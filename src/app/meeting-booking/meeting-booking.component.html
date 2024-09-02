@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="box">
+    <h1 class="title">Book a Meeting</h1>
+
+    <div class="field">
+      <label class="label">Select Date</label>
+      <div class="control">
+        <input class="input" type="date" [(ngModel)]="selectedDate" [min]="today" [max]="maxDate">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Select Time Slot</label>
+      <div class="control">
+        <div class="select">
+          <select [(ngModel)]="selectedTimeSlot">
+            <option *ngFor="let slot of timeSlots" [value]="slot.value">{{slot.label}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <button class="button is-primary" (click)="bookMeeting()">Book Meeting</button>
+      </div>
+    </div>
+  </div>
+</div>
