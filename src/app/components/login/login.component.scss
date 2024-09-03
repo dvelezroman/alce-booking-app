@@ -51,11 +51,19 @@ body {
     font-size: 1.2rem;
     margin-bottom: .15rem;
     margin-left: 14px;
+    font-weight: 400;
   }
 
   .field {
     margin-bottom: 2.3rem;  
     position: relative;
+  }
+
+  .input-container {
+    display: inline-block;
+    padding: 2px; /* Espacio para el borde degradado */
+    border-radius: 25px; /* Asegúrate de que coincida con el borde del input */
+    background: linear-gradient(135deg, #96a7d2, #d8bfd8); /* Degradado azul a morado */
   }
   
   .input {
@@ -66,20 +74,22 @@ body {
     font-size: 1.35rem;
     background-color: rgba(157, 156, 156, 0.3);  
     color: white;  
-    transition: background-color 0.3s ease;    
+    transition: background-color 0.4s ease; 
+       
     &:hover {
       background-color: rgba(157, 156, 156, 0.5);  
     }
   
     &:focus {
-      background-color: rgba(157, 156, 156, 0.5);  
+      background-color: rgba(157, 156, 156, 0.6);  
       outline: none; 
     }
   }
   
+  
   .input::placeholder {
     font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.4);  
+    color: rgba(255, 255, 255, 0.3);  
   }
 
   .error {
@@ -109,7 +119,7 @@ body {
     width: 100%;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.7s;
   
     &:hover {
       background-color: darken($color-secondary, 10%);
@@ -126,7 +136,7 @@ body {
   
       a {
         color: white;
-        font-weight: bold;
+        font-weight: 500;
         text-decoration: none;
         transition: color 0.3s ease;  
   
@@ -138,7 +148,23 @@ body {
     }
   }
 
-
+  .input-field {
+    position: relative;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 2;
+  }
+  
+  .toggle-password i {
+    font-size: 1.2rem;
+    color: #c3c3c3;
+  }
 
   .modal-overlay {
   position: fixed;
@@ -167,7 +193,23 @@ body {
 
 .modal-content p {
   font-size: 1.5rem; 
-  color: #333;  
+  color: #dfd9d9;  
+}
+
+.success-modal {
+  background-color: #b6b9bb; 
+}
+
+.success-modal p{
+  color: black;
+}
+
+.error-modal {
+  background-color: #b6b9bb; 
+}
+
+.error-modal p {
+  color: rgb(208, 58, 58);
 }
 
 .modal-close {
@@ -199,6 +241,17 @@ body {
     .title {
       font-size: 2.6rem;
     }
+
+    .field {
+      margin-bottom: 1.8rem; 
+    }
+
+    .label {
+      font-weight: 400;
+      font-size: 1.15rem;
+      margin-bottom: 0rem;
+      margin-left: 9px;
+    }
   
     .input {
       font-size: 1.3rem;
@@ -206,6 +259,15 @@ body {
     }
   
     .button.is-primary {
+      font-size: 1.2rem;
+    }
+
+    .modal-content {
+      padding: 2rem 1rem;
+      max-width: 80%; 
+    }
+
+    .modal-content p{
       font-size: 1.2rem;
     }
   }
@@ -221,11 +283,11 @@ body {
     }
   
     .input {
-      font-size: 1.1rem;
+      font-size: 1.3rem;
       padding: 0.4rem 10px;
     }
   
     .button.is-primary {
-      font-size: 1rem;
+      font-size: 1.2rem;
     }
   }

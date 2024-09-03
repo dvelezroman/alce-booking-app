@@ -21,12 +21,15 @@
 
       <div class="field">
         <label class="label">Password</label>
-        <div class="control">
+        <div class="control has-icons-right">
           <input 
+            [type]="passwordVisible ? 'text' : 'password'" 
             class="input" 
-            type="password" 
             formControlName="password" 
             placeholder="Enter your password">
+          <div class="toggle-password" (click)="togglePasswordVisibility()">
+            <i [ngClass]="passwordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+          </div>
         </div>
         <div 
           *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" 
@@ -55,8 +58,14 @@
 
 <!-- Modal -->
 <div *ngIf="showModal" class="modal-overlay">
-  <div class="modal-content">
+  <div class="modal-content error-modal">
     <p>The form must be completed.</p>
-    <button class="modal-close" (click)="closeModal()"></button>
+  </div>
+</div>
+
+<!-- Modal exitoso -->
+<div *ngIf="showSuccessModal" class="modal-overlay">
+  <div class="modal-content success-modal">
+    <p>Login successful!</p>
   </div>
 </div>

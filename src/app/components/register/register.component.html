@@ -23,20 +23,34 @@
           </div>
         </div>
   
-        <div class="field">
+         <!-- Password Field -->
+         <div class="field input-field">
           <label class="label">Password</label>
-          <div class="control">
-            <input class="input" type="password" formControlName="password" placeholder="Enter your password">
+          <div class="control has-icons-right">
+            <input [type]="passwordVisible ? 'text' : 'password'" 
+                   placeholder="Password" 
+                   class="input"
+                   formControlName="password">
+            <div class="toggle-password" (click)="togglePasswordVisibility()">
+              <i [ngClass]="passwordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+            </div>
           </div>
           <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
             Password must be at least 6 characters long
           </div>
         </div>
   
-        <div class="field">
+        <!-- Confirm Password Field -->
+        <div class="field input-field">
           <label class="label">Confirm Password</label>
-          <div class="control">
-            <input class="input" type="password" formControlName="confirmPassword" placeholder="Confirm your password">
+          <div class="control has-icons-right">
+            <input [type]="confirmPasswordVisible ? 'text' : 'password'" 
+                   placeholder="Confirm Password" 
+                   class="input"
+                   formControlName="confirmPassword">
+            <div class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
+              <i [ngClass]="confirmPasswordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+            </div>
           </div>
           <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched" class="error">
             Passwords do not match
@@ -61,10 +75,16 @@
   </div>
 
 
-  <!-- Modal -->
+<!-- Modal -->
 <div *ngIf="showModal" class="modal-overlay">
-  <div class="modal-content">
+  <div class="modal-content error-modal">
     <p>The form must be completed.</p>
-    <button class="modal-close" (click)="closeModal()"></button>
+  </div>
+</div>
+
+<!-- Modal exitoso -->
+<div *ngIf="showSuccessModal" class="modal-overlay">
+  <div class="modal-content success-modal">
+    <p>Register successful!</p>
   </div>
 </div>

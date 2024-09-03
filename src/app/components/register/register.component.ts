@@ -16,8 +16,12 @@ import { RouterModule } from '@angular/router';
 })
 export class RegisterComponent implements OnInit {
   currentPage = 'register';
+  passwordVisible: boolean = false;
+  confirmPasswordVisible: boolean = false;
   showModal = false;
+  showSuccessModal = false;
   registerForm: FormGroup;
+
 
   constructor(private fb: FormBuilder) {
 
@@ -52,14 +56,31 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     if (this.registerForm.invalid) {
       this.markFormGroupTouched(this.registerForm);
-      this.showModal = true;  
+      this.showModal = true; 
+
+      setTimeout(() => {
+        this.showModal = false;
+      }, 2000);
+  
       return;
     }
 
-    console.log('enviado', this.registerForm.value);
+    this.showSuccessModal = true;
+  
+    setTimeout(() => {
+      this.showSuccessModal = false;
+    }, 2000);
   }
 
   closeModal() {
-    this.showModal = false;  
+    this.showModal = false; 
+    this.showSuccessModal = false; 
+  }
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.confirmPasswordVisible = !this.confirmPasswordVisible;
   }
 }

@@ -16,6 +16,9 @@ import { RouterModule } from '@angular/router';
 export class LoginComponent implements OnInit {
   currentPage = 'login';
   showModal = false;
+  showSuccessModal = false;
+  passwordVisible: boolean = false;
+
   loginForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
@@ -42,14 +45,29 @@ onSubmit() {
   if (this.loginForm.invalid) {
     this.markFormGroupTouched(this.loginForm);  
     this.showModal = true;
+
+    setTimeout(() => {
+      this.showModal = false;
+    }, 2000);
+
     return;
   }
 
-  console.log('Formulario enviado', this.loginForm.value);
+  this.showSuccessModal = true;
+
+  setTimeout(() => {
+    this.showSuccessModal = false;
+  }, 2000);
 }
 
+
 closeModal() {
-  this.showModal = false;  
+  this.showModal = false; 
+  this.showSuccessModal = false; 
+}
+
+togglePasswordVisibility() {
+  this.passwordVisible = !this.passwordVisible;
 }
 
 
