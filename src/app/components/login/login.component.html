@@ -1,0 +1,62 @@
+<div class="login-container">
+  <div class="box">
+    <h1 class="title">Sign In</h1>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+          <input 
+            class="input" 
+            type="email" 
+            formControlName="email" 
+            placeholder="Enter your email">
+        </div>
+        <div 
+          *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" 
+          class="error">
+          Please enter a valid email
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+          <input 
+            class="input" 
+            type="password" 
+            formControlName="password" 
+            placeholder="Enter your password">
+        </div>
+        <div 
+          *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" 
+          class="error">
+          Password is required
+        </div>
+      </div>
+
+      <div class="field-button">
+        <div class="control">
+          <button 
+            class="button is-primary">Sign In</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="toggle-container">
+      <p>
+        Don't have an account? 
+        <a [routerLink]="['/register']">Sign up</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div *ngIf="showModal" class="modal-overlay">
+  <div class="modal-content">
+    <p>The form must be completed.</p>
+    <button class="modal-close" (click)="closeModal()"></button>
+  </div>
+</div>
