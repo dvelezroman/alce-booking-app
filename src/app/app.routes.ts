@@ -3,6 +3,7 @@ import {MeetingBookingComponent} from "./pages/meeting-booking/meeting-booking.c
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { HomeComponent } from './pages/home/home.component';
+import { ContactComponent } from './pages/contact/contact.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -10,5 +11,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'booking', component: MeetingBookingComponent },
+  { path: 'contact', component: ContactComponent},
   { path: '**', redirectTo: '/home' }
 ];
