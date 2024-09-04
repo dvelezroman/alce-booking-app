@@ -1,29 +1,65 @@
-<div class="container">
+<div class="container is-max-desktop">
   <div class="box">
-    <h1 class="title">Book a Meeting</h1>
 
-    <div class="field">
-      <label class="label">Select Date</label>
-      <div class="control">
-        <input class="input" type="date" [(ngModel)]="selectedDate" [min]="today" [max]="maxDate">
+
+    <div class="block">
+      <h1 class="title has-text-centered">Book a Meeting</h1>
+    </div>
+
+
+    <div class="block">
+      <div class="columns">
+
+
+        <div class="column is-half">
+          <div class="field">
+            <label class="label">Select Date</label>
+            <div class="control">
+              <input class="input has-background-light" type="date" [(ngModel)]="selectedDate" [min]="today" [max]="maxDate">
+            </div>
+          </div>
+        </div>
+
+
+        <div class="column is-half">
+          <div class="field">
+            <label class="label">Select Time Slot</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select class="has-background-light" [(ngModel)]="selectedTimeSlot">
+                  <option *ngFor="let slot of timeSlots" [value]="slot.value">{{slot.label}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <div class="field">
-      <label class="label">Select Time Slot</label>
-      <div class="control">
-        <div class="select">
-          <select [(ngModel)]="selectedTimeSlot">
-            <option *ngFor="let slot of timeSlots" [value]="slot.value">{{slot.label}}</option>
-          </select>
+
+    <div class="block">
+      <div class="field">
+        <div class="control">
+          <button class="button is-primary is-fullwidth has-background-primary has-text-white" (click)="bookMeeting()">Book Meeting</button>
         </div>
       </div>
     </div>
 
-    <div class="field">
-      <div class="control">
-        <button class="button is-primary" (click)="bookMeeting()">Book Meeting</button>
-      </div>
-    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div *ngIf="showModal" class="modal-overlay">
+  <div class="modal-content error-modal">
+    <p class="help is-danger" *ngIf="!selectedDate">Please select a date.</p> 
+    <p class="help is-danger" *ngIf="!selectedTimeSlot">Please select a time slot.</p>
+  </div>
+</div>
+
+<!-- Modal exitoso -->
+<div *ngIf="showSuccessModal" class="modal-overlay">
+  <div class="modal-content success-modal">
+    <p>Meeting booked on {{ formattedDate }} at {{ formattedTime }}.</p>
   </div>
 </div>
