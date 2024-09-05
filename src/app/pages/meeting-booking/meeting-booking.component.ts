@@ -2,7 +2,6 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {CommonModule, NgForOf} from "@angular/common";
 
-
 @Component({
   selector: 'app-meeting-booking',
   standalone: true,

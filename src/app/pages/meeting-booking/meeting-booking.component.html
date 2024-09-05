@@ -1,3 +1,6 @@
+<div class="class-booking-header">
+  <h1 class="title is-3">Class Booking</h1>
+</div>
 <div class="booking-container container">
   <div class="columns is-mobile">
     <!-- Primer bloque: Información del estudiante -->
@@ -37,7 +40,7 @@
       <div class="calendar-day-header">Sat</div>
     </div>
 
-
+    <!-- Días del mes seleccionado -->
     <div class="calendar-grid">
       <div 
       *ngFor="let day of currentMonthDays" 
@@ -50,15 +53,18 @@
     </div>
     </div>
   </div>
+<!--<div class="selected-date">
+    <h4 class="title is-5">{{ selectedDayFormatted || "Selecciona una fecha" }}</h4>
+  </div>-->
 </div>
 
 
 
-    <!-- Tercer bloque -->
+    <!-- Tercer bloque: Detalles de la fecha y horarios -->
     <div class="column selected-date-time" style="flex: 0 0 30%;">
 
     
-
+      <!-- Horarios disponibles -->
       <div class="time-slots">
         <div 
           class="time-slot" 
@@ -66,12 +72,12 @@
           (mouseenter)="showConfirm = time" 
           (mouseleave)="showConfirm = null">
           
-
+          <!-- Contenedor de la hora -->
           <div class="time-text-container">
             <span class="time-text">{{ time }}</span>
           </div>
       
-
+          <!-- Botón Confirm -->
           <div class="confirm-box" *ngIf="showConfirm === time" (click)="selectTimeSlot(time)">
             Confirm
           </div>
@@ -90,20 +96,19 @@
 <!-- Modal -->
 <div *ngIf="showModal" class="modal-overlay">
   <div class="modal-content error-modal">
-    <p class="help is-danger" *ngIf="!selectedDate">Please select a date.</p> 
-    <p class="help is-danger" *ngIf="!selectedTimeSlot">Please select a time slot.</p>
+    <p class="help is-danger">You must select a date before choosing a time slot.</p> 
   </div>
 </div>
 
 <!-- Modal exitoso con botones para confirmar o cancelar -->
 <div *ngIf="showSuccessModal" class="modal-overlay">
   <div class="modal-content success-modal">
-    <p>Ha elegido la fecha <br> {{ selectedDayFormatted }} a las {{ selectedTimeSlot }}.</p>
+    <p>You have selected <br> {{ selectedDayFormatted }} at {{ selectedTimeSlot }}.</p>
     
-    <!-- Botones de confirmación y cancelación -->
+    <!-- Confirmation and cancellation buttons -->
     <div class="modal-buttons">
-      <button class="button is-success" (click)="confirmSelection()">Aceptar</button>
-      <button class="button is-danger" (click)="cancelSelection()">Cancelar</button>
+      <button class="button is-success" (click)="confirmSelection()">Accept</button>
+      <button class="button is-danger" (click)="cancelSelection()">Cancel</button>
     </div>
   </div>
 </div>
