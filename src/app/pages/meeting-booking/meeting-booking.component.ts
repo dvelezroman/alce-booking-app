@@ -25,7 +25,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   formattedDate: string = '';
   formattedTime: string = '';
-  
+
   showModal = false;
   showSuccessModal = false;
 
@@ -45,7 +45,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
     if (dateInput) {
       dateInput.addEventListener('click', () => {
-        dateInput.showPicker(); 
+        dateInput.showPicker();
       });
     }
   }
