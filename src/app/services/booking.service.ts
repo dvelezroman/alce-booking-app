@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import {CreateMeetingDto} from "../components/booking/booking.dto";
+import {CreateMeetingDto} from '../meeting-booking/booking.dto';
 
 
 @Injectable({
@@ -14,7 +14,7 @@ export class BookingService {
   constructor(private http: HttpClient) {}
 
   private getHeaders() {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : '';
+    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : '';
     return new HttpHeaders({
       'Authorization': token ? `Bearer ${token}` : ''
     });
