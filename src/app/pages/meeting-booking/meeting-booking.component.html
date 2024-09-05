@@ -1,53 +1,91 @@
-<div class="container is-max-desktop">
-  <div class="box">
-
-
-    <div class="block">
-      <h1 class="title has-text-centered">Book a Meeting</h1>
-    </div>
-
-
-    <div class="block">
-      <div class="columns">
-
-
-        <div class="column is-half">
-          <div class="field">
-            <label class="label">Select Date</label>
-            <div class="control">
-              <input class="input has-background-light" type="date" [(ngModel)]="selectedDate" [min]="today" [max]="maxDate">
-            </div>
-          </div>
-        </div>
-
-
-        <div class="column is-half">
-          <div class="field">
-            <label class="label">Select Time Slot</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select class="has-background-light" [(ngModel)]="selectedTimeSlot">
-                  <option *ngFor="let slot of timeSlots" [value]="slot.value">{{slot.label}}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
+<div class="booking-container container">
+  <div class="columns is-mobile">
+    <!-- Primer bloque: Información del estudiante -->
+    <div class="column student-info" style="flex: 0 0 30%;">
+      <div class="student-photo">
+        <img src="/assets/foto usuario default.png" alt="Foto del estudiante">
+      </div>
+      <div class="student-name">
+        <h2>{{ studentName }}</h2>
+      </div>
+      <div class="student-details">
+        <p>{{ studentDetails }}</p>
       </div>
     </div>
 
 
-    <div class="block">
-      <div class="field">
-        <div class="control">
-          <button class="button is-primary is-fullwidth has-background-primary has-text-white" (click)="bookMeeting()">Book Meeting</button>
-        </div>
-      </div>
+ <!-- Segundo bloque Selector de mes -->
+ <div class="column date-time-selection" style="flex: 0 0 30%;">
+  <h3 class="title is-4">Select a date & time</h3>
+  
+
+  <div class="month-selector">
+    <button class="button is-small" (click)="prevMonth()">&#60;</button>
+    <span>{{ selectedMonth }} {{ selectedYear }}</span>
+    <button class="button is-small" (click)="nextMonth()">&#62;</button>
+  </div>
+
+
+  <div class="calendar">
+    <div class="calendar-header">
+      <div class="calendar-day-header">Sun</div>
+      <div class="calendar-day-header">Mon</div>
+      <div class="calendar-day-header">Tue</div>
+      <div class="calendar-day-header">Wed</div>
+      <div class="calendar-day-header">Thu</div>
+      <div class="calendar-day-header">Fri</div>
+      <div class="calendar-day-header">Sat</div>
     </div>
 
+
+    <div class="calendar-grid">
+      <div 
+      *ngFor="let day of currentMonthDays" 
+      class="calendar-day"
+      (click)="isDaySelectable(day) ? selectDay(day) : null"
+      [class.selected]="selectedDay === day.day"
+      [class.selectable]="isDaySelectable(day)"
+      [class.unselectable]="!isDaySelectable(day)"> 
+      {{ day.day }}
+    </div>
+    </div>
   </div>
 </div>
+
+
+
+    <!-- Tercer bloque -->
+    <div class="column selected-date-time" style="flex: 0 0 30%;">
+
+    
+
+      <div class="time-slots">
+        <div 
+          class="time-slot" 
+          *ngFor="let time of timeSlots" 
+          (mouseenter)="showConfirm = time" 
+          (mouseleave)="showConfirm = null">
+          
+
+          <div class="time-text-container">
+            <span class="time-text">{{ time }}</span>
+          </div>
+      
+
+          <div class="confirm-box" *ngIf="showConfirm === time" (click)="selectTimeSlot(time)">
+            Confirm
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
 
 <!-- Modal -->
 <div *ngIf="showModal" class="modal-overlay">
@@ -57,9 +95,15 @@
   </div>
 </div>
 
-<!-- Modal exitoso -->
+<!-- Modal exitoso con botones para confirmar o cancelar -->
 <div *ngIf="showSuccessModal" class="modal-overlay">
   <div class="modal-content success-modal">
-    <p>Meeting successfully booked on <br> {{ formattedDate }} at {{ formattedTime }}.</p>
+    <p>Ha elegido la fecha <br> {{ selectedDayFormatted }} a las {{ selectedTimeSlot }}.</p>
+    
+    <!-- Botones de confirmación y cancelación -->
+    <div class="modal-buttons">
+      <button class="button is-success" (click)="confirmSelection()">Aceptar</button>
+      <button class="button is-danger" (click)="cancelSelection()">Cancelar</button>
+    </div>
   </div>
 </div>

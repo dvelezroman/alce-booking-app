@@ -1,98 +1,287 @@
+
+body, html {
+  height: 100%; 
+  margin: 0;
+  padding: 0;
+}
+
 :host {
-    display: block;
-    background-color: #ffffff; 
-    width: 100%;
-    height: 100vh; 
-    padding: 2rem;
+  display: block;
+  background-color: #ffffff; 
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+  .main-container {
+
+    min-height: 100vh;
+    padding-top: 5rem;
+    background-color: white; 
+    display: flex;
+    flex-direction: column; 
   }
   
   .container {
+    margin-top: 7rem;
+  }
+
+
+  .column {
+    flex: 0 0 30%;
+    max-width: 30%;
+  }
+  
+  .student-photo img {
+    width: 120px; 
+    height: 120px; 
+    object-fit: cover; 
+    border-radius: 50%; 
+  }
+  
+  .student-info {
+    text-align: left;
+    border: 1px solid grey;
+  }
+  
+  .student-name {
     margin-top: 2rem;
+    font-size: 1.5rem;
   }
   
-  .box {
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    padding: 2rem;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  .student-details {
+    font-size: 1rem;
+    color: #666;
   }
+
+
+  /* SEGUNDO BLOQUE  */
   
-  .title {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    color: #363636;
+  .date-time-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    margin: 0 auto; 
+    width: 100%; 
+  }
+
+  .calendar {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    margin: 0 auto; 
+  }
+
+  .title.is-4 {
+    margin-top: -8rem;
+    font-size: 1.4rem;
     text-align: center;
+    color: #333; /* Color oscuro */
+    margin-bottom: 3rem; /* Espacio inferior */
   }
   
-  .block {
-    margin-bottom: 2.5rem;
+  .month-selector {
+    display: flex;
+    justify-content: center; /* Centra el selector de mes */
+    align-items: center;
+    margin-bottom: 2rem; /* Añade más separación entre el selector y el calendario */
   }
   
-  .label {
-    color: #000000; 
-    font-weight: 500;
-    font-size: 1.1rem;
-    margin-left: 7px;
-    margin-bottom: .1rem;
-  }
-
-  .input[type="date"] {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-color: #f0f0f0; 
-    color: #323131; 
-    border: 1px solid #a8a5a5; 
-    height: 2.7rem;
-    font-size: 1.15rem;
-    border-radius: 5px;
-    padding: 0 10px;
-    width: 100%;
-    cursor: pointer; 
-  }
-  .input[type="date"]::-webkit-calendar-picker-indicator {
-    display: none;
+  .month-selector button {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    background-color: transparent; /* Reemplaza con el color azul del navbar */
+    color: rgb(142, 139, 139);
+    border: 1px solid #89bdf5 ;
+    padding: 0rem 1.2rem;
+    font-size: 1.2rem; /* Mantiene el tamaño adecuado del chevron */
+    cursor: pointer;
+    border-radius: 50px;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+    height: 2.5rem; /* Ajusta la altura del botón */
+    line-height: 2.5rem; /* Alinea verticalmente el contenido */
   }
   
-  .input[type="date"]::-webkit-inner-spin-button {
-    display: none;
+  .month-selector button:hover {
+    background-color: #aad0f9; /* Color más oscuro en hover */
   }
   
-  .input[type="date"]::-webkit-clear-button {
-    display: none;
-  }
-
-  
-  .input,
-  .select select {
-    height: 2.7rem;
-    font-size: 1.15rem;
-    border-radius: 5px;
-    border: 1px solid #919191; 
-    background-color: #f0f0f0; 
-    color: #2c2b2b; 
-  }
-  
-  .input::placeholder,
-  .select select::placeholder {
-    color: #000000; 
-  }
-  
-  .button {
-    height: 3.2rem;
+  .month-selector span {
     font-size: 1.2rem;
-    border-radius: 5px;
-    background-color: #007bff !important; 
-    color: white;
-    border: none;
-    width: 30%;
-    margin: auto;
-  }
-  
-  .button:hover {
-    background-color: #0056b3 !important; 
+    color: #333; /* Color oscuro para el texto del selector */
   }
 
+  .calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); 
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .calendar-day-header {
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    color: #094e98;
+  }
+  
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); 
+    grid-auto-rows: 50px; 
+    gap: 5px; 
+    width: 100%;
+  }
+  
+  .calendar-day {
+    text-align: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    color: grey;
+    border-radius: 50%; /* Hace las casillas redondas */
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center; /* Centra el texto horizontalmente */
+    align-items: center; /* Centra el texto verticalmente */
+    cursor: pointer; /* Cambia el cursor a pointer cuando el usuario pase por encima */
+    transition: background-color 0.3s ease; /* Suaviza el cambio de color */
+  }
+
+  .calendar-day.selectable:hover{
+    background-color: #6eb3fc;
+    color: white;
+  }
+  
+  .calendar-day.selectable {
+    background-color: #e0e0e0; /* Color gris claro para los días seleccionables */
+    color: #333; /* Texto oscuro */
+    cursor: pointer;
+  }
+  
+  .calendar-day.unselectable {
+    background-color: #f0f0f0; /* Color más claro para los días no seleccionables */
+    color: #bbb; /* Texto más claro */
+    cursor: not-allowed; /* Indica que no se puede seleccionar */
+  }
+  
+  .calendar-day.selected {
+    background-color: #007bff; /* Fondo azul cuando el día está seleccionado */
+    color: white;
+    font-weight: bold;
+    cursor: default;
+  }
+
+
+
+
+  /* TERCER BLOQUE  */
+
+  .selected-date {
+    text-align: center;
+    margin-left: -8%;
+    color: #333 !important; 
+    margin-top: 1rem; 
+    min-height: 40px; 
+  }
+
+  .selected-date-time {
+    margin-left: auto; 
+    flex: 0 0 30%; 
+  }
+  
+  
+  .title.is-5 {
+    font-size: 1.2rem; 
+    color: inherit; 
+  }
+  
+  .time-slots {
+    display: flex;
+    margin-top: 1.5rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-height: 480px; 
+    overflow-y: auto;  
+   
+  }
+  
+  .time-slot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 60%;
+    min-height: 50px;
+    background-color: #edeaea;
+    gap: 5px;
+
+    cursor: pointer;
+    transition: all 0.5s ease;
+  }
+  
+  .time-text-container {
+    flex: 1;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    border: 1px solid #3461d4;
+    border-radius: 5px;
+    min-height: 50px;
+    width: 100%; 
+    padding: 0 12px;
+  }
+  
+  .time-text {
+    font-size: 1.3rem;
+    color: grey;
+  }
+
+  .time-text:hover{
+    color: white;
+  }
+  
+  .confirm-box {
+    flex: 1; 
+    background-color: #9775f3;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1.25rem;
+    text-align: center;
+    opacity: 0; 
+    visibility: hidden; 
+    width: 100%; 
+    transition: all 0.5s ease;
+  }
+  
+
+  
+  .time-slot:hover .confirm-box {
+    opacity: 1;
+    visibility: visible;
+    width: 100%; 
+  }
+  .time-slot:hover .time-text-container {
+    background-color: rgb(83, 128, 202);
+    color: white;
+  }
+  .time-slot:hover .time-text{
+    color: white;
+  }
+
+
+
+
+  /*  MODAL  */
   .modal-overlay {
     position: fixed;
     top: 0;

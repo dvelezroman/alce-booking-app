@@ -19,9 +19,22 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   selectedDate: string = '';
   selectedTimeSlot: string = '';
-  timeSlots: {label: string, value: number}[] = [];
+
+  timeSlots: string[] = [
+    '09:00', '10:00', '11:00', '12:00', 
+    '13:00', '14:00', '15:00', '16:00', 
+    '17:00', '18:00', '19:00', '20:00', 
+    '21:00'];
+
   today: string = '';
   maxDate: string = '';
+
+  selectedMonth!: string;
+  selectedYear!: number;
+  currentMonthDays: any[] = [];
+  selectedDay: number | null = null;
+  selectedDayFormatted!: string;
+  showConfirm: string | null = null;
 
   formattedDate: string = '';
   formattedTime: string = '';
@@ -29,9 +42,16 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   showModal = false;
   showSuccessModal = false;
 
+  studentName = 'Gregorio Vélez';
+  studentDetails = 'Detalles del estudiante';
+
+  todayMonth!: string;
+  todayYear!: number;
+  nextMonth_!: string;
+  nextYear!: number;
+
   constructor() {
     this.initializeTimeSlots();
-
 
   }
 
@@ -39,6 +59,21 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.today = this.getTodayDate();
     this.maxDate = this.getMaxDate();
     this.selectedDate = this.today; // Set the default selected date to today
+
+    const todayDate = new Date();
+    this.selectedMonth = todayDate.toLocaleString('default', { month: 'long' });
+    this.selectedYear = todayDate.getFullYear();
+
+  // Mes y año actuales
+  this.todayMonth = this.selectedMonth;
+  this.todayYear = this.selectedYear;
+
+  // Próximo mes y año
+  const nextDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, 1);
+  this.nextMonth_ = nextDate.toLocaleString('default', { month: 'long' });
+  this.nextYear = nextDate.getFullYear();
+    
+    this.generateCurrentMonthDays();
   }
 
   ngAfterViewInit() {
@@ -51,11 +86,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   initializeTimeSlots() {
-    const startHour = 8; // 8 AM
+    const startHour = 9; // 9 AM
     const endHour = 21; // 9 PM
     this.timeSlots = Array.from({ length: endHour - startHour + 1 }, (_, i) => {
       const hour = startHour + i;
-      return { label: `${hour}:00 to ${hour + 1}:50`, value: hour };
+      return `${hour}:00`;
     });
   }
 
@@ -80,18 +115,107 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return this.formatDate(maxDate);
   }
 
-  formatTime(timeSlot: string): string {
-    const hour = parseInt(timeSlot, 10);
-    const period = hour >= 12 ? 'PM' : 'AM';
-    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-    return `${formattedHour} ${period}`;
+  generateCurrentMonthDays() {
+    const monthIndex = new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth();
+    const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
+  
+    const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay(); 
+  
+
+    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '' }));
+  
+
+    this.currentMonthDays = this.currentMonthDays.concat(
+      Array.from({ length: daysInMonth }, (_, i) => {
+        const date = new Date(this.selectedYear, monthIndex, i + 1);
+        const dayOfWeek = date.toLocaleString('default', { weekday: 'long' });
+        return {
+          day: i + 1,
+          dayOfWeek
+        };
+      })
+    );
   }
+  
+  prevMonth() {
+    const today = new Date();
+    const currentMonth = today.toLocaleString('default', { month: 'long' });
+    const currentYear = today.getFullYear();
+  
+    // Solo retrocede si el mes actual no es el mes seleccionado
+    if (!(this.selectedMonth === currentMonth && this.selectedYear === currentYear)) {
+      const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() - 1, 1);
+      this.selectedMonth = date.toLocaleString('default', { month: 'long' });
+      this.selectedYear = date.getFullYear();
+      this.generateCurrentMonthDays();
+    }
+  }
+  
+  nextMonth() {
+    const today = new Date();
+    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const maxMonth = nextMonthDate.toLocaleString('default', { month: 'long' });
+    const maxYear = nextMonthDate.getFullYear();
+  
+    // Solo avanza si el mes seleccionado no es el siguiente mes
+    if (!(this.selectedMonth === this.nextMonth_ && this.selectedYear === this.nextYear)) {
+      const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() + 1, 1);
+      this.selectedMonth = date.toLocaleString('default', { month: 'long' });
+      this.selectedYear = date.getFullYear();
+      this.generateCurrentMonthDays();
+    }
+  }
+
+  isDaySelectable(day: any): boolean {
+    const currentDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
+    const todayDate = new Date(this.today); 
+    const maxDate = new Date(this.maxDate); 
+  
+
+    const isSameMonth = currentDate.getMonth() === todayDate.getMonth() && currentDate.getFullYear() === todayDate.getFullYear();
+    const isWithinRange = currentDate >= todayDate && currentDate <= maxDate;
+  
+    return isSameMonth && isWithinRange;
+  }
+  
+  selectDay(day: any) {
+    if (this.isDaySelectable(day)) {  
+      this.selectedDay = day.day;
+      this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
+      console.log('Día seleccionado:', this.selectedDayFormatted);
+    }
+  }
+
+  selectTimeSlot(time: string) {
+    if (this.selectedDayFormatted) {
+      this.selectedTimeSlot = time;
+      this.showSuccessModal = true; 
+    } else {
+
+      this.showModal = true;
+      setTimeout(() => {
+        this.showModal = false;
+      }, 2000);
+    }
+  }
+  
+  confirmSelection() {
+    this.showSuccessModal = false;
+    console.log(`Fecha confirmada: ${this.selectedDayFormatted} a las ${this.selectedTimeSlot}`);
+
+  }
+  
+  cancelSelection() {
+    this.showSuccessModal = false;
+    this.selectedTimeSlot = ''; 
+  }
+
 
   bookMeeting() {
     if (this.selectedDate && this.selectedTimeSlot) {
       const dateObject = new Date(this.selectedDate);
       this.formattedDate = this.formatDate(dateObject);
-      this.formattedTime = this.formatTime(this.selectedTimeSlot);
+      this.formattedTime = this.selectedTimeSlot;
 
       console.log(`Meeting booked on ${this.formattedDate} at ${this.formattedTime}`);
 
@@ -100,7 +224,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       setTimeout(() => {
         this.showSuccessModal = false;
       }, 4000);
-      // Add your booking logic here, e.g., send the selected date and time to your backend API.
     } else {
       this.showModal = true;
 
