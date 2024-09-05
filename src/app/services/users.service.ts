@@ -4,12 +4,12 @@ import {BehaviorSubject, Observable, tap} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Store} from "@ngrx/store";
 import {setAdminStatus, setLoggedInStatus} from "../store/user.action";
-import {LoginDto, LoginResponseDto, RegisterResponseDto, UserDto, UserRole} from "./user.dto";
+import {LoginDto, LoginResponseDto, RegisterResponseDto, UserDto, UserRole} from "./dtos/user.dto";
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
+export class UsersService {
   private apiUrl = `${environment.apiUrl}/users`;
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
@@ -37,10 +37,6 @@ export class UserService {
       return localStorage.getItem('accessToken');
     }
     return null;
-  }
-
-  public refreshLogin() {
-    return this.http.get(`${this.apiUrl}/refresh/login`, { headers: this.getHeaders() })
   }
 
   register(user: UserDto): Observable<RegisterResponseDto> {
