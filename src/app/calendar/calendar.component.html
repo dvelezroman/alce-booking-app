@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="box">
+    <div class="calendar">
+      <div class="calendar-header">
+        <button class="button is-light" (click)="previousMonth()">&#10094;</button>
+        <span class="calendar-title">{{ months[currentMonth] }} {{ currentYear }}</span>
+        <button class="button is-light" (click)="nextMonth()">&#10095;</button>
+      </div>
+      <div class="calendar-body">
+        <div class="columns is-multiline">
+          <div class="column is-one-seventh" *ngFor="let day of daysOfWeek">{{ day }}</div>
+          <div class="column is-one-seventh" *ngFor="let blank of blanks"></div>
+          <div class="column is-one-seventh" *ngFor="let day of daysInMonth">
+            <button
+              class="button is-light"
+              [ngClass]="{'is-selected': isSelected(day)}"
+              (click)="selectDate(day)"
+              [disabled]="isDisabled(day)">
+              {{ day }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

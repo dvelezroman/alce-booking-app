@@ -1,13 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {NgForOf} from "@angular/common";
+import {CalendarComponent} from "../calendar/calendar.component";
 
 @Component({
   selector: 'app-meeting-booking',
   standalone: true,
   imports: [
     FormsModule,
-    NgForOf
+    NgForOf,
+    CalendarComponent
   ],
   templateUrl: './meeting-booking.component.html',
   styleUrl: './meeting-booking.component.scss'
