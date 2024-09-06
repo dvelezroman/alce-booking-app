@@ -11,51 +11,52 @@ body {
 }
 
 .register-container { 
-  background: url('/assets/register y login fondo.png') no-repeat center center fixed;
+  background: url('/assets/fondo login y register 2.png') no-repeat center center fixed;
   background-size: cover; 
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  padding: 3rem 1rem;
 }
 
 .box {
-  background: rgba(162, 161, 163, 0.228);  
-  border-radius: 10px;
-  padding: 3rem 2.5rem;
+  background: rgba(221, 224, 227, 0.378);  
+  border-radius: 25px 0px 25px 0px;
+  padding: 3rem 2.8rem;
   width: 100%;
-  max-width: 550px;
-  box-shadow: 0 0 12px rgba(217, 211, 211, 0.1);
+  max-width: 750px;  
+  box-shadow: 0 0 12px 8px rgba(217, 211, 211, 0.1);
   backdrop-filter: blur(10px);  
   -webkit-backdrop-filter: blur(10px);  
-  border: .5px solid rgba(255, 255, 255, 0.1);  
+  border: .5px solid rgba(255, 255, 255, 0.172);  
   transition: box-shadow 0.3s ease-in-out;
- 
+
   &:focus-within {
-      box-shadow: 0 0 15px rgba(211, 211, 211, 0.3);  
-      transition: box-shadow 0.5s ease-in-out; 
+    box-shadow: 0 0 15px rgba(211, 211, 211, 0.3);  
+    transition: box-shadow 0.5s ease-in-out; 
   }
 }
 
-  .title {
-    text-align: center;
-    margin-bottom: 3rem;
-    font-size: 3rem;
-    background: yellow;  
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+.title {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.8rem;
+  background: linear-gradient(135deg, rgb(192, 192, 192), rgb(252, 252, 252),  rgb(192, 192, 192)); 
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
   
   .label {
-    color: white;  
+    color: rgb(97, 98, 100);  
     font-size: 1.2rem;
     margin-bottom: .15rem;
     margin-left: 14px;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .field {
-    margin-bottom: 2.3rem; 
+    margin-bottom: 2rem; 
     position: relative; 
   }
   
@@ -64,66 +65,96 @@ body {
     padding: 0.75rem;
     padding-left: 15px;
     border: none;
-    font-size: 1.45rem;
+    font-size: 1.15rem;
+    background-color: rgba(138, 138, 139, 0.182);  
+    color: rgb(242, 228, 228);  
+    transition: background-color 0.4s ease; 
+       
+    &:hover {
+      background-color: rgba(138, 138, 139, 0.182);  
+    }
+  
+    &:focus {
+      background-color: rgba(138, 138, 139, 0.182);  
+      outline: none; 
+      
+    }
+  }
+
+  .field select {
+    border-radius: 10px;
+    padding: 0.45rem;
+    padding-left: 15px;
+    border: none;
+    font-size: 1.255rem;
     background-color: rgba(157, 156, 156, 0.3);  
-    color: white;  
-    transition: background-color 0.3s ease;    
+    color: rgb(223, 223, 223);  
+    transition: background-color 0.3s ease; 
+  
     &:hover {
       background-color: rgba(169, 167, 167, 0.5);  
     }
   
     &:focus {
-      background-color: rgba(157, 156, 156, 0.5);  
-      outline: none; 
+      background-color: rgba(157, 156, 156, 0.5); 
+      outline: none;
     }
+  
+    option {
+      color: black;  
+    }
+
   }
   
   .input::placeholder {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.562);  
+    font-size: 1.15rem;
+    color: rgba(226, 223, 223, 0.791);  
   }
+  
 
   .error {
-    color: rgb(255, 221, 0);
+    color: rgb(211, 52, 27);
     font-size: 1rem;
     margin-top: 0.5rem;
-    position: absolute;  
-    bottom: -1.5rem;  
-    left: 4%;
+    position: absolute; 
+    bottom: -1.5rem; 
+    left: 10px;
     width: 100%;
-    height: 1.5rem; 
+    height: 1.5rem;
+    pointer-events: none; 
   }
   
   .field-button {
-    margin-top: 4.5rem;  
-    margin-bottom: 2rem;  
+    margin-top: 3.5rem;  
+    margin-bottom: 1.5rem;  
     text-align: center;  
   }
   
   .button.is-primary {
-    background-color: $color-secondary;
+    background-color:  rgb(60, 91, 231);
     color: $color-background;
     border: none;
     padding: 0.75rem;
     font-size: 1.3rem;
-    border-radius: 25px;
-    width: 100%;
+    border-radius:10px;
+    width: 40%;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.7s;
   
     &:hover {
-      background-color: darken($color-secondary, 10%);
+      background-color: rgb(33, 63, 196);
     }
   }
 
   .toggle-container {
     text-align: center;  
-    margin-top: 2rem;  
+    margin-top: 1rem; 
+    margin-bottom: 1rem; 
   
     p {
-      font-size: 1rem;
-      color: white;  
+      font-size: 1.1rem;
+      color: rgb(13, 61, 159);  
   
       a {
         color: white;
@@ -132,7 +163,7 @@ body {
         transition: color 0.3s ease;  
   
         &:hover {
-          color: $color-accent;  
+          color: white;  
           text-decoration: underline; 
         }
       }
@@ -156,7 +187,7 @@ body {
   
   .toggle-password i {
     font-size: 1.2rem;
-    color: #c3c3c3;
+    color: #e8e8e8;
   }
   
 
@@ -167,7 +198,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -200,7 +231,7 @@ body {
   }
   
   .error-modal {
-    background-color: #b6b9bb;  
+    background-color: #dfe2e3;  
   }
 
   .error-modal p {

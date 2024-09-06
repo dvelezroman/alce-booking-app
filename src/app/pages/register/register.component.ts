@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-register',
@@ -22,16 +23,20 @@ export class RegisterComponent implements OnInit {
   showSuccessModal = false;
   registerForm: FormGroup;
 
+  roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
 
-  constructor(private fb: FormBuilder) {
 
+  constructor(private fb: FormBuilder,
+             // private usersService: UsersService,
+              private router: Router 
+  ) {
     this.registerForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      role: ['', Validators.required], 
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, { validator: this.passwordMatchValidator });
-
   }
 
 
@@ -53,6 +58,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+
   onSubmit() {
     if (this.registerForm.invalid) {
       this.markFormGroupTouched(this.registerForm);
@@ -71,6 +77,8 @@ export class RegisterComponent implements OnInit {
       this.showSuccessModal = false;
     }, 2000);
   }
+
+
 
   closeModal() {
     this.showModal = false; 

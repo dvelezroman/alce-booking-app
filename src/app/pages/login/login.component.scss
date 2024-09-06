@@ -7,11 +7,11 @@ $color-background: rgb(250, 250, 253);
 
 body {
   background-color: $color-background;
-  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-family: 'poppins', 'Helvetica', 'Arial', sans-serif;
 }
 
 .login-container {
-    background: url('/assets/register y login fondo.png') no-repeat center center fixed;
+    background: url('/assets/fondo login y register 2.png') no-repeat center center fixed;
     background-size: cover;  
     display: flex;
     justify-content: center;
@@ -20,15 +20,16 @@ body {
 }
 
 .box {
-    background: rgba(162, 161, 163, 0.228);  
-    border-radius: 10px;
-    padding: 4rem 2.5rem;
+  
+    background: rgba(221, 224, 227, 0.378);  
+    border-radius: 25px 0px 25px 0px;
+    padding: 3rem 2.8rem;
     width: 100%;
-    max-width: 550px;
-    box-shadow: 0 0 12px rgba(217, 211, 211, 0.1);
+    max-width: 540px;
+    box-shadow: 0 0 12px 8px rgba(217, 211, 211, 0.1);
     backdrop-filter: blur(10px);  
     -webkit-backdrop-filter: blur(10px);  
-    border: .5px solid rgba(255, 255, 255, 0.1);  
+    border: .5px solid rgba(255, 255, 255, 0.172);  
     transition: box-shadow 0.3s ease-in-out;
    
     &:focus-within {
@@ -40,18 +41,18 @@ body {
   .title {
     text-align: center;
     margin-bottom: 3rem;
-    font-size: 3rem;
-    background: linear-gradient(135deg, rgb(255, 255, 9), rgb(250, 250, 253)); 
+    font-size: 2.8rem;
+    background: linear-gradient(135deg, rgb(192, 192, 192), rgb(252, 252, 252),  rgb(192, 192, 192)); 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   
   .label {
-    color: white;  
+    color: rgb(97, 98, 100);  
     font-size: 1.2rem;
     margin-bottom: .15rem;
     margin-left: 14px;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .field {
@@ -62,9 +63,9 @@ body {
 
   .input-container {
     display: inline-block;
-    padding: 2px; /* Espacio para el borde degradado */
-    border-radius: 25px; /* Asegúrate de que coincida con el borde del input */
-    background: linear-gradient(135deg, #96a7d2, #d8bfd8); /* Degradado azul a morado */
+    padding: 2px; 
+    border-radius: 25px; 
+    background: linear-gradient(135deg, #acbadd, #d8bfd8); 
   }
   
   .input {
@@ -73,28 +74,29 @@ body {
     padding-left: 15px;
     border: none;
     font-size: 1.35rem;
-    background-color: rgba(157, 156, 156, 0.3);  
-    color: white;  
+    background-color: rgba(138, 138, 139, 0.182);  
+    color: rgb(242, 228, 228);  
     transition: background-color 0.4s ease; 
        
     &:hover {
-      background-color: rgba(169, 167, 167, 0.585);  
+      background-color: rgba(138, 138, 139, 0.182);  
     }
   
     &:focus {
-      background-color: rgba(157, 156, 156, 0.6);  
+      background-color: rgba(138, 138, 139, 0.182);  
       outline: none; 
+      
     }
   }
   
   
   .input::placeholder {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.526);  
+    font-size: 1.15rem;
+    color: rgba(255, 255, 255, 0.791);  
   }
 
   .error {
-    color: rgb(255, 221, 0);
+    color: rgb(211, 52, 27);
     font-size: 1rem;
     margin-top: 0.5rem;
     position: absolute;  
@@ -105,25 +107,25 @@ body {
   }
   
   .field-button {
-    margin-top: 4.5rem;  
+    margin-top: 6rem;  
     margin-bottom: 2rem;  
     text-align: center;  
   }
   
   .button.is-primary {
-    background-color: $color-secondary;
+    background-color:  rgb(60, 91, 231);
     color: $color-background;
     border: none;
     padding: 0.75rem;
     font-size: 1.3rem;
-    border-radius: 25px;
-    width: 100%;
+    border-radius: 10px;
+    width: 50%;
     text-align: center;
     cursor: pointer;
     transition: background-color 0.7s;
   
     &:hover {
-      background-color: darken($color-secondary, 10%);
+      background-color: rgb(33, 63, 196);
     }
   }
 
@@ -132,8 +134,8 @@ body {
     margin-top: 2rem;  
   
     p {
-      font-size: 1rem;
-      color: white;  
+      font-size: 1.1rem;
+      color: rgb(13, 61, 159);  
   
       a {
         color: white;
@@ -142,7 +144,7 @@ body {
         transition: color 0.3s ease;  
   
         &:hover {
-          color: $color-accent;  
+          color: white;  
           text-decoration: underline; 
         }
       }
@@ -164,7 +166,27 @@ body {
   
   .toggle-password i {
     font-size: 1.2rem;
-    color: #c3c3c3;
+    color: #eae9e9;
+  }
+
+  .forgot-password-container {
+    position: absolute;
+    right: 0;
+    margin-top: 5px; 
+  }
+  
+  .field {
+    position: relative;  
+  }
+  
+  .forgot-password-link {
+    color: #ffffff;  
+    text-decoration: none;
+    font-size: 1rem;  
+  }
+  
+  .forgot-password-link:hover {
+    text-decoration: underline; 
   }
 
   .modal-overlay {
@@ -173,7 +195,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -186,7 +208,7 @@ body {
   padding: 4rem;
   border-radius: 10px;
   text-align: center;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 25px rgba(144, 143, 143, 0.3);
   width: 650px;
   max-width: 90%;
   position: relative;
@@ -206,7 +228,7 @@ body {
 }
 
 .error-modal {
-  background-color: #b6b9bb; 
+  background-color: #dedfdf; 
 }
 
 .error-modal p {
