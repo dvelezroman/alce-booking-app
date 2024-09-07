@@ -3,21 +3,8 @@
     <h1 class="title">Create Account</h1>
     
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <!-- Bloque Username -->
+      <!-- Bloque Email -->
       <div class="columns">
-        <div class="column">
-          <div class="field">
-            <label class="label">Username</label>
-            <div class="control">
-              <input class="input" type="text" formControlName="username" placeholder="Enter your username">
-            </div>
-            <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="error">
-              Username is required
-            </div>
-          </div>
-        </div>
-        
-        <!-- Bloque Email -->
         <div class="column">
           <div class="field">
             <label class="label">Email</label>
@@ -26,6 +13,22 @@
             </div>
             <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
               Please enter a valid email
+            </div>
+          </div>
+        </div>
+        
+        <!-- Bloque Role -->
+        <div class="column">
+          <div class="field">
+            <label class="label">Role</label>
+            <div class="control">
+              <select class="input" formControlName="role">
+                <option value="" disabled selected>Select your role</option>
+                <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+              </select>
+            </div>
+            <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="error">
+              Role is required
             </div>
           </div>
         </div>
@@ -68,20 +71,6 @@
               Passwords do not match
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Campo Role -->
-      <div class="field">
-        <label class="label">Role</label>
-        <div class="control">
-          <select class="input" formControlName="role">
-            <option value="" disabled selected>Select your role</option>
-            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
-          </select>
-        </div>
-        <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="error">
-          Role is required
         </div>
       </div>
 
