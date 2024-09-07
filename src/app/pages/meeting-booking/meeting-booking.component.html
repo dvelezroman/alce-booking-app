@@ -93,16 +93,19 @@
 
 
 
-<!-- Modal -->
+<!-- Modal de error -->
 <div *ngIf="showModal" class="modal-overlay">
   <div class="modal-content error-modal">
-    <p class="help is-danger">You must select a date before choosing a time slot.</p> 
+    <i class="fas fa-exclamation-circle error-icon"></i>
+    <p class="help is-danger bold-text">You must select a date</p>
+    <p class="help is-danger small-text">before choosing a time slot.</p>
   </div>
 </div>
 
 <!-- Modal exitoso con botones para confirmar o cancelar -->
 <div *ngIf="showSuccessModal" class="modal-overlay">
   <div class="modal-content success-modal">
+    <i class="fas fa-question-circle question-icon"></i> 
     <p>You have selected <br> {{ selectedDayFormatted }} at {{ selectedTimeSlot }}.</p>
     
     <!-- Confirmation and cancellation buttons -->
@@ -110,5 +113,12 @@
       <button class="button is-success" (click)="confirmSelection()">Accept</button>
       <button class="button is-danger" (click)="cancelSelection()">Cancel</button>
     </div>
+  </div>
+</div>
+
+<div *ngIf="showInfoModal" class="modal-overlay">
+  <div class="modal-content info-modal">
+    <i class="fas fa-check-circle info-icon"></i>
+    <p>Your selection was successful!</p>
   </div>
 </div>

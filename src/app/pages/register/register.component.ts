@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { UsersService } from '../../services/users.service';
+import { UserDto } from '../../services/dtos/user.dto';
 
 
 @Component({
@@ -21,19 +23,20 @@ export class RegisterComponent implements OnInit {
   confirmPasswordVisible: boolean = false;
   showModal = false;
   showSuccessModal = false;
+  showRegistrationErrorModal = false;
   registerForm: FormGroup;
 
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
 
 
   constructor(private fb: FormBuilder,
-             // private usersService: UsersService,
+              private usersService: UsersService,
               private router: Router 
   ) {
     this.registerForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      role: ['', Validators.required], 
+      role: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, { validator: this.passwordMatchValidator });
@@ -61,23 +64,56 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     if (this.registerForm.invalid) {
-      this.markFormGroupTouched(this.registerForm);
+      this.markFormGroupTouched(this.registerForm);  
       this.showModal = true; 
-
+  
       setTimeout(() => {
         this.showModal = false;
       }, 2000);
   
       return;
     }
-
-    this.showSuccessModal = true;
   
-    setTimeout(() => {
-      this.showSuccessModal = false;
-    }, 2000);
-  }
+    const userData: UserDto = {
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password,
+      role: this.registerForm.value.role,
+      idNumber: '',  
+      firstName: '',
+      lastName: '',
+      birthday: ''
+    };
+  
+    this.usersService.register(userData).subscribe({
+      next: () => {
+        this.showSuccessModal = true;
+  
+        setTimeout(() => {
+          this.showSuccessModal = false;
+          this.router.navigate(['/login']);  
+        }, 2500);
+      },
+      error: (error) => {
+        console.error('Error en el registro:', error);
+        this.showRegistrationErrorModal = true; 
+        if (error.status === 400) {
+          console.error('Error de validación en el servidor');
+          this.showRegistrationErrorModal = true; 
+        } else if (error.status === 0) {
+          console.error('Error de conexión al servidor');
+          this.showRegistrationErrorModal = true; 
+        } else {
+          console.error('Error desconocido');
+          this.showRegistrationErrorModal = true; 
+        }
+  
+        setTimeout(() => {
+          this.showRegistrationErrorModal = false;
+        }, 2000);
 
+      }
+    });
+  }
 
 
   closeModal() {

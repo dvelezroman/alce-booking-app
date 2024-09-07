@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {CommonModule, NgForOf} from "@angular/common";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-meeting-booking',
@@ -40,6 +41,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   showModal = false;
   showSuccessModal = false;
+  showInfoModal = false;
 
   studentName = 'Gregorio Vélez';
   studentDetails = 'Detalles del estudiante';
@@ -49,7 +51,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   nextMonth_!: string;
   nextYear!: number;
 
-  constructor() {
+  constructor(private router: Router) {
     this.initializeTimeSlots();
 
   }
@@ -194,19 +196,24 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.showModal = true;
       setTimeout(() => {
         this.showModal = false;
-      }, 2000);
+      }, 3500);
     }
   }
   
   confirmSelection() {
     this.showSuccessModal = false;
+    this.showInfoModal = true;
     console.log(`Fecha confirmada: ${this.selectedDayFormatted} a las ${this.selectedTimeSlot}`);
-
+    setTimeout(() => {
+      this.showInfoModal = false;
+      this.router.navigate(['/home']);
+    }, 3000);
   }
   
   cancelSelection() {
     this.showSuccessModal = false;
     this.selectedTimeSlot = ''; 
+
   }
 
 

@@ -49,7 +49,6 @@ onSubmit() {
     setTimeout(() => {
       this.showModal = false;
     }, 2000);
-
     return;
   }
 

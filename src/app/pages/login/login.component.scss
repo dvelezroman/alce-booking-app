@@ -209,22 +209,37 @@ body {
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 0 25px rgba(144, 143, 143, 0.3);
-  width: 650px;
+  width: 500px;
   max-width: 90%;
   position: relative;
+  animation: pop-up 0.2s ease-in-out;
+}
+
+@keyframes pop-up {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .modal-content p {
-  font-size: 1.3rem; 
+  font-size: 1.5rem; 
   color: #dfd9d9;  
 }
 
 .success-modal {
-  background-color: #b6b9bb; 
+  background-color: #eaecec; 
 }
 
 .success-modal p{
-  color: black;
+  color: #28a745;
 }
 
 .error-modal {
@@ -235,23 +250,18 @@ body {
   color: rgb(208, 58, 58);
 }
 
-.modal-close {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background-color: #ff5a5f;
-  color: white;
-  border: none;
-  padding: 1rem 1rem;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 2rem;
-  line-height: 1;
+.success-icon {
+  font-size: 3rem;
+  color: #28a745;
+  margin-bottom: 1rem;
 }
 
-.modal-close:hover {
-  background-color: #e04848;
+.error-icon {
+  font-size: 3rem;
+  color: #dc3545; 
+  margin-bottom: 1rem;
 }
+
 
 
   /* Estilos responsivos */
