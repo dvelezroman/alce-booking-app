@@ -34,10 +34,14 @@ export class RegisterComponent implements OnInit {
               private router: Router 
   ) {
     this.registerForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      role: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
+      firstName: ['', Validators.required],  
+      lastName: ['', Validators.required],   
+      idNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],  
+      birthday: ['', Validators.required],   
+      email: ['', [Validators.required, Validators.email]], 
+      role: ['', Validators.required],  
+      password: ['', [Validators.required, Validators.minLength(6)]],  
+      confirmPassword: ['', Validators.required]  
     }, { validator: this.passwordMatchValidator });
   }
 
@@ -77,10 +81,10 @@ export class RegisterComponent implements OnInit {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
       role: this.registerForm.value.role,
-      idNumber: '',  
-      firstName: '',
-      lastName: '',
-      birthday: ''
+      idNumber: this.registerForm.value.idNumber,
+      firstName: this.registerForm.value.firstName,
+      lastName: this.registerForm.value.lastName,
+      birthday: new Date(this.registerForm.value.birthday).toISOString().split('T')[0] 
     };
   
     this.usersService.register(userData).subscribe({
@@ -95,16 +99,6 @@ export class RegisterComponent implements OnInit {
       error: (error) => {
         console.error('Error en el registro:', error);
         this.showRegistrationErrorModal = true; 
-        if (error.status === 400) {
-          console.error('Error de validación en el servidor');
-          this.showRegistrationErrorModal = true; 
-        } else if (error.status === 0) {
-          console.error('Error de conexión al servidor');
-          this.showRegistrationErrorModal = true; 
-        } else {
-          console.error('Error desconocido');
-          this.showRegistrationErrorModal = true; 
-        }
   
         setTimeout(() => {
           this.showRegistrationErrorModal = false;

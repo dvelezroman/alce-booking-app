@@ -1,9 +1,63 @@
 <div class="register-container">
   <div class="box">
     <h1 class="title">Create Account</h1>
-    
+
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <!-- Bloque Email -->
+      <!-- Bloque First Name y Last Name -->
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <label class="label">First Name</label>
+            <div class="control">
+              <input class="input" type="text" formControlName="firstName" placeholder="Enter your first name">
+            </div>
+            <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" class="error">
+              First name is required
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="field">
+            <label class="label">Last Name</label>
+            <div class="control">
+              <input class="input" type="text" formControlName="lastName" placeholder="Enter your last name">
+            </div>
+            <div *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched" class="error">
+              Last name is required
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque ID Number y Birthday -->
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <label class="label">ID Number</label>
+            <div class="control">
+              <input class="input" type="text" formControlName="idNumber" placeholder="Enter your ID number">
+            </div>
+            <div *ngIf="registerForm.get('idNumber')?.invalid && registerForm.get('idNumber')?.touched" class="error">
+              ID number is required
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="field">
+            <label class="label">Birthday</label>
+            <div class="control">
+              <input class="input" type="date" formControlName="birthday" placeholder="Select your birthday">
+            </div>
+            <div *ngIf="registerForm.get('birthday')?.invalid && registerForm.get('birthday')?.touched" class="error">
+              Please select a valid date
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque Email y Role -->
       <div class="columns">
         <div class="column">
           <div class="field">
@@ -16,8 +70,7 @@
             </div>
           </div>
         </div>
-        
-        <!-- Bloque Role -->
+
         <div class="column">
           <div class="field">
             <label class="label">Role</label>
@@ -33,8 +86,8 @@
           </div>
         </div>
       </div>
-      
-      <!-- Bloque Password -->
+
+      <!-- Bloque Password y Confirm Password -->
       <div class="columns">
         <div class="column">
           <div class="field input-field">
@@ -53,8 +106,7 @@
             </div>
           </div>
         </div>
-        
-        <!-- Bloque Confirm Password -->
+
         <div class="column">
           <div class="field input-field">
             <label class="label">Confirm Password</label>
