@@ -39,8 +39,12 @@ export class UsersService {
     return null;
   }
 
-  register(user: UserDto): Observable<RegisterResponseDto> {
+  register(user: Partial<UserDto>): Observable<RegisterResponseDto> {
     return this.http.post<RegisterResponseDto>(`${this.apiUrl}/register`, user, { headers: this.getHeaders() });
+  }
+
+  completeRegister(user: UserDto): Observable<RegisterResponseDto> {
+    return this.http.post<RegisterResponseDto>(`${this.apiUrl}/complete-register`, user, { headers: this.getHeaders() });
   }
 
   login(credentials: LoginDto): Observable<LoginResponseDto> {

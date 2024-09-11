@@ -25,13 +25,14 @@ export class RegisterComponent implements OnInit {
   showSuccessModal = false;
   showRegistrationErrorModal = false;
   registerForm: FormGroup;
+  error: Error | undefined;
 
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
 
 
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
-              private router: Router 
+              private router: Router
   ) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -43,7 +44,7 @@ export class RegisterComponent implements OnInit {
 
 
   ngOnInit(): void {
-      
+
   }
 
   passwordMatchValidator(group: FormGroup) {
@@ -63,49 +64,46 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     if (this.registerForm.invalid) {
-      this.markFormGroupTouched(this.registerForm);  
-      this.showModal = true; 
-  
+      this.markFormGroupTouched(this.registerForm);
+      this.showModal = true;
+
       setTimeout(() => {
         this.showModal = false;
       }, 2000);
-  
+
       return;
     }
-  
-    const userData: UserDto = {
+
+    const userData: Partial<UserDto> = {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
       role: this.registerForm.value.role,
-      idNumber: '',  
-      firstName: '',
-      lastName: '',
-      birthday: ''
     };
-  
+
     this.usersService.register(userData).subscribe({
       next: () => {
         this.showSuccessModal = true;
-  
+
         setTimeout(() => {
           this.showSuccessModal = false;
-          this.router.navigate(['/login']);  
+          this.router.navigate(['/login']);
         }, 2500);
       },
       error: (error) => {
+        this.error = error.error;
         console.error('Error en el registro:', error);
-        this.showRegistrationErrorModal = true; 
+        this.showRegistrationErrorModal = true;
         if (error.status === 400) {
           console.error('Error de validación en el servidor');
-          this.showRegistrationErrorModal = true; 
+          this.showRegistrationErrorModal = true;
         } else if (error.status === 0) {
           console.error('Error de conexión al servidor');
-          this.showRegistrationErrorModal = true; 
+          this.showRegistrationErrorModal = true;
         } else {
           console.error('Error desconocido');
-          this.showRegistrationErrorModal = true; 
+          this.showRegistrationErrorModal = true;
         }
-  
+
         setTimeout(() => {
           this.showRegistrationErrorModal = false;
         }, 2000);
@@ -116,8 +114,8 @@ export class RegisterComponent implements OnInit {
 
 
   closeModal() {
-    this.showModal = false; 
-    this.showSuccessModal = false; 
+    this.showModal = false;
+    this.showSuccessModal = false;
   }
   togglePasswordVisibility() {
     this.passwordVisible = !this.passwordVisible;
