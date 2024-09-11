@@ -18,7 +18,9 @@ export class LoginComponent implements OnInit {
   currentPage = 'login';
   showModal = false;
   showSuccessModal = false;
+  showCredentialsErrorModal = false;
   passwordVisible: boolean = false;
+
 
   loginForm: FormGroup;
 
@@ -67,12 +69,20 @@ onSubmit() {
       }, 2000);
     },
     error: (error) => {
-      console.error('Error en el login:', error);
-      this.showModal = true;
 
-      setTimeout(() => {
-        this.showModal = false;
-      }, 2000);
+      if (error.status === 401) {  
+        this.showCredentialsErrorModal = true;  
+
+        setTimeout(() => {
+          this.showCredentialsErrorModal = false;  
+        }, 2000);
+      } else {
+        this.showModal = true;
+
+        setTimeout(() => {
+          this.showModal = false;
+        }, 2000);
+      }
     }
   });
 }
