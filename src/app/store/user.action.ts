@@ -15,3 +15,7 @@ export const setUserData = createAction(
   '[User] Set Data In Status',
   props<{ data: UserDto | null }>()
 );
+
+export const unsetUserData = createAction(
+  '[User] Unset Data In Status',
+);

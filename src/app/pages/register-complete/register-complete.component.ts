@@ -3,10 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { UsersService } from '../../services/users.service';
-import { UserDto } from '../../services/dtos/user.dto';
-import {RegisterStudentDto, Stage, Student} from "../../services/dtos/student.dto";
+import {UserDto} from '../../services/dtos/user.dto';
+import {RegisterStudentDto, Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
 import {StudentsService} from "../../services/students.service";
+import {Store} from "@ngrx/store";
+import {UserState} from "../../store/user.state";
 
 
 @Component({
@@ -30,16 +32,18 @@ export class RegisterCompleteComponent implements OnInit {
   registerForm: FormGroup;
   stages: Stage[] = [];
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
-
-  userId: number | null = null;
-
+  user: UserDto | null | undefined;
 
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
               private studentsService: StudentsService,
               private router: Router,
               private stagesService: StagesService,
+              private store: Store<{ state: UserState }>
   ) {
+    this.store.select('state').subscribe((state) => {
+      this.user = state.data;
+    });
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -57,12 +61,6 @@ export class RegisterCompleteComponent implements OnInit {
       this.stages = stages;
       console.log(this.stages);
     });
-
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      this.userId = +storedUserId; 
-      console.log(this.userId);
-    }
   }
 
   passwordMatchValidator(group: FormGroup) {
@@ -103,7 +101,7 @@ export class RegisterCompleteComponent implements OnInit {
 
     const studentData: RegisterStudentDto = {
       stageId: this.registerForm.controls['stageId'].value,
-      userId: this.userId!, // TODO: aqui colocar el Id del user que esta loggeado
+      userId: this.user?.id,
       mode: this.registerForm.controls['mode'].value,
     }
 
