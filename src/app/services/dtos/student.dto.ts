@@ -1,7 +1,7 @@
 export interface RegisterStudentDto {
   stageId: number;
   mode: Mode;
-  userId: number;
+  userId: number | null | undefined;
 }
 
 export interface Student {
