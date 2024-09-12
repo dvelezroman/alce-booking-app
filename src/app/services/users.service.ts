@@ -43,7 +43,7 @@ export class UsersService {
     return this.http.post<RegisterResponseDto>(`${this.apiUrl}/register`, user, { headers: this.getHeaders() });
   }
 
-  completeRegister(user: UserDto): Observable<RegisterResponseDto> {
+  completeRegister(user: Partial<UserDto>): Observable<RegisterResponseDto> {
     return this.http.post<RegisterResponseDto>(`${this.apiUrl}/complete-register`, user, { headers: this.getHeaders() });
   }
 

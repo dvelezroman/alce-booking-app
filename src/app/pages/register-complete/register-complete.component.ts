@@ -4,8 +4,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { UserDto } from '../../services/dtos/user.dto';
-import {Stage} from "../../services/dtos/student.dto";
+import {RegisterStudentDto, Stage, Student} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
+import {StudentsService} from "../../services/students.service";
 
 
 @Component({
@@ -33,6 +34,7 @@ export class RegisterCompleteComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
+              private studentsService: StudentsService,
               private router: Router,
               private stagesService: StagesService,
   ) {
@@ -81,9 +83,8 @@ export class RegisterCompleteComponent implements OnInit {
       return;
     }
 
-    const userData: UserDto = {
+    const userData: Partial<UserDto> = {
       email: this.registerForm.value.email,
-      password: this.registerForm.value.password,
       role: this.registerForm.value.role,
       idNumber: this.registerForm.value.idNumber,
       firstName: this.registerForm.value.firstName,
@@ -91,7 +92,16 @@ export class RegisterCompleteComponent implements OnInit {
       birthday: new Date(this.registerForm.value.birthday).toISOString().split('T')[0]
     };
 
-    this.usersService.register(userData).subscribe({
+    const studentData: RegisterStudentDto = {
+      stageId: this.registerForm.controls['stageId'].value,
+      userId: 1, // TODO: aqui colocar el Id del user que esta loggeado
+      mode: this.registerForm.controls['mode'].value,
+    }
+
+    this.usersService.completeRegister(userData).subscribe({
+
+    });
+    this.studentsService.registerStudent(studentData).subscribe({
       next: () => {
         this.showSuccessModal = true;
 
@@ -109,7 +119,7 @@ export class RegisterCompleteComponent implements OnInit {
         }, 2000);
 
       }
-    });
+    })
   }
 
 
