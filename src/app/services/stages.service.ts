@@ -26,6 +26,6 @@ export class StagesService {
   }
 
   getAll(): Observable<Stage[]> {
-    return this.http.get<Stage[]>(`${this.apiUrl}`, {headers: this.getHeaders()});
+    return this.http.get<Stage[]>(`${this.apiUrl}`, {headers: this.getHeaders()})
   }
 }

@@ -31,6 +31,8 @@ export class RegisterCompleteComponent implements OnInit {
   stages: Stage[] = [];
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
 
+  userId: number | null = null;
+
 
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
@@ -53,7 +55,14 @@ export class RegisterCompleteComponent implements OnInit {
   ngOnInit(): void {
     this.stagesService.getAll().subscribe(stages => {
       this.stages = stages;
-    })
+      console.log(this.stages);
+    });
+
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      this.userId = +storedUserId; 
+      console.log(this.userId);
+    }
   }
 
   passwordMatchValidator(group: FormGroup) {
@@ -94,7 +103,7 @@ export class RegisterCompleteComponent implements OnInit {
 
     const studentData: RegisterStudentDto = {
       stageId: this.registerForm.controls['stageId'].value,
-      userId: 1, // TODO: aqui colocar el Id del user que esta loggeado
+      userId: this.userId!, // TODO: aqui colocar el Id del user que esta loggeado
       mode: this.registerForm.controls['mode'].value,
     }
 

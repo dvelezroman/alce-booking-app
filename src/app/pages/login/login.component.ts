@@ -71,6 +71,7 @@ export class LoginComponent implements OnInit {
 
   this.usersService.login(credentials).subscribe({
     next: (response: LoginResponseDto) => {
+      localStorage.setItem('userId', response.id.toString());
       this.store.dispatch(setUserData({ user: response }));
       this.showSuccessModal = true;
       setTimeout(() => {
