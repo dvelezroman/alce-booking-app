@@ -6,7 +6,7 @@ import { UsersService } from '../../services/users.service';
 import {Observable} from "rxjs";
 import {UserState} from "../../store/user.state";
 import {Store} from "@ngrx/store";
-import {LoginResponseDto, UserDto} from "../../services/dtos/user.dto";
+import {LoginResponseDto} from "../../services/dtos/user.dto";
 import {setUserData} from "../../store/user.action";
 
 @Component({
@@ -33,17 +33,17 @@ export class LoginComponent implements OnInit {
   constructor(private fb: FormBuilder,
                private usersService: UsersService,
                private router: Router,
-              private store: Store<{ user: UserState }>
+              private store: Store<{ data: UserState }>
               ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
-    this.user$ = this.store.select('user');
+    this.user$ = this.store.select('data');
   }
 
   ngOnInit(): void {
-    this.store.select('user', 'isAdmin').subscribe(((state) => {
+    this.store.subscribe(((state) => {
       console.log(state);
     }))
   }
@@ -71,8 +71,7 @@ export class LoginComponent implements OnInit {
 
   this.usersService.login(credentials).subscribe({
     next: (response: LoginResponseDto) => {
-      localStorage.setItem('userId', response.id.toString());
-      this.store.dispatch(setUserData({ user: response }));
+      this.store.dispatch(setUserData({ data: response }));
       this.showSuccessModal = true;
       setTimeout(() => {
         this.showSuccessModal = false;

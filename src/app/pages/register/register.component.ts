@@ -27,8 +27,6 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   error: Error | undefined;
 
-  roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
-
 
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
