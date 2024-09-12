@@ -5,13 +5,14 @@ export enum UserRole {
 }
 
 export interface UserDto {
-  idNumber: string;
+  id: number;
+  idNumber?: string;
   email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  birthday: string;
-  role: UserRole;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  birthday?: string;
+  role?: UserRole;
   status?: boolean;
   register?: boolean;
 }
