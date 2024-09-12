@@ -28,3 +28,9 @@ export interface RegisterStudentResponseDto {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface Stage {
+  id: number;
+  number: number;
+  description: string;
+}

@@ -61,12 +61,15 @@
       <div class="columns">
         <div class="column">
           <div class="field">
-            <label class="label">Email</label>
+            <label class="label">Stage</label>
             <div class="control">
-              <input class="input" type="email" formControlName="email" placeholder="Enter your email">
+              <select class="input" formControlName="stageId">
+                <option value="" disabled selected>Select your role</option>
+                <option *ngFor="let stage of stages" [value]="stage.number">{{ stage.description }}</option>
+              </select>
             </div>
-            <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
-              Please enter a valid email
+            <div *ngIf="registerForm.get('stageId')?.invalid && registerForm.get('stageId')?.touched" class="error">
+              Stage is required
             </div>
           </div>
         </div>
@@ -88,43 +91,43 @@
       </div>
 
       <!-- Bloque Password y Confirm Password -->
-      <div class="columns">
-        <div class="column">
-          <div class="field input-field">
-            <label class="label">Password</label>
-            <div class="control has-icons-right">
-              <input [type]="passwordVisible ? 'text' : 'password'" 
-                     placeholder="Password" 
-                     class="input"
-                     formControlName="password">
-              <div class="toggle-password" (click)="togglePasswordVisibility()">
-                <i [ngClass]="passwordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
-              </div>
-            </div>
-            <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
-              Password must be at least 6 characters long
-            </div>
-          </div>
-        </div>
+<!--      <div class="columns">-->
+<!--        <div class="column">-->
+<!--          <div class="field input-field">-->
+<!--            <label class="label">Password</label>-->
+<!--            <div class="control has-icons-right">-->
+<!--              <input [type]="passwordVisible ? 'text' : 'password'"-->
+<!--                     placeholder="Password"-->
+<!--                     class="input"-->
+<!--                     formControlName="password">-->
+<!--              <div class="toggle-password" (click)="togglePasswordVisibility()">-->
+<!--                <i [ngClass]="passwordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">-->
+<!--              Password must be at least 6 characters long-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
 
-        <div class="column">
-          <div class="field input-field">
-            <label class="label">Confirm Password</label>
-            <div class="control has-icons-right">
-              <input [type]="confirmPasswordVisible ? 'text' : 'password'" 
-                     placeholder="Confirm Password" 
-                     class="input"
-                     formControlName="confirmPassword">
-              <div class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
-                <i [ngClass]="confirmPasswordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
-              </div>
-            </div>
-            <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched" class="error">
-              Passwords do not match
-            </div>
-          </div>
-        </div>
-      </div>
+<!--        <div class="column">-->
+<!--          <div class="field input-field">-->
+<!--            <label class="label">Confirm Password</label>-->
+<!--            <div class="control has-icons-right">-->
+<!--              <input [type]="confirmPasswordVisible ? 'text' : 'password'"-->
+<!--                     placeholder="Confirm Password"-->
+<!--                     class="input"-->
+<!--                     formControlName="confirmPassword">-->
+<!--              <div class="toggle-password" (click)="toggleConfirmPasswordVisibility()">-->
+<!--                <i [ngClass]="confirmPasswordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched" class="error">-->
+<!--              Passwords do not match-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
 
       <!-- Botón Register -->
       <div class="field-button">
@@ -137,7 +140,7 @@
     <!-- Texto Already have an account -->
     <div class="toggle-container">
       <p>
-        Already have an account? 
+        Already have an account?
         <a [routerLink]="['/login']">Sign in</a>
       </p>
     </div>

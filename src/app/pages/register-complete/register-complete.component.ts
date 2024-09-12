@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { UserDto } from '../../services/dtos/user.dto';
+import {Stage} from "../../services/dtos/student.dto";
+import {StagesService} from "../../services/stages.service";
 
 
 @Component({
@@ -25,29 +27,31 @@ export class RegisterCompleteComponent implements OnInit {
   showSuccessModal = false;
   showRegistrationErrorModal = false;
   registerForm: FormGroup;
-
+  stages: Stage[] = [];
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
 
 
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
-              private router: Router
+              private router: Router,
+              private stagesService: StagesService,
   ) {
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      idNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      idNumber: ['', Validators.pattern(/^[0-9]{10}$/)],
       birthday: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       role: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
+      stageId: ['', Validators.required],
     }, { validator: this.passwordMatchValidator });
   }
 
 
   ngOnInit(): void {
-
+    this.stagesService.getAll().subscribe(stages => {
+      this.stages = stages;
+    })
   }
 
   passwordMatchValidator(group: FormGroup) {
