@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-login',
@@ -17,11 +18,15 @@ export class LoginComponent implements OnInit {
   currentPage = 'login';
   showModal = false;
   showSuccessModal = false;
+  showCredentialsErrorModal = false;
   passwordVisible: boolean = false;
+
 
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+               private usersService: UsersService,
+               private router: Router ) {
 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -52,11 +57,34 @@ onSubmit() {
     return;
   }
 
-  this.showSuccessModal = true;
+  const credentials = this.loginForm.value;
 
-  setTimeout(() => {
-    this.showSuccessModal = false;
-  }, 2000);
+  this.usersService.login(credentials).subscribe({
+    next: (response) => {
+      this.showSuccessModal = true;
+
+      setTimeout(() => {
+        this.showSuccessModal = false;
+        this.router.navigate(['/home']);  
+      }, 2000);
+    },
+    error: (error) => {
+
+      if (error.status === 401) {  
+        this.showCredentialsErrorModal = true;  
+
+        setTimeout(() => {
+          this.showCredentialsErrorModal = false;  
+        }, 2000);
+      } else {
+        this.showModal = true;
+
+        setTimeout(() => {
+          this.showModal = false;
+        }, 2000);
+      }
+    }
+  });
 }
 
 

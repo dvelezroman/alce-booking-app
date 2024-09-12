@@ -1,0 +1,393 @@
+
+$color-primary: rgb(7, 45, 182);
+$color-secondary: rgb(115, 15, 177);
+$color-accent: rgb(255, 255, 9);
+$color-background: rgb(250, 250, 253);
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: $color-background;
+}
+
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  background: url('/assets/fondo login y register 2.png') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.box {
+  background: rgba(221, 224, 227, 0.378);
+  border-radius: 25px;
+  padding: 3rem 2rem;
+  width: 100%;
+  max-width: 820px;
+  box-shadow: 0 0 12px 8px rgba(217, 211, 211, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: .5px solid rgba(255, 255, 255, 0.172);
+  transition: box-shadow 0.3s ease-in-out;
+
+  &:focus-within {
+    box-shadow: 0 0 15px rgba(211, 211, 211, 0.3);
+    transition: box-shadow 0.5s ease-in-out;
+  }
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.8rem;
+  background: linear-gradient(135deg, rgb(192, 192, 192), rgb(252, 252, 252),  rgb(192, 192, 192));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+  .label {
+    color: rgb(97, 98, 100);
+    font-size: 1.1rem;
+    margin-bottom: .25rem;
+    margin-left: 14px;
+    font-weight: 500;
+  }
+
+  .field {
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .input {
+    border-radius: 10px;
+    padding: 0.75rem;
+    padding-left: 15px;
+    border: none;
+    font-size: 1.15rem;
+    background-color: rgba(138, 138, 139, 0.182);
+    color: rgb(63, 62, 62);
+    transition: background-color 0.4s ease;
+
+    &:hover {
+      background-color: rgba(138, 138, 139, 0.182);
+    }
+
+    &:focus {
+      background-color: rgba(138, 138, 139, 0.182);
+      outline: none;
+
+    }
+  }
+
+  .field select {
+    border-radius: 10px;
+    padding: 0.35rem 0.45rem;
+    padding-left: 15px;
+    border: none;
+    font-size: 1.155rem;
+    background-color: rgba(157, 156, 156, 0.3);
+    color: rgb(57, 55, 55);
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(169, 167, 167, 0.5);
+    }
+
+    &:focus {
+      background-color: rgba(157, 156, 156, 0.5);
+      outline: none;
+    }
+
+    option {
+      color: rgb(255, 254, 254);
+    }
+
+  }
+
+  .input::placeholder {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.606);
+  }
+
+  input[type="date"] {
+
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 40px;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    cursor: pointer;
+  }
+
+
+  .error {
+    color: rgb(211, 52, 27);
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    position: absolute;
+    bottom: -1.5rem;
+    left: 10px;
+    width: 100%;
+    height: 1.5rem;
+    pointer-events: none;
+  }
+
+  .field-button {
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .button.is-primary {
+    background-color:  rgb(60, 91, 231);
+    color: $color-background;
+    border: none;
+    padding: 0.65rem;
+    border-radius:10px;
+    width: 50%;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.7s;
+    font-size: 1.4rem;
+
+
+    &:hover {
+      background-color: rgb(33, 63, 196);
+    }
+  }
+
+  .toggle-container {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    p {
+      font-size: 1.1rem;
+      color: rgb(13, 61, 159);
+
+      a {
+        color: white;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: white;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+
+
+  .input-field {
+    position: relative;
+    margin-bottom: 1.3rem;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .toggle-password i {
+    font-size: 1.2rem;
+    color: #e8e8e8;
+  }
+
+
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow: hidden;
+  }
+
+  .modal-content {
+    background-color: white;
+    padding: 4rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+    width: 500px;
+    max-width: 90%;
+    position: relative;
+    animation: pop-up 0.2s ease-in-out;
+  }
+
+  @keyframes pop-up {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    80% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .modal-content p {
+    font-size: 1.5rem;
+    color: #dfd9d9;
+  }
+
+  .success-modal {
+    background-color: #eaecec;
+    color: #28a745;
+  }
+
+  .success-modal p{
+    color: #28a745;
+  }
+
+  .error-modal {
+    background-color: #dfe2e3;
+  }
+
+  .error-modal p {
+    color: rgb(208, 58, 58);
+  }
+
+  .success-icon {
+    font-size: 3rem;
+    color: #28a745;
+    margin-bottom: 1rem;
+  }
+
+  .error-icon {
+    font-size: 3rem;
+    color: #dc3545;
+    margin-bottom: 1rem;
+  }
+
+
+@media (max-width: 768px) {
+.register-container{
+  padding-top: 2rem ;
+}
+
+  .box {
+    padding: 3rem 2rem;
+    margin: 0 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .field {
+    margin-bottom: 1rem;
+  }
+
+  .label {
+    font-weight: 400;
+    font-size: 1rem;
+    margin-bottom: .2rem;
+    margin-left: 9px;
+  }
+
+  .input {
+    font-size: 1.15rem;
+    padding: 0.4rem 15px;
+  }
+
+  .button.is-primary {
+    font-size: 1.2rem;
+    width: 100%;
+  }
+
+  .modal-content {
+    padding: 2rem 1rem;
+    max-width: 80%;
+  }
+
+  .modal-content p{
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 527px) {
+  .register-container {
+    padding-top: 2rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .box {
+    padding: 2rem 1.5rem;
+    margin: 0 0.5rem;
+    border-radius: 15px;
+  }
+
+  .title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+
+  .field {
+    margin-bottom: 0.5rem;
+  }
+
+  .label {
+    font-weight: 400;
+    font-size: 0.9rem;
+    margin-bottom: 0.15rem;
+    margin-left: 8px;
+  }
+
+  .input {
+    font-size: 1rem;
+    padding: 0.35rem 12px;
+  }
+
+  .input::placeholder {
+    font-size: 1rem;
+  }
+
+  .error {
+    font-size: .8rem;
+    margin-top: 0.4rem;
+  }
+
+  .button.is-primary {
+    font-size: 1.5rem;
+    padding: 0.6rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem 1rem;
+    max-width: 90%;
+  }
+
+  .modal-content p {
+    font-size: 1rem;
+  }
+}

@@ -4,20 +4,22 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { UserDto } from '../../services/dtos/user.dto';
+import {Stage} from "../../services/dtos/student.dto";
+import {StagesService} from "../../services/stages.service";
 
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-register-complete',
   standalone: true,
   imports: [
     CommonModule,
     RouterModule,
     ReactiveFormsModule
   ],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  templateUrl: './register-complete.component.html',
+  styleUrl: './register-complete.component.scss'
 })
-export class RegisterComponent implements OnInit {
+export class RegisterCompleteComponent implements OnInit {
   currentPage = 'register';
   passwordVisible: boolean = false;
   confirmPasswordVisible: boolean = false;
@@ -25,26 +27,31 @@ export class RegisterComponent implements OnInit {
   showSuccessModal = false;
   showRegistrationErrorModal = false;
   registerForm: FormGroup;
-  error: Error | undefined;
-
+  stages: Stage[] = [];
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
 
 
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
-              private router: Router
+              private router: Router,
+              private stagesService: StagesService,
   ) {
     this.registerForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      idNumber: ['', Validators.pattern(/^[0-9]{10}$/)],
+      birthday: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       role: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
+      stageId: ['', Validators.required],
     }, { validator: this.passwordMatchValidator });
   }
 
 
   ngOnInit(): void {
-
+    this.stagesService.getAll().subscribe(stages => {
+      this.stages = stages;
+    })
   }
 
   passwordMatchValidator(group: FormGroup) {
@@ -74,10 +81,14 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    const userData: Partial<UserDto> = {
+    const userData: UserDto = {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
       role: this.registerForm.value.role,
+      idNumber: this.registerForm.value.idNumber,
+      firstName: this.registerForm.value.firstName,
+      lastName: this.registerForm.value.lastName,
+      birthday: new Date(this.registerForm.value.birthday).toISOString().split('T')[0]
     };
 
     this.usersService.register(userData).subscribe({
@@ -90,19 +101,8 @@ export class RegisterComponent implements OnInit {
         }, 2500);
       },
       error: (error) => {
-        this.error = error.error;
         console.error('Error en el registro:', error);
         this.showRegistrationErrorModal = true;
-        if (error.status === 400) {
-          console.error('Error de validación en el servidor');
-          this.showRegistrationErrorModal = true;
-        } else if (error.status === 0) {
-          console.error('Error de conexión al servidor');
-          this.showRegistrationErrorModal = true;
-        } else {
-          console.error('Error desconocido');
-          this.showRegistrationErrorModal = true;
-        }
 
         setTimeout(() => {
           this.showRegistrationErrorModal = false;
