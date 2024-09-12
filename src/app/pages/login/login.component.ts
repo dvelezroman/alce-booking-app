@@ -33,17 +33,17 @@ export class LoginComponent implements OnInit {
   constructor(private fb: FormBuilder,
                private usersService: UsersService,
                private router: Router,
-              private store: Store<{ user: UserState }>
+              private store: Store<{ data: UserState }>
               ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
-    this.user$ = this.store.select('user');
+    this.user$ = this.store.select('data');
   }
 
   ngOnInit(): void {
-    this.store.select('user', 'isAdmin').subscribe(((state) => {
+    this.store.subscribe(((state) => {
       console.log(state);
     }))
   }
@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit {
 
   this.usersService.login(credentials).subscribe({
     next: (response: LoginResponseDto) => {
-      this.store.dispatch(setUserData({ user: response }));
+      this.store.dispatch(setUserData({ data: response }));
       this.showSuccessModal = true;
       setTimeout(() => {
         this.showSuccessModal = false;

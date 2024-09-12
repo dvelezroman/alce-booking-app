@@ -27,8 +27,6 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   error: Error | undefined;
 
-  roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
-
 
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
@@ -36,7 +34,6 @@ export class RegisterComponent implements OnInit {
   ) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      role: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, { validator: this.passwordMatchValidator });
@@ -77,7 +74,6 @@ export class RegisterComponent implements OnInit {
     const userData: Partial<UserDto> = {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
-      role: this.registerForm.value.role,
     };
 
     this.usersService.register(userData).subscribe({

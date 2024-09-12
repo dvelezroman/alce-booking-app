@@ -1,4 +1,3 @@
-// src/app/store/user.actions.ts
 import { createAction, props } from '@ngrx/store';
 import {UserDto} from "../services/dtos/user.dto";
 
@@ -14,5 +13,5 @@ export const setLoggedInStatus = createAction(
 
 export const setUserData = createAction(
   '[User] Set Data In Status',
-  props<{ user: UserDto }>()
+  props<{ data: UserDto | null }>()
 );
