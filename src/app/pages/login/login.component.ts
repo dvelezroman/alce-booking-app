@@ -6,7 +6,7 @@ import { UsersService } from '../../services/users.service';
 import {Observable} from "rxjs";
 import {UserState} from "../../store/user.state";
 import {Store} from "@ngrx/store";
-import {LoginResponseDto} from "../../services/dtos/user.dto";
+import {LoginResponseDto, UserDto} from "../../services/dtos/user.dto";
 import {setUserData} from "../../store/user.action";
 
 @Component({
@@ -71,11 +71,29 @@ export class LoginComponent implements OnInit {
 
   this.usersService.login(credentials).subscribe({
     next: (response: LoginResponseDto) => {
-      this.store.dispatch(setUserData({ data: response }));
+      const userData: UserDto = {
+        id: response.id,
+        email: response.email,
+        firstName: response.firstName,
+        lastName: response.lastName,
+        birthday: response.birthday,
+        role: response.role,
+        status: response.status,
+        register: response.register
+      };
+      
+      this.store.dispatch(setUserData({ data: userData }));
+      console.log('Datos despachados al store:', response);
+
+      if (response.register === false) {
+        this.router.navigate(['/register-complete']);
+      } else {
+        this.router.navigate(['/home']);
+      }
+
       this.showSuccessModal = true;
       setTimeout(() => {
         this.showSuccessModal = false;
-        this.router.navigate(['/home']);
       }, 2000);
     },
     error: (error) => {

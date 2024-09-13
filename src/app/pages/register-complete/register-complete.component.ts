@@ -41,9 +41,7 @@ export class RegisterCompleteComponent implements OnInit {
               private stagesService: StagesService,
               private store: Store<{ state: UserState }>
   ) {
-    this.store.select('state').subscribe((state) => {
-      this.user = state.data;
-    });
+
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -61,6 +59,17 @@ export class RegisterCompleteComponent implements OnInit {
       this.stages = stages;
       console.log(this.stages);
     });
+
+    this.store.subscribe((state) => {
+      const userState = (state as any).user;
+      if (userState && userState.data) {
+        this.user = userState.data as UserDto;
+        console.log('datos del usuario en register:', this.user.id);
+      } else {
+        console.error('no hay nada en el store');
+      }
+    });
+
   }
 
   passwordMatchValidator(group: FormGroup) {
