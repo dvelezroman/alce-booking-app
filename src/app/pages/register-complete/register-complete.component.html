@@ -88,6 +88,21 @@
             </div>
           </div>
         </div>
+
+        <div class="column">
+          <div class="field">
+            <label class="label">Mode</label>
+            <div class="control">
+              <select class="input" formControlName="mode">
+                <option value="" disabled selected>Select your role</option>
+                <option *ngFor="let mode of modes" [value]="mode">{{ mode }}</option>
+              </select>
+            </div>
+            <div *ngIf="registerForm.get('mode')?.invalid && registerForm.get('mode')?.touched" class="error">
+              Mode is required
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Bloque Password y Confirm Password -->

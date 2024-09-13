@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {BehaviorSubject, Observable, tap} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Store} from "@ngrx/store";
-import {setAdminStatus, setLoggedInStatus, unsetUserData} from "../store/user.action";
+import {setAdminStatus, setLoggedInStatus, setUserData, unsetUserData} from "../store/user.action";
 import {LoginDto, LoginResponseDto, RegisterResponseDto, UserDto, UserRole} from "./dtos/user.dto";
 
 @Injectable({
@@ -57,6 +57,7 @@ export class UsersService {
             this.isAdmin$.next(response.role === UserRole.ADMIN);
             this.store.dispatch(setAdminStatus({ isAdmin: response.role === UserRole.ADMIN }));
             this.store.dispatch(setLoggedInStatus({ isLoggedIn: !!response.accessToken }));
+            this.store.dispatch(setUserData({ data: response }));
           }
         })
       );

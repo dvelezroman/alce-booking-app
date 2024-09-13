@@ -9,6 +9,8 @@ import {StagesService} from "../../services/stages.service";
 import {StudentsService} from "../../services/students.service";
 import {Store} from "@ngrx/store";
 import {UserState} from "../../store/user.state";
+import {Observable} from "rxjs";
+import {selectUserData} from "../../store/user.selector";
 
 
 @Component({
@@ -32,14 +34,16 @@ export class RegisterCompleteComponent implements OnInit {
   registerForm: FormGroup;
   stages: Stage[] = [];
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
+  modes: string[] = ['PRESENCIAL', 'ONLINE'];
   user: UserDto | null | undefined;
+  user$: Observable<UserDto | null>;
 
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
               private studentsService: StudentsService,
               private router: Router,
               private stagesService: StagesService,
-              private store: Store<{ state: UserState }>
+              private store: Store,
   ) {
 
     this.registerForm = this.fb.group({
@@ -47,35 +51,21 @@ export class RegisterCompleteComponent implements OnInit {
       lastName: ['', Validators.required],
       idNumber: ['', Validators.pattern(/^[0-9]{10}$/)],
       birthday: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      role: ['', Validators.required],
+      role: ['STUDENT', Validators.required],
       stageId: ['', Validators.required],
-    }, { validator: this.passwordMatchValidator });
+      mode: ['ONLINE', Validators.required],
+    });
+    this.user$ = this.store.select(selectUserData);
   }
 
 
   ngOnInit(): void {
     this.stagesService.getAll().subscribe(stages => {
       this.stages = stages;
-      console.log(this.stages);
     });
-
-    this.store.subscribe((state) => {
-      const userState = (state as any).user;
-      if (userState && userState.data) {
-        this.user = userState.data as UserDto;
-        console.log('datos del usuario en register:', this.user.id);
-      } else {
-        console.error('no hay nada en el store');
-      }
-    });
-
-  }
-
-  passwordMatchValidator(group: FormGroup) {
-    const password = group.get('password')?.value;
-    const confirmPassword = group.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { mismatch: true };
+    this.user$.subscribe(state => {
+      this.user = state;
+    })
   }
 
   private markFormGroupTouched(formGroup: FormGroup) {
@@ -100,16 +90,16 @@ export class RegisterCompleteComponent implements OnInit {
     }
 
     const userData: Partial<UserDto> = {
-      email: this.registerForm.value.email,
+      email: this.user?.email,
       role: this.registerForm.value.role,
       idNumber: this.registerForm.value.idNumber,
       firstName: this.registerForm.value.firstName,
       lastName: this.registerForm.value.lastName,
-      birthday: new Date(this.registerForm.value.birthday).toISOString().split('T')[0]
+      birthday: new Date(this.registerForm.value.birthday).toISOString().split('T')[0],
     };
 
     const studentData: RegisterStudentDto = {
-      stageId: this.registerForm.controls['stageId'].value,
+      stageId: parseInt(this.registerForm.controls['stageId'].value, 10),
       userId: this.user?.id,
       mode: this.registerForm.controls['mode'].value,
     }
