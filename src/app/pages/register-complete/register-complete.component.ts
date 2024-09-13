@@ -109,7 +109,7 @@ export class RegisterCompleteComponent implements OnInit {
         this.showSuccessModal = true;
 
         setTimeout(() => {
-          this.showSuccessModal = false;
+          this.closeModal();
           this.router.navigate(['/login']);
         }, 2500);
       },
@@ -118,23 +118,15 @@ export class RegisterCompleteComponent implements OnInit {
         this.showRegistrationErrorModal = true;
 
         setTimeout(() => {
-          this.showRegistrationErrorModal = false;
+          this.closeModal();
         }, 2000);
       }
     });
 
   }
 
-
   closeModal() {
     this.showModal = false;
     this.showSuccessModal = false;
-  }
-  togglePasswordVisibility() {
-    this.passwordVisible = !this.passwordVisible;
-  }
-
-  toggleConfirmPasswordVisibility() {
-    this.confirmPasswordVisible = !this.confirmPasswordVisible;
   }
 }
