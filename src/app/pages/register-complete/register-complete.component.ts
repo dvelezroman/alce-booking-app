@@ -128,5 +128,6 @@ export class RegisterCompleteComponent implements OnInit {
   closeModal() {
     this.showModal = false;
     this.showSuccessModal = false;
+    this.showRegistrationErrorModal = false;
   }
 }
