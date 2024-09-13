@@ -65,7 +65,6 @@ export class UsersService {
   logout(): void {
     if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
       localStorage.removeItem('accessToken');
-      localStorage.removeItem('userId');
       this.isLoggedInSubject.next(false);
       this.isAdmin$.next(false);
       this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
