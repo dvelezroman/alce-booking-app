@@ -41,11 +41,7 @@ export class LoginComponent implements OnInit {
     this.user$ = this.store.select('data');
   }
 
-  ngOnInit(): void {
-    this.store.subscribe(((state) => {
-      console.log(state);
-    }))
-  }
+  ngOnInit(): void {}
 
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(key => {

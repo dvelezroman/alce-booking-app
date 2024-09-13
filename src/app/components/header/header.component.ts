@@ -2,6 +2,10 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { CommonModule } from '@angular/common';
+import {Store} from "@ngrx/store";
+import {selectIsLoggedIn, selectUserData} from "../../store/user.selector";
+import {Observable} from "rxjs";
+import {UserDto} from "../../services/dtos/user.dto";
 
 
 @Component({
@@ -14,16 +18,23 @@ import { CommonModule } from '@angular/common';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit {
-
+  isLoggedIn$: Observable<boolean>;
+  user: UserDto | null | undefined;
   isLoggedIn: boolean = false;
   showLogoutModal: boolean = false;
 
-  constructor (private usersService: UsersService, private router: Router){ }
+  constructor (
+    private usersService: UsersService,
+    private router: Router,
+    private store: Store,
+    ){
+    this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
+  }
 
   ngOnInit(): void {
-    this.usersService.isLoggedIn$.subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-    });
+    this.isLoggedIn$.subscribe(state => {
+      this.isLoggedIn = state;
+    })
   }
 
   toggleNavbar() {
@@ -64,6 +75,6 @@ export class HeaderComponent implements OnInit {
   onConfirmLogout() {
     this.usersService.logout();
     this.router.navigate(['/login']);
-    this.closeLogoutModal(); 
+    this.closeLogoutModal();
   }
 }

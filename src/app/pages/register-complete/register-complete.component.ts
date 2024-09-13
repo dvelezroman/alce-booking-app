@@ -8,8 +8,7 @@ import {RegisterStudentDto, Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
 import {StudentsService} from "../../services/students.service";
 import {Store} from "@ngrx/store";
-import {UserState} from "../../store/user.state";
-import {Observable} from "rxjs";
+import {Observable, switchMap} from "rxjs";
 import {selectUserData} from "../../store/user.selector";
 
 
@@ -103,11 +102,9 @@ export class RegisterCompleteComponent implements OnInit {
       userId: this.user?.id,
       mode: this.registerForm.controls['mode'].value,
     }
-
-    this.usersService.completeRegister(userData).subscribe({
-
-    });
-    this.studentsService.registerStudent(studentData).subscribe({
+    this.usersService.completeRegister(userData).pipe(
+      switchMap(() => this.studentsService.registerStudent(studentData))
+    ).subscribe({
       next: () => {
         this.showSuccessModal = true;
 
@@ -117,15 +114,15 @@ export class RegisterCompleteComponent implements OnInit {
         }, 2500);
       },
       error: (error) => {
-        console.error('Error en el registro:', error);
+        console.error('Error in registration:', error);
         this.showRegistrationErrorModal = true;
 
         setTimeout(() => {
           this.showRegistrationErrorModal = false;
         }, 2000);
-
       }
-    })
+    });
+
   }
 
 
