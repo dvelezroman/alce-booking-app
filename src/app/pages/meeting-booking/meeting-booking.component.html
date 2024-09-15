@@ -1,11 +1,12 @@
 <div class="class-booking-header">
-  <h1 class="title is-3">Class Booking</h1>
+  <h1 class="title is-3">Booking</h1>
 </div>
+
 <div class="booking-container container">
   <div class="columns is-mobile">
-    
-    <!-- Primer bloque: Información del estudiante -->
-    <div class="column student-info" style="flex: 0 0 30%;">
+
+    <!-- primer bloque: información del estudiante -->
+    <div class="column student-info">
       <div class="student-photo">
         <img src="/assets/foto usuario default.png" alt="Foto del estudiante">
       </div>
@@ -17,79 +18,67 @@
       </div>
     </div>
 
-
- <!-- Segundo bloque Selector de mes -->
- <div class="column date-time-selection" style="flex: 0 0 30%;">
-  <h3 class="title is-4">Select a date & time</h3>
+    <!-- Segundo bloque: calendario y time slots-->
+    <div class="date-time-wrapper">
   
-
-  <div class="month-selector">
-    <button class="button is-small" (click)="prevMonth()">&#60;</button>
-    <span>{{ selectedMonth }} {{ selectedYear }}</span>
-    <button class="button is-small" (click)="nextMonth()">&#62;</button>
-  </div>
-
-
-  <div class="calendar">
-    <div class="calendar-header">
-      <div class="calendar-day-header">Sun</div>
-      <div class="calendar-day-header">Mon</div>
-      <div class="calendar-day-header">Tue</div>
-      <div class="calendar-day-header">Wed</div>
-      <div class="calendar-day-header">Thu</div>
-      <div class="calendar-day-header">Fri</div>
-      <div class="calendar-day-header">Sat</div>
-    </div>
-
-    <!-- Días del mes seleccionado -->
-    <div class="calendar-grid">
-      <div 
-      *ngFor="let day of currentMonthDays" 
-      class="calendar-day"
-      (click)="isDaySelectable(day) ? selectDay(day) : null"
-      [class.selected]="selectedDay === day.day"
-      [class.selectable]="isDaySelectable(day)"
-      [class.unselectable]="!isDaySelectable(day)"> 
-      {{ day.day }}
-    </div>
-    </div>
-  </div>
-<!--<div class="selected-date">
-    <h4 class="title is-5">{{ selectedDayFormatted || "Selecciona una fecha" }}</h4>
-  </div>-->
-</div>
-
-
-
-    <!-- Tercer bloque: Detalles de la fecha y horarios -->
-    <div class="column selected-date-time" style="flex: 0 0 30%;">
-
-    
-      <!-- Horarios disponibles -->
-      <div class="time-slots">
-        <div 
-          class="time-slot" 
-          *ngFor="let time of timeSlots" 
-          (mouseenter)="showConfirm = time" 
-          (mouseleave)="showConfirm = null">
-          
-          <!-- Contenedor de la hora -->
-          <div class="time-text-container">
-            <span class="time-text">{{ time }}</span>
+      <!-- sub-bloque 1: Calendario -->
+      <div class="date-time-selection">
+        <div class="calendar-title">
+          <h3 class="title is-4">Select a date</h3>
+        </div>
+        <div class="month-selector">
+          <button class="button is-small" (click)="prevMonth()">
+            <i class="fas fa-chevron-left"></i> 
+          </button>
+          <span>{{ selectedMonth }} {{ selectedYear }}</span>
+          <button class="button is-small" (click)="nextMonth()">
+            <i class="fas fa-chevron-right"></i> 
+          </button>
+        </div>
+        <div class="calendar">
+          <div class="calendar-header">
+            <div class="calendar-day-header">Sun</div>
+            <div class="calendar-day-header">Mon</div>
+            <div class="calendar-day-header">Tue</div>
+            <div class="calendar-day-header">Wed</div>
+            <div class="calendar-day-header">Thu</div>
+            <div class="calendar-day-header">Fri</div>
+            <div class="calendar-day-header">Sat</div>
           </div>
-      
-          <!-- Botón Confirmar -->
-          <div class="confirm-box" *ngIf="showConfirm === time" (click)="selectTimeSlot(time)">
-            Confirm
+          <div class="calendar-grid">
+            <div 
+              *ngFor="let day of currentMonthDays" 
+              class="calendar-day"
+              (click)="isDaySelectable(day) ? selectDay(day) : null"
+              [class.selected]="selectedDay === day.day"
+              [class.selectable]="isDaySelectable(day)"
+              [class.unselectable]="!isDaySelectable(day)">
+              {{ day.day }}
+            </div>
+          </div>
           </div>
         </div>
       </div>
+    
+      <!-- Sub-bloque 2: Time Slots -->
+      <div class="selected-date-time">
+        <h3 class="title is-5">Select a time</h3>
+        <div class="time-slots">
+          <div *ngFor="let time of timeSlots" 
+               class="time-slot"
+               (mouseenter)="showConfirm = time"
+               (mouseleave)="showConfirm = null">
+            <div class="time-text-container">
+              <span class="time-text">{{ time }}</span>
+            </div>
+            <div class="confirm-box" *ngIf="showConfirm === time" (click)="selectTimeSlot(time)">
+              Confirm
+            </div>
+          </div>
+        </div>
+      </div>
+      
     </div>
-  </div>
-</div>
-
-
-
 
 
 

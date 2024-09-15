@@ -1,292 +1,303 @@
-
+/* Estilos generales */
 body, html {
-  height: 100%; 
+  height: 100%;
   margin: 0;
   padding: 0;
 }
 
 :host {
   display: block;
-  background-color: #ffffff; 
+  background-color: #ffffff;
   width: 100%;
   min-height: 100vh;
-  padding: 2rem;
+  padding: 1rem;
   box-sizing: border-box;
 }
 
 .class-booking-header {
   text-align: center;
+  margin-top: 1.5rem;
   margin-bottom: 2rem;
 }
 
 .title.is-3 {
   font-size: 2rem;
   color: #333;
+  font-family: 'Poppins', sans-serif;
 }
 
-  .main-container {
+.main-container {
+  min-height: 100vh;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
 
-    min-height: 100vh;
-    background-color: white; 
-    display: flex;
-    flex-direction: column; 
-  }
-  
-  .container {
-    margin-top: 13rem;
-  }
+.container {
+  margin-top: 13rem;
+}
 
-
-  .column {
-    flex: 0 0 30%;
-    max-width: 30%;
-  }
-  
-  .student-photo img {
-    width: 120px; 
-    height: 120px; 
-    object-fit: cover; 
-    border-radius: 50%; 
-  }
-  
-  .student-info {
-    text-align: center;
-
-  }
-  
-  .student-name {
-    margin-left: 0px;
-    margin-top: 2rem;
-    font-size: 1.5rem;
-  }
-  
-  .student-details {
-    font-size: 1rem;
-    color: #666;
-  }
+.student-info {
+  flex: 0 0 30%; 
+  max-width: 30%;
+  text-align: center;
+  margin-bottom: 2rem; 
+}
 
 
-  /* SEGUNDO BLOQUE  */
-  
-  .date-time-selection {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    justify-content: center; 
-    margin: 0 auto; 
-    width: 100%; 
-  }
+/* información del estudiante */
+.student-photo img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+}
 
-  .calendar {
+.student-info {
+  text-align: center;
+}
 
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    justify-content: center; 
-    margin: 0 auto; 
-  }
+.student-name {
+  margin-left: 0px;
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  font-family: 'Open Sans', sans-serif;
+}
 
-  .title.is-4 {
-    margin-top: -8rem;
-    font-size: 1.4rem;
-    text-align: center;
-    color: #333; 
-    margin-bottom: 3rem; 
-  }
-  
-  .month-selector {
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    margin-bottom: 2rem; 
-  }
-  
-  .month-selector button {
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    background-color: transparent; 
-    color: rgb(142, 139, 139);
-    border: 1px solid #89bdf5 ;
-    padding: 0rem 1.2rem;
-    font-size: 1.2rem; 
-    cursor: pointer;
-    border-radius: 50px;
-    margin: 0 10px;
-    transition: background-color 0.3s ease;
-    height: 2.5rem; 
-    line-height: 2.5rem; 
-  }
-  
-  .month-selector button:hover {
-    background-color: #aad0f9; 
-  }
-  
-  .month-selector span {
-    font-size: 1.2rem;
-    color: #333; 
-  }
+.student-details {
+  font-size: 1rem;
+  color: #666;
+}
 
-  .calendar-header {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); 
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  
-  .calendar-day-header {
-    padding: 10px;
-    text-align: center;
-    font-weight: bold;
-    background-color: #f5f5f5;
-    color: #094e98;
-  }
-  
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); 
-    grid-auto-rows: 50px; 
-    gap: 5px; 
-    width: 100%;
-  }
-  
-  .calendar-day {
-    text-align: center;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    color: grey;
-    border-radius: 50%; 
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    cursor: pointer; 
-    transition: background-color 0.3s ease; 
-  }
+/* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
+.date-time-wrapper {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  width: 100%; 
+  gap: 2rem; 
+}
 
-  .calendar-day.selectable:hover{
-    background-color: #6eb3fc;
-    color: white;
-  }
-  
-  .calendar-day.selectable {
-    background-color: #e0e0e0; 
-    color: #333; 
-    cursor: pointer;
-  }
-  
-  .calendar-day.unselectable {
-    background-color: #f0f0f0; 
-    color: #bbb; 
-    cursor: not-allowed; 
-  }
-  
-  .calendar-day.selected {
-    background-color: #007bff; 
-    color: white;
-    font-weight: bold;
-    cursor: default;
-  }
+/* SUB-BLOQUE: Calendario */
+.date-time-selection {
+  flex: 0 0 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0rem;
+  margin-top: -7.5rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  width: 100%;
+}
 
+.calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
 
+.calendar-title {
+  text-align: center; 
+  margin-bottom: 3rem; 
+}
 
+.title.is-4 {
+  font-size: 1.4rem;
+  color: #333;
+}
 
-  /* TERCER BLOQUE  */
+.month-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
 
-  .selected-date {
-    text-align: center;
-    margin-left: -8%;
-    color: #333 !important; 
-    margin-top: 1rem; 
-    min-height: 40px; 
-  }
+.month-selector button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  color: rgb(142, 139, 139);
+  border: 1px solid #89bdf5;
+  padding: 0rem 1.2rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 50px;
+  margin: 0 10px;
+  transition: background-color 0.3s ease;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}
 
-  .selected-date-time {
-    margin-left: auto; 
-    flex: 0 0 30%; 
-  }
-  
-  
-  .title.is-5 {
-    font-size: 1.2rem; 
-    color: inherit; 
-  }
-  
-  .time-slots {
-    display: flex;
-    margin-top: 1.5rem;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    max-height: 480px; 
-    overflow-y: auto;  
-   
-  }
-  
-  .time-slot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-width: 60%;
-    min-height: 50px;
-    background-color: #edeaea;
-    gap: 5px;
+.month-selector button:hover {
+  background-color: #aad0f9;
+}
 
-    cursor: pointer;
-    transition: all 0.5s ease;
-  }
-  
-  .time-text-container {
-    flex: 1;
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    border: 1px solid #3461d4;
-    border-radius: 5px;
-    min-height: 50px;
-    width: 100%; 
-    padding: 0 12px;
-  }
-  
-  .time-text {
-    font-size: 1.3rem;
-    color: grey;
-  }
+.month-selector span {
+  font-size: 1.2rem;
+  color: #333;
+}
 
-  .time-text:hover{
-    color: white;
-  }
-  
-  .confirm-box {
-    flex: 1; 
-    background-color: #9775f3;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 1.25rem;
-    text-align: center;
-    opacity: 0; 
-    visibility: hidden; 
-    width: 100%; 
-    transition: all 0.5s ease;
-  }
-  
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: 100%;
+  margin-bottom: 10px;
+}
 
-  
-  .time-slot:hover .confirm-box {
-    opacity: 1;
-    visibility: visible;
-    width: 100%; 
-  }
-  .time-slot:hover .time-text-container {
-    background-color: rgb(83, 128, 202);
-    color: white;
-  }
-  .time-slot:hover .time-text{
-    color: white;
-  }
+.calendar-day-header {
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  background-color: #f5f5f5;
+  color: #094e98;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 50px;
+  gap: 5px;
+  width: 100%;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  color: grey;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calendar-day.selectable {
+  background-color: #e2e0e0; 
+  color: #333;
+  cursor: pointer;
+}
+
+.calendar-day.selectable:hover {
+  background-color: #6eb3fc;
+  color: white;
+}
+
+.calendar-day.unselectable {
+  background-color: #f0f0f0;
+  color: #929191;
+  cursor: not-allowed;
+}
+
+.calendar-day.selected {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: default;
+}
+
+/* SUB-BLOQUE: time slots */
+.selected-date-time {
+  flex: 0 0 35%; 
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center; 
+  padding: 1rem; 
+  width: 100%;
+  margin-top: -4rem;
+}
+
+.selected-date-time h3{
+  color: black;
+  text-align: center;
+  margin-top: 2.5rem;
+  font-size: 1.4rem;
+  margin-bottom: 3rem;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.time-slots {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-height: 480px;
+  overflow-y: auto;
+  width: 100%; 
+}
+
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 60%;
+  min-height: 50px;
+  background-color: #edeaea;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.time-text-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #3461d4;
+  border-radius: 5px;
+  min-height: 50px;
+  width: 100%;
+  padding: 0 12px;
+}
+
+.time-text {
+  font-size: 1.3rem;
+  color: grey;
+}
+
+.time-text:hover {
+  color: white;
+}
+
+.confirm-box {
+  flex: 1;
+  background-color: #9775f3;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1.25rem;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  width: 100%;
+  transition: all 0.5s ease;
+}
+
+.time-slot:hover .confirm-box {
+  opacity: 1;
+  visibility: visible;
+  width: 100%;
+}
+
+.time-slot:hover .time-text-container {
+  background-color: rgb(83, 128, 202);
+  color: white;
+}
+
+.time-slot:hover .time-text {
+  color: white;
+}
 
 
 
@@ -429,3 +440,650 @@ body, html {
     color: #28a745; 
     margin-bottom: 1rem;
   }
+
+
+
+@media (max-width: 992px) {
+  .columns.is-mobile {
+    flex-direction: column; 
+  }
+
+  .student-info {
+    flex: 0 0 100%; 
+    max-width: 100%;
+    margin-top: -7rem;
+    margin-bottom: 5rem; 
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+  }
+
+  .student-name,
+  .student-details-title {
+    display: inline-block;
+    margin: 0; 
+    vertical-align: middle;
+  }
+
+  .student-name {
+    font-size: 1.5rem;
+    margin: auto; 
+  }
+
+  .student-details-title {
+    font-size: 1.5rem;
+    color: #666; 
+  }
+
+  .student-details {
+    margin-top: 1rem; 
+    font-size: 1rem;
+    color: #666;
+    text-align: center; 
+  }
+
+  .date-time-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%; 
+    margin-bottom: 2rem; 
+  }
+
+  .date-time-selection{
+    flex: 0 0 100%;
+    max-width: 100%;
+    display: inline-block;
+    margin-bottom: 2rem;
+    margin: auto;
+    justify-content: center;
+  }
+
+  .selected-date-time{
+    flex: 0 0 100%;
+    max-width: 50%;
+    display: inline-block;
+    margin-bottom: 2rem;
+    margin: auto;
+  }
+
+  .date-time-selection h3 {
+    font-size: 1.2rem; 
+    margin-top: 0rem;
+    margin-bottom: 1rem; 
+    text-align: center;
+  }
+
+  .month-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .month-selector button {
+    padding: 0.2rem 0.6rem; 
+    font-size: 0.9rem; 
+    border-radius: 20px; 
+  }
+
+  .month-selector span {
+    font-size: 1rem; 
+  }
+
+  .calendar {
+    width: 90%;
+    max-width: 360px;
+    padding: 0rem;
+    margin: 0 auto;
+  }
+
+  .calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+    text-align: center;
+  }
+
+  .calendar-day-header {
+    padding: 4px;
+    font-size: 0.9rem;
+    background-color: #f5f5f5;
+    color: #094e98;
+    border-radius: 5px;
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 35px;
+    gap: 7px;
+  }
+
+  .calendar-day {
+    text-align: center;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    color: grey;
+    border-radius: 50px;
+    font-size: .9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .calendar-day.selectable:hover {
+    background-color: #6eb3fc;
+    color: white;
+  }
+
+  .calendar-day.selected {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+
+  .calendar-day.unselectable {
+    background-color: #f0f0f0;
+    color: #bbb;
+    cursor: not-allowed;
+  }
+
+  .selected-date-time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .time-slots {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(100px, 1fr)); 
+    gap: 1rem;
+    justify-content: center; 
+    margin-top: 2rem;
+  }
+
+  .time-slot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 30%;
+    margin: auto;
+    min-height: 50px;
+    background-color: #edeaea;
+    gap: 3px;
+
+    cursor: pointer;
+    transition: all 0.5s ease;
+  }
+  
+  .time-text-container {
+    flex: 1;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    border: 1px solid #3461d4;
+    border-radius: 5px;
+    min-height: 50px;
+    width: 50%; 
+    padding: 0 12px;
+  }
+  
+  .time-text {
+    font-size: 1rem;
+    color: grey;
+  }
+
+  .confirm-box {
+    font-size: 0.9rem;
+    padding: 1rem 0.5rem; 
+    border-radius: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .student-info {
+    flex: 0 0 100%; 
+    max-width: 100%;
+    margin-top: -7rem;
+    margin-bottom: 5rem; 
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+  }
+
+  .student-name,
+  .student-details-title {
+    display: inline-block;
+    margin: 0; 
+    vertical-align: middle;
+  }
+
+  .student-name {
+    font-size: 1.5rem;
+    margin: auto;
+    margin-top: 1rem; 
+  }
+
+  .student-details-title {
+    font-size: 1.5rem;
+    color: #666; 
+  }
+
+  .student-details {
+    margin-top: 1rem; 
+    font-size: 1rem;
+    color: #666;
+    text-align: center; 
+  }
+
+  .columns {
+    flex-direction: column;
+  }
+
+  .date-time-selection,
+  .selected-date-time {
+    flex: 0 0 100%;
+    max-width: 100%;
+    display: inline-block;
+    margin-bottom: 2rem;
+  }
+
+  .selected-date-time {
+    flex: 0 0 100%;
+    max-width: 100%;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .date-time-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    width: 90%; 
+    margin: 0 auto; 
+    padding: 1rem;
+  }
+
+  .date-time-selection h3 {
+    font-size: 1.4rem; 
+    margin-top: 0rem;
+    margin-bottom: 3rem; 
+    text-align: center;
+  }
+
+  .month-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .month-selector button {
+    padding: 0.2rem 0.6rem; 
+    font-size: 0.9rem; 
+    border-radius: 20px; 
+  }
+
+  .month-selector span {
+    font-size: 1rem; 
+  }
+
+  .calendar {
+    width: 100%; 
+    max-width: 100px; 
+    display: flex;
+    margin:0px auto;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .calendar {
+    width: 90%;
+    max-width: 360px;
+    padding: 0rem;
+    margin: 0 auto;
+  }
+
+  .calendar-day-header {
+    padding: 3px 5px;
+    font-size: 1.1rem;
+    background-color: #f5f5f5;
+    color: #094e98;
+    border-radius: 5px;
+    margin: auto;
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 35px;
+    gap: 10px;
+  }
+
+  .calendar-day {
+    text-align: center;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    color: grey;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .calendar-day.selectable:hover {
+    background-color: #6eb3fc;
+    color: white;
+  }
+
+  .calendar-day.selected {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+
+  .calendar-day.unselectable {
+    background-color: #f0f0f0;
+    color: #bbb;
+    cursor: not-allowed;
+  }
+
+  .selected-date-time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex: 0 0 100%;
+    max-width: 100%;
+    display: inline-block;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    background-color: rgb(255, 255, 255);
+    margin: auto;
+  }
+
+  .selected-date-time h3{
+    color: black;
+    text-align: center;
+    margin-top: 2.5rem;
+    font-size: 1.4rem;
+    margin-bottom:1.5rem;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  .time-slots {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(200px, 1fr)); 
+    gap: .8rem;
+    justify-content: center; 
+    margin: auto;
+    margin-top: 0rem;
+    max-width: 75%;
+    max-height: 1080px;
+    padding: 1rem 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .time-slot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+    min-height: 30px;
+    background-color: #edeaea;
+    gap: 5px;
+  }
+  
+  .time-text-container {
+    flex: 1;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    border: 1px solid #3461d4;
+    border-radius: 5px;
+    min-height: 50px;
+    width: 50%; 
+    padding: 0 12px;
+  }
+  
+  .time-text {
+    font-size: 1.2rem;
+    color: grey;
+  }
+
+  .confirm-box {
+    font-size: 1.1rem;
+    padding: .85rem 0.5rem; 
+    border-radius: 5px;
+  }
+}
+
+@media (max-width: 492px) {
+
+  .student-info {
+    flex: 0 0 100%; 
+    max-width: 100%;
+    margin-top: -9rem;
+    margin-bottom: 0rem; 
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+    background: linear-gradient(135deg, #5da9f9, #d35bd3);
+    border-radius: 5px;
+  }
+
+  .student-photo img{
+    margin-top: 2rem;
+    width: 120px;
+    height: 120px;
+  }
+
+  .student-name,
+  .student-details-title {
+    display: inline-block;
+    margin: 0; 
+    vertical-align: middle;
+  }
+
+  .student-name {
+    width: 90%;
+    font-size: 1.4rem;
+    margin: auto; 
+    margin-top: .5rem;
+    color: rgb(255, 253, 253);
+  }
+
+  .student-details {
+    margin-top: 1rem; 
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    color: #e1dcdc;
+    text-align: center; 
+  }
+
+  .columns {
+    flex-direction: column;
+  }
+
+  .date-time-wrapper{
+    margin: auto;
+    padding: 0px;
+  }
+
+  .date-time-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    width: 100%; 
+    margin: 0 auto;
+    padding: 1rem 2.5rem; 
+  }
+
+  .date-time-selection h3 {
+    font-size: 1.5rem; 
+    margin-top: 1.5rem;
+    margin-bottom: 3rem; 
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  .month-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .month-selector button {
+    padding: 0.2rem 0.6rem; 
+    font-size: 0.9rem; 
+    border-radius: 20px; 
+  }
+
+  .month-selector span {
+    font-size: 1rem; 
+  }
+
+  .calendar {
+    width: 100%;
+    max-width: 100%;
+    padding: 0rem;
+    margin: auto;
+    margin-right: 0px;
+  }
+
+  .calendar-day-header {
+    padding: 0px;
+    font-size: 1rem;
+    background-color: #f5f5f5;
+    color: #094e98;
+    margin: auto;
+    
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 43px;
+    gap: 2px;
+    margin-right: 0px;
+    margin: auto;
+  }
+
+  .calendar-day {
+    text-align: center;
+    padding:4.5px;
+    background-color: #eeeded;
+    color: grey;
+    border-radius: 50px;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .calendar-day.selectable:hover {
+    background-color: #6eb3fc;
+    color: white;
+  }
+
+  .calendar-day.selected {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+
+  .calendar-day.unselectable {
+    background-color: #f4f1f1;
+    color: #bbb;
+    cursor: not-allowed;
+  }
+
+  .selected-date-time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex: 0 0 100%;
+    max-width: 100%;
+    display: inline-block;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    background-color: rgb(255, 255, 255);
+    margin: auto;
+  }
+
+  .selected-date-time h3{
+    color: black;
+    text-align: center;
+    margin-top: 0rem;
+    font-size: 1.5rem;
+    margin-bottom:1.5rem;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  .time-slots {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(200px, 1fr)); 
+    gap: .8rem;
+    justify-content: center; 
+    margin: auto;
+    margin-top: 0rem;
+    max-width: 90%;
+    max-height: 1080px;
+    padding: 1rem 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .time-slot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+    min-height: 30px;
+    background-color: #edeaea;
+    gap: 3px;
+  }
+  
+  .time-text-container {
+    flex: 1;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    border-radius: 5px;
+    min-height: 55px;
+    width: 350px; 
+    padding: 0px 9px;
+  }
+  
+  .time-text {
+    font-size:1.3rem;
+    padding: .8rem 0.5rem;
+    color: grey;
+    width: 90%;
+    text-align: center;
+  }
+
+  .confirm-box {
+    font-size: 1.3rem;
+    padding: .85rem 0.5rem; 
+    border-radius: 5px;
+    width: 100%;
+  }
+}
