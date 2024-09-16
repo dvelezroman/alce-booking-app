@@ -1,7 +1,13 @@
 <div class="app-container">
   <app-header></app-header>
-  <main class="main-content">
-    <router-outlet></router-outlet>
-    <app-spinner></app-spinner>
-  </main>
+  <div class="content-wrapper">
+    <app-sidebar *ngIf="isLoggedIn"
+                 [isSidebarClosed]="isSidebarClosed"
+                 (toggleSidebarEvent)="toggleSidebar()">
+    </app-sidebar>
+    <main class="main-content">
+      <router-outlet></router-outlet>
+      <app-spinner></app-spinner>
+    </main>
+  </div>
 </div>

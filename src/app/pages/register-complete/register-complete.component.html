@@ -38,8 +38,9 @@
             <div class="control">
               <input class="input" type="text" formControlName="idNumber" placeholder="Enter your ID number">
             </div>
-            <div *ngIf="registerForm.get('idNumber')?.invalid && registerForm.get('idNumber')?.touched" class="error">
-              ID number is required
+            <div *ngIf="registerForm.get('idNumber')?.invalid && (registerForm.get('idNumber')?.touched || registerForm.get('idNumber')?.dirty)" class="error">
+              <div *ngIf="registerForm.get('idNumber')?.errors?.['required']">ID number is required</div>
+              <div *ngIf="registerForm.get('idNumber')?.errors?.['pattern']">ID number must be 10 digits long</div>
             </div>
           </div>
         </div>
@@ -113,13 +114,6 @@
       </div>
     </form>
 
-    <!-- Texto Already have an account -->
-    <div class="toggle-container">
-      <p>
-        Already have an account?
-        <a [routerLink]="['/login']">Sign in</a>
-      </p>
-    </div>
   </div>
 </div>
 
