@@ -1,9 +1,10 @@
 <div class="app-container">
-  <app-header></app-header>
+  <app-header *ngIf="!(isLoggedIn$ | async)"></app-header>
   <div class="content-wrapper">
     <app-sidebar *ngIf="isLoggedIn"
                  [isSidebarClosed]="isSidebarClosed"
-                 (toggleSidebarEvent)="toggleSidebar()">
+                 (toggleSidebarEvent)="toggleSidebar()"
+                 (logoutEvent)="onConfirmLogout()">
     </app-sidebar>
     <main class="main-content">
       <router-outlet></router-outlet>

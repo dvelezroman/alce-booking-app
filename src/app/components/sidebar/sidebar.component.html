@@ -9,7 +9,7 @@
   </div>
   <ul>
     <li *ngFor="let item of navItems">
-      <a href="#">
+      <a [routerLink]="item.route" (click)="closeSidebar($event)"> 
         <i class="{{item.icon}}"></i>
         <span class="link-text">{{ item.text }}</span>
       </a>
@@ -17,9 +17,21 @@
   </ul>
 
   <div class="logout">
-    <a href="#">
+    <a (click)="openLogoutModal()">
       <i class="fas fa-sign-out-alt"></i>
       <span class="link-text">Log Out</span>
     </a>
+  </div>
+</div>
+
+
+<!-- modal de cerrar sesión -->
+<div *ngIf="showLogoutModal" class="modal-overlay">
+  <div class="modal-content">
+    <p>Are you sure you want to log out?</p>
+    <div class="modal-buttons">
+      <button class="button is-danger" (click)="onConfirmLogout()">Yes</button>
+      <button class="button is-light" (click)="closeLogoutModal()">Cancel</button>
+    </div>
   </div>
 </div>

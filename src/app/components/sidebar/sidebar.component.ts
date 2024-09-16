@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,12 +16,16 @@ import { RouterModule } from '@angular/router';
 export class SidebarComponent {
   @Input() isSidebarClosed = false;
   @Output() toggleSidebarEvent = new EventEmitter<unknown>();
+  @Output() logoutEvent = new EventEmitter<void>();
+  showLogoutModal = false;
   navItems = [
-    { icon: 'fas fa-home', text: 'Home' },
+    { icon: 'fas fa-home', text: 'Home', route: '/home' },
     { icon: 'fas fa-info-circle', text: 'About' },
-    { icon: 'fas fa-envelope', text: 'Contact' },
-    { icon: 'fas fa-calendar-alt', text: 'Booking' }
+    { icon: 'fas fa-envelope', text: 'Contact', route: '/contact' },
+    { icon: 'fas fa-calendar-alt', text: 'Booking', route: '/booking' }
   ];
+
+  constructor(private usersService: UsersService, private router: Router) {}
 
   openSidebar(event: Event) {
     event.stopPropagation();
@@ -30,5 +35,20 @@ export class SidebarComponent {
   closeSidebar(event: Event) {
     event.stopPropagation();
     this.isSidebarClosed = true;
+  }
+
+  openLogoutModal() {
+    this.showLogoutModal = true;
+  }
+
+
+  closeLogoutModal() {
+    this.showLogoutModal = false;
+  }
+
+  onConfirmLogout() {
+    this.usersService.logout();
+    this.router.navigate(['/login']);
+    this.closeLogoutModal();  
   }
 }
