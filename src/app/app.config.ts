@@ -6,15 +6,16 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptors} from '@angular/common/http';
 import {userReducer} from "./store/user.reducer";
+import {HttpInterceptor} from "./services/http.interceptor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptors([HttpInterceptor])),
     provideStore({ user: userReducer }),
     provideEffects(),
     provideStoreDevtools({

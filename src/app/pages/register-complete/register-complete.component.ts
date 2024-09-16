@@ -48,7 +48,7 @@ export class RegisterCompleteComponent implements OnInit {
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      idNumber: ['', Validators.pattern(/^[0-9]{10}$/)],
+      idNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       birthday: ['', Validators.required],
       role: ['STUDENT', Validators.required],
       stageId: ['', Validators.required],
@@ -62,6 +62,7 @@ export class RegisterCompleteComponent implements OnInit {
     this.stagesService.getAll().subscribe(stages => {
       this.stages = stages;
     });
+
     this.user$.subscribe(state => {
       this.user = state;
     })
@@ -128,5 +129,6 @@ export class RegisterCompleteComponent implements OnInit {
   closeModal() {
     this.showModal = false;
     this.showSuccessModal = false;
+    this.showRegistrationErrorModal = false;
   }
 }

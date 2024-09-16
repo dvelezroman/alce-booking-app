@@ -1,0 +1,25 @@
+<div
+  class="sidebar"
+  [class.closed]="isSidebarClosed"
+  (mouseleave)="closeSidebar($event)"
+  (mouseover)="openSidebar($event)"
+>
+  <div class="logo-container">
+    <img src="/assets/logo header.png" alt="Logo">
+  </div>
+  <ul>
+    <li *ngFor="let item of navItems">
+      <a href="#">
+        <i class="{{item.icon}}"></i>
+        <span class="link-text">{{ item.text }}</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="logout">
+    <a href="#">
+      <i class="fas fa-sign-out-alt"></i>
+      <span class="link-text">Log Out</span>
+    </a>
+  </div>
+</div>

@@ -17,25 +17,6 @@
           </div>
         </div>
 
-        <!-- Bloque Role -->
-<!--        <div class="column">-->
-<!--          <div class="field">-->
-<!--            <label class="label">Role</label>-->
-<!--            <div class="control">-->
-<!--              <select class="input" formControlName="role">-->
-<!--                <option value="" disabled selected>Select your role</option>-->
-<!--                <option *ngFor="let role of roles" [value]="role">{{ role }}</option>-->
-<!--              </select>-->
-<!--            </div>-->
-<!--            <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="error">-->
-<!--              Role is required-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-
-
-      <!-- Bloque Password -->
-
         <div class="row">
           <div class="field input-field">
             <label class="label">Password</label>
@@ -93,26 +74,10 @@
 </div>
 
 
-<!-- Modal de Error de formulario -->
-<div *ngIf="showModal" class="modal-overlay">
-  <div class="modal-content error-modal">
-    <i class="fas fa-exclamation-circle error-icon"></i>
-    <p>The form must be completed.</p>
-  </div>
-</div>
-
-<!-- Modal de Error de Registro -->
-<div *ngIf="showRegistrationErrorModal" class="modal-overlay">
-  <div class="modal-content error-modal">
-    <i class="fas fa-exclamation-circle error-icon"></i>
-    <p>{{ error?.message }}</p>
-  </div>
-</div>
-
-<!-- Modal Exitoso -->
-<div *ngIf="showSuccessModal" class="modal-overlay">
-  <div class="modal-content success-modal">
-    <i class="fas fa-check-circle success-icon"></i>
-    <p>The user has been created successfully.</p>
-  </div>
-</div>
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  (close)="modal.close()">
+</app-modal>

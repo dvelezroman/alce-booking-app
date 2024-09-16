@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Store} from "@ngrx/store";
@@ -16,23 +16,13 @@ export class StudentsService {
     private store: Store,
   ) {}
 
-  private getHeaders() {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : '';
-    return new HttpHeaders({
-      'Authorization': token ? `Bearer ${token}` : '',
-      'Content-Type': 'application/json'
-    });
-  }
-
   registerStudent(user: RegisterStudentDto): Observable<RegisterStudentResponseDto> {
-    return this.http.post<RegisterStudentResponseDto>(`${this.apiUrl}/register`, user, { headers: this.getHeaders() });
+    return this.http.post<RegisterStudentResponseDto>(`${this.apiUrl}/register`, user);
   }
 
   // Find student by ID
   findStudentById(id: number): Observable<Student> {
-    return this.http.get<Student>(`${this.apiUrl}/find/${id}`, {
-      headers: this.getHeaders()
-    });
+    return this.http.get<Student>(`${this.apiUrl}/find/${id}`);
   }
 
   // Find students by stageId or mode
@@ -46,7 +36,6 @@ export class StudentsService {
     }
 
     return this.http.get<Student[]>(`${this.apiUrl}/search`, {
-      headers: this.getHeaders(),
       params: params
     });
   }

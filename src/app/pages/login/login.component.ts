@@ -19,8 +19,8 @@ import {LoginResponseDto} from "../../services/dtos/user.dto";
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
-  user$: Observable<UserState>;
   currentPage = 'login';
+  user$: Observable<UserState>;
   showModal = false;
   showSuccessModal = false;
   showCredentialsErrorModal = false;

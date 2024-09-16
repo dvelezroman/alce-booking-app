@@ -1,10 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import {NavigationEnd, Router, RouterModule} from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { CommonModule } from '@angular/common';
 import {Store} from "@ngrx/store";
-import {selectIsLoggedIn, selectUserData} from "../../store/user.selector";
-import {Observable} from "rxjs";
+import {selectIsLoggedIn} from "../../store/user.selector";
+import {filter, Observable} from "rxjs";
 import {UserDto} from "../../services/dtos/user.dto";
 
 
@@ -18,6 +18,7 @@ import {UserDto} from "../../services/dtos/user.dto";
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit {
+  currentPage: string = '';
   isLoggedIn$: Observable<boolean>;
   user: UserDto | null | undefined;
   isLoggedIn: boolean = false;
@@ -35,6 +36,11 @@ export class HeaderComponent implements OnInit {
     this.isLoggedIn$.subscribe(state => {
       this.isLoggedIn = state;
     })
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.currentPage = event.urlAfterRedirects.split('/').pop() || '';
+      });
   }
 
   toggleNavbar() {

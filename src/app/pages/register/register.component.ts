@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import {ModalComponent} from "../../components/modal/modal.component";
+import {ModalDto, modalInitializer} from "../../components/modal/modal.dto";
 import { UsersService } from '../../services/users.service';
 import { UserDto } from '../../services/dtos/user.dto';
-
 
 @Component({
   selector: 'app-register',
@@ -12,20 +13,20 @@ import { UserDto } from '../../services/dtos/user.dto';
   imports: [
     CommonModule,
     RouterModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ModalComponent
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
+
 export class RegisterComponent implements OnInit {
   currentPage = 'register';
   passwordVisible: boolean = false;
   confirmPasswordVisible: boolean = false;
-  showModal = false;
-  showSuccessModal = false;
-  showRegistrationErrorModal = false;
   registerForm: FormGroup;
   error: Error | undefined;
+  modal: ModalDto = modalInitializer();
 
 
   constructor(private fb: FormBuilder,
@@ -40,9 +41,7 @@ export class RegisterComponent implements OnInit {
   }
 
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   passwordMatchValidator(group: FormGroup) {
     const password = group.get('password')?.value;
@@ -62,12 +61,7 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     if (this.registerForm.invalid) {
       this.markFormGroupTouched(this.registerForm);
-      this.showModal = true;
-
-      setTimeout(() => {
-        this.showModal = false;
-      }, 2000);
-
+      this.showModal(this.createModalParams(true, 'El formulario debe ser completado.'));
       return;
     }
 
@@ -78,41 +72,37 @@ export class RegisterComponent implements OnInit {
 
     this.usersService.register(userData).subscribe({
       next: () => {
-        this.showSuccessModal = true;
-
-        setTimeout(() => {
-          this.showSuccessModal = false;
-          this.router.navigate(['/login']);
-        }, 2500);
+        this.showModal(this.createModalParams(false, 'El usuario se registró correctamente.', 'login'));
       },
       error: (error) => {
         this.error = error.error;
-        console.error('Error en el registro:', error);
-        this.showRegistrationErrorModal = true;
-        if (error.status === 400) {
-          console.error('Error de validación en el servidor');
-          this.showRegistrationErrorModal = true;
-        } else if (error.status === 0) {
-          console.error('Error de conexión al servidor');
-          this.showRegistrationErrorModal = true;
-        } else {
-          console.error('Error desconocido');
-          this.showRegistrationErrorModal = true;
-        }
-
-        setTimeout(() => {
-          this.showRegistrationErrorModal = false;
-        }, 2000);
-
+        this.showModal(this.createModalParams(true, this.error?.message || 'El usuario no se pudo registrar'));
       }
     });
   }
 
-
-  closeModal() {
-    this.showModal = false;
-    this.showSuccessModal = false;
+  showModal(params: ModalDto) {
+    this.modal = { ...params };
   }
+
+  closeModal = (redirect?: string) => {
+    this.modal = { ...modalInitializer() };
+    if (redirect) {
+      this.router.navigate([`/${redirect}`]);
+    }
+  }
+
+  createModalParams(isError: boolean, message: string, redirect?: string): ModalDto {
+    return {
+      ...this.modal,
+      show: true,
+      isError,
+      isSuccess: !isError,
+      message,
+      close: () => this.closeModal(redirect), // Arrow function ensures `this` is correctly bound
+    };
+  }
+
   togglePasswordVisibility() {
     this.passwordVisible = !this.passwordVisible;
   }
