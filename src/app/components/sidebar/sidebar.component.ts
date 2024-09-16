@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -14,17 +14,21 @@ import { RouterModule } from '@angular/router';
 })
 export class SidebarComponent {
   @Input() isSidebarClosed = false;
+  @Output() toggleSidebarEvent = new EventEmitter<unknown>();
+  navItems = [
+    { icon: 'fas fa-home', text: 'Home' },
+    { icon: 'fas fa-info-circle', text: 'About' },
+    { icon: 'fas fa-envelope', text: 'Contact' },
+    { icon: 'fas fa-calendar-alt', text: 'Booking' }
+  ];
 
   openSidebar(event: Event) {
-    event.stopPropagation(); 
-    this.isSidebarClosed = false; 
+    event.stopPropagation();
+    this.isSidebarClosed = false;
   }
 
-  @HostListener('document:click', ['$event'])
   closeSidebar(event: Event) {
-    const sidebar = document.querySelector('.sidebar');
-    if (sidebar && !sidebar.contains(event.target as Node)) {
-      this.isSidebarClosed = true; 
-    }
+    event.stopPropagation();
+    this.isSidebarClosed = true;
   }
 }
