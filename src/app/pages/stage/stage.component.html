@@ -7,7 +7,7 @@
     <thead>
     <tr>
       <th>Número</th>
-      <th>Descripcion</th>
+      <th>Descripción</th>
       <th>Acciones</th>
     </tr>
     </thead>
@@ -17,8 +17,12 @@
       <td>{{ stage.description }}</td>
       <td>
         <div class="buttons">
-          <button (click)="openEditModal(stage)" class="button is-warning is-light">Edit</button>
-          <button (click)="openDeleteModal(stage)" class="button is-danger is-light">Delete</button>
+          <button (click)="openEditModal(stage)" class="button edit-button">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button (click)="openDeleteModal(stage)" class="button delete-button">
+            <i class="fas fa-trash"></i> Delete
+          </button>
         </div>
       </td>
     </tr>
@@ -27,13 +31,13 @@
 
   <!-- Create Stage Modal -->
   <div id="createModal" class="modal" [ngClass]="{'is-active': isCreateModalOpen}">
-    <div class="modal-background" (click)="closeCreateModal()"></div>
+    <div class="modal-background"></div>
     <div class="modal-content">
       <div class="box">
         <h2 class="title is-4">Create New Stage</h2>
         <form (ngSubmit)="createStage()" #createStageForm="ngForm">
           <div class="field">
-            <label class="label">Name</label>
+            <label class="label">Number</label>
             <div class="control">
               <input class="input" type="number" [(ngModel)]="newStage.number" name="name" required>
             </div>
@@ -46,16 +50,15 @@
           </div>
           <div class="field is-grouped">
             <div class="control">
-              <button type="submit" class="button is-primary">Create</button>
+              <button type="submit" class="button create-btn is-primary">Create</button>
             </div>
             <div class="control">
-              <button type="button" class="button" (click)="closeCreateModal()">Cancel</button>
+              <button type="button" class="button cancel-btn" (click)="closeCreateModal()">Cancel</button>
             </div>
           </div>
         </form>
       </div>
     </div>
-    <button class="modal-close is-large" aria-label="close" (click)="closeCreateModal()"></button>
   </div>
 
   <!-- Edit Stage Modal -->
@@ -93,21 +96,20 @@
 
   <!-- Delete Stage Modal -->
   <div id="deleteModal" class="modal" [ngClass]="{'is-active': isDeleteModalOpen}">
-    <div class="modal-background" (click)="closeDeleteModal()"></div>
-    <div class="modal-content">
-      <div class="box">
-        <h2 class="title is-4">Confirm Delete</h2>
-        <p>Are you sure you want to delete the stage "{{ selectedStage?.number }}"?</p>
-        <div class="field is-grouped">
+    <div class="modal-background2"></div>
+    <div class="modal-content2">
+      <div class="delete-modal-box">
+        <h2 class="delete-modal-title">Confirm Delete</h2>
+        <p class="delete-modal-text">Are you sure you want to delete the stage "{{ selectedStage?.number }}"?</p>
+        <div class="delete-modal-actions">
           <div class="control">
-            <button class="button is-danger" (click)="deleteStage()">Delete</button>
+            <button class="delete-modal-btn-delete" (click)="deleteStage()">Delete</button>
           </div>
           <div class="control">
-            <button class="button" (click)="closeDeleteModal()">Cancel</button>
+            <button class="delete-modal-btn-cancel" (click)="closeDeleteModal()">Cancel</button>
           </div>
         </div>
       </div>
     </div>
-    <button class="modal-close is-large" aria-label="close" (click)="closeDeleteModal()"></button>
   </div>
 </div>

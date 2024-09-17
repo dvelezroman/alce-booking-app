@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {StagesService} from "../../services/stages.service";
 import {CreateStageDto, Stage} from "../../services/dtos/student.dto";
-import {NgClass, NgForOf} from "@angular/common";
+import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms"; // Adjust the import path as needed
 
 @Component({
@@ -9,8 +9,7 @@ import {FormsModule} from "@angular/forms"; // Adjust the import path as needed
   templateUrl: './stage.component.html',
   standalone: true,
   imports: [
-    NgForOf,
-    NgClass,
+    CommonModule,
     FormsModule
   ],
   styleUrls: ['./stage.component.scss']
