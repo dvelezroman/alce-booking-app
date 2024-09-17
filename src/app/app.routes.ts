@@ -5,6 +5,7 @@ import { RegisterCompleteComponent } from './pages/register-complete/register-co
 import { HomeComponent } from './pages/home/home.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { RegisterComponent } from "./pages/register/register.component";
+import {StageComponent} from "./pages/stage/stage.component";
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent},
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: 'register-complete', component: RegisterCompleteComponent },
   { path: 'booking', component: MeetingBookingComponent },
   { path: 'contact', component: ContactComponent},
+  { path: 'stage', component: StageComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
 ];

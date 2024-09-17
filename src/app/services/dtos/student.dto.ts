@@ -34,3 +34,13 @@ export interface Stage {
   number: number;
   description: string;
 }
+
+export interface CreateStageDto {
+  number: number;
+  description: string;
+}
+
+export interface UpdateStageDto {
+  number?: number;
+  description?: string;
+}
