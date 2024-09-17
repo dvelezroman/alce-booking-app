@@ -17,7 +17,9 @@ export class SidebarComponent {
   @Input() isSidebarClosed = false;
   @Output() toggleSidebarEvent = new EventEmitter<unknown>();
   @Output() logoutEvent = new EventEmitter<void>();
+
   showLogoutModal = false;
+  
   navItems = [
     { icon: 'fas fa-home', text: 'Home', route: '/home' },
     { icon: 'fas fa-info-circle', text: 'About' },

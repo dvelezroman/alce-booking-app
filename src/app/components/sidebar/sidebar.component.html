@@ -2,8 +2,8 @@
   class="sidebar"
   [class.closed]="isSidebarClosed"
   (mouseleave)="closeSidebar($event)"
-  (mouseover)="openSidebar($event)"
->
+  (mouseover)="openSidebar($event)">
+
   <div class="logo-container">
     <img src="/assets/logo header.png" alt="Logo">
   </div>
@@ -22,6 +22,15 @@
       <span class="link-text">Log Out</span>
     </a>
   </div>
+</div>
+
+
+<!-- Flecha para abrir el sidebar -->
+<div 
+  class="arrow-icon" 
+  *ngIf="isSidebarClosed"
+  (click)="openSidebar($event)">
+  <i class="fas fa-chevron-right"></i>
 </div>
 
 
