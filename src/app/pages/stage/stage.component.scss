@@ -161,7 +161,8 @@ h2.title {
   }
 }
 
-/* Estilos para el modal */
+/* Estilos para el modal de crear stages */
+
 .modal {
   .modal-background {
     background-color: rgba(0, 0, 0, 0.2); 
@@ -169,9 +170,10 @@ h2.title {
 
   .modal-content {
     max-width: 600px;
+    max-height: 100vh;
     margin: auto;
     padding: 1.5rem;
-    background-color: rgba(220, 208, 230, 0.571); 
+    background-color: rgba(241, 237, 245, 0.271);
     border-radius: 15px;
     backdrop-filter: blur(20px); 
     -webkit-backdrop-filter: blur(10px); 
@@ -182,6 +184,7 @@ h2.title {
   .box {
     background-color: transparent; 
     box-shadow: none;
+    height: auto;
   }
 
   h2.title {
@@ -189,15 +192,6 @@ h2.title {
     font-size: 2rem;
   }
 
-  /* Cerrar el modal */
-  .modal-close {
-    color: #fff;
-    opacity: 0.8;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
 
   .label {
     color: #373636; 
@@ -230,6 +224,7 @@ h2.title {
     appearance: none; 
   }
 
+  /* estilos para quitar los selectores del input number */
   /* Para WebKit browsers (Chrome, Safari) */
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
@@ -269,7 +264,7 @@ h2.title {
     .cancel-btn {
       padding: .96rem 6rem; 
       font-size: 1.1rem; 
-      background-color: rgb(132, 65, 199); 
+      background-color: rgb(127, 56, 198); 
       color: #ffffff; 
       border: 1px solid #6c727d; 
       transition: background-color 0.3s ease, color 0.3s ease;
@@ -285,7 +280,6 @@ h2.title {
 
 /* MODAL DE DELETE*/
 
-
 /* General styles for delete modal */
 .modal-content2 {
   max-width: 600px;
@@ -298,7 +292,6 @@ h2.title {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25); 
   border: 1px solid rgba(255, 255, 255, 0.18); 
 }
-
 
 .delete-modal-box {
   background-color: transparent; 
@@ -389,8 +382,7 @@ h2.title {
 }
 
 
-
-
+/* RESPONSIVE PARA TABLA DE LISTA DE STAGES Y MODAL CREAR STAGES */
 @media (max-width: 768px) {
 
   h2.title {
@@ -423,13 +415,11 @@ h2.title {
       vertical-align: middle;
     }
   
-    /* Estilos para los encabezados (th) */
     th {
       padding: .5rem;
       font-size: .9rem;
     }
   
-    /* Estilos para las celdas (td) */
     td {
       padding: 0.45rem;
       font-size: .9rem;
@@ -472,10 +462,10 @@ h2.title {
     }
   
     .modal-content {
-      max-width: 340px;
+      max-width: 400px;
       margin: auto;
       padding: .5rem;
-      background-color: rgba(220, 208, 230, 0.271);  
+      background-color: rgba(241, 237, 245, 0.271);  
     }
   
     h2.title {
@@ -500,24 +490,47 @@ h2.title {
   .field.is-grouped {
     display: flex;
     flex-direction: column; 
-    align-items: center; 
-    gap: .4rem; 
-    width: 100%; 
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
   
     .control {
+      margin-bottom: 1rem; 
       width: 100%; 
     }
   
-    .create-btn, .cancel-btn {
+    .create-btn {
+      padding: 1rem;
+      font-size: 1.1rem;
+      background-color: #3273dc;
+      color: white;
+      border: none;
       width: 100%; 
-      padding: 1rem; 
-      font-size: 1rem; 
+      transition: background-color 0.3s ease, color 0.3s ease;
+  
+      &:hover {
+        background-color: #275bb5;
+      }
+    }
+  
+    .cancel-btn {
+      padding: 1rem;
+      font-size: 1.1rem;
+      background-color: rgb(127, 56, 198);
+      color: #ffffff;
+      border: 1px solid #6c727d;
+      width: 100%; 
+      transition: background-color 0.3s ease, color 0.3s ease;
+  
+      &:hover {
+        background-color: rgb(110, 44, 176);
+        color: white;
+      }
     }
   }
 }
 
-
-
+ /* RESPONSIVE PARA TABLA*/
 @media (max-width: 576px){
   .container {
     margin: 0; 
@@ -542,13 +555,11 @@ h2.title {
      width: 100%; 
      border-radius: 5px; 
    
-     /* Estilos para los encabezados (th) */
      th {
        padding: .3rem;
        font-size: .6rem;
      }
    
-     /* Estilos para las celdas (td) */
      td {
        padding: 0.25rem;
        font-size: .7rem;
@@ -581,6 +592,7 @@ h2.title {
        }
      }
    }
+
 }
 
 
@@ -588,23 +600,35 @@ h2.title {
 
 @media (max-width: 576px) {
 
+  .modal-background {
+    background-color: rgba(0, 0, 0, 0.2); 
+  }
+
   .modal-content2 {
-    width: 85%;
-    max-width: 70%;
-    padding: .5rem;
-    border-radius: 10px;
+    max-width: 300px;
+    margin: auto;
+    padding: 0.5rem .5rem;
+    background-color: rgba(193, 191, 195, 0.271);  
+    border-radius: 5px;
+    border: 1px solid rgb(214, 211, 211);
   }
 
   .delete-modal-box {
     padding: .5rem;
   }
 
-  .delete-modal-title {
-    font-size: 1.5rem;
+  h2.delete-modal-title {
+    font-size: 1.3rem;
+    text-align: left;
+    margin-left: 5px;
+    margin-bottom: 5px;
   }
 
-  .delete-modal-text {
-    font-size: 1rem;
+  .delete-modal-text{
+    font-size: .75rem;
+    text-align: left;
+    margin-left: 5px;
+    margin-bottom: 15px;
   }
 
   .delete-modal-actions{
@@ -612,18 +636,17 @@ h2.title {
     flex-direction: column;
   }
 
-
   .delete-modal-actions {
     display: flex;
     flex-direction: column;
-    gap: .5rem; 
+    gap: .2rem; 
   }
 
   .delete-modal-btn-delete, 
   .delete-modal-btn-cancel {
     width: 100%; 
-    padding: .75rem; 
-    font-size: 1.1rem; 
+    padding: .65rem; 
+    font-size: .8rem; 
   }
 
 
@@ -635,47 +658,56 @@ h2.title {
     }
   
     .modal-content {
-      max-width: 370px;
+      max-width: 320px;
       margin: auto;
-      padding: .5rem;
-      background-color: rgba(220, 208, 230, 0.271);  
+      padding: 1rem 0rem;
+      background-color: rgba(225, 223, 227, 0.38);  
     }
   
     h2.title {
-      font-size: 1.7rem;
-    }
-  
-    .modal-close {
-      color: #fff;
-      opacity: 0.8;
-  
-      &:hover {
-        opacity: 1;
-      }
+      font-size: 1.4rem;
+      color: rgb(55, 54, 54);
     }
   
     .label {
       margin-left: 5px;
-      font-size: 1rem;
+      font-size: .8rem;
+      color: black;
+      font-weight: 400;
     }
+
+    .input,
+  .textarea {
+    background-color: #e4dede84; 
+    padding: 0.55rem; 
+    font-size: .9rem;
   }
 
+  }
+
+  /* BOTONES DEL MODAL CREAR STAGES */
   .field.is-grouped {
     display: flex;
     flex-direction: column; 
     align-items: center; 
-    gap: .4rem; 
+    gap: .3rem; 
     width: 100%; 
   
     .control {
       width: 100%; 
     }
-  
-    .create-btn, .cancel-btn {
-      width: 100%; 
-      padding: 1rem; 
-      font-size: 1rem; 
+
+    .button.is-primary.create-btn {
+      padding: .8rem 6rem; 
+      font-size: .85rem; 
     }
+  
+    .control .cancel-btn {
+      padding: .8rem 6rem; 
+      font-size: .85rem; 
+      background-color: rgb(127, 56, 198); 
+    }
+  
   }
 
 }
