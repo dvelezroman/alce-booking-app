@@ -22,7 +22,8 @@ export class SidebarComponent {
     { icon: 'fas fa-home', text: 'Home', route: '/home' },
     { icon: 'fas fa-info-circle', text: 'About' },
     { icon: 'fas fa-envelope', text: 'Contact', route: '/contact' },
-    { icon: 'fas fa-calendar-alt', text: 'Booking', route: '/booking' }
+    { icon: 'fas fa-calendar-alt', text: 'Booking', route: '/booking' },
+    { icon: 'fas fa-calendar-alt', text: 'Stages', route: '/stage' }
   ];
 
   constructor(private usersService: UsersService, private router: Router) {}
@@ -49,6 +50,6 @@ export class SidebarComponent {
   onConfirmLogout() {
     this.usersService.logout();
     this.router.navigate(['/login']);
-    this.closeLogoutModal();  
+    this.closeLogoutModal();
   }
 }
