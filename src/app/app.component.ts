@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import {selectIsLoggedIn} from "./store/user.selector";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
+import {setAdminStatus, setLoggedInStatus, unsetUserData} from "./store/user.action";
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,7 @@ export class AppComponent implements OnInit {
   isLoggedIn = false;
   isSidebarClosed = true;
 
-  constructor(private usersService: UsersService, 
+  constructor(private usersService: UsersService,
               private store: Store,
               private router: Router) {
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
@@ -37,8 +38,22 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.isLoggedIn$.subscribe(state => {
+      console.log(state);
       this.isLoggedIn = state;
     })
+    const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : '';
+    if (!this.isLoggedIn && accessToken) {
+      this.usersService.refreshLogin().subscribe({
+        error: () => {
+          this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
+          this.store.dispatch(setAdminStatus({ isAdmin: false }));
+          this.store.dispatch(unsetUserData());
+          if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+            localStorage.removeItem('accessToken');
+          }
+        }
+      });
+    }
   }
 
   toggleSidebar() {
@@ -46,7 +61,7 @@ export class AppComponent implements OnInit {
   }
 
   onConfirmLogout() {
-    this.usersService.logout();  
-    this.router.navigate(['/login']);  
+    this.usersService.logout();
+    this.router.navigate(['/login']);
   }
 }
