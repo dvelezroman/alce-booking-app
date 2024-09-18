@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Store} from "@ngrx/store";
@@ -32,6 +32,17 @@ export class UsersService {
           if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
             localStorage.setItem('accessToken', response.accessToken);
           }
+          this.store.dispatch(setAdminStatus({ isAdmin: response.role === UserRole.ADMIN }));
+          this.store.dispatch(setLoggedInStatus({ isLoggedIn: !!response.accessToken }));
+          this.store.dispatch(setUserData({ data: response }));
+        })
+      );
+  }
+
+  refreshLogin(): Observable<LoginResponseDto> {
+    return this.http.get<LoginResponseDto>(`${this.apiUrl}/refresh/login`)
+      .pipe(
+        tap((response) => {
           this.store.dispatch(setAdminStatus({ isAdmin: response.role === UserRole.ADMIN }));
           this.store.dispatch(setLoggedInStatus({ isLoggedIn: !!response.accessToken }));
           this.store.dispatch(setUserData({ data: response }));
