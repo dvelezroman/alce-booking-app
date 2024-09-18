@@ -1,12 +1,12 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { UsersService } from '../../services/users.service';
+import {CommonModule} from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router, RouterModule} from '@angular/router';
+import {UsersService} from '../../services/users.service';
 import {Observable} from "rxjs";
 import {UserState} from "../../store/user.state";
 import {Store} from "@ngrx/store";
-import {LoginResponseDto} from "../../services/dtos/user.dto";
+import {LoginResponseDto, UserRole} from "../../services/dtos/user.dto";
 
 @Component({
   selector: 'app-login',
@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
 
   this.usersService.login(credentials).subscribe({
     next: (response: LoginResponseDto) => {
-      if (response.register === false) {
+      if (response.role === UserRole.STUDENT && response.register === false) {
         this.router.navigate(['/register-complete']);
       } else {
         this.router.navigate(['/home']);

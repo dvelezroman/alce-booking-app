@@ -5,10 +5,11 @@ import {SpinnerComponent} from "./components/spinner/spinner.component";
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { UsersService } from './services/users.service';
 import { CommonModule } from '@angular/common';
-import {selectIsLoggedIn} from "./store/user.selector";
+import {selectIsLoggedIn, selectIsRegistered, selectUserData} from "./store/user.selector";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {setAdminStatus, setLoggedInStatus, unsetUserData} from "./store/user.action";
+import {UserDto, UserRole} from "./services/dtos/user.dto";
 
 @Component({
   selector: 'app-root',
@@ -28,19 +29,34 @@ export class AppComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   isLoggedIn = false;
   isSidebarClosed = true;
+  isRegistered$: Observable<boolean | undefined>;
+  isRegistered: boolean | undefined = false;
+  userData$: Observable<UserDto | null>;
+  userData: UserDto | null = null;
 
   constructor(private usersService: UsersService,
               private store: Store,
               private router: Router) {
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
+    this.isRegistered$ = this.store.select(selectIsRegistered);
+    this.userData$ = this.store.select(selectUserData);
   }
 
 
   ngOnInit() {
     this.isLoggedIn$.subscribe(state => {
-      console.log(state);
       this.isLoggedIn = state;
-    })
+    });
+    this.userData$.subscribe(state => {
+      console.log(state);
+      this.userData = state;
+    });
+    this.isRegistered$.subscribe(state => {
+      this.isRegistered = state;
+      if (this.isLoggedIn && this.userData?.role === UserRole.STUDENT && !this.isRegistered) {
+        this.router.navigate(['register-complete']);
+      }
+    });
     const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : '';
     if (!this.isLoggedIn && accessToken) {
       this.usersService.refreshLogin().subscribe({
@@ -64,4 +80,6 @@ export class AppComponent implements OnInit {
     this.usersService.logout();
     this.router.navigate(['/login']);
   }
+
+  protected readonly UserRole = UserRole;
 }

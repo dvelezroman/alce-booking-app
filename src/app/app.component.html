@@ -1,7 +1,7 @@
 <div class="app-container">
-  <app-header *ngIf="!(isLoggedIn$ | async)"></app-header>
+  <app-header *ngIf="isLoggedIn && (!isRegistered && userData?.role === UserRole.STUDENT)"></app-header>
   <div class="content-wrapper">
-    <app-sidebar *ngIf="isLoggedIn"
+    <app-sidebar *ngIf="isLoggedIn && (isRegistered || userData?.role !== UserRole.STUDENT)"
                  [isSidebarClosed]="isSidebarClosed"
                  (toggleSidebarEvent)="toggleSidebar()"
                  (logoutEvent)="onConfirmLogout()">

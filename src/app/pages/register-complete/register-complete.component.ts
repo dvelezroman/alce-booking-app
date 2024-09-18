@@ -111,7 +111,7 @@ export class RegisterCompleteComponent implements OnInit {
 
         setTimeout(() => {
           this.closeModal();
-          this.router.navigate(['/login']);
+          this.router.navigate(['/home']);
         }, 2500);
       },
       error: (error) => {
