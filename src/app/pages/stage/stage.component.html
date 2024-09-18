@@ -61,38 +61,37 @@
     </div>
   </div>
 
-  <!-- Edit Stage Modal -->
-<!--  <div id="editModal" class="modal" [ngClass]="{'is-active': isEditModalOpen}">-->
-<!--    <div class="modal-background" (click)="closeEditModal()"></div>-->
-<!--    <div class="modal-content">-->
-<!--      <div class="box">-->
-<!--        <h2 class="title is-4">Edit Stage</h2>-->
-<!--        <form (ngSubmit)="updateStage()" #editStageForm="ngForm">-->
-<!--          <div class="field">-->
-<!--            <label class="label">Name</label>-->
-<!--            <div class="control">-->
-<!--              <input class="input" type="text" [(ngModel)]="selectedStage?.number" name="name" required>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="field">-->
-<!--            <label class="label">Description</label>-->
-<!--            <div class="control">-->
-<!--              <textarea class="textarea" [(ngModel)]="selectedStage?.description" name="description" required></textarea>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="field is-grouped">-->
-<!--            <div class="control">-->
-<!--              <button type="submit" class="button is-primary">Update</button>-->
-<!--            </div>-->
-<!--            <div class="control">-->
-<!--              <button type="button" class="button" (click)="closeEditModal()">Cancel</button>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </form>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <button class="modal-close is-large" aria-label="close" (click)="closeEditModal()"></button>-->
-<!--  </div>-->
+<!-- Edit Stage Modal -->
+<div id="editModal" class="modal" [ngClass]="{'is-active': isEditModalOpen}">
+  <div class="modal-background" (click)="closeEditModal()"></div>
+  <div class="modal-content">
+    <div class="box">
+      <h2 class="title is-4">Edit Stage</h2>
+      <form (ngSubmit)="updateStage()" #editStageForm="ngForm">
+        <div class="field">
+          <label class="label">Number</label>
+          <div *ngIf="selectedStage" class="control">
+            <input class="input" type="number" [(ngModel)]="selectedStage.number" name="number" required>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Description</label>
+          <div *ngIf="selectedStage" class="control">
+            <textarea class="textarea" [(ngModel)]="selectedStage.description" name="description" required></textarea>
+          </div>
+        </div>
+        <div class="field is-grouped">
+          <div class="control">
+            <button type="submit" class="button create-btn is-primary">Update</button>
+          </div>
+          <div class="control">
+            <button type="button" class="button cancel-btn" (click)="closeEditModal()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
   <!-- Delete Stage Modal -->
   <div id="deleteModal" class="modal" [ngClass]="{'is-active': isDeleteModalOpen}">
