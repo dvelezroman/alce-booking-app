@@ -43,6 +43,9 @@ export class UsersService {
     return this.http.get<LoginResponseDto>(`${this.apiUrl}/refresh/login`)
       .pipe(
         tap((response) => {
+          if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+            localStorage.setItem('accessToken', response.accessToken);
+          }
           this.store.dispatch(setAdminStatus({ isAdmin: response.role === UserRole.ADMIN }));
           this.store.dispatch(setLoggedInStatus({ isLoggedIn: !!response.accessToken }));
           this.store.dispatch(setUserData({ data: response }));

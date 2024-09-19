@@ -10,6 +10,7 @@ import {StudentsService} from "../../services/students.service";
 import {Store} from "@ngrx/store";
 import {Observable, switchMap} from "rxjs";
 import {selectUserData} from "../../store/user.selector";
+import {setUserData} from "../../store/user.action";
 
 
 @Component({
@@ -25,8 +26,6 @@ import {selectUserData} from "../../store/user.selector";
 })
 export class RegisterCompleteComponent implements OnInit {
   currentPage = 'register';
-  passwordVisible: boolean = false;
-  confirmPasswordVisible: boolean = false;
   showModal = false;
   showSuccessModal = false;
   showRegistrationErrorModal = false;
@@ -34,7 +33,7 @@ export class RegisterCompleteComponent implements OnInit {
   stages: Stage[] = [];
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
   modes: string[] = ['PRESENCIAL', 'ONLINE'];
-  user: UserDto | null | undefined;
+  user: UserDto | null = null;
   user$: Observable<UserDto | null>;
 
   constructor(private fb: FormBuilder,

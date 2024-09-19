@@ -1,4 +1,5 @@
 export interface RegisterStudentDto {
+  id?: number;
   stageId: number;
   mode: Mode;
   userId: number | null | undefined;
@@ -6,8 +7,8 @@ export interface RegisterStudentDto {
 
 export interface Student {
   id: number;
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   stageId: number;
   mode: Mode;
   userId: number;
