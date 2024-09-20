@@ -27,10 +27,10 @@ html, body {
 .box {
 
     background: rgba(221, 224, 227, 0.378);
-    border-radius: 25px;
-    padding: 2rem 2rem;
+    border-radius: 15px;
+    padding: 1.5rem 1rem;
     width: 100%;
-    max-width: 450px;
+    max-width: 320px;
     box-shadow: 0 0 12px 8px rgba(217, 211, 211, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -45,8 +45,8 @@ html, body {
 
   .title {
     text-align: center;
-    margin-bottom: 2.5rem;
-    font-size: 2.5rem;
+    margin-bottom: 1.8rem;
+    font-size: 1.7rem;
     background: linear-gradient(135deg, rgb(192, 192, 192), rgb(252, 252, 252),  rgb(192, 192, 192));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -54,31 +54,31 @@ html, body {
 
   .label {
     color: rgb(112, 82, 178);
-    font-size: 1.1rem;
+    font-size: .8rem;
     margin-bottom: .25rem;
     margin-left: 10px;
     font-weight: 500;
   }
 
   .field {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.1rem;
     position: relative;
     color: white;
   }
 
   .input-container {
     display: inline-block;
-    padding: 2px;
+    padding: 1px;
     border-radius: 25px;
     background: linear-gradient(135deg, #acbadd, #d8bfd8);
   }
 
   .input {
     border-radius: 10px;
-    padding: 0.45rem;
+    padding: 0.35rem;
     padding-left: 15px;
     border: none;
-    font-size: 1.2rem;
+    font-size: 1rem;
     background-color: rgba(138, 138, 139, 0.182);
     color: rgb(52, 50, 50);
     transition: background-color 0.4s ease;
@@ -95,13 +95,13 @@ html, body {
   }
 
   .input::placeholder {
-    font-size: 1.05rem;
+    font-size: .9rem;
     color: rgba(231, 226, 239, 0.791);
   }
 
   .error {
     color: rgb(211, 52, 27);
-    font-size: .9rem;
+    font-size: .7rem;
     margin-top: 0.5rem;
     position: absolute;
     bottom: -1.5rem;
@@ -111,8 +111,8 @@ html, body {
   }
 
   .field-button {
-    margin-top: 4rem;
-    margin-bottom: 2rem;
+    margin-top: 3.2rem;
+    margin-bottom: 1.5rem;
     text-align: center;
   }
 
@@ -120,8 +120,8 @@ html, body {
     background-color:  rgb(60, 91, 231);
     color: $color-background;
     border: none;
-    padding: 0.85rem;
-    font-size: 1.2rem;
+    padding: 0.65rem;
+    font-size: 1rem;
     border-radius: 10px;
     width: 100%;
     text-align: center;
@@ -135,10 +135,10 @@ html, body {
 
   .toggle-container {
     text-align: center;
-    margin-top: 2rem;
+    margin-top: 1rem;
 
     p {
-      font-size: 1rem;
+      font-size: .8rem;
       color: rgb(13, 61, 159);
 
       a {
@@ -169,14 +169,14 @@ html, body {
   }
 
   .toggle-password i {
-    font-size: 1rem;
+    font-size: .85rem;
     color: #875fd6;
   }
 
   .forgot-password-container {
     position: absolute;
     right: 0;
-    margin-top: 0;
+    margin-top: -3px;
   }
 
   .field {
@@ -186,7 +186,7 @@ html, body {
   .forgot-password-link {
     color: #1d2bcb;
     text-decoration: none;
-    font-size: .9rem;
+    font-size: .7rem;
   }
 
   .forgot-password-link:hover {
@@ -209,32 +209,25 @@ html, body {
 
 .modal-content {
   background-color: white;
-  padding: 4rem;
-  border-radius: 10px;
+  padding: 2rem;
+  border-radius: 5px;
   text-align: center;
   box-shadow: 0 0 25px rgba(144, 143, 143, 0.3);
-  width: 500px;
+  width: 400px;
   max-width: 90%;
   position: relative;
-  animation: pop-up 0.2s ease-in-out;
+  animation: shake 0.5s ease;
 }
 
-@keyframes pop-up {
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  80% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-  }
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+    20%, 40%, 60%, 80% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
 }
 
 .modal-content p {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #dfd9d9;
 }
 
@@ -255,13 +248,13 @@ html, body {
 }
 
 .success-icon {
-  font-size: 3rem;
+  font-size: 1.8rem;
   color: #28a745;
   margin-bottom: 1rem;
 }
 
 .error-icon {
-  font-size: 3rem;
+  font-size: 1.8rem;
   color: #dc3545;
   margin-bottom: 1rem;
 }
@@ -270,40 +263,40 @@ html, body {
   @media (max-width: 768px) {
     .box {
       border-radius: 15px;
-      padding: 2rem 1.7rem;
+      padding: 1.5rem .9rem;
       margin: 0 1rem;
       width: 100%;
-      max-width: 350px;
+      max-width: 300px;
     }
 
     .title {
-      font-size: 2rem;
+      font-size: 1.7rem;
       margin-bottom: 1.5rem;
     }
 
     .field {
-      margin-bottom: 1.4rem;
+      margin-bottom: 1.2rem;
     }
 
     .label {
       font-weight: 400;
-      font-size: .97rem;
-      margin-bottom: 0;
+      font-size: .77rem;
+      margin-bottom: 3px;
       margin-left: 9px;
     }
 
     .input {
-      font-size: 1rem;
+      font-size: .9rem;
       padding: 0.5rem 15px;
     }
 
     .input::placeholder {
-      font-size: .9rem;
+      font-size: .8rem;
       color: rgba(231, 226, 239, 0.791);
     }
 
     .error {
-      font-size: .8rem;
+      font-size: .65rem;
       margin-top: 0.4rem;
       bottom: -1.5rem;
     }
@@ -311,25 +304,25 @@ html, body {
     .forgot-password-link {
       color: #1d2bcb;
       text-decoration: none;
-      font-size: .8rem;
+      font-size: .65rem;
     }
 
     .field-button {
-      margin-top: 3.5rem;
+      margin-top: 3rem;
       text-align: center;
     }
 
     .button.is-primary {
-      font-size: 1.05rem;
-      padding: .8rem 0;
+      font-size: .9rem;
+      padding: .7rem 0;
     }
 
     .toggle-container {
       text-align: center;
-      margin-top: -1rem;
+      margin-top: -.2rem;
 
       p {
-        font-size: .9rem;
+        font-size: .8rem;
 
         a {
           color: rgb(148, 117, 222);
@@ -338,24 +331,23 @@ html, body {
     }
 
     .toggle-password i {
-      font-size: .9rem;
+      font-size: .8rem;
       color: #875fd6;
     }
 
     .modal-content {
       background-color: white;
-      padding: 1.8rem;
+      padding: 1.5rem;
       border-radius: 10px;
       text-align: center;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
-      width: 480px;
+      width: 430px;
       max-width: 80%;
       position: relative;
-      animation: pop-up 0.2s ease-in-out;
     }
 
     .modal-content p {
-      font-size: 1.3rem;
+      font-size: 1rem;
       color: #dfd9d9;
     }
 
@@ -377,29 +369,40 @@ html, body {
     }
 
     .success-icon {
-      font-size: 2rem;
+      font-size: 1.7rem;
       margin-bottom: 1rem;
     }
 
     .error-icon {
-      font-size: 2rem;
+      font-size: 1.7rem;
       margin-bottom: 1rem;
     }
   }
 
-  @media (max-width: 526px) {
+  @media (max-width: 492px) {
 
-     .box {
-      padding: 2rem 1.7rem;
-      margin: 0 1rem;
+    .box {
+
+      background: transparent;
+      border-radius: 15px;
+      padding: 1.5rem 1rem;
       width: 100%;
-      margin-top: -10rem;
-      max-width: 340px;
-    }
+      max-width: 390px;
+      box-shadow: none;
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+      border: none;
+      transition: box-shadow 0.3s ease-in-out;
+  
+      &:focus-within {
+          box-shadow: none;
+          transition: box-shadow 0.5s ease-in-out;
+      }
+  }
 
     .title {
       font-size: 2rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 3rem;
     }
 
     .field {
@@ -408,25 +411,33 @@ html, body {
 
     .label {
       font-weight: 400;
-      font-size: .97rem;
-      margin-bottom: 0;
+      font-size: 1.05rem;
+      margin-bottom: 5px;
       margin-left: 9px;
     }
 
     .input {
-      font-size: 1rem;
-      padding: 0.5rem 15px;
+      font-size: 1.2rem;
+      padding: 0.7rem 15px;
+      background-color: rgba(167, 167, 223, 0.921);
+
     }
 
     .input::placeholder {
-      font-size: .9rem;
+      font-size: .95rem;
       color: rgba(231, 226, 239, 0.791);
     }
 
     .error {
-      font-size: .8rem;
+      font-size: .75rem;
       margin-top: 0.4rem;
       bottom: -1.5rem;
+    }
+
+    .forgot-password-container {
+      position: absolute;
+      right: 0;
+      margin-top: 3px;
     }
 
     .forgot-password-link {
@@ -436,18 +447,18 @@ html, body {
     }
 
     .field-button {
-      margin-top: 3.5rem;
+      margin-top: 4rem;
       text-align: center;
     }
 
     .button.is-primary {
-      font-size: 1.05rem;
-      padding: .8rem 0;
+      font-size: 1.2rem;
+      padding: 1.2rem 0;
     }
 
     .toggle-container {
       text-align: center;
-      margin-top: -1rem;
+      margin-top: 2rem;
 
       p {
         font-size: .9rem;
@@ -459,7 +470,7 @@ html, body {
     }
 
     .toggle-password i {
-      font-size: .9rem;
+      font-size: 1.2rem;
       color: #875fd6;
     }
 
