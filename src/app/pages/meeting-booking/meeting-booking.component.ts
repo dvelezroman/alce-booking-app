@@ -6,6 +6,7 @@ import {Store} from "@ngrx/store";
 import {selectUserData} from "../../store/user.selector";
 import {Observable} from "rxjs";
 import {UserDto} from "../../services/dtos/user.dto";
+import {BookingService} from "../../services/booking.service";
 
 @Component({
   selector: 'app-meeting-booking',
@@ -20,12 +21,8 @@ import {UserDto} from "../../services/dtos/user.dto";
 })
 export class MeetingBookingComponent implements OnInit, AfterViewInit {
   selectedDate: string = '';
-  selectedTimeSlot: string = '';
-  timeSlots: string[] = [
-    '09:00', '10:00', '11:00', '12:00',
-    '13:00', '14:00', '15:00', '16:00',
-    '17:00', '18:00', '19:00', '20:00',
-    '21:00'];
+  selectedTimeSlot: {label: string, value: number} = { label: "9:00", value: 9 };
+  timeSlots: {label: string, value: number }[] = [];
   today: string = '';
   maxDate: string = '';
   selectedMonth!: string;
@@ -34,12 +31,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   selectedDay: number | null = null;
   selectedDayFormatted!: string;
   showConfirm: string | null = null;
-  formattedDate: string = '';
-  formattedTime: string = '';
   showModal = false;
   showSuccessModal = false;
   showInfoModal = false;
-  studentDetails = 'Detalles del estudiante';
+  showModalBookingError = false;
   todayMonth!: string;
   todayYear!: number;
   nextMonth_!: string;
@@ -51,6 +46,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object,
     private store: Store,
+    private bookingService: BookingService,
   ) {
     this.initializeTimeSlots();
     this.userData$ = this.store.select(selectUserData);
@@ -60,21 +56,65 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.userData$.subscribe(state => {
       this.userData = state;
     });
+    /**
+     * Represents the current date.
+     *
+     * @returns {Date} The current date.
+     */
     this.today = this.getTodayDate();
+    /**
+     * Retrieves the maximum date available.
+     *
+     * @returns {Date} The maximum date.
+     */
     this.maxDate = this.getMaxDate();
+    /**
+     * Represents the selected date.
+     * @type {Date}
+     */
     this.selectedDate = this.today; // Set the default selected date to today
 
     const todayDate = new Date();
+    /**
+     * Represents the selected month.
+     *
+     * @type {string}
+     */
     this.selectedMonth = todayDate.toLocaleString('default', { month: 'long' });
+    /**
+     * The selectedYear variable represents the currently selected year.
+     *
+     * @type {number}
+     */
     this.selectedYear = todayDate.getFullYear();
 
-    // current month and year
+    /**
+     * Get the current month.
+     *
+     * @returns {number} The current month represented as a number.
+     */
     this.todayMonth = this.selectedMonth;
+    /**
+     * Returns the current year.
+     *
+     * @returns {number} The current year.
+     */
     this.todayYear = this.selectedYear;
 
-    // Next month and year
     const nextDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, 1);
+    /**
+     * Function to get the next month.
+     *
+     * @private
+     * @returns {Date} The next month.
+     */
     this.nextMonth_ = nextDate.toLocaleString('default', { month: 'long' });
+    /**
+     * Calculates the next year based on the current year.
+     *
+     * @param {number} currentYear - The current year.
+     * @returns {number} The next year.
+     */
     this.nextYear = nextDate.getFullYear();
 
     this.generateCurrentMonthDays();
@@ -104,7 +144,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const endHour = 21; // 9 PM
     this.timeSlots = Array.from({ length: endHour - startHour + 1 }, (_, i) => {
       const hour = startHour + i;
-      return `${hour}:00`;
+      return { label: `${hour}:00`, value: hour };
     });
   }
 
@@ -156,28 +196,29 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const currentMonth = today.toLocaleString('default', { month: 'long' });
     const currentYear = today.getFullYear();
 
-    // Solo retrocede si el mes actual no es el mes seleccionado
-    if (!(this.selectedMonth === currentMonth && this.selectedYear === currentYear)) {
-      const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() - 1, 1);
-      this.selectedMonth = date.toLocaleString('default', { month: 'long' });
-      this.selectedYear = date.getFullYear();
-      this.generateCurrentMonthDays();
+    if (this.selectedMonth === currentMonth && this.selectedYear === currentYear) {
+      return;
     }
+    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() - 1, 1);
+    this.selectedMonth = date.toLocaleString('default', {month: 'long'});
+    this.selectedYear = date.getFullYear();
+    this.generateCurrentMonthDays();
   }
 
   nextMonth() {
-    const today = new Date();
-    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    const maxMonth = nextMonthDate.toLocaleString('default', { month: 'long' });
-    const maxYear = nextMonthDate.getFullYear();
+    // const today = new Date();
+    // const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    // const maxMonth = nextMonthDate.toLocaleString('default', { month: 'long' });
+    // const maxYear = nextMonthDate.getFullYear();
 
-    // Solo avanza si el mes seleccionado no es el siguiente mes
-    if (!(this.selectedMonth === this.nextMonth_ && this.selectedYear === this.nextYear)) {
-      const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() + 1, 1);
-      this.selectedMonth = date.toLocaleString('default', { month: 'long' });
-      this.selectedYear = date.getFullYear();
-      this.generateCurrentMonthDays();
+
+    if (this.selectedMonth === this.nextMonth_ && this.selectedYear === this.nextYear) {
+      return;
     }
+    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() + 1, 1);
+    this.selectedMonth = date.toLocaleString('default', {month: 'long'});
+    this.selectedYear = date.getFullYear();
+    this.generateCurrentMonthDays();
   }
 
   isDaySelectable(day: any): boolean {
@@ -200,7 +241,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  selectTimeSlot(time: string) {
+  selectTimeSlot(time: {label: string, value: number}) {
     if (this.selectedDayFormatted) {
       this.selectedTimeSlot = time;
       this.showSuccessModal = true;
@@ -213,42 +254,62 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  confirmSelection() {
-    this.showSuccessModal = false;
-    this.showInfoModal = true;
-    console.log(`Fecha confirmada: ${this.selectedDayFormatted} a las ${this.selectedTimeSlot}`);
-    setTimeout(() => {
-      this.showInfoModal = false;
-      this.router.navigate(['/home']);
-    }, 3000);
-  }
-
   cancelSelection() {
     this.showSuccessModal = false;
-    this.selectedTimeSlot = '';
-
+    this.selectedTimeSlot = { label: "9:00", value: 9 };
+    this.selectedDate = '';
   }
 
 
   bookMeeting() {
-    if (this.selectedDate && this.selectedTimeSlot) {
-      const dateObject = new Date(this.selectedDate);
-      this.formattedDate = this.formatDate(dateObject);
-      this.formattedTime = this.selectedTimeSlot;
-
-      console.log(`Meeting booked on ${this.formattedDate} at ${this.formattedTime}`);
-
-      this.showSuccessModal = true;
-
-      setTimeout(() => {
-        this.showSuccessModal = false;
-      }, 4000);
+    if (this.isMeetingDataValid()) {
+      const bookingData = this.createBookingData();
+      this.bookingService.bookMeeting(bookingData).subscribe(response => {
+          console.log(response);
+          this.showSuccessModal = false;
+          this.showInfoModal = true;
+          this.hideInfoModalAfterDelay(3000);
+      },
+          error => {
+            this.showSuccessModal = false;
+            this.showModalBookingError = true;
+            this.hideBookingErrorModalAfterDelay(3000);
+          });
     } else {
       this.showModal = true;
-
-      setTimeout(() => {
-        this.showModal = false;
-      }, 2000);
+      this.hideModalAfterDelay(2000);
     }
+  }
+
+  isMeetingDataValid() {
+    return this.selectedDate && this.selectedTimeSlot;
+  }
+
+  createBookingData() {
+    return {
+      studentId: this.userData?.student?.id as number,
+      instructorId: null,
+      stageId: this.userData?.stage?.id,
+      date: new Date(this.selectedDate),
+      hour: this.selectedTimeSlot.value,
+    };
+  }
+
+  hideInfoModalAfterDelay(delay: number) {
+    setTimeout(() => {
+      this.showInfoModal = false;
+    }, delay);
+  }
+
+  hideModalAfterDelay(delay: number) {
+    setTimeout(() => {
+      this.showModal = false;
+    }, delay);
+  }
+
+  hideBookingErrorModalAfterDelay(delay: number) {
+    setTimeout(() => {
+      this.showModalBookingError = false;
+    }, delay);
   }
 }

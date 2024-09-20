@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { CreateMeetingDto } from "./dtos/booking.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +11,14 @@ export class BookingService {
 
   constructor(private http: HttpClient) {}
 
-  private getHeaders() {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : '';
-    return new HttpHeaders({
-      'Authorization': token ? `Bearer ${token}` : ''
-    });
-  }
-
-  bookMeeting(bookingData: CreateMeetingDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, bookingData, { headers: this.getHeaders() })
+  bookMeeting(bookingData: {
+    studentId: number;
+    date: Date;
+    hour: number;
+    instructorId: number | null;
+    stageId: number | undefined
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/book`, bookingData)
   }
 }
 

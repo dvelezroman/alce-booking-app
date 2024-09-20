@@ -46,11 +46,11 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log('APP LOADED');
     this.isLoggedIn$.subscribe(state => {
       this.isLoggedIn = state;
     });
     this.userData$.subscribe(state => {
+      console.log(state);
       this.userData = state;
     });
     this.isRegistered$.subscribe(state => {
