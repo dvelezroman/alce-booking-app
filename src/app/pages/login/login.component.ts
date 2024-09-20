@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
 
   this.usersService.login(credentials).subscribe({
     next: (response: LoginResponseDto) => {
-      if (response.role === UserRole.STUDENT && response.register === false) {
+      if (response.register === false) {
         this.router.navigate(['/register-complete']);
       } else {
         this.router.navigate(['/home']);

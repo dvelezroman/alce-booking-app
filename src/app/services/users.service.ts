@@ -5,6 +5,7 @@ import {environment} from "../../environments/environment";
 import {Store} from "@ngrx/store";
 import {setAdminStatus, setLoggedInStatus, setUserData, unsetUserData} from "../store/user.action";
 import {LoginDto, LoginResponseDto, RegisterResponseDto, UserDto, UserRole} from "./dtos/user.dto";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,7 @@ export class UsersService {
   constructor(
     private http: HttpClient,
     private store: Store,
+    private router: Router,
   ) {}
 
   register(user: Partial<UserDto>): Observable<RegisterResponseDto> {
@@ -35,6 +37,9 @@ export class UsersService {
           this.store.dispatch(setAdminStatus({ isAdmin: response.role === UserRole.ADMIN }));
           this.store.dispatch(setLoggedInStatus({ isLoggedIn: !!response.accessToken }));
           this.store.dispatch(setUserData({ data: response }));
+          if (response.accessToken) {
+            this.router.navigate(['register-complete']);
+          }
         })
       );
   }
