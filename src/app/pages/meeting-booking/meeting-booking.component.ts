@@ -2,6 +2,10 @@ import {AfterViewInit, Component, Inject, OnInit, PLATFORM_ID} from '@angular/co
 import {FormsModule} from "@angular/forms";
 import {CommonModule, isPlatformBrowser, NgForOf} from "@angular/common";
 import { Router } from '@angular/router';
+import {Store} from "@ngrx/store";
+import {selectUserData} from "../../store/user.selector";
+import {Observable} from "rxjs";
+import {UserDto} from "../../services/dtos/user.dto";
 
 @Component({
   selector: 'app-meeting-booking',
@@ -15,50 +19,47 @@ import { Router } from '@angular/router';
   styleUrl: './meeting-booking.component.scss'
 })
 export class MeetingBookingComponent implements OnInit, AfterViewInit {
-
-
   selectedDate: string = '';
   selectedTimeSlot: string = '';
-
   timeSlots: string[] = [
     '09:00', '10:00', '11:00', '12:00',
     '13:00', '14:00', '15:00', '16:00',
     '17:00', '18:00', '19:00', '20:00',
     '21:00'];
-
   today: string = '';
   maxDate: string = '';
-
   selectedMonth!: string;
   selectedYear!: number;
   currentMonthDays: any[] = [];
   selectedDay: number | null = null;
   selectedDayFormatted!: string;
   showConfirm: string | null = null;
-
   formattedDate: string = '';
   formattedTime: string = '';
-
   showModal = false;
   showSuccessModal = false;
   showInfoModal = false;
-
-  studentName = 'Gregorio Vélez';
   studentDetails = 'Detalles del estudiante';
-
   todayMonth!: string;
   todayYear!: number;
   nextMonth_!: string;
   nextYear!: number;
+  userData$: Observable<UserDto | null>;
+  userData: UserDto | null = null;
 
   constructor(
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object,
+    private store: Store,
   ) {
     this.initializeTimeSlots();
+    this.userData$ = this.store.select(selectUserData);
   }
 
   ngOnInit() {
+    this.userData$.subscribe(state => {
+      this.userData = state;
+    });
     this.today = this.getTodayDate();
     this.maxDate = this.getMaxDate();
     this.selectedDate = this.today; // Set the default selected date to today
@@ -67,16 +68,24 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedMonth = todayDate.toLocaleString('default', { month: 'long' });
     this.selectedYear = todayDate.getFullYear();
 
-  // Mes y año actuales
-  this.todayMonth = this.selectedMonth;
-  this.todayYear = this.selectedYear;
+    // current month and year
+    this.todayMonth = this.selectedMonth;
+    this.todayYear = this.selectedYear;
 
-  // Próximo mes y año
-  const nextDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, 1);
-  this.nextMonth_ = nextDate.toLocaleString('default', { month: 'long' });
-  this.nextYear = nextDate.getFullYear();
+    // Next month and year
+    const nextDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, 1);
+    this.nextMonth_ = nextDate.toLocaleString('default', { month: 'long' });
+    this.nextYear = nextDate.getFullYear();
 
     this.generateCurrentMonthDays();
+  }
+
+  userName() {
+    if (this.userData) {
+      const { firstName, lastName } = this.userData;
+      return `${firstName} ${lastName}`
+    }
+    return 'Nombre de Usuario';
   }
 
   ngAfterViewInit() {

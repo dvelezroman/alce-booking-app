@@ -1,4 +1,4 @@
-import {Student} from "./student.dto";
+import {Stage, Student} from "./student.dto";
 import {Instructor} from "./instructor.dto";
 
 export enum UserRole {
@@ -19,6 +19,7 @@ export interface UserDto {
   status?: boolean;
   register?: boolean;
   student?: Student;
+  stage?: Stage;
   instructor?: Instructor;
 }
 

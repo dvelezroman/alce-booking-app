@@ -34,9 +34,11 @@ export class AppComponent implements OnInit {
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
 
-  constructor(private usersService: UsersService,
-              private store: Store,
-              private router: Router) {
+  constructor(
+    private usersService: UsersService,
+    private store: Store,
+    private router: Router,
+  ) {
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
     this.isRegistered$ = this.store.select(selectIsRegistered);
     this.userData$ = this.store.select(selectUserData);
