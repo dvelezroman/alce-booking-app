@@ -46,16 +46,16 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log('APP LOADED');
     this.isLoggedIn$.subscribe(state => {
       this.isLoggedIn = state;
     });
     this.userData$.subscribe(state => {
-      console.log(state);
       this.userData = state;
     });
     this.isRegistered$.subscribe(state => {
       this.isRegistered = state;
-      if (this.isLoggedIn && this.userData?.role === UserRole.STUDENT && !this.isRegistered) {
+      if (this.isLoggedIn && !this.isRegistered) {
         this.router.navigate(['register-complete']);
       }
     });
