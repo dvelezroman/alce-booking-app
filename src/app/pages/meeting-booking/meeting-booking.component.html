@@ -69,12 +69,12 @@
         <div class="time-slots">
           <div *ngFor="let time of timeSlots"
                class="time-slot"
-               (mouseenter)="showConfirm = time"
+               (mouseenter)="showConfirm = time.label"
                (mouseleave)="showConfirm = null">
             <div class="time-text-container">
-              <span class="time-text">{{ time }}</span>
+              <span class="time-text">{{ time.label }}</span>
             </div>
-            <div class="confirm-box" *ngIf="showConfirm === time" (click)="selectTimeSlot(time)">
+            <div class="confirm-box" *ngIf="showConfirm" (click)="selectTimeSlot(time)">
               Confirm
             </div>
           </div>
@@ -99,11 +99,11 @@
 <div *ngIf="showSuccessModal" class="modal-overlay">
   <div class="modal-content success-modal">
     <i class="fas fa-question-circle question-icon"></i>
-    <p>You have selected <br> {{ selectedDayFormatted }} at {{ selectedTimeSlot }}.</p>
+    <p>You have selected <br> {{ selectedDayFormatted }} at {{ selectedTimeSlot.label }}</p>
 
     <!-- Confirmation and cancellation buttons -->
     <div class="modal-buttons">
-      <button class="button is-success" (click)="confirmSelection()">Accept</button>
+      <button class="button is-success" (click)="bookMeeting()">Accept</button>
       <button class="button is-danger" (click)="cancelSelection()">Cancel</button>
     </div>
   </div>
@@ -113,5 +113,13 @@
   <div class="modal-content info-modal">
     <i class="fas fa-check-circle info-icon"></i>
     <p>Your selection was successful!</p>
+  </div>
+</div>
+
+<!-- Modal de error -->
+<div *ngIf="showModalBookingError" class="modal-overlay">
+  <div class="modal-content error-modal">
+    <i class="fas fa-exclamation-circle error-icon"></i>
+    <p class="help is-danger bold-text">Ya tiene una meeting agendada en la fecha y hora seleccionada.</p>
   </div>
 </div>
