@@ -339,60 +339,8 @@ body, html {
 }
 
 
-
-  /*  MODAL  */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    overflow: hidden;
-  }
-
-  .modal-content {
-    padding: 1.7rem;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
-    width: 440px;
-    max-width: 90%;
-    position: relative;
-    animation: pop-up 0.2s ease-in-out;
-  }
-
-  @keyframes pop-up {
-    0% {
-      transform: scale(0.5);
-      opacity: 0;
-    }
-    80% {
-      transform: scale(1.05);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  .success-modal {
-    background-color: #e6e6e6;
-    border: 1px solid grey;
-  }
-
-  .success-modal p{
-    background-color: transparent;
-    color: #535654;
-    font-size: 1.2rem;
-    font-weight: 400
-  }
-
   /* MODAL DE ERROR */
-  .error-modal {
+  .modal-overlay .error-modal {
     padding: 2rem;
     background-color: #ebeeef;
     border: 1px solid rgba(239, 171, 171, 0.541);
@@ -458,17 +406,109 @@ body, html {
     margin-bottom: .7rem;
   }
 
+ /* MODAL CUANDO SE ELIGIÓ FECHA REPETIDA */
+  .modal-overlay.booking-error-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content.booking-error-content {
+    background-color: rgb(255, 224, 224);
+    padding: 2rem 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+    width: 450px;
+    max-width: 100%;
+    position: relative;
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  .booking-error-content .error-icon {
+    font-size: 1.7rem;
+    color: #dc3545;
+    margin-bottom: 1rem;
+  }
+  
+  .booking-error-content p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #d9534f; 
+  }
+  
+
 
   /* MODAL PRIMERO CUANDO SE ELIGIÓ DIA Y HORA CORRECTO */
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      overflow: hidden;
+    }
+  
+    .modal-content {
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+      width: 400px;
+      max-width: 80%;
+      position: relative;
+      animation: pop-up 0.2s ease-in-out;
+    }
+  
+    @keyframes pop-up {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      80% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+  
+    .success-modal {
+      background-color: #e6e6e6;
+      border: .5px solid rgb(218, 213, 213);
+    }
+  
+    .success-modal p{
+      background-color: transparent;
+      color: #535654;
+      font-size: 1.1rem;
+      font-weight: 400
+    }
+
   .modal-buttons {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 10px;
     margin-top: 1.5rem;
+    width: 100%;
   }
 
   .question-icon {
-    font-size: 2rem;
+    font-size: 1.7rem;
     color: #17a2b8;
     margin-bottom: 1rem;
   }
@@ -476,24 +516,26 @@ body, html {
   .button.is-success {
     background-color: #2868a7;
     color: white;
-    padding: 0.5rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.6rem 1.5rem;
+    font-size: .9rem;
+    width: 40%;
   }
 
   .button.is-danger {
     background-color: #7743a8; 
     color: white;
-    padding: 0.5rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.7rem 1.5rem;
+    font-size: .9rem;
+    width: 40%;
   }
 
   .info-modal {
     background-color: white;
-    padding: 4rem;
+    padding: 2.5rem 1.5rem;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
-    width: 500px;
+    width: 450px;
     max-width: 90%;
     position: relative;
     animation: pop-up 0.2s ease-in-out;
@@ -514,7 +556,7 @@ body, html {
   }
   .info-modal p{
     color: #28a745;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
 
   .info-modal strong{
@@ -523,7 +565,7 @@ body, html {
   }
 
   .info-icon {
-    font-size: 2rem;
+    font-size: 1.6rem;
     color: #28a745;
     margin-bottom: 1rem;
   }
@@ -926,7 +968,7 @@ body, html {
   .success-modal p{
     background-color: transparent;
     color: #535654;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-weight: 400
   }
 
@@ -936,7 +978,7 @@ body, html {
 
   .bold-text {
     font-weight: bold;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 
   .small-text {
@@ -952,7 +994,7 @@ body, html {
 
   .modal-buttons {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     gap: 5px;
     margin-top: 1.5rem;
@@ -967,15 +1009,15 @@ body, html {
   .button.is-success {
     background-color: #3273dc;
     color: white;
-    padding: .9rem 1.5rem;
-    font-size: 1rem;
+    padding: .7rem 1.5rem;
+    font-size: .9rem;
   }
 
   .button.is-danger {
     background-color: #7743a8;
     color: white;
-    padding: .9rem 1.5rem;
-    font-size: 1rem;
+    padding: .7rem 1.5rem;
+    font-size: .9rem;
   }
 
   .info-modal {
@@ -983,11 +1025,17 @@ body, html {
     padding: 1.5rem;
     border-radius: 10px;
     text-align: center;
-    box-shadow: 0 0 25px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 25px 10px rgba(0, 0, 0, 0.2);
     width: 350px;
     max-width: 80%;
-    position: relative;
-    animation: pop-up 0.2s ease-in-out;
+  }
+
+  .info-modal p{
+    font-size: 1rem;
+  }
+
+  .info-icon {
+    font-size: 1.4rem;
   }
 
   .error-modal {
@@ -1016,6 +1064,27 @@ body, html {
     font-size: 1.6rem;
     color: #e74c3c;
     margin-bottom: 1rem;
+  }
+
+
+
+/* MODAL CUANDO SE ELIGIO FEHCA REPETIDA */
+  
+  .modal-content.booking-error-content {
+    max-width: 80%;
+    position: relative;
+  }
+  
+  .booking-error-content .error-icon {
+    font-size: 1.7rem;
+    color: #dc3545;
+    margin-bottom: 1rem;
+  }
+  
+  .booking-error-content p {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #d9534f; 
   }
 
 }
@@ -1201,11 +1270,11 @@ body, html {
   .modal-content {
     padding: 1rem;
     width: 400px;
-    max-width: 80%;
+    max-width: 85%;
   }
 
   .success-modal {
-    padding: 1.2rem;
+    padding: 1.5rem 1rem;
     background-color: #e6e6e6;
     border: 1px solid rgb(159, 158, 158);
   }
@@ -1213,37 +1282,69 @@ body, html {
   .success-modal p{
     background-color: transparent;
     color: #535654;
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 400;
     width:100%;
+  }
+
+  .modal-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 1.5rem;
+  }
+
+  .question-icon {
+    font-size: 1.5rem;
+    color: #17a2b8;
+    margin-bottom: 1rem;
+  }
+
+  .button.is-success {
+    background-color: #3273dc;
+    color: white;
+    padding: .9rem 1.5rem;
+    font-size: .9rem;
+    width: 100%;
+  }
+
+  .button.is-danger {
+    background-color: transparent;
+    border: .5px solid #7743a8;
+    color: #7743a8;
+    padding: .9rem 1.5rem;
+    font-size: .9rem;
+    width: 100%;
   }
 
   /* MODAL DE ERROR CUANDO NO SE ELIGE BIEN */
 
   .error-modal {
-    padding: 1rem;
+    padding: 1.5rem;
     background-color: #ebeeef;
-    border: 1px solid rgb(239, 171, 171);
-    box-shadow: 0 0 25px rgba(169, 162, 162, 0.453);
+    border: .5px solid rgb(239, 171, 101);
+    box-shadow: 0 0 25px rgba(169, 162, 162, 0.953);
   }
 
   .bold-text {
     font-weight: bold;
-    background: linear-gradient(45deg, #cb5b3b, #7743a8);
+    background: linear-gradient(45deg,  #cb5b3b, #c55713);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 1rem;
+    font-size: 1.3rem;
   }
 
   .small-text {
-    background: linear-gradient(45deg,  #cb5b3b, #7743a8);
+    background: linear-gradient(45deg,  #cb5b3b, #c55713);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 1rem;
+    font-size: 1.05rem;
   }
 
   .error-icon {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     color: #e74c3c;
     margin-bottom: 1rem;
   }
@@ -1251,24 +1352,24 @@ body, html {
   /* MODAL CUANDO SE HA ELEGIDO FECHA Y TIME CORRECTO */
 
   .info-modal {
-    padding: 2rem;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
-    width: 500px;
-    max-width: 80%;
+    padding: 1.7rem 1rem;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+    width: 350px;
+    max-width: 90%;
   }
 
   .info-modal p {
-    background: linear-gradient(45deg, #125da2, #7743a8);
+    background: linear-gradient(45deg, #2bac1f, #43a88f);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 1.3rem;
 }
 
   .info-icon {
-    background: linear-gradient(45deg, #2781d5, #a666e1);
+    background: linear-gradient(45deg, #2bac1f, #43a88f);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 2rem;
+    font-size: 1.7rem;
     margin-bottom: 1rem;
 }
 }
