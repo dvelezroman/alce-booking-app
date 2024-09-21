@@ -22,6 +22,7 @@ import {BookingService} from "../../services/booking.service";
 export class MeetingBookingComponent implements OnInit, AfterViewInit {
   selectedDate: string = '';
   selectedTimeSlot: {label: string, value: number} = { label: "9:00", value: 9 };
+  hoverIndex: number | null = null;
   timeSlots: {label: string, value: number }[] = [];
   today: string = '';
   maxDate: string = '';
