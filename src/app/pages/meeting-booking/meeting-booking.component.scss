@@ -34,16 +34,28 @@ body, html {
 }
 
 .container {
-  margin-top: 13rem;
+  margin-top: 8rem;
 }
 
 .student-info {
-  flex: 0 0 30%;
-  max-width: 30%;
-  text-align: center;
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content:flex-start;
+  align-items: flex-center; 
+  flex: 0 0 35%;
+  max-width: 100%;
+  margin-left: 1.5rem; 
+  margin-bottom: 0rem;
+  padding-top: 1rem;
 }
 
+.student-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1rem;
+  font-family: 'Open Sans', sans-serif;
+}
 
 /* información del estudiante */
 .student-photo img {
@@ -54,19 +66,21 @@ body, html {
 }
 
 .student-info {
-  text-align: center;
+  text-align:center;
 }
 
 .student-name {
-  margin-left: 0;
-  margin-top: 2rem;
-  font-size: 1.5rem;
+  color: #4f4d4d;
+  margin-top: 1.3rem;
+  font-size: 1.2rem;
   font-family: 'Open Sans', sans-serif;
 }
 
 .student-details {
-  font-size: 1rem;
-  color: #666;
+  font-size: 0.9rem;
+  color: #4f4d4d;
+  margin-top: 0.5rem;
+  font-family: 'Open Sans', sans-serif;
 }
 
 /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
@@ -86,7 +100,7 @@ body, html {
   align-items: center;
   justify-content: center;
   padding: 0;
-  margin-top: -7.5rem;
+  margin-top: -4.9rem;
   background-color: #f9f9f9;
   border-radius: 10px;
   width: 100%;
@@ -102,11 +116,11 @@ body, html {
 
 .calendar-title {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .title.is-4 {
-  font-size: 1.4rem;
+  font-size: 1rem;
   color: #333;
 }
 
@@ -114,7 +128,7 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 0rem;
 }
 
 .month-selector button {
@@ -123,9 +137,9 @@ body, html {
   align-items: center;
   background-color: transparent;
   color: rgb(142, 139, 139);
-  border: 1px solid #89bdf5;
-  padding: 0 1.2rem;
-  font-size: 1.2rem;
+  border: none;
+  padding: 0 1rem;
+  font-size: .8rem;
   cursor: pointer;
   border-radius: 50px;
   margin: 0 10px;
@@ -139,7 +153,7 @@ body, html {
 }
 
 .month-selector span {
-  font-size: 1.2rem;
+  font-size: .9rem;
   color: #333;
 }
 
@@ -147,12 +161,13 @@ body, html {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 
 .calendar-day-header {
   padding: 10px;
   text-align: center;
+  font-size: .8rem;
   font-weight: bold;
   background-color: #f5f5f5;
   color: #094e98;
@@ -161,20 +176,21 @@ body, html {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: 50px;
+  grid-auto-rows: 35px;
   gap: 5px;
   width: 100%;
 }
 
 .calendar-day {
   text-align: center;
-  padding: 20px;
+  padding: 18px;
+  font-size: .8rem;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   color: grey;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,7 +199,8 @@ body, html {
 }
 
 .calendar-day.selectable {
-  background-color: #e2e0e0;
+  background-color: #f9f9f9;
+  border: 1px solid #6eb3fc;
   color: #333;
   cursor: pointer;
 }
@@ -215,24 +232,25 @@ body, html {
   justify-content: center;
   padding: 1rem;
   width: 100%;
-  margin-top: -4rem;
 }
 
 .selected-date-time h3{
   color: black;
   text-align: center;
-  margin-top: 2.5rem;
-  font-size: 1.4rem;
-  margin-bottom: 3rem;
+  margin-right: 23px;
+  margin-top: 0rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
   font-family: 'Open Sans', sans-serif;
 }
 
 .time-slots {
   display: flex;
+  margin-top: 2rem;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  max-height: 480px;
+  gap: 8px;
+  max-height: 330px;
   overflow-y: auto;
   width: 100%;
 }
@@ -241,14 +259,16 @@ body, html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-width: 55%;
-  min-height: 50px;
+  min-width: 45%;
+  min-height: 40px;
   background-color: #edeaea;
   background: linear-gradient(to right, #4490e2, #bd75e4);
   gap: 5px;
   cursor: pointer;
   transition: all 0.5s ease;
   border-radius: 5px;
+  position: relative;
+  overflow: hidden;
 }
 
 .time-text-container {
@@ -259,11 +279,11 @@ body, html {
   border-radius: 5px;
   min-height: 50px;
   width: 100%;
-  padding: 0 12px;
+  padding: 0 10px;
 }
 
 .time-text {
-  font-size: 1.3rem;
+  font-size: 1rem;
   color: white;
 }
 
@@ -272,12 +292,13 @@ body, html {
 }
 
 .confirm-box {
+  position: absolute;
   flex: 1;
   background-color: #9d52e8;
   color: white;
   padding: 10px;
   border-radius: 5px;
-  font-size: 1.25rem;
+  font-size: 1rem;
   text-align: center;
   opacity: 0;
   visibility: hidden;
@@ -503,7 +524,7 @@ body, html {
   .student-info {
     flex: 0 0 100%;
     max-width: 100%;
-    margin-top: -7rem;
+    margin-top: 0rem;
     margin-bottom: 5rem;
     display: flex;
     flex-direction: column;
@@ -564,7 +585,7 @@ body, html {
   }
 
   .title.is-4 {
-    font-size: 1.4rem;
+    font-size: 1rem;
     color: #333;
   }
 
@@ -595,28 +616,29 @@ body, html {
   .calendar-header {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 12px;
+    gap: 10px;
     text-align: center;
   }
 
   .calendar-day-header {
-    padding: 4px;
-    font-size: 0.9rem;
+    padding: 5px;
+    font-size: .9rem;
     background-color: #f5f5f5;
     color: #094e98;
     border-radius: 5px;
+    margin-bottom: 1rem;
   }
 
   .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: 35px;
-    gap: 7px;
+    grid-auto-rows: 40px;
+    gap: 5px;
   }
 
   .calendar-day {
     text-align: center;
-    padding: 5px;
+    padding: 20px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     color: grey;
@@ -627,30 +649,6 @@ body, html {
     align-items: center;
     cursor: pointer;
     transition: background-color 0.3s ease;
-  }
-
-  .calendar-day.selectable:hover {
-    background-color: #6eb3fc;
-    color: white;
-  }
-
-  .calendar-day.selected {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-  }
-
-  .calendar-day.unselectable {
-    background-color: #f0f0f0;
-    color: #bbb;
-    cursor: not-allowed;
-  }
-
-  .selected-date-time {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
   }
 
   .time-slots {
@@ -665,7 +663,7 @@ body, html {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-width: 100%;
+    min-width: 70%;
     margin: auto;
     min-height: 55px;
     background-color: #edeaea;
@@ -686,13 +684,13 @@ body, html {
   }
 
   .time-text {
-    font-size: 1.2rem;
-    padding: 1.2rem 0.5rem;
+    font-size: 1rem;
+    padding: 1rem 0.5rem;
     color: rgb(255, 255, 255);
   }
 
   .confirm-box {
-    font-size: 1.2rem;
+    font-size: 1rem;
     padding: 1.2rem 0.5rem;
     border-radius: 5px;
   }
@@ -700,15 +698,20 @@ body, html {
 
 @media (max-width: 768px) {
 
+
   .student-info {
-    flex: 0 0 100%;
-    max-width: 100%;
-    margin-top: -7rem;
-    margin-bottom: 5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    margin-left: 0rem; 
+    margin-bottom: 3rem;
+    padding-top: 0rem;
+  }
+
+  .student-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+    font-family: 'Open Sans', sans-serif;
   }
 
   .student-name,
@@ -742,7 +745,7 @@ body, html {
   }
 
   .title.is-4 {
-    font-size: 1.4rem;
+    font-size: 1rem;
     color: #333;
   }
 
@@ -793,6 +796,7 @@ body, html {
 
   .month-selector span {
     font-size: 1rem;
+    margin-bottom: 1rem;
   }
 
   .calendar {
@@ -813,7 +817,7 @@ body, html {
 
   .calendar-day-header {
     padding: 3px 5px;
-    font-size: 1.1rem;
+    font-size: .9rem;
     background-color: #f5f5f5;
     color: #094e98;
     border-radius: 5px;
@@ -823,18 +827,18 @@ body, html {
   .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: 35px;
+    grid-auto-rows: 30px;
     gap: 10px;
   }
 
   .calendar-day {
     text-align: center;
-    padding: 15px;
+    padding: 18px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     color: grey;
     border-radius: 50px;
-    font-size: 1.1rem;
+    font-size: .75rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -842,39 +846,11 @@ body, html {
     transition: background-color 0.3s ease;
   }
 
-  .calendar-day.selectable:hover {
-    background-color: #6eb3fc;
-    color: white;
-  }
-
-  .calendar-day.selected {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-  }
-
-  .calendar-day.unselectable {
-    background-color: #f0f0f0;
-    color: #bbb;
-    cursor: not-allowed;
-  }
-
-  .selected-date-time {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    flex: 0 0 100%;
-    max-width: 100%;
-    background-color: rgb(255, 255, 255);
-    margin: auto;
-  }
-
   .selected-date-time h3{
     color: black;
     text-align: center;
     margin-top: 2.5rem;
-    font-size: 1.4rem;
+    font-size: 1rem;
     margin-bottom:1.5rem;
     font-family: 'Open Sans', sans-serif;
   }
@@ -886,9 +862,9 @@ body, html {
     justify-content: center;
     margin: auto;
     margin-top: 0;
-    max-width: 90%;
-    max-height: 1080px;
-    padding: 1rem 1rem;
+    max-width: 100%;
+    max-height: 460px;
+    padding: .1rem .5rem;
     margin-bottom: 2rem;
   }
 
@@ -897,7 +873,7 @@ body, html {
     justify-content: space-between;
     align-items: center;
     min-width: 60%;
-    min-height: 35px;
+    height: 20px;
     background-color: #edeaea;
     gap: 5px;
   }
@@ -915,13 +891,13 @@ body, html {
   }
 
   .time-text {
-    font-size: 1.2rem;
+    font-size: 1rem;
     padding: 1.2rem 0.5rem;
     color: rgb(255, 255, 255);
   }
 
   .confirm-box {
-    font-size: 1.2rem;
+    font-size: 1rem;
     padding: 1.2rem 0.5rem;
     border-radius: 5px;
   }
@@ -1011,7 +987,7 @@ body, html {
   .student-info {
     flex: 0 0 100%;
     max-width: 100%;
-    margin-top: -9rem;
+    margin-top: -4rem;
     margin-bottom: 0;
     display: flex;
     flex-direction: column;
@@ -1036,15 +1012,16 @@ body, html {
 
   .student-name {
     width: 90%;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     margin: auto;
     margin-top: .5rem;
+    margin-bottom: 1rem;
     color: rgb(255, 253, 253);
   }
 
   .student-details {
     margin-top: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     font-size: 1.1rem;
     color: #e1dcdc;
     text-align: center;
@@ -1070,7 +1047,7 @@ body, html {
   }
 
   .date-time-selection h3 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-top: 1.5rem;
     margin-bottom: 3rem;
     text-align: center;
@@ -1085,13 +1062,12 @@ body, html {
   }
 
   .month-selector button {
-    padding: 0.2rem 0.6rem;
-    font-size: 0.9rem;
-    border-radius: 20px;
+    padding: 1rem 1rem;
+    font-size: 1rem;
   }
 
   .month-selector span {
-    font-size: 1rem;
+    font-size: .9rem;
   }
 
   .calendar {
@@ -1108,20 +1084,21 @@ body, html {
     background-color: #f5f5f5;
     color: #094e98;
     margin: auto;
-
+    margin-top: 1rem;
+    margin-bottom: 1.3rem;
   }
 
   .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: 43px;
+    grid-auto-rows: 40px;
     gap: 2px;
     margin: auto;
   }
 
   .calendar-day {
     text-align: center;
-    padding:4.5px;
+    padding:1.3rem;
     background-color: #eeeded;
     color: grey;
     border-radius: 50px;
@@ -1133,39 +1110,11 @@ body, html {
     transition: background-color 0.3s ease;
   }
 
-  .calendar-day.selectable:hover {
-    background-color: #6eb3fc;
-    color: white;
-  }
-
-  .calendar-day.selected {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-  }
-
-  .calendar-day.unselectable {
-    background-color: #f4f1f1;
-    color: #bbb;
-    cursor: not-allowed;
-  }
-
-  .selected-date-time {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    flex: 0 0 100%;
-    max-width: 100%;
-    background-color: rgb(255, 255, 255);
-    margin: auto;
-  }
-
   .selected-date-time h3{
     color: black;
     text-align: center;
     margin-top: 0;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-bottom:1.5rem;
     font-family: 'Open Sans', sans-serif;
   }
@@ -1178,7 +1127,7 @@ body, html {
     margin: auto;
     margin-top: 0;
     max-width: 90%;
-    max-height: 1080px;
+    max-height: 340px;
     padding: 1rem 1rem;
     margin-bottom: 2rem;
   }
@@ -1188,34 +1137,14 @@ body, html {
     justify-content: space-between;
     align-items: center;
     max-width: 100%;
-    min-height: 30px;
+    height: 30px;
     background-color: #edeaea;
     gap: 3px;
   }
 
   .time-text-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     border-radius: 5px;
-    min-height: 55px;
     width: 350px;
-    padding: 0 9px;
-  }
-
-  .time-text {
-    font-size:1.3rem;
-    padding: .8rem 0.5rem;
-    width: 90%;
-    text-align: center;
-  }
-
-  .confirm-box {
-    font-size: 1.3rem;
-    padding: .85rem 0.5rem;
-    border-radius: 5px;
-    width: 100%;
   }
 
   /* modal */
