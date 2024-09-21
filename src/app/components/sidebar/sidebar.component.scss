@@ -219,7 +219,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, .3);
+    background-color: rgba(0, 0, 0, .5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -229,7 +229,7 @@
   
   .modal-content {
     background-color: rgb(235, 234, 234);
-    padding: 4rem;
+    padding: 2.5rem;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 0 25px rgba(144, 143, 143, 0.3);
@@ -259,11 +259,14 @@
     display: flex;
     justify-content: center;
     gap: 1rem; 
-    margin-top: 1.5rem;
+    width: 80%;
+    margin: auto;
+    margin-top: 1.7rem;
   
     .button {
-      padding: 0.75rem 1.5rem;
-      font-size: 1.2rem;
+      width: 100%;
+      padding: 0.65rem 1rem;
+      font-size: 1rem;
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease, color 0.3s ease;
@@ -280,19 +283,20 @@
     }
   
     .button.is-light {
-      background-color: transparent; 
-      color: black; 
-      border: none; 
+      background-color: transparent;  
+      color: #800080;  
+      border: .5px solid #800080;  
+      transition: none;  
   
       &:hover {
-        color: #555; 
-        background-color: rgba(0, 0, 0, 0.05); 
+        background-color: transparent;  
+        color: #800080;  
       }
     }
   }
 
   .modal-content p {
-    font-size: 1.4rem; 
+    font-size: 1.2rem; 
     color: #3a3939;  
   }
 
@@ -384,38 +388,68 @@
       margin-right: 15px;
     }
 
-  /* MODAL PARA CERRAR SESIÓN */
+  /* modal para cerrar sesión */
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow: hidden;
+  }
+  
   .modal-content {
-    padding: 1.5rem;
-    width: 400px;
-    max-width: 80%;
+    background-color: rgb(235, 234, 234);
+    padding: 2.3rem;
+    width: 500px;
   }
 
-  .modal-content p {
-    font-size: 1.2rem; 
-    color: #3a3939;  
-  }
+
+  /* botones de modal cerrar sesión */
 
   .modal-buttons {
     display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    gap: .4rem; 
-    margin-top: 1.5rem;
+    justify-content: center;
+    gap: 1rem; 
+    width: 90%;
+    margin: auto;
+    margin-top: 1.7rem;
   
     .button {
-      width: 100%; 
-      padding: .6rem; 
-      font-size: 1rem;
+      width: 100%;
+      padding: 0.55rem 1rem;
+      font-size: .9rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
   
     .button.is-danger {
       background-color: #007BFF; 
+      color: white;
+      border: none;
+  
+      &:hover {
+        background-color: #0056b3; 
+      }
     }
   
     .button.is-light {
-      background-color: rgb(127, 56, 198); 
-      color: #ffffff; 
+      background-color: transparent;  
+      color: #800080;  
+      border: .5px solid #800080;  
+      transition: none;  
+  
+      &:hover {
+        background-color: transparent;  
+        color: #800080;  
+      }
     }
   }
 }
@@ -441,31 +475,54 @@
       font-size: 18px;
     }
 
-    .modal-content p {
-      font-size: 1.1rem; 
-      color: #3a3939;  
-    }
-
-
     /* MODAL PARA CERRAR SESIÓN */
-    .modal-buttons {
-      gap: .2rem; 
-    
-      .button {
-        width: 100%; 
-        padding: .6rem; 
-        font-size: .85rem;
-      }
-    
-      .button.is-danger {
-        background-color: #007BFF; 
-      }
-    
-      .button.is-light {
-        background-color: rgb(127, 56, 198); 
-        color: #ffffff; 
+  .modal-content {
+    padding: 1rem 0rem;
+    width: 400px;
+    max-width: 90%;
+  }
+
+  .modal-content p {
+    font-size: 1.3rem; 
+    color: #3a3939;  
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 0rem;
+    width: 90%;
+    margin: auto;
+    margin-right: 2rem;
+    margin-top: 1.2rem;
+  
+    .button {
+      width: 20%; 
+      padding: 0.55rem 1rem;
+      font-size: 1.1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: transparent; 
+      border: none; 
+      transition: none; 
+      color: inherit; 
+      
+      &:hover {
+        background-color: transparent; 
+        color: inherit; 
       }
     }
+  
+    .button.is-danger {
+      color: #007BFF; 
+      background-color: transparent;
+    }
+  
+    .button.is-light {
+      color: #800080;
+      border: none;
+    }
+  }
+}
 
    
-}
