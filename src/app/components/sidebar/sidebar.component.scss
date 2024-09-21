@@ -16,27 +16,69 @@
   }
   
   .sidebar.closed {
-    width: 80px; 
+    width: 70px; 
   }
   
+  .logo-user-container {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    align-items: center;
+    padding: 8px;
+    width: 100%; 
+    margin-top: 15px;
+  }
+
   .logo-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 15px;
-    flex-direction: column;
+
+    img {
+      width: 55px;
+      margin: auto;
+      height: auto;
+      max-width: 100px;
+    }
   }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 10px;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   
-  .logo-container img {
-    width: 65px;
-    height: auto;
-    max-width: 100px;
+    .hello-text {
+
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+      color: white;
+    }
+  
+    .user-name {
+      font-size: 1rem;
+      color: white;
+      font-weight: bold;
+    }
+  
+    .sidebar.closed & {
+      opacity: 0;
+    }
+  
+    .sidebar:not(.closed) & {
+      opacity: 1;
+    }
   }
   
   .sidebar ul {
     list-style: none;
     padding: 4px;
-    margin-top: 2rem;
+    margin-top: 4rem;
   }
   
   .sidebar ul li {
@@ -52,9 +94,10 @@
     align-items: center;
     text-decoration: none;
     color: white;
-    padding: 25px;
+    padding: 22px;
     position: relative; 
-    font-size: 17px;
+    font-weight: 500;
+    font-size: 14px;
     transition: all 0.5s ease-in-out;
     overflow: visible;
   }
@@ -78,8 +121,8 @@
   }
   
   .sidebar ul li a i {
-    font-size: 21px;
-    margin-right: 22px;
+    font-size: 17px;
+    margin-right: 18px;
   }
   
   .sidebar ul li a .link-text {
@@ -94,7 +137,7 @@
   }
   
   .logout {
-    padding: 20px;
+    padding: 18px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -106,7 +149,7 @@
 
   .logout a {
     display: flex;
-    font-size: 1.1rem;
+    font-size: .9rem;
     align-items: center;
     color: white;
     text-decoration: none;
@@ -135,7 +178,7 @@
   }
   
   .logout i {
-    font-size: 22px;
+    font-size: 18px;
     margin-right: 15px; 
   }
   
@@ -156,7 +199,7 @@
     left: 85px; 
     background: #975bcf;
     color: white;
-    padding: 10px 14px ;
+    padding: 7px 14px ;
     cursor: pointer;
     font-size: 15px;
     border-radius: 0px 15px 15px 0px;
@@ -258,36 +301,68 @@
         width: 300px; 
     }
 
+    .sidebar ul li a:hover::before {
+      width: 301px; 
+      background: rgba(255, 255, 255, 0.1); 
+    }
+
     .sidebar.closed {
       width: 0px; 
     }
 
-    .logo-container img {
-      width: 55px;
+    .logo-user-container {
+      display: flex;
+      flex-direction: row; 
+      justify-content: flex-start;
+      align-items: center;
+      padding: 12px;
+      width: 100%; 
+      margin-top: 20px;
+    }
+  
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  
+      img {
+        width: 50px;
+      }
+    }
+  
+    .user-info {
+      padding-left: 15px;
+    
+      .hello-text {
+        font-size: 1.1rem;
+        margin-bottom: 0px;
+      }
+    
+      .user-name {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+    
     }
 
     .sidebar ul li a {
-        padding: 24px; 
-    }
-
-
-    .sidebar ul li a:hover::before {
-      width: 300px; 
-      background: rgba(255, 255, 255, 0.1); 
+        padding: 22px; 
     }
 
     .sidebar ul li a span {
-      font-size: 18px;
+      font-size: 14px;
+      font-weight: 400;
     }
 
     .sidebar ul li a i {
-        font-size: 20px; 
+      font-size: 14px;
+      margin-right: 18px;
     }
 
     .arrow-icon {
       display: block;
       padding: 10px 14px ;
-      font-size: 20px;
+      font-size: 17px;
     }
 
     .logout {
@@ -296,16 +371,16 @@
 
     .logout a {
       width: 120px;
-      font-size: 1.1rem;
+      font-size: .9rem;
     }
 
     .logout a:hover::before {
-      width: 300px; 
+      width: 301px; 
       background: rgba(255, 255, 255, 0.1); 
     }
 
     .logout i{
-      font-size: 17.5px;
+      font-size: 13px;
       margin-right: 15px;
     }
 
@@ -336,7 +411,6 @@
   
     .button.is-danger {
       background-color: #007BFF; 
-
     }
   
     .button.is-light {
@@ -346,7 +420,7 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 492px) {
     .sidebar {
         width: 300px; 
     }
