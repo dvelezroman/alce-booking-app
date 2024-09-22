@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import {CreateMeetingDto, FilterMeetingsDto, MeetingDTO} from "./dtos/booking.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +12,32 @@ export class BookingService {
 
   constructor(private http: HttpClient) {}
 
-  bookMeeting(bookingData: {
-    studentId: number;
-    date: Date;
-    hour: number;
-    instructorId: number | null;
-    stageId: number | undefined
-  }): Observable<any> {
+  bookMeeting(bookingData: CreateMeetingDto
+  ): Observable<any> {
     return this.http.post(`${this.apiUrl}/book`, bookingData)
+  }
+
+  searchMeetings(filterParams: FilterMeetingsDto): Observable<MeetingDTO[]> {
+    const { from, to, hour, studentId} = filterParams;
+    let params = new HttpParams();
+
+    if (from) {
+      params = params.set('from', from);
+    }
+
+    if (to) {
+      params = params.set('to', to);
+    }
+
+    if (hour !== undefined) {
+      params = params.set('hour', hour.toString());
+    }
+
+    if (studentId !== undefined) {
+      params = params.set('studentId', studentId);
+    }
+
+    return this.http.get<MeetingDTO[]>(`${this.apiUrl}/search`, { params });
   }
 }
 

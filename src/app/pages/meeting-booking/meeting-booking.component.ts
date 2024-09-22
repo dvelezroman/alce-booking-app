@@ -4,9 +4,10 @@ import {CommonModule, isPlatformBrowser, NgForOf} from "@angular/common";
 import { Router } from '@angular/router';
 import {Store} from "@ngrx/store";
 import {selectUserData} from "../../store/user.selector";
-import {Observable} from "rxjs";
+import {Observable, Subject, takeUntil} from "rxjs";
 import {UserDto} from "../../services/dtos/user.dto";
 import {BookingService} from "../../services/booking.service";
+import {CreateMeetingDto, MeetingDTO} from "../../services/dtos/booking.dto";
 
 @Component({
   selector: 'app-meeting-booking',
@@ -41,6 +42,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   nextYear!: number;
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
+  meetings: MeetingDTO[] = [];
+  private unsubscribe$ = new Subject<void>();
+  showTimeSlotsModal = false;
 
   constructor(
     private router: Router,
@@ -53,8 +57,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.userData$.subscribe(state => {
+    this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
       this.userData = state;
+      if (state?.student?.id) {
+        this.initializeMeetings();
+      }
     });
     /**
      * Represents the current date.
@@ -120,6 +127,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.generateCurrentMonthDays();
   }
 
+  initializeMeetings() {
+    const currentDate = new Date();
+    const toDate = new Date(currentDate);
+    toDate.setDate(currentDate.getDate() + 10); // Add 10 days
+    const formattedToDate = toDate.toISOString().split('T')[0];
+    this.loadMeetings(this.getTodayDate(), formattedToDate, undefined, this.userData?.student?.id);
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   userName() {
     if (this.userData) {
       const { firstName, lastName } = this.userData;
@@ -163,6 +183,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return `${year}-${month}-${day}`;
   }
 
+  getTomorrowDate(): string {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // Increment the day by 1
+    return this.formatDate(tomorrow);
+  }
+
   getMaxDate(): string {
     const today = new Date();
     const maxDate = new Date(today.setDate(today.getDate() + 7)); // One week from today
@@ -170,15 +196,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   generateCurrentMonthDays() {
-    const monthIndex = new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth();
+    const monthIndex = new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth();
     const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
-
     const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
 
-
     this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '' }));
-
-
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
         const date = new Date(this.selectedYear, monthIndex, i + 1);
@@ -223,12 +245,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   isDaySelectable(day: any): boolean {
     const currentDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
-    const todayDate = new Date(this.today);
+    const currentHour = currentDate.getHours();
+    const startDate = currentHour > 11 ? new Date(this.getTomorrowDate()) : new Date(this.today);
     const maxDate = new Date(this.maxDate);
 
-
-    const isSameMonth = currentDate.getMonth() === todayDate.getMonth() && currentDate.getFullYear() === todayDate.getFullYear();
-    const isWithinRange = currentDate >= todayDate && currentDate <= maxDate;
+    const isSameMonth = currentDate.getMonth() === startDate.getMonth() && currentDate.getFullYear() === startDate.getFullYear();
+    const isWithinRange = currentDate >= startDate && currentDate <= maxDate;
 
     return isSameMonth && isWithinRange;
   }
@@ -237,16 +259,35 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     if (this.isDaySelectable(day)) {
       this.selectedDay = day.day;
       this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
-      console.log('Día seleccionado:', this.selectedDayFormatted);
+      console.log('Día seleccionado:', day);
+      this.recalculateTimeSlots(day); // Call the recalculation method
+      this.showTimeSlotsModal = true; // Show the modal
     }
   }
 
+  recalculateTimeSlots(day: any) {
+    const selectedDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
+    const currentDate = new Date();
+    const currentHour = currentDate.getHours();
+
+    if (selectedDate.toDateString() === currentDate.toDateString()) {
+      // If the selected day is today
+      this.timeSlots = Array.from({ length: 21 - (currentHour + 1) }, (_, i) => {
+        const hour = currentHour + 1 + i; // Start from the next hour
+        return { label: `${hour}:00`, value: hour };
+      });
+    } else {
+      // If the selected day is not today, show all available hours
+      this.initializeTimeSlots();
+    }
+  }
+
+
   selectTimeSlot(time: {label: string, value: number}) {
-    if (this.selectedDayFormatted) {
+    if (this.selectedDay) {
       this.selectedTimeSlot = time;
       this.showSuccessModal = true;
     } else {
-
       this.showModal = true;
       setTimeout(() => {
         this.showModal = false;
@@ -262,10 +303,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
 
   bookMeeting() {
+    this.showTimeSlotsModal = false;
     if (this.isMeetingDataValid()) {
-      const bookingData = this.createBookingData();
+      const bookingData: CreateMeetingDto = this.createBookingData();
       this.bookingService.bookMeeting(bookingData).subscribe(response => {
-          console.log(response);
           this.showSuccessModal = false;
           this.showInfoModal = true;
           this.hideInfoModalAfterDelay(3000);
@@ -281,16 +322,30 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
   }
 
+  loadMeetings(from?: string, to?: string, hour?: string, studentId?: number): void {
+    this.bookingService.searchMeetings({ from, to, hour, studentId }).subscribe({
+    next: (meetings: MeetingDTO[]) => {
+      this.meetings = meetings;
+      console.log(meetings);
+    }, error: (error) => {
+        console.error('Error fetching meetings:', error);
+      }
+    });
+  }
+
   isMeetingDataValid() {
     return this.selectedDate && this.selectedTimeSlot;
   }
 
-  createBookingData() {
+  createBookingData(): CreateMeetingDto {
+    if (!this.userData?.student) {
+      throw new Error('Student data is required to create booking data.');
+    }
     return {
-      studentId: this.userData?.student?.id as number,
-      instructorId: null,
-      stageId: this.userData?.stage?.id,
-      date: new Date(this.selectedDate),
+      studentId: this.userData.student.id,
+      instructorId: undefined,
+      stageId: this.userData.stage?.id,
+      date: new Date(`${this.selectedYear}-${this.selectedMonth}-${this.selectedDay}`),
       hour: this.selectedTimeSlot.value,
     };
   }
@@ -311,5 +366,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.showModalBookingError = false;
     }, delay);
+  }
+
+  closeTimeSlotsModal() {
+    this.showTimeSlotsModal = false;
   }
 }

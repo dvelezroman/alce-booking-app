@@ -64,26 +64,51 @@
       </div>
 
       <!-- Sub-bloque 2: Time Slots -->
-      <div class="selected-date-time">
-        <h3 class="title is-5">Select a time</h3>
-        <div class="time-slots">
-          <div *ngFor="let time of timeSlots"
-               class="time-slot"
-               (mouseenter)="showConfirm = time.label"
-               (mouseleave)="showConfirm = null">
-            <div class="time-text-container">
-              <span class="time-text">{{ time.label }}</span>
-            </div>
-            <div class="confirm-box" *ngIf="showConfirm" (click)="selectTimeSlot(time)">
-              Confirm
-            </div>
-          </div>
+<!--      <div class="selected-date-time">-->
+<!--        <h3 class="title is-5">Select a time</h3>-->
+<!--        <div class="time-slots">-->
+<!--          <div *ngFor="let time of timeSlots"-->
+<!--               class="time-slot"-->
+<!--               (mouseenter)="showConfirm = time.label"-->
+<!--               (mouseleave)="showConfirm = null"-->
+<!--               (click)="selectTimeSlot(time)">-->
+<!--            <div class="time-text-container">-->
+<!--              <span class="time-text">{{ time.label }}</span>-->
+<!--            </div>-->
+<!--            <div class="confirm-box" *ngIf="showConfirm">-->
+<!--              Confirm-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+  </div>
+</div>
+
+
+<!-- Time Slots Modal -->
+<div class="modal-overlay" *ngIf="showTimeSlotsModal">
+  <div class="modal-content info-modal">
+    <h3 class="title is-5">Select a time</h3>
+    <div class="time-slots">
+      <div *ngFor="let time of timeSlots"
+           class="time-slot"
+           (mouseenter)="showConfirm = time.label"
+           (mouseleave)="showConfirm = null"
+           (click)="selectTimeSlot(time)"
+      >
+        <div class="time-text-container">
+          <span class="time-text">{{ time.label }}</span>
+        </div>
+        <div class="confirm-box" *ngIf="showConfirm">
+          Confirm
         </div>
       </div>
-
     </div>
-
-
+    <div class="modal-buttons">
+      <button class="button is-danger" (click)="closeTimeSlotsModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
 
 <!-- Modal de error -->
