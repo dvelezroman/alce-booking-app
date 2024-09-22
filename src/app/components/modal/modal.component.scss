@@ -11,21 +11,95 @@
 }
 
 .modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
+  background-color: white;
+  padding: 1.7rem;
+  border-radius: 5px;
   text-align: center;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+  width: 400px;
+  max-width: 90%;
+  position: relative;
+  animation: shake 0.5s ease;
 }
 
-.error-modal {
-  color: red;
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+    20%, 40%, 60%, 80% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+
+.modal-content p {
+  font-size: 1.1rem;
+  color: #dfd9d9;
+}
+
+.button {
+  background-color: transparent;
+  color:  rgb(208, 58, 58);
+  border: 1px solid  rgb(208, 58, 58);
+  padding: 0.45rem 1.5rem;
+  margin-top: 1rem;
+  font-size: .9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color:   rgb(208, 58, 58);
+  color: white;
 }
 
 .success-modal {
-  color: green;
+  background-color: #eaecec;
+  color: #28a745;
 }
 
-.error-icon, .success-icon {
-  font-size: 3rem;
-  margin-bottom: 15px;
+.success-modal p{
+  color: #28a745;
+}
+
+.error-modal {
+  background-color: #dfe2e3;
+}
+
+.error-modal p {
+  color: rgb(208, 58, 58);
+}
+
+.success-icon {
+  font-size: 1.4rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+.error-icon {
+  font-size: 1.4rem;
+  color: #dc3545;
+  margin-bottom: .7rem;
+}
+
+@media (max-width: 492px) {
+  .modal-content {
+    width: 90%; 
+    padding: 1rem; 
+  }
+
+  .modal-content p {
+    font-size: 1rem; 
+  }
+
+  .button {
+    width: 25%; 
+    font-size: 1rem;
+    padding: 0.3rem; 
+    background-color: transparent; 
+    color: #dc3545;
+    border: 1px solid  rgb(208, 58, 58);
+  }
+
+  .button:hover {
+    background-color:transparent; 
+  }
 }

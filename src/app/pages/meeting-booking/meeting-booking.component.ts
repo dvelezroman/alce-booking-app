@@ -23,6 +23,7 @@ import {CreateMeetingDto, MeetingDTO} from "../../services/dtos/booking.dto";
 export class MeetingBookingComponent implements OnInit, AfterViewInit {
   selectedDate: string = '';
   selectedTimeSlot: {label: string, value: number} = { label: "9:00", value: 9 };
+  hoverIndex: number | null = null;
   timeSlots: {label: string, value: number }[] = [];
   today: string = '';
   maxDate: string = '';
@@ -270,17 +271,32 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
 
+    // Define the time slot range
+    const startHour = 9; // 9 AM
+    const endHour = 21; // 9 PM
+
     if (selectedDate.toDateString() === currentDate.toDateString()) {
       // If the selected day is today
-      this.timeSlots = Array.from({ length: 21 - (currentHour + 1) }, (_, i) => {
-        const hour = currentHour + 1 + i; // Start from the next hour
+      if (currentHour >= endHour) {
+        // If current time is later than 21:00, show time slots from tomorrow
+        selectedDate.setDate(selectedDate.getDate() + 1);
+      }
+
+      // Generate time slots starting from the maximum of startHour or currentHour + 1
+      const availableStartHour = Math.max(startHour, currentHour + 1);
+      this.timeSlots = Array.from({ length: endHour - availableStartHour + 1 }, (_, i) => {
+        const hour = availableStartHour + i;
         return { label: `${hour}:00`, value: hour };
-      });
+      }).filter(slot => slot.value <= endHour); // Ensure the hour doesn't exceed 21
     } else {
       // If the selected day is not today, show all available hours
-      this.initializeTimeSlots();
+      this.timeSlots = Array.from({ length: endHour - startHour + 1 }, (_, i) => {
+        const hour = startHour + i;
+        return { label: `${hour}:00`, value: hour };
+      });
     }
   }
+
 
 
   selectTimeSlot(time: {label: string, value: number}) {

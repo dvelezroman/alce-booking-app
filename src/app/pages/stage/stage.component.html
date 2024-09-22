@@ -49,12 +49,8 @@
             </div>
           </div>
           <div class="field is-grouped">
-            <div class="control">
-              <button type="submit" class="button create-btn is-primary">Create</button>
-            </div>
-            <div class="control">
-              <button type="button" class="button cancel-btn" (click)="closeCreateModal()">Cancel</button>
-            </div>
+            <button type="submit" class="button create-btn is-primary">Create</button>
+            <button type="button" class="button cancel-btn" (click)="closeCreateModal()">Cancel</button>
           </div>
         </form>
       </div>
@@ -68,26 +64,26 @@
     <div class="box">
       <h2 class="title is-4">Edit Stage</h2>
       <form (ngSubmit)="updateStage()" #editStageForm="ngForm">
+       
         <div class="field">
           <label class="label">Number</label>
           <div *ngIf="selectedStage" class="control">
             <input class="input" type="number" [(ngModel)]="selectedStage.number" name="number" required>
           </div>
         </div>
+
         <div class="field">
           <label class="label">Description</label>
           <div *ngIf="selectedStage" class="control">
             <textarea class="textarea" [(ngModel)]="selectedStage.description" name="description" required></textarea>
           </div>
         </div>
+
         <div class="field is-grouped">
-          <div class="control">
-            <button type="submit" class="button create-btn is-primary">Update</button>
-          </div>
-          <div class="control">
-            <button type="button" class="button cancel-btn" (click)="closeEditModal()">Cancel</button>
-          </div>
+          <button type="submit" class="button create-btn is-primary">Update</button>
+          <button type="button" class="button cancel-btn" (click)="closeEditModal()">Cancel</button>
         </div>
+        
       </form>
     </div>
   </div>

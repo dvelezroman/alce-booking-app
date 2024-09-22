@@ -4,9 +4,18 @@
   (mouseleave)="closeSidebar($event)"
   (mouseover)="openSidebar($event)">
 
-  <div class="logo-container">
-    <img src="/assets/logo header.png" alt="Logo">
+  <div class="logo-user-container">
+
+    <div class="logo-container">
+      <img src="/assets/logo header.png" alt="Logo">
+    </div>
+
+    <div class="user-info" *ngIf="!isSidebarClosed">
+      <h2 class="hello-text">hello,</h2>
+      <p class="user-name">{{ userData?.firstName }} {{ userData?.lastName }}</p>
+    </div>
   </div>
+
   <ul>
     <li *ngFor="let item of navItems">
       <a [routerLink]="item.route" (click)="closeSidebar($event)"> 
