@@ -6,7 +6,7 @@
                  (toggleSidebarEvent)="toggleSidebar()"
                  (logoutEvent)="onConfirmLogout()">
     </app-sidebar>
-    <main class="main-content">
+    <main class="main-content" [ngClass]="{'shrink': !isSidebarClosed}">
       <router-outlet></router-outlet>
       <app-spinner></app-spinner>
     </main>

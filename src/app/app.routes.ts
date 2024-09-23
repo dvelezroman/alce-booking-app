@@ -6,6 +6,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { RegisterComponent } from "./pages/register/register.component";
 import {StageComponent} from "./pages/stage/stage.component";
+import {MeetingUpdateLinkComponent} from "./pages/meeting-update-link/meeting-update-link.component";
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent},
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'booking', component: MeetingBookingComponent },
   { path: 'contact', component: ContactComponent},
   { path: 'stage', component: StageComponent },
+  { path: 'meeting-update-link', component: MeetingUpdateLinkComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
 ];

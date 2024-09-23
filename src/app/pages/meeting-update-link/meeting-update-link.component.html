@@ -1,0 +1,62 @@
+<div class="container">
+  <h1 class="title">Update Meeting Link</h1>
+  <form (ngSubmit)="updateLink()" #updateLinkForm="ngForm">
+    <div class="field">
+      <label class="label">Date</label>
+      <div class="control">
+        <input
+          class="input"
+          type="date"
+          name="date"
+          [(ngModel)]="meetingData.date"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Hour</label>
+      <div class="control">
+        <input
+          class="input"
+          type="number"
+          name="hour"
+          [(ngModel)]="meetingData.hour"
+          min="0"
+          max="23"
+          required
+        />
+      </div>
+      <p class="help">Enter hour in 24-hour format (0-23).</p>
+    </div>
+
+    <div class="field">
+      <label class="label">Meeting Link</label>
+      <div class="control">
+        <input
+          class="input"
+          type="url"
+          name="link"
+          [(ngModel)]="meetingData.link"
+          placeholder="https://example.com/meeting-link"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <button type="submit" class="button is-primary" [disabled]="!updateLinkForm.valid">
+          Update Link
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="updateSuccess" class="notification is-success">
+      Meeting link updated successfully!
+    </div>
+    <div *ngIf="updateError" class="notification is-danger">
+      Error updating meeting link. Please try again.
+    </div>
+  </form>
+</div>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import {CreateMeetingDto, FilterMeetingsDto, MeetingDTO} from "./dtos/booking.dto";
+import {CreateMeetingDto, FilterMeetingsDto, MeetingDTO, UpdateMeetingLinkDto} from "./dtos/booking.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +38,10 @@ export class BookingService {
     }
 
     return this.http.get<MeetingDTO[]>(`${this.apiUrl}/search`, { params });
+  }
+
+  updateMeetingLink(data: UpdateMeetingLinkDto): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/meetings/link`, data);
   }
 }
 
