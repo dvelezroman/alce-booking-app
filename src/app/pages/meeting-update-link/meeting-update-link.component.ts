@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import {UpdateMeetingLinkDto} from "../../services/dtos/booking.dto";
 import {BookingService} from "../../services/booking.service";
 import {FormsModule} from "@angular/forms";
-import {NgIf} from "@angular/common";
+import {CommonModule} from "@angular/common";
 
 @Component({
   selector: 'app-meeting-update-link',
   standalone: true,
   imports: [
     FormsModule,
-    NgIf
+    CommonModule
   ],
   templateUrl: './meeting-update-link.component.html',
   styleUrl: './meeting-update-link.component.scss'
