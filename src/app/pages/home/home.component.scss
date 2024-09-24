@@ -38,12 +38,12 @@
 
 .login-button {
   display: inline-block;
-  padding: 1rem 3.5rem;
+  padding: 1rem 3rem;
   font-size: 1rem;
   color: white;
   background-color: transparent;
   position: relative;
-  border-radius: 25px;
+  border-radius: 20px;
   text-transform: uppercase;
   text-decoration: none;
   transition: background-color 0.4s ease, color 0.4s ease;
@@ -59,8 +59,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 25px; 
-    padding: 4px; 
+    border-radius: 20px; 
+    padding: 2px; 
     background: linear-gradient(90deg, #007BFF, #8A2BE2, #007BFF); 
     background-size: 300% 300%; 
     background-position: 0% 50%;
@@ -72,6 +72,7 @@
 
   &:hover:before {
     animation: borderAnimation 4s infinite linear; 
+    padding: 3px; 
   }
 
   &:hover {
@@ -100,12 +101,46 @@
 }
 
 
-@media (max-width: 527px) {
+@media (max-width: 492px) {
   .desktop-video {
     display: none; 
   }
 
   .mobile-video {
     display: block; 
+  }
+
+  .hero-button-container {
+    bottom: 300px; 
+  }
+
+  .login-button {
+    display: inline-block;
+    padding: .9rem 2.5rem;
+    font-size: .9rem;
+    color: white;
+    background-color: transparent;
+    position: relative;
+    border-radius: 20px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    opacity: 0; 
+    transform: translateY(20px); 
+    animation: fadeIn 5s ease forwards;
+    border: 4px solid transparent;
+  
+    &:before {
+      content: "";
+      padding: 2px; 
+    }
+  
+    &:hover:before {
+      animation: none; 
+    }
+  
+    &:hover {
+      color: white; 
+    }
   }
 }
