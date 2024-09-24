@@ -1,9 +1,5 @@
 /* Estilos generales */
-body, html {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
+
 
 :host {
   display: block;
@@ -23,6 +19,7 @@ body, html {
 .title.is-3 {
   font-size: 2rem;
   color: #333;
+  text-align: center;
   font-family: 'Poppins', sans-serif;
 }
 
@@ -34,122 +31,107 @@ body, html {
 }
 
 .container {
-  margin-top: 4rem;
+  margin-top: 0rem;
+  padding: 5rem 0rem;
 }
 
 .student-info {
   display: flex;
+  border-radius: 10px;
   flex-direction: column;
   justify-content:flex-start;
   align-items: center;
-  max-width: 90%;
-  margin-left: 1.5rem;
-  margin-bottom: 0rem;
-  padding-top: 1rem;
-  padding-left: 7%;
-}
-
-.student-title {
-  font-size: 1rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 1rem;
-  font-family: 'Open Sans', sans-serif;
+  max-width: 75%;
+  padding: 2rem 0rem;
+  margin: auto;
 }
 
 /* información del estudiante */
-.student-photo img {
-  width: 170px;
-  height: 170px;
-  object-fit: cover;
-  border-radius: 50%;
-}
 
 .student-name {
-  color: #4f4d4d;
-  margin-top: 1.3rem;
-  font-size: 1.2rem;
+  color: #494949;
+  font-size: 2rem;
   font-family: 'Open Sans', sans-serif;
 }
 
 .student-details {
-  font-size: 0.9rem;
-  color: #4f4d4d;
-  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  color: #303030;
+  margin-top: 0rem;
   font-family: 'Open Sans', sans-serif;
+}
+
+.student-detail{
+  color: rgb(92, 90, 90);
 }
 
 /* bloque de fechas seleccionadas */
 .student-schedule {
-  width: 50%; 
-  margin-top: 2rem;
+  width: 60%; 
+  margin-top: 5rem;
 
   .schedule-title {
-    font-size: 1rem;
-    color: #313131;
-    margin-bottom: .5rem;
+    font-size: 1.5rem;
+    color: #515357;
+    margin-bottom: 1rem;
     font-weight: bold;
     text-align: center;
   }
 
   .schedule-list {
-    max-height: 125px; 
+    max-height: 150px; 
     overflow-y: auto; 
-    padding: .9rem;
+    padding: .7rem 0rem;
     border-radius: 5px;
     border: .5px solid rgb(184, 184, 184);
-    background-color: #f9f9f9;
+    background: linear-gradient(to right, #4490e2, #bd75e4);
     width: 100%; 
   }
 
   .schedule-list div {
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;     
-    margin-bottom: .5rem;
+    margin-bottom: .7rem;
+    padding-bottom: .6rem;
+    border-bottom: .5px solid rgba(181, 178, 178, 0.682);
   }
 
   .schedule-list p {
+    display: flex;
+    align-items: center;
     margin: 0 0.5rem; 
     font-size: .9rem;
-    color: #333;
+    color: #ffffff;
+  }
+
+  .schedule-list p .index {
+    width: 30px; 
+    text-align: right; 
+    margin-right: 10px; 
   }
 
   .schedule-list p strong {
     font-weight: bold;
-    color: #333; 
-    margin-left: 25px;
+    color: #ffffff; 
+    margin-left: 15px;
     margin-right: 5px;
   }
 
 }
-.schedule-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-  margin-left: 10%;
-}
 
-.delete-button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: red;
-  font-size: 1rem;
-}
-
-.delete-button:hover {
-  color: darkred;
-}
 
 /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
 .date-time-wrapper {
   display: flex;
+  background-color: #aa9bed74;
+  border-radius: 15px;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  gap: 0rem;
+  width: 85%;
+  margin: auto;
   margin-top: 4rem;
+  padding: 3rem 2rem;
 }
 
 /* SUB-BLOQUE: Calendario */
@@ -158,11 +140,11 @@ body, html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  margin-top: -4.9rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  width: 50%;
+  padding: 1.5rem;
+  margin-top: 0rem;
+  background-color: #ffffffb5;
+  border-radius: 10px;
+  width: 75%;
 }
 
 .calendar {
@@ -171,13 +153,11 @@ body, html {
   align-items: center;
   justify-content: center;
   width: 50%;
-
 }
 
 .calendar-title {
   text-align: center;
   margin-bottom: 2rem;
-
 }
 
 .title.is-4 {
@@ -230,8 +210,8 @@ body, html {
   text-align: center;
   font-size: .8rem;
   font-weight: bold;
-  background-color: #f5f5f5;
-  color: #094e98;
+  background-color: transparent;
+  color: #434445;
 }
 
 .calendar-grid {
@@ -246,7 +226,7 @@ body, html {
   text-align: center;
   padding: 18px;
   font-size: .65rem;
-  background-color: #f9f9f9;
+  background-color: #f9f9f9b3;
   border: 1px solid #ddd;
   color: grey;
   border-radius: 50%;
@@ -306,7 +286,7 @@ body, html {
 
 .time-slots {
   display: flex;
-  margin-top: 2rem;
+  margin-top: 1rem;
   flex-direction: column;
   align-items: center;
   gap: 8px;
@@ -639,7 +619,7 @@ body, html {
 
   .student-info {
     flex: 0 0 100%;
-    max-width: 100%;
+    width: 100%;
     margin-top: -2rem;
     margin-bottom: 5rem;
     display: flex;
@@ -674,7 +654,7 @@ body, html {
 
   /* bloque de fechas seleccionadas */
 .student-schedule {
-  width: 55%; 
+  width: 75%; 
   margin-top: 2rem;
 
   .schedule-title {
@@ -706,12 +686,12 @@ body, html {
   .schedule-list p {
     margin: 0 0.5rem; 
     font-size: .9rem;
-    color: #333;
+    color: #dbdada;
   }
 
   .schedule-list p strong {
     font-weight: bold;
-    color: #333; 
+    color: #dcdada; 
     margin-left: 25px;
     margin-right: 5px;
   }
@@ -734,11 +714,12 @@ body, html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0;
+
   margin-top: -4.9rem;
   background-color: #f9f9f9;
   border-radius: 8px;
   width: 50%;
+  margin: auto;
 }
 
 .calendar {
@@ -746,15 +727,13 @@ body, html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 75%;
+  width: 100%;
   margin: auto;
-  margin-left: 25%;
 }
 
 .calendar-title {
   text-align: center;
-  margin-left: 25%;
-  margin-bottom: 4.4rem;
+  margin-bottom: 2.4rem;
 }
 
 .title.is-4 {
@@ -767,7 +746,6 @@ body, html {
   justify-content: center;
   align-items: center;
   margin-bottom: 0rem;
-  margin-left: 25%;
 }
 
 .month-selector button {
@@ -980,9 +958,7 @@ body, html {
 @media (max-width: 768px) {
 
   .student-info {
-    margin-left: 0rem;
-    margin-bottom: 3rem;
-    padding-top: 0rem;
+    margin-bottom: 2em;
   }
 
   .student-title {
@@ -997,7 +973,7 @@ body, html {
   .student-name {
     font-size: 1.5rem;
     margin: auto;
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 
   .student-details-title {
@@ -1014,13 +990,13 @@ body, html {
 
    /* bloque de fechas seleccionadas */
 .student-schedule {
-  width: 70%; 
-  margin-top: 2rem;
+  width: 95%; 
+  margin-top: 5rem;
 
   .schedule-title {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: #313131;
-    margin-bottom: .5rem;
+    margin-bottom: 1rem;
     font-weight: bold;
     text-align: center;
   }
@@ -1037,7 +1013,7 @@ body, html {
 
   .schedule-list div {
     display: flex;
-    justify-content: center; 
+    justify-content: flex-start; 
     align-items: center;     
     margin-bottom: .5rem;
     margin-left: -35px;
@@ -1046,12 +1022,12 @@ body, html {
   .schedule-list p {
     margin: 0 0.5rem; 
     font-size: .9rem;
-    color: #333;
+    color: #eeeeee;
   }
 
   .schedule-list p strong {
     font-weight: bold;
-    color: #333; 
+    color: #d9d8d8; 
     margin-left: 25px;
     margin-right: 5px;
   }
@@ -1064,7 +1040,8 @@ body, html {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 75%;
+  background-color: transparent;
+  width: 80%;
   gap: 0rem;
   margin-top: 0rem;
   margin: auto;
@@ -1464,6 +1441,24 @@ body, html {
 }
 
 @media (max-width: 600px){
+
+  .student-info {
+    margin-bottom: 2em;
+
+  }
+
+  .schedule-list {
+    max-height: 100px; 
+    overflow-x: auto; 
+    white-space: nowrap; 
+    padding-top: 1.3rem;
+    padding-left: 0rem;
+    border-radius: 12px;
+    border: 0.5px solid rgb(184, 184, 184);
+    background-color: #f9f9f91d;
+    width: 100%; 
+  }
+  
   .date-time-wrapper {
     display: flex;
     flex-direction: column;
@@ -1474,13 +1469,19 @@ body, html {
     margin-top: 0rem;
     margin: auto;
   }
+
+
 }
 
 @media (max-width: 492px) {
 
+  :host {
+    padding:1rem 0rem;
+  }
+
   .container {
-    margin-top: 3rem;
-    margin-bottom: 1rem;
+    margin-top: 0rem;
+    margin-bottom: 0rem;
   }
 
   .class-booking-header {
@@ -1503,25 +1504,10 @@ body, html {
     border-radius: 5px;
   }
 
-  .student-photo img{
-    margin-top: 2rem;
-    width: 120px;
-    height: 120px;
-  }
-
-  .student-title {
-    display: none;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 1rem;
-    font-family: 'Open Sans', sans-serif;
-  }
-
   .student-name {
     text-align: center;
     width: 90%;
-    font-size: 1.8rem;
+    font-size: 2rem;
     margin: auto;
     margin-top: .5rem;
     margin-bottom: -1rem;
@@ -1531,7 +1517,7 @@ body, html {
   .student-details {
     margin-top: 1rem;
     margin-bottom: 0rem;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     color: #e1dcdc;
     text-align: center;
   }
@@ -1546,11 +1532,11 @@ body, html {
 
   .student-schedule {
     width: 90%; 
-    margin-top: 2rem;
+    margin-top: 3rem;
     background: transparent;
   
     .schedule-title {
-      font-size: 1.1rem;
+      font-size: 1.5rem;
       color: #e8e5e5;
       margin-bottom: .5rem;
       font-weight: bold;
@@ -1576,6 +1562,8 @@ body, html {
       padding-right: 20px;     
       margin-right: 2rem;
        border-right: 1px solid #ccc;
+       border-bottom: none;
+       padding-bottom: 0rem;
     }
     
     .schedule-list p {
@@ -1587,7 +1575,7 @@ body, html {
   
     .schedule-list p strong {
       font-weight: bold;
-      color: #2a2929; 
+      color: #dadada; 
       margin-left: 25px;
       margin-right: 7px;
     }
@@ -1603,7 +1591,7 @@ body, html {
   width: 100%;
   gap: 0rem;
   margin: auto;
-  margin-top: 3rem;
+  margin-top: 1rem;
 }
 
 /* SUB-BLOQUE: Calendario */
@@ -1624,7 +1612,7 @@ body, html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 15px;
+  padding: 20px;
   border-radius: 0px 0px 15px 15px;
   width: 100%;
   margin: auto;
@@ -1637,7 +1625,7 @@ body, html {
 }
 
 .title.is-4 {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #333;
 }
 

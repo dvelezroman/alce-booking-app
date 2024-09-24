@@ -25,8 +25,9 @@
       <div class="student-schedule" *ngIf="meetings.length > 0">
         <h4 class="schedule-title">Horario Seleccionado</h4>
         <div class="schedule-list">
-          <div *ngFor="let meeting of meetings">
-            <p>
+          <div *ngFor="let meeting of meetings; let i = index" class="schedule-item">
+            <p class="meeting-details">
+              <strong class="meeting-index">{{ i + 1 }}.</strong>
               <strong>Fecha:</strong> <span>{{ meeting.date | date: 'mediumDate' }}</span>
               <strong>Hora:</strong> <span>{{ meeting.hour }}:00</span>
             </p>
