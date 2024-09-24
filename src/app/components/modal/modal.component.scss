@@ -10,6 +10,10 @@
   justify-content: center;
 }
 
+.shake-animation {
+  animation: shake 0.5s ease;
+}
+
 .modal-content {
   background-color: white;
   padding: 1.7rem;
@@ -19,45 +23,14 @@
   width: 400px;
   max-width: 90%;
   position: relative;
-  animation: shake 0.5s ease;
+  /* Solo agregar la animación si es un error */
 }
 
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-    20%, 40%, 60%, 80% { transform: translateX(10px); }
-    100% { transform: translateX(0); }
-}
-
-.modal-content p {
-  font-size: 1.1rem;
-  color: #dfd9d9;
-}
-
-.button {
-  background-color: transparent;
-  color:  rgb(208, 58, 58);
-  border: 1px solid  rgb(208, 58, 58);
-  padding: 0.45rem 1.5rem;
-  margin-top: 1rem;
-  font-size: .9rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.button:hover {
-  background-color:   rgb(208, 58, 58);
-  color: white;
-}
-
-.success-modal {
-  background-color: #eaecec;
-  color: #28a745;
-}
-
-.success-modal p{
-  color: #28a745;
+@keyframes shake {
+  0% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+  20%, 40%, 60%, 80% { transform: translateX(10px); }
+  100% { transform: translateX(0); }
 }
 
 .error-modal {
@@ -66,6 +39,15 @@
 
 .error-modal p {
   color: rgb(208, 58, 58);
+}
+
+.success-modal {
+  background-color: #eaecec;
+  color: #28a745;
+}
+
+.success-modal p {
+  color: #28a745;
 }
 
 .success-icon {
@@ -80,6 +62,38 @@
   margin-bottom: .7rem;
 }
 
+.button {
+  border: 1px solid;
+  padding: 0.45rem 1.5rem;
+  margin-top: 1rem;
+  font-size: .9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.error-button {
+  background-color: transparent;
+  color: rgb(208, 58, 58);
+  border-color: rgb(208, 58, 58);
+}
+
+.error-button:hover {
+  background-color: rgb(208, 58, 58);
+  color: white;
+}
+
+.success-button {
+  background-color: transparent;
+  color: #28a745;
+  border-color: #28a745;
+}
+
+.success-button:hover {
+  background-color: #28a745;
+  color: white;
+}
+
 @media (max-width: 492px) {
   .modal-content {
     width: 90%; 
@@ -90,16 +104,26 @@
     font-size: 1rem; 
   }
 
-  .button {
-    width: 25%; 
-    font-size: 1rem;
-    padding: 0.3rem; 
-    background-color: transparent; 
-    color: #dc3545;
-    border: 1px solid  rgb(208, 58, 58);
-  }
+.button {
+  border: 1px solid;
+  padding: 0.45rem 1.5rem;
+  margin-top: 1rem;
+  font-size: .9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-  .button:hover {
-    background-color:transparent; 
-  }
+.error-button {
+  background-color: transparent;
+  color: rgb(208, 58, 58);
+  border-color: rgb(208, 58, 58);
+}
+
+.success-button {
+  background-color: transparent;
+  color: #28a745;
+  border-color: #28a745;
+}
+
 }

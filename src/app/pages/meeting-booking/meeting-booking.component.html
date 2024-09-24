@@ -7,7 +7,7 @@
 
     <!-- primer bloque: información del estudiante -->
     <div class="column student-info">
-      <h2 class="student-title">Estudiante</h2> <!-- Título añadido -->
+      
       <!-- <div class="student-photo">
            <img src="/assets/foto usuario default.png" alt="Foto del estudiante">
         </div> -->
@@ -20,6 +20,24 @@
       <div class="student-detail">
         <p>{{ userData?.stage?.description }}</p>
       </div>
+
+  <!-- Fechas seleccionadas por el usuario student -->
+      <div class="student-schedule" *ngIf="meetings.length > 0">
+        <h4 class="schedule-title">Horario Seleccionado</h4>
+        <div class="schedule-list">
+          <div *ngFor="let meeting of meetings">
+            <p>
+              <strong>Fecha:</strong> <span>{{ meeting.date | date: 'mediumDate' }}</span>
+              <strong>Hora:</strong> <span>{{ meeting.hour }}:00</span>
+            </p>
+          </div>
+        </div>
+      </div>
+     <!-- si no ha elegido fehca -->
+      <div *ngIf="meetings.length === 0">
+        <p>No tienes fechas de clases programadas.</p>
+      </div>
+    </div>
     </div>
 
     <!-- Segundo bloque: calendario y time slots-->
@@ -62,7 +80,7 @@
           </div>
           </div>
         </div>
-      </div>
+      
 
       <!-- Sub-bloque 2: Time Slots -->
       <div class="selected-date-time">
@@ -81,10 +99,10 @@
           </div>
         </div>
       </div>
-
+    </div>
     </div>
 
-  </div>
+
 
 
 <!-- Modal de error -->

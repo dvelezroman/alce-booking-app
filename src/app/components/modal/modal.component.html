@@ -1,8 +1,8 @@
 <div *ngIf="showModal" class="modal-overlay">
-  <div class="modal-content" [ngClass]="{'error-modal': isError, 'success-modal': isSuccess}">
+  <div class="modal-content" [ngClass]="{'error-modal': isError, 'shake-animation': isError, 'success-modal': isSuccess }">
     <i *ngIf="isError" class="fas fa-exclamation-circle error-icon"></i>
     <i *ngIf="isSuccess" class="fas fa-check-circle success-icon"></i>
     <p>{{ message }}</p>
-    <button class="button" (click)="closeModal()">Close</button>
+    <button class="button" [ngClass]="{'error-button': isError, 'success-button': isSuccess}" (click)="closeModal()">Close</button>
   </div>
 </div>

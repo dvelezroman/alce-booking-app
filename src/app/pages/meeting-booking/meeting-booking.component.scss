@@ -16,8 +16,8 @@ body, html {
 
 .class-booking-header {
   text-align: center;
-  margin-top: 1.5rem;
-  margin-bottom: 2rem;
+  margin-top: 2rem;
+  margin-bottom:0rem;
 }
 
 .title.is-3 {
@@ -34,27 +34,25 @@ body, html {
 }
 
 .container {
-  margin-top: 8rem;
+  margin-top: 4rem;
 }
 
 .student-info {
   display: flex;
   flex-direction: column;
   justify-content:flex-start;
-  align-items: flex-start;
-  flex: 0 0 32%;
+  align-items: center;
   max-width: 90%;
   margin-left: 1.5rem;
   margin-bottom: 0rem;
   padding-top: 1rem;
-  padding-left: 10%;
+  padding-left: 7%;
 }
 
 .student-title {
   font-size: 1rem;
   font-weight: bold;
   color: #333;
-  margin-left: 23%;
   margin-bottom: 1rem;
   font-family: 'Open Sans', sans-serif;
 }
@@ -81,18 +79,64 @@ body, html {
   font-family: 'Open Sans', sans-serif;
 }
 
+/* bloque de fechas seleccionadas */
+.student-schedule {
+  width: 35%; 
+  margin-top: 2rem;
+
+  .schedule-title {
+    font-size: 1rem;
+    color: #313131;
+    margin-bottom: .5rem;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .schedule-list {
+    max-height: 125px; 
+    overflow-y: auto; 
+    padding: .9rem;
+    border-radius: 5px;
+    border: .5px solid rgb(184, 184, 184);
+    background-color: #f9f9f9;
+    width: 100%; 
+  }
+
+  .schedule-list div {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    margin-bottom: .5rem;
+    margin-left: -35px;
+  }
+
+  .schedule-list p {
+    margin: 0 0.5rem; 
+    font-size: .9rem;
+    color: #333;
+  }
+
+  .schedule-list p strong {
+    font-weight: bold;
+    color: #333; 
+    margin-left: 25px;
+    margin-right: 5px;
+  }
+
+}
+
 /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
 .date-time-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  gap: 2rem;
+  gap: 0rem;
+  margin-top: 4rem;
 }
 
 /* SUB-BLOQUE: Calendario */
 .date-time-selection {
-  flex: 0 0 35%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -100,8 +144,8 @@ body, html {
   padding: 0;
   margin-top: -4.9rem;
   background-color: #f9f9f9;
-  border-radius: 10px;
-  width: 100%;
+  border-radius: 8px;
+  width: 50%;
 }
 
 .calendar {
@@ -109,12 +153,14 @@ body, html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 50%;
+
 }
 
 .calendar-title {
   text-align: center;
   margin-bottom: 2rem;
+
 }
 
 .title.is-4 {
@@ -163,7 +209,7 @@ body, html {
 }
 
 .calendar-day-header {
-  padding: 10px;
+  padding: 8px 10px;
   text-align: center;
   font-size: .8rem;
   font-weight: bold;
@@ -182,7 +228,7 @@ body, html {
 .calendar-day {
   text-align: center;
   padding: 18px;
-  font-size: .8rem;
+  font-size: .65rem;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   color: grey;
@@ -223,13 +269,12 @@ body, html {
 
 /* SUB-BLOQUE: time slots */
 .selected-date-time {
-  flex: 0 0 35%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  width: 100%;
+  padding: 0rem;
+  width: 40%;
 }
 
 .selected-date-time h3{
@@ -610,149 +655,312 @@ body, html {
     color: purple;
   }
 
-  .date-time-wrapper {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 2rem;
-  }
+  /* bloque de fechas seleccionadas */
+.student-schedule {
+  width: 50%; 
+  margin-top: 2rem;
 
-  .date-time-selection{
-    flex: 0 0 100%;
-    max-width: 100%;
-    display: inline-block;
-    margin: auto;
-    justify-content: center;
-  }
-
-  .selected-date-time{
-    flex: 0 0 100%;
-    max-width: 50%;
-    display: inline-block;
-    margin: auto;
-  }
-
-  .calendar-title {
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-
-  .title.is-4 {
+  .schedule-title {
     font-size: 1rem;
+    color: #313131;
+    margin-bottom: .5rem;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .schedule-list {
+    max-height: 125px; 
+    overflow-y: auto; 
+    padding: .9rem;
+    border-radius: 5px;
+    border: .5px solid rgb(184, 184, 184);
+    background-color: #f9f9f9;
+    width: 100%; 
+  }
+
+  .schedule-list div {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    margin-bottom: .5rem;
+    margin-left: -35px;
+  }
+
+  .schedule-list p {
+    margin: 0 0.5rem; 
+    font-size: .9rem;
     color: #333;
   }
 
-  .month-selector {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+  .schedule-list p strong {
+    font-weight: bold;
+    color: #333; 
+    margin-left: 25px;
+    margin-right: 5px;
   }
 
-  .month-selector button {
-    padding: 0.2rem 0.6rem;
-    font-size: 0.9rem;
-    border-radius: 20px;
-  }
+}
 
-  .month-selector span {
-    font-size: 1rem;
-  }
+  /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
+.date-time-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 0rem;
+  margin-top: 0rem;
+}
 
-  .calendar {
-    width: 90%;
-    max-width: 360px;
-    padding: 0;
-    margin: 0 auto;
-  }
+/* SUB-BLOQUE: Calendario */
+.date-time-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin-top: -4.9rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  width: 50%;
+}
 
-  .calendar-header {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 10px;
-    text-align: center;
-  }
+.calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 75%;
+  margin: auto;
+  margin-left: 25%;
+}
 
-  .calendar-day-header {
-    padding: 5px;
-    font-size: .9rem;
-    background-color: #f5f5f5;
-    color: #094e98;
-    border-radius: 5px;
-    margin-bottom: 1rem;
-  }
+.calendar-title {
+  text-align: center;
+  margin-left: 25%;
+  margin-bottom: 4.4rem;
+}
 
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: 40px;
-    gap: 5px;
-  }
+.title.is-4 {
+  font-size: 1rem;
+  color: #333;
+}
 
-  .calendar-day {
-    text-align: center;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    color: grey;
-    border-radius: 50px;
-    font-size: .9rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+.month-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0rem;
+  margin-left: 25%;
+}
 
-  .time-slots {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(200px, 1fr));
-    gap: .7rem;
-    justify-content: center;
-    margin-top: 2rem;
-    height: 300px;
-    margin-bottom: 2rem;
-  }
+.month-selector button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  color: rgb(142, 139, 139);
+  border: none;
+  padding: 0 1rem;
+  font-size: .8rem;
+  cursor: pointer;
+  border-radius: 50px;
+  margin: 0 10px;
+  transition: background-color 0.3s ease;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}
 
-  .time-slot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-width: 250px;
-    margin: auto;
-    min-height: 50px;
-    background-color: #edeaea;
-    gap: 6px;
-    cursor: pointer;
-    transition: all 0.5s ease;
-  }
+.month-selector button:hover {
+  background-color: #aad0f9;
+}
 
-  .time-text-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    min-height: 50px;
-    width: 50%;
-    padding: 0 12px;
-  }
+.month-selector span {
+  font-size: .9rem;
+  color: #333;
+}
 
-  .time-text {
-    font-size: 1rem;
-    padding: 1rem 0.5rem;
-    color: rgb(255, 255, 255);
-  }
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: 100%;
+  margin-bottom: 0px;
+}
 
-  .confirm-box {
-    font-size: 1rem;
-    padding: 1rem 0.5rem;
-    border-radius: 5px;
-  }
+.calendar-day-header {
+  padding: 8px 6.6px;
+  text-align: center;
+  font-size: .8rem;
+  font-weight: bold;
+  background-color: #f5f5f5;
+  color: #094e98;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 30px;
+  gap: 3.5px;
+  width: 100%;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 15px;
+  font-size: .72rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  color: grey;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calendar-day.selectable {
+  background-color: #f9f9f9;
+  border: 1px solid #6eb3fc;
+  color: #333;
+  cursor: pointer;
+}
+
+.calendar-day.selectable:hover {
+  background-color: #6eb3fc;
+  color: white;
+}
+
+.calendar-day.unselectable {
+  background-color: #f0f0f0;
+  color: #929191;
+  cursor: not-allowed;
+}
+
+.calendar-day.selected {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: default;
+}
+
+/* SUB-BLOQUE: time slots */
+.selected-date-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0rem;
+  width: 50%;
+}
+
+.selected-date-time h3{
+  color: black;
+  text-align: center;
+  margin-right: 23px;
+  margin-top: 0rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.time-slots {
+  display: flex;
+  margin-top: 2rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 330px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 45%;
+  min-height: 40px;
+  background-color: #edeaea;
+  background: linear-gradient(to right, #4490e2, #bd75e4);
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.confirm-box {
+  flex: 1;
+  background-color: #9d52e8;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  width: 100%;
+  transition: all 0.7s ease;
+}
+
+.time-text-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  min-height: 50px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.time-text {
+  font-size: 1rem;
+  color: white;
+}
+
+.time-text:hover {
+  color: white;
+}
+
+.confirm-box {
+  flex: 1;
+  background-color: #9d52e8;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  width: 100%;
+  transition: all 0.7s ease;
+}
+
+.time-slot:hover {
+  background: none;
+}
+.time-slot:hover .confirm-box {
+  opacity: 1;
+  visibility: visible;
+  width: 100%;
+}
+
+.time-slot:hover .time-text-container {
+  background-color: #4490e2;
+  color: white;
+}
+
+.time-slot:hover .time-text {
+  color: white;
+}
+
 }
 
 @media (max-width: 768px) {
-
 
   .student-info {
     margin-left: 0rem;
@@ -787,161 +995,320 @@ body, html {
     text-align: center;
   }
 
-  .calendar-title {
-    text-align: center;
-    margin-bottom: 0;
-  }
+   /* bloque de fechas seleccionadas */
+.student-schedule {
+  width: 70%; 
+  margin-top: 2rem;
 
-  .calendar-title .title.is-4 {
+  .schedule-title {
     font-size: 1rem;
-    color: #333;
-    margin-bottom: 1rem;
-  }
-
-  .date-time-selection,
-  .selected-date-time {
-    flex: 0 0 100%;
-    max-width: 100%;
-    display: inline-block;
-    margin-bottom: 2rem;
-  }
-
-  .selected-date-time {
-    flex: 0 0 100%;
-    max-width: 100%;
-    display: inline-block;
-    margin-bottom: 1rem;
-  }
-
-  .date-time-selection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 90%;
-    margin: 0 auto;
-    padding: 1rem;
-  }
-
-  .date-time-selection h3 {
-    font-size: 1.4rem;
-    margin-top: 0;
-    margin-bottom: 3rem;
+    color: #313131;
+    margin-bottom: .5rem;
+    font-weight: bold;
     text-align: center;
   }
 
-  .month-selector {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .month-selector button {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-    border-radius: 20px;
-  }
-
-  .month-selector span {
-    font-size: 1rem;
-    margin-bottom: .2rem;
-  }
-
-  .calendar {
-    width: 100%;
-    max-width: 100px;
-    display: flex;
-    margin:0 auto;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .calendar {
-    width: 90%;
-    max-width: 360px;
-    padding: 0;
-    margin: 0 auto;
-  }
-
-  .calendar-day-header {
-    padding: 3px 5px;
-    font-size: .9rem;
-    background-color: #f5f5f5;
-    color: #094e98;
+  .schedule-list {
+    max-height: 125px; 
+    overflow-y: auto; 
+    padding: .9rem;
     border-radius: 5px;
-    margin: auto;
-  }
-
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: 30px;
-    gap: 10px;
-  }
-
-  .calendar-day {
-    text-align: center;
-    padding: 18px;
+    border: .5px solid rgb(184, 184, 184);
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    color: grey;
-    border-radius: 50px;
-    font-size: .75rem;
+    width: 100%; 
+  }
+
+  .schedule-list div {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    justify-content: center; 
+    align-items: center;     
+    margin-bottom: .5rem;
+    margin-left: -35px;
   }
 
-  .time-slots {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(200px, 1fr));
-    gap: .8rem;
-    justify-content: center;
-    margin: auto;
-    margin-top: 0;
-    max-width: 100%;
-    max-height: 460px;
-    padding: .1rem .5rem;
-    margin-bottom: 2.5rem;
+  .schedule-list p {
+    margin: 0 0.5rem; 
+    font-size: .9rem;
+    color: #333;
   }
 
-  .time-slot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-width: 60%;
-    height: 20px;
-    background-color: #edeaea;
-    gap: 8px;
+  .schedule-list p strong {
+    font-weight: bold;
+    color: #333; 
+    margin-left: 25px;
+    margin-right: 5px;
   }
 
-  .time-text-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #3461d4;
-    border-radius: 5px;
-    min-height: 50px;
-    width: 50%;
-    padding: 0 12px;
-  }
+}
 
-  .time-text {
-    font-size: 1rem;
-    padding: 1.2rem 0.5rem;
-    color: rgb(255, 255, 255);
-  }
+  /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
+.date-time-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 75%;
+  gap: 0rem;
+  margin-top: 0rem;
+  margin: auto;
+}
 
-  .confirm-box {
-    font-size: 1rem;
-    padding: 1.2rem 0.5rem;
-    border-radius: 5px;
-  }
+/* SUB-BLOQUE: Calendario */
+.date-time-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  margin-top: 0rem;
+  border-radius: 8px;
+  width: 90%;
+}
+
+.calendar {
+  background-color: rgb(226, 226, 226);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 0px 0px 15px 15px;
+  width: 100%;
+  margin: auto;
+}
+
+.calendar-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  margin-left: 0%;
+}
+
+.title.is-4 {
+  font-size: 1rem;
+  color: #333;
+}
+
+.month-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 0rem;
+  margin-left: 0%;
+  background-color: rgb(226, 226, 226);
+  width: 100%;
+  border-radius: 15px 15px 0px 0px;
+}
+
+.month-selector button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  color: rgb(142, 139, 139);
+  border: none;
+  padding: 0 1rem;
+  font-size: .8rem;
+  cursor: pointer;
+  border-radius: 50px;
+  margin: 0 10px;
+  transition: background-color 0.3s ease;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}
+
+.month-selector button:hover {
+  background-color: #c5c6c7;
+  color: white;
+}
+
+.month-selector span {
+  font-size: .9rem;
+  color: #333;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: 100%;
+  margin-bottom: 0px;
+}
+
+.calendar-day-header {
+  padding: 8px 0px;
+  text-align: center;
+  font-size: .8rem;
+  margin-top: -1.2rem;
+  font-weight: bold;
+  margin-bottom: .5rem;
+  background-color: transparent;
+  color: #4c4c4d;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 32px;
+  gap: 5px;
+  width: 100%;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 16px;
+  font-size: .75rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  color: grey;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calendar-day.selectable {
+  background-color: #f9f9f9;
+  border: 1px solid #6eb3fc;
+  color: #333;
+  cursor: pointer;
+}
+
+.calendar-day.selectable:hover {
+  background-color: #6eb3fc;
+  color: white;
+}
+
+.calendar-day.unselectable {
+  background-color: #f0f0f0;
+  color: #929191;
+  cursor: not-allowed;
+}
+
+.calendar-day.selected {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: default;
+}
+
+/* SUB-BLOQUE: time slots */
+.selected-date-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0rem;
+  width: 90%;
+  margin: auto;
+}
+
+.selected-date-time h3{
+  color: black;
+  text-align: center;
+  margin-right: 23px;
+  margin-top: 3rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.time-slots {
+  display: flex;
+  margin-top: 2rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 330px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 45%;
+  min-height: 40px;
+  background-color: #edeaea;
+  background: linear-gradient(to right, #4490e2, #bd75e4);
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.confirm-box {
+  flex: 1;
+  background-color: #9d52e8;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  width: 100%;
+  transition: all 0.7s ease;
+}
+
+.time-text-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  min-height: 50px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.time-text {
+  font-size: 1rem;
+  color: white;
+}
+
+.time-text:hover {
+  color: white;
+}
+
+.confirm-box {
+  flex: 1;
+  background-color: #9d52e8;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  width: 100%;
+  transition: all 0.7s ease;
+}
+
+.time-slot:hover {
+  background: none;
+}
+.time-slot:hover .confirm-box {
+  opacity: 1;
+  visibility: visible;
+  width: 100%;
+}
+
+.time-slot:hover .time-text-container {
+  background-color: #4490e2;
+  color: white;
+}
+
+.time-slot:hover .time-text {
+  color: white;
+}
+
 
   .modal-content {
     padding: 1rem;
@@ -1079,14 +1446,31 @@ body, html {
 
 }
 
+@media (max-width: 600px){
+  .date-time-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 0rem;
+    margin-top: 0rem;
+    margin: auto;
+  }
+}
+
 @media (max-width: 492px) {
+
+  .container {
+    margin-top: 3rem;
+  }
 
   .student-info {
     flex: 0 0 100%;
     max-width: 100%;
-    margin-top: -4rem;
+    margin-top: 0rem;
     margin-bottom: 0;
-    padding: 1rem 0rem;
+    padding: 2rem 0rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1136,126 +1520,320 @@ body, html {
     text-align: center;
   }
 
-  .columns {
-    flex-direction: column;
+  .student-schedule {
+    width: 90%; 
+    margin-top: 2rem;
+    background: transparent;
+  
+    .schedule-title {
+      font-size: 1rem;
+      color: #e8e5e5;
+      margin-bottom: .5rem;
+      font-weight: bold;
+      text-align: center;
+    }
+  
+    .schedule-list {
+      max-height: 100px; 
+      overflow-y: auto; 
+      padding:.5rem 1rem .5rem 2rem;
+      border-radius: 12px;
+      border: .5px solid rgb(184, 184, 184);
+      background-color: #f9f9f91d;
+      width: 100%; 
+    }
+  
+    .schedule-list div {
+      display: flex;
+      justify-content: left; 
+      align-items: center;     
+      margin-bottom: .5rem;
+    }
+  
+    .schedule-list p {
+      margin: 0 0.5rem; 
+      font-size: 1rem;
+      color: #fffcfc;
+    }
+  
+    .schedule-list p strong {
+      font-weight: bold;
+      color: #2a2929; 
+      margin-left: 25px;
+      margin-right: 7px;
+    }
+  
   }
 
-  .date-time-wrapper{
-    margin: auto;
-    padding: 0;
-  }
+   /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
+.date-time-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 0rem;
+  margin: auto;
+  margin-top: 3rem;
+}
 
-  .date-time-selection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin: 0 auto;
-    padding: 1rem 2.5rem;
-  }
+/* SUB-BLOQUE: Calendario */
+.date-time-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  margin-top: 0rem;
+  border-radius: 8px;
+  width: 100%;
+}
 
-  .date-time-selection h3 {
-    font-size: 1.2rem;
-    margin-top: 1.5rem;
-    margin-bottom: 3rem;
-    text-align: center;
-    font-family: 'Open Sans', sans-serif;
-  }
+.calendar {
+  background-color: rgb(226, 226, 226);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 0px 0px 15px 15px;
+  width: 100%;
+  margin: auto;
+}
 
-  .month-selector {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 0rem;
-  }
+.calendar-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  margin-left: 0%;
+}
 
-  .month-selector button {
-    padding: 1rem 1rem;
-    font-size: 1rem;
-  }
+.title.is-4 {
+  font-size: 1rem;
+  color: #333;
+}
 
-  .month-selector span {
-    font-size: .9rem;
-  }
+.month-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 0rem;
+  margin-left: 0%;
+  background-color: rgb(226, 226, 226);
+  width: 100%;
+  border-radius: 15px 15px 0px 0px;
+}
 
-  .calendar {
-    width: 100%;
-    max-width: 100%;
-    padding: 0;
-    margin: auto;
-    margin-right: 0;
-  }
+.month-selector button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  color: rgb(142, 139, 139);
+  border: none;
+  padding: 0 1rem;
+  font-size: .8rem;
+  cursor: pointer;
+  border-radius: 50px;
+  margin: 0 10px;
+  transition: background-color 0.3s ease;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}
 
-  .calendar-day-header {
-    padding: 0;
-    font-size: 1rem;
-    background-color: #f5f5f5;
-    color: #094e98;
-    margin: auto;
-    margin-top: 1rem;
-    margin-bottom: 1.3rem;
-  }
+.month-selector button:hover {
+  background-color: #c5c6c7;
+  color: white;
+}
 
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: 40px;
-    gap: 2px;
-    margin: auto;
-  }
+.month-selector span {
+  font-size: .9rem;
+  color: #333;
+}
 
-  .calendar-day {
-    text-align: center;
-    padding:1.3rem;
-    background-color: #eeeded;
-    color: grey;
-    border-radius: 50px;
-    font-size: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: 100%;
+  margin-bottom: 0px;
+}
 
-  .selected-date-time h3{
-    color: black;
-    text-align: center;
-    margin-top: 0;
-    font-size: 1.2rem;
-    margin-bottom:1.5rem;
-    font-family: 'Open Sans', sans-serif;
-  }
+.calendar-day-header {
+  padding: 8px 0px;
+  text-align: center;
+  font-size: .8rem;
+  margin-top: -1.2rem;
+  font-weight: bold;
+  margin-bottom: .5rem;
+  background-color: transparent;
+  color: #4c4c4d;
+}
 
-  .time-slots {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(200px, 1fr));
-    gap: .8rem;
-    justify-content: center;
-    margin: auto;
-    margin-top: 0;
-    max-width: 80%;
-    height: 320px;
-    padding: 1rem 1rem;
-    margin-bottom: 2rem;
-  }
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 32px;
+  gap: 5px;
+  width: 100%;
+}
 
-  .time-slot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 100%;
-    height: 30px;
-    background-color: #edeaea;
-    gap: 10px;
-  }
+.calendar-day {
+  text-align: center;
+  padding: 16px;
+  font-size: .75rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  color: grey;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-  .time-text-container {
-    border-radius: 5px;
-    width: 350px;
-  }
+.calendar-day.selectable {
+  background-color: #f9f9f9;
+  border: 1px solid #6eb3fc;
+  color: #333;
+  cursor: pointer;
+}
+
+.calendar-day.selectable:hover {
+  background-color: #6eb3fc;
+  color: white;
+}
+
+.calendar-day.unselectable {
+  background-color: #f0f0f0;
+  color: #929191;
+  cursor: not-allowed;
+}
+
+.calendar-day.selected {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: default;
+}
+
+/* SUB-BLOQUE: time slots */
+.selected-date-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  width: 90%;
+  margin: auto;
+}
+
+.selected-date-time h3{
+  color: black;
+  text-align: center;
+  margin-right: 23px;
+  margin-top: 3rem;
+  font-size: 1rem;
+  margin-bottom: 0rem;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.time-slots {
+  display: flex;
+  margin-top: 2rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 340px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 70%;
+  min-height: 60px;
+  background-color: #edeaea;
+  background: linear-gradient(to right, #4490e2, #bd75e4);
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.confirm-box {
+  flex: 1;
+  background-color: #9d52e8;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  width: 100%;
+  transition: all 0.7s ease;
+}
+
+.time-text-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  min-height: 60px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.time-text {
+  font-size: 1rem;
+  color: white;
+}
+
+.time-text:hover {
+  color: white;
+}
+
+.confirm-box {
+  flex: 1;
+  background-color: #9d52e8;
+  color: white;
+  padding: 13.5px;
+  border-radius: 5px;
+  font-size: 1rem;
+  text-align: center;
+  line-height: 60px;
+  opacity: 0;
+  visibility: hidden;
+  min-height: 60px;
+  width: 100%;
+  transition: all 0.7s ease;
+}
+
+.time-slot:hover {
+  background: none;
+}
+.time-slot:hover .confirm-box {
+  opacity: 1;
+  visibility: visible;
+  width: 100%;
+}
+
+.time-slot:hover .time-text-container {
+  background-color: #4490e2;
+  color: white;
+}
+
+.time-slot:hover .time-text {
+  color: white;
+}
 
   /* modal */
 
