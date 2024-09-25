@@ -156,7 +156,7 @@ h2.title {
     max-height: 100vh;
     margin: auto;
     padding: 1.1rem .4rem;
-    background-color: rgba(225, 223, 227, 0.78);
+    background-color: rgba(225, 223, 227, 1);
     border-radius: 15px;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(10px);
@@ -175,12 +175,12 @@ h2.title {
     font-size: 1.5rem;
   }
 
-
   .label {
     color: #373636;
     font-weight: 500;
     margin-left: 5px;
     font-size: .9rem;
+    text-align: left;
   }
 
   .input,
@@ -280,7 +280,7 @@ h2.title {
   max-width: 650px;
   margin: auto;
   padding: 1.7rem;
-  background-color: rgba(234, 233, 236, 0.837);
+  background-color: rgba(234, 234, 234, 0.857);
   border-radius: 10px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(10px);
@@ -454,23 +454,11 @@ h2.title {
 
   /*MODAL CREAR STAGES*/
   .modal {
-    .modal-background {
-      background-color: rgba(38, 37, 37, 0.4);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-  }
-
     .modal-content {
       max-width: 400px;
       max-height: 100vh;
       margin: auto;
       padding: 1.1rem .4rem;
-      background-color: rgba(225, 223, 227, 0.78);
-      border-radius: 15px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.18);
     }
 
     .box {
@@ -508,32 +496,6 @@ h2.title {
     .textarea{
       min-height: 50px;
       height: 120px;
-      background-color: #e0dcdcad;
-    }
-
-    .input:focus,
-    .textarea:focus {
-      background-color: #d6d3d3;
-      border-color: #7743a8;
-      outline: none;
-    }
-
-    input[type="number"] {
-      -moz-appearance: textfield;
-      appearance: none;
-    }
-
-    /* estilos para quitar los selectores del input number */
-    /* Para WebKit browsers (Chrome, Safari) */
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    /* Para Firefox */
-    input[type="number"] {
-      -moz-appearance: textfield;
     }
 
     .field.is-grouped {
@@ -562,10 +524,6 @@ h2.title {
       background-color: #3273dc;
       color: white;
       border: none;
-
-      &:hover {
-        background-color: #275bb5;
-      }
     }
 
     .cancel-btn {
@@ -573,16 +531,10 @@ h2.title {
       background-color: rgb(127, 56, 198);
       color: white;
       border: none;
-
-      &:hover {
-        background-color: rgb(110, 44, 176);
-      }
     }
   }
 
 /* RESPONSIVE PARA MODAL DE DELETE*/
-
-/* General styles for delete modal */
 
 .modal-content2 {
   max-width: 400px;
@@ -606,6 +558,7 @@ h2.title {
 .delete-modal-actions {
   display: flex;
   justify-content: center;
+  flex-direction: row;
 }
 
 /* Botón de Delete */
@@ -749,14 +702,15 @@ h2.title {
 
   .delete-modal-actions {
     display: flex;
-    flex-direction: column;
-    gap: .3rem;
+    flex-direction: row;
+    gap: .5rem;
+    justify-content: flex-end;
   }
 
   .delete-modal-btn-delete,
   .delete-modal-btn-cancel {
     width: 100%;
-    padding: .95rem;
+    padding: .75rem;
     font-size: .85rem;
   }
 
@@ -766,21 +720,12 @@ h2.title {
   .modal {
     .modal-background {
       background-color: rgba(38, 37, 37, 0.4);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
   }
 
     .modal-content {
       max-width: 350px;
-      max-height: 100vh;
-      margin: auto;
       padding: 1.1rem .4rem;
-      background-color: rgba(225, 223, 227, 0.78);
-      border-radius: 15px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background-color: rgba(225, 223, 227);
     }
 
     .box {
@@ -828,24 +773,6 @@ h2.title {
       outline: none;
     }
 
-    input[type="number"] {
-      -moz-appearance: textfield;
-      appearance: none;
-    }
-
-    /* estilos para quitar los selectores del input number */
-    /* Para WebKit browsers (Chrome, Safari) */
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    /* Para Firefox */
-    input[type="number"] {
-      -moz-appearance: textfield;
-    }
-
     .field.is-grouped {
       display: flex;
       flex-direction: column;
@@ -884,9 +811,9 @@ h2.title {
       width: 100% ;
       padding: 1rem 8.45rem;
       margin-left: -2.5px;
-      background-color: rgb(127, 56, 198);
-      color: white;
-      border: none;
+      background-color: transparent;
+      color: rgb(127, 56, 198);
+      border: 1px solid rgb(127, 56, 198);;
 
       &:hover {
         background-color: rgb(110, 44, 176);
