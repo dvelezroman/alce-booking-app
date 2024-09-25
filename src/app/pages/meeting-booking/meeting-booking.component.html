@@ -3,42 +3,55 @@
 </div>
 
 <div class="booking-container container">
-  <div class="columns is-mobile">
+    <div class="columns is-mobile">
 
-    <!-- primer bloque: información del estudiante -->
-    <div class="column student-info">
-      
-      <!-- <div class="student-photo">
-           <img src="/assets/foto usuario default.png" alt="Foto del estudiante">
-        </div> -->
-      <div class="student-name">
-        <h3>{{ userName() }}</h3>
-      </div>
-      <div class="student-details">
-        <p>{{ userData?.email }}</p>
-      </div>
-      <div class="student-detail">
-        <p>{{ userData?.stage?.description }}</p>
-      </div>
-
-  <!-- Fechas seleccionadas por el usuario student -->
-      <div class="student-schedule" *ngIf="meetings.length > 0">
-        <h4 class="schedule-title">Horario Seleccionado</h4>
-        <div class="schedule-list">
-          <div *ngFor="let meeting of meetings; let i = index" class="schedule-item">
-            <p class="meeting-details">
-              <strong class="meeting-index">{{ i + 1 }}.</strong>
-              <strong>Fecha:</strong> <span>{{ meeting.date | date: 'mediumDate' }}</span>
-              <strong>Hora:</strong> <span>{{ meeting.hour }}:00</span>
-            </p>
+      <!-- primer bloque: información del estudiante -->
+      <div class="column student-info">
+        
+          <!-- <div class="student-photo">
+              <img src="/assets/foto usuario default.png" alt="Foto del estudiante">
+            </div> -->
+          <div class="student-name">
+            <h3>{{ userName() }}</h3>
           </div>
-        </div>
+          <div class="student-details">
+            <p>{{ userData?.email }}</p>
+          </div>
+          <div class="student-detail">
+            <p>{{ userData?.stage?.description }}</p>
+          </div>
+
+        <!-- Fechas seleccionadas por el usuario student -->
+          <div class="student-schedule" *ngIf="meetings.length > 0">
+            <h4 class="schedule-title">Horario Seleccionado</h4>
+            <div class="schedule-list">
+              <div *ngFor="let meeting of meetings; let i = index" class="schedule-item">
+                <!-- Título del Meeting -->
+                <div class="meeting-title">
+                  <strong>Meeting {{ i + 1 }}</strong>
+                </div>
+                <!-- Fecha, Hora y botón de eliminar -->
+                <div class="meeting-info-container">
+                  <!-- Fecha y hora -->
+                  <div class="schedule-info">
+                    <strong>Fecha:</strong> <span>{{ meeting.date | date: 'mediumDate' }}</span><br>
+                    <strong>Hora:</strong> <span>{{ meeting.hour }}:00</span>
+                  </div>
+                  <!-- Botón de eliminar -->
+                  <div class="schedule-delete">
+                    <button class="delete-button">
+                      <i class="fas fa-trash-alt" (click)="openDeleteModal(meeting)"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- si no ha elegido fecha -->
+          <div class="no-meeting" *ngIf="meetings.length === 0">
+            <p>No tienes fechas de clases programadas.</p>
+          </div>
       </div>
-     <!-- si no ha elegido fehca -->
-      <div *ngIf="meetings.length === 0">
-        <p>No tienes fechas de clases programadas.</p>
-      </div>
-    </div>
     </div>
 
     <!-- Segundo bloque: calendario y time slots-->
@@ -101,7 +114,7 @@
         </div>
       </div>
     </div>
-    </div>
+  </div>
 
 
 
@@ -143,5 +156,18 @@
     <p class="help is-danger bold-text">
       Ya tienes una meeting agendada en la fecha y hora seleccionada.
     </p>
+  </div>
+</div>
+
+<div class="modal" [ngClass]="{ 'is-active': isDeleteModalActive }">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <section class="modal-card-body">
+      <p>¿Estás seguro de que deseas eliminar esta reunión?</p>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-danger" (click)="confirmDelete()">Eliminar</button>
+      <button class="button is-primary3" (click)="closeDeleteModal()">Cancelar</button>
+    </footer>
   </div>
 </div>

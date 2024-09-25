@@ -67,7 +67,7 @@
 
 /* bloque de fechas seleccionadas */
 .student-schedule {
-  width: 60%; 
+  width: 100%;
   margin-top: 5rem;
 
   .schedule-title {
@@ -79,47 +79,67 @@
   }
 
   .schedule-list {
-    max-height: 150px; 
-    overflow-y: auto; 
-    padding: .7rem 0rem;
-    border-radius: 5px;
+    display: flex;
+    flex-wrap: nowrap; 
+    gap: 20px; 
+    padding: .7rem 1rem;
+    border-radius: 12px;
     border: .5px solid rgb(184, 184, 184);
     background: linear-gradient(to right, #4490e2, #bd75e4);
-    width: 100%; 
+    width: 87%;
+    margin: auto;
+    max-height: 150px; 
+    overflow-x: auto; 
   }
-
-  .schedule-list div {
+  
+  .schedule-item {
+    min-width: 200px; 
+    background-color: rgba(255, 255, 255, 0.1); 
+    padding: 1rem;
+    border-radius: 8px;
     display: flex;
-    justify-content: center;
-    align-items: center;     
-    margin-bottom: .7rem;
-    padding-bottom: .6rem;
-    border-bottom: .5px solid rgba(181, 178, 178, 0.682);
+    flex-direction: column;
+    justify-content: space-between;
   }
-
-  .schedule-list p {
-    display: flex;
-    align-items: center;
-    margin: 0 0.5rem; 
-    font-size: .9rem;
+  
+  .meeting-title {
+    font-size: 1.2rem;
     color: #ffffff;
-  }
-
-  .schedule-list p .index {
-    width: 30px; 
-    text-align: right; 
-    margin-right: 10px; 
-  }
-
-  .schedule-list p strong {
     font-weight: bold;
-    color: #ffffff; 
-    margin-left: 15px;
-    margin-right: 5px;
+    text-align: center;
+    margin-bottom: .5rem;
   }
-
+  
+  .meeting-info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+  }
+  
+  .schedule-info {
+    color: #ffffff;
+    font-size: 0.9rem;
+  }
+  
+  .schedule-delete {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .delete-button {
+    background: none;
+    border: none;
+    color: #931b33;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+  }
+  
+  .delete-button:hover {
+    color: #e43131;
+  }
 }
-
 
 /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
 .date-time-wrapper {
@@ -653,50 +673,80 @@
   }
 
   /* bloque de fechas seleccionadas */
-.student-schedule {
-  width: 75%; 
-  margin-top: 2rem;
-
-  .schedule-title {
-    font-size: 1rem;
-    color: #313131;
-    margin-bottom: .5rem;
-    font-weight: bold;
-    text-align: center;
+  .student-schedule {
+    width: 100%;
+    margin-top: 5rem;
+  
+    .schedule-title {
+      font-size: 1.5rem;
+      color: #515357;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-align: center;
+    }
+  
+    .schedule-list {
+      display: flex;
+      flex-wrap: nowrap; 
+      gap: 10px; 
+      padding: .5rem .7rem;
+      border-radius: 8px;
+      border: .5px solid rgb(184, 184, 184);
+      background: linear-gradient(to right, #4490e2, #bd75e4);
+      width: 100%;
+      margin: auto;
+      max-height: 150px; 
+      overflow-x: auto; 
+    }
+    
+    .schedule-item {
+      min-width: 200px; 
+      background-color: rgba(255, 255, 255, 0.1); 
+      padding: .7rem;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .meeting-title {
+      font-size: 1.15rem;
+      color: #ffffff;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: .5rem;
+    }
+    
+    .meeting-info-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-direction: row;
+    }
+    
+    .schedule-info {
+      color: #ffffff;
+      font-size: 0.9rem;
+    }
+    
+    .schedule-delete {
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    .delete-button {
+      background: none;
+      border: none;
+      color: #931b33;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 0;
+    }
+    
+    .delete-button:hover {
+      color: #e43131;
+    }
   }
-
-  .schedule-list {
-    max-height: 125px; 
-    overflow-y: auto; 
-    padding: .9rem;
-    border-radius: 5px;
-    border: .5px solid rgb(184, 184, 184);
-    background-color: #f9f9f9;
-    width: 100%; 
-  }
-
-  .schedule-list div {
-    display: flex;
-    justify-content: center; 
-    align-items: center;     
-    margin-bottom: .5rem;
-    margin-left: -35px;
-  }
-
-  .schedule-list p {
-    margin: 0 0.5rem; 
-    font-size: .9rem;
-    color: #dbdada;
-  }
-
-  .schedule-list p strong {
-    font-weight: bold;
-    color: #dcdada; 
-    margin-left: 25px;
-    margin-right: 5px;
-  }
-
-}
 
   /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
 .date-time-wrapper {
@@ -978,61 +1028,98 @@
 
   .student-details-title {
     font-size: 1.5rem;
-    color: #666;
+    color: #ffffff;
   }
 
   .student-details {
     margin-top: 1rem;
     font-size: 1rem;
-    color: #666;
+    color: #626161;
     text-align: center;
   }
 
    /* bloque de fechas seleccionadas */
-.student-schedule {
-  width: 95%; 
-  margin-top: 5rem;
+   .student-schedule {
+    width: 100%;
+    margin-top: 3rem;
+    padding: 0rem .5rem;
+  
+    .schedule-title {
+      font-size: 1.4rem;
+      color: #5c5c5c;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-align: center;
+    }
+  
+    .schedule-list {
+      display: flex;
+      flex-wrap: nowrap; 
+      gap: 15px; 
+      padding: .5rem .7rem;
+      border-radius: 8px;
+      border: .5px solid rgb(184, 184, 184);
+      background: linear-gradient(to right, #4490e2, #bd75e4);
+      width: 100%;
+      margin: auto;
+      max-height: 150px; 
+      overflow-x: auto; 
+    }
+    
+    .schedule-item {
+      min-width: 200px; 
+      background-color: rgba(255, 255, 255, 0.1); 
+      padding: .8rem;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .meeting-title {
+      font-size: 1.15rem;
+      color: #ffffff;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: .5rem;
+    }
+    
+    .meeting-info-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-direction: row;
+    }
+    
+    .schedule-info {
+      color: #efeeee;
+      font-size: 0.95rem;
+    }
 
-  .schedule-title {
-    font-size: 1.1rem;
-    color: #313131;
-    margin-bottom: 1rem;
-    font-weight: bold;
-    text-align: center;
+    .schedule-info strong{
+      margin-right: 5px;
+    }
+    
+    .schedule-delete {
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    .delete-button {
+      background: none;
+      border: none;
+      color: #cfcacb;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 0;
+    }
+
+    .delete-button:hover{
+      color: #d84663;
+    }
+    
   }
 
-  .schedule-list {
-    max-height: 125px; 
-    overflow-y: auto; 
-    padding: .9rem;
-    border-radius: 5px;
-    border: .5px solid rgb(184, 184, 184);
-    background-color: #f9f9f9;
-    width: 100%; 
-  }
-
-  .schedule-list div {
-    display: flex;
-    justify-content: flex-start; 
-    align-items: center;     
-    margin-bottom: .5rem;
-    margin-left: -35px;
-  }
-
-  .schedule-list p {
-    margin: 0 0.5rem; 
-    font-size: .9rem;
-    color: #eeeeee;
-  }
-
-  .schedule-list p strong {
-    font-weight: bold;
-    color: #d9d8d8; 
-    margin-left: 25px;
-    margin-right: 5px;
-  }
-
-}
 
   /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
 .date-time-wrapper {
@@ -1099,9 +1186,9 @@
   justify-content: center;
   align-items: center;
   background-color: transparent;
-  color: rgb(142, 139, 139);
+  color: rgb(89, 87, 87);
   border: none;
-  padding: 0 1rem;
+  padding: 0 1.1em;
   font-size: .8rem;
   cursor: pointer;
   border-radius: 50px;
@@ -1507,7 +1594,7 @@
   .student-name {
     text-align: center;
     width: 90%;
-    font-size: 2rem;
+    font-size: 1.7rem;
     margin: auto;
     margin-top: .5rem;
     margin-bottom: -1rem;
@@ -1517,7 +1604,7 @@
   .student-details {
     margin-top: 1rem;
     margin-bottom: 0rem;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     color: #e1dcdc;
     text-align: center;
   }
@@ -1530,56 +1617,79 @@
     text-align: center;
   }
 
+  /* bloque de fechas del usuario */
+
   .student-schedule {
-    width: 90%; 
-    margin-top: 3rem;
-    background: transparent;
+    width: 100%;
+    padding: 0rem .5rem;
   
     .schedule-title {
-      font-size: 1.5rem;
-      color: #e8e5e5;
-      margin-bottom: .5rem;
-      font-weight: bold;
-      text-align: center;
+      font-size: 1.4rem;
+      color: #e2dfdf;
+      margin-bottom: 1rem;
+
     }
   
     .schedule-list {
-      max-height: 100px; 
-      overflow-x: auto; 
-      white-space: nowrap; 
-      padding-top: 1.3rem;
-      padding-left: 1rem;
-      border-radius: 12px;
-      border: 0.5px solid rgb(184, 184, 184);
-      background-color: #f9f9f91d;
-      width: 100%; 
-    }
-  
-    .schedule-list div {
-      display: inline-block; 
-      justify-content: left; 
-      align-items: center;
-      padding-right: 20px;     
-      margin-right: 2rem;
-       border-right: 1px solid #ccc;
-       border-bottom: none;
-       padding-bottom: 0rem;
+      display: flex;
+      flex-wrap: nowrap; 
+      gap: 15px; 
+      padding: .8rem .7rem;
+      border-radius: 0%;
     }
     
-    .schedule-list p {
-      display: inline-block; 
-      margin: 0 0.5rem; 
+    .schedule-item {
+      min-width: 200px; 
+      background-color: rgba(255, 255, 255, 0.1); 
+      padding: .8rem;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .meeting-title {
       font-size: 1.2rem;
-      color: #fffcfc;
-    }
-  
-    .schedule-list p strong {
+      color: #ffffff;
       font-weight: bold;
-      color: #dadada; 
-      margin-left: 25px;
-      margin-right: 7px;
+      text-align: center;
+      margin-bottom: .5rem;
     }
-  
+    
+    .meeting-info-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-direction: row;
+    }
+    
+    .schedule-info {
+      color: #efeeee;
+      font-size: 1rem;
+    }
+
+    .schedule-info strong{
+      margin-right: 5px;
+    }
+    
+    .schedule-delete {
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    .delete-button {
+      background: none;
+      border: none;
+      color: #cfcacb;
+      cursor: pointer;
+      font-size: 1.4rem;
+      padding: 0;
+    }
+
+    .delete-button:hover{
+      color: #d84663;
+    }
+    
   }
 
    /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
@@ -1600,7 +1710,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 0px;
   margin-top: 0rem;
   border-radius: 8px;
   width: 100%;
@@ -1612,15 +1722,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 10px;
   border-radius: 0px 0px 15px 15px;
   width: 100%;
   margin: auto;
+
 }
 
 .calendar-title {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.4rem;
   margin-left: 0%;
 }
 
@@ -1664,7 +1775,7 @@
 }
 
 .month-selector span {
-  font-size: .9rem;
+  font-size: 1.1rem;
   color: #333;
 }
 
@@ -1750,9 +1861,9 @@
 .selected-date-time h3{
   color: black;
   text-align: center;
-  margin-right: 23px;
+  margin-right: 0px;
   margin-top: 3rem;
-  font-size: 1rem;
+  font-size: 1.2rem;
   margin-bottom: 0rem;
   font-family: 'Open Sans', sans-serif;
 }
@@ -1945,4 +2056,75 @@
     font-size: 1.7rem;
     margin-bottom: 1rem;
 }
+
+
+/* ESTILOS RESPONSIVE DEL MODAL DE CONFIRMACIóN ELIMINAR MEETING */
+.modal-card {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+}
+
+}
+
+
+
+/* ESTILOS DEL MODAL DE CONFIRMACIóN ELIMINAR MEETING */
+
+.modal-background {
+  background-color: rgba(0, 0, 0, 0.4); 
+}
+
+.modal-card {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+}
+
+.modal-card-body {
+  padding-top: 2rem;
+  padding-bottom: 0rem;
+  text-align: center;
+  background-color: transparent;
+  color: #333;
+}
+
+.modal-card-body p{
+  font-size: 1.2rem;
+}
+
+.modal-card-foot {
+  display: flex;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.modal-card-foot .button {
+  flex: 1;  
+  padding: 0.75rem 1.5rem;
+  font-size: .9rem;
+  margin: 0 0.5rem;  
+  border-radius: 5px;
+  text-align: center;
+}
+
+.modal-card-foot .button.is-danger {
+  background-color: #6a0dad;  
+  color: white;
+}
+
+.modal-card-foot .button.is-danger:hover {
+  background-color: transparent;
+  color: #6a0dad;
+}
+
+.modal-card-foot .button.is-primary3 {
+  background-color: #007bff;
+  color: white;
+}
+
+.modal-card-foot .button.is-primary3:hover {
+  background-color: #0056b3;
 }

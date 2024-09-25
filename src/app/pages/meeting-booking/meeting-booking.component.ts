@@ -46,6 +46,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   meetings: MeetingDTO[] = [];
   private unsubscribe$ = new Subject<void>();
   showTimeSlotsModal = false;
+  isDeleteModalActive = false;  
+  meetingToDelete: MeetingDTO | null = null;
 
   constructor(
     private router: Router,
@@ -386,5 +388,28 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   closeTimeSlotsModal() {
     this.showTimeSlotsModal = false;
+  }
+
+
+  deleteMeeting(meeting:MeetingDTO){}
+
+
+  openDeleteModal(meeting: MeetingDTO): void {
+    this.meetingToDelete = meeting;  
+    this.isDeleteModalActive = true; 
+    console.log(meeting);
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalActive = false;  
+    this.meetingToDelete = null;  
+  }
+  
+  confirmDelete(): void {
+    if (this.meetingToDelete) {
+      this.deleteMeeting(this.meetingToDelete);
+      this.meetings = this.meetings.filter(m => m !== this.meetingToDelete);  
+      this.closeDeleteModal();  
+    }
   }
 }
