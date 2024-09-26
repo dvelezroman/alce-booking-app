@@ -35,6 +35,6 @@ export interface FilterMeetingsDto {
 
 export interface UpdateMeetingLinkDto {
   date: string;  // ISO date string format
-  hour: number | null;  // Hour in 24-hour format
+  hour: number;  // Hour in 24-hour format
   link: string;  // The link to be updated
 }

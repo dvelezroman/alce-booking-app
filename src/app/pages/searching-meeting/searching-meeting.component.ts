@@ -77,14 +77,13 @@ export class SearchingMeetingComponent implements OnInit {
   }
 
   assignLink(): void {
-    this.meetings.forEach(meeting => {
-      const updateData: UpdateMeetingLinkDto = {
-        date: new Date(meeting.date).toISOString(),
-        hour: meeting.hour,
+    if (this.filter.hour && this.filter.from && this.link) {
+      const updateLinkParams: UpdateMeetingLinkDto = {
+        date: this.filter.from,
+        hour: +this.filter.hour,
         link: this.link
       };
-
-      this.bookingService.updateMeetingLink(updateData).subscribe(
+      this.bookingService.updateMeetingLink(updateLinkParams).subscribe(
         response => {
           console.log('Link asignado correctamente', response);
           this.closeModal();
@@ -93,37 +92,6 @@ export class SearchingMeetingComponent implements OnInit {
           console.error('Error al asignar el link', error);
         }
       );
-    });
+    }
   }
-
-
-  onPersonIconClick(meeting: MeetingDTO): void {
-    this.studentsList = [];
-
-    const meetingDate = new Date(meeting.date);
-
-    const filterParams: FilterMeetingsDto = {
-      stageId: meeting.stageId.toString(),
-      date: meetingDate.toISOString(),
-      hour: meeting.hour.toString(),
-    };
-    this.bookingService.searchMeetings(filterParams).subscribe((result: MeetingDTO[]) => {
-      const studentIds = Array.from(new Set(result.map(meeting => meeting.studentId)));
-      console.log('Estudiantes (IDs) en este stage, fecha y hora:', studentIds);
-
-      studentIds.forEach(studentId => {
-        this.studentService.findStudentById(studentId).subscribe((student: Student) => {
-          if (student) {
-            console.log(`Estudiante encontrado: ${student.name}`);
-            this.studentsList.push(student);
-          } else {
-            console.warn(`No se encontró el estudiante con ID ${studentId}`);
-          }
-        });
-      });
-
-      console.log('Lista de estudiantes:', this.studentsList);
-    });
-  }
-
 }

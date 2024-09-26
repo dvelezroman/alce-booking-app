@@ -17,7 +17,7 @@ import {CommonModule} from "@angular/common";
 export class MeetingUpdateLinkComponent {
   meetingData: UpdateMeetingLinkDto = {
     date: '',
-    hour: null,
+    hour: 0,
     link: '',
   };
 
