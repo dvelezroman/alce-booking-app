@@ -60,7 +60,7 @@
   .select select {
     background: white;
     color: #403f3f; 
-    padding: 0.5rem 0.75rem; 
+    padding: 0.25rem 0.75rem; 
     border: 1px solid rgb(213, 213, 213); 
     border-radius: 5px;
     font-size: 0.875rem;
@@ -71,56 +71,84 @@
   }
 
   /* Estilo para el bloque de resultados */
-  .block {
-    margin-top: 1rem;
-  }
-  
-  .subtitle {
-    color: #333333; 
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding-left: 0;
-    text-align: left;
-    margin-left: 10px;
-  }
-  
-  ul li {
-    margin-bottom: 0.5rem;
-    color: #333333; 
-  }
-  
-  ul li p {
-    margin: 0;
-    font-size: .9rem;
-  }
+.block {
+  margin-top: 1rem;
+  padding: 0.5rem;
+}
 
-  strong {
-    color: #333; 
-    font-weight: bold; 
-    margin-left: 15px;
-  }
-  
-  .no-results-message {
-    color: #ff0000; 
-    font-size: 1rem;
-    margin-top: 1rem;
-  }
+.subtitle {
+  color: #333333; 
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
 
-  button.is-primary {
-    background: linear-gradient(to right, #4490e2, #bd75e4); 
-    color: #fff; 
-    border: none; 
-    transition: all 0.3s ease; 
-  }
-  
-  button.is-primary:hover {
-    background: linear-gradient(to right, #367bbd, #a964c6); 
-  }
+ul {
+  list-style-type: none;
+  padding-left: 0;
+  text-align: left;
+  margin-left: 10px;
+}
+
+ul li {
+  margin-bottom: 0.5rem;
+  color: #333333;
+}
+
+ul li i.icon-person {
+  color: #4490e2; 
+  margin-right: 8px; 
+}
+
+ul li p {
+  margin: 0;
+  font-size: .9rem;
+}
+
+strong {
+  color: #333; 
+  font-weight: 500; 
+  margin-left: 15px;
+  margin-right: 3px;
+}
+
+.no-results-message {
+  color: #ff0000; 
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+button.is-primary {
+  background: linear-gradient(to right, #4490e2, #bd75e4); 
+  color: #fff; 
+  border: none; 
+  transition: all 0.3s ease; 
+}
+
+button.is-primary:hover {
+  background: linear-gradient(to right, #367bbd, #a964c6); 
+}
+
+.meeting-item {
+  margin-bottom: 1rem; 
+  padding-bottom: 0.5rem; 
+  border-bottom: 1px solid #dcdcdc; 
+}
+
+.meeting-stage {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem; 
+}
+
+.icon-person {
+  color: #4490e2;
+  margin-right: 8px;
+}
+
+.meeting-date-hour {
+  margin-left: 24px; 
+}
 
 
 /* estilos del modal */
@@ -240,7 +268,6 @@
       .modal-card-foot .button.is-danger {
         background-color: transparent; 
         color: #a175e4; 
-        border: 1px solid #a175e4; 
       }
       
       .modal-card-foot .button.is-danger:hover {
@@ -261,6 +288,14 @@
 
 
   @media (max-width: 492px) {
+
+    .block {
+      width: 100%; 
+      padding: 1rem; 
+      margin-left: 0; 
+      margin-right: 0;
+    }
+
     .columns.is-mobile {
       flex-direction: column; 
     }
@@ -279,5 +314,30 @@
       padding-left: 0;
       text-align: left;
       margin-left: -10px;
+    }
+
+    ul li {
+      font-size: .9rem; 
+      margin-bottom: 1rem; 
+      padding-bottom: 1rem; 
+    
+    }
+
+    .meeting-item {
+      display: flex;
+      flex-direction: column; 
+    }
+  
+    .meeting-stage, .meeting-date-hour {
+      margin-left: 0px; 
+    }
+  
+    .meeting-stage {
+      margin-bottom: 1rem; 
+    }
+
+    .icon-person {
+      color: #4490e2;
+      margin-right: 0px;
     }
   }

@@ -1,36 +1,37 @@
 <section class="section">
-    <div class="container">
-      
-      <div class="block">
-        <h1 class="title">Buscar Meeting</h1>
-      </div>
+  <div class="container">
 
-      <div class="block">
-        <form>
-          
-          <!-- Primer bloque del formulario: Inputs de fecha -->
-          <div class="columns is-mobile">
-            <div class="column">
-              <div class="field">
-                <label class="label">Fecha desde</label>
-                <div class="control">
-                  <input class="input" type="date" [(ngModel)]="filter.from" name="from" (ngModelChange)="onFilterChange()">
-                </div>
-              </div>
-            </div>
-            
-            <!-- Input fecha hasta -->
-            <div class="column">
-              <div class="field">
-                <label class="label">Fecha hasta</label>
-                <div class="control">
-                  <input class="input" type="date" [(ngModel)]="filter.to" name="to" (ngModelChange)="onFilterChange()">
-                </div>
+    <div class="block">
+      <h1 class="title">Buscar Meeting</h1>
+    </div>
+
+    <div class="block">
+      <form>
+        
+        <!-- Inputs de fecha -->
+        <div class="columns is-mobile">
+          <div class="column">
+            <div class="field">
+              <label class="label">Fecha desde</label>
+              <div class="control">
+                <input class="input" type="date" [(ngModel)]="filter.from" name="from" (ngModelChange)="onFilterChange()">
               </div>
             </div>
           </div>
-  
-          <!-- Segundo bloque del formulario: Input de hora -->
+
+          <div class="column">
+            <div class="field">
+              <label class="label">Fecha hasta</label>
+              <div class="control">
+                <input class="input" type="date" [(ngModel)]="filter.to" name="to" (ngModelChange)="onFilterChange()">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inputs de hora y stage -->
+        <div class="columns is-mobile">
+          <!-- Input de hora -->
           <div class="column">
             <div class="field">
               <label class="label">Hora</label>
@@ -42,36 +43,62 @@
                 </div>
               </div>
             </div>
-            
-            <!-- Botón de asignar (otra funcionalidad) -->
-            <div class="column" *ngIf="meetings && meetings.length > 0">
-              <div class="field">
-                <label class="label">&nbsp;</label> 
-                <div class="control">
-                  <button class="button is-primary is-fullwidth" (click)="openModal()">Asignar</button>
+          </div>
+
+          <!-- Input de stage -->
+          <div class="column">
+            <div class="field">
+              <label class="label">Stage</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="filterByStage()">
+                    <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+                  </select>
                 </div>
               </div>
             </div>
           </div>
-        </form>
-      </div>
-  
-      <div class="block">
-        <h2 class="subtitle" *ngIf="meetings && meetings.length > 0">Resultados de la búsqueda:</h2>
-        
-        <ul *ngIf="meetings && meetings.length > 0">
-          <li *ngFor="let meeting of meetings; let i = index">
-            <p><strong>{{ i + 1 }}. Fecha:</strong> {{ meeting.date | date: 'mediumDate' }} <strong>Hora:</strong> {{ meeting.hour }}:00</p>
-          </li>
-        </ul>
-
-        <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
-          No hay fechas para el rango asignado.
-        </p>
-      </div>
-  
+        </div>
+      </form>
     </div>
-  </section>
+
+     <!-- Botón de asignar (aparece cuando hay resultados) -->
+     <div class="block" *ngIf="meetings && meetings.length > 0">
+      <div class="field">
+        <label class="label">&nbsp;</label> 
+        <div class="control">
+          <button class="button is-primary is-fullwidth" (click)="openModal()">Asignar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultados de la búsqueda -->
+    <div class="block">
+      <h2 class="subtitle" *ngIf="meetings && meetings.length > 0">Resultados de la búsqueda:</h2>
+      <ul *ngIf="meetings && meetings.length > 0">
+        <li *ngFor="let meeting of meetings; let i = index">
+          <div class="meeting-item">
+            <!-- Primera fila: Ícono y Stage -->
+            <div class="meeting-stage">
+              <i class="fas fa-user icon-person"></i>
+              <strong>Stage: </strong> {{ meeting.stageId }}
+            </div>
+    
+            <!-- Segunda fila: Fecha y Hora -->
+            <div class="meeting-date-hour">
+              <strong>Fecha:</strong> {{ meeting.date | date: 'mediumDate' }}
+              <strong>Hora:</strong> {{ meeting.hour }}:00
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+      <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
+        No hay fechas para el rango asignado.
+      </p>
+    </div>
+  </div>
+</section>
 
   <div class="modal" [ngClass]="{ 'is-active': isModalOpen }">
     <div class="modal-background"></div> 
