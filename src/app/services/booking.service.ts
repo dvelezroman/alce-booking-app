@@ -22,7 +22,11 @@ export class BookingService {
     let params = new HttpParams();
 
     if (from) {
-      params = params.set('from', from);
+      if (to) {
+        params = params.set('from', from);
+      } else {
+        params = params.set('date', from);
+      }
     }
 
     if (to) {
@@ -45,7 +49,7 @@ export class BookingService {
   }
 
   updateMeetingLink(data: UpdateMeetingLinkDto): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/meetings/link`, data);
+    return this.http.patch(`${this.apiUrl}/link`, data);
   }
 }
 
