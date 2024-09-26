@@ -78,16 +78,21 @@
       <ul *ngIf="meetings && meetings.length > 0">
         <li *ngFor="let meeting of meetings; let i = index">
           <div class="meeting-item">
-            <!-- Primera fila: Ícono y Stage -->
+            <!-- Stage -->
             <div class="meeting-stage">
-              <i class="fas fa-user icon-person"></i>
               <strong>Stage: </strong> {{ meeting.stageId }}
             </div>
-    
-            <!-- Segunda fila: Fecha y Hora -->
+      
+            <!-- Fecha, Hora, e Ícono -->
             <div class="meeting-date-hour">
-              <strong>Fecha:</strong> {{ meeting.date | date: 'mediumDate' }}
-              <strong>Hora:</strong> {{ meeting.hour }}:00
+              <div class="date-hour-info">
+                <strong>Fecha:</strong> {{ meeting.date | date: 'mediumDate' }}
+                <strong>Hora:</strong> {{ meeting.hour }}:00
+              </div>
+              <!-- Ícono dentro del mismo bloque -->
+              <div class="meeting-icon">
+                <i class="fas fa-user icon-person"></i>
+              </div>
             </div>
           </div>
         </li>

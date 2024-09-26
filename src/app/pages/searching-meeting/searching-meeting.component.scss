@@ -1,14 +1,14 @@
 .section {
     background-color: #f5f5f5; 
     min-height: 100vh; 
-    padding: 2rem; 
+    padding: 1rem; 
   }
 
   .container {
     width: 550px; 
     margin: 0 auto; 
     background-color: #ffffff; 
-    padding: 2rem; 
+    padding: 1rem; 
     border-radius: 8px;  
   }
 
@@ -71,6 +71,7 @@
   }
 
   /* Estilo para el bloque de resultados */
+/* Estilo para el bloque de resultados */
 .block {
   margin-top: 1rem;
   padding: 0.5rem;
@@ -97,7 +98,6 @@ ul li {
 
 ul li i.icon-person {
   color: #4490e2; 
-  margin-right: 8px; 
 }
 
 ul li p {
@@ -109,7 +109,7 @@ strong {
   color: #333; 
   font-weight: 500; 
   margin-left: 15px;
-  margin-right: 3px;
+  margin-right: 1px;
 }
 
 .no-results-message {
@@ -135,21 +135,30 @@ button.is-primary:hover {
   border-bottom: 1px solid #dcdcdc; 
 }
 
-.meeting-stage {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem; 
-}
-
-.icon-person {
-  color: #4490e2;
-  margin-right: 8px;
-}
-
 .meeting-date-hour {
-  margin-left: 24px; 
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
 }
 
+.date-hour-info {
+  flex: 0 0 85%; 
+  display: flex;
+  gap: 10px; 
+  align-items: center;
+}
+
+.meeting-icon {
+  flex: 0 0 10%; 
+  display: flex;            
+  justify-content: center;   
+  align-items: center; 
+  padding: 5px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  border: 1px solid #367bbd;     
+  height: 80%;               
+}
 
 /* estilos del modal */
 
@@ -289,9 +298,15 @@ button.is-primary:hover {
 
   @media (max-width: 492px) {
 
+    .section {
+      background-color: #f5f5f5; 
+      min-height: 100vh; 
+      padding: 0rem; 
+    }
+
     .block {
       width: 100%; 
-      padding: 1rem; 
+      padding: .5rem; 
       margin-left: 0; 
       margin-right: 0;
     }
@@ -307,6 +322,15 @@ button.is-primary:hover {
   
     .columns.is-mobile .input {
       width: 100%; 
+    }
+
+    button.is-primary {
+      background: linear-gradient(to right, #4490e2, #bd75e4); 
+      color: #fff; 
+      padding: 12px;
+      font-size: 1.1rem;
+      border: none; 
+      transition: all 0.3s ease; 
     }
 
     ul {
@@ -333,7 +357,7 @@ button.is-primary:hover {
     }
   
     .meeting-stage {
-      margin-bottom: 1rem; 
+      margin-bottom: .5rem; 
     }
 
     .icon-person {
