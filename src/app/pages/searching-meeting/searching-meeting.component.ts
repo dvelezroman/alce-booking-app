@@ -4,9 +4,9 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BookingService } from '../../services/booking.service';
 import { FilterMeetingsDto, MeetingDTO, UpdateMeetingLinkDto } from '../../services/dtos/booking.dto';
-import { StagesService } from '../../services/stages.service';
 import { Stage, Student } from '../../services/dtos/student.dto';
 import { StudentsService } from '../../services/students.service';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-searching-meeting',
@@ -26,6 +26,7 @@ export class SearchingMeetingComponent implements OnInit {
   meetings: MeetingDTO[] = [];
   originalMeetings: MeetingDTO[] = [];
   stages: Stage[] = [];
+  studentsList: Student[] = [];
   
   filter: FilterMeetingsDto = {
     from: '',
@@ -36,7 +37,7 @@ export class SearchingMeetingComponent implements OnInit {
 
 
   constructor(private bookingService: BookingService,
-              private studentService: StudentsService
+              private studentService: StudentsService,
   ) {}
 
   ngOnInit(): void {
@@ -110,10 +111,34 @@ export class SearchingMeetingComponent implements OnInit {
     });
   }
 
-  getStudentsByStage(stageId: number): void {
-    this.studentService.findStudentsByStageOrMode(stageId).subscribe((students: Student[]) => {
-      const studentNames = students.map(student => student.name);  
-      console.log('estudiantes en el stage:', studentNames);
+
+  onPersonIconClick(meeting: MeetingDTO): void {
+    this.studentsList = []; 
+  
+    const meetingDate = new Date(meeting.date);
+  
+    const filterParams: FilterMeetingsDto = {
+      stageId: meeting.stageId.toString(),
+      date: meetingDate.toISOString(),  
+      hour: meeting.hour.toString(),
+    };
+  
+    this.bookingService.searchMeetings(filterParams).subscribe((result: MeetingDTO[]) => {
+      const studentIds = Array.from(new Set(result.map(meeting => meeting.studentId))); 
+      console.log('Estudiantes (IDs) en este stage, fecha y hora:', studentIds);
+  
+      studentIds.forEach(studentId => {
+        this.studentService.findStudentById(studentId).subscribe((student: Student) => {
+          if (student) {
+            console.log(`Estudiante encontrado: ${student.name}`);
+            this.studentsList.push(student); 
+          } else {
+            console.warn(`No se encontró el estudiante con ID ${studentId}`);
+          }
+        });
+      });
+  
+      console.log('Lista de estudiantes:', this.studentsList); 
     });
   }
 
