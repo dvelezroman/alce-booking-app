@@ -5,7 +5,8 @@ import { RouterModule } from '@angular/router';
 import { BookingService } from '../../services/booking.service';
 import { FilterMeetingsDto, MeetingDTO, UpdateMeetingLinkDto } from '../../services/dtos/booking.dto';
 import { StagesService } from '../../services/stages.service';
-import { Stage } from '../../services/dtos/student.dto';
+import { Stage, Student } from '../../services/dtos/student.dto';
+import { StudentsService } from '../../services/students.service';
 
 @Component({
   selector: 'app-searching-meeting',
@@ -35,14 +36,10 @@ export class SearchingMeetingComponent implements OnInit {
 
 
   constructor(private bookingService: BookingService,
-              private stagesService: StagesService
+              private studentService: StudentsService
   ) {}
 
   ngOnInit(): void {
-    this.stagesService.getAll().subscribe(stages => {
-      console.log(this.stages)
-    });
-
     const today = new Date();
     this.filter.from = today.toISOString().split('T')[0];  
     this.availableHours = Array.from({ length: 13 }, (_, i) => 9 + i);
@@ -110,6 +107,13 @@ export class SearchingMeetingComponent implements OnInit {
           console.error('Error al asignar el link', error);
         }
       );
+    });
+  }
+
+  getStudentsByStage(stageId: number): void {
+    this.studentService.findStudentsByStageOrMode(stageId).subscribe((students: Student[]) => {
+      const studentNames = students.map(student => student.name);  
+      console.log('estudiantes en el stage:', studentNames);
     });
   }
 

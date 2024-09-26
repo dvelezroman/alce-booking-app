@@ -74,7 +74,7 @@
 
     <!-- Resultados de la búsqueda -->
     <div class="block">
-      <h2 class="subtitle" *ngIf="meetings && meetings.length > 0">Resultados de la búsqueda:</h2>
+      <h2 class="subtitle" *ngIf="meetings && meetings.length > 0">Meetings:</h2>
       <ul *ngIf="meetings && meetings.length > 0">
         <li *ngFor="let meeting of meetings; let i = index">
           <div class="meeting-item">
@@ -90,7 +90,7 @@
                 <strong>Hora:</strong> {{ meeting.hour }}:00
               </div>
               <!-- Ícono dentro del mismo bloque -->
-              <div class="meeting-icon">
+              <div class="meeting-icon" (click)="getStudentsByStage(meeting.stageId)">
                 <i class="fas fa-user icon-person"></i>
               </div>
             </div>
