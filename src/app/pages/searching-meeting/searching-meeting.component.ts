@@ -61,22 +61,36 @@ export class SearchingMeetingComponent implements OnInit {
       ...this.filter,
       hour: this.filter.hour?.toString(),
     };
+  
     if (this.filter.stageId !== '-1') {
       filterParams.stageId = this.filter.stageId?.toString(); 
     }
+  
     if (this.filter.from && this.filter.to) {
       this.bookingService.searchMeetings(filterParams).subscribe(meetings => {
         this.meetings = meetings;
-        this.originalMeetings = meetings; 
+        this.originalMeetings = meetings;
   
-        const uniqueStages = Array.from(new Set(meetings.map(meeting => meeting.stageId)))
-          .map(stageId => ({
-            id: stageId,
-            number: stageId,
-            description: `Stage ${stageId}`
-          }));
+        if (meetings.length === 0) {
+          this.stages = [];
+          this.filter.stageId = ''; 
+        } else {
+          const uniqueStages = Array.from(new Set(meetings.map(meeting => meeting.stageId)))
+            .map(stageId => ({
+              id: stageId,
+              number: stageId,
+              description: `Stage ${stageId}`
+            }));
   
-        this.stages = [{ id: -1, number: -1, description: 'Todos los Stages' }, ...uniqueStages];
+          if (uniqueStages.length > 1) {
+            this.stages = [{ id: -1, number: -1, description: 'Todos los Stages' }, ...uniqueStages];
+            this.filter.stageId = '-1'; 
+          } else if (uniqueStages.length === 1) {
+            this.stages = uniqueStages;
+            this.filter.stageId = uniqueStages[0].id.toString(); 
+          }
+        }
+  
         console.log('Stages disponibles para el selector:', this.stages);
       });
     }

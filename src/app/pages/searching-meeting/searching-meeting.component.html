@@ -52,6 +52,9 @@
               <div class="control">
                 <div class="select is-fullwidth">
                   <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="filterByStage()">
+                    <!-- Opción predeterminada -->
+                    <option value="" disabled selected>Stages</option>
+                    <!-- Opciones de stages disponibles -->
                     <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
                   </select>
                 </div>
@@ -99,7 +102,7 @@
       </ul>
     
       <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
-        No hay fechas para el rango asignado.
+        No hay meetings para el rango asignado.
       </p>
     </div>
   </div>
