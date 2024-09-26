@@ -1,3 +1,6 @@
+import {Stage, Student} from "./student.dto";
+import {Instructor} from "./instructor.dto";
+
 export interface MeetingDTO {
   id?: number;            // Optional for create; required for update
   studentId: number;     // ID of the student
@@ -7,6 +10,9 @@ export interface MeetingDTO {
   stageId: number;       // ID of the stage
   link?: string;         // Optional link for the meeting
   present?: boolean;     // Optional attendance status
+  student?: Student;
+  instructor?: Instructor;
+  stage?: Stage;
 }
 
 export interface CreateMeetingDto {

@@ -7,7 +7,7 @@
 
     <div class="block">
       <form>
-        
+
         <!-- Inputs de fecha -->
         <div class="columns is-mobile">
           <div class="column">
@@ -51,11 +51,11 @@
               <label class="label">Stage</label>
               <div class="control">
                 <div class="select is-fullwidth">
-                  <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="filterByStage()">
+                  <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onFilterChange()">
                     <!-- Opción predeterminada -->
                     <option value="" disabled selected>Stages</option>
                     <!-- Opciones de stages disponibles -->
-                    <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+                    <option *ngFor="let stage of stages" [value]="stage.number">{{ stage.description }}</option>
                   </select>
                 </div>
               </div>
@@ -68,7 +68,7 @@
      <!-- Botón de asignar (aparece cuando hay resultados) -->
      <div class="block" *ngIf="meetings && meetings.length > 0">
       <div class="field">
-        <label class="label">&nbsp;</label> 
+        <label class="label">&nbsp;</label>
         <div class="control">
           <button class="button is-primary is-fullwidth" (click)="openModal()">Asignar</button>
         </div>
@@ -85,7 +85,10 @@
             <div class="meeting-stage">
               <strong>Stage: </strong> {{ meeting.stageId }}
             </div>
-      
+            <div class="meeting-stage">
+              {{ meeting.student?.user?.lastName }}
+            </div>
+
             <!-- Fecha, Hora, e Ícono -->
             <div class="meeting-date-hour">
               <div class="date-hour-info">
@@ -100,7 +103,7 @@
           </div>
         </li>
       </ul>
-    
+
       <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
         No hay meetings para el rango asignado.
       </p>
@@ -109,7 +112,7 @@
 </section>
 
   <div class="modal" [ngClass]="{ 'is-active': isModalOpen }">
-    <div class="modal-background"></div> 
+    <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">Asignar Link</p>

@@ -1,3 +1,5 @@
+import {UserDto} from "./user.dto";
+
 export interface RegisterStudentDto {
   id?: number;
   stageId: number;
@@ -14,6 +16,7 @@ export interface Student {
   userId: number;
   createdAt?: Date;
   updatedAt?: Date;
+  user?: UserDto;
 }
 
 export enum Mode {
