@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Inject, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {CommonModule, isPlatformBrowser, NgForOf} from "@angular/common";
 import { Router } from '@angular/router';
@@ -21,6 +21,10 @@ import {CreateMeetingDto, MeetingDTO} from "../../services/dtos/booking.dto";
   styleUrl: './meeting-booking.component.scss'
 })
 export class MeetingBookingComponent implements OnInit, AfterViewInit {
+  @ViewChild('scheduleList') scheduleList!: ElementRef;
+  canScrollLeft = false;
+  canScrollRight = true;
+
   selectedDate: string = '';
   selectedTimeSlot: {label: string, value: number} = { label: "9:00", value: 9 };
   hoverIndex: number | null = null;
@@ -300,7 +304,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
 
-
   selectTimeSlot(time: {label: string, value: number}) {
     if (this.selectedDay) {
       this.selectedTimeSlot = time;
@@ -411,5 +414,22 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.meetings = this.meetings.filter(m => m !== this.meetingToDelete);  
       this.closeDeleteModal();  
     }
+  }
+
+  checkScroll() {
+    const el = this.scheduleList.nativeElement;
+    this.canScrollLeft = el.scrollLeft > 0;
+    const maxScrollLeft = el.scrollWidth - el.clientWidth;
+    this.canScrollRight = el.scrollLeft < maxScrollLeft;
+  }
+
+  scrollLeft() {
+    this.scheduleList.nativeElement.scrollBy({ left: -330, behavior: 'smooth' });
+    setTimeout(() => this.checkScroll(), 300); 
+  }
+
+  scrollRight() {
+    this.scheduleList.nativeElement.scrollBy({ left: 330, behavior: 'smooth' });
+    setTimeout(() => this.checkScroll(), 300); 
   }
 }

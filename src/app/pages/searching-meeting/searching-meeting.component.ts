@@ -61,15 +61,28 @@ export class SearchingMeetingComponent implements OnInit {
 
 
   onFilterChange(): void {
+
+    const filterParams: FilterMeetingsDto = {
+      ...this.filter,
+      hour: this.filter.hour ? this.filter.hour.toString() : undefined 
+    };
+    
+    if (this.filter.stageId === '') {
+      delete filterParams.stageId; 
+    } else {
+      filterParams.stageId = this.filter.stageId?.toString(); 
+    }
+
     this.bookingService.searchMeetings(this.filter).subscribe(meetings => {
       this.meetings = meetings;
       this.originalMeetings = meetings;
       console.log(meetings);
     });
   }
+  
 
   filterByStage(): void {
-    if (this.filter.stageId === '-1') {
+    if (this.filter.stageId === '') {
       this.meetings = this.originalMeetings;
     } else {
       this.meetings = this.originalMeetings.filter(meeting => meeting.stageId === +this.filter.stageId!);

@@ -1,13 +1,12 @@
 <section class="section">
   <div class="container">
 
-    <div class="block">
+    <div class="block title-container">
       <h1 class="title">Buscar Meeting</h1>
     </div>
 
     <div class="block">
       <form>
-
         <!-- Inputs de fecha -->
         <div class="columns is-mobile">
           <div class="column">
@@ -38,6 +37,7 @@
               <div class="control">
                 <div class="select is-fullwidth">
                   <select [(ngModel)]="filter.hour" name="hour" (ngModelChange)="onFilterChange()">
+                    <option value="">Todas las horas</option>
                     <option *ngFor="let hour of availableHours" [value]="hour">{{ hour }}:00</option>
                   </select>
                 </div>
@@ -52,8 +52,7 @@
               <div class="control">
                 <div class="select is-fullwidth">
                   <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onFilterChange()">
-                    <!-- Opción predeterminada -->
-                    <option value="" disabled selected>Stages</option>
+                    <option value="">Stages</option>
                     <!-- Opciones de stages disponibles -->
                     <option *ngFor="let stage of stages" [value]="stage.number">{{ stage.description }}</option>
                   </select>
@@ -77,7 +76,7 @@
 
     <!-- Resultados de la búsqueda -->
     <div class="block">
-      <h2 class="subtitle" *ngIf="meetings && meetings.length > 0">Meetings:</h2>
+      <h2 class="subtitle" *ngIf="meetings && meetings.length > 0">Estudiantes:</h2>
       <ul *ngIf="meetings && meetings.length > 0">
         <li *ngFor="let meeting of meetings; let i = index">
           <div class="meeting-item">
@@ -85,23 +84,24 @@
             <div class="meeting-stage">
               <strong>Stage: </strong> {{ meeting.stageId }}
             </div>
-            <div class="meeting-stage">
-              {{ meeting.student?.user?.lastName }}
+             <!-- datos del estudiante -->
+            <div class="meeting-student">
+              <strong>Nombre:</strong> {{ meeting.student?.user?.firstName }} {{ meeting.student?.user?.lastName }}
             </div>
-
-            <!-- Fecha, Hora, e Ícono -->
+            <div class="meeting-email">
+              <strong>Correo:</strong> {{ meeting.student?.user?.email || 'Correo no disponible' }}
+            </div>
+            <!-- datos fecha -->
             <div class="meeting-date-hour">
-              <div class="date-hour-info">
                 <strong>Fecha:</strong> {{ meeting.date | date: 'mediumDate' }}
                 <strong>Hora:</strong> {{ meeting.hour }}:00
-              </div>
             </div>
           </div>
         </li>
       </ul>
 
       <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
-        No hay meetings para el rango asignado.
+        No hay estudiantes para el rango asignado.
       </p>
     </div>
   </div>

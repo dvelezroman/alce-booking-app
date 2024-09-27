@@ -12,16 +12,30 @@
     border-radius: 8px;  
   }
 
+  .title-container {
+    position: fixed; 
+    top: -15px; 
+    left: 70px;
+    width: 100%; 
+    height: 85px;
+    width: calc(100% - 70px);
+    background-color: rgb(209, 208, 208); 
+    z-index: 10; 
+    text-align: center;
+    padding: 3rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  }
+
   .title {
-    text-align: center; 
-    color: #333333; 
-    font-size: 2rem; 
-    font-weight: bold; 
-    margin-bottom: 1.5rem; 
+    font-size: 2.2rem;
+    line-height: 65px;
+    color: #333;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
   }
 
   form {
-    margin-top: 2rem; 
+    margin-top: 7rem; 
   }
   
   .label {
@@ -71,7 +85,6 @@
   }
 
   /* Estilo para el bloque de resultados */
-/* Estilo para el bloque de resultados */
 .block {
   margin-top: 1rem;
   padding: 0.5rem;
@@ -130,35 +143,27 @@ button.is-primary:hover {
 }
 
 .meeting-item {
+  display: flex;
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center; 
+  padding: 1rem; 
+  border: 1px solid #ddd;
+  border-radius: 8px; 
   margin-bottom: 1rem; 
-  padding-bottom: 0.5rem; 
-  border-bottom: 1px solid #dcdcdc; 
+  background-color: #f9f9f9; 
 }
 
+.meeting-stage,
+.meeting-student,
+.meeting-email,
 .meeting-date-hour {
-  display: flex;
-  justify-content: space-between; 
-  align-items: center; 
+  text-align: center; 
 }
 
-.date-hour-info {
-  flex: 0 0 85%; 
-  display: flex;
-  gap: 10px; 
-  align-items: center;
-}
-
-.meeting-icon {
-  flex: 0 0 10%; 
-  display: flex;            
-  justify-content: center;   
-  align-items: center; 
-  padding: 5px;
-  border-radius: 8px;
-  font-size: 1.2rem;
-  border: 1px solid #367bbd;     
-  height: 80%;  
-  cursor: pointer;             
+.meeting-stage {
+  font-weight: bold;
+  margin-bottom: 0.5rem; 
 }
 
 /* estilos del modal */
@@ -244,6 +249,19 @@ button.is-primary:hover {
       width: 90%; 
       margin: 0 auto; 
       padding: 1rem; 
+    }
+
+    .title-container{
+      left: 0; 
+      width: 100%; 
+    }
+
+    .title {
+      font-size: 1.5rem;
+      line-height: 74px;
+      color: #333;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
     }
 
     .modal-card {
@@ -351,18 +369,25 @@ button.is-primary:hover {
     .meeting-item {
       display: flex;
       flex-direction: column; 
+      justify-content: flex-start;
+      align-items: flex-start; 
+      padding: 1rem; 
+      border: 1px solid #ddd;
+      border-radius: 8px; 
+      margin-bottom: 0rem; 
+      background-color: #f9f9f9; 
     }
-  
-    .meeting-stage, .meeting-date-hour {
-      margin-left: 0px; 
+    
+    .meeting-stage,
+    .meeting-student,
+    .meeting-email,
+    .meeting-date-hour {
+      text-align: left; 
+      width: 100%;
     }
-  
+    
     .meeting-stage {
-      margin-bottom: .5rem; 
-    }
-
-    .icon-person {
-      color: #4490e2;
-      margin-right: 0px;
+      font-weight: bold;
+      margin-bottom: 0.5rem; 
     }
   }
