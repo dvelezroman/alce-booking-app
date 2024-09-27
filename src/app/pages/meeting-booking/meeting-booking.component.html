@@ -3,62 +3,62 @@
 </div>
 
 <div class="booking-container container">
-    <div class="columns is-mobile">
+     <div class="columns is-mobile">
 
-      <!-- primer bloque: información del estudiante -->
-      <div class="column student-info">
+        <!-- primer bloque: información del estudiante -->
+       <div class="column student-info">
         
-          <!-- <div class="student-photo">
-              <img src="/assets/foto usuario default.png" alt="Foto del estudiante">
-            </div> -->
-          <div class="student-name">
-            <h3>{{ userName() }}</h3>
-          </div>
-          <div class="student-details">
-            <p>{{ userData?.email }}</p>
-          </div>
-          <div class="student-detail">
-            <p>{{ userData?.stage?.description }}</p>
-          </div>
+            <!-- <div class="student-photo">
+                <img src="/assets/foto usuario default.png" alt="Foto del estudiante">
+              </div> -->
+            <div class="student-name">
+              <h3>{{ userName() }}</h3>
+            </div>
+            <div class="student-details">
+              <p>{{ userData?.email }}</p>
+            </div>
+            <div class="student-detail">
+              <p>{{ userData?.stage?.description }}</p>
+            </div>
 
-        <!-- Fechas seleccionadas por el usuario student -->
-        <div class="student-schedule" *ngIf="meetings.length > 0">
-          <h4 class="schedule-title">Horario Seleccionado</h4>
+          <!-- Fechas seleccionadas por el usuario student -->
+          <div class="student-schedule" *ngIf="meetings.length > 0">
+            <h4 class="schedule-title">Horario Seleccionado</h4>
+            
+            <!-- Botón de flecha izquierda -->
+            <button class="scroll-button left" (click)="scrollLeft()" [class.hidden]="!canScrollLeft">
+              <i class="fas fa-chevron-left"></i>
+            </button>
           
-          <!-- Botón de flecha izquierda -->
-          <button class="scroll-button left" (click)="scrollLeft()" [class.hidden]="!canScrollLeft">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-        
-          <div class="schedule-list"  #scheduleList>
-            <div *ngFor="let meeting of meetings; let i = index" class="schedule-item">
-              <div class="meeting-title">
-                <strong>Meeting {{ i + 1 }}</strong>
-              </div>
-              <div class="meeting-info-container">
-                <div class="schedule-info">
-                  <strong>Fecha:</strong> <span>{{ meeting.date | date: 'mediumDate' }}</span><br>
-                  <strong>Hora:</strong> <span>{{ meeting.hour }}:00</span>
+            <div class="schedule-list"  #scheduleList>
+              <div *ngFor="let meeting of meetings; let i = index" class="schedule-item">
+                <div class="meeting-title">
+                  <strong>Meeting {{ i + 1 }}</strong>
                 </div>
-                <div class="schedule-delete">
-                  <button class="delete-button">
-                    <i class="fas fa-trash-alt" (click)="openDeleteModal(meeting)"></i>
-                  </button>
+                <div class="meeting-info-container">
+                  <div class="schedule-info">
+                    <strong>Fecha:</strong> <span>{{ meeting.date | date: 'mediumDate' }}</span><br>
+                    <strong>Hora:</strong> <span>{{ meeting.hour }}:00</span>
+                  </div>
+                  <div class="schedule-delete">
+                    <button class="delete-button">
+                      <i class="fas fa-trash-alt" (click)="openDeleteModal(meeting)"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
+          
+            <!-- Botón de flecha derecha -->
+            <button class="scroll-button right" (click)="scrollRight()" [class.hidden]="!canScrollRight">
+              <i class="fas fa-chevron-right"></i>
+            </button>
           </div>
-        
-          <!-- Botón de flecha derecha -->
-          <button class="scroll-button right" (click)="scrollRight()" [class.hidden]="!canScrollRight">
-            <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-          <!-- si no ha elegido fecha -->
-          <div class="no-meeting" *ngIf="meetings.length === 0">
-            <p>No tienes fechas de clases programadas.</p>
-          </div>
-      </div>
+            <!-- si no ha elegido fecha -->
+            <div class="no-meeting" *ngIf="meetings.length === 0">
+              <p>No tienes fechas de clases programadas.</p>
+            </div>
+       </div>
     </div>
 
 
@@ -101,12 +101,12 @@
             </div>
           </div>
           </div>
-        </div>
+      </div>
       
 
       <!-- Sub-bloque 2: Time Slots -->
       <div class="selected-date-time">
-        <h3 class="title is-3">Select a time</h3>
+          <h3 class="title is-3">Select a time</h3>
         <div class="time-slots">
           <div *ngFor="let time of timeSlots; let i = index"
                class="time-slot"
@@ -121,8 +121,9 @@
           </div>
         </div>
       </div>
+
     </div>
-  </div>
+</div>
 
 
 

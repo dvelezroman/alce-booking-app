@@ -17,29 +17,41 @@
     top: -15px; 
     left: 70px;
     width: 100%; 
-    height: 85px;
+    height: 100px;
     width: calc(100% - 70px);
-    background-color: rgb(209, 208, 208); 
+    background:linear-gradient( #e2e0ebe2, #bcb4df8a );
+    backdrop-filter:blur(15px);
     z-index: 10; 
     text-align: center;
     padding: 3rem 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); 
   }
 
   .title {
-    font-size: 2.2rem;
-    line-height: 65px;
+    font-size: 2.1rem;
+    line-height: 85px;
     color: #333;
     text-align: center;
     font-family: 'Poppins', sans-serif;
   }
 
-  form {
-    margin-top: 7rem; 
+  .block-search {
+    background-color:#e1deef;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    margin-top: 5rem; 
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10rem ;
   }
   
   .label {
-    color: #333333; 
+    color: #4f4d4d; 
     font-weight: bold; 
     font-size: .9rem;
     margin-left: 8px;
@@ -86,8 +98,8 @@
 
   /* Estilo para el bloque de resultados */
 .block {
-  margin-top: 1rem;
-  padding: 0.5rem;
+  margin-top: .5rem;
+  padding: 0rem;
 }
 
 .subtitle {
@@ -101,11 +113,10 @@ ul {
   list-style-type: none;
   padding-left: 0;
   text-align: left;
-  margin-left: 10px;
 }
 
 ul li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   color: #333333;
 }
 
@@ -115,7 +126,6 @@ ul li i.icon-person {
 
 ul li p {
   margin: 0;
-  font-size: .9rem;
 }
 
 strong {
@@ -132,8 +142,9 @@ strong {
 }
 
 button.is-primary {
+  padding: .8rem;
   background: linear-gradient(to right, #4490e2, #bd75e4); 
-  color: #fff; 
+  color: white; 
   border: none; 
   transition: all 0.3s ease; 
 }
@@ -145,25 +156,31 @@ button.is-primary:hover {
 .meeting-item {
   display: flex;
   flex-direction: column; 
-  justify-content: center;
-  align-items: center; 
-  padding: 1rem; 
+  justify-content: flex-start;
+  align-items: flex-start; 
+  padding:1rem .5rem; 
   border: 1px solid #ddd;
   border-radius: 8px; 
   margin-bottom: 1rem; 
-  background-color: #f9f9f9; 
+  background-color: #d5c6fb; 
+  margin: auto;
 }
 
-.meeting-stage,
+.meeting-stage{
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem; 
+}
+
 .meeting-student,
 .meeting-email,
 .meeting-date-hour {
-  text-align: center; 
-}
-
-.meeting-stage {
-  font-weight: bold;
-  margin-bottom: 0.5rem; 
+  text-align: left; 
+  font-size: .9rem;
 }
 
 /* estilos del modal */
@@ -330,6 +347,11 @@ button.is-primary:hover {
       margin-right: 0;
     }
 
+    .title {
+      font-size: 1.5rem;
+      line-height: 90px;
+    }
+
     .columns.is-mobile {
       flex-direction: column; 
     }
@@ -359,23 +381,16 @@ button.is-primary:hover {
       margin-left: -10px;
     }
 
-    ul li {
-      font-size: .9rem; 
-      margin-bottom: 1rem; 
-      padding-bottom: 1rem; 
-    
-    }
-
     .meeting-item {
       display: flex;
       flex-direction: column; 
       justify-content: flex-start;
       align-items: flex-start; 
-      padding: 1rem; 
+      padding: .5rem; 
       border: 1px solid #ddd;
       border-radius: 8px; 
       margin-bottom: 0rem; 
-      background-color: #f9f9f9; 
+      margin: auto;
     }
     
     .meeting-stage,
@@ -388,6 +403,6 @@ button.is-primary:hover {
     
     .meeting-stage {
       font-weight: bold;
-      margin-bottom: 0.5rem; 
+      margin-bottom: 0.1rem; 
     }
   }
