@@ -250,6 +250,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() - 1, 1);
     this.selectedMonth = date.toLocaleString('default', {month: 'long'});
     this.selectedYear = date.getFullYear();
+
+    this.selectedDay = null;
+    this.selectedDayFormatted = '';
     this.generateCurrentMonthDays();
   }
 
@@ -266,19 +269,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() + 1, 1);
     this.selectedMonth = date.toLocaleString('default', {month: 'long'});
     this.selectedYear = date.getFullYear();
+
+    this.selectedDay = null;
+    this.selectedDayFormatted = ''; 
     this.generateCurrentMonthDays();
   }
 
   isDaySelectable(day: any): boolean {
     const currentDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
-    const currentHour = currentDate.getHours();
-    const startDate = currentHour > 11 ? new Date(this.getTomorrowDate()) : new Date(this.today);
-    const maxDate = new Date(this.maxDate);
-
-    const isSameMonth = currentDate.getMonth() === startDate.getMonth() && currentDate.getFullYear() === startDate.getFullYear();
-    const isWithinRange = currentDate >= startDate && currentDate <= maxDate;
-
-    return isSameMonth && isWithinRange;
+    const startDate = new Date(this.today); 
+    const maxDate = new Date(startDate); 
+    maxDate.setDate(startDate.getDate() + 7); 
+  
+    return currentDate >= startDate && currentDate <= maxDate;
   }
 
   selectDay(day: any) {
