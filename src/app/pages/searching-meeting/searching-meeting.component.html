@@ -76,29 +76,58 @@
 
     <!-- Resultados de la búsqueda -->
     <div class="block-results">
-      <ul *ngIf="meetings && meetings.length > 0">
+      <div class="view-switcher" *ngIf="meetings && meetings.length > 0">
+        <button class="icon-button" (click)="viewMode = 'table'">
+          <i class="fas fa-th-list"></i> 
+        </button>
+        <button class="icon-button" (click)="viewMode = 'list'">
+          <i class="fas fa-table"></i> 
+        </button>
+      </div>
+    
+      <!-- Vista de tabla -->
+      <table class="table-results" *ngIf="viewMode === 'table' && meetings && meetings.length > 0">
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let meeting of meetings">
+            <td>{{ meeting.stageId }}</td>
+            <td>{{ meeting.student?.user?.firstName }} {{ meeting.student?.user?.lastName }}</td>
+            <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
+            <td>{{ meeting.date | date: 'mediumDate' }}</td>
+            <td>{{ meeting.hour }}:00</td>
+          </tr>
+        </tbody>
+      </table>
+    
+      <!-- Vista de tarjetas -->
+      <ul class="card-results" *ngIf="viewMode === 'list' && meetings && meetings.length > 0">
         <li *ngFor="let meeting of meetings; let i = index">
           <div class="meeting-item">
-            <!-- Stage -->
             <div class="meeting-stage">
               <strong>Stage: </strong> {{ meeting.stageId }}
             </div>
-             <!-- datos del estudiante -->
             <div class="meeting-student">
               <strong>Nombre:</strong> {{ meeting.student?.user?.firstName }} {{ meeting.student?.user?.lastName }}
             </div>
             <div class="meeting-email">
               <strong>Correo:</strong> {{ meeting.student?.user?.email || 'Correo no disponible' }}
             </div>
-            <!-- datos fecha -->
             <div class="meeting-date-hour">
-                <strong>Fecha:</strong> {{ meeting.date | date: 'mediumDate' }}
-                <strong>Hora:</strong> {{ meeting.hour }}:00
+              <strong>Fecha:</strong> {{ meeting.date | date: 'mediumDate' }}
+              <strong>Hora:</strong> {{ meeting.hour }}:00
             </div>
           </div>
         </li>
       </ul>
-
+    
       <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
         No hay estudiantes para el rango asignado.
       </p>

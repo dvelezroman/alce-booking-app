@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {CommonModule, isPlatformBrowser, NgForOf} from "@angular/common";
 import { Router } from '@angular/router';
@@ -22,8 +22,11 @@ import {CreateMeetingDto, MeetingDTO} from "../../services/dtos/booking.dto";
 })
 export class MeetingBookingComponent implements OnInit, AfterViewInit {
   @ViewChild('scheduleList') scheduleList!: ElementRef;
+  @ViewChild('timeSlotList') timeSlotList!: ElementRef;
   canScrollLeft = false;
   canScrollRight = false;
+  canScrollUp = false;  
+  canScrollDown = false;
 
   selectedDate: string = '';
   selectedTimeSlot: {label: string, value: number} = { label: "9:00", value: 9 };
@@ -58,6 +61,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     private store: Store,
     private bookingService: BookingService,
+    private cdr: ChangeDetectorRef
   ) {
     this.initializeTimeSlots();
     this.userData$ = this.store.select(selectUserData);
@@ -132,6 +136,30 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.nextYear = nextDate.getFullYear();
 
     this.generateCurrentMonthDays();
+
+    setTimeout(() => {
+      this.checkScroll();
+    }, 100);
+  }
+
+  ngAfterViewInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
+      if (dateInput) {
+        dateInput.addEventListener('click', () => {
+          dateInput.showPicker();
+        });
+      }
+    }
+  
+    setTimeout(() => {
+      this.checkScroll();
+      this.cdr.detectChanges(); 
+    }, 300);
+    
+    setTimeout(() => {
+      this.checkScrollY();
+    }, 0);
   }
 
   initializeMeetings() {
@@ -155,18 +183,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return 'Nombre de Usuario';
   }
 
-  ngAfterViewInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-      if (dateInput) {
-        dateInput.addEventListener('click', () => {
-          dateInput.showPicker();
-        });
-      }
-    }
-
-    this.checkScroll(); 
-  }
+ 
 
   initializeTimeSlots() {
     const startHour = 9; // 9 AM
@@ -349,6 +366,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.bookingService.searchMeetings({ from, to, hour, studentId }).subscribe({
     next: (meetings: MeetingDTO[]) => {
       this.meetings = meetings;
+      this.cdr.detectChanges();
+      setTimeout(() => this.checkScroll(), 300);
       console.log(meetings);
     }, error: (error) => {
         console.error('Error fetching meetings:', error);
@@ -418,17 +437,21 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
   }
   
-//scroll flechas del contenedor de los meetings del estudiante
+//scroll flechas del contenedor de los meetings del estudiante y time slots
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.checkScroll(); 
+    this.checkScrollY();
   }
 
   checkScroll() {
+    if (!this.scheduleList || !this.scheduleList.nativeElement) {
+      return;  
+    }
+  
     const el = this.scheduleList.nativeElement;
-    this.canScrollLeft = el.scrollLeft > 0;
-    const maxScrollLeft = el.scrollWidth - el.clientWidth;
-    this.canScrollRight = el.scrollWidth > el.clientWidth; 
+    this.canScrollLeft = el.scrollLeft > 0;  
+    this.canScrollRight = el.scrollWidth > el.clientWidth;  
   }
 
   scrollLeft() {
@@ -439,5 +462,29 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   scrollRight() {
     this.scheduleList.nativeElement.scrollBy({ left: 330, behavior: 'smooth' });
     setTimeout(() => this.checkScroll(), 300); 
+  }
+
+  scrollUp() {
+    if (this.timeSlotList) {
+      this.timeSlotList.nativeElement.scrollBy({ top: -400, behavior: 'smooth' });
+      setTimeout(() => this.checkScrollY(), 300);  
+    }
+  }
+
+  scrollDown() {
+    if (this.timeSlotList) {
+      this.timeSlotList.nativeElement.scrollBy({ top: 400, behavior: 'smooth' });
+      setTimeout(() => this.checkScrollY(), 300);  
+    }
+  }
+
+  checkScrollY() {
+    if (!this.timeSlotList || !this.timeSlotList.nativeElement) {
+      return;
+    }
+    const el = this.timeSlotList.nativeElement;
+    this.canScrollUp = el.scrollTop > 0;  
+    const maxScrollTop = el.scrollHeight - el.clientHeight;
+    this.canScrollDown = el.scrollTop < maxScrollTop;  
   }
 }

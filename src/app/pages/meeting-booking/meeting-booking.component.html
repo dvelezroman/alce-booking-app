@@ -107,7 +107,10 @@
       <!-- Sub-bloque 2: Time Slots -->
       <div class="selected-date-time">
           <h3 class="title is-3">Select a time</h3>
-        <div class="time-slots">
+          <button class="scroll-arrow-up" (click)="scrollUp()" [class.disabled]="!canScrollUp">
+            <i class="fas fa-chevron-up"></i>
+          </button>
+        <div class="time-slots" #timeSlotList>
           <div *ngFor="let time of timeSlots; let i = index"
                class="time-slot"
                (mouseenter)="hoverIndex = i"
@@ -120,6 +123,9 @@
             </div>
           </div>
         </div>
+        <button class="scroll-arrow-down" (click)="scrollDown()" [class.disabled]="!canScrollDown">
+          <i class="fas fa-chevron-down"></i>
+        </button>
       </div>
 
     </div>

@@ -87,9 +87,9 @@
   .schedule-list {
     display: flex;
     flex-wrap: nowrap; 
-    gap: 20px; 
+    gap: 15px; 
     padding: .7rem 1rem;
-    border-radius: 12px;
+    border-radius: 5px;
     border: .5px solid rgb(184, 184, 184);
     background: linear-gradient(to right, #4490e2, #bd75e4);
     width: auto; 
@@ -109,11 +109,11 @@
   }
 
   .schedule-item {
-    min-width: 200px; 
+    min-width: 170px; 
     max-width: 100%;  
     background-color: rgba(255, 255, 255, 0.1); 
-    padding: 1rem;
-    border-radius: 8px;
+    padding: .5rem .8rem;
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -131,7 +131,8 @@
     font-size: 1.5rem;
     border-radius: 50%;
     z-index: 8;
-    transition: all .6s;
+    transition: all .6s ease;
+    animation: pulseBackground 1.5s infinite linear;
   }
 
   .scroll-button.left {
@@ -149,13 +150,25 @@
   .scroll-button:hover {
     background-color: rgba(216, 215, 215, 0.555);
   }
+
+  @keyframes pulseBackground {
+    0% {
+      background-color: rgba(255, 255, 255, 0.546);
+    }
+    50% {
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+    100% {
+      background-color: rgba(255, 255, 255, 0.546);
+    }
+  }
   
   .meeting-title {
-    font-size: 1.2rem;
+    font-size: .95rem;
     color: #ffffff;
     font-weight: bold;
     text-align: center;
-    margin-bottom: .5rem;
+    margin-bottom: .3rem;
   }
   
   .meeting-info-container {
@@ -167,7 +180,7 @@
   
   .schedule-info {
     color: #ffffff;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
   
   .schedule-delete {
@@ -176,16 +189,19 @@
   }
   
   .delete-button {
+    margin-top: 1rem;
     background: none;
     border: none;
-    color: #931b33;
+    color: #e1d9db;
     cursor: pointer;
     font-size: 1.2rem;
     padding: 0;
+    transition: all .6ms ease;
   }
   
   .delete-button:hover {
-    color: #e43131;
+    color: #cdcaca;
+    transform: scale(1.05);
   }
 
   .no-meeting{
@@ -379,20 +395,50 @@
 
 .time-slots {
   display: flex;
-  margin-top: 1rem;
+  margin-top: .7rem;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   height: 340px;
   overflow-y: auto;
   width: 100%;
-  padding: 10px 0px;
+  padding: 7px 0px;
   scrollbar-width: none; 
   -ms-overflow-style: none;
 }
 
 .time-slots::-webkit-scrollbar {
   display: none; 
+}
+
+/* Estilos para las flechas de scroll */
+.scroll-arrow-up,
+.scroll-arrow-down {
+  position: relative;
+  background-color: transparent;
+  color: rgb(146, 100, 238);
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.scroll-arrow-up {
+  margin-bottom: -15px; 
+}
+
+.scroll-arrow-down {
+  margin-top: 3px; 
+}
+
+.scroll-arrow-up.disabled,
+.scroll-arrow-down.disabled {
+  color: rgb(164, 161, 161);
+  cursor: pointer;
 }
 
 .time-slot {
@@ -777,9 +823,9 @@
     }
     
     .schedule-item {
-      min-width: 200px; 
+      min-width: 170px; 
       background-color: rgba(255, 255, 255, 0.1); 
-      padding: .7rem;
+      padding:.5rem .7rem;
       border-radius: 8px;
       display: flex;
       flex-direction: column;
@@ -814,14 +860,14 @@
     .delete-button {
       background: none;
       border: none;
-      color: #931b33;
+      color: #e9e7e8;
       cursor: pointer;
       font-size: 1.2rem;
       padding: 0;
     }
     
     .delete-button:hover {
-      color: #e43131;
+      color: #c7c6c6;
     }
   }
 
@@ -983,7 +1029,7 @@
   margin-right: 23px;
   margin-top: 0rem;
   font-size: 1rem;
-  margin-bottom: 0rem;
+  margin-bottom: 0.7rem;
   font-family: 'Open Sans', sans-serif;
 }
 
@@ -993,9 +1039,17 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  height: 330px;
+  height: 340px;
   overflow-y: auto;
   width: 400px;
+}
+
+.scroll-arrow-up {
+  margin-bottom: -28px; 
+}
+
+.scroll-arrow-down {
+  margin-top: 3px; 
 }
 
 .time-slot {
@@ -1227,7 +1281,7 @@
     .delete-button {
       background: none;
       border: none;
-      color: #cfcacb;
+      color: #e7e5e5;
       cursor: pointer;
       font-size: 1rem;
       padding: 0;
@@ -1235,11 +1289,10 @@
     }
 
     .delete-button:hover{
-      color: #7b7173;
+      color: #d5d2d3;
     }
     
   }
-
 
   /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
 .date-time-wrapper {
@@ -1411,10 +1464,10 @@
 .selected-date-time h3{
   color: black;
   text-align: center;
-  margin-right: 23px;
   margin-top: 3rem;
   font-size: 1rem;
-  margin-bottom: 0rem;
+  margin-left: 25px;
+  margin-bottom: 1.5rem;
   font-family: 'Open Sans', sans-serif;
 }
 
@@ -1424,9 +1477,17 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  height: 330px;
+  height: 340px;
   overflow-y: auto;
   width: 100%;
+}
+
+.scroll-arrow-up {
+  margin-bottom: -28px; 
+}
+
+.scroll-arrow-down {
+  margin-top: 8px; 
 }
 
 .time-slot {
@@ -1491,24 +1552,6 @@
   visibility: hidden;
   width: 100%;
   transition: all 0.7s ease;
-}
-
-.time-slot:hover {
-  background: none;
-}
-.time-slot:hover .confirm-box {
-  opacity: 1;
-  visibility: visible;
-  width: 100%;
-}
-
-.time-slot:hover .time-text-container {
-  background-color: #4490e2;
-  color: white;
-}
-
-.time-slot:hover .time-text {
-  color: white;
 }
 
 
@@ -1708,7 +1751,7 @@
   }
 
   .title.is-3 {
-    font-size: 1.5rem;
+    font-size: 1.9rem;
     line-height: 15px;
     margin-left: 3px;
     color: #333;
@@ -1726,8 +1769,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #5da9f9, #d35bd3);
+    background:none;
+    background-color: rgb(160, 116, 242);
     border-radius: 5px;
+    min-height: 290px;
   }
 
   .student-name {
@@ -1821,15 +1866,16 @@
     }
     
     .delete-button {
-      background: none;
+      background: transparent;
       border: none;
-      color: #cfcacb;
+      color: #e4e3e3;
       cursor: pointer;
       font-size: 1.1rem;
     }
 
     .delete-button:hover{
-      color: #6b6969;
+      color: #d6d6d6;
+      transform: scale(0.9);
     }
     
   }
@@ -1899,7 +1945,7 @@
 }
 
 .title.is-4 {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #333;
 }
 
@@ -2027,8 +2073,9 @@
   text-align: center;
   margin-right: 0px;
   margin-top: 3rem;
-  font-size: 1rem;
-  margin-bottom: 0rem;
+  font-size: 1.2rem;
+  margin-left: 0px;
+  margin-bottom: 1.5rem;
   font-family: 'Open Sans', sans-serif;
 }
 
@@ -2038,9 +2085,17 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  height: 340px;
+  height: 410px;
   overflow-y: auto;
   width: 100%;
+}
+
+.scroll-arrow-up {
+  margin-bottom: -24px; 
+}
+
+.scroll-arrow-down {
+  margin-top: 10px; 
 }
 
 .time-slot {

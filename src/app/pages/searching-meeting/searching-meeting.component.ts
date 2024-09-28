@@ -20,6 +20,7 @@ import {StagesService} from "../../services/stages.service";
   styleUrl: './searching-meeting.component.scss'
 })
 export class SearchingMeetingComponent implements OnInit {
+  viewMode: 'table' | 'list' = 'table';
   isModalOpen = false;
   link: string = '';
   availableHours: number[] = [];
