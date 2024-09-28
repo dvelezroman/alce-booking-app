@@ -71,11 +71,11 @@
           <h3 class="title is-4">Select a date</h3>
         </div>
         <div class="month-selector">
-          <button class="button is-small" (click)="prevMonth()">
+          <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()">
             <i class="fas fa-chevron-left"></i>
           </button>
-          <span>{{ selectedMonth }} {{ selectedYear }}</span>
-          <button class="button is-small" (click)="nextMonth()">
+          <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
+          <button *ngIf="canGoForward" class="button is-small next-button" (click)="nextMonth()">
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>

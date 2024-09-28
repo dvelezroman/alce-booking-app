@@ -27,6 +27,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   canScrollRight = false;
   canScrollUp = false;  
   canScrollDown = false;
+  canGoBack: boolean = false;
+  canGoForward: boolean = true;
 
   selectedDate: string = '';
   selectedTimeSlot: {label: string, value: number} = { label: "9:00", value: 9 };
@@ -136,6 +138,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.nextYear = nextDate.getFullYear();
 
     this.generateCurrentMonthDays();
+    this.updateNavigationButtons();
 
     setTimeout(() => {
       this.checkScroll();
@@ -254,6 +257,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedDay = null;
     this.selectedDayFormatted = '';
     this.generateCurrentMonthDays();
+    this.updateNavigationButtons();
   }
 
   nextMonth() {
@@ -273,6 +277,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedDay = null;
     this.selectedDayFormatted = ''; 
     this.generateCurrentMonthDays();
+    this.updateNavigationButtons();
   }
 
   isDaySelectable(day: any): boolean {
@@ -489,5 +494,22 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.canScrollUp = el.scrollTop > 0;  
     const maxScrollTop = el.scrollHeight - el.clientHeight;
     this.canScrollDown = el.scrollTop < maxScrollTop;  
+  }
+
+   // Método para actualizar los botones según el mes seleccionado
+   updateNavigationButtons() {
+    const today = new Date();
+    const currentMonth = today.toLocaleString('default', { month: 'long' });
+    const currentYear = today.getFullYear();
+
+    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const nextMonth = nextMonthDate.toLocaleString('default', { month: 'long' });
+    const nextYear = nextMonthDate.getFullYear();
+
+    // Puedes retroceder si no estás en el mes actual
+    this.canGoBack = !(this.selectedMonth === currentMonth && this.selectedYear === currentYear);
+
+    // Puedes avanzar si no estás ya en el mes siguiente
+    this.canGoForward = !(this.selectedMonth === nextMonth && this.selectedYear === nextYear);
   }
 }
