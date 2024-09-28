@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { BookingService } from '../../services/booking.service';
 import { FilterMeetingsDto, MeetingDTO, UpdateMeetingLinkDto } from '../../services/dtos/booking.dto';
 import { Stage, Student } from '../../services/dtos/student.dto';
-import { StudentsService } from '../../services/students.service';
 import {StagesService} from "../../services/stages.service";
 
 @Component({
@@ -29,6 +28,10 @@ export class SearchingMeetingComponent implements OnInit {
   stages: Stage[] = [];
   studentsList: Student[] = [];
 
+  toastMessage: string = '';
+  toastType: 'success' | 'error' = 'success';
+  isToastVisible: boolean = false;
+
   filter: FilterMeetingsDto = {
     from: '',
     to: '',
@@ -38,7 +41,6 @@ export class SearchingMeetingComponent implements OnInit {
 
 
   constructor(private bookingService: BookingService,
-              private studentService: StudentsService,
               private stagesService: StagesService,
   ) {}
 
@@ -100,12 +102,27 @@ export class SearchingMeetingComponent implements OnInit {
       this.bookingService.updateMeetingLink(updateLinkParams).subscribe(
         response => {
           console.log('Link asignado correctamente', response);
+          this.showToast('El link fue asignado', true);
           this.closeModal();
         },
         error => {
           console.error('Error al asignar el link', error);
+          this.showToast('Error al asignar el link', false);
         }
       );
     }
   }
+
+   // Método para mostrar el toast
+   showToast(message: string, isSuccess: boolean): void {
+    this.toastMessage = message;
+    this.toastType = isSuccess ? 'success' : 'error';
+    this.isToastVisible = true;
+  
+    setTimeout(() => {
+      this.isToastVisible = false; 
+    }, 3000);
+  }
+  
+  
 }

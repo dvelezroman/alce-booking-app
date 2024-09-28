@@ -130,6 +130,7 @@
   margin: auto;
   border-collapse: collapse;
   margin-top: 1rem;
+  margin-bottom: 5rem;
 }
 
 .table-results th {
@@ -169,13 +170,18 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #4490e2;
+  color: #5a9ee7;
   font-size: 1.5rem;
   margin-left: 10px;
 }
 
 .icon-button:hover {
   color: #367bbd;
+}
+
+.icon-button.active {
+  color: #3171b7; 
+  font-size: 1.8rem; 
 }
 
 
@@ -189,6 +195,7 @@ ul {
   padding-left: 0;
   list-style-type: none;
   margin: 0;
+  margin-bottom: 3rem;
 }
 
 /* Estilos para cada tarjeta */
@@ -247,8 +254,8 @@ ul {
   .modal-card-title {
     color: #333; 
     font-weight: 500;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+    margin-bottom: 0rem;
   }
 
   .modal-card-head {
@@ -259,16 +266,18 @@ ul {
   
   .modal-card-body {
     background-color: transparent; 
-    padding: 1.5rem;
+    padding: .8rem 1.45rem;
   }
 
   .field {
-    margin-bottom: .5rem; 
+    margin-bottom: .3rem; 
   }
 
   .modal-card-body .input {
     width: 100%; 
     margin: 0 auto;
+    font-size: 1rem;
+    padding: 0rem .7rem;
   }
 
   .modal-card-foot {
@@ -276,17 +285,16 @@ ul {
     justify-content: flex-end; 
     padding: 1.5rem 1.5rem;
     gap: 1rem;
-    background-color: #ffffff;
+    background-color: transparent;
   }
   
   .modal-card-foot .button {
-    padding: 0.75rem 1.5rem;
+    padding: 0.55rem 1.3rem;
   }
   
   .modal-card-foot .button.is-danger {
     background-color: transparent; 
     color: #a175e4; 
-    border: 1px solid #a175e4; 
   }
   
   .modal-card-foot .button.is-danger:hover {
@@ -303,6 +311,63 @@ ul {
   .modal-card-foot .button.is-primary2:hover {
     background-color: #3171b7; 
   }
+
+  /* Estilos para el Toast */
+  .toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f0f0f0; 
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.95;
+    z-index: 100;
+  }
+
+/* Estilos del ícono y texto del toast positivo */
+.success-toast i {
+  color: #28a745; 
+  font-size: 1.6rem;
+}
+
+.success-toast p {
+  color: #28a745; 
+  font-size: 1.1rem;
+}
+
+/* Estilos del ícono y texto del toast negativo */
+.error-toast i {
+  color: #dc3545; 
+  font-size: 1.6rem;
+}
+
+.error-toast p {
+  color: #dc3545; 
+  font-size: 1.1rem;
+}
+
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.toast {
+  animation: fadeInOut 3s forwards; 
+}
 
 
 
@@ -321,15 +386,84 @@ ul {
     }
 
     .title {
-      font-size: 1.5rem;
-      line-height: 74px;
+      font-size: 2rem;
+      line-height: 105px;
       color: #333;
       text-align: center;
       font-family: 'Poppins', sans-serif;
     }
 
+    button.is-primary {
+      width: 44%;
+      margin: auto;
+      padding: .7rem;
+      font-size: .9rem;
+    }
+
+    /* Estilo para el bloque de resultados */
+.block {
+  margin-top: .5rem;
+  padding: 0rem;
+}
+
+/* Estilo de la tabla */
+.table-results {
+  width: 90%;
+  margin: auto;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table-results th {
+  text-align: center;
+  padding: 5px;
+  font-size: .9rem;
+  font-weight: bold;
+  color: black;
+  border-bottom: 1px solid #b6b6b6; 
+}
+
+.table-results td {
+  text-align: center;
+  padding: 5px;
+  font-size: .85rem;
+}
+
+.table-results tr:nth-child(even) {
+  background-color: #f9f9f9; 
+}
+
+.no-results-message {
+  color: red;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+/* Estilos para los iconos de cambio de vista */
+.view-switcher {
+  width: 75%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #4490e2;
+  font-size: 1.5rem;
+  margin-left: 10px;
+}
+
+.icon-button:hover {
+  color: #367bbd;
+}
+
+
     .modal-card {
-        width: 90%;
+        width: 65%;
       }
     
       .modal-card-title {
@@ -341,6 +475,7 @@ ul {
       .modal-card-body .input {
         width: 100%; 
         margin: 0 auto;
+        font-size: .85rem;
         border: .5px solid rgb(184, 183, 183);
       }
     
@@ -356,28 +491,13 @@ ul {
         padding: 0.65rem 1.4rem;
         font-size: .8rem;
       }
-      
-      .modal-card-foot .button.is-danger {
-        background-color: transparent; 
-        color: #a175e4; 
-      }
-      
-      .modal-card-foot .button.is-danger:hover {
-        background-color: #a175e4; 
-        color: white; 
-      }
-      
-      .modal-card-foot .button.is-primary2 {
-        background-color: #4490e2; 
-        color: white; 
-        border: none;
-      }
-      
-      .modal-card-foot .button.is-primary2:hover {
-        background-color: #3171b7; 
-      }
   }
 
+  @media (max-width: 576px){
+    .table-results {
+      width: 100%;
+    }
+  }
 
   @media (max-width: 492px) {
 
@@ -413,43 +533,139 @@ ul {
     }
 
     button.is-primary {
-      background: linear-gradient(to right, #4490e2, #bd75e4); 
-      color: #fff; 
-      padding: 12px;
-      font-size: 1.1rem;
-      border: none; 
-      transition: all 0.3s ease; 
-    }
-
-    ul {
-      list-style-type: none;
-      padding-left: 0;
-      text-align: left;
-      margin-left: -10px;
-    }
-
-    .meeting-item {
-      display: flex;
-      flex-direction: column; 
-      justify-content: flex-start;
-      align-items: flex-start; 
-      padding: .5rem; 
-      border: 1px solid #ddd;
-      border-radius: 8px; 
-      margin-bottom: 0rem; 
+      width: 90%;
       margin: auto;
+      padding: .9rem;
+      font-size: 1rem;
+    }
+
+    .view-switcher, 
+    .card-results { 
+      display: none;
+    }
+
+    .table-results { 
+      display: table;
+    }
+
+    .table-results th {
+      text-align: left;
+      padding: 3px;
+      font-size: .75rem;
+      border-bottom: 1px solid #b6b6b6; 
     }
     
-    .meeting-stage,
-    .meeting-student,
-    .meeting-email,
-    .meeting-date-hour {
-      text-align: left; 
+    .table-results td {
+      text-align: left;
+      padding:5px 0px;
+      font-size: .72rem;
+      border-bottom: .5px solid rgb(187, 186, 186) ;
+    }
+
+    .table-results {
       width: 100%;
+      margin-bottom: 4rem;
     }
     
-    .meeting-stage {
-      font-weight: bold;
-      margin-bottom: 0.1rem; 
-    }
+
+    /* Contenedor de las tarjetas */
+ul {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: center; 
+  gap: 3px; 
+  padding-left: 0;
+  list-style-type: none;
+  margin: 0;
+}
+
+/* Estilos para cada tarjeta */
+.meeting-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%; 
+  padding: .6rem .7rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: .3rem;
+  background-color: #d6cceb;
+}
+
+.meeting-item strong {
+  color: #151515; 
+  margin-right: 5px;
+}
+
+/* Ajustes para los textos dentro de las tarjetas */
+.meeting-stage {
+  text-align: center;
+  width: 100%;
+  color: #626060;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.meeting-student,
+.meeting-email,
+.meeting-date-hour {
+  text-align: left;
+  font-size: 0.75rem;
+  color: #525151;
+}
+
+.modal-card {
+  width: 85%;
+}
+
+.modal-card-title {
+  font-size: 1.1rem;
+}
+
+.modal-card-body .input {
+  margin: 0 auto;
+  font-size: .8rem;
+}
+
+.modal-card-foot {
+  display: flex;
+  justify-content: flex-end; 
+  padding-top: 0rem;
+  gap: 1rem;
+  background-color: #ffffff;
+}
+
+.modal-card-foot .button {
+  padding: 0.65rem 1.4rem;
+  font-size: .9rem;
+}
+
+  /* Estilos para el Toast */
+  .toast {
+    width: 55%;
   }
+
+  /* Estilos del ícono y texto del toast positivo */
+  .success-toast i {
+    font-size: 1.4rem;
+  }
+
+  .success-toast p {
+    font-size: 1rem;
+  }
+
+  /* Estilos del ícono y texto del toast negativo */
+  .error-toast i {
+    font-size: 1.4rem;
+  }
+
+  .error-toast p { 
+    font-size: 1rem;
+  }
+      
+}

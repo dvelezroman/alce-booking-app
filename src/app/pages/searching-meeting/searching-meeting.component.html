@@ -74,17 +74,24 @@
       </div>
     </div>
 
+    <!-- Indicador de vista (iconos para alternar entre lista y tabla) -->
+    <div class="view-switcher" *ngIf="meetings && meetings.length > 0">
+      <button 
+        class="icon-button" 
+        [ngClass]="{ 'active': viewMode === 'table' }"
+        (click)="viewMode = 'table'">
+        <i class="fas fa-th-list"></i> 
+      </button>
+      <button 
+        class="icon-button" 
+        [ngClass]="{ 'active': viewMode === 'list' }"
+        (click)="viewMode = 'list'">
+        <i class="fas fa-table"></i> 
+      </button>
+    </div>
+
     <!-- Resultados de la búsqueda -->
     <div class="block-results">
-      <div class="view-switcher" *ngIf="meetings && meetings.length > 0">
-        <button class="icon-button" (click)="viewMode = 'table'">
-          <i class="fas fa-th-list"></i> 
-        </button>
-        <button class="icon-button" (click)="viewMode = 'list'">
-          <i class="fas fa-table"></i> 
-        </button>
-      </div>
-    
       <!-- Vista de tabla -->
       <table class="table-results" *ngIf="viewMode === 'table' && meetings && meetings.length > 0">
         <thead>
@@ -157,3 +164,17 @@
       </footer>
     </div>
   </div>
+
+  <!-- Toast Notificación -->
+ <!-- Toast positivo -->
+<div *ngIf="isToastVisible && toastType === 'success'" class="toast success-toast">
+  <i class="fas fa-check-circle"></i>
+  <p>{{ toastMessage }}</p>
+</div>
+
+<!-- Toast negativo -->
+<div *ngIf="isToastVisible && toastType === 'error'" class="toast error-toast">
+  <i class="fas fa-exclamation-circle"></i>
+  <p>{{ toastMessage }}</p>
+</div>
+
