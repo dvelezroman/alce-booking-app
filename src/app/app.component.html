@@ -1,12 +1,15 @@
 <div class="app-container">
   <app-header *ngIf="isLoggedIn && (!isRegistered && userData?.role === UserRole.STUDENT)"></app-header>
   <div class="content-wrapper">
+    <!-- Sidebar, visible solo cuando el usuario está logueado -->
     <app-sidebar *ngIf="isLoggedIn && (isRegistered || userData?.role !== UserRole.STUDENT)"
                  [isSidebarClosed]="isSidebarClosed"
                  (toggleSidebarEvent)="toggleSidebar()"
                  (logoutEvent)="onConfirmLogout()">
     </app-sidebar>
-    <main class="main-content" [ngClass]="{'shrink': !isSidebarClosed}">
+
+    <!-- Main content -->
+    <main class="main-content" [ngClass]="{'shrink': isLoggedIn && !isSidebarClosed, 'full-width': !isLoggedIn}">
       <router-outlet></router-outlet>
       <app-spinner></app-spinner>
     </main>

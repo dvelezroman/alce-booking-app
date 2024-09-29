@@ -275,8 +275,8 @@
   display: flex;
   align-items: center;
   justify-content: center; 
-  width: 100%;
-  background-color: rgb(226, 226, 226);
+  width: 85%;
+  background-color: transparent;
   padding: 15px;
   border-radius: 15px 15px 0px 0px;
   position: relative; 
@@ -294,6 +294,7 @@
   height: 2.5rem;
   line-height: 2.5rem;
   border: none;
+  border-radius: 50%;
   background-color: transparent;
   color: rgb(89, 87, 87);
   padding: 0;
@@ -583,17 +584,12 @@
 
 
   .bold-text {
-    font-weight: bold;
-    background: linear-gradient(45deg, #cb5b3b, #7743a8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ea6556;
     font-size: 1.1rem;
   }
 
   .small-text {
-    background: linear-gradient(45deg,  #cb5b3b, #7743a8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ea6556;
     font-size: 1.1rem;
   }
 
@@ -640,8 +636,6 @@
     font-weight: 500;
     color: #d9534f;
   }
-
-
 
   /* MODAL PRIMERO CUANDO SE ELIGIÓ DIA Y HORA CORRECTO */
 
@@ -898,12 +892,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: -4.8rem;
+  margin-top: 0rem;
   background-color: #f9f9f9;
   border-radius: 8px;
   width: 55%;
-  padding: 2.6rem 1rem;
-  margin: auto;
+  padding: 1.5rem 1rem;
 }
 
 .calendar {
@@ -922,39 +915,6 @@
 
 .title.is-4 {
   font-size: 1rem;
-  color: #333;
-}
-
-.month-selector {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 0rem;
-}
-
-.month-selector button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
-  color: rgb(142, 139, 139);
-  border: none;
-  padding: 0 1rem;
-  font-size: .8rem;
-  cursor: pointer;
-  border-radius: 50px;
-  margin: 0 10px;
-  transition: background-color 0.3s ease;
-  height: 2.5rem;
-  line-height: 2.5rem;
-}
-
-.month-selector button:hover {
-  background-color: #aad0f9;
-}
-
-.month-selector span {
-  font-size: .9rem;
   color: #333;
 }
 
@@ -1320,10 +1280,8 @@
 }
 
 /* SUB-BLOQUE: Calendario */
-
-
-
 .date-time-selection {
+  background-color: rgb(239, 238, 238);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1335,7 +1293,6 @@
 }
 
 .calendar {
-  background-color: rgb(226, 226, 226);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1356,8 +1313,6 @@
   font-size: 1rem;
   color: #333;
 }
-
-
 
 .calendar-header {
   display: grid;
@@ -1886,6 +1841,7 @@
 
 /* SUB-BLOQUE: Calendario */
 .date-time-selection {
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1907,7 +1863,6 @@
   border-radius: 0px 0px 15px 15px;
   width: 100%;
   margin: auto;
-
 }
 
 .calendar-title {
@@ -1926,44 +1881,45 @@
   color: #333;
 }
 
+
 .month-selector {
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 15px;
-  margin-bottom: 0rem;
-  font-size: .5rem;
-  margin-left: 0%;
-  background-color: rgb(234, 233, 233);
+  justify-content: center; 
   width: 100%;
+  background-color: rgb(234, 233, 233);
+  padding: 15px;
   border-radius: 15px 15px 0px 0px;
+  position: relative; 
+}
+
+.month-label {
+  text-align: center;
+  font-weight: bold;
+  font-size: .9rem;
+  color: #333;
 }
 
 .month-selector button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
-  color: rgb(142, 139, 139);
-  border: none;
-  padding: 0 1rem;
-  font-size: .8rem;
-  cursor: pointer;
-  border-radius: 50px;
-  margin: 0 10px;
-  transition: background-color 0.3s ease;
+  width: 40px;
   height: 2.5rem;
   line-height: 2.5rem;
+  border: none;
+  background-color: transparent;
+  color: rgb(89, 87, 87);
+  padding: 0;
+  cursor: pointer;
+  position: absolute; 
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.month-selector button:hover {
-  background-color: #c5c6c7;
-  color: white;
+.prev-button {
+  left: 50px; 
 }
 
-.month-selector span {
-  font-size: .9rem;
-  color: #333;
+.next-button {
+  right: 52px; 
 }
 
 .calendar-header {
@@ -1971,6 +1927,7 @@
   grid-template-columns: repeat(7, 1fr);
   width: 100%;
   margin-bottom: 0px;
+  margin-top: 1rem;
 }
 
 .calendar-day-header {

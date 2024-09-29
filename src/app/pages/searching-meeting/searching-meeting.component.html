@@ -92,6 +92,14 @@
 
     <!-- Resultados de la búsqueda -->
     <div class="block-results">
+
+      <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
+        No hay meetings para el rango asignado.
+        <span class="icon-container">
+          <i class="fas fa-user-slash"></i>
+          <i class="fas fa-video-slash"></i>
+        </span>
+      </p>
       <!-- Vista de tabla -->
       <table class="table-results" *ngIf="viewMode === 'table' && meetings && meetings.length > 0">
         <thead>
@@ -135,9 +143,6 @@
         </li>
       </ul>
     
-      <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
-        No hay estudiantes para el rango asignado.
-      </p>
     </div>
   </div>
 </section>
