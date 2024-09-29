@@ -4,31 +4,44 @@
   height: 100vh;
   width: 100vw;
   background-color: #ffffff;
-  padding: 2rem;
+  padding: 1rem;
   box-sizing: border-box;
 }
 
 .container {
+  width: 90%;
   margin-top: 1.5rem;
-  padding: 1rem;
+  padding: 1rem  4.7rem 1rem .5rem;
   border-radius: 8px;
   text-align: center;
   margin: auto;
 }
 
 h2.title {
-  color: black;
+  position: fixed; 
+  top: 0; 
+  left: 70px;
+  color: rgb(53, 53, 53);
+  width: 100%; 
+  width: calc(100% - 70px);
+  background: white;
+  background:linear-gradient( #e2e0ebe2, #bcb4df8a );
+  backdrop-filter:blur(15px);
+  z-index: 10; 
   text-align: center;
+  padding: 2.2rem 0;
+  font-family: 'Poppins', sans-serif; 
 }
 
 .button.is-primary {
-  margin-top: 1rem;
+  margin-top: 7rem;
   color: #7743a8;
-  margin-left: 0%;
   font-size: .9rem;
   background-color: transparent;
   border: 1px solid #7743a8;
   transition: background-color 0.3s ease, color 0.3s ease;
+  display: block;   
+  margin: 7rem auto 0 auto; 
 }
 
 .button.is-primary:hover {
@@ -40,105 +53,110 @@ h2.title {
 // Table Styles
 
 .table {
+  margin: 1rem auto;
+  margin-top: 1rem;
   margin-bottom: 2rem;
-  width: 80%;
+  width: 82%;
   table-layout: fixed;
   border-collapse: collapse;
   border-radius: 10px;
   overflow: hidden;
   border: .5px solid #dbdee1c5;
-  margin: auto;
+}
 
-  th, td {
-    text-align: center;
-    vertical-align: middle;
-  }
+.table th, 
+.table td {
+  text-align: center;
+  vertical-align: middle;
+}
 
-  /* Estilos para los encabezados (th) */
-  th {
-    background-color: #226abc;
-    color: white;
-    padding: .5rem;
-    font-size: .9rem;
-    border-bottom: 1px solid #ddd;
-  }
+/* Estilos para los encabezados (th) */
+.table th {
+  background-color: #226abc;
+  color: white;
+  padding: .5rem;
+  font-size: .9rem;
+  border-bottom: 1px solid #ddd;
+}
 
-  /* Estilos para las celdas (td) */
-  td {
-    background-color: white;
-    color: black;
-    padding: 0.45rem;
-    font-size: .9rem;
-    border-bottom: 1px solid #dad8d8;
-  }
+/* Estilos para las celdas (td) */
+.table td {
+  background-color: white;
+  color: black;
+  padding: 0.45rem;
+  font-size: .9rem;
+  border-bottom: 1px solid #dad8d8;
+}
 
-  th:nth-child(1), td:nth-child(1) {
-    width: 8%;
-  }
+.table th:nth-child(1), 
+.table td:nth-child(1) {
+  width: 8%;
+}
 
-  th:nth-child(2), td:nth-child(2) {
-    width: 62%;
-  }
+.table th:nth-child(2), 
+.table td:nth-child(2) {
+  width: 62%;
+}
 
-  th:nth-child(3), td:nth-child(3) {
-    width: 35%;
-  }
+.table th:nth-child(3), 
+.table td:nth-child(3) {
+  width: 35%;
+}
 
-  tbody tr:nth-child(even) td {
-    background-color: #e4e4e4;
-  }
+.table tbody tr:nth-child(even) td {
+  background-color: #e4e4e4;
+}
 
+/* Estilos para los botones */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: .8rem;
+}
 
-  .buttons {
-    display: flex;
-    justify-content: center;
-    gap: .8rem;
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  border: .5px solid transparent;
+  background-color: transparent;
+  font-size: .7rem;
+  cursor: pointer;
+  padding: .3rem .8rem;
+  transition: all 0.3s ease;
+}
 
-    .button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: .6rem;
-      border: .5px solid transparent;
-      background-color: transparent;
-      font-size: .7rem;
-      cursor: pointer;
-      padding: .3rem .8rem;
-      transition: all 0.3s ease;
+.button:hover {
+  opacity: 0.8;
+}
 
-      &:hover {
-        opacity: 0.8;
-      }
-    }
+.edit-button {
+  color: #4a90e2;
+  border-color: #4a90e2;
+}
 
-    .edit-button {
-      color: #4a90e2;
-      border-color: #4a90e2;
+.edit-button i {
+  font-size: .8rem;
+}
 
-      i {
-        font-size: .8rem;
-      }
+.edit-button:hover {
+  background-color: #4a90e2;
+  color: white;
+}
 
-      &:hover {
-        background-color: #4a90e2;
-        color: white;
-      }
-    }
+.delete-button {
+  color: #7743a8;
+  border-color: #7743a8;
+}
 
-    .delete-button {
-      color: #7743a8;
-      border-color: #7743a8;
+.delete-button i {
+  font-size: .8rem;
+}
 
-      i {
-        font-size: .8rem;
-      }
-
-      &:hover {
-        background-color: #7743a8;
-        color: white;
-      }
-    }
-  }
+.delete-button:hover {
+  background-color: #7743a8;
+  color: white;
 }
 
 
@@ -390,7 +408,10 @@ h2.title {
 
 
   /*TABLA*/
-
+  h2.title{
+    left: 0; 
+    width: 100%; 
+  }
 
   .table {
     margin-bottom: 2rem;
@@ -612,7 +633,7 @@ h2.title {
      font-size: 0.55rem;
      border: .01rem solid;
      background-color: #ede7f3;
-     margin-top: 2rem;
+     margin-top: 7rem;
  }
 
    /*TABLA*/
