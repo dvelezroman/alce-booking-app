@@ -4,6 +4,7 @@ import {CreateStageDto, Stage} from "../../services/dtos/student.dto";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms"; // Adjust the import path as needed
 
+
 @Component({
   selector: 'app-stage-list',
   templateUrl: './stage.component.html',
@@ -22,6 +23,11 @@ export class StageComponent implements OnInit {
   isEditModalOpen = false;
   isDeleteModalOpen = false;
 
+  isNotificationModalOpen = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' = 'success';
+
+
   constructor(private stagesService: StagesService) {}
 
   ngOnInit(): void {
@@ -37,6 +43,7 @@ export class StageComponent implements OnInit {
     ,
       error: (error) => {
         console.error('Error fetching stages:', error);
+        this.showNotification('Error al cargar los stages', 'error');
       }
     });
   }
@@ -54,10 +61,12 @@ export class StageComponent implements OnInit {
     this.stagesService.create(this.newStage).subscribe(
       () => {
         this.loadStages();
+        this.showNotification('Stage creado exitosamente', 'success');
         this.closeCreateModal();
       },
       error => {
         console.error('Error creating stage:', error);
+        this.showNotification('No se pudo crear el stage', 'error');
       }
     );
   }
@@ -77,10 +86,12 @@ export class StageComponent implements OnInit {
       this.stagesService.update(this.selectedStage.id, this.selectedStage).subscribe(
         () => {
           this.loadStages();
+          this.showNotification('Stage actualizado exitosamente', 'success');
           this.closeEditModal();
         },
         error => {
           console.error('Error updating stage:', error);
+          this.showNotification( 'No se pudo actualizar el stage', 'error');
         }
       );
     }
@@ -101,12 +112,25 @@ export class StageComponent implements OnInit {
       this.stagesService.delete(this.selectedStage.id).subscribe(
         () => {
           this.loadStages();
+          this.showNotification( 'Stage eliminado exitosamente', 'success');
           this.closeDeleteModal();
         },
         error => {
           console.error('Error deleting stage:', error);
+          this.showNotification( 'No se pudo eliminar el stage', 'error');
         }
       );
     }
   }
+
+ // Mostrar el modal de notificación
+ showNotification(message: string, type: 'success' | 'error'): void {
+  this.notificationMessage = message;
+  this.notificationType = type;
+  this.isNotificationModalOpen = true;
+
+  setTimeout(() => {
+    this.isNotificationModalOpen = false;
+  }, 2000);
+}
 }

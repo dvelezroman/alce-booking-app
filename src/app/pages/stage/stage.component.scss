@@ -160,6 +160,8 @@ h2.title {
 }
 
 
+
+
 /* ESTILOS PARA MODAL DE CREAR Y EDITAR STAGES */
 
 .modal {
@@ -167,13 +169,13 @@ h2.title {
     background-color: rgba(38, 37, 37, 0.4);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-}
+  }
 
   .modal-content {
     max-width: 400px;
     max-height: 100vh;
     margin: auto;
-    padding: 1.1rem .4rem;
+    padding: 1rem .4rem;
     background-color: rgba(225, 223, 227, 1);
     border-radius: 15px;
     backdrop-filter: blur(20px);
@@ -188,7 +190,7 @@ h2.title {
     height: auto;
   }
 
-  h2.title {
+  h3.title {
     color: rgb(83, 82, 82);
     font-size: 1.5rem;
   }
@@ -214,9 +216,9 @@ h2.title {
     transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
-  .textarea{
+  .textarea {
     min-height: 50px;
-    height: 120px;
+    height: 90px;
     background-color: #e0dcdcad;
   }
 
@@ -232,67 +234,77 @@ h2.title {
     appearance: none;
   }
 
-  /* estilos para quitar los selectores del input number */
-  /* Para WebKit browsers (Chrome, Safari) */
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
 
-  /* Para Firefox */
-  input[type="number"] {
-    -moz-appearance: textfield;
-  }
+  /* Estilos para los botones dentro del modal de crear, editar y eliminar stages */
 
-  .field.is-grouped {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: .6rem;
-    margin-top: 2rem;
-    width: 100%;
-    margin-left: 0px;
-  }
-
-  .button {
-    width: 80%;
-    font-size: .9rem;
-    padding: 1rem 4.2rem;
-    border-radius: 5px;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  .create-btn {
-    padding: 1rem 3rem;
-    margin-top: -.05rem;
-    background-color: #3273dc;
-    color: white;
-    border: none;
-
-    &:hover {
-      background-color: #275bb5;
-    }
-  }
-
-  .cancel-btn {
-    padding: 1rem 2.7rem;
-    background-color: rgb(127, 56, 198);
-    color: white;
-    border: none;
-
-    &:hover {
-      background-color: rgb(110, 44, 176);
-    }
-  }
+/* Contenedor de los botones */
+.buttons-container {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  gap: 1rem; 
+  margin-top: 1.5rem;
 }
 
+/* Botón de crear stage */
+.create-stage-btn {
+  width: 100%;
+  background-color: #3273dc;
+  color: white;
+  font-size: .9rem;
+  padding: .7rem 2.5rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.create-stage-btn:hover {
+  background-color: #275bb5;
+}
+
+/* Botón de actualizar stage */
+.update-stage-btn {
+  width: 100%;
+  background-color: #44bb6c;
+  color: white;
+  font-size: .9rem;
+  padding: .7rem 2.5rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.update-stage-btn:hover {
+  background-color:  #3aa55f;
+}
+
+/* Botón de cancelar stage */
+.cancel-stage-btn {
+  width: 100%;
+  background-color: transparent;
+  color: rgb(127, 56, 198);
+  font-size: .9rem;
+  padding: .7rem 2.5rem;
+  border-radius: 5px;
+  border: .5px solid rgb(127, 56, 198);
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.cancel-stage-btn:hover {
+  background-color: rgb(110, 44, 176);
+  color: white;
+}
+}
 
 /* MODAL DE DELETE*/
-/* General styles for delete modal */
 
 .modal-content2 {
   max-width: 650px;
@@ -380,6 +392,52 @@ h2.title {
   }
 }
 
+/* Estilos del modal de notificación */
+.modal-notification {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+}
+
+.modal-notification-background {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-notification-content {
+  position: relative;
+  z-index: 1001;
+  max-width: 400px;
+  width: 80%; 
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+
+.title-notification-success {
+  color: #44bb6c; 
+}
+
+.title-notification-error {
+  color: #d9534f; 
+}
+
+.title-notification {
+  font-size: 1.2rem;
+}
 
 /* RESPONSIVE PARA TABLA DE LISTA DE STAGES Y MODAL CREAR STAGES */
 @media (max-width: 768px) {
@@ -473,88 +531,6 @@ h2.title {
     }
   }
 
-  /*MODAL CREAR STAGES*/
-  .modal {
-    .modal-content {
-      max-width: 400px;
-      max-height: 100vh;
-      margin: auto;
-      padding: 1.1rem .4rem;
-    }
-
-    .box {
-      background-color: transparent;
-      box-shadow: none;
-      height: auto;
-    }
-
-    h2.title {
-      color: rgb(83, 82, 82);
-      font-size: 1.5rem;
-    }
-
-
-    .label {
-      color: #373636;
-      font-weight: 500;
-      margin-left: 5px;
-      font-size: .9rem;
-    }
-
-    .input,
-    .textarea {
-      background-color: #e0dcdcad;
-      resize: none;
-      height: 35px;
-      color: #393535;
-      border: 1px solid #cccccc;
-      padding: 0.55rem;
-      border-radius: 5px;
-      font-size: 1rem;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
-
-    .textarea{
-      min-height: 50px;
-      height: 120px;
-    }
-
-    .field.is-grouped {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      margin-top: 2rem;
-      width: 100%;
-      margin-left: 0px;
-    }
-
-    .button {
-      width: 80%;
-      font-size: .9rem;
-      padding: 1rem 3.9rem;
-      border-radius: 5px;
-      text-align: center;
-      cursor: pointer;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .create-btn {
-      width: 100%;
-      background-color: #3273dc;
-      color: white;
-      border: none;
-    }
-
-    .cancel-btn {
-      width: 100% ;
-      background-color: rgb(127, 56, 198);
-      color: white;
-      border: none;
-    }
-  }
-
 /* RESPONSIVE PARA MODAL DE DELETE*/
 
 .modal-content2 {
@@ -624,7 +600,7 @@ h2.title {
     max-width: 100%;
 }
 
-  h2.title {
+  h3.title {
     font-size: 1.6rem;
    }
 
@@ -675,7 +651,6 @@ h2.title {
        .delete-button {
          color: #7743a8;
          border-color: #7743a8;
-
          i {
            font-size: .5em;
          }
@@ -744,8 +719,8 @@ h2.title {
   }
 
     .modal-content {
-      max-width: 350px;
-      padding: 1.1rem .4rem;
+      max-width: 300px;
+      padding: .5rem .2rem;
       background-color: rgba(225, 223, 227);
     }
 
@@ -755,9 +730,9 @@ h2.title {
       height: auto;
     }
 
-    h2.title {
+    h3.title {
       color: rgb(83, 82, 82);
-      font-size: 1.5rem;
+      font-size: 1rem;
     }
 
 
@@ -765,26 +740,23 @@ h2.title {
       color: #373636;
       font-weight: 500;
       margin-left: 5px;
-      font-size: .9rem;
+      font-size: .65rem;
     }
 
     .input,
     .textarea {
       background-color: #e0dcdcad;
       resize: none;
-      height: 35px;
-      color: #393535;
+      height: 30px;
       border: 1px solid #cccccc;
       padding: 0.55rem;
-      border-radius: 5px;
-      font-size: 1rem;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
+      font-size: .85rem;
     }
 
     .textarea{
       min-height: 50px;
-      height: 120px;
-      background-color: #e0dcdcad;
+      height: 90px;
+      background-color: #dfdfdf;
     }
 
     .input:focus,
@@ -794,55 +766,65 @@ h2.title {
       outline: none;
     }
 
-    .field.is-grouped {
+    .buttons-container {
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      gap: .5rem;
+      gap: .3rem; 
       margin-top: 1rem;
-      width: 100%;
-      margin-left: 2px;
     }
-
+  
     .button {
-      width: 100%;
-      font-size: 1rem;
-      padding: .8rem 4.2rem;
-      border-radius: 5px;
+      font-size: .9rem;
+      padding: .7rem;
       text-align: center;
       cursor: pointer;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
-
+  
     .create-btn {
-      width: 100%;
-      margin-left: -2px;
-      padding: 1rem 8.5rem;
       background-color: #3273dc;
       color: white;
-      border: none;
-
-      &:hover {
-        background-color: #275bb5;
-      }
     }
-
+  
+    .create-btn:hover {
+      background-color: #275bb5;
+    }
+  
     .cancel-btn {
-      width: 100% ;
-      padding: 1rem 8.45rem;
-      margin-left: -2.5px;
       background-color: transparent;
       color: rgb(127, 56, 198);
-      border: 1px solid rgb(127, 56, 198);;
-
-      &:hover {
-        background-color: rgb(110, 44, 176);
-      }
+    }
+  
+    .cancel-btn:hover {
+      background-color: rgb(110, 44, 176);
     }
   }
 
 
 }
 
+/* Estilos comunes para los toasts */
+.toast {
+  animation: fadeInOut 3s ease-in-out forwards;
+}
 
+/* Animación de entrada y salida */
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}

@@ -3,7 +3,7 @@
 
   <button (click)="openCreateModal()" class="button is-primary mb-4">Crear Nuevo Stage</button>
 
-  <table class="table is-fullwidth is-striped">
+  <table class="table is-striped">
     <thead>
     <tr>
       <th>No.</th>
@@ -34,7 +34,7 @@
     <div class="modal-background"></div>
     <div class="modal-content">
       <div class="box">
-        <h2 class="title is-4">Create New Stage</h2>
+        <h3 class="title is-4">Create New Stage</h3>
         <form (ngSubmit)="createStage()" #createStageForm="ngForm">
           <div class="field">
             <label class="label">Number</label>
@@ -48,9 +48,9 @@
               <textarea class="textarea" [(ngModel)]="newStage.description" name="description" required></textarea>
             </div>
           </div>
-          <div class="field is-grouped">
-            <button type="submit" class="button create-btn is-primary">Create</button>
-            <button type="button" class="button cancel-btn" (click)="closeCreateModal()">Cancel</button>
+          <div class="buttons-container">
+            <button type="submit" class="button create-stage-btn">Create</button>
+            <button type="button" class="button cancel-stage-btn" (click)="closeCreateModal()">Cancel</button>
           </div>
         </form>
       </div>
@@ -59,10 +59,10 @@
 
 <!-- Edit Stage Modal -->
 <div id="editModal" class="modal" [ngClass]="{'is-active': isEditModalOpen}">
-  <div class="modal-background" (click)="closeEditModal()"></div>
+  <div class="modal-background"></div>
   <div class="modal-content">
     <div class="box">
-      <h2 class="title is-4">Edit Stage</h2>
+      <h3 class="title is-4">Edit Stage</h3>
       <form (ngSubmit)="updateStage()" #editStageForm="ngForm">
        
         <div class="field">
@@ -79,9 +79,9 @@
           </div>
         </div>
 
-        <div class="field is-grouped">
-          <button type="submit" class="button create-btn is-primary">Update</button>
-          <button type="button" class="button cancel-btn" (click)="closeEditModal()">Cancel</button>
+        <div class="buttons-container">
+          <button type="submit" class="button update-stage-btn">Update</button>
+          <button type="button" class="button cancel-stage-btn" (click)="closeEditModal()">Cancel</button>
         </div>
         
       </form>
@@ -108,3 +108,18 @@
     </div>
   </div>
 </div>
+
+<!-- Modal de notificación -->
+<div *ngIf="isNotificationModalOpen" class="modal-notification">
+  <div class="modal-notification-background"></div>
+  <div class="modal-notification-content">
+    <h3 [ngClass]="{
+        'title-notification-success': notificationType === 'success',
+        'title-notification-error': notificationType === 'error'}" 
+        class="title-notification">
+        {{ notificationMessage }}
+    </h3>
+  </div>
+</div>
+
+
