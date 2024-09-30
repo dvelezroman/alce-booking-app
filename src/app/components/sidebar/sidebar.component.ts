@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { UserDto } from '../../services/dtos/user.dto';
@@ -71,5 +71,16 @@ export class SidebarComponent implements OnInit {
     this.usersService.logout();
     this.router.navigate(['/login']);
     this.closeLogoutModal();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    const target = event.target as HTMLElement;
+    const sidebar = document.querySelector('.sidebar');
+    const isClickInsideSidebar = sidebar?.contains(target);
+
+    if (!isClickInsideSidebar && window.innerWidth <= 768) {
+      this.isSidebarClosed = true;
+    }
   }
 }
