@@ -123,16 +123,16 @@
     position: absolute;
     top: 65%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.546);
-    color: rgb(108, 107, 107);
+    background: rgba(255, 255, 255, 0.388);
+    color: rgba(153, 152, 152, 0.643);
     border: none;
     cursor: pointer;
-    padding: 0.5rem .9rem;
-    font-size: 1.5rem;
+    padding: 0.5rem .85rem;
+    font-size: 1.2rem;
     border-radius: 50%;
     z-index: 8;
     transition: all .6s ease;
-    animation: pulseBackground 1.5s infinite linear;
+    animation: pulseBackground 2s infinite linear;
   }
 
   .scroll-button.left {
@@ -148,18 +148,19 @@
   }
 
   .scroll-button:hover {
-    background-color: rgba(216, 215, 215, 0.555);
+    background-color: rgba(236, 234, 234, 0.879);
+    animation-play-state: paused;
   }
 
   @keyframes pulseBackground {
     0% {
-      background-color: rgba(255, 255, 255, 0.546);
+      background-color: rgba(235, 235, 235, 0.219);
     }
     50% {
-      background-color: rgba(255, 255, 255, 0.7);
+      background-color: rgba(255, 255, 255, 0.451);
     }
     100% {
-      background-color: rgba(255, 255, 255, 0.546);
+      background-color: rgba(255, 255, 255, 0.211);
     }
   }
   
@@ -279,10 +280,10 @@
   background-color: transparent;
   padding: 15px;
   border-radius: 15px 15px 0px 0px;
-  position: relative; 
 }
 
 .month-label {
+  position: relative; 
   text-align: center;
   font-weight: bold;
   font-size: .9rem;
@@ -300,16 +301,18 @@
   padding: 0;
   cursor: pointer;
   position: absolute; 
-  top: 50%;
+  font-size: 1rem;
   transform: translateY(-50%);
 }
 
 .prev-button {
-  left: 0; 
+  top: 62%;
+  left: 18.5%; 
 }
 
 .next-button {
-  right: 0; 
+  top: 62%;
+  left: 38%; 
 }
 
 .month-selector button.hidden {
@@ -326,7 +329,6 @@
 
 .calendar-day-header {
   padding: 8px 10px;
-
   text-align: center;
   font-size: .8rem;
   font-weight: bold;
@@ -541,7 +543,6 @@
   .modal-overlay .error-modal {
     padding: 2rem;
     background-color: #ebeeef;
-    border: 1px solid rgba(239, 171, 171, 0.541);
     box-shadow: 0 0 25px rgba(169, 162, 162, 0.453);
     animation: shake 0.5s ease-in-out;
   }
@@ -761,6 +762,67 @@
     margin-bottom: 1rem;
   }
 
+  /* ESTILOS DEL MODAL DE CONFIRMACIóN ELIMINAR MEETING */
+
+.modal-background {
+  background-color: rgba(0, 0, 0, 0.4); 
+}
+
+.modal-card {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+}
+
+.modal-card-body {
+  padding-top: 2rem;
+  padding-bottom: 0rem;
+  text-align: center;
+  background-color: transparent;
+  color: #333;
+}
+
+.modal-card-body p{
+  font-size: 1.2rem;
+}
+
+.modal-card-foot {
+  display: flex;
+  justify-content: flex-end; 
+  background-color: transparent;
+  padding: 1rem;
+  width: 100%;
+}
+
+.modal-card-foot .button {
+  width: 100px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  margin: 0 0.2rem;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+}
+
+.modal-card-foot .button.is-danger2 {
+  background-color: #9241cb;  
+  color: white;
+}
+
+.modal-card-foot .button.is-danger2:hover {
+  background-color: #7423ad; 
+}
+
+.modal-card-foot .button.is-primary3 {
+  background-color: #007bff;
+  color: white;
+}
+
+.modal-card-foot .button.is-primary3:hover {
+  background-color: #0056b3;
+}
+
 
 
 @media (max-width: 992px) {
@@ -955,8 +1017,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+}
+
+.prev-button {
+  top: 63.3%;
+  left: 15.7%; 
+}
+
+.next-button {
+  top: 63.2%;
+  left: 36%; 
 }
 
 .calendar-day.selectable {
@@ -1121,8 +1191,6 @@
     text-align: center;
     font-family: 'Poppins', sans-serif;
   }
-
-  
 
   .student-info {
     display: flex;
@@ -1321,6 +1389,16 @@
   margin-bottom: 0px;
 }
 
+.prev-button {
+  top: 38.4%;
+  left: 34%; 
+}
+
+.next-button {
+  top: 38.4%;
+  left: 60%; 
+}
+
 .calendar-day-header {
   padding: 8px 0px;
   text-align: center;
@@ -1486,15 +1564,14 @@
   transition: all 0.7s ease;
 }
 
-
+/* ESTILOS MODALES DE NOTIFICACIÓN */
   .modal-content {
-    padding: 1rem;
-    width: 400px;
-    max-width: 90%;
+    width: 250px;
+    max-width: 100%;
   }
 
   .success-modal {
-    padding: 1.2rem;
+    padding: 1rem;
     background-color: #e6e6e6;
     border: 1px solid rgb(159, 158, 158);
   }
@@ -1502,28 +1579,8 @@
   .success-modal p{
     background-color: transparent;
     color: #535654;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 400
-  }
-
-  .error-modal {
-    background-color: #ebeeef;
-  }
-
-  .bold-text {
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-
-  .small-text {
-    font-size: 1.2rem;
-    color: #e74c3c;
-  }
-
-  .error-icon {
-    font-size: 2rem;
-    color: #e74c3c;
-    margin-bottom: 1rem;
   }
 
   .modal-buttons {
@@ -1531,16 +1588,17 @@
     flex-direction: row;
     justify-content: center;
     gap: 5px;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
   }
 
   .question-icon {
     font-size: 1.5rem;
     color: #17a2b8;
-    margin-bottom: 1rem;
+    margin-bottom: 0rem;
   }
 
   .button.is-success {
+    width: 100%;
     background-color: #3273dc;
     color: white;
     padding: .7rem 1.5rem;
@@ -1548,6 +1606,7 @@
   }
 
   .button.is-danger {
+    width: 100%;
     background-color: #7743a8;
     color: white;
     padding: .7rem 1.5rem;
@@ -1572,8 +1631,11 @@
     font-size: 1.4rem;
   }
 
+
+  /* MODAL DE ERROR */
+
   .error-modal {
-    padding: 1rem;
+    padding: 0rem;
     background-color: #ebeeef;
     border: 1px solid rgb(239, 171, 171);
     box-shadow: 0 0 25px rgba(169, 162, 162, 0.453);
@@ -1581,28 +1643,22 @@
 
   .bold-text {
     font-weight: bold;
-    background: linear-gradient(45deg, #cb5b3b, #7743a8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: 1rem;
+    font-size: .9rem;
   }
 
   .small-text {
-    background: linear-gradient(45deg,  #cb5b3b, #7743a8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: 1rem;
+    font-size: .9rem;
   }
 
   .error-icon {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     color: #e74c3c;
-    margin-bottom: 1rem;
+    margin-bottom: .4rem;
   }
 
 
 
-/* MODAL CUANDO SE ELIGIO FEHCA REPETIDA */
+/* MODAL CUANDO SE ELIGIO FECHA REPETIDA */
 
   .modal-content.booking-error-content {
     max-width: 80%;
@@ -1620,6 +1676,42 @@
     font-weight: 500;
     color: #d9534f;
   }
+
+
+/* MODAL ELIMINAR MEETING */
+.modal-card {
+  max-width: 360px; 
+  width: 100%; 
+  margin: auto;
+}
+
+.modal-card-body{
+  padding: 1.2rem;
+}
+
+.modal-card-body p {
+  text-align: left;
+  font-size: 1.05rem; 
+}
+  .modal-card-foot {
+    display: flex;
+    justify-content: flex-end; 
+    background-color: transparent;
+    padding: 1rem;
+    padding-top: 0rem;
+    width: 100%;
+  }
+  
+  .modal-card-foot .button {
+    width: 100px;
+    padding: 0.65rem 1.5rem;
+    font-size: 0.9rem;
+    margin: 0 0.2rem;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+  }
+
 
 }
 
@@ -1651,6 +1743,16 @@
     gap: 0rem;
     margin-top: 0rem;
     margin: auto;
+  }
+
+  .prev-button {
+    top: 36.6%;
+    left: 29%; 
+  }
+  
+  .next-button {
+    top: 36.4%;
+    left: 64%; 
   }
 
 
@@ -1900,27 +2002,6 @@
   color: #333;
 }
 
-.month-selector button {
-  width: 40px;
-  height: 2.5rem;
-  line-height: 2.5rem;
-  border: none;
-  background-color: transparent;
-  color: rgb(89, 87, 87);
-  padding: 0;
-  cursor: pointer;
-  position: absolute; 
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.prev-button {
-  left: 50px; 
-}
-
-.next-button {
-  right: 52px; 
-}
 
 .calendar-header {
   display: grid;
@@ -1930,6 +2011,16 @@
   margin-top: 1rem;
 }
 
+.prev-button {
+  top: 50%;
+  left: 15%; 
+}
+
+.next-button {
+  top: 50%;
+  left: 75%; 
+}
+
 .calendar-day-header {
   padding: 8px 0px;
   text-align: center;
@@ -1937,8 +2028,6 @@
   margin-top: -1.2rem;
   font-weight: bold;
   margin-bottom: .5rem;
-  background-color: transparent;
-  color: #4c4c4d;
 }
 
 .calendar-grid {
@@ -1964,31 +2053,6 @@
   align-items: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-
-.calendar-day.selectable {
-  background-color: #f9f9f9;
-  border: 1px solid #6eb3fc;
-  color: #333;
-  cursor: pointer;
-}
-
-.calendar-day.selectable:hover {
-  background-color: #6eb3fc;
-  color: white;
-}
-
-.calendar-day.unselectable {
-  background-color: #f0f0f0;
-  color: #929191;
-  cursor: not-allowed;
-}
-
-.calendar-day.selected {
-  background-color: #007bff;
-  color: white;
-  font-weight: bold;
-  cursor: default;
 }
 
 /* SUB-BLOQUE: time slots */
@@ -2105,184 +2169,114 @@
   /* modal */
 
   .modal-content {
-    padding: 1rem;
-    width: 400px;
-    max-width: 85%;
+    padding: .5rem;
+    width: 250px;
+    max-width: 100%;
   }
 
   .success-modal {
-    padding: 1.5rem 1rem;
-    background-color: #e6e6e6;
-    border: 1px solid rgb(159, 158, 158);
+    padding: 1.3rem 1rem;
   }
 
   .success-modal p{
-    background-color: transparent;
-    color: #535654;
-    font-size: 1.25rem;
-    font-weight: 400;
-    width:100%;
+    font-size: 1rem;
   }
 
   .modal-buttons {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     gap: 5px;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
   }
 
   .question-icon {
-    font-size: 1.5rem;
-    color: #17a2b8;
-    margin-bottom: 1rem;
+    font-size: 1.7rem;
+    margin-bottom: .7rem;
   }
 
   .button.is-success {
-    background-color: #3273dc;
-    color: white;
-    padding: .9rem 1.5rem;
-    font-size: .9rem;
-    width: 100%;
+    padding: .75rem 1.5rem;
+    font-size: 1rem;
   }
 
   .button.is-danger {
-    background-color: transparent;
-    border: .5px solid #7743a8;
-    color: #7743a8;
-    padding: .9rem 1.5rem;
-    font-size: .9rem;
-    width: 100%;
+    padding: .75rem 1.5rem;
+    font-size: 1rem;
+
   }
 
   /* MODAL DE ERROR CUANDO NO SE ELIGE BIEN */
 
-  .error-modal {
-    padding: 1.5rem;
-    background-color: #ebeeef;
-    border: .5px solid rgb(239, 171, 101);
-    box-shadow: 0 0 25px rgba(169, 162, 162, 0.953);
-  }
+ .error-modal {
+  padding: 0rem;
+}
 
-  .bold-text {
-    font-weight: bold;
-    background: linear-gradient(45deg,  #cb5b3b, #c55713);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: 1.3rem;
-  }
+.bold-text {
+  font-weight: bold;
+  font-size: 1rem;
+}
 
-  .small-text {
-    background: linear-gradient(45deg,  #cb5b3b, #c55713);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: 1.05rem;
-  }
+.small-text {
+  font-size: 1rem;
+}
 
-  .error-icon {
-    font-size: 1.8rem;
-    color: #e74c3c;
-    margin-bottom: 1rem;
-  }
+.error-icon {
+  font-size: 1.4rem;
+  color: #e74c3c;
+  margin-bottom: .4rem;
+}
 
   /* MODAL CUANDO SE HA ELEGIDO FECHA Y TIME CORRECTO */
 
   .info-modal {
-    padding: 1.7rem 1rem;
+    padding: 1.5rem .8rem;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
-    width: 350px;
+    width: 280px;
     max-width: 90%;
   }
 
   .info-modal p {
-    background: linear-gradient(45deg, #2bac1f, #43a88f);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
 }
 
   .info-icon {
-    background: linear-gradient(45deg, #2bac1f, #43a88f);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     font-size: 1.7rem;
-    margin-bottom: 1rem;
+    margin-bottom: .9rem;
 }
 
-}
 
-
-
-/* ESTILOS DEL MODAL DE CONFIRMACIóN ELIMINAR MEETING */
-
-.modal-background {
-  background-color: rgba(0, 0, 0, 0.4); 
-}
-
+/*MODAL ELIMINAR MEETING*/
 .modal-card {
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  max-width: 500px;
-  width: 90%;
+  max-width: 320px; 
+  width: 100%; 
+  margin: auto;
 }
 
-.modal-card-body {
-  padding-top: 2rem;
-  padding-bottom: 0rem;
-  text-align: center;
-  background-color: transparent;
-  color: #333;
+.modal-card-body{
+  padding: 1.2rem;
 }
 
-.modal-card-body p{
-  font-size: 1.2rem;
+.modal-card-body p {
+  text-align: left;
+  font-size: 1.05rem; 
 }
-
 .modal-card-foot {
   display: flex;
   justify-content: flex-end; 
   background-color: transparent;
-  padding: 1rem;
+  padding: .8rem;
+  padding-top: 0rem;
   width: 100%;
-}
+  }
 
 .modal-card-foot .button {
   width: 100px;
-  padding: 0.75rem 1.5rem;
+  padding: 0.65rem;
   font-size: 0.9rem;
-  margin: 0 0.5rem;
+  margin: 0 0.2rem;
   border-radius: 5px;
+  border: none;
   text-align: center;
 }
 
-.modal-card-foot .button.is-danger2 {
-  background-color: transparent;  
-  color: #6a0dad;
-}
-
-.modal-card-foot .button.is-danger2:hover {
-  color: #6a0dad;
-}
-
-.modal-card-foot .button.is-primary3 {
-  background-color: #007bff;
-  color: white;
-}
-
-.modal-card-foot .button.is-primary3:hover {
-  background-color: #0056b3;
-}
-
-@media (max-width: 492px) {
-  .modal-card-foot {
-    justify-content: center; 
-    flex-direction: row; 
-    width: 100%; 
-  }
-
-  .modal-card-foot .button {
-    margin: 0.5rem; 
-    width: auto; 
-  }
 }

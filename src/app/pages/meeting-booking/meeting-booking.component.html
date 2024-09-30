@@ -143,12 +143,21 @@
   </div>
 </div>
 
+<!-- Modal de error por meeting repetida -->
+<div *ngIf="showModalBookingError" class="modal-overlay booking-error-modal">
+  <div class="modal-content booking-error-content">
+    <i class="fas fa-exclamation-circle error-icon"></i>
+    <p class="help is-danger bold-text">
+      Ya tienes una meeting agendada en la fecha y hora seleccionada.
+    </p>
+  </div>
+</div>
+
 <!-- Modal exitoso con botones para confirmar o cancelar -->
 <div *ngIf="showSuccessModal" class="modal-overlay">
   <div class="modal-content success-modal">
     <i class="fas fa-question-circle question-icon"></i>
     <p>You have selected <br> {{ selectedDayFormatted }} at {{ selectedTimeSlot.label }}</p>
-
     <!-- Confirmation and cancellation buttons -->
     <div class="modal-buttons">
       <button class="button is-success" (click)="bookMeeting()">Accept</button>
@@ -157,20 +166,12 @@
   </div>
 </div>
 
+
+<!-- Modal de successful-->
 <div *ngIf="showInfoModal" class="modal-overlay">
   <div class="modal-content info-modal">
     <i class="fas fa-check-circle info-icon"></i>
     <p>Your selection was successful!</p>
-  </div>
-</div>
-
-<!-- Modal de error -->
-<div *ngIf="showModalBookingError" class="modal-overlay booking-error-modal">
-  <div class="modal-content booking-error-content">
-    <i class="fas fa-exclamation-circle error-icon"></i>
-    <p class="help is-danger bold-text">
-      Ya tienes una meeting agendada en la fecha y hora seleccionada.
-    </p>
   </div>
 </div>
 
