@@ -83,6 +83,10 @@ export class RegisterComponent implements OnInit {
 
   showModal(params: ModalDto) {
     this.modal = { ...params };
+
+    setTimeout(() => {
+      this.modal.close();  
+    }, 3000);
   }
 
   closeModal = (redirect?: string) => {
@@ -101,6 +105,7 @@ export class RegisterComponent implements OnInit {
       message,
       close: () => this.closeModal(redirect), // Arrow function ensures `this` is correctly bound
     };
+
   }
 
   togglePasswordVisibility() {
