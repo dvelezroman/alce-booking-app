@@ -25,7 +25,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   @ViewChild('timeSlotList') timeSlotList!: ElementRef;
   canScrollLeft = false;
   canScrollRight = false;
-  canScrollUp = false;  
+  canScrollUp = false;
   canScrollDown = false;
   canGoBack: boolean = false;
   canGoForward: boolean = true;
@@ -55,7 +55,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   meetings: MeetingDTO[] = [];
   private unsubscribe$ = new Subject<void>();
   showTimeSlotsModal = false;
-  isDeleteModalActive = false;  
+  isDeleteModalActive = false;
   meetingToDelete: MeetingDTO | null = null;
 
   constructor(
@@ -145,6 +145,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
       const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
@@ -154,12 +159,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         });
       }
     }
-  
+
     setTimeout(() => {
       this.checkScroll();
-      this.cdr.detectChanges(); 
+      this.cdr.detectChanges();
     }, 300);
-    
+
     setTimeout(() => {
       this.checkScrollY();
     }, 0);
@@ -173,11 +178,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.loadMeetings(this.getTodayDate(), formattedToDate, undefined, this.userData?.student?.id);
   }
 
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
   userName() {
     if (this.userData) {
       const { firstName, lastName } = this.userData;
@@ -186,7 +186,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return 'Nombre de Usuario';
   }
 
- 
+
 
   initializeTimeSlots() {
     const startHour = 9; // 9 AM
@@ -275,17 +275,17 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedYear = date.getFullYear();
 
     this.selectedDay = null;
-    this.selectedDayFormatted = ''; 
+    this.selectedDayFormatted = '';
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
   }
 
   isDaySelectable(day: any): boolean {
     const currentDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
-    const startDate = new Date(this.today); 
-    const maxDate = new Date(startDate); 
-    maxDate.setDate(startDate.getDate() + 7); 
-  
+    const startDate = new Date(this.today);
+    const maxDate = new Date(startDate);
+    maxDate.setDate(startDate.getDate() + 7);
+
     return currentDate >= startDate && currentDate <= maxDate;
   }
 
@@ -354,16 +354,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.showTimeSlotsModal = false;
     if (this.isMeetingDataValid()) {
       const bookingData: CreateMeetingDto = this.createBookingData();
-      this.bookingService.bookMeeting(bookingData).subscribe(response => {
+      this.bookingService.bookMeeting(bookingData).subscribe({
+        next: () => {
           this.showSuccessModal = false;
           this.showInfoModal = true;
-          this.hideInfoModalAfterDelay(3000);
-      },
-          error => {
-            this.showSuccessModal = false;
-            this.showModalBookingError = true;
-            this.hideBookingErrorModalAfterDelay(3000);
-          });
+          this.hideInfoModalAfterDelay(2000);
+          this.initializeMeetings();
+        },
+        error: () => {
+          this.showSuccessModal = false;
+          this.showModalBookingError = true;
+          this.hideBookingErrorModalAfterDelay(2000);
+        }
+      });
     } else {
       this.showModal = true;
       this.hideModalAfterDelay(2000);
@@ -427,62 +430,62 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
 
   openDeleteModal(meeting: MeetingDTO): void {
-    this.meetingToDelete = meeting;  
-    this.isDeleteModalActive = true; 
+    this.meetingToDelete = meeting;
+    this.isDeleteModalActive = true;
     console.log(meeting);
   }
 
   closeDeleteModal(): void {
-    this.isDeleteModalActive = false;  
-    this.meetingToDelete = null;  
+    this.isDeleteModalActive = false;
+    this.meetingToDelete = null;
   }
-  
+
   confirmDelete(): void {
     if (this.meetingToDelete) {
       this.deleteMeeting(this.meetingToDelete);
-      this.meetings = this.meetings.filter(m => m !== this.meetingToDelete);  
-      this.closeDeleteModal();  
+      this.meetings = this.meetings.filter(m => m !== this.meetingToDelete);
+      this.closeDeleteModal();
     }
   }
-  
+
 //scroll flechas del contenedor de los meetings del estudiante y time slots
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.checkScroll(); 
+    this.checkScroll();
     this.checkScrollY();
   }
 
   checkScroll() {
     if (!this.scheduleList || !this.scheduleList.nativeElement) {
-      return;  
+      return;
     }
-  
+
     const el = this.scheduleList.nativeElement;
-    this.canScrollLeft = el.scrollLeft > 0;  
-    this.canScrollRight = el.scrollWidth > el.clientWidth;  
+    this.canScrollLeft = el.scrollLeft > 0;
+    this.canScrollRight = el.scrollWidth > el.clientWidth;
   }
 
   scrollLeft() {
     this.scheduleList.nativeElement.scrollBy({ left: -330, behavior: 'smooth' });
-    setTimeout(() => this.checkScroll(), 300); 
+    setTimeout(() => this.checkScroll(), 300);
   }
 
   scrollRight() {
     this.scheduleList.nativeElement.scrollBy({ left: 330, behavior: 'smooth' });
-    setTimeout(() => this.checkScroll(), 300); 
+    setTimeout(() => this.checkScroll(), 300);
   }
 
   scrollUp() {
     if (this.timeSlotList) {
       this.timeSlotList.nativeElement.scrollBy({ top: -400, behavior: 'smooth' });
-      setTimeout(() => this.checkScrollY(), 300);  
+      setTimeout(() => this.checkScrollY(), 300);
     }
   }
 
   scrollDown() {
     if (this.timeSlotList) {
       this.timeSlotList.nativeElement.scrollBy({ top: 400, behavior: 'smooth' });
-      setTimeout(() => this.checkScrollY(), 300);  
+      setTimeout(() => this.checkScrollY(), 300);
     }
   }
 
@@ -491,9 +494,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       return;
     }
     const el = this.timeSlotList.nativeElement;
-    this.canScrollUp = el.scrollTop > 0;  
+    this.canScrollUp = el.scrollTop > 0;
     const maxScrollTop = el.scrollHeight - el.clientHeight;
-    this.canScrollDown = el.scrollTop < maxScrollTop;  
+    this.canScrollDown = el.scrollTop < maxScrollTop;
   }
 
    // Método para actualizar los botones según el mes seleccionado
