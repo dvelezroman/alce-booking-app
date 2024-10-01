@@ -57,6 +57,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   showTimeSlotsModal = false;
   isDeleteModalActive = false;
   meetingToDelete: MeetingDTO | null = null;
+  selectedMeeting: MeetingDTO | null = null; 
+  isMeetingDetailModalActive = false; 
+  selectedMeetingIndex: number = 0;
 
   constructor(
     private router: Router,
@@ -529,11 +532,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   // método para seleccionar meetings, abrir y cerrar modal
-  selectedMeeting: MeetingDTO | null = null; 
-  isMeetingDetailModalActive = false; 
-
-  openMeetingDetailModal(meeting: MeetingDTO) {
+  openMeetingDetailModal(meeting: MeetingDTO, index: number) {
     this.selectedMeeting = meeting;
+    this.selectedMeetingIndex = index;
     this.isMeetingDetailModalActive = true;
   }
 
