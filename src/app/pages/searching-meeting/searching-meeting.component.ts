@@ -84,10 +84,11 @@ export class SearchingMeetingComponent implements OnInit {
   }
 
   assignLink(): void {
-    if (this.filter.hour && this.filter.from && this.link && this.filter.stageId !== '') {
+    if (this.filter.hour && this.filter.from && this.link && this.filter.stageId) {
       const updateLinkParams: UpdateMeetingLinkDto = {
         date: this.filter.from,
         hour: +this.filter.hour,
+        stageId: +this.filter.stageId,
         link: this.link
       };
       this.bookingService.updateMeetingLink(updateLinkParams).subscribe({

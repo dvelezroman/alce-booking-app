@@ -19,6 +19,7 @@ export class MeetingUpdateLinkComponent {
     date: '',
     hour: 0,
     link: '',
+    stageId: 1,
   };
 
   updateSuccess = false;
