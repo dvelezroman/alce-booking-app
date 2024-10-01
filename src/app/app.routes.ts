@@ -8,6 +8,7 @@ import { RegisterComponent } from "./pages/register/register.component";
 import {StageComponent} from "./pages/stage/stage.component";
 import {MeetingUpdateLinkComponent} from "./pages/meeting-update-link/meeting-update-link.component";
 import { SearchingMeetingComponent } from './pages/searching-meeting/searching-meeting.component';
+import { SearchingStudentComponent } from './pages/searching/searching-student.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent},
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'stage', component: StageComponent },
   { path: 'meeting-update-link', component: MeetingUpdateLinkComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent},
+  { path: 'searching', component: SearchingStudentComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
 ];
