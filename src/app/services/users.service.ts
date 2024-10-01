@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
 import {environment} from "../../environments/environment";
@@ -6,25 +6,42 @@ import {Store} from "@ngrx/store";
 import {setAdminStatus, setLoggedInStatus, setUserData, unsetUserData} from "../store/user.action";
 import {LoginDto, LoginResponseDto, RegisterResponseDto, UserDto, UserRole} from "./dtos/user.dto";
 import {Router} from "@angular/router";
+import {selectUserData} from "../store/user.selector";
 
 @Injectable({
   providedIn: 'root',
 })
-export class UsersService {
+export class UsersService implements OnInit{
   private apiUrl = `${environment.apiUrl}/users`;
+  private userData$: Observable<UserDto | null>;
+  userData: UserDto | null = null;
 
   constructor(
     private http: HttpClient,
     private store: Store,
     private router: Router,
-  ) {}
+  ) {
+    this.userData$ = this.store.select(selectUserData);
+  }
+
+  ngOnInit(): void {
+    this.userData$.subscribe(state => {
+      console.log(state);
+      this.userData = state;
+    });
+  }
 
   register(user: Partial<UserDto>): Observable<RegisterResponseDto> {
     return this.http.post<RegisterResponseDto>(`${this.apiUrl}/register`, user);
   }
 
   completeRegister(user: Partial<UserDto>): Observable<RegisterResponseDto> {
-    return this.http.post<RegisterResponseDto>(`${this.apiUrl}/complete-register`, user);
+    return this.http.post<RegisterResponseDto>(`${this.apiUrl}/complete-register`, user).pipe(
+      tap(response => {
+        this.store.dispatch(setAdminStatus({ isAdmin: response.user.role === UserRole.ADMIN }));
+        this.store.dispatch(setUserData({ data: { ...this.userData, ...response.user } }));
+      })
+    );
   }
 
   login(credentials: LoginDto): Observable<LoginResponseDto> {

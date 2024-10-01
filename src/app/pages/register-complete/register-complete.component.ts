@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { UsersService } from '../../services/users.service';
@@ -8,10 +8,8 @@ import {RegisterStudentDto, Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
 import {StudentsService} from "../../services/students.service";
 import {Store} from "@ngrx/store";
-import {Observable, switchMap} from "rxjs";
+import {Observable, Subject, switchMap, takeUntil} from "rxjs";
 import {selectUserData} from "../../store/user.selector";
-import {setUserData} from "../../store/user.action";
-
 
 @Component({
   selector: 'app-register-complete',
@@ -24,7 +22,7 @@ import {setUserData} from "../../store/user.action";
   templateUrl: './register-complete.component.html',
   styleUrl: './register-complete.component.scss'
 })
-export class RegisterCompleteComponent implements OnInit {
+export class RegisterCompleteComponent implements OnInit, OnDestroy {
   currentPage = 'register';
   showModal = false;
   showSuccessModal = false;
@@ -34,7 +32,8 @@ export class RegisterCompleteComponent implements OnInit {
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
   modes: string[] = ['PRESENCIAL', 'ONLINE'];
   user: UserDto | null = null;
-  user$: Observable<UserDto | null>;
+  userData$: Observable<UserDto | null>;
+  private destroy$ = new Subject<void>();
 
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
@@ -53,7 +52,7 @@ export class RegisterCompleteComponent implements OnInit {
       stageId: ['', Validators.required],
       mode: ['ONLINE', Validators.required],
     });
-    this.user$ = this.store.select(selectUserData);
+    this.userData$ = this.store.select(selectUserData);
   }
 
 
@@ -62,9 +61,14 @@ export class RegisterCompleteComponent implements OnInit {
       this.stages = stages;
     });
 
-    this.user$.subscribe(state => {
+    this.userData$.pipe(takeUntil(this.destroy$)).subscribe(state => {
       this.user = state;
     })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private markFormGroupTouched(formGroup: FormGroup) {

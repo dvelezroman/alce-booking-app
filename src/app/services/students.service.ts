@@ -1,6 +1,6 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable, tap} from 'rxjs';
+import {Observable, Subject, takeUntil, tap, withLatestFrom} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Store} from "@ngrx/store";
 import {Mode, RegisterStudentDto, RegisterStudentResponseDto, Student} from "./dtos/student.dto";
@@ -15,6 +15,7 @@ export class StudentsService implements OnInit{
   private apiUrl = `${environment.apiUrl}/students`;
   private userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private http: HttpClient,
@@ -24,16 +25,27 @@ export class StudentsService implements OnInit{
   }
 
   ngOnInit(): void {
-    this.userData$.subscribe(state => {
+    this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
       console.log(state);
       this.userData = state;
     });
   }
 
-  registerStudent(user: RegisterStudentDto): Observable<RegisterStudentResponseDto> {
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  registerStudent(user: RegisterStudentDto): Observable<[RegisterStudentResponseDto, UserDto | null]> {
     return this.http.post<RegisterStudentResponseDto>(`${this.apiUrl}/register`, user).pipe(
-      tap(response => {
-        this.store.dispatch(setUserData({ data: { ...this.userData, student: {...response} } as UserDto }));
+      withLatestFrom(this.userData$), // Wait for latest user data
+      tap(([response, userData]) => {
+        this.store.dispatch(setUserData({
+          data: {
+            ...userData,
+            student: { ...response }
+          } as UserDto
+        }));
       })
     );
   }

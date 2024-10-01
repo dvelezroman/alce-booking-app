@@ -17,6 +17,7 @@ export interface Student {
   createdAt?: Date;
   updatedAt?: Date;
   user?: UserDto;
+  stage?: Stage;
 }
 
 export enum Mode {
@@ -29,6 +30,7 @@ export interface RegisterStudentResponseDto {
   mode: Mode;
   stageId: number;
   userId: number;
+  stage: Stage;
   createdAt?: Date;
   updatedAt?: Date;
 }
