@@ -527,4 +527,20 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     // Puedes avanzar si no estás ya en el mes siguiente
     this.canGoForward = !(this.selectedMonth === nextMonth && this.selectedYear === nextYear);
   }
+
+  // método para seleccionar meetings, abrir y cerrar modal
+  selectedMeeting: MeetingDTO | null = null; 
+  isMeetingDetailModalActive = false; 
+
+  openMeetingDetailModal(meeting: MeetingDTO) {
+    this.selectedMeeting = meeting;
+    this.isMeetingDetailModalActive = true;
+  }
+
+  closeMeetingDetailModal() {
+    this.selectedMeeting = null;
+    this.isMeetingDetailModalActive = false;
+  }
+
+
 }

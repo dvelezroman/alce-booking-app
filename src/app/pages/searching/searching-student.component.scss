@@ -1,5 +1,8 @@
+  body {
+    overflow-y: scroll;
+  }
 
-.page-title {
+  .page-title {
     text-align: center;
     padding-top: 2.2rem;
     padding-bottom: 1.9rem;
@@ -23,7 +26,7 @@
   }
 
 /* Contenedor principal del formulario */
-.main-form-container {
+  .main-form-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -138,10 +141,10 @@
   }
   
   .student-form {
-    background-color: #ffffff;
-    transition: transform 0.2.8s ease;
+    transition: transform 2.8s ease;
     transform-style: preserve-3d;
   }
+
   .flipped {
     transform: rotateY(180deg);
   }
@@ -149,6 +152,13 @@
   .user-form {
     background-color: #ffffff;
     transform: rotateY(180deg); 
+  }
+
+  .error-message {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    margin-left: 5px;
   }
   
   /* Estilos para los campos del formulario */
@@ -158,9 +168,10 @@
   
   .form-field label {
     color: #333;
-    font-weight: bold;
+    font-weight: 500;
     display: block;
     margin-bottom: 0.5rem;
+    margin-left: 5px;
   }
   
   .form-field input {
@@ -176,6 +187,11 @@
 
   .user-form .form-field {
     margin-top: 1.5rem; 
+  }
+
+  input::placeholder {
+    color: #a1a1a1; 
+    opacity: 1; 
   }
   
   /* Botón de búsqueda */
@@ -222,6 +238,17 @@
       margin-left: 0px;
       font-size: 1.8rem;
     }
+
+    .form-switch-container {
+      gap: 1.5rem;
+      margin-top: -10rem;
+    }
+
+    .main-form-container {
+      margin-top: 4rem;
+      overflow-y: auto;
+    }
+
   }
 
   @media (max-width: 492px){
@@ -257,6 +284,18 @@
 
     .main-form-container {
       margin-top: 4rem;
+    }
+
+    .form-field label {
+      font-weight: 400;
+      font-size: .9rem;
+      margin-bottom: 0.5rem;
+      margin-left: 5px;
+    }
+
+    .search-button {
+      padding: 1rem;
+      font-size: 1.1rem;
     }
 
   }
