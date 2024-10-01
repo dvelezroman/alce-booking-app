@@ -426,7 +426,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
 
-  deleteMeeting(meeting:MeetingDTO){}
+  deleteMeeting(meeting:MeetingDTO){
+    if (meeting && meeting.id) {
+      this.bookingService.deleteMeeting(meeting.id).subscribe({
+        next: () => {
+          this.initializeMeetings();
+        },
+        error: (e: Error) => {
+          console.log(e);
+        }
+      });
+    }
+    return;
+  }
 
 
   openDeleteModal(meeting: MeetingDTO): void {

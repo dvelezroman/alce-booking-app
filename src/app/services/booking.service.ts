@@ -51,5 +51,9 @@ export class BookingService {
   updateMeetingLink(data: UpdateMeetingLinkDto): Observable<any> {
     return this.http.patch(`${this.apiUrl}/link`, data);
   }
+
+  deleteMeeting(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }
 
