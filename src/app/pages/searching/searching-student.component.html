@@ -1,0 +1,61 @@
+<div class="page-title">
+    <h1>Buscar</h1>
+  </div>
+
+<div class="main-form-container">
+
+    <!-- Switch para cambiar entre estudiante y usuario -->
+    <div class="form-switch-container">
+        <span class="switch-label" [ngClass]="{ 'bold-text': isStudentForm }">Estudiante</span>
+      
+        <label class="switch">
+          <input type="checkbox" (change)="toggleForm()">
+          <span class="slider"></span>
+        </label>
+      
+        <span class="switch-label" [ngClass]="{ 'bold-text': !isStudentForm }">Usuario</span>
+    </div>
+  
+    <!-- Contenedor que envuelve ambos formularios -->
+    <div class="form-card-container">
+      <div class="form-card" [ngClass]="{ 'flipped': !isStudentForm }">
+        <!-- Lado del formulario de Estudiante -->
+        <div class="student-form">
+          <form>
+            <div class="form-field">
+              <label for="userId">User ID</label>
+              <input type="text" id="userId" placeholder="Ingrese ID Card" />
+            </div>
+            <div class="form-field">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" placeholder="Ingrese el First Name" />
+            </div>
+            <div class="form-field">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" placeholder="Ingrese el Last Name" />
+            </div>
+            <div class="form-action">
+              <button class="search-button" type="submit">Buscar Estudiante</button>
+            </div>
+          </form>
+        </div>
+  
+        <!-- Lado del formulario de Usuario -->
+        <div class="user-form">
+          <form>
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="Ingrese el Email" />
+            </div>
+            <div class="form-field">
+              <label for="role">Rol</label>
+              <input type="text" id="role" placeholder="Ingrese el Rol del Usuario" />
+            </div>
+            <div class="form-action">
+              <button class="search-button" type="submit">Buscar Usuario</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>

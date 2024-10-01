@@ -1,0 +1,262 @@
+
+.page-title {
+    text-align: center;
+    padding-top: 2.2rem;
+    padding-bottom: 1.9rem;
+    margin-bottom: 0rem;
+    background:linear-gradient( #f2f1f7, #dbd6f3 );
+    backdrop-filter:blur(15px);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+
+  }
+  
+  .page-title h1 {
+    color: #333;
+    font-size: 2.1rem;
+    margin-left: -50px;
+    font-weight: bold;
+    margin-bottom: 0rem;
+    font-family: 'Poppins', sans-serif;
+  }
+
+/* Contenedor principal del formulario */
+.main-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-top: 0rem;
+    min-width: 100%;
+    overflow: hidden;
+    will-change: transform;
+  }
+  
+  /* Estilos del switch */
+  .form-switch-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.3rem;
+    margin-top: 5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 25px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: '';
+    height: 19px;
+    width: 19px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #9861eb;
+  }
+
+  input + .slider {
+    background-color: #4473e2;  
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(18px);
+  }
+  
+  .switch-label {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #8c8b8b;
+  }
+
+  .bold-text {
+    font-weight: 400;
+    color: #2c2b2b;
+  }
+  
+  /* Contenedor de la tarjeta */
+  .form-card-container {
+    perspective: 900px; 
+    width: 80%;
+    max-width: 400px; 
+  }
+  
+  .form-card {
+    position: relative;
+    width: 100%;
+    height: 350px; 
+    transition: transform 2.8s;
+    transform-style: preserve-3d;
+  }
+  
+  .form-card.flipped {
+    transform: rotateY(180deg); 
+  }
+  
+  .student-form, .user-form {
+    background: linear-gradient(to right, #d3cfea, #c7c2e7);
+    position: absolute;
+    width: 100%;
+    min-height: 400px;
+    padding: 2rem; 
+    border-radius: 10px;
+    box-sizing: border-box; 
+    backface-visibility: hidden;
+  }
+  
+  .student-form {
+    background-color: #ffffff;
+    transition: transform 0.2.8s ease;
+    transform-style: preserve-3d;
+  }
+  .flipped {
+    transform: rotateY(180deg);
+  }
+  
+  .user-form {
+    background-color: #ffffff;
+    transform: rotateY(180deg); 
+  }
+  
+  /* Estilos para los campos del formulario */
+  .form-field {
+    margin-bottom: 1rem;
+  }
+  
+  .form-field label {
+    color: #333;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-field input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    color: #333;
+    box-sizing: border-box; 
+  }
+
+  .user-form .form-field {
+    margin-top: 1.5rem; 
+  }
+  
+  /* Botón de búsqueda */
+  .search-button {
+    width: 100%;
+    padding: 0.85rem;
+    background-color: #4490e2;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .search-button:hover {
+    background-color: #367bbd;
+  }
+
+  .user-form .form-action {
+    margin-top: 2rem;
+  }
+
+  .user-form .search-button {
+    background-color: #9861eb;
+    transition: background-color 0.3s ease; 
+  }
+
+  .user-form .search-button:hover {
+    background-color: #8456ca;
+  }
+
+  /* RESPONSIVE */
+
+  @media (max-width: 768px){
+    .page-title {
+      padding-top: 1.9rem;
+      padding-bottom: 1.7rem;
+      margin-bottom: 0rem;
+    }
+    
+    .page-title h1 {
+      color: #333333;
+      margin-left: 0px;
+      font-size: 1.8rem;
+    }
+  }
+
+  @media (max-width: 492px){
+
+    .page-title {
+      padding-top: 1.7rem;
+      padding-bottom: 1.3rem;
+      margin-bottom: 0rem;
+    }
+    
+    .page-title h1 {
+      color: #333333;
+      margin-left: 0px;
+      font-size: 1.8rem;
+    }
+
+    .form-switch-container {
+      gap: 1.5rem;
+      margin-top: -10rem;
+    }
+
+    .form-card-container {
+      perspective: 900px; 
+      width: 90%;
+      max-width: 400px; 
+    }
+
+    .student-form, .user-form {
+      min-height: 400px;
+      padding: 1.5rem; 
+      border-radius: 6px;
+    }
+
+    .main-form-container {
+      margin-top: 4rem;
+    }
+
+  }
