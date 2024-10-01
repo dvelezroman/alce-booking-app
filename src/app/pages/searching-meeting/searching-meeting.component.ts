@@ -46,7 +46,7 @@ export class SearchingMeetingComponent implements OnInit {
 
   ngOnInit(): void {
     const today = new Date();
-    this.filter.from = today.toISOString().split('T')[0];
+    // this.filter.from = today.toISOString().split('T')[0];
     this.availableHours = Array.from({ length: 13 }, (_, i) => 9 + i);
     this.stagesService.getAll().subscribe(response => {
       this.stages = response;
@@ -67,13 +67,13 @@ export class SearchingMeetingComponent implements OnInit {
 
     const filterParams: FilterMeetingsDto = {
       ...this.filter,
-      hour: this.filter.hour ? this.filter.hour.toString() : undefined 
+      hour: this.filter.hour ? this.filter.hour.toString() : undefined
     };
-    
+
     if (this.filter.stageId === '') {
-      delete filterParams.stageId; 
+      delete filterParams.stageId;
     } else {
-      filterParams.stageId = this.filter.stageId?.toString(); 
+      filterParams.stageId = this.filter.stageId?.toString();
     }
 
     this.bookingService.searchMeetings(this.filter).subscribe(meetings => {
@@ -82,34 +82,25 @@ export class SearchingMeetingComponent implements OnInit {
       console.log(meetings);
     });
   }
-  
-
-  filterByStage(): void {
-    if (this.filter.stageId === '') {
-      this.meetings = this.originalMeetings;
-    } else {
-      this.meetings = this.originalMeetings.filter(meeting => meeting.stageId === +this.filter.stageId!);
-    }
-  }
 
   assignLink(): void {
-    if (this.filter.hour && this.filter.from && this.link) {
+    if (this.filter.hour && this.filter.from && this.link && this.filter.stageId !== '') {
       const updateLinkParams: UpdateMeetingLinkDto = {
         date: this.filter.from,
         hour: +this.filter.hour,
         link: this.link
       };
-      this.bookingService.updateMeetingLink(updateLinkParams).subscribe(
-        response => {
+      this.bookingService.updateMeetingLink(updateLinkParams).subscribe({
+        next: response => {
           console.log('Link asignado correctamente', response);
           this.showToast('El link fue asignado', true);
           this.closeModal();
         },
-        error => {
+        error: error => {
           console.error('Error al asignar el link', error);
           this.showToast('Error al asignar el link', false);
         }
-      );
+      });
     }
   }
 
@@ -118,11 +109,11 @@ export class SearchingMeetingComponent implements OnInit {
     this.toastMessage = message;
     this.toastType = isSuccess ? 'success' : 'error';
     this.isToastVisible = true;
-  
+
     setTimeout(() => {
-      this.isToastVisible = false; 
+      this.isToastVisible = false;
     }, 3000);
   }
-  
-  
+
+
 }

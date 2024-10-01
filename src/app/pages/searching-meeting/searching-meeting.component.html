@@ -65,7 +65,7 @@
     </div>
 
      <!-- Botón de asignar (aparece cuando hay resultados) -->
-     <div class="block" *ngIf="meetings && meetings.length > 0">
+     <div class="block" *ngIf="meetings && meetings.length > 0 && filter.from && filter.to && filter.hour && filter.stageId">
       <div class="field">
         <label class="label">&nbsp;</label>
         <div class="control">
@@ -76,17 +76,17 @@
 
     <!-- Indicador de vista (iconos para alternar entre lista y tabla) -->
     <div class="view-switcher" *ngIf="meetings && meetings.length > 0">
-      <button 
-        class="icon-button" 
+      <button
+        class="icon-button"
         [ngClass]="{ 'active': viewMode === 'table' }"
         (click)="viewMode = 'table'">
-        <i class="fas fa-th-list"></i> 
+        <i class="fas fa-th-list"></i>
       </button>
-      <button 
-        class="icon-button" 
+      <button
+        class="icon-button"
         [ngClass]="{ 'active': viewMode === 'list' }"
         (click)="viewMode = 'list'">
-        <i class="fas fa-table"></i> 
+        <i class="fas fa-table"></i>
       </button>
     </div>
 
@@ -116,12 +116,12 @@
             <td>{{ meeting.stageId }}</td>
             <td>{{ meeting.student?.user?.firstName }} {{ meeting.student?.user?.lastName }}</td>
             <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
-            <td>{{ meeting.date | date: 'mediumDate' }}</td>
+            <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
             <td>{{ meeting.hour }}:00</td>
           </tr>
         </tbody>
       </table>
-    
+
       <!-- Vista de tarjetas -->
       <ul class="card-results" *ngIf="viewMode === 'list' && meetings && meetings.length > 0">
         <li *ngFor="let meeting of meetings; let i = index">
@@ -142,7 +142,7 @@
           </div>
         </li>
       </ul>
-    
+
     </div>
   </div>
 </section>

@@ -20,7 +20,7 @@ export const routes: Routes = [
   { path: 'stage', component: StageComponent },
   { path: 'meeting-update-link', component: MeetingUpdateLinkComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent},
-  { path: 'searching', component: SearchingStudentComponent},
+  { path: 'searching-students', component: SearchingStudentComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
 ];

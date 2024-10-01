@@ -19,7 +19,7 @@ export interface CreateMeetingDto {
   studentId: number;
   instructorId?: number;
   stageId?: number;
-  date: Date;
+  date: string;
   hour: number;
 }
 
