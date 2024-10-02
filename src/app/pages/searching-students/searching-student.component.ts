@@ -3,6 +3,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalComponent } from '../../components/modal/modal.component';
 import {UsersService} from "../../services/users.service";
+import {UserDto} from "../../services/dtos/user.dto";
+import {Stage} from "../../services/dtos/student.dto";
+import {StagesService} from "../../services/stages.service";
 
 @Component({
   selector: 'app-searching-students-student',
@@ -19,6 +22,14 @@ export class SearchingStudentComponent {
   isStudentForm = true;
   studentForm!: FormGroup;
   userForm!: FormGroup;
+  roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
+
+  users: UserDto[] = [];
+  totalUsers: number = 0;
+  currentPage: number = 1;
+  itemsPerPage: number = 10; // Set the number of items per page
+
+  stages: Stage[] = [];
 
   showModal: boolean = false;
   modalMessage: string = '';
@@ -28,13 +39,18 @@ export class SearchingStudentComponent {
   constructor(
     private fb: FormBuilder,
     private usersService: UsersService,
+    private stagesService: StagesService,
   ) {}
 
   ngOnInit() {
+    this.stagesService.getAll().subscribe(stages => {
+      this.stages = stages;
+    });
     this.studentForm = this.fb.group({
       userId: [''],
       firstName: [''],
-      lastName: ['']
+      lastName: [''],
+      stageId: 1,
     });
 
     this.userForm = this.fb.group({
@@ -52,25 +68,40 @@ export class SearchingStudentComponent {
     this.isStudentForm = !this.isStudentForm;
   }
 
-  onSubmit() {
+  searchUsers() {
     if (this.isStudentForm) {
-      const { userId, firstName, lastName } = this.studentForm.value;
-      if (userId) {
-        console.log('Buscar por ID Card:', userId);
-      } else if (firstName && lastName) {
-        console.log('Buscar por nombre y apellido:', firstName, lastName);
-      } else {
-        this.showErrorModal('Agregue el ID Card o los nombres del estudiante.');
-      }
+      const { userId, firstName, lastName, stageId } = this.studentForm.value;
+      this.usersService.searchUsers((this.currentPage - 1) * this.itemsPerPage, this.itemsPerPage, undefined, firstName, lastName, undefined, undefined, undefined, stageId)
+        .subscribe({
+          next: result => {
+            this.users = result.users;
+            this.totalUsers = result.total; // Update the total count
+          },
+          error: error => {
+            console.log('Error:', error);
+            this.showErrorModal('Error occurred while searching users.');
+                    }
+      });
     } else {
-      if (this.userForm.valid) {
-        const { email, role } = this.userForm.value;
-        console.log('Buscar por email y rol:', email, role);
-      } else {
-        this.userForm.markAllAsTouched();
-        this.showErrorModal('Ambos campos son obligatorios.');
-      }
+      const { email, role } = this.userForm.value;
+
+      this.usersService.searchUsers((this.currentPage - 1) * this.itemsPerPage, this.itemsPerPage, email, undefined, undefined, undefined, role, undefined)
+        .subscribe({
+          next: result => {
+            this.users = result.users;
+            this.totalUsers = result.total; // Update the total count
+          },
+          error: error => {
+            console.log('Error:', error);
+            this.showErrorModal('Error occurred while searching users.');
+          }
+        });
     }
+  }
+
+  changePage(page: number) {
+    this.currentPage = page;
+    this.searchUsers(); // Re-fetch the results for the new page
   }
 
   showErrorModal(message: string) {

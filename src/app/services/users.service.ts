@@ -107,6 +107,7 @@ export class UsersService implements OnInit{
     status?: string,
     role?: string,
     register?: boolean,
+    stageId?: number,
   ): Observable<{ users: UserDto[], total: number }> {
     let params = new HttpParams();
 
@@ -130,6 +131,9 @@ export class UsersService implements OnInit{
     }
     if (register) {
       params = params.set('register', register.toString());
+    }
+    if (stageId) {
+      params = params.set('stageId', stageId.toString());
     }
 
     return this.http.get<{ users: UserDto[], total: number }>(`${this.apiUrl}/search`, { params });

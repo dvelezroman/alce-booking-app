@@ -7,25 +7,25 @@
     <!-- Switch para cambiar entre estudiante y usuario -->
     <div class="form-switch-container">
         <span class="switch-label" [ngClass]="{ 'bold-text': isStudentForm }">Estudiante</span>
-      
+
         <label class="switch">
           <input type="checkbox" (change)="toggleForm()">
           <span class="slider"></span>
         </label>
-      
+
         <span class="switch-label" [ngClass]="{ 'bold-text': !isStudentForm }">Usuario</span>
     </div>
-  
+
     <!-- Contenedor que envuelve ambos formularios -->
     <div class="form-card-container">
       <div class="form-card" [ngClass]="{ 'flipped': !isStudentForm }">
         <!-- Lado del formulario de Estudiante -->
         <div class="student-form">
-          <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
-            <div class="form-field">
-              <label for="userId">User ID</label>
-              <input type="text" id="userId" formControlName="userId" placeholder="Ingrese ID Card" />
-            </div>
+          <form [formGroup]="studentForm" (ngSubmit)="searchUsers()">
+<!--            <div class="form-field">-->
+<!--              <label for="userId">User ID</label>-->
+<!--              <input type="text" id="userId" formControlName="userId" placeholder="Ingrese ID Card" />-->
+<!--            </div>-->
             <div class="form-field">
               <label for="firstName">First Name</label>
               <input type="text" id="firstName" formControlName="firstName" placeholder="Ingrese el First Name" />
@@ -34,29 +34,32 @@
               <label for="lastName">Last Name</label>
               <input type="text" id="lastName" formControlName="lastName" placeholder="Ingrese el Last Name" />
             </div>
+            <div class="form-field">
+              <label for="stageId">Stage</label>
+              <select id="stageId" class="input" formControlName="stageId">
+                <option value="" disabled selected>Select your stage</option>
+                <option *ngFor="let stage of stages" [value]="stage.number">{{ stage.description }}</option>
+              </select>
+            </div>
             <div class="form-action">
               <button class="search-button" type="submit">Buscar Estudiante</button>
             </div>
           </form>
         </div>
-  
+
         <!-- Lado del formulario de Usuario -->
         <div class="user-form">
-          <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+          <form [formGroup]="userForm" (ngSubmit)="searchUsers()">
             <div class="form-field">
               <label for="email">Email</label>
               <input type="email" id="email" formControlName="email" placeholder="Ingrese el Email" />
-              <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="error-message">
-                <small *ngIf="userForm.get('email')?.errors?.['required']">El email es obligatorio</small>
-                <small *ngIf="userForm.get('email')?.errors?.['email']">El formato del email no es válido</small>
-              </div>
             </div>
             <div class="form-field">
               <label for="role">Rol</label>
-              <input type="text" id="role" formControlName="role" placeholder="Ingrese el Rol del Usuario" />
-              <div *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched" class="error-message">
-                <small *ngIf="userForm.get('role')?.errors?.['required']">El rol es obligatorio</small>
-              </div>
+              <select id="role" class="input" formControlName="role">
+                <option value="" disabled selected>Select your role</option>
+                <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+              </select>
             </div>
             <div class="form-action">
               <button class="search-button" type="submit">Buscar Usuario</button>
@@ -67,7 +70,7 @@
     </div>
 
     <!-- Modal para mostrar errores -->
-    <app-modal 
+    <app-modal
       [showModal]="showModal"
       [message]="modalMessage"
       [isError]="modalIsError"
