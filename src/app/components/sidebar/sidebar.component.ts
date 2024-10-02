@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { UsersService } from '../../services/users.service';
-import { UserDto } from '../../services/dtos/user.dto';
+import {UserDto, UserRole} from '../../services/dtos/user.dto';
 import { Observable } from 'rxjs';
-import { selectUserData } from '../../store/user.selector';
+import {selectIsAdmin, selectUserData} from '../../store/user.selector';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -23,29 +23,35 @@ export class SidebarComponent implements OnInit {
   @Output() logoutEvent = new EventEmitter<void>();
 
   showLogoutModal = false;
+  isAdmin$: Observable<boolean>;
+  isAdmin: boolean = false;
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
 
-  navItems: { icon: string, text: string, route: string}[] = [
-    { icon: 'fas fa-home', text: 'Home', route: '/home' },
-    { icon: 'fas fa-info-circle', text: 'About', route: '/about' },
-    { icon: 'fas fa-envelope', text: 'Contact', route: '/contact' },
-    { icon: 'fas fa-calendar-alt', text: 'Booking', route: '/booking' },
-    { icon: 'fas fa-calendar-alt', text: 'Stages', route: '/stage' }
+  navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
+    { icon: 'fas fa-home', text: 'Home', route: '/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
+    { icon: 'fas fa-calendar-alt', text: 'Booking', route: '/booking', roles: [UserRole.STUDENT] },
+    { icon: 'fas fa-calendar-alt', text: 'Meetings', route: '/searching-meeting', roles: [UserRole.ADMIN] },
+    { icon: 'fas fa-calendar-alt', text: 'Students', route: '/searching-students', roles: [UserRole.ADMIN] },
+    { icon: 'fas fa-calendar-alt', text: 'Stages', route: '/stage', roles: [UserRole.ADMIN] },
   ];
 
-  constructor(private usersService: UsersService,
-              private router: Router,
-              private store: Store) {
-
+  constructor(
+    private usersService: UsersService,
+    private router: Router,
+    private store: Store,
+  ) {
     this.userData$ = this.store.select(selectUserData);
-
+    this.isAdmin$ = this.store.select(selectIsAdmin);
   }
 
   ngOnInit() {
     this.userData$.subscribe(state => {
       this.userData = state;
     });
+    this.isAdmin$.subscribe(state => {
+      this.isAdmin = state;
+    })
   }
 
   openSidebar(event: Event) {
@@ -83,4 +89,6 @@ export class SidebarComponent implements OnInit {
       this.isSidebarClosed = true;
     }
   }
+
+  protected readonly UserRole = UserRole;
 }

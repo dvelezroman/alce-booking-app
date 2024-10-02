@@ -18,7 +18,7 @@
 
   <ul>
     <li *ngFor="let item of navItems">
-      <a [routerLink]="item.route" (click)="closeSidebar($event)"> 
+      <a *ngIf="item.roles.includes(userData?.role || UserRole.STUDENT)" [routerLink]="item.route" (click)="closeSidebar($event)">
         <i class="{{item.icon}}"></i>
         <span class="link-text">{{ item.text }}</span>
       </a>
@@ -35,8 +35,8 @@
 
 
 <!-- Flecha para abrir el sidebar -->
-<div 
-  class="arrow-icon" 
+<div
+  class="arrow-icon"
   *ngIf="isSidebarClosed"
   (click)="openSidebar($event)">
   <i class="fas fa-chevron-right"></i>
