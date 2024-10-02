@@ -7,7 +7,7 @@
 
         <!-- primer bloque: información del estudiante -->
        <div class="column student-info">
-        
+
             <!-- <div class="student-photo">
                 <img src="/assets/foto usuario default.png" alt="Foto del estudiante">
               </div> -->
@@ -24,12 +24,12 @@
           <!-- Fechas seleccionadas por el usuario student -->
           <div class="student-schedule" *ngIf="meetings.length > 0">
             <h4 class="schedule-title">Horario Seleccionado</h4>
-            
+
             <!-- Botón de flecha izquierda -->
             <button class="scroll-button left" (click)="scrollLeft()" [class.hidden]="!canScrollLeft">
               <i class="fas fa-chevron-left"></i>
             </button>
-          
+
             <div class="schedule-list"  #scheduleList>
               <div *ngFor="let meeting of meetings; let i = index" class="schedule-item" (click)="openMeetingDetailModal(meeting, i)">
                 <div class="meeting-title">
@@ -48,7 +48,7 @@
                 </div>
               </div>
             </div>
-          
+
             <!-- Botón de flecha derecha -->
             <button class="scroll-button right" (click)="scrollRight()" [class.hidden]="!canScrollRight">
               <i class="fas fa-chevron-right"></i>
@@ -102,7 +102,7 @@
           </div>
           </div>
       </div>
-      
+
 
       <!-- Sub-bloque 2: Time Slots -->
       <div class="selected-date-time">
@@ -144,7 +144,9 @@
       <p><strong>Hora:</strong> <span>{{ selectedMeeting?.hour }}:00</span></p>
       <p><strong>Instructor:</strong> <span>{{ selectedMeeting?.instructor?.user?.firstName || 'Instructor no asignado' }}</span></p>
       <p class="meeting-link" [ngClass]="{'no-link': !selectedMeeting?.link}">
-        <strong>Link:</strong> <span>{{ selectedMeeting?.link || 'no ha sido asignado' }}</span>
+        <a [href]="selectedMeeting?.link" target="_blank" rel="noopener noreferrer">
+          <span>{{ selectedMeeting?.link || 'no ha sido asignado' }}</span>
+        </a>
       </p>
     </section>
   </div>

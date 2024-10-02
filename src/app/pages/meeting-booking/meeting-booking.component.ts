@@ -57,8 +57,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   showTimeSlotsModal = false;
   isDeleteModalActive = false;
   meetingToDelete: MeetingDTO | null = null;
-  selectedMeeting: MeetingDTO | null = null; 
-  isMeetingDetailModalActive = false; 
+  selectedMeeting: MeetingDTO | null = null;
+  isMeetingDetailModalActive = false;
   selectedMeetingIndex: number = 0;
 
   constructor(
