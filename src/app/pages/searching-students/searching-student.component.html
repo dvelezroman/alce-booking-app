@@ -7,12 +7,10 @@
     <!-- Switch para cambiar entre estudiante y usuario -->
     <div class="form-switch-container">
         <span class="switch-label" [ngClass]="{ 'bold-text': isStudentForm }">Estudiante</span>
-
         <label class="switch">
           <input type="checkbox" (change)="toggleForm()">
           <span class="slider"></span>
         </label>
-
         <span class="switch-label" [ngClass]="{ 'bold-text': !isStudentForm }">Usuario</span>
     </div>
 
@@ -26,6 +24,13 @@
 <!--              <label for="userId">User ID</label>-->
 <!--              <input type="text" id="userId" formControlName="userId" placeholder="Ingrese ID Card" />-->
 <!--            </div>-->
+          <div class="form-field">
+            <label for="stageId">Stage</label>
+            <select id="stageId" class="input" formControlName="stageId">
+              <option value="">Stages</option>
+              <option *ngFor="let stage of stages" [value]="stage.number">{{ stage.description }}</option>
+            </select>
+          </div>
             <div class="form-field">
               <label for="firstName">First Name</label>
               <input type="text" id="firstName" formControlName="firstName" placeholder="Ingrese el First Name" />
@@ -33,13 +38,6 @@
             <div class="form-field">
               <label for="lastName">Last Name</label>
               <input type="text" id="lastName" formControlName="lastName" placeholder="Ingrese el Last Name" />
-            </div>
-            <div class="form-field">
-              <label for="stageId">Stage</label>
-              <select id="stageId" class="input" formControlName="stageId">
-                <option value="" disabled selected>Select your stage</option>
-                <option *ngFor="let stage of stages" [value]="stage.number">{{ stage.description }}</option>
-              </select>
             </div>
             <div class="form-action">
               <button class="search-button" type="submit">Buscar Estudiante</button>
@@ -57,7 +55,7 @@
             <div class="form-field">
               <label for="role">Rol</label>
               <select id="role" class="input" formControlName="role">
-                <option value="" disabled selected>Select your role</option>
+                <option value="">Roles</option>
                 <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
               </select>
             </div>
@@ -81,8 +79,40 @@
 <!--TODO:-->
 <!-- Pagination Controls -->
 <!--Esta paginacion usala para cuando pongas la lista de los registros traidos por la request, colocala al final de la tabla de registros.-->
-<!--<div class="pagination">-->
-<!--  <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>-->
-<!--  <span>Page {{ currentPage }} of {{ totalUsers / itemsPerPage | number: '1.0-0' }}</span>-->
-<!--  <button (click)="changePage(currentPage + 1)" [disabled]="currentPage * itemsPerPage >= totalUsers">Next</button>-->
-<!--</div>-->
+
+<!-- Tabla para mostrar los resultados -->
+<!-- Verifica si hay resultados antes de mostrar la tabla y la paginación -->
+<div *ngIf="users.length > 0">
+  <!-- Tabla para mostrar los resultados -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID Number</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.idNumber }}</td>
+        <td>{{ user.firstName }}</td>
+        <td>{{ user.lastName }}</td>
+        <td>{{ user.email }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination Controls -->
+  <div class="pagination">
+    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }} of {{ totalUsers / itemsPerPage | number: '1.0-0' }}</span>
+    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage * itemsPerPage >= totalUsers">Next</button>
+  </div>
+</div>
+
+<!-- Mensaje para cuando no hay resultados -->
+<div *ngIf="noResults" class="no-results-message">
+  <p>No se encontraron resultados.</p>
+  <i class="fas fa-user-slash"></i>
+</div>
