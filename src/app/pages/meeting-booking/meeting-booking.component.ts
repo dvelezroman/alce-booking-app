@@ -382,7 +382,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.meetings = meetings;
       this.cdr.detectChanges();
       setTimeout(() => this.checkScroll(), 300);
-      console.log(meetings);
     }, error: (error) => {
         console.error('Error fetching meetings:', error);
       }
@@ -543,5 +542,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.isMeetingDetailModalActive = false;
   }
 
-
+  getFormattedLink(link: string | undefined): string {
+    if (!link) {
+      return ''
+    }
+    return link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`;
+  }
 }

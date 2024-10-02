@@ -144,7 +144,7 @@
       <p><strong>Hora:</strong> <span>{{ selectedMeeting?.hour }}:00</span></p>
       <p><strong>Instructor:</strong> <span>{{ selectedMeeting?.instructor?.user?.firstName || 'Instructor no asignado' }}</span></p>
       <p class="meeting-link" [ngClass]="{'no-link': !selectedMeeting?.link}">
-        <a [href]="selectedMeeting?.link" target="_blank" rel="noopener noreferrer">
+        <a [href]="getFormattedLink(selectedMeeting?.link)" target="_blank" rel="noopener noreferrer">
           <span>{{ selectedMeeting?.link || 'no ha sido asignado' }}</span>
         </a>
       </p>
