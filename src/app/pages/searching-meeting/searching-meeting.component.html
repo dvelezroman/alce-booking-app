@@ -54,7 +54,7 @@
                   <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onFilterChange()">
                     <option value="">Stages</option>
                     <!-- Opciones de stages disponibles -->
-                    <option *ngFor="let stage of stages" [value]="stage.number">{{ stage.description }}</option>
+                    <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
                   </select>
                 </div>
               </div>
@@ -113,7 +113,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let meeting of meetings">
-            <td>{{ meeting.stageId }}</td>
+            <td>{{ meeting.stage?.number }}</td>
             <td>{{ meeting.student?.user?.firstName }} {{ meeting.student?.user?.lastName }}</td>
             <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
             <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>

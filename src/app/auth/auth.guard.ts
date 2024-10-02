@@ -11,7 +11,7 @@ export class AuthGuard implements CanActivate {
   constructor(private userService: UsersService, private router: Router) {}
 
   canActivate(): boolean {
-    const accessToken = typeof window !== 'undefined' ? localStorage.getItem('authToken') : '';
+    const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : '';
 
     if (accessToken) {
       return true
