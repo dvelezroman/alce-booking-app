@@ -35,6 +35,7 @@ export class SearchingStudentComponent {
   modalMessage: string = '';
   modalIsError: boolean = false;
   modalIsSuccess: boolean = false;
+  noResults: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -60,15 +61,23 @@ export class SearchingStudentComponent {
   }
 
   toggleForm() {
-    if (this.isStudentForm) {
-      this.userForm.reset();
+    if (!this.isStudentForm) {
+      this.userForm.setValue({
+        email: '', 
+        role: '' 
+      });
     } else {
-      this.studentForm.reset();
+      this.studentForm.patchValue({
+        firstName: '', 
+        lastName: ''   
+      });
     }
     this.isStudentForm = !this.isStudentForm;
   }
 
   searchUsers() {
+    this.noResults = false;
+
     if (this.isStudentForm) {
       const { userId, firstName, lastName, stageId } = this.studentForm.value;
       this.usersService.searchUsers((this.currentPage - 1) * this.itemsPerPage, this.itemsPerPage, undefined, firstName, lastName, undefined, undefined, undefined, stageId)
@@ -76,6 +85,12 @@ export class SearchingStudentComponent {
           next: result => {
             this.users = result.users;
             this.totalUsers = result.total; // Update the total count
+           
+            if (this.users.length === 0) {
+              setTimeout(() => {
+                this.noResults = true;
+              }, 1000);
+            }
           },
           error: error => {
             console.log('Error:', error);
