@@ -8,7 +8,7 @@ import { Stage, Student } from '../../services/dtos/student.dto';
 import {StagesService} from "../../services/stages.service";
 
 @Component({
-  selector: 'app-searching-meeting',
+  selector: 'app-searching-students-meeting',
   standalone: true,
   imports: [
     CommonModule,

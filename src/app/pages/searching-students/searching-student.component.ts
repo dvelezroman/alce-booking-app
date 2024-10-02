@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalComponent } from '../../components/modal/modal.component';
+import {UsersService} from "../../services/users.service";
 
 @Component({
-  selector: 'app-searching-student',
+  selector: 'app-searching-students-student',
   standalone: true,
   imports: [
       CommonModule,
@@ -24,7 +25,10 @@ export class SearchingStudentComponent {
   modalIsError: boolean = false;
   modalIsSuccess: boolean = false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private usersService: UsersService,
+  ) {}
 
   ngOnInit() {
     this.studentForm = this.fb.group({

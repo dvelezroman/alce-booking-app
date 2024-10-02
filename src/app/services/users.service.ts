@@ -99,14 +99,19 @@ export class UsersService implements OnInit{
   }
 
   searchUsers(
+    page: number = 1,
+    limit: number = 10,
     email?: string,
     firstName?: string,
     lastName?: string,
     status?: string,
     role?: string,
-    register?: boolean
-  ): Observable<UserDto[]> {
+    register?: boolean,
+  ): Observable<{ users: UserDto[], total: number }> {
     let params = new HttpParams();
+
+    params = params.set('page', page);
+    params = params.set('limit', limit);
 
     if (email) {
       params = params.set('email', email);
@@ -127,6 +132,6 @@ export class UsersService implements OnInit{
       params = params.set('register', register.toString());
     }
 
-    return this.http.get<UserDto[]>(`${this.apiUrl}/search`, { params });
+    return this.http.get<{ users: UserDto[], total: number }>(`${this.apiUrl}/search`, { params });
   }
 }
