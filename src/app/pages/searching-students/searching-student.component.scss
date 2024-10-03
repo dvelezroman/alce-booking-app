@@ -10,9 +10,10 @@
 
   .page-title {
     text-align: center;
-    padding-top: 2.2rem;
-    padding-bottom: 1.9rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
     margin-bottom: 0rem;
+    line-height: 45px;
     background:linear-gradient( #f2f1f7, #dbd6f3 );
     backdrop-filter:blur(15px);
     position: fixed;
@@ -24,7 +25,7 @@
   .page-title h1 {
     color: #333;
     font-size: 2.1rem;
-    margin-left: -50px;
+    margin-left: -55px;
     font-weight: bold;
     margin-bottom: 0rem;
     font-family: 'Poppins', sans-serif;
@@ -51,8 +52,8 @@
     justify-content: center;
     align-items: center;
     gap: 1.3rem;
-    margin-top: 5rem;
-    margin-bottom: 2rem;
+    margin-top: -5%;
+    margin-bottom: 3rem;
   }
   
   .switch {
@@ -135,7 +136,7 @@
   }
   
   .student-form, .user-form {
-    background: linear-gradient(to right, #d3cfea, #c7c2e7);
+    background: radial-gradient(circle, #e3e4e5, #e3e1e6);
     position: absolute;
     width: 100%;
     margin: auto;
@@ -245,7 +246,10 @@
   }
 
   /* BLOQUE RESULTADOS */
-
+  .results-container {
+    margin-top: -4.7rem; 
+    width: 100%;
+  }
   /* Estilos para la tabla */
 .table {
   width: 80%;
@@ -260,8 +264,9 @@
 }
 
 .table th, .table td {
-  padding: 12px;
+  padding: 10px;
   text-align: center;
+  font-size: .9rem;
 }
 
 .table th {
@@ -279,6 +284,90 @@
 .table tr:hover {
   background-color: #f1f1f1; 
 }
+
+.edit-icon {
+  z-index: 10; 
+  position: relative;
+  color: #007bff; 
+  cursor: pointer;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #0056b3; 
+  }
+}
+
+/* Estilos para el contenedor de las tarjetas */
+.card-container-users {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 85%;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Estilos para cada tarjeta */
+.page-indicator {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333; 
+}
+
+.page-indicator p {
+  margin: 0;
+  color: #007bff; 
+}
+
+.card-user {
+  background-color: #f0f0f0; 
+  border: .5px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px 15px;
+}
+
+.card-user-body p {
+  margin: 3px 0;
+  font-size: .85rem;
+  color: #555; 
+}
+
+.card-user-body p strong {
+  color: #333; 
+}
+
+.card-user-body p span {
+  color: #777;
+  margin-left: 5px;
+}
+
+.card-user-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.edit-button-user {
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-button-user:hover {
+  background-color: #0056b3;
+}
+
+/* Pagination estilos*/
 
 .pagination {
   margin-top: 0px;
@@ -332,9 +421,176 @@
   margin-top: 10px; 
 }
 
+/* Estilos específicos para el modal de editar usuario */
+
+.modal {
+  z-index: 1005;
+}
+/* Fondo borroso para el modal */
+.edit-user-modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(135, 134, 134, 0.4);
+  backdrop-filter: blur(5px);
+}
+
+/* Contenedor del modal */
+.edit-user-modal-card {
+  position: fixed;
+  top: 53%;
+  left: 52.5%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: radial-gradient(circle, #ffffff, #d3d3d3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  padding: 1.5rem;
+  padding-top: .6rem;
+  border-radius: 10px;
+}
+
+/* Cabeza del modal */
+.edit-user-modal-head {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  position: relative; 
+  padding: 1rem;
+}
+
+.edit-user-modal-title {
+  flex-grow: 1; 
+  font-size: 1.4rem;
+  text-align: center;
+  color: #333; 
+  margin: 0;
+}
+
+.edit-user-close {
+  position: absolute;
+  top: -15px;
+  right: -19px;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #7b7979; 
+}
+
+.edit-user-close:hover {
+  color: #373737; 
+}
+
+/* Cuerpo del modal */
+.edit-user-modal-body {
+  margin-bottom: 1.5rem;
+}
+
+/* Campos del formulario */
+.form-field-edit {
+  margin-bottom: 1rem;
+}
+
+.form-field-edit label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-left: 5px;
+  color: #333;
+}
+
+.form-field-edit input,
+.form-field-edit select {
+  width: 100%;
+  padding:.3rem .7rem;
+  font-size: 1rem;
+  height: 37px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Pie del modal */
+.edit-user-modal-foot {
+  display: flex;
+  justify-content: center;
+}
+
+.edit-user-modal-foot .button {
+  padding: 0.5rem 1.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-user-modal-foot .button:hover {
+  background-color: #0056b3;
+}
+
+
+/* modal de notificación */
+::ng-deep app-modal .modal-overlay {
+  z-index: 1050 !important; 
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; 
+  -webkit-appearance: none; 
+  appearance: none; 
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
   /* RESPONSIVE */
+  @media (max-width: 992px) {
+    .table {
+      width: 95%; 
+      margin: 0 auto; 
+      border-collapse: collapse;
+    }
+  
+    .table th, .table td {
+      font-size: 0.9rem; 
+      padding: 8px; 
+    }
+  
+    .table th {
+      background-color: #f5f5f5;
+      border-bottom: 1px solid rgb(174, 174, 174);
+      color: #333;
+    }
+  
+    .table td {
+      background-color: #fff;
+      color: #333;
+      border-bottom: .5px solid rgb(209, 207, 207);
+    }
+  
+    .table tr:hover {
+      background-color: #f1f1f1;
+    }
+  
+    .edit-icon {
+      font-size: 1rem; /* Ajusta el tamaño del ícono */
+      cursor: pointer;
+    }
+  }
 
   @media (max-width: 768px){
+  
 
     .page-title {
       padding-top: 1.9rem;
@@ -373,11 +629,15 @@
       transform-style: preserve-3d;
     }
 
+    .results-container {
+      margin-top: -8.7rem; 
+    }
+
     .table {
-      width: 95%;
-      margin: 20px auto;
+      width: 100%;
+      margin:  auto;
       border-collapse: collapse;
-      margin-top: 0px;
+      margin-top: -100px;
       margin-bottom: 0;
       border: .5px solid grey;
       border-radius: 10px;
@@ -386,7 +646,7 @@
     }
     
     .table th, .table td {
-      padding: 4px;
+      padding: 2px;
       text-align: center;
       font-size: .8rem;
     }
@@ -416,9 +676,18 @@
       transition: background-color 0.3s ease;
     }
 
+    .edit-user-modal-card {
+      left: 50%;
+      width: 340px;
+    }
+
   }
 
   @media (max-width: 492px){
+
+    .form-switch-container {
+
+    }
 
     .page-title {
       padding-top: 1.7rem;
@@ -434,7 +703,7 @@
 
     .form-switch-container {
       gap: 1.5rem;
-      margin-top: -10rem;
+      margin-top: -9rem;
     }
 
     .form-card-container {
@@ -471,4 +740,72 @@
       font-size: 1.1rem;
     }
 
+
+  /* tarjeta de resultados */
+  .results-container {
+    margin-top: -11.7rem; 
   }
+    .card-user {
+      padding: 10px;
+      background: radial-gradient(circle, rgba(238, 237, 238, 0.7), 
+                                          rgba(218, 217, 219, 0.7)); 
+      border: .5px solid #ccc;
+    }
+
+    .card-user-body p {
+      font-size: 0.8rem;
+    }
+
+    .card-user-footer {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    
+    .edit-button-user {
+      width: 100%;
+      padding: 10px 15px;
+      font-size: 0.8rem;
+    }
+
+/* modal editar usuario*/
+    .edit-user-modal-card {
+      left: 50%;
+      width: 300px;
+    }
+
+    .edit-user-modal-title {
+      font-size: 1.25rem;
+    }
+
+    /* Cuerpo del modal */
+    .edit-user-modal-body {
+      margin-bottom: 1.5rem;
+    }
+
+    /* Campos del formulario */
+    .form-field-edit {
+      margin-bottom: 1rem;
+    }
+
+    .form-field-edit label {
+      margin-bottom: 0.35rem;
+      font-size: 0.8rem;
+    }
+
+    .form-field-edit input,
+    .form-field-edit select {
+      padding:.3rem .7rem;
+      font-size: .9rem;
+      height: 34px;
+    }
+
+    /* Pie del modal */
+    .edit-user-modal-foot .button {
+      width: 100%;
+      padding: 0.7rem 1.5rem;
+      font-size: .95rem;
+    }
+
+
+}

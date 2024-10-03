@@ -1,3 +1,12 @@
+    <!-- Modal para mostrar notificaciones -->
+    <app-modal
+      [showModal]="showModal"
+      [message]="modalMessage"
+      [isError]="modalIsError"
+      [isSuccess]="modalIsSuccess"
+      (close)="closeModal()">
+    </app-modal>
+
 <div class="page-title">
     <h1>Buscar</h1>
   </div>
@@ -67,14 +76,7 @@
       </div>
     </div>
 
-    <!-- Modal para mostrar errores -->
-    <app-modal
-      [showModal]="showModal"
-      [message]="modalMessage"
-      [isError]="modalIsError"
-      [isSuccess]="modalIsSuccess"
-      (close)="closeModal()">
-    </app-modal>
+
 </div>
 <!--TODO:-->
 <!-- Pagination Controls -->
@@ -82,9 +84,9 @@
 
 <!-- Tabla para mostrar los resultados -->
 <!-- Verifica si hay resultados antes de mostrar la tabla y la paginación -->
-<div *ngIf="users.length > 0">
+<div class="results-container" *ngIf="users.length > 0">
   <!-- Tabla para mostrar los resultados -->
-  <table class="table">
+  <table class="table" *ngIf="screenWidth > 500">
     <thead>
       <tr>
         <th>ID Number</th>
@@ -94,6 +96,7 @@
         <th>Stage</th>
         <th>Registered</th>
         <th>Email</th>
+        <th>Edit</th>
       </tr>
     </thead>
     <tbody>
@@ -105,9 +108,33 @@
         <td>{{ user.student?.stage?.description | titlecase }}</td>
         <td>{{ user.register ? '✓' : '❌' }}</td>
         <td>{{ user.email }}</td>
+        <td><i class="fas fa-edit edit-icon" (click)="edit(user)"></i></td>
       </tr>
     </tbody>
   </table>
+
+   <!-- Tarjetas para pantallas móviles -->
+   <div class="card-container-users" *ngIf="screenWidth <=500">
+    <div class="page-indicator">
+      <p>Página {{ currentPage }}</p>
+    </div>
+    <div class="card-user" *ngFor="let user of users">
+      <div class="card-user-body">
+        <p><strong>ID Number:</strong> <span>{{ user.idNumber }}</span></p>
+        <p><strong>First Name:</strong> <span>{{ user.firstName | titlecase }}</span></p>
+        <p><strong>Last Name:</strong> <span>{{ user.lastName | titlecase }}</span></p>
+        <p><strong>Role:</strong> <span>{{ user.role | titlecase }}</span></p>
+        <p><strong>Stage:</strong> <span>{{ user.student?.stage?.description | titlecase }}</span></p>
+        <p><strong>Registered:</strong> <span>{{ user.register ? '✓' : '❌' }}</span></p>
+        <p><strong>Email:</strong> <span>{{ user.email }}</span></p>
+      </div>
+      <div class="card-user-footer">
+        <button (click)="edit(user)" class="edit-button-user">
+          <i class="fas fa-edit"></i> Edit
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Pagination Controls -->
   <div class="pagination">
@@ -122,3 +149,49 @@
   <p>No se encontraron resultados.</p>
   <i class="fas fa-user-slash"></i>
 </div>
+
+<!-- Modal para editar usuario -->
+<div class="modal" [ngClass]="{ 'is-active': isEditModalOpen }">
+  <div class="edit-user-modal-background"></div>
+  <div class="edit-user-modal-card">
+    <header class="edit-user-modal-head">
+      <p class="edit-user-modal-title">Datos del Usuario</p>
+      <button class="edit-user-close" aria-label="close" (click)="closeEditModal()">&times;</button>
+    </header>
+
+    <section class="edit-user-modal-body">
+      <form [formGroup]="editUserForm">
+        <div class="form-field-edit">
+          <label for="idNumber">ID Number</label>
+          <input type="number" id="idNumber" formControlName="idNumber" [value]="selectedUser?.idNumber" />
+        </div>
+        <div class="form-field-edit">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" formControlName="firstName" [value]="selectedUser?.firstName" />
+        </div>
+        <div class="form-field-edit">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" formControlName="lastName" [value]="selectedUser?.lastName" />
+        </div>
+        <div class="form-field-edit">
+          <label for="role">Role</label>
+          <select id="role" class="input" formControlName="role">
+            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+          </select>
+        </div>
+        <div class="form-field-edit">
+          <label for="stageId">Stage</label>
+          <select id="stageId" class="input" formControlName="stageId">
+            <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+          </select>
+        </div>
+      </form>
+    </section>
+
+    <footer class="edit-user-modal-foot">
+      <button class="button is-success" (click)="updateUser()">Actualizar</button>
+    </footer>
+  </div>
+</div>
+
+

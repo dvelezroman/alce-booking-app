@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalComponent } from '../../components/modal/modal.component';
 import {UsersService} from "../../services/users.service";
@@ -19,6 +19,7 @@ import {StagesService} from "../../services/stages.service";
   styleUrl: './searching-student.component.scss'
 })
 export class SearchingStudentComponent {
+  screenWidth: number = 0;
   isStudentForm = true;
   studentForm!: FormGroup;
   userForm!: FormGroup;
@@ -36,12 +37,23 @@ export class SearchingStudentComponent {
   modalIsError: boolean = false;
   modalIsSuccess: boolean = false;
   noResults: boolean = false;
+  selectedUser: UserDto | null = null;
+  isEditModalOpen = false;
+  editUserForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private usersService: UsersService,
     private stagesService: StagesService,
-  ) {}
+  ) {
+    this.editUserForm = this.fb.group({
+      idNumber: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      role: ['', Validators.required],
+      stageId: ['']
+    });
+  }
 
   ngOnInit() {
     this.stagesService.getAll().subscribe(stages => {
@@ -58,6 +70,14 @@ export class SearchingStudentComponent {
       email: ['', Validators.required],
       role: ['', Validators.required]
     });
+
+    this.screenWidth = window.innerWidth;
+  }
+
+//método para calcular el ancho de pantalla para activar las tarjetas y ocultar la tabla
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.screenWidth = (event.target as Window).innerWidth;
   }
 
   toggleForm() {
@@ -114,9 +134,55 @@ export class SearchingStudentComponent {
     }
   }
 
+//método para abrir modal con los datos de usuario
+  edit(user: UserDto) {
+    this.selectedUser = user;
+    this.isEditModalOpen = true;
+    this.editUserForm.patchValue({
+      idNumber: user.idNumber,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+      stageId: user.student?.stage?.id 
+    });
+  }
+
+  updateUser() {
+    if (this.editUserForm.valid && this.selectedUser) {
+      const updatedUser = { ...this.editUserForm.value };
+      this.usersService.update(this.selectedUser.id, updatedUser).subscribe({
+        next: (response) => {
+          console.log('User updated:', response);
+          this.isEditModalOpen = false;
+          this.showSuccessModal('Usuario actualizado exitosamente.');
+        },
+        error: (error) => {
+          console.error('Error updating user:', error);
+          this.showErrorModal('Ocurrió un error al actualizar el usuario.');
+        }
+      });
+    }
+  }
+
+  closeEditModal() {
+    this.isEditModalOpen = false;
+  }
+
+
   changePage(page: number) {
     this.currentPage = page;
     this.searchUsers(); // Re-fetch the results for the new page
+  }
+
+  showSuccessModal(message: string) {
+    this.modalIsSuccess = true;
+    this.modalIsError = false;
+    this.modalMessage = message;
+    this.showModal = true;
+  
+    setTimeout(() => {
+      this.closeModal();
+    }, 3000);
   }
 
   showErrorModal(message: string) {
