@@ -90,6 +90,9 @@
         <th>ID Number</th>
         <th>First Name</th>
         <th>Last Name</th>
+        <th>Role</th>
+        <th>Stage</th>
+        <th>Registered</th>
         <th>Email</th>
       </tr>
     </thead>
@@ -98,6 +101,9 @@
         <td>{{ user.idNumber }}</td>
         <td>{{ user.firstName | titlecase}}</td>
         <td>{{ user.lastName | titlecase }}</td>
+        <td>{{ user.role | titlecase }}</td>
+        <td>{{ user.student?.stage?.description | titlecase }}</td>
+        <td>{{ user.register ? '✓' : '❌' }}</td>
         <td>{{ user.email }}</td>
       </tr>
     </tbody>
