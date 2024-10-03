@@ -462,6 +462,33 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
   }
 
+//scroll animación titulo componente
+@HostListener('window:scroll', [])
+onWindowScroll() {
+  const header = document.querySelector('.class-booking-header') as HTMLElement;
+  const scrollPosition = window.scrollY;
+  const progress = Math.min(scrollPosition / 100, 1);
+
+  // color de fondo en función del progreso
+  const startColor = [255, 255, 255]; 
+  const endColor = [226, 224, 235]; 
+  const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * progress);
+  const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * progress);
+  const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * progress);
+
+  // color de fondo progresivo
+  header.style.background = `linear-gradient(rgb(${r}, ${g}, ${b}), #bcb4df8a)`;
+
+  // sombra cuando hay scroll
+  const boxShadowOpacity = 0.10 * progress; 
+  header.style.boxShadow = `0 2px 5px rgba(0, 0, 0, ${boxShadowOpacity})`;
+
+  if (scrollPosition === 0) {
+    header.style.background = 'linear-gradient(white, white)';
+    header.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0)';
+  }
+}
+
 //scroll flechas del contenedor de los meetings del estudiante y time slots
   @HostListener('window:resize', ['$event'])
   onResize() {

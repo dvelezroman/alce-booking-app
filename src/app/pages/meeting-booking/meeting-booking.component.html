@@ -23,28 +23,26 @@
 
           <!-- Fechas seleccionadas por el usuario student -->
           <div class="student-schedule" *ngIf="meetings.length > 0">
-            <h4 class="schedule-title">Scheduled Meetings</h4>
+            <h4 class="schedule-title">Horario Seleccionado</h4>
 
             <!-- Botón de flecha izquierda -->
             <button class="scroll-button left" (click)="scrollLeft()" [class.hidden]="!canScrollLeft">
               <i class="fas fa-chevron-left"></i>
             </button>
 
-            <div class="schedule-list" #scheduleList>
+            <div class="schedule-list"  #scheduleList>
               <div *ngFor="let meeting of meetings; let i = index" class="schedule-item" (click)="openMeetingDetailModal(meeting, i)">
                 <div class="meeting-title">
-                  <strong>
-                    {{ meeting.date | date: 'EEEE':'UTC' }}
-                  </strong>
+                  <strong>Meeting {{ i + 1 }}</strong>
                 </div>
                 <div class="meeting-info-container">
                   <div class="schedule-info">
-                    <strong>Date: </strong> <span>{{ meeting.date | date: 'mediumDate':'UTC' }}</span><br>
-                    <strong>time: </strong> <span>{{ meeting.hour | number: '2.0' }}:00</span>
+                    <strong>Fecha:</strong> <span>{{ meeting.date | date: 'mediumDate' }}</span><br>
+                    <strong>Hora:</strong> <span>{{ meeting.hour }}:00</span>
                   </div>
-                  <div class="schedule-delete">
-                    <button class="delete-button" (click)="openDeleteModal(meeting); $event.stopPropagation()">
-                      <i class="fas fa-trash-alt"></i>
+                 <div class="schedule-delete">
+                    <button class="delete-button">
+                      <i class="fas fa-trash-alt" (click)="openDeleteModal(meeting); $event.stopPropagation()"></i>
                     </button>
                   </div>
                 </div>
@@ -147,7 +145,7 @@
       <p><strong>Instructor:</strong> <span>{{ selectedMeeting?.instructor?.user?.firstName || 'Instructor no asignado' }}</span></p>
       <p class="meeting-link" [ngClass]="{'no-link': !selectedMeeting?.link}">
         <a [href]="getFormattedLink(selectedMeeting?.link)" target="_blank" rel="noopener noreferrer">
-          <span>{{ selectedMeeting?.link || 'no link' }}</span>
+          <span>{{ selectedMeeting?.link || 'no ha sido asignado' }}</span>
         </a>
       </p>
     </section>
