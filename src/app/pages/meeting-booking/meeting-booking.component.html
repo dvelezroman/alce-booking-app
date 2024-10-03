@@ -142,7 +142,13 @@
     <section class="modal-card-body">
       <p><strong>Fecha:</strong> <span>{{ selectedMeeting?.date | date: 'mediumDate' }}</span></p>
       <p><strong>Hora:</strong> <span>{{ selectedMeeting?.hour }}:00</span></p>
-      <p><strong>Instructor:</strong> <span>{{ selectedMeeting?.instructor?.user?.firstName || 'Instructor no asignado' }}</span></p>
+      <p>
+        <strong>Instructor:</strong> 
+        <span>
+          {{ (selectedMeeting?.instructor?.user?.firstName || 'Instructor no asignado') | titlecase }} 
+          {{ selectedMeeting?.instructor?.user?.lastName | titlecase }}
+        </span>
+      </p>
       <p class="meeting-link" [ngClass]="{'no-link': !selectedMeeting?.link}">
         <a [href]="getFormattedLink(selectedMeeting?.link)" target="_blank" rel="noopener noreferrer">
           <span>{{ selectedMeeting?.link || 'no ha sido asignado' }}</span>
