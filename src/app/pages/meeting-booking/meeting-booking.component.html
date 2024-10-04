@@ -2,134 +2,127 @@
   <h1 class="title is-3">Book your classes</h1>
 </div>
 
-<div class="booking-container container">
-     <div class="columns is-mobile">
+<main class="booking-container container">
+  <div class="columns is-mobile">
 
-        <!-- primer bloque: información del estudiante -->
-       <div class="column student-info">
+    <!-- Student Information Section -->
+    <section class="column student-info">
+      <div class="student-name">
+        <h3>{{ userName() }}</h3>
+      </div>
+      <div class="student-details">
+        <p>{{ userData?.email }}</p>
+      </div>
+      <div class="student-detail">
+        <p>{{ userData?.stage?.description }}</p>
+      </div>
 
-            <!-- <div class="student-photo">
-                <img src="/assets/foto usuario default.png" alt="Foto del estudiante">
-              </div> -->
-            <div class="student-name">
-              <h3>{{ userName() }}</h3>
-            </div>
-            <div class="student-details">
-              <p>{{ userData?.email }}</p>
-            </div>
-            <div class="student-detail">
-              <p>{{ userData?.stage?.description }}</p>
-            </div>
-
-          <!-- Fechas seleccionadas por el usuario student -->
-          <div class="student-schedule" *ngIf="meetings.length > 0">
-            <h4 class="schedule-title">Horario Seleccionado</h4>
-
-            <!-- Botón de flecha izquierda -->
-            <button class="scroll-button left" (click)="scrollLeft()" [class.hidden]="!canScrollLeft">
-              <i class="fas fa-chevron-left"></i>
-            </button>
-
-            <div class="schedule-list"  #scheduleList>
-              <div *ngFor="let meeting of meetings; let i = index" class="schedule-item" (click)="openMeetingDetailModal(meeting, i)">
-                <div class="meeting-title">
-                  <strong>Meeting {{ i + 1 }}</strong>
-                </div>
-                <div class="meeting-info-container">
-                  <div class="schedule-info">
-                    <strong>Fecha:</strong> <span>{{ meeting.date | date: 'mediumDate' }}</span><br>
-                    <strong>Hora:</strong> <span>{{ meeting.hour }}:00</span>
-                  </div>
-                 <div class="schedule-delete">
-                    <button class="delete-button">
-                      <i class="fas fa-trash-alt" (click)="openDeleteModal(meeting); $event.stopPropagation()"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Botón de flecha derecha -->
-            <button class="scroll-button right" (click)="scrollRight()" [class.hidden]="!canScrollRight">
-              <i class="fas fa-chevron-right"></i>
-            </button>
-          </div>
-            <!-- si no ha elegido fecha -->
-            <div class="no-meeting" *ngIf="meetings.length === 0">
-              <p>No tienes fechas de clases programadas.</p>
-            </div>
-       </div>
-    </div>
-
-
-    <!-- Segundo bloque: calendario y time slots-->
-    <div class="date-time-wrapper">
-
-      <!-- sub-bloque 1: Calendario -->
-      <div class="date-time-selection">
-        <div class="calendar-title">
-          <h3 class="title is-4">Select a date</h3>
-        </div>
-        <div class="month-selector">
-          <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()">
+      <!-- Selected Meetings Section -->
+      <div class="student-schedule" *ngIf="meetings.length > 0">
+        <h4 class="schedule-title">Horario Seleccionado</h4>
+        <div class="scroll-buttons">
+          <button class="scroll-button left" (click)="scrollLeft()" [class.hidden]="!canScrollLeft" aria-label="Scroll left">
             <i class="fas fa-chevron-left"></i>
           </button>
-          <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
-          <button *ngIf="canGoForward" class="button is-small next-button" (click)="nextMonth()">
+          <button class="scroll-button right" (click)="scrollRight()" [class.hidden]="!canScrollRight" aria-label="Scroll right">
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>
-        <div class="calendar">
-          <div class="calendar-header">
-            <div class="calendar-day-header">Sun</div>
-            <div class="calendar-day-header">Mon</div>
-            <div class="calendar-day-header">Tue</div>
-            <div class="calendar-day-header">Wed</div>
-            <div class="calendar-day-header">Thu</div>
-            <div class="calendar-day-header">Fri</div>
-            <div class="calendar-day-header">Sat</div>
-          </div>
-          <div class="calendar-grid">
-            <div
-              *ngFor="let day of currentMonthDays"
-              class="calendar-day"
-              (click)="isDaySelectable(day) ? selectDay(day) : null"
-              [class.selected]="selectedDay === day.day"
-              [class.selectable]="isDaySelectable(day)"
-              [class.unselectable]="!isDaySelectable(day)">
-              {{ day.day }}
-            </div>
-          </div>
-          </div>
-      </div>
 
-
-      <!-- Sub-bloque 2: Time Slots -->
-      <div class="selected-date-time">
-          <h3 class="title is-3">Select a time</h3>
-          <button class="scroll-arrow-up" (click)="scrollUp()" [class.disabled]="!canScrollUp">
-            <i class="fas fa-chevron-up"></i>
-          </button>
-        <div class="time-slots" #timeSlotList>
-          <div *ngFor="let time of timeSlots; let i = index"
-               class="time-slot"
-               (mouseenter)="hoverIndex = i"
-               (mouseleave)="hoverIndex = null">
-            <div class="time-text-container">
-              <span class="time-text">{{ time.label }}</span>
+        <div class="schedule-list" #scheduleList>
+          <div *ngFor="let meeting of meetings; let i = index" class="schedule-item" (click)="openMeetingDetailModal(meeting, i)">
+            <div class="meeting-title">
+              <strong>Meeting {{ i + 1 }}</strong>
             </div>
-            <div class="confirm-box" *ngIf="hoverIndex === i" (click)="selectTimeSlot(time)">
-              Confirm
+            <div class="meeting-info-container">
+              <div class="schedule-info">
+                <strong>Fecha:</strong> <span>{{ meeting.date | date: 'mediumDate' }}</span><br>
+                <strong>Hora:</strong> <span>{{ meeting.hour }}:00</span>
+              </div>
+              <div class="schedule-delete">
+                <button class="delete-button" (click)="openDeleteModal(meeting); $event.stopPropagation()" aria-label="Delete meeting">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <button class="scroll-arrow-down" (click)="scrollDown()" [class.disabled]="!canScrollDown">
-          <i class="fas fa-chevron-down"></i>
-        </button>
       </div>
 
-    </div>
-</div>
+      <!-- No Meetings Message -->
+      <div class="no-meeting" *ngIf="meetings.length === 0">
+        <p>No tienes fechas de clases programadas.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- Date and Time Selection Section -->
+  <div class="date-time-wrapper">
+
+    <!-- Calendar Selection -->
+    <section class="date-time-selection">
+      <div class="calendar-title">
+        <h3 class="title is-4">Select a date</h3>
+      </div>
+      <div class="month-selector">
+        <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()" aria-label="Previous month">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
+        <button *ngIf="canGoForward" class="button is-small next-button" (click)="nextMonth()" aria-label="Next month">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="calendar">
+        <div class="calendar-header">
+          <div class="calendar-day-header">Sun</div>
+          <div class="calendar-day-header">Mon</div>
+          <div class="calendar-day-header">Tue</div>
+          <div class="calendar-day-header">Wed</div>
+          <div class="calendar-day-header">Thu</div>
+          <div class="calendar-day-header">Fri</div>
+          <div class="calendar-day-header">Sat</div>
+        </div>
+        <div class="calendar-grid">
+          <div
+            *ngFor="let day of currentMonthDays"
+            class="calendar-day"
+            (click)="isDaySelectable(day) ? selectDay(day) : null"
+            [class.selected]="selectedDay === day.day"
+            [class.selectable]="isDaySelectable(day)"
+            [class.unselectable]="!isDaySelectable(day)">
+            {{ day.day }}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Time Slots Selection -->
+    <section class="selected-date-time">
+      <h3 class="title is-3">Select a time</h3>
+      <button class="scroll-arrow-up" (click)="scrollUp()" [class.disabled]="!canScrollUp" aria-label="Scroll up">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+      <div class="time-slots" #timeSlotList>
+        <div *ngFor="let time of timeSlots; let i = index"
+             class="time-slot"
+             (mouseenter)="hoverIndex = i"
+             (mouseleave)="hoverIndex = null">
+          <div class="time-text-container">
+            <span class="time-text">{{ time.label }}</span>
+          </div>
+          <div class="confirm-box" *ngIf="hoverIndex === i" (click)="selectTimeSlot(time)">
+            Confirm
+          </div>
+        </div>
+      </div>
+      <button class="scroll-arrow-down" (click)="scrollDown()" [class.disabled]="!canScrollDown" aria-label="Scroll down">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </section>
+  </div>
+</main>
+
 
 
 <!-- Modal de detalles de la reunión -->
@@ -143,9 +136,9 @@
       <p><strong>Fecha:</strong> <span>{{ selectedMeeting?.date | date: 'mediumDate' }}</span></p>
       <p><strong>Hora:</strong> <span>{{ selectedMeeting?.hour }}:00</span></p>
       <p>
-        <strong>Instructor:</strong> 
+        <strong>Instructor:</strong>
         <span>
-          {{ (selectedMeeting?.instructor?.user?.firstName || 'Instructor no asignado') | titlecase }} 
+          {{ (selectedMeeting?.instructor?.user?.firstName || 'Instructor no asignado') | titlecase }}
           {{ selectedMeeting?.instructor?.user?.lastName | titlecase }}
         </span>
       </p>
