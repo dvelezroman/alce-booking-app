@@ -83,13 +83,13 @@ export class SearchingStudentComponent {
   toggleForm() {
     if (!this.isStudentForm) {
       this.userForm.setValue({
-        email: '', 
-        role: '' 
+        email: '',
+        role: ''
       });
     } else {
       this.studentForm.patchValue({
-        firstName: '', 
-        lastName: ''   
+        firstName: '',
+        lastName: ''
       });
     }
     this.isStudentForm = !this.isStudentForm;
@@ -105,7 +105,7 @@ export class SearchingStudentComponent {
           next: result => {
             this.users = result.users;
             this.totalUsers = result.total; // Update the total count
-           
+
             if (this.users.length === 0) {
               setTimeout(() => {
                 this.noResults = true;
@@ -143,7 +143,7 @@ export class SearchingStudentComponent {
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
-      stageId: user.student?.stage?.id 
+      stageId: user.student?.stage?.id
     });
   }
 
@@ -179,7 +179,7 @@ export class SearchingStudentComponent {
     this.modalIsError = false;
     this.modalMessage = message;
     this.showModal = true;
-  
+
     setTimeout(() => {
       this.closeModal();
     }, 3000);
@@ -200,4 +200,5 @@ export class SearchingStudentComponent {
     this.showModal = false;
   }
 
+  protected readonly Math = Math;
 }
