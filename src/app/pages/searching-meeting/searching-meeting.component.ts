@@ -6,6 +6,7 @@ import { BookingService } from '../../services/booking.service';
 import { FilterMeetingsDto, MeetingDTO, UpdateMeetingLinkDto } from '../../services/dtos/booking.dto';
 import { Stage, Student } from '../../services/dtos/student.dto';
 import {StagesService} from "../../services/stages.service";
+import {Instructor} from "../../services/dtos/instructor.dto";
 
 @Component({
   selector: 'app-searching-students-meeting',
@@ -27,6 +28,9 @@ export class SearchingMeetingComponent implements OnInit {
   originalMeetings: MeetingDTO[] = [];
   stages: Stage[] = [];
   studentsList: Student[] = [];
+  meetingsIds: number[] = [];
+  instructorId: number | undefined;
+  instructorList: Instructor[] = [];
 
   toastMessage: string = '';
   toastType: 'success' | 'error' = 'success';
@@ -84,12 +88,14 @@ export class SearchingMeetingComponent implements OnInit {
   }
 
   assignLink(): void {
-    if (this.filter.hour && this.filter.from && this.link && this.filter.stageId) {
+    if (this.filter.hour && this.filter.from && this.link && this.filter.stageId && this.instructorId && this.meetingsIds.length) {
       const updateLinkParams: UpdateMeetingLinkDto = {
         date: this.filter.from,
         hour: +this.filter.hour,
         stageId: +this.filter.stageId,
-        link: this.link
+        link: this.link,
+        instructorId: +this.instructorId,
+        meetingIds: this.meetingsIds,
       };
       this.bookingService.updateMeetingLink(updateLinkParams).subscribe({
         next: response => {

@@ -23,7 +23,7 @@ export interface CreateMeetingDto {
   hour: number;
 }
 
-export interface FilterMeetingsDto {
+export class FilterMeetingsDto {
   date?: string;
   hour?: string;
   stageId?: string;
@@ -31,11 +31,14 @@ export interface FilterMeetingsDto {
   instructorId?: string;
   from?: string;
   to?: string;
+  assigned?: boolean = false;
 }
 
 export interface UpdateMeetingLinkDto {
-  date: string;  // ISO date string format
-  hour: number;  // Hour in 24-hour format
-  stageId: number;
+  date?: string;  // ISO date string format
+  hour?: number;  // Hour in 24-hour format
+  stageId?: number;
   link: string;  // The link to be updated
+  meetingIds: number[]; // Ids of meetings to be updated
+  instructorId?: number; // Id of the instructor to be added to meetings
 }
