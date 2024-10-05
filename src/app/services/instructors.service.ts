@@ -7,7 +7,7 @@ import {Mode, RegisterStudentDto, RegisterStudentResponseDto, Student} from "./d
 import {setUserData} from "../store/user.action";
 import {UserDto} from "./dtos/user.dto";
 import {selectUserData} from "../store/user.selector";
-import {RegisterInstructorDto, RegisterInstructorResponseDto} from "./dtos/instructor.dto";
+import {Instructor, RegisterInstructorDto, RegisterInstructorResponseDto} from "./dtos/instructor.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +38,7 @@ export class InstructorsService implements OnInit{
   }
 
   registerInstructor(user: RegisterInstructorDto): Observable<[RegisterInstructorResponseDto, UserDto | null]> {
-    return this.http.post<RegisterInstructorResponseDto>(`${this.apiUrl}`, user).pipe(
+    return this.http.post<RegisterInstructorResponseDto>(this.apiUrl, user).pipe(
       withLatestFrom(this.userData$), // Wait for latest user data
       tap(([response, userData]) => {
         this.store.dispatch(setUserData({
@@ -49,6 +49,10 @@ export class InstructorsService implements OnInit{
         }));
       })
     );
+  }
+
+  getAll(): Observable<Instructor[]> {
+    return this.http.get<Instructor[]>(this.apiUrl);
   }
 
   // Find student by ID

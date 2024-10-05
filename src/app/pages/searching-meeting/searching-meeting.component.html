@@ -65,11 +65,10 @@
     </div>
 
      <!-- Botón de asignar (aparece cuando hay resultados) -->
-     <div class="block" *ngIf="meetings && meetings.length > 0 && filter.from && filter.to && filter.hour && filter.stageId">
+     <div class="block">
       <div class="field">
-        <label class="label">&nbsp;</label>
         <div class="control">
-          <button class="button is-primary is-fullwidth" (click)="openModal()">Asignar Link Meeting</button>
+          <button class="button is-primary is-fullwidth" [disabled]="!selectedMeetingIds.length" (click)="openModal()">Asignar Link Meeting</button>
         </div>
       </div>
     </div>
@@ -101,9 +100,10 @@
         </span>
       </p>
       <!-- Vista de tabla -->
-      <table class="table-results" *ngIf="viewMode === 'table' && meetings && meetings.length > 0">
+      <table class="table-results is-striped is-fullwidth" *ngIf="viewMode === 'table' && meetings && meetings.length > 0">
         <thead>
           <tr>
+            <th></th>
             <th>Stage</th>
             <th>Nombre</th>
             <th>Correo</th>
@@ -113,8 +113,11 @@
         </thead>
         <tbody>
           <tr *ngFor="let meeting of meetings">
-            <td>{{ meeting.stage?.number }}</td>
-            <td>{{ meeting.student?.user?.firstName }} {{ meeting.student?.user?.lastName }}</td>
+            <td>
+              <input type="checkbox" [checked]="selectedMeetingIds.includes(meeting.id)" (change)="toggleSelection(meeting.id)" />
+            </td>
+            <td>{{ meeting.stage?.number || 'Stage no disponible' }}</td>
+            <td>{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
             <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
             <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
             <td>{{ meeting.hour }}:00</td>
@@ -155,6 +158,18 @@
       </header>
       <section class="modal-card-body">
         <!-- Primer bloque: Input para el link -->
+        <div class="field">
+          <label class="label">Stage</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onFilterChange()">
+                <option value="">Seleccione Instructor</option>
+                <!-- Opciones de instructores disponibles -->
+                <option *ngFor="let instructor of instructorList" [value]="instructor.id">{{ instructor.user?.firstName }}, {{ instructor.user?.lastName }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
         <div class="field">
           <label class="label"></label>
           <div class="control">
