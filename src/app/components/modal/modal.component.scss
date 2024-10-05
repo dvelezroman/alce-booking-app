@@ -11,9 +11,7 @@
   z-index: 1003;
 }
 
-.shake-animation {
-  animation: shake 0.5s ease;
-}
+
 
 .modal-content {
   background-color: white;
@@ -33,6 +31,10 @@
   10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
   20%, 40%, 60%, 80% { transform: translateX(5px); }
   100% { transform: translateX(0); }
+}
+
+.shake-animation {
+  animation: shake 0.5s ease-in-out;
 }
 
 .modal-content p{
@@ -103,12 +105,25 @@
 
 @media (max-width: 492px) {
   .modal-content {
-    width: 90%; 
-    padding: 1rem; 
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+    width: 350px;
+    max-width: 80%;
+    position: relative;
+    margin-left: 0%;
+    /* Solo agregar la animación si es un error */
+  }
+
+  .error-icon {
+    font-size: 1.2rem;
+    margin-bottom: .7rem;
   }
 
   .modal-content p {
-    font-size: 1rem; 
+    font-size: .87rem; 
   }
 
 .button {

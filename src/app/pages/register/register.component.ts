@@ -86,7 +86,7 @@ export class RegisterComponent implements OnInit {
 
     setTimeout(() => {
       this.modal.close();  
-    }, 3000);
+    }, 2500);
   }
 
   closeModal = (redirect?: string) => {

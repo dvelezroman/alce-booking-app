@@ -5,10 +5,17 @@
 <main class="booking-container container">
   <div class="columns is-mobile">
 
-    <!-- Student Information Section -->
+    
     <section class="column student-info">
       <div class="student-name">
-        <h3>{{ userName() }}</h3>
+        <h3 *ngIf="userData?.firstName && userData?.lastName">
+          {{ userName() }}
+        </h3>
+        <h3 *ngIf="!userData?.firstName || !userData?.lastName">
+          <a [routerLink]="['/register-complete']" class="complete-link">
+            Completar Datos
+          </a>
+        </h3>
       </div>
       <div class="student-details">
         <p>{{ userData?.email }}</p>
@@ -51,7 +58,7 @@
 
       <!-- No Meetings Message -->
       <div class="no-meeting" *ngIf="meetings.length === 0">
-        <p>No tienes fechas de clases programadas.</p>
+        <p>No tienes fechas de clases programadas</p>
       </div>
     </section>
   </div>

@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {CommonModule, isPlatformBrowser, NgForOf} from "@angular/common";
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import {Store} from "@ngrx/store";
 import {selectUserData} from "../../store/user.selector";
 import {Observable, Subject, takeUntil} from "rxjs";
@@ -15,7 +15,8 @@ import {CreateMeetingDto, MeetingDTO} from "../../services/dtos/booking.dto";
   imports: [
     FormsModule,
     NgForOf,
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   templateUrl: './meeting-booking.component.html',
   styleUrl: './meeting-booking.component.scss'
@@ -182,11 +183,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   userName() {
-    if (this.userData) {
-      const { firstName, lastName } = this.userData;
-      return `${firstName} ${lastName}`
+    if (this.userData && this.userData.firstName && this.userData.lastName) {
+      return `${this.userData.firstName} ${this.userData.lastName}`;
     }
-    return 'Nombre de Usuario';
+    return null;
   }
 
 

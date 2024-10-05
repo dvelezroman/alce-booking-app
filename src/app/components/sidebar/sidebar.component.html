@@ -11,8 +11,13 @@
     </div>
 
     <div class="user-info" *ngIf="!isSidebarClosed">
-      <h2 class="hello-text">hello,</h2>
-      <p class="user-name">{{ userData?.firstName | titlecase }} {{ userData?.lastName | titlecase }}</p>
+      <h2 class="hello-text" *ngIf="userData?.firstName && userData?.lastName">hello,</h2>
+      <h2 class="welcome-message" *ngIf="!userData?.firstName || !userData?.lastName">
+        Bienvenido a <span class="college-name">Alce College</span>
+      </h2>
+      <p class="user-name" *ngIf="userData?.firstName && userData?.lastName">
+        {{ userData?.firstName | titlecase }} {{ userData?.lastName | titlecase }}
+      </p>
     </div>
   </div>
 

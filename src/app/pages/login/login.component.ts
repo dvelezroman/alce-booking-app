@@ -83,11 +83,7 @@ export class LoginComponent implements OnInit {
           this.showCredentialsErrorModal = false;
         }, 2000);
       } else {
-        this.showModal = true;
-
-        setTimeout(() => {
-          this.showModal = false;
-        }, 2000);
+        console.log('error')
       }
     }
   });

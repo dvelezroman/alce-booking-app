@@ -20,17 +20,17 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2.2rem 1rem;
-  background: url('/assets/fondo login y register 2.png') no-repeat center center fixed;
+  padding: 2rem 1rem;
+  background: white;
   background-size: cover;
 }
 
 .box {
-  background: rgba(221, 224, 227, 0.378);
+  background:transparent;
   border-radius: 25px;
   padding: 3rem 2rem;
   width: 100%;
-  max-width: 820px;
+  max-width: 800px;
   box-shadow: 0 0 12px 8px rgba(217, 211, 211, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -46,15 +46,15 @@ html, body {
 .title {
   text-align: center;
   margin-bottom: 3rem;
-  font-size: 2.8rem;
+  font-size: 2rem;
   color: rgb(71, 69, 69);
 }
 
   .label {
     color: rgb(97, 98, 100);
-    font-size: 1.1rem;
+    font-size: .95rem;
     margin-bottom: .25rem;
-    margin-left: 14px;
+    margin-left: 10px;
     font-weight: 500;
   }
 
@@ -64,61 +64,70 @@ html, body {
   }
 
   .input {
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 0.75rem;
     padding-left: 15px;
-    border: none;
-    font-size: 1.15rem;
-    background-color: rgba(138, 138, 139, 0.182);
+    border: .5px solid rgb(196, 196, 196);
+    font-size: .95rem;
+    background-color: rgb(236, 236, 236);
     color: rgb(63, 62, 62);
     transition: background-color 0.4s ease;
 
-    &:hover {
-      background-color: rgba(138, 138, 139, 0.182);
-    }
-
     &:focus {
-      background-color: rgba(138, 138, 139, 0.182);
+      background-color: rgba(178, 178, 178, 0.182);
       outline: none;
 
     }
   }
 
   .field select {
-    border-radius: 10px;
+    border-radius: 5px;
+    height: 36px;
     padding: 0.35rem 0.45rem;
-    padding-left: 15px;
-    border: none;
-    font-size: 1.155rem;
-    background-color: rgba(157, 156, 156, 0.3);
-    color: rgb(57, 55, 55);
+    padding-left: 10px;
+    font-size: .85rem;
+    background-color: rgb(237, 237, 237);
+    border: .5px solid rgb(196, 196, 196);
+    color: rgb(95, 94, 94);
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: rgba(169, 167, 167, 0.5);
+      background-color: rgb(227, 227, 227);
     }
 
     &:focus {
-      background-color: rgba(157, 156, 156, 0.5);
+      background-color: rgb(219, 219, 219);
       outline: none;
     }
 
     option {
-      color: rgb(255, 254, 254);
+      color: rgb(213, 213, 213);
     }
 
   }
 
   .input::placeholder {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.606);
+    font-size: .95rem;
+    color: rgba(146, 145, 145, 0.606);
   }
 
   input[type="date"] {
-
     appearance: none;
-    -webkit-appearance: none;
-    padding-right: 40px;
+    -webkit-appearance: none; 
+    padding-right: 40px; 
+    position: relative;
+    cursor: pointer; 
+  }
+
+  input[type="date"]::before {
+    content: '\f073'; 
+    font-family: "FontAwesome";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4c7add;
+    pointer-events: none;
   }
 
   input[type="date"]::-webkit-calendar-picker-indicator {
@@ -129,11 +138,13 @@ html, body {
     z-index: 2;
     cursor: pointer;
   }
-
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0; 
+  }
 
   .error {
     color: rgb(211, 52, 27);
-    font-size: 1rem;
+    font-size: .8rem;
     margin-top: 0.5rem;
     position: absolute;
     bottom: -1.5rem;
@@ -144,8 +155,8 @@ html, body {
   }
 
   .field-button {
-    margin-top: 2.5rem;
-    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
     text-align: center;
   }
 
@@ -153,13 +164,13 @@ html, body {
     background-color:  rgb(60, 91, 231);
     color: $color-background;
     border: none;
-    padding: 0.85rem;
-    border-radius:10px;
-    width: 50%;
+    padding: 0.75rem;
+    border-radius: 5px;
+    width: 35%;
     text-align: center;
     cursor: pointer;
     transition: background-color 0.7s;
-    font-size: 1.2rem;
+    font-size: 1.05rem;
 
 
     &:hover {
@@ -183,12 +194,12 @@ html, body {
 
   .modal-content {
     background-color: white;
-    padding: 2.5rem 3rem;
-    border-radius: 10px;
+    padding: 2rem 1rem;
+    border-radius: 5px;
     text-align: center;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
-    width: 500px;
-    max-width: 90%;
+    width: 400px;
+    max-width: 100%;
     position: relative;
     animation: pop-up 0.2s ease-in-out;
   }
@@ -208,12 +219,12 @@ html, body {
   }
 
   .modal-content p {
-    font-size: 1.4rem;
+    font-size: 1rem;
     color: #dfd9d9;
   }
 
   .success-modal {
-    background-color: #eaecec;
+    background-color: #efefef;
     color: #28a745;
   }
 
@@ -222,13 +233,13 @@ html, body {
   }
 
   .success-icon {
-    font-size: 3rem;
+    font-size: 1.5rem;
     color: #28a745;
     margin-bottom: 1rem;
   }
 
   .error-modal {
-    background-color: #dfe2e3;
+    background-color: #f0f0f0;
     animation: shake 0.6s ease-in-out;
   }
 
@@ -251,7 +262,7 @@ html, body {
   }
 
   .error-icon {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     color: #dc3545;
     margin-bottom: 1rem;
   }
@@ -264,76 +275,79 @@ html, body {
 
 .box {
   background: rgba(221, 224, 227, 0.378);
-  border-radius: 25px;
   padding: 3rem 2rem;
   width: 100%;
-  max-width: 480px;
+  max-width: 500px;
 }
 
   .title {
-    font-size: 2rem;
+    font-size: 1.65rem;
   }
 
   .field {
-    margin-bottom: .7rem;
+    margin-bottom: 0rem;
   }
 
   .label {
-    font-weight: 400;
-    font-size: 1rem;
+    font-size: .85rem;
     margin-bottom: .2rem;
-    margin-left: 9px;
-    color:rgb(49, 48, 48);
+    margin-left: 5px;
   }
 
   .input {
-    font-size: 1.15rem;
-    padding: 0.4rem 15px;
+    font-size: .9rem;
+    height: 35px;
   }
 
   .input::placeholder {
-    font-size: 1.1rem;
+    font-size: .9rem;
     color: rgba(110, 107, 107, 0.606);
   }
 
   .error {
     color: rgb(211, 52, 27);
-    font-size: .9rem;
+    font-size: .70rem;
   }
 
   .button.is-primary {
-    font-size: 1.15rem;
-    padding: 1rem;
-    width: 100%;
+    font-size: 1rem;
+    padding: .9rem;
+    width: 60%;
   }
 
   .modal-content {
     padding: 2rem 1rem;
-    max-width: 80%;
+    max-width: 60%;
   }
 
   .modal-content p{
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
+
+  .error-icon,
+  .success-icon{
+    font-size: 1.3rem;
+  }
+
 }
 
 @media (max-width: 492px) {
   .register-container {
-    padding-top: 4rem;
-    padding-bottom: 2.5rem;
+    padding-top: 0rem;
+    padding-bottom: 1rem;
   }
 
   .box {
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.1rem;
     margin: 0 0.5rem;
     border-radius: 15px;
     width: 100%;
-    max-width:375px;
+    max-width: 385px;
   }
 
   .title {
-    font-size: 1.6rem;
-    margin-bottom: 25px;
+    font-size: 1.3rem;
+    margin-bottom: 40px;
   }
 
   .field {
@@ -341,19 +355,24 @@ html, body {
   }
 
   .label {
-    font-size: 0.95rem;
+    font-size: 0.8rem;
   }
 
   .input {
     border-radius: 5px;
-    font-size: .9rem;
+    font-size: .85rem;
     padding: 0.35rem 12px;
   }
 
+  .input,
+  .field select{
+    height: 32px;
+  }
+
   .field select {
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 0.35rem 0.45rem;
-    font-size: .9rem;
+    font-size: .85rem;
   }
 
   .input::placeholder {
@@ -370,54 +389,19 @@ html, body {
   }
 
   .button.is-primary {
-    font-size: 1.15rem;
-    padding: 0.9rem;
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.7rem;
   }
 
   .modal-content {
     padding: 1.5rem 1rem;
-    max-width: 90%;
+    max-width: 75%;
   }
 
   .modal-content p {
-    font-size: 1.15rem;
-    background: linear-gradient(45deg, #125da2, #7743a8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    
-  }
-
-  .success-icon {
-    font-size: 2rem;
-    color: #28a745;
-    margin-bottom: 1rem;
-  }
-
-  .error-modal {
-    color: rgb(211, 52, 27);
     font-size: .9rem;
-    animation: shake 0.4s ease-in-out;
   }
 
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    10% { transform: translateX(-5px); }
-    20% { transform: translateX(10px); }
-    30% { transform: translateX(-5px); }
-    40% { transform: translateX(10px); }
-    50% { transform: translateX(-5px); }
-    60% { transform: translateX(10px); }
-    70% { transform: translateX(-5px); }
-    80% { transform: translateX(10px); }
-    90% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-}
 
-  .error-icon {
-    font-size: 2rem;
-    background: linear-gradient(45deg, #dc7251, #ae6fea);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 1rem;
-  }
 }
