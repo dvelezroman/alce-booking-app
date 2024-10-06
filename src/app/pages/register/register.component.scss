@@ -36,11 +36,11 @@ body {
 }
 
 .box {
-  background: rgba(221, 224, 227, 0.378);
+  background: rgba(221, 224, 227, 0.136);
   border-radius: 10px;
-  padding: 1.5rem 1rem;
+  padding: 2rem 1.5rem;
   width: 100%;
-  max-width: 320px;
+  max-width: 350px;
   box-shadow: 0 0 22px 10px rgba(151, 47, 210, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -48,21 +48,21 @@ body {
   transition: box-shadow 0.3s ease-in-out;
 
   &:focus-within {
-    box-shadow: 0 0 15px rgba(211, 211, 211, 0.3);
-    transition: box-shadow 0.5s ease-in-out;
+      box-shadow: 0 0 15px rgba(146, 146, 146, 0.3);
+      transition: box-shadow 0.5s ease-in-out;
   }
 }
 
 .title {
   text-align: center;
-  margin-bottom: 1.5rem;
-  font-size: 1.7rem;
-  background: linear-gradient(135deg, rgb(192, 192, 192), rgb(252, 252, 252),  rgb(192, 192, 192));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  margin-bottom: 2.2rem;
+  font-size: 1.9rem;
+  color: rgb(82, 82, 82);
+  background: transparent
 }
 
 .label {
+  display: none;
   color: rgb(112, 82, 178);
   font-size: .8rem;
   margin-bottom: .25rem;
@@ -70,105 +70,10 @@ body {
   font-weight: 500;
 }
 
-.field {
-  margin-bottom: 1.1rem;
-  position: relative;
-}
-
-.input-container {
-  display: inline-block;
-  padding: 1px;
-  border-radius: 25px;
-  background: linear-gradient(135deg, #acbadd, #d8bfd8);
-}
-
-.input {
-  border-radius: 10px;
-  padding: 0.35rem;
-  padding-left: 15px;
-  border: none;
-  font-size: 1rem;
-  background-color: rgba(138, 138, 139, 0.182);
-  color: rgb(52, 50, 50);
-  transition: background-color 0.4s ease;
-
-  &:hover {
-    background-color: rgba(138, 138, 139, 0.182);
-  }
-
-  &:focus {
-    background-color: rgba(138, 138, 139, 0.182);
-    outline: none;
-
-  }
-}
-
-.input::placeholder {
-  font-size: .9rem;
-  color: rgba(231, 226, 239, 0.791);
-}
-
-.error {
-  color: rgb(211, 52, 27);
-  font-size: .7rem;
-  margin-top: 0.5rem;
-  position: absolute;
-  bottom: -1.5rem;
-  left: 10px;
-  width: 100%;
-  height: 1.5rem;
-  pointer-events: none;
-}
-
-.field-button {
-  margin-top: 3.2rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.button.is-primary {
-  background-color:  rgb(60, 91, 231);
-  color: $color-background;
-  border: none;
-  padding: 0.65rem;
-  font-size: 1rem;
-  border-radius:10px;
-  width: 100%;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.7s;
-
-  &:hover {
-    background-color: rgb(33, 63, 196);
-  }
-}
-
-.toggle-container {
-  text-align: center;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-
-  p {
-    font-size: .8rem;
-    color: rgb(13, 61, 159);
-
-    a {
-      color: rgb(148, 117, 222);
-      font-weight: 500;
-      text-decoration: none;
-      transition: color 0.3s ease;
-
-      &:hover {
-        color: rgb(90, 86, 86);
-        text-decoration: underline;
-      }
-    }
-  }
-}
-
+.field,
 .input-field {
+  margin-bottom: 2rem;
   position: relative;
-  margin-bottom: 1.3rem;
 }
 
 .toggle-password {
@@ -185,6 +90,127 @@ body {
   color: #875fd6;
 }
 
+.input-container {
+  display: inline-block;
+  padding: 1px;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #acbadd, #d8bfd8);
+}
+
+.input {
+  border-radius: 5px;
+  padding: 0.55rem;
+  padding-left: 10px; 
+  border: .5px solid rgb(118, 116, 116);
+  font-size: 1.05rem;
+  height: 42px;
+  background-color: rgba(138, 138, 139, 0.001);
+  color: rgb(76, 76, 76);
+  cursor: default;
+  transition: background-color 0.4s ease;
+
+  &:hover {
+    background-color: none;
+  }
+
+  &:focus {
+    background-color: none;
+    outline: none;
+
+  }
+}
+
+.control.has-icons-right {
+  position: relative;
+}
+
+.icon.is-right {
+  position: absolute;
+  right: 8px !important;  
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;  
+  color: #875fd6;  
+}
+
+.icon.is-right i {
+  color: #875fd6; 
+  transition: color 0.3s ease; 
+}
+
+.control.has-icons-right .input:focus + .icon.is-right i {
+  color: #875fd6; 
+}
+
+.input.is-invalid {
+  border-color: #dc3545; 
+  transition: border-color 0.3s ease; 
+}
+
+.input::placeholder {
+  font-size: .97rem;
+  color: rgba(111, 110, 113, 0.791);
+}
+
+.error {
+  color: rgb(211, 52, 27);
+  font-size: .75rem;
+  margin-top: 0.8rem;
+  position: absolute;
+  bottom: -1.5rem;
+  left: 3%;
+  width: 100%;
+  height: 1.5rem;
+}
+
+.field-button {
+  margin-top: 3.7rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.button.is-primary {
+  background: linear-gradient(90deg, rgb(60, 91, 231) 0%, rgb(150, 60, 231) 100%);
+  color: $color-background;
+  border: none;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.7s;
+
+  &:hover {
+    background-color: rgb(33, 63, 196);
+  }
+}
+
+.toggle-container {
+  text-align: center;
+  margin-top: 1rem;
+
+  p {
+    font-size: .85rem;
+    color: #875fd6;
+    font-weight: bold;
+
+    a {
+      color: rgb(148, 117, 222);
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: rgb(152, 105, 205);
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+
+
 
 /* Estilos responsivos */
 @media (max-width: 768px) {
@@ -193,40 +219,55 @@ body {
   }
 
   .box {
-    padding: 1.5rem .9rem;
+    padding: 1.5rem 1.2rem;
+    margin: 0 1rem;
     width: 100%;
     max-width: 300px;
-    margin: 0 1rem;
   }
 
   .title {
-    margin-bottom: 1.7rem;
-    font-size:1.5rem;
+    font-size: 1.4rem;
+    margin-bottom: 2.2rem;
+  }
+
+  .row .input-field {
+    margin-bottom: 1.85rem;
   }
 
   .label {
-    font-size: .77rem;
-    margin-bottom: 5px;
     font-weight: 400;
-  }
-
-  .field {
-    margin-bottom: 1.2rem;
+    font-size: .77rem;
+    margin-bottom: 3px;
+    margin-left: 9px;
   }
 
   .input {
     font-size: .9rem;
-    padding: 0.5rem 15px;
+    height: 39px;
+    padding: 0.5rem 12px;
+}
+
+  .icon.is-right {
+    right: 7px !important;    
+  }
+
+  .icon.is-right i {
+    font-size: .9rem;
+  }
+
+  .input::placeholder {
+    font-size: .95rem;
   }
 
   .error {
-    color: rgb(211, 52, 27);
     font-size: .65rem;
+    margin-top: 0.4rem;
+    bottom: -1.5rem;
   }
 
   .input::placeholder {
     font-size: .9rem;
-    color: rgba(231, 226, 239, 0.791);
+    color: rgba(111, 110, 113, 0.791);
   }
 
   .field-button {
@@ -269,84 +310,71 @@ body {
 
   .logo-container {
     display: flex;
-    margin-top: 0rem;
-    margin-bottom: 0rem;  
+    margin-top: -6rem;  
   }
-  
+
   .logo-container img {
-    max-width: 100px;  
-    width: 100%;      
+    width: 90px;       
   }
 
   .box {
     background: transparent;
-    border-radius: 0px;
-    padding: .5rem 0rem;
-    max-width: 400px;
-    width: 95%;
+    padding: .5rem .5rem;
+    width: 90%;
+    max-width: 390px;
     box-shadow: none;
     border: none;
+    transition: box-shadow 0.3s ease-in-out;
 
-  &:focus-within {
-    box-shadow: none;
-    transition: none;
+    &:focus-within {
+      box-shadow: none;
+      transition: none;
   }
 }
 
   .title {
-    margin-bottom: 1.8rem;
-    font-size: 1.4rem;
-  }
-
-  .label {
-    font-size: .95rem;
-    margin-left: 5px;
-    margin-bottom: 5px;
-    font-weight: 400;
-    color: #dedfdf;
+    font-size: 1.3rem;
+    margin-bottom: 2.5rem;
   }
 
   .field {
-    margin-bottom: 1.4rem;
+    margin-bottom: 2rem;
+  }
+
+  .label {
+    font-weight: 400;
+    font-size: .9rem;
+    margin-bottom: 3px;
+    margin-left: 4px;
+    color: #dedfdf;
   }
 
   .input {
-    font-size: .95rem;
+    font-size: 1rem;
     padding: 0.7rem 15px;
-    background-color: rgba(230, 230, 238, 0.134);
-    color: white;
-    border: .5px solid rgb(179, 177, 177);
     height: 40px;
     border-radius: 5px;
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.161);
-    }
-
-    &:focus {
-      background-color:none;
-      outline: none;
-
-    }
   }
 
   .input::placeholder {
     font-size: .9rem;
-    color: rgba(255, 255, 255, 0.723);
   }
 
   .error {
-    font-size: .55rem;
+    left: 5px;
+    font-size: .7rem;
+    margin-top: 0.1rem;
+    bottom: -1.6rem;
   }
 
   .field-button {
-    margin-top: 3rem;
+    margin-top: 4rem;
     text-align: center;
   }
 
   .button.is-primary {
     font-size: 1.05rem;
-    padding: 1rem 0;
+    padding: .8rem 0;
   }
 
   .toggle-container {
@@ -354,26 +382,17 @@ body {
     margin-top: 2rem;
 
     p {
-      font-size: .85rem;
+      font-size: .8rem;
 
       a {
-        color: rgb(255, 255, 255);
-        font-size: .8rem;
+        font-size: .85rem;
+        color: #7836d5;
       }
     }
   }
 
-  .input-field {
-    position: relative;
-    margin-bottom: 1.3rem;
-  }
-
   .toggle-password i {
-    font-size: 1rem;
-    color: #3d35d4;
+    font-size: .9rem;
   }
-
-
-
 
 }

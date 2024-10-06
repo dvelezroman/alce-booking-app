@@ -287,7 +287,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const currentDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
     const startDate = new Date(this.today);
     const maxDate = new Date(startDate);
-    maxDate.setDate(startDate.getDate() + 8);
+    maxDate.setDate(startDate.getDate() + 7);
 
     const isSunday = currentDate.getDay() === 0;
     return !isSunday && currentDate >= startDate && currentDate <= maxDate;

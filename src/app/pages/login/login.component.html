@@ -10,20 +10,24 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="field">
         <label class="label">Email</label>
-        <div class="control">
+        <div class="control has-icons-right">
           <input
             class="input"
             type="email"
             formControlName="email"
-            placeholder="Enter your email">
-        </div>
+            placeholder="Enter your email"
+            [ngClass]="{ 'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched }">
+            <span class="icon is-right">
+              <i class="fas fa-envelope"></i>
+            </span>
+          </div>
         <div
           *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
           class="error">
           Please enter a valid email
         </div>
       </div>
-
+      
       <div class="field">
         <label class="label">Password</label>
         <div class="control has-icons-right">
@@ -31,7 +35,8 @@
             [type]="passwordVisible ? 'text' : 'password'"
             class="input"
             formControlName="password"
-            placeholder="Enter your password">
+            placeholder="Enter your password"
+            [ngClass]="{ 'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched }">
           <div class="toggle-password" (click)="togglePasswordVisibility()">
             <i [ngClass]="passwordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
           </div>
@@ -40,7 +45,6 @@
           *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
           class="error">
           Password is required
-
         </div>
         <div class="forgot-password-container">
           <a [routerLink]="['/forgot-password']" class="forgot-password-link">

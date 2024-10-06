@@ -11,10 +11,18 @@
       <!-- Bloque Email -->
       <div class="rows">
         <div class="row">
-          <div class="field">
+          <div class="field input-field">
             <label class="label">Email</label>
-            <div class="control">
-              <input class="input" type="email" formControlName="email" placeholder="Enter your email">
+            <div class="control has-icons-right">
+              <input 
+                class="input" 
+                type="email" 
+                formControlName="email" 
+                placeholder="Enter your email"
+                [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}">
+              <span class="icon is-right">
+                <i class="fas fa-envelope"></i> 
+              </span>
             </div>
             <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
               Please enter a valid email
@@ -26,10 +34,12 @@
           <div class="field input-field">
             <label class="label">Password</label>
             <div class="control has-icons-right">
-              <input [type]="passwordVisible ? 'text' : 'password'"
-                     placeholder="Password"
-                     class="input"
-                     formControlName="password">
+              <input 
+                [type]="passwordVisible ? 'text' : 'password'"
+                placeholder="Password"
+                class="input"
+                formControlName="password"
+                [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}">
               <div class="toggle-password" (click)="togglePasswordVisibility()">
                 <i [ngClass]="passwordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
               </div>
@@ -45,10 +55,12 @@
           <div class="field input-field">
             <label class="label">Confirm Password</label>
             <div class="control has-icons-right">
-              <input [type]="confirmPasswordVisible ? 'text' : 'password'"
-                     placeholder="Confirm Password"
-                     class="input"
-                     formControlName="confirmPassword">
+              <input 
+                [type]="confirmPasswordVisible ? 'text' : 'password'"
+                placeholder="Confirm Password"
+                class="input"
+                formControlName="confirmPassword"
+                [ngClass]="{'is-invalid': registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched}">
               <div class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
                 <i [ngClass]="confirmPasswordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
               </div>
@@ -77,7 +89,6 @@
     </div>
   </div>
 </div>
-
 
 <app-modal
   [showModal]="modal.show"
