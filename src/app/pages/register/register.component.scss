@@ -12,7 +12,6 @@ body {
 
 .register-container {
   background: linear-gradient(180deg, rgb(180, 168, 241), rgb(166, 119, 237)); 
-             // url('/assets/fondo login & register.svg') no-repeat center center fixed;
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -36,7 +35,7 @@ body {
 }
 
 .box {
-  background: rgba(221, 224, 227, 0.136);
+  background: rgb(219, 219, 219);
   border-radius: 10px;
   padding: 2rem 1.5rem;
   width: 100%;
@@ -56,38 +55,116 @@ body {
 .title {
   text-align: center;
   margin-bottom: 2.2rem;
-  font-size: 1.9rem;
+  font-size: 1.75rem;
   color: rgb(82, 82, 82);
   background: transparent
 }
 
-.label {
-  display: none;
-  color: rgb(112, 82, 178);
-  font-size: .8rem;
-  margin-bottom: .25rem;
-  margin-left: 10px;
-  font-weight: 500;
+.field {
+  margin-bottom: 2.1rem; 
+  position: relative;
 }
 
-.field,
-.input-field {
-  margin-bottom: 2rem;
+.floating-label {
   position: relative;
+  width: 100%;
+}
+
+.floating-label input {
+  width: 100%;
+  padding: 0.55rem 12px;
+  padding-right: 36px;
+  font-size: 1rem;
+  height: 42px;
+  border: 1px solid rgb(141, 140, 140);
+  border-radius: 5px;
+  background-color: rgba(138, 138, 139, 0.001);
+  color: rgb(76, 76, 76);
+  transition: all 0.4s ease;
+}
+
+.floating-label input:focus {
+  border-color: rgb(171, 170, 170);
+  outline: none;
+}
+
+.floating-label label {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  font-size: .95rem;
+  color: rgba(111, 110, 113, 0.791);
+  transform: translateY(-50%);
+  transition: 0.2s ease all;
+  pointer-events: none;
+}
+
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label {
+  top: -0.15rem;
+  left: 5px;
+  font-size: 0.95rem;
+  color: rgb(94, 93, 93);
+  background: rgb(219, 219, 219);
+  padding: 0 5px;
+  z-index: 1;
 }
 
 .toggle-password {
   position: absolute;
-  right: 20px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  z-index: 2;
+}
+
+.floating-label input:focus{
+  border: none;
+}
+
+.floating-label input.is-invalid {
+  border-color: #dc3546a3; 
+}
+
+.input.is-invalid {
+  border-color: #dc3545; 
+  transition: border-color 0.3s ease; 
+}
+
+.error {
+  color: rgb(211, 52, 27);
+  font-size: .75rem;
+  position: absolute;
+  bottom: -1.05rem; 
+  left: 0;
+  width: 100%;
+  padding-left: 10px;
+}
+
+.icon.is-right {
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  font-size: .9rem;
+  transform: translateY(-50%);
+  color: #9672de;
+}
+
+.icon.is-right i {
+  transition: color 0.3s ease;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 18px; 
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
 }
 
 .toggle-password i {
-  font-size: .85rem;
-  color: #875fd6;
+  font-size: .9rem;
+  color: #9672de;
 }
 
 .input-container {
@@ -97,75 +174,9 @@ body {
   background: linear-gradient(135deg, #acbadd, #d8bfd8);
 }
 
-.input {
-  border-radius: 5px;
-  padding: 0.55rem;
-  padding-left: 10px; 
-  border: .5px solid rgb(118, 116, 116);
-  font-size: 1.05rem;
-  height: 42px;
-  background-color: rgba(138, 138, 139, 0.001);
-  color: rgb(76, 76, 76);
-  cursor: default;
-  transition: background-color 0.4s ease;
-
-  &:hover {
-    background-color: none;
-  }
-
-  &:focus {
-    background-color: none;
-    outline: none;
-
-  }
-}
-
-.control.has-icons-right {
-  position: relative;
-}
-
-.icon.is-right {
-  position: absolute;
-  right: 8px !important;  
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;  
-  color: #875fd6;  
-}
-
-.icon.is-right i {
-  color: #875fd6; 
-  transition: color 0.3s ease; 
-}
-
-.control.has-icons-right .input:focus + .icon.is-right i {
-  color: #875fd6; 
-}
-
-.input.is-invalid {
-  border-color: #dc3545; 
-  transition: border-color 0.3s ease; 
-}
-
-.input::placeholder {
-  font-size: .97rem;
-  color: rgba(111, 110, 113, 0.791);
-}
-
-.error {
-  color: rgb(211, 52, 27);
-  font-size: .75rem;
-  margin-top: 0.8rem;
-  position: absolute;
-  bottom: -1.5rem;
-  left: 3%;
-  width: 100%;
-  height: 1.5rem;
-}
-
 .field-button {
-  margin-top: 3.7rem;
-  margin-bottom: 1.5rem;
+  margin-top: 3rem;
+  margin-bottom: 1.6rem;
   text-align: center;
 }
 
@@ -230,49 +241,28 @@ body {
     margin-bottom: 2.2rem;
   }
 
-  .row .input-field {
-    margin-bottom: 1.85rem;
+  .field {
+    margin-bottom: 2.3rem; 
+    position: relative;
   }
-
-  .label {
-    font-weight: 400;
-    font-size: .77rem;
-    margin-bottom: 3px;
-    margin-left: 9px;
+  
+  .floating-label {
+    width: 100%;
   }
-
-  .input {
+  
+  .floating-label input {
+    height: 38px;
     font-size: .9rem;
-    height: 39px;
-    padding: 0.5rem 12px;
-}
-
-  .icon.is-right {
-    right: 7px !important;    
-  }
-
-  .icon.is-right i {
-    font-size: .9rem;
-  }
-
-  .input::placeholder {
-    font-size: .95rem;
   }
 
   .error {
     font-size: .65rem;
-    margin-top: 0.4rem;
-    bottom: -1.5rem;
-  }
-
-  .input::placeholder {
-    font-size: .9rem;
-    color: rgba(111, 110, 113, 0.791);
+    margin-top: 0.3rem;
+    bottom: -1.1rem;
   }
 
   .field-button {
     margin-top: 3rem;
-    text-align: center;
   }
 
   .button.is-primary {
@@ -305,12 +295,13 @@ body {
 
 @media (max-width: 492px) {
   .register-container{
+    background: rgb(219, 219, 219);
     padding-top: 1.5rem ;
   }
 
   .logo-container {
     display: flex;
-    margin-top: -6rem;  
+    margin-top: 0rem;  
   }
 
   .logo-container img {
@@ -333,38 +324,37 @@ body {
 }
 
   .title {
-    font-size: 1.3rem;
-    margin-bottom: 2.5rem;
+    font-size: 1.4rem;
+    margin-bottom: 4rem;
   }
 
   .field {
     margin-bottom: 2rem;
   }
 
-  .label {
-    font-weight: 400;
-    font-size: .9rem;
-    margin-bottom: 3px;
-    margin-left: 4px;
-    color: #dedfdf;
-  }
-
-  .input {
-    font-size: 1rem;
-    padding: 0.7rem 15px;
-    height: 40px;
+  .floating-label input {
+    width: 100%;
+    padding: 0.55rem 12px;
+    padding-right: 36px;
     border-radius: 5px;
+    box-shadow: none;
+    border-color: rgb(171, 170, 170);
+    font-size: 1rem;
+    height: 43px;
+    transition: all 0.4s ease;
   }
 
-  .input::placeholder {
-    font-size: .9rem;
+  .floating-label input:focus {
+    border-color: rgb(171, 170, 170);
+    border: .5px solid rgb(137, 136, 136);
+    border-radius: 5px;
+    outline: none;
   }
 
   .error {
-    left: 5px;
-    font-size: .7rem;
+    font-size: .65rem;
     margin-top: 0.1rem;
-    bottom: -1.6rem;
+    bottom: -1rem;
   }
 
   .field-button {

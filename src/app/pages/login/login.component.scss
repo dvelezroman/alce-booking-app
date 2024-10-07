@@ -12,12 +12,11 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background-color: $color-background;
+  background-color: white;
 }
 
 .login-container {
   background: linear-gradient(180deg, rgb(180, 168, 241), rgb(166, 119, 237)); 
-             // url('/assets/fondo login & register.svg') no-repeat center center fixed;
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -40,7 +39,7 @@ html, body {
   }
 
   .box {
-    background: rgba(221, 224, 227, 0.136);
+    background: rgb(219, 219, 219);
     border-radius: 10px;
     padding: 2rem 1.5rem;
     width: 100%;
@@ -65,17 +64,8 @@ html, body {
     background: transparent
   }
 
-  .label {
-    display: none;
-    color: rgb(112, 82, 178);
-    font-size: .8rem;
-    margin-bottom: .25rem;
-    margin-left: 10px;
-    font-weight: 500;
-  }
-
   .field {
-    margin-bottom: 2rem;
+    margin-bottom: 2.2rem;
     position: relative;
     color: white;
   }
@@ -90,62 +80,71 @@ html, body {
   .control.has-icons-right {
     position: relative;
   }
-  
-  .icon.is-right {
-    position: absolute;
-    right: 8px !important;  
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;  
-    color: #875fd6;  
-  }
 
-  .icon.is-right i {
-    color: #875fd6; 
-    transition: color 0.3s ease; 
-  }
-  
-  .control.has-icons-right .input:focus + .icon.is-right i {
-    color: #875fd6; 
-  }
+/* Floating label */
+.floating-label {
+  position: relative;
+  width: 100%;
+}
 
-  .input {
-    border-radius: 5px;
-    padding: 0.55rem;
-    padding-left: 10px; 
-    border: .5px solid rgb(118, 116, 116);
-    font-size: 1.05rem;
-    height: 42px;
-    background-color: rgba(138, 138, 139, 0.001);
-    color: rgb(76, 76, 76);
-    cursor: default;
-    transition: background-color 0.4s ease;
+.floating-label input {
+  width: 100%;
+  padding: 0.55rem 12px;
+  padding-right: 36px;
+  font-size: 1rem;
+  height: 42px;
+  border: 1px solid rgb(141, 140, 140);
+  border-radius: 5px;
+  background-color: rgba(138, 138, 139, 0.001);
+  color: rgb(76, 76, 76);
+  transition: all 0.2s ease;
+}
 
-    &:hover {
-      background-color: none;
-    }
+.floating-label input:focus {
+  border: none; 
+  outline: none;
+}
 
-    &:focus {
-      background-color: none;
-      outline: none;
+.floating-label label {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  font-size: .95rem;
+  color: rgba(111, 110, 113, 0.791);
+  transform: translateY(-50%);
+  transition: 0.3s ease all;
+  pointer-events: none;
+}
 
-    }
-  }
+/* Al hacer focus o cuando el input tiene texto, la etiqueta flota */
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label {
+  top: -0.15rem;
+  left: 5px;
+  font-size: 0.95rem;
+  color: rgb(94, 93, 93);
+  background: rgb(219, 219, 219);
+  padding: 0 5px;
+  z-index: 1;
+}
 
-  .input.is-invalid {
-    border-color: #dc3545; 
-    transition: border-color 0.3s ease; 
-  }
+.floating-label .icon.is-right {
+  position: absolute;
+  right: 14.5px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #875fd6;
+}
 
-  .input::placeholder {
-    font-size: .97rem;
-    color: rgba(111, 110, 113, 0.791);
-  }
+.input.is-invalid {
+  border-color: #dc3545 !important;
+  transition: border-color 0.3s ease;
+}
 
   .error {
-    color: rgb(211, 52, 27);
-    font-size: .75rem;
-    margin-top: 0.8rem;
+    color: rgb(218, 88, 68);
+    font-size: .7rem;
+    margin-top: 0.5rem;
     position: absolute;
     bottom: -1.5rem;
     left: 4%;
@@ -214,13 +213,13 @@ html, body {
 
   .toggle-password i {
     font-size: .85rem;
-    color: #875fd6;
+    color: #9672de;
   }
 
   .forgot-password-container {
     position: absolute;
     right: 0;
-    margin-top: -3px;
+    margin-top: -0px;
   }
 
   .field {
@@ -318,14 +317,7 @@ html, body {
     }
 
     .field {
-      margin-bottom: 1.7rem;
-    }
-
-    .label {
-      font-weight: 400;
-      font-size: .77rem;
-          margin-bottom: 3px;
-      margin-left: 9px;
+      margin-bottom: 2rem;
     }
 
     .input {
@@ -335,21 +327,17 @@ html, body {
 }
 
     .icon.is-right {
-      right: 7px !important;    
+      right: 15.5px !important;    
     }
 
     .icon.is-right i {
       font-size: .9rem;
     }
 
-    .input::placeholder {
-      font-size: .9rem;
-    }
-
     .error {
-      font-size: .65rem;
+      font-size: .6rem;
       margin-top: 0.4rem;
-      bottom: -1.5rem;
+      bottom: -1.4rem;
     }
 
     .forgot-password-link {
@@ -431,6 +419,10 @@ html, body {
 
   @media (max-width: 492px) {
 
+    .login-container{
+      background: rgb(219, 219, 219);
+    }
+
     .logo-container {
       display: flex;
       margin-top: -6rem;  
@@ -464,36 +456,36 @@ html, body {
       margin-bottom: 2rem;
     }
 
-    .label {
-      font-weight: 400;
-      font-size: .9rem;
-      margin-bottom: 3px;
-      margin-left: 4px;
-      color: #dedfdf;
-    }
-
-    .input {
-      font-size: 1rem;
-      padding: 0.7rem 15px;
-      height: 40px;
+    .floating-label input {
+      width: 100%;
+      padding: 0.55rem 12px;
+      padding-right: 36px;
       border-radius: 5px;
+      box-shadow: none;
+      border-color: rgb(171, 170, 170);
+      font-size: 1rem;
+      height: 43px;
+      transition: all 0.4s ease;
     }
-
-    .input::placeholder {
-      font-size: .9rem;
+  
+    .floating-label input:focus {
+      border-color: rgb(171, 170, 170);
+      border: .5px solid rgb(137, 136, 136);
+      border-radius: 5px;
+      outline: none;
     }
 
     .error {
       left: 5px;
       font-size: .7rem;
-      margin-top: 0.1rem;
-      bottom: -1.6rem;
+      margin-top: 0rem;
+      bottom: -1.5rem;
     }
 
     .forgot-password-container {
       position: absolute;
       right: 0;
-      margin-top: 3px;
+      margin-top: 0px;
     }
 
     .forgot-password-link {

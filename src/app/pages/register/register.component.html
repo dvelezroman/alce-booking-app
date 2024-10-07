@@ -1,5 +1,4 @@
 <div class="register-container">
-
   <div class="logo-container">
     <img src="/assets/logo imagen alce.png" alt="Logo">
   </div>
@@ -8,71 +7,68 @@
     <h1 class="title">Create Account</h1>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <!-- Bloque Email -->
-      <div class="rows">
-        <div class="row">
-          <div class="field input-field">
-            <label class="label">Email</label>
-            <div class="control has-icons-right">
-              <input 
-                class="input" 
-                type="email" 
-                formControlName="email" 
-                placeholder="Enter your email"
-                [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}">
-              <span class="icon is-right">
-                <i class="fas fa-envelope"></i> 
-              </span>
-            </div>
-            <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
-              Please enter a valid email
-            </div>
-          </div>
+      <!-- Campo Email con etiqueta flotante -->
+      <div class="field">
+        <div class="floating-label">
+          <input 
+            class="input" 
+            type="email" 
+            formControlName="email" 
+            placeholder=" "
+            [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}">
+          <label>Email</label>
+          <span class="icon is-right">
+            <i class="fas fa-envelope"></i>
+          </span>
         </div>
-
-        <div class="row">
-          <div class="field input-field">
-            <label class="label">Password</label>
-            <div class="control has-icons-right">
-              <input 
-                [type]="passwordVisible ? 'text' : 'password'"
-                placeholder="Password"
-                class="input"
-                formControlName="password"
-                [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}">
-              <div class="toggle-password" (click)="togglePasswordVisibility()">
-                <i [ngClass]="passwordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
-              </div>
-            </div>
-            <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
-              Password must be at least 6 characters long
-            </div>
-          </div>
-        </div>
-
-        <!-- Bloque Confirm Password -->
-        <div class="row">
-          <div class="field input-field">
-            <label class="label">Confirm Password</label>
-            <div class="control has-icons-right">
-              <input 
-                [type]="confirmPasswordVisible ? 'text' : 'password'"
-                placeholder="Confirm Password"
-                class="input"
-                formControlName="confirmPassword"
-                [ngClass]="{'is-invalid': registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched}">
-              <div class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
-                <i [ngClass]="confirmPasswordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
-              </div>
-            </div>
-            <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched" class="error">
-              Passwords do not match
-            </div>
-          </div>
+        <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
+          Please enter a valid email
         </div>
       </div>
 
-      <!-- Botón Register -->
+      <!-- Campo Password con etiqueta flotante -->
+      <div class="field">
+        <div class="floating-label">
+          <input 
+            [type]="passwordVisible ? 'text' : 'password'"
+            class="input"
+            formControlName="password"
+            placeholder=" "
+            (input)="onPasswordInput()"
+            [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}">
+          <label>Password</label>
+          <div class="toggle-password" (click)="togglePasswordVisibility()">
+            <i [ngClass]="registerForm.get('password')?.value ? 
+                          (passwordVisible ? 'fa fa-eye' : 'fa fa-eye-slash') : 'fa fa-lock'"></i>
+          </div>
+        </div>
+        <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
+          Password must be at least 6 characters long
+        </div>
+      </div>
+
+      <!-- Campo Confirmar Password con etiqueta flotante -->
+      <div class="field">
+        <div class="floating-label">
+          <input 
+            [type]="confirmPasswordVisible ? 'text' : 'password'"
+            class="input"
+            formControlName="confirmPassword"
+            placeholder=" "
+            (input)="onConfirmPasswordInput()"
+            [ngClass]="{'is-invalid': registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched}">
+          <label>Confirm Password</label>
+          <div class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
+            <i [ngClass]="registerForm.get('confirmPassword')?.value ? 
+                          (confirmPasswordVisible ? 'fa fa-eye' : 'fa fa-eye-slash') : 'fa fa-lock'"></i>
+          </div>
+        </div>
+        <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched" class="error">
+          Passwords do not match
+        </div>
+      </div>
+
+      <!-- Botón para registrar -->
       <div class="field-button">
         <div class="control">
           <button class="button is-primary" type="submit">Register</button>
@@ -80,9 +76,9 @@
       </div>
     </form>
 
-    <!-- Texto Already have an account -->
+    <!-- Link para login -->
     <div class="toggle-container">
-      <p>
+      <p class="nu">
         Already have an account?
         <a [routerLink]="['/login']">Sign in</a>
       </p>

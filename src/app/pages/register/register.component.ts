@@ -108,11 +108,24 @@ export class RegisterComponent implements OnInit {
 
   }
 
-  togglePasswordVisibility() {
+  onPasswordInput(): void {
+    const passwordControl = this.registerForm.get('password');
+    passwordControl?.markAsTouched();
+    passwordControl?.markAsDirty();
+  }
+
+  onConfirmPasswordInput(): void {
+    const confirmPasswordControl = this.registerForm.get('confirmPassword');
+    confirmPasswordControl?.markAsTouched();
+    confirmPasswordControl?.markAsDirty();
+  }
+
+  togglePasswordVisibility(): void {
     this.passwordVisible = !this.passwordVisible;
   }
 
-  toggleConfirmPasswordVisibility() {
+  toggleConfirmPasswordVisibility(): void {
     this.confirmPasswordVisible = !this.confirmPasswordVisible;
   }
+
 }

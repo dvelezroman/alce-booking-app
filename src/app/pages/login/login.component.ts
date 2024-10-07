@@ -95,6 +95,10 @@ closeModal() {
   this.showSuccessModal = false;
 }
 
+onPasswordInput(): void {
+  const passwordControl = this.loginForm.get('password');
+}
+
 togglePasswordVisibility() {
   this.passwordVisible = !this.passwordVisible;
 }

@@ -1,5 +1,4 @@
 <div class="login-container">
-
   <div class="logo-container">
     <img src="/assets/logo imagen alce.png" alt="Logo">
   </div>
@@ -8,42 +7,44 @@
     <h1 class="title">Sign In</h1>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Campo Email con etiqueta flotante -->
       <div class="field">
-        <label class="label">Email</label>
-        <div class="control has-icons-right">
+        <div class="floating-label">
           <input
             class="input"
             type="email"
             formControlName="email"
-            placeholder="Enter your email"
+            placeholder=" "
             [ngClass]="{ 'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched }">
-            <span class="icon is-right">
-              <i class="fas fa-envelope"></i>
-            </span>
-          </div>
-        <div
-          *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-          class="error">
+          <label>Email</label> 
+          <span class="icon is-right">
+            <i class="fas fa-envelope"></i>
+          </span>
+        </div>
+        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
           Please enter a valid email
         </div>
       </div>
-      
+
+      <!-- Campo Password con etiqueta flotante -->
       <div class="field">
-        <label class="label">Password</label>
-        <div class="control has-icons-right">
+        <div class="floating-label">
           <input
             [type]="passwordVisible ? 'text' : 'password'"
             class="input"
             formControlName="password"
-            placeholder="Enter your password"
+            placeholder=" "
+            (input)="onPasswordInput()"
             [ngClass]="{ 'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched }">
+          <label>Password</label>
+          
+          <!-- Icono dinámico -->
           <div class="toggle-password" (click)="togglePasswordVisibility()">
-            <i [ngClass]="passwordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+            <i [ngClass]="loginForm.get('password')?.value ? 
+                          (passwordVisible ? 'fa fa-eye' : 'fa fa-eye-slash') : 'fa fa-lock'"></i>
           </div>
         </div>
-        <div
-          *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-          class="error">
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
           Password is required
         </div>
         <div class="forgot-password-container">
@@ -53,14 +54,15 @@
         </div>
       </div>
 
+      <!-- Botón para iniciar sesión -->
       <div class="field-button">
         <div class="control">
-          <button
-            class="button is-primary">Sign In</button>
+          <button class="button is-primary">Sign In</button>
         </div>
       </div>
     </form>
 
+    <!-- Link para registro -->
     <div class="toggle-container">
       <p class="nu">
         New user?
