@@ -21,7 +21,6 @@ import {InstructorsService} from "../../services/instructors.service";
   styleUrl: './searching-meeting.component.scss'
 })
 export class SearchingMeetingComponent implements OnInit {
-  viewMode: 'table' | 'list' = 'table';
   isModalOpen = false;
   link: string = '';
   availableHours: number[] = [];
@@ -96,11 +95,8 @@ export class SearchingMeetingComponent implements OnInit {
   }
 
   assignLink(): void {
-    if (this.filter.hour && this.filter.from && this.link && this.filter.stageId && this.selectedInstructorId && this.selectedMeetingIds.length) {
+    if (this.selectedInstructorId && this.selectedMeetingIds.length) {
       const updateLinkParams: UpdateMeetingLinkDto = {
-        date: this.filter.from,
-        hour: +this.filter.hour,
-        stageId: +this.filter.stageId,
         link: this.link,
         instructorId: +this.selectedInstructorId,
         meetingIds: this.selectedMeetingIds,

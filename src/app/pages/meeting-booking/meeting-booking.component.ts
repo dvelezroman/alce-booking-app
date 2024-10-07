@@ -377,7 +377,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   loadMeetings(from?: string, to?: string, hour?: string, studentId?: number): void {
-    this.bookingService.searchMeetings({ from, to, hour, studentId }).subscribe({
+    this.bookingService.searchMeetings({ from, to, hour, studentId, assigned: true }).subscribe({
     next: (meetings: MeetingDTO[]) => {
       this.meetings = meetings;
       this.cdr.detectChanges();
@@ -470,8 +470,8 @@ onWindowScroll() {
   const progress = Math.min(scrollPosition / 100, 1);
 
   // color de fondo en función del progreso
-  const startColor = [255, 255, 255]; 
-  const endColor = [226, 224, 235]; 
+  const startColor = [255, 255, 255];
+  const endColor = [226, 224, 235];
   const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * progress);
   const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * progress);
   const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * progress);
@@ -480,7 +480,7 @@ onWindowScroll() {
   header.style.background = `linear-gradient(rgb(${r}, ${g}, ${b}), #bcb4df8a)`;
 
   // sombra cuando hay scroll
-  const boxShadowOpacity = 0.10 * progress; 
+  const boxShadowOpacity = 0.10 * progress;
   header.style.boxShadow = `0 2px 5px rgba(0, 0, 0, ${boxShadowOpacity})`;
 
   if (scrollPosition === 0) {
