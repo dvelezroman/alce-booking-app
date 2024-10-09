@@ -61,33 +61,32 @@
             </div>
           </div>
         </div>
+        <!-- Inputs de seleccionar si mostrar assigned o no mostrar -->
+        <div class="columns is-mobile">
+          <div class="column">
+            <div class="field">
+              <label class="checkbox">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="filter.assigned"
+                  name="assigned"
+                  (ngModelChange)="onFilterChange()"
+                >
+                Mostrar Asignadas Activas
+              </label>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
 
      <!-- Botón de asignar (aparece cuando hay resultados) -->
-     <div class="block" *ngIf="meetings && meetings.length > 0 && filter.from && filter.to && filter.hour && filter.stageId">
+     <div class="block">
       <div class="field">
-        <label class="label">&nbsp;</label>
         <div class="control">
-          <button class="button is-primary is-fullwidth" (click)="openModal()">Asignar Link Meeting</button>
+          <button class="button is-primary is-fullwidth" [disabled]="!selectedMeetingIds.length" (click)="openModal()">Asignar Link Meeting</button>
         </div>
       </div>
-    </div>
-
-    <!-- Indicador de vista (iconos para alternar entre lista y tabla) -->
-    <div class="view-switcher" *ngIf="meetings && meetings.length > 0">
-      <button
-        class="icon-button"
-        [ngClass]="{ 'active': viewMode === 'table' }"
-        (click)="viewMode = 'table'">
-        <i class="fas fa-th-list"></i>
-      </button>
-      <button
-        class="icon-button"
-        [ngClass]="{ 'active': viewMode === 'list' }"
-        (click)="viewMode = 'list'">
-        <i class="fas fa-table"></i>
-      </button>
     </div>
 
     <!-- Resultados de la búsqueda -->
@@ -101,48 +100,32 @@
         </span>
       </p>
       <!-- Vista de tabla -->
-      <table class="table-results" *ngIf="viewMode === 'table' && meetings && meetings.length > 0">
+      <table class="table-results is-striped is-fullwidth" *ngIf="meetings && meetings.length > 0">
         <thead>
           <tr>
+            <th></th>
             <th>Stage</th>
             <th>Nombre</th>
             <th>Correo</th>
             <th>Fecha</th>
             <th>Hora</th>
+            <th>Instructor</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let meeting of meetings">
-            <td>{{ meeting.stage?.number }}</td>
-            <td>{{ meeting.student?.user?.firstName }} {{ meeting.student?.user?.lastName }}</td>
+            <td>
+              <input type="checkbox" [checked]="selectedMeetingIds.includes(meeting.id)" (change)="toggleSelection(meeting.id)" />
+            </td>
+            <td>{{ meeting.stage?.number || 'Stage no disponible' }}</td>
+            <td>{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
             <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
             <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
             <td>{{ meeting.hour }}:00</td>
+            <td>{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
           </tr>
         </tbody>
       </table>
-
-      <!-- Vista de tarjetas -->
-      <ul class="card-results" *ngIf="viewMode === 'list' && meetings && meetings.length > 0">
-        <li *ngFor="let meeting of meetings; let i = index">
-          <div class="meeting-item">
-            <div class="meeting-stage">
-              <strong>Stage: </strong> {{ meeting.stageId }}
-            </div>
-            <div class="meeting-student">
-              <strong>Nombre:</strong> {{ meeting.student?.user?.firstName }} {{ meeting.student?.user?.lastName }}
-            </div>
-            <div class="meeting-email">
-              <strong>Correo:</strong> {{ meeting.student?.user?.email || 'Correo no disponible' }}
-            </div>
-            <div class="meeting-date-hour">
-              <strong>Fecha:</strong> {{ meeting.date | date: 'mediumDate' }}
-              <strong>Hora:</strong> {{ meeting.hour }}:00
-            </div>
-          </div>
-        </li>
-      </ul>
-
     </div>
   </div>
 </section>
@@ -155,6 +138,18 @@
       </header>
       <section class="modal-card-body">
         <!-- Primer bloque: Input para el link -->
+        <div class="field">
+          <label class="label">Stage</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select [(ngModel)]="selectedInstructorId" name="instructorId">
+                <option value="">Seleccione Instructor</option>
+                <!-- Opciones de instructores disponibles -->
+                <option *ngFor="let instructor of instructorList" [value]="instructor.id">{{ instructor.user?.firstName }}, {{ instructor.user?.lastName }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
         <div class="field">
           <label class="label"></label>
           <div class="control">

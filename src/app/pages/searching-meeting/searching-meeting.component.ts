@@ -4,8 +4,10 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BookingService } from '../../services/booking.service';
 import { FilterMeetingsDto, MeetingDTO, UpdateMeetingLinkDto } from '../../services/dtos/booking.dto';
-import { Stage, Student } from '../../services/dtos/student.dto';
+import { Stage } from '../../services/dtos/student.dto';
 import {StagesService} from "../../services/stages.service";
+import {Instructor} from "../../services/dtos/instructor.dto";
+import {InstructorsService} from "../../services/instructors.service";
 
 @Component({
   selector: 'app-searching-students-meeting',
@@ -19,14 +21,15 @@ import {StagesService} from "../../services/stages.service";
   styleUrl: './searching-meeting.component.scss'
 })
 export class SearchingMeetingComponent implements OnInit {
-  viewMode: 'table' | 'list' = 'table';
   isModalOpen = false;
   link: string = '';
   availableHours: number[] = [];
   meetings: MeetingDTO[] = [];
   originalMeetings: MeetingDTO[] = [];
   stages: Stage[] = [];
-  studentsList: Student[] = [];
+  selectedInstructorId: number | undefined;
+  instructorList: Instructor[] = [];
+  selectedMeetingIds: any[] = [];
 
   toastMessage: string = '';
   toastType: 'success' | 'error' = 'success';
@@ -36,23 +39,26 @@ export class SearchingMeetingComponent implements OnInit {
     from: '',
     to: '',
     hour: '',
-    stageId: ''
+    stageId: '',
+    assigned: false,
   };
-
 
   constructor(private bookingService: BookingService,
               private stagesService: StagesService,
+              private instructorsService: InstructorsService,
   ) {}
 
   ngOnInit(): void {
-    const today = new Date();
+    // const today = new Date();
     // this.filter.from = today.toISOString().split('T')[0];
     this.availableHours = Array.from({ length: 13 }, (_, i) => 9 + i);
     this.stagesService.getAll().subscribe(response => {
       this.stages = response;
     })
+    this.instructorsService.getAll().subscribe(response  => {
+      this.instructorList = response;
+    })
   }
-
 
   openModal(): void {
     this.isModalOpen = true;
@@ -64,32 +70,37 @@ export class SearchingMeetingComponent implements OnInit {
 
 
   onFilterChange(): void {
-
     const filterParams: FilterMeetingsDto = {
       ...this.filter,
       hour: this.filter.hour ? this.filter.hour.toString() : undefined
     };
-
     if (this.filter.stageId === '') {
       delete filterParams.stageId;
     } else {
       filterParams.stageId = this.filter.stageId?.toString();
     }
-
     this.bookingService.searchMeetings(this.filter).subscribe(meetings => {
       this.meetings = meetings;
       this.originalMeetings = meetings;
-      console.log(meetings);
     });
   }
 
+  toggleSelection(meetingId: number | undefined) {
+    if (this.selectedMeetingIds.includes(meetingId)) {
+      // Remove the meeting Id from the selectedMeetings array
+      this.selectedMeetingIds = this.selectedMeetingIds.filter(id => id !== meetingId);
+    } else {
+      // Add the meeting Id to the selectedMeetings array
+      this.selectedMeetingIds.push(meetingId);
+    }
+  }
+
   assignLink(): void {
-    if (this.filter.hour && this.filter.from && this.link && this.filter.stageId) {
+    if (this.selectedInstructorId && this.selectedMeetingIds.length) {
       const updateLinkParams: UpdateMeetingLinkDto = {
-        date: this.filter.from,
-        hour: +this.filter.hour,
-        stageId: +this.filter.stageId,
-        link: this.link
+        link: this.link,
+        instructorId: +this.selectedInstructorId,
+        meetingIds: this.selectedMeetingIds,
       };
       this.bookingService.updateMeetingLink(updateLinkParams).subscribe({
         next: response => {
@@ -105,7 +116,6 @@ export class SearchingMeetingComponent implements OnInit {
     }
   }
 
-   // Método para mostrar el toast
    showToast(message: string, isSuccess: boolean): void {
     this.toastMessage = message;
     this.toastType = isSuccess ? 'success' : 'error';
@@ -115,6 +125,4 @@ export class SearchingMeetingComponent implements OnInit {
       this.isToastVisible = false;
     }, 3000);
   }
-
-
 }

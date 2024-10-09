@@ -1,15 +1,17 @@
-import { CommonModule } from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { UsersService } from '../../services/users.service';
-import {UserDto} from '../../services/dtos/user.dto';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router, RouterModule} from '@angular/router';
+import {UsersService} from '../../services/users.service';
+import {UserDto, UserRole} from '../../services/dtos/user.dto';
 import {RegisterStudentDto, Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
 import {StudentsService} from "../../services/students.service";
 import {Store} from "@ngrx/store";
-import {Observable, Subject, switchMap, takeUntil} from "rxjs";
+import {Observable, of, Subject, switchMap, takeUntil} from "rxjs";
 import {selectUserData} from "../../store/user.selector";
+import {RegisterInstructorDto} from "../../services/dtos/instructor.dto";
+import {InstructorsService} from "../../services/instructors.service";
 
 @Component({
   selector: 'app-register-complete',
@@ -38,6 +40,7 @@ export class RegisterCompleteComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
               private studentsService: StudentsService,
+              private instructorsService: InstructorsService,
               private router: Router,
               private stagesService: StagesService,
               private store: Store,
@@ -106,8 +109,21 @@ export class RegisterCompleteComponent implements OnInit, OnDestroy {
       userId: this.user?.id,
       mode: this.registerForm.controls['mode'].value,
     }
+    const instructorData: RegisterInstructorDto = {
+      stageId: parseInt(this.registerForm.controls['stageId'].value, 10),
+      userId: this.user?.id,
+    }
     this.usersService.completeRegister(userData).pipe(
-      switchMap(() => this.studentsService.registerStudent(studentData))
+      switchMap(() => {
+        if (userData.role === UserRole.STUDENT) {
+          return this.studentsService.registerStudent(studentData);
+        }
+        if (userData.role === UserRole.INSTRUCTOR) {
+          return this.instructorsService.registerInstructor(instructorData);
+        }
+        // Handle other roles or a fallback
+        return of(null);  // Return an empty observable if no role matched
+      })
     ).subscribe({
       next: () => {
         this.showSuccessModal = true;

@@ -183,10 +183,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   userName() {
-    if (this.userData && this.userData.firstName && this.userData.lastName) {
-      return `${this.userData.firstName} ${this.userData.lastName}`;
+    if (this.userData) {
+      const { firstName, lastName } = this.userData;
+      return `${firstName} ${lastName}`
     }
-    return null;
+    return 'Nombre de Usuario';
   }
 
 
@@ -378,7 +379,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   loadMeetings(from?: string, to?: string, hour?: string, studentId?: number): void {
-    this.bookingService.searchMeetings({ from, to, hour, studentId }).subscribe({
+    this.bookingService.searchMeetings({ from, to, hour, studentId, assigned: true }).subscribe({
     next: (meetings: MeetingDTO[]) => {
       this.meetings = meetings;
       this.cdr.detectChanges();
@@ -471,9 +472,9 @@ onWindowScroll() {
   const progress = Math.min(scrollPosition / 100, 1);
 
   // gradient
-  const startColor1 = [228, 228, 228]; 
-  const startColor2 = [241, 241, 241]; 
-  const endColor = [226, 224, 235]; 
+  const startColor1 = [228, 228, 228];
+  const startColor2 = [241, 241, 241];
+  const endColor = [226, 224, 235];
 
   // Cálculo del gradiente progresivo en función del scroll
   const r1 = Math.round(startColor1[0] + (endColor[0] - startColor1[0]) * progress);
@@ -488,7 +489,7 @@ onWindowScroll() {
   header.style.background = `linear-gradient(270deg, rgb(${r1}, ${g1}, ${b1}), rgb(${r2}, ${g2}, ${b2}))`;
 
   // Sombra cuando hay scroll
-  const boxShadowOpacity = 0.10 * progress; 
+  const boxShadowOpacity = 0.10 * progress;
   header.style.boxShadow = `0 2px 5px rgba(0, 0, 0, ${boxShadowOpacity})`;
 
   if (scrollPosition === 0) {

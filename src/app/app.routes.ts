@@ -6,7 +6,6 @@ import { HomeComponent } from './pages/home/home.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { RegisterComponent } from "./pages/register/register.component";
 import {StageComponent} from "./pages/stage/stage.component";
-import {MeetingUpdateLinkComponent} from "./pages/meeting-update-link/meeting-update-link.component";
 import { SearchingMeetingComponent } from './pages/searching-meeting/searching-meeting.component';
 import { SearchingStudentComponent } from './pages/searching-students/searching-student.component';
 import {AuthGuard} from "./auth/auth.guard";
@@ -19,7 +18,6 @@ export const routes: Routes = [
   { path: 'booking', component: MeetingBookingComponent, canActivate: [AuthGuard] },
   { path: 'contact', component: ContactComponent, canActivate: [AuthGuard]},
   { path: 'stage', component: StageComponent, canActivate: [AuthGuard] },
-  { path: 'meeting-update-link', component: MeetingUpdateLinkComponent, canActivate: [AuthGuard] },
   { path: 'searching-meeting', component: SearchingMeetingComponent, canActivate: [AuthGuard]},
   { path: 'searching-students', component: SearchingStudentComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },

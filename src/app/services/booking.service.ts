@@ -18,7 +18,15 @@ export class BookingService {
   }
 
   searchMeetings(filterParams: FilterMeetingsDto): Observable<MeetingDTO[]> {
-    const { from, to, hour, studentId, stageId} = filterParams;
+    const {
+      from,
+      to,
+      hour,
+      studentId,
+      stageId,
+      assigned,
+      instructorId,
+    } = filterParams;
     let params = new HttpParams();
 
     if (from) {
@@ -43,6 +51,14 @@ export class BookingService {
 
     if (stageId !== undefined) {
       params = params.set('stageId', stageId);
+    }
+
+    if (assigned) {
+      params = params.set('assigned', assigned);
+    }
+
+    if (instructorId) {
+      params = params.set('instructorId', instructorId);
     }
 
     return this.http.get<MeetingDTO[]>(`${this.apiUrl}/search`, { params });

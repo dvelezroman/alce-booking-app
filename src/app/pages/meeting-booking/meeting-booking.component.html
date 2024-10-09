@@ -41,11 +41,11 @@
             </div>
             <div class="meeting-info-container">
               <div class="schedule-info">
-                <strong>Fecha:</strong> <span>{{ meeting.date | date: 'mediumDate' }}</span><br>
-                <strong>Hora:</strong> <span>{{ meeting.hour }}:00</span>
+                <strong>Date: </strong> <span>{{ meeting.date | date: 'mediumDate':'UTC' }}</span><br>
+                <strong>time: </strong> <span>{{ meeting.hour | number: '2.0' }}:00</span>
               </div>
               <div class="schedule-delete">
-                <button class="delete-button" (click)="openDeleteModal(meeting); $event.stopPropagation()" aria-label="Delete meeting">
+                <button class="delete-button" (click)="openDeleteModal(meeting); $event.stopPropagation()">
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </div>
