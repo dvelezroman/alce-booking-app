@@ -47,6 +47,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   showSuccessModal = false;
   showInfoModal = false;
   showModalBookingError = false;
+  showModalStageError = false;
   todayMonth!: string;
   todayYear!: number;
   nextMonth_!: string;
@@ -295,6 +296,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   selectDay(day: any) {
+    if (!this.userData?.student?.stageId) {
+      this.showModalStageError = true;
+      this.hideStageErrorModalAfterDelay(2000)
+     return;
+    }
     if (this.isDaySelectable(day)) {
       this.selectedDay = day.day;
       this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
@@ -337,6 +343,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
 
   selectTimeSlot(time: {label: string, value: number}) {
+    if (!this.userData?.student?.stageId) {
+      this.showModalStageError = true;
+      this.hideStageErrorModalAfterDelay(2000)
+      return;
+    }
     if (this.selectedDay) {
       this.selectedTimeSlot = time;
       this.showSuccessModal = true;
@@ -422,6 +433,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   hideBookingErrorModalAfterDelay(delay: number) {
     setTimeout(() => {
       this.showModalBookingError = false;
+    }, delay);
+  }
+
+  hideStageErrorModalAfterDelay(delay: number) {
+    setTimeout(() => {
+      this.showModalStageError = false;
     }, delay);
   }
 

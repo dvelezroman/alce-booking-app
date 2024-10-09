@@ -52,7 +52,6 @@ export class RegisterCompleteComponent implements OnInit, OnDestroy {
       idNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       birthday: ['', Validators.required],
       role: ['STUDENT', Validators.required],
-      stageId: ['', Validators.required],
       mode: ['ONLINE', Validators.required],
     });
     this.userData$ = this.store.select(selectUserData);
@@ -105,12 +104,12 @@ export class RegisterCompleteComponent implements OnInit, OnDestroy {
     };
 
     const studentData: RegisterStudentDto = {
-      stageId: parseInt(this.registerForm.controls['stageId'].value, 10),
+      // stageId: parseInt(this.registerForm.controls['stageId'].value, 10),
       userId: this.user?.id,
       mode: this.registerForm.controls['mode'].value,
     }
     const instructorData: RegisterInstructorDto = {
-      stageId: parseInt(this.registerForm.controls['stageId'].value, 10),
+      // stageId: parseInt(this.registerForm.controls['stageId'].value, 10),
       userId: this.user?.id,
     }
     this.usersService.completeRegister(userData).pipe(
