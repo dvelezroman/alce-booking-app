@@ -8,24 +8,10 @@ body, html {
   width: 100%;
   position: relative;
   overflow: hidden;
-  background-image: url('/assets/fondo home loggedIn.svg'); 
+  background-image: url('/assets/fondo home.svg'); 
   background-size: cover;
   background-position: center;
   overflow-y: auto;
-}
-
-.home-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; 
-}
-
-.desktop-video {
-  display: block; 
-}
-
-.mobile-video {
-  display: none; 
 }
 
 .hero-button-container {
@@ -37,54 +23,42 @@ body, html {
 
 .login-button {
   display: inline-block;
-  padding: .8rem 3rem;
-  font-size: .9rem;
-  color: white;
+  padding: .6rem 3rem;
+  font-size: 1rem;
+  color: rgb(146, 90, 220); 
   background-color: transparent;
   position: relative;
   border-radius: 20px;
   text-transform: uppercase;
   text-decoration: none;
-  transition: background-color 0.4s ease, color 0.4s ease;
-  opacity: 0; 
-  transform: translateY(20px); 
-  animation: fadeIn 5s ease forwards;
-  border: 2px solid transparent;
+  transition: color 0.4s ease;
+  border: .5px solid rgb(146, 90, 220);
+  overflow: hidden;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 4s ease forwards;
 
-  &:before {
+  &::before {
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 20px; 
-    padding: 2px; 
-    background: linear-gradient(90deg, #007BFF, #8A2BE2, #007BFF); 
-    background-size: 300% 300%; 
-    background-position: 0% 50%;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); 
-    -webkit-mask-composite: destination-out; 
-    mask-composite: exclude;
-    transition: all 0.4s ease;
-  }
-
-  &:hover:before {
-    animation: borderAnimation 4s infinite linear; 
-    padding: 3px; 
+    background-color: rgb(146, 90, 220);
+    border-radius: 20px;
+    clip-path: circle(0% at 0% 0%); 
+    transition: clip-path 0.5s ease; 
+    z-index: -1;
   }
 
   &:hover {
-    color: white; 
+    color: rgb(250, 250, 253); 
   }
-}
 
-@keyframes borderAnimation {
-  0% {
-    background-position: 0% 50%; 
-  }
-  100% {
-    background-position: 200% 50%; 
+  &:hover::before {
+    clip-path: circle(150% at 0% 0%); 
   }
 }
 
@@ -106,27 +80,21 @@ body, html {
   }
 
   .hero {
-    background-image: url('/assets/imagen fondo home.svg'); 
+   background-image: url("/assets/imagen fondo home movil.svg");
     background-size: cover;
     background-position: center;
   }
 
   .hero-button-container {
-    bottom: 100px; 
+    bottom: 30%; 
   }
 
   .login-button {
-    padding: 1rem 3rem;
-    font-size: .9rem;
-  
-    &:before {
-      content: "";
-      padding: 2px; 
-    }
-  
-    &:hover:before {
-      animation: none; 
-    }
+    padding: .7rem 2.4rem;
+    font-size: 1rem;
+    animation: none;
+    opacity: 1; 
+    transform: translateY(0);
   
     &:hover {
       color: white; 

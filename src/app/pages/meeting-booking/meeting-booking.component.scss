@@ -2,11 +2,12 @@
 
 :host {
   display: block;
-  background-color: white;
+  background: linear-gradient(270deg, rgb(228, 228, 228), rgb(241, 241, 241));
   width: 100%;
   min-height: 100vh;
   padding: 0rem;
   margin: 0;
+  overflow-x: hidden;
   box-sizing: border-box;
 }
 
@@ -17,7 +18,6 @@
   left: 70px;
   width: 100%;
   width: calc(100% - 70px);
-  background: linear-gradient(white, white);
   backdrop-filter: blur(15px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0);
   z-index: 1002;
@@ -37,11 +37,12 @@
 .booking-container.container {
   margin-top: 1rem;
   padding: 5rem 0rem;
-  background: linear-gradient(270deg, rgba(211, 211, 211, 0.8), rgba(241, 241, 241, 0.8));
   box-sizing: border-box; 
-  width: 100%; 
+  width: 100vw; 
+  overflow-x: hidden;
+  margin: 0 auto;
   padding-right: 0; 
-  margin-right: 0;
+  padding-left: 0;
 }
 
 .student-info {
@@ -349,7 +350,6 @@
 /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
 .date-time-wrapper {
   display: flex;
-  /*background-color: #3d1fc432;*/
   border-radius: 15px;
   justify-content: center;
   align-items: center;
@@ -739,8 +739,8 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: center;
@@ -974,7 +974,7 @@
   .student-info {
     flex: 0 0 100%;
     width: 100%;
-    margin-top: -2rem;
+    margin-top: 0rem;
     margin-bottom: 5rem;
     display: flex;
     flex-direction: column;
@@ -1341,7 +1341,7 @@
     align-items: center;
     max-width: 94.7%;
     padding: 0rem;
-    margin-top: .7rem;
+    margin-top: 3rem;
   }
 
   .student-name {
@@ -1870,14 +1870,12 @@
     text-align: center;
   }
 
-
 }
 
 @media (max-width: 600px){
 
   .student-info {
     margin-bottom: 2em;
-
   }
 
   .schedule-list {
@@ -1921,6 +1919,7 @@
   :host {
     padding:1rem 0rem;
     overflow-x: hidden;
+    background: radial-gradient(circle at 50% 27%, #f2f2f2, #e6e6e6);
   }
 
   .container {
@@ -1956,13 +1955,12 @@
     max-width: 100%;
     margin-top: 0rem;
     margin-bottom: 0;
-    padding: 2rem 0rem 0rem 0rem;
+    padding: 0rem 0rem 0rem 0rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background:none;
-    background: radial-gradient(circle at 50% 27%, #9eafeb, #996fe7);
     border-radius: 5px;
     min-height: 290px;
   }
@@ -1970,11 +1968,10 @@
   .student-name {
     text-align: center;
     width: 90%;
-    font-size: 1.6rem;
+    font-size: 1.25rem;
     margin: auto;
     margin-top: 0rem;
     margin-bottom: 0rem;
-    color: white;
   }
 
   .complete-link {
@@ -1984,15 +1981,13 @@
   .student-details {
     margin-top: 0rem;
     margin-bottom: 0rem;
-    font-size: .9rem;
-    color: white;
+    font-size: .85rem;
     text-align: center;
   }
 
   .student-detail {
     margin-top: 0rem;
-    font-size: .9rem;
-    color: white;
+    font-size: .85rem;
     text-align: center;
     text-decoration:none;
   }
@@ -2033,14 +2028,19 @@
   .meeting-link strong {
     margin-right: 0px; 
   }
+
+  .no-meeting{
+    font-size: .8rem;
+    margin-top: 2rem;
+    color: rgb(78, 77, 77);
+  }
+
   
   .no-link {
     background-color: #f0f0f0;
     border-color: #ccc; 
     color: #999;         
   }
-
-  
 
   /* bloque de fechas del usuario */
 
@@ -2122,12 +2122,6 @@
       transform: scale(0.9);
     }
 
-  }
-
-  .no-meeting{
-    font-size: .8rem;
-    margin-top: 2rem;
-    color: rgb(255, 255, 255);
   }
 
   .class-booking-subtitle {
@@ -2310,7 +2304,7 @@
 }
 
 .time-slots {
-  background: radial-gradient(circle, rgb(229, 229, 229) 20%, rgba(183, 150, 232, 0.761) 80%);
+  background: radial-gradient(circle, rgb(229, 229, 229) 20%, rgba(222, 204, 248, 0.761) 80%);
   box-shadow: 10px 0px 15px rgba(0, 0, 0, 0.1), -10px 0px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   margin-top: -5.5rem;
@@ -2336,13 +2330,13 @@
 .scroll-arrow-down {
   width: 100%;
   padding: 1.7rem;
-  margin-top:-4.8rem; 
+  margin-top:-4.5rem; 
   border-radius: 0px 0px 10px 10px;
   background-color: #e1e1e163;
   border: .5px solid rgba(255, 255, 255, 0.1);
   border-bottom: none; 
   backdrop-filter: blur(7px) saturate(180%); 
-  -webkit-backdrop-filter: blur(7px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
   box-shadow:0px -1px 10px rgba(0, 0, 0, 0), inset 7px 0px 4px rgba(0, 0, 0, 0), inset -7px 0px 4px rgba(0, 0, 0, 0);
 }
 

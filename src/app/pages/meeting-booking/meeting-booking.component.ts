@@ -287,7 +287,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const currentDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
     const startDate = new Date(this.today);
     const maxDate = new Date(startDate);
-    maxDate.setDate(startDate.getDate() + 7);
+    maxDate.setDate(startDate.getDate() + 8);
 
     const isSunday = currentDate.getDay() === 0;
     return !isSunday && currentDate >= startDate && currentDate <= maxDate;
@@ -470,22 +470,29 @@ onWindowScroll() {
   const scrollPosition = window.scrollY;
   const progress = Math.min(scrollPosition / 100, 1);
 
-  // color de fondo en función del progreso
-  const startColor = [255, 255, 255]; 
+  // gradient
+  const startColor1 = [228, 228, 228]; 
+  const startColor2 = [241, 241, 241]; 
   const endColor = [226, 224, 235]; 
-  const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * progress);
-  const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * progress);
-  const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * progress);
 
-  // color de fondo progresivo
-  header.style.background = `linear-gradient(rgb(${r}, ${g}, ${b}), #bcb4df8a)`;
+  // Cálculo del gradiente progresivo en función del scroll
+  const r1 = Math.round(startColor1[0] + (endColor[0] - startColor1[0]) * progress);
+  const g1 = Math.round(startColor1[1] + (endColor[1] - startColor1[1]) * progress);
+  const b1 = Math.round(startColor1[2] + (endColor[2] - startColor1[2]) * progress);
 
-  // sombra cuando hay scroll
+  const r2 = Math.round(startColor2[0] + (endColor[0] - startColor2[0]) * progress);
+  const g2 = Math.round(startColor2[1] + (endColor[1] - startColor2[1]) * progress);
+  const b2 = Math.round(startColor2[2] + (endColor[2] - startColor2[2]) * progress);
+
+  // Aplicación del color de fondo progresivo
+  header.style.background = `linear-gradient(270deg, rgb(${r1}, ${g1}, ${b1}), rgb(${r2}, ${g2}, ${b2}))`;
+
+  // Sombra cuando hay scroll
   const boxShadowOpacity = 0.10 * progress; 
   header.style.boxShadow = `0 2px 5px rgba(0, 0, 0, ${boxShadowOpacity})`;
 
   if (scrollPosition === 0) {
-    header.style.background = 'linear-gradient(white, white)';
+    header.style.background = 'linear-gradient(270deg, rgb(228, 228, 228), rgb(241, 241, 241))';
     header.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0)';
   }
 }
