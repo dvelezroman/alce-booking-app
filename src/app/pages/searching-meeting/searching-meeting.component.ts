@@ -39,7 +39,8 @@ export class SearchingMeetingComponent implements OnInit {
     from: '',
     to: '',
     hour: '',
-    stageId: ''
+    stageId: '',
+    assigned: false,
   };
 
   constructor(private bookingService: BookingService,
