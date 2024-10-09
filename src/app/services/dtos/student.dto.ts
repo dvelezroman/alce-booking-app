@@ -2,7 +2,7 @@ import {UserDto} from "./user.dto";
 
 export interface RegisterStudentDto {
   id?: number;
-  stageId: number;
+  stageId?: number;
   mode: Mode;
   userId: number | null | undefined;
 }

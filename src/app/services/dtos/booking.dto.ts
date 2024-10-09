@@ -42,3 +42,9 @@ export interface UpdateMeetingLinkDto {
   meetingIds: number[]; // Ids of meetings to be updated
   instructorId?: number; // Id of the instructor to be added to meetings
 }
+
+export interface MeetingLinkDto {
+  id: number;
+  link: string;
+  description?: string;
+}

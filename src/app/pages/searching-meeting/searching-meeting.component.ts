@@ -27,7 +27,7 @@ export class SearchingMeetingComponent implements OnInit {
   meetings: MeetingDTO[] = [];
   originalMeetings: MeetingDTO[] = [];
   stages: Stage[] = [];
-  selectedInstructorId: number | undefined;
+  selectedInstructor: Instructor | undefined;
   instructorList: Instructor[] = [];
   selectedMeetingIds: any[] = [];
 
@@ -79,7 +79,11 @@ export class SearchingMeetingComponent implements OnInit {
     } else {
       filterParams.stageId = this.filter.stageId?.toString();
     }
-    this.bookingService.searchMeetings(this.filter).subscribe(meetings => {
+    this.fetchMeetings(filterParams);
+  }
+
+  private fetchMeetings(params?: FilterMeetingsDto): void {
+    this.bookingService.searchMeetings(params ? params : this.filter).subscribe(meetings => {
       this.meetings = meetings;
       this.originalMeetings = meetings;
     });
@@ -96,10 +100,10 @@ export class SearchingMeetingComponent implements OnInit {
   }
 
   assignLink(): void {
-    if (this.selectedInstructorId && this.selectedMeetingIds.length) {
+    if (this.selectedInstructor && this.selectedInstructor.meetingLink?.link && this.selectedMeetingIds.length) {
       const updateLinkParams: UpdateMeetingLinkDto = {
-        link: this.link,
-        instructorId: +this.selectedInstructorId,
+        link: this.selectedInstructor.meetingLink?.link,
+        instructorId: +this.selectedInstructor.id,
         meetingIds: this.selectedMeetingIds,
       };
       this.bookingService.updateMeetingLink(updateLinkParams).subscribe({
@@ -107,11 +111,13 @@ export class SearchingMeetingComponent implements OnInit {
           console.log('Link asignado correctamente', response);
           this.showToast('El link fue asignado', true);
           this.closeModal();
+          this.fetchMeetings();
         },
         error: error => {
           console.error('Error al asignar el link', error);
           this.showToast('Error al asignar el link', false);
-        }
+          this.fetchMeetings();
+        },
       });
     }
   }
