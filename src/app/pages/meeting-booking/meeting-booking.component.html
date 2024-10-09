@@ -148,10 +148,11 @@
           {{ selectedMeeting?.instructor?.user?.lastName | titlecase }}
         </span>
       </p>
-      <p class="meeting-link" [ngClass]="{'no-link': !selectedMeeting?.link}">
-        <a [href]="getFormattedLink(selectedMeeting?.link)" target="_blank" rel="noopener noreferrer">
-          <span>{{ selectedMeeting?.link || 'no ha sido asignado' }}</span>
+      <p class="meeting-link" [ngClass]="{'no-link': linkStatus === 'hidden' || linkStatus === 'finished'}">
+        <a *ngIf="linkStatus === 'active'" [href]="getFormattedLink(selectedMeeting?.link)" target="_blank" rel="noopener noreferrer">
+          <span>{{ getLinkText() }}</span>
         </a>
+        <span *ngIf="linkStatus !== 'active'">{{ getLinkText() }}</span>
       </p>
     </section>
   </div>
@@ -181,6 +182,21 @@
   <div class="modal-content success-modal">
     <i class="fas fa-question-circle question-icon"></i>
     <p>You have selected <br> {{ selectedDayFormatted }} at {{ selectedTimeSlot.label }}</p>
+
+     <!-- bloque radio buttons -->
+    <p class="radio-question">Elige modo de la clase:</p>
+
+    <div class="radio-options">
+      <label class="custom-radio">
+        <input type="radio" name="meetingType" [(ngModel)]="meetingType" value="Online" checked>
+        <span class="radio-label">Online</span>
+      </label>
+      <label class="custom-radio">
+        <input type="radio" name="meetingType" [(ngModel)]="meetingType" value="Presencial">
+        <span class="radio-label">Presencial</span>
+      </label>
+    </div>
+
     <!-- Confirmation and cancellation buttons -->
     <div class="modal-buttons">
       <button class="button is-success" (click)="bookMeeting()">Accept</button>

@@ -33,6 +33,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   selectedDate: string = '';
   selectedTimeSlot: {label: string, value: number} = { label: "9:00", value: 9 };
+  meetingType: string = 'Online';
   hoverIndex: number | null = null;
   timeSlots: {label: string, value: number }[] = [];
   today: string = '';
@@ -61,6 +62,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   selectedMeeting: MeetingDTO | null = null;
   isMeetingDetailModalActive = false;
   selectedMeetingIndex: number = 0;
+  linkStatus: 'hidden' | 'active' | 'started' | 'finished' = 'hidden';
+  private linkInterval: any;
 
   constructor(
     private router: Router,
@@ -189,7 +192,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
     return 'Nombre de Usuario';
   }
-
 
 
   initializeTimeSlots() {
@@ -359,6 +361,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.showTimeSlotsModal = false;
     if (this.isMeetingDataValid()) {
       const bookingData: CreateMeetingDto = this.createBookingData();
+      console.log("Modo de la clase seleccionado:", this.meetingType);
       this.bookingService.bookMeeting(bookingData).subscribe({
         next: () => {
           this.showSuccessModal = false;
@@ -571,11 +574,14 @@ onWindowScroll() {
     this.selectedMeeting = meeting;
     this.selectedMeetingIndex = index;
     this.isMeetingDetailModalActive = true;
+    this.updateLinkStatus();
   }
 
   closeMeetingDetailModal() {
     this.selectedMeeting = null;
     this.isMeetingDetailModalActive = false;
+    clearInterval(this.linkInterval);
+
   }
 
   getFormattedLink(link: string | undefined): string {
@@ -583,5 +589,58 @@ onWindowScroll() {
       return ''
     }
     return link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`;
+  }
+
+
+  updateLinkStatus() {
+    if (!this.selectedMeeting) 
+      return;
+
+    const meetingStart = new Date(`${this.selectedMeeting.date}T${this.selectedMeeting.hour}:00`);
+    const meetingEnd = new Date(meetingStart);
+    meetingEnd.setMinutes(meetingEnd.getMinutes() + 60);  
+
+    this.linkInterval = setInterval(() => {
+      const now = new Date();
+      const timeUntilStart = meetingStart.getTime() - now.getTime();
+      const timeSinceEnd = now.getTime() - meetingEnd.getTime();
+
+      if (timeUntilStart <= 5 * 60 * 1000 && timeUntilStart > 0) {
+        this.linkStatus = 'active';  
+      } else if (timeUntilStart <= 0 && timeSinceEnd < 5 * 60 * 1000) {
+        this.linkStatus = 'started';  
+      } else if (timeSinceEnd >= 5 * 60 * 1000) {
+        this.linkStatus = 'finished';  
+        clearInterval(this.linkInterval);  
+      } else {
+        this.linkStatus = 'hidden';  
+      }
+    }, 1000);  
+  }
+
+  getLinkText() {
+    if (!this.selectedMeeting || !this.selectedMeeting.date || this.selectedMeeting.hour === undefined) {
+      return 'Link no disponible';
+    }
+    const meetingDateTime = new Date(this.selectedMeeting.date);
+    meetingDateTime.setHours(this.selectedMeeting.hour, 0, 0, 0); 
+  
+    const currentDate = new Date();
+    const isToday = currentDate.toDateString() === meetingDateTime.toDateString();
+  
+    if (isToday && !this.selectedMeeting.link && this.linkStatus === 'hidden') {
+      return 'El link estará disponible en breve...';
+    }
+  
+    switch (this.linkStatus) {
+      case 'active':
+        return this.selectedMeeting.link || 'Link no asignado';
+      case 'started':
+        return 'Clase iniciada';
+      case 'finished':
+        return 'Clase finalizada';
+      default:
+        return 'Link no disponible';
+    }
   }
 }
