@@ -379,6 +379,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
           this.showInfoModal = true;
           this.hideInfoModalAfterDelay(2000);
           this.initializeMeetings();
+          
         },
         error: () => {
           this.showSuccessModal = false;
@@ -387,6 +388,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
+      this.showSuccessModal = false;
       this.showModal = true;
       this.hideModalAfterDelay(2000);
     }
