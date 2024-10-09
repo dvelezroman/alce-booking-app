@@ -51,7 +51,11 @@ export class SearchingStudentComponent {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       role: ['', Validators.required],
-      stageId: ['']
+      stageId: ['', Validators.required],
+      email: ['', Validators.email],
+      birthday: ['', Validators.required],
+      status: ['', Validators.required],
+      register: ['', Validators.required],
     });
   }
 
@@ -140,6 +144,10 @@ export class SearchingStudentComponent {
     this.isEditModalOpen = true;
     this.editUserForm.patchValue({
       idNumber: user.idNumber,
+      email: user.email,
+      birthday: user.birthday,
+      status: user.status,
+      register: user.register,
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
@@ -155,6 +163,7 @@ export class SearchingStudentComponent {
           console.log('User updated:', response);
           this.isEditModalOpen = false;
           this.showSuccessModal('Usuario actualizado exitosamente.');
+          this.searchUsers();
         },
         error: (error) => {
           console.error('Error updating user:', error);

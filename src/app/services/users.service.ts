@@ -91,7 +91,7 @@ export class UsersService implements OnInit{
   }
 
   update(id: number, user: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, user);
+    return this.http.patch(`${this.apiUrl}/${id}`, user);
   }
 
   delete(id: number): Observable<any> {
