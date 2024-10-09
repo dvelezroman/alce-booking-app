@@ -1,5 +1,5 @@
 <div class="class-booking-header">
-  <h1 class="title is-3">Book your classes</h1>
+  <h1 class="title is-3">Agenda tus clases</h1>
 </div>
 
 <main class="booking-container container">
@@ -24,7 +24,7 @@
 
       <!-- Selected Meetings Section -->
       <div class="student-schedule" *ngIf="meetings.length > 0">
-        <h4 class="schedule-title">Horario Seleccionado</h4>
+        <h4 class="schedule-title">Reuniones Agendadas</h4>
         <div class="scroll-buttons">
           <button class="scroll-button left" (click)="scrollLeft()" [class.hidden]="!canScrollLeft" aria-label="Scroll left">
             <i class="fas fa-chevron-left"></i>
@@ -37,7 +37,12 @@
         <div class="schedule-list" #scheduleList>
           <div *ngFor="let meeting of meetings; let i = index" class="schedule-item" (click)="openMeetingDetailModal(meeting, i)">
             <div class="meeting-title">
-              <strong>Meeting {{ i + 1 }}</strong>
+
+              <strong>
+                {{ isCurrentWeek(meeting.date)
+                ? capitalizeFirstLetter(meeting.date | date: 'EEEE':'UTC')
+                : (meeting.date | date: 'mediumDate':'UTC') }}
+              </strong>
             </div>
             <div class="meeting-info-container">
               <div class="schedule-info">
@@ -136,10 +141,10 @@
   <div class="modal-background" (click)="closeMeetingDetailModal()"></div>
   <div class="modal-card meeting-detail-modal">
     <header class="modal-card-head">
-      <p class="modal-card-title">Detalles Meeting {{ selectedMeetingIndex + 1 }}</p>
+      <p class="modal-card-title">Detalles Reunion Agendada</p>
     </header>
     <section class="modal-card-body">
-      <p><strong>Fecha:</strong> <span>{{ selectedMeeting?.date | date: 'mediumDate' }}</span></p>
+      <p><strong>Fecha:</strong> <span>{{ selectedMeeting?.date | date: 'EEEE, d MMMM YYYY':'UTC' }}</span></p>
       <p><strong>Hora:</strong> <span>{{ selectedMeeting?.hour }}:00</span></p>
       <p>
         <strong>Instructor:</strong>

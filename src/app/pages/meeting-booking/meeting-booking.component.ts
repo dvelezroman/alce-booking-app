@@ -304,7 +304,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     if (this.isDaySelectable(day)) {
       this.selectedDay = day.day;
       this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
-      console.log('Día seleccionado:', day);
+      // console.log('Día seleccionado:', day);
       this.recalculateTimeSlots(day); // Call the recalculation method
       this.showTimeSlotsModal = true; // Show the modal
     }
@@ -340,7 +340,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       });
     }
   }
-
 
   selectTimeSlot(time: {label: string, value: number}) {
     if (!this.userData?.student?.stageId) {
@@ -600,5 +599,31 @@ onWindowScroll() {
       return ''
     }
     return link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`;
+  }
+
+  isCurrentWeek(date: Date): boolean {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // Day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+
+    // Calculate start of the current week (Sunday)
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - dayOfWeek);
+    startOfWeek.setHours(0, 0, 0, 0); // Set to start of the day
+
+    // Calculate end of the current week (Saturday)
+    const endOfWeek = new Date(today);
+    endOfWeek.setDate(today.getDate() + (6 - dayOfWeek));
+    endOfWeek.setHours(23, 59, 59, 999); // Set to end of the day
+
+    // Check if the given date is within the current week
+    const formattedDate = new Date(date);
+    return formattedDate >= startOfWeek && formattedDate <= endOfWeek;
+  }
+
+  capitalizeFirstLetter(value: string | null): string {
+    if (value) {
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    }
+    return '';
   }
 }
