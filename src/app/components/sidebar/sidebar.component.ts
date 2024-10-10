@@ -34,6 +34,7 @@ export class SidebarComponent implements OnInit {
     { icon: 'fas fa-calendar-alt', text: 'Meetings', route: '/searching-meeting', roles: [UserRole.ADMIN] },
     { icon: 'fas fa-calendar-alt', text: 'Students', route: '/searching-students', roles: [UserRole.ADMIN] },
     { icon: 'fas fa-calendar-alt', text: 'Stages', route: '/stage', roles: [UserRole.ADMIN] },
+    { icon: 'fas fa-calendar-alt', text: 'Meetings', route: '/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] }
   ];
 
   constructor(
