@@ -18,6 +18,13 @@ export interface Student {
   updatedAt?: Date;
   user?: UserDto;
   stage?: Stage;
+  studentClassification?: StudentClassification;
+}
+
+export enum StudentClassification {
+  ADULTS = "ADULTS",
+  TEENS = "TEENS",
+  KIDS = "KIDS",
 }
 
 export enum Mode {

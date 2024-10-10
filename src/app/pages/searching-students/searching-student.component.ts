@@ -157,7 +157,7 @@ export class SearchingStudentComponent {
       lastName: user.lastName,
       role: user.role,
       stageId: user.student?.stage?.id,
-      ageGroup: this.selectedAgeGroup || '',
+      ageGroup: user.student?.studentClassification,
     });
     if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
       this.editUserForm.patchValue({ link: user.instructor.meetingLink.link });
@@ -168,7 +168,7 @@ export class SearchingStudentComponent {
     if (this.editUserForm.valid && this.selectedUser) {
       const updatedUser = { ...this.editUserForm.value };
       if (this.selectedUser.role === UserRole.INSTRUCTOR && !updatedUser.link) {
-        delete updatedUser.link; 
+        delete updatedUser.link;
       }
       this.usersService.update(this.selectedUser.id, updatedUser).subscribe({
         next: (response) => {
