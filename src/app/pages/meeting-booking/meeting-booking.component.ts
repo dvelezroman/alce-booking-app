@@ -25,6 +25,8 @@ import { Mode } from '../../services/dtos/student.dto';
 export class MeetingBookingComponent implements OnInit, AfterViewInit {
   @ViewChild('scheduleList') scheduleList!: ElementRef;
   @ViewChild('timeSlotList') timeSlotList!: ElementRef;
+  private linkInterval: any;
+  private unsubscribe$ = new Subject<void>();
   canScrollLeft = false;
   canScrollRight = false;
   canScrollUp = false;
@@ -45,7 +47,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   currentMonthDays: any[] = [];
   selectedDay: number | null = null;
   selectedDayFormatted!: string;
-  showConfirm: string | null = null;
   showModal = false;
   showSuccessModal = false;
   showInfoModal = false;
@@ -58,15 +59,14 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
   meetings: MeetingDTO[] = [];
-  private unsubscribe$ = new Subject<void>();
   showTimeSlotsModal = false;
   isDeleteModalActive = false;
   meetingToDelete: MeetingDTO | null = null;
   selectedMeeting: MeetingDTO | null = null;
   isMeetingDetailModalActive = false;
   selectedMeetingIndex: number = 0;
-  linkStatus: 'hidden' | 'active' | 'started' | 'finished' = 'hidden';
-  private linkInterval: any;
+  linkStatus: string = 'not-clickable';
+
 
   constructor(
     private router: Router,
@@ -86,70 +86,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         this.initializeMeetings();
       }
     });
-    /**
-     * Represents the current date.
-     *
-     * @returns {Date} The current date.
-     */
     this.today = this.getTodayDate();
-    /**
-     * Retrieves the maximum date available.
-     *
-     * @returns {Date} The maximum date.
-     */
     this.maxDate = this.getMaxDate();
-    /**
-     * Represents the selected date.
-     * @type {Date}
-     */
     this.selectedDate = this.today; // Set the default selected date to today
-
     const todayDate = new Date();
-    /**
-     * Represents the selected month.
-     *
-     * @type {string}
-     */
     this.selectedMonth = todayDate.toLocaleString('default', { month: 'long' });
-    /**
-     * The selectedYear variable represents the currently selected year.
-     *
-     * @type {number}
-     */
     this.selectedYear = todayDate.getFullYear();
-
-    /**
-     * Get the current month.
-     *
-     * @returns {number} The current month represented as a number.
-     */
     this.todayMonth = this.selectedMonth;
-    /**
-     * Returns the current year.
-     *
-     * @returns {number} The current year.
-     */
     this.todayYear = this.selectedYear;
-
     const nextDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, 1);
-    /**
-     * Function to get the next month.
-     *
-     * @private
-     * @returns {Date} The next month.
-     */
     this.nextMonth_ = nextDate.toLocaleString('default', { month: 'long' });
-    /**
-     * Calculates the next year based on the current year.
-     *
-     * @param {number} currentYear - The current year.
-     * @returns {number} The next year.
-     */
     this.nextYear = nextDate.getFullYear();
-
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
-
     setTimeout(() => {
       this.checkScroll();
     }, 100);
@@ -195,8 +144,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
     return 'Nombre de Usuario';
   }
-
-
 
   initializeTimeSlots() {
     const startHour = 9; // 9 AM
@@ -275,8 +222,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     // const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
     // const maxMonth = nextMonthDate.toLocaleString('default', { month: 'long' });
     // const maxYear = nextMonthDate.getFullYear();
-
-
     if (this.selectedMonth === this.nextMonth_ && this.selectedYear === this.nextYear) {
       return;
     }
@@ -448,11 +393,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }, delay);
   }
 
-  closeTimeSlotsModal() {
-    this.showTimeSlotsModal = false;
-  }
-
-
   deleteMeeting(meeting:MeetingDTO){
     if (meeting && meeting.id) {
       this.bookingService.deleteMeeting(meeting.id).subscribe({
@@ -609,24 +549,33 @@ onWindowScroll() {
 
   updateLinkStatus() {
     if (!this.selectedMeeting) return;
-    const meetingStart = new Date(`${this.selectedMeeting.date}T${this.selectedMeeting.hour}:00`);
-    const meetingEnd = new Date(meetingStart);
-    meetingEnd.setMinutes(meetingEnd.getMinutes() + 60);
+
+    const MEETING_DURATION_MINUTES = 60;
+    const LINK_ACTIVE_BUFFER_MINUTES = 5;
+    const ONE_SECOND = 1000;
+    const timeZoneOffset = new Date().getTimezoneOffset() / 60;
+    const meetingStart = new Date(this.selectedMeeting.date).getTime() + ((this.selectedMeeting.hour + timeZoneOffset) * 60 * 60 * 1000 );
+    const meetingEnd = meetingStart + MEETING_DURATION_MINUTES * 60 * 1000;
 
     this.linkInterval = setInterval(() => {
-      const now = new Date();
-      const timeUntilStart = meetingStart.getTime() - now.getTime();
-      const timeSinceEnd = now.getTime() - meetingEnd.getTime();
-      if (timeUntilStart <= 5 * 60 * 1000 && timeSinceEnd < 5 * 60 * 1000) {
-        this.linkStatus = 'active';
+      const now = new Date().getTime();
+      const start = meetingStart;
+      const end = meetingEnd + (LINK_ACTIVE_BUFFER_MINUTES * 60 * 1000);
+      if (now < start) {
+        // The meeting is in the future, link is visible but not clickable
+        this.linkStatus = 'not-clickable';
+      } else if (now >= start && now <= end) {
+        // The meeting is within the active window (5 minutes before start to 65 minutes after start), link is clickable
+        this.linkStatus = 'clickable';
       } else {
-        this.linkStatus = 'hidden';
-      }
-      if (this.linkStatus === 'hidden') {
+        // The meeting has finished, link should not be clickable and show "Not available"
+        this.linkStatus = 'not-available';
         clearInterval(this.linkInterval);
       }
-    }, 60000);
+    }, ONE_SECOND);
   }
+
+
 
 
   isCurrentWeek(date: Date): boolean {

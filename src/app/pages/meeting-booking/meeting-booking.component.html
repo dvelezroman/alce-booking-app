@@ -154,14 +154,21 @@
         </span>
       </p>
       <ng-container *ngIf="selectedMeeting?.mode === mode.ONLINE">
-        <p class="meeting-link" [ngClass]="{'no-link': !selectedMeeting?.link, 'active': linkStatus === 'active'}">
-          <a *ngIf="selectedMeeting?.link"
+        <p class="meeting-link"
+           [ngClass]="{
+       'no-link': !selectedMeeting?.link,
+       'clickable': linkStatus === 'clickable',
+       'not-clickable': linkStatus === 'not-clickable',
+       'not-available': linkStatus === 'not-available'
+     }">
+          <a *ngIf="selectedMeeting?.link && linkStatus === 'clickable'"
              [href]="getFormattedLink(selectedMeeting?.link || '')"
              target="_blank"
              rel="noopener noreferrer">
-              {{ selectedMeeting?.link }}
+            {{ selectedMeeting?.link }}
           </a>
-          <span *ngIf="!selectedMeeting?.link">Enlace no disponible</span>
+          <span *ngIf="linkStatus === 'not-clickable'">{{ selectedMeeting?.link }}</span>
+          <span *ngIf="linkStatus === 'not-available'">Enlace no disponible</span>
         </p>
       </ng-container>
     </section>
