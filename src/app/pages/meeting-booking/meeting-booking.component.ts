@@ -626,4 +626,27 @@ onWindowScroll() {
     }
     return '';
   }
+
+  isToday(date: Date): boolean {
+    const today = new Date();
+    const formattedDate = new Date(date);
+    return (
+      formattedDate.getUTCFullYear() === today.getUTCFullYear() &&
+      formattedDate.getUTCMonth() === today.getUTCMonth() &&
+      formattedDate.getUTCDate() === today.getUTCDate()
+    );
+  }
+
+  isLinkEnabled(meetingDate?: Date): boolean {
+    if (!meetingDate) {
+      return false;
+    }
+    const formattedDate = new Date(meetingDate);
+    const currentTime = new Date().getTime();
+    const meetingTime = new Date(formattedDate).getTime();
+    const startWindow = meetingTime - 5 * 60 * 1000; // 5 minutes before the meeting
+    const endWindow = meetingTime + 60 * 60 * 1000 + 5 * 60 * 1000; // 5 minutes after meeting + 1 hour
+
+    return currentTime >= startWindow && currentTime <= endWindow;
+  }
 }

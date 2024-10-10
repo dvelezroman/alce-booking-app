@@ -33,15 +33,15 @@
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>
-
         <div class="schedule-list" #scheduleList>
           <div *ngFor="let meeting of meetings; let i = index" class="schedule-item" (click)="openMeetingDetailModal(meeting, i)">
             <div class="meeting-title">
-
               <strong>
-                {{ isCurrentWeek(meeting.date)
-                ? capitalizeFirstLetter(meeting.date | date: 'EEEE':'UTC')
-                : (meeting.date | date: 'mediumDate':'UTC') }}
+                {{ isToday(meeting.date)
+                ? 'Today'
+                : isCurrentWeek(meeting.date)
+                  ? capitalizeFirstLetter(meeting.date | date: 'EEEE':'UTC')
+                  : (meeting.date | date: 'mediumDate':'UTC') }}
               </strong>
             </div>
             <div class="meeting-info-container">
@@ -58,7 +58,6 @@
           </div>
         </div>
       </div>
-
       <!-- No Meetings Message -->
       <div class="no-meeting" *ngIf="meetings.length === 0">
         <p>No tienes fechas de clases programadas</p>
@@ -68,7 +67,6 @@
 
   <!-- Date and Time Selection Section -->
   <div class="date-time-wrapper">
-
     <!-- Calendar Selection -->
     <section class="date-time-selection">
       <div class="calendar-title">
@@ -153,10 +151,19 @@
           {{ selectedMeeting?.instructor?.user?.lastName | titlecase }}
         </span>
       </p>
-      <p class="meeting-link" [ngClass]="{'no-link': !selectedMeeting?.link}">
-        <a [href]="getFormattedLink(selectedMeeting?.link)" target="_blank" rel="noopener noreferrer">
-          <span>{{ selectedMeeting?.link || 'no ha sido asignado' }}</span>
+      <p>
+        NOTA: El link estará disponible 5 minutos antes de la hora agendada!
+      </p>
+      <p class="meeting-link" [ngClass]="{'no-link': !isLinkEnabled(selectedMeeting?.date)}">
+        <a *ngIf="isLinkEnabled(selectedMeeting?.date); else noLink"
+           [href]="getFormattedLink(selectedMeeting?.link)"
+           target="_blank"
+           rel="noopener noreferrer">
+          <span>{{ selectedMeeting?.link }}</span>
         </a>
+        <ng-template #noLink>
+          <span>{{ selectedMeeting?.link || 'Link no asignado' }}</span>
+        </ng-template>
       </p>
     </section>
   </div>
