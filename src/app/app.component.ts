@@ -1,15 +1,18 @@
 import { HeaderComponent } from './components/header/header.component';
-import { Component, OnInit } from '@angular/core';
+import {Component, LOCALE_ID, OnInit} from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import {SpinnerComponent} from "./components/spinner/spinner.component";
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { UsersService } from './services/users.service';
-import { CommonModule } from '@angular/common';
+import {CommonModule, registerLocaleData} from '@angular/common';
 import {selectIsLoggedIn, selectIsRegistered, selectUserData} from "./store/user.selector";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {setAdminStatus, setLoggedInStatus, unsetUserData} from "./store/user.action";
 import {UserDto, UserRole} from "./services/dtos/user.dto";
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localeEs)
 
 @Component({
   selector: 'app-root',
@@ -21,6 +24,9 @@ import {UserDto, UserRole} from "./services/dtos/user.dto";
     HeaderComponent,
     SidebarComponent,
     CommonModule
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es' }
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
