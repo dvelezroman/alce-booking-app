@@ -59,7 +59,7 @@
           <form [formGroup]="userForm" (ngSubmit)="searchUsers()">
             <div class="form-field">
               <label for="email">Email</label>
-              <input type="email" id="email" formControlName="email" placeholder="Ingrese el Email" />
+              <input type="email" id="emailInput" formControlName="email" placeholder="Ingrese el Email" />
             </div>
             <div class="form-field">
               <label for="role">Rol</label>
@@ -171,31 +171,33 @@
         </div>
         <div class="form-field-edit">
           <label for="firstName">First Name</label>
-          <input type="text" id="firstName" formControlName="firstName" [value]="selectedUser?.firstName" />
+          <input type="text" id="firstNameInput" formControlName="firstName" [value]="selectedUser?.firstName" />
         </div>
         <div class="form-field-edit">
           <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" formControlName="lastName" [value]="selectedUser?.lastName" />
+          <input type="text" id="lastNameInput" formControlName="lastName" [value]="selectedUser?.lastName" />
         </div>
         <div class="form-field-edit">
           <label for="role">Role</label>
-          <select id="role" class="input" formControlName="role">
+          <select id="roles" class="input" formControlName="role">
             <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
           </select>
         </div>
-        <div *ngIf="selectedUser?.role === 'STUDENT'" class="form-field-edit">
+        <div *ngIf="selectedUser?.role === UserRole.STUDENT" class="form-field-edit">
           <label for="ageGroup">Categoría de Edad</label>
           <select id="ageGroup" formControlName="ageGroup">
             <option *ngFor="let group of ageGroupOptions" [value]="group">{{ group }}</option>
           </select>
         </div>
-        <div class="form-field-edit" *ngIf="selectedUser?.role === 'INSTRUCTOR'">
-          <label for="link">Link</label>
-          <input type="text" id="link" formControlName="link"/>
+        <div class="form-field-edit" *ngIf="selectedUser?.role === UserRole.INSTRUCTOR">
+          <label for="links">URL Meeting</label>
+          <select id="links" class="input" formControlName="linkId">
+            <option *ngFor="let link of links" [value]="link.id">{{ link.link }}</option>
+          </select>
         </div>
         <div class="form-field-edit">
           <label for="stageId">Stage</label>
-          <select id="stageId" class="input" formControlName="stageId">
+          <select id="stages" class="input" formControlName="stageId">
             <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
           </select>
         </div>

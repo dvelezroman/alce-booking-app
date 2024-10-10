@@ -6,6 +6,8 @@ import {UsersService} from "../../services/users.service";
 import {UserDto, UserRole} from "../../services/dtos/user.dto";
 import {Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
+import {MeetingLinkDto} from "../../services/dtos/booking.dto";
+import {LinksService} from "../../services/links.service";
 
 @Component({
   selector: 'app-searching-students-student',
@@ -26,7 +28,7 @@ export class SearchingStudentComponent {
   userForm!: FormGroup;
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
-  selectedAgeGroup: string = '';
+  links: MeetingLinkDto[] = [];
 
   users: UserDto[] = [];
   totalUsers: number = 0;
@@ -48,18 +50,19 @@ export class SearchingStudentComponent {
     private fb: FormBuilder,
     private usersService: UsersService,
     private stagesService: StagesService,
+    private linksService: LinksService,
   ) {
     this.editUserForm = this.fb.group({
       idNumber: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       role: ['', Validators.required],
-      stageId: ['', Validators.required],
+      stageId: [''],
       email: ['', Validators.email],
       birthday: ['', Validators.required],
       status: ['', Validators.required],
       register: ['', Validators.required],
-      link: [''],
+      linkId: [''],
       ageGroup: ['']
     });
   }
@@ -67,6 +70,9 @@ export class SearchingStudentComponent {
   ngOnInit() {
     this.stagesService.getAll().subscribe(stages => {
       this.stages = stages;
+    });
+    this.linksService.getAll().subscribe(links => {
+      this.links = links;
     });
     this.studentForm = this.fb.group({
       userId: [''],
@@ -143,7 +149,7 @@ export class SearchingStudentComponent {
     }
   }
 
-//método para abrir modal con los datos de usuario
+  //método para abrir modal con los datos de usuario
   edit(user: UserDto) {
     this.selectedUser = user;
     this.isEditModalOpen = true;
@@ -160,15 +166,16 @@ export class SearchingStudentComponent {
       ageGroup: user.student?.studentClassification,
     });
     if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
-      this.editUserForm.patchValue({ link: user.instructor.meetingLink.link });
+      console.log('verfa')
+      this.editUserForm.patchValue({ linkId: user.instructor.meetingLink.id });
     }
   }
 
   updateUser() {
     if (this.editUserForm.valid && this.selectedUser) {
       const updatedUser = { ...this.editUserForm.value };
-      if (this.selectedUser.role === UserRole.INSTRUCTOR && !updatedUser.link) {
-        delete updatedUser.link;
+      if (!updatedUser.linkId) {
+        delete updatedUser.linkId;
       }
       this.usersService.update(this.selectedUser.id, updatedUser).subscribe({
         next: (response) => {
@@ -218,4 +225,5 @@ export class SearchingStudentComponent {
     this.showModal = false;
   }
   protected readonly Math = Math;
+  protected readonly UserRole = UserRole;
 }
