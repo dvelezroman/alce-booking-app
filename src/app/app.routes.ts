@@ -20,7 +20,7 @@ export const routes: Routes = [
   { path: 'contact', component: ContactComponent, canActivate: [AuthGuard]},
   { path: 'stage', component: StageComponent, canActivate: [AuthGuard] },
   { path: 'searching-meeting', component: SearchingMeetingComponent, canActivate: [AuthGuard]},
-  { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent},
+  { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent,canActivate: [AuthGuard]},
   { path: 'searching-students', component: SearchingStudentComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },

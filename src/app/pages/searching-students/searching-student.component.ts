@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalComponent } from '../../components/modal/modal.component';
 import {UsersService} from "../../services/users.service";
-import {UserDto} from "../../services/dtos/user.dto";
+import {UserDto, UserRole} from "../../services/dtos/user.dto";
 import {Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
 
@@ -13,7 +13,8 @@ import {StagesService} from "../../services/stages.service";
   imports: [
       CommonModule,
       ReactiveFormsModule,
-      ModalComponent
+      ModalComponent,
+      FormsModule
   ],
   templateUrl: './searching-student.component.html',
   styleUrl: './searching-student.component.scss'
@@ -24,6 +25,8 @@ export class SearchingStudentComponent {
   studentForm!: FormGroup;
   userForm!: FormGroup;
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
+  ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
+  selectedAgeGroup: string = '';
 
   users: UserDto[] = [];
   totalUsers: number = 0;
@@ -56,6 +59,8 @@ export class SearchingStudentComponent {
       birthday: ['', Validators.required],
       status: ['', Validators.required],
       register: ['', Validators.required],
+      link: [''],
+      ageGroup: ['']
     });
   }
 
@@ -151,13 +156,20 @@ export class SearchingStudentComponent {
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
-      stageId: user.student?.stage?.id
+      stageId: user.student?.stage?.id,
+      ageGroup: this.selectedAgeGroup || '',
     });
+    if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
+      this.editUserForm.patchValue({ link: user.instructor.meetingLink.link });
+    }
   }
 
   updateUser() {
     if (this.editUserForm.valid && this.selectedUser) {
       const updatedUser = { ...this.editUserForm.value };
+      if (this.selectedUser.role === UserRole.INSTRUCTOR && !updatedUser.link) {
+        delete updatedUser.link; 
+      }
       this.usersService.update(this.selectedUser.id, updatedUser).subscribe({
         next: (response) => {
           console.log('User updated:', response);

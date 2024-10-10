@@ -533,36 +533,30 @@ onWindowScroll() {
     if (!this.scheduleList || !this.scheduleList.nativeElement) {
       return;
     }
-
     const el = this.scheduleList.nativeElement;
     this.canScrollLeft = el.scrollLeft > 0;
     this.canScrollRight = el.scrollWidth > el.clientWidth;
   }
-
   scrollLeft() {
     this.scheduleList.nativeElement.scrollBy({ left: -330, behavior: 'smooth' });
     setTimeout(() => this.checkScroll(), 300);
   }
-
   scrollRight() {
     this.scheduleList.nativeElement.scrollBy({ left: 330, behavior: 'smooth' });
     setTimeout(() => this.checkScroll(), 300);
   }
-
   scrollUp() {
     if (this.timeSlotList) {
       this.timeSlotList.nativeElement.scrollBy({ top: -400, behavior: 'smooth' });
       setTimeout(() => this.checkScrollY(), 300);
     }
   }
-
   scrollDown() {
     if (this.timeSlotList) {
       this.timeSlotList.nativeElement.scrollBy({ top: 400, behavior: 'smooth' });
       setTimeout(() => this.checkScrollY(), 300);
     }
   }
-
   checkScrollY() {
     if (!this.timeSlotList || !this.timeSlotList.nativeElement) {
       return;

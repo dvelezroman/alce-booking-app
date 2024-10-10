@@ -183,6 +183,16 @@
             <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
           </select>
         </div>
+        <div *ngIf="selectedUser?.role === 'STUDENT'" class="form-field-edit">
+          <label for="ageGroup">Categoría de Edad</label>
+          <select id="ageGroup" formControlName="ageGroup">
+            <option *ngFor="let group of ageGroupOptions" [value]="group">{{ group }}</option>
+          </select>
+        </div>
+        <div class="form-field-edit" *ngIf="selectedUser?.role === 'INSTRUCTOR'">
+          <label for="link">Link</label>
+          <input type="text" id="link" formControlName="link"/>
+        </div>
         <div class="form-field-edit">
           <label for="stageId">Stage</label>
           <select id="stageId" class="input" formControlName="stageId">
