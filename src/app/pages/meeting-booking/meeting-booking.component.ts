@@ -8,6 +8,7 @@ import {Observable, Subject, takeUntil} from "rxjs";
 import {UserDto} from "../../services/dtos/user.dto";
 import {BookingService} from "../../services/booking.service";
 import {CreateMeetingDto, MeetingDTO} from "../../services/dtos/booking.dto";
+import { Mode } from '../../services/dtos/student.dto';
 
 @Component({
   selector: 'app-meeting-booking',
@@ -31,9 +32,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   canGoBack: boolean = false;
   canGoForward: boolean = true;
 
+  meetingType: Mode = Mode.ONLINE; 
+  mode = Mode;
   selectedDate: string = '';
   selectedTimeSlot: {label: string, value: number} = { label: "9:00", value: 9 };
-  meetingType: string = 'Online';
   hoverIndex: number | null = null;
   timeSlots: {label: string, value: number }[] = [];
   today: string = '';
@@ -420,6 +422,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       stageId: this.userData.stage?.id,
       date: new Date(`${this.selectedYear}-${this.selectedMonth}-${this.selectedDay}`).toISOString().split('T')[0],
       hour: this.selectedTimeSlot.value,
+      
     };
   }
 

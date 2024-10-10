@@ -57,6 +57,7 @@
       <!-- No Meetings Message -->
       <div class="no-meeting" *ngIf="meetings.length === 0">
         <p>No tienes fechas de clases programadas</p>
+        <i class="far fa-calendar-times no-meeting-icon"></i>
       </div>
     </section>
   </div>
@@ -199,11 +200,11 @@
 
     <div class="radio-options">
       <label class="custom-radio">
-        <input type="radio" name="meetingType" [(ngModel)]="meetingType" value="Online" checked>
+        <input type="radio" name="meetingType" [(ngModel)]="meetingType" [value]="mode.ONLINE" checked>
         <span class="radio-label">Online</span>
       </label>
       <label class="custom-radio">
-        <input type="radio" name="meetingType" [(ngModel)]="meetingType" value="Presencial">
+        <input type="radio" name="meetingType" [(ngModel)]="meetingType" [value]="mode.PRESENCIAL">
         <span class="radio-label">Presencial</span>
       </label>
     </div>
