@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
 import { BookingService } from '../../services/booking.service';
+import { Store } from '@ngrx/store';
+import { UserDto } from '../../services/dtos/user.dto';
+import { selectUserData } from '../../store/user.selector';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -19,6 +22,7 @@ import { BookingService } from '../../services/booking.service';
 export class SearchingMeetingInstructorComponent implements OnInit {
   availableHours: number[] = [];
   meetings: MeetingDTO[] = [];
+  instructorId: number | null = null;
   selectedMeetingIds: any[] = [];
   isChecked: boolean = true;
   attendanceStatus: { [key: number]: boolean } = {};
@@ -29,10 +33,20 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     hour: '',
     assigned: false,
   };
-  constructor(private bookingService: BookingService) {}
+  constructor(private bookingService: BookingService,
+               private store: Store) {}
 
   ngOnInit(): void {
     this.availableHours = Array.from({ length: 13 }, (_, i) => 9 + i);
+
+    this.store.select(selectUserData).subscribe((userData: UserDto | null) => {
+      if (userData && userData.instructor) {
+        this.instructorId = userData.instructor.id;
+        console.log('instructor ID:', this.instructorId); 
+      } else {
+        console.log('instructor ID no disponible');
+      }
+    });
   }
 
   onFilterChange(): void {
@@ -44,7 +58,12 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   }
 
   private fetchMeetings(params?: FilterMeetingsDto): void {
-    this.bookingService.searchMeetings(params ? params : this.filter).subscribe(meetings => {
+    const searchParams: FilterMeetingsDto = {
+      ...params,
+      instructorId: this.instructorId ? this.instructorId.toString() : undefined,
+    };
+  
+    this.bookingService.searchMeetings(searchParams).subscribe(meetings => {
       this.meetings = meetings;
     });
   }
