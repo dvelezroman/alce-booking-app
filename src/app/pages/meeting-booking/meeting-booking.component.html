@@ -142,6 +142,7 @@
     <section class="modal-card-body">
       <p><strong>Fecha:</strong> <span>{{ selectedMeeting?.date | date: 'mediumDate' }}</span></p>
       <p><strong>Hora:</strong> <span>{{ selectedMeeting?.hour }}:00</span></p>
+      <p><strong>Modo:</strong> <span>{{ selectedMeeting?.mode === mode.ONLINE ? 'Online' : 'Presencial' }}</span></p>
       <p>
         <strong>Instructor:</strong>
         <span>
@@ -149,12 +150,15 @@
           {{ selectedMeeting?.instructor?.user?.lastName | titlecase }}
         </span>
       </p>
-      <p class="meeting-link" [ngClass]="{'no-link': linkStatus === 'hidden' || linkStatus === 'finished'}">
-        <a *ngIf="linkStatus === 'active'" [href]="getFormattedLink(selectedMeeting?.link)" target="_blank" rel="noopener noreferrer">
-          <span>{{ getLinkText() }}</span>
-        </a>
-        <span *ngIf="linkStatus !== 'active'">{{ getLinkText() }}</span>
-      </p>
+      <ng-container *ngIf="selectedMeeting?.mode === mode.ONLINE">
+        <p class="meeting-link" [ngClass]="{'no-link': linkStatus === 'hidden' || linkStatus === 'finished'}">
+          <a *ngIf="linkStatus === 'active'" [href]="getFormattedLink(selectedMeeting?.link)" target="_blank" rel="noopener noreferrer">
+            <span>{{ getLinkText() }}</span>
+          </a>
+          <span *ngIf="linkStatus !== 'active'">{{ getLinkText() }}</span>
+        </p>
+        <div *ngIf="linkStatus === 'started'" class="countdown-timer">{{ countdown }}</div>
+      </ng-container>
     </section>
   </div>
 </div>

@@ -67,6 +67,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   selectedMeetingIndex: number = 0;
   linkStatus: 'hidden' | 'active' | 'started' | 'finished' = 'hidden';
   private linkInterval: any;
+  countdown: number = 0;
 
   constructor(
     private router: Router,
@@ -422,6 +423,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       stageId: this.userData.stage?.id,
       date: new Date(`${this.selectedYear}-${this.selectedMonth}-${this.selectedDay}`).toISOString().split('T')[0],
       hour: this.selectedTimeSlot.value,
+      mode: this.meetingType
       
     };
   }
@@ -615,30 +617,35 @@ onWindowScroll() {
 
 
   updateLinkStatus() {
-    if (!this.selectedMeeting) 
-      return;
+    if (!this.selectedMeeting) return;
 
     const meetingStart = new Date(`${this.selectedMeeting.date}T${this.selectedMeeting.hour}:00`);
     const meetingEnd = new Date(meetingStart);
-    meetingEnd.setMinutes(meetingEnd.getMinutes() + 60);  
+    meetingEnd.setMinutes(meetingEnd.getMinutes() + 60);
 
     this.linkInterval = setInterval(() => {
-      const now = new Date();
-      const timeUntilStart = meetingStart.getTime() - now.getTime();
-      const timeSinceEnd = now.getTime() - meetingEnd.getTime();
+        const now = new Date();
+        const timeUntilStart = meetingStart.getTime() - now.getTime();
+        const timeSinceEnd = now.getTime() - meetingEnd.getTime();
 
-      if (timeUntilStart <= 5 * 60 * 1000 && timeUntilStart > 0) {
-        this.linkStatus = 'active';  
-      } else if (timeUntilStart <= 0 && timeSinceEnd < 5 * 60 * 1000) {
-        this.linkStatus = 'started';  
-      } else if (timeSinceEnd >= 5 * 60 * 1000) {
-        this.linkStatus = 'finished';  
-        clearInterval(this.linkInterval);  
-      } else {
-        this.linkStatus = 'hidden';  
-      }
-    }, 1000);  
-  }
+        if (timeUntilStart <= 5 * 60 * 1000 && timeUntilStart > 0) {
+            this.linkStatus = 'active';
+            this.countdown = Math.floor(timeUntilStart / 1000);  
+        } else if (timeUntilStart <= 0 && timeSinceEnd < 5 * 60 * 1000) {
+            this.linkStatus = 'started';
+            this.countdown = 0;  
+        } else if (timeSinceEnd >= 5 * 60 * 1000) {
+            this.linkStatus = 'finished';
+            clearInterval(this.linkInterval);
+        } else {
+            this.linkStatus = 'hidden';
+        }
+
+        if (this.linkStatus === 'active' && this.countdown > 0) {
+            this.countdown--;  
+        }
+    }, 1000);
+}
 
   getLinkText() {
     if (!this.selectedMeeting || !this.selectedMeeting.date || this.selectedMeeting.hour === undefined) {
