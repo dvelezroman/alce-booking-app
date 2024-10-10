@@ -177,7 +177,6 @@ export class SearchingStudentComponent {
     this.isEditModalOpen = false;
   }
 
-
   changePage(page: number) {
     this.currentPage = page;
     this.searchUsers(); // Re-fetch the results for the new page
@@ -188,7 +187,6 @@ export class SearchingStudentComponent {
     this.modalIsError = false;
     this.modalMessage = message;
     this.showModal = true;
-
     setTimeout(() => {
       this.closeModal();
     }, 3000);
@@ -199,7 +197,6 @@ export class SearchingStudentComponent {
     this.modalIsError = true;
     this.modalMessage = message;
     this.showModal = true;
-
     setTimeout(() => {
       this.closeModal();
     }, 3000);
@@ -208,6 +205,5 @@ export class SearchingStudentComponent {
   closeModal() {
     this.showModal = false;
   }
-
   protected readonly Math = Math;
 }

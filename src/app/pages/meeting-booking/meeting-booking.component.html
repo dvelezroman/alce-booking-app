@@ -151,13 +151,15 @@
         </span>
       </p>
       <ng-container *ngIf="selectedMeeting?.mode === mode.ONLINE">
-        <p class="meeting-link" [ngClass]="{'no-link': linkStatus === 'hidden' || linkStatus === 'finished'}">
-          <a *ngIf="linkStatus === 'active'" [href]="getFormattedLink(selectedMeeting?.link)" target="_blank" rel="noopener noreferrer">
-            <span>{{ getLinkText() }}</span>
+        <p class="meeting-link" [ngClass]="{'no-link': !selectedMeeting?.link, 'active': linkStatus === 'active'}">
+          <a *ngIf="selectedMeeting?.link"
+             [href]="getFormattedLink(selectedMeeting?.link || '')"
+             target="_blank" 
+             rel="noopener noreferrer">
+              {{ selectedMeeting?.link }}
           </a>
-          <span *ngIf="linkStatus !== 'active'">{{ getLinkText() }}</span>
+          <span *ngIf="!selectedMeeting?.link">Enlace no disponible</span>
         </p>
-        <div *ngIf="linkStatus === 'started'" class="countdown-timer">{{ countdown }}</div>
       </ng-container>
     </section>
   </div>

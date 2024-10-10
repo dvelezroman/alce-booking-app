@@ -67,7 +67,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   selectedMeetingIndex: number = 0;
   linkStatus: 'hidden' | 'active' | 'started' | 'finished' = 'hidden';
   private linkInterval: any;
-  countdown: number = 0;
 
   constructor(
     private router: Router,
@@ -382,7 +381,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
           this.showInfoModal = true;
           this.hideInfoModalAfterDelay(2000);
           this.initializeMeetings();
-          
         },
         error: () => {
           this.showSuccessModal = false;
@@ -424,7 +422,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       date: new Date(`${this.selectedYear}-${this.selectedMonth}-${this.selectedDay}`).toISOString().split('T')[0],
       hour: this.selectedTimeSlot.value,
       mode: this.meetingType
-      
     };
   }
 
@@ -581,18 +578,14 @@ onWindowScroll() {
     const today = new Date();
     const currentMonth = today.toLocaleString('default', { month: 'long' });
     const currentYear = today.getFullYear();
-
     const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
     const nextMonth = nextMonthDate.toLocaleString('default', { month: 'long' });
     const nextYear = nextMonthDate.getFullYear();
-
     // Puedes retroceder si no estás en el mes actual
     this.canGoBack = !(this.selectedMonth === currentMonth && this.selectedYear === currentYear);
-
     // Puedes avanzar si no estás ya en el mes siguiente
     this.canGoForward = !(this.selectedMonth === nextMonth && this.selectedYear === nextYear);
   }
-
   // método para seleccionar meetings, abrir y cerrar modal
   openMeetingDetailModal(meeting: MeetingDTO, index: number) {
     this.selectedMeeting = meeting;
@@ -615,61 +608,25 @@ onWindowScroll() {
     return link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`;
   }
 
-
   updateLinkStatus() {
     if (!this.selectedMeeting) return;
-
     const meetingStart = new Date(`${this.selectedMeeting.date}T${this.selectedMeeting.hour}:00`);
     const meetingEnd = new Date(meetingStart);
-    meetingEnd.setMinutes(meetingEnd.getMinutes() + 60);
+    meetingEnd.setMinutes(meetingEnd.getMinutes() + 60); 
 
     this.linkInterval = setInterval(() => {
-        const now = new Date();
-        const timeUntilStart = meetingStart.getTime() - now.getTime();
-        const timeSinceEnd = now.getTime() - meetingEnd.getTime();
-
-        if (timeUntilStart <= 5 * 60 * 1000 && timeUntilStart > 0) {
-            this.linkStatus = 'active';
-            this.countdown = Math.floor(timeUntilStart / 1000);  
-        } else if (timeUntilStart <= 0 && timeSinceEnd < 5 * 60 * 1000) {
-            this.linkStatus = 'started';
-            this.countdown = 0;  
-        } else if (timeSinceEnd >= 5 * 60 * 1000) {
-            this.linkStatus = 'finished';
-            clearInterval(this.linkInterval);
-        } else {
-            this.linkStatus = 'hidden';
-        }
-
-        if (this.linkStatus === 'active' && this.countdown > 0) {
-            this.countdown--;  
-        }
-    }, 1000);
-}
-
-  getLinkText() {
-    if (!this.selectedMeeting || !this.selectedMeeting.date || this.selectedMeeting.hour === undefined) {
-      return 'Link no disponible';
-    }
-    const meetingDateTime = new Date(this.selectedMeeting.date);
-    meetingDateTime.setHours(this.selectedMeeting.hour, 0, 0, 0); 
-  
-    const currentDate = new Date();
-    const isToday = currentDate.toDateString() === meetingDateTime.toDateString();
-  
-    if (isToday && !this.selectedMeeting.link && this.linkStatus === 'hidden') {
-      return 'El link estará disponible en breve...';
-    }
-  
-    switch (this.linkStatus) {
-      case 'active':
-        return this.selectedMeeting.link || 'Link no asignado';
-      case 'started':
-        return 'Clase iniciada';
-      case 'finished':
-        return 'Clase finalizada';
-      default:
-        return 'Link no disponible';
-    }
+      const now = new Date();
+      const timeUntilStart = meetingStart.getTime() - now.getTime();
+      const timeSinceEnd = now.getTime() - meetingEnd.getTime();
+      if (timeUntilStart <= 5 * 60 * 1000 && timeSinceEnd < 5 * 60 * 1000) {
+        this.linkStatus = 'active';  
+      } else {
+        this.linkStatus = 'hidden';
+      }
+      if (this.linkStatus === 'hidden') {
+        clearInterval(this.linkInterval);
+      }
+    }, 60000);
   }
+
 }
