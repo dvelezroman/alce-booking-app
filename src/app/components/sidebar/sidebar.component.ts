@@ -33,6 +33,7 @@ export class SidebarComponent implements OnInit {
     { icon: 'booking', text: 'Booking', route: '/booking', roles: [UserRole.STUDENT] },
     { icon: 'group', text: 'Meetings', route: '/searching-meeting', roles: [UserRole.ADMIN] },
     { icon: 'school', text: 'Students', route: '/searching-students', roles: [UserRole.ADMIN] },
+    { icon: 'link', text: 'Links', route: '/link', roles: [UserRole.ADMIN] },
     { icon: 'stages', text: 'Stages', route: '/stage', roles: [UserRole.ADMIN] },
     { icon: 'video_call', text: 'Meetings', route: '/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] }
 ];
