@@ -435,9 +435,9 @@ onWindowScroll() {
   const progress = Math.min(scrollPosition / 100, 1);
 
   // gradient
-  const startColor1 = [228, 228, 228];
-  const startColor2 = [241, 241, 241];
-  const endColor = [226, 224, 235];
+  const startColor1 = [255, 255, 255];
+  const startColor2 = [245, 245, 245];
+  const endColor = [243, 245, 255];
 
   // Cálculo del gradiente progresivo en función del scroll
   const r1 = Math.round(startColor1[0] + (endColor[0] - startColor1[0]) * progress);
@@ -452,11 +452,11 @@ onWindowScroll() {
   header.style.background = `linear-gradient(270deg, rgb(${r1}, ${g1}, ${b1}), rgb(${r2}, ${g2}, ${b2}))`;
 
   // Sombra cuando hay scroll
-  const boxShadowOpacity = 0.10 * progress;
+  const boxShadowOpacity = 0.1 * progress;
   header.style.boxShadow = `0 2px 5px rgba(0, 0, 0, ${boxShadowOpacity})`;
 
   if (scrollPosition === 0) {
-    header.style.background = 'linear-gradient(270deg, rgb(228, 228, 228), rgb(241, 241, 241))';
+    header.style.background = 'linear-gradient(270deg, rgb(255, 255, 255), rgb(255, 255, 255))';
     header.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0)';
   }
 }

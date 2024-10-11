@@ -29,13 +29,13 @@ export class SidebarComponent implements OnInit {
   userData: UserDto | null = null;
 
   navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
-    { icon: 'fas fa-home', text: 'Home', route: '/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
-    { icon: 'fas fa-calendar-alt', text: 'Booking', route: '/booking', roles: [UserRole.STUDENT] },
-    { icon: 'fas fa-calendar-alt', text: 'Meetings', route: '/searching-meeting', roles: [UserRole.ADMIN] },
-    { icon: 'fas fa-calendar-alt', text: 'Students', route: '/searching-students', roles: [UserRole.ADMIN] },
-    { icon: 'fas fa-calendar-alt', text: 'Stages', route: '/stage', roles: [UserRole.ADMIN] },
-    { icon: 'fas fa-calendar-alt', text: 'Meetings', route: '/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] }
-  ];
+    { icon: 'home', text: 'Home', route: '/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
+    { icon: 'booking', text: 'Booking', route: '/booking', roles: [UserRole.STUDENT] },
+    { icon: 'group', text: 'Meetings', route: '/searching-meeting', roles: [UserRole.ADMIN] },
+    { icon: 'school', text: 'Students', route: '/searching-students', roles: [UserRole.ADMIN] },
+    { icon: 'stages', text: 'Stages', route: '/stage', roles: [UserRole.ADMIN] },
+    { icon: 'video_call', text: 'Meetings', route: '/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] }
+];
 
   constructor(
     private usersService: UsersService,
