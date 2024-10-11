@@ -93,7 +93,7 @@
         <th>First Name</th>
         <th>Last Name</th>
         <th>Role</th>
-        <th>Stage</th>
+        <th *ngIf="showStageColumn">Stage</th>
         <th>Registered</th>
         <th>Email</th>
         <th>Edit</th>
@@ -105,10 +105,13 @@
         <td>{{ user.firstName | titlecase}}</td>
         <td>{{ user.lastName | titlecase }}</td>
         <td>{{ user.role | titlecase }}</td>
-        <td>{{ user.student?.stage?.description | titlecase }}</td>
+        <td *ngIf="showStageColumn">{{ user.student?.stage?.description | titlecase }}</td>
         <td>{{ user.register ? '✓' : '❌' }}</td>
         <td>{{ user.email }}</td>
-        <td><i class="fas fa-edit edit-icon" (click)="edit(user)"></i></td>
+        <td>
+          <i class="fas fa-edit edit-icon" (click)="edit(user)"></i>
+          <i class="fas fa-trash delete-icon" (click)="openDeleteModal(user)"></i>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -129,8 +132,11 @@
         <p><strong>Email:</strong> <span>{{ user.email }}</span></p>
       </div>
       <div class="card-user-footer">
-        <button (click)="edit(user)" class="edit-button-user">
+        <button (click)="edit(user)" class="action-button edit-button-user">
           <i class="fas fa-edit"></i> Edit
+        </button>
+        <button (click)="openDeleteModal(user)" class="action-button delete-button">
+          <i class="fas fa-trash"></i> Delete
         </button>
       </div>
     </div>
@@ -163,7 +169,7 @@
       <form [formGroup]="editUserForm">
         <div class="form-field-edit">
           <label for="idNumber">Numero de Identificación</label>
-          <input type="number" id="idNumber" formControlName="idNumber" [value]="selectedUser?.idNumber" />
+          <input type="number" id="idNumber" formControlName="idNumber" [value]="selectedUser?.idNumber" readonly />
         </div>
         <div class="form-field-edit">
           <label for="email">Correo Electrónico</label>
@@ -195,7 +201,7 @@
             <option *ngFor="let link of links" [value]="link.id">{{ link.link }}</option>
           </select>
         </div>
-        <div class="form-field-edit">
+        <div class="form-field-edit" *ngIf="selectedUser?.role === UserRole.STUDENT">
           <label for="stageId">Stage</label>
           <select id="stages" class="input" formControlName="stageId">
             <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
@@ -210,4 +216,18 @@
   </div>
 </div>
 
+
+<!-- Modal específico para confirmación de eliminación -->
+<div class="delete-modal" [ngClass]="{ 'is-active': isDeleteModalOpen }">
+  <div class="delete-modal-background" (click)="closeDeleteModal()"></div>
+  <div class="delete-modal-card">
+    <section class="delete-modal-body">
+      <p>{{ deleteModalMessage }}</p>
+      <div class="delete-modal-actions">
+        <button class="delete-confirm-button" (click)="confirmDelete()">Eliminar</button>
+        <button class="delete-cancel-button" (click)="closeDeleteModal()">Cancelar</button>
+      </div>
+    </section>
+  </div>
+</div>
 

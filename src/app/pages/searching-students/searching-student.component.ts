@@ -22,6 +22,7 @@ import {LinksService} from "../../services/links.service";
   styleUrl: './searching-student.component.scss'
 })
 export class SearchingStudentComponent {
+  
   screenWidth: number = 0;
   isStudentForm = true;
   studentForm!: FormGroup;
@@ -45,6 +46,11 @@ export class SearchingStudentComponent {
   selectedUser: UserDto | null = null;
   isEditModalOpen = false;
   editUserForm!: FormGroup;
+  showStageColumn: boolean = true;
+
+  isDeleteModalOpen: boolean = false;
+  deleteModalMessage: string = '';
+  userToDelete: UserDto | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -53,10 +59,10 @@ export class SearchingStudentComponent {
     private linksService: LinksService,
   ) {
     this.editUserForm = this.fb.group({
-      idNumber: ['', Validators.required],
+       idNumber: [{ value: '', disabled: true }, Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      role: ['', Validators.required],
+      role: [{ value: '', disabled: true }, Validators.required],
       stageId: [''],
       email: ['', Validators.email],
       birthday: ['', Validators.required],
@@ -113,6 +119,9 @@ export class SearchingStudentComponent {
   searchUsers() {
     this.noResults = false;
 
+    const role = this.userForm.value.role;
+    this.showStageColumn = !role || role === 'STUDENT';
+
     if (this.isStudentForm) {
       const { userId, firstName, lastName, stageId } = this.studentForm.value;
       this.usersService.searchUsers((this.currentPage - 1) * this.itemsPerPage, this.itemsPerPage, undefined, firstName, lastName, undefined, undefined, undefined, stageId)
@@ -166,7 +175,6 @@ export class SearchingStudentComponent {
       ageGroup: user.student?.studentClassification,
     });
     if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
-      console.log('verfa')
       this.editUserForm.patchValue({ linkId: user.instructor.meetingLink.id });
     }
   }
@@ -226,4 +234,38 @@ export class SearchingStudentComponent {
   }
   protected readonly Math = Math;
   protected readonly UserRole = UserRole;
+  
+// Abre el modal de eliminación
+openDeleteModal(user: UserDto): void {
+  this.deleteModalMessage = `¿Estás seguro de que deseas eliminar al usuario ${user.firstName} ${user.lastName}?`;
+  this.isDeleteModalOpen = true;
+  this.userToDelete = user;
 }
+
+// Cierra el modal de eliminación
+closeDeleteModal(): void {
+  this.isDeleteModalOpen = false;
+  this.userToDelete = null;
+}
+
+// Confirma y elimina el usuario
+confirmDelete(): void {
+  if (this.userToDelete) {
+    console.log("Eliminando usuario con ID:", this.userToDelete.id);
+    this.usersService.delete(this.userToDelete.id).subscribe({
+      next: () => {
+        this.users = this.users.filter(user => user.id !== this.userToDelete?.id);
+        this.showSuccessModal('Usuario eliminado exitosamente');
+        this.closeDeleteModal();
+      },
+      error: (error) => {
+        console.error('Error al eliminar el usuario:', error);
+        this.showErrorModal('No se pudo eliminar el usuario');
+        this.closeDeleteModal();
+      }
+    });
+  }
+}
+
+}
+

@@ -249,6 +249,101 @@
     background-color: #8456ca;
   }
 
+
+/* modal de confirmación eliminación usuario */
+.delete-modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(158, 158, 158, 0.311); 
+  backdrop-filter: blur(8px); 
+  z-index: 1000;
+}
+
+.delete-modal {
+  display: none; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.delete-modal.is-active {
+  display: flex;
+}
+
+/* Tarjeta principal del modal */
+.delete-modal-card {
+  max-width: 400px;
+  margin: auto;
+  padding: 1rem;
+  background-color: #ffffff; 
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  position: relative;
+  z-index: 1000; 
+}
+
+/* Encabezado del modal */
+.delete-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 1rem;
+}
+
+/* Cuerpo del modal */
+.delete-modal-body {
+  padding: 1rem;
+  color: #555;
+  font-size: 1rem;
+  text-align: center;
+}
+
+/* Botones de acción */
+.delete-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.delete-confirm-button {
+  background-color: #6a0dad;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-confirm-button:hover {
+  background-color: #4b0082;
+}
+
+.delete-cancel-button {
+  background-color: #007bff; 
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-cancel-button:hover {
+  background-color: #0056b3; 
+}
+
   /* BLOQUE RESULTADOS */
   .results-container {
     margin-top: -3rem; 
@@ -256,6 +351,7 @@
   }
   /* Estilos para la tabla */
 .table {
+  
   width: 80%;
   margin: 20px auto;
   border-collapse: collapse;
@@ -288,17 +384,38 @@
   background-color: #f1f1f1; 
 }
 
+.icon-actions-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; 
+  z-index: 20; 
+}
+
 .edit-icon {
-  z-index: 10; 
   position: relative;
   color: #007bff; 
   cursor: pointer;
   font-size: 1rem;
+  margin-right: 10px;
   transition: color 0.3s ease;
 
   &:hover {
     color: #0056b3; 
   }
+  
+}
+.delete-icon {
+  position: relative; 
+  font-size: 1rem;
+  color: #8e44ad;
+  cursor: pointer;
+  margin-left: .3rem; 
+  transition: color 0.3s ease;
+}
+
+.delete-icon:hover {
+  color: #6c3483 !important; 
 }
 
 /* Estilos para el contenedor de las tarjetas */
@@ -354,20 +471,40 @@
   margin-top: 15px;
 }
 
-.edit-button-user {
-  width: 100%;
-  background-color: #007bff;
-  color: white;
+/*  botones de la tarjeta de resultados */
+.card-user-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem; 
+  margin-top: 10px;
+}
+
+.action-button {
+  flex: 1; 
   padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
   font-size: 0.8rem;
+  text-align: center;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
+.edit-button-user {
+  background-color: #3498db; 
+}
+
+.delete-button {
+  background-color: #8e44ad; 
+}
+
 .edit-button-user:hover {
-  background-color: #0056b3;
+  background-color: #2980b9;
+}
+
+.delete-button:hover {
+  background-color: #71368a;
 }
 
 /* Pagination estilos*/
@@ -598,8 +735,19 @@ input[type="number"]::-webkit-inner-spin-button {
     }
   
     .edit-icon {
-      font-size: 1rem; /* Ajusta el tamaño del ícono */
+      z-index: 10; 
+      position: relative;
+      color: #007bff; 
       cursor: pointer;
+      font-size: .85rem;
+      margin-right: 7px;
+    }
+    
+    .delete-icon {
+      font-size: .85rem;
+      color: #8e44ad !important; 
+      cursor: pointer;
+      margin-left: 0rem; 
     }
   }
 
@@ -708,6 +856,22 @@ input[type="number"]::-webkit-inner-spin-button {
       font-size: .8rem;
     }
 
+    .edit-icon {
+      z-index: 10; 
+      position: relative;
+      color: #007bff; 
+      cursor: pointer;
+      font-size: .85rem;
+      margin-right: 10px;
+    }
+
+    .delete-icon {
+      font-size: .85rem;
+      color: #8e44ad !important; 
+      cursor: pointer;
+      margin-left: .1rem; 
+    }
+    
     .pagination span {
       font-size: .7rem;
       color: #333;
@@ -810,13 +974,36 @@ input[type="number"]::-webkit-inner-spin-button {
     .card-user-footer {
       display: flex;
       justify-content: center;
+      gap: 1rem; 
       margin-top: 10px;
     }
     
+    .action-button {
+      flex: 1; 
+      padding: 7px 15px;
+      font-size: 0.7rem;
+      text-align: center;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
     .edit-button-user {
-      width: 100%;
-      padding: 10px 15px;
-      font-size: 0.8rem;
+      background-color: #3498db; 
+    }
+    
+    .delete-button {
+      background-color: #8e44ad; 
+    }
+    
+    .edit-button-user:hover {
+      background-color: #2980b9;
+    }
+    
+    .delete-button:hover {
+      background-color: #71368a;
     }
 
     .page-indicator {
@@ -865,6 +1052,20 @@ input[type="number"]::-webkit-inner-spin-button {
       width: 100%;
       padding: 0.6rem 1.5rem;
       font-size: .9rem;
+    }
+
+    /* modal para eliminar */
+    .delete-modal-card {
+      max-width: 300px;
+      margin: auto;
+    }
+    
+    /* Cuerpo del modal */
+    .delete-modal-body {
+      padding: .7rem;
+      color: #555;
+      font-size: .9rem;
+      text-align: center;
     }
 
 
