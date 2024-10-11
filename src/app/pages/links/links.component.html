@@ -1,0 +1,118 @@
+<div class="container">
+    <h2 class="title is-3">Links List</h2>
+  
+    <!-- Botón para abrir el modal de creación de link -->
+    <button (click)="openCreateModal()" class="button is-primary">Crear Nuevo Link</button>
+  
+    <!-- Tabla para listar los links -->
+    <table class="table is-striped">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Descripción</th>
+          <th>Link</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let link of links; index as i">
+          <td>{{ i + 1 }}</td> 
+          <td>{{ link.description }}</td>
+          <td>
+            <a [href]="link.link" target="_blank">{{ link.link }}</a> 
+          </td>
+          <td>
+            <div class="buttons">
+              <button (click)="openEditModal(link)" class="button edit-button">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button (click)="openDeleteModal(link)" class="button delete-button">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Modal para crear un nuevo link -->
+    <div id="createModal" class="modal" [ngClass]="{ 'is-active': isCreateModalOpen }">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="box">
+            <h3 class="title is-4">Crear Link</h3>
+            <form (ngSubmit)="createLink()">
+              
+              <!-- Campo para la descripción -->
+              <div class="field">
+                <label class="label">Descripción</label>
+                <div class="control">
+                  <textarea class="textarea" [(ngModel)]="newLink.description" name="description" required></textarea>
+                </div>
+              </div>
+      
+              <!-- Campo para el link -->
+              <div class="field">
+                <label class="label">Link</label>
+                <div class="control">
+                  <input class="input" type="url" [(ngModel)]="newLink.link" name="link" placeholder="https://example.com" required />
+                </div>
+              </div>
+      
+              <div class="buttons-container">
+                <button type="submit" class="button create-link-btn" (click)="createLink()">Crear</button>
+                <button type="button" class="button cancel-link-btn" (click)="closeCreateModal()">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+    <!-- Modal para editar un link existente -->
+    <div id="editModal" class="modal" [ngClass]="{ 'is-active': isEditModalOpen }">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="box">
+            <h3 class="title is-4">Editar Link</h3>
+            <form (ngSubmit)="updateLink()">
+              
+              <!-- Campo para la descripción -->
+              <div class="field">
+                <label class="label">Descripción</label>
+                <div class="control" *ngIf="selectedLink">
+                  <textarea class="textarea" [(ngModel)]="selectedLink.description" name="description" required></textarea>
+                </div>
+              </div>
+      
+              <!-- Campo para el link -->
+              <div class="field">
+                <label class="label">Link</label>
+                <div class="control" *ngIf="selectedLink">
+                  <input class="input" type="url" [(ngModel)]="selectedLink.link" name="link" placeholder="https://example.com" required />
+                </div>
+              </div>
+      
+              <div class="buttons-container">
+                <button type="submit" class="button update-link-btn" (click)="updateLink()">Actualizar</button>
+                <button type="button" class="button cancel-link-btn" (click)="closeEditModal()">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+    <!-- Modal para confirmar la eliminación de un link -->
+    <div id="deleteModal" class="modal" [ngClass]="{ 'is-active': isDeleteModalOpen }">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box">
+          <h3 class="title is-4">Eliminar</h3>
+          <p>¿Estás seguro de que deseas eliminar el link "{{ selectedLink?.description }}"?</p>
+          <div class="delete-buttons-container">
+            <button class="button delete-link-btn" (click)="deleteLink()">Eliminar</button>
+            <button class="button cancel-delete-link-btn" (click)="closeDeleteModal()">Cancelar</button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>

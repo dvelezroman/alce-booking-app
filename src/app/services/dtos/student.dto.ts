@@ -57,3 +57,13 @@ export interface UpdateStageDto {
   number?: number;
   description?: string;
 }
+
+export interface CreateLinkDto {
+  description: string;
+  link: string;
+}
+
+export interface UpdateLinkDto {
+  description?: string;
+  link?: string;
+}

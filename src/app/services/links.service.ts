@@ -1,5 +1,5 @@
 import {Store} from "@ngrx/store";
-import {CreateStageDto, UpdateStageDto} from "./dtos/student.dto";
+import {CreateLinkDto, CreateStageDto, UpdateLinkDto, UpdateStageDto} from "./dtos/student.dto";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
@@ -25,11 +25,11 @@ export class LinksService {
     return this.http.get<MeetingLinkDto[]>(`${this.apiUrl}`)
   }
 
-  create(data: CreateStageDto): Observable<MeetingLinkDto> {
+  create(data: CreateLinkDto): Observable<MeetingLinkDto> {
     return this.http.post<MeetingLinkDto>(`${this.apiUrl}`, data);
   }
 
-  update(id: number, data: UpdateStageDto): Observable<MeetingLinkDto> {
+  update(id: number,  data: UpdateLinkDto): Observable<MeetingLinkDto> {
     return this.http.patch<MeetingLinkDto>(`${this.apiUrl}/${id}`, data);
   }
 

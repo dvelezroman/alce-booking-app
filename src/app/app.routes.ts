@@ -10,6 +10,7 @@ import { SearchingMeetingComponent } from './pages/searching-meeting/searching-m
 import { SearchingStudentComponent } from './pages/searching-students/searching-student.component';
 import {AuthGuard} from "./auth/auth.guard";
 import { SearchingMeetingInstructorComponent } from './pages/searching-meeting-instructor/searching-meeting-instructor.component';
+import { LinksComponent } from './pages/links/links.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'booking', component: MeetingBookingComponent, canActivate: [AuthGuard] },
   { path: 'contact', component: ContactComponent, canActivate: [AuthGuard]},
   { path: 'stage', component: StageComponent, canActivate: [AuthGuard] },
+  { path: 'link', component: LinksComponent},
   { path: 'searching-meeting', component: SearchingMeetingComponent, canActivate: [AuthGuard]},
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent,canActivate: [AuthGuard]},
   { path: 'searching-students', component: SearchingStudentComponent, canActivate: [AuthGuard]},
