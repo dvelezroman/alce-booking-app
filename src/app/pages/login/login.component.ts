@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
       }, 2000);
     },
     error: (error) => {
-      if (error.status === 401) {
+      if (error.status === 400) {
         this.showCredentialsErrorModal = true;
         setTimeout(() => {
           this.showCredentialsErrorModal = false;
