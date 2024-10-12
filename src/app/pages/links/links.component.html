@@ -1,9 +1,9 @@
 <div class="container">
     <h2 class="title link is-3">Links List</h2>
-  
+
     <!-- Botón para abrir el modal de creación de link -->
     <button (click)="openCreateModal()" class="button is-primary">Crear Nuevo Link</button>
-  
+
     <!-- Tabla para listar los links -->
     <table class="table is-striped">
       <thead>
@@ -16,10 +16,10 @@
       </thead>
       <tbody>
         <tr *ngFor="let link of links; index as i">
-          <td>{{ i + 1 }}</td> 
+          <td>{{ i + 1 }}</td>
           <td>{{ link.description }}</td>
           <td>
-            <a [href]="link.link" target="_blank">{{ link.link }}</a> 
+            <a [href]="link.link" target="_blank">{{ link.link }}</a>
           </td>
           <td>
             <div class="buttons">
@@ -34,7 +34,7 @@
         </tr>
       </tbody>
     </table>
-  
+
     <!-- Modal para crear un nuevo link -->
     <div id="createModal" class="modal" [ngClass]="{ 'is-active': isCreateModalOpen }">
         <div class="modal-background"></div>
@@ -42,7 +42,7 @@
           <div class="box">
             <h3 class="title is-4">Crear Link</h3>
             <form (ngSubmit)="createLink()">
-              
+
               <!-- Campo para la descripción -->
               <div class="field">
                 <label class="label">Descripción</label>
@@ -50,7 +50,7 @@
                   <textarea class="textarea" [(ngModel)]="newLink.description" name="description" required></textarea>
                 </div>
               </div>
-      
+
               <!-- Campo para el link -->
               <div class="field">
                 <label class="label">Link</label>
@@ -58,16 +58,16 @@
                   <input class="input" type="url" [(ngModel)]="newLink.link" name="link" placeholder="https://example.com" required />
                 </div>
               </div>
-      
+
               <div class="buttons-container">
-                <button type="submit" class="button create-link-btn" (click)="createLink()">Crear</button>
+                <button type="submit" class="button create-link-btn">Crear</button>
                 <button type="button" class="button cancel-link-btn" (click)="closeCreateModal()">Cancelar</button>
               </div>
             </form>
           </div>
         </div>
       </div>
-  
+
     <!-- Modal para editar un link existente -->
     <div id="editModal" class="modal" [ngClass]="{ 'is-active': isEditModalOpen }">
         <div class="modal-background"></div>
@@ -75,7 +75,7 @@
           <div class="box">
             <h3 class="title is-4">Editar Link</h3>
             <form (ngSubmit)="updateLink()">
-              
+
               <!-- Campo para la descripción -->
               <div class="field">
                 <label class="label">Descripción</label>
@@ -83,7 +83,7 @@
                   <textarea class="textarea" [(ngModel)]="selectedLink.description" name="description" required></textarea>
                 </div>
               </div>
-      
+
               <!-- Campo para el link -->
               <div class="field">
                 <label class="label">Link</label>
@@ -91,7 +91,7 @@
                   <input class="input" type="url" [(ngModel)]="selectedLink.link" name="link" placeholder="https://example.com" required />
                 </div>
               </div>
-      
+
               <div class="buttons-container">
                 <button type="submit" class="button update-link-btn" (click)="updateLink()">Actualizar</button>
                 <button type="button" class="button cancel-link-btn" (click)="closeEditModal()">Cancelar</button>
@@ -100,7 +100,7 @@
           </div>
         </div>
       </div>
-  
+
     <!-- Modal para confirmar la eliminación de un link -->
     <div id="deleteModal" class="modal" [ngClass]="{ 'is-active': isDeleteModalOpen }">
       <div class="modal-background"></div>
