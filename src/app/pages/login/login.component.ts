@@ -62,32 +62,32 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-  const credentials = this.loginForm.value;
+    const credentials = this.loginForm.value;
 
-  this.usersService.login(credentials).subscribe({
-    next: (response: LoginResponseDto) => {
-      if (response.register === false) {
-        this.router.navigate(['/register-complete']);
-      } else {
-        this.router.navigate(['/home']);
-      }
-      this.showSuccessModal = true;
-      setTimeout(() => {
-        this.showSuccessModal = false;
-      }, 2000);
-    },
-    error: (error) => {
-      if (error.status === 400) {
-        this.showCredentialsErrorModal = true;
+    this.usersService.login(credentials).subscribe({
+      next: (response: LoginResponseDto) => {
+        if (response.register === false) {
+          this.router.navigate(['/register-complete']);
+        } else {
+          this.router.navigate(['/home']);
+        }
+        this.showSuccessModal = true;
         setTimeout(() => {
-          this.showCredentialsErrorModal = false;
+          this.showSuccessModal = false;
         }, 2000);
-      } else {
-        console.log('error')
+      },
+      error: (error) => {
+        if (error.status === 401) {
+          this.showCredentialsErrorModal = true;
+          setTimeout(() => {
+            this.showCredentialsErrorModal = false;
+          }, 2000);
+        } else {
+          console.log('error')
+        }
       }
-    }
-  });
-}
+    });
+  }
 
 
 closeModal() {
