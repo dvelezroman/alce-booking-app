@@ -116,31 +116,49 @@
     </tbody>
   </table>
 
-   <!-- Tarjetas para pantallas móviles -->
-   <div class="card-container-users" *ngIf="screenWidth <=500">
-    <div class="page-indicator">
-      <p>Página {{ currentPage }}</p>
-    </div>
-    <div class="card-user" *ngFor="let user of users">
-      <div class="card-user-body">
+ <!-- Tarjetas para pantallas móviles -->
+ <div class="card-container-users" *ngIf="screenWidth <= 500">
+  <div class="page-indicator">
+    <p>Página {{ currentPage }}</p>
+  </div>
+  
+  <div class="card-user" *ngFor="let user of users">
+    <div class="card-user-body">
+      
+      <!-- Bloque de Nombre como título principal -->
+      <p class="card-title">
+        <strong>{{ user.firstName | titlecase }} {{ user.lastName | titlecase }}</strong>
+      </p>
+      
+      <!-- Primer bloque: ID y Rol -->
+      <div class="card-info-row">
         <p><strong>ID Number:</strong> <span>{{ user.idNumber }}</span></p>
-        <p><strong>First Name:</strong> <span>{{ user.firstName | titlecase }}</span></p>
-        <p><strong>Last Name:</strong> <span>{{ user.lastName | titlecase }}</span></p>
         <p><strong>Role:</strong> <span>{{ user.role | titlecase }}</span></p>
-        <p><strong>Stage:</strong> <span>{{ user.student?.stage?.description | titlecase }}</span></p>
+      </div>
+
+      <!-- Segundo bloque: Stage y Registered -->
+      <div class="card-info-row">
+        <p *ngIf="showStageColumn"><strong>Stage:</strong> <span>{{ user.student?.stage?.description | titlecase }}</span></p>
         <p><strong>Registered:</strong> <span>{{ user.register ? '✓' : '❌' }}</span></p>
+      </div>
+
+      <!-- Tercer bloque: Email centrado -->
+      <div class="card-info-email">
         <p><strong>Email:</strong> <span>{{ user.email }}</span></p>
       </div>
-      <div class="card-user-footer">
-        <button (click)="edit(user)" class="action-button edit-button-user">
-          <i class="fas fa-edit"></i> Edit
-        </button>
-        <button (click)="openDeleteModal(user)" class="action-button delete-button">
-          <i class="fas fa-trash"></i> Delete
-        </button>
-      </div>
+    </div>
+
+    <!-- Bloque de botones de acción en fila -->
+    <div class="card-user-footer">
+      <button (click)="edit(user)" class="action-button edit-button-user">
+        <i class="fas fa-edit"></i> Edit
+      </button>
+      <button (click)="openDeleteModal(user)" class="action-button delete-button">
+        <i class="fas fa-trash"></i> Delete
+      </button>
     </div>
   </div>
+</div>
 
   <!-- Pagination Controls -->
   <div class="pagination">

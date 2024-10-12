@@ -10,25 +10,24 @@
   }
 
   .page-title {
+    position: fixed; 
+    top: 0; 
+    left: 0px;
+    color: rgb(53, 53, 53);
+    width: 100%; 
+    background: white;
+    background: linear-gradient(#f6f6fb, #ece7f6);
+    z-index: 10; 
     text-align: center;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-    margin-bottom: 0rem;
-    line-height: 45px;
-    background:linear-gradient( #f2f1f7, #dbd6f3 );
-    backdrop-filter:blur(15px);
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 100;
+    font-family: 'Poppins', sans-serif; 
   }
   
   .page-title h1 {
+     font-size: 1.7rem;
+    line-height: 75px;
     color: #333;
-    font-size: 2.1rem;
-    margin-left: -55px;
     font-weight: bold;
-    margin-bottom: 0rem;
+    text-align: center;
     font-family: 'Poppins', sans-serif;
   }
 
@@ -138,7 +137,7 @@
   }
   
   .student-form, .user-form {
-    background: radial-gradient(circle, #e3e4e5, #e3e1e6);
+    background: radial-gradient(circle, #e3e4e5, #f3f0f6);
     position: absolute;
     width: 100%;
     margin: auto;
@@ -147,6 +146,8 @@
     border-radius: 10px;
     box-sizing: border-box; 
     backface-visibility: hidden;
+    border: .5px solid rgb(223, 223, 223);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2), -2px -2px 10px rgba(0, 0, 0, 0.2);
   }
   
   .student-form {
@@ -363,9 +364,9 @@
 }
 
 .table th, .table td {
-  padding: 10px;
+  padding: 8px;
   text-align: center;
-  font-size: .9rem;
+  font-size: .85rem;
 }
 
 .table th {
@@ -396,7 +397,7 @@
   position: relative;
   color: #007bff; 
   cursor: pointer;
-  font-size: 1rem;
+  font-size: .9rem;
   margin-right: 10px;
   transition: color 0.3s ease;
 
@@ -407,7 +408,7 @@
 }
 .delete-icon {
   position: relative; 
-  font-size: 1rem;
+  font-size: .9rem;
   color: #8e44ad;
   cursor: pointer;
   margin-left: .3rem; 
@@ -418,93 +419,94 @@
   color: #6c3483 !important; 
 }
 
-/* Estilos para el contenedor de las tarjetas */
-.card-container-users {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 85%;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-/* Estilos para cada tarjeta */
-.page-indicator {
-  text-align: center;
-  margin-bottom: 15px;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #333; 
-}
-
-.page-indicator p {
-  margin: 0;
-  color: #007bff; 
-}
+/* Estilo principal para la tarjeta de resultados */
 
 .card-user {
-  background-color: #f0f0f0; 
-  border: .5px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 10px 15px;
-}
-
-.card-user-body p {
-  margin: 3px 0;
-  font-size: .85rem;
-  color: #555; 
-}
-
-.card-user-body p strong {
-  color: #333; 
-}
-
-.card-user-body p span {
-  color: #777;
-  margin-left: 5px;
-}
-
-.card-user-footer {
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
-}
-
-/*  botones de la tarjeta de resultados */
-.card-user-footer {
-  display: flex;
-  justify-content: center;
-  gap: 1rem; 
-  margin-top: 10px;
-}
-
-.action-button {
-  flex: 1; 
-  padding: 10px 15px;
-  font-size: 0.8rem;
+  width: 90%;
+  margin: auto;
+  border: .5px solid rgb(183, 180, 180);
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
-  color: #fff;
+}
+
+.page-indicator {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.7rem;
+}
+
+/* Filas de información en columnas centradas */
+.card-info-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+/* Color y espaciado de las etiquetas (strong) */
+.card-user-body strong {
+  color: #333;
+  margin-right: 5px;
+}
+
+/* Centrar el bloque de email */
+.card-info-email {
+  font-size: 0.9rem;
+  color: #333;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* Estilo para los botones en la tarjeta */
+.card-user-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Estilo para botones individuales */
+.action-button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
+/* Botón Editar */
 .edit-button-user {
-  background-color: #3498db; 
-}
-
-.delete-button {
-  background-color: #8e44ad; 
+  background-color: #4a90e2;
+  color: white;
 }
 
 .edit-button-user:hover {
-  background-color: #2980b9;
+  background-color: #357ab8;
+}
+
+/* Botón Eliminar */
+.delete-button {
+  background-color: #9b59b6; 
+  color: white;
 }
 
 .delete-button:hover {
-  background-color: #71368a;
+  background-color: #8e44ad; 
 }
 
 /* Pagination estilos*/
@@ -752,18 +754,12 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 
   @media (max-width: 768px){
-  
 
-    .page-title {
-      padding-top: 1.9rem;
-      padding-bottom: 1.7rem;
-      margin-bottom: 0rem;
-    }
     
     .page-title h1 {
       color: #333333;
       margin-left: 0px;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
     }
 
     .main-form-container {
@@ -775,7 +771,7 @@ input[type="number"]::-webkit-inner-spin-button {
      /* Estilos del switch */
      .form-switch-container {
       gap: 1.5rem;
-      margin-top: -15rem;
+      margin-top: -20rem;
     }
 
      /* Contenedor de la tarjeta */
@@ -905,11 +901,7 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 
   @media (max-width: 492px){
-    .page-title {
-      padding-top: 1.5rem;
-      padding-bottom: 1.1rem;
-      margin-bottom: 0rem;
-    }
+
     
     .page-title h1 {
       color: #333333;
@@ -958,53 +950,63 @@ input[type="number"]::-webkit-inner-spin-button {
 
   /* tarjeta de resultados */
   .results-container {
-    margin-top: -9.5rem; 
+    margin-top: -8rem; 
   }
-    .card-user {
-      padding: 10px;
-      background: radial-gradient(circle, rgba(238, 237, 238, 0.7), 
-                                          rgba(218, 217, 219, 0.7)); 
-      border: .5px solid #ccc;
-    }
 
-    .card-user-body p {
-      font-size: 0.8rem;
-    }
-
-    .card-user-footer {
-      display: flex;
-      justify-content: center;
-      gap: 1rem; 
-      margin-top: 10px;
-    }
-    
-    .action-button {
-      flex: 1; 
-      padding: 7px 15px;
-      font-size: 0.7rem;
-      text-align: center;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    
-    .edit-button-user {
-      background-color: #3498db; 
-    }
-    
-    .delete-button {
-      background-color: #8e44ad; 
-    }
-    
-    .edit-button-user:hover {
-      background-color: #2980b9;
-    }
-    
-    .delete-button:hover {
-      background-color: #71368a;
-    }
+  .card-user {
+    width: 75%;
+    margin: auto;
+    margin-bottom: .5rem;
+    padding: .6rem .5rem;
+    border-radius: 5px;
+  }
+  
+  .page-indicator {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+  
+  .card-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  /* Filas de información en columnas centradas */
+  .card-info-row {
+    gap: 1rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Color y espaciado de las etiquetas (strong) */
+  .card-user-body strong {
+    font-size: 0.8rem;
+    margin-right: 5px;
+  }
+  
+  /* Centrar el bloque de email */
+  .card-info-email {
+    font-size: 0.8rem;
+  }
+  
+  /* Estilo para los botones en la tarjeta */
+  .card-user-footer {
+    margin-top: .5rem;
+    gap: .5rem;
+  }
+  
+  /* Estilo para botones individuales */
+  .action-button {
+    width: 100%;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
     .page-indicator {
       margin-bottom: 0px;
