@@ -6,7 +6,7 @@ import {UsersService} from '../../services/users.service';
 import {Observable} from "rxjs";
 import {UserState} from "../../store/user.state";
 import {Store} from "@ngrx/store";
-import {LoginResponseDto, UserRole} from "../../services/dtos/user.dto";
+import {LoginResponseDto} from "../../services/dtos/user.dto";
 
 @Component({
   selector: 'app-login',
