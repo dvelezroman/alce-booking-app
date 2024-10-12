@@ -42,9 +42,9 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.store.select(selectUserData).subscribe((userData: UserDto | null) => {
       if (userData && userData.instructor) {
         this.instructorId = userData.instructor.id;
-        console.log('instructor ID:', this.instructorId);
+        //console.log('instructor ID:', this.instructorId);
       } else {
-        console.log('instructor ID no disponible');
+       // console.log('instructor ID no disponible');
       }
     });
   }
@@ -72,11 +72,18 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     if (meetingId !== undefined) {
         const selectedMeeting = this.meetings.find(meeting => meeting.id === meetingId);
         const studentName = `${selectedMeeting?.student?.user?.firstName || 'Estudiante'} ${selectedMeeting?.student?.user?.lastName || ''}`;
-
         this.attendanceStatus[meetingId] = !this.attendanceStatus[meetingId];
-
         const asistenciaTexto = this.attendanceStatus[meetingId] ? 'asistió' : 'no asistió';
-        console.log(`${studentName} ${asistenciaTexto} a la clase ${meetingId}`);
+        //console.log(`${studentName} ${asistenciaTexto} a la clase ${meetingId}`);
+        this.bookingService.updateAssistance(meetingId, this.attendanceStatus[meetingId]).subscribe({
+            next: () => {
+                //console.log(`Asistencia actualizada para ${studentName}: ${asistenciaTexto}`);
+            },
+            error: (error) => {
+                //console.error(`Error al actualizar la asistencia de ${studentName}:`, error);
+                this.attendanceStatus[meetingId] = !this.attendanceStatus[meetingId];
+            }
+        });
     }
-  }
+}
 }
