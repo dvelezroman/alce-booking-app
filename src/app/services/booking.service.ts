@@ -71,5 +71,9 @@ export class BookingService {
   deleteMeeting(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  updateAssistance(id: number, present: boolean): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/assistance/${id}`, { present });
+  }
 }
 
