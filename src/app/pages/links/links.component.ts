@@ -24,6 +24,9 @@ export class LinksComponent implements OnInit {
   isEditModalOpen = false;
   isDeleteModalOpen = false;
 
+  errorMessage: string = '';
+  isErrorModalOpen = false;
+
   constructor(private linksService: LinksService) {}
 
   ngOnInit(): void {
@@ -31,8 +34,13 @@ export class LinksComponent implements OnInit {
   }
 
   fetchLinks(): void {
-    this.linksService.getAll().subscribe(links => {
-      this.links = links;
+    this.linksService.getAll().subscribe({
+      next: (links) => {
+        this.links = links;
+      },
+      error: (err) => {
+        this.handleError(err);
+      }
     });
   }
 
@@ -52,9 +60,14 @@ export class LinksComponent implements OnInit {
         link: this.newLink.link
       };
 
-      this.linksService.create(newLinkData).subscribe(() => {
-        this.fetchLinks();
-        this.closeCreateModal();
+      this.linksService.create(newLinkData).subscribe({
+        next: () => {
+          this.fetchLinks();
+          this.closeCreateModal();
+        },
+        error: () => {
+          this.handleError('Error: Ud intentó crear un Link que ya existe.');
+        }
       });
     }
   }
@@ -71,9 +84,14 @@ export class LinksComponent implements OnInit {
 
   updateLink(): void {
     if (this.selectedLink) {
-      this.linksService.update(this.selectedLink.id, this.selectedLink).subscribe(() => {
-        this.fetchLinks();
-        this.closeEditModal();
+      this.linksService.update(this.selectedLink.id, this.selectedLink).subscribe({
+        next: () => {
+          this.fetchLinks();
+          this.closeEditModal();
+        },
+        error: () => {
+          this.handleError('No se pudo actualizar el Link!');
+        }
       });
     }
   }
@@ -90,10 +108,25 @@ export class LinksComponent implements OnInit {
 
   deleteLink(): void {
     if (this.selectedLink) {
-      this.linksService.delete(this.selectedLink.id).subscribe(() => {
-        this.fetchLinks();
-        this.closeDeleteModal();
+      this.linksService.delete(this.selectedLink.id).subscribe({
+        next: () => {
+          this.fetchLinks();
+          this.closeDeleteModal();
+        },
+        error: () => {
+          this.handleError('No se pudo eliminar el Link!');
+        }
       });
     }
+  }
+
+  handleError(error: string): void {
+    this.errorMessage = error || 'Ocurrió un error!';
+    this.isErrorModalOpen = true;
+  }
+
+  closeErrorModal(): void {
+    this.isErrorModalOpen = false;
+    this.errorMessage = '';
   }
 }

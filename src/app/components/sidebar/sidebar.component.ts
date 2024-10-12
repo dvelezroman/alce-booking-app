@@ -29,13 +29,13 @@ export class SidebarComponent implements OnInit {
   userData: UserDto | null = null;
 
   navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
-    { icon: 'home', text: 'Home', route: '/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
-    { icon: 'booking', text: 'Booking', route: '/booking', roles: [UserRole.STUDENT] },
-    { icon: 'group', text: 'Meetings', route: '/searching-meeting', roles: [UserRole.ADMIN] },
-    { icon: 'school', text: 'Students', route: '/searching-students', roles: [UserRole.ADMIN] },
-    { icon: 'link', text: 'Links', route: '/link', roles: [UserRole.ADMIN] },
+    { icon: 'home', text: 'Inicio', route: '/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
+    { icon: 'booking', text: 'Agendar', route: '/booking', roles: [UserRole.STUDENT] },
+    { icon: 'group', text: 'Agenda', route: '/searching-meeting', roles: [UserRole.ADMIN] },
+    { icon: 'school', text: 'Usuarios', route: '/searching-students', roles: [UserRole.ADMIN] },
+    { icon: 'link', text: 'Enlaces', route: '/link', roles: [UserRole.ADMIN] },
     { icon: 'stages', text: 'Stages', route: '/stage', roles: [UserRole.ADMIN] },
-    { icon: 'video_call', text: 'Meetings', route: '/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] }
+    { icon: 'video_call', text: 'Agenda', route: '/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] }
 ];
 
   constructor(
