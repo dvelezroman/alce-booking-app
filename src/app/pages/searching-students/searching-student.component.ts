@@ -22,7 +22,7 @@ import {LinksService} from "../../services/links.service";
   styleUrl: './searching-student.component.scss'
 })
 export class SearchingStudentComponent {
-  
+
   screenWidth: number = 0;
   isStudentForm = true;
   studentForm!: FormGroup;
@@ -62,7 +62,7 @@ export class SearchingStudentComponent {
        idNumber: [{ value: '', disabled: true }, Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      role: [{ value: '', disabled: true }, Validators.required],
+      role: [{ value: '' }, Validators.required],
       stageId: [''],
       email: ['', Validators.email],
       birthday: ['', Validators.required],
@@ -187,7 +187,7 @@ export class SearchingStudentComponent {
       }
       this.usersService.update(this.selectedUser.id, updatedUser).subscribe({
         next: (response) => {
-          console.log('User updated:', response);
+          // console.log('User updated:', response);
           this.isEditModalOpen = false;
           this.showSuccessModal('Usuario actualizado exitosamente.');
           this.searchUsers();
@@ -234,7 +234,7 @@ export class SearchingStudentComponent {
   }
   protected readonly Math = Math;
   protected readonly UserRole = UserRole;
-  
+
 // Abre el modal de eliminación
 openDeleteModal(user: UserDto): void {
   this.deleteModalMessage = `¿Estás seguro de que deseas eliminar al usuario ${user.firstName} ${user.lastName}?`;
@@ -251,7 +251,7 @@ closeDeleteModal(): void {
 // Confirma y elimina el usuario
 confirmDelete(): void {
   if (this.userToDelete) {
-    console.log("Eliminando usuario con ID:", this.userToDelete.id);
+    // console.log("Eliminando usuario con ID:", this.userToDelete.id);
     this.usersService.delete(this.userToDelete.id).subscribe({
       next: () => {
         this.users = this.users.filter(user => user.id !== this.userToDelete?.id);
