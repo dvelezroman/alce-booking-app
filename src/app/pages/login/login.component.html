@@ -4,7 +4,7 @@
   </div>
 
   <div class="box">
-    <h1 class="title">Sign In</h1>
+    <h1 class="title">Iniciar Sesion</h1>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <!-- Campo Email con etiqueta flotante -->
@@ -16,13 +16,13 @@
             formControlName="email"
             placeholder=" "
             [ngClass]="{ 'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched }">
-          <label>Email</label> 
+          <label>Email</label>
           <span class="icon is-right">
             <i class="fas fa-envelope"></i>
           </span>
         </div>
         <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
-          Please enter a valid email
+          Ingrese un email válido
         </div>
       </div>
 
@@ -37,19 +37,19 @@
             (input)="onPasswordInput()"
             [ngClass]="{ 'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched }">
           <label>Password</label>
-          
+
           <!-- Icono dinámico -->
           <div class="toggle-password" (click)="togglePasswordVisibility()">
-            <i [ngClass]="loginForm.get('password')?.value ? 
+            <i [ngClass]="loginForm.get('password')?.value ?
                           (passwordVisible ? 'fa fa-eye' : 'fa fa-eye-slash') : 'fa fa-lock'"></i>
           </div>
         </div>
         <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
-          Password is required
+          Se requiere contraseña
         </div>
         <div class="forgot-password-container">
           <a [routerLink]="['/forgot-password']" class="forgot-password-link">
-            Forgot your password?
+            Olvidaste la clave?
           </a>
         </div>
       </div>
@@ -57,7 +57,7 @@
       <!-- Botón para iniciar sesión -->
       <div class="field-button">
         <div class="control">
-          <button class="button is-primary">Sign In</button>
+          <button class="button is-primary">Iniciar Sesión</button>
         </div>
       </div>
     </form>
@@ -65,8 +65,8 @@
     <!-- Link para registro -->
     <div class="toggle-container">
       <p class="nu">
-        New user?
-        <a [routerLink]="['/register']">Sign up</a>
+        Nuevo usuario?
+        <a [routerLink]="['/register']">Registrarse</a>
       </p>
     </div>
   </div>
@@ -79,7 +79,7 @@
 <div *ngIf="showSuccessModal" class="modal-overlay">
   <div class="modal-content success-modal">
     <i class="fas fa-check-circle success-icon"></i>
-    <p>Login successful!</p>
+    <p>Inicio de sesion exitoso</p>
   </div>
 </div>
 
@@ -95,6 +95,6 @@
 <div *ngIf="showCredentialsErrorModal" class="modal-overlay">
   <div class="modal-content error-modal">
     <i class="fas fa-exclamation-circle error-icon"></i>
-    <p>Invalid credentials. Please try again.</p>
+    <p>Credenciales invalidas, intente de nuevo.</p>
   </div>
 </div>
