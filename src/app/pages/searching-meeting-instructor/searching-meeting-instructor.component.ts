@@ -26,12 +26,12 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   selectedMeetingIds: any[] = [];
   isChecked: boolean = true;
   attendanceStatus: { [key: number]: boolean } = {};
-  
+
   filter: FilterMeetingsDto = {
     from: '',
     to: '',
     hour: '',
-    assigned: false,
+    assigned: true,
   };
   constructor(private bookingService: BookingService,
                private store: Store) {}
@@ -42,7 +42,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.store.select(selectUserData).subscribe((userData: UserDto | null) => {
       if (userData && userData.instructor) {
         this.instructorId = userData.instructor.id;
-        console.log('instructor ID:', this.instructorId); 
+        console.log('instructor ID:', this.instructorId);
       } else {
         console.log('instructor ID no disponible');
       }
@@ -62,7 +62,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       ...params,
       instructorId: this.instructorId ? this.instructorId.toString() : undefined,
     };
-  
+
     this.bookingService.searchMeetings(searchParams).subscribe(meetings => {
       this.meetings = meetings;
     });
@@ -74,7 +74,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
         const studentName = `${selectedMeeting?.student?.user?.firstName || 'Estudiante'} ${selectedMeeting?.student?.user?.lastName || ''}`;
 
         this.attendanceStatus[meetingId] = !this.attendanceStatus[meetingId];
-        
+
         const asistenciaTexto = this.attendanceStatus[meetingId] ? 'asistió' : 'no asistió';
         console.log(`${studentName} ${asistenciaTexto} a la clase ${meetingId}`);
     }
