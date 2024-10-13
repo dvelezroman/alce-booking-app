@@ -138,19 +138,18 @@
       <section class="modal-card-body">
         <!-- Primer bloque: Input para el link -->
         <div class="field">
-          <label class="label">Instructor</label>
           <div class="control">
-            <div class="select is-fullwidth">
-              <select [(ngModel)]="selectedInstructor" name="instructorId">
-                <option [ngValue]="null">Seleccione Instructor</option>
-                <!-- Opciones de instructores disponibles -->
-                <option *ngFor="let instructor of instructorList" [ngValue]="instructor">
-                  {{ instructor.user?.firstName }}, {{ instructor.user?.lastName }}
-                </option>
-              </select>
-            </div>
+              <div class="select is-fullwidth">
+                  <select [(ngModel)]="selectedInstructor" name="instructorId">
+                      <option [ngValue]="null" disabled selected>Seleccione un instructor</option>
+                      <!-- Opciones de instructores disponibles -->
+                      <option *ngFor="let instructor of instructorList" [ngValue]="instructor">
+                          {{ instructor.user?.firstName }}, {{ instructor.user?.lastName }}
+                      </option>
+                  </select>
+              </div>
           </div>
-        </div>
+      </div>
 <!--        <div class="field">-->
 <!--          <label class="label"></label>-->
 <!--          <div class="control">-->

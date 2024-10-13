@@ -13,35 +13,35 @@
 
 /* bloque titulo del componente */
 .class-booking-header {
-  position: fixed;
-  top: 0;
-  left: 70px;
-  width: 100%;
-  width: calc(100% - 70px);
-  backdrop-filter: blur(15px);
-  box-shadow: none;
-  z-index: 1002;
+  position: fixed; 
+  top: 0; 
+  left: 0px;
+  color: rgb(53, 53, 53);
+  width: 100%; 
+  background: white;
+  background: linear-gradient(#fcfcfd, #fbf9fe);
+  z-index: 10; 
   text-align: center;
-  padding: 3rem 0;
+  font-family: 'Poppins', sans-serif; 
 }
 
 .title.is-3 {
-  font-size: 2.1rem;
-  line-height: 50%;
-  color: #333;
-  text-align: center;
-  font-family: 'Poppins', sans-serif;
-  z-index: 1002;
+   font-size: 1.7rem;
+    line-height: 75px;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
 }
 
 .booking-container.container {
   margin-top: 1rem;
   padding: 5rem 0rem;
-  box-sizing: border-box;
-  width: 100vw;
+  box-sizing: border-box; 
+  width: 100vw; 
   overflow-x: hidden;
   margin: 0 auto;
-  padding-right: 0;
+  padding-right: 0; 
   padding-left: 0;
 }
 
@@ -104,36 +104,36 @@
 
   .schedule-list {
     display: flex;
-    flex-wrap: nowrap;
-    gap: 15px;
+    flex-wrap: nowrap; 
+    gap: 15px; 
     padding: .7rem 1rem;
     border-radius: 5px;
     border: .5px solid rgba(229, 228, 228, 0.555);
     background: linear-gradient(to right, #4490e2, #bd75e4);
-    width: auto;
-    max-width: 100%;
+    width: auto; 
+    max-width: 100%; 
     margin: auto;
-    height: auto;
+    height: auto; 
 
     overflow-x: auto;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scroll-behavior: smooth; 
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
 
-    box-shadow: inset 0px 0 5px 0px rgba(0, 0, 0, 0.1),
+    box-shadow: inset 0px 0 5px 0px rgba(0, 0, 0, 0.1), 
               inset -0px 0 5px 0px rgba(0, 0, 0, 0.1);
 }
 
   .schedule-list {
-    width: fit-content;
-    max-width: 100%;
+    width: fit-content; 
+    max-width: 100%; 
   }
 
   .schedule-item {
-    min-width: 165px;
-    max-width: 100%;
+    min-width: 165px; 
+    max-width: 100%;  
     border: .5px solid rgba(230, 229, 229, 0.236);
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1); 
     padding: .5rem .8rem;
     border-radius: 5px;
     display: flex;
@@ -157,17 +157,17 @@
     transition: all .6s ease;
     animation: pulseBackground 2s infinite linear;
   }
-
+  
   .scroll-button.left {
     left: 25px;
   }
-
+  
   .scroll-button.right {
     right: 25px;
   }
 
   .scroll-button.hidden {
-    display: none;
+    display: none; 
   }
 
   .scroll-button:hover {
@@ -194,24 +194,24 @@
     text-align: center;
     margin-bottom: .3rem;
   }
-
+  
   .meeting-info-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
   }
-
+  
   .schedule-info {
     color: #ffffff;
     font-size: 0.85rem;
   }
-
+  
   .schedule-delete {
     display: flex;
     justify-content: flex-end;
   }
-
+  
   .delete-button {
     margin-top: 1rem;
     background: none;
@@ -222,7 +222,7 @@
     padding: 0;
     transition: all .6ms ease;
   }
-
+  
   .delete-button:hover {
     color: #cdcaca;
     transform: scale(1.05);
@@ -231,36 +231,121 @@
   .no-meeting {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; 
     justify-content: center;
     color: #888;
     margin-top: 5rem;
     text-align: center;
   }
-
+  
   .no-meeting-icon {
     font-size: 3rem;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
     color: #d3d3d3;
   }
-@import "./meeting-booking-modal";
+
+
+/* MODAL DE MEETING CUANDO SE HA SELECCIONADO una meeting */
+.modal-background {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-card.meeting-detail-modal {
+  max-width: 420px;
+  width: 100%;
+}
+
+.meeting-detail-modal .modal-card-head {
+  background: linear-gradient(to right, #4490e2, #7d79e8);
+  color: white;
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.modal-card-head .modal-card-title{
+  text-align: center;
+}
+
+.meeting-detail-modal p {
+  text-align: left;
+  font-size: 1.2rem;
+}
+
+.meeting-detail-modal .modal-card-body {
+  padding: 1rem 1.5rem;
+}
+
+.meeting-detail-modal strong {
+  color: #333333; 
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.meeting-detail-modal .modal-card-body span {
+  font-size: 1rem;
+  color: rgb(82, 81, 81);
+  margin-left: 7px;
+}
+
+.link-note small {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #f1750f;
+  display: block;
+  margin-top: .5rem;
+  margin-bottom: 4px;
+}
+
+.meeting-link {
+  margin-top: 1.5rem;
+  padding: 0.55rem 1.5rem;
+  border: 1px solid #4490e2;
+  border-radius: 25px;
+  text-align: center;
+  display: inline-block;
+  background-color: #f9f9f9;
+  color: #333333;
+}
+
+.meeting-link.active:hover {
+  background-color: #4490e2;
+  color: white;
+}
+
+.meeting-link.no-link {
+  pointer-events: none; 
+  background-color: #f0f0f0;
+  border-color: #ccc;
+  color: #999;
+}
+
+.meeting-link.no-link:hover {
+  background-color: #f0f0f0;
+  color: #999;
+}
+
+.modal-card-head .delete {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
 
 /* subtitulo */
 
 .class-booking-subtitle {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; 
+  align-items: center; 
   margin-top: 0rem;
   margin-bottom: .8rem;
-  text-align: center;
+  text-align: center; 
 }
 
 .class-booking-subtitle h3 {
-  font-size: 1.4rem;
+  font-size: 1.4rem; 
   font-weight: bold;
-  color: #333;
+  color: #333; 
 }
 
 /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
@@ -269,14 +354,161 @@
   border-radius: 15px;
   justify-content: center;
   align-items: center;
-  width: 80%;
+  width: 85%;
   gap: 20px;
   margin: 0 auto;
   margin-top: 4rem;
-  padding: 3rem 2rem;
+  padding: 3rem 0rem;
 }
 
-@import "meeting-booking-calendar";
+/* SUB-BLOQUE: Calendario */
+.date-time-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.9rem;
+  margin-top: 0rem;
+  background: rgb(255, 255, 255); 
+  border-radius: 10px;
+  width: 50%;
+  backdrop-filter: blur(15px); 
+  -webkit-backdrop-filter: blur(15px); 
+  box-shadow: 4px 4px 25px rgb(207, 207, 207), -4px -4px 25px rgb(207, 207, 207); ; 
+}
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+}
+
+.calendar-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title.is-4 {
+  font-size: 1rem;
+  color: rgb(62, 62, 62);
+}
+
+.month-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  width: 85%;
+  background-color: transparent;
+  padding: 15px;
+  border-radius: 15px 15px 0px 0px;
+}
+
+.month-label {
+  text-align: center;
+  font-weight: bold;
+  font-size: .9rem;
+  color: #333;
+}
+
+.month-selector button {
+  width: 40px;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  color: rgb(89, 87, 87);
+  padding: 0;
+  cursor: pointer;
+  position: absolute; 
+  font-size: 1rem;
+  transform: translateY(-50%);
+}
+
+.prev-button {
+  top:53%;
+  left: 18.5%; 
+}
+
+.next-button {
+  top: 48%;
+  left: 70%; 
+}
+
+.month-selector button.hidden {
+  visibility: hidden; 
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 0px;
+}
+
+.calendar-day-header {
+  padding: 8px 10px;
+  text-align: center;
+  font-size: .8rem;
+  font-weight: bold;
+  background-color: transparent;
+  color: #434445;
+}
+
+.calendar-grid {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 35px;
+  gap: 5px;
+  width: 100%;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 18px;
+  font-size: .8rem;
+  background-color: #ffffffb3;
+  border: 1px solid #ddd;
+  color: grey;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calendar-day.selectable {
+  background-color: #f9f9f9;
+  border: 1px solid #6eb3fc;
+  color: #333;
+  cursor: pointer;
+}
+
+.calendar-day.selectable:hover {
+  background-color: #6eb3fc;
+  color: white;
+}
+
+.calendar-day.unselectable {
+  background-color: #f1f1f1;
+  color: #929191;
+  cursor: not-allowed;
+}
+
+.calendar-day.selected {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: default;
+}
 
 /* SUB-BLOQUE: time slots */
 .selected-date-time {
@@ -317,12 +549,12 @@
   overflow-y: auto;
   width: 100%;
   padding: 7px 0px;
-  scrollbar-width: none;
+  scrollbar-width: none; 
   -ms-overflow-style: none;
 }
 
 .time-slots::-webkit-scrollbar {
-  display: none;
+  display: none; 
 }
 
 /* Estilos para las flechas de scroll */
@@ -342,11 +574,11 @@
 }
 
 .scroll-arrow-up {
-  margin-bottom: -15px;
+  margin-bottom: -15px; 
 }
 
 .scroll-arrow-down {
-  margin-top: 3px;
+  margin-top: 3px; 
 }
 
 .scroll-arrow-up.disabled,
@@ -442,7 +674,7 @@
 
   .error-modal {
     padding: 2rem;
-    justify-content: center;
+    justify-content: center; 
     align-items: center;
     background-color: #ebeeef;
     box-shadow: 0 0 25px rgba(169, 162, 162, 0.053);
@@ -604,30 +836,30 @@
 
     .radio-options {
       display: flex;
-      gap: 1.5rem;
+      gap: 1.5rem; 
       justify-content: center;
       margin-top: .5rem;
     }
-
+    
     .custom-radio {
       position: relative;
       display: flex;
       align-items: center;
       font-size: 1rem;
     }
-
+    
     .custom-radio input[type="radio"] {
       appearance: none;
       width: 15px;
       height: 15px;
-      background-color: rgb(230, 226, 230);
+      background-color: rgb(230, 226, 230); 
       border: .5px solid grey;
       border-radius: 50%;
       margin-right: 0.5rem;
       cursor: pointer;
       position: relative;
     }
-
+    
     .custom-radio input[type="radio"]:checked::before {
       content: '';
       position: absolute;
@@ -636,10 +868,10 @@
       transform: translate(-50%, -50%);
       width: 10px;
       height: 10px;
-      background-color: rgb(152, 56, 225);
+      background-color: rgb(152, 56, 225); 
       border-radius: 50%;
     }
-
+    
     .radio-label {
       cursor: pointer;
       color: rgb(78, 77, 77);
@@ -719,7 +951,7 @@
   /* ESTILOS DEL MODAL DE CONFIRMACIóN ELIMINAR MEETING */
 
 .modal-background {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.4); 
 }
 
 .modal{
@@ -731,7 +963,7 @@
   border-radius: 10px;
   max-width: 500px;
   width: 90%;
-
+  
 }
 
 .modal-card-body {
@@ -748,7 +980,7 @@
 
 .modal-card-foot {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-end; 
   background-color: transparent;
   padding: 1rem;
   width: 100%;
@@ -765,12 +997,12 @@
 }
 
 .modal-card-foot .button.is-danger2 {
-  background-color: #9241cb;
+  background-color: #9241cb;  
   color: white;
 }
 
 .modal-card-foot .button.is-danger2:hover {
-  background-color: #7423ad;
+  background-color: #7423ad; 
 }
 
 .modal-card-foot .button.is-primary3 {
@@ -785,7 +1017,7 @@
 
 
 @media (max-width: 992px) {
-
+ 
 
   .columns.is-mobile {
     flex-direction: column;
@@ -827,24 +1059,24 @@
   .student-schedule {
     width: 90%;
     margin-top: 5rem;
-
+  
     .schedule-title {
       color: #515357;
       margin-bottom: 1rem;
       font-weight: bold;
       text-align: center;
     }
-
+  
     .schedule-list {
-      gap: 10px;
+      gap: 10px; 
       padding: .5rem .7rem;
     }
-
+    
     .schedule-item {
-      min-width: 160px;
+      min-width: 160px; 
       padding:.5rem .7rem;
     }
-
+    
     .meeting-title {
       font-size: .9rem;
       color: #ffffff;
@@ -852,24 +1084,24 @@
       text-align: center;
       margin-bottom: .5rem;
     }
-
+    
     .meeting-info-container {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-direction: row;
     }
-
+    
     .schedule-info {
       color: #ffffff;
       font-size: 0.9rem;
     }
-
+    
     .schedule-delete {
       display: flex;
       justify-content: flex-end;
     }
-
+    
     .delete-button {
       background: none;
       border: none;
@@ -878,7 +1110,7 @@
       font-size: 1.2rem;
       padding: 0;
     }
-
+    
     .delete-button:hover {
       color: #c7c6c6;
     }
@@ -967,12 +1199,12 @@
 
 .prev-button {
   top:53%;
-  left: 1.5%;
+  left: 1.5%; 
 }
 
 .next-button {
   top: 48%;
-  left: 75%;
+  left: 75%; 
 }
 
 .calendar-day.selectable {
@@ -1032,11 +1264,11 @@
 }
 
 .scroll-arrow-up {
-  margin-bottom: -28px;
+  margin-bottom: -28px; 
 }
 
 .scroll-arrow-down {
-  margin-top: 3px;
+  margin-top: 3px; 
 }
 
 .time-slot {
@@ -1126,16 +1358,12 @@
 @media (max-width: 768px) {
 
   .class-booking-header {
-    left: 0;
-    width: 100%;
+    left: 0; 
+    width: 100%; 
   }
 
   .title.is-3 {
-    font-size: 1.8rem;
-    line-height: 50%;
-    color: #333;
-    text-align: center;
-    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
   }
 
   .student-info {
@@ -1189,11 +1417,11 @@
   }
 
   .scroll-button.left {
-    left: 10px;
+    left: 10px; 
   }
 
   .scroll-button.right {
-    right: 10px;
+    right: 10px; 
   }
 
    /* bloque de fechas seleccionadas */
@@ -1206,7 +1434,7 @@
     width: 100%;
     margin-top: 3rem;
     padding: 0rem .5rem;
-
+  
     .schedule-title {
       font-size: 1.1rem;
       color: #5c5c5c;
@@ -1214,18 +1442,18 @@
       font-weight: bold;
       text-align: center;
     }
-
-    .schedule-list {
-      gap: 10px;
+  
+    .schedule-list { 
+      gap: 10px; 
       padding: .6rem;
     }
-
+    
     .schedule-item {
-      min-width: 170px;
+      min-width: 170px; 
       padding: .8rem;
       border-radius: 8px;
     }
-
+    
     .meeting-title {
       font-size: 1rem;
       color: #ffffff;
@@ -1233,14 +1461,14 @@
       text-align: center;
       margin-bottom: .1rem;
     }
-
+    
     .meeting-info-container {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-direction: row;
     }
-
+    
     .schedule-info {
       color: #efeeee;
       font-size: 0.85rem;
@@ -1249,12 +1477,12 @@
     .schedule-info strong{
       margin-right: 4px;
     }
-
+    
     .schedule-delete {
       display: flex;
       justify-content: flex-end;
     }
-
+    
     .delete-button {
       background: none;
       border: none;
@@ -1268,12 +1496,20 @@
     .delete-button:hover{
       color: #d5d2d3;
     }
-
+    
   }
 
   .modal-card.meeting-detail-modal {
-    max-width: 330px;
-    width: 100%;
+    max-width: auto;
+  }
+
+  .link-note small {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #f1750f;
+    display: block;
+    margin-top: .5rem;
+    margin-bottom: 4px;
   }
 
   /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
@@ -1335,12 +1571,12 @@
 
 .prev-button {
   top:53%;
-  left: 13.5%;
+  left: 13.5%; 
 }
 
 .next-button {
   top: 48%;
-  left: 74%;
+  left: 74%; 
 }
 
 .calendar-day-header {
@@ -1444,11 +1680,11 @@
 }
 
 .scroll-arrow-up {
-  margin-bottom: -28px;
+  margin-bottom: -28px; 
 }
 
 .scroll-arrow-down {
-  margin-top: 8px;
+  margin-top: 8px; 
 }
 
 .time-slot {
@@ -1628,8 +1864,8 @@
 
 /* MODAL ELIMINAR MEETING */
 .modal-card {
-  max-width: 360px;
-  width: 100%;
+  max-width: 360px; 
+  width: 100%; 
   margin: auto;
 }
 
@@ -1639,17 +1875,17 @@
 
 .modal-card-body p {
   text-align: left;
-  font-size: 1.05rem;
+  font-size: 1.05rem; 
 }
   .modal-card-foot {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-end; 
     background-color: transparent;
     padding: 1rem;
     padding-top: 0rem;
     width: 100%;
   }
-
+  
   .modal-card-foot .button {
     width: 100px;
     padding: 0.65rem 1.5rem;
@@ -1669,11 +1905,11 @@
   }
 
   .schedule-list {
-    max-height: 100px;
+    max-height: 100px;  
     padding-top: 1.3rem;
     padding-left: 0rem;
   }
-
+  
   .date-time-wrapper {
     display: flex;
     flex-direction: column;
@@ -1687,12 +1923,12 @@
 
   .prev-button {
     top:53%;
-    left: 13.5%;
+    left: 13.5%; 
   }
-
+  
   .next-button {
     top: 48%;
-    left: 74%;
+    left: 74%; 
   }
 
 
@@ -1701,7 +1937,7 @@
 @media (max-width: 492px) {
 
   :host {
-    padding: 1rem 0rem;
+    padding:1rem 0rem;
     overflow-x: hidden;
     background: radial-gradient(circle at 50% 27%, #f2f2f2, #e6e6e6);
   }
@@ -1713,16 +1949,16 @@
   }
 
   .class-booking-header {
-    position: fixed;
-    top: 0%;
+    position: fixed; 
+    top: 0%; 
     left: 0;
-    width: 100%;
+    width: 100%; 
     height: 85px;
-    background-color: rgb(255, 255, 255);
-    z-index: 1000;
+    background-color: rgb(255, 255, 255); 
+    z-index: 1000; 
     text-align: center;
     padding: 2.5rem 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
   }
 
   .title.is-3 {
@@ -1744,7 +1980,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: none;
+    background:none;
     border-radius: 5px;
     min-height: 290px;
   }
@@ -1773,47 +2009,47 @@
     margin-top: 0rem;
     font-size: .85rem;
     text-align: center;
-    text-decoration: none;
+    text-decoration:none;
   }
 
-  /* modal meeting seleccionado */
+ /* modal meeting seleccionado */
   .meeting-detail-modal p {
     font-size: 1rem;
   }
-
+  
   .meeting-detail-modal .modal-card-body {
     padding: 1rem;
   }
-
+  
   .meeting-detail-modal strong {
     font-size: .9rem;
   }
-
+  
   .meeting-detail-modal .modal-card-body span {
     font-size: .9rem;
     margin-left: 5px;
   }
-
+  
   .meeting-link {
     margin-top: .9rem;
     padding: 0.55rem 1.2rem;
-    border: 1px solid #4490e2;
+    border: 1px solid #4490e2;            
   }
 
   .meeting-link.no-link {
-    pointer-events: none;
+    pointer-events: none; 
   }
-
+  
   .meeting-link:hover {
     background-color: #4490e2;
     color: white;
   }
-
+  
   .meeting-link strong {
-    margin-right: 0px;
+    margin-right: 0px; 
   }
 
-  .no-meeting {
+  .no-meeting{
     font-size: .8rem;
     margin-top: 2rem;
     color: rgb(78, 77, 77);
@@ -1821,8 +2057,8 @@
 
   .no-link {
     background-color: #f0f0f0;
-    border-color: #ccc;
-    color: #999;
+    border-color: #ccc; 
+    color: #999;         
   }
 
   /* bloque de fechas del usuario */
@@ -1834,67 +2070,75 @@
   .student-schedule {
     width: 100%;
     padding: 0rem 0rem;
-
+  
     .schedule-title {
       font-size: 1rem;
       color: #e2dfdf;
       margin-bottom: 0rem;
       display: none;
     }
-
+  
     .schedule-list {
       display: flex;
-      flex-wrap: nowrap;
-      gap: 9px;
+      flex-wrap: nowrap; 
+      gap: 9px; 
       padding: .6rem 1.15rem;
       border-radius: 0%;
     }
-
+    
     .schedule-item {
-      min-width: 130px;
+      min-width: 130px; 
       padding: .2rem .5rem .5rem .5rem;
       border-radius: 5px;
     }
-
+    
     .meeting-title {
       font-size: .85rem;
       margin-bottom: 0rem;
     }
-
+    
     .schedule-info {
       font-size: .75rem;
     }
 
-    .schedule-info strong {
+    .schedule-info strong{
       margin-right: 1px;
     }
-
+    
     .delete-button {
       background: transparent;
       cursor: pointer;
       font-size: 1.1rem;
     }
 
-    .delete-button:hover {
+    .delete-button:hover{
       color: #d6d6d6;
       transform: scale(0.9);
     }
 
   }
 
+  .modal-card.meeting-detail-modal {
+    max-width: 90%;
+  }
+
+  .link-note small {
+    font-size: 0.7rem;
+  }
+
   .class-booking-subtitle {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; 
+    align-items: center; 
     margin-top: 3rem;
     margin-bottom: 0rem;
-    text-align: center;
+    text-align: center; 
   }
 
   .class-booking-subtitle h3 {
-    font-size: 1.2rem;
+    font-size: 1.2rem; 
     font-weight: bold;
-    color: #333;
+    color: #333; 
   }
 
    /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
@@ -1940,21 +2184,21 @@
   margin: auto;
 }
 
-  .calendar-title {
-    text-align: center;
-    margin-bottom: 1.4rem;
-    margin-left: 0%;
-  }
+.calendar-title {
+  text-align: center;
+  margin-bottom: 1.4rem;
+  margin-left: 0%;
+}
 
-  .title.is-5 {
-    font-size: .9rem;
-    color: #333;
-  }
+.title.is-5 {
+  font-size: .9rem;
+  color: #333;
+}
 
-  .title.is-4 {
-    font-size: .9rem;
-    color: #333;
-  }
+.title.is-4 {
+  font-size: .9rem;
+  color: #333;
+}
 
 .month-selector {
   display: flex;
@@ -1969,79 +2213,79 @@
   position: relative; 
 }
 
-  .month-label {
-    text-align: center;
-    font-weight: bold;
-    font-size: .9rem;
-    color: #333;
-  }
+.month-label {
+  text-align: center;
+  font-weight: bold;
+  font-size: .9rem;
+  color: #333;
+}
 
-  .calendar-header {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    width: 100%;
-    margin-bottom: 0px;
-    margin-top: 1rem;
-  }
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: 100%;
+  margin-bottom: 0px;
+  margin-top: 1rem;
+}
 
-  .prev-button {
-    top: 53%;
-    left: 13.5%;
-  }
+.prev-button {
+  top:53%;
+  left: 13.5%; 
+}
 
-  .next-button {
-    top: 48%;
-    left: 74%;
-  }
+.next-button {
+  top: 48%;
+  left: 74%; 
+}
 
-  .calendar-day-header {
-    padding: 8px 0px;
-    text-align: center;
-    font-size: .8rem;
-    margin-top: -1.2rem;
-    font-weight: bold;
-    margin-bottom: .5rem;
-  }
+.calendar-day-header {
+  padding: 8px 0px;
+  text-align: center;
+  font-size: .8rem;
+  margin-top: -1.2rem;
+  font-weight: bold;
+  margin-bottom: .5rem;
+}
 
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: 37px;
-    gap: 5px;
-    width: 100%;
-  }
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 37px;
+  gap: 5px;
+  width: 100%;
+}
 
-  .calendar-day {
-    text-align: center;
-    padding: 15px;
-    font-size: .8rem;
-    background-color: white;
-    border: 1px solid #ddd;
-    color: grey;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-  }
+.calendar-day {
+  text-align: center;
+  padding: 15px;
+  font-size: .8rem;
+  background-color: white;
+  border: 1px solid #ddd;
+  color: grey;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
 
-  /* SUB-BLOQUE: time slots */
-  .selected-date-time {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0rem;
-    width: 80%;
-    margin: auto;
-    margin-top: 1rem;
-  }
+/* SUB-BLOQUE: time slots */
+.selected-date-time {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0rem;
+  width: 80%;
+  margin: auto;
+  margin-top: 1rem;
+}
 
-  .selected-date-time .titulo-slots {
-    font-size: .9rem;
-    font-weight: bold;
-    margin-top: 0rem;
-    margin-bottom: 1rem;
-  }
+.selected-date-time .titulo-slots{
+  font-size: .9rem;
+  font-weight: bold;
+  margin-top: 0rem;
+  margin-bottom: 1rem;
+}
 
 .selected-date-time h3 {
   color: black;
@@ -2063,29 +2307,29 @@
   box-shadow:0px 1px 10px rgba(0, 0, 0, 0.0), inset 7px 0px 4px rgba(0, 0, 0, 0.0), inset -7px 0px 4px rgba(0, 0, 0, 0.0);
 }
 
-  .time-slots {
-    background: radial-gradient(circle, rgb(255, 255, 255) 20%, rgba(241, 232, 255, 0.761) 80%);
-    box-shadow: 5px 0px 15px rgba(0, 0, 0, 0.07), -5px 0px 15px rgba(0, 0, 0, .07);
-    display: flex;
-    margin-top: -5.5rem;
-    padding-top: 5rem;
-    padding-bottom: 6rem;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    height: 460px;
-    overflow-y: auto;
-    width: 65%;
-  }
+.time-slots {
+  background: radial-gradient(circle, rgb(255, 255, 255) 20%, rgba(241, 232, 255, 0.761) 80%);
+  box-shadow: 5px 0px 15px rgba(0, 0, 0, 0.07), -5px 0px 15px rgba(0, 0, 0, .07);
+  display: flex;
+  margin-top: -5.5rem;
+  padding-top: 5rem;
+  padding-bottom: 6rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 460px;
+  overflow-y: auto;
+  width: 65%;
+}
 
-  .scroll-arrow-up {
-    position: absolute;
-    z-index: 10;
-    top: 13%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-bottom: 0px;
-  }
+.scroll-arrow-up {
+  position: absolute;
+  z-index: 10;
+  top: 13%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0px; 
+}
 
 .scroll-arrow-down {
   width: 70%;
@@ -2100,77 +2344,77 @@
   box-shadow:0px -1px 10px rgba(0, 0, 0, 0), inset 7px 0px 4px rgba(0, 0, 0, 0), inset -7px 0px 4px rgba(0, 0, 0, 0);
 }
 
-  .time-slot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-width: 80%;
-    width: 80%;
-    min-height: 40px;
-    background-color: #edeaea;
-    background: linear-gradient(to right, #4490e2, #bd75e4);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1), 0px 2px 4px rgba(0, 0, 0, 0.0);
-    gap: 8px;
-    cursor: pointer;
-    transition: all 0.5s ease;
-    border-radius: 5px;
-    position: relative;
-    overflow: hidden;
-  }
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 80%;
+  width: 80%;
+  min-height: 40px;
+  background-color: #edeaea;
+  background: linear-gradient(to right, #4490e2, #bd75e4);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1), 0px 2px 4px rgba(0, 0, 0, 0.0);
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
 
-  .time-text-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    min-height: 60px;
-    width: 100%;
-    padding: 0 10px;
-  }
+.time-text-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  min-height: 60px;
+  width: 100%;
+  padding: 0 10px;
+}
 
-  .time-text {
-    font-size: .9rem;
-    color: white;
-  }
+.time-text {
+  font-size: .9rem;
+  color: white;
+}
 
-  .time-text:hover {
-    color: white;
-  }
+.time-text:hover {
+  color: white;
+}
 
-  .confirm-box {
-    flex: 1;
-    background-color: #9d52e8;
-    color: white;
-    padding: 10.8px;
-    border-radius: 5px;
-    font-size: .9rem;
-    text-align: center;
-    line-height: 60px;
-    opacity: 0;
-    visibility: hidden;
-    min-height: 60px;
-    width: 100%;
-    transition: all 0.7s ease;
-  }
+.confirm-box {
+  flex: 1;
+  background-color: #9d52e8;
+  color: white;
+  padding: 10.8px;
+  border-radius: 5px;
+  font-size: .9rem;
+  text-align: center;
+  line-height: 60px;
+  opacity: 0;
+  visibility: hidden;
+  min-height: 60px;
+  width: 100%;
+  transition: all 0.7s ease;
+}
 
-  .time-slot:hover {
-    background: none;
-  }
-  .time-slot:hover .confirm-box {
-    opacity: 1;
-    visibility: visible;
-    width: 100%;
-  }
+.time-slot:hover {
+  background: none;
+}
+.time-slot:hover .confirm-box {
+  opacity: 1;
+  visibility: visible;
+  width: 100%;
+}
 
-  .time-slot:hover .time-text-container {
-    background-color: #4490e2;
-    color: white;
-  }
+.time-slot:hover .time-text-container {
+  background-color: #4490e2;
+  color: white;
+}
 
-  .time-slot:hover .time-text {
-    color: white;
-  }
+.time-slot:hover .time-text {
+  color: white;
+}
 
   /* modal */
 
@@ -2184,7 +2428,7 @@
     padding: 1rem 1rem;
   }
 
-  .success-modal p {
+  .success-modal p{
     font-size: .9rem;
   }
 
@@ -2213,24 +2457,24 @@
 
   /* MODAL DE ERROR CUANDO NO SE ELIGE BIEN */
 
-  .error-modal {
-    padding: 1rem;
-  }
+ .error-modal {
+  padding: 1rem;
+}
 
-  .bold-text {
-    font-weight: 400;
-    font-size: .9rem;
-  }
+.bold-text {
+  font-weight: 400;
+  font-size: .9rem;
+}
 
-  .small-text {
-    font-size: .9rem;
-  }
+.small-text {
+  font-size: .9rem;
+}
 
-  .error-icon {
-    font-size: 1.2rem;
-    color: #e74c3c;
-    margin-bottom: .2rem;
-  }
+.error-icon {
+  font-size: 1.2rem;
+  color: #e74c3c;
+  margin-bottom: .2rem;
+}
 
   /* MODAL CUANDO SE HA ELEGIDO FECHA Y TIME CORRECTO */
 
@@ -2243,45 +2487,46 @@
 
   .info-modal p {
     font-size: .9rem;
-  }
+}
 
   .info-icon {
     font-size: 1.4rem;
     margin-bottom: .9rem;
-  }
+}
 
 
-  /*MODAL ELIMINAR MEETING*/
-  .modal-card {
-    max-width: 320px;
-    width: 100%;
-    margin: auto;
+/*MODAL ELIMINAR MEETING*/
+.modal-card {
+  max-width: 320px; 
+  width: 100%; 
+  margin: auto;
+}
+
+.modal-card-body{
+  padding: 1.2rem;
+}
+
+.modal-card-body p {
+  text-align: left;
+  font-size: 1rem; 
+}
+.modal-card-foot {
+  display: flex;
+  justify-content: flex-end; 
+  background-color: transparent;
+  padding: .8rem;
+  padding-top: 0rem;
+  width: 100%;
   }
 
-  .modal-card-body {
-    padding: 1.2rem;
-  }
+.modal-card-foot .button {
+  width: 100px;
+  padding: 0.65rem;
+  font-size: 0.9rem;
+  margin: 0 0.2rem;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+}
 
-  .modal-card-body p {
-    text-align: left;
-    font-size: 1rem;
-  }
-  .modal-card-foot {
-    display: flex;
-    justify-content: flex-end;
-    background-color: transparent;
-    padding: .8rem;
-    padding-top: 0rem;
-    width: 100%;
-  }
-
-  .modal-card-foot .button {
-    width: 100px;
-    padding: 0.65rem;
-    font-size: 0.9rem;
-    margin: 0 0.2rem;
-    border-radius: 5px;
-    border: none;
-    text-align: center;
-  }
 }

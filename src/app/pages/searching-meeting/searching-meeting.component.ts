@@ -27,7 +27,7 @@ export class SearchingMeetingComponent implements OnInit {
   meetings: MeetingDTO[] = [];
   originalMeetings: MeetingDTO[] = [];
   stages: Stage[] = [];
-  selectedInstructor: Instructor | undefined;
+  selectedInstructor: Instructor | null | undefined = null;
   instructorList: Instructor[] = [];
   selectedMeetingIds: any[] = [];
 
@@ -61,6 +61,7 @@ export class SearchingMeetingComponent implements OnInit {
   }
 
   openModal(): void {
+    this.selectedInstructor = null;
     this.isModalOpen = true;
   }
 
