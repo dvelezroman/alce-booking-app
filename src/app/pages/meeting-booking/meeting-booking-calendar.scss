@@ -1,0 +1,149 @@
+/* SUB-BLOQUE: Calendario */
+.date-time-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.9rem;
+  margin-top: 0rem;
+  background: rgb(255, 255, 255);
+  border: .5px solid grey;
+  border-radius: 10px;
+  width: 50%;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+}
+
+.calendar-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title.is-4 {
+  font-size: 1rem;
+  color: rgb(62, 62, 62);
+}
+
+.month-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 85%;
+  background-color: transparent;
+  padding: 15px;
+  border-radius: 15px 15px 0px 0px;
+}
+
+.month-label {
+  text-align: center;
+  font-weight: bold;
+  font-size: .9rem;
+  color: #333;
+}
+
+.month-selector button {
+  width: 40px;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  color: rgb(89, 87, 87);
+  padding: 0;
+  cursor: pointer;
+  position: absolute;
+  font-size: 1rem;
+  transform: translateY(-50%);
+}
+
+.prev-button {
+  top:53%;
+  left: 18.5%;
+}
+
+.next-button {
+  top: 48%;
+  left: 70%;
+}
+
+.month-selector button.hidden {
+  visibility: hidden;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 0px;
+}
+
+.calendar-day-header {
+  padding: 8px 10px;
+  text-align: center;
+  font-size: .8rem;
+  font-weight: bold;
+  background-color: transparent;
+  color: #434445;
+}
+
+.calendar-grid {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 35px;
+  gap: 5px;
+  width: 100%;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 18px;
+  font-size: .8rem;
+  background-color: #ffffffb3;
+  border: 1px solid #ddd;
+  color: grey;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calendar-day.selectable {
+  background-color: #f9f9f9;
+  border: 1px solid #6eb3fc;
+  color: #333;
+  cursor: pointer;
+}
+
+.calendar-day.selectable:hover {
+  background-color: #6eb3fc;
+  color: white;
+}
+
+.calendar-day.unselectable {
+  background-color: #e1e1e1;
+  color: #929191;
+  cursor: not-allowed;
+}
+
+.calendar-day.selected {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: default;
+}
