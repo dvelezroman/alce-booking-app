@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
       this.isLoggedIn = state;
     });
     this.userData$.subscribe(state => {
-      console.log(state);
+      // console.log(state);
       this.userData = state;
     });
     this.isRegistered$.subscribe(state => {

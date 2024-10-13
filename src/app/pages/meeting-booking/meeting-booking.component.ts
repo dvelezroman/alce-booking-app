@@ -142,7 +142,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       const { firstName, lastName } = this.userData;
       return `${firstName} ${lastName}`
     }
-    return 'Nombre de Usuario';
+    return 'Usuario sin nombres';
   }
 
   initializeTimeSlots() {
@@ -268,27 +268,38 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     // Define the time slot range
     const startHour = 9; // 9 AM
     const endHour = 21; // 9 PM
+    const saturdayEndHour = 13; // For Saturdays, slots available until 13:00 (1 PM)
 
-    if (selectedDate.toDateString() === currentDate.toDateString()) {
+    // Check if the selected date is a Saturday (getDay() returns 6 for Saturday)
+    const isSaturday = selectedDate.getDay() === 6;
+
+    if (isSaturday) {
+      // Only show time slots from 9:00 to 13:00 on Saturdays
+      const availableStartHour = Math.max(startHour, currentHour + 2);
+      this.timeSlots = this.generateTimeSlots(availableStartHour, saturdayEndHour);
+    } else if (selectedDate.toDateString() === currentDate.toDateString()) {
       // If the selected day is today
       if (currentHour >= endHour) {
-        // If current time is later than 21:00, show time slots from tomorrow
+        // If the current time is later than 21:00, show time slots from tomorrow
         selectedDate.setDate(selectedDate.getDate() + 1);
+        this.timeSlots = this.generateTimeSlots(startHour, endHour);
+      } else {
+        // Generate time slots starting from the maximum of startHour or currentHour + 2
+        const availableStartHour = Math.max(startHour, currentHour + 2);
+        this.timeSlots = this.generateTimeSlots(availableStartHour, endHour);
       }
-
-      // Generate time slots starting from the maximum of startHour or currentHour + 1
-      const availableStartHour = Math.max(startHour, currentHour + 1);
-      this.timeSlots = Array.from({ length: endHour - availableStartHour + 1 }, (_, i) => {
-        const hour = availableStartHour + i;
-        return { label: `${hour}:00`, value: hour };
-      }).filter(slot => slot.value <= endHour); // Ensure the hour doesn't exceed 21
     } else {
       // If the selected day is not today, show all available hours
-      this.timeSlots = Array.from({ length: endHour - startHour + 1 }, (_, i) => {
-        const hour = startHour + i;
-        return { label: `${hour}:00`, value: hour };
-      });
+      this.timeSlots = this.generateTimeSlots(startHour, endHour);
     }
+  }
+
+  generateTimeSlots(startHour: number, endHour: number) {
+    // Create time slots from startHour to endHour (inclusive)
+    return Array.from({ length: endHour - startHour + 1 }, (_, i) => {
+      const hour = startHour + i;
+      return { label: `${hour}:00`, value: hour };
+    });
   }
 
   selectTimeSlot(time: {label: string, value: number}) {
@@ -411,7 +422,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   openDeleteModal(meeting: MeetingDTO): void {
     this.meetingToDelete = meeting;
     this.isDeleteModalActive = true;
-    console.log(meeting);
   }
 
   closeDeleteModal(): void {

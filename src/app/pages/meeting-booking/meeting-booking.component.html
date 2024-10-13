@@ -108,12 +108,15 @@
 
     <!-- Time Slots Selection -->
     <section class="selected-date-time">
-      <h2 class="titulo-slots">Select a time</h2>
+      <h2 class="titulo-slots">Seleccione una hora</h2>
       <h3 class="title is-3"></h3>
       <button class="scroll-arrow-up" (click)="scrollUp()" [class.disabled]="!canScrollUp" aria-label="Scroll up">
         <i class="fas fa-chevron-up"></i>
       </button>
       <div class="time-slots" #timeSlotList>
+        <div *ngIf="timeSlots.length === 0">
+          <p>Horarios no disponibles</p>
+        </div>
         <div *ngFor="let time of timeSlots; let i = index"
              class="time-slot"
              (mouseenter)="hoverIndex = i"
@@ -122,7 +125,7 @@
             <span class="time-text">{{ time.label }}</span>
           </div>
           <div class="confirm-box" *ngIf="hoverIndex === i" (click)="selectTimeSlot(time)">
-            Confirm
+            Confirmar
           </div>
         </div>
       </div>
