@@ -1,10 +1,10 @@
 <section class="section">
     <div class="container">
-  
+
       <div class="block title-container">
         <h1 class="title">Buscar Meetings</h1>
       </div>
-  
+
       <div class="block-search">
         <form>
           <!-- Inputs de fecha -->
@@ -17,7 +17,7 @@
                 </div>
               </div>
             </div>
-  
+
             <div class="column">
               <div class="field">
                 <label class="label">Fecha hasta</label>
@@ -27,7 +27,7 @@
               </div>
             </div>
           </div>
-  
+
           <!-- Input de hora -->
           <div class="columns is-mobile">
             <div class="column">
@@ -46,37 +46,42 @@
           </div>
         </form>
       </div>
-  
+
       <!-- Resultados de la búsqueda -->
       <div class="block-results">
         <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
           No hay meetings para el rango asignado.
         </p>
-  
+
         <table class="table-results is-striped is-fullwidth" *ngIf="meetings && meetings.length > 0">
           <thead>
             <tr>
-              <th></th>
               <th>Nombre</th>
               <th>Correo</th>
               <th>Fecha</th>
               <th>Hora</th>
               <th>Instructor</th>
+              <th>Marcar Asistencia</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let meeting of meetings">
-              <td>
-                <input type="checkbox" [checked]="selectedMeetingIds.includes(meeting.id)" (change)="toggleSelection(meeting.id)" />
-              </td>
               <td>{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
               <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
               <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
               <td>{{ meeting.hour }}:00</td>
               <td>{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
+              <td>
+                <input type="checkbox" [checked]="meeting.present" (change)="toggleSelection(meeting)" />
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
   </section>
+
+<div class="notification is-success" *ngIf="showSuccessToast" [ngClass]="{ 'is-hidden': !showSuccessToast }">
+  <button class="delete" (click)="closeToast()"></button>
+  {{ toastMessage }}
+</div>

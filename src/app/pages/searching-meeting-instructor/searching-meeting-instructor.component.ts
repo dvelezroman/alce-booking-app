@@ -23,9 +23,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   availableHours: number[] = [];
   meetings: MeetingDTO[] = [];
   instructorId: number | null = null;
-  selectedMeetingIds: any[] = [];
-  isChecked: boolean = true;
-  attendanceStatus: { [key: number]: boolean } = {};
+  showSuccessToast: boolean = false;
+  toastMessage: string = '';
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -68,22 +67,39 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     });
   }
 
-  toggleSelection(meetingId: number | undefined) {
-    if (meetingId !== undefined) {
-        const selectedMeeting = this.meetings.find(meeting => meeting.id === meetingId);
-        const studentName = `${selectedMeeting?.student?.user?.firstName || 'Estudiante'} ${selectedMeeting?.student?.user?.lastName || ''}`;
-        this.attendanceStatus[meetingId] = !this.attendanceStatus[meetingId];
-        const asistenciaTexto = this.attendanceStatus[meetingId] ? 'asistió' : 'no asistió';
-        //console.log(`${studentName} ${asistenciaTexto} a la clase ${meetingId}`);
-        this.bookingService.updateAssistance(meetingId, this.attendanceStatus[meetingId]).subscribe({
-            next: () => {
-                //console.log(`Asistencia actualizada para ${studentName}: ${asistenciaTexto}`);
-            },
-            error: (error) => {
-                //console.error(`Error al actualizar la asistencia de ${studentName}:`, error);
-                this.attendanceStatus[meetingId] = !this.attendanceStatus[meetingId];
-            }
-        });
+  toggleSelection(meeting: MeetingDTO) {
+    if (meeting && meeting.id) {
+      const updatedPresence = !meeting.present;
+      this.bookingService.updateAssistance(meeting.id, !meeting.present).subscribe({
+        next: () => {
+            //console.log(`Asistencia actualizada para ${studentName}: ${asistenciaTexto}`);
+          const filterParams: FilterMeetingsDto = {
+            ...this.filter,
+          };
+          this.fetchMeetings(filterParams);
+          const messageText = updatedPresence ? 'Presente' : 'Ausente';
+          this.toastMessage = `Asistencia actualizada: ${messageText}`;
+          this.showSuccessToast = true;
+
+          // Hide the toast after 3 seconds
+          setTimeout(() => {
+            this.showSuccessToast = false;
+          }, 3000);
+        },
+        error: () => {
+          //console.error(`Error al actualizar la asistencia de ${studentName}:`, error);
+          this.toastMessage = 'Error al actualizar la asistencia';
+          this.showSuccessToast = true;
+
+          setTimeout(() => {
+            this.showSuccessToast = false;
+          }, 3000);
+        }
+      });
     }
-}
+  }
+
+  closeToast() {
+    this.showSuccessToast = false;
+  }
 }
