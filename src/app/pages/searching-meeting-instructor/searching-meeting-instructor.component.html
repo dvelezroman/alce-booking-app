@@ -70,7 +70,7 @@
               <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
               <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
               <td>{{ meeting.hour }}:00</td>
-              <td>{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
+              <td>{{ meeting.instructor?.user?.firstName || 'No asignada' | titlecase }} {{ meeting.instructor?.user?.lastName || '' | titlecase }}</td>
               <td>
                 <input type="checkbox" [checked]="meeting.present" (change)="toggleSelection(meeting)" />
               </td>
