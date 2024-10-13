@@ -34,18 +34,18 @@
 <!--              <input type="text" id="userId" formControlName="userId" placeholder="Ingrese ID Card" />-->
 <!--            </div>-->
           <div class="form-field">
-            <label for="stageId">Stage</label>
+           <!--   <label for="stageId">Stage</label>-->
             <select id="stageId" class="input" formControlName="stageId">
               <option value="">Stages</option>
               <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
             </select>
           </div>
             <div class="form-field">
-              <label for="firstName">First Name</label>
+             <!--  <label for="firstName">First Name</label>-->
               <input type="text" id="firstName" formControlName="firstName" placeholder="Ingrese el First Name" />
             </div>
             <div class="form-field">
-              <label for="lastName">Last Name</label>
+            <!--  <label for="lastName">Last Name</label>-->
               <input type="text" id="lastName" formControlName="lastName" placeholder="Ingrese el Last Name" />
             </div>
             <div class="form-action">
@@ -58,11 +58,11 @@
         <div class="user-form">
           <form [formGroup]="userForm" (ngSubmit)="searchUsers()">
             <div class="form-field">
-              <label for="email">Email</label>
+            <!--  <label for="email">Email</label>-->
               <input type="email" id="emailInput" formControlName="email" placeholder="Ingrese el Email" />
             </div>
             <div class="form-field">
-              <label for="role">Rol</label>
+               <!--<label for="role">Rol</label>-->
               <select id="role" class="input" formControlName="role">
                 <option value="">Roles</option>
                 <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
@@ -121,15 +121,15 @@
   <div class="page-indicator">
     <p>Página {{ currentPage }}</p>
   </div>
-
+  
   <div class="card-user" *ngFor="let user of users">
     <div class="card-user-body">
-
+      
       <!-- Bloque de Nombre como título principal -->
       <p class="card-title">
         <strong>{{ user.firstName | titlecase }} {{ user.lastName | titlecase }}</strong>
       </p>
-
+      
       <!-- Primer bloque: ID y Rol -->
       <div class="card-info-row">
         <p><strong>ID Number:</strong> <span>{{ user.idNumber }}</span></p>
@@ -151,10 +151,10 @@
     <!-- Bloque de botones de acción en fila -->
     <div class="card-user-footer">
       <button (click)="edit(user)" class="action-button edit-button-user">
-        <i class="fas fa-edit"></i> Edit
+        <i class="fas fa-edit"></i>
       </button>
       <button (click)="openDeleteModal(user)" class="action-button delete-button">
-        <i class="fas fa-trash"></i> Delete
+        <i class="fas fa-trash"></i>
       </button>
     </div>
   </div>
