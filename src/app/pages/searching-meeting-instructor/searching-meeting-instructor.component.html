@@ -30,6 +30,21 @@
 
           <!-- Input de hora -->
           <div class="columns is-mobile">
+            <!-- Input de stage -->
+            <div class="column">
+              <div class="field">
+                <label class="label">Stage</label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onFilterChange()">
+                      <option value="">Stages</option>
+                      <!-- Opciones de stages disponibles -->
+                      <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="column">
               <div class="field">
                 <label class="label">Hora</label>
@@ -56,6 +71,8 @@
         <table class="table-results is-striped is-fullwidth" *ngIf="meetings && meetings.length > 0">
           <thead>
             <tr>
+              <th>Stage</th>
+              <th>Categoría</th>
               <th>Nombre</th>
               <th>Correo</th>
               <th>Fecha</th>
@@ -66,6 +83,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let meeting of meetings">
+              <td>{{ meeting.stage?.number || 'Stage no disponible' }}</td>
+              <td>{{ meeting.student?.studentClassification || 'Categoría no disponible' }}</td>
               <td>{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
               <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
               <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>

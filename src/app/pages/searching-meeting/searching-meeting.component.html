@@ -104,6 +104,8 @@
           <tr>
             <th></th>
             <th>Stage</th>
+            <th>Categoría</th>
+            <th>Modalidad</th>
             <th>Nombre</th>
             <th>Correo</th>
             <th>Fecha</th>
@@ -117,6 +119,8 @@
               <input type="checkbox" [checked]="selectedMeetingIds.includes(meeting.id)" (change)="toggleSelection(meeting.id)" />
             </td>
             <td>{{ meeting.stage?.number || 'Stage no disponible' }}</td>
+            <td>{{ meeting.student?.studentClassification || 'Categoría no disponible' }}</td>
+            <td>{{ meeting.student?.mode || 'Modalidad no disponible' }}</td>
             <td>{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
             <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
             <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>

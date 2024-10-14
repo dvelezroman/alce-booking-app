@@ -7,6 +7,8 @@ import { BookingService } from '../../services/booking.service';
 import { Store } from '@ngrx/store';
 import { UserDto } from '../../services/dtos/user.dto';
 import { selectUserData } from '../../store/user.selector';
+import {Stage} from "../../services/dtos/student.dto";
+import {StagesService} from "../../services/stages.service";
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -25,6 +27,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   instructorId: number | null = null;
   showSuccessToast: boolean = false;
   toastMessage: string = '';
+  stages: Stage[] = [];
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -32,10 +35,16 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     hour: '',
     assigned: true,
   };
-  constructor(private bookingService: BookingService,
-               private store: Store) {}
+  constructor(
+    private bookingService: BookingService,
+    private stagesService: StagesService,
+    private store: Store,
+  ) {}
 
   ngOnInit(): void {
+    this.stagesService.getAll().subscribe(response => {
+      this.stages = response;
+    })
     this.availableHours = Array.from({ length: 13 }, (_, i) => 9 + i);
 
     this.store.select(selectUserData).subscribe((userData: UserDto | null) => {
