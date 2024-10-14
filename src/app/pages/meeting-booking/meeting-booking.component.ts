@@ -560,17 +560,16 @@ onWindowScroll() {
   updateLinkStatus() {
     if (!this.selectedMeeting) return;
 
-    const MEETING_DURATION_MINUTES = 60;
-    const LINK_ACTIVE_BUFFER_MINUTES = 5;
+    const LINK_ACTIVE_BUFFER_MINUTES_BEFORE = 5 * 6 * 1000;
+    const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 8 * 60 * 1000;
     const ONE_SECOND = 1000;
     const timeZoneOffset = new Date().getTimezoneOffset() / 60;
     const meetingStart = new Date(this.selectedMeeting.date).getTime() + ((this.selectedMeeting.hour + timeZoneOffset) * 60 * 60 * 1000 );
-    const meetingEnd = meetingStart + MEETING_DURATION_MINUTES * 60 * 1000;
 
     this.linkInterval = setInterval(() => {
       const now = new Date().getTime();
-      const start = meetingStart;
-      const end = meetingEnd + (LINK_ACTIVE_BUFFER_MINUTES * 60 * 1000);
+      const start = meetingStart - LINK_ACTIVE_BUFFER_MINUTES_BEFORE;
+      const end = meetingStart + LINK_ACTIVE_BUFFER_MINUTES_AFTER;
       if (now < start) {
         // The meeting is in the future, link is visible but not clickable
         this.linkStatus = 'not-clickable';
