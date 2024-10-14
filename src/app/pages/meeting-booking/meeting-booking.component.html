@@ -165,12 +165,15 @@
        'not-available': linkStatus === 'not-available'
      }">
           <a *ngIf="selectedMeeting?.link && linkStatus === 'clickable'"
+             readonly="true"
              [href]="getFormattedLink(selectedMeeting?.link || 'Enlace aun no asignado')"
              target="_blank"
-             rel="noopener noreferrer">
-            {{ selectedMeeting?.link }}
+             rel="noopener noreferrer"
+             style="pointer-events: none; user-select: none;"
+          >
+            Ir a la clase
           </a>
-          <span *ngIf="linkStatus === 'not-clickable'">{{ selectedMeeting?.link || 'Enlace aun no asignado' }}</span>
+          <span *ngIf="linkStatus === 'not-clickable'">{{ selectedMeeting?.link ? 'Enlace asignado' : 'Enlace aun no asignado' }}</span>
           <span *ngIf="linkStatus === 'not-available'">Enlace no disponible</span>
         </p>
       </ng-container>
