@@ -38,7 +38,7 @@
             <div class="meeting-title">
               <strong>
                 {{ isToday(meeting.date)
-                ? 'Today'
+                ? 'Hoy'
                 : isCurrentWeek(meeting.date)
                   ? capitalizeFirstLetter(meeting.date | date: 'EEEE':'UTC')
                   : (meeting.date | date: 'mediumDate':'UTC') }}
@@ -46,8 +46,8 @@
             </div>
             <div class="meeting-info-container">
               <div class="schedule-info">
-                <strong>Date: </strong> <span>{{ meeting.date | date: 'mediumDate':'UTC' }}</span><br>
-                <strong>time: </strong> <span>{{ meeting.hour | number: '2.0' }}:00</span>
+                <strong>Fecha: </strong> <span>{{ meeting.date | date: 'mediumDate':'UTC' }}</span><br>
+                <strong>Hora: </strong> <span>{{ meeting.hour | number: '2.0' }}:00</span>
               </div>
               <div class="schedule-delete">
                 <button class="delete-button" (click)="openDeleteModal(meeting); $event.stopPropagation()">
@@ -71,7 +71,7 @@
     <!-- Calendar Selection -->
     <section class="date-time-selection">
       <div class="calendar-title">
-        <h3 class="title is-4">Select a date</h3>
+        <h3 class="title is-4">Seleccione día</h3>
       </div>
       <div class="month-selector">
         <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()" aria-label="Previous month">
@@ -84,13 +84,13 @@
       </div>
       <div class="calendar">
         <div class="calendar-header">
-          <div class="calendar-day-header">Sun</div>
-          <div class="calendar-day-header">Mon</div>
-          <div class="calendar-day-header">Tue</div>
-          <div class="calendar-day-header">Wed</div>
-          <div class="calendar-day-header">Thu</div>
-          <div class="calendar-day-header">Fri</div>
-          <div class="calendar-day-header">Sat</div>
+          <div class="calendar-day-header">Dom</div>
+          <div class="calendar-day-header">Lun</div>
+          <div class="calendar-day-header">Mar</div>
+          <div class="calendar-day-header">Mie</div>
+          <div class="calendar-day-header">Jue</div>
+          <div class="calendar-day-header">Vie</div>
+          <div class="calendar-day-header">Sab</div>
         </div>
         <div class="calendar-grid">
           <div
@@ -152,7 +152,7 @@
       <p>
         <strong>Instructor:</strong>
         <span>
-          {{ (selectedMeeting?.instructor?.user?.firstName || 'Instructor no asignado') | titlecase }}
+          {{ (selectedMeeting?.instructor?.user?.firstName || 'No asignado') | titlecase }}
           {{ selectedMeeting?.instructor?.user?.lastName | titlecase }}
         </span>
       </p>
@@ -182,8 +182,8 @@
 <div *ngIf="showModal" class="modal-overlay">
   <div class="modal-content error-modal">
     <i class="fas fa-exclamation-circle error-icon"></i>
-    <p class="help is-danger bold-text">You must select a date</p>
-    <p class="help is-danger small-text">before choosing a time slot.</p>
+    <p class="help is-danger bold-text">Debe seleccionar una fecha</p>
+    <p class="help is-danger small-text">antes de escoger la hora.</p>
   </div>
 </div>
 
@@ -202,8 +202,8 @@
   <div class="modal-content booking-error-content">
     <i class="fas fa-exclamation-circle error-icon"></i>
     <p class="help is-danger bold-text">
-      No puedes agendar clases.
-      Aun no tienes asignado un Stage, comunicate con administración.
+      No puedes agendar clases,
+      porque aun no tienes asignado un nivel "Stage", comunícate con administración.
     </p>
   </div>
 </div>
@@ -212,7 +212,7 @@
 <div *ngIf="showSuccessModal" class="modal-overlay">
   <div class="modal-content success-modal">
     <i class="fas fa-question-circle question-icon"></i>
-    <p>You have selected <br> {{ selectedDayFormatted }} at {{ selectedTimeSlot.label }}</p>
+    <p>Usted ha seleccionado <br> {{ selectedDayFormatted }} at {{ selectedTimeSlot.label }}</p>
 
      <!-- bloque radio buttons -->
     <p class="radio-question">Elige modo de la clase:</p>
@@ -230,8 +230,8 @@
 
     <!-- Confirmation and cancellation buttons -->
     <div class="modal-buttons">
-      <button class="button is-success" (click)="bookMeeting()">Accept</button>
-      <button class="button is-danger" (click)="cancelSelection()">Cancel</button>
+      <button class="button is-success" (click)="bookMeeting()">Aceptar</button>
+      <button class="button is-danger" (click)="cancelSelection()">Cancelar</button>
     </div>
   </div>
 </div>
@@ -241,7 +241,7 @@
 <div *ngIf="showInfoModal" class="modal-overlay">
   <div class="modal-content info-modal">
     <i class="fas fa-check-circle info-icon"></i>
-    <p>Your selection was successful!</p>
+    <p>Se agendó su clase!</p>
   </div>
 </div>
 
