@@ -2,7 +2,13 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import {CreateMeetingDto, FilterMeetingsDto, MeetingDTO, UpdateMeetingLinkDto} from "./dtos/booking.dto";
+import {
+  CreateMeetingDto,
+  FilterInstructorMeetingDto,
+  FilterMeetingsDto,
+  MeetingDTO,
+  UpdateMeetingLinkDto
+} from "./dtos/booking.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +80,29 @@ export class BookingService {
 
   updateAssistance(id: number, present: boolean): Observable<any> {
     return this.http.patch(`${this.apiUrl}/assistance/${id}`, { present });
+  }
+
+  getInstructorMeetingsGroupedByHour(data: FilterInstructorMeetingDto): Observable<any> {
+    const { from, to, instructorId } = data;
+    let params = new HttpParams();
+
+    if (from) {
+      if (to) {
+        params = params.set('from', from);
+      } else {
+        params = params.set('date', from);
+      }
+    }
+
+    if (to) {
+      params = params.set('to', to);
+    }
+
+    if (instructorId) {
+      params = params.set('instructorId', instructorId);
+    }
+
+    return this.http.get(`${this.apiUrl}/meetings/grouped-by-hour`, { params });
   }
 }
 

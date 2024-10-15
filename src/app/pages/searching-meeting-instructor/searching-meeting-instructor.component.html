@@ -30,6 +30,21 @@
 
           <!-- Input de hora -->
           <div class="columns is-mobile">
+            <!-- Input de stage -->
+            <div class="column">
+              <div class="field">
+                <label class="label">Stage</label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onFilterChange()">
+                      <option value="">Stages</option>
+                      <!-- Opciones de stages disponibles -->
+                      <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="column">
               <div class="field">
                 <label class="label">Hora</label>
@@ -53,9 +68,13 @@
           No hay meetings para el rango asignado.
         </p>
 
-        <table class="table-results is-striped is-fullwidth" *ngIf="meetings && meetings.length > 0">
-          <thead>
+        <!-- Scrollable container for small devices -->
+        <div class="table-container">
+          <table class="table-results is-striped is-fullwidth" *ngIf="meetings && meetings.length > 0">
+            <thead>
             <tr>
+              <th>Stage</th>
+              <th>Categoría</th>
               <th>Nombre</th>
               <th>Correo</th>
               <th>Fecha</th>
@@ -63,24 +82,28 @@
               <th>Instructor</th>
               <th>Marcar Asistencia</th>
             </tr>
-          </thead>
-          <tbody>
+            </thead>
+            <tbody>
             <tr *ngFor="let meeting of meetings">
-              <td>{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
-              <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
-              <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
-              <td>{{ meeting.hour }}:00</td>
-              <td>{{ meeting.instructor?.user?.firstName || 'No asignada' | titlecase }} {{ meeting.instructor?.user?.lastName || '' | titlecase }}</td>
-              <td>
+              <td data-label="Stage">{{ meeting.stage?.number || 'Stage no disponible' }}</td>
+              <td data-label="Categoría">{{ meeting.student?.studentClassification || 'Categoría no disponible' }}</td>
+              <td data-label="Nombre">{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
+              <td data-label="Correo">{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
+              <td data-label="Fecha">{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
+              <td data-label="Hora">{{ meeting.hour }}:00</td>
+              <td data-label="Instructor">{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
+              <td data-label="Marcar Asistencia">
                 <input type="checkbox" [checked]="meeting.present" (change)="toggleSelection(meeting)" />
               </td>
             </tr>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </section>
 
 <div class="notification is-success" *ngIf="showSuccessToast" [ngClass]="{ 'is-hidden': !showSuccessToast }">
+  <button class="delete" (click)="closeToast()"></button>
   {{ toastMessage }}
 </div>
