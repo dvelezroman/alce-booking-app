@@ -36,6 +36,13 @@ export class FilterMeetingsDto {
   assigned?: boolean = false;
 }
 
+export class FilterInstructorMeetingDto {
+  date?: string;
+  instructorId?: string;
+  from?: string;
+  to?: string;
+}
+
 export interface UpdateMeetingLinkDto {
   date?: string;  // ISO date string format
   hour?: number;  // Hour in 24-hour format
