@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { selectIsLoggedIn, selectUserData } from '../../store/user.selector';
 import { UserDto, UserRole } from '../../services/dtos/user.dto';
 import { BookingService } from '../../services/booking.service';
+import {MeetingDTO} from "../../services/dtos/booking.dto";
 
 @Component({
   selector: 'app-home',
@@ -34,7 +35,7 @@ export class HomeComponent implements OnInit {
 
   isModalOpen = false;
   selectedDate: Date | null = null;
-  meetingsOfDay: any[] = [];
+  meetingsOfDay: { date: string, hour: number, instructorId: number, meetings: MeetingDTO[] }[] = [];
 
   constructor(private store: Store,
               private bookingService: BookingService
@@ -68,21 +69,21 @@ export class HomeComponent implements OnInit {
 
   private initializeCalendarSettings(): void {
     const today = new Date();
-    this.selectedMonth = today.toLocaleString('default', { month: 'long' });
+    this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.selectedYear = today.getFullYear();
     this.minMonth = this.selectedMonth;
     this.minYear = this.selectedYear;
 
     const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    this.maxMonth = nextMonthDate.toLocaleString('default', { month: 'long' });
+    this.maxMonth = nextMonthDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.maxYear = nextMonthDate.getFullYear();
   }
-   
+
    generateCurrentMonthDays() {
     const monthIndex = new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth();
     const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
     const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
-  
+
     this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '' }));
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
@@ -94,10 +95,10 @@ export class HomeComponent implements OnInit {
         };
       })
     );
-  
+
     const lastDayOfWeek = new Date(this.selectedYear, monthIndex, daysInMonth).getDay();
     if (lastDayOfWeek !== 6) {
-      const daysToAdd = 6 - lastDayOfWeek; 
+      const daysToAdd = 6 - lastDayOfWeek;
       this.currentMonthDays = this.currentMonthDays.concat(
         Array.from({ length: daysToAdd }, (_, i) => ({
           day: i + 1,
@@ -132,7 +133,7 @@ export class HomeComponent implements OnInit {
 
     const today = new Date();
     const dateToCheck = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth(), day.day);
-    const dayDifference = Math.floor((dateToCheck.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    const dayDifference = Math.ceil((dateToCheck.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
     return dayDifference >= 0 && dayDifference <= 7 && dateToCheck.getDay() !== 0;
   }
@@ -147,14 +148,11 @@ export class HomeComponent implements OnInit {
     if (typeof day.day === 'number') {
       this.selectedDate = new Date(this.selectedYear, new Date().getMonth(), day.day);
       const formattedDate = this.selectedDate.toISOString();
-      console.log('Día seleccionado (from y to):', formattedDate);
-      console.log('Instructor ID:', this.instructorId);
-  
-      this.isModalOpen = true;
+      // console.log('Día seleccionado (from y to):', formattedDate);
+      // console.log('Instructor ID:', this.instructorId);
+
       this.bookingService.getInstructorMeetingsGroupedByHour({
-        date: formattedDate,
-        from: formattedDate,  
-        to: formattedDate,    
+        from: formattedDate,
         instructorId: this.instructorId?.toString()
       }).subscribe({
         next: (meetings) => {

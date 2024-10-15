@@ -88,21 +88,21 @@ export class BookingService {
 
     if (from) {
       if (to) {
-        params = params.set('from', from);
+        params = params.set('from', from.split('T')[0]);
       } else {
-        params = params.set('date', from);
+        params = params.set('date', from.split('T')[0]);
       }
     }
 
     if (to) {
-      params = params.set('to', to);
+      params = params.set('to', to.split('T')[0]);
     }
 
     if (instructorId) {
       params = params.set('instructorId', instructorId);
     }
 
-    return this.http.get(`${this.apiUrl}/meetings/grouped-by-hour`, { params });
+    return this.http.get(`${this.apiUrl}/grouped-by-hour`, { params });
   }
 }
 

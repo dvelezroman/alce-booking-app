@@ -1,4 +1,4 @@
-import {Mode, Stage, Student} from "./student.dto";
+import {Mode, Stage, Student, StudentClassification} from "./student.dto";
 import {Instructor} from "./instructor.dto";
 
 export interface MeetingDTO {
@@ -14,6 +14,7 @@ export interface MeetingDTO {
   instructor?: Instructor;
   stage?: Stage;
   mode: Mode
+  category: StudentClassification;
 }
 
 export interface CreateMeetingDto {
@@ -22,7 +23,8 @@ export interface CreateMeetingDto {
   stageId?: number;
   date: string;
   hour: number;
-  mode: Mode
+  mode: Mode;
+  category?: StudentClassification;
 }
 
 export class FilterMeetingsDto {

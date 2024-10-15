@@ -90,12 +90,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.maxDate = this.getMaxDate();
     this.selectedDate = this.today; // Set the default selected date to today
     const todayDate = new Date();
-    this.selectedMonth = todayDate.toLocaleString('default', { month: 'long' });
+    this.selectedMonth = todayDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.selectedYear = todayDate.getFullYear();
     this.todayMonth = this.selectedMonth;
     this.todayYear = this.selectedYear;
     const nextDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, 1);
-    this.nextMonth_ = nextDate.toLocaleString('default', { month: 'long' });
+    this.nextMonth_ = nextDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.nextYear = nextDate.getFullYear();
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
@@ -146,8 +146,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   initializeTimeSlots() {
-    const startHour = 9; // 9 AM
-    const endHour = 21; // 9 PM
+    const startHour = 8; // 8 AM
+    const endHour = 20; // 8 PM
     this.timeSlots = Array.from({ length: endHour - startHour + 1 }, (_, i) => {
       const hour = startHour + i;
       return { label: `${hour}:00`, value: hour };
@@ -190,7 +190,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
         const date = new Date(this.selectedYear, monthIndex, i + 1);
-        const dayOfWeek = date.toLocaleString('default', { weekday: 'long' });
+        const dayOfWeek = date.toLocaleString('es-ES', { weekday: 'long' }).toUpperCase();
         return {
           day: i + 1,
           dayOfWeek
@@ -201,14 +201,14 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   prevMonth() {
     const today = new Date();
-    const currentMonth = today.toLocaleString('default', { month: 'long' });
+    const currentMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     const currentYear = today.getFullYear();
 
     if (this.selectedMonth === currentMonth && this.selectedYear === currentYear) {
       return;
     }
     const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() - 1, 1);
-    this.selectedMonth = date.toLocaleString('default', {month: 'long'});
+    this.selectedMonth = date.toLocaleString('es-ES', {month: 'long'}).toUpperCase();
     this.selectedYear = date.getFullYear();
 
     this.selectedDay = null;
@@ -226,7 +226,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       return;
     }
     const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() + 1, 1);
-    this.selectedMonth = date.toLocaleString('default', {month: 'long'});
+    this.selectedMonth = date.toLocaleString('es-ES', {month: 'long'}).toUpperCase();
     this.selectedYear = date.getFullYear();
 
     this.selectedDay = null;
@@ -266,15 +266,15 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const currentHour = currentDate.getHours();
 
     // Define the time slot range
-    const startHour = 9; // 9 AM
-    const endHour = 21; // 9 PM
+    const startHour = 8; // 8 AM
+    const endHour = 20; // 8 PM
     const saturdayEndHour = 13; // For Saturdays, slots available until 13:00 (1 PM)
 
     // Check if the selected date is a Saturday (getDay() returns 6 for Saturday)
     const isSaturday = selectedDate.getDay() === 6;
 
     if (isSaturday) {
-      // Only show time slots from 9:00 to 13:00 on Saturdays
+      // Only show time slots from 8:00 to 13:00 on Saturdays
       const availableStartHour = Math.max(startHour, currentHour + 2);
       this.timeSlots = this.generateTimeSlots(availableStartHour, saturdayEndHour);
     } else if (selectedDate.toDateString() === currentDate.toDateString()) {
@@ -376,7 +376,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       stageId: this.userData.stage?.id,
       date: new Date(`${this.selectedYear}-${this.selectedMonth}-${this.selectedDay}`).toISOString().split('T')[0],
       hour: this.selectedTimeSlot.value,
-      mode: this.meetingType
+      mode: this.meetingType,
+      category: this.userData.student.studentClassification,
     };
   }
 

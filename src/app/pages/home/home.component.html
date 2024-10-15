@@ -15,16 +15,16 @@
 
   <div class="month-selector">
     <div class="month-nav-buttons">
-      <button *ngIf="selectedMonth !== minMonth || selectedYear !== minYear" 
-              class="button is-small prev-button" 
-              (click)="prevMonth()" 
+      <button *ngIf="selectedMonth !== minMonth || selectedYear !== minYear"
+              class="button is-small prev-button"
+              (click)="prevMonth()"
               aria-label="Mes anterior">
         <i class="fas fa-chevron-left"></i>
       </button>
       <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
-      <button *ngIf="selectedMonth !== maxMonth || selectedYear !== maxYear" 
-              class="button is-small next-button" 
-              (click)="nextMonth()" 
+      <button *ngIf="selectedMonth !== maxMonth || selectedYear !== maxYear"
+              class="button is-small next-button"
+              (click)="nextMonth()"
               aria-label="Mes siguiente">
         <i class="fas fa-chevron-right"></i>
       </button>
@@ -56,6 +56,7 @@
   </div>
 </section>
 
+
 <!-- modal de clases por día-->
 <div class="modal" [ngClass]="{ 'is-active': isModalOpen }">
   <div class="modal-background"></div>
@@ -69,17 +70,19 @@
         <thead>
           <tr>
             <th>Stage</th>
-            <th>Date</th>
-            <th>Hour</th>
-            <th>Mode</th>
+            <th>Categoría</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Modalidad</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let meeting of meetingsOfDay">
-            <td>{{ meeting.stage }}</td>
-            <td>{{ meeting.date | date: 'mediumDate' }}</td>
-            <td>{{ meeting.hour }}:00</td>
-            <td>{{ meeting.mode }}</td>
+          <tr *ngFor="let item of meetingsOfDay">
+            <td>{{ item.meetings[0].stage?.number }}</td>
+            <td>{{ item.meetings[0].category }}</td>
+            <td>{{ item.date | date: 'mediumDate':'UTC' }}</td>
+            <td>{{ item.hour }}:00</td>
+            <td>{{ item.meetings[0].mode }}</td>
           </tr>
         </tbody>
       </table>
