@@ -38,7 +38,7 @@ export class AttendanceReportsComponent implements OnInit {
     this.availableHours = Array.from({ length: 13 }, (_, i) => 9 + i);
     this.loadStudents();
     this.filteredStudents = [...this.students];
-    
+
   }
 
   filterStudents() {
@@ -52,9 +52,9 @@ export class AttendanceReportsComponent implements OnInit {
     }
   }
 
-  selectStudent(student: UserDto) {
-    this.filter.studentName = `${student.firstName} ${student.lastName}`;
-    this.selectedStudentId = student.id; 
+  selectStudent(user: UserDto) {
+    this.filter.studentName = `${user.firstName} ${user.lastName}`;
+    this.selectedStudentId = user.student?.id;
     this.showDropdown = false;
   }
 
@@ -66,8 +66,8 @@ export class AttendanceReportsComponent implements OnInit {
     this.usersService.searchUsers(1, 100, undefined, undefined, undefined, undefined, 'STUDENT')
       .subscribe({
         next: (result) => {
-          this.students = result.users; 
-          console.log('Estudiantes cargados:', this.students); 
+          this.students = result.users;
+          console.log('Estudiantes cargados:', this.students);
         },
         error: (error) => {
           console.error('Error al cargar estudiantes:', error);
@@ -80,7 +80,8 @@ export class AttendanceReportsComponent implements OnInit {
       from: this.filter.from || undefined,
       to: this.filter.to || undefined,
       hour: this.filter.hour ? String(this.filter.hour) : undefined,
-      studentId: this.selectedStudentId
+      studentId: this.selectedStudentId,
+      assigned: true,
     };
     console.log("Parámetros enviados al servicio:", filterParams);
 
