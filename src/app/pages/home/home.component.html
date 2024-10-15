@@ -1,6 +1,88 @@
-<section class="hero">
+<section *ngIf="isInstructor" class="page-title">
+  <h1 class="home-title">Home</h1>
+</section>
 
+<section class="hero" *ngIf="!isInstructor">
   <div *ngIf="!isLoggedIn" class="hero-button-container">
     <a routerLink="/login" class="login-button">Login</a>
   </div>
 </section>
+
+<section class="calendar-section" *ngIf="isInstructor">
+  <div class="calendar-title">
+    <h3 class="title is-4">Clases Programadas</h3>
+  </div>
+
+  <div class="month-selector">
+    <div class="month-nav-buttons">
+      <button *ngIf="selectedMonth !== minMonth || selectedYear !== minYear" 
+              class="button is-small prev-button" 
+              (click)="prevMonth()" 
+              aria-label="Mes anterior">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
+      <button *ngIf="selectedMonth !== maxMonth || selectedYear !== maxYear" 
+              class="button is-small next-button" 
+              (click)="nextMonth()" 
+              aria-label="Mes siguiente">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="calendar">
+    <div class="calendar-header">
+      <div class="calendar-day-header">Dom</div>
+      <div class="calendar-day-header">Lun</div>
+      <div class="calendar-day-header">Mar</div>
+      <div class="calendar-day-header">Mie</div>
+      <div class="calendar-day-header">Jue</div>
+      <div class="calendar-day-header">Vie</div>
+      <div class="calendar-day-header">Sab</div>
+    </div>
+    <div class="calendar-grid">
+      <div
+      *ngFor="let day of currentMonthDays"
+      class="calendar-day"
+      [ngClass]="{ 'empty': day.day === '' }"
+      (click)="isDaySelectable(day) ? openModal(day) : null"
+      [class.selected]="selectedDay === day.day"
+      [class.selectable]="isDaySelectable(day)"
+      [class.unselectable]="!isDaySelectable(day)">
+      {{ day.day }}
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- modal de clases por día-->
+<div class="modal" [ngClass]="{ 'is-active': isModalOpen }">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">{{ selectedDate | date: 'EEEE, d MMMM' }}</p>
+      <button class="delete" aria-label="close" (click)="closeModal()"></button>
+    </header>
+    <section class="modal-card-body">
+      <table class="table is-fullwidth is-striped">
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th>Date</th>
+            <th>Hour</th>
+            <th>Mode</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let meeting of meetingsOfDay">
+            <td>{{ meeting.stage }}</td>
+            <td>{{ meeting.date | date: 'mediumDate' }}</td>
+            <td>{{ meeting.hour }}:00</td>
+            <td>{{ meeting.mode }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</div>
