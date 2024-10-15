@@ -1,1 +1,83 @@
-<p>attendance-reports works!</p>
+<section class="attendance-section">
+    <div class="attendance-title">
+      <h1>Asistencias</h1>
+    </div>
+
+    <div class="attendance-search">
+        <form>
+            <!-- Selección de estudiante -->
+            <div class="field">
+                <label class="label">Buscar Estudiante</label>
+                <div class="control">
+                    <input
+                    class="input"
+                    type="text"
+                    placeholder="Escribe para buscar estudiante"
+                    [(ngModel)]="filter.studentName"
+                    (input)="filterStudents()"
+                    (focus)="showDropdown = true"
+                    (blur)="hideDropdown()"
+                    name="studentName"
+                    autocomplete="off"
+                  />
+                  <!-- Lista desplegable de estudiantes filtrados -->
+                  <div *ngIf="showDropdown && filteredStudents.length" class="dropdown">
+                    <ul>
+                      <li
+                        *ngFor="let student of filteredStudents"
+                        (mousedown)="selectStudent(student)"
+                      >
+                        {{ student.firstName }} {{ student.lastName }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+        
+            <!-- Campos de fecha desde y hasta -->
+            <div class="columns is-mobile">
+                <div class="column">
+                <div class="field">
+                    <label class="label">Fecha desde</label>
+                    <div class="control">
+                    <input class="input" type="date" [(ngModel)]="filter.from" name="from" (ngModelChange)="onFilterChange()">
+                    </div>
+                </div>
+                </div>
+        
+                <div class="column">
+                <div class="field">
+                    <label class="label">Fecha hasta</label>
+                    <div class="control">
+                    <input class="input" type="date" [(ngModel)]="filter.to" name="to" (ngModelChange)="onFilterChange()">
+                    </div>
+                </div>
+                </div>
+            </div>
+        
+            <!-- Campo de hora y botón de búsqueda -->
+            <div class="columns is-mobile">
+                <!-- Selector de hora -->
+                <div class="column">
+                <div class="field">
+                    <div class="control">
+                    <div class="select is-fullwidth hour-select">
+                        <select [(ngModel)]="filter.hour" name="hour" (ngModelChange)="onFilterChange()">
+                        <option value="">Seleccionar Hora</option>
+                        <option *ngFor="let hour of availableHours" [value]="hour">{{ hour }}:00</option>
+                        </select>
+                    </div>
+                    </div>
+                </div>
+                </div>
+        
+                <!-- Botón de buscar -->
+                <div class="column">
+                <div class="field">
+                    <button class="button is-primary is-fullwidth" (click)="searchAttendance()">Buscar</button>
+                </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

@@ -11,6 +11,7 @@ import { SearchingStudentComponent } from './pages/searching-students/searching-
 import {AuthGuard} from "./auth/auth.guard";
 import { SearchingMeetingInstructorComponent } from './pages/searching-meeting-instructor/searching-meeting-instructor.component';
 import { LinksComponent } from './pages/links/links.component';
+import { AttendanceReportsComponent } from './pages/attendance-reports/attendance-reports.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: 'searching-meeting', component: SearchingMeetingComponent, canActivate: [AuthGuard]},
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent,canActivate: [AuthGuard]},
   { path: 'searching-students', component: SearchingStudentComponent, canActivate: [AuthGuard]},
+  { path: 'asistencias', component: AttendanceReportsComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
 ];
