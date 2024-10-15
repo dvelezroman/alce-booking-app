@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
   minMonth!: string;
   minYear!: number;
 
-  isModalOpen = true;
+  isModalOpen = false;
   selectedDate: Date | null = null;
   meetingsOfDay: any[] = [];
 
