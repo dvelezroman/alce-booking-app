@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserDto } from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
+import { FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
+import { BookingService } from '../../services/booking.service';
 
 @Component({
   selector: 'app-attendance-reports',
@@ -18,15 +20,19 @@ export class AttendanceReportsComponent implements OnInit {
   availableHours: number[] = [];
   students: UserDto[] = [];
   filteredStudents: UserDto[] = [];
+  meetings: MeetingDTO[] = [];
+  selectedStudentId: number | undefined;
+
   filter = {
     studentName: '',
     from: '',
     to: '',
     hour: ''
   };
-  
   showDropdown: boolean = false;
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService,
+              private bookingService: BookingService
+  ) {}
 
   ngOnInit() {
     this.availableHours = Array.from({ length: 13 }, (_, i) => 9 + i);
@@ -48,6 +54,7 @@ export class AttendanceReportsComponent implements OnInit {
 
   selectStudent(student: UserDto) {
     this.filter.studentName = `${student.firstName} ${student.lastName}`;
+    this.selectedStudentId = student.id; 
     this.showDropdown = false;
   }
 
@@ -68,10 +75,27 @@ export class AttendanceReportsComponent implements OnInit {
       });
   }
 
-  onFilterChange() {
-  }
-
   searchAttendance() {
-    console.log("busqueda:", this.filter);
-  }
+    const filterParams: FilterMeetingsDto = {
+      from: this.filter.from || undefined,
+      to: this.filter.to || undefined,
+      hour: this.filter.hour ? String(this.filter.hour) : undefined,
+      studentId: this.selectedStudentId
+    };
+    console.log("Parámetros enviados al servicio:", filterParams);
+
+    this.fetchMeetings(filterParams);
+}
+
+private fetchMeetings(params: FilterMeetingsDto) {
+    this.bookingService.searchMeetings(params).subscribe({
+      next: (meetings) => {
+        console.log("Reuniones recibidas:", meetings);
+        this.meetings = meetings;
+      },
+      error: (error) => {
+        console.error("Error al obtener las reuniones:", error);
+      }
+    });
+}
 }
