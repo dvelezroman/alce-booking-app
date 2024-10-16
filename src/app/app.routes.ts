@@ -26,7 +26,7 @@ export const routes: Routes = [
   { path: 'searching-meeting', component: SearchingMeetingComponent, canActivate: [AuthGuard]},
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent,canActivate: [AuthGuard]},
   { path: 'searching-students', component: SearchingStudentComponent, canActivate: [AuthGuard]},
-  { path: 'asistencias', component: AttendanceReportsComponent, canActivate: [AuthGuard]},
+  { path: 'asistencias-alumnos', component: AttendanceReportsComponent, canActivate: [AuthGuard]},
   { path: 'asistencias-instructor', component: AttendanceInstructorComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },

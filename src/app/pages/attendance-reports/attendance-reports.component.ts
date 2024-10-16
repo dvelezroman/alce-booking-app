@@ -38,7 +38,7 @@ export class AttendanceReportsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.availableHours = Array.from({ length: 13 }, (_, i) => 9 + i);
+    this.availableHours = Array.from({ length: 13 }, (_, i) => 8 + i);
     this.loadStudents();
     this.filteredStudents = [...this.students];
 
@@ -46,15 +46,15 @@ export class AttendanceReportsComponent implements OnInit {
 
   filterStudents() {
     const query = this.filter.studentName.trim().toLowerCase();
-    
+
     if (query.length > 0 && query !== this.selectedStudentName?.toLowerCase()) {
       this.filteredStudents = this.students.filter(student =>
         (student.firstName + ' ' + student.lastName).toLowerCase().includes(query)
       );
-      this.showDropdown = true; 
+      this.showDropdown = true;
     } else {
       this.filteredStudents = [];
-      this.showDropdown = false; 
+      this.showDropdown = false;
     }
   }
 
@@ -87,8 +87,8 @@ export class AttendanceReportsComponent implements OnInit {
     this.searchAttempted = false;
 
     if (!this.filter.studentName || !this.selectedStudentId) {
-      this.isNameFieldInvalid = true; 
-      return; 
+      this.isNameFieldInvalid = true;
+      return;
   }
     const filterParams: FilterMeetingsDto = {
       from: this.filter.from || undefined,

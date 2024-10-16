@@ -51,7 +51,7 @@ export class SearchingMeetingComponent implements OnInit {
   ngOnInit(): void {
     // const today = new Date();
     // this.filter.from = today.toISOString().split('T')[0];
-    this.availableHours = Array.from({ length: 13 }, (_, i) => 9 + i);
+    this.availableHours = Array.from({ length: 13 }, (_, i) => 8 + i);
     this.stagesService.getAll().subscribe(response => {
       this.stages = response;
     })
