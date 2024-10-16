@@ -83,7 +83,7 @@ export class BookingService {
   }
 
   getInstructorMeetingsGroupedByHour(data: FilterInstructorMeetingDto): Observable<any> {
-    const { from, to, instructorId } = data;
+    const { from, to, instructorId, present } = data;
     let params = new HttpParams();
 
     if (from) {
@@ -100,6 +100,10 @@ export class BookingService {
 
     if (instructorId) {
       params = params.set('instructorId', instructorId);
+    }
+
+    if (present) {
+      params = params.set('present', present);
     }
 
     return this.http.get(`${this.apiUrl}/grouped-by-hour`, { params });

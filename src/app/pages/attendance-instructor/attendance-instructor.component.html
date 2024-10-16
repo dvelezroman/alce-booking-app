@@ -1,7 +1,7 @@
 <div class="attendance-title">
     <h1>Asistencias Instructores</h1>
   </div>
-  
+
   <section class="attendance-section">
     <div class="attendance-search">
       <form>
@@ -32,7 +32,7 @@
             </div>
           </div>
         </div>
-  
+
         <!-- Campos de fecha desde y hasta -->
         <div class="columns is-mobile">
           <div class="column">
@@ -52,7 +52,22 @@
             </div>
           </div>
         </div>
-  
+
+        <div class="columns is-mobile">
+          <div class="column">
+            <label class="label">Mostrar todas las:</label>
+                <div class="select is-fullwidth">
+                  <select
+                    [(ngModel)]="filter.present"
+                    name="present"
+                  >
+                    <option *ngFor="let option of [{ value: 'true', label: 'Asistidas' }, { value: 'false', label: 'No Asistidas'}]" [ngValue]="option.value">
+                      {{ option.label }}
+                    </option></select>
+            </div>
+          </div>
+        </div>
+
         <!-- Botón de buscar -->
         <div class="columns is-mobile">
           <div class="column">
@@ -63,33 +78,37 @@
         </div>
       </form>
     </div>
-  
+
     <!-- Tabla de resultados instructores datos -->
     <div class="meeting-results" *ngIf="meetings.length > 0">
       <table class="table is-fullwidth">
         <thead>
           <tr>
-            <th>Fecha</th>
             <th>Stage</th>
+            <th>Categoría</th>
+            <th>Fecha</th>
+            <th>Hora</th>
             <th>Modo</th>
-            <th>Asistencia</th>
+<!--            <th>Asistida</th>-->
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let meeting of meetings">
-            <td>{{ meeting.date | date: 'mediumDate' }}</td>
-            <td>{{ meeting.stage?.description }}</td>
-            <td>{{ meeting.mode }}</td>
-            <td class="attendance-icon">
-              <span class="material-icons" [ngClass]="meeting.present ? 'icon-yes' : 'icon-no'">
-                {{ meeting.present ? 'check' : 'close' }}
-              </span>
-            </td>
+          <tr *ngFor="let item of meetings">
+            <td>{{ item.meetings[0].stage?.number }}</td>
+            <td>{{ item.meetings[0].category }}</td>
+            <td>{{ item.date | date: 'mediumDate':'UTC' }}</td>
+            <td>{{ item.hour }}:00</td>
+            <td>{{ item.meetings[0].mode }}</td>
+<!--            <td class="attendance-icon">-->
+<!--              <span class="material-icons" [ngClass]="itemmeeting.present ? 'icon-yes' : 'icon-no'">-->
+<!--                {{ meeting.present ? 'check' : 'close' }}-->
+<!--              </span>-->
+<!--            </td>-->
           </tr>
         </tbody>
       </table>
     </div>
-  
+
     <div *ngIf="searchAttempted && meetings.length === 0" class="no-results">
       No se encontraron clases para los criterios seleccionados.
     </div>

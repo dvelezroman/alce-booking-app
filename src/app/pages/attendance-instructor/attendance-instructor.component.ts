@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
-import { UserDto } from '../../services/dtos/user.dto';
+import {UserDto, UserRole} from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { BookingService } from '../../services/booking.service';
 import { FormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
 export class AttendanceInstructorComponent implements OnInit {
   instructors: UserDto[] = [];
   filteredInstructors: UserDto[] = [];
-  meetings: MeetingDTO[] = [];
+  meetings: { date: string, hour: number, instructorId: number, meetings: MeetingDTO[] }[] = [];
   selectedInstructorId: number | undefined;
   searchAttempted = false;
   isNameFieldInvalid: boolean = false;
@@ -27,9 +27,10 @@ export class AttendanceInstructorComponent implements OnInit {
   filter = {
     instructorName: '',
     from: '',
-    to: ''
+    to: '',
+    present: 'yes',
   };
-  showDropdown: boolean = false;
+  showDropdown: boolean = true;
 
   constructor(private usersService: UsersService,
               private bookingService: BookingService) {}
@@ -44,10 +45,10 @@ export class AttendanceInstructorComponent implements OnInit {
       this.filteredInstructors = this.instructors.filter(instructor =>
         (instructor.firstName + ' ' + instructor.lastName).toLowerCase().includes(query)
       );
-      this.showDropdown = true; 
+      this.showDropdown = true;
     } else {
       this.filteredInstructors = [];
-      this.showDropdown = false; 
+      this.showDropdown = false;
     }
   }
 
@@ -62,12 +63,10 @@ export class AttendanceInstructorComponent implements OnInit {
   }
 
   loadInstructors() {
-    this.usersService.searchUsers(1, 100)
+    this.usersService.searchUsers(0, 100, undefined, undefined, undefined, undefined, UserRole.INSTRUCTOR)
       .subscribe({
         next: (result) => {
-         // console.log('Respuesta completa del servicio:', result); 
-          this.instructors = result.users.filter(user => user.role === 'INSTRUCTOR');
-          console.log('Instructores cargados:', this.instructors); 
+          this.instructors = result.users;
         },
         error: (error) => {
           console.error('Error al cargar instructores:', error);
@@ -81,23 +80,24 @@ export class AttendanceInstructorComponent implements OnInit {
 
     if (!this.filter.instructorName || !this.selectedInstructorId) {
         this.isNameFieldInvalid = true;
-        return; 
+        return;
     }
     const filterParams: FilterMeetingsDto = {
         from: this.filter.from || undefined,
         to: this.filter.to || undefined,
         instructorId: this.selectedInstructorId?.toString(),
         assigned: true,
+        present: this.filter.present,
     };
 
-    console.log("Parámetros de búsqueda enviados:", filterParams);
+    // console.log("Parámetros de búsqueda enviados:", filterParams);
 
     this.fetchMeetings(filterParams);
 }
 
   private fetchMeetings(params: FilterMeetingsDto) {
     this.searchAttempted = true;
-    this.bookingService.searchMeetings(params).subscribe({
+    this.bookingService.getInstructorMeetingsGroupedByHour(params).subscribe({
         next: (meetings) => {
             console.log("Reuniones recibidas:", meetings);
             this.meetings = meetings;

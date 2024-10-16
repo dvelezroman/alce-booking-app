@@ -36,6 +36,7 @@ export class FilterMeetingsDto {
   from?: string;
   to?: string;
   assigned?: boolean = false;
+  present?: string;
 }
 
 export class FilterInstructorMeetingDto {
@@ -43,6 +44,7 @@ export class FilterInstructorMeetingDto {
   instructorId?: string;
   from?: string;
   to?: string;
+  present?: string;
 }
 
 export interface UpdateMeetingLinkDto {
