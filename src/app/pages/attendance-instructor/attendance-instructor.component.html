@@ -1,0 +1,96 @@
+<div class="attendance-title">
+    <h1>Asistencias Instructores</h1>
+  </div>
+  
+  <section class="attendance-section">
+    <div class="attendance-search">
+      <form>
+        <!-- Selección de instructor -->
+        <div class="field">
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="Nombre del Instructor"
+              [(ngModel)]="filter.instructorName"
+              (input)="filterInstructors()"
+              (blur)="hideDropdown()"
+              name="instructorName"
+              autocomplete="off"/>
+            <!-- Lista desplegable de instructores filtrados -->
+            <div *ngIf="showDropdown" class="dropdown">
+              <div *ngIf="filteredInstructors.length === 0" class="no-results1">
+                No se encontraron instructores
+              </div>
+              <ul *ngIf="filteredInstructors.length > 0">
+                <li
+                  *ngFor="let instructor of filteredInstructors"
+                  (mousedown)="selectInstructor(instructor)">
+                  {{ instructor.firstName }} {{ instructor.lastName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Campos de fecha desde y hasta -->
+        <div class="columns is-mobile">
+          <div class="column">
+            <div class="field">
+              <label class="label">Fecha desde</label>
+              <div class="control">
+                <input class="input" type="date" [(ngModel)]="filter.from" name="from">
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">Fecha hasta</label>
+              <div class="control">
+                <input class="input" type="date" [(ngModel)]="filter.to" name="to">
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Botón de buscar -->
+        <div class="columns is-mobile">
+          <div class="column">
+            <div class="field">
+              <button class="button is-primary is-fullwidth" (click)="searchInstructorAttendance()">Buscar</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Tabla de resultados instructores datos -->
+    <div class="meeting-results" *ngIf="meetings.length > 0">
+      <table class="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Stage</th>
+            <th>Modo</th>
+            <th>Asistencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let meeting of meetings">
+            <td>{{ meeting.date | date: 'mediumDate' }}</td>
+            <td>{{ meeting.stage?.description }}</td>
+            <td>{{ meeting.mode }}</td>
+            <td class="attendance-icon">
+              <span class="material-icons" [ngClass]="meeting.present ? 'icon-yes' : 'icon-no'">
+                {{ meeting.present ? 'check' : 'close' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div *ngIf="searchAttempted && meetings.length === 0" class="no-results">
+      No se encontraron clases para los criterios seleccionados.
+    </div>
+  </section>
