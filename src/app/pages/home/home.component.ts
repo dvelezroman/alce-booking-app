@@ -33,7 +33,6 @@ export class HomeComponent implements OnInit {
   minMonth!: string;
   minYear!: number;
 
-  isModalOpen = false;
   selectedDate: Date | null = null;
   meetingsOfDay: { date: string, hour: number, instructorId: number, meetings: MeetingDTO[] }[] = [];
 
@@ -65,6 +64,7 @@ export class HomeComponent implements OnInit {
         this.generateCurrentMonthDays();
       }
     });
+    
   }
 
   private initializeCalendarSettings(): void {
@@ -144,7 +144,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  openModal(day: { day: number | string; dayOfWeek: string }) {
+  showMeetingsOfDay(day: { day: number | string; dayOfWeek: string }) {
     if (typeof day.day === 'number') {
       this.selectedDate = new Date(this.selectedYear, new Date().getMonth(), day.day);
       const formattedDate = this.selectedDate.toISOString();
@@ -157,16 +157,11 @@ export class HomeComponent implements OnInit {
       }).subscribe({
         next: (meetings) => {
           this.meetingsOfDay = meetings;
-          this.isModalOpen = true;
         },
         error: (error) => console.error('Error al obtener reuniones:', error)
       });
     }
   }
 
-  closeModal() {
-    this.isModalOpen = false;
-    this.meetingsOfDay = [];
-  }
 
 }

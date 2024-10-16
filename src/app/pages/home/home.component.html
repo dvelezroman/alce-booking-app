@@ -46,7 +46,7 @@
       *ngFor="let day of currentMonthDays"
       class="calendar-day"
       [ngClass]="{ 'empty': day.day === '' }"
-      (click)="isDaySelectable(day) ? openModal(day) : null"
+      (click)="isDaySelectable(day) ? showMeetingsOfDay(day) : null"
       [class.selected]="selectedDay === day.day"
       [class.selectable]="isDaySelectable(day)"
       [class.unselectable]="!isDaySelectable(day)">
@@ -54,28 +54,20 @@
     </div>
     </div>
   </div>
-</section>
-
-
-<!-- modal de clases por día-->
-<div class="modal" [ngClass]="{ 'is-active': isModalOpen }">
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ selectedDate | date: 'EEEE, d MMMM' }}</p>
-      <button class="delete" aria-label="close" (click)="closeModal()"></button>
-    </header>
-    <section class="modal-card-body">
-      <table class="table is-fullwidth is-striped">
-        <thead>
-          <tr>
-            <th>Stage</th>
-            <th>Categoría</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Modalidad</th>
-          </tr>
-        </thead>
+  
+  <!-- Tabla de resultados -->
+  <div *ngIf="meetingsOfDay.length > 0" class="meeting-results">
+    <h3 class="title is-5">Clases para el {{ selectedDate | date: 'EEEE, d MMMM' }}</h3>
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Categoría</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Modalidad</th>
+        </tr>
+      </thead>
         <tbody>
           <tr *ngFor="let item of meetingsOfDay">
             <td>{{ item.meetings[0].stage?.number }}</td>
@@ -85,7 +77,7 @@
             <td>{{ item.meetings[0].mode }}</td>
           </tr>
         </tbody>
-      </table>
-    </section>
+    </table>
   </div>
-</div>
+</section>
+
