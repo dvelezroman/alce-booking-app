@@ -78,6 +78,7 @@ export class AttendanceInstructorComponent implements OnInit {
   searchInstructorAttendance() {
     this.isNameFieldInvalid = false;
     this.searchAttempted = false;
+
     if (!this.filter.instructorName || !this.selectedInstructorId) {
         this.isNameFieldInvalid = true;
         return; 
@@ -85,7 +86,8 @@ export class AttendanceInstructorComponent implements OnInit {
     const filterParams: FilterMeetingsDto = {
         from: this.filter.from || undefined,
         to: this.filter.to || undefined,
-        instructorId: this.selectedInstructorId?.toString()
+        instructorId: this.selectedInstructorId?.toString(),
+        assigned: true,
     };
 
     console.log("Parámetros de búsqueda enviados:", filterParams);
@@ -95,5 +97,14 @@ export class AttendanceInstructorComponent implements OnInit {
 
   private fetchMeetings(params: FilterMeetingsDto) {
     this.searchAttempted = true;
-  }
+    this.bookingService.searchMeetings(params).subscribe({
+        next: (meetings) => {
+            console.log("Reuniones recibidas:", meetings);
+            this.meetings = meetings;
+        },
+        error: (error) => {
+            console.error("Error al obtener las reuniones:", error);
+        }
+    });
+}
 }
