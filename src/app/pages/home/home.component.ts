@@ -69,13 +69,13 @@ export class HomeComponent implements OnInit {
 
   private initializeCalendarSettings(): void {
     const today = new Date();
-    this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' });
     this.selectedYear = today.getFullYear();
     this.minMonth = this.selectedMonth;
     this.minYear = this.selectedYear;
 
     const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    this.maxMonth = nextMonthDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    this.maxMonth = nextMonthDate.toLocaleString('es-ES', { month: 'long' });
     this.maxYear = nextMonthDate.getFullYear();
   }
 
@@ -109,19 +109,19 @@ export class HomeComponent implements OnInit {
   }
 
   prevMonth() {
-    if (this.selectedMonth === this.minMonth && this.selectedYear === this.minYear) return;
-
-    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() - 1, 1);
+    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), 1);
+    date.setMonth(date.getMonth() - 1);
+    if (date < new Date(this.minYear, new Date(Date.parse(this.minMonth + " 1," + this.minYear)).getMonth())) return;
     this.selectedMonth = date.toLocaleString('default', { month: 'long' });
     this.selectedYear = date.getFullYear();
     this.selectedDay = null;
     this.generateCurrentMonthDays();
   }
-
+  
   nextMonth() {
-    if (this.selectedMonth === this.maxMonth && this.selectedYear === this.maxYear) return;
-
-    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() + 1, 1);
+    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), 1);
+    date.setMonth(date.getMonth() + 1);
+    if (date > new Date(this.maxYear, new Date(Date.parse(this.maxMonth + " 1," + this.maxYear)).getMonth())) return;
     this.selectedMonth = date.toLocaleString('default', { month: 'long' });
     this.selectedYear = date.getFullYear();
     this.selectedDay = null;
