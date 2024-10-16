@@ -51,9 +51,9 @@ export class AttendanceInstructorComponent implements OnInit {
     }
   }
 
-  selectInstructor(instructor: UserDto) {
-    this.filter.instructorName = `${instructor.firstName} ${instructor.lastName}`;
-    this.selectedInstructorId = instructor.instructor?.id;
+  selectInstructor(user: UserDto) {
+    this.filter.instructorName = `${user.firstName} ${user.lastName}`;
+    this.selectedInstructorId = user.instructor?.id;
     this.showDropdown = false;
   }
 
@@ -62,11 +62,12 @@ export class AttendanceInstructorComponent implements OnInit {
   }
 
   loadInstructors() {
-    this.usersService.searchUsers(1, 100, undefined, undefined, undefined, undefined, 'INSTRUCTOR')
+    this.usersService.searchUsers(1, 100)
       .subscribe({
         next: (result) => {
-          this.instructors = result.users;
-          console.log('Instructores cargados:', this.instructors);
+         // console.log('Respuesta completa del servicio:', result); 
+          this.instructors = result.users.filter(user => user.role === 'INSTRUCTOR');
+          console.log('Instructores cargados:', this.instructors); 
         },
         error: (error) => {
           console.error('Error al cargar instructores:', error);
@@ -77,23 +78,22 @@ export class AttendanceInstructorComponent implements OnInit {
   searchInstructorAttendance() {
     this.isNameFieldInvalid = false;
     this.searchAttempted = false;
-
     if (!this.filter.instructorName || !this.selectedInstructorId) {
-      this.isNameFieldInvalid = true;
-      return; 
+        this.isNameFieldInvalid = true;
+        return; 
     }
-
     const filterParams: FilterMeetingsDto = {
-      from: this.filter.from || undefined,
-      to: this.filter.to || undefined,
-      instructorId: this.selectedInstructorId?.toString()
+        from: this.filter.from || undefined,
+        to: this.filter.to || undefined,
+        instructorId: this.selectedInstructorId?.toString()
     };
 
+    console.log("Parámetros de búsqueda enviados:", filterParams);
+
     this.fetchMeetings(filterParams);
-  }
+}
 
   private fetchMeetings(params: FilterMeetingsDto) {
-    // Simulación de datos hasta que se complete el servicio
     this.searchAttempted = true;
   }
 }
