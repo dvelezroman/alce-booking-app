@@ -1,55 +1,54 @@
+<div class="attendance-title">
+  <h1>Asistencias</h1>
+</div>
 <section class="attendance-section">
-    <div class="attendance-title">
-      <h1>Asistencias</h1>
-    </div>
 
     <div class="attendance-search">
         <form>
             <!-- Selección de estudiante -->
             <div class="field">
-                <label class="label">Buscar Estudiante</label>
                 <div class="control">
                     <input
-                    class="input"
-                    type="text"
-                    placeholder="Escribe para buscar estudiante"
-                    [(ngModel)]="filter.studentName"
-                    (input)="filterStudents()"
-                    (focus)="showDropdown = true"
-                    (blur)="hideDropdown()"
-                    name="studentName"
-                    autocomplete="off"
-                  />
+                        class="input"
+                        type="text"
+                        placeholder="Nombre del Estudiante"
+                        [(ngModel)]="filter.studentName"
+                        (input)="filterStudents()"
+                        (blur)="hideDropdown()"
+                        name="studentName"
+                        autocomplete="off"/>
                   <!-- Lista desplegable de estudiantes filtrados -->
-                  <div *ngIf="showDropdown && filteredStudents.length" class="dropdown">
-                    <ul>
-                      <li
-                        *ngFor="let student of filteredStudents"
-                        (mousedown)="selectStudent(student)"
-                      >
-                        {{ student.firstName }} {{ student.lastName }}
-                      </li>
-                    </ul>
-                  </div>
+                    <div *ngIf="showDropdown" class="dropdown">
+                        <div *ngIf="filteredStudents.length === 0" class="no-results1">
+                            No se encontraron estudiantes
+                        </div>
+                        <ul *ngIf="filteredStudents.length > 0">
+                            <li
+                                *ngFor="let student of filteredStudents"
+                                (mousedown)="selectStudent(student)">
+                                {{ student.firstName }} {{ student.lastName }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-              </div>
+            </div>
         
             <!-- Campos de fecha desde y hasta -->
             <div class="columns is-mobile">
                 <div class="column">
-                <div class="field">
-                    <label class="label">Fecha desde</label>
-                    <div class="control">
-                    <input class="input" type="date" [(ngModel)]="filter.from" name="from">
+                    <div class="field">
+                        <label class="label">Fecha desde</label>
+                        <div class="control">
+                            <input class="input" type="date" [(ngModel)]="filter.from" name="from">
+                        </div>
                     </div>
-                </div>
                 </div>
         
                 <div class="column">
                 <div class="field">
                     <label class="label">Fecha hasta</label>
                     <div class="control">
-                    <input class="input" type="date" [(ngModel)]="filter.to" name="to">
+                        <input class="input" type="date" [(ngModel)]="filter.to" name="to">
                     </div>
                 </div>
                 </div>
@@ -59,37 +58,37 @@
             <div class="columns is-mobile">
                 <!-- Selector de hora -->
                 <div class="column">
-                <div class="field">
-                    <div class="control">
-                    <div class="select is-fullwidth hour-select">
-                        <select [(ngModel)]="filter.hour" name="hour">
-                        <option value="">Todas las horas</option>
-                        <option *ngFor="let hour of availableHours" [value]="hour">{{ hour }}:00</option>
-                        </select>
+                    <div class="field">
+                        <div class="control">
+                            <div class="select is-fullwidth hour-select">
+                                <select [(ngModel)]="filter.hour" name="hour">
+                                    <option value="">Todas las horas</option>
+                                    <option *ngFor="let hour of availableHours" [value]="hour">{{ hour }}:00</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    </div>
-                </div>
                 </div>
         
                 <!-- Botón de buscar -->
                 <div class="column">
-                <div class="field">
-                    <button class="button is-primary is-fullwidth" (click)="searchAttendance()">Buscar</button>
-                </div>
+                    <div class="field">
+                        <button class="button is-primary is-fullwidth" (click)="searchAttendance()">Buscar</button>
+                    </div>
                 </div>
             </div>
         </form>
     </div>
      <!-- Tabla de reuniones -->
     <div class="meeting-results" *ngIf="meetings.length > 0">
-        <table class="table is-fullwidth is-striped">
+        <table class="table is-fullwidth">
             <thead>
                 <tr>
                     <th>Fecha</th>
                     <th>Hora</th>
                     <th>Stage</th>
                     <th>Modo</th>
-                    <th>Presente</th>
+                    <th>Asistencia</th>
                 </tr>
             </thead>
             <tbody>
@@ -98,9 +97,16 @@
                     <td>{{ meeting.hour }}:00</td>
                     <td>{{ meeting.stage?.description }}</td>
                     <td>{{ meeting.mode }}</td>
-                    <td>{{ meeting.present ? 'Sí' : 'No' }}</td>
+                    <td class="attendance-icon">
+                        <span class="material-icons" [ngClass]="meeting.present ? 'icon-yes' : 'icon-no'">
+                            {{ meeting.present ? 'check' : 'close' }}
+                        </span>
+                    </td>
                 </tr>
             </tbody>
         </table>
+    </div>
+    <div *ngIf="searchAttempted && meetings.length === 0" class="no-results">
+        No se encontraron clases para los criterios seleccionados.
     </div>
 </section>

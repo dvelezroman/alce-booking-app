@@ -22,6 +22,9 @@ export class AttendanceReportsComponent implements OnInit {
   filteredStudents: UserDto[] = [];
   meetings: MeetingDTO[] = [];
   selectedStudentId: number | undefined;
+  selectedStudentName: string = '';
+  searchAttempted = false;
+  isNameFieldInvalid: boolean = false;
 
   filter = {
     studentName: '',
@@ -42,19 +45,23 @@ export class AttendanceReportsComponent implements OnInit {
   }
 
   filterStudents() {
-    const query = this.filter.studentName.trim();
-    if (query.length > 0) {
+    const query = this.filter.studentName.trim().toLowerCase();
+    
+    if (query.length > 0 && query !== this.selectedStudentName?.toLowerCase()) {
       this.filteredStudents = this.students.filter(student =>
-        (student.firstName + ' ' + student.lastName).toLowerCase().includes(query.toLowerCase())
+        (student.firstName + ' ' + student.lastName).toLowerCase().includes(query)
       );
+      this.showDropdown = true; 
     } else {
       this.filteredStudents = [];
+      this.showDropdown = false; 
     }
   }
 
   selectStudent(user: UserDto) {
     this.filter.studentName = `${user.firstName} ${user.lastName}`;
     this.selectedStudentId = user.student?.id;
+    this.selectedStudentName = this.filter.studentName;
     this.showDropdown = false;
   }
 
@@ -76,6 +83,13 @@ export class AttendanceReportsComponent implements OnInit {
   }
 
   searchAttendance() {
+    this.isNameFieldInvalid = false;
+    this.searchAttempted = false;
+
+    if (!this.filter.studentName || !this.selectedStudentId) {
+      this.isNameFieldInvalid = true; 
+      return; 
+  }
     const filterParams: FilterMeetingsDto = {
       from: this.filter.from || undefined,
       to: this.filter.to || undefined,
@@ -83,7 +97,10 @@ export class AttendanceReportsComponent implements OnInit {
       studentId: this.selectedStudentId,
       assigned: true,
     };
-    console.log("Parámetros enviados al servicio:", filterParams);
+    //console.log("Parámetros enviados al servicio:", filterParams);
+    setTimeout(() => {
+      this.searchAttempted = true;
+    }, 1000);
 
     this.fetchMeetings(filterParams);
 }
