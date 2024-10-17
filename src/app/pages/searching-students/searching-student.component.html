@@ -35,8 +35,8 @@
 <!--            </div>-->
           <div class="form-field">
            <!--   <label for="stageId">Stage</label>-->
-            <select id="stageId" class="input" formControlName="stageId">
-              <option value="">Stages</option>
+            <select id="stageId" class="input" formControlName="stageId" [value]=0>
+              <option [value]=0>Stages</option>
               <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
             </select>
           </div>
@@ -121,15 +121,15 @@
   <div class="page-indicator">
     <p>Página {{ currentPage }}</p>
   </div>
-  
+
   <div class="card-user" *ngFor="let user of users">
     <div class="card-user-body">
-      
+
       <!-- Bloque de Nombre como título principal -->
       <p class="card-title">
         <strong>{{ user.firstName | titlecase }} {{ user.lastName | titlecase }}</strong>
       </p>
-      
+
       <!-- Primer bloque: ID y Rol -->
       <div class="card-info-row">
         <p><strong>ID Number:</strong> <span>{{ user.idNumber }}</span></p>

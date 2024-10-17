@@ -31,7 +31,7 @@ export class RegisterCompleteComponent implements OnInit, OnDestroy {
   showRegistrationErrorModal = false;
   registerForm: FormGroup;
   stages: Stage[] = [];
-  roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
+  roles = ['STUDENT'];
   modes: string[] = ['PRESENCIAL', 'ONLINE'];
   user: UserDto | null = null;
   userData$: Observable<UserDto | null>;

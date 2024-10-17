@@ -85,7 +85,7 @@ export class SearchingStudentComponent {
       userId: [''],
       firstName: [''],
       lastName: [''],
-      stageId: 1,
+      stageId: 0,
     });
 
     this.userForm = this.fb.group({
@@ -239,9 +239,9 @@ export class SearchingStudentComponent {
 
 // Abre el modal de eliminación
 openDeleteModal(user: UserDto): void {
-  // this.deleteModalMessage = `¿Estás seguro de que deseas eliminar al usuario ${user.firstName} ${user.lastName}?`;
-  // this.isDeleteModalOpen = true;
-  // this.userToDelete = user;
+  this.deleteModalMessage = `¿Estás seguro de que deseas eliminar al usuario ${user.firstName} ${user.lastName}?`;
+  this.isDeleteModalOpen = true;
+  this.userToDelete = user;
 }
 
 // Cierra el modal de eliminación
@@ -256,14 +256,16 @@ confirmDelete(): void {
     // console.log("Eliminando usuario con ID:", this.userToDelete.id);
     this.usersService.delete(this.userToDelete.id).subscribe({
       next: () => {
-        this.users = this.users.filter(user => user.id !== this.userToDelete?.id);
+        // this.users = this.users.filter(user => user.id !== this.userToDelete?.id);
         this.showSuccessModal('Usuario eliminado exitosamente');
         this.closeDeleteModal();
+        this.searchUsers();
       },
       error: (error) => {
         console.error('Error al eliminar el usuario:', error);
         this.showErrorModal('No se pudo eliminar el usuario');
         this.closeDeleteModal();
+        this.searchUsers();
       }
     });
   }
