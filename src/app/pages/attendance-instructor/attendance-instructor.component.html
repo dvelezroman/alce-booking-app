@@ -25,7 +25,7 @@
               <ul *ngIf="filteredInstructors.length > 0">
                 <li
                   *ngFor="let instructor of filteredInstructors"
-                  (mousedown)="selectInstructor(instructor)">
+                  (click)="selectInstructor(instructor)">
                   {{ instructor.firstName }} {{ instructor.lastName }}
                 </li>
               </ul>
@@ -37,17 +37,17 @@
         <div class="columns is-mobile">
           <div class="column">
             <div class="field">
-              <label class="label">Fecha desde</label>
+              <label class="label">Desde</label>
               <div class="control">
-                <input class="input" type="date" [(ngModel)]="filter.from" name="from">
+                <input class="input" type="date" [(ngModel)]="filter.from" name="from" required min="2024-10-01" max="2024-12-31">
               </div>
             </div>
           </div>
           <div class="column">
             <div class="field">
-              <label class="label">Fecha hasta</label>
+              <label class="label">Hasta</label>
               <div class="control">
-                <input class="input" type="date" [(ngModel)]="filter.to" name="to">
+                <input class="input" type="date" [(ngModel)]="filter.to" name="to" name="from" required min="2024-10-01" max="2024-12-31">
               </div>
             </div>
           </div>
@@ -86,6 +86,7 @@
           <tr>
             <th>Stage</th>
             <th>Categoría</th>
+            <th>Modalidad</th>
             <th>Fecha</th>
             <th>Hora</th>
             <th>Modo</th>
@@ -96,6 +97,7 @@
           <tr *ngFor="let item of meetings">
             <td>{{ item.meetings[0].stage?.number }}</td>
             <td>{{ item.meetings[0].category }}</td>
+            <td>{{ item.meetings[0].mode }}</td>
             <td>{{ item.date | date: 'mediumDate':'UTC' }}</td>
             <td>{{ item.hour }}:00</td>
             <td>{{ item.meetings[0].mode }}</td>
@@ -110,6 +112,6 @@
     </div>
 
     <div *ngIf="searchAttempted && meetings.length === 0" class="no-results">
-      No se encontraron clases para los criterios seleccionados.
+      No se encontraron registros para los criterios seleccionados.
     </div>
   </section>

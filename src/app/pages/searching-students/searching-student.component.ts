@@ -103,18 +103,19 @@ export class SearchingStudentComponent {
   }
 
   toggleForm() {
-    if (!this.isStudentForm) {
-      this.userForm.setValue({
-        email: '',
-        role: ''
-      });
-    } else {
-      this.studentForm.patchValue({
-        firstName: '',
-        lastName: ''
-      });
-    }
+    // if (!this.isStudentForm) {
+    //   this.userForm.setValue({
+    //     email: '',
+    //     role: ''
+    //   });
+    // } else {
+    //   this.studentForm.patchValue({
+    //     firstName: '',
+    //     lastName: ''
+    //   });
+    // }
     this.isStudentForm = !this.isStudentForm;
+    this.searchUsers();
   }
 
   searchUsers() {
@@ -125,7 +126,7 @@ export class SearchingStudentComponent {
 
     if (this.isStudentForm) {
       const { firstName, lastName, stageId } = this.studentForm.value;
-      this.usersService.searchUsers((this.currentPage - 1) * this.itemsPerPage, this.itemsPerPage, undefined, firstName, lastName, undefined, undefined, undefined, stageId)
+      this.usersService.searchUsers((this.currentPage - 1) * this.itemsPerPage, this.itemsPerPage, undefined, firstName, lastName, undefined, UserRole.STUDENT, undefined, stageId)
         .subscribe({
           next: result => {
             this.users = result.users;

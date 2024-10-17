@@ -26,7 +26,7 @@ export class AttendanceInstructorComponent implements OnInit {
 
   filter = {
     instructorName: '',
-    from: '',
+    from: new Date().toISOString().substring(0, 10),
     to: '',
     present: 'yes',
   };
@@ -83,7 +83,7 @@ export class AttendanceInstructorComponent implements OnInit {
         return;
     }
     const filterParams: FilterMeetingsDto = {
-        from: this.filter.from || undefined,
+        from: this.filter.from || new Date().toISOString(),
         to: this.filter.to || undefined,
         instructorId: this.selectedInstructorId?.toString(),
         assigned: true,
@@ -93,7 +93,7 @@ export class AttendanceInstructorComponent implements OnInit {
     // console.log("Parámetros de búsqueda enviados:", filterParams);
 
     this.fetchMeetings(filterParams);
-}
+  }
 
   private fetchMeetings(params: FilterMeetingsDto) {
     this.searchAttempted = true;

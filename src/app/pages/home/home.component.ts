@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit {
         this.generateCurrentMonthDays();
       }
     });
-    
+
   }
 
   private initializeCalendarSettings(): void {
@@ -117,7 +117,7 @@ export class HomeComponent implements OnInit {
     this.selectedDay = null;
     this.generateCurrentMonthDays();
   }
-  
+
   nextMonth() {
     const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), 1);
     date.setMonth(date.getMonth() + 1);
@@ -135,7 +135,7 @@ export class HomeComponent implements OnInit {
     const dateToCheck = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth(), day.day);
     const dayDifference = Math.ceil((dateToCheck.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-    return dayDifference >= 0 && dayDifference <= 7 && dateToCheck.getDay() !== 0;
+    return dayDifference >= 0 && dateToCheck.getDay() !== 0;
   }
 
   selectDay(day: { day: number | string }) {
