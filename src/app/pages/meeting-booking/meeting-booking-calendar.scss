@@ -1,3 +1,16 @@
+/* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
+.date-time-wrapper {
+  display: flex;
+  border-radius: 15px;
+  justify-content: center;
+  align-items: center;
+  width: 85%;
+  gap: 20px;
+  margin: 0 auto;
+  margin-top: 4rem;
+  padding: 3rem 0rem;
+}
+
 /* SUB-BLOQUE: Calendario */
 .date-time-selection {
   display: flex;
@@ -146,4 +159,163 @@
   color: white;
   font-weight: bold;
   cursor: default;
+}
+
+/* SUB-BLOQUE: time slots */
+.selected-date-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0rem;
+  width: 45%;
+}
+
+.selected-date-time .titulo-slots{
+  color: rgb(62, 62, 62);
+  text-align: center;
+  margin-right: 0px;
+  margin-top: 0rem;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1rem;
+}
+
+.selected-date-time h3{
+  color: rgb(62, 62, 62);
+  text-align: center;
+  margin-right: 0px;
+  margin-top: 0rem;
+  font-size: 1rem;
+  margin-bottom: .5rem;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.time-slots {
+  display: flex;
+  margin-top: .7rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 340px;
+  overflow-y: auto;
+  width: 100%;
+  padding: 7px 0px;
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+}
+
+.time-slots::-webkit-scrollbar {
+  display: none; 
+}
+
+/* Estilos para las flechas de scroll */
+.scroll-arrow-up,
+.scroll-arrow-down {
+  position: relative;
+  background-color: transparent;
+  color: rgb(146, 100, 238);
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.scroll-arrow-up {
+  margin-bottom: -15px; 
+}
+
+.scroll-arrow-down {
+  margin-top: 3px; 
+}
+
+.scroll-arrow-up.disabled,
+.scroll-arrow-down.disabled {
+  color: rgb(164, 161, 161);
+  cursor: pointer;
+}
+
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 45%;
+  min-height: 40px;
+  background-color: #edeaea;
+  background: linear-gradient(to right, #4490e2, #bd75e4);
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.confirm-box {
+  flex: 1;
+  background-color: #9d52e8;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  width: 100%;
+  transition: all 0.7s ease;
+}
+
+.time-text-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  min-height: 50px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.time-text {
+  font-size: 1rem;
+  color: white;
+}
+
+.time-text:hover {
+  color: white;
+}
+
+.confirm-box {
+  flex: 1;
+  background-color: #9d52e8;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  width: 100%;
+  transition: all 0.7s ease;
+}
+
+.time-slot:hover {
+  background: none;
+}
+.time-slot:hover .confirm-box {
+  opacity: 1;
+  visibility: visible;
+  width: 100%;
+}
+
+.time-slot:hover .time-text-container {
+  background-color: #4490e2;
+  color: white;
+}
+
+.time-slot:hover .time-text {
+  color: white;
 }

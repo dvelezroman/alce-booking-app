@@ -30,7 +30,7 @@ export class AttendanceInstructorComponent implements OnInit {
     to: '',
     present: 'yes',
   };
-  showDropdown: boolean = true;
+  showDropdown: boolean = false;
 
   constructor(private usersService: UsersService,
               private bookingService: BookingService) {}
