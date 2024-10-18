@@ -9,6 +9,7 @@ export interface MeetingDTO {
   hour: number;          // Hour of the meeting (24-hour format)
   stageId: number;       // ID of the stage
   link?: string;         // Optional link for the meeting
+  password?: string;    // Optional password for meeting
   present?: boolean;     // Optional attendance status
   student?: Student;
   instructor?: Instructor;
