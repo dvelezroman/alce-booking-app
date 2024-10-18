@@ -276,6 +276,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   recalculateTimeSlots(day: any) {
+    console.log('Recalculate Time Slots');
     const selectedDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
@@ -295,9 +296,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     } else if (selectedDate.toDateString() === currentDate.toDateString()) {
       // If the selected day is today
       if (currentHour >= endHour) {
-        // If the current time is later than 21:00, show time slots from tomorrow
-        selectedDate.setDate(selectedDate.getDate() + 1);
-        this.timeSlots = this.generateTimeSlots(startHour, endHour);
+        // If the current time is later than 21:00, return empty array
+        this.timeSlots = [];
       } else {
         // Generate time slots starting from the maximum of startHour or currentHour + 2
         const availableStartHour = Math.max(startHour, currentHour + 2);
