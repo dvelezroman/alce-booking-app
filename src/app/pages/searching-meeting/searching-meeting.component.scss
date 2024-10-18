@@ -1,5 +1,3 @@
-
-
 .section {
   background-color: #ededed; 
     min-height: 100vh; 
@@ -74,7 +72,7 @@
   .input[type="date"] {
     position: relative;
     padding-right: 2rem; 
-    background-color: #f9f9f9;
+    background-color: #ededed;
   }
   
   .input[type="date"]::-webkit-calendar-picker-indicator {
@@ -127,7 +125,7 @@
     color: rgb(70, 70, 70);
     font-size: .9rem; 
   }
-
+/* MENSAJE CUANDO NO HAY RESULTADO DE MEETING */
   .no-results-message {
     color: #ff0000;
     text-align: center;
@@ -138,15 +136,11 @@
     align-items: center;
     gap: 2rem; 
   }
-  
-  .icon-container {
-    display: inline-flex;
-    gap: 1rem; 
-  }
-  
-  .icon-container i {
-    font-size: 2.5rem;
-    color: #d3d4d5; 
+
+/* Estilo para el bloque del botón link */
+  .block {
+    margin-top: .5rem;
+    padding: 0rem;
   }
   
   button.is-primary {
@@ -172,9 +166,18 @@
   }
 
   /* Estilo para el bloque de resultados */
-.block {
-  margin-top: .5rem;
-  padding: 0rem;
+.block-results {
+  width: 100%; 
+  max-width: 100%; 
+  overflow-x: auto; 
+  box-sizing: border-box; 
+  margin: 0 auto; 
+  padding: 0; 
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
 }
 
 /* Estilo de la tabla */
@@ -224,7 +227,7 @@
   accent-color: #007bff;
 }
 
-/* estilos del modal */
+/* estilos del modal para asignar el link a la meeting */
 .modal-background {
   background-color: rgba(62, 62, 62, 0.23); 
   backdrop-filter: blur(5px); 
@@ -358,20 +361,10 @@
 
   /* estilos responsive */
   @media (max-width: 992px){
-    .table-results {
-      margin-top: 1rem;
-    }
-
-    button.is-primary {
-      margin: auto;
-      padding: .6rem 2rem;
-      font-size: .9rem;
-    }
 
     .table-results th {
       padding: 5px;
       font-size: .8rem;
-      border-bottom: 1px solid #b6b6b6; 
     }
     
     .table-results td {
@@ -381,10 +374,6 @@
   }
 
   @media (max-width: 768px) {
-    .container {
-      width: 90%; 
-      padding: 1rem; 
-    }
 
     .title-container{
       background: linear-gradient(45deg, #4a90e2,  #7743a8);
@@ -397,25 +386,19 @@
 
     .block-search{
       margin-top: 8rem;
-    }
-
-    button.is-primary {
-      padding: .6rem 2rem;
+      width: 95%;
     }
 
     /* Estilo para el bloque de resultados */
 /* Estilo de la tabla */
+
 .table-results {
   min-width: 100%;
-  margin: auto;
-  border-collapse: collapse;
-  margin-top: 1rem;
 }
 
 .table-results th {
   padding: 5px;
-  font-size: .9rem;
-  border-bottom: 1px solid #b6b6b6; 
+  font-size: .8rem;
 }
 
 .table-results td {
@@ -424,33 +407,22 @@
 
 /* MENSAJE CUANDO NO HAY RESULTADO DE MEETING */
 .no-results-message {
-  font-size: 1rem;
+  font-size: .9rem;
   margin-top: 1rem;
 }
 
-/* Estilos para los iconos de cambio de vista */
+/* Estilos para modal asignar link meeting */
     .modal-card {
-        width: 65%;
-      }
-    
-      .modal-card-title {
-        font-weight: 500;
-        font-size: 1.2rem;
-        margin-bottom: -.5rem;
+        width: 75%;
       }
     
       .modal-card-body .input {
-        width: 100%; 
-        margin: 0 auto;
         font-size: .85rem;
         border: .5px solid rgb(184, 183, 183);
       }
     
       .modal-card-foot {
-        display: flex;
-        justify-content: flex-end; 
         padding-top: 0rem;
-        gap: 1rem;
         background-color: #ffffff;
       }
       
@@ -460,27 +432,10 @@
       }
   }
 
-  @media (max-width: 576px){
-
-    button.is-primary {
-      padding: .6rem 2rem;
-      font-size: .8rem;
-    }
-
-    .table-results th {
-      font-size: .75rem;
-    }
-    
-    .table-results td {
-      padding: 5px 4px;
-      font-size: .7rem;
-    }
-  }
-
   @media (max-width: 492px) {
     .section { 
       min-height: 100vh; 
-      padding: 0rem; 
+      padding: 0; 
     }
 
     .container {
@@ -488,7 +443,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 0;
+      box-sizing: border-box;
     }
 
     .title-container {
@@ -499,34 +454,21 @@
       font-size: 1.5rem;
     }
 
-    .block {
-      width: 100%; 
-      padding: .5rem; 
-      margin-left: 0; 
-      margin-right: 0;
-    }
-
     .block-search{
       border: none;
       margin-top: 7rem;
-      padding: 1rem;
+      padding: 2.2rem 1.5rem;
     }
 
     .label {
       font-weight: 500; 
-      font-size: .9rem;
       margin-left: 5px;
       margin-bottom: 0.2rem;
-    }
-    
-    .field {
-      margin-bottom: 0rem; 
     }
   
     .input {
       font-size: 0.9rem;
       height: 40px;
-      border: 1px solid rgb(181, 181, 181);
     }
 
     .columns.is-mobile {
@@ -548,101 +490,36 @@
 }
 
 .columns.is-mobile .column .field .checkbox input[type="checkbox"] {
-  transform: scale(1); 
-  margin-right: 0.3rem; 
+  transform: scale(1.2); 
+  margin-right: 0.5rem; 
 }
 
 .checkbox.is-centered {
-  display: flex;
-  align-items: center; 
-  gap: 0.5rem; 
+  margin-top: 1rem;
 }
 
-.checkbox {
-  font-size: .9rem; 
-}
-
-    button.is-primary {
-      margin: auto;
-      padding: .7rem 2rem;
-      font-size: .9rem;
-      border: 1px solid;
-    }
-
-    .view-switcher, 
-    .card-results { 
-      display: none;
-    }
-
-    .table-results {
-      width: 100%;
-      margin: 0 auto;
-      margin-bottom: 4rem;
-    }
-
-    .table-results th {
-      text-align: center;
-      padding: 7px 5px;
-      font-size: .75rem;
-    }
-    
-    .table-results td {
-      text-align: left;
-      padding: 4px 2px;
-      font-size: .7rem;
-    }
-
-    /* Contenedor de las tarjetas */
-ul {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap; 
-  justify-content: center; 
-  gap: 3px; 
-  padding-left: 0;
-  list-style-type: none;
-  margin: 0;
-}
-
-/* Estilos para cada tarjeta */
-.meeting-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+.block {
   width: 100%; 
-  padding: .6rem .7rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-bottom: .3rem;
-  background-color: #d6cceb;
+  padding: 0.5rem; 
+  margin: 0;  
+  box-sizing: border-box;
 }
 
-.meeting-item strong {
-  color: #151515; 
-  margin-right: 5px;
+.table-container {
+  margin-bottom: 2rem;
 }
 
-/* Ajustes para los textos dentro de las tarjetas */
-.meeting-stage {
-  text-align: center;
-  width: 100%;
-  color: #626060;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  margin-bottom: 0.3rem;
+.table-results th {
+  padding: 7px;
+  font-size: .85rem; 
 }
 
-.meeting-student,
-.meeting-email,
-.meeting-date-hour {
-  text-align: left;
-  font-size: 0.75rem;
-  color: #525151;
+.table-results td {
+  padding: 5px 10px;
+  font-size: .85rem;
 }
 
+/* estilos del modal para asignar el link a la meeting */
 .modal-card {
   width: 85%;
 }
@@ -652,13 +529,10 @@ ul {
 }
 
 .modal-card-body .input {
-  margin: 0 auto;
   font-size: .8rem;
 }
 
 .modal-card-foot {
-  display: flex;
-  justify-content: flex-end; 
   padding-top: 0rem;
   gap: 1rem;
   background-color: #ffffff;
@@ -666,7 +540,6 @@ ul {
 
 .modal-card-foot .button {
   padding: 0.65rem 1.4rem;
-  font-size: .9rem;
 }
 
   /* Estilos para el Toast */

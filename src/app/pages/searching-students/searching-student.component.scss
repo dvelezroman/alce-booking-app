@@ -16,7 +16,7 @@
     color: rgb(53, 53, 53);
     width: 100%; 
     background-color: white;
-    z-index: 10; 
+    z-index: 12; 
     text-align: center;
     font-family: 'Poppins', sans-serif; 
     padding: 1.35rem 0;
@@ -347,9 +347,20 @@
     margin-top: -8rem; 
     width: 100%;
   }
+
+  .table-container {
+    position: relative;
+    width: 96%;
+    margin: auto;
+    overflow-x: auto; 
+    margin-bottom: 1rem; 
+    z-index: 10;
+  }
+
   /* Estilos para la tabla */
 .table {
-  width: 80%;
+  position: relative;
+  width: 85%;
   margin: 20px auto;
   border-collapse: collapse;
   margin-top: 0px;
@@ -357,12 +368,13 @@
   border-radius: 10px;
   overflow: hidden;
   border-bottom: .5px solid rgb(186, 186, 186);
+  z-index: 10;
 }
 
 .table th, .table td {
   padding: 10px 8px;
   text-align: center;
-  font-size: .85rem;
+  font-size: .9rem;
 }
 
 .table th {
@@ -374,7 +386,7 @@
 .table td {
   background-color: #fff; 
   color: #333; 
-  border: .5px solid rgb(230, 230, 230);
+  border: 1px solid rgb(230, 230, 230);
 }
 
 .table tr:hover {
@@ -415,90 +427,7 @@
   color: #6c3483 !important; 
 }
 
-/* Estilo principal para la tarjeta de resultados */
-.card-user {
-  width: 90%;
-  margin: auto;
-  border: .5px solid rgb(204, 204, 204);
-  background-color: #ffffff;
-  border-radius: 5px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
- .card-title strong {
-  font-size: 1.3rem; 
-  font-weight: bold; 
-  color: #333; 
-  margin-bottom: 0.5rem; 
-}
-
-/* Filas de información en columnas centradas */
-.card-info-row {
-  display: flex;
-  justify-content: center;
-  gap: .7rem;
-  font-size: 0.9rem;
-  margin-bottom: 0.3rem;
-  color: #333;
-}
-
-/* Color y espaciado de las etiquetas (strong) */
-.card-user-body strong {
-  color: #333;
-  margin-right: 5px;
-}
-
-/* Centrar el bloque de email */
-.card-info-email {
-  font-size: 0.9rem;
-  color: #333;
-  text-align: center;
-  margin-top: 0.5rem;
-}
-
-/* Estilo para los botones en la tarjeta */
-.card-user-footer {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-/* Estilo para botones individuales */
-.action-button {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-/* Botón Editar */
-.edit-button-user {
-  background-color: #4a90e2;
-  color: white;
-}
-
-.edit-button-user:hover {
-  background-color: #357ab8;
-}
-
-/* Botón Eliminar */
-.delete-button {
-  background-color: #9b59b6; 
-  color: white;
-}
-
-.delete-button:hover {
-  background-color: #8e44ad; 
-}
-
 /* Pagination estilos*/
-
 .pagination {
   margin-top: 0px;
   display: flex;
@@ -693,33 +622,36 @@ input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
   /* RESPONSIVE */
   @media (max-width: 992px) {
     .table {
       width: 88%;
       margin: 0 auto; 
       margin-left: 6rem; 
-      border-collapse: collapse;
     }
   
     .table th, .table td {
       font-size: 0.8rem; 
-      padding: 6px; 
+      padding: 5px; 
     }
-  
-    .table th {
-      border-bottom: 1px solid rgb(174, 174, 174);
-      color: #333;
+
+    .table td:last-child {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px; 
+      padding: 17px; 
+      height: auto; 
     }
-  
-    .table td {
-      background-color: #fff;
-      color: #333;
-      border-bottom: .5px solid rgb(209, 207, 207);
-    }
-  
-    .table tr:hover {
-      background-color: #f1f1f1;
+
+    .table td:last-child i {
+      display: inline-flex; 
+      width: auto; 
+      margin: 0; 
+      padding: 0; 
+      height: auto; 
+      vertical-align: middle; 
     }
   
     .edit-icon {
@@ -753,26 +685,20 @@ input[type="number"]::-webkit-inner-spin-button {
      /* Estilos del switch */
      .form-switch-container {
       gap: 1.5rem;
-      margin-top: -20rem;
+      margin-top: -23rem;
     }
 
      /* Contenedor de la tarjeta */
      .form-card-container {
-      perspective: 900px; 
       width: 75%;
-      max-width: 400px; 
     }
   
     .form-card {
       width: 250px;
       min-height: 100px;
-      transition: transform 2.2s;
-      transform-style: preserve-3d;
     }
   
   .student-form, .user-form {
-    width: 100%;
-    margin: auto;
     min-height: 0px;
     padding: 1.7rem 1.5rem;
   }
@@ -783,12 +709,11 @@ input[type="number"]::-webkit-inner-spin-button {
   }
   
   .form-field label {
-    margin-bottom: 0.3rem;
     font-size: .75rem;
   }
   
   .form-field input {
-    font-size: .75rem;
+    font-size: .9rem;
   }
 
   .user-form .form-field {
@@ -796,29 +721,32 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 
   input, select {
-    height: 34px;
-    font-size: .8rem;
+    height: 38px;
+    font-size: .9rem;
   }
   
   /* Botón de búsqueda */
   .search-button {
-    padding: 0.75rem;
+    padding: 0.8rem;
     font-size: .9rem;
   }
 
     .results-container {
-      margin-top: -18rem; 
+      margin-top: -19rem; 
+    }
+
+    .table-container {
+      width: 90%;
+      margin-bottom: .5rem; 
     }
 
     .table {
-      width: 99%;
+      width: 100%;
       margin:  auto;
-      overflow: hidden;
-      z-index: 1000;
     }
     
     .table th, .table td {
-      padding: 7px 0px;
+      padding: 5px 10px;
       font-size: .8rem;
     }
 
@@ -834,7 +762,6 @@ input[type="number"]::-webkit-inner-spin-button {
     
     .pagination span {
       font-size: .7rem;
-      color: #333;
     }
 
     .pagination {
@@ -845,7 +772,6 @@ input[type="number"]::-webkit-inner-spin-button {
     .pagination button {
       padding: 5px 14px;
       font-size: .9rem;
-      background-color: #4490e2;
     }
 
     .edit-user-modal-card {
@@ -905,72 +831,32 @@ input[type="number"]::-webkit-inner-spin-button {
       box-shadow: 0 0 5px rgb(102, 161, 224); 
     }
 
+    .results-container {
+      margin-top: -8rem; 
+    }
+
+    .table-container {
+      width: 90%; 
+    }
+    
+    .table th, .table td {
+      padding: 3px 8px;
+      font-size: .8rem;
+    }
+
+    .edit-icon {
+      font-size: .9rem;
+    }
+
+    .delete-icon {
+      font-size: .9rem;
+      margin-left: .5rem; 
+    }
+
     .search-button {
       padding: .9rem;
       font-size: 1rem;
     }
-
-  /* tarjeta de resultados */
-  .results-container {
-    margin-top: -8.5rem; 
-  }
-
-  .card-user {
-    width: 80%;
-    margin-bottom: .7rem;
-    padding: .6rem .5rem;
-    border: 1px solid rgb(203, 203, 203);
-  }
-
-  .card-container-users .page-indicator {
-    text-align: center;
-    font-size: 0.8rem;
-    color: #333;
-    margin-bottom: 1rem;
-  }
-  
-  .card-info-row {
-    gap: 1rem;
-    font-size: 0.87rem;
-    margin-bottom: .2rem;
-  }
-  
-  /* Color y espaciado de las etiquetas (strong) */
-  .card-user-body {
-    font-size: .77rem;
-    margin-right: 5px;
-  }
-  
-  .card-info-email {
-    font-size: 0.87rem;
-  }
-  
-  /* Estilo para los botones en la tarjeta */
-  .card-user-footer {
-    margin-top: .3rem;
-    gap: .7rem;
-  }
-  
-  /* Estilo para botones individuales */
-  .card-user-footer .action-button {
-    background: none;
-    padding: 0.5rem;
-    font-size: 1.1rem; 
-  }
-  
-  .card-user-footer .edit-button-user i {
-    color: #28a745; 
-  }
-  .card-user-footer .edit-button-user:hover i {
-    color: #218838; 
-  }
-  
-  .card-user-footer .delete-button i {
-    color: rgb(117, 0, 255); 
-  }
-  .card-user-footer .delete-button:hover i {
-    color: rgb(117, 0, 255); 
-  }
 
     .page-indicator {
       margin-bottom: 0px;

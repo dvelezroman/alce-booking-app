@@ -96,11 +96,6 @@ export class SearchingStudentComponent {
     this.screenWidth = window.innerWidth;
   }
 
-//método para calcular el ancho de pantalla para activar las tarjetas y ocultar la tabla
-  @HostListener('window:resize', ['$event'])
-  onResize(event: Event) {
-    this.screenWidth = (event.target as Window).innerWidth;
-  }
 
   toggleForm() {
     // if (!this.isStudentForm) {
