@@ -2,7 +2,10 @@
     <h2 class="title link is-3">Links List</h2>
 
     <!-- Botón para abrir el modal de creación de link -->
-    <button (click)="openCreateModal()" class="button is-primary">Crear Nuevo Link</button>
+    <button (click)="openCreateModal()" class="button is-primary">
+      <span class="material-icons">add</span>
+      Crear Nuevo link
+    </button>
 
     <!-- Tabla para listar los links -->
     <table class="table is-striped">
@@ -19,7 +22,7 @@
           <td>{{ i + 1 }}</td>
           <td>{{ link.description }}</td>
           <td>
-            <a [href]="link.link" target="_blank">{{ link.link }}</a>
+            <a [href]="link.link" target="_blank" class="purple-link">{{ link.link }}</a>
           </td>
           <td>
             <div class="buttons">

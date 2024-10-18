@@ -1,7 +1,7 @@
 :host {
     display: block;
     height: 100vh;
-    background-color: #ffffff;
+    background-color: #ededed; 
     padding: 0rem;
     box-sizing: border-box;
     overflow-x: hidden;
@@ -23,29 +23,43 @@
     color: rgb(53, 53, 53);
     width: 100%; 
     background: white;
-    background: linear-gradient(#f6f6fb, #ece7f6);
+    background-color: white;
     z-index: 10; 
     text-align: center;
     font-family: 'Poppins', sans-serif; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
 
   .title.link{
     font-size: 1.7rem;
     line-height: 75px;
-    color: #333;
+    color: #282828;
     text-align: center;
     font-family: 'Poppins', sans-serif;
   }
 
   /* BOTóN PARA CREAR LINKS */
+  button {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+  }
+  
+  button .material-icons {
+    font-size: 19px; 
+    vertical-align: middle; 
+    margin-right: 2px; 
+    margin-bottom: 2px;
+  }
+
   .button.is-primary {
     color: #7743a8;
-    font-size: .85rem;
+    font-size: .9rem;
     background-color: transparent;
     border: .5px solid #7743a8;
     transition: background-color 0.3s ease, color 0.3s ease;
     display: block;   
-    margin: 7rem auto 0 auto; 
+    margin: 9rem auto 0 auto; 
   }
   
   .button.is-primary:hover {
@@ -62,7 +76,7 @@
     width: 75%;
     table-layout: fixed;
     border-collapse: collapse;
-    border-radius: 7px;
+    border-radius: 7px 7px 0px 0px;
     overflow: hidden;
     border: 0.5px solid #cecece;
   }
@@ -73,7 +87,7 @@
   }
   
   .table th {
-    background-color: #226abc;
+    background-color: #4390e8;
     color: white;
     padding: .7rem 0.5rem;
     font-size: 0.9rem;
@@ -82,7 +96,7 @@
   
   .table td {
     background-color: white;
-    color: black;
+    color: rgb(63, 63, 63);
     padding: .7rem 0.4rem;
     font-size: 0.9rem;
     border: 1px solid #dddddd;
@@ -100,11 +114,20 @@
   .table tbody tr:nth-child(even) td {
     background-color: #f2f2f2;
   }
+
+  .purple-link {
+    color: purple; 
+    text-decoration: none; 
+  }
+  
+  .purple-link:hover {
+    text-decoration: underline; 
+  }
   
   .buttons {
     display: flex;
     justify-content: center;
-    gap: 0.4rem;
+    gap: 0.7rem;
   }
   
   .button {
@@ -112,7 +135,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
-    border: 0.5px solid transparent;
+    border: 1px solid transparent;
     background-color: transparent;
     font-size: 0.7rem;
     cursor: pointer;
@@ -340,20 +363,21 @@
 
 @media (max-width: 768px) {
 
+    h2.title{
+      background: linear-gradient(45deg, #4a90e2,  #7743a8);
+    }
 
     .title.link{
-      font-size: 1.7rem;
+      font-size: 1.5rem;
       line-height: 75px;
-      color: #333;
-      text-align: center;
-      font-family: 'Poppins', sans-serif;
+      color: white;
     }
   
     /* Botón para crear links */
     .button.is-primary {
       font-size: 0.8rem;
       padding: 0.3rem 0.6rem;
-      margin: 6rem auto 0 auto; 
+      margin: 8rem auto 0 auto; 
     }
   
     /* Tabla */
@@ -361,10 +385,18 @@
       width: 97%; 
       font-size: 0.8rem;
     }
+
+    th:nth-child(2), td:nth-child(2) {
+      width: 22%;
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+      width: 39%;
+    }
   
     .table th {
       font-size: 0.8rem; 
-      padding: 0.4rem;
+      padding: 0.5rem;
       border: none;
     }
   
@@ -376,15 +408,8 @@
   
     /* Botones en la tabla */
 
-    .buttons {
-        display: flex;
-        justify-content: center;
-        gap: 0.4rem;
-      }
-      
       .button {
         gap: 0.4rem;
-        border: 0.5px solid transparent;
         font-size: 0.6rem;
         padding: 0.3rem 0.6rem;
       }
@@ -529,8 +554,6 @@
     margin-bottom: 1rem;
 }
 
-
-
 /* Botón de Eliminar */
 .delete-link-btn {
     width: 45%;
@@ -571,9 +594,12 @@
 
   @media (max-width: 492px) {
 
+    h2.title{
+      padding: .29rem 0;
+    }
+    
     h2.title {
-      font-size: 1.4rem; 
-
+      font-size: 1.5rem; 
     }
   
     /* Botón para crear links */
@@ -587,6 +613,8 @@
     /* Tabla */
     .table {
       width: 100%; 
+      border-radius: 3px;
+      border: none;
     }
   
     .table th {

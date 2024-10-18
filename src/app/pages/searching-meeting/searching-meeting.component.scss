@@ -1,7 +1,7 @@
 
 
 .section {
-    background-color: white; 
+  background-color: #ededed; 
     min-height: 100vh; 
     padding: 0rem; 
   }
@@ -9,7 +9,7 @@
   .container {
     width: 100%; 
     margin: 0 auto; 
-    background-color: white; 
+    background-color: transparent; 
     padding: 1rem; 
     border-radius: 8px;  
   }
@@ -17,37 +17,36 @@
   .title-container {
     position: fixed; 
     top: 0; 
-    left: 0px;
+    left: 0;
     color: rgb(53, 53, 53);
     width: 100%; 
-    background: white;
-    background: linear-gradient(#f9f9fc, #faf9fc);
+    background-color: white;
     z-index: 10; 
     text-align: center;
     font-family: 'Poppins', sans-serif; 
+    padding: 1.35rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
   }
 
   .title {
-    font-size: 1.7rem;
-    line-height: 75px;
-    color: #333;
-    text-align: center;
-    font-family: 'Poppins', sans-serif;
+    font-size: 1.8rem;
+    line-height: 1.5; 
+    color: #282828; 
+    font-weight: bold;
   }
 
   .block-search {
     background-color:#ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 2rem;
     border-radius: 12px;
-    border: .5px solid rgb(255, 108, 26);
-    margin-top: 5rem; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgb(203, 202, 202); 
     transition: all 0.3s ease;
     width: 100%;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 8rem ;
+    margin-top: 10rem ;
     margin-bottom: 1.5rem;
   }
   
@@ -67,6 +66,7 @@
     font-size: 0.875rem;
     background-color: #f9f9f9; 
     color: #333333; 
+    height: 40px;
     border: 1px solid rgb(213, 213, 213);  
     border-radius: 5px;
   }
@@ -76,12 +76,24 @@
     padding-right: 2rem; 
     background-color: #f9f9f9;
   }
-
+  
   .input[type="date"]::-webkit-calendar-picker-indicator {
     position: absolute;
+    right: 15px;
+    opacity: 0; 
+  }
+
+  .date-from .control::after {
+    content: 'event'; 
+    font-family: 'Material Icons';
+    position: absolute;
     right: 10px;
-    color: #333333; 
-    opacity: 0.7; 
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5; 
+    pointer-events: none;
+    font-size: 1.3rem;
+    color: #565657;
   }
 
   .select select {
@@ -91,15 +103,23 @@
     border: 1px solid rgb(213, 213, 213); 
     border-radius: 5px;
     font-size: 0.875rem;
+    height: 40px;
   }
 
   .select.is-fullwidth {
     background-color: transparent; 
   }
 
+  .columns.is-mobile .column .field .checkbox.is-centered {
+    display: flex;
+    justify-content:left; 
+    align-items: center; 
+    text-align: center; 
+  }
+  
   .columns.is-mobile .column .field .checkbox input[type="checkbox"] {
     transform: scale(1); 
-    margin-right: 0.3rem; 
+    margin-right: 0.6rem; 
     accent-color: #007bff;
   }
   
@@ -132,7 +152,7 @@
   button.is-primary {
     width: auto;
     margin: auto;
-    font-size: .85rem;
+    font-size: .9rem;
     padding: .6rem 2.5rem;
     background:  #bd75e4; 
     color: white; 
@@ -204,88 +224,7 @@
   accent-color: #007bff;
 }
 
-/* Estilos para los iconos de cambio de vista */
-.view-switcher {
-  width: 75%;
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.icon-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #5a9ee7;
-  font-size: 1.5rem;
-  margin-left: 10px;
-}
-
-.icon-button:hover {
-  color: #367bbd;
-}
-
-.icon-button.active {
-  color: #3171b7; 
-  font-size: 1.8rem; 
-}
-
-
-/* Contenedor de las tarjetas */
-ul {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap; 
-  justify-content: center; 
-  gap: 15px; 
-  padding-left: 0;
-  list-style-type: none;
-  margin: 0;
-  margin-bottom: 3rem;
-}
-
-/* Estilos para cada tarjeta */
-.meeting-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  width: 250px; 
-  padding: 1rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  background-color: #f2f2f2;
-}
-
-.meeting-item strong {
-  color: #454545; 
-  margin-right: 5px;
-}
-
-/* Ajustes para los textos dentro de las tarjetas */
-.meeting-stage {
-  text-align: center;
-  width: 100%;
-  color: #4a4a4a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.meeting-student,
-.meeting-email,
-.meeting-date-hour {
-  text-align: left;
-  font-size: 0.9rem;
-  color: #4e4e4e;
-}
-
 /* estilos del modal */
-
 .modal-background {
   background-color: rgba(62, 62, 62, 0.23); 
   backdrop-filter: blur(5px); 
@@ -402,7 +341,6 @@ ul {
   font-size: 1.1rem;
 }
 
-
 @keyframes fadeInOut {
   0%, 100% {
     opacity: 0;
@@ -421,9 +359,6 @@ ul {
   /* estilos responsive */
   @media (max-width: 992px){
     .table-results {
-      min-width: 80%;
-      margin: auto;
-      border-collapse: collapse;
       margin-top: 1rem;
     }
 
@@ -434,16 +369,12 @@ ul {
     }
 
     .table-results th {
-      text-align: center;
       padding: 5px;
       font-size: .8rem;
-      font-weight: bold;
-      color: black;
       border-bottom: 1px solid #b6b6b6; 
     }
     
     .table-results td {
-      text-align: center;
       padding: 5px;
       font-size: .8rem;
     }
@@ -452,41 +383,27 @@ ul {
   @media (max-width: 768px) {
     .container {
       width: 90%; 
-      margin: 0 auto; 
       padding: 1rem; 
     }
 
     .title-container{
-      left: 0; 
-      width: 100%; 
+      background: linear-gradient(45deg, #4a90e2,  #7743a8);
     }
-
+    
     .title {
       font-size: 1.6rem;
-      color: #333;
-      text-align: center;
-      font-family: 'Poppins', sans-serif;
+      color: white;
+    }
+
+    .block-search{
+      margin-top: 8rem;
     }
 
     button.is-primary {
-      margin: auto;
       padding: .6rem 2rem;
-      font-size: .9rem;
     }
 
     /* Estilo para el bloque de resultados */
-.block {
-  margin-top: .5rem;
-  padding: 0rem;
-}
-
-.block-search{
-  margin-top: 7rem;
-  background-color: white;
-  border: none;
-  box-shadow: none;
-}
-
 /* Estilo de la tabla */
 .table-results {
   min-width: 100%;
@@ -496,24 +413,14 @@ ul {
 }
 
 .table-results th {
-  text-align: center;
   padding: 5px;
   font-size: .9rem;
-  font-weight: bold;
-  color: black;
   border-bottom: 1px solid #b6b6b6; 
 }
 
 .table-results td {
-  text-align: center;
   padding: 5px;
-  font-size: .85rem;
 }
-
-.table-results tr:nth-child(even) {
-  background-color: #f9f9f9; 
-}
-
 
 /* MENSAJE CUANDO NO HAY RESULTADO DE MEETING */
 .no-results-message {
@@ -521,30 +428,7 @@ ul {
   margin-top: 1rem;
 }
 
-
 /* Estilos para los iconos de cambio de vista */
-.view-switcher {
-  width: 75%;
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.icon-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #4490e2;
-  font-size: 1.5rem;
-  margin-left: 10px;
-}
-
-.icon-button:hover {
-  color: #367bbd;
-}
-
-
     .modal-card {
         width: 65%;
       }
@@ -578,42 +462,22 @@ ul {
 
   @media (max-width: 576px){
 
-    .table-results {
-      min-width: 100%;
-      margin: auto;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
     button.is-primary {
-      margin: auto;
       padding: .6rem 2rem;
       font-size: .8rem;
     }
 
     .table-results th {
-      text-align: center;
-      padding: 5px;
       font-size: .75rem;
-      font-weight: bold;
-      color: black;
-      border-bottom: 1px solid #b6b6b6; 
     }
     
     .table-results td {
-      text-align: center;
       padding: 5px 4px;
       font-size: .7rem;
-    }
-
-    .table-results input[type="checkbox"] {
-      width: 1rem;
-      height: 1rem;
     }
   }
 
   @media (max-width: 492px) {
-
     .section { 
       min-height: 100vh; 
       padding: 0rem; 
@@ -627,6 +491,14 @@ ul {
       padding: 0;
     }
 
+    .title-container {
+      padding: 1.6rem 0;
+    }
+  
+    .title {
+      font-size: 1.5rem;
+    }
+
     .block {
       width: 100%; 
       padding: .5rem; 
@@ -635,17 +507,9 @@ ul {
     }
 
     .block-search{
-      margin-top: 6rem;
-      padding: 0.4rem;
-    }
-
-    .title-container {
-      padding: 0rem ;
-    }
-  
-    .title {
-      font-size: 1.5rem;
-      line-height: 90px;
+      border: none;
+      margin-top: 7rem;
+      padding: 1rem;
     }
 
     .label {
@@ -660,7 +524,7 @@ ul {
     }
   
     .input {
-      font-size: 0.75rem;
+      font-size: 0.9rem;
       height: 40px;
       border: 1px solid rgb(181, 181, 181);
     }

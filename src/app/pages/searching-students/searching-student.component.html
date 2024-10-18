@@ -1,3 +1,5 @@
+    
+
     <!-- Modal para mostrar notificaciones -->
     <app-modal
       [showModal]="showModal"
@@ -7,172 +9,169 @@
       (close)="closeModal()">
     </app-modal>
 
-<div class="page-title">
-    <h1>Buscar</h1>
-  </div>
-
-<div class="main-form-container">
-
-    <!-- Switch para cambiar entre estudiante y usuario -->
-    <div class="form-switch-container">
-        <span class="switch-label" [ngClass]="{ 'bold-text': isStudentForm }">Estudiante</span>
-        <label class="switch">
-          <input type="checkbox" (change)="toggleForm()">
-          <span class="slider"></span>
-        </label>
-        <span class="switch-label" [ngClass]="{ 'bold-text': !isStudentForm }">Usuario</span>
+    <div class="page-title">
+      <h1>Buscar</h1>
     </div>
 
-    <!-- Contenedor que envuelve ambos formularios -->
-    <div class="form-card-container">
-      <div class="form-card" [ngClass]="{ 'flipped': !isStudentForm }">
-        <!-- Lado del formulario de Estudiante -->
-        <div class="student-form">
-          <form [formGroup]="studentForm" (ngSubmit)="searchUsers()">
-<!--            <div class="form-field">-->
-<!--              <label for="userId">User ID</label>-->
-<!--              <input type="text" id="userId" formControlName="userId" placeholder="Ingrese ID Card" />-->
-<!--            </div>-->
-          <div class="form-field">
-           <!--   <label for="stageId">Stage</label>-->
-            <select id="stageId" class="input" formControlName="stageId" [value]=0>
-              <option [value]=0>Stages</option>
-              <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
-            </select>
-          </div>
-            <div class="form-field">
-             <!--  <label for="firstName">First Name</label>-->
-              <input type="text" id="firstName" formControlName="firstName" placeholder="Ingrese el First Name" />
-            </div>
-            <div class="form-field">
-            <!--  <label for="lastName">Last Name</label>-->
-              <input type="text" id="lastName" formControlName="lastName" placeholder="Ingrese el Last Name" />
-            </div>
-            <div class="form-action">
-              <button class="search-button" type="submit">Buscar Estudiante</button>
-            </div>
-          </form>
-        </div>
+  <div class="main-form-container">
 
-        <!-- Lado del formulario de Usuario -->
-        <div class="user-form">
-          <form [formGroup]="userForm" (ngSubmit)="searchUsers()">
+      <!-- Switch para cambiar entre estudiante y usuario -->
+      <div class="form-switch-container">
+          <span class="switch-label" [ngClass]="{ 'bold-text': isStudentForm }">Estudiante</span>
+          <label class="switch">
+            <input type="checkbox" (change)="toggleForm()">
+            <span class="slider"></span>
+          </label>
+          <span class="switch-label" [ngClass]="{ 'bold-text': !isStudentForm }">Usuario</span>
+      </div>
+
+      <!-- Contenedor que envuelve ambos formularios -->
+      <div class="form-card-container">
+        <div class="form-card" [ngClass]="{ 'flipped': !isStudentForm }">
+          <!-- Lado del formulario de Estudiante -->
+          <div class="student-form">
+            <form [formGroup]="studentForm" (ngSubmit)="searchUsers()">
+  <!--            <div class="form-field">-->
+  <!--              <label for="userId">User ID</label>-->
+  <!--              <input type="text" id="userId" formControlName="userId" placeholder="Ingrese ID Card" />-->
+  <!--            </div>-->
             <div class="form-field">
-            <!--  <label for="email">Email</label>-->
-              <input type="email" id="emailInput" formControlName="email" placeholder="Ingrese el Email" />
-            </div>
-            <div class="form-field">
-               <!--<label for="role">Rol</label>-->
-              <select id="role" class="input" formControlName="role">
-                <option value="">Roles</option>
-                <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+            <!--   <label for="stageId">Stage</label>-->
+              <select id="stageId" class="input" formControlName="stageId" [value]=0>
+                <option [value]=0>Stages</option>
+                <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
               </select>
             </div>
-            <div class="form-action">
-              <button class="search-button" type="submit">Buscar Usuario</button>
-            </div>
-          </form>
+              <div class="form-field">
+              <!--  <label for="firstName">First Name</label>-->
+                <input type="text" id="firstName" formControlName="firstName" placeholder="Ingrese el First Name" />
+              </div>
+              <div class="form-field">
+              <!--  <label for="lastName">Last Name</label>-->
+                <input type="text" id="lastName" formControlName="lastName" placeholder="Ingrese el Last Name" />
+              </div>
+              <div class="form-action">
+                <button class="search-button" type="submit">Buscar Estudiante</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Lado del formulario de Usuario -->
+          <div class="user-form">
+            <form [formGroup]="userForm" (ngSubmit)="searchUsers()">
+              <div class="form-field">
+              <!--  <label for="email">Email</label>-->
+                <input type="email" id="emailInput" formControlName="email" placeholder="Ingrese el Email" />
+              </div>
+              <div class="form-field">
+                <!--<label for="role">Rol</label>-->
+                <select id="role" class="input" formControlName="role">
+                  <option value="">Roles</option>
+                  <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                </select>
+              </div>
+              <div class="form-action">
+                <button class="search-button" type="submit">Buscar Usuario</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!--TODO:-->
+  <!-- Pagination Controls -->
+  <!--Esta paginacion usala para cuando pongas la lista de los registros traidos por la request, colocala al final de la tabla de registros.-->
+
+  <!-- Tabla para mostrar los resultados -->
+  <!-- Verifica si hay resultados antes de mostrar la tabla y la paginación -->
+  <div class="results-container" *ngIf="users.length > 0">
+    <!-- Tabla para mostrar los resultados -->
+    <table class="table" *ngIf="screenWidth > 562">
+      <thead>
+        <tr>
+          <th>ID Number</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Role</th>
+          <th>Stage</th>
+          <th>Registered</th>
+          <th>Email</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.idNumber }}</td>
+          <td>{{ user.firstName | titlecase}}</td>
+          <td>{{ user.lastName | titlecase }}</td>
+          <td>{{ user.role | titlecase }}</td>
+          <td>{{ user.student?.stage?.description || 'No Aplica' }}</td>
+          <td>{{ user.register ? '✓' : '❌' }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <i class="fas fa-edit edit-icon" (click)="edit(user)"></i>
+            <i class="fas fa-trash delete-icon" (click)="openDeleteModal(user)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Tarjetas para pantallas móviles -->
+    <div class="card-container-users" *ngIf="screenWidth <= 562">
+
+      <div class="card-user" *ngFor="let user of users">
+        <div class="card-user-body">
+
+          <!-- Bloque de Nombre como título principal -->
+          <p class="card-title">
+            <strong>{{ user.firstName | titlecase }} {{ user.lastName | titlecase }}</strong>
+          </p>
+
+          <!-- Primer bloque: ID y Rol -->
+          <div class="card-info-row">
+            <p><strong>ID Number:</strong> <span>{{ user.idNumber }}</span></p>
+            <p><strong>Role:</strong> <span>{{ user.role | titlecase }}</span></p>
+          </div>
+
+          <!-- Segundo bloque: Stage y Registered -->
+          <div class="card-info-row">
+            <p *ngIf="showStageColumn"><strong>Stage:</strong> <span>{{ user.student?.stage?.description | titlecase }}</span></p>
+            <p><strong>Registered:</strong> <span>{{ user.register ? '✓' : '❌' }}</span></p>
+          </div>
+
+          <!-- Tercer bloque: Email centrado -->
+          <div class="card-info-email">
+            <p><strong>Email:</strong> <span>{{ user.email }}</span></p>
+          </div>
+        </div>
+
+        <!-- Bloque de botones de acción en fila -->
+        <div class="card-user-footer">
+          <button (click)="edit(user)" class="action-button edit-button-user">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button (click)="openDeleteModal(user)" class="action-button delete-button">
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
       </div>
     </div>
 
 
-</div>
-<!--TODO:-->
-<!-- Pagination Controls -->
-<!--Esta paginacion usala para cuando pongas la lista de los registros traidos por la request, colocala al final de la tabla de registros.-->
-
-<!-- Tabla para mostrar los resultados -->
-<!-- Verifica si hay resultados antes de mostrar la tabla y la paginación -->
-<div class="results-container" *ngIf="users.length > 0">
-  <!-- Tabla para mostrar los resultados -->
-  <table class="table" *ngIf="screenWidth > 500">
-    <thead>
-      <tr>
-        <th>ID Number</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Role</th>
-        <th>Stage</th>
-        <th>Registered</th>
-        <th>Email</th>
-        <th>Edit</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.idNumber }}</td>
-        <td>{{ user.firstName | titlecase}}</td>
-        <td>{{ user.lastName | titlecase }}</td>
-        <td>{{ user.role | titlecase }}</td>
-        <td>{{ user.student?.stage?.description || 'No Aplica' }}</td>
-        <td>{{ user.register ? '✓' : '❌' }}</td>
-        <td>{{ user.email }}</td>
-        <td>
-          <i class="fas fa-edit edit-icon" (click)="edit(user)"></i>
-          <i class="fas fa-trash delete-icon" (click)="openDeleteModal(user)"></i>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
- <!-- Tarjetas para pantallas móviles -->
- <div class="card-container-users" *ngIf="screenWidth <= 500">
-  <div class="page-indicator">
-    <p>Página {{ currentPage }}</p>
+    <!-- Pagination Controls -->
+    <div class="pagination">
+        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+        <span>Page {{ currentPage }} of {{ Math.ceil(totalUsers / itemsPerPage) | number: '1.0-0' }}</span>
+        <button (click)="changePage(currentPage + 1)" [disabled]="currentPage * itemsPerPage >= totalUsers">Next</button>
+    </div> 
   </div>
-
-  <div class="card-user" *ngFor="let user of users">
-    <div class="card-user-body">
-
-      <!-- Bloque de Nombre como título principal -->
-      <p class="card-title">
-        <strong>{{ user.firstName | titlecase }} {{ user.lastName | titlecase }}</strong>
-      </p>
-
-      <!-- Primer bloque: ID y Rol -->
-      <div class="card-info-row">
-        <p><strong>ID Number:</strong> <span>{{ user.idNumber }}</span></p>
-        <p><strong>Role:</strong> <span>{{ user.role | titlecase }}</span></p>
-      </div>
-
-      <!-- Segundo bloque: Stage y Registered -->
-      <div class="card-info-row">
-        <p *ngIf="showStageColumn"><strong>Stage:</strong> <span>{{ user.student?.stage?.description | titlecase }}</span></p>
-        <p><strong>Registered:</strong> <span>{{ user.register ? '✓' : '❌' }}</span></p>
-      </div>
-
-      <!-- Tercer bloque: Email centrado -->
-      <div class="card-info-email">
-        <p><strong>Email:</strong> <span>{{ user.email }}</span></p>
-      </div>
-    </div>
-
-    <!-- Bloque de botones de acción en fila -->
-    <div class="card-user-footer">
-      <button (click)="edit(user)" class="action-button edit-button-user">
-        <i class="fas fa-edit"></i>
-      </button>
-      <button (click)="openDeleteModal(user)" class="action-button delete-button">
-        <i class="fas fa-trash"></i>
-      </button>
-    </div>
-  </div>
-</div>
-
-  <!-- Pagination Controls -->
-  <div class="pagination">
-    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
-    <span>Page {{ currentPage }} of {{ Math.ceil(totalUsers / itemsPerPage) | number: '1.0-0' }}</span>
-    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage * itemsPerPage >= totalUsers">Next</button>
-  </div>
-</div>
 
 <!-- Mensaje para cuando no hay resultados -->
-<div *ngIf="noResults" class="no-results-message">
-  <p>No se encontraron resultados.</p>
-  <i class="fas fa-user-slash"></i>
-</div>
+  <div *ngIf="noResults" class="no-results-message">
+    <p>No se encontraron resultados.</p>
+    <i class="fas fa-user-slash"></i>
+  </div>
+
 
 <!-- Modal para editar usuario -->
 <div class="modal" [ngClass]="{ 'is-active': isEditModalOpen }">

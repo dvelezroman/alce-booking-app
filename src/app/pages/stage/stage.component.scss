@@ -2,8 +2,7 @@
 :host {
   display: block;
   height: 100vh;
-
-  background-color: white;
+  background-color: #ededed; 
   padding: 0rem;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -25,19 +24,33 @@ h2.title {
   color: rgb(53, 53, 53);
   width: 100%; 
   background: white;
-  background: linear-gradient(#f6f6fb, #ece7f6);
+  background-color: white;
   z-index: 10; 
   text-align: center;
   font-family: 'Poppins', sans-serif; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .title.stage{
   font-size: 1.7rem;
   line-height: 75px;
-  color: #333;
+  color: #282828;
   font-weight: bold;
   text-align: center;
   font-family: 'Poppins', sans-serif;
+}
+
+button {
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+}
+
+button .material-icons {
+  font-size: 19px; 
+  vertical-align: middle; 
+  margin-right: 2px; 
+  margin-bottom: 2px;
 }
 
 .button.is-primary {
@@ -47,7 +60,7 @@ h2.title {
   border: .5px solid #7743a8;
   transition: background-color 0.3s ease, color 0.3s ease;
   display: block;   
-  margin: 10rem auto 0 auto; 
+  margin: 10rem auto 1rem auto; 
 }
 
 .button.is-primary:hover {
@@ -61,11 +74,11 @@ h2.title {
 .table {
   margin: 0 auto;
   margin-top: 1rem;
-  margin-bottom: 2rem;
-  width: 50%;
+  margin-bottom: 1rem;
+  width: 500px;
   table-layout: fixed;
   border-collapse: collapse;
-  border-radius: 10px;
+  border-radius: 7px 7px 2px 2px;
   overflow: hidden;
   border: .5px solid #dbdee1c5;
 }
@@ -78,7 +91,7 @@ h2.title {
 
 /* Estilos para los encabezados (th) */
 .table th {
-  background-color: #226abc;
+  background-color: #4390e8;
   color: white;
   padding: .7rem .5rem;
   font-size: .9rem;
@@ -96,7 +109,7 @@ h2.title {
 
 .table th:nth-child(1), 
 .table td:nth-child(1) {
-  width: 10%;
+  width: 7%;
 }
 
 .table th:nth-child(2), 
@@ -106,7 +119,7 @@ h2.title {
 
 .table th:nth-child(3), 
 .table td:nth-child(3) {
-  width: 27%;
+  width: 30%;
 }
 
 .table tbody tr:nth-child(even) td {
@@ -430,7 +443,6 @@ h2.title {
   text-align: center;
 }
 
-
 .title-notification-success {
   color: #44bb6c; 
 }
@@ -454,14 +466,17 @@ h2.title {
   }
 
   h2.title {
-   font-size: 1.6rem;
+   font-size: 1.5rem;
+   background: linear-gradient(45deg, #4a90e2,  #7743a8);
   }
 
+  .title.stage{
+    color: white; 
+  }
 
   .button.is-primary {
-    margin-top: 5rem;
+    margin-top: 6rem;
 }
-
 
   /*TABLA*/
   h2.title{
@@ -471,19 +486,23 @@ h2.title {
 
   .table {
     margin-bottom: 2rem;
-    width: 90%;
+    width: 95%;
     table-layout: fixed;
     border-collapse: collapse;
-    border-radius: 10px;
+    border-radius: 7px 7px 2px 2px;
     overflow: hidden;
     border: 1px solid #dbdee1c5;
 
+    th:nth-child(1), td:nth-child(1) {
+      width: 8%;
+    }
+
     th:nth-child(2), td:nth-child(2) {
-      width: 52%;
+      width: 40%;
     }
 
     th:nth-child(3), td:nth-child(3) {
-      width: 40%;
+      width: 55%;
     }
 
     th, td {
@@ -492,7 +511,7 @@ h2.title {
     }
 
     th {
-      padding: .3rem;
+      padding: .5rem;
       font-size: .8rem;
     }
 
@@ -519,8 +538,6 @@ h2.title {
       }
 
       .delete-button {
-        color: #7743a8;
-        border-color: #7743a8;
 
         i {
           font-size: .75rem;
@@ -589,7 +606,7 @@ h2.title {
 }
 }
 
- /* RESPONSIVE PARA TABLA*/
+ /* RESPONSIVE*/
 @media (max-width: 492px){
   .container {
     margin: 0;
@@ -598,8 +615,12 @@ h2.title {
     max-width: 100%;
 }
 
-  h3.title {
-    font-size: 1.6rem;
+  h2.title{
+    padding: .29rem 0;
+  }
+
+  .title.stage {
+    font-size: 1.5rem;
    }
 
    .button.is-primary {
@@ -616,7 +637,7 @@ h2.title {
    .table {
      margin: 0 auto;
      width: 90%;
-     border-radius: 5px;
+     border-radius: 3px;
      border: none;
      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 
@@ -629,7 +650,6 @@ h2.title {
        padding: 0.25rem;
        font-size: .7rem;
      }
-
 
      .buttons {
        gap: .5rem;

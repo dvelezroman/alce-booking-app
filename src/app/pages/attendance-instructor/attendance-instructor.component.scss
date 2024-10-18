@@ -1,27 +1,33 @@
 :host {
     display: block;
-    padding: 2rem;
-    background-color: #ffffff; 
+    padding: 0rem;
+    background-color: #ededed;  
     min-height: 100vh; 
   }
-  
-  .attendance-section {
-    background-color: white;
-    padding: 1rem .5rem;
-    border-radius: 8px;
-    max-width: 800px;
-    margin: 0 auto;  
-  }
-  
+
   .attendance-title {
+    position: sticky;
+    top: 0; 
+    z-index: 1000; 
+    background-color: white;
+    padding: 1.35rem 0;
     text-align: center;
-    margin-bottom: 5rem;
+    margin-bottom: 4rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
   }
   
   .attendance-title h1 {
     font-size: 1.8rem;
     font-weight: bold;
-    color: #333; 
+    color: #282828;  
+  }
+  
+  .attendance-section {
+    background-color: transparent;
+    padding: 1rem .5rem;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 0 auto;  
   }
   
   .attendance-search {
@@ -31,7 +37,7 @@
     border-radius: 8px;
     max-width: 600px;
     margin: 0 auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     border: 1px solid rgb(203, 202, 202); 
 }
   
@@ -51,12 +57,12 @@
     font-size: .9rem;
     background-color: #f0f0f0;
     color: #333;
-    padding: 5px 0; /* Reduce el padding vertical */
-    padding-left: 5px; /* Asegura espacio desde la izquierda */
-    line-height: 1.6rem; /* Aumenta la altura de línea para centrar verticalmente */
+    padding: 5px 0; 
+    padding-left: 5px; 
+    line-height: 1.6rem; 
     border: 1px solid #b9b9b9;
     border-radius: 4px;
-    appearance: none; /* Elimina el estilo por defecto del navegador */
+    appearance: none; 
 }
 
   /* Estilo del input de búsqueda de estudiantes */
@@ -87,9 +93,9 @@
     top: 101%;
     left: 0;
     width: 100%;
-    background-color: rgb(205, 205, 205); 
+    background-color: rgb(224, 224, 224); 
     border-radius: 0 0 2px 2px;
-    max-height: 150px;
+    max-height: 200px;
     overflow-y: auto;
     z-index: 1000;
     padding: 0px 0;
@@ -208,8 +214,8 @@
   
   .button {
     width: 100%;
-    padding: 0.6rem;
-    font-size: 0.9rem;
+    padding: .7rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #ffffff;
     background-color: #007bff;
@@ -292,10 +298,19 @@
   @media (max-width: 768px) {
 
     :host {
-      padding: 1rem;
+      padding: 0rem;
     }
+
     .attendance-section {
-      padding: 1rem 0rem; 
+      padding: 1rem 1rem; 
+    }
+
+    .attendance-title {
+      background: linear-gradient(45deg, #4a90e2,  #7743a8);
+    }
+    
+    .attendance-title h1 {
+      color: white;  
     }
 
   }
@@ -304,6 +319,7 @@
 
     .attendance-title {
       margin-bottom: 3rem;
+      padding: 1.2rem 0;
     }
 
     .attendance-title h1 {
@@ -331,10 +347,10 @@
       border: 1px solid #b1b1b1; 
       padding: 0.5rem;
       font-size: 0.9rem;
-      height: 40px;
+      height: 38px;
     }
 
-      .columns.is-mobile .column .select.is-fullwidth select {
+    .columns.is-mobile .column .select.is-fullwidth select {
     font-size: .9rem; 
     background-color: #f0f0f0; 
     color: #333; 
@@ -346,7 +362,7 @@
     .button {
       width: 100%;
       padding: 0.7rem;
-      font-size: 1rem;
+      font-size: .9rem;
     }
 
     .table thead th,
