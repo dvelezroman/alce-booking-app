@@ -61,9 +61,11 @@ export interface UpdateStageDto {
 export interface CreateLinkDto {
   description: string;
   link: string;
+  password?: string;
 }
 
 export interface UpdateLinkDto {
   description?: string;
   link?: string;
+  password?: string;
 }

@@ -37,7 +37,7 @@
 
     <!-- Modal para crear un nuevo link -->
     <div id="createModal" class="modal" [ngClass]="{ 'is-active': isCreateModalOpen }">
-        <div class="modal-background"></div>
+      <div class="modal-background"></div>
         <div class="modal-content">
           <div class="box">
             <h3 class="title is-4">Crear Link</h3>
@@ -59,6 +59,14 @@
                 </div>
               </div>
 
+              <!-- Campo para el password de la meeting -->
+              <div class="field">
+                <label class="label">Password de la meeting</label>
+                <div class="control">
+                  <input class="input" type="text" [(ngModel)]="newLink.password" name="password" placeholder="password" />
+                </div>
+              </div>
+
               <div class="buttons-container">
                 <button type="submit" class="button create-link-btn">Crear</button>
                 <button type="button" class="button cancel-link-btn" (click)="closeCreateModal()">Cancelar</button>
@@ -68,8 +76,8 @@
         </div>
       </div>
 
-    <!-- Modal para editar un link existente -->
-    <div id="editModal" class="modal" [ngClass]="{ 'is-active': isEditModalOpen }">
+      <!-- Modal para editar un link existente -->
+      <div id="editModal" class="modal" [ngClass]="{ 'is-active': isEditModalOpen }">
         <div class="modal-background"></div>
         <div class="modal-content">
           <div class="box">
@@ -89,6 +97,14 @@
                 <label class="label">Link</label>
                 <div class="control" *ngIf="selectedLink">
                   <input class="input" type="url" [(ngModel)]="selectedLink.link" name="link" placeholder="https://example.com" required />
+                </div>
+              </div>
+
+              <!-- Campo para el password de la meeting -->
+              <div class="field">
+                <label class="label">Password de la meeting</label>
+                <div class="control" *ngIf="selectedLink">
+                  <input class="input" type="text" [(ngModel)]="selectedLink.password" name="password" placeholder="password" />
                 </div>
               </div>
 

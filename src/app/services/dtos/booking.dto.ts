@@ -60,4 +60,5 @@ export interface MeetingLinkDto {
   id: number;
   link: string;
   description?: string;
+  password?: string;
 }

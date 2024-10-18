@@ -17,7 +17,7 @@ import { CreateLinkDto } from '../../services/dtos/student.dto';
 })
 export class LinksComponent implements OnInit {
   links: MeetingLinkDto[] = [];
-  newLink: CreateLinkDto = {  description: '', link: '' };
+  newLink: CreateLinkDto = {  description: '', link: '', password: '' };
   selectedLink: MeetingLinkDto | null = null;
 
   isCreateModalOpen = false;
@@ -50,14 +50,15 @@ export class LinksComponent implements OnInit {
 
   closeCreateModal(): void {
     this.isCreateModalOpen = false;
-    this.newLink = { link: '', description: '' };
+    this.newLink = { link: '', description: '', password: '' };
   }
 
   createLink(): void {
     if (this.newLink.description && this.newLink.link) {
       const newLinkData: CreateLinkDto = {
         description: this.newLink.description,
-        link: this.newLink.link
+        link: this.newLink.link,
+        password: this.newLink.password,
       };
 
       this.linksService.create(newLinkData).subscribe({
