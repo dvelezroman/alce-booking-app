@@ -79,12 +79,15 @@ export class HomeComponent implements OnInit {
     this.maxYear = nextMonthDate.getFullYear();
   }
 
-   generateCurrentMonthDays() {
+  generateCurrentMonthDays() {
     const monthIndex = new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth();
     const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
     const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
-
-    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '' }));
+  
+    // Inicia con celdas vacías hasta que llegue el primer día del mes
+    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '', isNextMonth: false }));
+  
+    // Agrega los días del mes
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
         const date = new Date(this.selectedYear, monthIndex, i + 1);
@@ -92,17 +95,20 @@ export class HomeComponent implements OnInit {
         return {
           day: i + 1,
           dayOfWeek,
+          isNextMonth: false
         };
       })
     );
-
+  
+    // Agregar los días del próximo mes que completan la última semana
     const lastDayOfWeek = new Date(this.selectedYear, monthIndex, daysInMonth).getDay();
     if (lastDayOfWeek !== 6) {
       const daysToAdd = 6 - lastDayOfWeek;
       this.currentMonthDays = this.currentMonthDays.concat(
         Array.from({ length: daysToAdd }, (_, i) => ({
           day: i + 1,
-          dayOfWeek: '',
+          dayOfWeek: new Date(this.selectedYear, monthIndex + 1, i + 1).toLocaleString('default', { weekday: 'long' }),
+          isNextMonth: true // Indicador para saber que pertenece al próximo mes
         }))
       );
     }
@@ -128,19 +134,23 @@ export class HomeComponent implements OnInit {
     this.generateCurrentMonthDays();
   }
 
-  isDaySelectable(day: { day: number | string }): boolean {
+  isDaySelectable(day: { day: number | string, isNextMonth?: boolean }): boolean {
     if (typeof day.day !== 'number') return false;
-
+  
     const today = new Date();
-    const dateToCheck = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth(), day.day);
+    const monthIndex = day.isNextMonth ? new Date().getMonth() + 1 : new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth();
+    const dateToCheck = new Date(this.selectedYear, monthIndex, day.day);
     const dayDifference = Math.ceil((dateToCheck.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-    return dayDifference >= 0 && dateToCheck.getDay() !== 0;
+    return dayDifference >= 0 && dateToCheck.getDay() !== 0; 
   }
 
-  selectDay(day: { day: number | string }) {
+  selectDay(day: { day: number | string, isNextMonth: boolean }) {
     if (typeof day.day === 'number') {
       this.selectedDay = day.day;
+      if (day.isNextMonth) {
+        this.nextMonth(); 
+        this.selectedDay = day.day; 
+      }
     }
   }
 
@@ -148,7 +158,7 @@ export class HomeComponent implements OnInit {
     if (typeof day.day === 'number') {
       this.selectedDate = new Date(this.selectedYear, new Date().getMonth(), day.day);
       const formattedDate = this.selectedDate.toISOString();
-      // console.log('Día seleccionado (from y to):', formattedDate);
+       //console.log('Día seleccionado (from y to):', formattedDate);
       // console.log('Instructor ID:', this.instructorId);
 
       this.bookingService.getInstructorMeetingsGroupedByHour({

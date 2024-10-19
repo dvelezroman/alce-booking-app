@@ -1,5 +1,5 @@
 .section {
-    background-color: white; 
+  background-color: #ededed; 
     min-height: 100vh; 
     padding: 0rem; 
   }
@@ -7,7 +7,7 @@
   .container {
     width: 100%; 
     margin: 0 auto; 
-    background-color: white; 
+    background-color: #ededed;
     padding: 1rem 0rem; 
     border-radius: 8px;  
   }
@@ -18,7 +18,7 @@
     left: 0px;
     color: rgb(53, 53, 53);
     width: 100%; 
-    background: rgb(255, 251, 249);
+    background-color: #ededed;
     z-index: 10; 
     text-align: center;
     font-family: 'Poppins', sans-serif; 
@@ -34,34 +34,45 @@
   }
   
   .block-search {
-    background: radial-gradient(circle, #f9f9f9, #f5f3f6);
-    box-shadow: 0 4px 8px rgba(117, 117, 117, 0.1);
+    background-color: white; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 2rem;
     border-radius: 6px;
-    border: .5px solid rgb(255, 108, 26);
-    margin-top: 10rem;
+    border: .5px solid rgb(198, 198, 198);
+    margin-top: 9rem;
     width: 100%;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
   }
 
-  .block-search .input[type="date"] {
-    position: relative;
+  .input-date-container input[type="date"] {
+    width: 100%;
     padding-right: 2.5rem; 
-  }
+    box-sizing: border-box;
+}
+
+.input-date-container .icon-calendar {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    color: #929090;
+    pointer-events: none;
+}
   
   .block-search .input[type="date"]::-webkit-calendar-picker-indicator {
     position: absolute;
     right: 0.75rem; 
     top: 50%;
+    opacity: 0; 
     transform: translateY(-50%);
-    opacity: 0.7; 
     cursor: pointer;
-    color: #333; 
   }
   
   .block-search .input[type="date"]::-moz-calendar-picker-indicator {
+    opacity: 0; 
     position: absolute;
     right: 0.75rem;
     top: 50%;
@@ -102,7 +113,7 @@
     width: 75%;
     margin: auto;
     border-collapse: collapse;
-    margin-top: 2rem;
+    margin-top: 4rem;
     margin-bottom: 5rem;
     overflow: hidden;
   }
@@ -150,10 +161,12 @@
     .title-container {
       left: 0; 
       width: 100%; 
+      background: linear-gradient(45deg, #4a90e2,  #7743a8);
  }
   
     .title {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
+      color: white;
  }
   
     .block-search {
@@ -188,13 +201,16 @@
  }
 
     .block-results {
-     margin-top: 1.5rem;
-     display: flex;
-     justify-content: center; 
+      width: 90%;
+      margin: auto;
+      margin-top: 2.5rem;
+      display: flex;
+      justify-content: center; 
  }
     
     .table-results {
-     width: 90%; 
+     width: 100%; 
+     margin: auto;
      margin: 0;
  }
   
@@ -225,11 +241,10 @@
 }
 
 .block-search {
- background-color: white;
- border: none;
+ background-color: #ededed !important; 
  box-shadow: none;
- width: 98%;
- margin-top: 5rem;
+ width: 90%;
+ margin-top: 7rem;
 }
 
 .block-search .label {
@@ -241,8 +256,12 @@
   .block-search .input,
   .block-search .select select {
    padding: 0.2rem .7rem;
-   font-size: 0.75rem;
+   font-size: 0.8rem;
    height: 40px;
+}
+
+.block-results {
+  width: 100%;
 }
 
 .table-results {
@@ -251,14 +270,14 @@
 }
 
   .table-results th, .table-results td {
-   font-size: 0.7rem; 
+   font-size: 0.8rem; 
    padding: 5px 8px; 
    border: .5px solid rgb(191, 191, 191, .3);
    margin-bottom: 1px solid grey;
  }
 
  .table-results td {
-    padding: 5px 4px; 
+    padding: 5px 8px; 
 }
 
  .no-results-message {

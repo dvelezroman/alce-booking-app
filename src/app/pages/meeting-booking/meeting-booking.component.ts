@@ -438,40 +438,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
   }
 
-//scroll animación titulo componente
-@HostListener('window:scroll', [])
-onWindowScroll() {
-  const header = document.querySelector('.class-booking-header') as HTMLElement;
-  const scrollPosition = window.scrollY;
-  const progress = Math.min(scrollPosition / 100, 1);
-
-  // gradient
-  const startColor1 = [255, 255, 255];
-  const startColor2 = [245, 245, 245];
-  const endColor = [243, 245, 255];
-
-  // Cálculo del gradiente progresivo en función del scroll
-  const r1 = Math.round(startColor1[0] + (endColor[0] - startColor1[0]) * progress);
-  const g1 = Math.round(startColor1[1] + (endColor[1] - startColor1[1]) * progress);
-  const b1 = Math.round(startColor1[2] + (endColor[2] - startColor1[2]) * progress);
-
-  const r2 = Math.round(startColor2[0] + (endColor[0] - startColor2[0]) * progress);
-  const g2 = Math.round(startColor2[1] + (endColor[1] - startColor2[1]) * progress);
-  const b2 = Math.round(startColor2[2] + (endColor[2] - startColor2[2]) * progress);
-
-  // Aplicación del color de fondo progresivo
-  header.style.background = `linear-gradient(270deg, rgb(${r1}, ${g1}, ${b1}), rgb(${r2}, ${g2}, ${b2}))`;
-
-  // Sombra cuando hay scroll
-  const boxShadowOpacity = 0.1 * progress;
-  header.style.boxShadow = `0 2px 5px rgba(0, 0, 0, ${boxShadowOpacity})`;
-
-  if (scrollPosition === 0) {
-    header.style.background = 'linear-gradient(270deg, rgb(255, 255, 255), rgb(255, 255, 255))';
-    header.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0)';
-  }
-}
-
 //scroll flechas del contenedor de los meetings del estudiante y time slots
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -584,8 +550,6 @@ onWindowScroll() {
       }
     }, ONE_SECOND);
   }
-
-
 
 
   isCurrentWeek(date: Date): boolean {
