@@ -28,7 +28,7 @@ export class AttendanceInstructorComponent implements OnInit {
     instructorName: '',
     from: new Date().toISOString().substring(0, 10),
     to: '',
-    present: 'yes',
+    present: 'true',
   };
   showDropdown: boolean = false;
 

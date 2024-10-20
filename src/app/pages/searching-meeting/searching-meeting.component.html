@@ -90,7 +90,6 @@
 
     <!-- Resultados de la búsqueda -->
     <div class="block-results">
-
       <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
         No hay meetings para el rango asignado.
         <span class="icon-container">
@@ -99,36 +98,36 @@
       </p>
       <!-- Vista de tabla -->
       <div class="table-container">
-      <table class="table-results is-striped is-fullwidth" *ngIf="meetings && meetings.length > 0">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Stage</th>
-            <th>Categoría</th>
-            <th>Modalidad</th>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Instructor</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let meeting of meetings">
-            <td>
-              <input type="checkbox" [checked]="selectedMeetingIds.includes(meeting.id)" (change)="toggleSelection(meeting.id)" />
-            </td>
-            <td>{{ meeting.stage?.number || 'Stage no disponible' }}</td>
-            <td>{{ meeting.category || 'Categoría no disponible' }}</td>
-            <td>{{ meeting.student?.mode || 'Modalidad no disponible' }}</td>
-            <td>{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
-            <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
-            <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
-            <td>{{ meeting.hour }}:00</td>
-            <td>{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
-          </tr>
-        </tbody>
-      </table>
+        <table class="table-results is-striped is-fullwidth" *ngIf="meetings && meetings.length > 0">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Stage</th>
+              <th>Categoría</th>
+              <th>Modalidad</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Instructor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let meeting of meetings">
+              <td>
+                <input type="checkbox" [checked]="selectedMeetingIds.includes(meeting.id)" (change)="toggleSelection(meeting.id)" />
+              </td>
+              <td>{{ meeting.stage?.number || 'Stage no disponible' }}</td>
+              <td>{{ meeting.category || 'Categoría no disponible' }}</td>
+              <td>{{ meeting.student?.mode || 'Modalidad no disponible' }}</td>
+              <td>{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
+              <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
+              <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
+              <td>{{ meeting.hour }}:00</td>
+              <td>{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

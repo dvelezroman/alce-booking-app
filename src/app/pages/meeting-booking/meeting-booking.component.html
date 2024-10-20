@@ -27,7 +27,7 @@
 
       <!-- Selected Meetings Section -->
       <div class="student-schedule" *ngIf="meetings.length > 0">
-        <h4 class="schedule-title">Reuniones Agendadas</h4>
+        <h4 class="schedule-title">Agendadas</h4>
         <div class="scroll-buttons">
           <button class="scroll-button left" (click)="scrollLeft()" [class.hidden]="!canScrollLeft" aria-label="Scroll left">
             <i class="fas fa-chevron-left"></i>
@@ -69,11 +69,13 @@
     </section>
   </div>
 
+  <hr class="divider">
+
   <!-- Date and Time Selection Section -->
   <div class="date-time-wrapper">
     <!-- Calendar Selection -->
     <section class="date-time-selection">
-      <div class="calendar-title">
+      <div class="calendar-title" (click)="scrollToCalendar()">
         <h3 class="title is-4">Seleccione día</h3>
       </div>
       <div class="month-selector">
@@ -85,7 +87,7 @@
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
-      <div class="calendar">
+      <div class="calendar" #calendarRef>
         <div class="calendar-header">
           <div class="calendar-day-header">Dom</div>
           <div class="calendar-day-header">Lun</div>
@@ -103,7 +105,8 @@
             [class.selected]="selectedDay === day.day"
             [class.selectable]="isDaySelectable(day)"
             [class.unselectable]="!isDaySelectable(day)"
-            [class.empty]="!day.day">
+            [class.empty]="!day.day"
+            [class.danger]="day.dayOfWeek === 'DOMINGO'">
             {{ day.day }}
           </div>
         </div>
@@ -112,12 +115,12 @@
 
     <!-- Time Slots Selection -->
     <section class="selected-date-time">
-      <h2 class="titulo-slots">Seleccione una hora</h2>
+      <h2 class="titulo-slots" (click)="scrollToTimeSlots()">Seleccione una hora</h2>
       <h3 class="title is-3"></h3>
       <button class="scroll-arrow-up" (click)="scrollUp()" [class.disabled]="!canScrollUp" aria-label="Scroll up">
         <i class="fas fa-chevron-up"></i>
       </button>
-      <div class="time-slots" #timeSlotList>
+      <div class="time-slots" #timeSlotList  #timeSlotsRef>
         <div *ngIf="timeSlots.length === 0">
           <p>Horarios no disponibles</p>
         </div>

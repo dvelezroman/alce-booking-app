@@ -44,8 +44,11 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   ngOnInit(): void {
     this.stagesService.getAll().subscribe(response => {
       this.stages = response;
+
+    this.filter.stageId = '';
     })
-    this.availableHours = Array.from({ length: 13 }, (_, i) => 9 + i);
+    
+    this.availableHours = Array.from({ length: 13 }, (_, i) => 8 + i);
 
     this.store.select(selectUserData).subscribe((userData: UserDto | null) => {
       if (userData && userData.instructor) {

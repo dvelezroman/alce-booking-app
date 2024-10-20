@@ -25,6 +25,8 @@ import { Mode } from '../../services/dtos/student.dto';
 export class MeetingBookingComponent implements OnInit, AfterViewInit {
   @ViewChild('scheduleList') scheduleList!: ElementRef;
   @ViewChild('timeSlotList') timeSlotList!: ElementRef;
+  @ViewChild('calendarRef') calendarRef!: ElementRef;
+  @ViewChild('timeSlotsRef') timeSlotsRef!: ElementRef;
   private linkInterval: any;
   private unsubscribe$ = new Subject<void>();
   canScrollLeft = false;
@@ -152,6 +154,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       const hour = startHour + i;
       return { label: `${hour}:00`, value: hour };
     });
+  }
+
+//referencias calendario
+ scrollToCalendar() {
+  if (this.calendarRef && this.calendarRef.nativeElement) {
+    this.calendarRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+  //referencia a time
+  scrollToTimeSlots() {
+    if (this.timeSlotsRef && this.timeSlotsRef.nativeElement) {
+      this.timeSlotsRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   formatDate(date: Date): string {

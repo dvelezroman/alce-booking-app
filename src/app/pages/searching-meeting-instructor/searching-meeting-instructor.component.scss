@@ -88,7 +88,7 @@
   }
   
   .field {
-    margin-bottom: 0rem; 
+    margin-bottom: .5rem; 
   }
   
   .input, .select select {
@@ -109,8 +109,9 @@
   }
   
   /* Estilos de la tabla de resultados */
+
   .table-results {
-    width: 75%;
+    width: 90%;
     margin: auto;
     border-collapse: collapse;
     margin-top: 4rem;
@@ -130,6 +131,7 @@
     text-align: center;
     padding: 10px;
     font-weight: bold;
+    font-size: .85rem;
     color: black;
     border-bottom: .5px solid #b6b6b6; 
     background-color: rgba(136, 255, 0, 0.646);
@@ -150,9 +152,33 @@
   input[type="checkbox"]:checked {
     accent-color: #007bff; 
   }
+
+/* Personalización del scrollbar */
+.table-container::-webkit-scrollbar {
+  width: 8px; 
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f0f0f0; 
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #d8d8d8;
+  border-radius: 20px; 
+  border: 2px solid #f0f0f0; 
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #a2a3a6; 
+}
   
   /* Responsivos */
-  
+  @media (max-width: 992px){
+    .table-results {
+      width: 80%; 
+  }
+  } 
+
   @media (max-width: 768px) {
     .container {
       width: 100%; 
@@ -262,6 +288,10 @@
 
 .block-results {
   width: 100%;
+}
+
+.table-container::-webkit-scrollbar {
+  display: none; 
 }
 
 .table-results {
