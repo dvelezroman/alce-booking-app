@@ -70,7 +70,7 @@ export class AttendanceReportsComponent implements OnInit {
   }
 
   loadStudents() {
-    this.usersService.searchUsers(1, 100, undefined, undefined, undefined, undefined, 'STUDENT')
+    this.usersService.searchUsers(0, undefined, undefined, undefined, undefined, undefined, 'STUDENT')
       .subscribe({
         next: (result) => {
           this.students = result.users;

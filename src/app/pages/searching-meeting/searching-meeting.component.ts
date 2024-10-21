@@ -106,6 +106,7 @@ export class SearchingMeetingComponent implements OnInit {
         link: this.selectedInstructor.meetingLink?.link,
         instructorId: +this.selectedInstructor.id,
         meetingIds: this.selectedMeetingIds,
+        password: this.selectedInstructor.meetingLink?.password,
       };
       this.bookingService.updateMeetingLink(updateLinkParams).subscribe({
         next: response => {

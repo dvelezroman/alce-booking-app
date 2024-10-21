@@ -1,12 +1,12 @@
 import {UserDto} from "./user.dto";
 import {Mode, Stage} from "./student.dto";
-import {MeetingDTO} from "./booking.dto";
+import {MeetingLinkDto} from "./booking.dto";
 
 export interface Instructor {
   id: number;
   userId: number;
   user?: UserDto;
-  meetingLink?: MeetingDTO
+  meetingLink?: MeetingLinkDto
 }
 
 export interface RegisterInstructorDto {
