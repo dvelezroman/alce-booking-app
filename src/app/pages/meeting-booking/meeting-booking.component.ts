@@ -276,7 +276,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   recalculateTimeSlots(day: any) {
-    console.log('Recalculate Time Slots');
+    // console.log('Recalculate Time Slots');
     const selectedDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
