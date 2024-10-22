@@ -99,7 +99,7 @@ export class AttendanceInstructorComponent implements OnInit {
     this.searchAttempted = true;
     this.bookingService.getInstructorMeetingsGroupedByHour(params).subscribe({
         next: (meetings) => {
-            console.log("Reuniones recibidas:", meetings);
+            //console.log("Reuniones recibidas:", meetings);
             this.meetings = meetings;
         },
         error: (error) => {

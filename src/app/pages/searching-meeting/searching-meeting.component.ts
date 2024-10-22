@@ -110,7 +110,7 @@ export class SearchingMeetingComponent implements OnInit {
       };
       this.bookingService.updateMeetingLink(updateLinkParams).subscribe({
         next: response => {
-          console.log('Link asignado correctamente', response);
+          //console.log('Link asignado correctamente', response);
           this.showToast('El link fue asignado', true);
           this.closeModal();
           this.fetchMeetings();

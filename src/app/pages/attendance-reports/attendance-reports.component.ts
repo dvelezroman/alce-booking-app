@@ -74,7 +74,7 @@ export class AttendanceReportsComponent implements OnInit {
       .subscribe({
         next: (result) => {
           this.students = result.users;
-          console.log('Estudiantes cargados:', this.students);
+          //console.log('Estudiantes cargados:', this.students);
         },
         error: (error) => {
           console.error('Error al cargar estudiantes:', error);
@@ -108,7 +108,7 @@ export class AttendanceReportsComponent implements OnInit {
 private fetchMeetings(params: FilterMeetingsDto) {
     this.bookingService.searchMeetings(params).subscribe({
       next: (meetings) => {
-        console.log("Reuniones recibidas:", meetings);
+        //console.log("Reuniones recibidas:", meetings);
         this.meetings = meetings;
       },
       error: (error) => {
