@@ -28,7 +28,7 @@
           <td>{{ link.password }}</td>
           <td>
             <div class="buttons">
-              <button (click)="openEditModal(link)" class="button password-button">
+              <button (click)="openEditPasswordModal(link)" class="button password-button">
                 <i class="fas fa-key"></i>
               </button>
               <button (click)="openEditModal(link)" class="button edit-button">
@@ -124,6 +124,31 @@
           </div>
         </div>
       </div>
+
+      <div id="editPasswordModal" class="modal" [ngClass]="{ 'is-active': isEditPasswordModalOpen }">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="box">
+            <h3 class="title is-4">Editar Password</h3>
+            <form (ngSubmit)="updatePassword()">
+              <!-- Campo para el password de la meeting -->
+              <div class="field">
+                <label class="label">Password de la meeting</label>
+                <div *ngIf="selectedLink" class="control">
+                  <input class="input" type="text" [(ngModel)]="selectedLink.password" name="password" placeholder="password" required />
+                </div>
+              </div>
+      
+              <div class="buttons-container">
+                <button type="submit" class="button update-link-btn">Actualizar</button>
+                <button type="button" class="button cancel-link-btn" (click)="closeEditPasswordModal()">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      
 
     <!-- Modal para confirmar la eliminación de un link -->
     <div id="deleteModal" class="modal" [ngClass]="{ 'is-active': isDeleteModalOpen }">

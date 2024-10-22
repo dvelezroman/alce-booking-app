@@ -23,6 +23,7 @@ export class LinksComponent implements OnInit {
   isCreateModalOpen = false;
   isEditModalOpen = false;
   isDeleteModalOpen = false;
+  isEditPasswordModalOpen = false;
 
   errorMessage: string = '';
   isErrorModalOpen = false;
@@ -92,6 +93,31 @@ export class LinksComponent implements OnInit {
         },
         error: () => {
           this.handleError('No se pudo actualizar el Link!');
+        }
+      });
+    }
+  }
+
+  openEditPasswordModal(link: MeetingLinkDto): void {
+    this.selectedLink = { ...link };  // Guardamos el link seleccionado
+    this.isEditPasswordModalOpen = true;  // Mostramos el modal
+  }
+
+  closeEditPasswordModal(): void {
+    this.isEditPasswordModalOpen = false;  // Cerramos el modal
+    this.selectedLink = null;  // Limpiamos el link seleccionado
+  }
+
+  updatePassword(): void {
+    if (this.selectedLink) {
+      const updateData = { password: this.selectedLink.password };  // Solo enviamos la contraseña
+      this.linksService.update(this.selectedLink.id, updateData).subscribe({
+        next: () => {
+          this.fetchLinks();  // Refrescamos los links
+          this.closeEditPasswordModal();  // Cerramos el modal
+        },
+        error: () => {
+          this.handleError('No se pudo actualizar el password del Link!');
         }
       });
     }
