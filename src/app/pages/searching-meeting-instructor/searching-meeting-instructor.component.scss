@@ -112,9 +112,11 @@
   .table-container {
     max-height: 400px; 
     overflow-y: auto; 
+    overflow-x: auto;
     display: block; 
     margin-top: 2.5rem;
     position: relative;
+    width: 100%;
 }
 
   .table-results {
@@ -122,6 +124,7 @@
     margin: auto;
     border-collapse: collapse;
     table-layout: fixed; 
+    min-width: 1000px; 
   }
   
   .table-results th {
@@ -130,6 +133,7 @@
     font-weight: bold;
     font-size: .85rem;
     color: black;
+    white-space: nowrap;
     border-bottom: none; 
     background-color: #bcf496; 
     position: sticky; 
@@ -144,6 +148,9 @@
     border-bottom: .5px solid rgb(208, 208, 208);
     background-color: #ffffff;
     color: rgb(104, 104, 104);
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   input[type="checkbox"]:checked {
@@ -152,13 +159,14 @@
   
   /* Responsivos */
   @media (max-width: 992px){
-    .table-results {
-      width: 80%; 
+    .container {
+      width: 100%;
   }
+
   } 
 
   @media (max-width: 768px) {
-    .container {
+    .table-container {
       width: 100%; 
  }
   
