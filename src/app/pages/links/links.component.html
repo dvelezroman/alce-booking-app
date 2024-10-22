@@ -68,12 +68,15 @@
               </div>
 
               <!-- Campo para el password de la meeting -->
+             <!-- Campo para el password de la meeting -->
+              <!-- 
               <div class="field">
                 <label class="label">Password de la meeting</label>
                 <div class="control">
                   <input class="input" type="text" [(ngModel)]="newLink.password" name="password" placeholder="password" />
                 </div>
               </div>
+              -->
 
               <div class="buttons-container">
                 <button type="submit" class="button create-link-btn">Crear</button>
@@ -109,12 +112,13 @@
               </div>
 
               <!-- Campo para el password de la meeting -->
-              <div class="field">
+              <!--<div class="field">
                 <label class="label">Password de la meeting</label>
                 <div class="control" *ngIf="selectedLink">
                   <input class="input" type="text" [(ngModel)]="selectedLink.password" name="password" placeholder="password" />
                 </div>
               </div>
+              -->
 
               <div class="buttons-container">
                 <button type="submit" class="button update-link-btn" (click)="updateLink()">Actualizar</button>
@@ -129,7 +133,9 @@
         <div class="modal-background"></div>
         <div class="modal-content">
           <div class="box">
-            <h3 class="title is-4">Editar Password</h3>
+            <h3 class="title is-4">
+              {{ selectedLink?.password ? 'Editar Password' : 'Agregar Password' }}
+            </h3>
             <form (ngSubmit)="updatePassword()">
               <!-- Campo para el password de la meeting -->
               <div class="field">
@@ -156,7 +162,7 @@
       <div class="modal-content">
         <div class="box">
           <h3 class="title is-4">Eliminar</h3>
-          <p>¿Estás seguro de que deseas eliminar el link "{{ selectedLink?.description }}"?</p>
+          <p>¿Deseas eliminar el link "{{ selectedLink?.description }}"?</p>
           <div class="delete-buttons-container">
             <button class="button delete-link-btn" (click)="deleteLink()">Eliminar</button>
             <button class="button cancel-delete-link-btn" (click)="closeDeleteModal()">Cancelar</button>
