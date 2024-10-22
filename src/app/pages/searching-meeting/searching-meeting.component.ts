@@ -73,7 +73,8 @@ export class SearchingMeetingComponent implements OnInit {
   onFilterChange(): void {
     const filterParams: FilterMeetingsDto = {
       ...this.filter,
-      hour: this.filter.hour ? this.filter.hour.toString() : undefined
+      hour: this.filter.hour ? this.filter.hour.toString() : undefined,
+      assigned: this.filter.assigned ? true : undefined
     };
     if (this.filter.stageId === '') {
       delete filterParams.stageId;
@@ -85,8 +86,12 @@ export class SearchingMeetingComponent implements OnInit {
 
   private fetchMeetings(params?: FilterMeetingsDto): void {
     this.bookingService.searchMeetings(params ? params : this.filter).subscribe(meetings => {
-      this.meetings = meetings;
-      this.originalMeetings = meetings;
+      if (this.filter.assigned) {
+        this.meetings = meetings.filter(meeting => !!meeting.link); 
+      } else {
+        this.meetings = meetings; 
+      }
+      this.originalMeetings = this.meetings;
     });
   }
 

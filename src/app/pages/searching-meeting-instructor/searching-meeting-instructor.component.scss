@@ -109,23 +109,20 @@
   }
   
   /* Estilos de la tabla de resultados */
+  .table-container {
+    max-height: 400px; 
+    overflow-y: auto; 
+    display: block; 
+    margin-top: 2.5rem;
+    position: relative;
+}
 
   .table-results {
-    width: 90%;
+    width: 90%; 
     margin: auto;
     border-collapse: collapse;
-    margin-top: 4rem;
-    margin-bottom: 5rem;
-    overflow: hidden;
+    table-layout: fixed; 
   }
-
-  .table-results tr:first-child th:first-child {
-    border-top-left-radius: 8px;
-}
-
-  .table-results tr:first-child th:last-child {
-    border-top-right-radius: 8px;
-}
   
   .table-results th {
     text-align: center;
@@ -135,6 +132,9 @@
     color: black;
     border-bottom: none; 
     background-color: #bcf496; 
+    position: sticky; 
+    top: 0; 
+    z-index: 2;
   }
   
   .table-results td {
@@ -142,35 +142,13 @@
     font-size: .9rem;
     padding: 10px 7px;
     border-bottom: .5px solid rgb(208, 208, 208);
+    background-color: #ffffff;
     color: rgb(104, 104, 104);
-  }
-  
-  .table-results tr:nth-child(odd) {
-    background-color: #ffffff; 
   }
 
   input[type="checkbox"]:checked {
     accent-color: #007bff; 
   }
-
-/* Personalización del scrollbar */
-.table-container::-webkit-scrollbar {
-  width: 8px; 
-}
-
-.table-container::-webkit-scrollbar-track {
-  background: #f0f0f0; 
-}
-
-.table-container::-webkit-scrollbar-thumb {
-  background-color: #d8d8d8;
-  border-radius: 20px; 
-  border: 2px solid #f0f0f0; 
-}
-
-.table-container::-webkit-scrollbar-thumb:hover {
-  background-color: #a2a3a6; 
-}
   
   /* Responsivos */
   @media (max-width: 992px){

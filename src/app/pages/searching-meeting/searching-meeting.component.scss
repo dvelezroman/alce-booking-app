@@ -127,14 +127,19 @@
   }
 /* MENSAJE CUANDO NO HAY RESULTADO DE MEETING */
   .no-results-message {
-    color: #ff0000;
+    color: #fd3c3c;
     text-align: center;
     font-size: .95rem;
-    margin-top: 5rem; 
+    margin-top: 3rem; 
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2rem; 
+  }
+
+  .no-results-message .icon-container i {
+    color: #cccccc; 
+    font-size: 1.7rem; 
   }
 
 /* Estilo para el bloque del botón link */
@@ -177,10 +182,11 @@
 
 .table-container {
   width: 100%;
-  max-height: 400px; 
-  max-height: auto;
-  overflow-y: auto;  
+  max-height: 500px; 
+  overflow-y: auto; 
+  overflow-x: auto;
   margin-bottom: 2rem; 
+  position: relative;
 }
 
 /* Estilo de la tabla */
@@ -189,14 +195,13 @@
   margin: auto;
   border-collapse: collapse;
   margin-top: 1rem;
+  table-layout: auto; 
+  min-width: 900px; 
 }
 
-.table-results tr:first-child th:first-child {
-  border-top-left-radius: 8px;
-}
-
-.table-results tr:first-child th:last-child {
-  border-top-right-radius: 8px;
+.table-results th:first-child,
+.table-results td:first-child {
+  width: 40px; 
 }
 
 .table-results th {
@@ -207,15 +212,20 @@
   color: black;
   border-bottom: 1px solid #ececec; 
   background-color: #bcf496; 
+  position: sticky; 
+  top: 0; 
+  z-index: 1;
 }
 
 .table-results td {
   text-align: center;
-  padding: 10px;
+  overflow: hidden; 
+  padding: 10px 5px;
   font-size: .87rem;
   color: rgb(104, 104, 104);
   border-bottom: 1px solid rgb(221, 221, 221);
 }
+
 
 .table-results tr:nth-child(odd) {
   background-color: white !important; 
@@ -235,25 +245,6 @@
   width: 1rem;
   height: 1rem;
   accent-color: #007bff;
-}
-
-/* Personalización del scrollbar */
-.table-container::-webkit-scrollbar {
-  width: 8px; 
-}
-
-.table-container::-webkit-scrollbar-track {
-  background: #f0f0f0; 
-}
-
-.table-container::-webkit-scrollbar-thumb {
-  background-color: #d8d8d8; 
-  border-radius: 20px; 
-  border: 2px solid #f0f0f0; 
-}
-
-.table-container::-webkit-scrollbar-thumb:hover {
-  background-color: #a2a3a6;
 }
 
 /* estilos del modal para asignar el link a la meeting */
@@ -390,6 +381,9 @@
 
   /* estilos responsive */
   @media (max-width: 992px){
+    .table-results {
+      margin-left: 8%;
+    }
 
     .table-results th {
       padding: 5px;
@@ -423,6 +417,7 @@
 
 .table-results {
   min-width: 100%;
+  margin-left: 0%;
 }
 
 .table-results th {
