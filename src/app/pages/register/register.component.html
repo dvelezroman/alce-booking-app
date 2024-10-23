@@ -4,74 +4,74 @@
   </div>
 
   <div class="box">
-    <h1 class="title">Create Account</h1>
+    <h1 class="title">Crear Cuenta</h1>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <!-- Campo Email con etiqueta flotante -->
       <div class="field">
         <div class="floating-label">
-          <input 
-            class="input" 
-            type="email" 
-            formControlName="email" 
+          <input
+            class="input"
+            type="email"
+            formControlName="email"
             placeholder=" "
             [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}">
-          <label>Email</label>
+          <label>Correo Electrónico</label>
           <span class="icon is-right">
             <i class="fas fa-envelope"></i>
           </span>
         </div>
         <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
-          Please enter a valid email
+          Ingrese una direccion de correo válida
         </div>
       </div>
 
       <!-- Campo Password con etiqueta flotante -->
       <div class="field">
         <div class="floating-label">
-          <input 
+          <input
             [type]="passwordVisible ? 'text' : 'password'"
             class="input"
             formControlName="password"
             placeholder=" "
             (input)="onPasswordInput()"
             [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}">
-          <label>Password</label>
+          <label>Contraseña</label>
           <div class="toggle-password" (click)="togglePasswordVisibility()">
-            <i [ngClass]="registerForm.get('password')?.value ? 
+            <i [ngClass]="registerForm.get('password')?.value ?
                           (passwordVisible ? 'fa fa-eye' : 'fa fa-eye-slash') : 'fa fa-lock'"></i>
           </div>
         </div>
         <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
-          Password must be at least 6 characters long
+          Contraseña debe tener al menos 4 caracteres
         </div>
       </div>
 
       <!-- Campo Confirmar Password con etiqueta flotante -->
       <div class="field">
         <div class="floating-label">
-          <input 
+          <input
             [type]="confirmPasswordVisible ? 'text' : 'password'"
             class="input"
             formControlName="confirmPassword"
             placeholder=" "
             (input)="onConfirmPasswordInput()"
             [ngClass]="{'is-invalid': registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched}">
-          <label>Confirm Password</label>
+          <label>Confirmar Contraseña</label>
           <div class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
-            <i [ngClass]="registerForm.get('confirmPassword')?.value ? 
+            <i [ngClass]="registerForm.get('confirmPassword')?.value ?
                           (confirmPasswordVisible ? 'fa fa-eye' : 'fa fa-eye-slash') : 'fa fa-lock'"></i>
           </div>
         </div>
         <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched" class="error">
-          Passwords do not match
+          Contraseñas no coinciden
         </div>
       </div>
 
       <!-- Botón para registrar -->
       <div class="field-button">
         <div class="control">
-          <button class="button is-primary" type="submit">Register</button>
+          <button class="button is-primary" type="submit">Registrar</button>
         </div>
       </div>
     </form>
@@ -79,8 +79,8 @@
     <!-- Link para login -->
     <div class="toggle-container">
       <p class="nu">
-        Already have an account?
-        <a [routerLink]="['/login']">Sign in</a>
+        Ya tienes una cuenta?
+        <a [routerLink]="['/login']">Iniciar sesión</a>
       </p>
     </div>
   </div>
