@@ -35,7 +35,8 @@ export class LoginComponent implements OnInit {
               private store: Store<{ data: UserState }>
               ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      // email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required]],
       password: ['', Validators.required]
     });
     this.user$ = this.store.select('data');
