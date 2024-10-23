@@ -28,12 +28,14 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   showSuccessToast: boolean = false;
   toastMessage: string = '';
   stages: Stage[] = [];
+  ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
 
   filter: FilterMeetingsDto = {
     from: '',
     to: '',
     hour: '',
     assigned: true,
+    category: undefined
   };
   constructor(
     private bookingService: BookingService,
@@ -42,6 +44,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.filter.category = undefined;
+
     this.stagesService.getAll().subscribe(response => {
       this.stages = response;
 
@@ -63,7 +67,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   onFilterChange(): void {
     const filterParams: FilterMeetingsDto = {
       ...this.filter,
-      hour: this.filter.hour ? this.filter.hour.toString() : undefined
+      hour: this.filter.hour ? this.filter.hour.toString() : undefined,
+      category: this.filter.category ? this.filter.category : undefined
     };
     this.fetchMeetings(filterParams);
   }

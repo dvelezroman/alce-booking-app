@@ -38,6 +38,7 @@ export class FilterMeetingsDto {
   to?: string;
   assigned?: boolean = false;
   present?: string;
+  category?: StudentClassification;
 }
 
 export class FilterInstructorMeetingDto {

@@ -30,6 +30,7 @@ export class SearchingMeetingComponent implements OnInit {
   selectedInstructor: Instructor | null | undefined = null;
   instructorList: Instructor[] = [];
   selectedMeetingIds: any[] = [];
+  ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
 
   toastMessage: string = '';
   toastType: 'success' | 'error' = 'success';
@@ -41,6 +42,7 @@ export class SearchingMeetingComponent implements OnInit {
     hour: '',
     stageId: '',
     assigned: false,
+    category: undefined
   };
 
   constructor(private bookingService: BookingService,
@@ -49,6 +51,7 @@ export class SearchingMeetingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.filter.category = undefined;
     // const today = new Date();
     // this.filter.from = today.toISOString().split('T')[0];
     this.availableHours = Array.from({ length: 13 }, (_, i) => 8 + i);
@@ -74,7 +77,8 @@ export class SearchingMeetingComponent implements OnInit {
     const filterParams: FilterMeetingsDto = {
       ...this.filter,
       hour: this.filter.hour ? this.filter.hour.toString() : undefined,
-      assigned: this.filter.assigned ? true : undefined
+      assigned: this.filter.assigned ? true : undefined,
+      category: this.filter.category ? this.filter.category : undefined
     };
     if (this.filter.stageId === '') {
       delete filterParams.stageId;
