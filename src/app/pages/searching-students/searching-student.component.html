@@ -8,7 +8,7 @@
       [isSuccess]="modalIsSuccess"
       (close)="closeModal()">
     </app-modal>
-
+<div class="main-container">
     <div class="page-title">
       <h1>Buscar</h1>
     </div>
@@ -51,7 +51,7 @@
                 <input type="text" id="lastName" formControlName="lastName" placeholder="Ingrese el Last Name" />
               </div>
               <div class="form-action">
-                <button class="search-button" type="submit">Buscar Estudiante</button>
+                <button class="search-button" type="submit">Buscar</button>
               </div>
             </form>
           </div>
@@ -71,7 +71,7 @@
                 </select>
               </div>
               <div class="form-action">
-                <button class="search-button" type="submit">Buscar Usuario</button>
+                <button class="search-button" type="submit">Buscar</button>
               </div>
             </form>
           </div>
@@ -127,12 +127,13 @@
     </div> 
   </div>
 
-<!-- Mensaje para cuando no hay resultados -->
+
+  <!-- Mensaje para cuando no hay resultados -->
   <div *ngIf="noResults" class="no-results-message">
     <p>No se encontraron resultados.</p>
     <i class="fas fa-user-slash"></i>
   </div>
-
+</div>
 
 <!-- Modal para editar usuario -->
 <div class="modal" [ngClass]="{ 'is-active': isEditModalOpen }">
