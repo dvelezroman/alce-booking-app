@@ -49,7 +49,8 @@ export class RegisterCompleteComponent implements OnInit, OnDestroy {
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      idNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      // idNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      idNumber: ['', [Validators.required]],
       birthday: ['', Validators.required],
       role: ['STUDENT', Validators.required],
       mode: ['ONLINE', Validators.required],
@@ -96,7 +97,7 @@ export class RegisterCompleteComponent implements OnInit, OnDestroy {
 
     const userData: Partial<UserDto> = {
       email: this.user?.email,
-      role: this.registerForm.value.role,
+      role: UserRole.STUDENT,
       idNumber: this.registerForm.value.idNumber,
       firstName: this.registerForm.value.firstName,
       lastName: this.registerForm.value.lastName,
@@ -149,4 +150,6 @@ export class RegisterCompleteComponent implements OnInit, OnDestroy {
     this.showSuccessModal = false;
     this.showRegistrationErrorModal = false;
   }
+
+  protected readonly UserRole = UserRole;
 }

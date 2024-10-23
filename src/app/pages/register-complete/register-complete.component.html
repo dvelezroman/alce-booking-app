@@ -12,9 +12,9 @@
       <div class="columns">
         <div class="column">
           <div class="field">
-            <label class="label">First Name</label>
+            <label class="label">Nombres</label>
             <div class="control">
-              <input class="input" type="text" formControlName="firstName" placeholder="Enter your first name">
+              <input class="input" type="text" formControlName="firstName" placeholder="Ingres sus nombres">
             </div>
             <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" class="error">
               First name is required
@@ -24,12 +24,12 @@
 
         <div class="column">
           <div class="field">
-            <label class="label">Last Name</label>
+            <label class="label">Apellidos</label>
             <div class="control">
-              <input class="input" type="text" formControlName="lastName" placeholder="Enter your last name">
+              <input class="input" type="text" formControlName="lastName" placeholder="ingrese sus apellidos">
             </div>
             <div *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched" class="error">
-              Last name is required
+              Apellido es requerido
             </div>
           </div>
         </div>
@@ -39,25 +39,25 @@
       <div class="columns">
         <div class="column">
           <div class="field">
-            <label class="label">ID Number</label>
+            <label class="label">Numero de identificacion</label>
             <div class="control">
-              <input class="input" type="text" formControlName="idNumber" placeholder="Enter your ID number">
+              <input class="input" type="text" formControlName="idNumber" placeholder="Ingrese su numero de identificacion">
             </div>
             <div *ngIf="registerForm.get('idNumber')?.invalid && (registerForm.get('idNumber')?.touched || registerForm.get('idNumber')?.dirty)" class="error">
-              <div *ngIf="registerForm.get('idNumber')?.errors?.['required']">ID number is required</div>
-              <div *ngIf="registerForm.get('idNumber')?.errors?.['pattern']">ID number must be 10 digits long</div>
+              <div *ngIf="registerForm.get('idNumber')?.errors?.['required']">Numero de identificacion es requerido</div>
+              <div *ngIf="registerForm.get('idNumber')?.errors?.['pattern']">Debe tener minimo 10 digitos</div>
             </div>
           </div>
         </div>
 
         <div class="column">
           <div class="field">
-            <label class="label">Birthday</label>
+            <label class="label">Fecha de Nacimiento</label>
             <div class="control">
               <input class="input" type="date" formControlName="birthday" placeholder="Select your birthday">
             </div>
             <div *ngIf="registerForm.get('birthday')?.invalid && registerForm.get('birthday')?.touched" class="error">
-              Please select a valid date
+              Seleccione una fecha valida
             </div>
           </div>
         </div>
@@ -80,20 +80,20 @@
 <!--          </div>-->
 <!--        </div>-->
 
-        <div class="column">
-          <div class="field">
-            <label class="label">Role</label>
-            <div class="control">
-              <select class="input" formControlName="role">
-                <option value="" disabled selected>Select your role</option>
-                <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
-              </select>
-            </div>
-            <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="error">
-              Role is required
-            </div>
-          </div>
-        </div>
+<!--        <div class="column">-->
+<!--          <div class="field">-->
+<!--            <label class="label">Rol</label>-->
+<!--            <div class="control">-->
+<!--              <select class="input" formControlName="role" [value]="UserRole.STUDENT">-->
+<!--                <option value="" disabled selected>Rol</option>-->
+<!--                <option *ngFor="let role of roles" [value]="role">{{ role }}</option>-->
+<!--              </select>-->
+<!--            </div>-->
+<!--            <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="error">-->
+<!--              Rol es requerido-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
 
 <!--        <div class="column">-->
 <!--          <div class="field">-->
