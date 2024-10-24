@@ -50,7 +50,6 @@
   text-decoration: none;
   transition: color 0.4s ease;
   border: 1px solid rgb(146, 90, 220);
-  overflow: hidden;
   z-index: 1;
   opacity: 0;
   transform: translateY(20px);
@@ -259,6 +258,16 @@
   visibility: hidden;
 }
 
+.calendar-day.meeting-day {
+  background-color: #cffbbe !important; 
+}
+
+.calendar-day.meeting-day:hover { 
+  background-color: #bdffa3 !important; 
+  color: #333 !important; 
+  font-weight: bold;
+}
+
 .calendar-day.selectable {
   background-color: #f9f9f9;
   border: 1px solid #6eb3fc;
@@ -282,10 +291,21 @@
   font-weight: bold;
 }
 
+.no-meetings-message {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: #f14646;
+  background-color: transparent;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
 /* Estilos para la tabla */
 
 .table {
-  width: 100%;
+  width: 80%;
+  margin: auto;
   border-collapse: collapse;
   background-color: #ffffff; 
   text-align: center;
@@ -355,7 +375,8 @@
   }
 
   .meeting-results {
-    width: 90%; 
+    width: 100%; 
+    margin: auto;
   }
 }
 
@@ -389,13 +410,16 @@
 
 /* TABLA MEETINGS */
 .meeting-results {
-  width: 95%; 
   margin-top: 3rem;
 }
 
 .meeting-results h3{
   font-size: .75rem;
   margin-bottom: .5rem;
+}
+
+.table{
+  width: 90%;
 }
 
 .table th, .table td {

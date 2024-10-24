@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
 
   selectedMonth!: string;
   selectedYear!: number;
-  currentMonthDays: { day: number | string; dayOfWeek: string }[] = [];
+  currentMonthDays: { day: number | string; dayOfWeek: string; isNextMonth: boolean; hasMeetings: boolean }[] = [];
   selectedDay: number | null = null;
   maxMonth!: string;
   maxYear!: number;
@@ -34,7 +34,9 @@ export class HomeComponent implements OnInit {
   minYear!: number;
 
   selectedDate: Date | null = null;
+  daySelected: boolean = false;
   meetingsOfDay: { date: string, hour: number, instructorId: number, meetings: MeetingDTO[] }[] = [];
+  daysWithMeetings: number[] = [];
 
   constructor(private store: Store,
               private bookingService: BookingService
@@ -62,6 +64,7 @@ export class HomeComponent implements OnInit {
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
       if (this.isInstructor) {
         this.generateCurrentMonthDays();
+        this.loadMeetingsForMonth();
       }
     });
 
@@ -84,23 +87,29 @@ export class HomeComponent implements OnInit {
     const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
     const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
   
-    // Inicia con celdas vacías hasta que llegue el primer día del mes
-    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '', isNextMonth: false }));
+     this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({
+    day: '', 
+    dayOfWeek: '', 
+    isNextMonth: false, 
+    hasMeetings: false 
+  }));
   
     // Agrega los días del mes
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
         const date = new Date(this.selectedYear, monthIndex, i + 1);
         const dayOfWeek = date.toLocaleString('default', { weekday: 'long' });
+        const hasMeetings = this.daysWithMeetings.includes(i + 1);
+        //console.log(`Día ${i + 1}: ${hasMeetings ? 'Tiene reuniones' : 'Sin reuniones'}`);
         return {
           day: i + 1,
           dayOfWeek,
+          hasMeetings,
           isNextMonth: false
         };
       })
     );
   
-    // Agregar los días del próximo mes que completan la última semana
     const lastDayOfWeek = new Date(this.selectedYear, monthIndex, daysInMonth).getDay();
     if (lastDayOfWeek !== 6) {
       const daysToAdd = 6 - lastDayOfWeek;
@@ -108,10 +117,29 @@ export class HomeComponent implements OnInit {
         Array.from({ length: daysToAdd }, (_, i) => ({
           day: i + 1,
           dayOfWeek: new Date(this.selectedYear, monthIndex + 1, i + 1).toLocaleString('default', { weekday: 'long' }),
-          isNextMonth: true // Indicador para saber que pertenece al próximo mes
+          hasMeetings: false,
+          isNextMonth: true, 
         }))
       );
     }
+  }
+
+  loadMeetingsForMonth() {
+    const from = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), 1).toISOString();
+    const to = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() + 1, 0).toISOString();
+  
+    this.bookingService.getInstructorMeetingsGroupedByHour({
+      from,
+      to,
+      instructorId: this.instructorId?.toString()
+    }).subscribe({
+      next: (meetings) => {
+        //console.log('Datos de reuniones recibidos:', meetings);
+        this.daysWithMeetings = meetings.map((m: { date: string }) => new Date(m.date).getUTCDate());
+        this.generateCurrentMonthDays();
+      },
+      error: (error) => console.error('Error al obtener las reuniones:', error)
+    });
   }
 
   prevMonth() {
@@ -156,7 +184,9 @@ export class HomeComponent implements OnInit {
 
   showMeetingsOfDay(day: { day: number | string; dayOfWeek: string }) {
     if (typeof day.day === 'number') {
+      this.daySelected = true;
       this.selectedDate = new Date(this.selectedYear, new Date().getMonth(), day.day);
+      this.meetingsOfDay = [];
       const formattedDate = this.selectedDate.toISOString();
        //console.log('Día seleccionado (from y to):', formattedDate);
       // console.log('Instructor ID:', this.instructorId);

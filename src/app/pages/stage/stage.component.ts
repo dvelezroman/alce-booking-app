@@ -19,7 +19,7 @@ export class StageComponent implements OnInit {
   stages: Stage[] = [];
   newStage: CreateStageDto = { number: 0, description: '' };
   selectedStage: Stage | null = null;
-  isCreateModalOpen = true;
+  isCreateModalOpen = false;
   isEditModalOpen = false;
   isDeleteModalOpen = false;
 
