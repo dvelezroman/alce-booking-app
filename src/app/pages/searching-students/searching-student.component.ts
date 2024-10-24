@@ -64,10 +64,10 @@ export class SearchingStudentComponent {
       lastName: ['', Validators.required],
       role: [{ value: '' }, Validators.required],
       stageId: [''],
-      email: ['', Validators.email],
-      birthday: ['', Validators.required],
-      status: ['', Validators.required],
-      register: ['', Validators.required],
+      email: [''],
+      birthday: [''],
+      status: [''],
+      register: [''],
       linkId: [''],
       ageGroup: [''],
       studentId: [''],
@@ -85,7 +85,7 @@ export class SearchingStudentComponent {
       userId: [''],
       firstName: [''],
       lastName: [''],
-      stageId: 0,
+      stageId: '',
     });
 
     this.userForm = this.fb.group({

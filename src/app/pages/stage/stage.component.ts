@@ -17,7 +17,7 @@ import {FormsModule} from "@angular/forms"; // Adjust the import path as needed
 })
 export class StageComponent implements OnInit {
   stages: Stage[] = [];
-  newStage: CreateStageDto = { number: 0, description: '' };
+  newStage: CreateStageDto = { number: '', description: '' };
   selectedStage: Stage | null = null;
   isCreateModalOpen = false;
   isEditModalOpen = false;
@@ -54,7 +54,7 @@ export class StageComponent implements OnInit {
 
   closeCreateModal(): void {
     this.isCreateModalOpen = false;
-    this.newStage = { number: 0, description: '' }; // Reset form
+    this.newStage = { number: '0', description: '' }; // Reset form
   }
 
   createStage(): void {

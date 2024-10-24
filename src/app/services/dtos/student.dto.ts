@@ -44,17 +44,17 @@ export interface RegisterStudentResponseDto {
 
 export interface Stage {
   id: number;
-  number: number;
+  number: string;
   description: string;
 }
 
 export interface CreateStageDto {
-  number: number;
+  number: string;
   description: string;
 }
 
 export interface UpdateStageDto {
-  number?: number;
+  number?: string;
   description?: string;
 }
 

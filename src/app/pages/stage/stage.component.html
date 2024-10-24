@@ -1,5 +1,5 @@
 <div class="container">
-  <h2 class="title stage is-3">Stages List</h2>
+  <h2 class="title stage is-3">Lista de Stages</h2>
 
   <button (click)="openCreateModal()" class="button is-primary">
     <span class="material-icons">add</span>
@@ -9,7 +9,7 @@
   <table class="table is-striped">
     <thead>
     <tr>
-      <th>No.</th>
+      <th>Stage</th>
       <th>Descripción</th>
       <th>Acciones</th>
     </tr>
@@ -21,10 +21,10 @@
       <td>
         <div class="buttons">
           <button (click)="openEditModal(stage)" class="button edit-button">
-            <i class="fas fa-edit"></i> Edit
+            <i class="fas fa-edit"></i> Editar
           </button>
           <button (click)="openDeleteModal(stage)" class="button delete-button">
-            <i class="fas fa-trash"></i> Delete
+            <i class="fas fa-trash"></i> Eliminar
           </button>
         </div>
       </td>
@@ -37,23 +37,23 @@
     <div class="modal-background"></div>
     <div class="modal-content">
       <div class="box">
-        <h3 class="title is-4">Create New Stage</h3>
+        <h3 class="title is-4">Crear nuevo stage</h3>
         <form (ngSubmit)="createStage()" #createStageForm="ngForm">
           <div class="field">
-            <label class="label">Number</label>
+            <label class="label">Stage</label>
             <div class="control">
-              <input class="input" type="number" [(ngModel)]="newStage.number" name="name" required>
+              <input class="input" [(ngModel)]="newStage.number" name="name" required>
             </div>
           </div>
           <div class="field">
-            <label class="label">Description</label>
+            <label class="label">Descripción</label>
             <div class="control">
               <textarea class="textarea" [(ngModel)]="newStage.description" name="description" required></textarea>
             </div>
           </div>
           <div class="buttons-container">
-            <button type="submit" class="button create-stage-btn">Create</button>
-            <button type="button" class="button cancel-stage-btn" (click)="closeCreateModal()">Cancel</button>
+            <button type="submit" class="button create-stage-btn">Crear</button>
+            <button type="button" class="button cancel-stage-btn" (click)="closeCreateModal()">Cancelar</button>
           </div>
         </form>
       </div>
@@ -65,28 +65,28 @@
   <div class="modal-background"></div>
   <div class="modal-content">
     <div class="box">
-      <h3 class="title is-4">Edit Stage</h3>
+      <h3 class="title is-4">Editar Stage</h3>
       <form (ngSubmit)="updateStage()" #editStageForm="ngForm">
-       
+
         <div class="field">
-          <label class="label">Number</label>
+          <label class="label">Stage</label>
           <div *ngIf="selectedStage" class="control">
-            <input class="input" type="number" [(ngModel)]="selectedStage.number" name="number" required>
+            <input class="input" [(ngModel)]="selectedStage.number" name="number" required>
           </div>
         </div>
 
         <div class="field">
-          <label class="label">Description</label>
+          <label class="label">Descripción</label>
           <div *ngIf="selectedStage" class="control">
             <textarea class="textarea" [(ngModel)]="selectedStage.description" name="description" required></textarea>
           </div>
         </div>
 
         <div class="buttons-container">
-          <button type="submit" class="button update-stage-btn">Update</button>
-          <button type="button" class="button cancel-stage-btn" (click)="closeEditModal()">Cancel</button>
+          <button type="submit" class="button update-stage-btn">Actualizar</button>
+          <button type="button" class="button cancel-stage-btn" (click)="closeEditModal()">Cancelar</button>
         </div>
-        
+
       </form>
     </div>
   </div>
@@ -97,14 +97,14 @@
     <div class="modal-background2"></div>
     <div class="modal-content2">
       <div class="delete-modal-box">
-        <h2 class="delete-modal-title">Confirm Delete</h2>
-        <p class="delete-modal-text">Are you sure you want to delete the stage "{{ selectedStage?.number }}"?</p>
+        <h2 class="delete-modal-title">Confirmar Eliminación</h2>
+        <p class="delete-modal-text">Esta seguro de eliminar el stage: "{{ selectedStage?.number }}"?</p>
         <div class="delete-modal-actions">
           <div class="control">
-            <button class="delete-modal-btn-cancel" (click)="closeDeleteModal()">Cancel</button>
+            <button class="delete-modal-btn-cancel" (click)="closeDeleteModal()">Cancelar</button>
           </div>
           <div class="control">
-            <button class="delete-modal-btn-delete" (click)="deleteStage()">Delete</button>
+            <button class="delete-modal-btn-delete" (click)="deleteStage()">Eliminar</button>
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@
   <div class="modal-notification-content">
     <h3 [ngClass]="{
         'title-notification-success': notificationType === 'success',
-        'title-notification-error': notificationType === 'error'}" 
+        'title-notification-error': notificationType === 'error'}"
         class="title-notification">
         {{ notificationMessage }}
     </h3>
