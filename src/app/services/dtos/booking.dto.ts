@@ -39,6 +39,14 @@ export class FilterMeetingsDto {
   assigned?: boolean = false;
   present?: string;
   category?: StudentClassification;
+  status?: MeetingStatusEnum;
+}
+
+export enum MeetingStatusEnum {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  CANCELLED = 'CANCELLED',
+  DELETED = 'DELETED',
 }
 
 export class FilterInstructorMeetingDto {

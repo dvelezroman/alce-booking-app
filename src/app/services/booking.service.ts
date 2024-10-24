@@ -33,6 +33,7 @@ export class BookingService {
       assigned,
       instructorId,
       category,
+      status,
     } = filterParams;
     let params = new HttpParams();
 
@@ -68,8 +69,12 @@ export class BookingService {
       params = params.set('instructorId', instructorId);
     }
 
-    if (category) { 
+    if (category) {
       params = params.set('category', category);
+    }
+
+    if (status) {
+      params = params.set('status', status);
     }
 
     return this.http.get<MeetingDTO[]>(`${this.apiUrl}/search`, { params });

@@ -1,14 +1,24 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild
+} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {CommonModule, isPlatformBrowser, NgForOf} from "@angular/common";
-import { Router, RouterModule } from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import {Store} from "@ngrx/store";
 import {selectUserData} from "../../store/user.selector";
 import {Observable, Subject, takeUntil} from "rxjs";
 import {UserDto} from "../../services/dtos/user.dto";
 import {BookingService} from "../../services/booking.service";
-import {CreateMeetingDto, MeetingDTO} from "../../services/dtos/booking.dto";
-import { Mode } from '../../services/dtos/student.dto';
+import {CreateMeetingDto, MeetingDTO, MeetingStatusEnum} from "../../services/dtos/booking.dto";
+import {Mode} from '../../services/dtos/student.dto';
 
 @Component({
   selector: 'app-meeting-booking',
@@ -136,7 +146,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const toDate = new Date(currentDate);
     toDate.setDate(currentDate.getDate() + 10); // Add 10 days
     const formattedToDate = toDate.toISOString().split('T')[0];
-    this.loadMeetings(this.getTodayDate(), formattedToDate, undefined, this.userData?.student?.id);
+    this.loadMeetings(this.getTodayDate(), formattedToDate, undefined, this.userData?.student?.id, MeetingStatusEnum.ACTIVE);
   }
 
   userName() {
@@ -365,8 +375,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  loadMeetings(from?: string, to?: string, hour?: string, studentId?: number): void {
-    this.bookingService.searchMeetings({ from, to, hour, studentId, assigned: true }).subscribe({
+  loadMeetings(from?: string, to?: string, hour?: string, studentId?: number, status?: MeetingStatusEnum): void {
+    this.bookingService.searchMeetings({ from, to, hour, studentId, assigned: true, status }).subscribe({
     next: (meetings: MeetingDTO[]) => {
       this.meetings = meetings;
       this.cdr.detectChanges();
