@@ -67,6 +67,7 @@
         <th>Fecha</th>
         <th>Hora</th>
         <th>Modalidad</th>
+        <th>Contenido</th>
       </tr>
     </thead>
       <tbody>
@@ -76,8 +77,37 @@
           <td>{{ item.date | date: 'mediumDate':'UTC' }}</td>
           <td>{{ item.hour }}:00</td>
           <td>{{ item.meetings[0].mode }}</td>
+          <td>
+            <button class="button is-small" (click)="openThemeModal(item)">
+              <span class="material-icons">menu_book</span>
+            </button>
+          </td>
         </tr>
       </tbody>
   </table>
+</div>
+
+<!-- Modal -->
+<div class="modal" [class.is-active]="isModalOpen">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head transparent-header">
+      <p class="modal-card-title text-dark">Contenidos de la Clase</p>
+    </header>
+    <section class="modal-card-body transparent-body">
+      <div class="field">
+        <div class="control">
+          <textarea class="textarea text-dark" 
+          [(ngModel)]="meetingContent" 
+          placeholder="Escribe aquí el contenido...">
+          </textarea>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot transparent-footer">
+      <button class="button is-success btn-wide btn-blue" (click)="addMeetingTheme()">Agregar</button>
+      <button class="button btn-wide btn-purple" (click)="closeThemeModal()">Cancelar</button>
+    </footer>
+  </div>
 </div>
 

@@ -7,13 +7,17 @@ import { selectIsLoggedIn, selectUserData } from '../../store/user.selector';
 import { UserDto, UserRole } from '../../services/dtos/user.dto';
 import { BookingService } from '../../services/booking.service';
 import {MeetingDTO} from "../../services/dtos/booking.dto";
+import { FormsModule } from '@angular/forms';
+import { MeetingThemesService } from '../../services/meeting-themes.service';
+import { MeetingThemeDto } from '../../services/dtos/meeting-theme.dto';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
       CommonModule,
-      RouterModule],
+      RouterModule,
+      FormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -36,8 +40,13 @@ export class HomeComponent implements OnInit {
   selectedDate: Date | null = null;
   meetingsOfDay: { date: string, hour: number, instructorId: number, meetings: MeetingDTO[] }[] = [];
 
+  isModalOpen: boolean = false;
+  selectedMeeting: any = null;
+  meetingContent: string = '';
+
   constructor(private store: Store,
-              private bookingService: BookingService
+              private bookingService: BookingService,
+              private meetingThemesService: MeetingThemesService
   ) {
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
     this.userData$ = this.store.select(selectUserData);
@@ -171,6 +180,40 @@ export class HomeComponent implements OnInit {
         error: (error) => console.error('Error al obtener reuniones:', error)
       });
     }
+  }
+
+  openThemeModal(item: any) {
+    this.selectedMeeting = {
+      stageId: item.stageId,             
+      instructorId: item.instructorId,   
+      date: item.date,                   
+      hour: item.hour,                   
+      description: ''                    
+    };
+    console.log(this.selectedMeeting);
+    this.isModalOpen = true;
+  }
+
+  closeThemeModal(): void {
+    this.isModalOpen = false; 
+    this.meetingContent = ''; 
+  }
+
+  addMeetingTheme() {
+    this.selectedMeeting.description = this.meetingContent;
+    
+    if (!this.selectedMeeting.description.trim()) {
+      return;
+    }
+    this.meetingThemesService.create(this.selectedMeeting).subscribe({
+      next: (response) => {
+        console.log('agregado exitosamente:', response);
+        this.closeThemeModal();  
+      },
+      error: (error) => {
+        console.error('error al agregar el tema:', error);
+      }
+    });
   }
 
 
