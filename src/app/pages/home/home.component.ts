@@ -10,6 +10,8 @@ import {MeetingDTO} from "../../services/dtos/booking.dto";
 import { FormsModule } from '@angular/forms';
 import { MeetingThemesService } from '../../services/meeting-themes.service';
 import { MeetingThemeDto } from '../../services/dtos/meeting-theme.dto';
+import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
+import { ModalComponent } from '../../components/modal/modal.component';
 
 @Component({
   selector: 'app-home',
@@ -17,11 +19,13 @@ import { MeetingThemeDto } from '../../services/dtos/meeting-theme.dto';
   imports: [
       CommonModule,
       RouterModule,
-      FormsModule],
+      FormsModule,
+      ModalComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
+  modal: ModalDto = modalInitializer();
   isLoggedIn$: Observable<boolean>;
   isLoggedIn: boolean = false;
   userData$: Observable<UserDto | null>;
@@ -43,6 +47,7 @@ export class HomeComponent implements OnInit {
   isModalOpen: boolean = false;
   selectedMeeting: any = null;
   meetingContent: string = '';
+  isUpdating: boolean = false;
 
   constructor(private store: Store,
               private bookingService: BookingService,
@@ -188,15 +193,20 @@ export class HomeComponent implements OnInit {
       instructorId: item.instructorId,   
       date: item.date,                   
       hour: item.hour,                   
-      description: ''                    
+      description: item.meetingTheme ? item.meetingTheme.description : '' 
     };
-    console.log(this.selectedMeeting);
+  
+    this.meetingContent = this.selectedMeeting.description; 
+    this.isUpdating = !!item.meetingTheme?.id; 
     this.isModalOpen = true;
+
+    //console.log(this.selectedMeeting);
   }
 
   closeThemeModal(): void {
     this.isModalOpen = false; 
     this.meetingContent = ''; 
+    this.isUpdating = false;
   }
 
   addMeetingTheme() {
@@ -207,13 +217,57 @@ export class HomeComponent implements OnInit {
     }
     this.meetingThemesService.create(this.selectedMeeting).subscribe({
       next: (response) => {
-        console.log('agregado exitosamente:', response);
+        this.showModal(this.createModalParams(false, 'Contenido de la clase agregado correctamente.'));
         this.closeThemeModal();  
       },
       error: (error) => {
-        console.error('error al agregar el tema:', error);
+        this.showModal(this.createModalParams(true, 'No se pudo agregar el contenido de la clase.'));
       }
     });
+  }
+
+  updateMeetingTheme() {
+    if (!this.meetingContent.trim()) {
+      return;
+    }
+  
+    const updatedData: MeetingThemeDto = {
+      ...this.selectedMeeting,
+      description: this.meetingContent
+    };
+    console.log(updatedData);
+  
+    this.meetingThemesService.update(this.selectedMeeting.meetingThemeId, updatedData).subscribe({
+      next: (response) => {
+        this.showModal(this.createModalParams(false, 'Tema actualizado exitosamente.'));
+        this.closeThemeModal();  
+      },
+      error: (error) => {
+        this.showModal(this.createModalParams(true, 'Error al actualizar el tema.'));
+      }
+    });
+  }
+
+  showModal(params: ModalDto) {
+    this.modal = { ...params };
+    setTimeout(() => {
+      this.modal.close();
+    }, 2500);
+  }
+
+  closeModal = () => {
+    this.modal = { ...modalInitializer() };
+  }
+
+  createModalParams(isError: boolean, message: string): ModalDto {
+    return {
+      ...this.modal,
+      show: true,
+      isError,
+      isSuccess: !isError,
+      message,
+      close: this.closeModal
+    };
   }
 
 
