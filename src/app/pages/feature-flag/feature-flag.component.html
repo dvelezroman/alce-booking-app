@@ -1,0 +1,20 @@
+<div class="container">
+  <h2 class="title stage is-3">Lista de Configuraciones</h2>
+
+  <table class="table is-striped">
+    <thead>
+    <tr>
+      <th>Configuración</th>
+      <th>Habilitado</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let ff of ffs">
+      <td>Habilitar Agendamiento</td>
+      <td data-label="Habilitar Feature Flag">
+        <input type="checkbox" [checked]="ff.status" (change)="toggle(ff)" />
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

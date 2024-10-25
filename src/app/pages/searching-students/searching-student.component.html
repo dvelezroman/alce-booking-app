@@ -111,7 +111,8 @@
             <td>{{ user.register ? '✓' : '❌' }}</td>
             <td>{{ user.email }}</td>
             <td>
-              <i class="fas fa-edit edit-icon" (click)="edit(user)"></i>
+              <i class="fas fa-edit edit-icon" (click)="openEditUSerModal(user)"></i>
+              <i class="fas fa-key password-icon" (click)="openEditPasswordModal(user)"></i>
               <i class="fas fa-trash delete-icon" (click)="openDeleteModal(user)"></i>
             </td>
           </tr>
@@ -191,6 +192,31 @@
     <footer class="edit-user-modal-foot">
       <button class="button is-success" (click)="updateUser()">Actualizar</button>
     </footer>
+  </div>
+</div>
+
+<div id="editPasswordModal" class="modal" [ngClass]="{ 'is-active': isEditPasswordModalOpen }">
+  <div class="edit-user-modal-background"></div>
+  <div class="modal-content">
+    <div class="box">
+      <h3 class="title is-4">
+        {{ selectedUser?.password ? 'Editar Password' : 'Agregar Password' }}
+      </h3>
+      <form (ngSubmit)="updatePassword()">
+        <!-- Campo para el password de la meeting -->
+        <div class="field">
+          <label class="label">Nueva contraseña</label>
+          <div *ngIf="selectedUser" class="control">
+            <input class="input" type="text" [(ngModel)]="selectedUser.password" name="password" placeholder="password" required />
+          </div>
+        </div>
+
+        <div class="buttons-container">
+          <button type="submit" class="button update-link-btn">Actualizar</button>
+          <button type="button" class="button cancel-link-btn" (click)="closeEditPasswordModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 

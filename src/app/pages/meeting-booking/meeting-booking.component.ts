@@ -19,6 +19,8 @@ import {UserDto} from "../../services/dtos/user.dto";
 import {BookingService} from "../../services/booking.service";
 import {CreateMeetingDto, MeetingDTO, MeetingStatusEnum} from "../../services/dtos/booking.dto";
 import {Mode} from '../../services/dtos/student.dto';
+import {FeatureFlagService} from "../../services/feature-flag.service";
+import {FeatureFlagDto} from "../../services/dtos/feature-flag.dto";
 
 @Component({
   selector: 'app-meeting-booking',
@@ -49,7 +51,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   meetingType: Mode = Mode.ONLINE;
   mode = Mode;
   selectedDate: string = '';
-  selectedTimeSlot: {label: string, value: number} = { label: "9:00", value: 9 };
+  selectedTimeSlot: {label: string, value: number} = { label: "8:00", value: 8 };
   hoverIndex: number | null = null;
   timeSlots: {label: string, value: number }[] = [];
   today: string = '';
@@ -64,6 +66,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   showInfoModal = false;
   showModalBookingError = false;
   showModalStageError = false;
+  showModalScheduleError = false;
   todayMonth!: string;
   todayYear!: number;
   nextMonth_!: string;
@@ -78,6 +81,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   isMeetingDetailModalActive = false;
   selectedMeetingIndex: number = 0;
   linkStatus: string = 'not-clickable';
+  ffs: FeatureFlagDto[] = [];
 
 
   constructor(
@@ -85,13 +89,17 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     private store: Store,
     private bookingService: BookingService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private ffService: FeatureFlagService,
   ) {
     this.initializeTimeSlots();
     this.userData$ = this.store.select(selectUserData);
   }
 
   ngOnInit() {
+    this.ffService.getAll().subscribe(ffs => {
+      this.ffs = ffs;
+    });
     this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
       this.userData = state;
       if (state?.student?.id) {
@@ -264,13 +272,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const currentDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
     const startDate = new Date(this.today);
     const maxDate = new Date(startDate);
-    maxDate.setDate(startDate.getDate() + 8);
+    maxDate.setDate(startDate.getDate() + 10);
 
     const isSunday = currentDate.getDay() === 0;
     return !isSunday && currentDate >= startDate && currentDate <= maxDate;
   }
 
   selectDay(day: any) {
+    const isScheduleActive = this.ffs.find(ff => ff.name === 'enable-schedule');
+    if (isScheduleActive && !isScheduleActive.status) {
+      this.showModalScheduleError = true;
+      this.hideScheduleErrorModalAfterDelay(2000);
+      return;
+    }
     if (!this.userData?.student?.stageId) {
       this.showModalStageError = true;
       this.hideStageErrorModalAfterDelay(2000)
@@ -289,6 +303,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     // console.log('Recalculate Time Slots');
     const selectedDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
     const currentDate = new Date();
+    const currentDay = currentDate.getDay();
     const currentHour = currentDate.getHours();
 
     // Define the time slot range
@@ -301,7 +316,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
     if (isSaturday) {
       // Only show time slots from 8:00 to 13:00 on Saturdays
-      const availableStartHour = Math.max(startHour, currentHour + 2);
+      const availableStartHour = currentDay === 6 ? Math.max(startHour, currentHour + 2) : startHour;
       this.timeSlots = this.generateTimeSlots(availableStartHour, saturdayEndHour);
     } else if (selectedDate.toDateString() === currentDate.toDateString()) {
       // If the selected day is today
@@ -346,7 +361,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   cancelSelection() {
     this.showSuccessModal = false;
-    this.selectedTimeSlot = { label: "9:00", value: 9 };
+    this.selectedTimeSlot = { label: "8:00", value: 8 };
     this.selectedDate = '';
   }
 
@@ -427,6 +442,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   hideStageErrorModalAfterDelay(delay: number) {
     setTimeout(() => {
       this.showModalStageError = false;
+    }, delay);
+  }
+
+  hideScheduleErrorModalAfterDelay(delay: number) {
+    setTimeout(() => {
+      this.showModalScheduleError = false;
     }, delay);
   }
 

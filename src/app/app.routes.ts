@@ -13,6 +13,7 @@ import { SearchingMeetingInstructorComponent } from './pages/searching-meeting-i
 import { LinksComponent } from './pages/links/links.component';
 import { AttendanceReportsComponent } from './pages/attendance-reports/attendance-reports.component';
 import { AttendanceInstructorComponent } from './pages/attendance-instructor/attendance-instructor.component';
+import {FeatureFlagComponent} from "./pages/feature-flag/feature-flag.component";
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -28,6 +29,7 @@ export const routes: Routes = [
   { path: 'searching-students', component: SearchingStudentComponent, canActivate: [AuthGuard]},
   { path: 'asistencias-alumnos', component: AttendanceReportsComponent, canActivate: [AuthGuard]},
   { path: 'asistencias-instructor', component: AttendanceInstructorComponent, canActivate: [AuthGuard]},
+  { path: 'feature-flag', component: FeatureFlagComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
 ];
