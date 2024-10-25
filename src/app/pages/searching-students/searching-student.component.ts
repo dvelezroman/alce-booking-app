@@ -52,6 +52,8 @@ export class SearchingStudentComponent {
   deleteModalMessage: string = '';
   userToDelete: UserDto | null = null;
 
+  isEditPasswordModalOpen = false;
+
   constructor(
     private fb: FormBuilder,
     private usersService: UsersService,
@@ -155,8 +157,33 @@ export class SearchingStudentComponent {
     }
   }
 
-  //método para abrir modal con los datos de usuario
-  edit(user: UserDto) {
+  openEditPasswordModal(user: UserDto): void {
+    this.selectedUser = { ...user };
+    this.isEditPasswordModalOpen = true;
+    this.selectedUser.password = '';
+  }
+
+  updatePassword(): void {
+    if (this.selectedUser) {
+      const updateData = { password: this.selectedUser.password };  // Solo enviamos la contraseña
+      this.usersService.update(this.selectedUser.id, updateData).subscribe({
+        next: () => {
+          this.closeEditPasswordModal();
+        },
+        error: () => {
+          console.error('No se pudo actualizar el password del Link!');
+        }
+      });
+    }
+  }
+
+  closeEditPasswordModal(): void {
+    this.isEditPasswordModalOpen = false;
+    this.selectedUser = null;
+  }
+
+  // Método para abrir modal con los datos de usuario
+  openEditUSerModal(user: UserDto) {
     this.selectedUser = user;
     this.isEditModalOpen = true;
     this.editUserForm.patchValue({
