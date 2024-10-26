@@ -11,6 +11,8 @@ import {Observable} from "rxjs";
 import {setAdminStatus, setLoggedInStatus, unsetUserData} from "./store/user.action";
 import {UserDto, UserRole} from "./services/dtos/user.dto";
 import localeEs from '@angular/common/locales/es';
+import { ModalDto, modalInitializer } from './components/modal/modal.dto';
+import { ModalComponent } from './components/modal/modal.component';
 
 registerLocaleData(localeEs)
 
@@ -23,7 +25,8 @@ registerLocaleData(localeEs)
     SpinnerComponent,
     HeaderComponent,
     SidebarComponent,
-    CommonModule
+    CommonModule,
+    ModalComponent
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' }
@@ -32,6 +35,8 @@ registerLocaleData(localeEs)
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+  modal: ModalDto = modalInitializer();
+
   isLoggedIn$: Observable<boolean>;
   isLoggedIn = false;
   isSidebarClosed = true;
@@ -65,6 +70,16 @@ export class AppComponent implements OnInit {
         this.router.navigate(['register-complete']);
       }
     });
+
+     // Detectar pérdida y recuperación de conexión
+    window.addEventListener('offline', () => {
+      this.showModal(this.createModalParams(true, 'Sin conexión a internet'));
+    });
+
+    window.addEventListener('online', () => {
+      this.showModal(this.createModalParams(false, 'Conectado a internet'));
+    });
+
     const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : '';
     if (!this.isLoggedIn && accessToken) {
       this.usersService.refreshLogin().subscribe({
@@ -90,4 +105,27 @@ export class AppComponent implements OnInit {
   }
 
   protected readonly UserRole = UserRole;
+
+   showModal(params: ModalDto) {
+    this.modal = { ...params };
+
+    setTimeout(() => {
+      this.modal.close(); 
+    }, 3000);
+  }
+
+  createModalParams(isError: boolean, message: string): ModalDto {
+    return {
+      ...this.modal,
+      show: true,
+      isError,
+      isSuccess: !isError,
+      message,
+      close: () => this.closeModal(), 
+    };
+  }
+
+  closeModal() {
+    this.modal = { ...modalInitializer() };
+  }
 }
