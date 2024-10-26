@@ -3,11 +3,12 @@ import {Stage} from "./student.dto";
 
 export interface MeetingThemeDto {
   id?: number;
-  date: string;
+  meetingThemeId?: number;
+  date?: Date;
   hour: number;
   description: string;
-  stageId: number;
-  instructorId: number;
+  stageId?: number;
+  instructorId?: number;
   stage?: Stage;
   instructor?: Instructor;
 }

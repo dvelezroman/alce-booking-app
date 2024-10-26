@@ -19,6 +19,7 @@ export interface MeetingDTO {
   category: StudentClassification;
   meetingThemeId: number;
   meetingTheme: MeetingThemeDto;
+  status: string;
 }
 
 export interface CreateMeetingDto {
