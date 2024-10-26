@@ -7,6 +7,8 @@ import {Observable} from "rxjs";
 import {UserState} from "../../store/user.state";
 import {Store} from "@ngrx/store";
 import {LoginResponseDto} from "../../services/dtos/user.dto";
+import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
+import { ModalComponent } from '../../components/modal/modal.component';
 
 @Component({
   selector: 'app-login',
@@ -14,16 +16,15 @@ import {LoginResponseDto} from "../../services/dtos/user.dto";
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule],
+    RouterModule,
+    ModalComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
   currentPage = 'login';
   user$: Observable<UserState>;
-  showModal = false;
-  showSuccessModal = false;
-  showCredentialsErrorModal = false;
+  modal: ModalDto = modalInitializer();
   passwordVisible: boolean = false;
 
 
@@ -55,46 +56,55 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.loginForm.invalid) {
       this.markFormGroupTouched(this.loginForm);
-      this.showModal = true;
-
-      setTimeout(() => {
-        this.showModal = false;
-      }, 2000);
+      this.showModal(this.createModalParams(true, 'El formulario debe estar completado.'));
       return;
     }
-
     const credentials = this.loginForm.value;
-
+    
     this.usersService.login(credentials).subscribe({
       next: (response: LoginResponseDto) => {
         if (response.register === false) {
-          this.router.navigate(['/register-complete']);
+            this.router.navigate(['/register-complete']);
         } else {
-          this.router.navigate(['/home']);
+            this.router.navigate(['/home']);
         }
-        this.showSuccessModal = true;
+        
+        this.showModal(this.createModalParams(false, 'Inicio de sesión exitoso.'));
         setTimeout(() => {
-          this.showSuccessModal = false;
-        }, 2000);
-      },
+            this.modal.close();
+        }, 2000);  
+    },
       error: (error) => {
-        if (error.status === 401) {
-          this.showCredentialsErrorModal = true;
-          setTimeout(() => {
-            this.showCredentialsErrorModal = false;
-          }, 2000);
-        } else {
-          console.log('error')
-        }
+        const errorMessage = error.status === 401
+          ? 'Credenciales inválidas, intente de nuevo.'
+          : error.error?.message || 'Ocurrió un error. Intente nuevamente.';
+        this.showModal(this.createModalParams(true, errorMessage));
       }
     });
   }
 
+  showModal(params: ModalDto) {
+    this.modal = { ...params };
 
-closeModal() {
-  this.showModal = false;
-  this.showSuccessModal = false;
-}
+    setTimeout(() => {
+      this.modal.close();
+    }, 2500);
+  }
+
+  createModalParams(isError: boolean, message: string): ModalDto {
+    return {
+      ...this.modal,
+      show: true,
+      isError,
+      isSuccess: !isError,
+      message,
+      close: () => this.closeModal()
+    };
+  }
+
+  closeModal() {
+    this.modal.show = false;
+  }
 
 onPasswordInput(): void {
   const passwordControl = this.loginForm.get('password');

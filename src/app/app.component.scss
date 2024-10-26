@@ -28,6 +28,37 @@ app-sidebar {
   margin-left: 0; 
   width: 100%; 
 }
+/* franja notificación offline */
+.connection-status {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  text-align: center;
+  font-size: 1.1rem;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.connection-status p {
+  margin: 0;
+}
+
+.connection-status i {
+  display: block;
+  font-size: 1.5rem;
+  margin-top: 5px;
+}
+
+.connection-status.show {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 @media (min-width: 768px) {
   .main-content {

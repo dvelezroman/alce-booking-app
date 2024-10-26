@@ -36,6 +36,7 @@ registerLocaleData(localeEs)
 })
 export class AppComponent implements OnInit {
   modal: ModalDto = modalInitializer();
+  isOffline: boolean = !navigator.onLine;
 
   isLoggedIn$: Observable<boolean>;
   isLoggedIn = false;
@@ -72,11 +73,13 @@ export class AppComponent implements OnInit {
     });
 
      // Detectar pérdida y recuperación de conexión
-    window.addEventListener('offline', () => {
+     window.addEventListener('offline', () => {
+      this.isOffline = true;
       this.showModal(this.createModalParams(true, 'Sin conexión a internet'));
     });
-
+  
     window.addEventListener('online', () => {
+      this.isOffline = false;
       this.showModal(this.createModalParams(false, 'Conectado a internet'));
     });
 
@@ -111,7 +114,7 @@ export class AppComponent implements OnInit {
 
     setTimeout(() => {
       this.modal.close(); 
-    }, 3000);
+    }, 2000);
   }
 
   createModalParams(isError: boolean, message: string): ModalDto {

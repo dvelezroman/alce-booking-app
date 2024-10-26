@@ -1,4 +1,10 @@
 <div class="app-container">
+  
+  <div [class.show]="isOffline" class="connection-status">
+    <i class="fas fa-exclamation-triangle"></i> 
+    <p>Sin conexión a internet</p>
+  </div>
+
   <app-header *ngIf="isLoggedIn && (!isRegistered && userData?.role === UserRole.STUDENT)"></app-header>
   <div class="content-wrapper">
     <!-- Sidebar, visible solo cuando el usuario está logueado -->
