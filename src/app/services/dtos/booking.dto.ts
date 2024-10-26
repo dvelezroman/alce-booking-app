@@ -1,5 +1,6 @@
 import {Mode, Stage, Student, StudentClassification} from "./student.dto";
 import {Instructor} from "./instructor.dto";
+import {MeetingThemeDto} from "./meeting-theme.dto";
 
 export interface MeetingDTO {
   id?: number;            // Optional for create; required for update
@@ -16,6 +17,8 @@ export interface MeetingDTO {
   stage?: Stage;
   mode: Mode
   category: StudentClassification;
+  meetingThemeId: number;
+  meetingTheme: MeetingThemeDto;
 }
 
 export interface CreateMeetingDto {

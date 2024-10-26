@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
   meetingsOfDay: { date: string, hour: number, instructorId: number, meetings: MeetingDTO[] }[] = [];
 
   isModalOpen: boolean = false;
-  selectedMeeting: any = null;
+  selectedMeeting: any;
   meetingContent: string = '';
   isUpdating: boolean = false;
 
@@ -97,10 +97,10 @@ export class HomeComponent implements OnInit {
     const monthIndex = new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth();
     const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
     const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
-  
+
     // Inicia con celdas vacías hasta que llegue el primer día del mes
     this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '', isNextMonth: false }));
-  
+
     // Agrega los días del mes
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
@@ -113,7 +113,7 @@ export class HomeComponent implements OnInit {
         };
       })
     );
-  
+
     // Agregar los días del próximo mes que completan la última semana
     const lastDayOfWeek = new Date(this.selectedYear, monthIndex, daysInMonth).getDay();
     if (lastDayOfWeek !== 6) {
@@ -150,20 +150,20 @@ export class HomeComponent implements OnInit {
 
   isDaySelectable(day: { day: number | string, isNextMonth?: boolean }): boolean {
     if (typeof day.day !== 'number') return false;
-  
+
     const today = new Date();
     const monthIndex = day.isNextMonth ? new Date().getMonth() + 1 : new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth();
     const dateToCheck = new Date(this.selectedYear, monthIndex, day.day);
     const dayDifference = Math.ceil((dateToCheck.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    return dayDifference >= 0 && dateToCheck.getDay() !== 0; 
+    return dayDifference >= 0 && dateToCheck.getDay() !== 0;
   }
 
   selectDay(day: { day: number | string, isNextMonth: boolean }) {
     if (typeof day.day === 'number') {
       this.selectedDay = day.day;
       if (day.isNextMonth) {
-        this.nextMonth(); 
-        this.selectedDay = day.day; 
+        this.nextMonth();
+        this.selectedDay = day.day;
       }
     }
   }
@@ -172,53 +172,58 @@ export class HomeComponent implements OnInit {
     if (typeof day.day === 'number') {
       this.selectedDate = new Date(this.selectedYear, new Date().getMonth(), day.day);
       const formattedDate = this.selectedDate.toISOString();
-       //console.log('Día seleccionado (from y to):', formattedDate);
-      // console.log('Instructor ID:', this.instructorId);
-
-      this.bookingService.getInstructorMeetingsGroupedByHour({
-        from: formattedDate,
-        instructorId: this.instructorId?.toString()
-      }).subscribe({
-        next: (meetings) => {
-          this.meetingsOfDay = meetings;
-        },
-        error: (error) => console.error('Error al obtener reuniones:', error)
-      });
+      //console.log('Día seleccionado (from y to):', formattedDate);
+      this.getInstructorMeetings();
     }
+  }
+
+  getInstructorMeetings = () => {
+    const formattedDate = this.selectedDate?.toISOString();
+
+    this.bookingService.getInstructorMeetingsGroupedByHour({
+      from: formattedDate,
+      instructorId: this.instructorId?.toString()
+    }).subscribe({
+      next: (meetings) => {
+        this.meetingsOfDay = meetings;
+      },
+      error: (error) => console.error('Error al obtener reuniones:', error)
+    });
   }
 
   openThemeModal(item: any) {
     this.selectedMeeting = {
-      stageId: item.stageId,             
-      instructorId: item.instructorId,   
-      date: item.date,                   
-      hour: item.hour,                   
-      description: item.meetingTheme ? item.meetingTheme.description : '' 
+      meetingThemeId: item.meetingThemeId,
+      stageId: item.stageId,
+      instructorId: item.instructorId,
+      date: item.date,
+      hour: item.hour,
+      description: item.meetingTheme ? item.meetingTheme.description : ''
     };
-  
-    this.meetingContent = this.selectedMeeting.description; 
-    this.isUpdating = !!item.meetingTheme?.id; 
+
+    this.meetingContent = this.selectedMeeting.description;
+    this.isUpdating = !!item.meetingTheme?.id;
     this.isModalOpen = true;
 
     //console.log(this.selectedMeeting);
   }
 
   closeThemeModal(): void {
-    this.isModalOpen = false; 
-    this.meetingContent = ''; 
+    this.isModalOpen = false;
+    this.meetingContent = '';
     this.isUpdating = false;
   }
 
   addMeetingTheme() {
     this.selectedMeeting.description = this.meetingContent;
-    
+
     if (!this.selectedMeeting.description.trim()) {
       return;
     }
     this.meetingThemesService.create(this.selectedMeeting).subscribe({
       next: (response) => {
         this.showModal(this.createModalParams(false, 'Contenido de la clase agregado correctamente.'));
-        this.closeThemeModal();  
+        this.closeThemeModal();
       },
       error: (error) => {
         this.showModal(this.createModalParams(true, 'No se pudo agregar el contenido de la clase.'));
@@ -230,17 +235,20 @@ export class HomeComponent implements OnInit {
     if (!this.meetingContent.trim()) {
       return;
     }
-  
+
     const updatedData: MeetingThemeDto = {
-      ...this.selectedMeeting,
+      stageId: this.selectedMeeting.stageId,
+      instructorId: this.selectedMeeting.instructorId,
+      date: this.selectedMeeting.date,
+      hour: this.selectedMeeting.hour,
       description: this.meetingContent
     };
-    console.log(updatedData);
-  
+
     this.meetingThemesService.update(this.selectedMeeting.meetingThemeId, updatedData).subscribe({
       next: (response) => {
         this.showModal(this.createModalParams(false, 'Tema actualizado exitosamente.'));
-        this.closeThemeModal();  
+        this.closeThemeModal();
+        this.getInstructorMeetings();
       },
       error: (error) => {
         this.showModal(this.createModalParams(true, 'Error al actualizar el tema.'));
