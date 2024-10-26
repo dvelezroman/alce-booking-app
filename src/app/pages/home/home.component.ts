@@ -170,26 +170,37 @@ export class HomeComponent implements OnInit {
 
   showMeetingsOfDay(day: { day: number | string; dayOfWeek: string }) {
     if (typeof day.day === 'number') {
-      this.selectedDate = new Date(this.selectedYear, new Date().getMonth(), day.day);
-      const formattedDate = this.selectedDate.toISOString();
-      //console.log('Día seleccionado (from y to):', formattedDate);
-      this.getInstructorMeetings();
+        this.selectedDate = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), day.day);
+        this.getInstructorMeetings(this.selectedDate);
     }
-  }
+}
 
-  getInstructorMeetings = () => {
-    const formattedDate = this.selectedDate?.toISOString();
+getMonthIndex(monthName: string): number {
+  const date = new Date(Date.parse(monthName + " 1, 2021"));
+  return date.getMonth();
+}
+
+  getInstructorMeetings(selectedDate: Date) {
+    const month = selectedDate.getMonth();
+    const year = selectedDate.getFullYear();
 
     this.bookingService.getInstructorMeetingsGroupedByHour({
-      from: formattedDate,
-      instructorId: this.instructorId?.toString()
+        from: selectedDate.toISOString(),
+        instructorId: this.instructorId?.toString()
     }).subscribe({
-      next: (meetings) => {
-        this.meetingsOfDay = meetings;
-      },
-      error: (error) => console.error('Error al obtener reuniones:', error)
+        next: (meetings) => {
+            this.meetingsOfDay = meetings.filter((meeting: MeetingDTO) => {
+                const meetingDate = new Date(meeting.date);
+                return (
+                    meetingDate.getMonth() === month &&
+                    meetingDate.getFullYear() === year
+                );
+            });
+            //console.log(this.meetingsOfDay);
+        },
+        error: (error) => console.error('Error al obtener reuniones:', error)
     });
-  }
+}
 
   openThemeModal(item: any) {
     this.selectedMeeting = {
@@ -233,28 +244,30 @@ export class HomeComponent implements OnInit {
 
   updateMeetingTheme() {
     if (!this.meetingContent.trim()) {
-      return;
+        return;
     }
 
     const updatedData: MeetingThemeDto = {
-      stageId: this.selectedMeeting.stageId,
-      instructorId: this.selectedMeeting.instructorId,
-      date: this.selectedMeeting.date,
-      hour: this.selectedMeeting.hour,
-      description: this.meetingContent
+        stageId: this.selectedMeeting.stageId,
+        instructorId: this.selectedMeeting.instructorId,
+        date: this.selectedMeeting.date,
+        hour: this.selectedMeeting.hour,
+        description: this.meetingContent
     };
 
     this.meetingThemesService.update(this.selectedMeeting.meetingThemeId, updatedData).subscribe({
-      next: (response) => {
-        this.showModal(this.createModalParams(false, 'Tema actualizado exitosamente.'));
-        this.closeThemeModal();
-        this.getInstructorMeetings();
-      },
-      error: (error) => {
-        this.showModal(this.createModalParams(true, 'Error al actualizar el tema.'));
-      }
+        next: (response) => {
+            this.showModal(this.createModalParams(false, 'Tema actualizado exitosamente.'));
+            this.closeThemeModal();
+            if (this.selectedDate) {
+                this.getInstructorMeetings(this.selectedDate); // Actualizamos reuniones solo del mes y año actuales
+            }
+        },
+        error: (error) => {
+            this.showModal(this.createModalParams(true, 'Error al actualizar el tema.'));
+        }
     });
-  }
+}
 
   showModal(params: ModalDto) {
     this.modal = { ...params };
