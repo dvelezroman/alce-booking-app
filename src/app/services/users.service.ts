@@ -99,8 +99,8 @@ export class UsersService implements OnInit{
   }
 
   searchUsers(
-    page: number = 1,
-    limit: number = 10,
+    page?: number,
+    limit?: number,
     email?: string,
     firstName?: string,
     lastName?: string,
@@ -111,8 +111,12 @@ export class UsersService implements OnInit{
   ): Observable<{ users: UserDto[], total: number }> {
     let params = new HttpParams();
 
-    params = params.set('page', page);
-    params = params.set('limit', limit);
+    if (page) {
+      params = params.set('page', page);
+    }
+    if (limit) {
+      params = params.set('limit', limit);
+    }
 
     if (email) {
       params = params.set('email', email);

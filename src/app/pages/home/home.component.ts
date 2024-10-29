@@ -211,6 +211,7 @@ export class HomeComponent implements OnInit {
   closeThemeModal(): void {
     this.isModalOpen = false;
     this.meetingContent = '';
+    this.selectedMeeting = null;
     this.isUpdating = false;
   }
 
@@ -220,10 +221,20 @@ export class HomeComponent implements OnInit {
     if (!this.selectedMeeting.description.trim()) {
       return;
     }
-    this.meetingThemesService.create(this.selectedMeeting).subscribe({
+
+    const createNewMeetingThemeData = {
+      description: this.meetingContent,
+      date: this.selectedMeeting.date,
+      hour: this.selectedMeeting.hour,
+      instructorId: this.selectedMeeting.instructorId,
+      stageId: this.selectedMeeting.stageId,
+    };
+
+    this.meetingThemesService.create(createNewMeetingThemeData).subscribe({
       next: (response) => {
         this.showModal(this.createModalParams(false, 'Contenido de la clase agregado correctamente.'));
         this.closeThemeModal();
+        this.getInstructorMeetings();
       },
       error: (error) => {
         this.showModal(this.createModalParams(true, 'No se pudo agregar el contenido de la clase.'));
