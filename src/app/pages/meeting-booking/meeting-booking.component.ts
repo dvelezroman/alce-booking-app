@@ -410,11 +410,14 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     if (!this.userData?.student) {
       throw new Error('Student data is required to create booking data.');
     }
+    const formattedDate = new Date(`${this.selectedYear}-${this.selectedMonth}-${this.selectedDay}`);
+    formattedDate.setHours(this.selectedTimeSlot.value)
+
     return {
       studentId: this.userData.student.id,
       instructorId: undefined,
       stageId: this.userData.stage?.id,
-      date: new Date(`${this.selectedYear}-${this.selectedMonth}-${this.selectedDay}`).toISOString().split('T')[0],
+      date: formattedDate.toLocaleString(),
       hour: this.selectedTimeSlot.value,
       mode: this.meetingType,
       category: this.userData.student.studentClassification,
