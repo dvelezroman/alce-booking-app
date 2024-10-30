@@ -77,3 +77,10 @@ export interface MeetingLinkDto {
   description?: string;
   password?: string;
 }
+
+export interface InstructorAttendanceDto {
+  date: string,
+  hour: number,
+  instructorId: number,
+  meetings: MeetingDTO[],
+}
