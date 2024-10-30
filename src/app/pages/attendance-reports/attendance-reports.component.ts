@@ -6,6 +6,7 @@ import { UsersService } from '../../services/users.service';
 import { FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
 import { BookingService } from '../../services/booking.service';
 import {MeetingThemeDto} from "../../services/dtos/meeting-theme.dto";
+import {convertToLocalTimeZone} from "../../shared/utils/dates.util";
 
 @Component({
   selector: 'app-attendance-reports',
@@ -120,9 +121,10 @@ export class AttendanceReportsComponent implements OnInit {
       });
   }
 
-  isFutureDate(date: string | Date): boolean {
+  isFutureDate(date: Date | string): boolean {
     const meetingDate = new Date(date);
-    const currentDate = new Date();
+    const currentDate = convertToLocalTimeZone(new Date().toString());
+
     return meetingDate > currentDate;
   }
 

@@ -94,7 +94,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let meeting of meetings">
-                    <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
+                    <td>{{ meeting.date | date: 'mediumDate' }}</td>
                     <td>{{ meeting.hour }}:00</td>
                     <td>{{ meeting.stage?.description }}</td>
                     <td>{{ meeting.mode }}</td>
@@ -106,9 +106,9 @@
                         >
                             {{ meeting.present ? 'check' : 'close' }}
                         </span>
-                      <span *ngIf="meeting.status === 'CANCELLED'">
-                            Cancelada
-                      </span>
+                        <span *ngIf="meeting.status === 'CANCELLED'">
+                              Cancelada
+                        </span>
                     </td>
                     <td>
                       <span style="cursor:pointer;" *ngIf="!isFutureDate(meeting.date)" (click)="openThemeModal(meeting)" class="material-icons">menu_book</span>

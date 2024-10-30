@@ -417,7 +417,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       studentId: this.userData.student.id,
       instructorId: undefined,
       stageId: this.userData.stage?.id,
-      date: formattedDate.toLocaleString(),
+      date: formattedDate.toString(),
       hour: this.selectedTimeSlot.value,
       mode: this.meetingType,
       category: this.userData.student.studentClassification,
