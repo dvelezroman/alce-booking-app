@@ -96,6 +96,7 @@ export class SearchingMeetingComponent implements OnInit {
         this.meetings = meetings;
       }
       this.originalMeetings = this.meetings;
+      this.selectedMeetingIds = [];
     });
   }
 
