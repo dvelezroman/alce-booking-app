@@ -91,9 +91,9 @@ export class SearchingMeetingComponent implements OnInit {
   private fetchMeetings(params?: FilterMeetingsDto): void {
     this.bookingService.searchMeetings(params ? params : this.filter).subscribe(meetings => {
       if (this.filter.assigned) {
-        this.meetings = meetings.filter(meeting => !!meeting.link); 
+        this.meetings = meetings.filter(meeting => !!meeting.link);
       } else {
-        this.meetings = meetings; 
+        this.meetings = meetings;
       }
       this.originalMeetings = this.meetings;
     });
@@ -122,6 +122,7 @@ export class SearchingMeetingComponent implements OnInit {
           //console.log('Link asignado correctamente', response);
           this.showToast('El link fue asignado', true);
           this.closeModal();
+          this.selectedMeetingIds = [];
           this.fetchMeetings();
         },
         error: error => {

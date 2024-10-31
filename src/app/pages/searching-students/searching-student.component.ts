@@ -201,6 +201,7 @@ export class SearchingStudentComponent {
       stageId: user.student?.stage?.id,
       ageGroup: user.student?.studentClassification,
       studentId: user.student?.id,
+      linkId: '',
     });
     if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
       this.editUserForm.patchValue({ linkId: user.instructor.meetingLink.id });
