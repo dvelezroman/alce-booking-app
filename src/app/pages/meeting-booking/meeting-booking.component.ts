@@ -21,8 +21,6 @@ import {CreateMeetingDto, MeetingDTO, MeetingStatusEnum} from "../../services/dt
 import {Mode} from '../../services/dtos/student.dto';
 import {FeatureFlagService} from "../../services/feature-flag.service";
 import {FeatureFlagDto} from "../../services/dtos/feature-flag.dto";
-import {start} from "node:repl";
-import {convertToLocalTimeZone} from "../../shared/utils/dates.util";
 
 @Component({
   selector: 'app-meeting-booking',
@@ -582,6 +580,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 6 * 60 * 1000;
     const ONE_SECOND = 1000;
     const timeZoneOffset = new Date().getTimezoneOffset() / 60;
+
     const meetingStart = new Date(this.selectedMeeting.date).getTime() + ((timeZoneOffset) * 60 * 60 * 1000 );
     this.linkInterval = setInterval(() => {
       const now = new Date().getTime();
