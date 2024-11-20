@@ -5,6 +5,8 @@ import { UserDto } from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
 import { BookingService } from '../../services/booking.service';
+import {MeetingThemeDto} from "../../services/dtos/meeting-theme.dto";
+import {convertToLocalTimeZone} from "../../shared/utils/dates.util";
 
 @Component({
   selector: 'app-attendance-reports',
@@ -25,6 +27,8 @@ export class AttendanceReportsComponent implements OnInit {
   selectedStudentName: string = '';
   searchAttempted = false;
   isNameFieldInvalid: boolean = false;
+  isModalOpen: boolean = false;
+  selectedMeeting: MeetingThemeDto | null = null;
 
   filter = {
     studentName: '',
@@ -105,15 +109,39 @@ export class AttendanceReportsComponent implements OnInit {
     this.fetchMeetings(filterParams);
 }
 
-private fetchMeetings(params: FilterMeetingsDto) {
-    this.bookingService.searchMeetings(params).subscribe({
-      next: (meetings) => {
-        //console.log("Reuniones recibidas:", meetings);
-        this.meetings = meetings;
-      },
-      error: (error) => {
-        console.error("Error al obtener las reuniones:", error);
-      }
-    });
-}
+  private fetchMeetings(params: FilterMeetingsDto) {
+      this.bookingService.searchMeetings(params).subscribe({
+        next: (meetings) => {
+          //console.log("Reuniones recibidas:", meetings);
+          this.meetings = meetings;
+        },
+        error: (error) => {
+          console.error("Error al obtener las reuniones:", error);
+        }
+      });
+  }
+
+  isFutureDate(date: Date | string): boolean {
+    const meetingDate = new Date(date);
+    const currentDate = convertToLocalTimeZone(new Date().toString());
+
+    return meetingDate > currentDate;
+  }
+
+  openThemeModal(meeting: MeetingDTO) {
+    this.selectedMeeting = {
+      meetingThemeId: meeting.meetingThemeId,
+      stageId: meeting.stageId,
+      instructorId: meeting.instructorId,
+      date: meeting.date,
+      hour: meeting.hour,
+      description: meeting.meetingTheme ? meeting.meetingTheme.description : ''
+    };
+    this.isModalOpen = true;
+  }
+
+  closeThemeModal(): void {
+    this.isModalOpen = false;
+    this.selectedMeeting = null;
+  }
 }

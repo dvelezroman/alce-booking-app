@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
+import {FilterMeetingsDto, InstructorAttendanceDto, MeetingDTO} from '../../services/dtos/booking.dto';
 import {UserDto, UserRole} from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { BookingService } from '../../services/booking.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import {MeetingThemeDto} from "../../services/dtos/meeting-theme.dto";
+import {convertToLocalTimeZone} from "../../shared/utils/dates.util";
 
 @Component({
   selector: 'app-attendance-instructor',
@@ -19,10 +21,13 @@ import { CommonModule } from '@angular/common';
 export class AttendanceInstructorComponent implements OnInit {
   instructors: UserDto[] = [];
   filteredInstructors: UserDto[] = [];
-  meetings: { date: string, hour: number, instructorId: number, meetings: MeetingDTO[] }[] = [];
+  meetings: InstructorAttendanceDto[] = [];
   selectedInstructorId: number | undefined;
   searchAttempted = false;
   isNameFieldInvalid: boolean = false;
+
+  isModalOpen: boolean = false;
+  selectedMeeting: MeetingThemeDto | null = null;
 
   filter = {
     instructorName: '',
@@ -106,5 +111,27 @@ export class AttendanceInstructorComponent implements OnInit {
             console.error("Error al obtener las reuniones:", error);
         }
     });
-}
+  }
+
+  openThemeModal(meeting: InstructorAttendanceDto) {
+    this.selectedMeeting = {
+      date: new Date(meeting.date),
+      description: meeting.meetings[0].meetingTheme.description,
+      hour: meeting.hour,
+      instructorId: meeting.instructorId
+    };
+    this.isModalOpen = true;
+  }
+
+  closeThemeModal(): void {
+    this.isModalOpen = false;
+    this.selectedMeeting = null;
+  }
+
+  isFutureDate(date: Date | string): boolean {
+    const meetingDate = new Date(date);
+    const currentDate = convertToLocalTimeZone(new Date().toString());
+
+    return meetingDate > currentDate;
+  }
 }

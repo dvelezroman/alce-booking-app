@@ -112,7 +112,10 @@ export class SearchingStudentComponent {
     //   });
     // }
     this.isStudentForm = !this.isStudentForm;
-    this.searchUsers();
+    this.users = [];
+    this.totalUsers = 0;
+    this.currentPage = 1;
+    // this.searchUsers();
   }
 
   searchUsers() {

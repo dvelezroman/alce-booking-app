@@ -19,6 +19,7 @@ export interface MeetingDTO {
   category: StudentClassification;
   meetingThemeId: number;
   meetingTheme: MeetingThemeDto;
+  status: string;
 }
 
 export interface CreateMeetingDto {
@@ -75,4 +76,11 @@ export interface MeetingLinkDto {
   link: string;
   description?: string;
   password?: string;
+}
+
+export interface InstructorAttendanceDto {
+  date: string,
+  hour: number,
+  instructorId: number,
+  meetings: MeetingDTO[],
 }
