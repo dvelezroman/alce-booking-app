@@ -245,7 +245,9 @@ getMonthIndex(monthName: string): number {
       next: (response) => {
         this.showModal(this.createModalParams(false, 'Contenido de la clase agregado correctamente.'));
         this.closeThemeModal();
-        this.getInstructorMeetings();
+        if (this.selectedDate) {
+          this.getInstructorMeetings(this.selectedDate);
+        }
       },
       error: (error) => {
         this.showModal(this.createModalParams(true, 'No se pudo agregar el contenido de la clase.'));
