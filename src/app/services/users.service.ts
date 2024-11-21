@@ -37,6 +37,10 @@ export class UsersService implements OnInit{
     this.unsubscribe$.complete();
   }
 
+  create(user: Partial<UserDto>) {
+    return this.http.post<RegisterResponseDto>(this.apiUrl, user);
+  }
+
   register(user: Partial<UserDto>): Observable<RegisterResponseDto> {
     return this.http.post<RegisterResponseDto>(`${this.apiUrl}/register`, user);
   }

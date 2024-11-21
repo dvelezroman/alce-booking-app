@@ -24,8 +24,8 @@ import { selectUserData } from '../../store/user.selector';
 export class RegisterStudentComponent implements OnInit {
   registerForm: FormGroup;
   passwordVisible: boolean = false;
-  confirmPasswordVisible: boolean = false; 
-  modal: ModalDto = modalInitializer(); 
+  confirmPasswordVisible: boolean = false;
+  modal: ModalDto = modalInitializer();
   user: UserDto | null = null;
 
   constructor(
@@ -43,7 +43,7 @@ export class RegisterStudentComponent implements OnInit {
       lastName: ['', Validators.required],
       idNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       birthday: ['', Validators.required],
-      role: ['STUDENT'], 
+      role: ['STUDENT'],
       mode: ['', Validators.required],
     }, { validator: this.passwordMatchValidator });
   }
@@ -65,53 +65,51 @@ export class RegisterStudentComponent implements OnInit {
     passwordControl?.markAsTouched();
     passwordControl?.markAsDirty();
   }
-  
+
   onConfirmPasswordInput(): void {
     const confirmPasswordControl = this.registerForm.get('confirmPassword');
     confirmPasswordControl?.markAsTouched();
     confirmPasswordControl?.markAsDirty();
   }
-  
+
   togglePasswordVisibility(): void {
     this.passwordVisible = !this.passwordVisible;
   }
-  
+
   toggleConfirmPasswordVisibility(): void {
     this.confirmPasswordVisible = !this.confirmPasswordVisible;
   }
-  
+
   onSubmit() {
     if (this.registerForm.invalid) {
       this.markFormGroupTouched(this.registerForm);
       this.showModal(this.createModalParams(true, 'El formulario debe ser completado.'));
       return;
     }
-  
-    const userData: UserDto = {
-      id: 0, 
+
+    const userData: Omit<UserDto, 'id'> = {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
       firstName: this.registerForm.value.firstName,
       lastName: this.registerForm.value.lastName,
       idNumber: this.registerForm.value.idNumber,
       birthday: new Date(this.registerForm.value.birthday).toISOString().split('T')[0],
-      role: UserRole.STUDENT, 
+      role: UserRole.STUDENT,
     };
-  
+
     const studentData: RegisterStudentDto = {
-      userId: null, 
+      userId: null,
       mode: this.registerForm.value.mode,
-      stageId: undefined, 
+      stageId: undefined,
     };
-  
-    this.usersService.register(userData).subscribe({
+
+    this.usersService.create(userData).subscribe({
       next: (userResponse) => {
         studentData.userId = userResponse.user.id;
-  
+
         this.studentsService.registerStudent(studentData).subscribe({
           next: () => {
             this.showModal(this.createModalParams(false, 'Registro exitoso.'));
-            this.router.navigate(['/home']);
           },
           error: (error) => {
             console.error('Error al registrar estudiante:', error);
@@ -125,7 +123,7 @@ export class RegisterStudentComponent implements OnInit {
       },
     });
   }
-  
+
   createModalParams(isError: boolean, message: string): ModalDto {
     return {
       ...this.modal,
@@ -149,9 +147,9 @@ export class RegisterStudentComponent implements OnInit {
     this.modal = { ...params };
     setTimeout(() => {
       this.modal.close();
-    }, 2500); 
+    }, 2500);
   }
-  
+
   closeModal = () => {
     this.modal = { ...modalInitializer() };
   };
