@@ -73,6 +73,7 @@ export class SearchingStudentComponent {
       linkId: [''],
       ageGroup: [''],
       studentId: [''],
+      comment: [''],
     });
   }
 
@@ -202,6 +203,7 @@ export class SearchingStudentComponent {
       ageGroup: user.student?.studentClassification,
       studentId: user.student?.id,
       linkId: '',
+      comment: user.comment,
     });
     if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
       this.editUserForm.patchValue({ linkId: user.instructor.meetingLink.id });

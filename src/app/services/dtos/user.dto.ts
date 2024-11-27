@@ -21,6 +21,7 @@ export interface UserDto {
   student?: Student;
   stage?: Stage;
   instructor?: Instructor;
+  comment?: string;
 }
 
 export interface LoginDto {
