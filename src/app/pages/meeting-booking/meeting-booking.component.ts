@@ -241,13 +241,14 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       return;
     }
     const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() - 1, 1);
-    this.selectedMonth = date.toLocaleString('es-ES', {month: 'long'}).toUpperCase();
+    this.selectedMonth = date.toLocaleString('en-US', {month: 'long'}).toUpperCase();
     this.selectedYear = date.getFullYear();
 
     this.selectedDay = null;
     this.selectedDayFormatted = '';
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
+    console.log(date);
   }
 
   nextMonth() {
@@ -259,13 +260,14 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       return;
     }
     const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() + 1, 1);
-    this.selectedMonth = date.toLocaleString('es-ES', {month: 'long'}).toUpperCase();
+    this.selectedMonth = date.toLocaleString('en-US', {month: 'long'}).toUpperCase();
     this.selectedYear = date.getFullYear();
 
     this.selectedDay = null;
     this.selectedDayFormatted = '';
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
+    console.log(date);
   }
 
   isDaySelectable(day: any): boolean {

@@ -7,3 +7,7 @@ export const convertToLocalTimeZone = (dateStr: string): Date => {
 
   return date;
 };
+
+export const monthMap = (monthName: string) => {
+  return ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',].findIndex(month => month === monthName.toLowerCase());
+};
