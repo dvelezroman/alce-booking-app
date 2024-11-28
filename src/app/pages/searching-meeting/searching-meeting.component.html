@@ -126,6 +126,7 @@
               <th>Fecha</th>
               <th>Hora</th>
               <th>Instructor</th>
+              <th>Observación</th>
             </tr>
           </thead>
           <tbody>
@@ -141,6 +142,11 @@
               <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
               <td>{{ meeting.hour }}:00</td>
               <td>{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
+              <td class="tooltip-container">
+                <span class="tooltip" [hidden]="!meeting.student?.user?.comment">
+                  {{ meeting.student?.user?.comment }}
+                </span>
+              </td>
             </tr>
           </tbody>
         </table>

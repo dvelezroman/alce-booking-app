@@ -144,4 +144,9 @@ export class SearchingMeetingComponent implements OnInit {
       this.isToastVisible = false;
     }, 3000);
   }
+
+  openCommentModal(comment: string): void {
+    // Logic to open the modal
+    alert(comment); // Replace with your modal service logic
+  }
 }
