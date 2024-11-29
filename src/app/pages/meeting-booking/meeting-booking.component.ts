@@ -211,19 +211,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   getMaxDate(): string {
-    const today = new Date(); // Fecha actual
-    let selectableDays = 0; // Contador de días seleccionables
-    const maxDate = new Date(today); // Copia de la fecha actual
-  
-    // Iterar hasta contar 7 días seleccionables
-    while (selectableDays < 7) {
-      maxDate.setDate(maxDate.getDate() + 1); // Avanzar un día
-      if (maxDate.getDay() !== 0) { // Si no es domingo
-        selectableDays++; // Incrementar días seleccionables
-      }
-    }
-  
-    return this.formatDate(maxDate); // Retornar la fecha formateada
+    const today = new Date();
+    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0); 
+    return this.formatDate(endOfMonth); 
   }
 
   updateNavigationButtons() {
@@ -290,29 +280,35 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
     const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
   
-    // Generar días solo del mes actual
     this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '' }));
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
         const date = new Date(this.selectedYear, monthIndex, i + 1);
-        const dayOfWeek = date.toLocaleString('es-ES', { weekday: 'long' }).toUpperCase();
+        const dayOfWeek = date.toLocaleString('es-ES', { weekday: 'long' }).toUpperCase(); 
         return {
           day: i + 1,
           dayOfWeek,
-          date: date.toISOString().split('T')[0]
+          date: date.toISOString().split('T')[0] // Formato ISO para consistencia
         };
       })
     );
   
-   // console.log(this.currentMonthDays);
+    console.log(this.currentMonthDays); 
   }
   
   nextMonth() {
     const today = new Date();
     const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    const currentDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth(), 1);
+    const currentDate = new Date(
+      this.selectedYear,
+      new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth(),
+      1
+    );
   
-    if (currentDate.getFullYear() === nextMonthDate.getFullYear() && currentDate.getMonth() === nextMonthDate.getMonth()) {
+    if (
+      currentDate.getFullYear() === nextMonthDate.getFullYear() &&
+      currentDate.getMonth() === nextMonthDate.getMonth()
+    ) {
       return;
     }
   
@@ -324,16 +320,21 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedDay = null;
     this.selectedDayFormatted = '';
   
-    this.generateCurrentMonthDays();
+    this.generateCurrentMonthDays(); // Aquí generamos los días del mes
     this.updateNavigationButtons();
   }
 
   isDaySelectable(day: any): boolean {
-    const currentDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
+    const monthMap: Record<string, number> = {
+      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+    };
+    const monthIndex = monthMap[this.selectedMonth];
+    const currentDate = new Date(this.selectedYear, monthIndex, day.day);
     const startDate = new Date(this.today);
     const maxDate = new Date(startDate);
-    maxDate.setDate(startDate.getDate() + 10);
-
+    maxDate.setDate(startDate.getDate() + 8);
+  
     const isSunday = currentDate.getDay() === 0;
     return !isSunday && currentDate >= startDate && currentDate <= maxDate;
   }
