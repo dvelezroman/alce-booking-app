@@ -340,23 +340,20 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   selectDay(day: any) {
-    const isScheduleActive = this.ffs.find(ff => ff.name === 'enable-schedule');
-    if (isScheduleActive && !isScheduleActive.status) {
-      this.showModalScheduleError = true;
-      this.hideScheduleErrorModalAfterDelay(2000);
-      return;
-    }
-    if (!this.userData?.student?.stageId) {
-      this.showModalStageError = true;
-      this.hideStageErrorModalAfterDelay(2000)
-     return;
-    }
+    const monthMap: Record<string, number> = {
+      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+    };
+  
+    const monthIndex = monthMap[this.selectedMonth]; // Índice del mes actual
+    const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
+  
     if (this.isDaySelectable(day)) {
+      this.selectedDate = selectedDate.toISOString().split('T')[0];
       this.selectedDay = day.day;
       this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
-      // console.log('Día seleccionado:', day);
-      this.recalculateTimeSlots(day); // Call the recalculation method
-      this.showTimeSlotsModal = true; // Show the modal
+      this.recalculateTimeSlots(day);
+      this.showTimeSlotsModal = true; 
     }
   }
 
@@ -471,14 +468,15 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     if (!this.userData?.student) {
       throw new Error('Student data is required to create booking data.');
     }
-    const formattedDate = new Date(`${this.selectedYear}-${this.selectedMonth}-${this.selectedDay}`);
-    formattedDate.setHours(this.selectedTimeSlot.value)
-
+  
+    const [year, month, day] = this.selectedDate.split('-').map(Number); 
+    const formattedDate = new Date(year, month - 1, day, this.selectedTimeSlot.value);
+  
     return {
       studentId: this.userData.student.id,
       instructorId: undefined,
       stageId: this.userData.stage?.id,
-      date: formattedDate.toString(),
+      date: formattedDate.toISOString(), 
       hour: this.selectedTimeSlot.value,
       mode: this.meetingType,
       category: this.userData.student.studentClassification,
