@@ -21,6 +21,8 @@ import {CreateMeetingDto, MeetingDTO, MeetingStatusEnum} from "../../services/dt
 import {Mode} from '../../services/dtos/student.dto';
 import {FeatureFlagService} from "../../services/feature-flag.service";
 import {FeatureFlagDto} from "../../services/dtos/feature-flag.dto";
+import { MonthKey } from '../../services/dtos/meeting-theme.dto';
+
 
 @Component({
   selector: 'app-meeting-booking',
@@ -209,16 +211,86 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   getMaxDate(): string {
-    const today = new Date();
-    const maxDate = new Date(today.setDate(today.getDate() + 7)); // One week from today
-    return this.formatDate(maxDate);
+    const today = new Date(); // Fecha actual
+    let selectableDays = 0; // Contador de días seleccionables
+    const maxDate = new Date(today); // Copia de la fecha actual
+  
+    // Iterar hasta contar 7 días seleccionables
+    while (selectableDays < 7) {
+      maxDate.setDate(maxDate.getDate() + 1); // Avanzar un día
+      if (maxDate.getDay() !== 0) { // Si no es domingo
+        selectableDays++; // Incrementar días seleccionables
+      }
+    }
+  
+    return this.formatDate(maxDate); // Retornar la fecha formateada
   }
 
+  updateNavigationButtons() {
+    const today = new Date();
+    const currentMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    const currentYear = today.getFullYear();
+    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const nextMonth = nextMonthDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    const nextYear = nextMonthDate.getFullYear();
+  
+    this.canGoBack = !(this.selectedMonth === currentMonth && this.selectedYear === currentYear);
+    this.canGoForward = !(this.selectedMonth === nextMonth && this.selectedYear === nextYear);
+  }
+
+  prevMonth() {
+    const today = new Date();
+    const monthMap: Record<MonthKey, number> = {
+      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+    };
+  
+    const currentMonthIndex = monthMap[this.selectedMonth as MonthKey];
+  
+    if (currentMonthIndex === undefined) {
+      console.error('Mes inválido en prevMonth:', this.selectedMonth);
+      return;
+    }
+    // Calcula el mes anterior
+    const currentDate = new Date(this.selectedYear, currentMonthIndex, 1);
+    currentDate.setMonth(currentDate.getMonth() - 1);
+  
+    const isCurrentMonth = 
+      currentDate.getFullYear() === today.getFullYear() && 
+      currentDate.getMonth() === today.getMonth();
+  
+    if (isCurrentMonth) {
+      this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+      this.selectedYear = today.getFullYear();
+    } else {
+      this.selectedMonth = currentDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+      this.selectedYear = currentDate.getFullYear();
+    }
+  
+    this.selectedDay = null;
+    this.selectedDayFormatted = '';
+  
+    this.generateCurrentMonthDays();
+    this.updateNavigationButtons();
+  }
+  
   generateCurrentMonthDays() {
-    const monthIndex = new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth();
+    const monthMap: Record<MonthKey, number> = {
+      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+    };
+  
+    const monthIndex = monthMap[this.selectedMonth as MonthKey];
+    if (monthIndex === undefined) {
+      console.error(`Mes inválido: ${this.selectedMonth}`);
+      this.currentMonthDays = [];
+      return;
+    }
+  
     const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
     const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
-
+  
+    // Generar días solo del mes actual
     this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '' }));
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
@@ -226,44 +298,32 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         const dayOfWeek = date.toLocaleString('es-ES', { weekday: 'long' }).toUpperCase();
         return {
           day: i + 1,
-          dayOfWeek
+          dayOfWeek,
+          date: date.toISOString().split('T')[0]
         };
       })
     );
+  
+   // console.log(this.currentMonthDays);
   }
-
-  prevMonth() {
-    const today = new Date();
-    const currentMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
-    const currentYear = today.getFullYear();
-
-    if (this.selectedMonth === currentMonth && this.selectedYear === currentYear) {
-      return;
-    }
-    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() - 1, 1);
-    this.selectedMonth = date.toLocaleString('es-ES', {month: 'long'}).toUpperCase();
-    this.selectedYear = date.getFullYear();
-
-    this.selectedDay = null;
-    this.selectedDayFormatted = '';
-    this.generateCurrentMonthDays();
-    this.updateNavigationButtons();
-  }
-
+  
   nextMonth() {
-    // const today = new Date();
-    // const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    // const maxMonth = nextMonthDate.toLocaleString('default', { month: 'long' });
-    // const maxYear = nextMonthDate.getFullYear();
-    if (this.selectedMonth === this.nextMonth_ && this.selectedYear === this.nextYear) {
+    const today = new Date();
+    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const currentDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth(), 1);
+  
+    if (currentDate.getFullYear() === nextMonthDate.getFullYear() && currentDate.getMonth() === nextMonthDate.getMonth()) {
       return;
     }
-    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth() + 1, 1);
-    this.selectedMonth = date.toLocaleString('es-ES', {month: 'long'}).toUpperCase();
-    this.selectedYear = date.getFullYear();
-
+  
+    currentDate.setMonth(currentDate.getMonth() + 1);
+  
+    this.selectedMonth = currentDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    this.selectedYear = currentDate.getFullYear();
+  
     this.selectedDay = null;
     this.selectedDayFormatted = '';
+  
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
   }
@@ -538,19 +598,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.canScrollDown = el.scrollTop < maxScrollTop;
   }
 
-   // Método para actualizar los botones según el mes seleccionado
-   updateNavigationButtons() {
-    const today = new Date();
-    const currentMonth = today.toLocaleString('default', { month: 'long' });
-    const currentYear = today.getFullYear();
-    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    const nextMonth = nextMonthDate.toLocaleString('default', { month: 'long' });
-    const nextYear = nextMonthDate.getFullYear();
-    // Puedes retroceder si no estás en el mes actual
-    this.canGoBack = !(this.selectedMonth === currentMonth && this.selectedYear === currentYear);
-    // Puedes avanzar si no estás ya en el mes siguiente
-    this.canGoForward = !(this.selectedMonth === nextMonth && this.selectedYear === nextYear);
-  }
+
   // método para seleccionar meetings, abrir y cerrar modal
   openMeetingDetailModal(meeting: MeetingDTO, index: number) {
     this.selectedMeeting = meeting;
@@ -580,8 +628,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 6 * 60 * 1000;
     const ONE_SECOND = 1000;
     const timeZoneOffset = new Date().getTimezoneOffset() / 60;
+    const meetingStart = new Date(this.selectedMeeting.date).getTime() + ((this.selectedMeeting.hour + timeZoneOffset) * 60 * 60 * 1000 );
 
-    const meetingStart = new Date(this.selectedMeeting.date).getTime() + ((timeZoneOffset) * 60 * 60 * 1000 );
     this.linkInterval = setInterval(() => {
       const now = new Date().getTime();
       const start = meetingStart - LINK_ACTIVE_BUFFER_MINUTES_BEFORE;
@@ -637,3 +685,4 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     );
   }
 }
+
