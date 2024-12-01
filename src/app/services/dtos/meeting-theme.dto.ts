@@ -12,3 +12,6 @@ export interface MeetingThemeDto {
   stage?: Stage;
   instructor?: Instructor;
 }
+export type MonthKey = "ENERO" | "FEBRERO" | "MARZO" |
+ "ABRIL" | "MAYO" | "JUNIO" | "JULIO" | "AGOSTO" | 
+ "SEPTIEMBRE" | "OCTUBRE" | "NOVIEMBRE" | "DICIEMBRE";
