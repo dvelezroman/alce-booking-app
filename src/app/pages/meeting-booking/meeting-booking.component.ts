@@ -212,8 +212,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   getMaxDate(): string {
     const today = new Date();
-    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0); 
-    return this.formatDate(endOfMonth); 
+    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    return this.formatDate(endOfMonth);
   }
 
   updateNavigationButtons() {
@@ -223,7 +223,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
     const nextMonth = nextMonthDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     const nextYear = nextMonthDate.getFullYear();
-  
+
     this.canGoBack = !(this.selectedMonth === currentMonth && this.selectedYear === currentYear);
     this.canGoForward = !(this.selectedMonth === nextMonth && this.selectedYear === nextYear);
   }
@@ -234,9 +234,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-  
+
     const currentMonthIndex = monthMap[this.selectedMonth as MonthKey];
-  
+
     if (currentMonthIndex === undefined) {
       console.error('Mes inválido en prevMonth:', this.selectedMonth);
       return;
@@ -244,11 +244,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     // Calcula el mes anterior
     const currentDate = new Date(this.selectedYear, currentMonthIndex, 1);
     currentDate.setMonth(currentDate.getMonth() - 1);
-  
-    const isCurrentMonth = 
-      currentDate.getFullYear() === today.getFullYear() && 
+
+    const isCurrentMonth =
+      currentDate.getFullYear() === today.getFullYear() &&
       currentDate.getMonth() === today.getMonth();
-  
+
     if (isCurrentMonth) {
       this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
       this.selectedYear = today.getFullYear();
@@ -256,35 +256,35 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.selectedMonth = currentDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
       this.selectedYear = currentDate.getFullYear();
     }
-  
+
     this.selectedDay = null;
     this.selectedDayFormatted = '';
-  
+
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
   }
-  
+
   generateCurrentMonthDays() {
     const monthMap: Record<MonthKey, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-  
+
     const monthIndex = monthMap[this.selectedMonth as MonthKey];
     if (monthIndex === undefined) {
       console.error(`Mes inválido: ${this.selectedMonth}`);
       this.currentMonthDays = [];
       return;
     }
-  
+
     const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
     const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
-  
+
     this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '' }));
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
         const date = new Date(this.selectedYear, monthIndex, i + 1);
-        const dayOfWeek = date.toLocaleString('es-ES', { weekday: 'long' }).toUpperCase(); 
+        const dayOfWeek = date.toLocaleString('es-ES', { weekday: 'long' }).toUpperCase();
         return {
           day: i + 1,
           dayOfWeek,
@@ -292,10 +292,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         };
       })
     );
-  
-    console.log(this.currentMonthDays); 
+
+    // console.log(this.currentMonthDays);
   }
-  
+
   nextMonth() {
     const today = new Date();
     const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
@@ -304,22 +304,22 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth(),
       1
     );
-  
+
     if (
       currentDate.getFullYear() === nextMonthDate.getFullYear() &&
       currentDate.getMonth() === nextMonthDate.getMonth()
     ) {
       return;
     }
-  
+
     currentDate.setMonth(currentDate.getMonth() + 1);
-  
+
     this.selectedMonth = currentDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.selectedYear = currentDate.getFullYear();
-  
+
     this.selectedDay = null;
     this.selectedDayFormatted = '';
-  
+
     this.generateCurrentMonthDays(); // Aquí generamos los días del mes
     this.updateNavigationButtons();
   }
@@ -334,7 +334,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const startDate = new Date(this.today);
     const maxDate = new Date(startDate);
     maxDate.setDate(startDate.getDate() + 8);
-  
+
     const isSunday = currentDate.getDay() === 0;
     return !isSunday && currentDate >= startDate && currentDate <= maxDate;
   }
@@ -344,22 +344,23 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-  
+
     const monthIndex = monthMap[this.selectedMonth]; // Índice del mes actual
     const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
-  
+// console.log(selectedDate);
     if (this.isDaySelectable(day)) {
       this.selectedDate = selectedDate.toISOString().split('T')[0];
+      //console.log(this.selectedDate);
       this.selectedDay = day.day;
       this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
       this.recalculateTimeSlots(day);
-      this.showTimeSlotsModal = true; 
+      this.showTimeSlotsModal = true;
     }
   }
 
   recalculateTimeSlots(day: any) {
     // console.log('Recalculate Time Slots');
-    const selectedDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
+    const selectedDate = new Date(this.selectedDate); //new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
     const currentDate = new Date();
     const currentDay = currentDate.getDay();
     const currentHour = currentDate.getHours();
@@ -370,7 +371,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const saturdayEndHour = 13; // For Saturdays, slots available until 13:00 (1 PM)
 
     // Check if the selected date is a Saturday (getDay() returns 6 for Saturday)
-    const isSaturday = selectedDate.getDay() === 6;
+    const isSaturday = selectedDate.getDay() === 5;
+    // console.log(selectedDate.getDay());
 
     if (isSaturday) {
       // Only show time slots from 8:00 to 13:00 on Saturdays
@@ -468,15 +470,15 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     if (!this.userData?.student) {
       throw new Error('Student data is required to create booking data.');
     }
-  
-    const [year, month, day] = this.selectedDate.split('-').map(Number); 
+
+    const [year, month, day] = this.selectedDate.split('-').map(Number);
     const formattedDate = new Date(year, month - 1, day, this.selectedTimeSlot.value);
-  
+
     return {
       studentId: this.userData.student.id,
       instructorId: undefined,
       stageId: this.userData.stage?.id,
-      date: formattedDate.toISOString(), 
+      date: formattedDate.toISOString(),
       hour: this.selectedTimeSlot.value,
       mode: this.meetingType,
       category: this.userData.student.studentClassification,
