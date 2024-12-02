@@ -298,26 +298,26 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   nextMonth() {
     const today = new Date();
-  
+
     const monthMap: Record<MonthKey, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-  
+
     const currentMonthIndex = monthMap[this.selectedMonth as MonthKey];
     if (currentMonthIndex === undefined) {
       return;
     }
-  
+
     const currentDate = new Date(this.selectedYear, currentMonthIndex, 1);
     currentDate.setMonth(currentDate.getMonth() + 1);
-  
+
     this.selectedMonth = currentDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.selectedYear = currentDate.getFullYear();
-  
+
     this.selectedDay = null;
     this.selectedDayFormatted = '';
-  
+
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
   }
@@ -342,7 +342,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-
+// console.log(day);
     const monthIndex = monthMap[this.selectedMonth]; // Índice del mes actual
     const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
 // console.log(selectedDate);
@@ -358,18 +358,25 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   recalculateTimeSlots(day: any) {
     // console.log('Recalculate Time Slots');
-    const selectedDate = new Date(this.selectedDate); //new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
+    const monthMap: Record<string, number> = {
+      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+    };
+// console.log(day);
+    const monthIndex = monthMap[this.selectedMonth]; // Índice del mes actual
+    const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
+    // const selectedDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
     const currentDate = new Date();
     const currentDay = currentDate.getDay();
     const currentHour = currentDate.getHours();
-
+// console.log(currentDate);
     // Define the time slot range
     const startHour = 8; // 8 AM
     const endHour = 20; // 8 PM
     const saturdayEndHour = 13; // For Saturdays, slots available until 13:00 (1 PM)
 
     // Check if the selected date is a Saturday (getDay() returns 6 for Saturday)
-    const isSaturday = selectedDate.getDay() === 5;
+    const isSaturday = selectedDate.getDay() === 6;
     // console.log(selectedDate.getDay());
 
     if (isSaturday) {
@@ -378,7 +385,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.timeSlots = this.generateTimeSlots(availableStartHour, saturdayEndHour);
     } else if (selectedDate.toDateString() === currentDate.toDateString()) {
       // If the selected day is today
+      // console.log('TODAY');
+      // console.log(selectedDate, currentDate);
+      // console.log(currentHour);
       if (currentHour >= endHour) {
+        // console.log('TODAY MAS TARDE');
         // If the current time is later than 21:00, return empty array
         this.timeSlots = [];
       } else {
