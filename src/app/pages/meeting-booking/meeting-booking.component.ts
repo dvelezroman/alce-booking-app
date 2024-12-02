@@ -298,29 +298,27 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   nextMonth() {
     const today = new Date();
-    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    const currentDate = new Date(
-      this.selectedYear,
-      new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth(),
-      1
-    );
-
-    if (
-      currentDate.getFullYear() === nextMonthDate.getFullYear() &&
-      currentDate.getMonth() === nextMonthDate.getMonth()
-    ) {
+  
+    const monthMap: Record<MonthKey, number> = {
+      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+    };
+  
+    const currentMonthIndex = monthMap[this.selectedMonth as MonthKey];
+    if (currentMonthIndex === undefined) {
       return;
     }
-
+  
+    const currentDate = new Date(this.selectedYear, currentMonthIndex, 1);
     currentDate.setMonth(currentDate.getMonth() + 1);
-
+  
     this.selectedMonth = currentDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.selectedYear = currentDate.getFullYear();
-
+  
     this.selectedDay = null;
     this.selectedDayFormatted = '';
-
-    this.generateCurrentMonthDays(); // Aquí generamos los días del mes
+  
+    this.generateCurrentMonthDays();
     this.updateNavigationButtons();
   }
 
