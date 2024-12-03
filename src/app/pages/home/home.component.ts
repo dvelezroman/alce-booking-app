@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
 
   selectedMonth!: string;
   selectedYear!: number;
-  currentMonthDays: { day: number | string; dayOfWeek: string }[] = [];
+  currentMonthDays: { day: number | string; dayOfWeek: string; hasMeeting: boolean }[] = [];
   selectedDay: number | null = null;
   maxMonth!: string;
   maxYear!: number;
@@ -67,6 +67,8 @@ export class HomeComponent implements OnInit {
       if (userData && userData.instructor) {
         this.instructorId = userData.instructor.id;
          //console.log('instructor ID:', this.instructorId);
+         const today = new Date();
+         this.getInstructorMeetings(today);
       } else {
        // console.log('instructor ID no disponible');
       }
@@ -75,6 +77,7 @@ export class HomeComponent implements OnInit {
     this.userData$.subscribe(user => {
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
       if (this.isInstructor) {
+        console.log('Es un instructor:', user); 
         this.generateCurrentMonthDays();
       }
     });
@@ -94,58 +97,83 @@ export class HomeComponent implements OnInit {
   }
 
   generateCurrentMonthDays() {
-    const monthIndex = new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth();
+    const monthMap: Record<string, number> = {
+      enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
+      julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
+    };
+  
+    const monthIndex = monthMap[this.selectedMonth.toLowerCase()];
+    if (monthIndex === undefined) {
+      console.error('Mes inválido:', this.selectedMonth);
+      return;
+    }
+
     const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
     const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
-
-    // Inicia con celdas vacías hasta que llegue el primer día del mes
-    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '', isNextMonth: false }));
-
-    // Agrega los días del mes
+    
+    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({
+      day: '',
+      dayOfWeek: '',
+      hasMeeting: false 
+    }));
+  
+    // Días del mes actual
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
         const date = new Date(this.selectedYear, monthIndex, i + 1);
-        const dayOfWeek = date.toLocaleString('default', { weekday: 'long' });
         return {
           day: i + 1,
-          dayOfWeek,
-          isNextMonth: false
+          dayOfWeek: date.toLocaleString('es-ES', { weekday: 'long' }),
+          hasMeeting: false 
         };
       })
     );
-
-    // Agregar los días del próximo mes que completan la última semana
-    const lastDayOfWeek = new Date(this.selectedYear, monthIndex, daysInMonth).getDay();
-    if (lastDayOfWeek !== 6) {
-      const daysToAdd = 6 - lastDayOfWeek;
-      this.currentMonthDays = this.currentMonthDays.concat(
-        Array.from({ length: daysToAdd }, (_, i) => ({
-          day: i + 1,
-          dayOfWeek: new Date(this.selectedYear, monthIndex + 1, i + 1).toLocaleString('default', { weekday: 'long' }),
-          isNextMonth: true // Indicador para saber que pertenece al próximo mes
-        }))
-      );
-    }
-  }
-
-  prevMonth() {
-    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), 1);
-    date.setMonth(date.getMonth() - 1);
-    if (date < new Date(this.minYear, new Date(Date.parse(this.minMonth + " 1," + this.minYear)).getMonth())) return;
-    this.selectedMonth = date.toLocaleString('default', { month: 'long' });
-    this.selectedYear = date.getFullYear();
-    this.selectedDay = null;
-    this.generateCurrentMonthDays();
   }
 
   nextMonth() {
-    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), 1);
-    date.setMonth(date.getMonth() + 1);
-    if (date > new Date(this.maxYear, new Date(Date.parse(this.maxMonth + " 1," + this.maxYear)).getMonth())) return;
-    this.selectedMonth = date.toLocaleString('default', { month: 'long' });
-    this.selectedYear = date.getFullYear();
+    const monthMap: Record<string, number> = {
+      enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
+      julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
+    };
+  
+    const currentMonthIndex = monthMap[this.selectedMonth.toLowerCase()];
+    if (currentMonthIndex === undefined) {
+      console.error('Mes inválido:', this.selectedMonth);
+      return;
+    }
+  
+    const newDate = new Date(this.selectedYear, currentMonthIndex + 1, 1);
+    const maxDate = new Date(this.maxYear, monthMap[this.maxMonth.toLowerCase()], 1);
+    if (newDate > maxDate) return;
+  
+    this.selectedMonth = newDate.toLocaleString('es-ES', { month: 'long' });
+    this.selectedYear = newDate.getFullYear();
     this.selectedDay = null;
     this.generateCurrentMonthDays();
+    this.getInstructorMeetings(newDate);
+  }
+  
+  prevMonth() {
+    const monthMap: Record<string, number> = {
+      enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
+      julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
+    };
+  
+    const currentMonthIndex = monthMap[this.selectedMonth.toLowerCase()];
+    if (currentMonthIndex === undefined) {
+      console.error('Mes inválido:', this.selectedMonth);
+      return;
+    }
+  
+    const newDate = new Date(this.selectedYear, currentMonthIndex - 1, 1);
+    const minDate = new Date(this.minYear, monthMap[this.minMonth.toLowerCase()], 1);
+    if (newDate < minDate) return;
+  
+    this.selectedMonth = newDate.toLocaleString('es-ES', { month: 'long' });
+    this.selectedYear = newDate.getFullYear();
+    this.selectedDay = null;
+    this.generateCurrentMonthDays();
+    this.getInstructorMeetings(newDate);
   }
 
   isDaySelectable(day: { day: number | string, isNextMonth?: boolean }): boolean {
@@ -168,39 +196,78 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  showMeetingsOfDay(day: { day: number | string; dayOfWeek: string }) {
-    if (typeof day.day === 'number') {
-        this.selectedDate = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), day.day);
-        this.getInstructorMeetings(this.selectedDate);
+  showMeetingsOfDay(day: { day: number | string; dayOfWeek: string; hasMeeting: boolean; meetings?: MeetingDTO[] }) {
+  if (typeof day.day === 'number') {
+    this.selectedDay = day.day; 
+    this.selectedDate = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), day.day); // Fecha seleccionada
+
+    if (day.hasMeeting && day.meetings && day.meetings.length > 0) {
+      console.log(`Reuniones para el día ${this.selectedDate.toDateString()}:`, day.meetings);
+
+      this.meetingsOfDay = [{
+        date: new Date(day.meetings[0].date).toISOString(), 
+        hour: day.meetings[0].hour,
+        instructorId: day.meetings[0].instructorId ?? 0,
+        meetings: day.meetings,
+      }];
+
+      console.log('meetingsOfDay para la tabla:', this.meetingsOfDay);
+    } else {
+      console.log(`No hay reuniones para el día ${this.selectedDate.toDateString()}.`);
+      this.meetingsOfDay = []; // Vaciar la tabla si no hay reuniones
     }
+  }
 }
 
-getMonthIndex(monthName: string): number {
-  const date = new Date(Date.parse(monthName + " 1, 2021"));
-  return date.getMonth();
-}
+  getMonthIndex(monthName: string): number {
+    const monthMap: Record<string, number> = {
+      enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
+      julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
+    };
+  
+    return monthMap[monthName.toLowerCase()] ?? -1; 
+  }
 
   getInstructorMeetings(selectedDate: Date) {
     const month = selectedDate.getMonth();
     const year = selectedDate.getFullYear();
-
+  
     this.bookingService.getInstructorMeetingsGroupedByHour({
-        from: selectedDate.toISOString(),
-        instructorId: this.instructorId?.toString()
+      from: new Date(year, month, 1).toISOString(),
+      to: new Date(year, month + 1, 0).toISOString(),
+      instructorId: this.instructorId?.toString()
     }).subscribe({
-        next: (meetings) => {
-            this.meetingsOfDay = meetings.filter((meeting: MeetingDTO) => {
-                const meetingDate = new Date(meeting.date);
-                return (
-                    meetingDate.getMonth() === month &&
-                    meetingDate.getFullYear() === year
-                );
-            });
-            //console.log(this.meetingsOfDay);
-        },
-        error: (error) => console.error('Error al obtener reuniones:', error)
+      next: (meetings) => {
+        const daysWithMeetings = new Map<number, MeetingDTO[]>(); // Mapa para reuniones por día
+  
+        meetings.forEach((meeting: MeetingDTO) => {
+          const meetingDate = new Date(meeting.date);
+          if (meetingDate.getMonth() === month && meetingDate.getFullYear() === year) {
+            const day = meetingDate.getDate();
+            if (!daysWithMeetings.has(day)) {
+              daysWithMeetings.set(day, []);
+            }
+            daysWithMeetings.get(day)?.push(meeting); // Agregar la reunión al día correspondiente
+          }
+        });
+  
+        // Actualizar `currentMonthDays` con reuniones
+        this.currentMonthDays = this.currentMonthDays.map(day => {
+          if (typeof day.day === 'number' && daysWithMeetings.has(day.day)) {
+            return {
+              ...day,
+              hasMeeting: true,
+              meetings: daysWithMeetings.get(day.day) || [] // Asignar reuniones
+            };
+          }
+          return { ...day, hasMeeting: false, meetings: [] }; // Día sin reuniones
+        });
+  
+        console.log('Días actualizados con reuniones:', this.currentMonthDays);
+      },
+      error: (error) => console.error('Error al obtener reuniones:', error)
     });
-}
+  }
 
   openThemeModal(item: any) {
     this.selectedMeeting = {
