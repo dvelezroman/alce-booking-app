@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit {
     this.userData$.subscribe(user => {
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
       if (this.isInstructor) {
-        console.log('Es un instructor:', user); 
+        //console.log('Es un instructor:', user); 
         this.generateCurrentMonthDays();
       }
     });
@@ -202,10 +202,10 @@ export class HomeComponent implements OnInit {
       this.selectedDate = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), day.day);
   
       if (day.hasMeeting && day.meetings && day.meetings.length > 0) {
-        console.log(`Reuniones para el día ${this.selectedDate.toDateString()}:`, day.meetings);
+        //console.log(`Reuniones para el día ${this.selectedDate.toDateString()}:`, day.meetings);
   
         this.meetingsOfDay = day.meetings;
-        console.log('Estructura de meetingsOfDay:', this.meetingsOfDay);
+        //console.log('Estructura de meetingsOfDay:', this.meetingsOfDay);
       } else {
         console.log(`No hay reuniones para el día ${this.selectedDate.toDateString()}.`);
         this.meetingsOfDay = [];
@@ -234,6 +234,7 @@ export class HomeComponent implements OnInit {
       instructorId: this.instructorId?.toString()
     }).subscribe({
       next: (meetings) => {
+        //console.log('Reuniones obtenidas para el instructor:', meetings);
         const daysWithMeetings = new Map<number, MeetingDTO[]>(); // Mapa para reuniones por día
   
         meetings.forEach((meeting: MeetingDTO) => {
@@ -259,7 +260,7 @@ export class HomeComponent implements OnInit {
           return { ...day, hasMeeting: false, meetings: [] }; // Día sin reuniones
         });
   
-        console.log('Días actualizados con reuniones:', this.currentMonthDays);
+        //console.log('Días actualizados con reuniones:', this.currentMonthDays);
       },
       error: (error) => console.error('Error al obtener reuniones:', error)
     });
