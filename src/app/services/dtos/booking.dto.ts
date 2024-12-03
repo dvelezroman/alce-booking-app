@@ -20,7 +20,9 @@ export interface MeetingDTO {
   meetingThemeId: number;
   meetingTheme: MeetingThemeDto;
   status: string;
+  meetings?: MeetingDTO[];
 }
+
 
 export interface CreateMeetingDto {
   studentId: number;

@@ -73,20 +73,21 @@
         <th>Contenido</th>
       </tr>
     </thead>
-      <tbody>
-        <tr *ngFor="let item of meetingsOfDay">
-          <td>{{ item.meetings[0].stage?.number || 'Sin etapa' }}</td>
-          <td>{{ item.meetings[0].category || 'Sin categoría' }}</td>
-          <td>{{ item.date | date: 'mediumDate':'UTC' }}</td>
-          <td>{{ item.hour }}:00</td>
-          <td>{{ item.meetings[0].mode || 'Sin modalidad' }}</td>
-          <td>
-            <button class="button is-small" (click)="openThemeModal(item)">
-              <span class="material-icons">menu_book</span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
+    <tbody>
+      <tr *ngFor="let item of meetingsOfDay">
+        <!-- Si meetings contiene solo un elemento -->
+        <td>{{ item.meetings?.[0]?.stage?.number || 'Sin etapa' }}</td>
+        <td>{{ item.meetings?.[0]?.category || 'Sin categoría' }}</td>
+        <td>{{ item.date | date: 'mediumDate' }}</td>
+        <td>{{ item.hour }}:00</td>
+        <td>{{ item.meetings?.[0]?.mode || 'Sin modalidad' }}</td>
+        <td>
+          <button class="button is-small" (click)="openThemeModal(item)">
+            <span class="material-icons">menu_book</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
   </table>
 </div>
 

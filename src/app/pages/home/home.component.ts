@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
   minYear!: number;
 
   selectedDate: Date | null = null;
-  meetingsOfDay: { date: string, hour: number, instructorId: number, meetings: MeetingDTO[] }[] = [];
+  meetingsOfDay: MeetingDTO[] = [];
 
   isModalOpen: boolean = false;
   selectedMeeting: any;
@@ -197,27 +197,23 @@ export class HomeComponent implements OnInit {
   }
 
   showMeetingsOfDay(day: { day: number | string; dayOfWeek: string; hasMeeting: boolean; meetings?: MeetingDTO[] }) {
-  if (typeof day.day === 'number') {
-    this.selectedDay = day.day; 
-    this.selectedDate = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), day.day); // Fecha seleccionada
-
-    if (day.hasMeeting && day.meetings && day.meetings.length > 0) {
-      console.log(`Reuniones para el día ${this.selectedDate.toDateString()}:`, day.meetings);
-
-      this.meetingsOfDay = [{
-        date: new Date(day.meetings[0].date).toISOString(), 
-        hour: day.meetings[0].hour,
-        instructorId: day.meetings[0].instructorId ?? 0,
-        meetings: day.meetings,
-      }];
-
-      console.log('meetingsOfDay para la tabla:', this.meetingsOfDay);
+    if (typeof day.day === 'number') {
+      this.selectedDay = day.day;
+      this.selectedDate = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), day.day);
+  
+      if (day.hasMeeting && day.meetings && day.meetings.length > 0) {
+        console.log(`Reuniones para el día ${this.selectedDate.toDateString()}:`, day.meetings);
+  
+        this.meetingsOfDay = day.meetings;
+        console.log('Estructura de meetingsOfDay:', this.meetingsOfDay);
+      } else {
+        console.log(`No hay reuniones para el día ${this.selectedDate.toDateString()}.`);
+        this.meetingsOfDay = [];
+      }
     } else {
-      console.log(`No hay reuniones para el día ${this.selectedDate.toDateString()}.`);
-      this.meetingsOfDay = []; // Vaciar la tabla si no hay reuniones
+      console.log('Día no válido:', day);
     }
   }
-}
 
   getMonthIndex(monthName: string): number {
     const monthMap: Record<string, number> = {
