@@ -18,7 +18,7 @@
                 </div>
               </div>
             </div>
-          
+
             <div class="column">
               <div class="field">
                 <label class="label">Fecha hasta</label>
@@ -104,8 +104,11 @@
             <tr *ngFor="let meeting of meetings">
               <td data-label="Stage">{{ meeting.stage?.number || 'Stage no disponible' }}</td>
               <td data-label="Categoría">{{ meeting.student?.studentClassification || 'Categoría no disponible' }}</td>
-              <td data-label="Nombre">{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
-              <td data-label="Correo">{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
+              <td data-label="Nombre" style="white-space: normal; vertical-align: top;">
+                {{ meeting.student?.user?.firstName || 'Nombre no disponible' }}
+                {{ meeting.student?.user?.lastName || '' }}
+              </td>
+              <td data-label="Usuario">{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
               <td data-label="Fecha">{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
               <td data-label="Hora">{{ meeting.hour }}:00</td>
               <td data-label="Instructor">{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
