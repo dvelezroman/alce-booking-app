@@ -31,6 +31,7 @@ export class SearchingMeetingComponent implements OnInit {
   instructorList: Instructor[] = [];
   selectedMeetingIds: any[] = [];
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
+  mode: string[] =['ONLINE', 'PRESENCIAL'];
 
   toastMessage: string = '';
   toastType: 'success' | 'error' = 'success';
@@ -42,7 +43,8 @@ export class SearchingMeetingComponent implements OnInit {
     hour: '',
     stageId: '',
     assigned: false,
-    category: undefined
+    category: undefined,
+    mode: undefined,
   };
 
   constructor(private bookingService: BookingService,
@@ -72,13 +74,13 @@ export class SearchingMeetingComponent implements OnInit {
     this.isModalOpen = false;
   }
 
-
   onFilterChange(): void {
     const filterParams: FilterMeetingsDto = {
       ...this.filter,
       hour: this.filter.hour ? this.filter.hour.toString() : undefined,
       assigned: this.filter.assigned ? true : undefined,
-      category: this.filter.category ? this.filter.category : undefined
+      category: this.filter.category ? this.filter.category : undefined,
+      mode: this.filter.mode ? this.filter.mode : undefined,
     };
     if (this.filter.stageId === '') {
       delete filterParams.stageId;

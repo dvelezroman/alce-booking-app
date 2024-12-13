@@ -46,6 +46,7 @@ export class FilterMeetingsDto {
   present?: string;
   category?: StudentClassification;
   status?: MeetingStatusEnum;
+  mode?: Mode;
 }
 
 export enum MeetingStatusEnum {

@@ -63,7 +63,7 @@
         </div>
 
         <div class="columns is-mobile">
-        <!-- Campo para seleccionar categoría al lado del checkbox -->
+          <!-- Campo para seleccionar categoría -->
           <div class="column is-half">
             <div class="field">
               <label class="label">Categoría</label>
@@ -77,9 +77,26 @@
               </div>
             </div>
           </div>
-
-          <!-- Campo del checkbox Mostrar Asignadas Activas -->
+        
+          <!-- Campo para seleccionar modalidad -->
           <div class="column is-half">
+            <div class="field">
+              <label class="label">Modalidad</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select [(ngModel)]="filter.mode" name="mode" (ngModelChange)="onFilterChange()">
+                    <option [ngValue]="undefined">Todas las modalidades</option>
+                    <option *ngFor="let option of mode" [value]="option">{{ option }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Nueva fila para el checkbox -->
+        <div class="columns is-mobile">
+          <div class="column">
             <div class="field">
               <label class="checkbox is-centered">
                 <input
