@@ -34,6 +34,7 @@ export class BookingService {
       instructorId,
       category,
       status,
+      mode,
     } = filterParams;
     let params = new HttpParams();
 
@@ -75,6 +76,9 @@ export class BookingService {
 
     if (status) {
       params = params.set('status', status);
+    }
+    if (mode) {
+      params = params.set('mode', mode); 
     }
 
     return this.http.get<MeetingDTO[]>(`${this.apiUrl}/search`, { params });
