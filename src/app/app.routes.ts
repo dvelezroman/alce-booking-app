@@ -21,7 +21,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'register-complete', component: RegisterCompleteComponent, canActivate: [AuthGuard] },
-  { path: 'register-student', component: RegisterStudentComponent},
   { path: 'booking', component: MeetingBookingComponent, canActivate: [AuthGuard] },
   { path: 'contact', component: ContactComponent, canActivate: [AuthGuard]},
   { path: 'stage', component: StageComponent, canActivate: [AuthGuard] },

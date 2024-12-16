@@ -8,7 +8,7 @@
           <label class="label">Cédula</label>
           <div class="control">
             <input
-              type="text"
+              type="number"
               class="input"
               formControlName="idNumber"
               placeholder="Ingrese su número de cédula">
@@ -17,7 +17,7 @@
             La cédula es obligatoria y debe tener 10 dígitos.
           </div>
         </div>
-        
+
         <div class="field">
           <label class="label">Usuario o Correo</label>
           <div class="control floating-label">
@@ -38,15 +38,10 @@
           <label class="label">Contraseña</label>
           <div class="control-label">
             <input
-              [type]="passwordVisible ? 'text' : 'password'"
+              type="text"
               class="input with-icon"
               formControlName="password"
               placeholder="Ingrese una contraseña">
-            <i
-              class="toggle-password fa"
-              [ngClass]="passwordVisible ? 'fa-eye' : 'fa-eye-slash'"
-              (click)="togglePasswordVisibility()">
-            </i>
           </div>
           <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
             La contraseña debe tener al menos 6 caracteres

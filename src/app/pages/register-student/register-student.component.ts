@@ -22,7 +22,6 @@ import { UserDto, UserRole } from '../../services/dtos/user.dto';
 })
 export class RegisterStudentComponent implements OnInit {
   registerForm: FormGroup;
-  passwordVisible: boolean = false;
   stages: Stage[] = [];
   modes: string[] = ['PRESENCIAL', 'ONLINE'];
   modal: ModalDto = modalInitializer();
@@ -48,10 +47,6 @@ export class RegisterStudentComponent implements OnInit {
     this.stagesService.getAll().subscribe(stages => {
       this.stages = stages;
     });
-  }
-
-  togglePasswordVisibility(): void {
-    this.passwordVisible = !this.passwordVisible;
   }
 
   onSubmit(): void {
