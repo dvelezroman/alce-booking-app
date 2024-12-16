@@ -3,7 +3,21 @@
       <h1 class="title">Registro de Estudiante</h1>
   
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-  
+        
+        <div class="field">
+          <label class="label">Cédula</label>
+          <div class="control">
+            <input
+              type="text"
+              class="input"
+              formControlName="idNumber"
+              placeholder="Ingrese su número de cédula">
+          </div>
+          <div *ngIf="registerForm.get('idNumber')?.invalid && registerForm.get('idNumber')?.touched" class="error">
+            La cédula es obligatoria y debe tener 10 dígitos.
+          </div>
+        </div>
+        
         <div class="field">
           <label class="label">Usuario o Correo</label>
           <div class="control floating-label">

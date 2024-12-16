@@ -1,3 +1,4 @@
+import { UsersService } from './../../services/users.service';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,6 +8,7 @@ import { StudentsService } from '../../services/students.service';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { StagesService } from '../../services/stages.service';
+import { UserDto, UserRole } from '../../services/dtos/user.dto';
 
 @Component({
   selector: 'app-register-student',
@@ -29,10 +31,12 @@ export class RegisterStudentComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private studentsService: StudentsService,
+    private usersService: UsersService,
     private stagesService: StagesService,
     private router: Router
   ) {
     this.registerForm = this.fb.group({
+      idNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       email: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       stageId: ['', Validators.required],
@@ -57,23 +61,38 @@ export class RegisterStudentComponent implements OnInit {
       return;
     }
   
-    const studentData: RegisterStudentDto = {
-      userId: null,
-      stageId: this.registerForm.value.stageId,
-      mode: this.registerForm.value.mode,
+    const userData: Omit<UserDto, 'id'> = {
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password,
+      idNumber: this.registerForm.value.idNumber, 
+      role: UserRole.STUDENT,
     };
   
-    this.studentsService.registerStudent(studentData).subscribe({
-      next: () => {
-        this.showModal(this.createModalParams(false, 'Registro exitoso.'));
-        setTimeout(() => {
-          this.router.navigate(['/students']);
-        }, 2000);
+    this.usersService.create(userData).subscribe({
+      next: (userResponse) => {
+        const studentData: RegisterStudentDto = {
+          userId: userResponse.user.id,
+          stageId: this.registerForm.value.stageId,
+          mode: this.registerForm.value.mode,
+        };
+  
+        this.studentsService.registerStudent(studentData).subscribe({
+          next: () => {
+            this.showModal(this.createModalParams(false, 'Registro exitoso.'));
+            setTimeout(() => {
+              this.router.navigate(['/students']); 
+            }, 2000);
+          },
+          error: (error) => {
+            console.error('Error al registrar estudiante:', error);
+            this.showModal(this.createModalParams(true, 'No se pudo registrar el estudiante.'));
+          },
+        });
       },
       error: (error) => {
-        console.error('Error al registrar estudiante:', error);
-        this.showModal(this.createModalParams(true, 'No se pudo completar el registro.'));
-      }
+        console.error('Error al crear usuario:', error);
+        this.showModal(this.createModalParams(true, 'No se pudo registrar el usuario.'));
+      },
     });
   }
 
