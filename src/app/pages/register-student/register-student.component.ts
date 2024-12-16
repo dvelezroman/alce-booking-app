@@ -59,7 +59,7 @@ export class RegisterStudentComponent implements OnInit {
     const userData: Omit<UserDto, 'id'> = {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
-      idNumber: this.registerForm.value.idNumber, 
+      idNumber: this.registerForm.value.idNumber.toString(), 
       role: UserRole.STUDENT,
     };
   
