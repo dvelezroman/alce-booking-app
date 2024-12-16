@@ -97,6 +97,7 @@
               <th>Fecha</th>
               <th>Hora</th>
               <th>Instructor</th>
+              <th>Observación</th>
               <th>Marcar Asistencia</th>
             </tr>
             </thead>
@@ -112,6 +113,11 @@
               <td data-label="Fecha">{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
               <td data-label="Hora">{{ meeting.hour }}:00</td>
               <td data-label="Instructor">{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
+              <td data-label="Observación" class="tooltip-container">
+                <span class="tooltip" [hidden]="!meeting.student?.user?.comment" [title]="meeting.student?.user?.comment">
+                  {{ meeting.student?.user?.comment || 'Sin observación' }}
+                </span>
+              </td>
               <td data-label="Marcar Asistencia">
                 <input type="checkbox" [checked]="meeting.present" (change)="toggleSelection(meeting)" />
               </td>
