@@ -3,23 +3,51 @@
       <h1 class="title">Registro de Estudiante</h1>
   
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        
+
         <div class="field">
-          <label class="label">Cédula</label>
+          <label class="label">Nombres</label>
+          <div class="control">
+            <input
+              type="text"
+              class="input"
+              formControlName="firstName"
+              placeholder="Ingrese sus nombres">
+          </div>
+          <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" class="error">
+            Nombres es obligatorio.
+          </div>
+        </div>
+  
+        <div class="field">
+          <label class="label">Apellidos</label>
+          <div class="control">
+            <input
+              type="text"
+              class="input"
+              formControlName="lastName"
+              placeholder="Ingrese sus apellidos">
+          </div>
+          <div *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched" class="error">
+            Apellidos es obligatorio.
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Número de Identificación o Cédula</label>
           <div class="control">
             <input
               type="number"
               class="input"
               formControlName="idNumber"
-              placeholder="Ingrese su número de cédula">
+              placeholder="Ingrese número de identificación">
           </div>
           <div *ngIf="registerForm.get('idNumber')?.invalid && registerForm.get('idNumber')?.touched" class="error">
-            La cédula es obligatoria y debe tener 10 dígitos.
+            La cédula es obligatoria.
           </div>
         </div>
 
         <div class="field">
-          <label class="label">Correo</label>
+          <label class="label">Usuario o Correo Electrónico</label>
           <div class="control floating-label">
             <input
               type="email"

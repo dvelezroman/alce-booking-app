@@ -35,7 +35,9 @@ export class RegisterStudentComponent implements OnInit {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
-      idNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      idNumber: ['', Validators.required],
       email: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       stageId: ['', Validators.required],
@@ -57,6 +59,8 @@ export class RegisterStudentComponent implements OnInit {
     }
   
     const userData: Omit<UserDto, 'id'> = {
+      firstName: this.registerForm.value.firstName, 
+      lastName: this.registerForm.value.lastName,
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
       idNumber: this.registerForm.value.idNumber.toString(), 
