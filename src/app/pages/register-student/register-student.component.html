@@ -4,124 +4,71 @@
   
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   
-        <div class="columns">
-            <div class="column">
-                <div class="field">
-                    <label class="label">Nombres</label>
-                    <input class="input" type="text" formControlName="firstName" placeholder="Ingrese sus nombres">
-                </div>
-                <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" class="error">
-                    Nombres es obligatorio.
-                </div>
-            </div>
-            <div class="column">
-                <div class="field">
-                    <label class="label">Apellidos</label>
-                    <input class="input" type="text" formControlName="lastName" placeholder="Ingrese sus apellidos">
-                </div>
-                <div *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched" class="error">
-                    Apellidos es obligatorio.
-                </div>
-            </div>
+        <div class="field">
+          <label class="label">Usuario o Correo</label>
+          <div class="control floating-label">
+            <input
+              type="email"
+              class="input with-icon"
+              formControlName="email"
+              placeholder="Ingrese su correo"
+              [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}">
+            <i class="icon fa fa-envelope"></i> 
+          </div>
+          <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
+            Ingrese una dirección de correo válida
+          </div>
         </div>
   
-        <div class="columns">
-            <div class="column">
-                <div class="field">
-                    <label class="label">Número de Identificación</label>
-                    <input class="input" type="text" formControlName="idNumber" placeholder="Ingrese su número de identificación">
-                </div>
-                <div *ngIf="registerForm.get('idNumber')?.invalid && registerForm.get('idNumber')?.touched" class="error">
-                    Identificación es obligatorio.
-                </div>
-            </div>
-            <div class="column">
-                <div class="field">
-                    <label class="label">Fecha de Nacimiento</label>
-                    <input class="input" type="date" formControlName="birthday">
-                </div>
-                <div *ngIf="registerForm.get('birthday')?.invalid && registerForm.get('birthday')?.touched" class="error">
-                    Fecha de Nacimiento es obligatorio.
-                </div>
-            </div>
+        <div class="field">
+          <label class="label">Contraseña</label>
+          <div class="control-label">
+            <input
+              [type]="passwordVisible ? 'text' : 'password'"
+              class="input with-icon"
+              formControlName="password"
+              placeholder="Ingrese una contraseña">
+            <i
+              class="toggle-password fa"
+              [ngClass]="passwordVisible ? 'fa-eye' : 'fa-eye-slash'"
+              (click)="togglePasswordVisibility()">
+            </i>
+          </div>
+          <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
+            La contraseña debe tener al menos 6 caracteres
+          </div>
         </div>
   
-        <div class="field extra-space">
+        <div class="field">
+          <label class="label">Stage</label>
+          <div class="control">
+            <select class="input" formControlName="stageId">
+              <option value="" disabled selected>Seleccione un Stage</option>
+              <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+            </select>
+          </div>
+          <div *ngIf="registerForm.get('stageId')?.invalid && registerForm.get('stageId')?.touched" class="error">
+            Por favor, seleccione un Stage.
+          </div>
+        </div>
+  
+        <div class="field">
             <label class="label">Modo de Estudio</label>
             <div class="control">
               <select class="input" formControlName="mode">
-                <option value="" disabled selected>Seleccionar</option> 
-                <option value="ONLINE">Online</option>
-                <option value="PRESENCIAL">Presencial</option>
+                <option value="" disabled selected>Seleccionar</option>
+                <option *ngFor="let mode of modes" [value]="mode">{{ mode }}</option>
               </select>
             </div>
             <div *ngIf="registerForm.get('mode')?.invalid && registerForm.get('mode')?.touched" class="error">
-                Por favor, seleccione un modo de estudio.
+              Por favor, seleccione un modo de estudio.
             </div>
-        </div>
-
-        <div class="field">
-            <label class="label">Correo Electrónico</label>
-            <div class="control floating-label">
-                <input
-                    type="email"
-                    class="input with-icon"
-                    formControlName="email"
-                    placeholder="Ingrese su correo"
-                    [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}">
-                <i class="icon fa fa-envelope"></i> 
-            </div>
-            <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
-              Ingrese una dirección de correo válida
-            </div>
-        </div>
-    
-        <div class="field extra-space">
-            <label class="label">Contraseña</label>
-            <div class="control-label">
-              <input
-                    [type]="passwordVisible ? 'text' : 'password'"
-                    class="input with-icon"
-                    formControlName="password"
-                    placeholder="Ingrese una contraseña"
-                    (input)="onPasswordInput()">
-                <i
-                    class="toggle-password fa"
-                    [ngClass]="registerForm.get('password')?.value ?
-                            (passwordVisible ? 'fa-eye' : 'fa-eye-slash') : 'fa-lock'"
-                    (click)="togglePasswordVisibility()">
-                </i>
-            </div>
-            <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
-              La contraseña debe tener al menos 6 caracteres
-            </div>
-        </div>
-          
-        <div class="field extra-space">
-            <label class="label">Confirmar Contraseña</label>
-            <div class="control-label">
-                <input
-                    [type]="confirmPasswordVisible ? 'text' : 'password'"
-                    class="input with-icon"
-                    formControlName="confirmPassword"
-                    placeholder="Confirme su contraseña"
-                    (input)="onConfirmPasswordInput()">
-                <i
-                    class="toggle-password fa"
-                    [ngClass]="registerForm.get('confirmPassword')?.value ?
-                            (confirmPasswordVisible ? 'fa-eye' : 'fa-eye-slash') : 'fa-lock'"
-                    (click)="toggleConfirmPasswordVisibility()">
-                </i>
-            </div>
-            <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched" class="error">
-              Las contraseñas no coinciden
-            </div>
-        </div>
+          </div>
   
         <div class="field">
-            <div class="field-button">
-                <button class="button">Registrar</button>
-            </div>
+          <div class="field-button">
+            <button class="button">Registrar</button>
+          </div>
         </div>
       </form>
     </div>
