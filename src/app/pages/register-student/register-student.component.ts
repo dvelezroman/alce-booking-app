@@ -1,4 +1,3 @@
-import { UsersService } from './../../services/users.service';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,6 +8,7 @@ import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { StagesService } from '../../services/stages.service';
 import { UserDto, UserRole } from '../../services/dtos/user.dto';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-register-student',
@@ -57,29 +57,29 @@ export class RegisterStudentComponent implements OnInit {
       this.showModal(this.createModalParams(true, 'El formulario debe ser completado.'));
       return;
     }
-  
+
     const userData: Omit<UserDto, 'id'> = {
-      firstName: this.registerForm.value.firstName, 
+      firstName: this.registerForm.value.firstName,
       lastName: this.registerForm.value.lastName,
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
-      idNumber: this.registerForm.value.idNumber.toString(), 
+      idNumber: this.registerForm.value.idNumber.toString(),
       role: UserRole.STUDENT,
     };
-  
+
     this.usersService.create(userData).subscribe({
       next: (userResponse) => {
         const studentData: RegisterStudentDto = {
           userId: userResponse.user.id,
-          stageId: this.registerForm.value.stageId,
+          stageId: parseInt(this.registerForm.value.stageId, 10),
           mode: this.registerForm.value.mode,
         };
-  
+
         this.studentsService.registerStudent(studentData).subscribe({
           next: () => {
             this.showModal(this.createModalParams(false, 'Registro exitoso.'));
             setTimeout(() => {
-              this.router.navigate(['/students']); 
+              this.router.navigate(['/students']);
             }, 2000);
           },
           error: (error) => {
