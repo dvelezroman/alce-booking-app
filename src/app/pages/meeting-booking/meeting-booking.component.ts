@@ -330,8 +330,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const monthIndex = monthMap[this.selectedMonth];
     const currentDate = new Date(this.selectedYear, monthIndex, day.day);
 
-    if (currentDate.getMonth() === 11 && currentDate.getDate() === 21) {
-      return false; 
+    if (currentDate.getMonth() === 11 && (currentDate.getDate() === 21 || currentDate.getDate() === 25 || currentDate.getDate() === 31)) {
+      return false;
     }
 
     const startDate = new Date(this.today);
