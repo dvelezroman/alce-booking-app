@@ -297,7 +297,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   nextMonth() {
-    const today = new Date();
+    // const today = new Date();
 
     const monthMap: Record<MonthKey, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
@@ -331,6 +331,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const currentDate = new Date(this.selectedYear, monthIndex, day.day);
 
     if (currentDate.getMonth() === 11 && (currentDate.getDate() === 21 || currentDate.getDate() === 25 || currentDate.getDate() === 31)) {
+      return false;
+    }
+    if (currentDate.getMonth() === 0 && currentDate.getDate() === 1) {
       return false;
     }
 
@@ -372,7 +375,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
     // const selectedDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
     const currentDate = new Date();
-    const currentDay = currentDate.getDay();
+    // const currentDay = currentDate.getDay();
     const currentHour = currentDate.getHours();
 // console.log(currentDate);
     // Define the time slot range
@@ -386,7 +389,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
     if (isSaturday) {
       // Only show time slots from 8:00 to 13:00 on Saturdays
-      const availableStartHour = currentDay === 6 ? Math.max(startHour, currentHour + 2) : startHour;
+      const availableStartHour = selectedDate.getDate() === currentDate.getDate() ? Math.max(startHour, currentHour + 2) : startHour;
       this.timeSlots = this.generateTimeSlots(availableStartHour, saturdayEndHour);
     } else if (selectedDate.toDateString() === currentDate.toDateString()) {
       // If the selected day is today
