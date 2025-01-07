@@ -15,6 +15,8 @@ import { AttendanceReportsComponent } from './pages/attendance-reports/attendanc
 import { AttendanceInstructorComponent } from './pages/attendance-instructor/attendance-instructor.component';
 import { FeatureFlagComponent } from "./pages/feature-flag/feature-flag.component";
 import { RegisterStudentComponent } from './pages/register-student/register-student.component';
+import { RegisterInstructorAdminComponent } from './pages/register-instructor-admin/register-instructor-admin.component';
+
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -32,6 +34,7 @@ export const routes: Routes = [
   { path: 'asistencias-instructor', component: AttendanceInstructorComponent, canActivate: [AuthGuard]},
   { path: 'feature-flag', component: FeatureFlagComponent, canActivate: [AuthGuard]},
   { path: 'create-students', component: RegisterStudentComponent, canActivate: [AuthGuard]},
+  { path: 'create-instructor', component: RegisterInstructorAdminComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
 ];
