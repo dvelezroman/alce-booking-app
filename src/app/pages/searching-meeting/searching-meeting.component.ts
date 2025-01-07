@@ -97,6 +97,11 @@ export class SearchingMeetingComponent implements OnInit {
       } else {
         this.meetings = meetings;
       }
+      this.meetings.sort((a, b) => {
+        const stageA = a.stage?.number ? parseFloat(a.stage.number.replace(/[^0-9.]/g, '')) : Infinity;
+        const stageB = b.stage?.number ? parseFloat(b.stage.number.replace(/[^0-9.]/g, '')) : Infinity;
+        return stageA - stageB;
+      });
       this.originalMeetings = this.meetings;
       this.selectedMeetingIds = [];
     });
