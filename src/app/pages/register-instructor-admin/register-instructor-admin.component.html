@@ -2,7 +2,7 @@
     <div class="box">
       <h1 class="title">Registro de Usuario</h1>
   
-      <form [formGroup]="registerForm">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" >
   
         <!-- identificación -->
         <div class="field">
@@ -137,3 +137,11 @@
       </form>
     </div>
   </div>
+
+  <app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  (close)="closeModal()">
+</app-modal>
