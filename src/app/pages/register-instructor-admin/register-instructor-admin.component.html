@@ -119,11 +119,10 @@
         <div class="field" *ngIf="showInstructorLink">
           <label class="label">Link</label>
           <div class="control">
-            <input
-              type="text"
-              class="input"
-              formControlName="instructorLink"
-              placeholder="Ingrese el link para el instructor (opcional)">
+            <select class="input" formControlName="instructorLink">
+              <option [ngValue]="null" disabled selected>Seleccione un link (opcional)</option>
+              <option *ngFor="let link of links" [ngValue]="link">{{ link.description }}</option>
+            </select>
           </div>
         </div>
 

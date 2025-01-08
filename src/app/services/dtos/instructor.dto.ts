@@ -13,6 +13,7 @@ export interface RegisterInstructorDto {
   id?: number;
   stageId?: number;
   userId: number | null | undefined;
+  meetingLink?: MeetingLinkDto;
 }
 
 export interface RegisterInstructorResponseDto {

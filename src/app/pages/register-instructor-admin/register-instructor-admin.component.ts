@@ -7,6 +7,8 @@ import { UserDto, UserRole } from '../../services/dtos/user.dto';
 import { RegisterInstructorDto } from '../../services/dtos/instructor.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
+import { LinksService } from '../../services/links.service';
+import { MeetingLinkDto } from '../../services/dtos/booking.dto';
 
 @Component({
   selector: 'app-register-instructor-admin',
@@ -24,11 +26,13 @@ export class RegisterInstructorAdminComponent implements OnInit {
   roles: string[] = ['INSTRUCTOR', 'ADMIN'];
   showInstructorLink: boolean = false;
   modal: ModalDto = modalInitializer();
+  links: MeetingLinkDto[] = [];
 
 
   constructor(private fb: FormBuilder,
               private usersService: UsersService,
-              private instructorsService: InstructorsService) {
+              private instructorsService: InstructorsService,
+              private linksService: LinksService) {
     this.registerForm = this.fb.group({
       idNumber: ['', Validators.required],
       email: ['', [Validators.required, Validators.minLength(6)]],
@@ -43,6 +47,10 @@ export class RegisterInstructorAdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.linksService.getAll().subscribe(links => {
+      this.links = links;
+    });
+
     this.registerForm.get('repeatPassword')?.valueChanges.subscribe(repeatPassword => {
       const password = this.registerForm.get('password')?.value;
       if (password !== repeatPassword) {
@@ -86,7 +94,8 @@ export class RegisterInstructorAdminComponent implements OnInit {
         if (role === UserRole.INSTRUCTOR) {
           const instructorData: RegisterInstructorDto = {
             userId: createdUserId,
-            stageId: undefined
+            stageId: undefined,
+            meetingLink: instructorLink
           };
 
           this.instructorsService.registerInstructor(instructorData).subscribe({
