@@ -21,24 +21,24 @@ import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 })
 export class RegisterInstructorAdminComponent implements OnInit {
   registerForm: FormGroup;
-  roles: string[] = ['INSTRUCTOR', 'ADMIN']; 
+  roles: string[] = ['INSTRUCTOR', 'ADMIN'];
   showInstructorLink: boolean = false;
   modal: ModalDto = modalInitializer();
 
 
-  constructor(private fb: FormBuilder, 
+  constructor(private fb: FormBuilder,
               private usersService: UsersService,
               private instructorsService: InstructorsService) {
     this.registerForm = this.fb.group({
       idNumber: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.minLength(6)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       repeatPassword: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      birthDate: [''],  
+      birthDate: [''],
       role: [''],
-      instructorLink: ['']        
+      instructorLink: ['']
     });
   }
 
@@ -55,7 +55,7 @@ export class RegisterInstructorAdminComponent implements OnInit {
     this.registerForm.get('role')?.valueChanges.subscribe((role: string) => {
       this.showInstructorLink = role === 'INSTRUCTOR';
       if (!this.showInstructorLink) {
-        this.registerForm.get('instructorLink')?.reset(); 
+        this.registerForm.get('instructorLink')?.reset();
       }
     });
   }
@@ -70,14 +70,13 @@ export class RegisterInstructorAdminComponent implements OnInit {
     const { idNumber, email, password, firstName, lastName, birthDate, role, instructorLink } = this.registerForm.value;
 
     const newUser: Partial<UserDto> = {
-      idNumber,
+      idNumber: idNumber.toString(),
       email,
       password,
       firstName,
       lastName,
       birthday: birthDate,
       role,
-      status: true
     };
 
     this.usersService.create(newUser).subscribe({
@@ -125,14 +124,14 @@ export class RegisterInstructorAdminComponent implements OnInit {
       isError,
       isSuccess
     };
-  
+
     setTimeout(() => {
       this.closeModal();
-    }, 3000); 
+    }, 3000);
   }
 
   closeModal() {
     this.modal.show = false;
   }
-  
+
 }

@@ -34,7 +34,7 @@ export const routes: Routes = [
   { path: 'asistencias-instructor', component: AttendanceInstructorComponent, canActivate: [AuthGuard]},
   { path: 'feature-flag', component: FeatureFlagComponent, canActivate: [AuthGuard]},
   { path: 'create-students', component: RegisterStudentComponent, canActivate: [AuthGuard]},
-  { path: 'create-instructor', component: RegisterInstructorAdminComponent, canActivate: [AuthGuard]},
+  { path: 'create-instructors', component: RegisterInstructorAdminComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
 ];
