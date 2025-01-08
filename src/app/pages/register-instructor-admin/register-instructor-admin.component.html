@@ -1,0 +1,147 @@
+<div class="register-container">
+    <div class="box">
+      <h1 class="title">Registro de Usuario</h1>
+  
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" >
+  
+        <!-- identificación -->
+        <div class="field">
+          <label class="label">Número de Identificación</label>
+          <div class="control">
+            <input
+              type="number"
+              class="input"
+              formControlName="idNumber"
+              placeholder="Ingrese número de identificación">
+          </div>
+          <div *ngIf="registerForm.get('idNumber')?.invalid && registerForm.get('idNumber')?.touched" class="error">
+            El número de identificación es obligatorio.
+          </div>
+        </div>
+  
+        <div class="field">
+          <label class="label">Email o Usuario</label>
+          <div class="control">
+            <input
+              type="email"
+              class="input"
+              formControlName="email"
+              placeholder="Ingrese su email o usuario">
+          </div>
+          <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
+            El correo es obligatorio.
+          </div>
+        </div>
+  
+        <!-- Contraseña -->
+        <div class="field">
+          <label class="label">Contraseña</label>
+          <div class="control">
+            <input
+              type="text"
+              class="input"
+              formControlName="password"
+              placeholder="Ingrese una contraseña">
+          </div>
+          <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
+            La contraseña debe tener al menos 6 caracteres.
+          </div>
+        </div>
+  
+        <!-- Repetir Contraseña -->
+        <div class="field">
+          <label class="label">Repetir Contraseña</label>
+          <div class="control">
+            <input
+              type="text"
+              class="input"
+              formControlName="repeatPassword"
+              placeholder="Repita la contraseña">
+          </div>
+          <div *ngIf="registerForm.get('repeatPassword')?.errors?.['mismatch'] && registerForm.get('repeatPassword')?.touched" class="error">
+            Las contraseñas no coinciden.
+          </div>
+        </div>
+  
+        <!-- Nombres -->
+        <div class="field">
+          <label class="label">Nombres</label>
+          <div class="control">
+            <input
+              type="text"
+              class="input"
+              formControlName="firstName"
+              placeholder="Ingrese los nombres">
+          </div>
+          <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" class="error">
+            Los nombres son obligatorios.
+          </div>
+        </div>
+  
+        <!-- Apellidos -->
+        <div class="field">
+          <label class="label">Apellidos</label>
+          <div class="control">
+            <input
+              type="text"
+              class="input"
+              formControlName="lastName"
+              placeholder="Ingrese los apellidos">
+          </div>
+          <div *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched" class="error">
+            Los apellidos son obligatorios.
+          </div>
+        </div>
+  
+        <!-- Fecha de nacimiento -->
+        <div class="field">
+          <label class="label">Fecha de Nacimiento</label>
+          <div class="control">
+            <input
+              type="date"
+              class="input"
+              formControlName="birthDate">
+          </div>
+        </div>
+  
+        <!-- Rol -->
+        <div class="field">
+          <label class="label">Rol</label>
+          <div class="control">
+            <select class="input" formControlName="role">
+              <option value="" disabled selected>Seleccione un Rol</option>
+              <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+            </select>
+          </div>
+        </div>
+  
+        <!-- link para Instructor -->
+        <div class="field" *ngIf="showInstructorLink">
+          <label class="label">Link</label>
+          <div class="control">
+            <input
+              type="text"
+              class="input"
+              formControlName="instructorLink"
+              placeholder="Ingrese el link para el instructor (opcional)">
+          </div>
+        </div>
+  
+        <!-- enviar -->
+        <div class="field">
+          <div class="field-button">
+            <button class="button">Registrar</button>
+          </div>
+        </div>
+  
+      </form>
+    </div>
+  </div>
+
+  <app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  (close)="closeModal()">
+</app-modal>
