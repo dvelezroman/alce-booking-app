@@ -71,10 +71,7 @@ export class LoginComponent implements OnInit {
         }
     },
       error: (error) => {
-        const errorMessage = error.status === 401
-          ? 'Credenciales inválidas, intente de nuevo.'
-          : error.error?.message || 'Ocurrió un error. Intente nuevamente.';
-        this.showModal(this.createModalParams(true, errorMessage));
+        this.showModal(this.createModalParams(true, error.error.message));
       }
     });
   }

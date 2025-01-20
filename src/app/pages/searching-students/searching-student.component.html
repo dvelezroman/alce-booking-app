@@ -91,14 +91,14 @@
       <table class="table">
         <thead>
           <tr>
-            <th>ID Number</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Role</th>
+            <th>Identificación</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Rol de Usuario</th>
             <th>Stage</th>
-            <th>Registered</th>
-            <th>Email</th>
-            <th>Edit</th>
+            <th>Activo</th>
+            <th>Correo Electronico</th>
+            <th>Editar</th>
           </tr>
         </thead>
         <tbody>
@@ -108,7 +108,7 @@
             <td>{{ user.lastName | titlecase }}</td>
             <td>{{ user.role | titlecase }}</td>
             <td>{{ user.student?.stage?.description || 'No Aplica' }}</td>
-            <td>{{ user.register ? '✓' : '❌' }}</td>
+            <td>{{ user.status === UserStatus.ACTIVE ? '✓' : '❌' }}</td>
             <td>{{ user.email }}</td>
             <td>
               <i class="fas fa-edit edit-icon" (click)="openEditUSerModal(user)"></i>
@@ -203,6 +203,7 @@
     </section>
 
     <footer class="edit-user-modal-foot">
+      <button class="button delete-cancel-button" (click)="closeEditModal()">Cancelar</button>
       <button class="button is-success" (click)="updateUser()">Actualizar</button>
     </footer>
   </div>
