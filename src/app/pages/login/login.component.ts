@@ -7,8 +7,8 @@ import {Observable} from "rxjs";
 import {UserState} from "../../store/user.state";
 import {Store} from "@ngrx/store";
 import {LoginResponseDto} from "../../services/dtos/user.dto";
-import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
-import { ModalComponent } from '../../components/modal/modal.component';
+import {ModalDto, modalInitializer} from '../../components/modal/modal.dto';
+import {ModalComponent} from '../../components/modal/modal.component';
 
 @Component({
   selector: 'app-login',
@@ -60,19 +60,15 @@ export class LoginComponent implements OnInit {
       return;
     }
     const credentials = this.loginForm.value;
-    
+
     this.usersService.login(credentials).subscribe({
       next: (response: LoginResponseDto) => {
         if (response.register === false) {
             this.router.navigate(['/register-complete']);
         } else {
-            this.router.navigate(['/home']);
+          this.router.navigate(['/home']);
+          this.showModal(this.createModalParams(false, 'Inicio de sesión exitoso.'));
         }
-        
-        this.showModal(this.createModalParams(false, 'Inicio de sesión exitoso.'));
-        setTimeout(() => {
-            this.modal.close();
-        }, 2000);  
     },
       error: (error) => {
         const errorMessage = error.status === 401
