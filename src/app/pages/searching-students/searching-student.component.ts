@@ -53,6 +53,7 @@ export class SearchingStudentComponent {
   userToDelete: UserDto | null = null;
 
   isEditPasswordModalOpen = false;
+  isEditMode: boolean = true; 
 
   constructor(
     private fb: FormBuilder,
@@ -190,6 +191,8 @@ export class SearchingStudentComponent {
   openEditUSerModal(user: UserDto) {
     this.selectedUser = user;
     this.isEditModalOpen = true;
+    this.isEditMode = false; 
+    this.editUserForm.disable();
     this.editUserForm.patchValue({
       idNumber: user.idNumber,
       email: user.email,
@@ -207,6 +210,14 @@ export class SearchingStudentComponent {
     });
     if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
       this.editUserForm.patchValue({ linkId: user.instructor.meetingLink.id });
+    }
+  }
+
+  toggleEditMode() {
+    if (this.isEditMode) {
+      this.editUserForm.enable(); 
+    } else {
+      this.editUserForm.disable(); 
     }
   }
 
