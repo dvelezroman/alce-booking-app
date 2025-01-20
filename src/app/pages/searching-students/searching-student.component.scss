@@ -523,7 +523,7 @@
 /* Estilos específicos para el modal de editar usuario */
 
 .modal {
-  z-index: 10;
+  z-index: 1100;
 }
 /* Fondo borroso para el modal */
 .edit-user-modal-background {
@@ -539,16 +539,16 @@
 /* Contenedor del modal */
 .edit-user-modal-card {
   position: fixed;
-  top: 50%;
-  left: 52.5%;
-  transform: translate(-50%, -50%);
+  top: 12%;
+  left: 50%;
+  transform: translate(-50%, 0);
   width: 400px;
   background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 10;
   padding: 1.5rem;
-  padding-top: .6rem;
-  border-radius: 10px;
+  overflow-y: auto; 
+  max-height: 85vh;
+  border-radius: 8px;
 }
 
 /* Cabeza del modal */
@@ -557,7 +557,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 1rem;
+  padding: .5rem;
 }
 
 .edit-user-modal-title {
@@ -645,6 +645,68 @@ select::-ms-expand {
   background-color: #0056b3;
 }
 
+/* modal de password */
+.modal-content {
+  background-color: #f9f9f9; 
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+  max-width: 450px; 
+  width: 90%; 
+  margin: auto; 
+}
+
+.title.is-4 {
+  font-size: 1.4rem;
+  color: #333; 
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.field .label {
+  font-size: 0.9rem;
+  color: #555; 
+  margin-bottom: 0.5rem;
+}
+
+.input {
+  background-color: #ffffff;
+  border: 1px solid #ddd; 
+  border-radius: 5px;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.input:focus {
+  border-color: #6a5acd; 
+  box-shadow: 0 0 5px rgba(106, 90, 205, 0.5);
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: flex-end; 
+  gap: 1rem; 
+  margin-top: 1.5rem;
+}
+
+.cancel-link-btn {
+  background-color: #f4f4f4; 
+  color: #955acd; 
+  border: none; 
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.update-link-btn {
+  background-color: #007bff; 
+  color: #ffffff; 
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
 /* modal de notificación */
 ::ng-deep app-modal .modal-overlay {
   z-index: 1050 !important;
@@ -679,7 +741,7 @@ input[type="number"]::-webkit-inner-spin-button {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 15px;
+      gap: 18px;
       padding: 17px;
       height: auto;
     }
@@ -926,8 +988,11 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /* modal editar usuario*/
     .edit-user-modal-card {
-      left: 50%;
       width: 300px;
+    }
+
+    .edit-user-modal-head{
+      padding: 0rem;
     }
 
     .edit-user-modal-title {
@@ -959,13 +1024,11 @@ input[type="number"]::-webkit-inner-spin-button {
       font-size: .9rem;
     }
 
-    /* modal para eliminar */
     .delete-modal-card {
       max-width: 300px;
       margin: auto;
     }
 
-    /* Cuerpo del modal */
     .delete-modal-body {
       padding: .7rem;
       color: #555;
