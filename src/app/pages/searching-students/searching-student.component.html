@@ -144,6 +144,15 @@
       <button class="edit-user-close" aria-label="close" (click)="closeEditModal()">&times;</button>
     </header>
 
+    <div class="form-switch-container">
+      <label class="switch-label">Modo de Edición</label>
+      <label class="switch">
+        <input type="checkbox" [(ngModel)]="isEditMode" (change)="toggleEditMode()" />
+        <span class="slider"></span>
+      </label>
+      <span class="switch-state">{{ isEditMode ? 'ON' : 'OFF' }}</span>
+    </div>
+
     <section class="edit-user-modal-body">
       <form [formGroup]="editUserForm">
         <div class="form-field-edit">
