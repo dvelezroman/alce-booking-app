@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModalComponent } from '../../components/modal/modal.component';
+import {CommonModule} from '@angular/common';
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ModalComponent} from '../../components/modal/modal.component';
 import {UsersService} from "../../services/users.service";
-import {UserDto, UserRole} from "../../services/dtos/user.dto";
+import {UserDto, UserRole, UserStatus} from "../../services/dtos/user.dto";
 import {Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
 import {MeetingLinkDto} from "../../services/dtos/booking.dto";
@@ -69,7 +69,7 @@ export class SearchingStudentComponent {
       stageId: [''],
       email: [''],
       birthday: [''],
-      status: [''],
+      status: [this.selectedUser?.status === UserStatus.ACTIVE],
       register: [''],
       linkId: [''],
       ageGroup: [''],
@@ -98,6 +98,11 @@ export class SearchingStudentComponent {
     });
 
     this.screenWidth = window.innerWidth;
+
+    this.editUserForm.get('active')?.valueChanges.subscribe((isActive) => {
+      console.log('User active status changed:', isActive);
+      // Perform any additional actions based on the new status
+    });
   }
 
 
@@ -197,7 +202,6 @@ export class SearchingStudentComponent {
       idNumber: user.idNumber,
       email: user.email,
       birthday: user.birthday,
-      status: user.status,
       register: user.register,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -207,6 +211,7 @@ export class SearchingStudentComponent {
       studentId: user.student?.id,
       linkId: '',
       comment: user.comment,
+      status: user.status === UserStatus.ACTIVE,
     });
     if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
       this.editUserForm.patchValue({ linkId: user.instructor.meetingLink.id });
@@ -224,6 +229,7 @@ export class SearchingStudentComponent {
   updateUser() {
     if (this.editUserForm.valid && this.selectedUser) {
       const updatedUser = { ...this.editUserForm.value };
+      updatedUser.status = updatedUser.status ? UserStatus.ACTIVE : UserStatus.INACTIVE;
       if (!updatedUser.linkId) {
         delete updatedUser.linkId;
       }
@@ -311,5 +317,6 @@ confirmDelete(): void {
   }
 }
 
+  protected readonly UserStatus = UserStatus;
 }
 
