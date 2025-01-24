@@ -21,8 +21,19 @@ export interface MeetingDTO {
   meetingTheme: MeetingThemeDto;
   status: string;
   meetings?: MeetingDTO[];
+  assignedBy: AssignedByDTO;
+  markAssistanceByUser: MarkedAssistanceByDTO;
 }
 
+export interface AssignedByDTO {
+  lastName: string;
+  firstName: string;
+}
+
+export interface MarkedAssistanceByDTO {
+  lastName: string;
+  firstName: string;
+}
 
 export interface CreateMeetingDto {
   studentId: number;

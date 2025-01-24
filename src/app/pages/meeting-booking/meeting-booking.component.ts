@@ -634,7 +634,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   getFormattedLink(link: string | undefined): string {
     if (!link) {
-      return ''
+      return 'El instructor no colocó enlace.'
     }
     return link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`;
   }

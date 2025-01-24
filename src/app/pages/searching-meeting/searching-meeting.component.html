@@ -77,7 +77,7 @@
               </div>
             </div>
           </div>
-        
+
           <!-- Campo para seleccionar modalidad -->
           <div class="column is-half">
             <div class="field">
@@ -93,7 +93,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Nueva fila para el checkbox -->
         <div class="columns is-mobile">
           <div class="column">
@@ -144,6 +144,7 @@
               <th>Hora</th>
               <th>Instructor</th>
               <th>Observación</th>
+              <th>Asignó</th>
             </tr>
           </thead>
           <tbody>
@@ -163,6 +164,9 @@
                 <span class="tooltip" [hidden]="!meeting.student?.user?.comment">
                   {{ meeting.student?.user?.comment }}
                 </span>
+              </td>
+              <td>
+                {{ meeting.assignedBy?.firstName || '' }} {{ meeting.assignedBy?.lastName || '' }}
               </td>
             </tr>
           </tbody>
