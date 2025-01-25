@@ -704,5 +704,17 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       formattedDate.getDate() === today.getDate()
     );
   }
+
+  isTomorrow(date: Date): boolean {
+    const formattedDate = new Date(date);
+    const today = new Date();
+    const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+    return (
+      formattedDate.getFullYear() === tomorrow.getFullYear() &&
+      formattedDate.getMonth() === tomorrow.getMonth() &&
+      formattedDate.getDate() === tomorrow.getDate()
+    );
+  }
 }
 
