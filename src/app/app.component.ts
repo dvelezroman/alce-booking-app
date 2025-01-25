@@ -13,6 +13,7 @@ import {UserDto, UserRole} from "./services/dtos/user.dto";
 import localeEs from '@angular/common/locales/es';
 import { ModalDto, modalInitializer } from './components/modal/modal.dto';
 import { ModalComponent } from './components/modal/modal.component';
+import {IdleService} from "./services/idle-service";
 
 registerLocaleData(localeEs)
 
@@ -50,6 +51,7 @@ export class AppComponent implements OnInit {
     private usersService: UsersService,
     private store: Store,
     private router: Router,
+    private idleService: IdleService,
   ) {
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
     this.isRegistered$ = this.store.select(selectIsRegistered);
@@ -77,7 +79,7 @@ export class AppComponent implements OnInit {
       this.isOffline = true;
       this.showModal(this.createModalParams(true, 'Sin conexión a internet'));
     });
-  
+
     window.addEventListener('online', () => {
       this.isOffline = false;
       this.showModal(this.createModalParams(false, 'Conectado a internet'));
@@ -113,7 +115,7 @@ export class AppComponent implements OnInit {
     this.modal = { ...params };
 
     setTimeout(() => {
-      this.modal.close(); 
+      this.modal.close();
     }, 2000);
   }
 
@@ -124,7 +126,7 @@ export class AppComponent implements OnInit {
       isError,
       isSuccess: !isError,
       message,
-      close: () => this.closeModal(), 
+      close: () => this.closeModal(),
     };
   }
 

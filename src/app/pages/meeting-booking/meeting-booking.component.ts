@@ -697,10 +697,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   isToday(date: Date): boolean {
     const today = new Date();
     const formattedDate = new Date(date);
+
     return (
-      formattedDate.getUTCFullYear() === today.getUTCFullYear() &&
-      formattedDate.getUTCMonth() === today.getUTCMonth() &&
-      formattedDate.getUTCDate() === today.getUTCDate()
+      formattedDate.getFullYear() === today.getFullYear() &&
+      formattedDate.getMonth() === today.getMonth() &&
+      formattedDate.getDate() === today.getDate()
     );
   }
 }
