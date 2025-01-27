@@ -643,12 +643,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     if (!this.selectedMeeting) return;
 
     const LINK_ACTIVE_BUFFER_MINUTES_BEFORE = 5 * 60 * 1000;
-    const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 6 * 60 * 1000;
+    const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 55 * 60 * 1000;
     const ONE_SECOND = 1000;
     const timeZoneOffset = new Date().getTimezoneOffset() / 60;
     const meetingStart = new Date(this.selectedMeeting.date).getTime() + ((timeZoneOffset) * 60 * 60 * 1000 );
     // console.log(this.selectedMeeting.date);
-    // console.log(meetingStart);
+    // console.log(new Date(meetingStart));
     this.linkInterval = setInterval(() => {
       const now = new Date().getTime();
       const start = meetingStart - LINK_ACTIVE_BUFFER_MINUTES_BEFORE;
