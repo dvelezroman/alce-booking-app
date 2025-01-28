@@ -40,7 +40,8 @@ export class SidebarComponent implements OnInit {
     { icon: 'school', text: 'Crear Estudiante', route: '/create-students', roles: [UserRole.ADMIN] },
     { icon: 'school', text: 'Crear Admin / Instructor', route: '/create-instructors', roles: [UserRole.ADMIN] },
     { icon: 'video_call', text: 'Agenda', route: '/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] },
-    { icon: 'link', text: 'Configuración', route: '/feature-flag', roles: [UserRole.ADMIN] }
+    { icon: 'link', text: 'Configuración', route: '/feature-flag', roles: [UserRole.ADMIN] },
+    { icon: 'reportes', text: 'Reportes', route: '/reports', roles: [UserRole.ADMIN] },
 ];
 
   constructor(

@@ -16,6 +16,10 @@ import { AttendanceInstructorComponent } from './pages/attendance-instructor/att
 import { FeatureFlagComponent } from "./pages/feature-flag/feature-flag.component";
 import { RegisterStudentComponent } from './pages/register-student/register-student.component';
 import { RegisterInstructorAdminComponent } from './pages/register-instructor-admin/register-instructor-admin.component';
+import { ReportesComponent } from './pages/reportes/reportes.component';
+import { ReportsDetailedComponent } from './pages/reports-detailed/reports-detailed.component';
+import { ReportsStatisticalComponent } from './pages/reports-statistical/reports-statistical.component';
+import { ReportsClassesComponent } from './pages/reports-classes/reports-classes.component';
 
 
 export const routes: Routes = [
@@ -35,6 +39,17 @@ export const routes: Routes = [
   { path: 'feature-flag', component: FeatureFlagComponent, canActivate: [AuthGuard]},
   { path: 'create-students', component: RegisterStudentComponent, canActivate: [AuthGuard]},
   { path: 'create-instructors', component: RegisterInstructorAdminComponent, canActivate: [AuthGuard]},
+  { 
+    path: 'reports', 
+    component: ReportesComponent, 
+    canActivate: [AuthGuard], 
+    children: [
+      { path: 'detailed', component: ReportsDetailedComponent },
+      { path: 'statistical', component: ReportsStatisticalComponent },
+      { path: 'classes', component: ReportsClassesComponent },
+      { path: '', redirectTo: 'detailed', pathMatch: 'full' },
+    ]
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
 ];
