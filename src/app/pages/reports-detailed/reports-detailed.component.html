@@ -1,1 +1,74 @@
-<p>reports-detailed works!</p>
+<section class="section">
+    <div class="container">
+  
+      <div class="form-block">
+        <form>
+        <!-- Campo de búsqueda de estudiante -->
+        <div class="field">
+            <label class="label">Estudiante</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                placeholder="Nombre del Estudiante"
+                [(ngModel)]="filter.studentName"
+                (input)="filterStudents()"
+                (blur)="hideDropdown()"
+                name="studentName"
+                autocomplete="off"/>
+              <!-- Lista desplegable de estudiantes filtrados -->
+              <div *ngIf="showDropdown" class="dropdown">
+                <div *ngIf="filteredStudents.length === 0" class="no-results">No se encontraron estudiantes</div>
+                <ul *ngIf="filteredStudents.length > 0">
+                  <li
+                    *ngFor="let student of filteredStudents"
+                    (mousedown)="selectStudent(student)">
+                    {{ student.firstName }} {{ student.lastName }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Campos de fecha desde y hasta -->
+          <div class="columns is-mobile">
+            <div class="column">
+              <div class="field">
+                <label class="label">Fecha desde</label>
+                <div class="control date-input-container">
+                  <input class="input" type="date" [(ngModel)]="filter.from" name="from">
+                </div>
+              </div>
+            </div>
+  
+            <div class="column">
+              <div class="field">
+                <label class="label">Fecha hasta</label>
+                <div class="control date-input-container">
+                  <input class="input" type="date" [(ngModel)]="filter.to" name="to">
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Selector de stage -->
+          <div class="field">
+            <label class="label">Stage</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select [(ngModel)]="filter.stageId" name="stageId">
+                  <option value="">Todos los stages</option>
+                  <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Botones -->
+          <div class="button-block">
+            <button class="button is-primary">Enviar</button>
+            <button class="button is-secondary">Descargar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
