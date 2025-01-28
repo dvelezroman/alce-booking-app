@@ -634,7 +634,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   getFormattedLink(link: string | undefined): string {
     if (!link) {
-      return ''
+      return 'El instructor no colocó enlace.'
     }
     return link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`;
   }
@@ -697,10 +697,23 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   isToday(date: Date): boolean {
     const today = new Date();
     const formattedDate = new Date(date);
+
     return (
-      formattedDate.getUTCFullYear() === today.getUTCFullYear() &&
-      formattedDate.getUTCMonth() === today.getUTCMonth() &&
-      formattedDate.getUTCDate() === today.getUTCDate()
+      formattedDate.getFullYear() === today.getFullYear() &&
+      formattedDate.getMonth() === today.getMonth() &&
+      formattedDate.getDate() === today.getDate()
+    );
+  }
+
+  isTomorrow(date: Date): boolean {
+    const formattedDate = new Date(date);
+    const today = new Date();
+    const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+    return (
+      formattedDate.getFullYear() === tomorrow.getFullYear() &&
+      formattedDate.getMonth() === tomorrow.getMonth() &&
+      formattedDate.getDate() === tomorrow.getDate()
     );
   }
 }

@@ -41,10 +41,10 @@
             <div class="meeting-title">
               <strong>
                 {{ isToday(meeting.date)
-                ? 'Hoy'
-                : isCurrentWeek(meeting.date)
-                  ? capitalizeFirstLetter(meeting.date | date: 'EEEE':'UTC')
-                  : (meeting.date | date: 'mediumDate':'UTC') }}
+                ? 'Hoy' : isTomorrow(meeting.date)
+                  ? 'Mañana' : isCurrentWeek(meeting.date)
+                    ? capitalizeFirstLetter(meeting.date | date: 'EEEE':'UTC')
+                      : (meeting.date | date: 'mediumDate':'UTC') }}
               </strong>
             </div>
             <div class="meeting-info-container">

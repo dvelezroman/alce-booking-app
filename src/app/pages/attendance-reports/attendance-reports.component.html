@@ -90,6 +90,7 @@
                     <th>Modo</th>
                     <th>Asistencia</th>
                     <th>Nota Instructor</th>
+                    <th>Marcó Asistencia</th>
                 </tr>
             </thead>
             <tbody>
@@ -113,6 +114,7 @@
                     <td>
                       <span style="cursor:pointer;" *ngIf="!isFutureDate(meeting.date)" (click)="openThemeModal(meeting)" class="material-icons">menu_book</span>
                     </td>
+                    <td>{{ meeting.markAssistanceByUser?.firstName || '' }} {{ meeting.markAssistanceByUser?.lastName || '' }}</td>
                 </tr>
             </tbody>
         </table>
