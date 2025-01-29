@@ -1,4 +1,4 @@
-import {Instructor} from "./instructor.dto";
+
 import {Stage} from "./student.dto";
 
 export interface MeetingThemeDto {
@@ -10,7 +10,10 @@ export interface MeetingThemeDto {
   stageId?: number;
   instructorId?: number;
   stage?: Stage;
-  instructor?: Instructor;
+  studentId?: number;
+  student?: { name: string; email: string; stage: string; };
+  instructor?: { name: string; };
+  _count?: { _all: number; };
 }
 export type MonthKey = "ENERO" | "FEBRERO" | "MARZO" |
  "ABRIL" | "MAYO" | "JUNIO" | "JULIO" | "AGOSTO" | 

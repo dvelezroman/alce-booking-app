@@ -1,74 +1,120 @@
 <section class="section">
-    <div class="container">
-  
-      <div class="form-block">
-        <form>
+  <div class="container">
+    <div class="form-block">
+      <form [formGroup]="detailedForm" (ngSubmit)="onSubmit()">
+        
         <!-- Campo de búsqueda de estudiante -->
         <div class="field">
-            <label class="label">Estudiante</label>
-            <div class="control">
-              <input
-                class="input"
-                type="text"
-                placeholder="Nombre del Estudiante"
-                [(ngModel)]="filter.studentName"
-                (input)="filterStudents()"
-                (blur)="hideDropdown()"
-                name="studentName"
-                autocomplete="off"/>
-              <!-- Lista desplegable de estudiantes filtrados -->
-              <div *ngIf="showDropdown" class="dropdown">
-                <div *ngIf="filteredStudents.length === 0" class="no-results">No se encontraron estudiantes</div>
-                <ul *ngIf="filteredStudents.length > 0">
-                  <li
-                    *ngFor="let student of filteredStudents"
-                    (mousedown)="selectStudent(student)">
-                    {{ student.firstName }} {{ student.lastName }}
-                  </li>
-                </ul>
+          <label class="label">Estudiante</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="Nombre del Estudiante"
+              formControlName="studentName"
+              (input)="filterStudents()"
+              (blur)="hideDropdown()"
+              autocomplete="off"/>
+            <!-- Lista desplegable de estudiantes filtrados -->
+            <div *ngIf="showDropdown" class="dropdown">
+              <div *ngIf="filteredStudents.length === 0" class="no-results">
+                No se encontraron estudiantes
               </div>
+              <ul *ngIf="filteredStudents.length > 0">
+                <li
+                  *ngFor="let student of filteredStudents"
+                  (mousedown)="selectStudent(student)">
+                  {{ student.firstName }} {{ student.lastName }}
+                </li>
+              </ul>
             </div>
           </div>
-          <!-- Campos de fecha desde y hasta -->
-          <div class="columns is-mobile">
-            <div class="column">
-              <div class="field">
-                <label class="label">Fecha desde</label>
-                <div class="control date-input-container">
-                  <input class="input" type="date" [(ngModel)]="filter.from" name="from">
-                </div>
+          <p class="error-message" *ngIf="detailedForm.get('studentName')?.invalid && detailedForm.get('studentName')?.touched">
+            Estudiante es requerido
+          </p>
+        </div>
+
+        <!-- Campos de fecha desde y hasta -->
+        <div class="columns is-mobile">
+          <div class="column">
+            <div class="field">
+              <label class="label">Fecha desde</label>
+              <div class="control date-input-container">
+                <input class="input" type="date" formControlName="from">
               </div>
-            </div>
-  
-            <div class="column">
-              <div class="field">
-                <label class="label">Fecha hasta</label>
-                <div class="control date-input-container">
-                  <input class="input" type="date" [(ngModel)]="filter.to" name="to">
-                </div>
-              </div>
+             <!-- <p class="error-message" *ngIf="detailedForm.get('from')?.invalid && detailedForm.get('from')?.touched">
+                Fecha desde es requerida
+              </p>-->
             </div>
           </div>
-  
-          <!-- Selector de stage -->
-          <div class="field">
-            <label class="label">Stage</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select [(ngModel)]="filter.stageId" name="stageId">
-                  <option value="">Selecciona el stage</option>
-                  <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
-                </select>
+
+          <div class="column">
+            <div class="field">
+              <label class="label">Fecha hasta</label>
+              <div class="control date-input-container">
+                <input class="input" type="date" formControlName="to">
               </div>
+              <!--<p class="error-message" *ngIf="detailedForm.get('to')?.invalid && detailedForm.get('to')?.touched">
+                Fecha hasta es requerida
+              </p>-->
             </div>
           </div>
-  
-          <!-- Botones -->
-          <div class="button-block">
-            <button class="button is-primary">Enviar</button>
-            <button class="button is-secondary">Descargar</button>
+        </div>
+
+        <!-- Selector de stage -->
+        <div class="field">
+          <label class="label">Stage</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select formControlName="stageId">
+                <option value="">Selecciona el stage</option>
+                <option *ngFor="let stage of stages" [value]="stage.id">
+                  {{ stage.description }} 
+                </option>
+              </select>
+            </div>
           </div>
-        </form>
-      </div>
+          <!--<p class="error-message" *ngIf="detailedForm.get('stageId')?.invalid && detailedForm.get('stageId')?.touched">
+            Stage es requerido
+          </p>-->
+        </div>
+
+        <!-- Botones -->
+        <div class="button-block">
+          <button class="button is-primary" type="submit">Enviar</button>
+          <button class="button is-secondary" type="button">Descargar</button>
+        </div>
+
+      </form>
     </div>
-  </section>
+  </div>
+  
+  <div *ngIf="reportData && reportData.length > 0" class="table-container">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Estudiante</th>
+          <th>Stage</th>
+          <th>Instructor</th>
+          <th>Clases Agendadas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let report of reportData">
+          <td>{{ report.studentId }}</td>
+          <td>{{ report.student?.email }}</td>
+          <td>{{ report.student?.name }}</td>
+          <td>{{ report.student?.stage }}</td>
+          <td>{{ report.instructor?.name || 'No asignado' }}</td>
+          <td>{{ report._count?._all }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div *ngIf="searchAttempted && reportData.length === 0" class="no-results">
+    No hay resultados para los criterios seleccionados.
+  </div>
+</section>

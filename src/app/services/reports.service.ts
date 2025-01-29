@@ -16,7 +16,7 @@ export class ReportsService {
     private store: Store,
   ) {}
 
-  getDetailedStatistics(studentId: number, from: string, to: string, stageId?: number): Observable<MeetingThemeDto> {
+  getDetailedStatistics(studentId: number, from: string, to: string, stageId?: number): Observable<MeetingThemeDto[]> {
     let params = new HttpParams();
 
     if (studentId) {
@@ -32,7 +32,7 @@ export class ReportsService {
       params = params.set('stageId', stageId.toString());
     }
 
-    return this.http.get<MeetingThemeDto>(`${this.apiUrl}/detail`, { params });
+    return this.http.get<MeetingThemeDto[]>(`${this.apiUrl}/detail`, { params });
   }
 
   update(id: number,  data: MeetingThemeDto): Observable<MeetingThemeDto> {
