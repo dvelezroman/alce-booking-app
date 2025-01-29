@@ -35,7 +35,35 @@ export class ReportsService {
     return this.http.get<MeetingThemeDto[]>(`${this.apiUrl}/detail`, { params });
   }
 
-  update(id: number,  data: MeetingThemeDto): Observable<MeetingThemeDto> {
-    return this.http.patch<MeetingThemeDto>(`${this.apiUrl}/${id}`, data);
+  getStatisticsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<MeetingThemeDto[]> {
+    let params = new HttpParams();
+
+    if (from) {
+      params = params.set('from', from);
+    }
+    if (to) {
+      params = params.set('to', to);
+    }
+    if (stageId) {
+      params = params.set('stageId', stageId.toString());
+    }
+
+    return this.http.get<MeetingThemeDto[]>(`${this.apiUrl}/statistics/${studentId}`, { params });
+  }
+
+  getMeetingsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<MeetingThemeDto[]> {
+    let params = new HttpParams();
+
+    if (from) {
+      params = params.set('from', from);
+    }
+    if (to) {
+      params = params.set('to', to);
+    }
+    if (stageId) {
+      params = params.set('stageId', stageId.toString());
+    }
+
+    return this.http.get<MeetingThemeDto[]>(`${this.apiUrl}/statistics/${studentId}/meetings`, { params });
   }
 }
