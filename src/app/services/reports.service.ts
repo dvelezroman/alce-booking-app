@@ -3,7 +3,7 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
-import {MeetingThemeDto} from "./dtos/meeting-theme.dto";
+import {Meeting, MeetingThemeDto} from "./dtos/meeting-theme.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -51,7 +51,7 @@ export class ReportsService {
     return this.http.get<{ report: any }>(`${this.apiUrl}/statistics/${studentId}`, { params });
   }
 
-  getMeetingsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<MeetingThemeDto[]> {
+  getMeetingsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<{ meetings: Meeting[] }> {
     let params = new HttpParams();
 
     if (from) {
@@ -64,6 +64,6 @@ export class ReportsService {
       params = params.set('stageId', stageId.toString());
     }
 
-    return this.http.get<MeetingThemeDto[]>(`${this.apiUrl}/statistics/${studentId}/meetings`, { params });
+    return this.http.get<{ meetings: Meeting[] }>(`${this.apiUrl}/statistics/${studentId}/meetings`, { params });
   }
 }

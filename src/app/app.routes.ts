@@ -16,8 +16,9 @@ import { AttendanceInstructorComponent } from './pages/attendance-instructor/att
 import { FeatureFlagComponent } from "./pages/feature-flag/feature-flag.component";
 import { RegisterStudentComponent } from './pages/register-student/register-student.component';
 import { RegisterInstructorAdminComponent } from './pages/register-instructor-admin/register-instructor-admin.component';
-import { ReportesComponent } from './pages/reportes/reportes.component';
-import { ReportsDetailedComponent } from './pages/reports-detailed/reports-detailed.component';
+import { ReportesComponent } from './pages/reports/reportes.component';
+import { ReportsDetailedComponent } from './pages/reports-detail-statist-meeting/reports-detailed.component';
+
 
 
 export const routes: Routes = [

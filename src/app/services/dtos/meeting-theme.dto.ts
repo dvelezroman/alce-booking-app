@@ -23,6 +23,16 @@ export interface MeetingThemeDto {
   present_percentage?: number;
   absent_percentage?: number;
   cancelled_percentage?: number;
+  //reporte_clases
+  meetings?: Meeting[];
+}
+
+export interface Meeting {
+  id: number;
+  date: string;  
+  hour: number;  
+  present: boolean;  
+  mode: string;  
 }
 
 export type MonthKey = "ENERO" | "FEBRERO" | "MARZO" |

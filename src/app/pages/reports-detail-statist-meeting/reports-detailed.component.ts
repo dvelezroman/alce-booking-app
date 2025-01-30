@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} f
 import { UserDto } from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { ReportsService } from '../../services/reports.service';
-import { MeetingThemeDto } from '../../services/dtos/meeting-theme.dto';
+import { Meeting, MeetingThemeDto } from '../../services/dtos/meeting-theme.dto';
 
 @Component({
   selector: 'app-reports-detailed',
@@ -29,7 +29,7 @@ export class ReportsDetailedComponent implements OnInit {
   selectedStudentName: string = '';
   reportData: MeetingThemeDto[] = [];
   statisticalData: MeetingThemeDto[] = []; 
-  meetingsData: MeetingThemeDto[] = [];
+  meetingsData: Meeting[] = [];
   searchAttempted: boolean = false;
   showReportButtons = false;
   activeReport: 'detailed' | 'statistical' | 'meetings' = 'detailed';
@@ -160,30 +160,32 @@ export class ReportsDetailedComponent implements OnInit {
   });
 }
 
-  fetchMeetingsReport() {
-    this.activeReport = 'meetings';
-    const formData = {
-      studentId: this.selectedStudentId,
-      from: this.formatDate(this.detailedForm.get('from')?.value),
-      to: this.formatDate(this.detailedForm.get('to')?.value),
-      stageId: this.detailedForm.get('stageId')?.value || undefined,
-    };
+fetchMeetingsReport() {
+  this.activeReport = 'meetings';
 
-    this.reportsService.getMeetingsByStudentId(
-      formData.studentId!,
-      formData.from,
-      formData.to,
-      formData.stageId
-    ).subscribe({
-      next: (data: MeetingThemeDto[]) => {
-        this.meetingsData = data || [];
-      },
-      error: (error) => {
-        this.meetingsData = [];
-        console.error('Error al obtener el reporte de clases:', error);
-      }
-    });
-  }
+  const formData = {
+    studentId: this.selectedStudentId,
+    from: this.formatDate(this.detailedForm.get('from')?.value),
+    to: this.formatDate(this.detailedForm.get('to')?.value),
+    stageId: this.detailedForm.get('stageId')?.value || undefined,
+  };
+
+  this.reportsService.getMeetingsByStudentId(
+    formData.studentId!,
+    formData.from,
+    formData.to,
+    formData.stageId
+  ).subscribe({
+    next: (data) => {
+      //console.log(data);
+      this.meetingsData = data.meetings || []; 
+    },
+    error: (error) => {
+      this.meetingsData = [];
+      console.error('Error al obtener el reporte de clases:', error);
+    }
+  });
+}
 
   private formatDate(dateString: string): string {
     if (!dateString) return '';

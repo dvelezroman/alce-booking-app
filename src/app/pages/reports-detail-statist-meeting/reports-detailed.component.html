@@ -152,7 +152,29 @@
         </tr>
       </tbody>
     </table>
-</div>
+  </div>
+  
+  <!-- Tabla de Reporte meeting -->
+  <div *ngIf="activeReport === 'meetings' && meetingsData.length > 0" class="table-container">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Asistencia</th>
+          <th>Modalidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let meeting of meetingsData">
+          <td>{{ meeting.date | date:'yyyy-MM-dd' }}</td>
+          <td>{{ meeting.hour }}:00</td>
+          <td>{{ meeting.present ? 'Sí' : 'No' }}</td>
+          <td>{{ meeting.mode }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   
   <div *ngIf="searchAttempted && reportData.length === 0" class="no-results">
     No hay resultados para los criterios seleccionados.
