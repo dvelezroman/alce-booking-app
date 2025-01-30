@@ -88,8 +88,20 @@
       </form>
     </div>
   </div>
+
+  <div *ngIf="showReportButtons" class="button-block-reports">
+    <button class="custom-button" 
+            [class.active]="activeReport === 'detailed'" 
+            (click)="onSubmit()">Detallado</button>
+    <button class="custom-button" 
+            [class.active]="activeReport === 'statistical'" 
+            (click)="fetchStatisticalReport()">Estadístico</button>
+    <button class="custom-button" 
+            [class.active]="activeReport === 'meetings'" 
+            (click)="fetchMeetingsReport()">Clases</button>
+  </div>
   
-  <div *ngIf="reportData && reportData.length > 0" class="table-container">
+  <div *ngIf="activeReport === 'detailed' && reportData && reportData.length > 0" class="table-container">
     <table class="table is-fullwidth">
       <thead>
         <tr>
@@ -113,6 +125,34 @@
       </tbody>
     </table>
   </div>
+  
+  <!-- Tabla de Reporte Estadístico -->
+  <div *ngIf="activeReport === 'statistical' && statisticalData.length > 0" class="table-container">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Total Clases</th>
+          <th>Asistencias</th>
+          <th>Faltas</th>
+          <th>Canceladas</th>
+          <th>% Asistencias</th>
+          <th>% Faltas</th>
+          <th>% Canceladas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ statisticalData[0].total ?? 'N/A' }}</td>
+          <td>{{ statisticalData[0].present ?? 'N/A' }}</td>
+          <td>{{ statisticalData[0].absent ?? 'N/A' }}</td>
+          <td>{{ statisticalData[0].cancelled ?? 'N/A' }}</td>
+          <td>{{ statisticalData[0].present_percentage ?? 'N/A' }}%</td>
+          <td>{{ statisticalData[0].absent_percentage ?? 'N/A' }}%</td>
+          <td>{{ statisticalData[0].cancelled_percentage ?? 'N/A' }}%</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
   
   <div *ngIf="searchAttempted && reportData.length === 0" class="no-results">
     No hay resultados para los criterios seleccionados.

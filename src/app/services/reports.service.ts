@@ -35,7 +35,7 @@ export class ReportsService {
     return this.http.get<MeetingThemeDto[]>(`${this.apiUrl}/detail`, { params });
   }
 
-  getStatisticsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<MeetingThemeDto[]> {
+  getStatisticsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<{ report: any }> {
     let params = new HttpParams();
 
     if (from) {
@@ -48,7 +48,7 @@ export class ReportsService {
       params = params.set('stageId', stageId.toString());
     }
 
-    return this.http.get<MeetingThemeDto[]>(`${this.apiUrl}/statistics/${studentId}`, { params });
+    return this.http.get<{ report: any }>(`${this.apiUrl}/statistics/${studentId}`, { params });
   }
 
   getMeetingsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<MeetingThemeDto[]> {

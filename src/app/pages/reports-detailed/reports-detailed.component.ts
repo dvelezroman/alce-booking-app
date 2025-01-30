@@ -28,7 +28,11 @@ export class ReportsDetailedComponent implements OnInit {
   selectedStudentId: number | undefined;
   selectedStudentName: string = '';
   reportData: MeetingThemeDto[] = [];
+  statisticalData: MeetingThemeDto[] = []; 
+  meetingsData: MeetingThemeDto[] = [];
   searchAttempted: boolean = false;
+  showReportButtons = false;
+  activeReport: 'detailed' | 'statistical' | 'meetings' = 'detailed';
 
   constructor(private fb: FormBuilder,
               private stagesService: StagesService, 
@@ -37,8 +41,8 @@ export class ReportsDetailedComponent implements OnInit {
 
     this.detailedForm = this.fb.group({
         studentName: ['', Validators.required],
-        from: [''],
-        to: [''],
+        from: ['', Validators.required],
+        to: ['', Validators.required],
         stageId: [''],
     });   
  }
@@ -94,7 +98,9 @@ export class ReportsDetailedComponent implements OnInit {
       this.detailedForm.markAllAsTouched();
       return;
     }
+    this.showReportButtons = true;
     this.searchAttempted = true;
+    this.activeReport = 'detailed';
     const formData = {
       studentId: this.selectedStudentId,
       from: this.formatDate(this.detailedForm.get('from')?.value),
@@ -117,6 +123,64 @@ export class ReportsDetailedComponent implements OnInit {
       error: (error) => {
         //console.error('Error al obtener el reporte:', error);
         this.reportData = [];  
+      }
+    });
+  }
+
+  fetchStatisticalReport() {
+  if (!this.selectedStudentId) return;
+
+  const formData = {
+    studentId: this.selectedStudentId,
+    from: this.formatDate(this.detailedForm.get('from')?.value),
+    to: this.formatDate(this.detailedForm.get('to')?.value),
+    stageId: this.detailedForm.get('stageId')?.value || undefined,
+  };
+
+  this.reportsService.getStatisticsByStudentId(
+    formData.studentId!,
+    formData.from,
+    formData.to,
+    formData.stageId
+  ).subscribe({
+    next: (data) => {
+      //console.log('Respuesta del backend (estadístico):', data);
+      
+      if (data?.report) {
+        this.statisticalData = [data.report];
+        this.activeReport = 'statistical'; 
+      } else {
+        this.statisticalData = [];
+      }
+    },
+    error: (error) => {
+      console.error('Error al obtener estadísticas:', error);
+      this.statisticalData = [];
+    }
+  });
+}
+
+  fetchMeetingsReport() {
+    this.activeReport = 'meetings';
+    const formData = {
+      studentId: this.selectedStudentId,
+      from: this.formatDate(this.detailedForm.get('from')?.value),
+      to: this.formatDate(this.detailedForm.get('to')?.value),
+      stageId: this.detailedForm.get('stageId')?.value || undefined,
+    };
+
+    this.reportsService.getMeetingsByStudentId(
+      formData.studentId!,
+      formData.from,
+      formData.to,
+      formData.stageId
+    ).subscribe({
+      next: (data: MeetingThemeDto[]) => {
+        this.meetingsData = data || [];
+      },
+      error: (error) => {
+        this.meetingsData = [];
+        console.error('Error al obtener el reporte de clases:', error);
       }
     });
   }

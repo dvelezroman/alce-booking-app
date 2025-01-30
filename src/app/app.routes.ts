@@ -18,8 +18,6 @@ import { RegisterStudentComponent } from './pages/register-student/register-stud
 import { RegisterInstructorAdminComponent } from './pages/register-instructor-admin/register-instructor-admin.component';
 import { ReportesComponent } from './pages/reportes/reportes.component';
 import { ReportsDetailedComponent } from './pages/reports-detailed/reports-detailed.component';
-import { ReportsStatisticalComponent } from './pages/reports-statistical/reports-statistical.component';
-import { ReportsClassesComponent } from './pages/reports-classes/reports-classes.component';
 
 
 export const routes: Routes = [
@@ -45,8 +43,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard], 
     children: [
       { path: 'detailed', component: ReportsDetailedComponent },
-      { path: 'statistical', component: ReportsStatisticalComponent },
-      { path: 'classes', component: ReportsClassesComponent },
       { path: '', redirectTo: 'detailed', pathMatch: 'full' },
     ]
   },
