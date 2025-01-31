@@ -82,7 +82,7 @@
         <!-- Botones -->
         <div class="button-block">
           <button class="button is-primary" type="submit">Enviar</button>
-          <button class="button is-secondary" type="button">Descargar</button>
+          <button class="button is-secondary" type="button" (click)="openDownloadModal()" [disabled]="!isReportGenerated">Descargar</button>
         </div>
 
       </form>
@@ -180,3 +180,13 @@
     No hay resultados para los criterios seleccionados.
   </div>
 </section>
+
+<app-modal 
+  [showModal]="modalData.show"
+  [message]="modalData.message"
+  [isError]="modalData.isError"
+  [isSuccess]="modalData.isSuccess"
+  [showButtons]="true"
+  (close)="closeModal()"
+  (confirmAction)="confirmDownload()">
+</app-modal>

@@ -16,8 +16,9 @@ export class ModalComponent {
   @Input() message: string = 'An error occurred'; // Default message
   @Input() isError: boolean = true;  // Flag to determine error or success
   @Input() isSuccess: boolean = false;  // Success flag for success message
-
+  @Output() confirmAction = new EventEmitter<void>();
   @Output() close = new EventEmitter<void>();
+  @Input() showButtons: boolean = false;
   shake: boolean = false;
 
   ngOnChanges() {
@@ -27,6 +28,10 @@ export class ModalComponent {
         this.shake = false;
       }, 500); 
     }
+  }
+
+  confirm() {
+    this.confirmAction.emit(); 
   }
   
   closeModal() {

@@ -10,7 +10,7 @@
 
 .container {
   width: 100%;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   padding: 0rem;
   border-radius: 8px;
   text-align: center;
@@ -60,7 +60,7 @@ button .material-icons {
   border: .5px solid #7743a8;
   transition: background-color 0.3s ease, color 0.3s ease;
   display: block;   
-  margin: 10rem auto 1rem auto; 
+  margin: 7rem auto 1rem auto; 
 }
 
 .button.is-primary:hover {
@@ -70,15 +70,23 @@ button .material-icons {
 }
 
 // Table Styles
+.table-container {
+  width: 100%;
+  margin: auto;
+  margin-bottom: 1rem;
+  overflow-x: auto; 
+}
 
 .table {
   margin: 0 auto;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  width: 500px;
+  width: 700px;
+  min-width: 500px;
+  max-width: 700px;
   table-layout: fixed;
   border-collapse: collapse;
-  border-radius: 7px 7px 2px 2px;
+  border-radius: 5px 5px 2px 2px;
   overflow: hidden;
 }
 
@@ -106,21 +114,6 @@ button .material-icons {
   border-bottom: .5px solid #dad8d8;
 }
 
-.table th:nth-child(1), 
-.table td:nth-child(1) {
-  width: 7%;
-}
-
-.table th:nth-child(2), 
-.table td:nth-child(2) {
-  width: 25%;
-}
-
-.table th:nth-child(3), 
-.table td:nth-child(3) {
-  width: 20%;
-}
-
 .table tbody tr:nth-child(even) td {
   background-color: #fdfdfd;
 }
@@ -136,10 +129,10 @@ button .material-icons {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: .6rem;
+  gap: .75rem;
   border: .5px solid transparent;
   background-color: transparent;
-  font-size: .7rem;
+  font-size: .8rem;
   cursor: pointer;
   padding: .3rem .8rem;
   transition: all 0.3s ease;
@@ -457,12 +450,6 @@ button .material-icons {
 /* RESPONSIVE PARA TABLA DE LISTA DE STAGES Y MODAL CREAR STAGES */
 @media (max-width: 768px) {
 
-  .container {
-    margin-top: 2rem;
-    padding: 1rem;
-    border-radius: 8px;
-    text-align: center;
-  }
 
   h2.title {
    font-size: 1.5rem;
@@ -478,130 +465,33 @@ button .material-icons {
 }
 
   /*TABLA*/
-  h2.title{
-    left: 0; 
-    width: 100%; 
-  }
-
-  .table {
-    margin-bottom: 2rem;
-    width: 95%;
-    table-layout: fixed;
-    border-collapse: collapse;
-    border-radius: 7px 7px 2px 2px;
-    overflow: hidden;
-    border: 1px solid #dbdee1c5;
-
-    th:nth-child(1), td:nth-child(1) {
-      width: 8%;
-    }
-
-    th:nth-child(2), td:nth-child(2) {
-      width: 40%;
-    }
-
-    th:nth-child(3), td:nth-child(3) {
-      width: 55%;
-    }
-
-    th, td {
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    th {
-      padding: .5rem;
-      font-size: .8rem;
-    }
-
-    td {
-      padding: 0.3rem;
-      font-size: .8rem;
-    }
-
-
-    .buttons {
-      gap: 0.5rem;
-
-      .button {
-        gap: .3rem;
-        font-size: .5rem;
-        padding: 0.3rem .75rem;
-      }
-
-      .edit-button {
-
-        i {
-          font-size: .75rem;
-        }
-      }
-
-      .delete-button {
-
-        i {
-          font-size: .75rem;
-        }
-      }
-    }
-  }
 
 /* RESPONSIVE PARA MODAL DE DELETE*/
 
 .modal-content2 {
   max-width: 400px;
   padding: 1.5rem;
-  background-color: rgba(234, 233, 236, 0.937);
-  border: .5px solid grey;
 }
 
 .delete-modal-title {
   font-size: 1.2rem;
-  margin-bottom: .4rem;
   margin-left: 2px;
 }
 
 .delete-modal-text {
   font-size: .9rem;
-  margin-bottom: 2rem;
   margin-left: 3px;
-}
-
-.delete-modal-actions {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
 }
 
 /* Botón de Delete */
 .delete-modal-btn-delete {
   padding: .78rem 4.2rem;
-  font-size: .9rem;
-  margin-bottom: .3rem;
-  border-radius: 5px !important;
-  background-color: #3273dc;
-  color: white;
-  border: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
-
-  &:hover {
-    background-color: #275bb5;
-  }
 }
 
 /* Botón de Cancel */
 .delete-modal-btn-cancel {
   padding: .7rem 4.2rem;
-  font-size: .9rem;
   margin-bottom: .3rem;
-  background-color: transparent;
-  color: rgb(132, 65, 199);
-  border: 1px solid rgb(132, 65, 199);
-  transition: background-color 0.3s ease, color 0.3s ease;
-
-  &:hover {
-    background-color: rgb(110, 44, 176);
-    color: white;
-  }
 }
 }
 
@@ -632,6 +522,9 @@ button .material-icons {
  }
 
    /*TABLA*/
+   .table-container {
+    width: 95%; 
+  }
 
    .table {
      margin: 0 auto;
@@ -641,50 +534,30 @@ button .material-icons {
      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 
      th {
-       padding: 7px .3rem;
        font-size: .8rem;
      }
 
      td {
-       padding: 0.25rem;
        font-size: .8rem;
      }
 
-     th:nth-child(1), td:nth-child(1) {
-      width: 10%;
-    }
-
-    th:nth-child(2), td:nth-child(2) {
-      width: 55%;
-    }
-
-    th:nth-child(3), td:nth-child(3) {
-      width: 35%;
-    }
-
      .buttons {
-       gap: .5rem;
 
        .button {
          border: none ;
          gap: .3rem;
-         font-size: 0rem;
          padding: 0.25rem;
        }
 
        .edit-button {
-
          i {
-           font-size: 1rem;
+          display: none;
          }
        }
 
        .delete-button {
-         border: none;
-         color: #7743a8;
-         border-color: #7743a8;
          i {
-           font-size: 1rem;
+          display: none;
          }
        }
      }

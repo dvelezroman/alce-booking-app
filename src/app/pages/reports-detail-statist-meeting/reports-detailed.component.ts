@@ -7,6 +7,8 @@ import { UserDto } from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { ReportsService } from '../../services/reports.service';
 import { Meeting, MeetingThemeDto } from '../../services/dtos/meeting-theme.dto';
+import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
+import { ModalComponent } from '../../components/modal/modal.component';
 
 @Component({
   selector: 'app-reports-detailed',
@@ -14,7 +16,8 @@ import { Meeting, MeetingThemeDto } from '../../services/dtos/meeting-theme.dto'
   imports: [
       CommonModule,
       FormsModule,
-      ReactiveFormsModule
+      ReactiveFormsModule,
+      ModalComponent
   ],
   templateUrl: './reports-detailed.component.html',
   styleUrl: './reports-detailed.component.scss'
@@ -33,6 +36,8 @@ export class ReportsDetailedComponent implements OnInit {
   searchAttempted: boolean = false;
   showReportButtons = false;
   activeReport: 'detailed' | 'statistical' | 'meetings' = 'detailed';
+  isReportGenerated = false;
+  modalData: ModalDto = modalInitializer();
 
   constructor(private fb: FormBuilder,
               private stagesService: StagesService, 
@@ -99,6 +104,7 @@ export class ReportsDetailedComponent implements OnInit {
       return;
     }
     this.showReportButtons = true;
+    this.isReportGenerated = false;
     this.searchAttempted = true;
     this.activeReport = 'detailed';
     const formData = {
@@ -117,11 +123,13 @@ export class ReportsDetailedComponent implements OnInit {
       formData.stageId
     ).subscribe({
       next: (data: MeetingThemeDto[]) => {  
-        this.reportData = data || [];  
+        this.reportData = data || [];
+        this.isReportGenerated = this.reportData.length > 0;  
         //console.log('respuesta del backend:', this.reportData);
       },
       error: (error) => {
         //console.error('Error al obtener el reporte:', error);
+        this.isReportGenerated = false;
         this.reportData = [];  
       }
     });
@@ -191,5 +199,27 @@ fetchMeetingsReport() {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toISOString().split('T')[0]; 
+}
+
+openDownloadModal() {
+  if (!this.isReportGenerated) return; 
+
+  this.modalData = {
+    show: true,
+    message: '¿Desea descargar el documento?',
+    isError: false,
+    isSuccess: false,
+    close: () => this.closeModal(),
+    confirm: () => this.confirmDownload()
+  };
+}
+
+closeModal() {
+  this.modalData.show = false;
+}
+
+confirmDownload() {
+  console.log("Iniciando descarga...");
+  this.closeModal();
 }
 }

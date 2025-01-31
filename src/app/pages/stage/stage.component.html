@@ -6,31 +6,33 @@
     Crear Nuevo Stage
   </button>
 
-  <table class="table is-striped">
-    <thead>
-    <tr>
-      <th>Stage</th>
-      <th>Descripción</th>
-      <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let stage of stages">
-      <td>{{ stage.number }}</td>
-      <td>{{ stage.description }}</td>
-      <td>
-        <div class="buttons">
-          <button (click)="openEditModal(stage)" class="button edit-button">
-            <i class="fas fa-edit"></i> Editar
-          </button>
-          <button (click)="openDeleteModal(stage)" class="button delete-button">
-            <i class="fas fa-trash"></i> Eliminar
-          </button>
-        </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="table-container">
+    <table class="table is-striped">
+      <thead>
+      <tr>
+        <th>Stage</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let stage of stages">
+        <td>{{ stage.number }}</td>
+        <td>{{ stage.description }}</td>
+        <td>
+          <div class="buttons">
+            <button (click)="openEditModal(stage)" class="button edit-button">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button (click)="openDeleteModal(stage)" class="button delete-button">
+              <i class="fas fa-trash"></i> Eliminar
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 
   <!-- Create Stage Modal -->
   <div id="createModal" class="modal" [ngClass]="{'is-active': isCreateModalOpen}">
