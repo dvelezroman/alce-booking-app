@@ -22,6 +22,11 @@ import {Mode} from '../../services/dtos/student.dto';
 import {FeatureFlagService} from "../../services/feature-flag.service";
 import {FeatureFlagDto} from "../../services/dtos/feature-flag.dto";
 import { MonthKey } from '../../services/dtos/meeting-theme.dto';
+import {
+  convertEcuadorDateToLocal,
+  convertEcuadorHourToLocal,
+  getTimezoneOffsetHours
+} from "../../shared/utils/dates.util";
 
 
 @Component({
@@ -288,7 +293,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         return {
           day: i + 1,
           dayOfWeek,
-          date: date.toISOString().split('T')[0] // Formato ISO para consistencia
+          date: date.toLocaleString().split('T')[0] // Formato ISO para consistencia
         };
       })
     );
@@ -350,13 +355,13 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-// console.log(day);
+console.log(day);
     const monthIndex = monthMap[this.selectedMonth]; // Índice del mes actual
     const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
-// console.log(selectedDate);
+console.log(selectedDate);
     if (this.isDaySelectable(day)) {
-      this.selectedDate = selectedDate.toISOString().split('T')[0];
-      //console.log(this.selectedDate);
+      this.selectedDate = selectedDate.toLocaleString().split('T')[0];
+      console.log(this.selectedDate);
       this.selectedDay = day.day;
       this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
       this.recalculateTimeSlots(day);
@@ -488,15 +493,28 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       throw new Error('Student data is required to create booking data.');
     }
 
-    const [year, month, day] = this.selectedDate.split('-').map(Number);
-    const formattedDate = new Date(year, month - 1, day, this.selectedTimeSlot.value);
+    const [date, time] = this.selectedDate.split(',');
+    const [day, month, year] = date.split('/').map(Number); // Assuming your format is "DD/MM/YYYY"
+
+    // Ensure proper ISO 8601 format (zero-padding month & day)
+    const formattedMonth = (month + 1).toString().padStart(2, '0');
+    const formattedDay = day.toString().padStart(2, '0');
+    const formattedHour = this.selectedTimeSlot.value.toString().padStart(2, '0');
+    // Create a valid ISO 8601 date string (Ecuador is UTC-5)
+    const formattedDate = `${year}-${formattedMonth}-${formattedDay}T${formattedHour}:00:00-05:00`;
+
+    console.log("Formatted Ecuador Date:", formattedDate);
+    console.log("Timezone Offset:", getTimezoneOffsetHours());
+
+    const convertedDate = getTimezoneOffsetHours() !== 0 ? convertEcuadorDateToLocal(formattedDate) : formattedDate;
+    console.log("Converted Local Date:", convertedDate);
 
     return {
       studentId: this.userData.student.id,
       instructorId: undefined,
       stageId: this.userData.stage?.id,
-      date: formattedDate.toISOString(),
-      hour: this.selectedTimeSlot.value,
+      date: convertedDate,
+      hour: getTimezoneOffsetHours() !== 0 ? convertEcuadorHourToLocal(this.selectedTimeSlot.value) : this.selectedTimeSlot.value,
       mode: this.meetingType,
       category: this.userData.student.studentClassification,
     };
