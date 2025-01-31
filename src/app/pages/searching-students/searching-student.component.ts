@@ -34,7 +34,7 @@ export class SearchingStudentComponent {
   users: UserDto[] = [];
   totalUsers: number = 0;
   currentPage: number = 1;
-  itemsPerPage: number = 10; // Set the number of items per page
+  itemsPerPage: number = 100; // Set the number of items per page
 
   stages: Stage[] = [];
 
