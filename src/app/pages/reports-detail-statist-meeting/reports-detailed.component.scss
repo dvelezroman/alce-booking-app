@@ -101,7 +101,7 @@
     font-size: 0.85rem;
     margin-top: 5px;
     padding-left: 5px;
-}
+  }
 
   .button-block {
     display: flex;
@@ -181,29 +181,63 @@
     margin-top: 2rem;
     overflow-x: auto;
   }
-  
+
   .table {
+    width: auto;
     min-width: 900px;
     border-collapse: collapse;
     background-color: white;
+    border-spacing: 0;
   }
-  
+
+  .table thead {
+    position: sticky;
+    top: 0;
+    background-color: #bcf496;
+    z-index: 2;
+  }
+
   .table th {
     text-align: center;
     padding: 10px;
-    font-size: .9rem;
+    font-size: 0.9rem;
     font-weight: bold;
     background-color: #bcf496;
     color: black;
     border-bottom: none;
+    position: sticky;
+    top: 0;
+    z-index: 2;
   }
-  
+
+  .table tbody {
+    display: block;
+    max-height: 450px; 
+    overflow-y: auto; 
+  }
+
+  .table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .table tbody tr:hover {
+    background-color: rgb(239, 239, 239); 
+    transition: background-color 0.3s ease-in-out; 
+}
+
   .table td {
+    width: auto;
     text-align: center;
     padding: 8px;
-    font-size: .9rem;
+    font-size: 0.9rem;
     color: #333;
     border-bottom: 1px solid #ddd;
+    max-height: 400px; 
+    overflow-y: auto; 
+    display: table-cell;
+    vertical-align: middle;
   }
   
   .no-results {

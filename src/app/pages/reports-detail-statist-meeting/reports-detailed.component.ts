@@ -178,7 +178,7 @@ fetchMeetingsReport() {
   ).subscribe({
     next: (data) => {
       //console.log(data);
-      this.meetingsData = data.meetings || []; 
+      this.meetingsData = data.meetings || [];
     },
     error: (error) => {
       this.meetingsData = [];
@@ -191,5 +191,5 @@ fetchMeetingsReport() {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toISOString().split('T')[0]; 
-  }
+}
 }
