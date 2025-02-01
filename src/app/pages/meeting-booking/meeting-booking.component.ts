@@ -355,13 +355,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-console.log(day);
     const monthIndex = monthMap[this.selectedMonth]; // Índice del mes actual
-    const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
-console.log(selectedDate);
+    const selectedDate = `${this.selectedYear}-${(monthIndex + 1).toString().padStart(2,'0')}-${day.day.toString().padStart(2,'0')}`;
     if (this.isDaySelectable(day)) {
-      this.selectedDate = selectedDate.toLocaleString().split('T')[0];
-      console.log(this.selectedDate);
+      // console.log(selectedDate);
+      this.selectedDate = selectedDate;
       this.selectedDay = day.day;
       this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
       this.recalculateTimeSlots(day);
@@ -493,21 +491,16 @@ console.log(selectedDate);
       throw new Error('Student data is required to create booking data.');
     }
 
-    const [date, time] = this.selectedDate.split(',');
-    const [day, month, year] = date.split('/').map(Number); // Assuming your format is "DD/MM/YYYY"
+    const date = this.selectedDate;
+    const [year, month, day] = date.split('-').map(Number); // Assuming your format is "YYYY/MM/DD"
 
     // Ensure proper ISO 8601 format (zero-padding month & day)
-    const formattedMonth = (month + 1).toString().padStart(2, '0');
+    const formattedMonth = month.toString().padStart(2, '0');
     const formattedDay = day.toString().padStart(2, '0');
     const formattedHour = this.selectedTimeSlot.value.toString().padStart(2, '0');
     // Create a valid ISO 8601 date string (Ecuador is UTC-5)
     const formattedDate = `${year}-${formattedMonth}-${formattedDay}T${formattedHour}:00:00-05:00`;
-
-    console.log("Formatted Ecuador Date:", formattedDate);
-    console.log("Timezone Offset:", getTimezoneOffsetHours());
-
     const convertedDate = getTimezoneOffsetHours() !== 0 ? convertEcuadorDateToLocal(formattedDate) : formattedDate;
-    console.log("Converted Local Date:", convertedDate);
 
     return {
       studentId: this.userData.student.id,
