@@ -1,10 +1,4 @@
 
-$color-primary: rgb(7, 45, 182);
-$color-secondary: rgb(115, 15, 177);
-$color-accent: rgb(255, 255, 9);
-$color-background: rgb(250, 250, 253);
-
-
 html, body {
   height: 100%;
   margin: 0;
@@ -22,7 +16,7 @@ html, body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
   .logo-container {
@@ -40,18 +34,10 @@ html, body {
 
   .box {
     background: rgb(254, 254, 254);
-    border-radius: 10px;
     padding: 2rem 1.5rem;
     width: 100%;
     max-width: 350px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border: .5px solid rgba(255, 255, 255, 0.172);
-    transition: box-shadow 0.3s ease-in-out;
-
-    &:focus-within {
-        transition: box-shadow 0.5s ease-in-out;
-    }
 }
 
   .title {
@@ -142,7 +128,7 @@ html, body {
 
   .error {
     color: rgb(218, 88, 68);
-    font-size: .7rem;
+    font-size: .8rem;
     margin-top: 0.5rem;
     position: absolute;
     bottom: -1.5rem;
@@ -159,9 +145,9 @@ html, body {
 
   .button.is-primary {
     background: linear-gradient(90deg, rgb(60, 91, 231) 0%, rgb(150, 60, 231) 100%);
-    color: $color-background;
+    color: rgb(250, 250, 253);
     border: none;
-    padding: 0.75rem;
+    padding: 0.8rem;
     font-size: 1.1rem;
     border-radius: 5px;
     width: 100%;
@@ -215,12 +201,6 @@ html, body {
     color: #9672de;
   }
 
-  .forgot-password-container {
-    position: absolute;
-    right: 0;
-    margin-top: -0px;
-  }
-
   .field {
     position: relative;
   }
@@ -235,96 +215,17 @@ html, body {
     text-decoration: underline;
   }
 
-  .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  overflow: hidden;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 1.7rem;
-  border-radius: 5px;
-  text-align: center;
-  border: .5px solid rgb(182, 182, 182);
-  box-shadow: 2px 2px 25px rgba(0, 0, 0, 0.2);
-  width: 350px;
-  max-width: 90%;
-  position: relative;
-  animation: shake 0.5s ease;
-}
-
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
-    100% { transform: translateX(0); }
-}
-
-.modal-content p {
-  font-size: 1rem;
-  color: #dfd9d9;
-}
-
-.success-modal {
-  background-color: #ffffff;
-}
-
-.success-modal p{
-  color: #28a745;
-}
-
-.error-modal {
-  background-color: rgb(255, 255, 255);
-}
-
-.error-modal p {
-  color: rgb(208, 58, 58);
-}
-
-.success-icon {
-  font-size: 1.4rem;
-  color: #28a745;
-  margin-bottom: 1rem;
-}
-
-.error-icon {
-  font-size: 1.4rem;
-  color: #dc3545;
-  margin-bottom: 1rem;
-}
-
-
   @media (max-width: 768px) {
     .box {
       padding: 1.5rem 1.2rem;
       margin: 0 1rem;
-      width: 100%;
       max-width: 300px;
     }
 
     .title {
       font-size: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
-
-    .field {
-      margin-bottom: 2rem;
-    }
-
-    .input {
-      font-size: .9rem;
-      height: 39px;
-      padding: 0.5rem 12px;
-}
 
     .icon.is-right {
       right: 15.5px !important;    
@@ -334,20 +235,8 @@ html, body {
       font-size: .9rem;
     }
 
-    .error {
-      font-size: .6rem;
-      margin-top: 0.4rem;
-      bottom: -1.4rem;
-    }
-
-    .forgot-password-link {
-      text-decoration: none;
-      font-size: .65rem;
-    }
-
     .field-button {
       margin-top: 3rem;
-      text-align: center;
     }
 
     .button.is-primary {
@@ -356,81 +245,28 @@ html, body {
     }
 
     .toggle-container {
-      text-align: center;
       margin-top: -.2rem;
 
       p {
         font-size: .8rem;
-
-        a {
-          color: rgb(148, 117, 222);
-        }
       }
     }
 
     .toggle-password i {
       font-size: .8rem;
-      color: #875fd6;
-    }
-
-    .modal-content {
-      background-color: white;
-      padding: 1.5rem 1rem;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-      width: 400px;
-      max-width: 80%;
-      position: relative;
-    }
-
-    .modal-content p {
-      font-size: .9rem;
-      color: #dfd9d9;
-    }
-
-    .success-modal {
-      background-color: #ffffff;
-      color: #28a745;
-    }
-
-    .success-modal p{
-      color: #28a745;
-    }
-
-    .error-modal {
-      background-color: #ffffff;
-    }
-
-    .error-modal p {
-      color: rgb(208, 58, 58);
-    }
-
-    .success-icon {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .error-icon {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
     }
   }
 
   @media (max-width: 492px) {
 
-    .login-container{
-      background: rgb(255, 255, 255);
-    }
-
     .logo-container {
       display: flex;
       margin-top: -5rem;  
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
   
     .logo-container img {
-      width: 100px;       
+      width: 120px;       
     }
 
     .box {
@@ -438,55 +274,35 @@ html, body {
       padding: .5rem .5rem;
       width: 90%;
       max-width: 390px;
-      box-shadow: none;
-      border: none;
-      transition: box-shadow 0.3s ease-in-out;
   }
 
     .title {
-      font-size: 1.5rem;
-      margin-bottom: 4rem;
+      font-size: 1.7rem;
+      margin-bottom: 3rem;
     }
 
     .field {
-      margin-bottom: 1.7rem;
+      margin-bottom: 2.1rem;
     }
 
     .floating-label input {
-      width: 100%;
-      padding: 0.55rem 12px;
-      padding-right: 36px;
       border-radius: 5px;
       box-shadow: none;
       border-color: rgb(196, 196, 196);
-      font-size: 1rem;
       height: 42px;
     }
   
     .floating-label input:focus {
       border-color: rgb(255, 255, 255);
-      border: 1px solid rgb(137, 136, 136);
+      border: 1px solid rgb(172, 172, 172);
       border-radius: 5px;
       outline: none;
     }
 
     .error {
       left: 5px;
-      font-size: .7rem;
+      font-size: .8rem;
       margin-top: 0rem;
-      bottom: -1.5rem;
-    }
-
-    .forgot-password-container {
-      position: absolute;
-      right: 0;
-      margin-top: 0px;
-    }
-
-    .forgot-password-link {
-      color: #7836d5;
-      text-decoration: none;
-      font-size: .9rem;
     }
 
     .field-button {
@@ -500,7 +316,6 @@ html, body {
     }
 
     .toggle-container {
-      text-align: center;
       margin-top: 2rem;
 
       p {
@@ -509,7 +324,6 @@ html, body {
 
         a {
           font-size: .85rem;
-          color: #7836d5;
         }
       }
     }
@@ -518,17 +332,4 @@ html, body {
       font-size: .9rem;
     }
 
-    .modal-content {
-      padding: 1.5rem 1rem;
-      max-width: 80%;
-      border-radius: 5px;
-    }
-
-    .modal-content p{
-      font-size: .85rem;
-    }
-
-    .modal-content i{
-      font-size: 1.1rem;
-    }
   }
