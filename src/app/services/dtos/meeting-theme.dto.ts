@@ -32,7 +32,9 @@ export interface Meeting {
   date: string;  
   hour: number;  
   present: boolean;  
-  mode: string;  
+  mode: string;
+  assignedBy?: { id: number; firstName: string; lastName: string } | null; 
+  markAssistanceByUser?: { id: number; firstName: string; lastName: string } | null;  
 }
 
 export type MonthKey = "ENERO" | "FEBRERO" | "MARZO" |
