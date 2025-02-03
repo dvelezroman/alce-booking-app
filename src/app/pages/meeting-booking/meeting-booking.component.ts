@@ -344,8 +344,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
     const startDate = new Date(this.today);
     const maxDate = new Date(startDate);
+    startDate.setHours(0, 0, 0, 0);
+    maxDate.setHours(23, 59, 59);
     maxDate.setDate(startDate.getDate() + 8);
-
     const isSunday = currentDate.getDay() === 0;
     return !isSunday && currentDate >= startDate && currentDate <= maxDate;
   }
@@ -379,7 +380,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     // const selectedDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
     const currentDate = new Date();
     // const currentDay = currentDate.getDay();
-    const currentHour = currentDate.getHours();
+    // console.log(getTimezoneOffsetHours());
+    const currentHour = currentDate.getHours() - getTimezoneOffsetHours();
 // console.log(currentDate);
     // Define the time slot range
     const startHour = 8; // 8 AM
