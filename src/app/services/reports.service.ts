@@ -3,7 +3,7 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
-import {Meeting, MeetingThemeDto} from "./dtos/meeting-theme.dto";
+import {Meeting, MeetingReportDetailed} from "./dtos/meeting-theme.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class ReportsService {
     private store: Store,
   ) {}
 
-  getDetailedStatistics(studentId: number, from: string, to: string, stageId?: number): Observable<MeetingThemeDto[]> {
+  getDetailedStatistics(studentId: number, from: string, to: string, stageId?: number): Observable<MeetingReportDetailed[]> {
     let params = new HttpParams();
 
     if (studentId) {
@@ -32,7 +32,7 @@ export class ReportsService {
       params = params.set('stageId', stageId.toString());
     }
 
-    return this.http.get<MeetingThemeDto[]>(`${this.apiUrl}/detail`, { params });
+    return this.http.get<MeetingReportDetailed[]>(`${this.apiUrl}/detail`, { params });
   }
 
   getStatisticsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<{ report: any }> {
@@ -65,5 +65,24 @@ export class ReportsService {
     }
 
     return this.http.get<{ meetings: Meeting[] }>(`${this.apiUrl}/statistics/${studentId}/meetings`, { params });
+  }
+
+  getCsvReport(type: string, studentId: number, from: string, to: string, stageId?: number) {
+    let params = new HttpParams();
+
+    if (type) {
+      params = params.set('type', type);
+    }
+    if (from) {
+      params = params.set('from', from);
+    }
+    if (to) {
+      params = params.set('to', to);
+    }
+    if (stageId) {
+      params = params.set('stageId', stageId.toString());
+    }
+
+    return this.http.get(`${this.apiUrl}/statistics/${studentId}/meetings`, { params, responseType: 'blob' });
   }
 }

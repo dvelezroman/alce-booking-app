@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} f
 import { UserDto } from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { ReportsService } from '../../services/reports.service';
-import { Meeting, MeetingThemeDto } from '../../services/dtos/meeting-theme.dto';
+import {Meeting, MeetingReportDetailed, MeetingThemeDto} from '../../services/dtos/meeting-theme.dto';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
 
@@ -30,8 +30,8 @@ export class ReportsDetailedComponent implements OnInit {
   showDropdown: boolean = false;
   selectedStudentId: number | undefined;
   selectedStudentName: string = '';
-  reportData: MeetingThemeDto[] = [];
-  statisticalData: MeetingThemeDto[] = []; 
+  reportData: MeetingReportDetailed[] = [];
+  statisticalData: MeetingThemeDto[] = [];
   meetingsData: Meeting[] = [];
   searchAttempted: boolean = false;
   showReportButtons = false;
@@ -40,7 +40,7 @@ export class ReportsDetailedComponent implements OnInit {
   modalData: ModalDto = modalInitializer();
 
   constructor(private fb: FormBuilder,
-              private stagesService: StagesService, 
+              private stagesService: StagesService,
               private usersService: UsersService,
               private reportsService: ReportsService) {
 
@@ -49,7 +49,7 @@ export class ReportsDetailedComponent implements OnInit {
         from: ['', Validators.required],
         to: ['', Validators.required],
         stageId: [''],
-    });   
+    });
  }
 
   ngOnInit() {
@@ -113,24 +113,24 @@ export class ReportsDetailedComponent implements OnInit {
       to: this.formatDate(this.detailedForm.get('to')?.value),
       stageId: this.detailedForm.get('stageId')?.value || undefined,
     };
-  
+
     //console.log('datos enviados:', formData);
-  
+
     this.reportsService.getDetailedStatistics(
       formData.studentId!,
       formData.from,
       formData.to,
       formData.stageId
     ).subscribe({
-      next: (data: MeetingThemeDto[]) => {  
+      next: (data: MeetingReportDetailed[]) => {
         this.reportData = data || [];
-        this.isReportGenerated = this.reportData.length > 0;  
+        this.isReportGenerated = this.reportData.length > 0;
         //console.log('respuesta del backend:', this.reportData);
       },
       error: (error) => {
         //console.error('Error al obtener el reporte:', error);
         this.isReportGenerated = false;
-        this.reportData = [];  
+        this.reportData = [];
       }
     });
   }
@@ -153,10 +153,10 @@ export class ReportsDetailedComponent implements OnInit {
   ).subscribe({
     next: (data) => {
       //console.log('Respuesta del backend (estadístico):', data);
-      
+
       if (data?.report) {
         this.statisticalData = [data.report];
-        this.activeReport = 'statistical'; 
+        this.activeReport = 'statistical';
       } else {
         this.statisticalData = [];
       }
@@ -198,11 +198,11 @@ fetchMeetingsReport() {
   private formatDate(dateString: string): string {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0]; 
+    return date.toISOString().split('T')[0];
 }
 
 openDownloadModal() {
-  if (!this.isReportGenerated) return; 
+  if (!this.isReportGenerated) return;
 
   this.modalData = {
     show: true,
@@ -218,8 +218,48 @@ closeModal() {
   this.modalData.show = false;
 }
 
-confirmDownload() {
-  console.log("Iniciando descarga...");
-  this.closeModal();
-}
+  confirmDownload() {
+    const formData = {
+      studentId: this.selectedStudentId,
+      from: this.formatDate(this.detailedForm.get('from')?.value),
+      to: this.formatDate(this.detailedForm.get('to')?.value),
+      stageId: this.detailedForm.get('stageId')?.value || undefined,
+    };
+    const reportType = () => {
+      switch (this.activeReport) {
+        case "detailed": return 'GET_DETAIL_REPORT'
+        case "meetings": return 'GET_MEETINGS'
+        default: return 'GET_MEETING_STATISTICS_BY_STUDENT_ID'
+      }
+    }
+    this.reportsService.getCsvReport(
+      reportType(),
+      formData.studentId!,
+      formData.from,
+      formData.to,
+      formData.stageId
+    ).subscribe({
+      next: (blob: Blob) => {
+        // Create a URL for the blob
+        const downloadUrl = window.URL.createObjectURL(blob);
+        // Create a temporary link element
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        // Optionally, set a filename for the download
+        a.download = 'report.csv';
+        // Append the link to the document (it needs to be in the DOM for Firefox)
+        document.body.appendChild(a);
+        // Programmatically click the link to trigger the download
+        a.click();
+        // Cleanup: remove the link and revoke the object URL
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(downloadUrl);
+      },
+      error: (error) => {
+        this.meetingsData = [];
+        console.error('Error al obtener el reporte de clases:', error);
+      }
+    });
+    this.closeModal();
+  }
 }

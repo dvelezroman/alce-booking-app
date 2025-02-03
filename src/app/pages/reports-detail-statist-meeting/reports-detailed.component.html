@@ -2,7 +2,7 @@
   <div class="container">
     <div class="form-block">
       <form [formGroup]="detailedForm" (ngSubmit)="onSubmit()">
-        
+
         <!-- Campo de búsqueda de estudiante -->
         <div class="field">
           <label class="label">Estudiante</label>
@@ -69,7 +69,7 @@
               <select formControlName="stageId">
                 <option value="">Selecciona el stage</option>
                 <option *ngFor="let stage of stages" [value]="stage.id">
-                  {{ stage.description }} 
+                  {{ stage.description }}
                 </option>
               </select>
             </div>
@@ -96,42 +96,44 @@
   </div>
 
   <div *ngIf="showReportButtons" class="button-block-reports">
-    <button class="custom-button" 
-            [class.active]="activeReport === 'detailed'" 
+    <button class="custom-button"
+            [class.active]="activeReport === 'detailed'"
             (click)="onSubmit()">Detallado</button>
-    <button class="custom-button" 
-            [class.active]="activeReport === 'statistical'" 
+    <button class="custom-button"
+            [class.active]="activeReport === 'statistical'"
             (click)="fetchStatisticalReport()">Estadístico</button>
-    <button class="custom-button" 
-            [class.active]="activeReport === 'meetings'" 
+    <button class="custom-button"
+            [class.active]="activeReport === 'meetings'"
             (click)="fetchMeetingsReport()">Clases</button>
   </div>
-  
+
   <div *ngIf="activeReport === 'detailed' && reportData && reportData.length > 0" class="table-container">
     <table class="table is-fullwidth">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Usuario</th>
           <th>Estudiante</th>
+          <th>Usuario</th>
           <th>Stage</th>
           <th>Instructor</th>
-          <th>Clases Agendadas</th>
+          <th>Agendadas</th>
+          <th>Presentes</th>
+          <th>Ausentes</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let report of reportData">
-          <td>{{ report.studentId }}</td>
-          <td>{{ report.student?.email }}</td>
-          <td>{{ report.student?.name }}</td>
-          <td>{{ report.student?.stage }}</td>
-          <td>{{ report.instructor?.name || 'No asignado' }}</td>
-          <td>{{ report._count?._all }}</td>
+          <td>{{ report.student_name }}</td>
+          <td>{{ report.username }}</td>
+          <td>{{ report.stage_description }}</td>
+          <td>{{ report.instructor_name }}</td>
+          <td>{{ report.total_meetings }}</td>
+          <td>{{ report.total_present }}</td>
+          <td>{{ report.total_absent }}</td>
         </tr>
       </tbody>
     </table>
   </div>
-  
+
   <!-- Tabla de Reporte Estadístico -->
   <div *ngIf="activeReport === 'statistical' && statisticalData.length > 0" class="table-container">
     <table class="table is-fullwidth">
@@ -159,7 +161,7 @@
       </tbody>
     </table>
   </div>
-  
+
   <!-- Tabla de Reporte meeting -->
   <div *ngIf="activeReport === 'meetings' && meetingsData.length > 0" class="table-container">
     <table class="table is-fullwidth">
@@ -170,6 +172,7 @@
           <th>Hora</th>
           <th>Asistencia</th>
           <th>Instructor</th>
+          <th>Asistencia Marcada Por</th>
           <th>Modalidad</th>
         </tr>
       </thead>
@@ -179,19 +182,20 @@
           <td>{{ meeting.date | date:'yyyy-MM-dd' }}</td>
           <td>{{ meeting.hour }}:00</td>
           <td>{{ meeting.present ? 'Sí' : 'No' }}</td>
+          <td>{{ meeting.instructor ? (meeting.instructor.user.firstName + ' ' + meeting.instructor.user.lastName) : 'No registrado' }}</td>
           <td>{{ meeting.markAssistanceByUser ? (meeting.markAssistanceByUser.firstName + ' ' + meeting.markAssistanceByUser.lastName) : 'No registrado' }}</td>
           <td>{{ meeting.mode }}</td>
         </tr>
       </tbody>
     </table>
   </div>
-  
+
   <div *ngIf="searchAttempted && reportData.length === 0" class="no-results">
     No hay resultados para los criterios seleccionados.
   </div>
 </section>
 
-<app-modal 
+<app-modal
   [showModal]="modalData.show"
   [message]="modalData.message"
   [isError]="modalData.isError"

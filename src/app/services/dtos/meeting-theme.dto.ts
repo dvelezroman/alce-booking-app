@@ -29,14 +29,25 @@ export interface MeetingThemeDto {
 
 export interface Meeting {
   id: number;
-  date: string;  
-  hour: number;  
-  present: boolean;  
+  date: string;
+  hour: number;
+  present: boolean;
   mode: string;
-  assignedBy?: { id: number; firstName: string; lastName: string } | null; 
-  markAssistanceByUser?: { id: number; firstName: string; lastName: string } | null;  
+  instructor?: { user: { id: number; firstName: string; lastName: string } };
+  assignedBy?: { id: number; firstName: string; lastName: string } | null;
+  markAssistanceByUser?: { id: number; firstName: string; lastName: string } | null;
+}
+
+export interface MeetingReportDetailed {
+  instructor_name: string;
+  stage_description: string;
+  student_name: string;
+  total_absent: number;
+  total_present: number;
+  total_meetings: number;
+  username: string;
 }
 
 export type MonthKey = "ENERO" | "FEBRERO" | "MARZO" |
- "ABRIL" | "MAYO" | "JUNIO" | "JULIO" | "AGOSTO" | 
+ "ABRIL" | "MAYO" | "JUNIO" | "JULIO" | "AGOSTO" |
  "SEPTIEMBRE" | "OCTUBRE" | "NOVIEMBRE" | "DICIEMBRE";
