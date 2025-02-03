@@ -127,8 +127,7 @@ export class ReportsDetailedComponent implements OnInit {
         this.isReportGenerated = this.reportData.length > 0;
         //console.log('respuesta del backend:', this.reportData);
       },
-      error: (error) => {
-        //console.error('Error al obtener el reporte:', error);
+      error: () => {
         this.isReportGenerated = false;
         this.reportData = [];
       }
