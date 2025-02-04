@@ -274,7 +274,7 @@ closeModal() {
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = downloadUrl;
-        a.download = `Resumen-General-Clases-Agendadas${from}-${to}.csv`;
+        a.download = `Resumen-General-Clases-Agendadas-desde-${from}-hasta-${to}.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
