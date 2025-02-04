@@ -7,8 +7,10 @@ import { UserDto } from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { ReportsService } from '../../services/reports.service';
 import {
+  Meeting,
   MeetingDataI,
   MeetingReportDetailed,
+  MeetingThemeDto,
   StatisticalDataI
 } from '../../services/dtos/meeting-theme.dto';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
@@ -240,13 +242,51 @@ closeModal() {
       formData.to,
       formData.stageId
     ).subscribe((blob) => {
-      const a = document.createElement('a');
+        const a = document.createElement('a');
       const url = window.URL.createObjectURL(blob);
       a.href = url;
       a.download = `report${reportType.label}_${formData.from}_${formData.to}.csv`;
-      a.click();
+        a.click();
       window.URL.revokeObjectURL(url); // Clean up
     });
     this.closeModal();
+  }
+
+
+  summaryReport() {
+    const fromControl = this.detailedForm.get('from');
+    const toControl = this.detailedForm.get('to');
+
+    if (!fromControl?.value || !toControl?.value) {
+        fromControl?.markAsTouched();
+        toControl?.markAsTouched();
+        return; 
+    }
+    
+    const from = this.formatDate(fromControl.value);
+    const to = this.formatDate(toControl.value);
+    const stageId = this.detailedForm.get('stageId')?.value || undefined;
+  
+    this.reportsService.getCsvSummaryReport(
+      "GET_MEETING_STATISTICS_BY_STUDENT_ID",
+      0, 
+      from || '',  
+      to || '',
+      stageId
+    ).subscribe({
+      next: (blob: Blob) => {
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = `resumen-general-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(downloadUrl);
+      },
+      error: (error) => {
+        console.error("Error al descargar el resumen general:", error);
+      },
+    });
   }
 }
