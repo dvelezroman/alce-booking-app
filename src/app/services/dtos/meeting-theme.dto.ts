@@ -1,5 +1,6 @@
 
 import {Stage} from "./student.dto";
+import {MeetingDTO} from "./booking.dto";
 
 export interface MeetingThemeDto {
   id?: number;
@@ -46,6 +47,20 @@ export interface MeetingReportDetailed {
   total_present: number;
   total_meetings: number;
   username: string;
+}
+
+export interface StatisticalDataI {
+  absent: number;
+  absent_percentage: number;
+  cancelled_percentage: number;
+  cancelled: number
+  present: number;
+  present_percentage: number;
+  total: number;
+}
+
+export interface MeetingDataI extends MeetingDTO {
+
 }
 
 export type MonthKey = "ENERO" | "FEBRERO" | "MARZO" |

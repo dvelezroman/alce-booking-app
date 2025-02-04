@@ -6,18 +6,26 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} f
 import { UserDto } from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { ReportsService } from '../../services/reports.service';
-import {Meeting, MeetingReportDetailed, MeetingThemeDto} from '../../services/dtos/meeting-theme.dto';
+import {
+  Meeting,
+  MeetingDataI,
+  MeetingReportDetailed,
+  MeetingThemeDto,
+  StatisticalDataI
+} from '../../services/dtos/meeting-theme.dto';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
+import {LuxonDatePipe} from "../../shared/utils/locale-date.pipe";
 
 @Component({
   selector: 'app-reports-detailed',
   standalone: true,
   imports: [
-      CommonModule,
-      FormsModule,
-      ReactiveFormsModule,
-      ModalComponent
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ModalComponent,
+    LuxonDatePipe,
   ],
   templateUrl: './reports-detailed.component.html',
   styleUrl: './reports-detailed.component.scss'
@@ -31,8 +39,8 @@ export class ReportsDetailedComponent implements OnInit {
   selectedStudentId: number | undefined;
   selectedStudentName: string = '';
   reportData: MeetingReportDetailed[] = [];
-  statisticalData: MeetingThemeDto[] = [];
-  meetingsData: Meeting[] = [];
+  statisticalData: StatisticalDataI | null  = null;
+  meetingsData: MeetingDataI[] = [];
   searchAttempted: boolean = false;
   showReportButtons = false;
   activeReport: 'detailed' | 'statistical' | 'meetings' = 'detailed';
@@ -152,17 +160,12 @@ export class ReportsDetailedComponent implements OnInit {
   ).subscribe({
     next: (data) => {
       //console.log('Respuesta del backend (estadístico):', data);
-
-      if (data?.report) {
-        this.statisticalData = [data.report];
-        this.activeReport = 'statistical';
-      } else {
-        this.statisticalData = [];
-      }
+      this.activeReport = 'statistical';
+      this.statisticalData = data;
     },
     error: (error) => {
       console.error('Error al obtener estadísticas:', error);
-      this.statisticalData = [];
+      this.statisticalData = null;
     }
   });
 }
@@ -185,7 +188,7 @@ fetchMeetingsReport() {
   ).subscribe({
     next: (data) => {
       //console.log(data);
-      this.meetingsData = data.meetings || [];
+      this.meetingsData = data || [];
     },
     error: (error) => {
       this.meetingsData = [];
@@ -245,7 +248,7 @@ closeModal() {
         const a = document.createElement('a');
         a.href = downloadUrl;
         // Optionally, set a filename for the download
-        a.download = 'report.csv';
+        a.download = `${this.activeReport}-report-${new Date().toLocaleString('YYYY-MM-DD')}.csv`;
         // Append the link to the document (it needs to be in the DOM for Firefox)
         document.body.appendChild(a);
         // Programmatically click the link to trigger the download

@@ -22,7 +22,9 @@ export interface MeetingDTO {
   status: string;
   meetings?: MeetingDTO[];
   assignedBy?: AssignedByDTO;
+  assignedAt?: Date;
   markAssistanceByUser?: MarkedAssistanceByDTO;
+  markAssistanceAt?: Date;
 }
 
 export interface AssignedByDTO {

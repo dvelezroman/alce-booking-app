@@ -135,7 +135,7 @@
   </div>
 
   <!-- Tabla de Reporte Estadístico -->
-  <div *ngIf="activeReport === 'statistical' && statisticalData.length > 0" class="table-container">
+  <div *ngIf="activeReport === 'statistical' && statisticalData" class="table-container">
     <table class="table is-fullwidth">
       <thead>
         <tr>
@@ -150,13 +150,13 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{ statisticalData[0].total ?? 'N/A' }}</td>
-          <td>{{ statisticalData[0].present ?? 'N/A' }}</td>
-          <td>{{ statisticalData[0].absent ?? 'N/A' }}</td>
-          <td>{{ statisticalData[0].cancelled ?? 'N/A' }}</td>
-          <td>{{ statisticalData[0].present_percentage ?? 'N/A' }}%</td>
-          <td>{{ statisticalData[0].absent_percentage ?? 'N/A' }}%</td>
-          <td>{{ statisticalData[0].cancelled_percentage ?? 'N/A' }}%</td>
+          <td>{{ statisticalData.total}}</td>
+          <td>{{ statisticalData.present}}</td>
+          <td>{{ statisticalData.absent}}</td>
+          <td>{{ statisticalData.cancelled}}</td>
+          <td>{{ statisticalData.present_percentage}}%</td>
+          <td>{{ statisticalData.absent_percentage}}%</td>
+          <td>{{ statisticalData.cancelled_percentage}}%</td>
         </tr>
       </tbody>
     </table>
@@ -167,23 +167,27 @@
     <table class="table is-fullwidth">
       <thead>
         <tr>
+          <th>Fecha de Agendado</th>
           <th>Agendado Por</th>
-          <th>Fecha</th>
+          <th>Fecha Clase</th>
           <th>Hora</th>
           <th>Asistencia</th>
           <th>Instructor</th>
           <th>Asistencia Marcada Por</th>
+          <th>Fecha de Asistencia Marcada</th>
           <th>Modalidad</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let meeting of meetingsData">
-          <td>{{ meeting.assignedBy ? (meeting.assignedBy.firstName + ' ' + meeting.assignedBy.lastName) : 'No registrado' }}</td>
+          <td>{{ meeting.assignedAt | luxonDate }}</td>
+          <td>{{ meeting.assignedBy ? (meeting.assignedBy?.firstName + ' ' + meeting.assignedBy?.lastName) : 'No registrado' }}</td>
           <td>{{ meeting.date | date:'yyyy-MM-dd' }}</td>
           <td>{{ meeting.hour }}:00</td>
           <td>{{ meeting.present ? 'Sí' : 'No' }}</td>
-          <td>{{ meeting.instructor ? (meeting.instructor.user.firstName + ' ' + meeting.instructor.user.lastName) : 'No registrado' }}</td>
-          <td>{{ meeting.markAssistanceByUser ? (meeting.markAssistanceByUser.firstName + ' ' + meeting.markAssistanceByUser.lastName) : 'No registrado' }}</td>
+          <td>{{ meeting.instructor ? (meeting.instructor.user?.firstName + ' ' + meeting.instructor.user?.lastName) : 'No registrado' }}</td>
+          <td>{{ meeting.markAssistanceByUser ? (meeting.markAssistanceByUser?.firstName + ' ' + meeting.markAssistanceByUser?.lastName) : 'No registrado' }}</td>
+          <td>{{ meeting.markAssistanceAt | luxonDate }}</td>
           <td>{{ meeting.mode }}</td>
         </tr>
       </tbody>
