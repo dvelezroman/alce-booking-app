@@ -7,10 +7,8 @@ import { UserDto } from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { ReportsService } from '../../services/reports.service';
 import {
-  Meeting,
   MeetingDataI,
   MeetingReportDetailed,
-  MeetingThemeDto,
   StatisticalDataI
 } from '../../services/dtos/meeting-theme.dto';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
@@ -227,40 +225,27 @@ closeModal() {
       to: this.formatDate(this.detailedForm.get('to')?.value),
       stageId: this.detailedForm.get('stageId')?.value || undefined,
     };
-    const reportType = () => {
+    const getReportType = () => {
       switch (this.activeReport) {
-        case "detailed": return 'GET_DETAIL_REPORT'
-        case "meetings": return 'GET_MEETINGS'
-        default: return 'GET_MEETING_STATISTICS_BY_STUDENT_ID'
+        case "detailed": return ({ type: 'GET_DETAIL_REPORT', label: `Reporte_detallado_estudianteId_${formData.studentId}` });
+        case "meetings": return ({ type: 'GET_MEETINGS', label: `Reporte_total_clases_estudianteId_${formData.studentId}` });
+        default: return ({ type: 'GET_MEETING_STATISTICS_BY_STUDENT_ID', label: `Reporte_estadistico_estudianteId_${formData.studentId}` });
       }
     }
+    const reportType = getReportType();
     this.reportsService.getCsvReport(
-      reportType(),
+      reportType.type,
       formData.studentId!,
       formData.from,
       formData.to,
       formData.stageId
-    ).subscribe({
-      next: (blob: Blob) => {
-        // Create a URL for the blob
-        const downloadUrl = window.URL.createObjectURL(blob);
-        // Create a temporary link element
-        const a = document.createElement('a');
-        a.href = downloadUrl;
-        // Optionally, set a filename for the download
-        a.download = `${this.activeReport}-report-${new Date().toLocaleString('YYYY-MM-DD')}.csv`;
-        // Append the link to the document (it needs to be in the DOM for Firefox)
-        document.body.appendChild(a);
-        // Programmatically click the link to trigger the download
-        a.click();
-        // Cleanup: remove the link and revoke the object URL
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(downloadUrl);
-      },
-      error: (error) => {
-        this.meetingsData = [];
-        console.error('Error al obtener el reporte de clases:', error);
-      }
+    ).subscribe((blob) => {
+      const a = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = `report${reportType.label}_${formData.from}_${formData.to}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url); // Clean up
     });
     this.closeModal();
   }
