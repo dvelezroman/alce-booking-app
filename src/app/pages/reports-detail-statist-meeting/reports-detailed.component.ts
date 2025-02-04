@@ -243,7 +243,7 @@ closeModal() {
         const a = document.createElement('a');
       const url = window.URL.createObjectURL(blob);
       a.href = url;
-      a.download = `report${reportType.label}_${formData.from}_${formData.to}.csv`;
+      a.download = `${reportType.label}_${formData.from}_${formData.to}.csv`;
         a.click();
       window.URL.revokeObjectURL(url); // Clean up
     });
