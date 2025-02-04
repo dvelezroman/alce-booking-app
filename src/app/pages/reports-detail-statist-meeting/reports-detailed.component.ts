@@ -7,10 +7,8 @@ import { UserDto } from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { ReportsService } from '../../services/reports.service';
 import {
-  Meeting,
   MeetingDataI,
   MeetingReportDetailed,
-  MeetingThemeDto,
   StatisticalDataI
 } from '../../services/dtos/meeting-theme.dto';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
@@ -260,25 +258,23 @@ closeModal() {
     if (!fromControl?.value || !toControl?.value) {
         fromControl?.markAsTouched();
         toControl?.markAsTouched();
-        return; 
+        return;
     }
-    
+
     const from = this.formatDate(fromControl.value);
     const to = this.formatDate(toControl.value);
     const stageId = this.detailedForm.get('stageId')?.value || undefined;
-  
+
     this.reportsService.getCsvSummaryReport(
-      "GET_MEETING_STATISTICS_BY_STUDENT_ID",
-      0, 
-      from || '',  
-      to || '',
+      from,
+      to,
       stageId
     ).subscribe({
       next: (blob: Blob) => {
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = downloadUrl;
-        a.download = `resumen-general-${new Date().toISOString().split('T')[0]}.csv`;
+        a.download = `Resumen-General-Clases-Agendadas${from}-${to}.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

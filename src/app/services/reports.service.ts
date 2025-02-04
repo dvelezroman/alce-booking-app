@@ -86,7 +86,7 @@ export class ReportsService {
     return this.http.get(`${this.apiUrl}/statistics/${studentId}/csv`, { params, responseType: 'blob' });
   }
 
-  getCsvSummaryReport(type: string, studentId: number, from: string, to: string, stageId?: number) {
+  getCsvSummaryReport(from: string, to: string, stageId?: number) {
     let params = new HttpParams();
 
     if (from) {
