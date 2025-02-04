@@ -181,12 +181,12 @@
       <tbody>
         <tr *ngFor="let meeting of meetingsData">
           <td>{{ meeting.assignedAt | luxonDate }}</td>
-          <td>{{ meeting.assignedBy ? (meeting.assignedBy?.firstName + ' ' + meeting.assignedBy?.lastName) : 'No registrado' }}</td>
+          <td>{{ meeting.assignedBy ? (meeting.assignedBy.firstName + ' ' + meeting.assignedBy.lastName) : 'No registrado' }}</td>
           <td>{{ meeting.date | date:'yyyy-MM-dd' }}</td>
           <td>{{ meeting.hour }}:00</td>
           <td>{{ meeting.present ? 'Sí' : 'No' }}</td>
           <td>{{ meeting.instructor ? (meeting.instructor.user?.firstName + ' ' + meeting.instructor.user?.lastName) : 'No registrado' }}</td>
-          <td>{{ meeting.markAssistanceByUser ? (meeting.markAssistanceByUser?.firstName + ' ' + meeting.markAssistanceByUser?.lastName) : 'No registrado' }}</td>
+          <td>{{ meeting.markAssistanceByUser ? (meeting.markAssistanceByUser.firstName + ' ' + meeting.markAssistanceByUser.lastName) : 'No registrado' }}</td>
           <td>{{ meeting.markAssistanceAt | luxonDate }}</td>
           <td>{{ meeting.mode }}</td>
         </tr>

@@ -3,7 +3,7 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
-import {Meeting, MeetingDataI, MeetingReportDetailed, StatisticalDataI} from "./dtos/meeting-theme.dto";
+import {MeetingDataI, MeetingReportDetailed, StatisticalDataI} from "./dtos/meeting-theme.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -83,7 +83,7 @@ export class ReportsService {
       params = params.set('stageId', stageId.toString());
     }
 
-    return this.http.get(`${this.apiUrl}/statistics/${studentId}/meetings`, { params, responseType: 'blob' });
+    return this.http.get(`${this.apiUrl}/statistics/${studentId}/csv`, { params, responseType: 'blob' });
   }
 
   getCsvSummaryReport(type: string, studentId: number, from: string, to: string, stageId?: number) {
