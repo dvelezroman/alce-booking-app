@@ -77,44 +77,45 @@
       </form>
     </div>
 
-    <!-- Tabla de resultados instructores datos -->
-    <div class="meeting-results" *ngIf="meetings.length > 0">
-      <table class="table is-fullwidth">
-        <thead>
-          <tr>
-            <th>Stage</th>
-            <th>Categoría</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Modo</th>
-            <th>Nota</th>
+  </section>
+  
+<!-- Tabla de resultados instructores datos -->
+<div class="table-container" *ngIf="meetings.length > 0">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Categoría</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Modo</th>
+          <th>Nota</th>
 <!--            <th>Asistida</th>-->
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let meeting of meetings">
-            <td>{{ meeting.meetings[0].stage?.number }}</td>
-            <td>{{ meeting.meetings[0].category }}</td>
-            <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
-            <td>{{ meeting.hour }}:00</td>
-            <td>{{ meeting.meetings[0].mode }}</td>
-            <td>
-              <span style="cursor:pointer;" *ngIf="!isFutureDate(meeting.date)" (click)="openThemeModal(meeting)" class="material-icons">menu_book</span>
-            </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let meeting of meetings">
+          <td>{{ meeting.meetings[0].stage?.number }}</td>
+          <td>{{ meeting.meetings[0].category }}</td>
+          <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
+          <td>{{ meeting.hour }}:00</td>
+          <td>{{ meeting.meetings[0].mode }}</td>
+          <td>
+            <span style="cursor:pointer;" *ngIf="!isFutureDate(meeting.date)" (click)="openThemeModal(meeting)" class="material-icons">menu_book</span>
+          </td>
 <!--            <td class="attendance-icon">-->
 <!--              <span class="material-icons" [ngClass]="itemmeeting.present ? 'icon-yes' : 'icon-no'">-->
 <!--                {{ meeting.present ? 'check' : 'close' }}-->
 <!--              </span>-->
 <!--            </td>-->
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div *ngIf="searchAttempted && meetings.length === 0" class="no-results">
-      No se encontraron clases para los criterios seleccionados.
-    </div>
-  </section>
+  <div *ngIf="searchAttempted && meetings.length === 0" class="no-results">
+    No se encontraron clases para los criterios seleccionados.
+  </div>
 
 <!-- Modal -->
 <div class="modal" [class.is-active]="isModalOpen">

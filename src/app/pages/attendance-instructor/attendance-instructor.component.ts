@@ -105,7 +105,8 @@ export class AttendanceInstructorComponent implements OnInit {
     this.bookingService.getInstructorMeetingsGroupedByHour(params).subscribe({
         next: (meetings) => {
             //console.log("Reuniones recibidas:", meetings);
-            this.meetings = meetings;
+            this.meetings = meetings.sort((a: InstructorAttendanceDto, b: InstructorAttendanceDto) => 
+              new Date(a.date).getTime() - new Date(b.date).getTime());
         },
         error: (error) => {
             console.error("Error al obtener las reuniones:", error);
