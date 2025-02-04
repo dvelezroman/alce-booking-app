@@ -3,7 +3,7 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
-import {Meeting, MeetingReportDetailed} from "./dtos/meeting-theme.dto";
+import {Meeting, MeetingDataI, MeetingReportDetailed, StatisticalDataI} from "./dtos/meeting-theme.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +35,7 @@ export class ReportsService {
     return this.http.get<MeetingReportDetailed[]>(`${this.apiUrl}/detail`, { params });
   }
 
-  getStatisticsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<{ report: any }> {
+  getStatisticsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<StatisticalDataI> {
     let params = new HttpParams();
 
     if (from) {
@@ -48,10 +48,10 @@ export class ReportsService {
       params = params.set('stageId', stageId.toString());
     }
 
-    return this.http.get<{ report: any }>(`${this.apiUrl}/statistics/${studentId}`, { params });
+    return this.http.get<StatisticalDataI>(`${this.apiUrl}/statistics/${studentId}`, { params });
   }
 
-  getMeetingsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<{ meetings: Meeting[] }> {
+  getMeetingsByStudentId(studentId: number, from: string, to: string, stageId?: number): Observable<MeetingDataI[]> {
     let params = new HttpParams();
 
     if (from) {
@@ -64,7 +64,7 @@ export class ReportsService {
       params = params.set('stageId', stageId.toString());
     }
 
-    return this.http.get<{ meetings: Meeting[] }>(`${this.apiUrl}/statistics/${studentId}/meetings`, { params });
+    return this.http.get<MeetingDataI[]>(`${this.apiUrl}/statistics/${studentId}/meetings`, { params });
   }
 
   getCsvReport(type: string, studentId: number, from: string, to: string, stageId?: number) {
@@ -84,5 +84,21 @@ export class ReportsService {
     }
 
     return this.http.get(`${this.apiUrl}/statistics/${studentId}/meetings`, { params, responseType: 'blob' });
+  }
+
+  getCsvSummaryReport(type: string, studentId: number, from: string, to: string, stageId?: number) {
+    let params = new HttpParams();
+
+    if (from) {
+      params = params.set('from', from);
+    }
+    if (to) {
+      params = params.set('to', to);
+    }
+    if (stageId) {
+      params = params.set('stageId', stageId.toString());
+    }
+
+    return this.http.get(`${this.apiUrl}/statistics/total/summary/csv`, { params, responseType: 'blob' });
   }
 }
