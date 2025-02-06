@@ -31,6 +31,7 @@ export class SearchingMeetingComponent implements OnInit {
   instructorList: Instructor[] = [];
   selectedMeetingIds: any[] = [];
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
+  mode: string[] =['ONLINE', 'PRESENCIAL'];
 
   toastMessage: string = '';
   toastType: 'success' | 'error' = 'success';
@@ -42,7 +43,8 @@ export class SearchingMeetingComponent implements OnInit {
     hour: '',
     stageId: '',
     assigned: false,
-    category: undefined
+    category: undefined,
+    mode: undefined,
   };
 
   constructor(private bookingService: BookingService,
@@ -72,13 +74,13 @@ export class SearchingMeetingComponent implements OnInit {
     this.isModalOpen = false;
   }
 
-
   onFilterChange(): void {
     const filterParams: FilterMeetingsDto = {
       ...this.filter,
       hour: this.filter.hour ? this.filter.hour.toString() : undefined,
       assigned: this.filter.assigned ? true : undefined,
-      category: this.filter.category ? this.filter.category : undefined
+      category: this.filter.category ? this.filter.category : undefined,
+      mode: this.filter.mode ? this.filter.mode : undefined,
     };
     if (this.filter.stageId === '') {
       delete filterParams.stageId;
@@ -95,6 +97,11 @@ export class SearchingMeetingComponent implements OnInit {
       } else {
         this.meetings = meetings;
       }
+      this.meetings.sort((a, b) => {
+        const stageA = a.stage?.number ? parseFloat(a.stage.number.replace(/[^0-9.]/g, '')) : Infinity;
+        const stageB = b.stage?.number ? parseFloat(b.stage.number.replace(/[^0-9.]/g, '')) : Infinity;
+        return stageA - stageB;
+      });
       this.originalMeetings = this.meetings;
       this.selectedMeetingIds = [];
     });
@@ -143,5 +150,10 @@ export class SearchingMeetingComponent implements OnInit {
     setTimeout(() => {
       this.isToastVisible = false;
     }, 3000);
+  }
+
+  openCommentModal(comment: string): void {
+    // Logic to open the modal
+    alert(comment); // Replace with your modal service logic
   }
 }

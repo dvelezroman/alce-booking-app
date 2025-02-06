@@ -7,6 +7,12 @@ export enum UserRole {
   ADMIN = 'ADMIN',
 }
 
+export enum UserStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  HOLD = 'HOLD',
+}
+
 export interface UserDto {
   id: number;
   idNumber?: string;
@@ -16,12 +22,12 @@ export interface UserDto {
   lastName?: string;
   birthday?: string;
   role?: UserRole;
-  status?: boolean;
   register?: boolean;
   student?: Student;
   stage?: Stage;
   instructor?: Instructor;
   comment?: string;
+  status?: UserStatus;
 }
 
 export interface LoginDto {

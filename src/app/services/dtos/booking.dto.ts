@@ -20,6 +20,21 @@ export interface MeetingDTO {
   meetingThemeId: number;
   meetingTheme: MeetingThemeDto;
   status: string;
+  meetings?: MeetingDTO[];
+  assignedBy?: AssignedByDTO;
+  assignedAt?: Date;
+  markAssistanceByUser?: MarkedAssistanceByDTO;
+  markAssistanceAt?: Date;
+}
+
+export interface AssignedByDTO {
+  lastName: string;
+  firstName: string;
+}
+
+export interface MarkedAssistanceByDTO {
+  lastName: string;
+  firstName: string;
 }
 
 export interface CreateMeetingDto {
@@ -44,6 +59,7 @@ export class FilterMeetingsDto {
   present?: string;
   category?: StudentClassification;
   status?: MeetingStatusEnum;
+  mode?: Mode;
 }
 
 export enum MeetingStatusEnum {

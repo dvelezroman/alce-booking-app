@@ -4,7 +4,8 @@ export const modalInitializer = (): ModalDto => {
     message: '',
     isError: false,
     isSuccess: false,
-    close: () => {}
+    close: () => {},
+    confirm: () => {}
   })
 }
 
@@ -14,4 +15,5 @@ export interface ModalDto {
   isError: boolean;
   isSuccess: boolean;
   close: () => void;
+  confirm?: () => void;
 }

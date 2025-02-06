@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FilterMeetingsDto, InstructorAttendanceDto, MeetingDTO} from '../../services/dtos/booking.dto';
+import {FilterMeetingsDto, InstructorAttendanceDto} from '../../services/dtos/booking.dto';
 import {UserDto, UserRole} from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { BookingService } from '../../services/booking.service';
@@ -105,7 +105,8 @@ export class AttendanceInstructorComponent implements OnInit {
     this.bookingService.getInstructorMeetingsGroupedByHour(params).subscribe({
         next: (meetings) => {
             //console.log("Reuniones recibidas:", meetings);
-            this.meetings = meetings;
+            this.meetings = meetings.sort((a: InstructorAttendanceDto, b: InstructorAttendanceDto) => 
+              new Date(a.date).getTime() - new Date(b.date).getTime());
         },
         error: (error) => {
             console.error("Error al obtener las reuniones:", error);
@@ -116,7 +117,7 @@ export class AttendanceInstructorComponent implements OnInit {
   openThemeModal(meeting: InstructorAttendanceDto) {
     this.selectedMeeting = {
       date: new Date(meeting.date),
-      description: meeting.meetings[0].meetingTheme.description,
+      description: meeting.meetings[0].meetingTheme?.description || '',
       hour: meeting.hour,
       instructorId: meeting.instructorId
     };

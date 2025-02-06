@@ -6,5 +6,10 @@
     <i *ngIf="isError" class="fas fa-exclamation-circle error-icon"></i>
     <i *ngIf="isSuccess" class="fas fa-check-circle success-icon"></i>
     <p>{{ message }}</p>
+
+    <div class="modal-buttons" *ngIf="showButtons">
+      <button class="button confirm-button" (click)="confirm()">Aceptar</button>
+      <button class="button cancel-button" (click)="close.emit()">Cancelar</button>
+    </div>
   </div>
 </div>

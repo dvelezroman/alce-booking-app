@@ -1,31 +1,36 @@
 :host {
     display: block;
     padding: 0rem;
+    padding-bottom: 4rem;
     background-color: #f2f2f2;
     min-height: 100vh;
   }
-
+  
   .attendance-title {
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 1000;
+    left: 0;
+    color: rgb(53, 53, 53);
+    width: 100%;
     background-color: white;
-    padding: 1.35rem 0;
+    z-index: 10;
     text-align: center;
-    margin-bottom: 4rem;
+    font-family: 'Poppins', sans-serif;
+    padding: 1.35rem 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
 
   .attendance-title h1 {
     font-size: 1.8rem;
-    font-weight: bold;
+    line-height: 1.5;
     color: #282828;
-    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
   }
 
   .attendance-section {
     background-color: transparent;
-    padding: 1rem .5rem;
+    padding: 1rem;
+    padding-top: 8rem;
     border-radius: 8px;
     max-width: 800px;
     margin: 0 auto;
@@ -38,15 +43,16 @@
     border-radius: 8px;
     max-width: 600px;
     margin: 0 auto;
+    margin-bottom: 2rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     border: 1px solid rgb(203, 202, 202);
 }
 
   .label {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
     margin-left: 5px;
-    margin-bottom: 2px;
+    margin-bottom: 5px;
     color: #333;
   }
 
@@ -136,7 +142,7 @@
 
   .select select {
     width: 100%;
-    font-size: 0.95rem;
+    font-size: 1rem;
     padding: 0.5rem;
     border: 1px solid #ddd;
     background-color: white;
@@ -175,7 +181,7 @@
     border: 1px solid #d0d0d0;
     border-radius: 4px;
     padding: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
     height: 42px;
     box-sizing: border-box;
     appearance: none;
@@ -215,60 +221,85 @@
 
   .button {
     width: 100%;
+    margin-top: 1rem;
     padding: .7rem;
     font-size: 1rem;
-    font-weight: 600;
     color: #ffffff;
     background-color: #007bff;
     border-radius: 4px;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
   }
 
-  .button:hover {
-    background-color: #0056b3;
+  .table-container {
+    max-width: 90%;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+    overflow-x: auto;
   }
 
-  /*  TABLA DE RESULTADO DE BÚSQUEDA*/
-/* Contenedor de resultados de reuniones */
-.meeting-results {
-  background-color: white;
-  width: 100%;
-  max-height: 500px;
-  overflow-y: auto;
-  margin: 3rem 0 0;
+  .table {
+    width: 90%;
+    margin: auto;
+    min-width: 710px;
+    border-collapse: collapse;
+    background-color: white;
+    border-spacing: 0;
+    overflow-x: auto;
+  }
+
+  .table thead {
+    position: sticky;
+    top: 0;
+    background-color: #bcf496;
+    z-index: 2;
+  }
+
+  .table th {
+    text-align: center;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #bcf496;
+    color: black;
+    border-bottom: none;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .table tbody {
+    display: block;
+    max-height: 500px; 
+    overflow-y: auto; 
+  }
+
+  .table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .table tbody tr:hover {
+    background-color: rgb(239, 239, 239); 
+    transition: background-color 0.3s ease-in-out; 
 }
 
-/* Tabla */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: center;
-  margin: auto;
-  overflow: hidden;
-}
-
-.table thead th {
-  text-align: center;
-  font-size: .9rem;
-  font-weight: 500;
-  color: #333;
-  padding: 10px 8px;
-  background-color: #bcf496;
-  border-bottom:none;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.table td {
-  padding: 0.75rem;
-  font-size: 0.9rem;
-  color: #333;
-  background-color: #ffffff;
-  border-bottom: .5px solid #dadada;
-}
+  .table td {
+    width: auto;
+    text-align: center;
+    padding: 8px;
+    font-size: 1rem;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    max-height: 400px; 
+    overflow-y: auto; 
+    display: table-cell;
+    vertical-align: middle;
+  }
 
 .attendance-icon {
   text-align: center;
@@ -300,13 +331,8 @@
 
   /* Estilos responsivos */
   @media (max-width: 768px) {
-
     :host {
-      padding: 0rem;
-    }
-
-    .attendance-section {
-      padding: 1rem 1rem;
+      padding: 1rem;
     }
 
     .attendance-title {
@@ -315,6 +341,10 @@
 
     .attendance-title h1 {
       color: white;
+    }
+
+    .table-container {
+      max-width: 100%;
     }
 
   }
@@ -331,10 +361,14 @@
       font-size: 1.5rem;
     }
 
-    .columns.is-mobile .field {
-      margin-bottom: .9rem;
+    .columns.is-mobile {
+      flex-direction: column; 
     }
 
+    .columns.is-mobile .column {
+      width: 100%; 
+    }
+    
     .label {
       font-size: 0.85rem;
       margin-bottom: 2px;
