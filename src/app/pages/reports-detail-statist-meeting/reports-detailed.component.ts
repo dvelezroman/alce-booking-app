@@ -285,4 +285,41 @@ closeModal() {
       },
     });
   }
+
+  dailySummaryReport() {
+    const fromControl = this.detailedForm.get('from');
+    const toControl = this.detailedForm.get('to');
+
+    if (!fromControl?.value || !toControl?.value) {
+      fromControl?.markAsTouched();
+      toControl?.markAsTouched();
+      return;
+    }
+
+    const studentId = this.detailedForm.get('studentId')?.value || undefined;
+    const from = this.formatDate(fromControl.value);
+    const to = this.formatDate(toControl.value);
+    const stageId = this.detailedForm.get('stageId')?.value || undefined;
+
+    this.reportsService.getCsvDailySummaryReport(
+      from,
+      to,
+      studentId,
+      stageId,
+    ).subscribe({
+      next: (blob: Blob) => {
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = `Resumen-General-Diario-Clases-Agendadas-desde-${from}-hasta-${to}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(downloadUrl);
+      },
+      error: (error) => {
+        console.error("Error al descargar el resumen general:", error);
+      },
+    });
+  }
 }

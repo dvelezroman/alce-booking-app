@@ -101,4 +101,24 @@ export class ReportsService {
 
     return this.http.get(`${this.apiUrl}/statistics/total/summary/csv`, { params, responseType: 'blob' });
   }
+
+  getCsvDailySummaryReport(from: string, to: string, studentId?: number, stageId?: number) {
+    let params = new HttpParams();
+
+    if (studentId) {
+      params = params.set('studentId', studentId.toString());
+    }
+
+    if (from) {
+      params = params.set('from', from);
+    }
+    if (to) {
+      params = params.set('to', to);
+    }
+    if (stageId) {
+      params = params.set('stageId', stageId.toString());
+    }
+
+    return this.http.get(`${this.apiUrl}/statistics/daily/summary/csv`, { params, responseType: 'blob' });
+  }
 }
