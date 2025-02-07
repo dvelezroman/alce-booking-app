@@ -111,8 +111,9 @@
             [class.active]="activeReport === 'meetings'"
             [disabled]="!isReportGenerated"
             (click)="fetchMeetingsReport()">Clases</button>
-            
+
     <button class="download-button" (click)="summaryReport()">Reporte Completo</button>
+    <button class="download-button" (click)="dailySummaryReport()">Reporte Diario</button>
   </div>
 
   <div *ngIf="activeReport === 'detailed' && reportData && reportData.length > 0" class="table-container">
@@ -133,7 +134,7 @@
           <td>{{ report.student_name }}</td>
           <td>{{ report.username }}</td>
           <td>{{ report.stage_description }}</td>
-          <td>{{ report.instructor_name }}</td>
+          <td>{{ report.instructor_name || 'No asignado' }}</td>
           <td>{{ report.total_meetings }}</td>
           <td>{{ report.total_present }}</td>
           <td>{{ report.total_absent }}</td>
