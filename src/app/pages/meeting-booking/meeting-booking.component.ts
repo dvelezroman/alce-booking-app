@@ -327,29 +327,42 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.updateNavigationButtons();
   }
 
-  isDaySelectable(day: any): boolean {
+  isDaySelectable(day: { day: number }): boolean {
     const monthMap: Record<string, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
+
     const monthIndex = monthMap[this.selectedMonth];
-    const currentDate = new Date(this.selectedYear, monthIndex, day.day);
+    if (monthIndex === undefined) return false; // Guard clause for invalid month
 
-    if (currentDate.getMonth() === 11 && (currentDate.getDate() === 21 || currentDate.getDate() === 25 || currentDate.getDate() === 31)) {
-      return false;
-    }
-    if (currentDate.getMonth() === 0 && currentDate.getDate() === 1) {
-      return false;
-    }
+    const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
+    const today = new Date(this.today);
+    today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
 
-    const startDate = new Date(this.today);
-    const maxDate = new Date(startDate);
-    startDate.setHours(0, 0, 0, 0);
-    maxDate.setHours(23, 59, 59);
-    maxDate.setDate(startDate.getDate() + 8);
-    const isSunday = currentDate.getDay() === 0;
-    return !isSunday && currentDate >= startDate && currentDate <= maxDate;
+    // Get the Monday of the current week
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - today.getDay() + 1); // Move to Monday
+
+    // Get the Saturday of the current week
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 5); // Move to Saturday
+
+    // Get the Monday of next week
+    const nextWeekStart = new Date(weekStart);
+    nextWeekStart.setDate(weekStart.getDate() + 7);
+
+    // Get the Saturday of next week
+    const nextWeekEnd = new Date(nextWeekStart);
+    nextWeekEnd.setDate(nextWeekStart.getDate() + 5);
+
+    return (
+      selectedDate.getDay() !== 0 &&
+      ((selectedDate >= weekStart && selectedDate <= weekEnd) ||
+        (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd))
+    );
   }
+
 
   selectDay(day: any) {
     const monthMap: Record<string, number> = {
