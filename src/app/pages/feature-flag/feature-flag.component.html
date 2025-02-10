@@ -48,14 +48,17 @@
             *ngFor="let day of currentMonthDays"
             class="calendar-day"
             (click)="selectDay(day)"
-            [class.selected]="selectedDay === day.day"
-            [class.empty]="!day.day">
+            [class.selected]="selectedDay?.day === day.day"
+            [class.empty]="!day.day"
+            [class.disabled]="day.isDisabled">
             {{ day.day }}
           </div>
         </div>
       </div>
       <div class="button-block">
-        <button class="button is-primary" (click)="sendDate()">Deshabilitar Fecha</button>
+        <button class="button is-primary" [disabled]="!selectedDay" (click)="blockDate()">
+          {{ buttonText }}
+        </button>
       </div>
     </div>
   </section>
