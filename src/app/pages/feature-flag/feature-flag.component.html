@@ -3,18 +3,60 @@
 
   <table class="table is-striped">
     <thead>
-    <tr>
-      <th>Configuración</th>
-      <th>Habilitado</th>
-    </tr>
+      <tr>
+        <th>Configuración</th>
+        <th>Habilitado</th>
+      </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let ff of ffs">
-      <td>Habilitar Agendamiento</td>
-      <td data-label="Habilitar Feature Flag">
-        <input type="checkbox" [checked]="ff.status" (change)="toggle(ff)" />
-      </td>
-    </tr>
+      <tr *ngFor="let ff of ffs">
+        <td>Habilitar Agendamiento</td>
+        <td data-label="Habilitar Feature Flag">
+          <input type="checkbox" [checked]="ff.status" (change)="toggle(ff)" />
+        </td>
+      </tr>
     </tbody>
   </table>
+
+   <!-- Calendar Selection -->
+  <section class="calendar-container">
+    <div class="date-selection">
+      <div class="calendar-title">
+        <h3 class="title is-4">Deshabilitar dia</h3>
+      </div>
+      <div class="month-selector">
+        <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()" aria-label="Previous month">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
+        <button *ngIf="canGoForward" class="button is-small next-button" (click)="nextMonth()" aria-label="Next month">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="calendar">
+        <div class="calendar-header">
+          <div class="calendar-day-header">D</div>
+          <div class="calendar-day-header">L</div>
+          <div class="calendar-day-header">M</div>
+          <div class="calendar-day-header">M</div>
+          <div class="calendar-day-header">J</div>
+          <div class="calendar-day-header">V</div>
+          <div class="calendar-day-header">S</div>
+        </div>
+        <div class="calendar-grid">
+          <div
+            *ngFor="let day of currentMonthDays"
+            class="calendar-day"
+            (click)="selectDay(day)"
+            [class.selected]="selectedDay === day.day"
+            [class.empty]="!day.day">
+            {{ day.day }}
+          </div>
+        </div>
+      </div>
+      <div class="button-block">
+        <button class="button is-primary" (click)="sendDate()">Deshabilitar Fecha</button>
+      </div>
+    </div>
+  </section>
 </div>

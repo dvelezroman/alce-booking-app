@@ -39,92 +39,239 @@ h2.title {
   font-family: 'Poppins', sans-serif;
 }
 
-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-button .material-icons {
-  font-size: 19px;
-  vertical-align: middle;
-  margin-right: 2px;
-  margin-bottom: 2px;
-}
-
-.button.is-primary {
-  color: #7743a8;
-  font-size: .9rem;
-  background-color: transparent;
-  border: .5px solid #7743a8;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  display: block;
-  margin: 10rem auto 1rem auto;
-}
-
-.button.is-primary:hover {
-  color: #ffffff;
-  background-color: #7743a8;
-  border-color: #7743a8;
-}
-
 // Table Styles
 
 .table {
-  margin: 0 auto;
-  margin-top: 6rem;
-  margin-bottom: 1rem;
-  table-layout: fixed;
+  margin: 7rem auto 1rem auto;
   width: 60%;
   border-collapse: collapse;
   border-radius: 7px 7px 2px 2px;
   overflow: hidden;
+  
+  th, td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.7rem 0.4rem;
+    font-size: 0.9rem;
+    border-bottom: 0.5px solid #dad8d8;
+  }
+
+  th {
+    background-color: #4390e8;
+    color: white;
+    font-weight: bold;
+  }
+
+  td {
+    background-color: white;
+    color: black;
+  }
+
+  tbody tr:nth-child(even) td {
+    background-color: #f9f9f9;
+  }
+
+  tbody tr:hover {
+    background-color: #eef6fd;
+  }
 }
 
-.table th,
-.table td {
+/* estilos del calendario */
+
+.calendar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto 1rem;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.date-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+  background: rgba(255, 255, 255, 0.731);
+  border-radius: 10px;
+}
+
+.calendar {
+  display: flex;
+  padding: 1rem 0rem;
+  background-color: #ffffff;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.calendar-title {
   text-align: center;
-  vertical-align: middle;
+  margin-bottom: .5rem;
+  cursor: default;
+  background-color: rgb(254, 208, 101);
+  padding: 0.7rem 2.5rem;
+  border-radius: 25px;
 }
 
-/* Estilos para los encabezados (th) */
-.table th {
-  background-color: #4390e8;
+.title.is-4 {
+  font-size: 1rem;
+  color: rgb(62, 62, 62);
+}
+
+.month-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 85%;
+  background-color: transparent;
+  padding: 15px;
+}
+
+.month-label {
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.month-selector button {
+  width: 40px;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  color: rgb(89, 87, 87);
+  padding: 0;
+  cursor: pointer;
+  position: absolute;
+  font-size: 1rem;
+  transform: translateY(-50%);
+}
+
+.prev-button {
+  top: 53%;
+  left: 11.5%;
+}
+
+.next-button {
+  top: 48%;
+  left: 75%;
+}
+
+.month-selector button.hidden {
+  visibility: hidden;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 0px;
+}
+
+.calendar-day-header {
+  padding: 8px 10px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  background-color: transparent;
+  color: #434445;
+}
+
+.calendar-grid {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 35px;
+  gap: 5px;
+  width: 100%;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 18px;
+  font-size: 0.8rem;
+  background-color: #ffffffb3;
+  border: 1px solid #ddd;
+  color: grey;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calendar-day.selectable {
+  background-color: #f9f9f9;
+  border: 1px solid #6eb3fc;
+  color: #333;
+  cursor: pointer;
+}
+
+.calendar-day.selectable:hover {
+  background-color: #6eb3fc;
   color: white;
-  padding: .7rem .5rem;
-  font-size: .9rem;
-  border-bottom: none;
 }
 
-/* Estilos para las celdas (td) */
-.table td {
-  background-color: white;
-  color: black;
-  padding: 0.7rem 0.4rem;
-  font-size: .9rem;
-  border-bottom: .5px solid #dad8d8;
+.calendar-day.unselectable {
+  background-color: #e1e1e1;
+  color: #929191;
+  cursor: not-allowed;
 }
 
-.table th:nth-child(1),
-.table td:nth-child(1) {
-  width: 7%;
+.calendar-day.selected {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: default;
 }
 
-.table th:nth-child(2),
-.table td:nth-child(2) {
-  width: 25%;
+.calendar-day.empty {
+  background-color: transparent;
+  border: none;
+  cursor: none;
+  pointer-events: none;
 }
 
-.table th:nth-child(3),
-.table td:nth-child(3) {
-  width: 20%;
+.calendar-day.danger {
+  background-color: #ffcccb;
+  color: #8b8a8a;
 }
 
-.table tbody tr:nth-child(even) td {
-  background-color: #fdfdfd;
+.button-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
 }
 
-/* RESPONSIVE PARA TABLA DE LISTA DE STAGES Y MODAL CREAR STAGES */
+.button.is-primary {
+  background-color: #4390e8; 
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button.is-primary:active {
+  background-color: #2a5d8c;
+  transform: scale(0.98);
+}
+
 @media (max-width: 768px) {
 
   .container {
@@ -134,378 +281,72 @@ button .material-icons {
     text-align: center;
   }
 
-  h2.title {
-    font-size: 1.5rem;
-    background: linear-gradient(45deg, #4a90e2,  #7743a8);
-  }
-
   .title.stage{
+    background: linear-gradient(45deg, #4a90e2,  #7743a8);
     color: white;
-  }
-
-  .button.is-primary {
-    margin-top: 6rem;
-  }
-
-  /*TABLA*/
-  h2.title{
-    left: 0;
-    width: 100%;
+    font-size: 1.5rem;
   }
 
   .table {
-    margin-bottom: 2rem;
-    width: 95%;
-    table-layout: fixed;
-    border-collapse: collapse;
-    border-radius: 7px 7px 2px 2px;
-    overflow: hidden;
-    border: 1px solid #dbdee1c5;
-
-    th:nth-child(1), td:nth-child(1) {
-      width: 8%;
-    }
-
-    th:nth-child(2), td:nth-child(2) {
-      width: 40%;
-    }
-
-    th:nth-child(3), td:nth-child(3) {
-      width: 55%;
-    }
-
+    width: 90%;
+    margin: 5rem auto 1rem auto;
+    font-size: 0.85rem;
+    
     th, td {
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    th {
-      padding: .5rem;
-      font-size: .8rem;
-    }
-
-    td {
-      padding: 0.3rem;
-      font-size: .8rem;
-    }
-
-
-    .buttons {
-      gap: 0.5rem;
-
-      .button {
-        gap: .3rem;
-        font-size: .5rem;
-        padding: 0.3rem .75rem;
-      }
-
-      .edit-button {
-
-        i {
-          font-size: .75rem;
-        }
-      }
-
-      .delete-button {
-
-        i {
-          font-size: .75rem;
-        }
-      }
+      padding: 0.6rem 0.3rem;
     }
   }
 
-  /* RESPONSIVE PARA MODAL DE DELETE*/
-
-  .modal-content2 {
-    max-width: 400px;
-    padding: 1.5rem;
-    background-color: rgba(234, 233, 236, 0.937);
-    border: .5px solid grey;
+  .date-selection {
+    padding: 1rem .5rem;
   }
 
-  .delete-modal-title {
-    font-size: 1.2rem;
-    margin-bottom: .4rem;
-    margin-left: 2px;
+  .calendar-title {
+    padding: 0.5rem 1.5rem;
   }
 
-  .delete-modal-text {
-    font-size: .9rem;
-    margin-bottom: 2rem;
-    margin-left: 3px;
+  .month-selector {
+    padding: 10px;
   }
 
-  .delete-modal-actions {
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
+  .month-label {
+    font-size: 0.85rem;
   }
 
-  /* Botón de Delete */
-  .delete-modal-btn-delete {
-    padding: .78rem 4.2rem;
-    font-size: .9rem;
-    margin-bottom: .3rem;
-    border-radius: 5px !important;
-    background-color: #3273dc;
-    color: white;
-    border: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
-
-    &:hover {
-      background-color: #275bb5;
-    }
+  .month-selector button {
+    width: 35px;
+    height: 2rem;
   }
 
-  /* Botón de Cancel */
-  .delete-modal-btn-cancel {
-    padding: .7rem 4.2rem;
-    font-size: .9rem;
-    margin-bottom: .3rem;
-    background-color: transparent;
-    color: rgb(132, 65, 199);
-    border: 1px solid rgb(132, 65, 199);
-    transition: background-color 0.3s ease, color 0.3s ease;
+  .calendar-day-header {
+    font-size: 0.75rem;
+  }
 
-    &:hover {
-      background-color: rgb(110, 44, 176);
-      color: white;
-    }
+  .calendar-day {
+    padding: 18px;
+    font-size: 0.8rem;
   }
 }
 
-/* RESPONSIVE*/
-@media (max-width: 492px){
-  .container {
-    margin: 0;
-    padding: 0;
-    width: 100vw;
-    max-width: 100%;
+@media (max-width: 492px) {
+  .date-time-selection {
+    padding: 1rem;
+    margin-top: 1rem;
   }
 
-  h2.title{
-    padding: .29rem 0;
-  }
-
-  .title.stage {
-    font-size: 1.5rem;
-  }
-
-  .button.is-primary {
-    padding: 0.5rem .8rem;
-    font-size: 0.85rem;
-    border: .01rem solid;
-    background-color: #ffffff;
-    margin-top: 7rem;
+  .calendar-title {
     margin-bottom: 1.5rem;
   }
 
-  /*TABLA*/
-
-  .table {
-    margin: 0 auto;
-    width: 90%;
-    border-radius: 3px;
-    border: none;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-
-    th {
-      padding: 7px .3rem;
-      font-size: .8rem;
-    }
-
-    td {
-      padding: 0.25rem;
-      font-size: .8rem;
-    }
-
-    th:nth-child(1), td:nth-child(1) {
-      width: 10%;
-    }
-
-    th:nth-child(2), td:nth-child(2) {
-      width: 55%;
-    }
-
-    th:nth-child(3), td:nth-child(3) {
-      width: 35%;
-    }
-
-    .buttons {
-      gap: .5rem;
-
-      .button {
-        border: none ;
-        gap: .3rem;
-        font-size: 0rem;
-        padding: 0.25rem;
-      }
-
-      .edit-button {
-
-        i {
-          font-size: 1rem;
-        }
-      }
-
-      .delete-button {
-        border: none;
-        color: #7743a8;
-        border-color: #7743a8;
-        i {
-          font-size: 1rem;
-        }
-      }
-    }
+  .month-selector button {
+    width: 30px;
+    height: 1.8rem;
   }
 
-}
-
-/* RESPONSIVE DEL MODAL DE BORRAR */
-
-@media (max-width: 492px) {
-
-  .modal-background2 {
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-
-  .modal-content2 {
-    width: 300px;
-    margin: auto;
-    padding: 1.2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  }
-
-  h2.delete-modal-title {
-    font-size: 1.3rem;
-    text-align: left;
-    margin-left: 5px;
-    margin-bottom: 0px;
-  }
-
-  .delete-modal-text{
-    font-size: .85rem;
-    text-align: left;
-    margin-left: 5px;
-    margin-bottom: 10px;
-  }
-
-  .delete-modal-actions{
-    display: flex;
-    flex-direction: column;
-  }
-
-  .delete-modal-actions {
-    display: flex;
-    flex-direction: row;
-    gap: .5rem;
-    justify-content: flex-end;
-  }
-
-  .delete-modal-btn-delete,
-  .delete-modal-btn-cancel {
-    width: 100%;
-    padding: .5rem .75rem;
-    font-size: .8rem;
-  }
-
-
-  /* RESPONSIVE DEL MODAL CREAR STAGES */
-
-  .modal {
-    .modal-background {
-      background-color: rgba(38, 37, 37, 0.3);
-    }
-
-    .modal-content {
-      max-width: 90%;
-      padding: .5rem .2rem;
-      background-color: rgb(249, 249, 249);
-    }
-
-    h3.title {
-      font-size: 1.4rem;
-    }
-
-    .label {
-      font-size: .8rem;
-    }
-
-    .input,
-    .textarea {
-      resize: none;
-      border: 1px solid rgb(184, 184, 184);
-      padding: 0.55rem;
-      font-size: .85rem;
-    }
-
-    .input{
-      height: 40px;
-    }
-
-    .input:focus,
-    .textarea:focus {
-      border-color: #af7be0;
-    }
-
-    .buttons-container {
-      gap: .5rem;
-      margin-top: 1rem;
-    }
-
-    .button {
-      font-size: .9rem;
-      padding: .7rem;
-      text-align: center;
-      cursor: pointer;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .create-btn {
-      background-color: #3273dc;
-      color: white;
-    }
-
-    .create-btn:hover {
-      background-color: #275bb5;
-    }
-
-    .cancel-btn {
-      border: 1px solid rgb(127, 56, 198) ;
-      background-color: transparent;
-      color: rgb(127, 56, 198);
-    }
-
-    .cancel-btn:hover {
-      background-color: rgb(110, 44, 176);
-    }
-  }
-
-
-}
-
-/* Estilos comunes para los toasts */
-.toast {
-  animation: fadeInOut 3s ease-in-out forwards;
-}
-
-/* Animación de entrada y salida */
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  10% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  90% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-20px);
+  .calendar-day {
+    padding: 18px;
+    font-size: 0.9rem;
   }
 }
+
+

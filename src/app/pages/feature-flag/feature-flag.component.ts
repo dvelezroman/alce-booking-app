@@ -19,6 +19,12 @@ import {catchError, EMPTY, switchMap} from "rxjs";
 })
 export class FeatureFlagComponent implements OnInit {
   ffs: FeatureFlagDto[] = [];
+  selectedMonth!: string;
+  selectedYear!: number;
+  currentMonthDays: any[] = [];
+  selectedDay: number | null = null;
+  canGoBack = false;
+  canGoForward = true;
 
   constructor(
     private readonly ffService: FeatureFlagService,
@@ -26,6 +32,11 @@ export class FeatureFlagComponent implements OnInit {
 
   ngOnInit() {
     this.getAll();
+    const today = new Date();
+      this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+      this.selectedYear = today.getFullYear();
+      this.generateCurrentMonthDays();
+      this.updateNavigationButtons();
   }
 
   private getAll() {
@@ -46,5 +57,58 @@ export class FeatureFlagComponent implements OnInit {
       next: () => console.log('Feature flag toggled and list updated'),
       error: (err) => console.error('Subscription error:', err)
     });
+  }
+
+  prevMonth() {
+    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1, " + this.selectedYear)).getMonth() - 1);
+    this.selectedMonth = date.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    this.selectedYear = date.getFullYear();
+    this.generateCurrentMonthDays();
+    this.updateNavigationButtons();
+  }
+
+  nextMonth() {
+    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1, " + this.selectedYear)).getMonth() + 1);
+    this.selectedMonth = date.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    this.selectedYear = date.getFullYear();
+    this.generateCurrentMonthDays();
+    this.updateNavigationButtons();
+  }
+
+  generateCurrentMonthDays() {
+    const monthIndex = new Date(Date.parse(this.selectedMonth + " 1, " + this.selectedYear)).getMonth();
+    const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
+    const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
+
+    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '' }));
+    this.currentMonthDays = this.currentMonthDays.concat(
+      Array.from({ length: daysInMonth }, (_, i) => ({ day: i + 1 }))
+    );
+  }
+
+  updateNavigationButtons() {
+    const today = new Date();
+    const currentMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    const currentYear = today.getFullYear();
+    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const nextMonth = nextMonthDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    const nextYear = nextMonthDate.getFullYear();
+
+    this.canGoBack = !(this.selectedMonth === currentMonth && this.selectedYear === currentYear);
+    this.canGoForward = !(this.selectedMonth === nextMonth && this.selectedYear === nextYear);
+  }
+
+  selectDay(day: any) {
+    if (day.day) {
+      this.selectedDay = day.day;
+    }
+  }
+
+  sendDate() {
+    if (this.selectedDay) {
+      console.log(`Fecha: ${this.selectedDay} ${this.selectedMonth} ${this.selectedYear}`);
+    } else {
+      console.log('No se ha seleccionado ninguna fecha.');
+    }
   }
 }
