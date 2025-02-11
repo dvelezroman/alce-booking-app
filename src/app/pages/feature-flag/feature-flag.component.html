@@ -30,6 +30,10 @@
           <span>Día habilitado</span>
         </div>
         <div class="legend-item">
+          <span class="legend-circle hours-disabled"></span>
+          <span>Horas deshabilitadas</span>
+        </div>
+        <div class="legend-item">
           <span class="legend-circle disabled"></span>
           <span>Día deshabilitado</span>
         </div>
@@ -60,7 +64,8 @@
             (click)="selectDay(day)"
             [class.selected]="isDaySelected(day)"
             [class.empty]="!day.day"
-            [class.disabled]="day.isDisabled">
+            [class.disabled]="day.isDisabled"
+            [class.hours-disabled]="day.isHoursDisabled">
             {{ day.day }}
           </div>
         </div>
@@ -73,7 +78,7 @@
           Deshabilitar Día(s)
         </button>
       </div>
-     
+
     </div>
   </section>
 </div>

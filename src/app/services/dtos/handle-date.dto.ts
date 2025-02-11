@@ -6,3 +6,10 @@ export interface DisabledDateAndHours {
 }
 
 export interface DisabledDatesAndHours extends Record<string, DisabledDateAndHours[]> {}
+
+export interface SelectedDay {
+  day: number,
+  isDisabled: boolean,
+  isHoursDisabled: boolean,
+  hours: number[],
+}

@@ -6,7 +6,11 @@ import {catchError, EMPTY, Observable, switchMap, tap} from "rxjs";
 import {FeatureFlagService} from "../../services/feature-flag.service";
 import {HandleDatesService} from "../../services/handle-dates.service";
 import {FeatureFlagDto} from "../../services/dtos/feature-flag.dto";
-import {DisabledDateAndHours, DisabledDatesAndHours, DisabledDays} from "../../services/dtos/handle-date.dto";
+import {
+  DisabledDatesAndHours,
+  DisabledDays,
+  SelectedDay
+} from "../../services/dtos/handle-date.dto";
 
 @Component({
   selector: 'app-feature-flag',
@@ -24,7 +28,7 @@ export class FeatureFlagComponent implements OnInit {
   selectedMonth!: string;
   selectedYear!: number;
   currentMonthDays: any[] = [];
-  selectedDays: { day: number, isDisabled: boolean, hours: [] }[] = [];
+  selectedDays: SelectedDay[] = [];
   canGoBack = false;
   canGoForward = true;
   disabledDates: DisabledDays = {};
@@ -129,8 +133,9 @@ export class FeatureFlagComponent implements OnInit {
       ...Array.from({ length: firstDayOfWeek }, () => ({ day: '' })),
       ...Array.from({ length: daysInMonth }, (_, i) => {
         const day = i + 1;
-        const isDisabled = this.disabledDatesAndHours[(monthIndex).toString()]?.some(dateAndHour => dateAndHour.day == day) ?? false; // ✅ Corrected indexing
-        return { day, isDisabled };
+        const isDisabled = this.disabledDatesAndHours[(monthIndex).toString()]?.some(dateAndHour => dateAndHour.day === day && dateAndHour.hours.length === 0) ?? false; // ✅ Corrected indexing
+        const isHoursDisabled = this.disabledDatesAndHours[(monthIndex).toString()]?.some(dateAndHour => dateAndHour.day === day && dateAndHour.hours.length) ?? false; // ✅ Corrected indexing
+        return { day, isDisabled, isHoursDisabled };
       })
     ];
   }
@@ -153,14 +158,27 @@ export class FeatureFlagComponent implements OnInit {
     this.canGoForward = selectedDate < limitDate;
   }
 
-  selectDay(day: any) {
+  selectDay(day: SelectedDay) {
     if (day.day) {
       const existingIndex = this.selectedDays.findIndex(selected => selected.day === day.day);
 
       if (existingIndex > -1) {
         this.selectedDays.splice(existingIndex, 1);
       } else {
-        this.selectedDays.push({ day: day.day, isDisabled: day.isDisabled, hours: [] });
+        this.selectedDays.push({ day: day.day, isDisabled: day.isDisabled, isHoursDisabled: day.isHoursDisabled, hours: [] });
+      }
+      this.generateCurrentMonthDays();
+    }
+  }
+
+  selectHour(day: SelectedDay, selectedHour: number) {
+    if (day.day) {
+      const existingDayIndex = this.selectedDays.findIndex(selected => selected.day === day.day);
+      const existingHourIndex = this.selectedDays[existingDayIndex].hours.findIndex(hour => hour === selectedHour);
+      if (existingHourIndex > -1) {
+        this.selectedDays[existingDayIndex].hours.splice(existingHourIndex, 1);
+      } else {
+        this.selectedDays[existingDayIndex].hours.push(selectedHour);
       }
       this.generateCurrentMonthDays();
     }
