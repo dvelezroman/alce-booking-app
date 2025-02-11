@@ -24,7 +24,7 @@ export class FeatureFlagComponent implements OnInit {
   selectedMonth!: string;
   selectedYear!: number;
   currentMonthDays: any[] = [];
-  selectedDay: { day: number, isDisabled: boolean } | null = null;
+  selectedDays: { day: number, isDisabled: boolean }[] = [];
   canGoBack = false;
   canGoForward = true;
   buttonText: string = 'Selecciona un día';
@@ -38,6 +38,7 @@ export class FeatureFlagComponent implements OnInit {
   ngOnInit() {
     this.getAll();
     this.getDisabledDates().subscribe(() => {
+      console.log('Fechas deshabilitadas cargadas:', this.disabledDates);
       const today = new Date();
       this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
       this.selectedYear = today.getFullYear();
@@ -49,10 +50,15 @@ export class FeatureFlagComponent implements OnInit {
 
   private getDisabledDates(): Observable<DisabledDays> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
-
+  
     return this.handleDatesService.getNotAvailableDates(firstDayOfYear, lastDayOfYear).pipe(
       tap((disabledDays: DisabledDays) => {
+        Object.keys(disabledDays).forEach(month => {
+          disabledDays[month] = [...new Set(disabledDays[month])];
+        });
+  
         this.disabledDates = disabledDays;
+        console.log('Fechas deshabilitadas actualizadas:', this.disabledDates);
       })
     );
   }
@@ -87,21 +93,29 @@ export class FeatureFlagComponent implements OnInit {
   }
 
   prevMonth() {
-    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1, " + this.selectedYear)).getMonth() - 1);
+    const date = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth) - 1);
     this.selectedMonth = date.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.selectedYear = date.getFullYear();
-    this.selectedDay = null;
+    this.selectedDays = [];
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
   }
 
   nextMonth() {
-    const date = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1, " + this.selectedYear)).getMonth() + 1);
+    const date = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth) + 1);
     this.selectedMonth = date.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.selectedYear = date.getFullYear();
-    this.selectedDay = null;
+    this.selectedDays = [];
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
+  }
+
+  getMonthIndex(monthName: string): number {
+    const monthMap: Record<string, number> = {
+      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+    };
+    return monthMap[monthName] ?? -1; 
   }
 
   generateCurrentMonthDays() {
@@ -129,51 +143,74 @@ export class FeatureFlagComponent implements OnInit {
     ];
   }
 
-
   updateNavigationButtons() {
     const monthMap: Record<string, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-
+  
     const today = new Date();
     const currentMonthIndex = today.getMonth();
     const currentYear = today.getFullYear();
-    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    const nextMonthIndex = nextMonthDate.getMonth();
-    const nextYear = nextMonthDate.getFullYear();
     const selectedMonthIndex = monthMap[this.selectedMonth];
+    const limitDate = new Date(currentYear + 1, currentMonthIndex -1);
+    const selectedDate = new Date(this.selectedYear, selectedMonthIndex);
 
-    this.canGoBack = !(selectedMonthIndex === currentMonthIndex && this.selectedYear === currentYear);
-    this.canGoForward = !(selectedMonthIndex === nextMonthIndex && this.selectedYear === nextYear);
+    this.canGoBack = selectedDate > new Date(currentYear, currentMonthIndex);
+  
+    this.canGoForward = selectedDate < limitDate;
   }
 
   selectDay(day: any) {
     if (day.day) {
-      this.selectedDay = { day: day.day, isDisabled: day.isDisabled };
-      this.buttonText = day.isDisabled ? 'Habilitar Día' : 'Deshabilitar Día';
+      const existingIndex = this.selectedDays.findIndex(selected => selected.day === day.day);
+
+      if (existingIndex > -1) {
+        this.selectedDays.splice(existingIndex, 1);
+      } else {
+        this.selectedDays.push({ day: day.day, isDisabled: day.isDisabled });
+      }
+
+      this.generateCurrentMonthDays();
     }
   }
 
-  blockDate() {
-    if (this.selectedDay) {
-      const { day } = this.selectedDay;
+  isDaySelected(day: any): boolean {
+    return this.selectedDays.some(selected => selected.day === day.day);
+  }
 
-      // Mapeo de meses para obtener el índice correcto del mes
+  blockDate(action: 'enable' | 'disable') {
+    if (this.selectedDays.length > 0) {
       const monthMap: Record<string, number> = {
         ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
         JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
       };
-
+  
       const monthIndex = monthMap[this.selectedMonth];
-
       if (monthIndex === undefined) {
         console.error('Mes inválido:', this.selectedMonth);
         return;
       }
-      const formattedDate = `${this.selectedYear}-${(monthIndex + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-      console.log(`Fecha seleccionada: ${formattedDate}`);
-
+  
+      const dates = this.selectedDays.map(({ day }) => 
+        `${this.selectedYear}-${(monthIndex + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
+      );
+  
+      const uniqueDates = [...new Set(dates)];
+  
+      if (action === 'disable') {
+        this.handleDatesService.disableDates(uniqueDates).subscribe(() => {
+          this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
+          console.log('Fechas deshabilitadas:', uniqueDates);
+        });
+      } else {
+        this.handleDatesService.enableDates(uniqueDates).subscribe(() => {
+          this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
+          console.log('Fechas habilitadas:', uniqueDates);
+        });
+      }
+  
+      this.selectedDays = [];
     } else {
       console.log('No se ha seleccionado ninguna fecha.');
     }

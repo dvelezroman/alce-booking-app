@@ -24,6 +24,16 @@
       <div class="calendar-title">
         <h3 class="title is-4">Deshabilitar dia</h3>
       </div>
+      <div class="calendar-legend">
+        <div class="legend-item">
+          <span class="legend-circle enabled"></span>
+          <span>Día habilitado</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-circle disabled"></span>
+          <span>Día deshabilitado</span>
+        </div>
+      </div>
       <div class="month-selector">
         <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()" aria-label="Previous month">
           <i class="fas fa-chevron-left"></i>
@@ -48,7 +58,7 @@
             *ngFor="let day of currentMonthDays"
             class="calendar-day"
             (click)="selectDay(day)"
-            [class.selected]="selectedDay?.day === day.day"
+            [class.selected]="isDaySelected(day)"
             [class.empty]="!day.day"
             [class.disabled]="day.isDisabled">
             {{ day.day }}
@@ -56,10 +66,14 @@
         </div>
       </div>
       <div class="button-block">
-        <button class="button is-primary" [disabled]="!selectedDay" (click)="blockDate()">
-          {{ buttonText }}
+        <button class="button enable-btn" [disabled]="!selectedDays.length" (click)="blockDate('enable')">
+          Habilitar Día(s)
+        </button>
+        <button class="button disable-btn" [disabled]="!selectedDays.length" (click)="blockDate('disable')">
+          Deshabilitar Día(s)
         </button>
       </div>
+     
     </div>
   </section>
 </div>
