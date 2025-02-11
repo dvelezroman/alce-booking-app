@@ -6,7 +6,7 @@ import {catchError, EMPTY, Observable, switchMap, tap} from "rxjs";
 import {FeatureFlagService} from "../../services/feature-flag.service";
 import {HandleDatesService} from "../../services/handle-dates.service";
 import {FeatureFlagDto} from "../../services/dtos/feature-flag.dto";
-import {DisabledDays} from "../../services/dtos/handle-date.dto";
+import {DisabledDateAndHours, DisabledDatesAndHours, DisabledDays} from "../../services/dtos/handle-date.dto";
 
 @Component({
   selector: 'app-feature-flag',
@@ -24,11 +24,11 @@ export class FeatureFlagComponent implements OnInit {
   selectedMonth!: string;
   selectedYear!: number;
   currentMonthDays: any[] = [];
-  selectedDays: { day: number, isDisabled: boolean }[] = [];
+  selectedDays: { day: number, isDisabled: boolean, hours: [] }[] = [];
   canGoBack = false;
   canGoForward = true;
-  buttonText: string = 'Selecciona un día';
   disabledDates: DisabledDays = {};
+  disabledDatesAndHours: DisabledDatesAndHours = {};
 
   constructor(
     private readonly ffService: FeatureFlagService,
@@ -47,16 +47,11 @@ export class FeatureFlagComponent implements OnInit {
     });
   }
 
-  private getDisabledDates(): Observable<DisabledDays> {
+  private getDisabledDates(): Observable<DisabledDatesAndHours> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
-
-    return this.handleDatesService.getNotAvailableDates(firstDayOfYear, lastDayOfYear).pipe(
-      tap((disabledDays: DisabledDays) => {
-        Object.keys(disabledDays).forEach(month => {
-          disabledDays[month] = [...new Set(disabledDays[month])];
-        });
-
-        this.disabledDates = disabledDays;
+    return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear).pipe(
+      tap((disabledDatesAndHours) => {
+        this.disabledDatesAndHours = disabledDatesAndHours
       })
     );
   }
@@ -134,7 +129,7 @@ export class FeatureFlagComponent implements OnInit {
       ...Array.from({ length: firstDayOfWeek }, () => ({ day: '' })),
       ...Array.from({ length: daysInMonth }, (_, i) => {
         const day = i + 1;
-        const isDisabled = this.disabledDates[(monthIndex).toString()]?.includes(day) ?? false; // ✅ Corrected indexing
+        const isDisabled = this.disabledDatesAndHours[(monthIndex).toString()]?.some(dateAndHour => dateAndHour.day == day) ?? false; // ✅ Corrected indexing
         return { day, isDisabled };
       })
     ];
@@ -165,9 +160,8 @@ export class FeatureFlagComponent implements OnInit {
       if (existingIndex > -1) {
         this.selectedDays.splice(existingIndex, 1);
       } else {
-        this.selectedDays.push({ day: day.day, isDisabled: day.isDisabled });
+        this.selectedDays.push({ day: day.day, isDisabled: day.isDisabled, hours: [] });
       }
-
       this.generateCurrentMonthDays();
     }
   }
@@ -195,6 +189,9 @@ export class FeatureFlagComponent implements OnInit {
       const uniqueDates = [...new Set(dates)];
 
       if (action === 'disable') {
+        // this.handleDatesService.disableDatesHours({ items: datesAndHours }).subscribe(() => {
+        //   this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
+        // });
         this.handleDatesService.disableDates(uniqueDates).subscribe(() => {
           this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
         });
