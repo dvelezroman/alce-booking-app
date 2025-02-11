@@ -32,6 +32,6 @@ export class HandleDatesService {
   }
 
   enableDates(dates: string[]): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/enable`,  { dates });
+    return this.http.request<void>('DELETE', `${this.apiUrl}/enable`, { body: { dates } });
   }
 }
