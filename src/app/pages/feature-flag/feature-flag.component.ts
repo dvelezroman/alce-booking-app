@@ -38,7 +38,6 @@ export class FeatureFlagComponent implements OnInit {
   ngOnInit() {
     this.getAll();
     this.getDisabledDates().subscribe(() => {
-      console.log('Fechas deshabilitadas cargadas:', this.disabledDates);
       const today = new Date();
       this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
       this.selectedYear = today.getFullYear();
@@ -50,15 +49,14 @@ export class FeatureFlagComponent implements OnInit {
 
   private getDisabledDates(): Observable<DisabledDays> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
-  
+
     return this.handleDatesService.getNotAvailableDates(firstDayOfYear, lastDayOfYear).pipe(
       tap((disabledDays: DisabledDays) => {
         Object.keys(disabledDays).forEach(month => {
           disabledDays[month] = [...new Set(disabledDays[month])];
         });
-  
+
         this.disabledDates = disabledDays;
-        console.log('Fechas deshabilitadas actualizadas:', this.disabledDates);
       })
     );
   }
@@ -81,8 +79,7 @@ export class FeatureFlagComponent implements OnInit {
   toggle(ff: FeatureFlagDto) {
     this.ffService.toggle(ff.id).pipe(
       switchMap(async () => this.getAll()),
-      catchError((error) => {
-        console.error('Error toggling feature flag:', error);
+      catchError(() => {
         // Optional: Display user-friendly feedback using a notification service
         return EMPTY;
       })
@@ -115,7 +112,7 @@ export class FeatureFlagComponent implements OnInit {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-    return monthMap[monthName] ?? -1; 
+    return monthMap[monthName] ?? -1;
   }
 
   generateCurrentMonthDays() {
@@ -148,7 +145,7 @@ export class FeatureFlagComponent implements OnInit {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-  
+
     const today = new Date();
     const currentMonthIndex = today.getMonth();
     const currentYear = today.getFullYear();
@@ -157,7 +154,7 @@ export class FeatureFlagComponent implements OnInit {
     const selectedDate = new Date(this.selectedYear, selectedMonthIndex);
 
     this.canGoBack = selectedDate > new Date(currentYear, currentMonthIndex);
-  
+
     this.canGoForward = selectedDate < limitDate;
   }
 
@@ -185,34 +182,29 @@ export class FeatureFlagComponent implements OnInit {
         ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
         JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
       };
-  
+
       const monthIndex = monthMap[this.selectedMonth];
       if (monthIndex === undefined) {
-        console.error('Mes inválido:', this.selectedMonth);
         return;
       }
-  
-      const dates = this.selectedDays.map(({ day }) => 
+
+      const dates = this.selectedDays.map(({ day }) =>
         `${this.selectedYear}-${(monthIndex + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
       );
-  
+
       const uniqueDates = [...new Set(dates)];
-  
+
       if (action === 'disable') {
         this.handleDatesService.disableDates(uniqueDates).subscribe(() => {
           this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
-          console.log('Fechas deshabilitadas:', uniqueDates);
         });
       } else {
         this.handleDatesService.enableDates(uniqueDates).subscribe(() => {
           this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
-          console.log('Fechas habilitadas:', uniqueDates);
         });
       }
-  
+
       this.selectedDays = [];
-    } else {
-      console.log('No se ha seleccionado ninguna fecha.');
     }
   }
 }
