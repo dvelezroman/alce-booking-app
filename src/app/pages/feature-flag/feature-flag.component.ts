@@ -232,6 +232,46 @@ export class FeatureFlagComponent implements OnInit {
     }
   }
 
+  blockHours() {
+    if (this.selectedDays.length > 0) {
+      const monthMap: Record<string, number> = {
+        ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+        JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+      };
+  
+      const monthIndex = monthMap[this.selectedMonth];
+      if (monthIndex === undefined) {
+        console.error('Mes inválido:', this.selectedMonth);
+        return;
+      }
+  
+      // Generar el payload para enviar las horas seleccionadas
+      const hoursToDisable = this.selectedDays
+        .filter(day => day.hours.length > 0)  
+        .map(day => ({
+          date: `${this.selectedYear}-${(monthIndex + 1).toString().padStart(2, '0')}-${day.day.toString().padStart(2, '0')}`,
+          hours: day.hours
+        }));
+  
+        if (!hoursToDisable.length) {
+          return;
+        }
+      
+      this.handleDatesService.disableDatesHours(hoursToDisable).subscribe({
+        next: () => {
+          console.log('Horas deshabilitadas:', hoursToDisable);
+          this.getDisabledDatesAndHours().subscribe(() => {
+            const selectedDay = this.selectedDays[0]; 
+            this.recalculateTimeSlots(selectedDay);
+          });
+        },
+        error: (err) => {
+          console.error('Error al deshabilitar horas:', err);
+        }
+      });
+    } 
+  }
+
   isSunday(dayNumber: number): boolean {
     return new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), dayNumber).getDay() === 0;
   }
@@ -276,22 +316,22 @@ export class FeatureFlagComponent implements OnInit {
     return dayData ? dayData.hours : [];
   }
 
-  isHourSelected(hour: number): boolean {
-    return this.selectedDays.length > 0 && this.selectedDays[0].hours.includes(hour);
+isHourSelected(hour: number): boolean {
+  return this.selectedDays.length > 0 && this.selectedDays[0].hours.includes(hour);
 }
 
-  toggleHourSelection(hour: number) {
-    if (this.selectedDays.length === 0) return;
+toggleHourSelection(hour: number, isDisabled: boolean) {
+  if (this.selectedDays.length === 0) return;
 
-    const selectedDay = this.selectedDays[0];
-    const hourIndex = selectedDay.hours.indexOf(hour);
+  const selectedDay = this.selectedDays[0];
+  const index = selectedDay.hours.indexOf(hour);
 
-    if (hourIndex > -1) {
-      selectedDay.hours.splice(hourIndex, 1);
-    } else {
-      selectedDay.hours.push(hour);
-    }
+  if (index > -1) {
+    selectedDay.hours.splice(index, 1);  
+  } else {
+    selectedDay.hours.push(hour);       
   }
+}
 
 
 }
