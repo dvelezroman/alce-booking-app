@@ -33,7 +33,7 @@ export class FeatureFlagComponent implements OnInit {
   canGoForward = true;
   disabledDates: DisabledDays = {};
   disabledDatesAndHours: DisabledDatesAndHours = {};
-  timeSlots: { label: string, value: number }[] = [];
+  timeSlots: { label: string; value: number; isDisabled?: boolean }[] = [];
 
   constructor(
     private readonly ffService: FeatureFlagService,
@@ -42,7 +42,12 @@ export class FeatureFlagComponent implements OnInit {
 
   ngOnInit() {
     this.getAll();
+
     this.getDisabledDates().subscribe(() => {
+      this.generateCurrentMonthDays();
+    });
+
+    this.getDisabledDatesAndHours().subscribe(() => {
       const today = new Date();
       this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
       this.selectedYear = today.getFullYear();
@@ -57,6 +62,17 @@ export class FeatureFlagComponent implements OnInit {
     return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear).pipe(
       tap((disabledDatesAndHours) => {
         this.disabledDatesAndHours = disabledDatesAndHours
+      })
+    );
+  }
+
+  private getDisabledDatesAndHours(): Observable<DisabledDatesAndHours> {
+    const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
+  
+    return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear).pipe(
+      tap((disabledDatesAndHours) => {
+        this.disabledDatesAndHours = disabledDatesAndHours;
+        //console.log('fechas y horas deshabilitadas:', this.disabledDatesAndHours); 
       })
     );
   }
@@ -231,17 +247,29 @@ export class FeatureFlagComponent implements OnInit {
   
     const monthIndex = monthMap[this.selectedMonth];
     const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
-    const dayOfWeek = selectedDate.getDay(); 
+    const dayOfWeek = selectedDate.getDay();
+    const startHour = 8;
+    const endHour = 20;
+    const saturdayEndHour = 13;
+    const finalEndHour = (dayOfWeek === 6) ? saturdayEndHour : endHour;
+    const disabledHours = this.getDisabledHoursForDay(day.day, monthIndex);
   
-    const startHour = 8;  // 8:00 AM
-    const endHour = 20;   // 8:00 PM
-    const saturdayEndHour = 13; // 1:00 PM para Sábados
+    this.timeSlots = Array.from({ length: finalEndHour - startHour + 1 }, (_, i) => {
+      const hour = startHour + i;
+      return {
+        label: `${hour}:00`,
+        value: hour,
+        isDisabled: disabledHours.includes(hour) 
+      };
+    });
+  }
+
+  getDisabledHoursForDay(day: number, monthIndex: number): number[] {
+    const monthData = this.disabledDatesAndHours[monthIndex.toString()];
+    if (!monthData) return [];
   
-    if (dayOfWeek === 6) {
-      this.timeSlots = this.generateTimeSlots(startHour, saturdayEndHour);
-    } else {
-      this.timeSlots = this.generateTimeSlots(startHour, endHour);
-    }
+    const dayData = monthData.find(d => d.day === day);
+    return dayData ? dayData.hours : [];
   }
 
   isHourSelected(hour: number): boolean {

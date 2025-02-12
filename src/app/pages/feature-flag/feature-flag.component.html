@@ -83,14 +83,22 @@
   </section>
 
   <section class="time-selection" *ngIf="selectedDays.length === 1 && timeSlots.length > 0">
-    <h3 class="title is-4">Selecciona las Horas</h3>
+    <div class="time-title">
+      <h3 class="title is-4">Deshabilitar hora</h3>
+    </div>
     <div class="time-grid">
       <div *ngFor="let time of timeSlots"
-          class="time-slot"
-          [class.selected]="isHourSelected(time.value)"
-          (click)="toggleHourSelection(time.value)">
-        {{ time.label }}
+        class="time-slot"
+        [class.selected]="isHourSelected(time.value)"
+        [class.disabled]="time.isDisabled"
+        (click)="!time.isDisabled && toggleHourSelection(time.value)">
+          {{ time.label }}
       </div>
+    </div>
+    <div class="button-block">
+      <button class="button disable-btn"
+              [disabled]="selectedDays[0].hours.length === 0">Deshabilitar Hora(s)
+      </button>
     </div>
   </section>
 
