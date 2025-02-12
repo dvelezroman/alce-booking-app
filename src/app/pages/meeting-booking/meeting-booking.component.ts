@@ -28,6 +28,7 @@ import {
   getTimezoneOffsetHours
 } from "../../shared/utils/dates.util";
 import { HandleDatesService } from '../../services/handle-dates.service';
+import { DisabledDatesAndHours, DisabledDays } from '../../services/dtos/handle-date.dto';
 
 
 @Component({
@@ -59,9 +60,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   meetingType: Mode = Mode.ONLINE;
   mode = Mode;
   selectedDate: string = '';
-  selectedTimeSlot: {label: string, value: number} = { label: "8:00", value: 8 };
+  selectedTimeSlot: { label: string; value: number; isDisabled: boolean } = { label: '8:00', value: 8, isDisabled: false };
   hoverIndex: number | null = null;
-  timeSlots: {label: string, value: number }[] = [];
+  timeSlots: { label: string; value: number; isDisabled: boolean }[] = [];
   today: string = '';
   maxDate: string = '';
   selectedMonth!: string;
@@ -91,6 +92,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   linkStatus: string = 'not-clickable';
   ffs: FeatureFlagDto[] = [];
   disabledDates: Record<string, number[]> = {};
+  disabledDatesAndHours: DisabledDatesAndHours = {};
 
 
   constructor(
@@ -110,33 +112,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.ffService.getAll().subscribe(ffs => {
       this.ffs = ffs;
     });
+  
     this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
       this.userData = state;
       if (state?.student?.id) {
         this.initializeMeetings();
       }
     });
-    this.getDisabledDates()
-      this.today = this.getTodayDate();
-      this.maxDate = this.getMaxDate();
-      this.selectedDate = this.today; // Fecha seleccionada por defecto: hoy
-      
-      const todayDate = new Date();
-      this.selectedMonth = todayDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
-      this.selectedYear = todayDate.getFullYear();
-      this.todayMonth = this.selectedMonth;
-      this.todayYear = this.selectedYear;
-      
-      const nextDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, 1);
-      this.nextMonth_ = nextDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
-      this.nextYear = nextDate.getFullYear();
   
-      this.generateCurrentMonthDays();  
-      this.updateNavigationButtons();   
-    
-    setTimeout(() => {
-      this.checkScroll();
-    }, 100);
+    this.getDisabledDates().subscribe(() => {
+      this.getDisabledDatesAndHours().subscribe(() => {
+        this.initializeCalendar();
+      });
+    });
   }
 
   ngOnDestroy() {
@@ -164,6 +152,29 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
+  private initializeCalendar(): void {
+    this.today = this.getTodayDate();
+    this.maxDate = this.getMaxDate();
+    this.selectedDate = this.today; 
+  
+    const todayDate = new Date();
+    this.selectedMonth = todayDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    this.selectedYear = todayDate.getFullYear();
+    this.todayMonth = this.selectedMonth;
+    this.todayYear = this.selectedYear;
+  
+    const nextDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, 1);
+    this.nextMonth_ = nextDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    this.nextYear = nextDate.getFullYear();
+  
+    this.generateCurrentMonthDays();  
+    this.updateNavigationButtons(); 
+  
+    setTimeout(() => {
+      this.checkScroll();
+    }, 100);
+  }
+
   initializeMeetings() {
     const currentDate = new Date();
     const toDate = new Date(currentDate);
@@ -182,10 +193,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   initializeTimeSlots() {
     const startHour = 8; // 8 AM
-    const endHour = 20; // 8 PM
+    const endHour = 20;  // 8 PM
     this.timeSlots = Array.from({ length: endHour - startHour + 1 }, (_, i) => {
       const hour = startHour + i;
-      return { label: `${hour}:00`, value: hour };
+      return { label: `${hour}:00`, value: hour, isDisabled: false };  
     });
   }
 
@@ -273,48 +284,52 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedDay = null;
     this.selectedDayFormatted = '';
 
+    this.filterDisabledTimeSlots();
+
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
   }
 
-  generateCurrentMonthDays() {
-    const monthMap: Record<MonthKey, number> = {
-      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
-    };
-  
-    const monthIndex = monthMap[this.selectedMonth as MonthKey];
-    if (monthIndex === undefined) {
-      console.error(`Mes inválido: ${this.selectedMonth}`);
-      this.currentMonthDays = [];
-      return;
-    }
-  
-    const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
-    const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
-    const disabledDaysForMonth = this.disabledDates[monthIndex] || [];
-  
-    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '', isDisabled: false }));
-    this.currentMonthDays = this.currentMonthDays.concat(
-      Array.from({ length: daysInMonth }, (_, i) => {
-        const day = i + 1;
-        const date = new Date(this.selectedYear, monthIndex, day);
-        const dayOfWeek = date.toLocaleString('es-ES', { weekday: 'long' }).toUpperCase();
-        const isDisabled = disabledDaysForMonth.includes(day);
-  
-        return {
-          day,
-          dayOfWeek,
-          date: date.toLocaleString().split('T')[0],  
-          isDisabled  
-        };
-      })
-    );
+generateCurrentMonthDays() {
+  const monthMap: Record<MonthKey, number> = {
+    ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+    JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+  };
+
+  const monthIndex = monthMap[this.selectedMonth as MonthKey];
+  if (monthIndex === undefined) {
+    console.error(`Mes inválido: ${this.selectedMonth}`);
+    this.currentMonthDays = [];
+    return;
   }
+
+  const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
+  const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
+
+  this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '', isDisabled: false }));
+  this.currentMonthDays = this.currentMonthDays.concat(
+    Array.from({ length: daysInMonth }, (_, i) => {
+      const day = i + 1;
+      const date = new Date(this.selectedYear, monthIndex, day);
+      const dayOfWeek = date.toLocaleString('es-ES', { weekday: 'long' }).toUpperCase();
+      const dayData = this.disabledDatesAndHours[monthIndex.toString()]?.find(dateAndHour => dateAndHour.day === day);
+      const isCompletelyDisabled = dayData ? dayData.hours.length === 0 : false;
+      const isDisabled = isCompletelyDisabled;
+
+      //console.log(`Día: ${day}, isDisabled: ${isDisabled}, Horas deshabilitadas:`, dayData?.hours);
+
+      return {
+        day,
+        dayOfWeek,
+        date: date.toLocaleString().split('T')[0],
+        isDisabled
+      };
+    })
+  );
+}
 
   nextMonth() {
     // const today = new Date();
-
     const monthMap: Record<MonthKey, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
@@ -334,8 +349,13 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedDay = null;
     this.selectedDayFormatted = '';
 
+    this.filterDisabledTimeSlots()
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
+  }
+
+  private filterDisabledTimeSlots(): void {
+    this.timeSlots = this.timeSlots.filter(slot => !slot.isDisabled);
   }
 
   isDaySelectable(day: { day: number }): boolean {
@@ -373,7 +393,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd))
     );
   }
-
 
   selectDay(day: any) {
     const monthMap: Record<string, number> = {
@@ -415,28 +434,33 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     // Check if the selected date is a Saturday (getDay() returns 6 for Saturday)
     const isSaturday = selectedDate.getDay() === 6;
     // console.log(selectedDate.getDay());
+    const disabledHours = this.getDisabledHoursForDay(day.day, monthIndex);
+    //console.log(`Horas deshabilitadas para el día ${day.day}:`, disabledHours);
+    
 
     if (isSaturday) {
       // Only show time slots from 8:00 to 13:00 on Saturdays
       const availableStartHour = selectedDate.getDate() === currentDate.getDate() ? Math.max(startHour, currentHour + 2) : startHour;
-      this.timeSlots = this.generateTimeSlots(availableStartHour, saturdayEndHour);
+      this.timeSlots = this.generateTimeSlots(availableStartHour, saturdayEndHour).map(slot => ({
+        ...slot,
+        isDisabled: disabledHours.includes(slot.value)
+      }));
     } else if (selectedDate.toDateString() === currentDate.toDateString()) {
-      // If the selected day is today
-      // console.log('TODAY');
-      // console.log(selectedDate, currentDate);
-      // console.log(currentHour);
       if (currentHour >= endHour) {
-        // console.log('TODAY MAS TARDE');
         // If the current time is later than 21:00, return empty array
         this.timeSlots = [];
       } else {
-        // Generate time slots starting from the maximum of startHour or currentHour + 2
         const availableStartHour = Math.max(startHour, currentHour + 2);
-        this.timeSlots = this.generateTimeSlots(availableStartHour, endHour);
+        this.timeSlots = this.generateTimeSlots(availableStartHour, endHour).map(slot => ({
+          ...slot,
+          isDisabled: disabledHours.includes(slot.value)
+        }));
       }
     } else {
-      // If the selected day is not today, show all available hours
-      this.timeSlots = this.generateTimeSlots(startHour, endHour);
+      this.timeSlots = this.generateTimeSlots(startHour, endHour).map(slot => ({
+        ...slot,
+        isDisabled: disabledHours.includes(slot.value)
+      }));
     }
   }
 
@@ -448,7 +472,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     });
   }
 
-  selectTimeSlot(time: {label: string, value: number}) {
+  selectTimeSlot(time: {label: string, value: number, isDisabled: boolean}) {
     if (!this.userData?.student?.stageId) {
       this.showModalStageError = true;
       this.hideStageErrorModalAfterDelay(2000)
@@ -467,7 +491,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   cancelSelection() {
     this.showSuccessModal = false;
-    this.selectedTimeSlot = { label: "8:00", value: 8 };
+    this.selectedTimeSlot = { label: "8:00", value: 8, isDisabled: false };
     this.selectedDate = '';
   }
 
@@ -582,7 +606,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
     return;
   }
-
 
   openDeleteModal(meeting: MeetingDTO): void {
     this.meetingToDelete = meeting;
@@ -754,14 +777,35 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     );
   }
 
-  private getDisabledDates(): void {
+  private getDisabledDates(): Observable<DisabledDays> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
-    this.handleDatesService.getNotAvailableDates(firstDayOfYear, lastDayOfYear).subscribe(disabledDays => {
-      this.disabledDates = this.removeDuplicateDays(disabledDays);
-      //console.log('fecha deshabilitadas:', this.disabledDates);
-      this.generateCurrentMonthDays();
-    });
+    
+    return this.handleDatesService.getNotAvailableDates(firstDayOfYear, lastDayOfYear).pipe(
+      tap(disabledDays => {
+        this.disabledDates = this.removeDuplicateDays(disabledDays);
+        //console.log('Fechas deshabilitadas:', this.disabledDates);
+      })
+    );
   }
+  
+  private getDisabledDatesAndHours(): Observable<DisabledDatesAndHours> {
+    const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
+  
+    return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear).pipe(
+      tap(disabledData => {
+        this.disabledDatesAndHours = disabledData;
+        //console.log('Horas deshabilitadas:', this.disabledDatesAndHours);
+      })
+    );
+  }
+
+  private getDisabledHoursForDay(day: number, monthIndex: number): number[] {
+    const monthData = this.disabledDatesAndHours[monthIndex.toString()];
+    if (!monthData) return [];
+
+    const dayData = monthData.find(d => d.day === day);
+    return dayData ? dayData.hours : [];
+}
 
   private removeDuplicateDays(disabledDays: Record<string, number[]>): Record<string, number[]> {
     const cleanedDisabledDays: Record<string, number[]> = {};

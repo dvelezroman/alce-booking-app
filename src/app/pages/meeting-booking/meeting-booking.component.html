@@ -129,12 +129,13 @@
         </div>
         <div *ngFor="let time of timeSlots; let i = index"
              class="time-slot"
+             [class.disabled]="time.isDisabled"
              (mouseenter)="hoverIndex = i"
              (mouseleave)="hoverIndex = null">
           <div class="time-text-container">
             <span class="time-text">{{ time.label }}</span>
           </div>
-          <div class="confirm-box" *ngIf="hoverIndex === i" (click)="selectTimeSlot(time)">
+          <div class="confirm-box" *ngIf="hoverIndex === i && !time.isDisabled" (click)="selectTimeSlot(time)">
             Confirmar
           </div>
         </div>
