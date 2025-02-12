@@ -45,7 +45,7 @@ export class HandleDatesService {
   }
 
   disableDatesHours(dates: DisabledDateAndHours[]): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/disable/hours`, { dates });
+    return this.http.post<void>(`${this.apiUrl}/disable/hours`, { items: dates });
   }
 
   enableDates(dates: string[]): Observable<void> {

@@ -68,11 +68,11 @@ export class FeatureFlagComponent implements OnInit {
 
   private getDisabledDatesAndHours(): Observable<DisabledDatesAndHours> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
-  
+
     return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear).pipe(
       tap((disabledDatesAndHours) => {
         this.disabledDatesAndHours = disabledDatesAndHours;
-        //console.log('fechas y horas deshabilitadas:', this.disabledDatesAndHours); 
+        //console.log('fechas y horas deshabilitadas:', this.disabledDatesAndHours);
       })
     );
   }
@@ -177,10 +177,10 @@ export class FeatureFlagComponent implements OnInit {
 
   selectDay(day: SelectedDay) {
     if (!day.day) return;
-  
+
     const index = this.selectedDays.findIndex(selected => selected.day === day.day);
     index > -1 ? this.selectedDays.splice(index, 1) : this.selectedDays.push({ ...day, hours: [] });
-  
+
     if (this.selectedDays.length === 1) {
       const remainingDay = this.selectedDays[0];
       this.isSunday(remainingDay.day) ? this.timeSlots = [] : this.recalculateTimeSlots(remainingDay);
@@ -209,15 +209,19 @@ export class FeatureFlagComponent implements OnInit {
         `${this.selectedYear}-${(monthIndex + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
       );
 
-      const uniqueDates = [...new Set(dates)];
+      const datesAndHours = this.selectedDays.map((selectedDay) => ({
+        date: `${this.selectedYear}-${(monthIndex + 1).toString().padStart(2, '0')}-${selectedDay.day.toString().padStart(2, '0')}`,
+        hours: selectedDay.hours,
+      }));
 
+      const uniqueDates = [...new Set(dates)];
       if (action === 'disable') {
-        // this.handleDatesService.disableDatesHours({ items: datesAndHours }).subscribe(() => {
-        //   this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
-        // });
-        this.handleDatesService.disableDates(uniqueDates).subscribe(() => {
+        this.handleDatesService.disableDatesHours(datesAndHours).subscribe(() => {
           this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
         });
+        // this.handleDatesService.disableDates(uniqueDates).subscribe(() => {
+        //   this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
+        // });
       } else {
         this.handleDatesService.enableDates(uniqueDates).subscribe(() => {
           this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
@@ -244,7 +248,7 @@ export class FeatureFlagComponent implements OnInit {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-  
+
     const monthIndex = monthMap[this.selectedMonth];
     const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
     const dayOfWeek = selectedDate.getDay();
@@ -253,13 +257,13 @@ export class FeatureFlagComponent implements OnInit {
     const saturdayEndHour = 13;
     const finalEndHour = (dayOfWeek === 6) ? saturdayEndHour : endHour;
     const disabledHours = this.getDisabledHoursForDay(day.day, monthIndex);
-  
+
     this.timeSlots = Array.from({ length: finalEndHour - startHour + 1 }, (_, i) => {
       const hour = startHour + i;
       return {
         label: `${hour}:00`,
         value: hour,
-        isDisabled: disabledHours.includes(hour) 
+        isDisabled: disabledHours.includes(hour)
       };
     });
   }
@@ -267,7 +271,7 @@ export class FeatureFlagComponent implements OnInit {
   getDisabledHoursForDay(day: number, monthIndex: number): number[] {
     const monthData = this.disabledDatesAndHours[monthIndex.toString()];
     if (!monthData) return [];
-  
+
     const dayData = monthData.find(d => d.day === day);
     return dayData ? dayData.hours : [];
   }
@@ -283,11 +287,11 @@ export class FeatureFlagComponent implements OnInit {
     const hourIndex = selectedDay.hours.indexOf(hour);
 
     if (hourIndex > -1) {
-      selectedDay.hours.splice(hourIndex, 1);  
+      selectedDay.hours.splice(hourIndex, 1);
     } else {
-      selectedDay.hours.push(hour); 
+      selectedDay.hours.push(hour);
     }
   }
 
-  
+
 }
