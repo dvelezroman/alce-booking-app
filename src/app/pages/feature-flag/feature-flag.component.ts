@@ -33,6 +33,7 @@ export class FeatureFlagComponent implements OnInit {
   canGoForward = true;
   disabledDates: DisabledDays = {};
   disabledDatesAndHours: DisabledDatesAndHours = {};
+  timeSlots: { label: string, value: number }[] = [];
 
   constructor(
     private readonly ffService: FeatureFlagService,
@@ -159,28 +160,16 @@ export class FeatureFlagComponent implements OnInit {
   }
 
   selectDay(day: SelectedDay) {
-    if (day.day) {
-      const existingIndex = this.selectedDays.findIndex(selected => selected.day === day.day);
-
-      if (existingIndex > -1) {
-        this.selectedDays.splice(existingIndex, 1);
-      } else {
-        this.selectedDays.push({ day: day.day, isDisabled: day.isDisabled, isHoursDisabled: day.isHoursDisabled, hours: [] });
-      }
-      this.generateCurrentMonthDays();
-    }
-  }
-
-  selectHour(day: SelectedDay, selectedHour: number) {
-    if (day.day) {
-      const existingDayIndex = this.selectedDays.findIndex(selected => selected.day === day.day);
-      const existingHourIndex = this.selectedDays[existingDayIndex].hours.findIndex(hour => hour === selectedHour);
-      if (existingHourIndex > -1) {
-        this.selectedDays[existingDayIndex].hours.splice(existingHourIndex, 1);
-      } else {
-        this.selectedDays[existingDayIndex].hours.push(selectedHour);
-      }
-      this.generateCurrentMonthDays();
+    if (!day.day) return;
+  
+    const index = this.selectedDays.findIndex(selected => selected.day === day.day);
+    index > -1 ? this.selectedDays.splice(index, 1) : this.selectedDays.push({ ...day, hours: [] });
+  
+    if (this.selectedDays.length === 1) {
+      const remainingDay = this.selectedDays[0];
+      this.isSunday(remainingDay.day) ? this.timeSlots = [] : this.recalculateTimeSlots(remainingDay);
+    } else {
+      this.timeSlots = [];
     }
   }
 
@@ -222,4 +211,55 @@ export class FeatureFlagComponent implements OnInit {
       this.selectedDays = [];
     }
   }
+
+  isSunday(dayNumber: number): boolean {
+    return new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), dayNumber).getDay() === 0;
+  }
+
+  generateTimeSlots(startHour: number, endHour: number) {
+    return Array.from({ length: endHour - startHour + 1 }, (_, i) => {
+      const hour = startHour + i;
+      return { label: `${hour}:00`, value: hour };
+    });
+  }
+
+  recalculateTimeSlots(day: any) {
+    const monthMap: Record<string, number> = {
+      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+    };
+  
+    const monthIndex = monthMap[this.selectedMonth];
+    const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
+    const dayOfWeek = selectedDate.getDay(); 
+  
+    const startHour = 8;  // 8:00 AM
+    const endHour = 20;   // 8:00 PM
+    const saturdayEndHour = 13; // 1:00 PM para Sábados
+  
+    if (dayOfWeek === 6) {
+      this.timeSlots = this.generateTimeSlots(startHour, saturdayEndHour);
+    } else {
+      this.timeSlots = this.generateTimeSlots(startHour, endHour);
+    }
+  }
+
+  isHourSelected(hour: number): boolean {
+    return this.selectedDays.length > 0 && this.selectedDays[0].hours.includes(hour);
+}
+
+  toggleHourSelection(hour: number) {
+    if (this.selectedDays.length === 0) return;
+
+    const selectedDay = this.selectedDays[0];
+    const hourIndex = selectedDay.hours.indexOf(hour);
+
+    if (hourIndex > -1) {
+      selectedDay.hours.splice(hourIndex, 1);  
+    } else {
+      selectedDay.hours.push(hour); 
+    }
+  }
+
+  
 }

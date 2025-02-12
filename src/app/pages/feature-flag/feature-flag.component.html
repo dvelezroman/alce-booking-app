@@ -81,4 +81,20 @@
 
     </div>
   </section>
+
+  <section class="time-selection" *ngIf="selectedDays.length === 1 && timeSlots.length > 0">
+    <h3 class="title is-4">Selecciona las Horas</h3>
+    <div class="time-grid">
+      <div *ngFor="let time of timeSlots"
+          class="time-slot"
+          [class.selected]="isHourSelected(time.value)"
+          (click)="toggleHourSelection(time.value)">
+        {{ time.label }}
+      </div>
+    </div>
+  </section>
+
+  <p *ngIf="selectedDays.length === 1 && isSunday(selectedDays[0].day)" class="no-hours-message">
+    No hay horas disponibles para este día.
+  </p>
 </div>
