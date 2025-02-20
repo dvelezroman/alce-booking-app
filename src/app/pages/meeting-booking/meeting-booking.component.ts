@@ -112,14 +112,14 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.ffService.getAll().subscribe(ffs => {
       this.ffs = ffs;
     });
-  
+
     this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
       this.userData = state;
       if (state?.student?.id) {
         this.initializeMeetings();
       }
     });
-  
+
     this.getDisabledDates().subscribe(() => {
       this.getDisabledDatesAndHours().subscribe(() => {
         this.initializeCalendar();
@@ -155,21 +155,21 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   private initializeCalendar(): void {
     this.today = this.getTodayDate();
     this.maxDate = this.getMaxDate();
-    this.selectedDate = this.today; 
-  
+    this.selectedDate = this.today;
+
     const todayDate = new Date();
     this.selectedMonth = todayDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.selectedYear = todayDate.getFullYear();
     this.todayMonth = this.selectedMonth;
     this.todayYear = this.selectedYear;
-  
+
     const nextDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, 1);
     this.nextMonth_ = nextDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.nextYear = nextDate.getFullYear();
-  
-    this.generateCurrentMonthDays();  
-    this.updateNavigationButtons(); 
-  
+
+    this.generateCurrentMonthDays();
+    this.updateNavigationButtons();
+
     setTimeout(() => {
       this.checkScroll();
     }, 100);
@@ -196,7 +196,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const endHour = 20;  // 8 PM
     this.timeSlots = Array.from({ length: endHour - startHour + 1 }, (_, i) => {
       const hour = startHour + i;
-      return { label: `${hour}:00`, value: hour, isDisabled: false };  
+      return { label: `${hour}:00`, value: hour, isDisabled: false };
     });
   }
 
@@ -364,33 +364,37 @@ generateCurrentMonthDays() {
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
 
-    const monthIndex = monthMap[this.selectedMonth];
-    if (monthIndex === undefined) return false; // Guard clause for invalid month
+    if (!this.selectedMonth || !(this.selectedMonth in monthMap)) return false; // Guard clause
 
+    const monthIndex = monthMap[this.selectedMonth];
     const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
     const today = new Date(this.today);
-    today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
+    today.setHours(0, 0, 0, 0); // Normalize to midnight
 
-    // Get the Monday of the current week
+    // Calculate Monday of the current week
     const weekStart = new Date(today);
-    weekStart.setDate(today.getDate() - today.getDay() + 1); // Move to Monday
+    const dayOfWeek = today.getDay() || 7; // Convert Sunday (0) to 7 for proper calculation
+    weekStart.setDate(today.getDate() - dayOfWeek + 1);
 
-    // Get the Saturday of the current week
+    // Calculate Saturday of the current week
     const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 5); // Move to Saturday
+    weekEnd.setDate(weekStart.getDate() + 5);
 
-    // Get the Monday of next week
+    // Calculate Monday of the next week
     const nextWeekStart = new Date(weekStart);
     nextWeekStart.setDate(weekStart.getDate() + 7);
 
-    // Get the Saturday of next week
+    // Calculate Saturday of the next week
     const nextWeekEnd = new Date(nextWeekStart);
     nextWeekEnd.setDate(nextWeekStart.getDate() + 5);
 
     return (
-      selectedDate.getDay() !== 0 &&
-      ((selectedDate >= weekStart && selectedDate <= weekEnd) ||
-        (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd))
+      selectedDate.getDay() !== 0 && // Exclude Sundays
+      selectedDate > today && // Disable past days
+      (
+        (selectedDate >= weekStart && selectedDate <= weekEnd) ||
+        (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd)
+      )
     );
   }
 
@@ -436,11 +440,11 @@ generateCurrentMonthDays() {
     // console.log(selectedDate.getDay());
     const disabledHours = this.getDisabledHoursForDay(day.day, monthIndex);
     //console.log(`Horas deshabilitadas para el día ${day.day}:`, disabledHours);
-    
+
 
     if (isSaturday) {
       // Only show time slots from 8:00 to 13:00 on Saturdays
-      const availableStartHour = selectedDate.getDate() === currentDate.getDate() ? Math.max(startHour, currentHour + 3) : startHour;
+      const availableStartHour = selectedDate.getDate() === currentDate.getDate() ? Math.max(startHour, currentHour + 2) : startHour;
       this.timeSlots = this.generateTimeSlots(availableStartHour, saturdayEndHour).map(slot => ({
         ...slot,
         isDisabled: disabledHours.includes(slot.value)
@@ -779,7 +783,7 @@ generateCurrentMonthDays() {
 
   private getDisabledDates(): Observable<DisabledDays> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
-    
+
     return this.handleDatesService.getNotAvailableDates(firstDayOfYear, lastDayOfYear).pipe(
       tap(disabledDays => {
         this.disabledDates = this.removeDuplicateDays(disabledDays);
@@ -787,10 +791,10 @@ generateCurrentMonthDays() {
       })
     );
   }
-  
+
   private getDisabledDatesAndHours(): Observable<DisabledDatesAndHours> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
-  
+
     return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear).pipe(
       tap(disabledData => {
         this.disabledDatesAndHours = disabledData;
@@ -813,10 +817,10 @@ generateCurrentMonthDays() {
       const days = disabledDays[monthKey];
       cleanedDisabledDays[monthKey] = Array.from(new Set(days));
     });
-  
+
     return cleanedDisabledDays;
   }
-  
+
   private getFirstAndLastDayOfYear(): [string, string] {
     const year = new Date().getFullYear();
     const firstDay = `${year}-01-01`;
