@@ -440,7 +440,7 @@ generateCurrentMonthDays() {
 
     if (isSaturday) {
       // Only show time slots from 8:00 to 13:00 on Saturdays
-      const availableStartHour = selectedDate.getDate() === currentDate.getDate() ? Math.max(startHour, currentHour + 2) : startHour;
+      const availableStartHour = selectedDate.getDate() === currentDate.getDate() ? Math.max(startHour, currentHour + 3) : startHour;
       this.timeSlots = this.generateTimeSlots(availableStartHour, saturdayEndHour).map(slot => ({
         ...slot,
         isDisabled: disabledHours.includes(slot.value)
@@ -450,7 +450,7 @@ generateCurrentMonthDays() {
         // If the current time is later than 21:00, return empty array
         this.timeSlots = [];
       } else {
-        const availableStartHour = Math.max(startHour, currentHour + 2);
+        const availableStartHour = Math.max(startHour, currentHour + 3);
         this.timeSlots = this.generateTimeSlots(availableStartHour, endHour).map(slot => ({
           ...slot,
           isDisabled: disabledHours.includes(slot.value)
@@ -703,7 +703,7 @@ generateCurrentMonthDays() {
     if (!this.selectedMeeting) return;
 
     const LINK_ACTIVE_BUFFER_MINUTES_BEFORE = 5 * 60 * 1000;
-    const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 55 * 60 * 1000;
+    const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 6 * 60 * 1000;
     const ONE_SECOND = 1000;
     const timeZoneOffset = new Date().getTimezoneOffset() / 60;
     const meetingStart = new Date(this.selectedMeeting.date).getTime() + ((timeZoneOffset) * 60 * 60 * 1000 );
