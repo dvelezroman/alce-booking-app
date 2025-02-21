@@ -87,6 +87,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   ffs: FeatureFlagDto[] = [];
   disabledDates: Record<string, number[]> = {};
   disabledDatesAndHours: DisabledDatesAndHours = {};
+  calendarAnimationClass: string = '';
   
   modalConfig: ModalDto = modalInitializer();
   showTimeSlotsModal = false;
@@ -250,6 +251,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   prevMonth() {
+    this.calendarAnimationClass = 'fade-out';
+
     const today = new Date();
     const monthMap: Record<MonthKey, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
@@ -280,11 +283,17 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
     this.selectedDay = null;
     this.selectedDayFormatted = '';
-
     this.filterDisabledTimeSlots();
-
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
+    this.calendarAnimationClass = 'fade-in';
+    this.resetCalendarAnimation();
+  }
+
+  private resetCalendarAnimation() {
+    setTimeout(() => {
+      this.calendarAnimationClass = '';
+    }, 300);
   }
 
 generateCurrentMonthDays() {
@@ -314,7 +323,6 @@ generateCurrentMonthDays() {
       const isDisabled = isCompletelyDisabled;
 
       //console.log(`Día: ${day}, isDisabled: ${isDisabled}, Horas deshabilitadas:`, dayData?.hours);
-
       return {
         day,
         dayOfWeek,
@@ -326,6 +334,7 @@ generateCurrentMonthDays() {
 }
 
   nextMonth() {
+    this.calendarAnimationClass = 'fade-out';
     // const today = new Date();
     const monthMap: Record<MonthKey, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
@@ -349,7 +358,10 @@ generateCurrentMonthDays() {
     this.filterDisabledTimeSlots()
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
+    this.calendarAnimationClass = 'fade-in';
+    this.resetCalendarAnimation();
   }
+  
 
   private filterDisabledTimeSlots(): void {
     this.timeSlots = this.timeSlots.filter(slot => !slot.isDisabled);
@@ -505,7 +517,7 @@ generateCurrentMonthDays() {
 
 
   bookMeeting() {
-    console.log("isMeetingDataValid:", this.isMeetingDataValid()); 
+    //console.log("isMeetingDataValid:", this.isMeetingDataValid()); 
   
     if (this.isMeetingDataValid()) {
       const bookingData: CreateMeetingDto = this.createBookingData();

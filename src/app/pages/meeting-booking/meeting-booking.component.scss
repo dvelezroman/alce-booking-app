@@ -47,6 +47,8 @@
   padding-left: 0;
 }
 
+/* información del estudiante */
+
 .student-info {
   display: flex;
   border-radius: 10px;
@@ -56,25 +58,13 @@
   max-width: 75%;
   padding: 2rem 0rem;
   margin: auto;
-  margin-top: 2.5rem;
+  margin-top: 2rem;
 }
 
-/* información del estudiante */
 .student-name {
   color: #494949;
   font-size: 1.7rem;
   font-family: 'Open Sans', sans-serif;
-}
-
-.complete-link {
-  font-size: 1.2rem;
-  color: #007bff;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.complete-link:hover {
-  color: #0056b3;
 }
 
 .student-details {
@@ -88,7 +78,7 @@
   .student-schedule {
     position: relative;
     width: 100%;
-    margin-top: 3rem;
+    margin-top: 2rem;
   }
 
   .schedule-title {
@@ -126,9 +116,10 @@
     max-width: 100%;  
     border: .5px solid rgba(230, 229, 229, 0.236);
     background-color: rgba(255, 255, 255, 0.1); 
-    padding: .5rem .5rem;
+    padding: .5rem;
     border-radius: 5px;
     display: flex;
+    margin: auto;
     flex-direction: column;
     justify-content: space-between;
     cursor:  pointer;
@@ -138,8 +129,8 @@
     position: absolute;
     top: 65%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.388);
-    color: rgba(153, 152, 152, 0.643);
+    backdrop-filter: blur(1px);
+    color: rgb(118, 118, 118);
     border: none;
     cursor: pointer;
     padding: 0.5rem .85rem;
@@ -172,7 +163,7 @@
       background-color: rgba(235, 235, 235, 0.219);
     }
     50% {
-      background-color: rgba(255, 255, 255, 0.451);
+      background-color: rgba(255, 255, 255, 0.58);
     }
     100% {
       background-color: rgba(255, 255, 255, 0.211);
@@ -261,277 +252,14 @@
   color: #333; 
 }
 
-/* modal detalle de la meeting */
-
-.modal-background {
-  background-color: rgba(0, 0, 0, 0.1); 
-}
-
-.modal-card {
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  max-width: 500px;
-  width: 90%;
-}
-
-.modal-card-body {
-  padding-top: 2rem;
-  padding-bottom: 0rem;
-  text-align: center;
-  background-color: transparent;
-  color: #333;
-}
-
-.modal-card-body p{
-  font-size: 1.1rem;
-}
-
-.link-note small {
-  text-align: center;
-  font-size: 0.85rem;
-  color: #2e2e2e;
-  display: block;
-  margin-top: .5rem;
-  margin-bottom: 4px;
-}
-
-
-  /* Modal para reservar meeting */
-
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      background: rgba(0, 0, 0, 0.103);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      overflow: hidden;
-    }
-
-    .modal-content {
-      padding: 1.4rem;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
-      width: 400px;
-      max-width: 80%;
-      position: relative;
-      animation: pop-up 0.2s ease-in-out;
-    }
-
-    @keyframes pop-up {
-      0% {
-        transform: scale(0.5);
-        opacity: 0;
-      }
-      80% {
-        transform: scale(1.05);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    .success-modal {
-      background-color: #e6e6e6;
-      border: .5px solid rgb(218, 213, 213);
-    }
-
-    .success-modal p{
-      background-color: transparent;
-      color: #535654;
-      font-size: 1.1rem;
-      font-weight: 400
-    }
-
-/* radio buttons estilos */
-
-    .success-modal .radio-question {
-      margin-top: 1rem;
-      font-size: .9rem;
-      font-weight: bold;
-      text-align: center;
-    }
-
-    .radio-options {
-      display: flex;
-      gap: 1.5rem; 
-      justify-content: center;
-      margin-top: .5rem;
-    }
-    
-    .custom-radio {
-      position: relative;
-      display: flex;
-      align-items: center;
-      font-size: 1rem;
-    }
-    
-    .custom-radio input[type="radio"] {
-      appearance: none;
-      width: 15px;
-      height: 15px;
-      background-color: rgb(230, 226, 230); 
-      border: .5px solid grey;
-      border-radius: 50%;
-      margin-right: 0.5rem;
-      cursor: pointer;
-      position: relative;
-    }
-    
-    .custom-radio input[type="radio"]:checked::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 10px;
-      height: 10px;
-      background-color: rgb(152, 56, 225); 
-      border-radius: 50%;
-    }
-    
-    .radio-label {
-      cursor: pointer;
-      color: rgb(78, 77, 77);
-    }
-
-  .modal-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 1.5rem;
-    width: 100%;
-  }
-
-  .question-icon {
-    font-size: 1.7rem;
-    color: #17a2b8;
-    margin-bottom: 1rem;
-  }
-
-  .button.is-success {
-    background-color: #2868a7;
-    color: white;
-    padding: 0.6rem 1.5rem;
-    font-size: .9rem;
-    width: 40%;
-  }
-
-  .button.is-danger {
-    background-color: #7743a8;
-    color: white;
-    padding: 0.7rem 1.5rem;
-    font-size: .9rem;
-    width: 40%;
-  }
-
-  @keyframes pop-up {
-    0% {
-      transform: scale(0.5);
-      opacity: 0;
-    }
-    80% {
-      transform: scale(1.05);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-  .info-modal p{
-    color: #28a745;
-    font-size: 1.2rem;
-  }
-
-  .info-modal strong{
-    color: rgb(94, 94, 94);
-    font-weight: bold;
-  }
-
-  .info-icon {
-    font-size: 1.6rem;
-    color: #28a745;
-    margin-bottom: 1rem;
-  }
-
 @media (max-width: 992px) {
   .columns.is-mobile {
     flex-direction: column;
   }
 
-  .student-info {
-    flex: 0 0 100%;
-    width: 100%;
-    padding-left: 0%;
-  }
-
   .student-name {
-    font-size: 1.5rem;
-    margin: auto;
-    margin-top: 1rem;
-  }
+    font-size: 1.6rem;
 
-  /* bloque de meetings tarjetas seleccionados */
-  .student-schedule {
-    width: 90%;
-  
-    .schedule-title {
-      margin-bottom: 1rem;
-    }
-  
-    .schedule-list {
-      gap: 10px; 
-      padding: .5rem .7rem;
-    }
-    
-    .schedule-item {
-      min-width: 160px; 
-      padding:.5rem .7rem;
-    }
-    
-    .meeting-title {
-      font-size: .9rem;
-      color: #ffffff;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: .5rem;
-    }
-    
-    .meeting-info-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-direction: row;
-    }
-    
-    .schedule-info {
-      color: #ffffff;
-      font-size: 0.9rem;
-    }
-    
-    .schedule-delete {
-      display: flex;
-      justify-content: flex-end;
-    }
-    
-    .delete-button {
-      background: none;
-      border: none;
-      color: #e9e7e8;
-      cursor: pointer;
-      font-size: 1.2rem;
-      padding: 0;
-    }
-    
-    .delete-button:hover {
-      color: #c7c6c6;
-    }
   }
 
   /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
@@ -581,16 +309,6 @@
   font-size: .72rem;
 }
 
-.prev-button {
-  top: 53%;
-  left: 1.5%; 
-}
-
-.next-button {
-  top: 48%;
-  left: 75%; 
-}
-
 /* SUB-BLOQUE: time slots */
 .selected-date-time {
   width: 50%;
@@ -638,7 +356,7 @@
   }
 
   .student-name {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     margin: auto;
     margin-top: 1rem;
   }
@@ -648,52 +366,26 @@
     color: #ffffff;
   }
 
-  .student-details {
-    margin-top: 0rem;
-    font-size: .9rem;
-    text-align: center;
-  }
-
-  .student-detail{
-    font-size: .9rem;
-  }
-
-/* scroll */
-  .scroll-button {
-    background: transparent;
-    color: grey;
-    padding: 0.5rem 1rem;
-    font-size: 1.5rem;
-  }
-
   .scroll-button.left {
-    left: 17px; 
+    left: 37px; 
   }
 
   .scroll-button.right {
-    right: 17px; 
+    right: 35px; 
   }
 
    /* bloque de meetings tarjetas seleccionados */
-   .modal{
-    padding-left: 0px;
-  }
 
    .student-schedule {
     padding: 0rem .5rem;
   
-  
     .schedule-list { 
-      padding: .6rem;
-    }
-    
-    .schedule-item {
-      min-width: 165px; 
-      padding: .4rem;
+      max-width: 90%;
+      min-width: 196px;
     }
     
     .meeting-title {
-      font-size: .95rem;
+      font-size: 1rem;
       margin-bottom: .1rem;
     }
     
@@ -712,9 +404,16 @@
     }
 
     .link-note small {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
     }
     
+  }
+  .scroll-button.left {
+    left: 8%; 
+  }
+
+  .scroll-button.right {
+    right: 8%; 
   }
 
   .modal-card.meeting-detail-modal {
@@ -734,13 +433,12 @@
 .date-time-selection {
   padding: 15px;
   border-radius: 8px;
-  width: 390px;
+  width: 450px;
 }
 
 .calendar {
   padding: 20px;
   border-radius: 0px 0px 15px 15px;
-  width: 100%;
   margin: auto;
 }
 
@@ -764,20 +462,19 @@
 }
 
 .calendar-day-header {
-  padding: 8px 0px;
-  font-size: .8rem;
-  margin-top: -1.2rem;
+  font-size: 1rem;
   margin-bottom: .5rem;
   color: #4c4c4d;
 }
 
 .calendar-grid {
-  grid-auto-rows: 32px;
+  grid-auto-rows: 35px;
+  gap: 5px;
 }
 
 .calendar-day {
-  padding: 16px;
-  font-size: .75rem;
+  padding: 18px;
+  font-size: .8rem;
   background-color: #f9f9f9;
 }
 
@@ -818,8 +515,6 @@
   margin-top: 8px; 
 }
 
-
-
 }
 
 @media (max-width: 492px) {
@@ -854,7 +549,6 @@
     max-width: 100%;
     margin-top: 2rem;
     margin-bottom: 0;
-    padding: 0rem 0rem 0rem 0rem;
     justify-content: center;
     background:none;
     border-radius: 5px;
@@ -951,14 +645,13 @@
     }
   
     .schedule-list {
+      max-width: 90%;
+      min-width: 200px;
+      padding: .7rem;
       gap: 9px; 
-      padding: .6rem 1.15rem;
-      border-radius: 0%;
-    }
-    
-    .schedule-item {
-      min-width: 130px; 
-      padding: .2rem .5rem .5rem .5rem;
+      border-radius: 5px;
+      scrollbar-width: thin; 
+      scrollbar-color: rgba(196, 196, 196, 1) transparent;
     }
     
     .meeting-title {
@@ -1083,8 +776,8 @@
 }
 
 .calendar-day-header {
+  padding: 5px 15px;
   margin-top: -1.2rem;
-  margin-bottom: .5rem;
 }
 
 .calendar-grid {
@@ -1096,36 +789,5 @@
   background-color: white;
   font-size: .95rem;
 }
-
-  /* modal */
-
-  .modal-content {
-    padding: 1rem;
-    width: 300px;
-    max-width: 100%;
-  }
-
-  .modal-buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-    margin-top: 1rem;
-  }
-
-  .question-icon {
-    font-size: 1.4rem;
-    margin-bottom: .7rem;
-  }
-
-  .button.is-success {
-    padding: .5rem .7rem;
-    font-size: .85rem;
-  }
-
-  .button.is-danger {
-    padding: .45rem;
-    font-size: .85rem;
-  }
-
 
 }

@@ -116,13 +116,13 @@
 </div>
 
 
-<!-- modal de cerrar sesión -->
-<div *ngIf="showLogoutModal" class="modal-overlay">
-  <div class="modal-content">
-    <p>Estás seguro de cerrar la sesión?</p>
-    <div class="modal-buttons">
-      <button class="button is-light" (click)="closeLogoutModal()">Cancelar</button>
-      <button class="button is-danger" (click)="onConfirmLogout()">Si</button>
-    </div>
-  </div>
-</div>
+<app-modal
+  [showModal]="modalConfig.show"
+  [message]="modalConfig.message"
+  [isError]="false"  
+  [isInfo]="true"  
+  [showButtons]="true"
+  (confirmAction)="modalConfig.confirm && modalConfig.confirm()"
+  (close)="modalConfig.close()">
+</app-modal>
+

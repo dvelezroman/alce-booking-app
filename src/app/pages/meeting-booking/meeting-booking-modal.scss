@@ -1,15 +1,29 @@
 /* MODAL DE MEETING CUANDO SE HA SELECCIONADO una meeting */
 .modal-background {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
-.modal-card .meeting-detail-modal {
-  max-width: 420px;
-  width: 100%;
-  overflow: hidden;
+.meeting-detail-modal {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  max-width: 450px;
+  width: 80%;
+  animation: pop-up 0.3s ease-in-out;
 }
 
-.meeting-detail-modal .modal-card-head {
+.modal-card-body {
+  padding-top: 2rem;
+  padding-bottom: 0rem;
+  text-align: center;
+  background-color: white;
+  color: #333;
+}
+
+.modal-card-body p{
+  font-size: 1rem;
+}
+
+.modal-card-head {
   background: linear-gradient(to right, #4490e2, #7d79e8);
   color: white;
   font-weight: bold;
@@ -24,17 +38,17 @@
 
 .meeting-detail-modal p {
   text-align: left;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .meeting-detail-modal .modal-card-body {
-  padding: 1rem 1.5rem;
+  padding: 1rem;
 }
 
 .meeting-detail-modal strong {
   color: #333333;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .meeting-detail-modal .modal-card-body span {
@@ -71,8 +85,192 @@
   color: #999;
 }
 
-.modal-card-head .delete {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
+.link-note small {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #2e2e2e;
+  display: block;
+  margin-top: .5rem;
+  margin-bottom: 4px;
 }
+
+
+  /* Modal para reservar meeting */
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background: rgba(0, 0, 0, 0.103);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow: hidden;
+  }
+
+  .modal-content {
+    padding: 1.4rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 100%;
+    position: relative;
+    animation: pop-up 0.3s ease-in-out;
+  }
+
+  @keyframes pop-up {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    80% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .success-modal {
+    background-color: #e6e6e6;
+    border: .5px solid rgb(218, 213, 213);
+  }
+
+  .question-icon {
+    font-size: 1.7rem;
+    color: #17a2b8;
+    margin-bottom: 1rem;
+  }
+
+  .success-modal p{
+    background-color: transparent;
+    color: #535654;
+    font-size: 1.1rem;
+    font-weight: 400
+  }
+
+/* radio buttons estilos */
+
+  .success-modal .radio-question {
+    margin-top: 1rem;
+    font-size: .9rem;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .radio-options {
+    display: flex;
+    gap: 1.5rem; 
+    justify-content: center;
+    margin-top: .5rem;
+  }
+  
+  .custom-radio {
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+  }
+  
+  .custom-radio input[type="radio"] {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background-color: rgb(230, 226, 230); 
+    border: .5px solid grey;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .custom-radio input[type="radio"]:checked::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: rgb(152, 56, 225); 
+    border-radius: 50%;
+  }
+  
+  .radio-label {
+    cursor: pointer;
+    color: rgb(78, 77, 77);
+  }
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+.button.is-success {
+  background-color: #2868a7;
+  color: white;
+  padding: 0.6rem 1.5rem;
+  font-size: .9rem;
+  width: 40%;
+}
+
+.button.is-danger {
+  background-color: #7743a8;
+  color: white;
+  padding: 0.7rem 1.5rem;
+  font-size: .9rem;
+  width: 40%;
+}
+
+@keyframes pop-up {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 492px){
+
+    .modal-content {
+      padding: 1rem;
+      width: 340px;
+      max-width: 100%;
+    }
+  
+    .modal-buttons {
+      flex-direction: row;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+  
+    .question-icon {
+      font-size: 1.4rem;
+      margin-bottom: .7rem;
+    }
+  
+    .button.is-success {
+      padding: .85rem;
+      font-size: .9rem;
+    }
+  
+    .button.is-danger {
+      padding: .5rem;
+      font-size: .9rem;
+    }
+}
+

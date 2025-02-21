@@ -71,8 +71,6 @@
     </section>
   </div>
 
-  <hr class="divider">
-
   <!-- Date and Time Selection Section -->
   <div class="date-time-wrapper">
     <!-- Calendar Selection -->
@@ -89,17 +87,17 @@
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
-      <div class="calendar" #calendarRef>
+      <div class="calendar" #calendarRef >
         <div class="calendar-header">
-          <div class="calendar-day-header">Dom</div>
-          <div class="calendar-day-header">Lun</div>
-          <div class="calendar-day-header">Mar</div>
-          <div class="calendar-day-header">Mie</div>
-          <div class="calendar-day-header">Jue</div>
-          <div class="calendar-day-header">Vie</div>
-          <div class="calendar-day-header">Sab</div>
+          <div class="calendar-day-header">D</div>
+          <div class="calendar-day-header">L</div>
+          <div class="calendar-day-header">M</div>
+          <div class="calendar-day-header">M</div>
+          <div class="calendar-day-header">J</div>
+          <div class="calendar-day-header">V</div>
+          <div class="calendar-day-header">S</div>
         </div>
-        <div class="calendar-grid">
+        <div class="calendar-grid" [ngClass]="calendarAnimationClass">
           <div
             *ngFor="let day of currentMonthDays"
             class="calendar-day"
@@ -173,21 +171,21 @@
       <ng-container *ngIf="selectedMeeting?.mode === mode.ONLINE">
         <p class="meeting-link"
            [ngClass]="{
-       'no-link': !selectedMeeting?.link,
-       'clickable': linkStatus === 'clickable',
-       'not-clickable': linkStatus === 'not-clickable',
-       'not-available': linkStatus === 'not-available'}">
+            'no-link': !selectedMeeting?.link,
+            'clickable': linkStatus === 'clickable',
+            'not-clickable': linkStatus === 'not-clickable',
+            'not-available': linkStatus === 'not-available'}">
           <a *ngIf="selectedMeeting?.link && linkStatus === 'clickable'"
              readonly="true"
              [href]="getFormattedLink(selectedMeeting?.link || 'Enlace aun no asignado')"
              target="_blank"
              rel="noopener noreferrer"
              style="user-select: none;"
-          >
+            >
             Ir a la clase
           </a>
-          <span *ngIf="linkStatus === 'not-clickable'">{{ selectedMeeting?.link ? 'Enlace asignado' : 'Enlace aun no asignado' }}</span>
-          <span *ngIf="linkStatus === 'not-available'">Enlace no disponible</span>
+            <span *ngIf="linkStatus === 'not-clickable'">{{ selectedMeeting?.link ? 'Enlace asignado' : 'Enlace aun no asignado' }}</span>
+            <span *ngIf="linkStatus === 'not-available'">Enlace no disponible</span>
         </p>
         <p class="link-note" *ngIf="selectedMeeting?.link">
           <small>* El enlace estará disponible 5 minutos antes y hasta 6 minutos después de la hora agendada.</small>
@@ -204,7 +202,6 @@
     <i class="fas fa-question-circle question-icon"></i>
     <p>Usted ha seleccionado <br> {{ selectedDayFormatted }} a las {{ selectedTimeSlot.label }}</p>
 
-     <!-- bloque radio buttons -->
     <p class="radio-question">Elige modo de la clase:</p>
 
     <div class="radio-options">
@@ -218,7 +215,6 @@
       </label>
     </div>
 
-    <!-- Confirmation and cancellation buttons -->
     <div class="modal-buttons">
       <button class="button is-success" (click)="bookMeeting()">Aceptar</button>
       <button class="button is-danger" (click)="cancelSelection()">Cancelar</button>
