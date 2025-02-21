@@ -58,21 +58,34 @@
 }
 
 .meeting-link {
-  margin-top: 1.5rem;
+  margin-top: .5rem;
   padding: 0.55rem 1.5rem;
-  border: 1px solid #4490e2;
+  border: 1px solid #2868a7;
   border-radius: 25px;
   text-align: center;
   display: inline-block;
   background-color: #f9f9f9;
-  color: #333333;
+  color: #2868a7;
+  transition: all 0.3s ease-in-out;
 }
 
-.meeting-link.active:hover {
-  background-color: #4490e2;
-  color: white;
+.meeting-link a {
+  text-decoration: none;
+  color: inherit; 
+  transition: inherit; 
 }
 
+.meeting-link.clickable:hover {
+  border-color: #306daa;
+  transform: scale(1.03);
+}
+
+.meeting-link.clickable:active {
+  transform: scale(1.03);
+}
+
+.meeting-link.not-clickable,
+.meeting-link.not-available,
 .meeting-link.no-link {
   pointer-events: none;
   background-color: #f0f0f0;
@@ -80,20 +93,24 @@
   color: #999;
 }
 
+.meeting-link.not-clickable:hover,
+.meeting-link.not-available:hover,
 .meeting-link.no-link:hover {
   background-color: #f0f0f0;
   color: #999;
+  border-color: #ccc;
+  transform: none;
+  box-shadow: none;
 }
 
 .link-note small {
   text-align: center;
-  font-size: 0.85rem;
-  color: #2e2e2e;
+  font-size: 0.9rem;
+  color: #7c2db0;
   display: block;
   margin-top: .5rem;
   margin-bottom: 4px;
 }
-
 
   /* Modal para reservar meeting */
 
@@ -245,6 +262,14 @@
 }
 
 @media (max-width: 492px){
+
+  .meeting-detail-modal {
+    width: 90%;
+  }
+
+  .link-note small {
+    font-size: 2rem;
+  }
 
     .modal-content {
       padding: 1rem;
