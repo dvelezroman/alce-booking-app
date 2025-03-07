@@ -364,39 +364,44 @@ generateCurrentMonthDays() {
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
 
-    if (!this.selectedMonth || !(this.selectedMonth in monthMap)) return false; // Guard clause
+    if (!this.selectedMonth || !this.selectedYear || !(this.selectedMonth in monthMap)) {
+      return false; // Ensure valid month and year
+    }
 
     const monthIndex = monthMap[this.selectedMonth];
     const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
+
     const today = new Date(this.today);
+    if (isNaN(today.getTime())) return false; // Ensure today is a valid date
     today.setHours(0, 0, 0, 0); // Normalize to midnight
 
-    // Calculate Monday of the current week
+    // Get the start of the current week (Monday)
     const weekStart = new Date(today);
-    const dayOfWeek = today.getDay() || 7; // Convert Sunday (0) to 7 for proper calculation
+    const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay(); // Convert Sunday (0) to 7
     weekStart.setDate(today.getDate() - dayOfWeek + 1);
 
-    // Calculate Saturday of the current week
+    // Get the end of the current week (Saturday)
     const weekEnd = new Date(weekStart);
     weekEnd.setDate(weekStart.getDate() + 5);
 
-    // Calculate Monday of the next week
+    // Get the start of next week (Monday)
     const nextWeekStart = new Date(weekStart);
     nextWeekStart.setDate(weekStart.getDate() + 7);
 
-    // Calculate Saturday of the next week
+    // Get the end of next week (Saturday)
     const nextWeekEnd = new Date(nextWeekStart);
     nextWeekEnd.setDate(nextWeekStart.getDate() + 5);
 
     return (
       selectedDate.getDay() !== 0 && // Exclude Sundays
-      selectedDate > today && // Disable past days
+      selectedDate >= today && // Allow today and future days
       (
         (selectedDate >= weekStart && selectedDate <= weekEnd) ||
         (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd)
       )
     );
   }
+
 
   selectDay(day: any) {
     const monthMap: Record<string, number> = {
