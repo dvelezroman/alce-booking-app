@@ -454,7 +454,7 @@ generateCurrentMonthDays() {
         // If the current time is later than 21:00, return empty array
         this.timeSlots = [];
       } else {
-        const availableStartHour = Math.max(startHour, currentHour + 3);
+        const availableStartHour = Math.max(startHour, currentHour + 2);
         this.timeSlots = this.generateTimeSlots(availableStartHour, endHour).map(slot => ({
           ...slot,
           isDisabled: disabledHours.includes(slot.value)
