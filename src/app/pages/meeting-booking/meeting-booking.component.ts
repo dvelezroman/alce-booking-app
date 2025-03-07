@@ -444,7 +444,7 @@ generateCurrentMonthDays() {
 
     if (isSaturday) {
       // Only show time slots from 8:00 to 13:00 on Saturdays
-      const availableStartHour = selectedDate.getDate() === currentDate.getDate() ? Math.max(startHour, currentHour + 2) : startHour;
+      const availableStartHour = selectedDate.getDate() === currentDate.getDate() ? Math.max(startHour, currentHour + 3) : startHour;
       this.timeSlots = this.generateTimeSlots(availableStartHour, saturdayEndHour).map(slot => ({
         ...slot,
         isDisabled: disabledHours.includes(slot.value)
