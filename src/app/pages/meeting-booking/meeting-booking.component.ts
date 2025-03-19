@@ -394,7 +394,7 @@ generateCurrentMonthDays() {
 
     return (
       selectedDate.getDay() !== 0 && // Exclude Sundays
-      selectedDate >= today && // Allow today and future days
+      selectedDate > today && // Allow today and future days
       (
         (selectedDate >= weekStart && selectedDate <= weekEnd) ||
         (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd)
