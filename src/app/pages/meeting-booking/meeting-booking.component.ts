@@ -369,38 +369,40 @@ generateCurrentMonthDays() {
     }
 
     const monthIndex = monthMap[this.selectedMonth];
-    const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
+    const selectedDate = new Date(Date.UTC(this.selectedYear, monthIndex, day.day));
 
     const today = new Date(this.today);
     if (isNaN(today.getTime())) return false; // Ensure today is a valid date
-    today.setHours(0, 0, 0, 0); // Normalize to midnight
 
-    // Get the start of the current week (Monday)
+    // Normalize today to UTC midnight
+    today.setUTCHours(0, 0, 0, 0);
+
+    // Determine the start of the current week (Monday in UTC)
+    const dayOfWeek = today.getUTCDay() || 7; // Convert Sunday (0) to 7
     const weekStart = new Date(today);
-    const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay(); // Convert Sunday (0) to 7
-    weekStart.setDate(today.getDate() - dayOfWeek + 1);
+    weekStart.setUTCDate(today.getUTCDate() - (dayOfWeek - 1));
 
-    // Get the end of the current week (Saturday)
+    // Determine the end of the current week (Saturday in UTC)
     const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 5);
+    weekEnd.setUTCDate(weekStart.getUTCDate() + 5);
 
-    // Get the start of next week (Monday)
+    // Determine the next week's range (Monday to Saturday in UTC)
     const nextWeekStart = new Date(weekStart);
-    nextWeekStart.setDate(weekStart.getDate() + 7);
+    nextWeekStart.setUTCDate(weekStart.getUTCDate() + 7);
 
-    // Get the end of next week (Saturday)
     const nextWeekEnd = new Date(nextWeekStart);
-    nextWeekEnd.setDate(nextWeekStart.getDate() + 5);
+    nextWeekEnd.setUTCDate(nextWeekStart.getUTCDate() + 5);
 
     return (
-      selectedDate.getDay() !== 0 && // Exclude Sundays
-      selectedDate > today && // Allow today and future days
+      selectedDate.getUTCDay() !== 0 && // Exclude Sundays
+      selectedDate >= today && // Allow today and future days
       (
         (selectedDate >= weekStart && selectedDate <= weekEnd) ||
         (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd)
       )
     );
   }
+
 
 
   selectDay(day: any) {
