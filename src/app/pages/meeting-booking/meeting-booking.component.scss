@@ -21,7 +21,7 @@
   color: rgb(53, 53, 53);
   width: 100%; 
   background: white;
-  background: linear-gradient(#fcfcfd, #fbf9fe);
+  background-color: #f2f2f2;
   z-index: 10; 
   text-align: center;
   font-family: 'Poppins', sans-serif; 
@@ -55,7 +55,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 75%;
+  max-width: 85%;
   padding: 2rem 0rem;
   margin: auto;
   margin-top: 2rem;
@@ -115,15 +115,22 @@
     min-width: 165px; 
     max-width: 100%;  
     border: .5px solid rgba(230, 229, 229, 0.236);
-    background-color: rgba(255, 255, 255, 0.1); 
+    background-color: rgba(215, 215, 215, 0.346); 
     padding: .5rem;
     border-radius: 5px;
     display: flex;
     margin: auto;
     flex-direction: column;
     justify-content: space-between;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
     cursor:  pointer;
   }
+
+  .schedule-item:hover {
+    box-shadow: 4px 8px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1.5px);
+}
 
   .scroll-button {
     position: absolute;
@@ -253,56 +260,19 @@
 }
 
 @media (max-width: 992px) {
-
-  .student-name {
-    font-size: 1.6rem;
-  }
-
   /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
 .date-time-wrapper {
-  gap: 12px;
-  margin-top: 0rem;
-  margin-left: 8rem;
+  margin-left: 7rem;
 }
 
 /* SUB-BLOQUE: Calendario */
-.date-time-selection {
-  border-radius: 8px;
-  width: 350px;
-  padding: 1.5rem 1rem;
-}
-
 .calendar {
   width: 100%;
-  margin: auto;
-}
-
-.calendar-title {
-  margin-bottom: 2.4rem;
-}
-
-.title.is-4 {
-  color: #333;
-}
-
-.calendar-header {
-  margin-bottom: 5px;
-}
-
-.calendar-day-header {
-  padding: 8px 6px;
-  font-size: .75rem;
-  color: #363636;
 }
 
 .calendar-grid {
-  grid-auto-rows: 30px;
-  gap: 3px;
-}
-
-.calendar-day {
-  padding: 15px;
-  font-size: .72rem;
+  grid-auto-rows: 38px;
+  gap: 7px;
 }
 
 /* SUB-BLOQUE: time slots */
@@ -310,15 +280,9 @@
   width: 50%;
 }
 
-.selected-date-time h3{
-  color: black;
-  margin-right: 23px;
-  margin-bottom: 0.7rem;
-}
-
 .time-slots {
   margin-top: 2rem;
-  width: 400px;
+
 }
 
 .scroll-arrow-up {
@@ -332,34 +296,12 @@
 }
 
 @media (max-width: 768px) {
-
   .class-booking-header {
     background: linear-gradient(45deg, #4a90e2,  #7743a8);
   }
 
   .title.is-3 {
-    font-size: 1.5rem;
     color: white;
-  }
-
-  .student-info {
-    justify-content:flex-start;
-    align-items: center;
-    max-width: 94.7%;
-    padding: 0rem;
-    margin-top: 3rem;
-    margin-bottom: 2rem;
-  }
-
-  .student-name {
-    font-size: 1.5rem;
-    margin: auto;
-    margin-top: 1rem;
-  }
-
-  .student-details-title {
-    font-size: 1.5rem;
-    color: #ffffff;
   }
 
   .scroll-button.left {
@@ -371,39 +313,6 @@
   }
 
    /* bloque de meetings tarjetas seleccionados */
-
-   .student-schedule {
-    padding: 0rem .5rem;
-  
-    .schedule-list { 
-      max-width: 90%;
-      min-width: 196px;
-    }
-    
-    .meeting-title {
-      font-size: 1rem;
-      margin-bottom: 0rem;
-    }
-    
-    .schedule-info {
-      color: #efeeee;
-      font-size: 0.85rem;
-    }
-
-    .schedule-info strong{
-      margin-right: 4px;
-    }
-    
-    .delete-button {
-      font-size: 1rem;
-      margin-top: 20px;
-    }
-
-    .link-note small {
-      font-size: 0.8rem;
-    }
-    
-  }
   .scroll-button.left {
     left: 8%; 
   }
@@ -412,43 +321,19 @@
     right: 8%; 
   }
 
-  .modal-card.meeting-detail-modal {
-    max-width: auto;
-  }
-
   /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
 .date-time-wrapper {
   flex-direction: column;
-  width: 80%;
-  gap: 0rem;
-  margin-top: 0rem;
   margin: auto;
 }
 
 /* SUB-BLOQUE: Calendario */
 .date-time-selection {
-  padding: 15px;
-  border-radius: 8px;
-  width: 450px;
-}
-
-.calendar {
-  padding: 20px;
-  border-radius: 0px 0px 15px 15px;
-  margin: auto;
-}
-
-.calendar-title {
-  margin-bottom: 1.5rem;
-  margin-left: 0%;
-}
-
-.title.is-4 {
-  color: #333;
+  width: 420px;
 }
 
 .prev-button {
-  top:53%;
+  top: 53%;
   left: 13.5%; 
 }
 
@@ -457,21 +342,12 @@
   left: 74%; 
 }
 
-.calendar-day-header {
-  font-size: 1rem;
-  margin-bottom: .5rem;
-  color: #4c4c4d;
-}
-
 .calendar-grid {
-  grid-auto-rows: 35px;
-  gap: 5px;
+  grid-auto-rows: 38px;
 }
 
 .calendar-day {
   padding: 18px;
-  font-size: .8rem;
-  background-color: #f9f9f9;
 }
 
 /* SUB-BLOQUE: time slots */
@@ -481,26 +357,12 @@
 }
 
 .selected-date-time .titulo-slots{
-  font-size: 1rem;
   font-weight: bold;
-  margin-top: 3.5rem;
-  margin-bottom: 0rem;
-}
-
-.selected-date-time h3{
-  color: black;
   margin-top: 3rem;
-  margin-left: 25px;
-  margin-bottom: 0rem;
 }
 
 .time-slots {
-  margin-top: 2rem;
-  width: 550px;
-}
-
-.time-text {
-  font-size: 1rem;
+  width: 520px;
 }
 
 .scroll-arrow-up {
@@ -514,256 +376,46 @@
 }
 
 @media (max-width: 492px) {
-
-  :host {
-    padding:1rem 0rem;
-  }
-
-  .container {
-    margin-top: 0rem;
-    margin-bottom: 0rem;
-    max-width: 100%;
-  }
-
-  .class-booking-header {
-    height: 85px;
-    background-color: rgb(255, 255, 255); 
-    z-index: 1000; 
-    text-align: center;
-    padding: 2.5rem 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-  }
-
-  .title.is-3 {
-    font-size: 1.3rem;
-    line-height: 15px;
-    margin-left: 3px;
-  }
-
-  .student-info {
-    flex: 0 0 100%;
-    max-width: 100%;
-    margin-top: 2rem;
-    margin-bottom: 0;
-    justify-content: center;
-    background:none;
-    border-radius: 5px;
-    min-height: 290px;
-  }
-
-  .student-name {
-    text-align: center;
-    width: 90%;
-    font-size: 1.25rem;
-    margin: auto;
-    margin-top: 0rem;
-    margin-bottom: 0rem;
-  }
-
-  .student-details {
-    font-size: 1rem;
-    color: #5b5b5b;
-    text-align: center;
-  }
-
- /* modal meeting seleccionado */
-  .meeting-detail-modal p {
-    font-size: 1rem;
-  }
-  
-  .meeting-detail-modal .modal-card-body {
-    padding: 1rem;
-  }
-  
-  .meeting-detail-modal strong {
-    font-size: .9rem;
-  }
-  
-  .meeting-detail-modal .modal-card-body span {
-    font-size: .9rem;
-    margin-left: 5px;
-  }
-  
-  .meeting-link {
-    margin-top: .9rem;
-    padding: 0.55rem 1.2rem;
-    border: 1px solid #4490e2;            
-  }
-
-  .meeting-link.no-link {
-    pointer-events: none; 
-  }
-  
-  .meeting-link:hover {
-    background-color: #4490e2;
-    color: white;
-  }
-  
-  .meeting-link strong {
-    margin-right: 0px; 
-  }
-
-  .no-meeting{
-    font-size: .8rem;
-    margin-top: 2rem;
-    color: rgb(78, 77, 77);
-  }
-
-  .no-link {
-    background-color: #f0f0f0;
-    border-color: #ccc; 
-    color: #999;         
-  }
-
-  /* bloque de fechas del usuario */
-
-  .scroll-button {
-    display: none;
-  }
-
-  .student-schedule {
-    padding: 0rem 0rem;
-  
-    .schedule-title {
-      font-size: 1rem;
-      margin-bottom: 1rem;
-    }
-  
-    .schedule-list {
-      max-width: 90%;
-      min-width: 200px;
-      padding: .7rem;
-      gap: 9px; 
-      border-radius: 5px;
-      scrollbar-width: thin; 
-      scrollbar-color: rgba(196, 196, 196, 1) transparent;
-    }
-    
-    .meeting-title {
-      font-size: .85rem;
-      margin-bottom: 0rem;
-    }
-    
-    .schedule-info {
-      font-size: .75rem;
-    }
-
-    .schedule-info strong{
-      margin-right: 1px;
-    }
-    
-    .delete-button {
-      background: transparent;
-      cursor: pointer;
-      font-size: 1.1rem;
-    }
-
-    .delete-button:hover{
-      color: #d6d6d6;
-      transform: scale(0.9);
-    }
-  }
-
-  .modal-card.meeting-detail-modal {
-    max-width: 90%;
-  }
-
+  /* bloque de fechas del usuario modal advertencia de enlace */
   .link-note small {
-    font-size: 0.7rem;
-  }
-
-  .class-booking-subtitle {
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    margin-top: 3rem;
-    margin-bottom: 0rem;
-    text-align: center; 
-  }
-
-  .class-booking-subtitle h3 {
-    font-size: 1.2rem; 
-    font-weight: bold;
-    color: #333; 
+    font-size: 0.8rem;
   }
 
    /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
-
-.date-time-wrapper {
-  border-radius: 0px;
-  width: 100%;
-  gap: 0rem;
-  padding: 0;
-  margin: auto;
-  margin-top: 1rem;
-}
+  .date-time-wrapper {
+    width: 100%;
+  }
 
 /* SUB-BLOQUE: Calendario */
 .date-time-selection {
-  padding: 20px 0px;
-  margin-top: 0rem;
-  width: 90%;
-  background-color: transparent;
+  padding:  20px 0;
+  width: 96%;
+  border-radius: 25px;
 }
 
 .calendar {
-  padding-top: 30px;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 15px;
+  border-radius: 25px;
   width: 100%;
-  margin: auto;
-}
-
-.calendar-title {
-  margin-bottom: 1.4rem;
-  margin-left: 0%;
-  font-size: 1rem;
-}
-
-.title.is-5 {
-  font-size: 1rem;
-  color: #333;
-}
-
-.title.is-4 {
-  font-size: 1rem;
-  color: #333;
-}
-
-.month-selector {
-  width: 100%;
-  padding-top: 2rem;
-  border-bottom: none;
-}
-
-.calendar-header {
-  margin-top: 1rem;
-  font-size: .9rem;
 }
 
 .prev-button {
-  top: 60%;
+  top: 50%;
   left: 13.5%; 
 }
 
 .next-button {
-  top: 60%;
+  top: 47%;
   left: 74%; 
 }
 
-.calendar-day-header {
-  padding: 5px 15px;
-  margin-top: -1.2rem;
+.time-slot, .time-text-container, .confirm-box{
+  min-height: 55px;
+  font-size: 1.2rem;
 }
 
-.calendar-grid {
-  grid-auto-rows: 37px;
-}
-
-.calendar-day {
-  padding: 17px;
-  background-color: white;
-  font-size: .95rem;
+.confirm-box{
+  padding: 15px 10px 10px;
 }
 
 }
