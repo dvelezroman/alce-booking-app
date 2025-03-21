@@ -5,28 +5,20 @@
 <main class="booking-container container">
   <div class="columns is-mobile">
     <section class="column student-info">
-      <div class="student-name">
+      <div class="student-name student-shared-style">
         <h3 *ngIf="userData?.firstName && userData?.lastName">
           {{ userName() }}
         </h3>
-<!--        <h3 *ngIf="!userData?.firstName || !userData?.lastName">-->
-<!--          <a [routerLink]="['/register-complete']" class="complete-link">-->
-<!--            Completar Datos-->
-<!--          </a>-->
-<!--        </h3>-->
       </div>
-      <div class="student-details">
+      <div class="student-details student-shared-style">
         <p>{{ userData?.email }}</p>
       </div>
-      <div class="student-details">
+      <div class="student-details student-shared-style">
         <p>{{ userData?.stage?.description }}</p>
       </div>
-<!--      <div class="student-details">-->
-<!--        <p>{{ userData?.student?.studentClassification }}</p>-->
-<!--      </div>-->
 
       <!-- Selected Meetings Section -->
-      <div class="student-schedule" *ngIf="meetings.length > 0">
+      <div class="student-schedule student-shared-style" *ngIf="meetings.length > 0">
         <h4 class="schedule-title">Agendadas</h4>
         <div class="scroll-buttons">
           <button class="scroll-button left" (click)="scrollLeft()" [class.hidden]="!canScrollLeft" aria-label="Scroll left">
@@ -74,9 +66,9 @@
   <!-- Date and Time Selection Section -->
   <div class="date-time-wrapper">
     <!-- Calendar Selection -->
-    <section class="date-time-selection">
+    <section class="date-time-selection shared-box-style">
       <div class="calendar-title" (click)="scrollToCalendar()">
-        <h3 class="title is-4">Seleccione día</h3>
+        <h2 class="title-date">Seleccione día</h2>
       </div>
       <div class="month-selector">
         <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()" aria-label="Previous month">
@@ -115,9 +107,11 @@
     </section>
 
     <!-- Time Slots Selection -->
-    <section class="selected-date-time">
-      <h2 class="titulo-slots" (click)="scrollToTimeSlots()">Seleccione una hora</h2>
-      <h3 class="title is-3"></h3>
+    <section class="selected-date-time shared-box-style">
+      <div class="booking-title-absolute">
+        <h2 class="title-date" (click)="scrollToTimeSlots()">Seleccione una hora</h2>
+      </div>
+
       <button class="scroll-arrow-up" (click)="scrollUp()" [class.disabled]="!canScrollUp" aria-label="Scroll up">
         <i class="fas fa-chevron-up"></i>
       </button>

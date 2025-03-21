@@ -16,27 +16,33 @@
 .date-time-wrapper {
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 85%;
+  align-items: stretch;
+  width: 83%;
   gap: 20px;
   margin: 0 auto;
-  padding: 5rem 0;
+  margin-top: 3rem;
+  padding: 5rem 0 0;
 }
 
 /* SUB-BLOQUE: Calendario */
-.date-time-selection {
+
+.date-time-selection,
+.selected-date-time {
   position: relative;
+  width: 445px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #333333b9;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.shared-box-style {
   border: 1px solid rgba(210, 210, 210, 0.709);
   background-color: rgba(249, 249, 249, 0.661);
-  border-radius: 5px;
-  padding: 1.7rem;
-  width: 445px;
-  gap: 1.5rem;
   border-radius: 25px;
+  color: #333333b9;
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.14);
 }
 
@@ -47,14 +53,16 @@
   width: 380px;
 }
 
-.calendar-title{
+.calendar-title, .booking-title-absolute{
   position: absolute;
   top: -75px;
   left: 50%;
+  white-space: nowrap; 
+  min-width: 200px;
   transform: translateX(-50%); 
 }
 
-.title.is-4, .titulo-slots{
+.title-date{
   color: rgb(62, 62, 62);
   padding: 1rem 2rem;
   background-color: rgba(255, 213, 114, 0.777);
@@ -62,6 +70,8 @@
   font-size: 1rem;
   font-weight: bold;
   border-radius: 10px;
+  white-space: nowrap; 
+  min-width: 200px; 
 }
 
 .month-selector {
@@ -160,25 +170,15 @@
   background-color: #ffd3d2; 
 }
 
-/* SUB-BLOQUE: time slots */
-.selected-date-time {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0rem;
-  width: 45%;
-}
-
 .time-slots {
   display: flex;
   margin-top: .7rem;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  height: 320px;
+  height: 270px;
   overflow-y: auto;
-  width: 440px;
+  width: 420px;
   padding: 7px 0px;
   scrollbar-width: none; 
   -ms-overflow-style: none;
@@ -196,8 +196,8 @@
   color: rgb(146, 100, 238);
   border: none;
   cursor: pointer;
-  padding: 0.5rem 1rem;
-  font-size: 1.5rem;
+  padding: 0 1rem;
+  font-size: 1.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -205,61 +205,45 @@
 }
 
 .scroll-arrow-up {
-  margin-bottom: -15px; 
+  margin-bottom: -30px; 
 }
 
 .scroll-arrow-down {
-  margin-top: 3px; 
-}
-
-.scroll-arrow-up.disabled,
-.scroll-arrow-down.disabled {
-  color: rgb(164, 161, 161);
-  cursor: pointer;
+  margin-top: -15px; 
 }
 
 .time-slot {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: white;
   min-width: 45%;
   min-height: 45px;
   background: linear-gradient(to right, rgba(68, 144, 226, 0.74) 0%, rgba(194, 68, 226, 0.711) 100%  ); 
   gap: 5px;
   cursor: pointer;
-  transition: all 0.5s ease;
   border-radius: 8px;
   position: relative;
   overflow: hidden;
   box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15);
 }
 
-.time-text-container {
-  flex: 1;
+.time-text-container, .confirm-box {
+  flex: 1 1 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 45px;
+  min-height: 44px;
   border-radius: 5px;
-  width: 100%;
   padding: 0 10px;
-  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15);
+  transition: flex-grow 0.7s ease, transform 0.7s ease, opacity 0.5s ease;
 }
 
 .confirm-box {
-  flex: 1;
-  width: 100%;
-  background: linear-gradient(to right, rgba(194, 68, 226, 0.673) 0%, rgb(194, 68, 226)100%);
-  padding: 11px 10px 10px;
-  min-height: 45px;
-  border-radius: 5px;
-
-  text-align: center;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.7s ease;
+  background: linear-gradient(to right, rgba(194, 68, 226, 0.673), rgb(194, 68, 226));
   box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15);
 }
 
