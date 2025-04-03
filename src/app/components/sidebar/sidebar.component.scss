@@ -99,7 +99,6 @@
     width: 100%;
     display: flex;
     align-items: center;
-    margin: 0px 0px 0px 5px;
     transition: margin 0.6s ease;
   }
   
@@ -108,7 +107,7 @@
     align-items: center;
     text-decoration: none;
     color: white;
-    padding: 15px;
+    padding: 15px 21px;;
     position: relative; 
     font-weight: 400;
     font-size: 15px;
@@ -140,8 +139,6 @@
     margin-right: 12px; 
     fill: #e8eaed; 
   }
-  
-
   
   .sidebar ul li a .link-text {
     opacity: 1;
@@ -226,95 +223,6 @@
     left: 0;
   }
 
-/* modal para cerrar sesión */
-
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, .6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    overflow: hidden;
-  }
-  
-  .modal-content {
-    background-color: rgb(235, 234, 234);
-    padding: 2rem;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 0 25px rgba(144, 143, 143, 0.3);
-    width: 400px;
-    max-width: 90%;
-    position: relative;
-    animation: pop-up 0.2s ease-in-out;
-  }
-  
-  @keyframes pop-up {
-    0% {
-      transform: scale(0.5);
-      opacity: 0;
-    }
-    80% {
-      transform: scale(1.05);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  /* botones de modal cerrar sesión */
-
-  .modal-buttons {
-    display: flex;
-    justify-content: center;
-    gap: .6rem; 
-    width: 55%;
-    margin: auto;
-    margin-top: 1.7rem;
-  
-    .button {
-      width: 100%;
-      padding: 0.65rem 1rem;
-      font-size: .9rem;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-  
-    .button.is-danger {
-      background-color: #007BFF; 
-      color: white;
-      border: none;
-  
-      &:hover {
-        background-color: #0056b3;
-        color: white; 
-      }
-    }
-  
-    .button.is-light {
-      background-color: transparent;  
-      color: #800080;  
-      border: .5px solid #800080;  
-      transition: none;  
-  
-      &:hover {
-        background-color: transparent;  
-        color: #800080;  
-      }
-    }
-  }
-
-  .modal-content p {
-    font-size: 1.15rem; 
-    color: #3a3939;  
-  }
 
   @media (max-width: 768px) {
     .sidebar {
@@ -404,55 +312,6 @@
       margin-right: 15px;
     }
 
-  /* modal para cerrar sesión */
-  
-  .modal-content {
-    background-color: rgb(235, 234, 234);
-    padding: 1.5rem  1rem;
-    width: 400px;
-  }
-
-  /* botones de modal cerrar sesión */
-
-  .modal-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem; 
-    width: 65%;
-    margin: auto;
-    margin-top: 1.4rem;
-  
-    .button {
-      width: 100%;
-      padding: 0.55rem 1rem;
-      font-size: .9rem;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-  
-    .button.is-danger {
-      background-color: #007BFF; 
-      color: white;
-      border: none;
-  
-      &:hover {
-        background-color: #0056b3; 
-      }
-    }
-  
-    .button.is-light {
-      background-color: transparent;  
-      color: #800080;  
-      border: .5px solid #800080;  
-      transition: none;  
-  
-      &:hover {
-        background-color: transparent;  
-        color: #800080;  
-      }
-    }
-  }
 }
 
 @media (max-width: 492px) {
@@ -474,11 +333,9 @@
 
     .sidebar {
         width: 300px; 
-        border-radius: 0px 15px 0px 0px;
     }
 
     .sidebar ul {
-      border-top: 1px solid rgba(209, 209, 209, 0.744);
       margin-top: 1rem;
       padding-top: 1rem;
     }
@@ -498,72 +355,8 @@
       fill: #e8eaed;
     }
 
-    .logout {
-        padding: 14px; 
-    }
 
-    .logout .link-text{
-      font-size: 1rem;
-      color: rgb(236, 92, 92);
-    }
 
-    .logout i{
-      font-size: 13px;
-      color: rgb(236, 92, 92);
-    }
-
-    /* MODAL PARA CERRAR SESIÓN */
-  .modal-content {
-    border-radius: 5px;
-    padding: 1.5rem .5rem;
-    width: 380px;
-    max-width: 90%;
-  }
-
-  .modal-content p {
-    font-size: 1rem;
-    text-align: left; 
-    margin-left: 5px;
-  }
-
-  .modal-buttons {
-    display: flex;
-    justify-content: flex-end; 
-    gap: 0rem;
-    width: 100%;
-    padding: 0rem 0rem;
-    margin: auto;
-    margin-right: 0rem;
-    margin-top: .8rem;
-  
-    .button {
-      width: 20%; 
-      padding: 0.55rem 0rem;
-      font-size: .9rem;
-      font-weight: 400;
-      border-radius: 5px;
-      cursor: pointer;
-      background-color: transparent; 
-      border: none; 
-      transition: none; 
-      color: inherit; 
-      
-      &:hover {
-        background-color: transparent; 
-        color: inherit; 
-      }
-    }
-  
-    .button.is-danger {
-      color: #007BFF; 
-      background-color: transparent;
-    }
-  
-    .button.is-light {
-      color: #800080;
-      border: none;
-    }
-  }
 }
 
    

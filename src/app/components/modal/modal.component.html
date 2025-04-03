@@ -2,9 +2,14 @@
   <div class="modal-content" [ngClass]="{
              'error-modal': isError, 
              'shake-animation': shake && isError, 
-             'success-modal': isSuccess }">
+             'pop-up-animation': !isError,
+             'success-modal': isSuccess,
+             'info-modal': isInfo  }">
+
     <i *ngIf="isError" class="fas fa-exclamation-circle error-icon"></i>
     <i *ngIf="isSuccess" class="fas fa-check-circle success-icon"></i>
+    <i *ngIf="isInfo" class="fas fa-question-circle question-icon"></i>
+
     <p>{{ message }}</p>
 
     <div class="modal-buttons" *ngIf="showButtons">

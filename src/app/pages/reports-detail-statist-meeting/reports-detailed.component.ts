@@ -208,6 +208,7 @@ openDownloadModal() {
     show: true,
     message: '¿Desea descargar el documento?',
     isError: false,
+    isInfo: false,
     isSuccess: false,
     close: () => this.closeModal(),
     confirm: () => this.confirmDownload()

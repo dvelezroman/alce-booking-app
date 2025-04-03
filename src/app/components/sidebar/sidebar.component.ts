@@ -6,13 +6,16 @@ import {UserDto, UserRole} from '../../services/dtos/user.dto';
 import { Observable } from 'rxjs';
 import {selectIsAdmin, selectUserData} from '../../store/user.selector';
 import { Store } from '@ngrx/store';
+import { ModalDto, modalInitializer } from '../modal/modal.dto';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    ModalComponent
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
@@ -23,6 +26,7 @@ export class SidebarComponent implements OnInit {
   @Output() logoutEvent = new EventEmitter<void>();
 
   showLogoutModal = false;
+  modalConfig: ModalDto = modalInitializer();
   isAdmin$: Observable<boolean>;
   isAdmin: boolean = false;
   userData$: Observable<UserDto | null>;
@@ -72,20 +76,28 @@ export class SidebarComponent implements OnInit {
     this.isSidebarClosed = true;
   }
 
-  openLogoutModal() {
-    this.showLogoutModal = true;
+  openLogoutModal(): void {
+    this.modalConfig = {
+      show: true,
+      message: "¿Estás seguro de cerrar sesión?",
+      isError: false, 
+      isSuccess: false,
+      isInfo: true,  
+      showButtons: true,
+      close: () => this.closeLogoutModal(),
+      confirm: () => this.onConfirmLogout()
+    };
   }
 
+closeLogoutModal() {
+  this.modalConfig.show = false;
+}
 
-  closeLogoutModal() {
-    this.showLogoutModal = false;
-  }
-
-  onConfirmLogout() {
-    this.usersService.logout();
-    this.router.navigate(['/login']);
-    this.closeLogoutModal();
-  }
+onConfirmLogout() {
+  this.usersService.logout();
+  this.router.navigate(['/login']);
+  this.closeLogoutModal();
+}
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {

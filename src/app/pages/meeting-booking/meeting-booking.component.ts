@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {CommonModule, isPlatformBrowser, NgForOf} from "@angular/common";
-import {Router, RouterModule} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {Store} from "@ngrx/store";
 import {selectUserData} from "../../store/user.selector";
 import {Observable, Subject, takeUntil, tap} from "rxjs";
@@ -30,6 +30,8 @@ import {
 import { HandleDatesService } from '../../services/handle-dates.service';
 import { DisabledDatesAndHours, DisabledDays } from '../../services/dtos/handle-date.dto';
 import {DateTime} from "luxon";
+import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
+import { ModalComponent } from '../../components/modal/modal.component';
 
 
 @Component({
@@ -39,7 +41,8 @@ import {DateTime} from "luxon";
     FormsModule,
     NgForOf,
     CommonModule,
-    RouterModule
+    RouterModule,
+    ModalComponent
   ],
   templateUrl: './meeting-booking.component.html',
   styleUrl: './meeting-booking.component.scss'
@@ -71,12 +74,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   currentMonthDays: any[] = [];
   selectedDay: number | null = null;
   selectedDayFormatted!: string;
-  showModal = false;
-  showSuccessModal = false;
-  showInfoModal = false;
-  showModalBookingError = false;
-  showModalStageError = false;
-  showModalScheduleError = false;
   todayMonth!: string;
   todayYear!: number;
   nextMonth_!: string;
@@ -84,20 +81,21 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
   meetings: MeetingDTO[] = [];
-  showTimeSlotsModal = false;
-  isDeleteModalActive = false;
   meetingToDelete: MeetingDTO | null = null;
   selectedMeeting: MeetingDTO | null = null;
-  isMeetingDetailModalActive = false;
   selectedMeetingIndex: number = 0;
   linkStatus: string = 'not-clickable';
   ffs: FeatureFlagDto[] = [];
   disabledDates: Record<string, number[]> = {};
   disabledDatesAndHours: DisabledDatesAndHours = {};
-
+  calendarAnimationClass: string = '';
+  
+  modalConfig: ModalDto = modalInitializer();
+  showTimeSlotsModal = false;
+  isMeetingDetailModalActive = false;
+  showSuccessModal = false;
 
   constructor(
-    private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object,
     private store: Store,
     private bookingService: BookingService,
@@ -255,6 +253,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   prevMonth() {
+    this.calendarAnimationClass = 'fade-out';
+
     const today = new Date();
     const monthMap: Record<MonthKey, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
@@ -285,11 +285,17 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
     this.selectedDay = null;
     this.selectedDayFormatted = '';
-
     this.filterDisabledTimeSlots();
-
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
+    this.calendarAnimationClass = 'fade-in';
+    this.resetCalendarAnimation();
+  }
+
+  private resetCalendarAnimation() {
+    setTimeout(() => {
+      this.calendarAnimationClass = '';
+    }, 300);
   }
 
 generateCurrentMonthDays() {
@@ -319,7 +325,6 @@ generateCurrentMonthDays() {
       const isDisabled = isCompletelyDisabled;
 
       //console.log(`Día: ${day}, isDisabled: ${isDisabled}, Horas deshabilitadas:`, dayData?.hours);
-
       return {
         day,
         dayOfWeek,
@@ -331,6 +336,7 @@ generateCurrentMonthDays() {
 }
 
   nextMonth() {
+    this.calendarAnimationClass = 'fade-out';
     // const today = new Date();
     const monthMap: Record<MonthKey, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
@@ -354,7 +360,10 @@ generateCurrentMonthDays() {
     this.filterDisabledTimeSlots()
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
+    this.calendarAnimationClass = 'fade-in';
+    this.resetCalendarAnimation();
   }
+  
 
   private filterDisabledTimeSlots(): void {
     this.timeSlots = this.timeSlots.filter(slot => !slot.isDisabled);
@@ -424,6 +433,13 @@ generateCurrentMonthDays() {
     }
   }
 
+  private resetCalendarSelection(): void {
+    this.selectedDay = null;
+    this.selectedDate = '';
+    this.selectedDayFormatted = '';
+    this.selectedTimeSlot = { label: "8:00", value: 8, isDisabled: false };
+  }
+
   recalculateTimeSlots(day: any) {
     const monthMap: Record<string, number> = {
       ENERO: 1, FEBRERO: 2, MARZO: 3, ABRIL: 4, MAYO: 5, JUNIO: 6,
@@ -490,18 +506,18 @@ generateCurrentMonthDays() {
 
   selectTimeSlot(time: {label: string, value: number, isDisabled: boolean}) {
     if (!this.userData?.student?.stageId) {
-      this.showModalStageError = true;
-      this.hideStageErrorModalAfterDelay(2000)
+      this.showModalMessage(
+        "No puedes agendar clases, porque aún no tienes asignado un nivel 'Stage'. Comunícate con administración."
+      );
+      this.hideModalAfterDelay(2000);
       return;
     }
     if (this.selectedDay) {
       this.selectedTimeSlot = time;
       this.showSuccessModal = true;
     } else {
-      this.showModal = true;
-      setTimeout(() => {
-        this.showModal = false;
-      }, 3500);
+      this.showModalMessage("Debe seleccionar una fecha antes de escoger la hora.");
+      this.hideModalAfterDelay(3500);
     }
   }
 
@@ -513,28 +529,30 @@ generateCurrentMonthDays() {
 
 
   bookMeeting() {
-    this.showTimeSlotsModal = false;
+    //console.log("isMeetingDataValid:", this.isMeetingDataValid()); 
+  
     if (this.isMeetingDataValid()) {
       const bookingData: CreateMeetingDto = this.createBookingData();
       this.bookingService.bookMeeting(bookingData).subscribe({
         next: () => {
+          this.showModalMessage("Se agendó su clase!", false, false, true);
           this.showSuccessModal = false;
-          this.showInfoModal = true;
-          this.hideInfoModalAfterDelay(2000);
+          this.hideModalAfterDelay(2000);
           this.initializeMeetings();
         },
-        error: () => {
+        error: (err) => {
+          this.showModalMessage("Ya tienes una meeting agendada en la fecha y hora seleccionada.");
           this.showSuccessModal = false;
-          this.showModalBookingError = true;
-          this.hideBookingErrorModalAfterDelay(2000);
+          this.hideModalAfterDelay(2000);
         }
       });
     } else {
+      this.showModalMessage("Debe seleccionar una fecha antes de escoger la hora.");
       this.showSuccessModal = false;
-      this.showModal = true;
       this.hideModalAfterDelay(2000);
     }
   }
+
 
   loadMeetings(from?: string, to?: string, hour?: string, studentId?: number, status?: MeetingStatusEnum): void {
     this.bookingService.searchMeetings({ from, to, hour, studentId, assigned: true, status }).subscribe({
@@ -581,33 +599,10 @@ generateCurrentMonthDays() {
     };
   }
 
-  hideInfoModalAfterDelay(delay: number) {
-    setTimeout(() => {
-      this.showInfoModal = false;
-    }, delay);
-  }
-
   hideModalAfterDelay(delay: number) {
     setTimeout(() => {
-      this.showModal = false;
-    }, delay);
-  }
-
-  hideBookingErrorModalAfterDelay(delay: number) {
-    setTimeout(() => {
-      this.showModalBookingError = false;
-    }, delay);
-  }
-
-  hideStageErrorModalAfterDelay(delay: number) {
-    setTimeout(() => {
-      this.showModalStageError = false;
-    }, delay);
-  }
-
-  hideScheduleErrorModalAfterDelay(delay: number) {
-    setTimeout(() => {
-      this.showModalScheduleError = false;
+      this.modalConfig.show = false;
+      this.resetCalendarSelection();
     }, delay);
   }
 
@@ -625,22 +620,44 @@ generateCurrentMonthDays() {
     return;
   }
 
-  openDeleteModal(meeting: MeetingDTO): void {
-    this.meetingToDelete = meeting;
-    this.isDeleteModalActive = true;
+  showModalMessage(message: string, isError: boolean = true, isInfo: boolean = false, isSuccess: boolean = false) {
+    this.modalConfig = {
+      show: true,
+      message,
+      isError,
+      isSuccess,
+      isInfo,
+      close: () => {
+        this.modalConfig.show = false;
+      }
+    };
   }
 
-  closeDeleteModal(): void {
-    this.isDeleteModalActive = false;
-    this.meetingToDelete = null;
+  openDeleteModal(meeting: MeetingDTO): void {
+    this.meetingToDelete = meeting;
+    this.modalConfig = {
+      show: true,
+      message: "¿Estás seguro de que deseas eliminar esta reunión?",
+      isError: false,  
+      isSuccess: false,
+      isInfo: true,
+      showButtons: true,
+      close: () => this.closeDeleteModal(),
+      confirm: () => this.confirmDelete()  
+    };
   }
 
   confirmDelete(): void {
     if (this.meetingToDelete) {
       this.deleteMeeting(this.meetingToDelete);
       this.meetings = this.meetings.filter(m => m !== this.meetingToDelete);
-      this.closeDeleteModal();
     }
+    this.closeDeleteModal(); 
+  }
+
+  closeDeleteModal(): void {
+    this.modalConfig = modalInitializer(); 
+    this.meetingToDelete = null;
   }
 
 //scroll flechas del contenedor de los meetings del estudiante y time slots

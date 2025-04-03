@@ -19,6 +19,7 @@ export class ModalComponent {
   @Output() confirmAction = new EventEmitter<void>();
   @Output() close = new EventEmitter<void>();
   @Input() showButtons: boolean = false;
+  @Input() isInfo: boolean = false;  
   shake: boolean = false;
 
   ngOnChanges() {

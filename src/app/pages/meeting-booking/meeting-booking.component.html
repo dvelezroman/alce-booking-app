@@ -5,28 +5,20 @@
 <main class="booking-container container">
   <div class="columns is-mobile">
     <section class="column student-info">
-      <div class="student-name">
+      <div class="student-name student-shared-style">
         <h3 *ngIf="userData?.firstName && userData?.lastName">
           {{ userName() }}
         </h3>
-<!--        <h3 *ngIf="!userData?.firstName || !userData?.lastName">-->
-<!--          <a [routerLink]="['/register-complete']" class="complete-link">-->
-<!--            Completar Datos-->
-<!--          </a>-->
-<!--        </h3>-->
       </div>
-      <div class="student-details">
+      <div class="student-details student-shared-style">
         <p>{{ userData?.email }}</p>
       </div>
-      <div class="student-details">
+      <div class="student-details student-shared-style">
         <p>{{ userData?.stage?.description }}</p>
       </div>
-<!--      <div class="student-details">-->
-<!--        <p>{{ userData?.student?.studentClassification }}</p>-->
-<!--      </div>-->
 
       <!-- Selected Meetings Section -->
-      <div class="student-schedule" *ngIf="meetings.length > 0">
+      <div class="student-schedule student-shared-style" *ngIf="meetings.length > 0">
         <h4 class="schedule-title">Agendadas</h4>
         <div class="scroll-buttons">
           <button class="scroll-button left" (click)="scrollLeft()" [class.hidden]="!canScrollLeft" aria-label="Scroll left">
@@ -71,14 +63,12 @@
     </section>
   </div>
 
-  <hr class="divider">
-
   <!-- Date and Time Selection Section -->
   <div class="date-time-wrapper">
     <!-- Calendar Selection -->
-    <section class="date-time-selection">
+    <section class="date-time-selection shared-box-style">
       <div class="calendar-title" (click)="scrollToCalendar()">
-        <h3 class="title is-4">Seleccione día</h3>
+        <h2 class="title-date">Seleccione día</h2>
       </div>
       <div class="month-selector">
         <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()" aria-label="Previous month">
@@ -89,17 +79,17 @@
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
-      <div class="calendar" #calendarRef>
+      <div class="calendar" #calendarRef >
         <div class="calendar-header">
-          <div class="calendar-day-header">Dom</div>
-          <div class="calendar-day-header">Lun</div>
-          <div class="calendar-day-header">Mar</div>
-          <div class="calendar-day-header">Mie</div>
-          <div class="calendar-day-header">Jue</div>
-          <div class="calendar-day-header">Vie</div>
-          <div class="calendar-day-header">Sab</div>
+          <div class="calendar-day-header">D</div>
+          <div class="calendar-day-header">L</div>
+          <div class="calendar-day-header">M</div>
+          <div class="calendar-day-header">M</div>
+          <div class="calendar-day-header">J</div>
+          <div class="calendar-day-header">V</div>
+          <div class="calendar-day-header">S</div>
         </div>
-        <div class="calendar-grid">
+        <div class="calendar-grid" [ngClass]="calendarAnimationClass">
           <div
             *ngFor="let day of currentMonthDays"
             class="calendar-day"
@@ -117,9 +107,11 @@
     </section>
 
     <!-- Time Slots Selection -->
-    <section class="selected-date-time">
-      <h2 class="titulo-slots" (click)="scrollToTimeSlots()">Seleccione una hora</h2>
-      <h3 class="title is-3"></h3>
+    <section class="selected-date-time shared-box-style">
+      <div class="booking-title-absolute">
+        <h2 class="title-date" (click)="scrollToTimeSlots()">Seleccione una hora</h2>
+      </div>
+
       <button class="scroll-arrow-up" (click)="scrollUp()" [class.disabled]="!canScrollUp" aria-label="Scroll up">
         <i class="fas fa-chevron-up"></i>
       </button>
@@ -149,7 +141,6 @@
 </main>
 
 
-
 <!-- Modal de detalles de la reunión -->
 <div class="modal" [ngClass]="{ 'is-active': isMeetingDetailModalActive }">
   <div class="modal-background" (click)="closeMeetingDetailModal()"></div>
@@ -175,69 +166,30 @@
       <ng-container *ngIf="selectedMeeting?.mode === mode.ONLINE">
         <p class="meeting-link"
            [ngClass]="{
-       'no-link': !selectedMeeting?.link,
-       'clickable': linkStatus === 'clickable',
-       'not-clickable': linkStatus === 'not-clickable',
-       'not-available': linkStatus === 'not-available'}">
+            'no-link': !selectedMeeting?.link,
+            'clickable': linkStatus === 'clickable',
+            'not-clickable': linkStatus === 'not-clickable',
+            'not-available': linkStatus === 'not-available'}">
           <a *ngIf="selectedMeeting?.link && linkStatus === 'clickable'"
              readonly="true"
              [href]="getFormattedLink(selectedMeeting?.link || 'Enlace aun no asignado')"
              target="_blank"
              rel="noopener noreferrer"
              style="user-select: none;"
-          >
+            >
             Ir a la clase
           </a>
-          <span *ngIf="linkStatus === 'not-clickable'">{{ selectedMeeting?.link ? 'Enlace asignado' : 'Enlace aun no asignado' }}</span>
-          <span *ngIf="linkStatus === 'not-available'">Enlace no disponible</span>
+            <span *ngIf="linkStatus === 'not-clickable'">{{ selectedMeeting?.link ? 'Enlace asignado' : 'Enlace aun no asignado' }}</span>
+            <span *ngIf="linkStatus === 'not-available'">Enlace no disponible</span>
         </p>
         <p class="link-note" *ngIf="selectedMeeting?.link">
-          <small>El enlace estará disponible 5 minutos antes y hasta 6 minutos despues de la hora agendada.</small>
+          <small>El enlace estará disponible 5 minutos antes y hasta 6 minutos después de la hora agendada.</small>
         </p>
       </ng-container>
     </section>
   </div>
 </div>
 
-<!-- Modal de error -->
-<div *ngIf="showModal" class="modal-overlay">
-  <div class="modal-content error-modal">
-    <i class="fas fa-exclamation-circle error-icon"></i>
-    <p class="help is-danger bold-text">Debe seleccionar una fecha</p>
-    <p class="help is-danger small-text">antes de escoger la hora.</p>
-  </div>
-</div>
-
-<!-- Modal de error por meeting repetida -->
-<div *ngIf="showModalBookingError" class="modal-overlay booking-error-modal">
-  <div class="modal-content booking-error-content">
-    <i class="fas fa-exclamation-circle error-icon"></i>
-    <p class="help is-danger bold-text">
-      Ya tienes una meeting agendada en la fecha y hora seleccionada.
-    </p>
-  </div>
-</div>
-
-<!-- Modal de error que no tiene asignado stage -->
-<div *ngIf="showModalStageError" class="modal-overlay booking-error-modal">
-  <div class="modal-content booking-error-content">
-    <i class="fas fa-exclamation-circle error-icon"></i>
-    <p class="help is-danger bold-text">
-      No puedes agendar clases,
-      porque aun no tienes asignado un nivel "Stage", comunícate con administración.
-    </p>
-  </div>
-</div>
-
-<!-- Modal de error cuando el agendamiento esta deshabilitado -->
-<div *ngIf="showModalScheduleError" class="modal-overlay booking-error-modal">
-  <div class="modal-content booking-error-content">
-    <i class="fas fa-exclamation-circle error-icon"></i>
-    <p class="help is-danger bold-text">
-      El agendamiento se encuentra deshabilitado, comunícate con Administración.
-    </p>
-  </div>
-</div>
 
 <!-- Modal exitoso con botones para confirmar o cancelar -->
 <div *ngIf="showSuccessModal" class="modal-overlay">
@@ -245,7 +197,6 @@
     <i class="fas fa-question-circle question-icon"></i>
     <p>Usted ha seleccionado <br> {{ selectedDayFormatted }} a las {{ selectedTimeSlot.label }}</p>
 
-     <!-- bloque radio buttons -->
     <p class="radio-question">Elige modo de la clase:</p>
 
     <div class="radio-options">
@@ -259,7 +210,6 @@
       </label>
     </div>
 
-    <!-- Confirmation and cancellation buttons -->
     <div class="modal-buttons">
       <button class="button is-success" (click)="bookMeeting()">Aceptar</button>
       <button class="button is-danger" (click)="cancelSelection()">Cancelar</button>
@@ -267,26 +217,13 @@
   </div>
 </div>
 
-
-<!-- Modal de successful-->
-<div *ngIf="showInfoModal" class="modal-overlay">
-  <div class="modal-content info-modal">
-    <i class="fas fa-check-circle info-icon"></i>
-    <p>Se agendó su clase!</p>
-  </div>
-</div>
-
-
-<!-- Modal de confirmación para eliminar meeting-->
-<div class="modal" [ngClass]="{ 'is-active': isDeleteModalActive }">
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <section class="modal-card-body">
-      <p>¿Estás seguro de que deseas eliminar esta reunión?</p>
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button is-primary3" (click)="closeDeleteModal()">Cancelar</button>
-      <button class="button is-danger2" (click)="confirmDelete()">Eliminar</button>
-    </footer>
-  </div>
-</div>
+<app-modal 
+  [showModal]="modalConfig.show"
+  [message]="modalConfig.message"
+  [isError]="modalConfig.isError"
+  [isSuccess]="modalConfig.isSuccess"
+  [isInfo]="modalConfig.isInfo"
+  [showButtons]="modalConfig.confirm !== undefined"
+  (confirmAction)="modalConfig.confirm && modalConfig.confirm()"
+  (close)="modalConfig.close()">
+</app-modal>

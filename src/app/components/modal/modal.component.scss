@@ -4,12 +4,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(96, 96, 96, 0.15);
+  background: rgba(96, 96, 96, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1010;
-  backdrop-filter: blur(1px);
 }
 
 .modal-content {
@@ -22,6 +21,24 @@
   max-width: 90%;
   position: relative;
   /* Solo agregar la animación si es un error */
+}
+
+@keyframes pop-up {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pop-up-animation {
+  animation: pop-up 0.3s ease-out;
 }
 
 @keyframes shake {
@@ -63,6 +80,17 @@
   margin-bottom: 1rem;
 }
 
+.info-modal {
+  background-color: rgb(255, 255, 255);
+  color: #17a2b8; 
+}
+
+.question-icon {
+  font-size: 1.4rem;
+  color: #17a2b8;
+  margin-bottom: 1rem;
+}
+
 .error-icon {
   font-size: 1.4rem;
   color: #dc3545;
@@ -72,26 +100,39 @@
 .modal-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;  
   margin-top: 20px;
 }
 
 .button {
   padding: 10px 20px;
   font-size: 1rem;
+  font-weight: 600; 
+  border-radius: 6px;
   border: 1px solid;
-  border-radius: 5px;
   cursor: pointer;
+  transition: all 0.3s ease-in-out; 
 }
 
 .cancel-button {
-  background-color: transparent;
-  color: rgb(63, 63, 63);
+  background-color: white;
+  color: #6f42c1;  
+  border-color: #6f42c1; 
+
+  &:hover {
+    background-color: #6f42c1;
+    color: white;
+  }
 }
 
 .confirm-button {
-  background-color: #007bff;
+  background-color: #007bff; 
   color: white;
+  border-color: #007bff;
+
+  &:hover {
+    background-color: #0056b3; 
+  }
 }
 
 @media (max-width: 492px) {
