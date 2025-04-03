@@ -42,7 +42,9 @@ export interface CreateMeetingDto {
   instructorId?: number;
   stageId?: number;
   date: string;
+  localdate: string;
   hour: number;
+  localhour: number;
   mode: Mode;
   category?: StudentClassification;
 }

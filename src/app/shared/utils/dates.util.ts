@@ -1,5 +1,26 @@
 import { DateTime } from "luxon";
 
+export const convertToEcuadorTime = (dateInput: string | Date): Date => {
+  const date = new Date(dateInput);
+
+  // Get the current timezone offset in minutes
+  // Ecuador is UTC-5 → offset = 300 minutes
+  const localOffsetMinutes = date.getTimezoneOffset(); // positive = behind UTC
+
+  const ecuOffsetMinutes = 5 * 60; // 300 minutes
+
+  if (localOffsetMinutes === ecuOffsetMinutes) {
+    // Already in Ecuador time — no need to adjust
+    return date;
+  }
+
+  // Not in Ecuador time — manually convert to UTC-5
+  const diff = localOffsetMinutes - ecuOffsetMinutes;
+  const ecuTime = new Date(date.getTime() + diff * 60 * 1000);
+
+  return ecuTime;
+};
+
 export const convertToLocalTimeZone = (dateStr: string): Date => {
   const date = new Date(dateStr);
 

@@ -24,7 +24,7 @@ import {FeatureFlagDto} from "../../services/dtos/feature-flag.dto";
 import { MonthKey } from '../../services/dtos/meeting-theme.dto';
 import {
   convertEcuadorDateToLocal,
-  convertEcuadorHourToLocal,
+  convertEcuadorHourToLocal, convertToEcuadorTime,
   getTimezoneOffsetHours
 } from "../../shared/utils/dates.util";
 import { HandleDatesService } from '../../services/handle-dates.service';
@@ -62,7 +62,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   selectedDate: string = '';
   selectedTimeSlot: { label: string; value: number; isDisabled: boolean } = { label: '8:00', value: 8, isDisabled: false };
   hoverIndex: number | null = null;
-  timeSlots: { label: string; value: number; isDisabled: boolean }[] = [];
+  timeSlots: { label: string; value: number; isDisabled: boolean, localhour: string }[] = [];
   today: string = '';
   maxDate: string = '';
   selectedMonth!: string;
@@ -196,7 +196,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const endHour = 20;  // 8 PM
     this.timeSlots = Array.from({ length: endHour - startHour + 1 }, (_, i) => {
       const hour = startHour + i;
-      return { label: `${hour}:00`, value: hour, isDisabled: false };
+      const localhour = convertEcuadorHourToLocal(hour);
+      return { label: `${hour}:00`, value: hour, isDisabled: false, localhour: `${localhour}:00` };
     });
   }
 
@@ -371,7 +372,7 @@ generateCurrentMonthDays() {
     const monthIndex = monthMap[this.selectedMonth];
     const selectedDate = new Date(Date.UTC(this.selectedYear, monthIndex, day.day));
 
-    const today = new Date(this.today);
+    const today = convertToEcuadorTime(new Date(this.today));
     if (isNaN(today.getTime())) return false; // Ensure today is a valid date
 
     // Normalize today to UTC midnight
@@ -479,7 +480,8 @@ generateCurrentMonthDays() {
     // Create time slots from startHour to endHour (inclusive)
     return Array.from({ length: endHour - startHour + 1 }, (_, i) => {
       const hour = startHour + i;
-      return { label: `${hour}:00`, value: hour };
+      const localhour = convertEcuadorHourToLocal(hour);
+      return { label: `${hour}:00`, value: hour, localhour: `${localhour}:00`  };
     });
   }
 
@@ -569,6 +571,8 @@ generateCurrentMonthDays() {
       stageId: this.userData.stage?.id,
       date: convertedDate,
       hour: getTimezoneOffsetHours() !== 0 ? convertEcuadorHourToLocal(this.selectedTimeSlot.value) : this.selectedTimeSlot.value,
+      localdate: formattedDate,
+      localhour: this.selectedTimeSlot.value,
       mode: this.meetingType,
       category: this.userData.student.studentClassification,
     };
