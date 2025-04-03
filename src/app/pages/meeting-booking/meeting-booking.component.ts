@@ -227,11 +227,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   getTodayDate(): string {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return DateTime.now().setZone('America/Guayaquil').startOf('day').toISODate() ?? '';
   }
 
   getTomorrowDate(): string {
@@ -304,42 +300,57 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }, 300);
   }
 
-generateCurrentMonthDays() {
-  const monthMap: Record<MonthKey, number> = {
-    ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-    JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
-  };
-
-  const monthIndex = monthMap[this.selectedMonth as MonthKey];
-  if (monthIndex === undefined) {
-    console.error(`Mes inválido: ${this.selectedMonth}`);
-    this.currentMonthDays = [];
-    return;
+  generateCurrentMonthDays() {
+    const monthMap: Record<MonthKey, number> = {
+      ENERO: 1, FEBRERO: 2, MARZO: 3, ABRIL: 4, MAYO: 5, JUNIO: 6,
+      JULIO: 7, AGOSTO: 8, SEPTIEMBRE: 9, OCTUBRE: 10, NOVIEMBRE: 11, DICIEMBRE: 12
+    };
+  
+    const monthIndex = monthMap[this.selectedMonth as MonthKey];
+    if (!monthIndex) {
+      console.error(`Mes inválido: ${this.selectedMonth}`);
+      this.currentMonthDays = [];
+      return;
+    }
+  
+    const startOfMonth = DateTime.fromObject(
+      { year: this.selectedYear, month: monthIndex, day: 1 },
+      { zone: 'America/Guayaquil' }
+    );
+  
+    const daysInMonth = startOfMonth.daysInMonth;
+    if (!daysInMonth) {
+      console.error('No se pudo calcular la cantidad de días del mes.');
+      this.currentMonthDays = [];
+      return;
+    }
+    const firstDayOfWeek = startOfMonth.weekday % 7;
+  
+    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({
+      day: '',
+      dayOfWeek: '',
+      isDisabled: false,
+    }));
+  
+    // Generar días del mes
+    this.currentMonthDays = this.currentMonthDays.concat(
+      Array.from({ length: daysInMonth }, (_, i) => {
+        const date = startOfMonth.plus({ days: i });
+        const day = date.day;
+        const dayOfWeek = date.setLocale('es').toFormat('cccc').toUpperCase();
+    
+        const dayData = this.disabledDatesAndHours[(monthIndex - 1).toString()]?.find(d => d.day === day);
+        const isCompletelyDisabled = dayData ? dayData.hours.length === 0 : false;
+    
+        return {
+          day,
+          dayOfWeek,
+          date: date.toFormat('yyyy-MM-dd'),
+          isDisabled: isCompletelyDisabled,
+        };
+      })
+    );
   }
-
-  const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
-  const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
-
-  this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '', isDisabled: false }));
-  this.currentMonthDays = this.currentMonthDays.concat(
-    Array.from({ length: daysInMonth }, (_, i) => {
-      const day = i + 1;
-      const date = new Date(this.selectedYear, monthIndex, day);
-      const dayOfWeek = date.toLocaleString('es-ES', { weekday: 'long' }).toUpperCase();
-      const dayData = this.disabledDatesAndHours[monthIndex.toString()]?.find(dateAndHour => dateAndHour.day === day);
-      const isCompletelyDisabled = dayData ? dayData.hours.length === 0 : false;
-      const isDisabled = isCompletelyDisabled;
-
-      //console.log(`Día: ${day}, isDisabled: ${isDisabled}, Horas deshabilitadas:`, dayData?.hours);
-      return {
-        day,
-        dayOfWeek,
-        date: date.toLocaleString().split('T')[0],
-        isDisabled
-      };
-    })
-  );
-}
 
   nextMonth() {
     this.calendarAnimationClass = 'fade-out';
@@ -375,52 +386,42 @@ generateCurrentMonthDays() {
     this.timeSlots = this.timeSlots.filter(slot => !slot.isDisabled);
   }
 
-  isDaySelectable(day: { day: number }): boolean {
+  isDaySelectable(day: { day: number | null }): boolean {
+    if (!day.day || isNaN(day.day)) return false;
+  
     const monthMap: Record<string, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-
+  
     if (!this.selectedMonth || !this.selectedYear || !(this.selectedMonth in monthMap)) {
-      return false; // Ensure valid month and year
+      return false;
     }
-
+  
     const monthIndex = monthMap[this.selectedMonth];
-    const selectedDate = new Date(Date.UTC(this.selectedYear, monthIndex, day.day));
-
-    const today = convertToEcuadorTime(new Date(this.today));
-    if (isNaN(today.getTime())) return false; // Ensure today is a valid date
-
-    // Normalize today to UTC midnight
-    today.setUTCHours(0, 0, 0, 0);
-
-    // Determine the start of the current week (Monday in UTC)
-    const dayOfWeek = today.getUTCDay() || 7; // Convert Sunday (0) to 7
-    const weekStart = new Date(today);
-    weekStart.setUTCDate(today.getUTCDate() - (dayOfWeek - 1));
-
-    // Determine the end of the current week (Saturday in UTC)
-    const weekEnd = new Date(weekStart);
-    weekEnd.setUTCDate(weekStart.getUTCDate() + 5);
-
-    // Determine the next week's range (Monday to Saturday in UTC)
-    const nextWeekStart = new Date(weekStart);
-    nextWeekStart.setUTCDate(weekStart.getUTCDate() + 7);
-
-    const nextWeekEnd = new Date(nextWeekStart);
-    nextWeekEnd.setUTCDate(nextWeekStart.getUTCDate() + 5);
-
+  
+    const selectedDate = DateTime.fromObject(
+      { year: this.selectedYear, month: monthIndex + 1, day: day.day },
+      { zone: 'America/Guayaquil' }
+    ).startOf('day');
+  
+    const today = DateTime.now().setZone('America/Guayaquil').startOf('day');
+  
+    const weekday = today.weekday;
+    const weekStart = today.minus({ days: weekday - 1 });
+    const weekEnd = weekStart.plus({ days: 5 });
+    const nextWeekStart = weekStart.plus({ days: 7 });
+    const nextWeekEnd = nextWeekStart.plus({ days: 5 });
+  
     return (
-      selectedDate.getUTCDay() !== 0 && // Exclude Sundays
-      selectedDate >= today && // Allow today and future days
+      selectedDate.weekday !== 7 &&
+      selectedDate >= today &&
       (
         (selectedDate >= weekStart && selectedDate <= weekEnd) ||
         (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd)
       )
     );
   }
-
-
 
   selectDay(day: any) {
     const monthMap: Record<string, number> = {
@@ -576,34 +577,33 @@ generateCurrentMonthDays() {
     return this.selectedDate && this.selectedTimeSlot;
   }
 
-  createBookingData(): CreateMeetingDto {
-    if (!this.userData?.student) {
-      throw new Error('Student data is required to create booking data.');
-    }
-
-    const date = this.selectedDate;
-    const [year, month, day] = date.split('-').map(Number); // Assuming your format is "YYYY/MM/DD"
-
-    // Ensure proper ISO 8601 format (zero-padding month & day)
-    const formattedMonth = month.toString().padStart(2, '0');
-    const formattedDay = day.toString().padStart(2, '0');
-    const formattedHour = this.selectedTimeSlot.value.toString().padStart(2, '0');
-    // Create a valid ISO 8601 date string (Ecuador is UTC-5)
-    const formattedDate = `${year}-${formattedMonth}-${formattedDay}T${formattedHour}:00:00-05:00`;
-    const convertedDate = getTimezoneOffsetHours() !== 0 ? convertEcuadorDateToLocal(formattedDate) : formattedDate;
-
-    return {
-      studentId: this.userData.student.id,
-      instructorId: undefined,
-      stageId: this.userData.stage?.id,
-      date: convertedDate,
-      hour: getTimezoneOffsetHours() !== 0 ? convertEcuadorHourToLocal(this.selectedTimeSlot.value) : this.selectedTimeSlot.value,
-      localdate: formattedDate,
-      localhour: this.selectedTimeSlot.value,
-      mode: this.meetingType,
-      category: this.userData.student.studentClassification,
-    };
+createBookingData(): CreateMeetingDto {
+  if (!this.userData?.student) {
+    throw new Error('Student data is required to create booking data.');
   }
+
+  const [year, month, day] = this.selectedDate.split('-').map(Number);
+  const selectedHour = this.selectedTimeSlot.value;
+
+  const dateInEcuador = DateTime.fromObject(
+    { year, month, day, hour: selectedHour, minute: 0 },
+    { zone: 'America/Guayaquil' }
+  );
+
+  const ecuadorISO = dateInEcuador.toISO() ?? ''; 
+
+  return {
+    studentId: this.userData.student.id,
+    instructorId: undefined,
+    stageId: this.userData.stage?.id,
+    date: ecuadorISO,
+    hour: selectedHour,
+    localdate: ecuadorISO,
+    localhour: selectedHour,
+    mode: this.meetingType,
+    category: this.userData.student.studentClassification,
+  };
+}
 
   hideModalAfterDelay(delay: number) {
     setTimeout(() => {
