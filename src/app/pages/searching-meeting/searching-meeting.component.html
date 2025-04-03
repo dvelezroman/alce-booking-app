@@ -157,8 +157,8 @@
               <td>{{ meeting.mode || 'Modalidad no disponible' }}</td>
               <td>{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
               <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
-              <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
-              <td>{{ meeting.hour }}:00</td>
+              <td>{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
+              <td>{{ meeting.localhour }}:00</td>
               <td>{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
               <td class="tooltip-container">
                 <span class="tooltip" [hidden]="!meeting.student?.user?.comment">

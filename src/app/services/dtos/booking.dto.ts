@@ -8,6 +8,8 @@ export interface MeetingDTO {
   instructorId?: number; // Optional ID of the instructor
   date: Date;            // Date of the meeting
   hour: number;          // Hour of the meeting (24-hour format)
+  localdate: Date;
+  localhour: number;
   stageId: number;       // ID of the stage
   link?: string;         // Optional link for the meeting
   password?: string;    // Optional password for meeting
@@ -98,7 +100,9 @@ export interface MeetingLinkDto {
 
 export interface InstructorAttendanceDto {
   date: string,
+  localdate: string,
   hour: number,
+  localhour: number,
   instructorId: number,
   meetings: MeetingDTO[],
 }
