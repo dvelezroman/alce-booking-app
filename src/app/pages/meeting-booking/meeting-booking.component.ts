@@ -29,6 +29,7 @@ import {
 } from "../../shared/utils/dates.util";
 import { HandleDatesService } from '../../services/handle-dates.service';
 import { DisabledDatesAndHours, DisabledDays } from '../../services/dtos/handle-date.dto';
+import {DateTime} from "luxon";
 
 
 @Component({
@@ -424,45 +425,47 @@ generateCurrentMonthDays() {
   }
 
   recalculateTimeSlots(day: any) {
-    // console.log('Recalculate Time Slots');
     const monthMap: Record<string, number> = {
-      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+      ENERO: 1, FEBRERO: 2, MARZO: 3, ABRIL: 4, MAYO: 5, JUNIO: 6,
+      JULIO: 7, AGOSTO: 8, SEPTIEMBRE: 9, OCTUBRE: 10, NOVIEMBRE: 11, DICIEMBRE: 12
     };
-// console.log(day);
-    const monthIndex = monthMap[this.selectedMonth]; // Índice del mes actual
-    const selectedDate = new Date(this.selectedYear, monthIndex, day.day);
-    // const selectedDate = new Date(this.selectedYear, new Date(Date.parse(this.selectedMonth + " 1," + this.selectedYear)).getMonth(), day.day);
-    const currentDate = new Date();
-    // const currentDay = currentDate.getDay();
-    // console.log(getTimezoneOffsetHours());
-    const currentHour = currentDate.getHours() - getTimezoneOffsetHours();
-// console.log(currentDate);
-    // Define the time slot range
-    const startHour = 8; // 8 AM
-    const endHour = 20; // 8 PM
-    const saturdayEndHour = 13; // For Saturdays, slots available until 13:00 (1 PM)
 
-    // Check if the selected date is a Saturday (getDay() returns 6 for Saturday)
-    const isSaturday = selectedDate.getDay() === 6;
-    // console.log(selectedDate.getDay());
-    const disabledHours = this.getDisabledHoursForDay(day.day, monthIndex);
-    //console.log(`Horas deshabilitadas para el día ${day.day}:`, disabledHours);
+    const monthIndex = monthMap[this.selectedMonth];
+    if (!monthIndex) {
+      console.error(`Invalid month: ${this.selectedMonth}`);
+      return;
+    }
 
+    // Get current and selected dates in Ecuador timezone
+    const nowInEcuador = DateTime.now().setZone('America/Guayaquil');
+    const selectedDate = DateTime.fromObject(
+      { year: this.selectedYear, month: monthIndex, day: day.day },
+      { zone: 'America/Guayaquil' }
+    );
+
+    const isSaturday = selectedDate.weekday === 6; // 6 = Saturday
+    const disabledHours = this.getDisabledHoursForDay(day.day, monthIndex - 1);
+
+    const startHour = 8;
+    const endHour = 20;
+    const saturdayEndHour = 13;
 
     if (isSaturday) {
-      // Only show time slots from 8:00 to 13:00 on Saturdays
-      const availableStartHour = selectedDate.getDate() === currentDate.getDate() ? Math.max(startHour, currentHour + 3) : startHour;
-      this.timeSlots = this.generateTimeSlots(availableStartHour, saturdayEndHour).map(slot => ({
-        ...slot,
-        isDisabled: disabledHours.includes(slot.value)
-      }));
-    } else if (selectedDate.toDateString() === currentDate.toDateString()) {
-      if (currentHour >= endHour) {
-        // If the current time is later than 21:00, return empty array
+      const availableStartHour = selectedDate.hasSame(nowInEcuador, 'day')
+        ? Math.max(startHour, nowInEcuador.hour + 3)
+        : startHour;
+
+      this.timeSlots = availableStartHour >= saturdayEndHour
+        ? []
+        : this.generateTimeSlots(availableStartHour, saturdayEndHour).map(slot => ({
+          ...slot,
+          isDisabled: disabledHours.includes(slot.value)
+        }));
+    } else if (selectedDate.hasSame(nowInEcuador, 'day')) {
+      if (nowInEcuador.hour >= endHour) {
         this.timeSlots = [];
       } else {
-        const availableStartHour = Math.max(startHour, currentHour + 2);
+        const availableStartHour = Math.max(startHour, nowInEcuador.hour + 2);
         this.timeSlots = this.generateTimeSlots(availableStartHour, endHour).map(slot => ({
           ...slot,
           isDisabled: disabledHours.includes(slot.value)
