@@ -90,6 +90,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   disabledDatesAndHours: DisabledDatesAndHours = {};
   calendarAnimationClass: string = '';
   ecuadorTime: string = '';
+  ecuadorDate: string = '';
   
   modalConfig: ModalDto = modalInitializer();
   showTimeSlotsModal = false;
@@ -113,8 +114,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.ffs = ffs;
     });
 
-    const nowInEcuador = convertToEcuadorTime(new Date());
-    this.ecuadorTime = nowInEcuador.toTimeString().slice(0, 5);
+    const nowInEcuador = DateTime.now().setZone('America/Guayaquil').setLocale('es');
+    this.ecuadorTime = nowInEcuador.toFormat("HH:mm");
+    this.ecuadorDate = nowInEcuador.toFormat("EEEE, dd 'de' LLLL");
 
     this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
       this.userData = state;
