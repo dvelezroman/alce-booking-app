@@ -112,27 +112,37 @@
         <h2 class="title-date" (click)="scrollToTimeSlots()">Seleccione una hora</h2>
       </div>
 
+      <!-- hora actual en Ecuador -->
+      <div class="ecuador-time-display">
+        <strong>Hora actual en Ecuador:</strong>
+        <span>{{ ecuadorTime }}</span>
+      </div>
+
       <button class="scroll-arrow-up" (click)="scrollUp()" [class.disabled]="!canScrollUp" aria-label="Scroll up">
         <i class="fas fa-chevron-up"></i>
       </button>
-      <div class="time-slots" #timeSlotList  #timeSlotsRef>
+
+      <div class="time-slots" #timeSlotList #timeSlotsRef>
         <div *ngIf="timeSlots.length === 0">
           <p>Horarios no disponibles</p>
         </div>
+
         <div *ngFor="let time of timeSlots; let i = index"
-             class="time-slot"
-             [class.disabled]="time.isDisabled"
-             (mouseenter)="hoverIndex = i"
-             (mouseleave)="hoverIndex = null">
+            class="time-slot"
+            [class.disabled]="time.isDisabled"
+            (mouseenter)="hoverIndex = i"
+            (mouseleave)="hoverIndex = null">
+
           <div class="time-text-container">
-            <span class="time-text">{{ time.label }}</span>
-<!--            <span class="time-text">{{ time.localhour }}</span>-->
+            <span class="time-text">{{ time.localhour }}</span> <!-- Solo hora del estudiante -->
           </div>
+
           <div class="confirm-box" *ngIf="hoverIndex === i && !time.isDisabled" (click)="selectTimeSlot(time)">
             Confirmar
           </div>
         </div>
       </div>
+
       <button class="scroll-arrow-down" (click)="scrollDown()" [class.disabled]="!canScrollDown" aria-label="Scroll down">
         <i class="fas fa-chevron-down"></i>
       </button>

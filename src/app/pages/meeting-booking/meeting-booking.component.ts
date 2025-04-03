@@ -89,6 +89,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   disabledDates: Record<string, number[]> = {};
   disabledDatesAndHours: DisabledDatesAndHours = {};
   calendarAnimationClass: string = '';
+  ecuadorTime: string = '';
   
   modalConfig: ModalDto = modalInitializer();
   showTimeSlotsModal = false;
@@ -111,6 +112,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.ffService.getAll().subscribe(ffs => {
       this.ffs = ffs;
     });
+
+    const nowInEcuador = convertToEcuadorTime(new Date());
+    this.ecuadorTime = nowInEcuador.toTimeString().slice(0, 5);
 
     this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
       this.userData = state;
