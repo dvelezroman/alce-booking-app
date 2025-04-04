@@ -8,87 +8,97 @@
   </div>
 </section>
 
-<section class="calendar-section" *ngIf="isInstructor">
+<section class="date-time-selection shared-box-style" *ngIf="isInstructor">
   <div class="calendar-title">
-    <h3 class="title is-4">Clases Programadas</h3>
+    <h2 class="title-date">Clases Programadas</h2>
+  </div>
+
+  <div class="calendar-legend">
+    <span class="legend-dot"></span>
+    <span class="legend-text">Día con clases programadas</span>
   </div>
 
   <div class="month-selector">
-    <div class="month-nav-buttons">
-      <button *ngIf="selectedMonth !== minMonth || selectedYear !== minYear"
-              class="button is-small prev-button"
-              (click)="prevMonth()"
-              aria-label="Mes anterior">
-        <i class="fas fa-chevron-left"></i>
-      </button>
-      <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
-      <button *ngIf="selectedMonth !== maxMonth || selectedYear !== maxYear"
-              class="button is-small next-button"
-              (click)="nextMonth()"
-              aria-label="Mes siguiente">
-        <i class="fas fa-chevron-right"></i>
-      </button>
-    </div>
+    <button *ngIf="selectedMonth !== minMonth || selectedYear !== minYear"
+            class="button is-small prev-button"
+            (click)="prevMonth()"
+            aria-label="Mes anterior">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
+
+    <button *ngIf="selectedMonth !== maxMonth || selectedYear !== maxYear"
+            class="button is-small next-button"
+            (click)="nextMonth()"
+            aria-label="Mes siguiente">
+      <i class="fas fa-chevron-right"></i>
+    </button>
   </div>
 
   <div class="calendar">
     <div class="calendar-header">
-      <div class="calendar-day-header">Dom</div>
-      <div class="calendar-day-header">Lun</div>
-      <div class="calendar-day-header">Mar</div>
-      <div class="calendar-day-header">Mie</div>
-      <div class="calendar-day-header">Jue</div>
-      <div class="calendar-day-header">Vie</div>
-      <div class="calendar-day-header">Sab</div>
+      <div class="calendar-day-header">D</div>
+      <div class="calendar-day-header">L</div>
+      <div class="calendar-day-header">M</div>
+      <div class="calendar-day-header">M</div>
+      <div class="calendar-day-header">J</div>
+      <div class="calendar-day-header">V</div>
+      <div class="calendar-day-header">S</div>
     </div>
+
     <div class="calendar-grid">
       <div
-  *ngFor="let day of currentMonthDays"
-  class="calendar-day"
-  [ngClass]="{
-    'empty': day.day === '', 
-    'selected': selectedDay === day.day,
-    'selectable': isDaySelectable(day),
-    'has-meeting': day.hasMeeting
-  }"
-  (click)="showMeetingsOfDay(day)"
->
-  {{ day.day }}
-</div>
+        *ngFor="let day of currentMonthDays"
+        class="calendar-day"
+        [ngClass]="{
+          'empty': day.day === '',
+          'selected': selectedDay === day.day,
+          'has-meeting': day.hasMeeting
+        }"
+        (click)="showMeetingsOfDay(day)"
+      >
+        {{ day.day }}
+      </div>
     </div>
   </div>
 </section>
 
 <!-- Tabla de resultados -->
+<div *ngIf="meetingsOfDay.length === 0 && selectedDay !== null" class="no-meetings-message">
+  <p>No hay clases programadas para este día.</p>
+</div>
 <div *ngIf="meetingsOfDay.length > 0" class="meeting-results">
   <h3 class="title is-5">Clases para el {{ selectedDate | date: 'EEEE, d MMMM' }}</h3>
-  <table class="table is-fullwidth">
-    <thead>
-      <tr>
-        <th>Stage</th>
-        <th>Categoría</th>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <th>Modalidad</th>
-        <th>Contenido</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of meetingsOfDay">
-        <!-- Si meetings contiene solo un elemento -->
-        <td>{{ item.meetings?.[0]?.stage?.number || 'Sin etapa' }}</td>
-        <td>{{ item.meetings?.[0]?.category || 'Sin categoría' }}</td>
-        <td>{{ item.date | date: 'mediumDate' }}</td>
-        <td>{{ item.hour }}:00</td>
-        <td>{{ item.meetings?.[0]?.mode || 'Sin modalidad' }}</td>
-        <td>
-          <button class="button is-small" (click)="openThemeModal(item)">
-            <span class="material-icons">menu_book</span>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  
+  <div class="table-responsive">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Categoría</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Modalidad</th>
+          <th>Contenido</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of meetingsOfDay">
+          <td>{{ item.meetings?.[0]?.stage?.number || 'Sin etapa' }}</td>
+          <td>{{ item.meetings?.[0]?.category || 'Sin categoría' }}</td>
+          <td>{{ item.date | date: 'mediumDate' }}</td>
+          <td>{{ item.hour }}:00</td>
+          <td>{{ item.meetings?.[0]?.mode || 'Sin modalidad' }}</td>
+          <td>
+            <button class="button is-small" (click)="openThemeModal(item)">
+              <span class="material-icons">menu_book</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <!-- Modal -->

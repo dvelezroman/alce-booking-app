@@ -22,11 +22,7 @@ import {Mode} from '../../services/dtos/student.dto';
 import {FeatureFlagService} from "../../services/feature-flag.service";
 import {FeatureFlagDto} from "../../services/dtos/feature-flag.dto";
 import { MonthKey } from '../../services/dtos/meeting-theme.dto';
-import {
-  convertEcuadorDateToLocal,
-  convertEcuadorHourToLocal, convertToEcuadorTime,
-  getTimezoneOffsetHours
-} from "../../shared/utils/dates.util";
+import { convertEcuadorHourToLocal } from "../../shared/utils/dates.util";
 import { HandleDatesService } from '../../services/handle-dates.service';
 import { DisabledDatesAndHours, DisabledDays } from '../../services/dtos/handle-date.dto';
 import {DateTime} from "luxon";
@@ -89,6 +85,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   disabledDates: Record<string, number[]> = {};
   disabledDatesAndHours: DisabledDatesAndHours = {};
   calendarAnimationClass: string = '';
+  ecuadorTimeInterval!: any;
   ecuadorTime: string = '';
   ecuadorDate: string = '';
   
@@ -130,6 +127,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         this.initializeCalendar();
       });
     });
+
+    this.updateEcuadorTime();
+      this.ecuadorTimeInterval = setInterval(() => {
+      this.updateEcuadorTime();
+      } , 60000); 
   }
 
   ngOnDestroy() {
@@ -155,6 +157,13 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.checkScrollY();
     }, 0);
+  }
+
+  private updateEcuadorTime(): void {
+    const nowInEcuador = DateTime.now().setZone('America/Guayaquil').setLocale('es');
+    this.ecuadorTime = nowInEcuador.toFormat("HH:mm");
+    this.ecuadorDate = nowInEcuador.toFormat("EEEE, dd 'de' LLLL");
+    this.cdr.detectChanges(); // Para asegurarte de que actualiza el binding
   }
 
   private initializeCalendar(): void {

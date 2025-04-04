@@ -138,7 +138,7 @@ export class HomeComponent implements OnInit {
   
     const currentMonthIndex = monthMap[this.selectedMonth.toLowerCase()];
     if (currentMonthIndex === undefined) {
-      console.error('Mes inválido:', this.selectedMonth);
+      //console.error('Mes inválido:', this.selectedMonth);
       return;
     }
   
@@ -161,7 +161,7 @@ export class HomeComponent implements OnInit {
   
     const currentMonthIndex = monthMap[this.selectedMonth.toLowerCase()];
     if (currentMonthIndex === undefined) {
-      console.error('Mes inválido:', this.selectedMonth);
+      //console.error('Mes inválido:', this.selectedMonth);
       return;
     }
   
@@ -178,12 +178,14 @@ export class HomeComponent implements OnInit {
 
   isDaySelectable(day: { day: number | string, isNextMonth?: boolean }): boolean {
     if (typeof day.day !== 'number') return false;
-
+  
     const today = new Date();
-    const monthIndex = day.isNextMonth ? new Date().getMonth() + 1 : new Date(Date.parse(this.selectedMonth + ' 1,' + this.selectedYear)).getMonth();
-    const dateToCheck = new Date(this.selectedYear, monthIndex, day.day);
-    const dayDifference = Math.ceil((dateToCheck.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    return dayDifference >= 0 && dateToCheck.getDay() !== 0;
+    const currentMonthIndex = this.getMonthIndex(this.selectedMonth);
+    const selectedDate = new Date(this.selectedYear, currentMonthIndex, +day.day);
+    const esHoyOMasTarde = selectedDate >= new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const esDomingo = selectedDate.getDay() === 0;
+  
+    return esHoyOMasTarde && !esDomingo;
   }
 
   selectDay(day: { day: number | string, isNextMonth: boolean }) {
@@ -207,7 +209,7 @@ export class HomeComponent implements OnInit {
         this.meetingsOfDay = day.meetings;
         //console.log('Estructura de meetingsOfDay:', this.meetingsOfDay);
       } else {
-        console.log(`No hay reuniones para el día ${this.selectedDate.toDateString()}.`);
+        //console.log(`No hay reuniones para el día ${this.selectedDate.toDateString()}.`);
         this.meetingsOfDay = [];
       }
     } else {
@@ -235,7 +237,7 @@ export class HomeComponent implements OnInit {
     }).subscribe({
       next: (meetings) => {
         //console.log('Reuniones obtenidas para el instructor:', meetings);
-        const daysWithMeetings = new Map<number, MeetingDTO[]>(); // Mapa para reuniones por día
+        const daysWithMeetings = new Map<number, MeetingDTO[]>(); 
   
         meetings.forEach((meeting: MeetingDTO) => {
           const meetingDate = new Date(meeting.date);
@@ -244,7 +246,7 @@ export class HomeComponent implements OnInit {
             if (!daysWithMeetings.has(day)) {
               daysWithMeetings.set(day, []);
             }
-            daysWithMeetings.get(day)?.push(meeting); // Agregar la reunión al día correspondiente
+            daysWithMeetings.get(day)?.push(meeting); 
           }
         });
   
