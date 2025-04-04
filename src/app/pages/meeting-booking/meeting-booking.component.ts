@@ -60,7 +60,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   meetingType: Mode = Mode.ONLINE;
   mode = Mode;
   selectedDate: string = '';
-  selectedTimeSlot: { label: string; value: number; isDisabled: boolean } = { label: '8:00', value: 8, isDisabled: false };
+  selectedTimeSlot: { label: string; value: number; isDisabled: boolean } = { label: '8:00', value: 8, isDisabled: false  };
   hoverIndex: number | null = null;
   timeSlots: { label: string; value: number; isDisabled: boolean, localhour: string }[] = [];
   today: string = '';
@@ -88,6 +88,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   ecuadorTimeInterval!: any;
   ecuadorTime: string = '';
   ecuadorDate: string = '';
+  convertEcuadorHourToLocal = convertEcuadorHourToLocal;
   
   modalConfig: ModalDto = modalInitializer();
   showTimeSlotsModal = false;
@@ -872,6 +873,18 @@ createBookingData(): CreateMeetingDto {
     const firstDay = `${year}-01-01`;
     const lastDay = `${year}-12-31`;
     return [firstDay, lastDay];
+  }
+
+  getStudentLocalHour(): string | null {
+    if (!this.selectedMeeting) return null;
+
+    const ecuadorTime = DateTime.fromJSDate(new Date(this.selectedMeeting.date)) 
+      .setZone('America/Guayaquil')
+      .set({ hour: this.selectedMeeting.hour, minute: 0 });
+  
+    const localTime = ecuadorTime.setZone(DateTime.local().zoneName);
+  
+    return localTime.toFormat('HH:mm');
   }
 }
 

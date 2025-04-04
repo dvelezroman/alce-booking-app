@@ -171,7 +171,20 @@
     </header>
     <section class="modal-card-body">
       <p><strong>Fecha:</strong> <span>{{ selectedMeeting?.date | date: 'EEEE, d MMMM YYYY':'UTC' }}</span></p>
-      <p><strong>Hora:</strong> <span>{{ selectedMeeting?.hour }}:00</span></p>
+     
+      <p class="meeting-hour-inline">
+        <strong>Hora:</strong>
+        <span class="main-hour" *ngIf="getStudentLocalHour() !== (selectedMeeting?.hour + ':00')">
+          {{ getStudentLocalHour() }} (hora local)  /
+        </span>
+        <span class="secondary-hour" *ngIf="getStudentLocalHour() !== (selectedMeeting?.hour + ':00')">
+       {{ selectedMeeting?.hour }}:00 (hora de Ecuador)
+        </span>
+        <span class="main-hour" *ngIf="getStudentLocalHour() === (selectedMeeting?.hour + ':00')">
+          {{ selectedMeeting?.hour }}:00
+        </span>
+      </p>
+
       <p><strong>Modo:</strong> <span>{{ selectedMeeting?.mode === mode.ONLINE ? 'Online' : 'Presencial' }}</span></p>
       <p>
         <strong>Instructor:</strong>
@@ -216,7 +229,10 @@
 <div *ngIf="showSuccessModal" class="modal-overlay">
   <div class="modal-content success-modal">
     <i class="fas fa-question-circle question-icon"></i>
-    <p>Usted ha seleccionado <br> {{ selectedDayFormatted }} a las {{ selectedTimeSlot.label }}</p>
+    <p>
+      Usted ha seleccionado<br>
+      {{ selectedDayFormatted }} a las {{ convertEcuadorHourToLocal(selectedTimeSlot.value) }}:00 
+    </p>
 
     <p class="radio-question">Elige modo de la clase:</p>
 
