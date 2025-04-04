@@ -600,7 +600,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       { zone: 'America/Guayaquil' }
     );
   
-    const ecuadorISO = dateInEcuador.toISO() ?? ''; 
+    const ecuadorISO = dateInEcuador.toISO() ?? '';
+    const localDateISO = dateInEcuador.setZone(DateTime.local().zoneName).toISO() ?? '';
   
     return {
       studentId: this.userData.student.id,
@@ -608,7 +609,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       stageId: this.userData.stage?.id,
       date: ecuadorISO,
       hour: selectedHour,
-      localdate: ecuadorISO,
+      localdate: localDateISO, 
       localhour: dateInEcuador.setZone(DateTime.local().zoneName).hour,
       mode: this.meetingType,
       category: this.userData.student.studentClassification,
