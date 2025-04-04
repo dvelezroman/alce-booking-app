@@ -178,9 +178,16 @@
           <span class="main-hour">
             {{ selectedMeeting?.hour }}:00 (hora local) /
           </span>
-          <span class="secondary-hour">
-            {{ selectedMeeting?.localhour }}:00 (hora de Ecuador)
-          </span>
+          <ng-container *ngIf="selectedMeeting?.localdate !== selectedMeeting?.date">
+            <span class="secondary-hour">
+              {{ selectedMeeting?.localdate | date: 'EEEE, d MMMM YYYY':'UTC' }}, {{ selectedMeeting?.localhour }}:00 (hora de Ecuador)
+            </span>
+          </ng-container>
+          <ng-container *ngIf="selectedMeeting?.localdate === selectedMeeting?.date">
+            <span class="secondary-hour">
+              {{ selectedMeeting?.localhour }}:00 (hora de Ecuador)
+            </span>
+          </ng-container>
         </ng-container>
         <ng-container *ngIf="selectedMeeting?.localhour === selectedMeeting?.hour">
           <span class="main-hour">
