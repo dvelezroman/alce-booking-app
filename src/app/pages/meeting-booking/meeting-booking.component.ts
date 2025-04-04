@@ -22,7 +22,11 @@ import {Mode} from '../../services/dtos/student.dto';
 import {FeatureFlagService} from "../../services/feature-flag.service";
 import {FeatureFlagDto} from "../../services/dtos/feature-flag.dto";
 import { MonthKey } from '../../services/dtos/meeting-theme.dto';
-import { convertEcuadorHourToLocal } from "../../shared/utils/dates.util";
+import {
+  convertEcuadorDateToLocal,
+  convertEcuadorHourToLocal,
+  getTimezoneOffsetHours
+} from "../../shared/utils/dates.util";
 import { HandleDatesService } from '../../services/handle-dates.service';
 import { DisabledDatesAndHours, DisabledDays } from '../../services/dtos/handle-date.dto';
 import {DateTime} from "luxon";
@@ -93,8 +97,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   ecuadorTimeInterval!: any;
   ecuadorTime: string = '';
   ecuadorDate: string = '';
-  localdateSelected: string = ''; 
-  
+  localdateSelected: string = '';
+
   modalConfig: ModalDto = modalInitializer();
   showTimeSlotsModal = false;
   isMeetingDetailModalActive = false;
@@ -137,7 +141,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.updateEcuadorTime();
       this.ecuadorTimeInterval = setInterval(() => {
       this.updateEcuadorTime();
-      } , 60000); 
+      } , 60000);
   }
 
   ngOnDestroy() {
@@ -320,19 +324,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       ENERO: 1, FEBRERO: 2, MARZO: 3, ABRIL: 4, MAYO: 5, JUNIO: 6,
       JULIO: 7, AGOSTO: 8, SEPTIEMBRE: 9, OCTUBRE: 10, NOVIEMBRE: 11, DICIEMBRE: 12
     };
-  
+
     const monthIndex = monthMap[this.selectedMonth as MonthKey];
     if (!monthIndex) {
       console.error(`Mes inválido: ${this.selectedMonth}`);
       this.currentMonthDays = [];
       return;
     }
-  
+
     const startOfMonth = DateTime.fromObject(
       { year: this.selectedYear, month: monthIndex, day: 1 },
       { zone: 'America/Guayaquil' }
     );
-  
+
     const daysInMonth = startOfMonth.daysInMonth;
     if (!daysInMonth) {
       console.error('No se pudo calcular la cantidad de días del mes.');
@@ -340,23 +344,23 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       return;
     }
     const firstDayOfWeek = startOfMonth.weekday % 7;
-  
+
     this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({
       day: '',
       dayOfWeek: '',
       isDisabled: false,
     }));
-  
+
     // Generar días del mes
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
         const date = startOfMonth.plus({ days: i });
         const day = date.day;
         const dayOfWeek = date.setLocale('es').toFormat('cccc').toUpperCase();
-    
+
         const dayData = this.disabledDatesAndHours[(monthIndex - 1).toString()]?.find(d => d.day === day);
         const isCompletelyDisabled = dayData ? dayData.hours.length === 0 : false;
-    
+
         return {
           day,
           dayOfWeek,
@@ -395,7 +399,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.calendarAnimationClass = 'fade-in';
     this.resetCalendarAnimation();
   }
-  
+
 
   private filterDisabledTimeSlots(): void {
     this.timeSlots = this.timeSlots.filter(slot => !slot.isDisabled);
@@ -403,31 +407,31 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   isDaySelectable(day: { day: number | null }): boolean {
     if (!day.day || isNaN(day.day)) return false;
-  
+
     const monthMap: Record<string, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
-  
+
     if (!this.selectedMonth || !this.selectedYear || !(this.selectedMonth in monthMap)) {
       return false;
     }
-  
+
     const monthIndex = monthMap[this.selectedMonth];
-  
+
     const selectedDate = DateTime.fromObject(
       { year: this.selectedYear, month: monthIndex + 1, day: day.day },
       { zone: 'America/Guayaquil' }
     ).startOf('day');
-  
+
     const today = DateTime.now().setZone('America/Guayaquil').startOf('day');
-  
+
     const weekday = today.weekday;
     const weekStart = today.minus({ days: weekday - 1 });
     const weekEnd = weekStart.plus({ days: 5 });
     const nextWeekStart = weekStart.plus({ days: 7 });
     const nextWeekEnd = nextWeekStart.plus({ days: 5 });
-  
+
     return (
       selectedDate.weekday !== 7 &&
       selectedDate >= today &&
@@ -534,25 +538,25 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.hideModalAfterDelay(2000);
       return;
     }
-  
+
     if (this.selectedDay) {
       this.selectedTimeSlot = time;
-  
+
       const [year, month, day] = this.selectedDate.split('-').map(Number);
-  
+
       if (isNaN(year) || isNaN(month) || isNaN(day)) {
         this.showModalMessage("Debe seleccionar una fecha antes de escoger la hora.");
         this.hideModalAfterDelay(2000);
         return;
       }
-  
+
       const ecuadorTime = DateTime.fromObject(
         { year, month, day, hour: time.value, minute: 0 },
         { zone: 'America/Guayaquil' }
       );
-  
+
       this.localdateSelected = ecuadorTime.setZone(DateTime.local().zoneName).toISO() ?? '';
-  
+
       this.showSuccessModal = true;
     } else {
       this.showModalMessage("Debe seleccionar una fecha antes de escoger la hora.");
@@ -576,8 +580,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
 
   bookMeeting() {
-    //console.log("isMeetingDataValid:", this.isMeetingDataValid()); 
-  
+    //console.log("isMeetingDataValid:", this.isMeetingDataValid());
+
     if (this.isMeetingDataValid()) {
       const bookingData: CreateMeetingDto = this.createBookingData();
       this.bookingService.bookMeeting(bookingData).subscribe({
@@ -616,35 +620,62 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   isMeetingDataValid() {
     return this.selectedDate && this.selectedTimeSlot;
   }
-
   createBookingData(): CreateMeetingDto {
     if (!this.userData?.student) {
       throw new Error('Student data is required to create booking data.');
     }
-  
-    const [year, month, day] = this.selectedDate.split('-').map(Number);
-    const selectedHour = this.selectedTimeSlot.value;
-  
-    const dateInEcuador = DateTime.fromObject(
-      { year, month, day, hour: selectedHour, minute: 0 },
-      { zone: 'America/Guayaquil' }
-    );
-  
-    const ecuadorISO = dateInEcuador.toISO() ?? '';
-    const localDateISO = dateInEcuador.setZone(DateTime.local().zoneName).toISO() ?? '';
-  
+
+    const date = this.selectedDate;
+    const [year, month, day] = date.split('-').map(Number); // Assuming your format is "YYYY/MM/DD"
+
+    // Ensure proper ISO 8601 format (zero-padding month & day)
+    const formattedMonth = month.toString().padStart(2, '0');
+    const formattedDay = day.toString().padStart(2, '0');
+    const formattedHour = this.selectedTimeSlot.value.toString().padStart(2, '0');
+    // Create a valid ISO 8601 date string (Ecuador is UTC-5)
+    const formattedDate = `${year}-${formattedMonth}-${formattedDay}T${formattedHour}:00:00-05:00`;
+    const convertedDate = getTimezoneOffsetHours() !== 0 ? convertEcuadorDateToLocal(formattedDate) : formattedDate;
+
     return {
       studentId: this.userData.student.id,
       instructorId: undefined,
       stageId: this.userData.stage?.id,
-      date: ecuadorISO,
-      hour: selectedHour,
-      localdate: localDateISO, 
-      localhour: dateInEcuador.setZone(DateTime.local().zoneName).hour,
+      date: convertedDate,
+      hour: getTimezoneOffsetHours() !== 0 ? convertEcuadorHourToLocal(this.selectedTimeSlot.value) : this.selectedTimeSlot.value,
+      localdate: formattedDate,
+      localhour: this.selectedTimeSlot.value,
       mode: this.meetingType,
       category: this.userData.student.studentClassification,
     };
   }
+  // createBookingData(): CreateMeetingDto {
+  //   if (!this.userData?.student) {
+  //     throw new Error('Student data is required to create booking data.');
+  //   }
+  //
+  //   const [year, month, day] = this.selectedDate.split('-').map(Number);
+  //   const selectedHour = this.selectedTimeSlot.value;
+  //
+  //   const dateInEcuador = DateTime.fromObject(
+  //     { year, month, day, hour: selectedHour, minute: 0 },
+  //     { zone: 'America/Guayaquil' }
+  //   );
+  //
+  //   const ecuadorISO = dateInEcuador.toISO() ?? '';
+  //   const localDateISO = dateInEcuador.setZone(DateTime.local().zoneName).toISO() ?? '';
+  //
+  //   return {
+  //     studentId: this.userData.student.id,
+  //     instructorId: undefined,
+  //     stageId: this.userData.stage?.id,
+  //     date: ecuadorISO,
+  //     hour: selectedHour,
+  //     localdate: localDateISO,
+  //     localhour: dateInEcuador.setZone(DateTime.local().zoneName).hour,
+  //     mode: this.meetingType,
+  //     category: this.userData.student.studentClassification,
+  //   };
+  // }
 
   hideModalAfterDelay(delay: number) {
     setTimeout(() => {
@@ -685,12 +716,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.modalConfig = {
       show: true,
       message: "¿Estás seguro de que deseas eliminar esta reunión?",
-      isError: false,  
+      isError: false,
       isSuccess: false,
       isInfo: true,
       showButtons: true,
       close: () => this.closeDeleteModal(),
-      confirm: () => this.confirmDelete()  
+      confirm: () => this.confirmDelete()
     };
   }
 
@@ -699,11 +730,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.deleteMeeting(this.meetingToDelete);
       this.meetings = this.meetings.filter(m => m !== this.meetingToDelete);
     }
-    this.closeDeleteModal(); 
+    this.closeDeleteModal();
   }
 
   closeDeleteModal(): void {
-    this.modalConfig = modalInitializer(); 
+    this.modalConfig = modalInitializer();
     this.meetingToDelete = null;
   }
 

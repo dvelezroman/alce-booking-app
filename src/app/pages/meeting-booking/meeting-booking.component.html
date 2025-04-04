@@ -171,15 +171,15 @@
     </header>
     <section class="modal-card-body">
       <p><strong>Fecha:</strong> <span>{{ selectedMeeting?.date | date: 'EEEE, d MMMM YYYY':'UTC' }}</span></p>
-     
+
       <p class="meeting-hour-inline">
         <strong>Hora:</strong>
         <ng-container *ngIf="selectedMeeting?.localhour !== selectedMeeting?.hour">
           <span class="main-hour">
-            {{ selectedMeeting?.localhour }}:00 (hora local) /
+            {{ selectedMeeting?.hour }}:00 (hora local) /
           </span>
           <span class="secondary-hour">
-            {{ selectedMeeting?.hour }}:00 (hora de Ecuador)
+            {{ selectedMeeting?.localhour }}:00 (hora de Ecuador)
           </span>
         </ng-container>
         <ng-container *ngIf="selectedMeeting?.localhour === selectedMeeting?.hour">
@@ -233,7 +233,7 @@
 <div *ngIf="showSuccessModal" class="modal-overlay">
   <div class="modal-content success-modal">
     <i class="fas fa-question-circle question-icon"></i>
-   
+
     <p *ngIf="localdateSelected">
       Usted ha seleccionado<br />
       {{ getFormattedLocalSelection() }}
@@ -259,7 +259,7 @@
   </div>
 </div>
 
-<app-modal 
+<app-modal
   [showModal]="modalConfig.show"
   [message]="modalConfig.message"
   [isError]="modalConfig.isError"
