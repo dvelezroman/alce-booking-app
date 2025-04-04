@@ -876,16 +876,5 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return [firstDay, lastDay];
   }
 
-  getStudentLocalHour(): string | null {
-    if (!this.selectedMeeting) return null;
-
-    const ecuadorTime = DateTime.fromJSDate(new Date(this.selectedMeeting.date)) 
-      .setZone('America/Guayaquil')
-      .set({ hour: this.selectedMeeting.hour, minute: 0 });
-  
-    const localTime = ecuadorTime.setZone(DateTime.local().zoneName);
-  
-    return localTime.toFormat('HH:mm');
-  }
 }
 
