@@ -93,7 +93,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   ecuadorTimeInterval!: any;
   ecuadorTime: string = '';
   ecuadorDate: string = '';
-  localdateSelected: string = ''; 
+  localdateSelected: string = '';
+  convertEcuadorHourToLocal = convertEcuadorHourToLocal; 
   
   modalConfig: ModalDto = modalInitializer();
   showTimeSlotsModal = false;
@@ -552,13 +553,13 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getFormattedLocalSelection(): string {
-  if (!this.localdateSelected) return '';
+//   getFormattedLocalSelection(): string {
+//   if (!this.localdateSelected) return '';
 
-  return DateTime.fromISO(this.localdateSelected)
-    .setLocale('es')
-    .toFormat("cccc, d 'de' LLLL 'a las' HH:mm");
-}
+//   return DateTime.fromISO(this.localdateSelected)
+//     .setLocale('es')
+//     .toFormat("cccc, d 'de' LLLL 'a las' HH:mm");
+// }
 
   cancelSelection() {
     this.showSuccessModal = false;
