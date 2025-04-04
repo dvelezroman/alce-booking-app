@@ -93,8 +93,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   ecuadorTimeInterval!: any;
   ecuadorTime: string = '';
   ecuadorDate: string = '';
-  localdateSelected: string = '';
-  convertEcuadorHourToLocal = convertEcuadorHourToLocal; 
+  localdateSelected: string = ''; 
   
   modalConfig: ModalDto = modalInitializer();
   showTimeSlotsModal = false;
@@ -538,7 +537,14 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   
     if (this.selectedDay) {
       this.selectedTimeSlot = time;
+  
       const [year, month, day] = this.selectedDate.split('-').map(Number);
+  
+      if (isNaN(year) || isNaN(month) || isNaN(day)) {
+        this.showModalMessage("Debe seleccionar una fecha antes de escoger la hora.");
+        this.hideModalAfterDelay(2000);
+        return;
+      }
   
       const ecuadorTime = DateTime.fromObject(
         { year, month, day, hour: time.value, minute: 0 },
@@ -546,25 +552,26 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       );
   
       this.localdateSelected = ecuadorTime.setZone(DateTime.local().zoneName).toISO() ?? '';
+  
       this.showSuccessModal = true;
     } else {
       this.showModalMessage("Debe seleccionar una fecha antes de escoger la hora.");
-      this.hideModalAfterDelay(3500);
+      this.hideModalAfterDelay(2500);
     }
   }
 
-//   getFormattedLocalSelection(): string {
-//   if (!this.localdateSelected) return '';
+  getFormattedLocalSelection(): string {
+  if (!this.localdateSelected) return '';
 
-//   return DateTime.fromISO(this.localdateSelected)
-//     .setLocale('es')
-//     .toFormat("cccc, d 'de' LLLL 'a las' HH:mm");
-// }
+  return DateTime.fromISO(this.localdateSelected)
+    .setLocale('es')
+    .toFormat("cccc, d 'de' LLLL 'a las' HH:mm");
+}
 
   cancelSelection() {
     this.showSuccessModal = false;
     this.selectedTimeSlot = { label: "8:00", value: 8, isDisabled: false , localhour: convertEcuadorHourToLocal(8) + ':00' };
-    this.selectedDate = '';
+    this.localdateSelected = '';
   }
 
 

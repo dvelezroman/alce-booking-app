@@ -234,9 +234,9 @@
   <div class="modal-content success-modal">
     <i class="fas fa-question-circle question-icon"></i>
    
-    <p>
-      Usted ha seleccionado<br>
-      {{ selectedDayFormatted }} a las {{ convertEcuadorHourToLocal(selectedTimeSlot.value) }}:00 
+    <p *ngIf="localdateSelected">
+      Usted ha seleccionado<br />
+      {{ getFormattedLocalSelection() }}
     </p>
 
     <p class="radio-question">Elige modo de la clase:</p>
