@@ -60,7 +60,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   meetingType: Mode = Mode.ONLINE;
   mode = Mode;
   selectedDate: string = '';
-  selectedTimeSlot: { label: string; value: number; isDisabled: boolean } = { label: '8:00', value: 8, isDisabled: false  };
+  selectedTimeSlot: { label: string; value: number; isDisabled: boolean; localhour: string } = {
+    label: '8:00',
+    value: 8,
+    isDisabled: false,
+    localhour: convertEcuadorHourToLocal(8) + ':00'
+  };
   hoverIndex: number | null = null;
   timeSlots: { label: string; value: number; isDisabled: boolean, localhour: string }[] = [];
   today: string = '';
@@ -88,7 +93,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   ecuadorTimeInterval!: any;
   ecuadorTime: string = '';
   ecuadorDate: string = '';
-  convertEcuadorHourToLocal = convertEcuadorHourToLocal;
+  localdateSelected: string = ''; 
   
   modalConfig: ModalDto = modalInitializer();
   showTimeSlotsModal = false;
@@ -454,7 +459,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedDay = null;
     this.selectedDate = '';
     this.selectedDayFormatted = '';
-    this.selectedTimeSlot = { label: "8:00", value: 8, isDisabled: false };
+    this.selectedTimeSlot = { label: "8:00", value: 8, isDisabled: false, localhour: convertEcuadorHourToLocal(8) + ':00' };
   }
 
   recalculateTimeSlots(day: any) {
@@ -521,7 +526,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     });
   }
 
-  selectTimeSlot(time: {label: string, value: number, isDisabled: boolean}) {
+  selectTimeSlot(time: {label: string, value: number, isDisabled: boolean, localhour: string }) {
     if (!this.userData?.student?.stageId) {
       this.showModalMessage(
         "No puedes agendar clases, porque aún no tienes asignado un nivel 'Stage'. Comunícate con administración."
@@ -529,8 +534,17 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.hideModalAfterDelay(2000);
       return;
     }
+  
     if (this.selectedDay) {
       this.selectedTimeSlot = time;
+      const [year, month, day] = this.selectedDate.split('-').map(Number);
+  
+      const ecuadorTime = DateTime.fromObject(
+        { year, month, day, hour: time.value, minute: 0 },
+        { zone: 'America/Guayaquil' }
+      );
+  
+      this.localdateSelected = ecuadorTime.setZone(DateTime.local().zoneName).toISO() ?? '';
       this.showSuccessModal = true;
     } else {
       this.showModalMessage("Debe seleccionar una fecha antes de escoger la hora.");
@@ -538,9 +552,17 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
   }
 
+  getFormattedLocalSelection(): string {
+  if (!this.localdateSelected) return '';
+
+  return DateTime.fromISO(this.localdateSelected)
+    .setLocale('es')
+    .toFormat("cccc, d 'de' LLLL 'a las' HH:mm");
+}
+
   cancelSelection() {
     this.showSuccessModal = false;
-    this.selectedTimeSlot = { label: "8:00", value: 8, isDisabled: false };
+    this.selectedTimeSlot = { label: "8:00", value: 8, isDisabled: false , localhour: convertEcuadorHourToLocal(8) + ':00' };
     this.selectedDate = '';
   }
 
