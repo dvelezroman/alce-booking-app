@@ -174,27 +174,26 @@
 
       <p class="meeting-hour-inline">
         <strong>Hora:</strong>
-        <ng-container *ngIf="selectedMeeting?.localhour !== selectedMeeting?.hour">
-          <span class="main-hour">
-            {{ selectedMeeting?.hour }}:00 (hora local) /
-          </span>
+        <span class="main-hour">
+          {{ selectedMeeting?.hour }}:00
+        </span>
+      </p>
+      
+      <ng-container *ngIf="selectedMeeting?.localhour !== selectedMeeting?.hour">
+        <p class="meeting-hour-inline">
+          <strong>Hora Ecuador:</strong>
           <ng-container *ngIf="selectedMeeting?.localdate !== selectedMeeting?.date">
             <span class="secondary-hour">
-              {{ selectedMeeting?.localdate | date: 'EEEE, d MMMM YYYY':'UTC' }}, {{ selectedMeeting?.localhour }}:00 (hora de Ecuador)
+              {{ selectedMeeting?.localdate | date: 'EEEE, d MMMM yyyy':'UTC' }}, {{ selectedMeeting?.localhour }}:00
             </span>
           </ng-container>
           <ng-container *ngIf="selectedMeeting?.localdate === selectedMeeting?.date">
             <span class="secondary-hour">
-              {{ selectedMeeting?.localhour }}:00 (hora de Ecuador)
+              {{ selectedMeeting?.localhour }}:00
             </span>
           </ng-container>
-        </ng-container>
-        <ng-container *ngIf="selectedMeeting?.localhour === selectedMeeting?.hour">
-          <span class="main-hour">
-            {{ selectedMeeting?.hour }}:00
-          </span>
-        </ng-container>
-      </p>
+        </p>
+      </ng-container>
 
       <p><strong>Modo:</strong> <span>{{ selectedMeeting?.mode === mode.ONLINE ? 'Online' : 'Presencial' }}</span></p>
       <p>
