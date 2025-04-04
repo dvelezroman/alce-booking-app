@@ -587,33 +587,33 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return this.selectedDate && this.selectedTimeSlot;
   }
 
-createBookingData(): CreateMeetingDto {
-  if (!this.userData?.student) {
-    throw new Error('Student data is required to create booking data.');
+  createBookingData(): CreateMeetingDto {
+    if (!this.userData?.student) {
+      throw new Error('Student data is required to create booking data.');
+    }
+  
+    const [year, month, day] = this.selectedDate.split('-').map(Number);
+    const selectedHour = this.selectedTimeSlot.value;
+  
+    const dateInEcuador = DateTime.fromObject(
+      { year, month, day, hour: selectedHour, minute: 0 },
+      { zone: 'America/Guayaquil' }
+    );
+  
+    const ecuadorISO = dateInEcuador.toISO() ?? ''; 
+  
+    return {
+      studentId: this.userData.student.id,
+      instructorId: undefined,
+      stageId: this.userData.stage?.id,
+      date: ecuadorISO,
+      hour: selectedHour,
+      localdate: ecuadorISO,
+      localhour: dateInEcuador.setZone(DateTime.local().zoneName).hour,
+      mode: this.meetingType,
+      category: this.userData.student.studentClassification,
+    };
   }
-
-  const [year, month, day] = this.selectedDate.split('-').map(Number);
-  const selectedHour = this.selectedTimeSlot.value;
-
-  const dateInEcuador = DateTime.fromObject(
-    { year, month, day, hour: selectedHour, minute: 0 },
-    { zone: 'America/Guayaquil' }
-  );
-
-  const ecuadorISO = dateInEcuador.toISO() ?? ''; 
-
-  return {
-    studentId: this.userData.student.id,
-    instructorId: undefined,
-    stageId: this.userData.stage?.id,
-    date: ecuadorISO,
-    hour: selectedHour,
-    localdate: ecuadorISO,
-    localhour: selectedHour,
-    mode: this.meetingType,
-    category: this.userData.student.studentClassification,
-  };
-}
 
   hideModalAfterDelay(delay: number) {
     setTimeout(() => {
