@@ -14,6 +14,7 @@ import {
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
 import {LuxonDatePipe} from "../../shared/utils/locale-date.pipe";
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-reports-detailed',
@@ -75,6 +76,18 @@ export class ReportsDetailedComponent implements OnInit {
           console.error('Error al cargar estudiantes:', error);
         }
       });
+  }
+
+  formatLocalDateOnly(dateInput: string | Date): string {
+    const dt = typeof dateInput === 'string'
+      ? DateTime.fromISO(dateInput)
+      : DateTime.fromJSDate(dateInput);
+  
+    return dt.toFormat('yyyy/MM/dd');
+  }
+
+  formatHourNumber(hour: number): string {
+    return hour.toString().padStart(2, '0') + ':00';
   }
 
   filterStudents() {
