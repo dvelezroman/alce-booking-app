@@ -65,9 +65,13 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     });
   }
 
-  isToday(date: Date): boolean {
+  isToday(date: Date | string): boolean {
+    if (!date) return false;
+  
     const today = DateTime.now().setZone('America/Guayaquil').startOf('day');
-    const meetingDate = DateTime.fromJSDate(date).setZone('America/Guayaquil').startOf('day');
+    const meetingDate = typeof date === 'string'
+      ? DateTime.fromISO(date, { zone: 'America/Guayaquil' }).startOf('day')
+      : DateTime.fromJSDate(date, { zone: 'America/Guayaquil' }).startOf('day');
   
     return today.toISODate() === meetingDate.toISODate();
   }
