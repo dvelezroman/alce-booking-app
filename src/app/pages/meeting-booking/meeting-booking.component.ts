@@ -405,8 +405,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.timeSlots = this.timeSlots.filter(slot => !slot.isDisabled);
   }
 
-  isDaySelectable(day: { day: number | null }): boolean {
-    if (!day.day || isNaN(day.day)) return false;
+  isDaySelectable(day: { day: number | null; isDisabled?: boolean }): boolean {
+    if (!day.day || isNaN(day.day) || day.isDisabled) return false;
 
     const monthMap: Record<string, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,

@@ -58,18 +58,38 @@
   padding: 2rem 0;
   margin: auto;
   gap: .5rem;
-  margin-top: 1.8rem;
+  margin-top: 1.5rem;
 }
 
 .student-name {
   color: #494949;
-  font-size: 1.7rem;
+  font-size: 1.3rem;
 }
 
-.student-details {
-  font-size: 1rem;
+.student-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+}
+
+.student-email,
+.student-stage {
+  font-size: .9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.student-email {
   color: #303030;
-  margin-top: 0rem;
+}
+
+.student-stage {
+  color: #898787;
+  text-align: right;
 }
 
 .student-shared-style {
@@ -83,10 +103,11 @@
 
 .student-schedule {
   position: relative;
-  margin-top: 2rem;
+  display: none !important;
 }
 
 .schedule-title {
+  display: flex;
   font-size: 1.2rem;
   color: #515357;
   margin-bottom: 1rem;
@@ -266,7 +287,7 @@
 @media (max-width: 992px) {
   /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
 .date-time-wrapper {
-  margin-left: 6.3rem;
+  margin-left: 5rem;
 }
 
 /* SUB-BLOQUE: Calendario */
@@ -285,7 +306,6 @@
 
 .time-slots {
   margin-top: 2rem;
-
 }
 
 .scroll-arrow-up {
@@ -303,6 +323,16 @@
     color: white;
   }
 
+  .student-schedule {
+    display: block !important;
+    padding: .7rem 0.5rem;
+  }
+
+  .schedule-title {
+    justify-content: center;
+  }
+
+
     /* bloque de meetings tarjetas seleccionados */
   .scroll-button.left {
     left: 8%; 
@@ -318,6 +348,7 @@
   align-items: center;
   margin: auto;
   gap: 70px;
+  min-width: unset !important;
 }
 
 /* SUB-BLOQUE: Calendario */
@@ -366,6 +397,14 @@
   margin-top: 5px;
   margin-bottom: 1rem; 
 
+}
+
+.scheduled-meetings {
+  display: none !important;
+}
+
+.date-time-scroll-container {
+  overflow-x: hidden !important;
 }
 
 }
@@ -421,7 +460,7 @@
 }
 
 .ecuador-time-display strong {
-  display: block; /* para que también esté centrado y en su propia línea si quieres */
+  display: block; 
 }
 
 .time-slot, .time-text-container, .confirm-box{
