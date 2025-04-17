@@ -9,6 +9,7 @@ import { UserDto } from '../../services/dtos/user.dto';
 import { selectUserData } from '../../store/user.selector';
 import {Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -62,6 +63,13 @@ export class SearchingMeetingInstructorComponent implements OnInit {
        // console.log('instructor ID no disponible');
       }
     });
+  }
+
+  isToday(date: Date): boolean {
+    const today = DateTime.now().setZone('America/Guayaquil').startOf('day');
+    const meetingDate = DateTime.fromJSDate(date).setZone('America/Guayaquil').startOf('day');
+  
+    return today.toISODate() === meetingDate.toISODate();
   }
 
   onFilterChange(): void {

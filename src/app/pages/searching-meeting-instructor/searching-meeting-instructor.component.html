@@ -119,7 +119,7 @@
                 </span>
               </td>
               <td data-label="Marcar Asistencia">
-                <input type="checkbox" [checked]="meeting.present" (change)="toggleSelection(meeting)" />
+                <input type="checkbox" [checked]="meeting.present" (change)="toggleSelection(meeting)" [disabled]="!isToday(meeting.localdate)" />
               </td>
             </tr>
             </tbody>

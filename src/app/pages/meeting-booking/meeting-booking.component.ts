@@ -29,7 +29,7 @@ import {
 } from "../../shared/utils/dates.util";
 import { HandleDatesService } from '../../services/handle-dates.service';
 import { DisabledDatesAndHours, DisabledDays } from '../../services/dtos/handle-date.dto';
-import {DateTime} from "luxon";
+import { DateTime} from "luxon";
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
 
