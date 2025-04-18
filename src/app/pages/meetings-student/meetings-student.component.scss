@@ -27,16 +27,46 @@
   text-align: center;
 }
 
+.view-toggle-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: auto;
+  margin-top: 7rem;
+  flex-wrap: wrap;
+
+  .button {
+    padding: 0.5rem 1.5rem;
+    border: 2px solid #ccc;
+    background-color: white;
+    color: #333;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-weight: 500;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &.is-active {
+      background-color: #4a90e2;
+      color: white;
+      border-color: #4a90e2;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
 .legend-wrapper {
   width: fit-content;
   margin: 0 auto;
-  margin-top: 6rem;
+  margin-top: 2rem;
   padding: 0.75rem 1.25rem;
   border-radius: 12px;
   background-color: #f9f9f9;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
 }
-
 
 .calendar-legend {
   display: flex;
@@ -47,26 +77,42 @@
   align-items: flex-start; 
 }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-}
-
 .legend-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
   margin-right: 6px;
-  background-color: #00c853;
+  background-color: #9bddf3;
   display: inline-block;
 }
 
 .legend-dot.past {
-  background-color: #c2e5c1;
+  background-color: #babdbe3c;
 }
 
 .legend-text {
   font-weight: 500;
+}
+
+.calendar-hint,
+.calendar-hint-range {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #3a3a3a;
+  margin-top: 3rem;
+  padding: 0.75rem 1.25rem;
+  background-color: #fff8db;
+  border-left: 4px solid #ffd54f;
+  border-radius: 5px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.calendar-hint-range {
+  margin-top: 0rem;
+  margin-bottom: 1rem;
 }
   
   /* CALENDARIO DE MEETINGS Student */
@@ -96,7 +142,7 @@
     margin-top: 2rem;
     border: 1px solid rgba(210, 210, 210, 0.2);
     background-color: rgba(249, 249, 249, 0.636);
-    border-radius: 25px;
+    border-radius: 12px;
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.03);
   }
   
@@ -110,7 +156,7 @@
   
   .month-label {
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1rem;
     text-transform: uppercase;
     color: #333;
   }
@@ -176,7 +222,7 @@
   }
   
   .calendar-day.selected {
-    background-color: #6eb3fcbc;
+    background-color: #2881e0de;
     color: white;
     font-weight: bold;
   }
@@ -195,22 +241,92 @@
   }
   
   .calendar-day.has-meeting {
+    background-color: #9bddf3b5; 
+    color: #595d5e;
     font-weight: bold;
-    position: relative;
-  }
-  
-  .calendar-day.has-meeting::after {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    width: 6px;
-    height: 6px;
-    background-color: #28a745;
     border-radius: 50%;
+  }
+
+  .calendar-day.has-meeting.selected {
+    background-color: #1976d2;
+    color: white;
+  }
+
+  .calendar-day.past-meeting.has-meeting {
+    background-color: #e0e0e0 !important; 
+    color: #555;
+    font-weight: normal;
+    pointer-events: none;
+  }
+
+  .date-range-search {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1.25rem;
+  
+    .calendar-hint-range {
+      text-align: center;
+      color: #555;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  
+    .date-inputs {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+  
+      > div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+  
+      label {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        color: #333;
+      }
+  
+      input[type="date"] {
+        padding: 0.45rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        min-width: 200px;
+      }
+  
+      .error-border {
+        border-color: #ff5252 !important;
+      }
+  
+      .error-text {
+        color: #ff5252;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+      }
+    }
+  
+    button {
+      padding: 0.6rem 1.5rem;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      background-color: #2881e0de;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    
+      &:hover {
+        background-color: #1f66b8;
+      }
+    }
   }
   
   /* Contenedor de la tabla de reuniones */
-  
   .no-meetings-message {
     display: flex;
     justify-content: center;
@@ -244,9 +360,37 @@
   
   /* Estilos para la tabla */
   .table-responsive {
-    overflow-x: auto;
     width: 85%;
     margin: 0 auto;
+    overflow-x: auto;
+  }
+  
+  .table-scroll-fixed {
+    display: block;
+    max-height: 455px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border-radius: 8px;
+  }
+  
+  .table-scroll-fixed thead,
+  .table-scroll-fixed tbody,
+  .table-scroll-fixed tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  .table-scroll-fixed thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #bcf496;
+  }
+  
+  .table-scroll-fixed tbody {
+    overflow-y: auto;
+    max-height: 400px;
   }
   
   .table {
@@ -257,6 +401,11 @@
     border-radius: 8px 8px 0 0;
     font-size: 0.9rem;
     margin-bottom: 3rem;
+    max-height: 475px; 
+    position: relative;
+    overflow: hidden;
+    overflow-y: auto;  
+    overflow-x: auto; 
   }
   
   .table thead th {
@@ -297,7 +446,6 @@
     text-align: center;
   }
   
-  /* responsive calendario y modal de meetings*/
   @media (max-width: 768px) {
   
   .class-booking-header {
@@ -308,12 +456,32 @@
     color: white;
   }
 
+  .date-range-search .date-inputs {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .date-range-search .date-inputs > div {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .date-range-search input[type="date"] {
+    width: 100%;
+  }
+
+  .button {
+    width: fit-content;
+  }
+
   .meeting-results {
     width: 100%; 
   }
 }
   
-  @media (max-width: 492px){
+@media (max-width: 492px){
+
   .date-time-selection {
     width: 95%;
   }
@@ -343,4 +511,4 @@
   
 
   
-  }
+}

@@ -2,21 +2,37 @@
   <h1 class="title is-3">Clases Agendadas</h1>
 </div>
 
-<div class="legend-wrapper">
-  <div class="calendar-legend">
-    <div class="legend-item">
-      <span class="legend-dot"></span>
-      <span class="legend-text">Día con clases programadas</span>
-    </div>
-    <div class="legend-item">
-      <span class="legend-dot past"></span>
-      <span class="legend-text">Clases anteriores</span>
-    </div>
-  </div>
+<div class="view-toggle-buttons">
+  <button
+    class="button is-info is-light"
+    [class.is-active]="viewMode === 'calendar'"
+    (click)="setViewMode('calendar')">
+    Ver Calendario
+  </button>
+
+  <button
+    class="button is-success is-light"
+    [class.is-active]="viewMode === 'range'"
+    (click)="setViewMode('range')">
+    Buscar por Rango
+  </button>
 </div>
 
-<section class="date-time-selection shared-box-style">
-  
+<div *ngIf="viewMode === 'calendar'">
+  <div class="calendar-hint">
+    <p>Selecciona un día en el calendario para ver la fecha y hora de tu clase asignada.</p>
+  </div>
+
+  <div class="legend-wrapper">
+    <div class="calendar-legend">
+      <div class="legend-item">
+        <span class="legend-dot"></span>
+        <span class="legend-text">Día con clases programadas</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="date-time-selection shared-box-style">
     <div class="month-selector">
       <button *ngIf="selectedMonth !== minMonth || selectedYear !== minYear"
               class="button is-small prev-button"
@@ -24,9 +40,9 @@
               aria-label="Mes anterior">
         <i class="fas fa-chevron-left"></i>
       </button>
-  
+
       <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
-  
+
       <button *ngIf="selectedMonth !== maxMonth || selectedYear !== maxYear"
               class="button is-small next-button"
               (click)="nextMonth()"
@@ -34,7 +50,7 @@
         <i class="fas fa-chevron-right"></i>
       </button>
     </div>
-  
+
     <div class="calendar">
       <div class="calendar-header">
         <div class="calendar-day-header">D</div>
@@ -45,7 +61,7 @@
         <div class="calendar-day-header">V</div>
         <div class="calendar-day-header">S</div>
       </div>
-  
+
       <div class="calendar-grid">
         <div
           *ngFor="let day of currentMonthDays"
@@ -63,31 +79,66 @@
       </div>
     </div>
   </section>
+</div>
+
+<!-- meetings por rango de fechas -->
+<div *ngIf="viewMode === 'range'" class="date-range-search">
+  <div class="calendar-hint-range">
+    <p>Consulta tus clases por rango de fechas.</p>
+  </div>
+
+  <div class="date-inputs">
+    <div>
+      <label for="fromDate">Desde:</label>
+      <input
+        type="date"
+        id="fromDate"
+        [(ngModel)]="rangeFrom"
+        [ngClass]="{ 'error-border': rangeError.from }"
+      />
+      <small *ngIf="rangeError.from" class="error-text">Requerido</small>
+    </div>
+
+    <div>
+      <label for="toDate">Hasta:</label>
+      <input
+        type="date"
+        id="toDate"
+        [(ngModel)]="rangeTo"
+        [ngClass]="{ 'error-border': rangeError.to }"
+      />
+      <small *ngIf="rangeError.to" class="error-text">Requerido</small>
+    </div>
+  </div>
+
+  <button class="button is-small is-link" (click)="searchMeetingsByRange()">Buscar</button>
+</div>
   
   <!-- Tabla de resultados -->
   <div *ngIf="meetingsOfDay.length === 0 && selectedDay !== null" class="no-meetings-message">
     <p>No hay clases programadas para este día.</p>
   </div>
   <div *ngIf="meetingsOfDay.length > 0" class="meeting-results">
-    <h3 class="title is-5">Clases para el {{ getFormattedSelectedDate() }}</h3>
+    <h3 *ngIf="viewMode === 'calendar'" class="title is-5">
+      Clases para el {{ getFormattedSelectedDate() }}
+    </h3>
   
     <div class="table-responsive">
-      <table class="table is-fullwidth">
+      <table class="table is-fullwidth table-scroll-fixed">
         <thead>
           <tr>
             <th>Stage</th>
-            <th>Categoría</th>
             <th>Fecha</th>
             <th>Hora</th>
             <th *ngIf="showEcuadorHourColumn">Hora Ecuador</th>
             <th>Modalidad</th>
             <th>Contenido</th>
+            <th>Asistencia</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of meetingsOfDay">
             <td>{{ item.stage?.number || 'Sin etapa' }}</td>
-            <td>{{ item.category || 'Sin categoría' }}</td>
             <td>{{ getUtcFormattedDate(item.date) }}</td>
             <td>{{ get24HourFormat(item.date) }}</td>
             <td *ngIf="showEcuadorHourColumn">
@@ -95,6 +146,16 @@
             </td>
             <td>{{ item.mode || 'Sin modalidad' }}</td>
             <td>{{ getMeetingThemeDescription(item.meetingTheme) }}</td>
+            <td>
+              <ng-container *ngIf="isPastMeeting(item.date); else upcoming">
+                <span [ngClass]="{ 'has-text-success': item.markAssistanceAt, 'has-text-danger': !item.markAssistanceAt }">
+                  {{ item.markAssistanceAt ? 'Asistió' : 'No asistió' }}
+                </span>
+              </ng-container>
+              <ng-template #upcoming>
+                -
+              </ng-template>
+            </td>
           </tr>
         </tbody>
       </table>

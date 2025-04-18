@@ -8,13 +8,15 @@ import { UserDto } from '../../services/dtos/user.dto';
 import { BookingService } from '../../services/booking.service';
 import { MeetingDTO, MeetingStatusEnum } from '../../services/dtos/booking.dto';
 import { DateTime } from 'luxon';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-meetings-student',
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    FormsModule
   ],
   templateUrl: './meetings-student.component.html',
   styleUrl: './meetings-student.component.scss'
@@ -32,7 +34,10 @@ export class MeetingsStudentComponent implements OnInit {
   maxYear!: number;
   minMonth!: string;
   minYear!: number;
-
+  viewMode: 'calendar' | 'range' = 'calendar'; 
+  rangeError = { from: false, to: false };
+  rangeFrom: string = '';
+  rangeTo: string = '';
   selectedDate: Date | null = null;
   meetingsOfDay: MeetingDTO[] = [];
   showEcuadorHourColumn = false;
@@ -57,6 +62,19 @@ export class MeetingsStudentComponent implements OnInit {
         this.getStudentMeetings(today);
       }
     });
+  }
+
+  setViewMode(mode: 'calendar' | 'range') {
+    this.viewMode = mode;
+    this.meetingsOfDay = []; 
+    this.selectedDay = null;
+    this.selectedDate = null;
+  
+    if (mode === 'calendar') {
+      this.rangeFrom = '';
+      this.rangeTo = '';
+      this.rangeError = { from: false, to: false };
+    }
   }
 
   private initializeCalendarSettings(): void {
@@ -140,13 +158,41 @@ export class MeetingsStudentComponent implements OnInit {
     }
   }
 
-  getStudentMeetings(selectedDate: Date) {
-    const month = selectedDate.getMonth();
-    const year = selectedDate.getFullYear();
+  searchMeetingsByRange() {
+    this.rangeError = { from: false, to: false };
+  
+    if (!this.rangeFrom || !this.rangeTo) {
+      if (!this.rangeFrom) this.rangeError.from = true;
+      if (!this.rangeTo) this.rangeError.to = true;
+      return;
+    }
+  
+    if (!this.studentId) return;
   
     this.bookingService.searchMeetings({
-      from: new Date(year, month, 1).toISOString().split('T')[0],
-      to: new Date(year, month + 1, 0).toISOString().split('T')[0],
+      from: this.rangeFrom,
+      to: this.rangeTo,
+      studentId: this.studentId,
+      assigned: true,
+      status: MeetingStatusEnum.ACTIVE
+    }).subscribe({
+      next: (meetings) => {
+        this.selectedDay = null;
+        this.selectedDate = null;
+        this.meetingsOfDay = meetings;
+        this.showEcuadorHourColumn = meetings.some(m => m.date !== m.localdate);
+      },
+      error: (err) => console.error('Error en búsqueda por rango:', err)
+    });
+  }
+
+  getStudentMeetings(selectedDate: Date) {
+    const now = DateTime.now().setZone('utc').startOf('day');
+    const until = now.plus({ days: 20 });
+  
+    this.bookingService.searchMeetings({
+      from: now.toISODate()!,      
+      to: until.toISODate()!,       
       studentId: this.studentId ?? undefined,
       assigned: true,
       status: MeetingStatusEnum.ACTIVE
@@ -159,35 +205,29 @@ export class MeetingsStudentComponent implements OnInit {
             ? meeting.date
             : meeting.date.toISOString();
   
-          const meetingDate = DateTime.fromISO(rawDate, { zone: 'utc' });
-          const day = meetingDate.day;
-          const meetingMonth = meetingDate.month - 1;
-          const meetingYear = meetingDate.year;
+          const meetingDate = DateTime.fromISO(rawDate, { zone: 'utc' }).startOf('day');
   
-          if (meetingMonth === month && meetingYear === year) {
-            if (!daysWithMeetings.has(day)) {
-              daysWithMeetings.set(day, []);
+          if (meetingDate >= now && meetingDate <= until) {
+            const day = meetingDate.day;
+            const month = meetingDate.month - 1;
+            const year = meetingDate.year;
+  
+            if (month === selectedDate.getMonth() && year === selectedDate.getFullYear()) {
+              if (!daysWithMeetings.has(day)) {
+                daysWithMeetings.set(day, []);
+              }
+              daysWithMeetings.get(day)?.push(meeting);
             }
-            daysWithMeetings.get(day)?.push(meeting);
           }
         });
   
         this.currentMonthDays = this.currentMonthDays.map(day => {
           if (typeof day.day === 'number' && daysWithMeetings.has(day.day)) {
-            const today = DateTime.now().setZone('utc').startOf('day');
-            const meetingDay = DateTime.fromObject({
-              year: this.selectedYear,
-              month: month + 1,
-              day: day.day
-            }, { zone: 'utc' }).startOf('day');
-  
-            const isPast = meetingDay < today;
-  
             return {
               ...day,
               hasMeeting: true,
               meetings: daysWithMeetings.get(day.day) || [],
-              isPast
+              isPast: false
             };
           }
   
@@ -236,4 +276,13 @@ export class MeetingsStudentComponent implements OnInit {
   getMeetingThemeDescription(theme?: { description: string } | null): string {
     return theme?.description ?? 'Sin contenido';
 }
+
+  isPastMeeting(date: string | Date | null | undefined): boolean {
+    if (!date) return false;
+    const now = DateTime.now().setZone('utc').startOf('day');
+    const meetingDate = typeof date === 'string'
+      ? DateTime.fromISO(date, { zone: 'utc' }).startOf('day')
+      : DateTime.fromJSDate(date).startOf('day');
+    return meetingDate < now;
+  }
 }
