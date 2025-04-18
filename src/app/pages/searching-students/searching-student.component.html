@@ -2,12 +2,15 @@
 
     <!-- Modal para mostrar notificaciones -->
     <app-modal
-      [showModal]="showModal"
-      [message]="modalMessage"
-      [isError]="modalIsError"
-      [isSuccess]="modalIsSuccess"
-      (close)="closeModal()">
-    </app-modal>
+    [showModal]="modalConfig.show"
+    [message]="modalConfig.message"
+    [isError]="modalConfig.isError"
+    [isSuccess]="modalConfig.isSuccess"
+    [isInfo]="modalConfig.isInfo"
+    [showButtons]="modalConfig.showButtons ?? false"
+    (close)="modalConfig.close()"
+    (confirmAction)="modalConfig.confirm?.()">
+  </app-modal>
 
     <div class="page-title">
       <h1>Buscar</h1>
@@ -31,17 +34,12 @@
           <!-- Lado del formulario de Estudiante -->
           <div class="student-form">
             <form [formGroup]="studentForm" (ngSubmit)="searchUsers()">
-  <!--            <div class="form-field">-->
-  <!--              <label for="userId">User ID</label>-->
-  <!--              <input type="text" id="userId" formControlName="userId" placeholder="Ingrese ID Card" />-->
-  <!--            </div>-->
-            <div class="form-field">
-            <!--   <label for="stageId">Stage</label>-->
-              <select id="stageId" class="input" formControlName="stageId" [value]=0>
-                <option [value]=0>Stages</option>
-                <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
-              </select>
-            </div>
+              <div class="form-field">
+                <select id="stageId" formControlName="stageId">
+                  <option value="">Seleccionar Stage</option>
+                  <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+                </select>
+              </div>
               <div class="form-field">
               <!--  <label for="firstName">First Name</label>-->
                 <input type="text" id="firstName" formControlName="firstName" placeholder="Ingrese el First Name" />
@@ -66,7 +64,7 @@
               <div class="form-field">
                 <!--<label for="role">Rol</label>-->
                 <select id="role" class="input" formControlName="role">
-                  <option value="">Roles</option>
+                  <option value="">Seleccionar Role</option>
                   <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
                 </select>
               </div>
@@ -78,16 +76,13 @@
         </div>
       </div>
   </div>
-  <!--TODO:-->
+
+
   <!-- Pagination Controls -->
-  <!--Esta paginacion usala para cuando pongas la lista de los registros traidos por la request, colocala al final de la tabla de registros.-->
 
   <!-- Tabla para mostrar los resultados -->
-  <!-- Verifica si hay resultados antes de mostrar la tabla y la paginación -->
   <div class="results-container" *ngIf="users.length > 0">
-    <!-- Contenedor para la tabla -->
     <div class="table-container">
-      <!-- Tabla para mostrar los resultados -->
       <table class="table">
         <thead>
           <tr>
@@ -203,9 +198,8 @@
     </section>
 
     <footer class="edit-user-modal-foot">
-      <button class="button delete-cancel-button" (click)="closeEditModal()">Cancelar</button>
       <button class="button is-success" (click)="updateUser()">Actualizar</button>
-
+      <button class="button delete-cancel-button" (click)="closeEditModal()">Cancelar</button>
     </footer>
   </div>
 </div>
@@ -218,34 +212,20 @@
         {{ selectedUser?.password ? 'Editar Password' : 'Agregar Password' }}
       </h3>
       <form (ngSubmit)="updatePassword()">
-        <!-- Campo para el password de la meeting -->
         <div class="field">
           <label class="label">Nueva contraseña</label>
           <div *ngIf="selectedUser" class="control">
-            <input class="input" type="text" [(ngModel)]="selectedUser.password" name="password" placeholder="password" required />
+            <input class="input" type="text" [(ngModel)]="selectedUser.password" name="password" placeholder="Nuevo Password" required />
           </div>
         </div>
 
         <div class="buttons-container">
-          <button type="button" class="button cancel-link-btn" (click)="closeEditPasswordModal()">Cancelar</button>
           <button type="submit" class="button update-link-btn">Actualizar</button>
+          <button type="button" class="button cancel-link-btn" (click)="closeEditPasswordModal()">Cancelar</button>
         </div>
       </form>
     </div>
 </div>
 
 
-<!-- Modal específico para confirmación de eliminación -->
-<div class="delete-modal" [ngClass]="{ 'is-active': isDeleteModalOpen }">
-  <div class="delete-modal-background" (click)="closeDeleteModal()"></div>
-  <div class="delete-modal-card">
-    <section class="delete-modal-body">
-      <p>{{ deleteModalMessage }}</p>
-      <div class="delete-modal-actions">
-        <button class="delete-confirm-button" (click)="confirmDelete()">Eliminar</button>
-        <button class="delete-cancel-button" (click)="closeDeleteModal()">Cancelar</button>
-      </div>
-    </section>
-  </div>
-</div>
 
