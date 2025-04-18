@@ -34,6 +34,7 @@ export class SidebarComponent implements OnInit {
 
   navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
     { icon: 'home', text: 'Inicio', route: '/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
+    { icon: 'event', text: 'Mis Clases', route: '/meetings-student', roles: [UserRole.STUDENT] },
     { icon: 'booking', text: 'Agendar', route: '/booking', roles: [UserRole.STUDENT] },
     { icon: 'group', text: 'Agenda', route: '/searching-meeting', roles: [UserRole.ADMIN] },
     { icon: 'school', text: 'Usuarios', route: '/searching-students', roles: [UserRole.ADMIN] },

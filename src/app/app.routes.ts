@@ -17,6 +17,7 @@ import { RegisterStudentComponent } from './pages/register-student/register-stud
 import { RegisterInstructorAdminComponent } from './pages/register-instructor-admin/register-instructor-admin.component';
 import { ReportesComponent } from './pages/reports/reportes.component';
 import { ReportsDetailedComponent } from './pages/reports-detail-statist-meeting/reports-detailed.component';
+import { MeetingsStudentComponent } from './pages/meetings-student/meetings-student.component';
 
 
 
@@ -28,6 +29,7 @@ export const routes: Routes = [
   { path: 'booking', component: MeetingBookingComponent, canActivate: [AuthGuard] },
   { path: 'stage', component: StageComponent, canActivate: [AuthGuard] },
   { path: 'link', component: LinksComponent},
+  { path: 'meetings-student', component: MeetingsStudentComponent, canActivate: [AuthGuard] },
   { path: 'searching-meeting', component: SearchingMeetingComponent, canActivate: [AuthGuard]},
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent,canActivate: [AuthGuard]},
   { path: 'searching-students', component: SearchingStudentComponent, canActivate: [AuthGuard]},

@@ -1,0 +1,239 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { selectIsLoggedIn, selectUserData } from '../../store/user.selector';
+import { UserDto } from '../../services/dtos/user.dto';
+import { BookingService } from '../../services/booking.service';
+import { MeetingDTO, MeetingStatusEnum } from '../../services/dtos/booking.dto';
+import { DateTime } from 'luxon';
+
+@Component({
+  selector: 'app-meetings-student',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule
+  ],
+  templateUrl: './meetings-student.component.html',
+  styleUrl: './meetings-student.component.scss'
+})
+export class MeetingsStudentComponent implements OnInit {
+  isLoggedIn$: Observable<boolean>;
+  userData$: Observable<UserDto | null>;
+  isLoggedIn: boolean = false;
+  studentId: number | null = null;
+  selectedMonth!: string;
+  selectedYear!: number;
+  currentMonthDays: { day: number | string; dayOfWeek: string; hasMeeting: boolean; meetings?: MeetingDTO[]; isPast?: boolean; }[] = [];
+  selectedDay: number | null = null;
+  maxMonth!: string;
+  maxYear!: number;
+  minMonth!: string;
+  minYear!: number;
+
+  selectedDate: Date | null = null;
+  meetingsOfDay: MeetingDTO[] = [];
+  showEcuadorHourColumn = false;
+
+  constructor(
+    private store: Store,
+    private bookingService: BookingService
+  ) {
+    this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
+    this.userData$ = this.store.select(selectUserData);
+    this.initializeCalendarSettings();
+  }
+
+  ngOnInit() {
+    this.isLoggedIn$.subscribe(state => this.isLoggedIn = state);
+
+    this.userData$.subscribe(user => {
+      if (user && user.student) {
+        this.studentId = user.student.id;
+        this.generateCurrentMonthDays();
+        const today = new Date();
+        this.getStudentMeetings(today);
+      }
+    });
+  }
+
+  private initializeCalendarSettings(): void {
+    const today = new Date();
+    this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' });
+    this.selectedYear = today.getFullYear();
+    this.minMonth = this.selectedMonth;
+    this.minYear = this.selectedYear;
+
+    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    this.maxMonth = nextMonthDate.toLocaleString('es-ES', { month: 'long' });
+    this.maxYear = nextMonthDate.getFullYear();
+  }
+
+  generateCurrentMonthDays() {
+    const monthMap: Record<string, number> = {
+      enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
+      julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
+    };
+
+    const monthIndex = monthMap[this.selectedMonth.toLowerCase()];
+    if (monthIndex === undefined) return;
+
+    const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
+    const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
+
+    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', dayOfWeek: '', hasMeeting: false }));
+
+    this.currentMonthDays = this.currentMonthDays.concat(
+      Array.from({ length: daysInMonth }, (_, i) => {
+        const date = new Date(this.selectedYear, monthIndex, i + 1);
+        return {
+          day: i + 1,
+          dayOfWeek: date.toLocaleString('es-ES', { weekday: 'long' }),
+          hasMeeting: false
+        };
+      })
+    );
+  }
+
+  nextMonth() {
+    const current = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth));
+    const next = new Date(current.getFullYear(), current.getMonth() + 1, 1);
+    if (next > new Date(this.maxYear, this.getMonthIndex(this.maxMonth))) return;
+
+    this.selectedMonth = next.toLocaleString('es-ES', { month: 'long' });
+    this.selectedYear = next.getFullYear();
+    this.selectedDay = null;
+    this.generateCurrentMonthDays();
+    this.getStudentMeetings(next);
+  }
+
+  prevMonth() {
+    const current = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth));
+    const prev = new Date(current.getFullYear(), current.getMonth() - 1, 1);
+    if (prev < new Date(this.minYear, this.getMonthIndex(this.minMonth))) return;
+
+    this.selectedMonth = prev.toLocaleString('es-ES', { month: 'long' });
+    this.selectedYear = prev.getFullYear();
+    this.selectedDay = null;
+    this.generateCurrentMonthDays();
+    this.getStudentMeetings(prev);
+  }
+
+  getMonthIndex(monthName: string): number {
+    const monthMap: Record<string, number> = {
+      enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
+      julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
+    };
+    return monthMap[monthName.toLowerCase()] ?? -1;
+  }
+
+  showMeetingsOfDay(day: { day: number | string; dayOfWeek: string; hasMeeting: boolean; meetings?: MeetingDTO[] }) {
+    if (typeof day.day === 'number') {
+      this.selectedDay = day.day;
+      this.selectedDate = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), day.day);
+      this.meetingsOfDay = day.meetings ?? [];
+      this.showEcuadorHourColumn = this.meetingsOfDay.some(
+        (meeting) => meeting.date !== meeting.localdate
+      );
+    }
+  }
+
+  getStudentMeetings(selectedDate: Date) {
+    const month = selectedDate.getMonth();
+    const year = selectedDate.getFullYear();
+  
+    this.bookingService.searchMeetings({
+      from: new Date(year, month, 1).toISOString().split('T')[0],
+      to: new Date(year, month + 1, 0).toISOString().split('T')[0],
+      studentId: this.studentId ?? undefined,
+      assigned: true,
+      status: MeetingStatusEnum.ACTIVE
+    }).subscribe({
+      next: (meetings) => {
+        const daysWithMeetings = new Map<number, MeetingDTO[]>();
+  
+        meetings.forEach((meeting: MeetingDTO) => {
+          const rawDate = typeof meeting.date === 'string'
+            ? meeting.date
+            : meeting.date.toISOString();
+  
+          const meetingDate = DateTime.fromISO(rawDate, { zone: 'utc' });
+          const day = meetingDate.day;
+          const meetingMonth = meetingDate.month - 1;
+          const meetingYear = meetingDate.year;
+  
+          if (meetingMonth === month && meetingYear === year) {
+            if (!daysWithMeetings.has(day)) {
+              daysWithMeetings.set(day, []);
+            }
+            daysWithMeetings.get(day)?.push(meeting);
+          }
+        });
+  
+        this.currentMonthDays = this.currentMonthDays.map(day => {
+          if (typeof day.day === 'number' && daysWithMeetings.has(day.day)) {
+            const today = DateTime.now().setZone('utc').startOf('day');
+            const meetingDay = DateTime.fromObject({
+              year: this.selectedYear,
+              month: month + 1,
+              day: day.day
+            }, { zone: 'utc' }).startOf('day');
+  
+            const isPast = meetingDay < today;
+  
+            return {
+              ...day,
+              hasMeeting: true,
+              meetings: daysWithMeetings.get(day.day) || [],
+              isPast
+            };
+          }
+  
+          return {
+            ...day,
+            hasMeeting: false,
+            meetings: [],
+            isPast: false
+          };
+        });
+      },
+      error: (error) => console.error('Error al obtener reuniones del estudiante:', error)
+    });
+  }
+
+  getFormattedSelectedDate(): string {
+    if (!this.selectedDate) return '';
+    return DateTime.fromJSDate(this.selectedDate)
+      .setLocale('es')
+      .toFormat("cccc, d 'de' LLLL");
+  }
+
+  getUtcFormattedDate(value: string | Date | null | undefined): string {
+    if (!value) return '';
+    const date = typeof value === 'string' ? new Date(value) : value;
+    return date.toLocaleDateString('es-EC', {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC'
+    });
+  }
+
+  get24HourFormat(value: string | Date | null | undefined): string {
+    if (!value) return '';
+    const date = typeof value === 'string' ? new Date(value) : value;
+    return date.toLocaleTimeString('es-EC', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'UTC' 
+    });
+  }
+
+  getMeetingThemeDescription(theme?: { description: string } | null): string {
+    return theme?.description ?? 'Sin contenido';
+}
+}

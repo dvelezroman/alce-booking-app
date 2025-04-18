@@ -1,0 +1,346 @@
+
+:host {
+  display: block;
+  background-color: #f2f2f2;
+  min-height: 100vh;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.class-booking-header {
+  position: fixed; 
+  top: 0; 
+  left: 0px;
+  color: rgb(53, 53, 53);
+  width: 100%; 
+  background: white;
+  background-color: #f2f2f2;
+  z-index: 10; 
+  text-align: center;
+}
+
+.title.is-3 {
+  font-size: 1.7rem;
+  line-height: 75px;
+  color: #333;
+  font-weight: bold;
+  text-align: center;
+}
+
+.legend-wrapper {
+  width: fit-content;
+  margin: 0 auto;
+  margin-top: 6rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+.calendar-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #555;
+  align-items: flex-start; 
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background-color: #00c853;
+  display: inline-block;
+}
+
+.legend-dot.past {
+  background-color: #c2e5c1;
+}
+
+.legend-text {
+  font-weight: 500;
+}
+  
+  /* CALENDARIO DE MEETINGS Student */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+  
+  .fade-out { animation: fadeOut 0.4s forwards; }
+  .fade-in { animation: fadeIn 0.4s forwards; }
+  
+  .date-time-selection,
+  .shared-box-style {
+    position: relative;
+    width: 445px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    margin: auto;
+    margin-top: 2rem;
+    border: 1px solid rgba(210, 210, 210, 0.2);
+    background-color: rgba(249, 249, 249, 0.636);
+    border-radius: 25px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.03);
+  }
+  
+  .month-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+  }
+  
+  .month-label {
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    color: #333;
+  }
+  
+  .month-selector button {
+    width: 40px;
+    height: 2.5rem;
+    border: 1px solid rgba(128, 128, 128, 0.107);
+    border-radius: 50%;
+    background-color: rgba(129, 128, 128, 0.054);
+    color: rgb(104, 104, 104);
+    cursor: pointer;
+    position: absolute;
+    font-size: 1rem;
+    transform: translateY(-50%);
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .month-selector button:hover {
+    box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15);
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  .prev-button { left: 18.5%; top: 53%; }
+  .next-button { left: 70%; top: 48%; }
+  
+  .calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 350px;
+  }
+  
+  .calendar-header,
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 11px;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .calendar-day-header {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .calendar-day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15px;
+    height: 15px;
+    padding: 18px;
+    font-size: 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+    color: #333; 
+    background-color: transparent;
+  }
+  
+  .calendar-day.selected {
+    background-color: #6eb3fcbc;
+    color: white;
+    font-weight: bold;
+  }
+
+  .calendar-day.past-meeting {
+    opacity: 0.4;
+    pointer-events: none;
+    position: relative;
+  }
+  
+  .calendar-day.empty {
+    background-color: transparent;
+    border: none;
+    cursor: default;
+    pointer-events: none;
+  }
+  
+  .calendar-day.has-meeting {
+    font-weight: bold;
+    position: relative;
+  }
+  
+  .calendar-day.has-meeting::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    width: 6px;
+    height: 6px;
+    background-color: #28a745;
+    border-radius: 50%;
+  }
+  
+  /* Contenedor de la tabla de reuniones */
+  
+  .no-meetings-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .no-meetings-message p {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #504e4e; 
+    margin: 0;
+  }
+  
+  .meeting-results {
+    width: 100%;
+    display: flex;
+    color: #504e4e;
+    flex-direction: column;
+    align-items: center; 
+    margin-top: 1.5rem;
+  }
+  
+  .meeting-results h3.title {
+    text-align: center;
+    margin-bottom: .9rem;
+    font-size: 1rem;
+    color: #504e4e;
+  }
+  
+  /* Estilos para la tabla */
+  .table-responsive {
+    overflow-x: auto;
+    width: 85%;
+    margin: 0 auto;
+  }
+  
+  .table {
+    min-width: 900px;
+    border-collapse: collapse;
+    background-color: #ffffff; 
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+    font-size: 0.9rem;
+    margin-bottom: 3rem;
+  }
+  
+  .table thead th {
+    background-color: #bcf496; 
+    font-weight: 600;
+    color: #333;
+    padding: 0.55rem;
+    border-bottom: 1px solid #cbcbcb;
+    position: sticky; 
+    top: 0; 
+    z-index: 1;
+  }
+  
+  .table thead th:first-child {
+    border-top-left-radius: 8px; 
+  }
+  
+  .table thead th:last-child {
+    border-top-right-radius: 8px;
+  }
+  
+  .table tbody tr {
+    transition: background-color 0.3s ease;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f1f8e9; 
+  }
+  
+  .table td {
+    padding: 0.75rem;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+  }
+  
+  .table th, .table td {
+    text-align: center;
+  }
+  
+  /* responsive calendario y modal de meetings*/
+  @media (max-width: 768px) {
+  
+  .class-booking-header {
+    background: linear-gradient(45deg, #4a90e2,  #7743a8);
+  }
+
+  .title.is-3 {
+    color: white;
+  }
+
+  .meeting-results {
+    width: 100%; 
+  }
+}
+  
+  @media (max-width: 492px){
+  .date-time-selection {
+    width: 95%;
+  }
+  
+  .month-label {
+    font-size: 1.1rem;
+  }
+  
+  .calendar {
+    width: 330px;
+  }
+  
+  .calendar-header,
+  .calendar-grid {
+    gap: 6px;
+  }
+  
+  .calendar-day-header {
+    font-size: 1.1rem;
+    margin-bottom: .75rem;
+  }
+
+  .table th, .table td {
+    text-align: center;
+    font-size: .9rem;
+  }
+  
+
+  
+  }

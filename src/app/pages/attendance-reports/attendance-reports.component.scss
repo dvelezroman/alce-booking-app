@@ -1,295 +1,306 @@
 :host {
-  display: block;
-  padding: 0rem;
-  padding-bottom: 4rem;
+display: block;
+padding: 0rem;
+padding-bottom: 4rem;
+background-color: #f2f2f2;
+min-height: 100vh;
+}
+
+.attendance-title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  color: rgb(53, 53, 53);
+  width: 100%;
   background-color: #f2f2f2;
-  min-height: 100vh;
+  z-index: 10;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  padding: 1.35rem 0;
 }
 
-  .attendance-title {
-    position: fixed;
-    top: 0;
-    left: 0;
-    color: rgb(53, 53, 53);
-    width: 100%;
-    background-color: #f2f2f2;
-    z-index: 10;
-    text-align: center;
-    font-family: 'Poppins', sans-serif;
-    padding: 1.35rem 0;
-  }
-
-  .attendance-title h1 {
-    font-size: 1.8rem;
-    line-height: 1.5;
-    color: #282828;
-    font-weight: bold;
-  }
-
-  .attendance-section {
-    background-color: transparent;
-    padding: 1rem;
-    padding-top: 8rem;
-    border-radius: 8px;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  .attendance-search {
-    background-color: rgb(255, 255, 255);
-    padding: 1.5rem;
-    padding-top: 2.5rem;
-    border-radius: 8px;
-    max-width: 600px;
-    margin: 0 auto;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgb(203, 202, 202);
+.attendance-title h1 {
+  font-size: 1.8rem;
+  line-height: 1.5;
+  color: #282828;
+  font-weight: bold;
 }
 
-  .label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-left: 5px;
-    margin-bottom: 5px;
-    color: #333;
-  }
-
-  .field {
-    margin-bottom: 1.5rem;
-  }
-
-  .select.is-fullwidth {
-    width: 100%;
-  }
-
-  /* Estilo del input de búsqueda de estudiantes */
-  .input[type="text"] {
-    background-color: white;
-    color: #333;
-    border: 1px solid #d0d0d0;
-    border-radius: 4px;
-    padding: 0.5rem;
-    height: 42px;
-    font-size: 0.95rem;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  .input[type="text"]::placeholder {
-    color: #999;
-  }
-
-  .input[type="text"]:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
-  }
-
-  /* Dropdown de estudiantes */
-  .dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: #f1f1f1;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 0 0 10px 10px;
-    max-height: 150px;
-    overflow-y: auto;
-    z-index: 1000;
-    padding: 0px 0;
-  }
-
-  .dropdown ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-  }
-
-  .dropdown li {
-    padding: 6px 10px;
-    font-size: 0.9rem;
-    color: #555555;
-    width: 100%;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    box-sizing: border-box;
-  }
-
-  .dropdown li:hover {
-    background-color: rgba(153, 151, 154, 0.15);
-  }
-
-  .no-results1 {
-    padding: 8px;
-    font-size: 0.9rem;
-    color: #f84848;
-    text-align: center;
-    background-color: transparent;
-    border-radius: 4px;
-    margin: 4px;
-    font-style: italic;
+.attendance-section {
+  background-color: transparent;
+  padding: 1rem;
+  padding-top: 8rem;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-  .select select {
-    width: 100%;
-    font-size: 0.95rem;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    background-color: white;
-    color: grey;
-    border-radius: 4px;
-    background-color: transparent;
-    box-sizing: border-box;
-  }
-
-  .select select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-  }
-
-  .date-input-container {
-    position: relative;
-  }
-
-  .date-input-container::after {
-    content: 'event';
-    font-family: 'Material Icons';
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.5;
-    pointer-events: none;
-    font-size: 1rem;
-    color: #565657;
-  }
-
-  input[type="date"] {
-    background-color: #ffffff;
-    color: #333;
-    border: 1px solid #d0d0d0;
-    border-radius: 4px;
-    padding: 0.5rem;
-    font-size: 1rem;
-    height: 42px;
-    box-sizing: border-box;
-    appearance: none;
-    -webkit-appearance: none;
-  }
-
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    position: absolute;
-    right: 10px;
-    color: transparent;
-    cursor: pointer;
-    opacity: 0;
-  }
-
-  input[type="date"]:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-  }
-
-  .select.hour-select select {
-    border: 1px solid #c1c1c1;
-    border-radius: 6px;
-    padding: 0.5rem;
-    height: 42px;
-    font-size: 1rem;
+.attendance-search {
+  background-color: rgb(255, 255, 255);
+  padding: 1.5rem;
+  padding-top: 2.5rem;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgb(203, 202, 202);
 }
 
-  .button {
-    width: 100%;
-    margin-top: 0px;
-    padding: 0.7rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #ffffff;
-    background-color: #007bff;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-
-  .button:hover {
-    background-color: #0056b3;
-  }
-
-  .table-container {
-    max-width: 90%;
-    width: 100%;
-    margin: auto;
-    display: flex;
-    margin-top: 2rem;
-    margin-bottom: 4rem;
-    overflow-x: auto;
-  }
-
-  .table {
-    width: 90%;
-    margin: auto;
-    min-width: 900px;
-    border-collapse: collapse;
-    background-color: white;
-    border-spacing: 0;
-    overflow-x: auto;
-  }
-
-  .table thead {
-    position: sticky;
-    top: 0;
-    background-color: #bcf496;
-    z-index: 2;
-  }
-
-  .table th {
-    text-align: center;
-    padding: 10px;
-    font-size: 1rem;
-    font-weight: bold;
-    background-color: #bcf496;
-    color: black;
-    border-bottom: none;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
-
-  .table tbody {
-    display: block;
-    max-height: 500px; 
-    overflow-y: auto; 
-  }
-
-  .table tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-  }
-
-  .table tbody tr:hover {
-    background-color: rgb(239, 239, 239); 
-    transition: background-color 0.3s ease-in-out; 
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  color: #333;
 }
 
-  .table td {
-    width: auto;
-    text-align: center;
-    padding: 8px;
-    font-size: 1rem;
-    color: #333;
-    border-bottom: 1px solid #ddd;
-    max-height: 400px; 
-    overflow-y: auto; 
-    display: table-cell;
-    vertical-align: middle;
-  }
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.select.is-fullwidth {
+  width: 100%;
+}
+
+/* Estilo del input de búsqueda de estudiantes */
+.input[type="text"] {
+  background-color: white;
+  color: #333;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  padding: 0.5rem;
+  height: 42px;
+  font-size: 0.95rem;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.input[type="text"]::placeholder {
+  color: #999;
+}
+
+.input[type="text"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+/* Dropdown de estudiantes */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #f1f1f1;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 0 0 10px 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1000;
+  padding: 0px 0;
+}
+
+.dropdown ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.dropdown li {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  color: #555555;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.dropdown li:hover {
+  background-color: rgba(153, 151, 154, 0.15);
+}
+
+.no-results1 {
+  padding: 8px;
+  font-size: 0.9rem;
+  color: #f84848;
+  text-align: center;
+  background-color: transparent;
+  border-radius: 4px;
+  margin: 4px;
+  font-style: italic;
+}
+
+.select select {
+  width: 100%;
+  font-size: 0.95rem;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  background-color: white;
+  color: grey;
+  border-radius: 4px;
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
+.select select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.date-input-container {
+  position: relative;
+}
+
+.date-input-container::after {
+  content: 'event';
+  font-family: 'Material Icons';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  pointer-events: none;
+  font-size: 1rem;
+  color: #565657;
+}
+
+input[type="date"] {
+  background-color: #ffffff;
+  color: #333;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  height: 42px;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 10px;
+  color: transparent;
+  cursor: pointer;
+  opacity: 0;
+}
+
+input[type="date"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.select.hour-select select {
+  border: 1px solid #c1c1c1;
+  border-radius: 6px;
+  padding: 0.5rem;
+  height: 42px;
+  font-size: 1rem;
+}
+
+.button {
+  width: 100%;
+  margin-top: 0px;
+  padding: 0.7rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #007bff;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.block-results{
+  width: 90%;
+  margin: auto;
+}
+
+.table-container {
+  max-width: 100%;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  position: relative;
+  border-radius: 8px; 
+  max-height: 475px; 
+  overflow: hidden;
+  overflow-y: auto;  
+  overflow-x: auto; 
+  margin-left: 20px; 
+}
+
+.table {
+  width: 100%;
+  margin: auto;
+  min-width: 1200px;
+  border-collapse: collapse;
+  background-color: white;
+  border-spacing: 0;
+  overflow-x: auto;
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+  background-color: #bcf496;
+  z-index: 2;
+}
+
+.table th {
+  text-align: center;
+  padding: 10px;
+  font-size: .9rem;
+  font-weight: bold;
+  background-color: #bcf496;
+  color: black;
+  border-bottom: none;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.table tbody {
+  display: block;
+  max-height: 500px; 
+  overflow-y: auto; 
+}
+
+.table tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table tbody tr:hover {
+  background-color: rgb(239, 239, 239); 
+  transition: background-color 0.3s ease-in-out; 
+}
+
+.table td {
+  width: auto;
+  text-align: center;
+  padding: 8px;
+  font-size: .9rem;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  max-height: 400px; 
+  overflow-y: auto; 
+  display: table-cell;
+  vertical-align: middle;
+}
 
 .attendance-icon {
   text-align: center;
@@ -322,21 +333,21 @@
   /* Estilos responsivos */
   @media (max-width: 768px) {
 
-    :host {
-      padding: 1rem;
-    }
+  :host {
+    padding: 1rem;
+  }
 
-    .attendance-title {
-      background: linear-gradient(45deg, #4a90e2,  #7743a8);
-    }
+  .attendance-title {
+    background: linear-gradient(45deg, #4a90e2,  #7743a8);
+  }
 
-    .attendance-title h1 {
-      color: white;
-    }
+  .attendance-title h1 {
+    color: white;
+  }
 
-    .table-container {
-      max-width: 100%;
-    }
+  .table-container{
+    margin-left: 0;
+  }
 
   }
 
@@ -396,12 +407,6 @@
     padding: 0.62rem;
     font-size: .9rem;
   }
-
-    .table thead th,
-    .table td {
-      font-size: .75rem;
-      padding: 0.4rem;
-    }
   }
 
 /* MODAL ESTILOS */
