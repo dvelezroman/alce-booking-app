@@ -115,50 +115,53 @@
 </div>
   
   <!-- Tabla de resultados -->
-  <div *ngIf="meetingsOfDay.length === 0 && selectedDay !== null" class="no-meetings-message">
-    <p>No hay clases programadas para este día.</p>
+<div *ngIf="meetingsOfDay.length === 0 && selectedDay !== null" class="no-meetings-message">
+  <p>No hay clases programadas para este día.</p>
+</div>
+<div *ngIf="meetingsOfDay.length > 0" class="meeting-results">
+  <h3 *ngIf="viewMode === 'calendar'" class="title is-5">
+    Clases para el {{ getFormattedSelectedDate() }}
+  </h3>
+
+  <div class="table-responsive">
+    <table class="table is-fullwidth table-scroll-fixed">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th *ngIf="showEcuadorHourColumn">Fecha Ecuador</th>
+          <th>Modalidad</th>
+          <th>Contenido</th>
+          <th>Asistencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of meetingsOfDay">
+          <td>{{ item.stage?.number || 'Sin etapa' }}</td>
+          <td>{{ getUtcFormattedDate(item.date) }}</td>
+          <td>{{ get24HourFormat(item.date) }}</td>
+          <td *ngIf="showEcuadorHourColumn">
+            <ng-container *ngIf="item.date !== item.localdate; else noEcuadorHour">
+              <div>{{ getUtcFormattedDate(item.localdate) }}</div>
+              <div>{{ get24HourFormat(item.localdate) }}</div>
+            </ng-container>
+            <ng-template #noEcuadorHour>-</ng-template>
+          </td>
+          <td>{{ item.mode || 'Sin modalidad' }}</td>
+          <td>{{ getMeetingThemeDescription(item.meetingTheme) }}</td>
+          <td>
+            <ng-container *ngIf="isPastMeeting(item.date); else upcoming">
+              <span [ngClass]="{ 'has-text-success': item.markAssistanceAt, 'has-text-danger': !item.markAssistanceAt }">
+                {{ item.markAssistanceAt ? 'Asistió' : 'No asistió' }}
+              </span>
+            </ng-container>
+            <ng-template #upcoming>
+              -
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <div *ngIf="meetingsOfDay.length > 0" class="meeting-results">
-    <h3 *ngIf="viewMode === 'calendar'" class="title is-5">
-      Clases para el {{ getFormattedSelectedDate() }}
-    </h3>
-  
-    <div class="table-responsive">
-      <table class="table is-fullwidth table-scroll-fixed">
-        <thead>
-          <tr>
-            <th>Stage</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th *ngIf="showEcuadorHourColumn">Hora Ecuador</th>
-            <th>Modalidad</th>
-            <th>Contenido</th>
-            <th>Asistencia</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of meetingsOfDay">
-            <td>{{ item.stage?.number || 'Sin etapa' }}</td>
-            <td>{{ getUtcFormattedDate(item.date) }}</td>
-            <td>{{ get24HourFormat(item.date) }}</td>
-            <td *ngIf="showEcuadorHourColumn">
-              {{ item.date !== item.localdate ? get24HourFormat(item.localdate) : '-' }}
-            </td>
-            <td>{{ item.mode || 'Sin modalidad' }}</td>
-            <td>{{ getMeetingThemeDescription(item.meetingTheme) }}</td>
-            <td>
-              <ng-container *ngIf="isPastMeeting(item.date); else upcoming">
-                <span [ngClass]="{ 'has-text-success': item.markAssistanceAt, 'has-text-danger': !item.markAssistanceAt }">
-                  {{ item.markAssistanceAt ? 'Asistió' : 'No asistió' }}
-                </span>
-              </ng-container>
-              <ng-template #upcoming>
-                -
-              </ng-template>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  
+</div>
