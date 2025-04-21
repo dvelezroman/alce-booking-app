@@ -66,6 +66,14 @@ export class FeatureFlagComponent implements OnInit {
     );
   }
 
+  getFlagLabel(name: string): string {
+    switch (name) {
+      case 'enable-login': return 'Habilitar Login';
+      case 'enable-schedule': return 'Habilitar Agendamiento';
+      default: return name;
+    }
+  }
+
   private getDisabledDatesAndHours(): Observable<DisabledDatesAndHours> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
 
@@ -88,7 +96,9 @@ export class FeatureFlagComponent implements OnInit {
 
   private getAll() {
     this.ffService.getAll().subscribe(ffs => {
-      this.ffs = ffs;
+      console.log(ffs)
+      const orden = ['enable-login', 'enable-schedule'];
+      this.ffs = ffs.sort((a, b) => orden.indexOf(a.name) - orden.indexOf(b.name));
     });
   }
 

@@ -91,6 +91,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   selectedMeetingIndex: number = 0;
   linkStatus: string = 'not-clickable';
   ffs: FeatureFlagDto[] = [];
+  isScheduleEnabled: boolean = true;
   disabledDates: Record<string, number[]> = {};
   disabledDatesAndHours: DisabledDatesAndHours = {};
   calendarAnimationClass: string = '';
@@ -119,6 +120,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.ffService.getAll().subscribe(ffs => {
       this.ffs = ffs;
+      const scheduleFlag = this.ffs.find(f => f.name === 'enable-schedule');
+      this.isScheduleEnabled = scheduleFlag?.status ?? true;
     });
 
     const nowInEcuador = DateTime.now().setZone('America/Guayaquil').setLocale('es');
@@ -443,6 +446,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   selectDay(day: any) {
+    if (!this.isScheduleEnabled) {
+      this.showModalMessage('El agendamiento está deshabilitado por el administrador.');
+      this.hideModalAfterDelay(3000);
+      return;
+    }
+
     const monthMap: Record<string, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11

@@ -66,6 +66,13 @@ export class LoginComponent implements OnInit {
       this.showModal(this.createModalParams(true, 'El formulario debe estar completado.'));
       return;
     }
+    
+    const loginFlag = this.ffs.find(f => f.name === 'enable-login');
+    if (loginFlag && !loginFlag.status) {
+      this.showModal(this.createModalParams(true, 'El inicio de sesión está deshabilitado por el administrador.'));
+      return;
+    }
+
     const credentials = this.loginForm.value;
 
     this.usersService.login(credentials).subscribe({
