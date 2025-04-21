@@ -9,6 +9,8 @@ import {Store} from "@ngrx/store";
 import {LoginResponseDto} from "../../services/dtos/user.dto";
 import {ModalDto, modalInitializer} from '../../components/modal/modal.dto';
 import {ModalComponent} from '../../components/modal/modal.component';
+import {FeatureFlagService} from "../../services/feature-flag.service";
+import {FeatureFlagDto} from "../../services/dtos/feature-flag.dto";
 
 @Component({
   selector: 'app-login',
@@ -26,14 +28,15 @@ export class LoginComponent implements OnInit {
   user$: Observable<UserState>;
   modal: ModalDto = modalInitializer();
   passwordVisible: boolean = false;
-
+  ffs: FeatureFlagDto[] = [];
 
   loginForm: FormGroup;
 
   constructor(private fb: FormBuilder,
                private usersService: UsersService,
                private router: Router,
-              private store: Store<{ data: UserState }>
+              private store: Store<{ data: UserState }>,
+              private ffService: FeatureFlagService,
               ) {
     this.loginForm = this.fb.group({
       // email: ['', [Validators.required, Validators.email]],
@@ -43,7 +46,11 @@ export class LoginComponent implements OnInit {
     this.user$ = this.store.select('data');
   }
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    this.ffService.getAll().subscribe(ffs => {
+      this.ffs = ffs;
+    });
+  }
 
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(key => {
