@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit {
     
     const loginFlag = this.ffs.find(f => f.name === 'enable-login');
     if (loginFlag && !loginFlag.status) {
-      this.showModal(this.createModalParams(true, 'El inicio de sesión está deshabilitado por el administrador.'));
+      this.showModal(this.createModalParams(true, 'El inicio de sesión está deshabilitado por el momento.'));
       return;
     }
 
