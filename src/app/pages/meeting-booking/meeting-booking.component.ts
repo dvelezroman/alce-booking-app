@@ -849,6 +849,20 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }, ONE_SECOND);
   }
 
+  handleMeetingAssistanceClick(meetingId?: number) {
+    if (!meetingId) return;
+  
+    this.bookingService.clickAssistanceByStudent(meetingId).subscribe({
+      next: () => {
+        this.showModalMessage("Tu asistencia ha sido registrada automáticamente", false, false, true);
+        this.hideModalAfterDelay(2000);
+      },
+      error: () => {
+        this.showModalMessage("No se pudo registrar tu asistencia. Intenta nuevamente.", true, false, false);
+        this.hideModalAfterDelay(2000);
+      }
+    });
+  }
 
   isCurrentWeek(date: Date): boolean {
     const today = new Date();

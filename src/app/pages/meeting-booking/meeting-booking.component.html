@@ -255,6 +255,7 @@
             'not-available': linkStatus === 'not-available'}">
           <a *ngIf="selectedMeeting?.link && linkStatus === 'clickable'"
              readonly="true"
+             (click)="handleMeetingAssistanceClick(selectedMeeting?.id)"
              [href]="getFormattedLink(selectedMeeting?.link || 'Enlace aun no asignado')"
              target="_blank"
              rel="noopener noreferrer"
