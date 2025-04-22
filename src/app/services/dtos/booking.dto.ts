@@ -27,6 +27,7 @@ export interface MeetingDTO {
   assignedAt?: Date;
   markAssistanceByUser?: MarkedAssistanceByDTO;
   markAssistanceAt?: Date;
+  linkOpened?: boolean;
 }
 
 export interface AssignedByDTO {

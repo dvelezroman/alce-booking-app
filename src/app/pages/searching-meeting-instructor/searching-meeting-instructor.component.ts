@@ -128,6 +128,17 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     }
   }
 
+  hasMeetingPassed(localdate: string | Date, hour: number): boolean {
+    if (!localdate || hour === undefined) return false;
+  
+    const meetingDateTime = DateTime.fromISO(String(localdate))
+      .set({ hour, minute: 0 })
+      .setZone('America/Guayaquil');
+    const now = DateTime.now().setZone('America/Guayaquil');
+  
+    return now > meetingDateTime;
+  }
+
   closeToast() {
     this.showSuccessToast = false;
   }
