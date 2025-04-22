@@ -60,7 +60,7 @@ export interface StatisticalDataI {
 }
 
 export interface MeetingDataI extends MeetingDTO {
-
+  linkOpened?: boolean;
 }
 
 export type MonthKey = "ENERO" | "FEBRERO" | "MARZO" |

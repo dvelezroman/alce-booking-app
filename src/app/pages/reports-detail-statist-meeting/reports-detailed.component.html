@@ -180,6 +180,7 @@
           <th>Agendado Por</th>
           <th>Fecha Clase</th>
           <th>Hora</th>
+          <th>Abrió Enlace</th>
           <th>Asistencia</th>
           <th>Instructor</th>
           <th>Asistencia Marcada Por</th>
@@ -193,6 +194,10 @@
           <td>{{ meeting.assignedBy ? (meeting.assignedBy.firstName + ' ' + meeting.assignedBy.lastName) : 'No registrado' }}</td>
           <td>{{ formatLocalDateOnly(meeting.localdate) }}</td>
           <td>{{ formatHourNumber(meeting.localhour) }}</td>
+          <td>
+            <span *ngIf="meeting.linkOpened; else notOpened">✔️</span>
+            <ng-template #notOpened>❌</ng-template>
+          </td>
           <td>{{ meeting.present ? 'Sí' : 'No' }}</td>
           <td>{{ meeting.instructor ? (meeting.instructor.user?.firstName + ' ' + meeting.instructor.user?.lastName) : 'No registrado' }}</td>
           <td>{{ meeting.markAssistanceByUser ? (meeting.markAssistanceByUser.firstName + ' ' + meeting.markAssistanceByUser.lastName) : 'No registrado' }}</td>
