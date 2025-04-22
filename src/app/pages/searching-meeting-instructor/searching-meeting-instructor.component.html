@@ -110,8 +110,8 @@
                 {{ meeting.student?.user?.lastName || '' }}
               </td>
               <td data-label="Usuario">{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
-              <td data-label="Fecha">{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
-              <td data-label="Hora">{{ meeting.hour }}:00</td>
+              <td data-label="Fecha">{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
+              <td data-label="Hora">{{ meeting.localhour }}:00</td>
               <td data-label="Instructor">{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
               <td data-label="Observación" class="tooltip-container">
                 <span class="tooltip" [hidden]="!meeting.student?.user?.comment" [title]="meeting.student?.user?.comment">
