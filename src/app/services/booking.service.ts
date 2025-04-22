@@ -78,7 +78,7 @@ export class BookingService {
       params = params.set('status', status);
     }
     if (mode) {
-      params = params.set('mode', mode); 
+      params = params.set('mode', mode);
     }
 
     return this.http.get<MeetingDTO[]>(`${this.apiUrl}/search`, { params });
@@ -94,6 +94,10 @@ export class BookingService {
 
   updateAssistance(id: number, present: boolean): Observable<any> {
     return this.http.patch(`${this.apiUrl}/assistance/${id}`, { present });
+  }
+
+  clickAssistanceByStudent(meetingId: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/book/click-link/${meetingId}`, {});
   }
 
   getInstructorMeetingsGroupedByHour(data: FilterInstructorMeetingDto): Observable<any> {
