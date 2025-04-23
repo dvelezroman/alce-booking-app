@@ -225,3 +225,14 @@
   <p>{{ toastMessage }}</p>
 </div>
 
+
+<app-modal
+  [showModal]="modalConfig.show"
+  [message]="modalConfig.message"
+  [isError]="modalConfig.isError"
+  [isSuccess]="modalConfig.isSuccess"
+  [isInfo]="modalConfig.isInfo"
+  [showButtons]="modalConfig.confirm !== undefined"
+  (confirmAction)="modalConfig.confirm && modalConfig.confirm()"
+  (close)="modalConfig.close()"
+/>

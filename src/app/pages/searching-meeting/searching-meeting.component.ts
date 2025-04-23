@@ -8,6 +8,8 @@ import { Stage } from '../../services/dtos/student.dto';
 import {StagesService} from "../../services/stages.service";
 import {Instructor} from "../../services/dtos/instructor.dto";
 import {InstructorsService} from "../../services/instructors.service";
+import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
+import { ModalComponent } from '../../components/modal/modal.component';
 
 @Component({
   selector: 'app-searching-students-meeting',
@@ -15,7 +17,8 @@ import {InstructorsService} from "../../services/instructors.service";
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    ModalComponent
   ],
   templateUrl: './searching-meeting.component.html',
   styleUrl: './searching-meeting.component.scss'
@@ -36,6 +39,7 @@ export class SearchingMeetingComponent implements OnInit {
   toastMessage: string = '';
   toastType: 'success' | 'error' = 'success';
   isToastVisible: boolean = false;
+  modalConfig: ModalDto = modalInitializer();
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -118,9 +122,16 @@ export class SearchingMeetingComponent implements OnInit {
   }
 
   assignLink(): void {
-    if (this.selectedInstructor && this.selectedInstructor.meetingLink?.link && this.selectedMeetingIds.length) {
+    const link = this.selectedInstructor?.meetingLink?.link?.trim();
+  
+    if (!this.selectedInstructor || !link) {
+      this.showModalMessage('No se puede asignar este instructor porque no tiene enlace asignado.');
+      return;
+    }
+    
+    if (this.selectedMeetingIds.length) {
       const updateLinkParams: UpdateMeetingLinkDto = {
-        link: this.selectedInstructor.meetingLink?.link,
+        link,
         instructorId: +this.selectedInstructor.id,
         meetingIds: this.selectedMeetingIds,
         password: this.selectedInstructor.meetingLink?.password,
@@ -155,5 +166,23 @@ export class SearchingMeetingComponent implements OnInit {
   openCommentModal(comment: string): void {
     // Logic to open the modal
     alert(comment); // Replace with your modal service logic
+  }
+
+  showModalMessage(message: string, isError: boolean = true, isInfo: boolean = false, isSuccess: boolean = false) {
+    this.modalConfig = {
+      show: true,
+      message,
+      isError,
+      isSuccess,
+      isInfo,
+      close: () => {
+        this.modalConfig.show = false;
+      }
+    };
+  
+    // Auto cierre con delay
+    setTimeout(() => {
+      this.modalConfig.show = false;
+    }, 3000);
   }
 }

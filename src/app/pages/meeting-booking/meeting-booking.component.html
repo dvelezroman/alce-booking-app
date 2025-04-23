@@ -266,13 +266,10 @@
           </a>
 
           <span *ngIf="linkStatus === 'not-clickable'">
-            {{
-              selectedMeeting?.instructor
-                ? (selectedMeeting?.link ? 'Enlace asignado' : 'Instructor no tiene asignado enlace')
-                : 'Enlace aún no asignado'
-            }}
+            {{ getMeetingLinkMessage() }}
           </span>
           <span *ngIf="linkStatus === 'not-available'">Enlace no disponible</span>
+          
         </p>
         <p class="link-note" *ngIf="selectedMeeting?.link">
           <small>El enlace estará disponible 5 minutos antes y hasta 6 minutos después de la hora agendada.</small>

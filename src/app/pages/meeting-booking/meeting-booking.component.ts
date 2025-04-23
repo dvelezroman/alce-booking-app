@@ -849,6 +849,16 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }, ONE_SECOND);
   }
 
+  getMeetingLinkMessage(): string {
+    const hasInstructor = !!this.selectedMeeting?.instructor;
+    const hasLink = !!this.selectedMeeting?.link?.trim();
+  
+    if (!hasInstructor) return 'Enlace aún no asignado';
+    if (!hasLink) return 'Instructor no tiene asignado enlace';
+
+    return 'Enlace asignado';
+  }
+
   handleMeetingAssistanceClick(meetingId?: number) {
     if (!meetingId) return;
   
