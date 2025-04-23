@@ -69,15 +69,18 @@ export class ProcessedEventsComponent implements OnInit {
         return;
       }
   
-      const words = query.split(' ').filter(Boolean); 
+      const queryWords = query.split(' ').filter(word => word !== '');
   
       this.filteredUsers = this.users.filter(user => {
-        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-        return words.every(word => fullName.includes(word)); 
+        const fullNameWords = `${user.firstName} ${user.lastName}`.toLowerCase().split(' ');
+  
+        return queryWords.every((qWord, index) => {
+          return fullNameWords[index]?.startsWith(qWord);
+        });
       });
   
       this.showUserDropdown = this.filteredUsers.length > 0;
-    }, 500); 
+    }, 800);
   }
 
   hideDropdown(): void {
