@@ -864,12 +864,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   
     this.bookingService.clickAssistanceByStudent(meetingId).subscribe({
       next: () => {
-        this.showModalMessage("Tu asistencia ha sido registrada automáticamente", false, false, true);
-        this.hideModalAfterDelay(2000);
+        // console.log("asistencia registrada");
       },
       error: () => {
-        this.showModalMessage("No se pudo registrar tu asistencia. Intenta nuevamente.", true, false, false);
-        this.hideModalAfterDelay(2000);
+        // console.log("error al registrar la asistencia.");
       }
     });
   }
