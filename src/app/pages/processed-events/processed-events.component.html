@@ -1,0 +1,107 @@
+<section class="section">
+    <div class="container">
+      <div class="block title-container">
+        <h1 class="title">Buscar Eventos Procesados</h1>
+      </div>
+  
+      <div class="block-search">
+        <form #form="ngForm" (ngSubmit)="searchEvents(form)" novalidate>
+  
+          <!-- Usuario -->
+          <div class="field">
+            <label class="label">Nombre de Usuario o Estudiante</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                placeholder="Buscar por nombre de usuario o estudiante"
+                [(ngModel)]="searchTerm"
+                name="searchTerm"
+                (input)="filterUsers()"
+                (blur)="hideDropdown()"
+                autocomplete="off"
+              />
+              <div *ngIf="showUserDropdown" class="dropdown">
+                <div *ngIf="filteredUsers.length === 0" class="no-results">
+                  No se encontraron coincidencias
+                </div>
+                <ul *ngIf="filteredUsers.length > 0">
+                  <li *ngFor="let user of filteredUsers" (mousedown)="selectUser(user)">
+                    {{ user.firstName }} {{ user.lastName }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Fechas -->
+          <div class="columns is-mobile">
+            <div class="column">
+              <div class="field">
+                <label class="label">Fecha desde</label>
+                <div class="control input-date-container">
+                  <input
+                    class="input has-calendar-icon"
+                    type="date"
+                    [(ngModel)]="filter.from"
+                    name="from"
+                    required
+                    #from="ngModel"
+                  />
+                  <span class="calendar-icon material-icons">calendar_today</span>
+                </div>
+                <p class="error-message" *ngIf="formSubmitted && from.invalid">La fecha inicial es obligatoria</p>
+              </div>
+            </div>
+  
+            <div class="column">
+              <div class="field">
+                <label class="label">Fecha hasta</label>
+                <div class="control input-date-container">
+                  <input
+                    class="input has-calendar-icon"
+                    type="date"
+                    [(ngModel)]="filter.to"
+                    name="to"
+                    required
+                    #to="ngModel"
+                  />
+                  <span class="calendar-icon material-icons">calendar_today</span>
+                </div>
+                <p class="error-message" *ngIf="formSubmitted && to.invalid">La fecha final es obligatoria</p>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Tipo de evento -->
+          <div class="field">
+            <label class="label">Tipo de Evento</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select
+                  [(ngModel)]="filter.eventType"
+                  name="eventType"
+                  required
+                  #eventType="ngModel"
+                >
+                  <option value="" disabled selected>Seleccionar evento</option>
+                  <option *ngFor="let event of eventTypes" [value]="event.key">
+                    {{ event.label }}
+                  </option>
+                </select>
+              </div>
+              <p class="error-message" *ngIf="formSubmitted && eventType.invalid">Debes seleccionar un tipo de evento</p>
+            </div>
+          </div>
+  
+          <!-- Botón -->
+          <div class="field mt-4">
+            <div class="control">
+              <button type="submit" class="button is-primary is-fullwidth">Buscar</button>
+            </div>
+          </div>
+  
+        </form>
+      </div>
+    </div>
+  </section>

@@ -18,6 +18,7 @@ import { RegisterInstructorAdminComponent } from './pages/register-instructor-ad
 import { ReportesComponent } from './pages/reports/reportes.component';
 import { ReportsDetailedComponent } from './pages/reports-detail-statist-meeting/reports-detailed.component';
 import { MeetingsStudentComponent } from './pages/meetings-student/meetings-student.component';
+import { ProcessedEventsComponent } from './pages/processed-events/processed-events.component';
 
 
 
@@ -35,6 +36,7 @@ export const routes: Routes = [
   { path: 'searching-students', component: SearchingStudentComponent, canActivate: [AuthGuard]},
   { path: 'asistencias-alumnos', component: AttendanceReportsComponent, canActivate: [AuthGuard]},
   { path: 'asistencias-instructor', component: AttendanceInstructorComponent, canActivate: [AuthGuard]},
+  { path: 'processed-events', component: ProcessedEventsComponent, canActivate: [AuthGuard] },
   { path: 'feature-flag', component: FeatureFlagComponent, canActivate: [AuthGuard]},
   { path: 'create-students', component: RegisterStudentComponent, canActivate: [AuthGuard]},
   { path: 'create-instructors', component: RegisterInstructorAdminComponent, canActivate: [AuthGuard]},
