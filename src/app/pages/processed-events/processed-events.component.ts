@@ -31,6 +31,7 @@ export class ProcessedEventsComponent implements OnInit {
   filteredUsers: UserDto[] = [];
   showUserDropdown: boolean = false;
   formSubmitted: boolean = false;
+  private debounceTimeout: any = null;
 
   constructor(
     private processedEventService: ProcessedEventsService,
@@ -53,18 +54,30 @@ export class ProcessedEventsComponent implements OnInit {
     });
   }
 
+ 
   filterUsers(): void {
-    const query = this.searchTerm.trim().toLowerCase();
-    if (query.length > 0) {
-      this.filteredUsers = this.users.filter(user =>
-        (`${user.firstName} ${user.lastName}`).toLowerCase().includes(query) ||
-        user.email?.toLowerCase().includes(query)
-      );
-      this.showUserDropdown = true;
-    } else {
-      this.filteredUsers = [];
-      this.showUserDropdown = false;
+    if (this.debounceTimeout) {
+      clearTimeout(this.debounceTimeout);
     }
+  
+    this.debounceTimeout = setTimeout(() => {
+      const query = this.searchTerm.trim().toLowerCase();
+  
+      if (query.length === 0) {
+        this.filteredUsers = [];
+        this.showUserDropdown = false;
+        return;
+      }
+  
+      const words = query.split(' ').filter(Boolean); 
+  
+      this.filteredUsers = this.users.filter(user => {
+        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+        return words.every(word => fullName.includes(word)); 
+      });
+  
+      this.showUserDropdown = this.filteredUsers.length > 0;
+    }, 500); 
   }
 
   hideDropdown(): void {
