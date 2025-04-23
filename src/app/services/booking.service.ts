@@ -97,7 +97,7 @@ export class BookingService {
   }
 
   clickAssistanceByStudent(meetingId: number): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/book/click-link/${meetingId}`, {});
+    return this.http.patch(`${this.apiUrl}/click-link/${meetingId}`, {});
   }
 
   getInstructorMeetingsGroupedByHour(data: FilterInstructorMeetingDto): Observable<any> {
