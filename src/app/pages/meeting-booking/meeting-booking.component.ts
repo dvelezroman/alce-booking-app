@@ -600,7 +600,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
           this.hideModalAfterDelay(2000);
           this.initializeMeetings();
         },
-        error: (err) => {
+        error: () => {
           this.showModalMessage("Ya tienes una meeting agendada en la fecha y hora seleccionada.");
           this.showSuccessModal = false;
           this.hideModalAfterDelay(2000);
@@ -815,10 +815,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   getFormattedLink(link: string | undefined): string {
-    if (!link) {
-      return 'El instructor no colocó enlace.'
+    if (!link || !this.isValidUrl(link)) {
+      return '';
     }
-    return link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`;
+    return link.startsWith('http') ? link : `https://${link}`;
+  }
+
+  isValidUrl(link: string): boolean {
+    try {
+      new URL(link);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   updateLinkStatus() {
@@ -852,7 +861,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   getMeetingLinkMessage(): string {
     const hasInstructor = !!this.selectedMeeting?.instructor;
     const hasLink = !!this.selectedMeeting?.link?.trim();
-  
+
     if (!hasInstructor) return 'Enlace aún no asignado';
     if (!hasLink) return 'Instructor no tiene asignado enlace';
 
@@ -861,7 +870,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   handleMeetingAssistanceClick(meetingId?: number) {
     if (!meetingId) return;
-  
+
     this.bookingService.clickAssistanceByStudent(meetingId).subscribe({
       next: () => {
         // console.log("asistencia registrada");

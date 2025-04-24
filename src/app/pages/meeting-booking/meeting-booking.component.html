@@ -217,7 +217,7 @@
           {{ selectedMeeting?.hour }}:00
         </span>
       </p>
-      
+
       <ng-container *ngIf="selectedMeeting?.localhour !== selectedMeeting?.hour">
         <p class="meeting-hour-inline">
           <strong>Hora Ecuador:</strong>
@@ -248,31 +248,42 @@
       </p>
       <ng-container *ngIf="selectedMeeting?.mode === mode.ONLINE">
         <p class="meeting-link"
-           [ngClass]="{
-            'no-link': !selectedMeeting?.link,
-            'clickable': linkStatus === 'clickable',
-            'not-clickable': linkStatus === 'not-clickable',
-            'not-available': linkStatus === 'not-available'}">
-            
-          <a *ngIf="selectedMeeting?.link && linkStatus === 'clickable'"
-             readonly="true"
-             (click)="handleMeetingAssistanceClick(selectedMeeting?.id)"
-             [href]="getFormattedLink(selectedMeeting?.link || 'Enlace aun no asignado')"
-             target="_blank"
-             rel="noopener noreferrer"
-             style="user-select: none;"
-            >
-            Ir a la clase
-          </a>
+           [class.no-link]="!selectedMeeting?.link"
+           [class.clickable]="linkStatus === 'clickable'"
+           [class.not-clickable]="linkStatus === 'not-clickable'"
+           [class.not-available]="linkStatus === 'not-available'">
 
-          <span *ngIf="linkStatus === 'not-clickable'">
-            {{ getMeetingLinkMessage() }}
-          </span>
-          <span *ngIf="linkStatus === 'not-available'">Enlace no disponible</span>
-          
+          <ng-container [ngSwitch]="linkStatus">
+
+            <a *ngSwitchCase="'clickable'"
+               (click)="handleMeetingAssistanceClick(selectedMeeting?.id)"
+               [href]="getFormattedLink(selectedMeeting?.link)"
+               target="_blank"
+               rel="noopener noreferrer"
+               style="user-select: none;">
+              Ir a la clase
+            </a>
+
+            <span *ngSwitchCase="'not-clickable'"
+                  role="link"
+                  aria-disabled="true">
+        {{ getMeetingLinkMessage() }}
+      </span>
+
+            <span *ngSwitchCase="'not-available'"
+                  role="link"
+                  aria-disabled="true">
+        Enlace no disponible
+      </span>
+
+          </ng-container>
+
         </p>
+
         <p class="link-note" *ngIf="selectedMeeting?.link">
-          <small>El enlace estará disponible 5 minutos antes y hasta 6 minutos después de la hora agendada.</small>
+          <small>
+            El enlace estará disponible 5 minutos antes y hasta 6 minutos después de la hora agendada.
+          </small>
         </p>
       </ng-container>
     </section>
