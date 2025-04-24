@@ -41,6 +41,7 @@ export class ProcessedEventsComponent implements OnInit {
   ngOnInit() {
     this.initializeEventTypes();
     this.loadUsers();
+    
   }
 
   loadUsers(): void {
@@ -80,7 +81,7 @@ export class ProcessedEventsComponent implements OnInit {
       });
   
       this.showUserDropdown = this.filteredUsers.length > 0;
-    }, 800);
+    }, 600);
   }
 
   hideDropdown(): void {
@@ -156,5 +157,10 @@ export class ProcessedEventsComponent implements OnInit {
         console.error('Error al obtener eventos:', error);
       }
     });
+  }
+
+  getUserFullName(userId: number): string {
+    const user = this.users.find(u => u.id === userId);
+    return user ? `${user.firstName} ${user.lastName}` : 'Usuario no disponible';
   }
 }

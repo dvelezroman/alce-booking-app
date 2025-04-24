@@ -11,4 +11,5 @@ export interface ProcessedEventDto {
   processedById: number;
   eventType: string;
   description: string;
+  createdAt: string;
 }

@@ -20,6 +20,8 @@
                 (input)="filterUsers()"
                 (blur)="hideDropdown()"
                 autocomplete="off"
+                required
+                #searchTermInput="ngModel"
               />
               <div *ngIf="showUserDropdown" class="dropdown">
                 <div *ngIf="filteredUsers.length === 0" class="no-results">
@@ -32,6 +34,11 @@
                 </ul>
               </div>
             </div>
+            <p
+                class="error-message"
+                *ngIf="formSubmitted && searchTermInput.invalid">
+                Debes seleccionar un usuario
+            </p>
           </div>
   
           <!-- Fechas -->
@@ -94,7 +101,6 @@
             </div>
           </div>
   
-          <!-- Botón -->
           <div class="field mt-4">
             <div class="control">
               <button type="submit" class="button is-primary is-fullwidth">Buscar</button>
@@ -102,6 +108,32 @@
           </div>
   
         </form>
+      </div>
+    </div>
+    <div class="block-results">
+      <p *ngIf="filter.from && filter.to && events && events.length === 0" class="no-results-message">
+        No hay eventos procesados para el rango asignado.
+      </p>
+    
+      <div class="table-container">
+        <table class="table-results is-fullwidth" *ngIf="events && events.length > 0">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Tipo de Evento</th>
+              <th>Descripción</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let event of events">
+              <td data-label="Usuario">{{ getUserFullName(event.processedById) }}</td>
+              <td data-label="Tipo de Evento">{{ event.eventType }}</td>
+              <td data-label="Descripción">{{ event.description }}</td>
+              <td data-label="Fecha">{{ formatDate(event.createdAt || '') }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>

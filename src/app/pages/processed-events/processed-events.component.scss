@@ -1,10 +1,15 @@
-.section {
-    background-color: #f2f2f2;
-    min-height: 100vh;
+html, body {
+    height: 100%;
+    margin: 0;
     padding: 0;
   }
+
+.section {
+    min-height: 100vh;
+    background-color: #f2f2f2;
+  }
   
-  .container {
+.container {
     width: 100%;
     margin: 0 auto;
     background-color: #f2f2f2;
@@ -12,7 +17,7 @@
     border-radius: 8px;
   }
   
-  .title-container {
+.title-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -24,7 +29,7 @@
     font-family: 'Poppins', sans-serif;
   }
   
-  .title {
+.title {
     font-size: 1.7rem;
     line-height: 75px;
     color: #333;
@@ -33,13 +38,13 @@
     font-family: 'Poppins', sans-serif;
   }
   
-  .block-search {
+.block-search {
     background-color: white;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     padding: 2rem;
     border-radius: 6px;
     border: .5px solid rgb(198, 198, 198);
-    margin-top: 9rem;
+    margin-top: 7rem;
     width: 100%;
     max-width: 600px;
     margin-left: auto;
@@ -53,7 +58,7 @@
     margin-left: 5px;
   }
   
-  .field {
+.field {
     margin-bottom: .5rem;
   }
 
@@ -200,6 +205,81 @@
     opacity: 0.6;
     cursor: not-allowed;
     }
+
+    .block-results {
+     width: 85%;
+     margin: auto;
+      }
+      
+    .no-results-message {
+    color: #ff0000;
+    text-align: center;
+    font-size: 1rem;
+    margin-top: 5rem;
+    }
+
+    /* Tabla de resultados */
+    .table-container {
+    max-width: 100%;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+    position: relative;
+    border-radius: 8px;
+    max-height: 475px;
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: auto;
+    margin-left: 20px;
+    }
+
+    .table-results {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    min-width: 900px;
+    word-wrap: break-word;
+    }
+
+    .table-results thead {
+    position: sticky;
+    top: 0;
+    background-color: #bcf496;
+    z-index: 2;
+    }
+
+    .table-results th {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    background-color: #bcf496;
+    color: black;
+    border-bottom: none;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    }
+
+    .table-results td {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.85rem;
+    padding: 5px;
+    border-bottom: 0.5px solid rgb(208, 208, 208);
+    background-color: #ffffff;
+    color: rgb(76, 75, 75);
+    overflow: visible;
+    text-overflow: clip;
+    }
+
+    input[type='checkbox']:checked {
+    accent-color: #007bff;
+    }
   
   /* Responsive */
   @media (max-width: 768px) {
@@ -241,11 +321,20 @@
     .title-container {
       background: linear-gradient(45deg, #4a90e2, #7743a8);
     }
+
+    .block-results {
+        width: 100%;
+        margin: auto;
+    }
+    
+    .table-container{
+        margin-left: 0px;
+    }
   }
   
   @media (max-width: 492px) {
     .container {
-      width: 97%;
+      width: 100%;
     }
   
     .title-container {
@@ -261,7 +350,7 @@
     .block-search {
       background-color: #ededed !important;
       box-shadow: none;
-      width: 95%;
+      width: 100%;
       margin-top: 7rem;
     }
   
