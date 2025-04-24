@@ -81,6 +81,7 @@ export class ProcessedEventsComponent implements OnInit {
     this.filter.processedById = user.id;
     this.filteredUsers = [];
     this.showUserDropdown = false;
+    this.filter.eventType = undefined;
   }
 
   formatDate(date: string): string {
