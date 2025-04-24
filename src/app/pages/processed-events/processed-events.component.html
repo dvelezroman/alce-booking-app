@@ -89,7 +89,7 @@
                   name="eventType"
                   #eventType="ngModel"
                 >
-                  <option [ngValue]="null" disabled>Seleccionar evento</option>
+                <option [ngValue]="undefined" disabled hidden>Seleccionar evento</option>
                   <option *ngFor="let event of eventTypes" [value]="event.key">
                     {{ event.label }}
                   </option>
@@ -108,7 +108,7 @@
       </div>
     </div>
     <div class="block-results">
-      <p *ngIf="filter.from && filter.to && events && events.length === 0" class="no-results-message">
+      <p *ngIf="formSubmitted && filter.eventType && filter.processedById && events && events.length === 0" class="no-results-message">
         No hay eventos procesados para el rango asignado.
       </p>
 
@@ -134,3 +134,4 @@
       </div>
     </div>
   </section>
+
