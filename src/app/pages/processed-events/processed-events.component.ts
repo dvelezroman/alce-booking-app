@@ -8,20 +8,21 @@ import { UsersService } from '../../services/users.service';
 import { UserDto } from '../../services/dtos/user.dto';
 import {debounceTime} from "rxjs/operators";
 import {Subject} from "rxjs";
+import {EnumLabelPipe} from "../../pipes/enum-label.pipe";
 
 @Component({
   selector: 'app-processed-events',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EnumLabelPipe],
   templateUrl: './processed-events.component.html',
   styleUrl: './processed-events.component.scss'
 })
 export class ProcessedEventsComponent implements OnInit {
   filter: ProcessedEventFilterDto = {
     processedById: undefined,
-    from: '',
-    to: '',
-    eventType: '',
+    from: undefined,
+    to: undefined,
+    eventType: undefined,
     sort: 'desc'
   };
   searchTerm: string = '';
@@ -119,4 +120,9 @@ export class ProcessedEventsComponent implements OnInit {
       this.showUserDropdown = false;
     }, 200);
   }
+
+  // mapEventType(eventType: EventTypeE) {
+  //   return EventTypeE[eventType as keyof typeof EventTypeE];
+  // }
+  protected readonly EventTypeE = EventTypeE;
 }

@@ -1,5 +1,5 @@
 export interface ProcessedEventFilterDto {
-  eventType?: string;
+  eventType?: EventTypeE;
   from?: string;
   to?: string;
   processedById?: number;
@@ -9,7 +9,7 @@ export interface ProcessedEventFilterDto {
 export interface ProcessedEventDto {
   id: number;
   processedById: number;
-  eventType: string;
+  eventType: EventTypeE;
   description: string;
   createdAt: string;
 }
