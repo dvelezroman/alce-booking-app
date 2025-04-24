@@ -3,10 +3,10 @@
       <div class="block title-container">
         <h1 class="title">Buscar Eventos Procesados</h1>
       </div>
-  
+
       <div class="block-search">
         <form #form="ngForm" (ngSubmit)="searchEvents(form)" novalidate>
-  
+
           <!-- Usuario -->
           <div class="field">
             <label class="label">Nombre de Usuario o Estudiante</label>
@@ -14,15 +14,16 @@
               <input
                 class="input"
                 type="text"
+                name="searchTerm"
                 placeholder="Buscar por nombre de usuario o estudiante"
                 [(ngModel)]="searchTerm"
-                name="searchTerm"
-                (input)="filterUsers()"
+                #searchTermInput="ngModel"
+                (input)="searchInput$.next(searchTerm)"
                 (blur)="hideDropdown()"
                 autocomplete="off"
                 required
-                #searchTermInput="ngModel"
               />
+
               <div *ngIf="showUserDropdown" class="dropdown">
                 <div *ngIf="filteredUsers.length === 0" class="no-results">
                   No se encontraron coincidencias
@@ -34,13 +35,13 @@
                 </ul>
               </div>
             </div>
-            <p
-                class="error-message"
-                *ngIf="formSubmitted && searchTermInput.invalid">
-                Debes seleccionar un usuario
+
+            <p class="error-message" *ngIf="formSubmitted && searchTermInput.invalid">
+              Debes seleccionar un usuario
             </p>
           </div>
-  
+
+
           <!-- Fechas -->
           <div class="columns is-mobile">
             <div class="column">
@@ -52,7 +53,6 @@
                     type="date"
                     [(ngModel)]="filter.from"
                     name="from"
-                    required
                     #from="ngModel"
                   />
                   <span class="calendar-icon material-icons">calendar_today</span>
@@ -60,7 +60,7 @@
                 <p class="error-message" *ngIf="formSubmitted && from.invalid">La fecha inicial es obligatoria</p>
               </div>
             </div>
-  
+
             <div class="column">
               <div class="field">
                 <label class="label">Fecha hasta</label>
@@ -70,7 +70,6 @@
                     type="date"
                     [(ngModel)]="filter.to"
                     name="to"
-                    required
                     #to="ngModel"
                   />
                   <span class="calendar-icon material-icons">calendar_today</span>
@@ -79,7 +78,7 @@
               </div>
             </div>
           </div>
-  
+
           <!-- Tipo de evento -->
           <div class="field">
             <label class="label">Tipo de Evento</label>
@@ -88,25 +87,23 @@
                 <select
                   [(ngModel)]="filter.eventType"
                   name="eventType"
-                  required
                   #eventType="ngModel"
                 >
-                  <option value="" disabled selected>Seleccionar evento</option>
+                  <option [ngValue]="null" disabled>Seleccionar evento</option>
                   <option *ngFor="let event of eventTypes" [value]="event.key">
                     {{ event.label }}
                   </option>
                 </select>
               </div>
-              <p class="error-message" *ngIf="formSubmitted && eventType.invalid">Debes seleccionar un tipo de evento</p>
             </div>
           </div>
-  
+
           <div class="field mt-4">
             <div class="control">
               <button type="submit" class="button is-primary is-fullwidth">Buscar</button>
             </div>
           </div>
-  
+
         </form>
       </div>
     </div>
@@ -114,7 +111,7 @@
       <p *ngIf="filter.from && filter.to && events && events.length === 0" class="no-results-message">
         No hay eventos procesados para el rango asignado.
       </p>
-    
+
       <div class="table-container">
         <table class="table-results is-fullwidth" *ngIf="events && events.length > 0">
           <thead>

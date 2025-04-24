@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { ProcessedEventDto, ProcessedEventFilterDto } from '../../services/dtos/process-event-filter.dto';
+import {EventTypeE, ProcessedEventDto, ProcessedEventFilterDto} from '../../services/dtos/process-event-filter.dto';
 import { DateTime } from 'luxon';
 import { ProcessedEventsService } from '../../services/processedEvents.service';
 import { UsersService } from '../../services/users.service';
 import { UserDto } from '../../services/dtos/user.dto';
+import {debounceTime} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-processed-events',
@@ -15,7 +17,6 @@ import { UserDto } from '../../services/dtos/user.dto';
   styleUrl: './processed-events.component.scss'
 })
 export class ProcessedEventsComponent implements OnInit {
-
   filter: ProcessedEventFilterDto = {
     processedById: undefined,
     from: '',
@@ -23,7 +24,6 @@ export class ProcessedEventsComponent implements OnInit {
     eventType: '',
     sort: 'desc'
   };
-
   searchTerm: string = '';
   events: ProcessedEventDto[] = [];
   eventTypes: { key: string, label: string }[] = [];
@@ -31,7 +31,8 @@ export class ProcessedEventsComponent implements OnInit {
   filteredUsers: UserDto[] = [];
   showUserDropdown: boolean = false;
   formSubmitted: boolean = false;
-  private debounceTimeout: any = null;
+  searchInput$ = new Subject<string>();
+
 
   constructor(
     private processedEventService: ProcessedEventsService,
@@ -39,106 +40,55 @@ export class ProcessedEventsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.initializeEventTypes();
-    this.loadUsers();
-    
+    this.searchInput$
+      .pipe(debounceTime(500))
+      .subscribe((term: string) => {
+        this.filterUsers(term);
+      });
+    this.loadEventTypes();
   }
 
-  loadUsers(): void {
-    this.usersService.searchUsers(0, undefined, undefined, undefined, undefined, undefined).subscribe({
+  private loadEventTypes() {
+    this.eventTypes = Object.entries(EventTypeE).map(([key, label]) => ({
+      key,
+      label,
+    }));
+  }
+
+  filterUsers(term: string): void {
+    if (!term || term.trim().length < 2) {
+      this.filteredUsers = [];
+      this.showUserDropdown = false;
+      return;
+    }
+
+    this.usersService.searchUsers(undefined, undefined, undefined, term, term, undefined).subscribe({
       next: (result) => {
-        this.users = result.users;
+        this.filteredUsers = result.users;
+        this.showUserDropdown = true;
       },
       error: (error) => {
         console.error('Error al cargar usuarios:', error);
-      }
-    });
-  }
-
- 
-  filterUsers(): void {
-    if (this.debounceTimeout) {
-      clearTimeout(this.debounceTimeout);
-    }
-  
-    this.debounceTimeout = setTimeout(() => {
-      const query = this.searchTerm.trim().toLowerCase();
-  
-      if (query.length === 0) {
         this.filteredUsers = [];
         this.showUserDropdown = false;
-        return;
       }
-  
-      const queryWords = query.split(' ').filter(word => word !== '');
-  
-      this.filteredUsers = this.users.filter(user => {
-        const fullNameWords = `${user.firstName} ${user.lastName}`.toLowerCase().split(' ');
-  
-        return queryWords.every((qWord, index) => {
-          return fullNameWords[index]?.startsWith(qWord);
-        });
-      });
-  
-      this.showUserDropdown = this.filteredUsers.length > 0;
-    }, 600);
-  }
-
-  hideDropdown(): void {
-    setTimeout(() => {
-      this.showUserDropdown = false;
-    }, 200);
+    });
   }
 
   selectUser(user: UserDto): void {
-    this.filter.processedById = user.id;
     this.searchTerm = `${user.firstName} ${user.lastName}`;
+    this.filter.processedById = user.id;
+    this.filteredUsers = [];
     this.showUserDropdown = false;
-  }
-
-  onFilterChange(): void {
-    const hasAnyFilter = this.filter.eventType || this.filter.from || this.filter.to || this.filter.processedById;
-    if (!hasAnyFilter) return;
-
-    this.fetchEvents();
-  }
-
-  fetchEvents(): void {
-    const filters: ProcessedEventFilterDto = { ...this.filter };
-    this.processedEventService.getProcessedEvents(filters).subscribe(events => {
-      this.events = events;
-    });
   }
 
   formatDate(date: string): string {
     return DateTime.fromISO(date).setLocale('es').toFormat('DDDD HH:mm');
   }
 
-  private initializeEventTypes(): void {
-    this.eventTypes = [
-      { key: 'CreateUser', label: 'Creación de Usuario' },
-      { key: 'UpdateUser', label: 'Actualización de Usuario' },
-      { key: 'DeleteUser', label: 'Eliminación de Usuario' },
-      { key: 'AssignInstructor', label: 'Asignar Instructor' },
-      { key: 'CreateLink', label: 'Creación de Link' },
-      { key: 'DeleteLink', label: 'Eliminación de Link' },
-      { key: 'Login', label: 'Inicio de Sesión' },
-      { key: 'GenerateReport', label: 'Generar Reporte' },
-      { key: 'MarkAssistance', label: 'Marcar Asistencia' },
-      { key: 'UpdateLink', label: 'Actualizar Link' },
-      { key: 'DisableDay', label: 'Deshabilitar Día' },
-      { key: 'CreateMeet', label: 'Crear Reunión' },
-      { key: 'DeleteMeet', label: 'Eliminar Reunión' },
-      { key: 'CancelMeet', label: 'Cancelar Reunión' },
-      { key: 'ClickMeet', label: 'Clic en Reunión' }
-    ];
-  }
-
   searchEvents(form: NgForm): void {
     this.formSubmitted = true;
     if (form.invalid) return;
-
-    console.log('Datos enviados:', this.filter);
 
     const hasFilters =
       this.filter.from ||
@@ -162,5 +112,11 @@ export class ProcessedEventsComponent implements OnInit {
   getUserFullName(userId: number): string {
     const user = this.users.find(u => u.id === userId);
     return user ? `${user.firstName} ${user.lastName}` : 'Usuario no disponible';
+  }
+
+  hideDropdown(): void {
+    setTimeout(() => {
+      this.showUserDropdown = false;
+    }, 200);
   }
 }
