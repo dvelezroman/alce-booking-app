@@ -57,7 +57,9 @@
                   />
                   <span class="calendar-icon material-icons">calendar_today</span>
                 </div>
-                <p class="error-message" *ngIf="formSubmitted && from.invalid">La fecha inicial es obligatoria</p>
+                <p class="error-message" *ngIf="showFromError">
+                  Fecha es obligatoria si hay una fecha final
+                </p>
               </div>
             </div>
 
@@ -74,7 +76,9 @@
                   />
                   <span class="calendar-icon material-icons">calendar_today</span>
                 </div>
-                <p class="error-message" *ngIf="formSubmitted && to.invalid">La fecha final es obligatoria</p>
+                <p class="error-message" *ngIf="showToError">
+                  Fecha final es obligatoria si hay una fecha inicial
+                </p>
               </div>
             </div>
           </div>
@@ -89,7 +93,7 @@
                   name="eventType"
                   #eventType="ngModel"
                 >
-                <option [ngValue]="undefined" disabled hidden>Seleccionar evento</option>
+                <option [ngValue]="undefined" disabled>Seleccionar evento</option>
                   <option *ngFor="let event of eventTypes" [value]="event.key">
                     {{ event.label }}
                   </option>
@@ -108,8 +112,8 @@
       </div>
     </div>
     <div class="block-results">
-      <p *ngIf="formSubmitted && filter.eventType && filter.processedById && events && events.length === 0" class="no-results-message">
-        No hay eventos procesados para el rango asignado.
+      <p *ngIf="formSubmitted && events && events.length === 0" class="no-results-message">
+        No hay eventos procesados para los filtros aplicados.
       </p>
 
       <div class="table-container">

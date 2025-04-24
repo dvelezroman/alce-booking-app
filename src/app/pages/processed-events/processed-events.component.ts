@@ -33,6 +33,8 @@ export class ProcessedEventsComponent implements OnInit {
   showUserDropdown: boolean = false;
   formSubmitted: boolean = false;
   searchInput$ = new Subject<string>();
+  showFromError = false;
+  showToError = false;
 
 
   constructor(
@@ -90,6 +92,18 @@ export class ProcessedEventsComponent implements OnInit {
 
   searchEvents(form: NgForm): void {
     this.formSubmitted = true;
+    this.showFromError = false;
+    this.showToError = false;
+
+    if ((this.filter.from && !this.filter.to)) {
+      this.showToError = true;
+      return;
+    }
+
+    if ((this.filter.to && !this.filter.from)) {
+      this.showFromError = true;
+      return;
+    }
     if (form.invalid) return;
 
     const hasFilters =
