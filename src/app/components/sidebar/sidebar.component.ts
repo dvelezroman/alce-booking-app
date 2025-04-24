@@ -45,6 +45,7 @@ export class SidebarComponent implements OnInit {
     { icon: 'create', text: 'Crear Estudiante', route: '/create-students', roles: [UserRole.ADMIN] },
     { icon: 'create', text: 'Crear Admin / Instructor', route: '/create-instructors', roles: [UserRole.ADMIN] },
     { icon: 'video_call', text: 'Agenda', route: '/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] },
+    { icon: 'history', text: 'Eventos', route: '/processed-events', roles: [UserRole.ADMIN] },
     { icon: 'config', text: 'Configuración', route: '/feature-flag', roles: [UserRole.ADMIN] },
     { icon: 'reportes', text: 'Reportes', route: '/reports', roles: [UserRole.ADMIN] },
 ];
