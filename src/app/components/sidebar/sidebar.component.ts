@@ -83,7 +83,7 @@ export class SidebarComponent implements OnInit {
       {
         title: 'Clases y Agendamientos',
         items: [
-          // this.findNavItem('event'),
+          this.findNavItem('event'),
           this.findNavItem('booking'),
           this.findNavItem('group'),
           this.findNavItem('video_call')
