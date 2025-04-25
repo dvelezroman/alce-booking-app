@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { selectIsLoggedIn, selectUserData } from '../../store/user.selector';
 import { UserDto } from '../../services/dtos/user.dto';
 import { BookingService } from '../../services/booking.service';
-import { MeetingDTO, MeetingStatusEnum } from '../../services/dtos/booking.dto';
+import { MeetingDTO } from '../../services/dtos/booking.dto';
 import { DateTime } from 'luxon';
 import { FormsModule } from '@angular/forms';
 
@@ -34,7 +34,7 @@ export class MeetingsStudentComponent implements OnInit {
   maxYear!: number;
   minMonth!: string;
   minYear!: number;
-  viewMode: 'calendar' | 'range' = 'calendar'; 
+  viewMode: 'calendar' | 'range' = 'calendar';
   rangeError = { from: false, to: false };
   rangeFrom: string = '';
   rangeTo: string = '';
@@ -66,10 +66,10 @@ export class MeetingsStudentComponent implements OnInit {
 
   setViewMode(mode: 'calendar' | 'range') {
     this.viewMode = mode;
-    this.meetingsOfDay = []; 
+    this.meetingsOfDay = [];
     this.selectedDay = null;
     this.selectedDate = null;
-  
+
     if (mode === 'calendar') {
       this.rangeFrom = '';
       this.rangeTo = '';
@@ -160,21 +160,21 @@ export class MeetingsStudentComponent implements OnInit {
 
   searchMeetingsByRange() {
     this.rangeError = { from: false, to: false };
-  
+
     if (!this.rangeFrom || !this.rangeTo) {
       if (!this.rangeFrom) this.rangeError.from = true;
       if (!this.rangeTo) this.rangeError.to = true;
       return;
     }
-  
+
     if (!this.studentId) return;
-  
+
     this.bookingService.searchMeetings({
       from: this.rangeFrom,
       to: this.rangeTo,
       studentId: this.studentId,
       assigned: true,
-      status: MeetingStatusEnum.ACTIVE
+      // status: MeetingStatusEnum.ACTIVE
     }).subscribe({
       next: (meetings) => {
         this.selectedDay = null;
@@ -189,29 +189,29 @@ export class MeetingsStudentComponent implements OnInit {
   getStudentMeetings(selectedDate: Date) {
     const now = DateTime.now().setZone('utc').startOf('day');
     const until = now.plus({ days: 20 });
-  
+
     this.bookingService.searchMeetings({
-      from: now.toISODate()!,      
-      to: until.toISODate()!,       
+      from: now.toISODate()!,
+      to: until.toISODate()!,
       studentId: this.studentId ?? undefined,
       assigned: true,
-      status: MeetingStatusEnum.ACTIVE
+      // status: MeetingStatusEnum.ACTIVE
     }).subscribe({
       next: (meetings) => {
         const daysWithMeetings = new Map<number, MeetingDTO[]>();
-  
+
         meetings.forEach((meeting: MeetingDTO) => {
           const rawDate = typeof meeting.date === 'string'
             ? meeting.date
             : meeting.date.toISOString();
-  
+
           const meetingDate = DateTime.fromISO(rawDate, { zone: 'utc' }).startOf('day');
-  
+
           if (meetingDate >= now && meetingDate <= until) {
             const day = meetingDate.day;
             const month = meetingDate.month - 1;
             const year = meetingDate.year;
-  
+
             if (month === selectedDate.getMonth() && year === selectedDate.getFullYear()) {
               if (!daysWithMeetings.has(day)) {
                 daysWithMeetings.set(day, []);
@@ -220,7 +220,7 @@ export class MeetingsStudentComponent implements OnInit {
             }
           }
         });
-  
+
         this.currentMonthDays = this.currentMonthDays.map(day => {
           if (typeof day.day === 'number' && daysWithMeetings.has(day.day)) {
             return {
@@ -230,7 +230,7 @@ export class MeetingsStudentComponent implements OnInit {
               isPast: false
             };
           }
-  
+
           return {
             ...day,
             hasMeeting: false,
@@ -269,7 +269,7 @@ export class MeetingsStudentComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false,
-      timeZone: 'UTC' 
+      timeZone: 'UTC'
     });
   }
 
