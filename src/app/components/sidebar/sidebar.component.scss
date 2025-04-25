@@ -19,6 +19,19 @@
     width: 65px; 
   }
   
+  .sidebar.closed .nav-section {
+    overflow: hidden; 
+  }
+
+  .sidebar.closed .category-title {
+    display: none;
+  }
+  
+  .sidebar.closed .category-title {
+    padding: 0 0 0 17px; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
   .logo-user-container {
     display: flex;
     flex-direction: row; 
@@ -51,12 +64,10 @@
     transition: opacity 0.3s ease-in-out;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
   
     .hello-text {
       font-size: 1rem;
-      margin-bottom: 5px;
-      color: white;
+      color: rgba(255, 255, 255, 0.8);
     }
   
     .user-name {
@@ -86,11 +97,30 @@
       opacity: 1;
     }
   }
+
+  .nav-section {
+    margin-top: 1.3rem;   
+    padding-top: .5rem;
+    flex-grow: 1;       
+    overflow-y: auto;  
+    overflow-x: hidden; 
+    scrollbar-width: thin; 
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .category-title {
+    white-space: nowrap; 
+    overflow: hidden; 
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 0 0 0 17px;
+  }
   
   .sidebar ul {
     list-style: none;
-    padding: 3px;
-    margin-top: 1.5rem;
+    padding: 5px;
   }
   
   .sidebar ul li {
@@ -103,12 +133,12 @@
   .sidebar ul li a {
     display: flex;
     align-items: center;
-    text-decoration: none;
+
     color: white;
     padding: 13px 19px;;
     position: relative; 
     font-weight: 400;
-    font-size: 14px;
+    font-size: 12px;
     transition: all 0.5s ease-in-out;
     overflow: visible;
   }
@@ -132,8 +162,8 @@
   }
 
   .sidebar svg {
-    width: 20px;  
-    height: 20px;
+    width: 18px;  
+    height: 18px;
     margin-right: 12px; 
     fill: #e8eaed; 
   }
@@ -181,19 +211,15 @@
   }
 
   .logout svg {
-    height: 20px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
     margin-right: 12px;
     fill: #e8eaed;
-  }
-
-  .logout i {
-    font-size: 18px;
-    margin-right: 15px; 
   }
   
   .logout .link-text {
     opacity: 1;
+    font-size: 12px;
     transition: opacity 0.3s ease;
   }
   
@@ -237,23 +263,8 @@
     }
 
     .logo-user-container {
-      display: flex;
-      flex-direction: row; 
-      justify-content: flex-start;
-      align-items: center;
       padding: 12px;
-      width: 100%; 
       margin-top: 20px;
-    }
-  
-    .logo-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-  
-      img {
-        width: 50px;
-      }
     }
   
     .user-info {
@@ -262,11 +273,6 @@
       .hello-text {
         font-size: 1.1rem;
         margin-bottom: 0px;
-      }
-    
-      .user-name {
-        font-size: 1rem;
-        font-weight: 500;
       }
     
     }
@@ -300,16 +306,6 @@
       font-size: .9rem;
     }
 
-    .logout a:hover::before {
-      width: 301px; 
-      background: rgba(255, 255, 255, 0.1); 
-    }
-
-    .logout i{
-      font-size: 13px;
-      margin-right: 15px;
-    }
-
 }
 
 @media (max-width: 492px) {
@@ -333,17 +329,12 @@
         width: 300px; 
     }
 
-    .sidebar ul {
-      margin-top: 1rem;
-      padding-top: 1rem;
-    }
-
     .sidebar ul li a .link-text {
-      font-size: 1rem; 
+      font-size: .8rem; 
     }
 
     .sidebar ul li a {
-      padding: 12px;
+      padding: 12px; 
     }
 
     .sidebar svg {
