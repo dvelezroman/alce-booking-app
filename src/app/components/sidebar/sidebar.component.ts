@@ -31,6 +31,7 @@ export class SidebarComponent implements OnInit {
   isAdmin: boolean = false;
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
+  categoryStates: Record<string, boolean> = {};
 
   navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
     { icon: 'home', text: 'Inicio', route: '/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
@@ -52,6 +53,7 @@ export class SidebarComponent implements OnInit {
 
   navGrouped: {
     title: string;
+    icon: string;
     items: { icon: string; text: string; route: string; roles: UserRole[] }[];
   }[] = [];
 
@@ -77,52 +79,63 @@ export class SidebarComponent implements OnInit {
   
     const grouped = [
       {
-        title: 'Principal',
-        items: [this.findNavItem('home')].filter(item => item.roles.includes(role))
+        title: 'Inicio',
+        icon: 'home',
+        items: [this.findNavItemByRoute('/home')].filter(item => item.roles.includes(role))
       },
       {
         title: 'Clases y Agendamientos',
+        icon: 'event',
         items: [
-          this.findNavItem('event'),
-          this.findNavItem('booking'),
-          this.findNavItem('group'),
-          this.findNavItem('video_call')
+          this.findNavItemByRoute('/meetings-student'),
+          this.findNavItemByRoute('/booking'),
+          this.findNavItemByRoute('/searching-meeting'),
+          this.findNavItemByRoute('/searching-meeting-instructor')
         ].filter(item => item.roles.includes(role))
       },
       {
         title: 'Gestión Académica',
+        icon: 'school',
         items: [
-          this.findNavItem('school'),
-          this.findNavItem('asistencias-student'),
-          this.findNavItem('asistencias-instructor'),
-          this.findNavItem('create')
+          this.findNavItemByRoute('/searching-students'),
+          this.findNavItemByRoute('/asistencias-alumnos'),
+          this.findNavItemByRoute('/asistencias-instructor'),
+          this.findNavItemByRoute('/create-students'),
+          this.findNavItemByRoute('/create-instructors')
         ].filter(item => item.roles.includes(role))
       },
       {
         title: 'Gestión de Eventos',
-        items: [this.findNavItem('history')].filter(item => item.roles.includes(role))
+        icon: 'history',
+        items: [this.findNavItemByRoute('/processed-events')].filter(item => item.roles.includes(role))
       },
       {
         title: 'Administración de Recursos',
+        icon: 'link',
         items: [
-          this.findNavItem('link'),
-          this.findNavItem('stages')
+          this.findNavItemByRoute('/link'),
+          this.findNavItemByRoute('/stage')
         ].filter(item => item.roles.includes(role))
       },
       {
         title: 'Reportes y Configuración',
+        icon: 'config',
         items: [
-          this.findNavItem('reportes'),
-          this.findNavItem('config')
+          this.findNavItemByRoute('/reports'),
+          this.findNavItemByRoute('/feature-flag')
         ].filter(item => item.roles.includes(role))
       }
     ];
   
     this.navGrouped = grouped.filter(group => group.items.length > 0);
+
+    for (const group of this.navGrouped) {
+      this.categoryStates[group.title] = false;
+  }
   }
 
-  findNavItem(iconName: string) {
-    return this.navItems.find(item => item.icon === iconName)!;
+  findNavItemByRoute(route: string) {
+    return this.navItems.find(item => item.route === route)!;
   }
 
   openSidebar(event: Event) {
@@ -133,6 +146,12 @@ export class SidebarComponent implements OnInit {
   closeSidebar(event: Event) {
     event.stopPropagation();
     this.isSidebarClosed = true;
+  
+    for (const title in this.categoryStates) {
+      if (this.categoryStates.hasOwnProperty(title)) {
+        this.categoryStates[title] = false;
+      }
+    }
   }
 
   openLogoutModal(): void {
@@ -166,6 +185,16 @@ export class SidebarComponent implements OnInit {
 
     if (!isClickInsideSidebar && window.innerWidth <= 768) {
       this.isSidebarClosed = true;
+    }
+  }
+
+  toggleCategory(title: string) {
+    for (const key in this.categoryStates) {
+      if (key === title) {
+        this.categoryStates[key] = !this.categoryStates[key];
+      } else {
+        this.categoryStates[key] = false;
+      }
     }
   }
 

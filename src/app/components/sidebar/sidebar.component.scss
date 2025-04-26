@@ -1,5 +1,5 @@
 .sidebar {
-    width: 260px;
+    width: 270px;
     background: linear-gradient(45deg, #7743a8, #4a90e2);
     color: white;
     height: 100vh;
@@ -24,12 +24,20 @@
   }
 
   .sidebar.closed .category-title {
-    display: none;
-  }
-  
-  .sidebar.closed .category-title {
-    padding: 0 0 0 17px; 
+    opacity: 0;
+    visibility: hidden;
+    padding: 0 0 0 17px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .sidebar.closed .category-header span {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .sidebar.closed .category-header svg {
+    opacity: 1;
+    visibility: visible;
   }
 
   .logo-user-container {
@@ -110,6 +118,55 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   }
 
+  .category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 17px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: bold;
+    white-space: nowrap;      
+    overflow: hidden;           
+    transition: background-color 0.3s ease;
+  }
+  
+  .sidebar .nav-group.active .group-list {
+    max-height: 500px; 
+    opacity: 1;
+  }
+  
+  .category-header svg {
+    width: 18px;
+    height: 18px;
+    margin-left: 5px; 
+    margin-right: 8px;
+    fill: #e8eaed;
+    flex-shrink: 0;
+  }
+
+  .category-header span {
+    flex: 1;
+    text-align: left;
+    white-space: nowrap;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .category-header .chevron-icon {
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+  }
+  
+  .category-header.collapsed .chevron-icon {
+    transform: rotate(0deg);
+  }
+
+  .category-header:not(.collapsed) .chevron-icon {
+    transform: rotate(-180deg); 
+  }
+
   .category-title {
     white-space: nowrap; 
     overflow: hidden; 
@@ -131,9 +188,9 @@
   }
   
   .sidebar ul li a {
+    width: 100%;
     display: flex;
     align-items: center;
-
     color: white;
     padding: 13px 19px;;
     position: relative; 
@@ -157,17 +214,10 @@
   }
   
   .sidebar ul li a:hover::before {
-    width: 261px; 
+    width: 271px; 
     background: rgba(255, 255, 255, 0.1); 
   }
 
-  .sidebar svg {
-    width: 18px;  
-    height: 18px;
-    margin-right: 12px; 
-    fill: #e8eaed; 
-  }
-  
   .sidebar ul li a .link-text {
     opacity: 1;
     white-space: nowrap;

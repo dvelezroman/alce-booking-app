@@ -2,10 +2,10 @@
   class="sidebar"
   [class.closed]="isSidebarClosed"
   (mouseleave)="closeSidebar($event)"
-  (mouseover)="openSidebar($event)">
+  (mouseover)="openSidebar($event)"
+>
 
   <div class="logo-user-container">
-
     <div class="logo-container">
       <img src="/assets/logo header.png" alt="Logo">
     </div>
@@ -24,147 +24,97 @@
   <div class="nav-section">
     <ng-container *ngFor="let group of navGrouped">
       <div class="nav-group">
-      <div class="category-title" *ngIf="!isSidebarClosed">
-        {{ group.title }}
-      </div>
+        <div
+          class="category-header"
+          [class.closed]="isSidebarClosed"
+          (click)="toggleCategory(group.title)"
+          [class.collapsed]="!categoryStates[group.title]"
+        >
+          <ng-container [ngSwitch]="group.icon">
+            
+            <ng-container *ngSwitchCase="'home'">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#e8eaed" viewBox="0 -960 960 960">
+                <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
+              </svg>
+            </ng-container>
 
-      <ul class="group-list">
-        <li *ngFor="let item of group.items">
-          <a *ngIf="item.roles.includes(userData?.role || UserRole.STUDENT)" [routerLink]="item.route" (click)="closeSidebar($event)">
+            <ng-container *ngSwitchCase="'event'">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#e8eaed" viewBox="0 -960 960 960">
+                <path d="M280-640h400v-80H280v80Zm0 240h400v-80H280v80Zm0 240h250q-3-20-2.5-40t4.5-40H280v80Zm440 80-80-80h-80v-80h80l80-80v240ZM160-120q-33 0-56.5-23.5T80-200v-560q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v294q-17-6-34.5-10.5T810-486v-274H150v520h330q-2 10-2 20t2 20H160Zm320-360Z"/>
+              </svg>
+            </ng-container>
 
-            <ng-container [ngSwitch]="item.icon">
-              <ng-container *ngSwitchCase="'home'">
-                <!-- Icono Home -->
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
-                </svg>
-              </ng-container>
-    
-              <ng-container *ngSwitchCase="'event'">
-                <!-- Icono Event -->
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="M280-640h400v-80H280v80Zm0 240h400v-80H280v80Zm0 240h250q-3-20-2.5-40t4.5-40H280v80Zm440 80-80-80h-80v-80h80l80-80v240ZM160-120q-33 0-56.5-23.5T80-200v-560q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v294q-17-6-34.5-10.5T810-486v-274H150v520h330q-2 10-2 20t2 20H160Zm320-360Z"/>
-                </svg>
-              </ng-container>
-    
-              <ng-container *ngSwitchCase="'history'">
-                <!-- Icono History -->
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="M480-120q-75 0-140.5-28.5T225-225q-49-49-77-114.5T120-480h80q0 117 81.5 198.5T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-66 0-123.5 29T259-656h101v80H160v-200h80v64q42-42 99-66t121-24q75 0 140.5 28.5T735-735q49 49 77 114.5T840-480q0 75-28.5 140.5T735-225q-49 49-114.5 77T480-120Zm40-240-120-120v-240h80v200l100 100-60 60Z"/>
-                </svg>
-              </ng-container>
-    
-              <ng-container *ngSwitchCase="'booking'">
-                <!-- Icono Booking -->
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="M200-640h560v-80H200v80Zm0 0v-80 80Zm0 560q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v227q-19-9-39-15t-41-9v-43H200v400h252q7 22 16.5 42T491-80H200Zm520 40q-83 0-141.5-58.5T520-240q0-83 58.5-141.5T720-440q83 0 141.5 58.5T920-240q0 83-58.5 141.5T720-40Zm67-105 28-28-75-75v-112h-40v128l87 87Z"/>
-                </svg>
-              </ng-container>
-    
-              <ng-container *ngSwitchCase="'group'">
-                <!-- Icono Meetings -->
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm0-80h480v-640h-80v280l-100-60-100 60v-280H240v640Zm0 0v-640 640Zm200-360 100-60 100 60-100-60-100 60Z"/>
-                </svg>
-              </ng-container>
-
-              <!-- Icono Students -->
-              <ng-container *ngSwitchCase="'school'">
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <ng-container *ngSwitchCase="'school'">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#e8eaed" viewBox="0 -960 960 960">
                 <path d="M360-240ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q32 0 64.5 3.5T489-425q-13 17-22.5 35.5T451-351q-23-5-45.5-7t-45.5-2q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32h323q4 22 11 42t18 38H40Zm320-320q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm400-160q0 66-47 113t-113 47q-11 0-28-2.5t-28-5.5q27-32 41.5-71t14.5-81q0-42-14.5-81T544-792q14-5 28-6.5t28-1.5q66 0 113 47t47 113Zm-400 80q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm320 440q34 0 56.5-20t23.5-60q1-34-22.5-57T680-360q-34 0-57 23t-23 57q0 34 23 57t57 23Zm0 80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 23-5.5 43.5T818-198L920-96l-56 56-102-102q-18 11-38.5 16.5T680-120Z"/>
               </svg>
-              </ng-container>
-              
-              <!-- Create student/admin/instructor -->
-              <ng-container *ngSwitchCase="'create'">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
-                </svg>
-                </ng-container>
-
-              <!-- Icono para la Asistencia -->
-              <ng-container *ngSwitchCase="'asistencias-student'">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="M80-160v-112q0-33 17-62t47-44q51-26 115-44t141-18q30 0 58.5 3t55.5 9l-70 70q-11-2-21.5-2H400q-71 0-127.5 17T180-306q-9 5-14.5 14t-5.5 20v32h250l80 80H80Zm542 16L484-282l56-56 82 82 202-202 56 56-258 258ZM400-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm10 240Zm-10-320q33 0 56.5-23.5T480-640q0-33-23.5-56.5T400-720q-33 0-56.5 23.5T320-640q0 33 23.5 56.5T400-560Zm0-80Z"/>
-                </svg>
-              </ng-container>
-
-              <ng-container *ngSwitchCase="'asistencias-instructor'">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="M240-320h480v-80H240v80Zm0-160h480v-80H240v80Zm0-160h480v-80H240v80ZM160-120v-720h640v720H160Zm80-80h480v-560H240v560Zm0 0v-560 560Z"/>
-                </svg>
-              </ng-container>
-
-                <!-- Icono para la página de Links -->
-              <ng-container *ngSwitchCase="'link'">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/>
-                </svg>
-              </ng-container>
-
-              <!-- Icono Stages -->
-              <ng-container *ngSwitchCase="'stages'">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="m136-240-56-56 296-298 160 160 208-206H640v-80h240v240h-80v-104L536-320 376-480 136-240Z"/>
-                </svg>
-              </ng-container>
-
-              <!-- Icono para Meetings del Instructor -->
-              <ng-container *ngSwitchCase="'video_call'">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="M200-640h560v-80H200v80Zm0 0v-80 80Zm0 560q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v227q-19-9-39-15t-41-9v-43H200v400h252q7 22 16.5 42T491-80H200Zm520 40q-83 0-141.5-58.5T520-240q0-83 58.5-141.5T720-440q83 0 141.5 58.5T920-240q0 83-58.5 141.5T720-40Zm67-105 28-28-75-75v-112h-40v128l87 87Z"/>
-                </svg>
-              </ng-container>
-
-              <!-- Icono para Reportes -->
-              <ng-container *ngSwitchCase="'reportes'">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="M320-480v-80h320v80H320Zm0-160v-80h320v80H320Zm-80 240h300q29 0 54 12.5t42 35.5l84 110v-558H240v400Zm0 240h442L573-303q-6-8-14.5-12.5T540-320H240v160Zm480 80H240q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80Zm-480-80v-640 640Zm0-160v-80 80Z"/>
-                </svg>
-              </ng-container>
-              <!-- Icono para configuración -->
-              <ng-container *ngSwitchCase="'config'">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                  <path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"/>
-                </svg>
-              </ng-container>
             </ng-container>
-            <span class="link-text">{{ item.text }}</span>
-            
-          </a>
-        </li>
-      </ul>
+
+            <ng-container *ngSwitchCase="'history'">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#e8eaed" viewBox="0 -960 960 960">
+                <path d="M480-120q-75 0-140.5-28.5T225-225q-49-49-77-114.5T120-480h80q0 117 81.5 198.5T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-66 0-123.5 29T259-656h101v80H160v-200h80v64q42-42 99-66t121-24q75 0 140.5 28.5T735-735q49 49 77 114.5T840-480q0 75-28.5 140.5T735-225q-49 49-114.5 77T480-120Zm40-240-120-120v-240h80v200l100 100-60 60Z"/>
+              </svg>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'link'">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#e8eaed" viewBox="0 -960 960 960">
+                <path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/>
+              </svg>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'config'">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#e8eaed" viewBox="0 -960 960 960">
+                <path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"/>
+              </svg>
+            </ng-container>
+
+          </ng-container>
+
+          <span>{{ group.title }}</span>
+          <i class="fas fa-chevron-down chevron-icon"></i>
+        </div>
+
+        <ul *ngIf="categoryStates[group.title]" class="group-list">
+          <li *ngFor="let item of group.items">
+            <a
+              *ngIf="item.roles.includes(userData?.role || UserRole.STUDENT)"
+              [routerLink]="item.route"
+              (click)="closeSidebar($event)"
+            >
+              <span class="link-text">{{ item.text }}</span>
+            </a>
+          </li>
+        </ul>
+
       </div>
     </ng-container>
   </div>
 
   <div class="logout">
     <a (click)="openLogoutModal()">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#e8eaed" viewBox="0 -960 960 960">
         <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/>
       </svg>
       <span class="link-text">Salir</span>
     </a>
   </div>
+
 </div>
 
-
-<!-- Flecha para abrir el sidebar -->
 <div
   class="arrow-icon"
   *ngIf="isSidebarClosed"
-  (click)="openSidebar($event)">
+  (click)="openSidebar($event)"
+>
   <i class="fas fa-chevron-right"></i>
 </div>
-
 
 <app-modal
   [showModal]="modalConfig.show"
   [message]="modalConfig.message"
-  [isError]="false"  
-  [isInfo]="true"  
+  [isError]="false"
+  [isInfo]="true"
   [showButtons]="true"
   (confirmAction)="modalConfig.confirm && modalConfig.confirm()"
-  (close)="modalConfig.close()">
-</app-modal>
-
+  (close)="modalConfig.close()"
+/>
