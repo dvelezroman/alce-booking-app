@@ -69,6 +69,10 @@ export class SearchingMeetingComponent implements OnInit {
     })
   }
 
+  get totalSelectedMeetings(): number {
+    return this.selectedMeetingIds.length;
+  }
+
   openModal(): void {
     this.selectedInstructor = null;
     this.isModalOpen = true;

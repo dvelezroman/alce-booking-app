@@ -187,7 +187,7 @@ export class MeetingsStudentComponent implements OnInit {
   }
 
   getStudentMeetings(selectedDate: Date) {
-    const now = DateTime.now().setZone('utc').startOf('day');
+    const now = DateTime.now().setZone('America/Guayaquil').startOf('day');
     const until = now.plus({ days: 20 });
 
     this.bookingService.searchMeetings({
@@ -205,7 +205,7 @@ export class MeetingsStudentComponent implements OnInit {
             ? meeting.date
             : meeting.date.toISOString();
 
-          const meetingDate = DateTime.fromISO(rawDate, { zone: 'utc' }).startOf('day');
+            const meetingDate = DateTime.fromISO(rawDate, { zone: 'America/Guayaquil' }).startOf('day');
 
           if (meetingDate >= now && meetingDate <= until) {
             const day = meetingDate.day;
@@ -284,5 +284,18 @@ export class MeetingsStudentComponent implements OnInit {
       ? DateTime.fromISO(date, { zone: 'utc' }).startOf('day')
       : DateTime.fromJSDate(date).startOf('day');
     return meetingDate < now;
+  }
+
+  getAssistanceText(item: MeetingDTO): string {
+    const now = DateTime.now().setZone('America/Guayaquil');
+    const meetingDate = DateTime.fromISO(item.localdate.toString(), { zone: 'America/Guayaquil' });
+  
+    if (meetingDate > now) {
+      return '-';
+    }
+    if (item.present === false) {
+    return 'No asistió';
+    }
+    return 'Asistió';
   }
 }

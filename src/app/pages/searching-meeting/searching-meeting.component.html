@@ -123,6 +123,15 @@
 
     <!-- Resultados de la búsqueda -->
     <div class="block-results">
+      <div *ngIf="meetings.length > 0" class="info-count total-results-count">
+        <p><strong>Resultado:</strong> {{ meetings.length }}</p>
+      </div>
+      
+      <div *ngIf="meetings.length > 0" class="info-count selected-count">
+        <p><strong>Estudiante{{ totalSelectedMeetings === 1 ? '' : 's' }} Seleccionado{{ totalSelectedMeetings === 1 ? '' : 's' }}:</strong> 
+          <span class="count-number">{{ totalSelectedMeetings }}</span>
+        </p>
+      </div>
       <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
         No hay meetings para el rango asignado.
         <span class="icon-container">
@@ -150,7 +159,11 @@
           <tbody>
             <tr *ngFor="let meeting of meetings">
               <td>
-                <input type="checkbox" [checked]="selectedMeetingIds.includes(meeting.id)" (change)="toggleSelection(meeting.id)" />
+                <input 
+                    type="checkbox" 
+                    [checked]="selectedMeetingIds.includes(meeting.id)" 
+                    (change)="toggleSelection(meeting.id)" 
+                    [disabled]="meeting.link"/>
               </td>
               <td>{{ meeting.stage?.number || 'Stage no disponible' }}</td>
               <td>{{ meeting.category || 'Categoría no disponible' }}</td>
@@ -180,7 +193,12 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Asignar Link</p>
+        <p class="modal-card-title">
+          Asignar Link 
+          <span *ngIf="totalSelectedMeetings > 0" class="selected-count-modal">
+            - {{ totalSelectedMeetings }} Estudiante{{ totalSelectedMeetings > 1 ? 's' : '' }} Seleccionado{{ totalSelectedMeetings > 1 ? 's' : '' }}
+          </span>
+        </p>
       </header>
       <section class="modal-card-body">
         <!-- Primer bloque: Input para el link -->

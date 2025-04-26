@@ -38,8 +38,8 @@ export class SidebarComponent implements OnInit {
     { icon: 'booking', text: 'Agendar', route: '/booking', roles: [UserRole.STUDENT] },
     { icon: 'group', text: 'Agenda', route: '/searching-meeting', roles: [UserRole.ADMIN] },
     { icon: 'school', text: 'Usuarios', route: '/searching-students', roles: [UserRole.ADMIN] },
-    { icon: 'asistencias', text: 'Asistencias', route: '/asistencias-alumnos', roles: [UserRole.ADMIN] },
-    { icon: 'asistencias', text: 'Asistencias Instructores', route: '/asistencias-instructor', roles: [UserRole.ADMIN] },
+    { icon: 'asistencias-student', text: 'Asistencias Estudiantes', route: '/asistencias-alumnos', roles: [UserRole.ADMIN] },
+    { icon: 'asistencias-instructor', text: 'Asistencias Instructores', route: '/asistencias-instructor', roles: [UserRole.ADMIN] },
     { icon: 'link', text: 'Enlaces', route: '/link', roles: [UserRole.ADMIN] },
     { icon: 'stages', text: 'Stages', route: '/stage', roles: [UserRole.ADMIN] },
     { icon: 'create', text: 'Crear Estudiante', route: '/create-students', roles: [UserRole.ADMIN] },
@@ -93,7 +93,8 @@ export class SidebarComponent implements OnInit {
         title: 'Gestión Académica',
         items: [
           this.findNavItem('school'),
-          this.findNavItem('asistencias'),
+          this.findNavItem('asistencias-student'),
+          this.findNavItem('asistencias-instructor'),
           this.findNavItem('create')
         ].filter(item => item.roles.includes(role))
       },
