@@ -32,6 +32,7 @@ export class SidebarComponent implements OnInit {
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
   categoryStates: Record<string, boolean> = {};
+  homeNavItem: { icon: string; text: string; route: string; roles: UserRole[] } | null = null;
 
   navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
     { icon: 'home', text: 'Inicio', route: '/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
@@ -76,13 +77,14 @@ export class SidebarComponent implements OnInit {
     });
   
     const role = this.userData?.role || UserRole.STUDENT;
+
+    const homeItem = this.findNavItemByRoute('/home');
+    if (homeItem && homeItem.roles.includes(role)) {
+      this.homeNavItem = homeItem;
+    }
   
     const grouped = [
-      {
-        title: 'Inicio',
-        icon: 'home',
-        items: [this.findNavItemByRoute('/home')].filter(item => item.roles.includes(role))
-      },
+
       {
         title: 'Clases y Agendamientos',
         icon: 'event',
