@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { UserDto, UserRole } from '../../services/dtos/user.dto';
 import { Observable } from 'rxjs';
@@ -32,6 +32,7 @@ export class SidebarComponent implements OnInit {
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
   categoryStates: Record<string, boolean> = {};
+  currentRoute: string = '';
   homeNavItem: { icon: string; text: string; route: string; roles: UserRole[] } | null = null;
 
   navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
@@ -75,6 +76,13 @@ export class SidebarComponent implements OnInit {
     this.isAdmin$.subscribe(state => {
       this.isAdmin = state;
     });
+
+    this.currentRoute = this.router.url;
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentRoute = event.urlAfterRedirects;
+      }
+    });
   
     const role = this.userData?.role || UserRole.STUDENT;
 
@@ -82,6 +90,7 @@ export class SidebarComponent implements OnInit {
     if (homeItem && homeItem.roles.includes(role)) {
       this.homeNavItem = homeItem;
     }
+    
   
     const grouped = [
 
@@ -129,12 +138,17 @@ export class SidebarComponent implements OnInit {
       }
     ];
   
-    this.navGrouped = grouped.filter(group => group.items.length > 0);
+      this.navGrouped = grouped.filter(group => group.items.length > 0);
 
-    for (const group of this.navGrouped) {
-      this.categoryStates[group.title] = false;
+      for (const group of this.navGrouped) {
+        this.categoryStates[group.title] = false;
+    }
   }
+  
+  isCategoryActive(items: { icon: string; text: string; route: string; roles: UserRole[] }[]): boolean {
+    return items.some(item => this.currentRoute === item.route || this.currentRoute.startsWith(item.route + '/'));
   }
+  
 
   findNavItemByRoute(route: string) {
     return this.navItems.find(item => item.route === route)!;
