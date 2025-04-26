@@ -65,11 +65,11 @@ button .material-icons {
   border-color: #7743a8;
 }
 
-/* Tabla */
 .table-container {
   width: 100%;
   margin: auto;
-  overflow-x: auto; 
+  max-height: 600px; 
+  overflow-x: auto;
 }
 
 .table {
@@ -77,11 +77,31 @@ button .material-icons {
   margin-top: 1.5rem;
   margin-bottom: 2rem;
   width: 90%;
-  min-width: 750px; 
+  min-width: 750px;
+  background-color: #ffffff;
   table-layout: fixed;
   border-collapse: collapse;
   border-radius: 5px 5px 2px 2px;
   overflow: hidden;
+}
+
+.table thead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table tbody {
+  display: block;
+  max-height: 475px; 
+  overflow-y: auto;
+  width: 100%;
+}
+
+.table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
 .table th, .table td {
@@ -90,32 +110,36 @@ button .material-icons {
 }
 
 .table th {
-  background-color: #4390e8;
-  color: white;
-  padding: .7rem 0.5rem;
+  position: sticky;
+  top: 0;
+  background-color: #dfecfb;
+  color: #333;
+  padding: .55rem;
   font-size: 0.9rem;
   border-bottom: .5px solid #eeeeee;
+  z-index: 2;
 }
 
 .table td {
   background-color: white;
   color: rgb(63, 63, 63);
-  padding: .7rem 0.4rem;
+  padding: .55rem;
   font-size: 0.9rem;
   border: 1px solid #f4f4f4;
-  white-space: nowrap;      
-  overflow: hidden;        
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .table th:nth-child(1), 
 .table td:nth-child(1) {
-  width: 6%; 
+  width: 6%;
   min-width: 50px;
 }
 
-th:nth-child(4), td:nth-child(4) {
-width: 15%;
+.table th:nth-child(4), 
+.table td:nth-child(4) {
+  width: 15%;
 }
 
 .table tbody tr:nth-child(even) td {
@@ -123,12 +147,12 @@ width: 15%;
 }
 
 .purple-link {
-  color: purple; 
-  text-decoration: none; 
+  color: purple;
+  text-decoration: none;
 }
 
 .purple-link:hover {
-  text-decoration: underline; 
+  text-decoration: underline;
 }
 
 .buttons {

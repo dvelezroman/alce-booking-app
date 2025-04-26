@@ -67,56 +67,72 @@ button .material-icons {
   border-color: #7743a8;
 }
 
-// Table Styles
 .table-container {
   width: 100%;
   margin: auto;
-  margin-bottom: 1rem;
-  overflow-x: auto; 
+  margin-bottom: 1rem; 
+  overflow-x: auto;
 }
 
 .table {
-  margin: 0 auto;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
   width: 700px;
   min-width: 500px;
   max-width: 700px;
+  margin: 0 auto;
   table-layout: fixed;
   border-collapse: collapse;
   border-radius: 5px 5px 2px 2px;
   overflow: hidden;
 }
 
-.table th, 
+.table thead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table tbody {
+  display: block;
+  max-height: 550px; 
+  overflow-y: auto;
+  width: 100%;
+}
+
+.table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table th,
 .table td {
   text-align: center;
   vertical-align: middle;
 }
 
-/* Estilos para los encabezados (th) */
 .table th {
-  background-color: #4390e8;
-  color: white;
-  padding: .7rem .5rem;
-  font-size: .9rem;
+  position: sticky;
+  top: 0;
+  background-color: #dfecfb;
+  color: #333;
+  padding: 0.7rem 0.5rem;
+  font-size: 0.9rem;
   border-bottom: none;
+  z-index: 2;
 }
 
-/* Estilos para las celdas (td) */
 .table td {
   background-color: white;
   color: black;
   padding: 0.7rem 0.4rem;
-  font-size: .9rem;
-  border-bottom: .5px solid #dad8d8;
+  font-size: 0.9rem;
+  border-bottom: 0.5px solid #dad8d8;
 }
 
 .table tbody tr:nth-child(even) td {
   background-color: #fdfdfd;
 }
 
-/* Estilos para los botones */
 .buttons {
   display: flex;
   justify-content: center;
