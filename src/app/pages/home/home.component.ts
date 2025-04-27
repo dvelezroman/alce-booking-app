@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   isLoggedIn: boolean = false;
   userData$: Observable<UserDto | null>;
   isInstructor: boolean = false;
-  isStudent    = false;
+  isStudent: boolean  = false;
   instructorId: number | null = null;
 
   selectedMonth!: string;
@@ -67,11 +67,9 @@ export class HomeComponent implements OnInit {
     this.store.select(selectUserData).subscribe((userData: UserDto | null) => {
       if (userData && userData.instructor) {
         this.instructorId = userData.instructor.id;
-         //console.log('instructor ID:', this.instructorId);
          const today = new Date();
          this.getInstructorMeetings(today);
       } else {
-       // console.log('instructor ID no disponible');
       }
     });
 
