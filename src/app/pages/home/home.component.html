@@ -2,11 +2,17 @@
   <h1 class="home-title">Home</h1>
 </section>
 
-<section class="hero" *ngIf="!isInstructor">
-  <div *ngIf="!isLoggedIn" class="hero-button-container">
-    <a routerLink="/login" class="login-button">Ingresar</a>
-  </div>
-</section>
+<div class="hero-wrapper" *ngIf="!isInstructor">
+  
+  <div class="hero-background"></div>
+
+  <section class="hero">
+    <div *ngIf="!isLoggedIn" class="hero-button-container">
+      <a routerLink="/login" class="login-button">Ingresar</a>
+    </div>
+  </section>
+
+</div>
 
 <section class="date-time-selection shared-box-style" *ngIf="isInstructor">
   <div class="calendar-title">
