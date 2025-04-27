@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit {
   isLoggedIn: boolean = false;
   userData$: Observable<UserDto | null>;
   isInstructor: boolean = false;
+  isStudent    = false;
   instructorId: number | null = null;
 
   selectedMonth!: string;
@@ -76,10 +77,13 @@ export class HomeComponent implements OnInit {
 
     this.userData$.subscribe(user => {
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
+      this.isStudent    = user?.role === UserRole.STUDENT;     
       if (this.isInstructor) {
-        //console.log('Es un instructor:', user); 
         this.generateCurrentMonthDays();
       }
+    });
+    this.isLoggedIn$.subscribe(state => {
+      this.isLoggedIn = state;
     });
 
   }
