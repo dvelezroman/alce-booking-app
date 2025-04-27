@@ -229,6 +229,7 @@ export class HomeComponent implements OnInit {
   getInstructorMeetings(selectedDate: Date) {
     const month = selectedDate.getMonth();
     const year = selectedDate.getFullYear();
+    const now = new Date(); 
   
     this.bookingService.getInstructorMeetingsGroupedByHour({
       from: new Date(year, month, 1).toISOString(),
@@ -236,33 +237,31 @@ export class HomeComponent implements OnInit {
       instructorId: this.instructorId?.toString()
     }).subscribe({
       next: (meetings) => {
-        //console.log('Reuniones obtenidas para el instructor:', meetings);
         const daysWithMeetings = new Map<number, MeetingDTO[]>(); 
   
-        meetings.forEach((meeting: MeetingDTO) => {
-          const meetingDate = new Date(meeting.date);
-          if (meetingDate.getMonth() === month && meetingDate.getFullYear() === year) {
-            const day = meetingDate.getDate();
-            if (!daysWithMeetings.has(day)) {
-              daysWithMeetings.set(day, []);
+        meetings
+          .filter((meeting: MeetingDTO) => new Date(meeting.date) > now) 
+          .forEach((meeting: MeetingDTO) => {
+            const meetingDate = new Date(meeting.date);
+            if (meetingDate.getMonth() === month && meetingDate.getFullYear() === year) {
+              const day = meetingDate.getDate();
+              if (!daysWithMeetings.has(day)) {
+                daysWithMeetings.set(day, []);
+              }
+              daysWithMeetings.get(day)?.push(meeting); 
             }
-            daysWithMeetings.get(day)?.push(meeting); 
-          }
-        });
+          });
   
-        // Actualizar `currentMonthDays` con reuniones
         this.currentMonthDays = this.currentMonthDays.map(day => {
           if (typeof day.day === 'number' && daysWithMeetings.has(day.day)) {
             return {
               ...day,
               hasMeeting: true,
-              meetings: daysWithMeetings.get(day.day) || [] // Asignar reuniones
+              meetings: daysWithMeetings.get(day.day) || []
             };
           }
-          return { ...day, hasMeeting: false, meetings: [] }; // Día sin reuniones
+          return { ...day, hasMeeting: false, meetings: [] };
         });
-  
-        //console.log('Días actualizados con reuniones:', this.currentMonthDays);
       },
       error: (error) => console.error('Error al obtener reuniones:', error)
     });
