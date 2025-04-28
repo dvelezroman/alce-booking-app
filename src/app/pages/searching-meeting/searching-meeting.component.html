@@ -163,7 +163,7 @@
                     type="checkbox" 
                     [checked]="selectedMeetingIds.includes(meeting.id)" 
                     (change)="toggleSelection(meeting.id)" 
-                    [disabled]="meeting.link"/>
+                    [disabled]="meeting.linkOpened || meeting.present"/>
               </td>
               <td>{{ meeting.stage?.number || 'Stage no disponible' }}</td>
               <td>{{ meeting.category || 'Categoría no disponible' }}</td>
