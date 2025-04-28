@@ -72,7 +72,7 @@ export class SidebarComponent implements OnInit {
     this.userData$.subscribe(state => {
       this.userData = state;
     });
-  
+
     this.isAdmin$.subscribe(state => {
       this.isAdmin = state;
     });
@@ -83,22 +83,22 @@ export class SidebarComponent implements OnInit {
         this.currentRoute = event.urlAfterRedirects;
       }
     });
-  
+
     const role = this.userData?.role || UserRole.STUDENT;
 
     const homeItem = this.findNavItemByRoute('/home');
     if (homeItem && homeItem.roles.includes(role)) {
       this.homeNavItem = homeItem;
     }
-    
-  
+
+
     const grouped = [
 
       {
         title: 'Clases y Agendamientos',
         icon: 'event',
         items: [
-          this.findNavItemByRoute('/meetings-student'),
+          // this.findNavItemByRoute('/meetings-student'),
           this.findNavItemByRoute('/booking'),
           this.findNavItemByRoute('/searching-meeting'),
           this.findNavItemByRoute('/searching-meeting-instructor')
@@ -137,18 +137,18 @@ export class SidebarComponent implements OnInit {
         ].filter(item => item.roles.includes(role))
       }
     ];
-  
+
       this.navGrouped = grouped.filter(group => group.items.length > 0);
 
       for (const group of this.navGrouped) {
         this.categoryStates[group.title] = false;
     }
   }
-  
+
   isCategoryActive(items: { icon: string; text: string; route: string; roles: UserRole[] }[]): boolean {
     return items.some(item => this.currentRoute === item.route || this.currentRoute.startsWith(item.route + '/'));
   }
-  
+
 
   findNavItemByRoute(route: string) {
     return this.navItems.find(item => item.route === route)!;
@@ -162,7 +162,7 @@ export class SidebarComponent implements OnInit {
   closeSidebar(event: Event) {
     event.stopPropagation();
     this.isSidebarClosed = true;
-  
+
     for (const title in this.categoryStates) {
       if (this.categoryStates.hasOwnProperty(title)) {
         this.categoryStates[title] = false;
