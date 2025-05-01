@@ -979,9 +979,14 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
 
   canDeleteMeeting(meeting: MeetingDTO): boolean {
+    const utcNow = new Date();
+    const ecuadorNow = new Date(utcNow.getTime() - 5 * 60 * 60 * 1000); // subtract 5 hours
+    const meetingDate = new Date(meeting.localdate); // assuming ISO string or Date
+
     if (
       meeting.linkOpened ||
-      meeting.markAssistanceById
+      meeting.markAssistanceById ||
+      ecuadorNow > meetingDate
     ) {
       return false;
     }
