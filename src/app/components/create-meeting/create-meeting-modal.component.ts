@@ -30,6 +30,8 @@ export class CreateMeetingModalComponent implements OnInit {
   selectedStudent?: UserDto;
   showUserDropdown: boolean = false;
   searchInput$ = new Subject<string>();
+  showErrorToast = false;
+  errorToastMessage = '';
 
 
   constructor(private usersService: UsersService) {
@@ -83,8 +85,13 @@ export class CreateMeetingModalComponent implements OnInit {
   }
 
   createMeeting(): void {
-    if (!this.selectedStudent || !this.fromDate || !this.hour) {
-      console.error('Faltan datos para crear la reunión');
+    if (!this.selectedStudent || !this.instructorId || !this.fromDate || !this.hour) {
+      this.errorToastMessage = 'Faltan datos para crear la reunión';
+      this.showErrorToast = true;
+  
+      setTimeout(() => {
+        this.showErrorToast = false;
+      }, 3000);
       return;
     }
   

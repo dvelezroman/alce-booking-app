@@ -160,7 +160,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   
         setTimeout(() => {
           this.showSuccessToast = false;
-        }, 3000);
+        }, 2000);
       },
       error: () => {
         this.toastMessage = 'No se pudo crear la clase';
