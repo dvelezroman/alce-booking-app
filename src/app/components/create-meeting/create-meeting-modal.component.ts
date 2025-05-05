@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { debounceTime, Subject } from 'rxjs';
 import { UserDto } from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
+import { CreateMeetingDto } from '../../services/dtos/booking.dto';
+import { convertEcuadorDateToLocal, convertEcuadorHourToLocal, getTimezoneOffsetHours } from '../../shared/utils/dates.util';
+import { StudentClassification } from '../../services/dtos/student.dto';
 
 @Component({
   selector: 'app-create-meeting-modal',
@@ -14,7 +17,7 @@ import { UsersService } from '../../services/users.service';
 })
 
 export class CreateMeetingModalComponent implements OnInit {
-  @Output() studentSelected = new EventEmitter<UserDto>();
+  @Output() meetingCreated = new EventEmitter<CreateMeetingDto>();
   @Output() close = new EventEmitter<void>();
   @Input() fromDate?: string;
   @Input() from?: string;
@@ -24,8 +27,10 @@ export class CreateMeetingModalComponent implements OnInit {
 
   searchTerm: string = '';
   filteredUsers: UserDto[] = [];
+  selectedStudent?: UserDto;
   showUserDropdown: boolean = false;
   searchInput$ = new Subject<string>();
+
 
   constructor(private usersService: UsersService) {
     this.searchInput$
@@ -36,10 +41,9 @@ export class CreateMeetingModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('Instructor ID:', this.instructorId);
-    console.log('Fecha desde:', this.from);
-    console.log('Fecha hasta:', this.to);
-    console.log('Hora:', this.hour);
+    // console.log('Instructor ID:', this.instructorId);
+    // console.log('Fecha:', this.fromDate);
+    // console.log('Hora:', this.hour);
   }
 
   onSearchChange(term: string): void {
@@ -66,15 +70,51 @@ export class CreateMeetingModalComponent implements OnInit {
   }
 
   selectUser(user: UserDto): void {
+    this.selectedStudent = user;
     this.searchTerm = `${user.firstName} ${user.lastName}`;
     this.filteredUsers = [];
     this.showUserDropdown = false;
-    this.studentSelected.emit(user);
   }
 
   hideDropdown(): void {
     setTimeout(() => {
       this.showUserDropdown = false;
     }, 200);
+  }
+
+  createMeeting(): void {
+    if (!this.selectedStudent || !this.fromDate || !this.hour) {
+      console.error('Faltan datos para crear la reunión');
+      return;
+    }
+  
+    const [year, month, day] = this.fromDate.split('-').map(Number);
+    const formattedMonth = month.toString().padStart(2, '0');
+    const formattedDay = day.toString().padStart(2, '0');
+    const formattedHour = this.hour.toString().padStart(2, '0');
+  
+    const formattedDate = `${year}-${formattedMonth}-${formattedDay}T${formattedHour}:00:00-05:00`;
+  
+    const date = getTimezoneOffsetHours() !== 0
+      ? convertEcuadorDateToLocal(formattedDate)
+      : formattedDate;
+  
+    const hour = getTimezoneOffsetHours() !== 0
+      ? convertEcuadorHourToLocal(Number(this.hour))
+      : Number(this.hour);
+  
+    const meeting: CreateMeetingDto = {
+      studentId: this.selectedStudent.student!.id,
+      instructorId: this.instructorId,
+      stageId: this.selectedStudent.student!.stageId,
+      date,
+      hour,
+      localdate: formattedDate,
+      localhour: Number(this.hour),
+      mode: this.selectedStudent.student!.mode,
+      category: this.selectedStudent.student!.studentClassification ?? StudentClassification.ADULTS,
+    };
+  
+    this.meetingCreated.emit(meeting);
   }
 } 

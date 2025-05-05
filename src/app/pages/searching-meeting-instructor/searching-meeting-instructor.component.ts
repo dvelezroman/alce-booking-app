@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
+import { CreateMeetingDto, FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
 import { BookingService } from '../../services/booking.service';
 import { Store } from '@ngrx/store';
 import { UserDto } from '../../services/dtos/user.dto';
@@ -147,7 +147,30 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   }
 
   onCreateMeeting(): void {
-    console.log('Crear meeting...');
     this.showCreateModal = true;
+  }
+
+  handleMeetingCreated(meeting: CreateMeetingDto): void {
+    this.bookingService.bookMeeting(meeting).subscribe({
+      next: () => {
+        this.toastMessage = 'Clase creada exitosamente';
+        this.showSuccessToast = true;
+        this.showCreateModal = false;
+        this.fetchMeetings(this.filter);
+  
+        setTimeout(() => {
+          this.showSuccessToast = false;
+        }, 3000);
+      },
+      error: () => {
+        this.toastMessage = 'No se pudo crear la clase';
+        this.showSuccessToast = true;
+        this.showCreateModal = false;
+  
+        setTimeout(() => {
+          this.showSuccessToast = false;
+        }, 3000);
+      }
+    });
   }
 }

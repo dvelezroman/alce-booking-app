@@ -12,23 +12,19 @@
 .main-content {
   flex-grow: 1;
   overflow-y: auto;
-  transition: margin-left 0.3s ease, width 0.3s ease;
-  width: 100%; 
-}
-app-sidebar {
-  z-index: 1005; 
+  transition: width 0.5s ease;
+  width: 100%;
 }
 
-/* Cuando el sidebar está cerrado, el main-content tiene 70px de margen */
-.main-content.shrink {
-  margin-left: 250px; 
+app-sidebar {
+  z-index: 1000;
 }
 
 .main-content.full-width {
-  margin-left: 0; 
-  width: 100%; 
+  margin-left: 0;
+  width: 100%;
 }
-/* franja notificación offline */
+
 .connection-status {
   position: fixed;
   top: 0;
@@ -58,19 +54,4 @@ app-sidebar {
 .connection-status.show {
   opacity: 1;
   transform: translateY(0);
-}
-
-@media (min-width: 768px) {
-  .main-content {
-    margin-left: 0px; 
-  }
-
-  .main-content.shrink {
-    margin-left: 250px; 
-  }
-
-  .main-content.full-width {
-    margin-left: 0; 
-    width: 100%; 
-  }
 }
