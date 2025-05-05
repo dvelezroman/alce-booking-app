@@ -10,6 +10,7 @@ import { selectUserData } from '../../store/user.selector';
 import {Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
 import { DateTime } from 'luxon';
+import { CreateMeetingModalComponent } from '../../components/create-meeting/create-meeting-modal.component';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -17,7 +18,8 @@ import { DateTime } from 'luxon';
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    CreateMeetingModalComponent
   ],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'
@@ -30,6 +32,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   toastMessage: string = '';
   stages: Stage[] = [];
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
+  showCreateModal = false;
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -141,5 +144,10 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   closeToast() {
     this.showSuccessToast = false;
+  }
+
+  onCreateMeeting(): void {
+    console.log('Crear meeting...');
+    this.showCreateModal = true;
   }
 }

@@ -1,0 +1,54 @@
+<div class="modal is-active">
+    <div class="modal-background" (click)="close.emit()"></div>
+  
+    <div class="modal-card slide-up-animation">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Crear Nueva Clase</p>
+        <button class="delete" aria-label="close" (click)="close.emit()"></button>
+      </header>
+      <div class="selected-info">
+        <p> <strong>Fecha seleccionada:</strong> {{ fromDate || 'No asignada' }} </p>
+        <p> <strong>Hora seleccionada:</strong> {{ hour || 'No asignada' }}:00 </p>
+      </div>
+  
+      <section class="modal-card-body">
+        <div class="field">
+          <label class="label">Buscar estudiante</label>
+          <div class="control has-icons-left">
+            <input
+              class="input"
+              type="text"
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="onSearchChange($event)"
+              (focus)="showUserDropdown = true"
+              (blur)="hideDropdown()"
+              placeholder="Escribe el nombre del estudiante"
+              name="studentSearch"
+            />
+            <span class="icon is-left">
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+  
+          <div class="dropdown is-active" *ngIf="showUserDropdown && filteredUsers.length > 0">
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <a
+                  *ngFor="let user of filteredUsers"
+                  class="dropdown-item"
+                  (click)="selectUser(user)"
+                >
+                  {{ user.firstName }} {{ user.lastName }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <footer class="modal-card-foot buttons-footer">
+        <button class="button is-blue" (click)="close.emit()">Crear Clase</button>
+        <button class="button is-purple" (click)="close.emit()">Cancelar</button>
+      </footer>
+    </div>
+  </div>

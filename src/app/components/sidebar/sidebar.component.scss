@@ -12,11 +12,11 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start; 
-  transition: transform 0.3s ease, width 0.3s ease;
+  transition: transform 0.3s ease, width 0.6s ease;
 }
 
 .sidebar.closed {
-  width: 65px; 
+  width: 60px; 
 }
 
 .sidebar.closed .nav-section {
@@ -45,9 +45,9 @@
   flex-direction: row; 
   justify-content: flex-start;
   align-items: center;
-  padding: 7px;
+  padding: 5px;
   width: 100%; 
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .logo-container {
@@ -74,7 +74,7 @@
   overflow: hidden;
 
   .hello-text {
-    font-size: 1rem;
+    font-size: .9rem;
     color: rgba(255, 255, 255, 0.8);
   }
 
@@ -107,7 +107,7 @@
 }
 
 .nav-section {
-  margin-top: 1.3rem;   
+  margin-top: 1rem;   
   padding-top: .5rem;
   flex-grow: 1;       
   overflow-y: auto;  
@@ -127,35 +127,14 @@
   user-select: none;
   font-size: 13px;
   color: rgba(255, 255, 255, 0.7);
-  font-weight: bold;
   white-space: nowrap;      
   overflow: hidden;           
   transition: background-color 0.3s ease;
 }
 
-.category-header:hover:not(.active) {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
 .sidebar .nav-group.active .group-list {
   max-height: 500px; 
   opacity: 1;
-}
-
-.nav-item.active,
-.category-header.active {
-  position: relative;
-}
-
-.nav-item.active::before,
-.category-header.active::before {
-  content: '';
-  position: absolute;
-  inset: 5px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  z-index: -1;
 }
 
 .nav-item svg,
@@ -179,7 +158,7 @@
   flex: 1;
   text-align: left;
   white-space: nowrap;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:  visibility 0.3s ease;
 }
 
 .category-header .chevron-icon {
@@ -229,12 +208,7 @@
   color: #e8eaed;
   font-size: 0.95rem;
   text-decoration: none;
-  transition: background-color 0.3s ease;
   border-radius: 6px;
-}
-
-.nav-item:hover:not(.active) {
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .nav-item a {
@@ -251,26 +225,38 @@
   position: relative;
   font-weight: 400;
   font-size: 13px;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.3s ease-in-out;
   overflow: visible;
 }
 
-.sidebar ul li a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -5px;
-  width: 0px; 
-  height: 100%;
-  background: rgba(255, 255, 255, 0.0); 
-  backdrop-filter: blur(10px);  
-  transition: all 0.4s ease-in-out;
-  z-index: -1; 
+.sidebar ul li a,
+.nav-item,
+.category-header {
+  position: relative;
 }
 
+.nav-item.active,
+.category-header.active,
+.nav-item:hover:not(.active),
+.category-header:hover:not(.active),
+.sidebar ul li a:hover:not(.active) {
+  position: relative;
+}
+
+.nav-item.active::before,
+.category-header.active::before,
+.nav-item:hover:not(.active)::before,
+.category-header:hover:not(.active)::before,
 .sidebar ul li a:hover:not(.active)::before {
-  width: 281px;
-  background: rgba(255, 255, 255, 0.1);
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 5px;
+  right: 5px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  z-index: -1;
 }
 
 .sidebar ul li a .link-text {
@@ -305,10 +291,6 @@
   overflow: visible; 
   z-index: 1;
   transition: transform 0.3s ease;
-}
-
-.logout a:hover {
-  transform: scale(1.02); 
 }
 
 .logout a:hover {
@@ -352,101 +334,16 @@
   left: 0;
 }
 
-
   @media (max-width: 768px) {
-  .sidebar {
-      width: 300px; 
-  }
-
-  .sidebar ul li a:hover::before {
-    width: 301px; 
-    background: rgba(255, 255, 255, 0.1); 
-  }
 
   .sidebar.closed {
     width: 0px; 
-  }
-
-  .logo-user-container {
-    padding: 12px;
-    margin-top: 20px;
-  }
-
-  .user-info {
-    padding-left: 15px;
-  
-    .hello-text {
-      font-size: 1.1rem;
-      margin-bottom: 0px;
-    }
-  
-  }
-
-  .sidebar ul li a {
-      padding: 13px; 
-  }
-
-  .sidebar ul li a span {
-    font-size: 13px;
-    font-weight: 400;
-  }
-
-  .sidebar ul li a i {
-    font-size: 14px;
-    margin-right: 18px;
   }
 
   .arrow-icon {
     display: block;
     padding: 10px 14px ;
     font-size: 17px;
-  }
-
-  .logout {
-    padding: 19px; 
-  }
-
-  .logout a {
-    width: 120px;
-    font-size: .9rem;
-  }
-
-}
-
-@media (max-width: 492px) {
-  .logo-user-container{
-  margin-bottom: -1rem;
-  }
-  .hello-text {
-    font-size: 1.1rem;
-    margin-bottom: 2px;
-  }
-
-  .user-info .user-name {
-    font-size: 1rem;
-  }
-
-  .welcome-message .college-name {
-    font-size: .8rem;
-  }
-
-  .sidebar {
-      width: 300px; 
-  }
-
-  .sidebar ul li a .link-text {
-    font-size: .8rem; 
-  }
-
-  .sidebar ul li a {
-    padding: 12px; 
-  }
-
-  .sidebar svg {
-    width: 18px; 
-    height: 18px; 
-    margin-right: 12px;
-    fill: #e8eaed;
   }
 
 }
