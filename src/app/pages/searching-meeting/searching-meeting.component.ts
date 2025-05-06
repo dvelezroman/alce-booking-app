@@ -143,29 +143,29 @@ export class SearchingMeetingComponent implements OnInit {
       this.bookingService.updateMeetingLink(updateLinkParams).subscribe({
         next: response => {
           //console.log('Link asignado correctamente', response);
-          this.showToast('El link fue asignado', true);
+          this.showModalMessage('El link fue asignado correctamente.', false, false, true); 
           this.closeModal();
           this.selectedMeetingIds = [];
           this.fetchMeetings();
         },
         error: error => {
-          console.error('Error al asignar el link', error);
-          this.showToast('Error al asignar el link', false);
+          //console.error('Error al asignar el link', error);
+          this.showModalMessage('Error al asignar el link.', true);
           this.fetchMeetings();
         },
       });
     }
   }
 
-   showToast(message: string, isSuccess: boolean): void {
-    this.toastMessage = message;
-    this.toastType = isSuccess ? 'success' : 'error';
-    this.isToastVisible = true;
+  //  showToast(message: string, isSuccess: boolean): void {
+  //   this.toastMessage = message;
+  //   this.toastType = isSuccess ? 'success' : 'error';
+  //   this.isToastVisible = true;
 
-    setTimeout(() => {
-      this.isToastVisible = false;
-    }, 3000);
-  }
+  //   setTimeout(() => {
+  //     this.isToastVisible = false;
+  //   }, 3000);
+  // }
 
   openCommentModal(comment: string): void {
     // Logic to open the modal

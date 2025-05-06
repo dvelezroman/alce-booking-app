@@ -22,35 +22,35 @@
     z-index: 10; 
     text-align: center;
     font-family: 'Poppins', sans-serif; 
-    padding: 1.35rem 0;
+    padding: 1rem 0;
   }
 
   .title {
-    font-size: 1.8rem;
-    line-height: 1.5; 
+    font-size: 1.5rem;
+    line-height: 1.3; 
     color: #282828; 
     font-weight: bold;
   }
 
   .block-search {
     background-color:#ffffff;
-    padding: 2rem;
-    border-radius: 12px;
+    padding: 1.3rem;
+    border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     border: 1px solid rgb(203, 202, 202); 
     transition: all 0.3s ease;
     width: 100%;
-    max-width: 600px;
+    max-width: 550px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 10rem ;
+    margin-top: 8rem ;
     margin-bottom: 1.5rem;
   }
   
   .label {
     color: #6a6767; 
     font-weight: bold; 
-    font-size: .9rem;
+    font-size: .8rem;
     margin-left: 8px;
   }
   
@@ -59,18 +59,17 @@
   }
 
   .input {
-    padding: 0.5rem 0.75rem; 
-    font-size: 0.875rem;
+    padding: 0 0.75rem; 
+    font-size: 0.8rem;
     background-color: #ffffff; 
     color: #333333; 
-    height: 40px;
+    height: 38px;
     border: 1px solid rgb(213, 213, 213);  
     border-radius: 5px;
   }
 
   .input[type="date"] {
     position: relative;
-    padding-right: 2rem; 
     background-color: #ffffff; 
   }
   
@@ -89,18 +88,18 @@
     transform: translateY(-50%);
     opacity: 0.5; 
     pointer-events: none;
-    font-size: 1.3rem;
+    font-size: 1rem;
     color: #565657;
   }
 
   .select select {
     background: white;
     color: #403f3f; 
-    padding: 0.25rem 0.75rem; 
+    padding: 0 0.75rem; 
     border: 1px solid rgb(213, 213, 213); 
     border-radius: 5px;
-    font-size: 0.875rem;
-    height: 40px;
+    font-size: 0.8rem;
+    height: 38px;
   }
 
   .select.is-fullwidth {
@@ -128,19 +127,10 @@
   }
 /* MENSAJE CUANDO NO HAY RESULTADO DE MEETING */
   .no-results-message {
-    color: #fd3c3c;
+    color: #6a6969;
     text-align: center;
-    font-size: .95rem;
-    margin-top: 3rem; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem; 
-  }
-
-  .no-results-message .icon-container i {
-    color: #cccccc; 
-    font-size: 1.7rem; 
+    font-size: .9rem;
+    margin-top: 2rem; 
   }
 
 /* Estilo para el bloque del botón link */
@@ -270,338 +260,154 @@
   accent-color: #007bff;
 }
 
-/* estilos del modal para asignar el link a la meeting */
-.modal.is-active {
-  position: fixed; 
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 2000;
+.modal {
+  display: none;
+  &.is-active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1050;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
 }
 
 .modal-background {
-  z-index: 1999;
-  background-color: rgba(135, 135, 135, 0.159);
-  backdrop-filter: blur(5px);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(50, 50, 50, 0.3);
+  z-index: 0;
 }
 
-  .modal-card {
-    position: relative;
-    width: 450px;
-    background-color: #ffffff; 
-    border-radius: 8px;
-    padding: .5rem 0rem;
-    box-shadow: 1px 4px 10px rgba(0, 0, 0, 0.3); 
-    z-index: 2001;
-  }
-
-  .modal-card-title {
-    color: #333; 
-    font-weight: 500;
-    font-size: 1.2rem;
-    margin-bottom: .5rem;
-  }
-
-  
-  .modal-card-head {
-    background-color: transparent; 
-    padding-top: 1.5rem;
-    padding-bottom: 0rem;
-  }
-  
-  .selected-count-modal {
-    font-size: 0.9rem;
-    color: #363636; 
-    font-weight: 500;
-    margin-left: 8px;
-  }
-
-  .modal-card-body {
-    background-color: transparent; 
-    padding: .8rem 1.45rem;
-  }
-
-  .field {
-    margin-bottom: 0rem; 
-  }
-
-  .modal-card-body .input {
-    width: 100%; 
-    margin: 0 auto;
-    font-size: 1.05rem;
-    padding: 5px .7rem;
-  }
-
-  .modal-card-foot {
-    display: flex;
-    justify-content: flex-end; 
-    padding: 1rem 1.5rem;
-    gap: 1rem;
-    background-color: transparent;
-  }
-  
-  .modal-card-foot .button {
-    padding: 0.45rem 1.3rem;
-    font-size: .9rem;
-  }
-  
-  .modal-card-foot .button.is-danger {
-    background-color: #a175e4; 
-    color: white; 
-  }
-
-  .modal-card-foot .button.is-primary2 {
-    background-color: #4490e2; 
-    color: white; 
-    border: none;
-  }
-  
-  .modal-card-foot .button.is-primary2:hover {
-    background-color: #3171b7; 
-  }
-
-  /* Estilos para el Toast */
-  .toast {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #ffffff; 
-    border-radius: 8px;
-    padding: 2rem 1rem;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    opacity: 1;
-    z-index: 100;
-  }
-
-/* Estilos del ícono y texto del toast positivo */
-.success-toast i {
-  color: #28a745; 
-  font-size: 1.4rem;
-}
-
-.success-toast p {
-  color: #2b2b2b; 
-  font-size: 1rem;
-}
-
-/* Estilos del ícono y texto del toast negativo */
-.error-toast i {
-  color: #dc3545; 
-  font-size: 1.5rem;
-}
-
-.error-toast p {
-  color: #2b2b2b; 
-  font-size: 1rem;
-}
-
-@keyframes fadeInOut {
-  0%, 100% {
-    opacity: 0;
-    transform: translate(-50%, -40%);
-  }
-  10%, 90% {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-
-.toast {
-  animation: fadeInOut 3s forwards; 
-}
-
-  /* estilos responsive */
-  @media (max-width: 992px){
-    .table-container {
-      margin-left: 0px;
-    }
-  }
-
-  @media (max-width: 768px) {
-
-    .title-container{
-      background: linear-gradient(45deg, #4a90e2,  #7743a8);
-    }
-    
-    .title {
-      font-size: 1.6rem;
-      color: white;
-    }
-
-    .block-search{
-      margin-top: 8rem;
-      width: 95%;
-    }
-
-    .block-results{
-      width: 100%;
-    }
-
-/* MENSAJE CUANDO NO HAY RESULTADO DE MEETING */
-.no-results-message {
-  font-size: .9rem;
-  margin-top: 1rem;
-}
-
-/* Estilos para modal asignar link meeting */
-    .modal-card {
-        width: 75%;
-      }
-    
-      .modal-card-body .input {
-        font-size: .85rem;
-        border: .5px solid rgb(184, 183, 183);
-      }
-    
-      .modal-card-foot {
-        padding-top: 0rem;
-        background-color: #ffffff;
-      }
-      
-      .modal-card-foot .button {
-        padding: 0.65rem 1.4rem;
-        font-size: .8rem;
-      }
-  }
-
-  @media (max-width: 492px) {
-    .section { 
-      min-height: 100vh; 
-      padding: 0; 
-    }
-
-    .container {
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      box-sizing: border-box;
-    }
-
-    .title-container {
-      padding: 1.6rem 0;
-    }
-  
-    .title {
-      font-size: 1.5rem;
-    }
-
-    .block-search{
-      border: none;
-      margin-top: 7rem;
-      padding: 2.2rem 1.5rem;
-    }
-
-    .label {
-      font-weight: 500; 
-      margin-left: 5px;
-      margin-bottom: 0.2rem;
-    }
-  
-    .input {
-      font-size: 0.9rem;
-      height: 40px;
-    }
-
-    .columns.is-mobile {
-      flex-direction: column; 
-    }
-  
-    .columns.is-mobile .column {
-      width: 100%; 
-      margin-bottom: -.5rem; 
-    }
-  
-    .columns.is-mobile .column .field .select {
-      margin-bottom: -0.2rem; 
-  }
-
-  .columns.is-mobile .column .field .select select {
-    height: 40px; 
-    border: 1px solid rgb(181, 181, 181);
-}
-
-.columns.is-mobile .column .field .checkbox input[type="checkbox"] {
-  transform: scale(1.2); 
-  margin-right: 0.5rem; 
-}
-
-.checkbox.is-centered {
-  margin-top: 1rem;
-}
-
-.block {
-  width: 100%; 
-  padding: 0.5rem; 
-  margin: 0;  
-  box-sizing: border-box;
-}
-
-.table-container::-webkit-scrollbar {
-  display: none; 
-}
-
-.table-results th {
-  padding: 7px;
-  font-size: .8rem; 
-}
-
-.table-results td {
-  padding: 5px 10px;
-  font-size: .8rem;
-}
-
-/* estilos del modal para asignar el link a la meeting */
 .modal-card {
-  width: 85%;
+  position: relative;
+  z-index: 2;
+  background: white;
+  width: 95%;
+  max-width: 480px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: fadeInScale 0.25s ease-out;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-card-head {
+  padding: 1.25rem 1.5rem 0.75rem;
+  border-bottom: 1px solid #eee;
+  background-color: white;
 }
 
 .modal-card-title {
-  font-size: 1.1rem;
+  margin: 0;
+  color: #2c2c2c;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  width: 100%;
+  word-break: break-word;
 }
 
-.modal-card-body .input {
-  font-size: .8rem;
+.selected-count-modal {
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 500;
+  display: block;
+  margin-top: 0.25rem;
+  text-align: center;
+}
+
+.modal-card-body {
+  padding: 1.25rem;
+  background-color: white;
+}
+
+.select.is-fullwidth {
+  width: 100%;
+  font-size: 0.95rem;
 }
 
 .modal-card-foot {
-  padding-top: 0rem;
+  display: flex;
+  justify-content: center;
   gap: 1rem;
-  background-color: #ffffff;
+  padding: 1rem 1.25rem 1.5rem;
+  background-color: white;
+  flex-wrap: wrap;
 }
 
 .modal-card-foot .button {
-  padding: 0.65rem 1.4rem;
+  font-size: 0.95rem;
+  padding: 0.5rem 1.4rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-  /* Estilos para el Toast */
-  .toast {
-    width: 55%;
+.button.is-danger {
+  background-color: #8e44ad;
+  color: white;
+}
+
+.button.is-danger:hover {
+  background-color: #732d91;
+}
+
+.button.is-primary2 {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.button.is-primary2:hover {
+  background-color: #3578c5;
+}
+
+@media (max-width: 992px){
+  .table-container {
+    margin-left: 0px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .title-container{
+    background: linear-gradient(45deg, #4a90e2,  #7743a8);
+  }
+  
+  .title {
+    color: white;
   }
 
-  /* Estilos del ícono y texto del toast positivo */
-  .success-toast i {
-    font-size: 1.4rem;
+  .block-search .columns {
+    flex-direction: column;
+    display: flex;
   }
 
-  .success-toast p {
-    font-size: 1rem;
+  .block-search .column {
+    width: 100%;
   }
 
-  /* Estilos del ícono y texto del toast negativo */
-  .error-toast i {
-    font-size: 1.4rem;
+  .checkbox.is-centered {
+    justify-content: flex-start;
+    margin-left: 0;
   }
 
-  .error-toast p { 
-    font-size: 1rem;
+  .block-results{
+    width: 100%;
   }
-      
+
 }
