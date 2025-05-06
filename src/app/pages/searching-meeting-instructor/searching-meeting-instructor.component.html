@@ -80,7 +80,7 @@
       </div>
 
       <!-- Botón de Crear Meeting -->
-      <div class="field has-text-centered mt-4">
+      <div class="field has-text-centered mt-4" *ngIf="filter.from && filter.hour">
         <button class="button is-link is-mediun" type="button" (click)="onCreateMeeting()">
           + Crear meeting
         </button>
@@ -151,8 +151,6 @@
 <app-create-meeting-modal
   *ngIf="showCreateModal"
   [fromDate]="filter.from"
-  [from]="filter.from"
-  [to]="filter.to"
   [hour]="filter.hour"
   [instructorId]="instructorId ?? undefined"
   (close)="showCreateModal = false"

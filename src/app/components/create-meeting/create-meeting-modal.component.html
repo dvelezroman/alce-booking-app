@@ -7,13 +7,14 @@
         <button class="delete" aria-label="close" (click)="close.emit()"></button>
       </header>
       <div class="selected-info">
-        <p> <strong>Fecha seleccionada:</strong> {{ fromDate || 'No asignada' }} </p>
-        <p> <strong>Hora seleccionada:</strong> {{ hour || 'No asignada' }}:00 </p>
+        <p> <strong>Fecha seleccionada:</strong> {{ fromDate }} </p>
+        <p> <strong>Hora seleccionada:</strong> {{ hour }}:00 </p>
       </div>
   
-      <section class="modal-card-body">
-        <div class="field">
+      <div class="modal-card-body">
+        <div class="field fixed-input-container">
           <label class="label">Buscar estudiante</label>
+      
           <div class="control has-icons-left">
             <input
               class="input"
@@ -29,22 +30,21 @@
               <i class="fas fa-search"></i>
             </span>
           </div>
-  
-          <div class="dropdown is-active" *ngIf="showUserDropdown && filteredUsers.length > 0">
-            <div class="dropdown-menu">
-              <div class="dropdown-content">
-                <a
-                  *ngFor="let user of filteredUsers"
-                  class="dropdown-item"
-                  (click)="selectUser(user)"
-                >
-                  {{ user.firstName }} {{ user.lastName }}
-                </a>
-              </div>
-            </div>
+        </div>
+      
+        <div
+          class="dropdown-list-fixed"
+          *ngIf="showUserDropdown && filteredUsers.length > 0"
+        >
+          <div
+            class="dropdown-item"
+            *ngFor="let user of filteredUsers"
+            (click)="selectUser(user)"
+          >
+            {{ user.firstName }} {{ user.lastName }}
           </div>
         </div>
-      </section>
+      </div>
   
       <footer class="modal-card-foot buttons-footer">
         <button class="button is-blue" (click)="createMeeting()">Crear</button>

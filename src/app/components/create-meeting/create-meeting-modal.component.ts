@@ -20,8 +20,6 @@ export class CreateMeetingModalComponent implements OnInit {
   @Output() meetingCreated = new EventEmitter<CreateMeetingDto>();
   @Output() close = new EventEmitter<void>();
   @Input() fromDate?: string;
-  @Input() from?: string;
-  @Input() to?: string;
   @Input() hour?: string;
   @Input() instructorId?: number;
 
@@ -43,9 +41,6 @@ export class CreateMeetingModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // console.log('Instructor ID:', this.instructorId);
-    // console.log('Fecha:', this.fromDate);
-    // console.log('Hora:', this.hour);
   }
 
   onSearchChange(term: string): void {

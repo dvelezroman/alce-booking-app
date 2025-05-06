@@ -33,11 +33,13 @@
 .modal-card {
   width: 90%;
   max-width: 450px;
+  max-height: 600px;
   background-color: #ffffff;
   color: #4c4c4c;
   font-size: 0.85rem;
   border-radius: 8px;
   overflow: hidden;
+  cursor: pointer;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -60,6 +62,8 @@
 
 .modal-card-body {
   background-color: #ffffff;
+  position: relative;
+  overflow: hidden;
   padding: 1.5rem;
 }
 
@@ -79,6 +83,7 @@
 }
 
 .input {
+  position: relative;
   background-color: #ffffff; 
   color: #4c4c4c;
   font-size: .9rem;
@@ -87,6 +92,25 @@
   &::placeholder {
     color: #a0a0a0; 
   }
+}
+
+.fixed-input-container {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 5;
+  padding-bottom: 0.5rem;
+}
+
+.dropdown-list-fixed {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+  background: white;
+  z-index: 10;
+  position: relative;
 }
 
 .icon.is-left i {
@@ -119,6 +143,14 @@
   padding: 1rem;
 }
 
+.button.is-blue,
+.button.is-purple {
+  font-size: .9rem;
+  max-width: 140px; 
+  min-width: 120px; 
+  text-align: center;
+}
+
 .button.is-blue {
   background-color: #3273dc;
   color: #fff;
@@ -141,6 +173,8 @@
 
 .toast-center {
   position: fixed;
+  background-color: #e9d6d4;
+  color: #b71c1c;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
