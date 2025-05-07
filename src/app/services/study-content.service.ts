@@ -1,4 +1,3 @@
-import {CreateStageDto, UpdateStageDto} from "./dtos/student.dto";
 import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
@@ -26,22 +25,22 @@ export class StudyContentService {
   filterBy(stageId?: number, unit?: number): Observable<StudyContentDto[]> {
     let params = new HttpParams();
 
-    if (stageId !== undefined) {
+    if (!!stageId) {
       params = params.set('stageId', stageId.toString());
     }
 
-    if (unit !== undefined) {
+    if (!!unit) {
       params = params.set('unit', unit.toString());
     }
 
     return this.http.get<StudyContentDto[]>(`${this.apiUrl}/filter`, { params });
   }
 
-  create(data: CreateStageDto): Observable<StudyContentCreateDto> {
-    return this.http.post<StudyContentDto>(`${this.apiUrl}`, data);
+  create(data: StudyContentCreateDto): Observable<StudyContentDto> {
+  return this.http.post<StudyContentDto>(`${this.apiUrl}`, data);
   }
 
-  update(id: number, data: UpdateStageDto): Observable<StudyContentUpdateDto> {
+  update(id: number, data: StudyContentUpdateDto): Observable<StudyContentDto> {
     return this.http.patch<StudyContentDto>(`${this.apiUrl}/${id}`, data);
   }
 

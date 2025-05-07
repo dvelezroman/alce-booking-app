@@ -44,6 +44,7 @@ export class SidebarComponent implements OnInit {
     { icon: 'asistencias-student', text: 'Asistencias Estudiantes', route: '/asistencias-alumnos', roles: [UserRole.ADMIN] },
     { icon: 'asistencias-instructor', text: 'Asistencias Instructores', route: '/asistencias-instructor', roles: [UserRole.ADMIN] },
     { icon: 'link', text: 'Enlaces', route: '/link', roles: [UserRole.ADMIN] },
+    { icon: 'book', text: 'Contenidos', route: '/content', roles: [UserRole.ADMIN] },
     { icon: 'stages', text: 'Stages', route: '/stage', roles: [UserRole.ADMIN] },
     { icon: 'create', text: 'Crear Estudiante', route: '/create-students', roles: [UserRole.ADMIN] },
     { icon: 'create', text: 'Crear Admin / Instructor', route: '/create-instructors', roles: [UserRole.ADMIN] },
@@ -125,7 +126,8 @@ export class SidebarComponent implements OnInit {
         icon: 'link',
         items: [
           this.findNavItemByRoute('/link'),
-          this.findNavItemByRoute('/stage')
+          this.findNavItemByRoute('/stage'),
+          this.findNavItemByRoute('/content')
         ].filter(item => item.roles.includes(role))
       },
       {

@@ -1,0 +1,84 @@
+<div class="modal" [class.is-active]="isModalOpen">
+    <div class="modal-background"></div>
+  
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Agregar Contenido</p>
+        <button class="delete" aria-label="close" (click)="close()"></button>
+      </header>
+  
+      <section class="modal-card-body">
+        <form [formGroup]="contentForm" (ngSubmit)="onSubmit()">
+          <!-- Stage -->
+          <div class="field">
+            <label class="label">Stage</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select formControlName="stageId">
+                  <option [ngValue]="null" disabled selected>Seleccione un Stage</option>
+                  <option *ngFor="let stage of stages" [value]="stage.id">
+                    {{ stage.description }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <p class="error-message" *ngIf="contentForm.get('stageId')?.invalid && contentForm.get('stageId')?.touched">
+              Stage es obligatorio.
+            </p>
+          </div>
+  
+          <!-- Unidad -->
+          <div class="field">
+            <label class="label">Unidad</label>
+            <div class="control">
+              <input type="number" formControlName="unit" class="input" />
+            </div>
+          </div>
+  
+          <!-- Título -->
+          <div class="field">
+            <label class="label">Título</label>
+            <div class="control">
+              <input type="text" formControlName="title" class="input" />
+            </div>
+          </div>
+  
+          <!-- Descripción -->
+          <div class="field">
+            <label class="label">Descripción</label>
+            <div class="control">
+              <textarea formControlName="description" class="textarea"></textarea>
+            </div>
+          </div>
+  
+          <!-- Contenido -->
+          <div class="field">
+            <label class="label">Contenido</label>
+            <div class="control">
+              <textarea 
+                class="textarea"
+                formControlName="textContent"
+              ></textarea>
+            </div>
+          </div>
+  
+          <!-- Habilitado
+          <div class="field mt-3">
+            <label class="checkbox">
+              <input type="checkbox" formControlName="enabled" />
+              Habilitado
+            </label>
+          </div> -->
+  
+          <!-- Botón -->
+          <div class="field mt-4">
+            <div class="control">
+              <button type="submit" class="button is-primary is-fullwidth" [disabled]="contentForm.invalid">
+                Guardar
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
