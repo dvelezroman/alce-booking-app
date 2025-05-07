@@ -1,0 +1,68 @@
+<div class="modal is-active">
+    <div class="modal-background"></div>
+  
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Editar Contenido</p>
+        <button class="delete" aria-label="close" (click)="onClose()"></button>
+      </header>
+  
+      <section class="modal-card-body">
+        <form [formGroup]="editForm" (ngSubmit)="onSubmit()" id="editContentForm">
+
+            <div class="field mt-4">
+                <label class="checkbox">
+                <input type="checkbox" formControlName="enabled" />
+                &nbsp;Contenido habilitado
+                </label>
+            </div>
+
+          <div class="field">
+            <label class="label">Unidad</label>
+            <div class="control">
+              <input type="number" formControlName="unit" class="input" />
+            </div>
+            <p class="error-message" *ngIf="editForm.get('unit')?.invalid && editForm.get('unit')?.touched">
+              Unidad es requerida y debe ser mayor a 0.
+            </p>
+          </div>
+  
+          <div class="field">
+            <label class="label">Título</label>
+            <div class="control">
+              <input type="text" formControlName="title" class="input" />
+            </div>
+            <p class="error-message" *ngIf="editForm.get('title')?.invalid && editForm.get('title')?.touched">
+              El título es requerido (mínimo 3 caracteres).
+            </p>
+          </div>
+  
+          <div class="field">
+            <label class="label">Descripción</label>
+            <div class="control">
+              <textarea formControlName="description" class="textarea"></textarea>
+            </div>
+            <p class="error-message" *ngIf="editForm.get('description')?.invalid && editForm.get('description')?.touched">
+              La descripción es requerida (mínimo 5 caracteres).
+            </p>
+          </div>
+  
+          <div class="field">
+            <label class="label">Contenido (opcional)</label>
+            <div class="control">
+              <textarea formControlName="textContent" class="textarea"></textarea>
+            </div>
+          </div>
+        </form>
+      </section>
+  
+      <footer class="modal-card-foot buttons-footer">
+        <button type="submit" form="editContentForm" class="button is-primary">
+          Guardar Cambios
+        </button>
+        <button class="button" type="button" (click)="onClose()">
+          Cancelar
+        </button>
+      </footer>
+    </div>
+  </div>

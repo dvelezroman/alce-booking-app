@@ -50,6 +50,13 @@
       (closeModal)="closeModal()">
     </app-content-form>
 
+    <app-edit-content-modal
+      *ngIf="contentToEdit"
+      [content]="contentToEdit"
+      (update)="handleUpdateContent($event)"
+      (close)="closeEditModal()"
+    ></app-edit-content-modal>
+
     <div class="block-results" *ngIf="filteredContents.length > 0">
       <div class="table-container">
         <table class="table-results is-fullwidth">
@@ -77,9 +84,9 @@
 <!--                </span>-->
 <!--              </td>-->
               <td>{{ content.content }}</td>
-              <td>
-                <button class="button is-small is-info mr-2" (click)="editContent(content)">Editar</button>
-                <button class="button is-small is-danger" (click)="deleteContent(content.id)">Eliminar</button>
+              <td class="table-actions">
+                <button class="button button-edit mr-2" (click)="editContent(content)">Editar</button>
+                <button class="button button-delete" (click)="deleteContent(content.id)">Eliminar</button>
               </td>
             </tr>
           </tbody>

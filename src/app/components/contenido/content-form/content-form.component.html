@@ -8,7 +8,7 @@
       </header>
   
       <section class="modal-card-body">
-        <form [formGroup]="contentForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="contentForm" (ngSubmit)="onSubmit()" id="contentForm">
           <!-- Stage -->
           <div class="field">
             <label class="label">Stage</label>
@@ -33,6 +33,9 @@
             <div class="control">
               <input type="number" formControlName="unit" class="input" />
             </div>
+            <p class="error-message" *ngIf="contentForm.get('unit')?.invalid && contentForm.get('unit')?.touched">
+              Unidad es requerido.
+            </p>
           </div>
   
           <!-- Título -->
@@ -41,6 +44,9 @@
             <div class="control">
               <input type="text" formControlName="title" class="input" />
             </div>
+            <p class="error-message" *ngIf="contentForm.get('title')?.invalid && contentForm.get('title')?.touched">
+              El título es requerido.
+            </p>
           </div>
   
           <!-- Descripción -->
@@ -49,11 +55,14 @@
             <div class="control">
               <textarea formControlName="description" class="textarea"></textarea>
             </div>
+            <p class="error-message" *ngIf="contentForm.get('description')?.invalid && contentForm.get('description')?.touched">
+              La descripción es requerido.
+            </p>
           </div>
   
           <!-- Contenido -->
           <div class="field">
-            <label class="label">Contenido</label>
+            <label class="label">Contenido (opcional)</label>
             <div class="control">
               <textarea 
                 class="textarea"
@@ -61,24 +70,12 @@
               ></textarea>
             </div>
           </div>
-  
-          <!-- Habilitado
-          <div class="field mt-3">
-            <label class="checkbox">
-              <input type="checkbox" formControlName="enabled" />
-              Habilitado
-            </label>
-          </div> -->
-  
-          <!-- Botón -->
-          <div class="field mt-4">
-            <div class="control">
-              <button type="submit" class="button is-primary is-fullwidth" [disabled]="contentForm.invalid">
-                Guardar
-              </button>
-            </div>
-          </div>
         </form>
       </section>
+      <footer class="modal-card-foot">
+        <button type="submit" class="button is-primary" form="contentForm">
+          Guardar
+        </button>
+      </footer>
     </div>
   </div>

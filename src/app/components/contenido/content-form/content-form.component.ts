@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Stage } from '../../services/dtos/student.dto';
+import { Stage } from '../../../services/dtos/student.dto';
 
 @Component({
   selector: 'app-content-form',
@@ -27,26 +27,29 @@ export class ContentFormComponent {
       unit: [null, [Validators.required, Validators.min(1)]],
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(5)]],
-      textContent: ['', [Validators.required]],
+      textContent: [''],
       enabled: [true]
     });
   }
 
   onSubmit() {
-    if (this.contentForm.valid) {
-      const formValues = this.contentForm.value;
-
-      const formData = {
-        stageId: Number(formValues.stageId),
-        unit: formValues.unit,
-        title: formValues.title,
-        description: formValues.description,
-        content: formValues.textContent ?JSON.stringify(formValues.textContent) : '',
-        enabled: formValues.enabled
-      };
-
-      this.formSubmit.emit(formData);
+    if (this.contentForm.invalid) {
+      this.contentForm.markAllAsTouched(); 
+      return;
     }
+  
+    const formValues = this.contentForm.value;
+  
+    const formData = {
+      stageId: Number(formValues.stageId),
+      unit: formValues.unit,
+      title: formValues.title,
+      description: formValues.description,
+      content: formValues.textContent ? JSON.stringify(formValues.textContent) : '',
+      enabled: formValues.enabled
+    };
+  
+    this.formSubmit.emit(formData);
   }
 
   close() {

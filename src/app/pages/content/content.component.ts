@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ContentFormComponent } from '../../components/content-form/content-form.component';
+import { ContentFormComponent } from '../../components/contenido/content-form/content-form.component';
 import { StudyContentService } from '../../services/study-content.service';
-import {StudyContentCreateDto, StudyContentDto} from '../../services/dtos/study-content.dto';
+import {StudyContentCreateDto, StudyContentDto, StudyContentUpdateDto} from '../../services/dtos/study-content.dto';
 import { Stage } from '../../services/dtos/student.dto';
 import { StagesService } from '../../services/stages.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { EditContentModalComponent } from '../../components/contenido/edit-content-modal/edit-content-modal.component';
 
 @Component({
   selector: 'app-content',
@@ -13,7 +14,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   imports: [
       CommonModule,
       ContentFormComponent,
-      ReactiveFormsModule
+      ReactiveFormsModule,
+      EditContentModalComponent
     ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
@@ -22,6 +24,7 @@ export class ContentComponent implements OnInit {
   showModal = false;
   stages: Stage[] = [];
   filteredContents: StudyContentDto[] = [];
+  contentToEdit: StudyContentDto | null = null;
 
   filterForm: FormGroup;
 
@@ -75,11 +78,39 @@ export class ContentComponent implements OnInit {
   }
 
   editContent(content: StudyContentDto) {
-    console.log('Editar contenido:', content);
+    console.log('Editando contenido:', content);
+    this.contentToEdit = content;
+  }
+
+  handleUpdateContent(updated: StudyContentUpdateDto) {
+    if (!this.contentToEdit) return;
+  
+    this.studyContentService.update(this.contentToEdit.id, updated).subscribe({
+      next: (res) => {
+        console.log('Contenido actualizado:', res);
+        this.contentToEdit = null;
+        this.searchContent(); 
+      },
+      error: (err) => {
+        console.error('Error al actualizar contenido:', err);
+      }
+    });
+  }
+
+  closeEditModal() {
+    this.contentToEdit = null;
   }
 
   deleteContent(id: number) {
-    console.log('Eliminar contenido con ID:', id);
+    this.studyContentService.delete(id).subscribe({
+      next: () => {
+        console.log(`${id} eliminado correctamente`);
+        this.searchContent();
+      },
+      error: (err) => {
+        console.error('Error al eliminar contenido:', err);
+      }
+    });
   }
 
   protected readonly JSON = JSON;
