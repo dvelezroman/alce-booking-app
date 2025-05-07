@@ -83,45 +83,45 @@
 
  <!-- Tabla de reuniones -->
  <div class="block-results">
-<div class="table-container" *ngIf="meetings.length > 0">
-    <table class="table is-fullwidth">
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Stage</th>
-                <th>Modo</th>
-                <th>Asistencia</th>
-                <th>Nota Instructor</th>
-                <th>Marcó Asistencia</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let meeting of meetings">
-                <td>{{ meeting.localdate | date: 'mediumDate' }}</td>
-                <td>{{ meeting.localhour }}:00</td>
-                <td>{{ meeting.stage?.description }}</td>
-                <td>{{ meeting.mode }}</td>
-                <td class="attendance-icon">
-                    <span
-                      *ngIf="meeting.status !== 'CANCELLED' && !isFutureDate(meeting.date)"
-                      class="material-icons"
-                      [ngClass]="meeting.present ? 'icon-yes' : 'icon-no'"
-                    >
-                        {{ meeting.present ? 'check' : 'close' }}
-                    </span>
-                    <span *ngIf="meeting.status === 'CANCELLED'">
-                          Cancelada
-                    </span>
-                </td>
-                <td>
-                  <span style="cursor:pointer;" *ngIf="!isFutureDate(meeting.date)" (click)="openThemeModal(meeting)" class="material-icons">menu_book</span>
-                </td>
-                <td>{{ meeting.markAssistanceByUser?.firstName || '' }} {{ meeting.markAssistanceByUser?.lastName || '' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+    <div class="table-container" *ngIf="meetings.length > 0">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Stage</th>
+                    <th>Modo</th>
+                    <th>Asistencia</th>
+                    <th>Nota Instructor</th>
+                    <th>Marcó Asistencia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let meeting of meetings">
+                    <td>{{ meeting.localdate | date: 'mediumDate' }}</td>
+                    <td>{{ meeting.localhour }}:00</td>
+                    <td>{{ meeting.stage?.description }}</td>
+                    <td>{{ meeting.mode }}</td>
+                    <td class="attendance-icon">
+                        <span
+                        *ngIf="meeting.status !== 'CANCELLED' && !isFutureDate(meeting.date)"
+                        class="material-icons"
+                        [ngClass]="meeting.present ? 'icon-yes' : 'icon-no'"
+                        >
+                            {{ meeting.present ? 'check' : 'close' }}
+                        </span>
+                        <span *ngIf="meeting.status === 'CANCELLED'">
+                            Cancelada
+                        </span>
+                    </td>
+                    <td>
+                    <span style="cursor:pointer;" *ngIf="!isFutureDate(meeting.date)" (click)="openThemeModal(meeting)" class="material-icons">menu_book</span>
+                    </td>
+                    <td>{{ meeting.markAssistanceByUser?.firstName || '' }} {{ meeting.markAssistanceByUser?.lastName || '' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <div *ngIf="searchAttempted && meetings.length === 0" class="no-results">
     No se encontraron clases para los criterios seleccionados.
