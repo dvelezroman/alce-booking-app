@@ -126,10 +126,19 @@
       <div *ngIf="meetings.length > 0" class="info-count total-results-count">
         <p><strong>Resultado:</strong> {{ meetings.length }}</p>
       </div>
-      
+
       <div *ngIf="meetings.length > 0" class="info-count selected-count">
-        <p><strong>Estudiante{{ totalSelectedMeetings === 1 ? '' : 's' }} Seleccionado{{ totalSelectedMeetings === 1 ? '' : 's' }}:</strong> 
-          <span class="count-number">{{ totalSelectedMeetings }}</span>
+        <p>
+          <strong>
+            Estudiante<span *ngIf="totalSelectedMeetings !== 1">s</span>
+            Seleccionado<span *ngIf="totalSelectedMeetings !== 1">s</span>:
+          </strong>
+          <span
+            class="count-number"
+            [class.over-limit]="totalSelectedMeetings > 15">
+            {{ totalSelectedMeetings }}
+          </span>
+          <span *ngIf="totalSelectedMeetings > 15" class="warning-icon">⚠️</span>
         </p>
       </div>
 
@@ -158,10 +167,10 @@
           <tbody>
             <tr *ngFor="let meeting of meetings">
               <td>
-                <input 
-                    type="checkbox" 
-                    [checked]="selectedMeetingIds.includes(meeting.id)" 
-                    (change)="toggleSelection(meeting.id)" 
+                <input
+                    type="checkbox"
+                    [checked]="selectedMeetingIds.includes(meeting.id)"
+                    (change)="toggleSelection(meeting.id)"
                     [disabled]="meeting.linkOpened || meeting.present"/>
               </td>
               <td>{{ meeting.stage?.number || 'Stage no disponible' }}</td>
@@ -193,9 +202,17 @@
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">
-          Asignar Link 
-          <span *ngIf="totalSelectedMeetings > 0" class="selected-count-modal">
-            {{ totalSelectedMeetings }} Estudiante{{ totalSelectedMeetings > 1 ? 's' : '' }} Seleccionado{{ totalSelectedMeetings > 1 ? 's' : '' }}
+          Asignar Link
+          <span
+            *ngIf="totalSelectedMeetings > 0"
+            class="selected-count-modal"
+            [class.over-limit]="totalSelectedMeetings > 15">
+
+            {{ totalSelectedMeetings }}
+              Estudiante<span *ngIf="totalSelectedMeetings !== 1">s</span>
+              Seleccionado<span *ngIf="totalSelectedMeetings !== 1">s</span>:
+
+              <span *ngIf="totalSelectedMeetings > 15" class="warning-icon">⚠️</span>
           </span>
         </p>
       </header>
