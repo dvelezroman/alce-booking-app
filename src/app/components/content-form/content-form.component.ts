@@ -35,18 +35,16 @@ export class ContentFormComponent {
   onSubmit() {
     if (this.contentForm.valid) {
       const formValues = this.contentForm.value;
-  
+
       const formData = {
-        stageId: Number(formValues.stageId), 
+        stageId: Number(formValues.stageId),
         unit: formValues.unit,
         title: formValues.title,
         description: formValues.description,
-        content: {
-          texto: formValues.textContent || ''
-        },
+        content: formValues.textContent ?JSON.stringify(formValues.textContent) : '',
         enabled: formValues.enabled
       };
-  
+
       this.formSubmit.emit(formData);
     }
   }

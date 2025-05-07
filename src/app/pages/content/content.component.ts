@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ContentFormComponent } from '../../components/content-form/content-form.component';
 import { StudyContentService } from '../../services/study-content.service';
-import { StudyContentDto } from '../../services/dtos/study-content.dto';
-import { CreateStageDto, Stage } from '../../services/dtos/student.dto';
+import {StudyContentCreateDto, StudyContentDto} from '../../services/dtos/study-content.dto';
+import { Stage } from '../../services/dtos/student.dto';
 import { StagesService } from '../../services/stages.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -15,10 +15,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
       ContentFormComponent,
       ReactiveFormsModule
     ],
-  templateUrl: './contenidos.component.html',
-  styleUrl: './contenidos.component.scss'
+  templateUrl: './content.component.html',
+  styleUrl: './content.component.scss'
 })
-export class ContenidosComponent implements OnInit {
+export class ContentComponent implements OnInit {
   showModal = false;
   stages: Stage[] = [];
   filteredContents: StudyContentDto[] = [];
@@ -62,7 +62,7 @@ export class ContenidosComponent implements OnInit {
     });
   }
 
-  handleFormSubmit(data: CreateStageDto) {
+  handleFormSubmit(data: StudyContentCreateDto) {
     this.showModal = false;
     this.studyContentService.create(data).subscribe({
       next: (response) => {
@@ -81,4 +81,6 @@ export class ContenidosComponent implements OnInit {
   deleteContent(id: number) {
     console.log('Eliminar contenido con ID:', id);
   }
+
+  protected readonly JSON = JSON;
 }

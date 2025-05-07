@@ -19,7 +19,7 @@ import { ReportesComponent } from './pages/reports/reportes.component';
 import { ReportsDetailedComponent } from './pages/reports-detail-statist-meeting/reports-detailed.component';
 import { MeetingsStudentComponent } from './pages/meetings-student/meetings-student.component';
 import { ProcessedEventsComponent } from './pages/processed-events/processed-events.component';
-import { ContenidosComponent } from './pages/content/contenidos.component';
+import { ContentComponent } from './pages/content/content.component';
 
 
 
@@ -31,7 +31,7 @@ export const routes: Routes = [
   { path: 'booking', component: MeetingBookingComponent, canActivate: [AuthGuard] },
   { path: 'stage', component: StageComponent, canActivate: [AuthGuard] },
   { path: 'link', component: LinksComponent},
-  { path: 'content', component: ContenidosComponent, canActivate: [AuthGuard] },
+  { path: 'content', component: ContentComponent, canActivate: [AuthGuard] },
   { path: 'meetings-student', component: MeetingsStudentComponent, canActivate: [AuthGuard] },
   { path: 'searching-meeting', component: SearchingMeetingComponent, canActivate: [AuthGuard]},
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent,canActivate: [AuthGuard]},

@@ -1,9 +1,8 @@
-import {CreateStageDto, UpdateStageDto} from "./dtos/student.dto";
 import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
-import {StudyContentDto, StudyContentUpdateDto} from "./dtos/study-content.dto";
+import {StudyContentCreateDto, StudyContentDto, StudyContentUpdateDto} from "./dtos/study-content.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -37,11 +36,11 @@ export class StudyContentService {
     return this.http.get<StudyContentDto[]>(`${this.apiUrl}/filter`, { params });
   }
 
-  create(data: CreateStageDto): Observable<StudyContentDto> {
+  create(data: StudyContentCreateDto): Observable<StudyContentDto> {
   return this.http.post<StudyContentDto>(`${this.apiUrl}`, data);
   }
 
-  update(id: number, data: UpdateStageDto): Observable<StudyContentUpdateDto> {
+  update(id: number, data: StudyContentUpdateDto): Observable<StudyContentDto> {
     return this.http.patch<StudyContentDto>(`${this.apiUrl}/${id}`, data);
   }
 
