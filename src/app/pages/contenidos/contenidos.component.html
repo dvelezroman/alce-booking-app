@@ -1,0 +1,94 @@
+<div class="class-booking-header">
+    <h1 class="title is-3">Contenido</h1>
+  </div>
+  
+  <div class="page-wrapper">
+    <form [formGroup]="filterForm" (ngSubmit)="searchContent()" class="search-form">
+      <div class="field-group">
+        <div class="field">
+          <label class="label">Stage</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select formControlName="stageId">
+                <option [ngValue]="null" disabled selected>Seleccione un Stage</option>
+                <option *ngFor="let stage of stages" [value]="stage.id">
+                  {{ stage.description }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <p class="error-message" *ngIf="filterForm.get('stageId')?.invalid && filterForm.get('stageId')?.touched">
+            El stage es obligatorio.
+          </p>
+        </div>
+  
+        <div class="field">
+            <label class="label">Unidad</label>
+            <div class="control">
+                <input type="number" class="input" formControlName="unit" placeholder="Número de unidad" />
+            </div>
+            <p class="error-message" *ngIf="filterForm.get('unit')?.invalid && filterForm.get('unit')?.touched">
+                La unidad es obligatoria.
+            </p>
+        </div>
+  
+        <div class="field">
+          <div class="button-wrapper">
+            <button class="button is-blue" type="submit">
+              Buscar Contenido
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  
+    <div class="content-actions">
+      <button class="button is-light" (click)="openModal()">
+        + Nuevo Contenido
+      </button>
+    </div>
+  
+    <app-content-form
+      *ngIf="showModal"
+      [stages]="stages"
+      [isModalOpen]="showModal"
+      (formSubmit)="handleFormSubmit($event)"
+      (closeModal)="closeModal()">
+    </app-content-form>
+  
+    <div class="block-results" *ngIf="filteredContents.length > 0">
+      <div class="table-container">
+        <table class="table-results is-fullwidth">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Stage</th>
+              <th>Unidad</th>
+              <th>Título</th>
+              <th>Descripción</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let content of filteredContents">
+              <td>{{ content.id }}</td>
+              <td>{{ content.stageId }}</td>
+              <td>{{ content.unit }}</td>
+              <td>{{ content.title }}</td>
+              <td>{{ content.description }}</td>
+              <td>
+                <span [ngClass]="content.enabled ? 'has-text-success' : 'has-text-danger'">
+                  {{ content.enabled ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td>
+                <button class="button is-small is-info mr-2" (click)="editContent(content)">Editar</button>
+                <button class="button is-small is-danger" (click)="deleteContent(content.id)">Eliminar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

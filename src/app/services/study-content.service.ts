@@ -37,9 +37,9 @@ export class StudyContentService {
     return this.http.get<StudyContentDto[]>(`${this.apiUrl}/filter`, { params });
   }
 
-  create(data: CreateStageDto): Observable<StudyContentCreateDto> {
-    return this.http.post<StudyContentDto>(`${this.apiUrl}`, data);
-  }
+  create(data: CreateStageDto): Observable<StudyContentDto> {
+  return this.http.post<StudyContentDto>(`${this.apiUrl}`, data);
+  }  
 
   update(id: number, data: UpdateStageDto): Observable<StudyContentUpdateDto> {
     return this.http.patch<StudyContentDto>(`${this.apiUrl}/${id}`, data);
