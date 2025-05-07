@@ -1,6 +1,11 @@
 export interface StudyContentDto {
   id: number;
   stageId: number;
+  stage: {
+    id: number;
+    description: string;
+    number: string;
+  };
   unit: number;
   title: string;
   description: string;

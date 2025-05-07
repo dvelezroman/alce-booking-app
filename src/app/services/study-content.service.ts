@@ -3,7 +3,7 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
-import {StudyContentCreateDto, StudyContentDto, StudyContentUpdateDto} from "./dtos/study-content.dto";
+import {StudyContentDto, StudyContentUpdateDto} from "./dtos/study-content.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -26,11 +26,11 @@ export class StudyContentService {
   filterBy(stageId?: number, unit?: number): Observable<StudyContentDto[]> {
     let params = new HttpParams();
 
-    if (stageId !== undefined) {
+    if (!!stageId) {
       params = params.set('stageId', stageId.toString());
     }
 
-    if (unit !== undefined) {
+    if (!!unit) {
       params = params.set('unit', unit.toString());
     }
 
@@ -39,7 +39,7 @@ export class StudyContentService {
 
   create(data: CreateStageDto): Observable<StudyContentDto> {
   return this.http.post<StudyContentDto>(`${this.apiUrl}`, data);
-  }  
+  }
 
   update(id: number, data: UpdateStageDto): Observable<StudyContentUpdateDto> {
     return this.http.patch<StudyContentDto>(`${this.apiUrl}/${id}`, data);

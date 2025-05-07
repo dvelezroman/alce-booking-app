@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ContentFormComponent } from '../../components/content-form/content-form.component';
 import { StudyContentService } from '../../services/study-content.service';
-import { StudyContentCreateDto, StudyContentDto } from '../../services/dtos/study-content.dto';
+import { StudyContentDto } from '../../services/dtos/study-content.dto';
 import { CreateStageDto, Stage } from '../../services/dtos/student.dto';
 import { StagesService } from '../../services/stages.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-contenidos',
+  selector: 'app-content',
   standalone: true,
   imports: [
-      CommonModule, 
+      CommonModule,
       ContentFormComponent,
       ReactiveFormsModule
     ],
@@ -31,8 +31,8 @@ export class ContenidosComponent implements OnInit {
     private studyContentService: StudyContentService
   ){
     this.filterForm = this.fb.group({
-      stageId: [null, [Validators.required]],
-      unit: [null, [Validators.required, Validators.min(1)]],
+      stageId: [undefined, [Validators.min(1)]],
+      unit: [undefined, [Validators.min(1)]],
     });
    }
 
@@ -51,11 +51,6 @@ export class ContenidosComponent implements OnInit {
   }
 
   searchContent() {
-    if (this.filterForm.invalid) {
-      this.filterForm.markAllAsTouched();
-      return;
-    }
-    
     const { stageId, unit } = this.filterForm.value;
     this.studyContentService.filterBy(stageId, unit).subscribe({
       next: (results) => {
@@ -82,7 +77,7 @@ export class ContenidosComponent implements OnInit {
   editContent(content: StudyContentDto) {
     console.log('Editar contenido:', content);
   }
-  
+
   deleteContent(id: number) {
     console.log('Eliminar contenido con ID:', id);
   }
