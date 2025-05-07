@@ -28,11 +28,10 @@
           <span class="switch-label" [ngClass]="{ 'bold-text': !isStudentForm }">Usuario</span>
       </div>
 
-      <!-- Contenedor que envuelve ambos formularios -->
       <div class="form-card-container">
-        <div class="form-card" [ngClass]="{ 'flipped': !isStudentForm }">
-          <!-- Lado del formulario de Estudiante -->
-          <div class="student-form">
+        <div class="form-card">
+          <!-- Formulario de Estudiante -->
+          <div *ngIf="isStudentForm" class="form-wrapper">
             <form [formGroup]="studentForm" (ngSubmit)="searchUsers()">
               <div class="form-field">
                 <select id="stageId" formControlName="stageId">
@@ -41,11 +40,9 @@
                 </select>
               </div>
               <div class="form-field">
-              <!--  <label for="firstName">First Name</label>-->
                 <input type="text" id="firstName" formControlName="firstName" placeholder="Ingrese el First Name" />
               </div>
               <div class="form-field">
-              <!--  <label for="lastName">Last Name</label>-->
                 <input type="text" id="lastName" formControlName="lastName" placeholder="Ingrese el Last Name" />
               </div>
               <div class="form-action">
@@ -53,17 +50,15 @@
               </div>
             </form>
           </div>
-
-          <!-- Lado del formulario de Usuario -->
-          <div class="user-form">
+      
+          <!-- Formulario de Usuario -->
+          <div *ngIf="!isStudentForm" class="form-wrapper">
             <form [formGroup]="userForm" (ngSubmit)="searchUsers()">
               <div class="form-field">
-              <!--  <label for="email">Email</label>-->
                 <input type="email" id="emailInput" formControlName="email" placeholder="Ingrese el Email" />
               </div>
               <div class="form-field">
-                <!--<label for="role">Rol</label>-->
-                <select id="role" class="input" formControlName="role">
+                <select id="role" formControlName="role">
                   <option value="">Seleccionar Role</option>
                   <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
                 </select>

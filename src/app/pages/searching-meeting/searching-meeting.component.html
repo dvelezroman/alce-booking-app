@@ -132,12 +132,11 @@
           <span class="count-number">{{ totalSelectedMeetings }}</span>
         </p>
       </div>
+
       <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
         No hay meetings para el rango asignado.
-        <span class="icon-container">
-          <i class="fas fa-users-slash"></i>
-        </span>
       </p>
+
       <!-- Vista de tabla -->
       <div class="table-container">
         <table class="table-results is-fullwidth" *ngIf="meetings && meetings.length > 0">
@@ -196,7 +195,7 @@
         <p class="modal-card-title">
           Asignar Link 
           <span *ngIf="totalSelectedMeetings > 0" class="selected-count-modal">
-            - {{ totalSelectedMeetings }} Estudiante{{ totalSelectedMeetings > 1 ? 's' : '' }} Seleccionado{{ totalSelectedMeetings > 1 ? 's' : '' }}
+            {{ totalSelectedMeetings }} Estudiante{{ totalSelectedMeetings > 1 ? 's' : '' }} Seleccionado{{ totalSelectedMeetings > 1 ? 's' : '' }}
           </span>
         </p>
       </header>

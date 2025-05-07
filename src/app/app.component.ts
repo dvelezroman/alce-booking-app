@@ -24,7 +24,6 @@ registerLocaleData(localeEs)
     RouterOutlet,
     HeaderComponent,
     SpinnerComponent,
-    HeaderComponent,
     SidebarComponent,
     CommonModule,
     ModalComponent

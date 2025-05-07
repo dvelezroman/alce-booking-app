@@ -2,65 +2,64 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    background-color: #f2f2f2;
+    background-color: #f8f9fa; 
   }
   
   .register-container {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; 
     background-color: #f2f2f2;
-    padding: 2rem;
+    padding: .8rem;
   }
   
   .box {
     width: 100%;
-    max-width: 500px; 
-    background-color: #ffffff; 
+    max-width: 450px; 
+    background-color: #ffffff;
     border-radius: 8px;
     padding: 2rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    border: 1px solid #d1d1d1;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   
   .title {
     text-align: center;
     margin-bottom: 2rem;
-    font-size: 1.8rem;
-    color: #4a4a4a;
+    font-size: 1.3rem;
+    color: #333333; 
   }
   
   .label {
-    font-size: .9rem;
-    margin-bottom: 0.5rem;
-    color: #333;
+    font-size: .85rem;
+    color: #6c6c6c; 
+    margin-bottom: .3rem;
   }
   
-  .field {
-    margin-bottom: 1.5rem; 
+  .field.extra-space {
+    margin-bottom: 1.3rem; 
+  }
+  
+  .columns .field {
+    margin-bottom: 0.3rem; 
   }
   
   .input {
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 4px;
-    padding: 0.75rem;
-    font-size: 1rem;
-    color: #333333;
-    background-color: #f9f9f9;
-    transition: border-color 0.3s ease;
+    padding: 0.5rem;
+    height: 35px;
+    font-size: .85rem;
+    background-color: #f9f9f9; 
+    color: #5f5f5f; 
+  
+    &:focus {
+      border-color: #007bff; 
+      outline: none;
+    }
   }
 
-  select.input {
-    padding: 0.5rem 0.75rem; 
-  }
-  
-  .input:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
   input[type="number"]::-webkit-inner-spin-button, 
   input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -77,30 +76,49 @@ input::placeholder {
   color: #999; 
   opacity: 1;  
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
   
   .error {
-    color: #d9534f;
-    font-size: 0.9rem;
+    color: #d9534f; 
+    font-size: 0.8rem;
+  }
+
+  .floating-label {
+    position: relative;
   }
   
-  .button {
-    background-color: #8a2be2;
-    color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    width: 100%;
-    text-align: center;
+  .control-label {
+    position: relative;
   }
   
-  .button:hover {
-    background-color: #6a1ab9;
+  .input.with-icon {
+    padding-right: 2.5rem; 
   }
   
   .field-button {
     margin-top: 2rem;
-    text-align: center;
+    text-align: center; 
   }
   
+  .button {
+    background-color: #8a2be2;
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: .85rem;
+    cursor: pointer;
+    width: 120px; 
+    margin: 0 auto;
+  
+    &:hover {
+     background-color: #6a1ab9;
+    }
+  }

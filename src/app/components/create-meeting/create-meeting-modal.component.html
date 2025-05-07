@@ -1,0 +1,58 @@
+<div class="modal is-active">
+    <div class="modal-background"></div>
+  
+    <div class="modal-card slide-up-animation">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Crear Nueva Clase</p>
+        <button class="delete" aria-label="close" (click)="close.emit()"></button>
+      </header>
+      <div class="selected-info">
+        <p> <strong>Fecha seleccionada:</strong> {{ fromDate }} </p>
+        <p> <strong>Hora seleccionada:</strong> {{ hour }}:00 </p>
+      </div>
+  
+      <div class="modal-card-body">
+        <div class="field fixed-input-container">
+          <label class="label">Buscar estudiante</label>
+      
+          <div class="control has-icons-left">
+            <input
+              class="input"
+              type="text"
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="onSearchChange($event)"
+              (focus)="showUserDropdown = true"
+              (blur)="hideDropdown()"
+              placeholder="Escribe el nombre del estudiante"
+              name="studentSearch"
+            />
+            <span class="icon is-left">
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+        </div>
+      
+        <div
+          class="dropdown-list-fixed"
+          *ngIf="showUserDropdown && filteredUsers.length > 0"
+        >
+          <div
+            class="dropdown-item"
+            *ngFor="let user of filteredUsers"
+            (click)="selectUser(user)"
+          >
+            {{ user.firstName }} {{ user.lastName }}
+          </div>
+        </div>
+      </div>
+  
+      <footer class="modal-card-foot buttons-footer">
+        <button class="button is-blue" (click)="createMeeting()">Crear</button>
+        <button class="button is-purple" (click)="close.emit()">Cancelar</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="toast-center notification is-danger" *ngIf="showErrorToast">
+    {{ errorToastMessage }}
+  </div>

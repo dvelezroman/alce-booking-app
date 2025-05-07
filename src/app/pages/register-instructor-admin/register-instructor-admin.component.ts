@@ -37,7 +37,7 @@ export class RegisterInstructorAdminComponent implements OnInit {
       idNumber: ['', Validators.required],
       email: ['', [Validators.required, Validators.minLength(6)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      repeatPassword: ['', Validators.required],
+      // repeatPassword: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       birthDate: [''],

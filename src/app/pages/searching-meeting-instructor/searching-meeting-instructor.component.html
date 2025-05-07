@@ -79,6 +79,13 @@
         </form>
       </div>
 
+      <!-- Botón de Crear Meeting -->
+      <div class="field has-text-centered mt-4" *ngIf="filter.from && filter.hour">
+        <button class="button is-link is-mediun" type="button" (click)="onCreateMeeting()">
+          + Crear meeting
+        </button>
+      </div>
+
       <!-- Resultados de la búsqueda -->
       <div class="block-results">
         <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
@@ -140,3 +147,12 @@
 <div class="notification is-success" *ngIf="showSuccessToast" [ngClass]="{ 'is-hidden': !showSuccessToast }">
   {{ toastMessage }}
 </div>
+
+<app-create-meeting-modal
+  *ngIf="showCreateModal"
+  [fromDate]="filter.from"
+  [hour]="filter.hour"
+  [instructorId]="instructorId ?? undefined"
+  (close)="showCreateModal = false"
+  (meetingCreated)="handleMeetingCreated($event)"
+></app-create-meeting-modal>

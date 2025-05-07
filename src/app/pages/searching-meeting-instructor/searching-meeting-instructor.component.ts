@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
+import { CreateMeetingDto, FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
 import { BookingService } from '../../services/booking.service';
 import { Store } from '@ngrx/store';
 import { UserDto } from '../../services/dtos/user.dto';
@@ -10,6 +10,7 @@ import { selectUserData } from '../../store/user.selector';
 import {Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
 import { DateTime } from 'luxon';
+import { CreateMeetingModalComponent } from '../../components/create-meeting/create-meeting-modal.component';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -17,7 +18,8 @@ import { DateTime } from 'luxon';
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    CreateMeetingModalComponent
   ],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'
@@ -30,6 +32,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   toastMessage: string = '';
   stages: Stage[] = [];
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
+  showCreateModal = false;
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -141,5 +144,33 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   closeToast() {
     this.showSuccessToast = false;
+  }
+
+  onCreateMeeting(): void {
+    this.showCreateModal = true;
+  }
+
+  handleMeetingCreated(meeting: CreateMeetingDto): void {
+    this.bookingService.bookMeeting(meeting).subscribe({
+      next: () => {
+        this.toastMessage = 'Clase creada exitosamente';
+        this.showSuccessToast = true;
+        this.showCreateModal = false;
+        this.fetchMeetings(this.filter);
+  
+        setTimeout(() => {
+          this.showSuccessToast = false;
+        }, 2000);
+      },
+      error: () => {
+        this.toastMessage = 'No se pudo crear la clase';
+        this.showSuccessToast = true;
+        this.showCreateModal = false;
+  
+        setTimeout(() => {
+          this.showSuccessToast = false;
+        }, 3000);
+      }
+    });
   }
 }
