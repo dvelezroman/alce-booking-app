@@ -144,11 +144,6 @@
     </div>
   </section>
 
-  <div
-    class="toast-center notification"
-    [ngClass]="{'is-success': toastType === 'success', 'is-danger': toastType === 'error'}" *ngIf="showSuccessToast">
-    {{ toastMessage }}
-  </div>
 
 <app-create-meeting-modal
   *ngIf="showCreateModal"
@@ -158,3 +153,12 @@
   (close)="showCreateModal = false"
   (meetingCreated)="handleMeetingCreated($event)"
 ></app-create-meeting-modal>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  (close)="closeModal()"
+></app-modal>

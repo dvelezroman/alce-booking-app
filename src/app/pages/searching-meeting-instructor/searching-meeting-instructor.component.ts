@@ -11,7 +11,8 @@ import {Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
 import { DateTime } from 'luxon';
 import { CreateMeetingModalComponent } from '../../components/create-meeting/create-meeting-modal.component';
-import { setInstructorLink } from '../../store/user.action';
+import { ModalComponent } from '../../components/modal/modal.component';
+import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -20,7 +21,8 @@ import { setInstructorLink } from '../../store/user.action';
     CommonModule,
     RouterModule,
     FormsModule,
-    CreateMeetingModalComponent
+    CreateMeetingModalComponent,
+    ModalComponent
   ],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'
@@ -29,9 +31,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   availableHours: number[] = [];
   meetings: MeetingDTO[] = [];
   instructorId: number | null = null;
-  showSuccessToast: boolean = false;
-  toastMessage: string = '';
-  toastType: 'success' | 'error' = 'success';
+  modal: ModalDto = modalInitializer();
   stages: Stage[] = [];
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
   showCreateModal = false;
@@ -52,10 +52,6 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   ngOnInit(): void {
     this.filter.category = undefined;
-    this.store.select(selectInstructorLink).subscribe(link => {
-      this.instructorLink = link;
-      console.log('Instructor link:', link);
-    });
 
     this.stagesService.getAll().subscribe(response => {
       this.stages = response;
@@ -72,6 +68,10 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       } else {
        // console.log('instructor ID no disponible');
       }
+    });
+    this.store.select(selectInstructorLink).subscribe(link => {
+      this.instructorLink = link;
+      //console.log('Instructor link:', link);
     });
   }
 
@@ -117,22 +117,11 @@ export class SearchingMeetingInstructorComponent implements OnInit {
           };
           this.fetchMeetings(filterParams);
           const messageText = updatedPresence ? 'Presente' : 'Ausente';
-          this.toastMessage = `Asistencia actualizada: ${messageText}`;
-          this.showSuccessToast = true;
-
-          // Hide the toast after 3 seconds
-          setTimeout(() => {
-            this.showSuccessToast = false;
-          }, 3000);
+          this.showModal(this.createModalParams(false, `Asistencia actualizada: ${messageText}`));
         },
         error: () => {
           //console.error(`Error al actualizar la asistencia de ${studentName}:`, error);
-          this.toastMessage = 'Error al actualizar la asistencia';
-          this.showSuccessToast = true;
-
-          setTimeout(() => {
-            this.showSuccessToast = false;
-          }, 3000);
+          this.showModal(this.createModalParams(true, 'Error al actualizar la asistencia'));
         }
       });
     }
@@ -149,10 +138,6 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     return now > meetingDateTime;
   }
 
-  closeToast() {
-    this.showSuccessToast = false;
-  }
-
   onCreateMeeting(): void {
     this.showCreateModal = true;
   }
@@ -160,26 +145,59 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   handleMeetingCreated(meeting: CreateMeetingDto): void {
     this.bookingService.bookMeeting(meeting).subscribe({
       next: (createdMeeting) => {
-        this.toastType = 'success';
-        this.toastMessage = 'Clase creada exitosamente';
-        this.showSuccessToast = true;
+        this.showModal(this.createModalParams(false, 'Clase creada exitosamente'));
         this.showCreateModal = false;
         this.fetchMeetings(this.filter);
-  
-        setTimeout(() => {
-          this.showSuccessToast = false;
-        }, 2000);
+
+        if (this.instructorLink && createdMeeting?.id && meeting.mode === 'ONLINE') {
+          this.assignLinkIfNeeded(createdMeeting.id);
+        } 
       },
       error: (error) => {
-        this.toastType = 'error';
-        this.toastMessage = error?.error?.message || 'No se pudo crear la clase';
-        this.showSuccessToast = true;
+        const msg = error?.error?.message || 'No se pudo crear la clase';
+        this.showModal(this.createModalParams(true, msg));
         this.showCreateModal = false;
-  
-        setTimeout(() => {
-          this.showSuccessToast = false;
-        }, 4000);
       }
     });
+  }
+
+  assignLinkIfNeeded(meetingId: number): void {
+    const updateLinkData: UpdateMeetingLinkDto = {
+      link: this.instructorLink!,
+      meetingIds: [meetingId],
+      instructorId: this.instructorId!
+    };
+  
+    this.bookingService.updateMeetingLink(updateLinkData).subscribe({
+      next: () => {
+        this.fetchMeetings(this.filter);
+        this.showModal(this.createModalParams(false, 'Link asignado correctamente.'));
+      },
+      error: () => {
+        this.showModal(this.createModalParams(true, 'Clase creada, pero error al asignar link.'));
+      }
+    });
+  }
+
+  showModal(params: ModalDto) {
+    this.modal = { ...params };
+    setTimeout(() => {
+      this.modal.close();
+    }, 3000);
+  }
+
+  closeModal = () => {
+    this.modal = { ...modalInitializer() };
+  }
+
+  createModalParams(isError: boolean, message: string): ModalDto {
+    return {
+      ...this.modal,
+      show: true,
+      isError,
+      isSuccess: !isError,
+      message,
+      close: this.closeModal
+    };
   }
 }
