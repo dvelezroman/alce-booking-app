@@ -5,4 +5,5 @@ export interface UserState {
   isAdmin: boolean;
   isLoggedIn: boolean;
   data: UserDto | null;
+  instructorLink: string | null;
 }

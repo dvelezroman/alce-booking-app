@@ -22,3 +22,8 @@ export const selectUserData = createSelector(
   selectUserState,
   (state: UserState) => state.data
 );
+
+export const selectInstructorLink = createSelector(
+  selectUserState,
+  (state: UserState) => state.instructorLink
+);

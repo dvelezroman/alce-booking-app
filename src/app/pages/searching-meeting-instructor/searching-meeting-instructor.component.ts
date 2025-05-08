@@ -2,15 +2,16 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { CreateMeetingDto, FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
+import { CreateMeetingDto, FilterMeetingsDto, MeetingDTO, UpdateMeetingLinkDto } from '../../services/dtos/booking.dto';
 import { BookingService } from '../../services/booking.service';
 import { Store } from '@ngrx/store';
 import { UserDto } from '../../services/dtos/user.dto';
-import { selectUserData } from '../../store/user.selector';
+import { selectInstructorLink, selectUserData } from '../../store/user.selector';
 import {Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
 import { DateTime } from 'luxon';
 import { CreateMeetingModalComponent } from '../../components/create-meeting/create-meeting-modal.component';
+import { setInstructorLink } from '../../store/user.action';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -30,9 +31,11 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   instructorId: number | null = null;
   showSuccessToast: boolean = false;
   toastMessage: string = '';
+  toastType: 'success' | 'error' = 'success';
   stages: Stage[] = [];
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
   showCreateModal = false;
+  instructorLink: string | null = null;
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -49,6 +52,10 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   ngOnInit(): void {
     this.filter.category = undefined;
+    this.store.select(selectInstructorLink).subscribe(link => {
+      this.instructorLink = link;
+      console.log('Instructor link:', link);
+    });
 
     this.stagesService.getAll().subscribe(response => {
       this.stages = response;
@@ -152,7 +159,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   handleMeetingCreated(meeting: CreateMeetingDto): void {
     this.bookingService.bookMeeting(meeting).subscribe({
-      next: () => {
+      next: (createdMeeting) => {
+        this.toastType = 'success';
         this.toastMessage = 'Clase creada exitosamente';
         this.showSuccessToast = true;
         this.showCreateModal = false;
@@ -162,14 +170,15 @@ export class SearchingMeetingInstructorComponent implements OnInit {
           this.showSuccessToast = false;
         }, 2000);
       },
-      error: () => {
-        this.toastMessage = 'No se pudo crear la clase';
+      error: (error) => {
+        this.toastType = 'error';
+        this.toastMessage = error?.error?.message || 'No se pudo crear la clase';
         this.showSuccessToast = true;
         this.showCreateModal = false;
   
         setTimeout(() => {
           this.showSuccessToast = false;
-        }, 3000);
+        }, 4000);
       }
     });
   }

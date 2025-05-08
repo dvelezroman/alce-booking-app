@@ -3,10 +3,11 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, Subject, tap} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Store} from "@ngrx/store";
-import {setAdminStatus, setLoggedInStatus, setUserData, unsetUserData} from "../store/user.action";
+import {setAdminStatus, setInstructorLink, setLoggedInStatus, setUserData, unsetUserData} from "../store/user.action";
 import {LoginDto, LoginResponseDto, RegisterResponseDto, UserDto, UserRole} from "./dtos/user.dto";
 import {Router} from "@angular/router";
 import {selectUserData} from "../store/user.selector";
+import { LinksService } from './links.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,7 @@ export class UsersService implements OnInit{
   constructor(
     private http: HttpClient,
     private store: Store,
+    private linksService: LinksService,
     private router: Router,
   ) {
     this.userData$ = this.store.select(selectUserData);
@@ -64,6 +66,12 @@ export class UsersService implements OnInit{
           this.store.dispatch(setAdminStatus({ isAdmin: response.role === UserRole.ADMIN }));
           this.store.dispatch(setLoggedInStatus({ isLoggedIn: !!response.accessToken }));
           this.store.dispatch(setUserData({ data: response }));
+          
+          if (response.role === UserRole.INSTRUCTOR && response.instructor?.meetingLink?.link) {
+            const link = response.instructor.meetingLink.link;
+            localStorage.setItem('instructorLink', link);
+            this.store.dispatch(setInstructorLink({ link }));
+          }
           if (response.accessToken) {
             this.router.navigate(['register-complete']);
           }
@@ -88,9 +96,11 @@ export class UsersService implements OnInit{
   logout(): void {
     if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('instructorLink');
       this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
       this.store.dispatch(setAdminStatus({ isAdmin: false }));
       this.store.dispatch(unsetUserData());
+      this.store.dispatch(setInstructorLink({ link: null }));
     }
   }
 

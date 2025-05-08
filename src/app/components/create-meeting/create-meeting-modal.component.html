@@ -44,10 +44,25 @@
             {{ user.firstName }} {{ user.lastName }}
           </div>
         </div>
+
+        <div class="field mt-4">
+          <label class="label">Modo de clase</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select [(ngModel)]="selectedMode" class="select custom-select">
+                <option [ngValue]="'ONLINE'">Online</option>
+                <option [ngValue]="'PRESENCIAL'">Presencial</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
+      <p *ngIf="validationMessage" class="has-text-danger is-flex is-justify-content-center mt-2 text-xs">
+        {{ validationMessage }}
+      </p>
   
       <footer class="modal-card-foot buttons-footer">
-        <button class="button is-blue" (click)="createMeeting()">Crear</button>
+        <button class="button is-blue" (click)="createMeeting()" [disabled]="!canCreateMeeting()">Crear</button>
         <button class="button is-purple" (click)="close.emit()">Cancelar</button>
       </footer>
     </div>

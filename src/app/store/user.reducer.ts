@@ -1,11 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
-import {setAdminStatus, setLoggedInStatus, setUserData, unsetUserData} from './user.action';
+import {setAdminStatus, setInstructorLink, setLoggedInStatus, setUserData, unsetUserData} from './user.action';
 import { UserState } from './user.state';
 
 const initialState: UserState = {
   isAdmin: false,
   isLoggedIn: false,
   data: null,
+  instructorLink: null,
 };
 
 export const userReducer = createReducer(
@@ -14,4 +15,5 @@ export const userReducer = createReducer(
   on(setLoggedInStatus, (state, { isLoggedIn }) => ({ ...state, isLoggedIn })),
   on(setUserData, (state, { data }) => ({ ...state, data })),
   on(unsetUserData, () => ({ ...initialState })),
+  on(setInstructorLink, (state, { link }) => ({ ...state, instructorLink: link })),
 );

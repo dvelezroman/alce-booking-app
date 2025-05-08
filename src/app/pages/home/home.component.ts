@@ -207,8 +207,7 @@ export class HomeComponent implements OnInit {
   
       if (day.hasMeeting && day.meetings && day.meetings.length > 0) {
         //console.log(`Reuniones para el día ${this.selectedDate.toDateString()}:`, day.meetings);
-  
-        this.meetingsOfDay = day.meetings;
+        this.meetingsOfDay = [...day.meetings].sort((a, b) => a.hour - b.hour);
         //console.log('Estructura de meetingsOfDay:', this.meetingsOfDay);
       } else {
         //console.log(`No hay reuniones para el día ${this.selectedDate.toDateString()}.`);
@@ -241,18 +240,22 @@ export class HomeComponent implements OnInit {
       next: (meetings) => {
         const daysWithMeetings = new Map<number, MeetingDTO[]>(); 
   
-        meetings
-          .filter((meeting: MeetingDTO) => new Date(meeting.date) > now) 
-          .forEach((meeting: MeetingDTO) => {
-            const meetingDate = new Date(meeting.date);
-            if (meetingDate.getMonth() === month && meetingDate.getFullYear() === year) {
-              const day = meetingDate.getDate();
-              if (!daysWithMeetings.has(day)) {
-                daysWithMeetings.set(day, []);
-              }
-              daysWithMeetings.get(day)?.push(meeting); 
+        meetings.forEach((meeting: MeetingDTO) => {
+          const meetingDate = new Date(meeting.date);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0); 
+        
+          if (meetingDate < today) {
+            return; 
+          }
+          if (meetingDate.getMonth() === month && meetingDate.getFullYear() === year) {
+            const day = meetingDate.getDate();
+            if (!daysWithMeetings.has(day)) {
+              daysWithMeetings.set(day, []);
             }
-          });
+            daysWithMeetings.get(day)?.push(meeting); 
+          }
+        });
   
         this.currentMonthDays = this.currentMonthDays.map(day => {
           if (typeof day.day === 'number' && daysWithMeetings.has(day.day)) {

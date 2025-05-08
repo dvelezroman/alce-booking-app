@@ -19,3 +19,8 @@ export const setUserData = createAction(
 export const unsetUserData = createAction(
   '[User] Unset Data In Status',
 );
+
+export const setInstructorLink = createAction(
+  '[User] Set Instructor Link',
+  props<{ link: string | null }>()
+);

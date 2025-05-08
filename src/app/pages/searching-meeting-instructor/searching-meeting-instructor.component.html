@@ -144,9 +144,11 @@
     </div>
   </section>
 
-<div class="notification is-success" *ngIf="showSuccessToast" [ngClass]="{ 'is-hidden': !showSuccessToast }">
-  {{ toastMessage }}
-</div>
+  <div
+    class="toast-center notification"
+    [ngClass]="{'is-success': toastType === 'success', 'is-danger': toastType === 'error'}" *ngIf="showSuccessToast">
+    {{ toastMessage }}
+  </div>
 
 <app-create-meeting-modal
   *ngIf="showCreateModal"

@@ -6,7 +6,8 @@ import { UserDto } from '../../services/dtos/user.dto';
 import { UsersService } from '../../services/users.service';
 import { CreateMeetingDto } from '../../services/dtos/booking.dto';
 import { convertEcuadorDateToLocal, convertEcuadorHourToLocal, getTimezoneOffsetHours } from '../../shared/utils/dates.util';
-import { StudentClassification } from '../../services/dtos/student.dto';
+import { Mode, StudentClassification } from '../../services/dtos/student.dto';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-create-meeting-modal',
@@ -30,6 +31,7 @@ export class CreateMeetingModalComponent implements OnInit {
   searchInput$ = new Subject<string>();
   showErrorToast = false;
   errorToastMessage = '';
+  selectedMode: Mode = Mode.ONLINE;
 
 
   constructor(private usersService: UsersService) {
@@ -41,6 +43,34 @@ export class CreateMeetingModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  isTodayOnly(): boolean {
+    if (!this.fromDate) return false;
+    const selected = DateTime.fromISO(this.fromDate).toFormat('yyyy-MM-dd');
+    const today = DateTime.now().setZone('America/Guayaquil').toFormat('yyyy-MM-dd');
+    return selected === today;
+  }
+
+  isHourValid(): boolean {
+    if (!this.hour || !this.isTodayOnly) return true;
+    const now = DateTime.now().setZone('America/Guayaquil');
+    const selectedHour = +this.hour;
+    return now.hour <= selectedHour;
+  }
+
+  canCreateMeeting(): boolean {
+    return this.isTodayOnly() && this.isHourValid();
+  }
+
+  get validationMessage(): string | null {
+    if (!this.isTodayOnly()) {
+      return 'Solo puedes agendar una clase para el día de hoy.';
+    }
+    if (!this.isHourValid()) {
+      return 'La hora seleccionada ya pasó. Elige una hora futura.';
+    }
+    return null;
   }
 
   onSearchChange(term: string): void {
@@ -80,8 +110,8 @@ export class CreateMeetingModalComponent implements OnInit {
   }
 
   createMeeting(): void {
-    if (!this.selectedStudent || !this.instructorId || !this.fromDate || !this.hour) {
-      this.errorToastMessage = 'Faltan datos para crear la reunión';
+    if (!this.selectedStudent || !this.instructorId || !this.fromDate || !this.hour  || !this.selectedMode) {
+      this.errorToastMessage = 'Faltan datos para crear la clase';
       this.showErrorToast = true;
   
       setTimeout(() => {
@@ -113,7 +143,7 @@ export class CreateMeetingModalComponent implements OnInit {
       hour,
       localdate: formattedDate,
       localhour: Number(this.hour),
-      mode: this.selectedStudent.student!.mode,
+      mode: this.selectedMode,
       category: this.selectedStudent.student!.studentClassification ?? StudentClassification.ADULTS,
     };
   

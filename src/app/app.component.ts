@@ -5,10 +5,10 @@ import {SpinnerComponent} from "./components/spinner/spinner.component";
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { UsersService } from './services/users.service';
 import {CommonModule, registerLocaleData} from '@angular/common';
-import {selectIsLoggedIn, selectIsRegistered, selectUserData} from "./store/user.selector";
+import { selectIsLoggedIn, selectIsRegistered, selectUserData} from "./store/user.selector";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {setAdminStatus, setLoggedInStatus, unsetUserData} from "./store/user.action";
+import {setAdminStatus, setInstructorLink, setLoggedInStatus, unsetUserData} from "./store/user.action";
 import {UserDto, UserRole} from "./services/dtos/user.dto";
 import localeEs from '@angular/common/locales/es';
 import { ModalDto, modalInitializer } from './components/modal/modal.dto';
@@ -63,9 +63,13 @@ export class AppComponent implements OnInit {
       this.isLoggedIn = state;
     });
     this.userData$.subscribe(state => {
-      // console.log(state);
+       //console.log(state);
       this.userData = state;
     });
+    const savedLink = localStorage.getItem('instructorLink');
+    if (savedLink) {
+      this.store.dispatch(setInstructorLink({ link: savedLink }));
+    }
     this.isRegistered$.subscribe(state => {
       this.isRegistered = state;
       if (this.isLoggedIn && !this.isRegistered) {
