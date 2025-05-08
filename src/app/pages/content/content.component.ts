@@ -7,6 +7,8 @@ import { Stage } from '../../services/dtos/student.dto';
 import { StagesService } from '../../services/stages.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditContentModalComponent } from '../../components/contenido/edit-content-modal/edit-content-modal.component';
+import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
+import { ModalComponent } from '../../components/modal/modal.component';
 
 @Component({
   selector: 'app-content',
@@ -15,7 +17,8 @@ import { EditContentModalComponent } from '../../components/contenido/edit-conte
       CommonModule,
       ContentFormComponent,
       ReactiveFormsModule,
-      EditContentModalComponent
+      EditContentModalComponent,
+      ModalComponent
     ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
@@ -25,6 +28,7 @@ export class ContentComponent implements OnInit {
   stages: Stage[] = [];
   filteredContents: StudyContentDto[] = [];
   contentToEdit: StudyContentDto | null = null;
+  modal: ModalDto = modalInitializer();
 
   filterForm: FormGroup;
 
@@ -43,6 +47,15 @@ export class ContentComponent implements OnInit {
     this.stagesService.getAll().subscribe(stages => {
       this.stages = stages;
     });
+  }
+
+  parseContent(content: string | null | undefined): string {
+    try {
+      const parsed = JSON.parse(content ?? '""');
+      return typeof parsed === 'string' ? parsed : '';
+    } catch {
+      return content ?? '';
+    }
   }
 
   openModal() {
@@ -69,10 +82,12 @@ export class ContentComponent implements OnInit {
     this.showModal = false;
     this.studyContentService.create(data).subscribe({
       next: (response) => {
-        console.log('Contenido creado exitosamente:', response);
+        this.showNotification('Contenido creado correctamente', false, true);
+        this.searchContent();
       },
       error: (err) => {
-        console.error('Error al crear el contenido:', err);
+        this.showNotification('Error al crear el contenido', true);
+        console.error(err);
       }
     });
   }
@@ -87,12 +102,13 @@ export class ContentComponent implements OnInit {
   
     this.studyContentService.update(this.contentToEdit.id, updated).subscribe({
       next: (res) => {
-        console.log('Contenido actualizado:', res);
+        this.showNotification('Contenido actualizado correctamente', false, true);
         this.contentToEdit = null;
-        this.searchContent(); 
+        this.searchContent();
       },
       error: (err) => {
         console.error('Error al actualizar contenido:', err);
+        this.showNotification('Error al actualizar el contenido', true);
       }
     });
   }
@@ -101,16 +117,46 @@ export class ContentComponent implements OnInit {
     this.contentToEdit = null;
   }
 
-  deleteContent(id: number) {
+  confirmDelete(id: number) {
     this.studyContentService.delete(id).subscribe({
       next: () => {
-        console.log(`${id} eliminado correctamente`);
+        this.showNotification('Contenido eliminado correctamente', false, true);
         this.searchContent();
       },
       error: (err) => {
         console.error('Error al eliminar contenido:', err);
+        this.showNotification('Error al eliminar el contenido', true);
       }
     });
+  
+    this.modal.show = false;
+  }
+
+  deleteContent(id: number) {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: '¿Estás seguro de eliminar este contenido?',
+      isInfo: true,
+      showButtons: true,
+      close: () => this.modal.show = false,
+      confirm: () => this.confirmDelete(id)
+    };
+  }
+
+  showNotification(message: string, isError: boolean = false, isSuccess: boolean = false) {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message,
+      isError,
+      isSuccess,
+      close: () => this.modal.show = false
+    };
+  
+    setTimeout(() => {
+      this.modal.show = false;
+    }, 2500);
   }
 
   protected readonly JSON = JSON;

@@ -43,9 +43,9 @@ export class EditContentModalComponent implements OnInit {
   private tryExtractText(raw: string): string {
     try {
       const parsed = JSON.parse(raw);
-      return parsed?.texto || '';
+      return typeof parsed === 'string' ? parsed : '';
     } catch {
-      return '';
+      return raw ?? '';
     }
   }
 

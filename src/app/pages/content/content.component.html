@@ -83,10 +83,14 @@
 <!--                  {{ content.enabled ? 'Activo' : 'Inactivo' }}-->
 <!--                </span>-->
 <!--              </td>-->
-              <td>{{ content.content }}</td>
+              <td>{{ parseContent(content.content) }}</td>
               <td class="table-actions">
-                <button class="button button-edit mr-2" (click)="editContent(content)">Editar</button>
-                <button class="button button-delete" (click)="deleteContent(content.id)">Eliminar</button>
+                <button (click)="editContent(content)" class="icon-button edit-icon" title="Editar">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button (click)="deleteContent(content.id)" class="icon-button delete-icon" title="Eliminar">
+                  <i class="fas fa-trash"></i>
+                </button>
               </td>
             </tr>
           </tbody>
@@ -94,3 +98,14 @@
       </div>
     </div>
   </div>
+
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm?.()"
+    (close)="modal.close()">
+</app-modal>
