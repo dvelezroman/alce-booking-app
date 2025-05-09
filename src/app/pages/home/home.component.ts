@@ -228,50 +228,61 @@ export class HomeComponent implements OnInit {
   }
 
   getInstructorMeetings(selectedDate: Date) {
-    const month = selectedDate.getMonth();
-    const year = selectedDate.getFullYear();
-    const now = new Date(); 
-  
-    this.bookingService.getInstructorMeetingsGroupedByHour({
-      from: new Date(year, month, 1).toISOString(),
-      to: new Date(year, month + 1, 0).toISOString(),
-      instructorId: this.instructorId?.toString()
-    }).subscribe({
-      next: (meetings) => {
-        const daysWithMeetings = new Map<number, MeetingDTO[]>(); 
-  
-        meetings.forEach((meeting: MeetingDTO) => {
-          const meetingDate = new Date(meeting.date);
-          const today = new Date();
-          today.setHours(0, 0, 0, 0); 
-        
-          if (meetingDate < today) {
-            return; 
-          }
-          if (meetingDate.getMonth() === month && meetingDate.getFullYear() === year) {
-            const day = meetingDate.getDate();
-            if (!daysWithMeetings.has(day)) {
-              daysWithMeetings.set(day, []);
-            }
-            daysWithMeetings.get(day)?.push(meeting); 
-          }
-        });
-  
-        this.currentMonthDays = this.currentMonthDays.map(day => {
-          if (typeof day.day === 'number' && daysWithMeetings.has(day.day)) {
-            return {
-              ...day,
-              hasMeeting: true,
-              meetings: daysWithMeetings.get(day.day) || []
-            };
-          }
-          return { ...day, hasMeeting: false, meetings: [] };
-        });
-      },
-      error: (error) => console.error('Error al obtener reuniones:', error)
+  const month = selectedDate.getMonth();
+  const year = selectedDate.getFullYear();
+
+  const from = new Date(year, month, 1).toISOString();
+  const to = new Date(year, month + 1, 0).toISOString();
+
+  this.bookingService.getInstructorMeetingsGroupedByHour({
+    from,
+    to,
+    instructorId: this.instructorId?.toString()
+  }).subscribe({
+    next: (meetings) => this.processMeetings(meetings, month, year),
+    error: (error) => console.error('Error al obtener reuniones:', error)
+  });
+}
+
+  private processMeetings(meetings: MeetingDTO[], month: number, year: number) {
+    const daysWithMeetings = this.groupMeetingsByDay(meetings, month, year);
+
+    this.currentMonthDays = this.currentMonthDays.map(day => {
+      if (typeof day.day === 'number' && daysWithMeetings.has(day.day)) {
+        return {
+          ...day,
+          hasMeeting: true,
+          meetings: daysWithMeetings.get(day.day) || []
+        };
+      }
+      return { ...day, hasMeeting: false, meetings: [] };
     });
   }
 
+  private groupMeetingsByDay(meetings: MeetingDTO[], month: number, year: number): Map<number, MeetingDTO[]> {
+    const daysWithMeetings = new Map<number, MeetingDTO[]>();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    meetings.forEach((meeting: MeetingDTO) => {
+      const meetingDate = new Date(meeting.date);
+
+      if (meetingDate < today) {
+        return; 
+      }
+
+      if (meetingDate.getMonth() === month && meetingDate.getFullYear() === year) {
+        const day = meetingDate.getDate();
+        if (!daysWithMeetings.has(day)) {
+          daysWithMeetings.set(day, []);
+        }
+        daysWithMeetings.get(day)?.push(meeting);
+      }
+    });
+
+    return daysWithMeetings;
+  }
+  
   openThemeModal(item: any) {
     this.selectedMeeting = {
       meetingThemeId: item.meetingThemeId,
@@ -376,3 +387,4 @@ export class HomeComponent implements OnInit {
 
 
 }
+

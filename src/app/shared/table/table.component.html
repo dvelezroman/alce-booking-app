@@ -1,0 +1,83 @@
+<div class="container is-fluid has-background-white centered-table-container">
+  <div class="table-container no-border-container">
+    <table class="table is-striped is-hoverable is-fullwidth has-background-white is-custom-small">
+
+      <!-- Encabezado -->
+      <thead style="background-color: #e0f2fa;">
+        <tr>
+          <th *ngIf="selectable" class="has-text-black">
+            <input type="checkbox" [checked]="selectedItems.length === data.length" (change)="selectAll($event)">
+          </th>
+          <th *ngFor="let col of columns" class="has-text-black">
+            {{ columnLabels[col] || col }}
+          </th>
+          <th *ngIf="showActions" class="has-text-black">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of paginatedData" class="has-background-white ">
+          <td *ngIf="selectable" class="has-text-black">
+            <input type="checkbox" [checked]="isSelected(item)" (change)="toggleSelection(item)">
+          </td>
+          <td *ngFor="let col of columns" class="has-text-black">
+            <ng-container *ngIf="col === 'present'; else normalCell">
+              <input
+                type="checkbox"
+                [checked]="item[col]"
+                (change)="onActionClick('togglePresence', item)"
+                [disabled]="isCheckboxDisabled(item)"
+              />
+            </ng-container>
+
+            <ng-template #normalCell>
+              <ng-container *ngIf="isDateField(item[col]); else showText">
+                {{ item[col] | luxonDateOnly }}
+              </ng-container>
+              <ng-template #showText>
+                {{ item[col] }}
+              </ng-template>
+            </ng-template>
+          </td>
+          <td *ngIf="showActions" class="has-text-black">
+            <button
+              *ngFor="let action of actions"
+              class="button is-small is-light mr-1"
+              [ngClass]="{
+                'is-danger': action === 'delete',
+                'is-info': action === 'edit'
+              }"
+              (click)="onActionClick(action, item)"
+            >
+              {{ action }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+</div>
+
+  <!-- Pagination -->
+<div *ngIf="manualPagination" class="w-full max-w-6xl mx-auto flex justify-between items-center mt-4">
+  <div class="text-xs text-gray-600 dark:text-zinc-300">
+    Página {{ currentPage }} de {{ totalPages }}
+  </div>
+    <div class="space-x-2">
+      <button
+      (click)="changePage(currentPage - 1)"
+      [disabled]="currentPage === 1"
+      class="px-2 py-1 text-xs bg-gray-200 dark:bg-zinc-800 text-gray-800 dark:text-white rounded disabled:opacity-50"
+    >
+      Anterior
+    </button>
+    <button
+      (click)="changePage(currentPage + 1)"
+      [disabled]="currentPage === totalPages"
+      class="px-2 py-1 text-xs bg-gray-200 dark:bg-zinc-800 text-gray-800 dark:text-white rounded disabled:opacity-50"
+    >
+      Siguiente
+    </button>
+  </div>
+</div>

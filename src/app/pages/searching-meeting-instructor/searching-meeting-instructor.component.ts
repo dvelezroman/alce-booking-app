@@ -13,6 +13,7 @@ import { DateTime } from 'luxon';
 import { CreateMeetingModalComponent } from '../../components/create-meeting/create-meeting-modal.component';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
+import { TableComponent } from '../../shared/table/table.component';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -22,7 +23,8 @@ import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
     RouterModule,
     FormsModule,
     CreateMeetingModalComponent,
-    ModalComponent
+    ModalComponent,
+    TableComponent
   ],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'
@@ -44,6 +46,19 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     assigned: true,
     category: undefined
   };
+
+  tableColumns = ['stage', 'category', 'name', 'localdate', 'localhour', 'comment', 'linkOpened', 'present'];
+  tableColumnLabels: Record<string, string> = {
+    stage: 'Stage',
+    category: 'Categoría',
+    name: 'Nombre',
+    localdate: 'Fecha',
+    localhour: 'Hora',
+    comment: 'Observación',
+    linkOpened: 'Abrió Enlace',
+    present: 'Marcar Asistencia',
+  };
+  
   constructor(
     private bookingService: BookingService,
     private stagesService: StagesService,
@@ -75,6 +90,28 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     });
   }
 
+  get formattedMeetings() {
+  return this.meetings.map(meeting => ({
+    source: meeting,
+    stage: meeting.stage?.number || 'Stage no disponible',
+    category: meeting.student?.studentClassification || 'Categoría no disponible',
+    name: `${meeting.student?.user?.firstName || ''} ${meeting.student?.user?.lastName || ''}`.trim() || 'Nombre no disponible',
+    localdate: meeting.localdate,
+    localhour: `${meeting.localhour}:00`,
+    comment: meeting.student?.user?.comment || 'Sin observación',
+    linkOpened: this.hasMeetingPassed(meeting.localdate, meeting.localhour)
+      ? (meeting.linkOpened ? '✔️' : '❌')
+      : '-',
+    present: meeting.present
+  }));
+}
+
+  handleTableAction(event: { action: string; item: any }) {
+    if (event.action === 'togglePresence') {
+      this.toggleSelection(event.item.source);  
+    }
+  }
+
   isToday(date: Date | string): boolean {
     if (!date) return false;
   
@@ -85,6 +122,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   
     return today.toISODate() === meetingDate.toISODate();
   }
+
+  disableCheckboxIfNotToday = (item: any) => !this.isToday(item.localdate);
 
   onFilterChange(): void {
     const filterParams: FilterMeetingsDto = {
@@ -202,3 +241,4 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     };
   }
 }
+
