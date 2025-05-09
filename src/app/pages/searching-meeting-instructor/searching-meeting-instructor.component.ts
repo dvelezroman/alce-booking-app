@@ -215,6 +215,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       },
       error: () => {
         this.showModal(this.createModalParams(true, 'Clase creada, pero error al asignar link.'));
+        this.fetchMeetings(this.filter);
       }
     });
   }

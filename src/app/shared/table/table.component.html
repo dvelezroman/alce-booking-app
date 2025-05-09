@@ -60,23 +60,15 @@
 </div>
 
   <!-- Pagination -->
-<div *ngIf="manualPagination" class="w-full max-w-6xl mx-auto flex justify-between items-center mt-4">
-  <div class="text-xs text-gray-600 dark:text-zinc-300">
+<div *ngIf="manualPagination" class="pagination-wrapper">
+  <div class="pagination-info">
     Página {{ currentPage }} de {{ totalPages }}
   </div>
-    <div class="space-x-2">
-      <button
-      (click)="changePage(currentPage - 1)"
-      [disabled]="currentPage === 1"
-      class="px-2 py-1 text-xs bg-gray-200 dark:bg-zinc-800 text-gray-800 dark:text-white rounded disabled:opacity-50"
-    >
+  <div class="pagination-buttons">
+    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
       Anterior
     </button>
-    <button
-      (click)="changePage(currentPage + 1)"
-      [disabled]="currentPage === totalPages"
-      class="px-2 py-1 text-xs bg-gray-200 dark:bg-zinc-800 text-gray-800 dark:text-white rounded disabled:opacity-50"
-    >
+    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
       Siguiente
     </button>
   </div>
