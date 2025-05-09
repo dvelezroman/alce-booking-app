@@ -143,42 +143,25 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   }
 
   handleMeetingCreated(meeting: CreateMeetingDto): void {
-    this.bookingService.bookMeeting(meeting).subscribe({
-      next: (createdMeeting) => {
-        this.showCreateModal = false;
+  const meetingWithInstructorInfo: CreateMeetingDto = {
+    ...meeting,
+    link: this.instructorLink ?? undefined,
+    password: this.instructorId ? this.instructorId.toString() : undefined,
+  };
 
-        if (this.instructorLink && createdMeeting?.id && meeting.mode === 'ONLINE') {
-          this.assignLinkIfNeeded(createdMeeting.id); 
-        } else {
-          this.showModal(this.createModalParams(false, 'Clase creada exitosamente.'));
-          this.fetchMeetings(this.filter);
-        }
-      },
-      error: (error) => {
-        const msg = error?.error?.message || 'No se pudo crear la clase';
-        this.showModal(this.createModalParams(true, msg));
-        this.showCreateModal = false;
-      }
-    });
-  }
-
-  assignLinkIfNeeded(meetingId: number): void {
-    const updateLinkData: UpdateMeetingLinkDto = {
-      link: this.instructorLink!,
-      meetingIds: [meetingId],
-      instructorId: this.instructorId!
-    };
-  
-    this.bookingService.updateMeetingLink(updateLinkData).subscribe({
-      next: () => {
-        this.fetchMeetings(this.filter);
-        this.showModal(this.createModalParams(false, 'Clase creada exitosamente'));
-      },
-      error: () => {
-        this.showModal(this.createModalParams(true, 'Clase creada, pero error al asignar link.'));
-      }
-    });
-  }
+  this.bookingService.bookMeeting(meetingWithInstructorInfo).subscribe({
+    next: () => {
+      this.showCreateModal = false;
+      this.showModal(this.createModalParams(false, 'Clase creada exitosamente.'));
+      this.fetchMeetings(this.filter);
+    },
+    error: (error) => {
+      const msg = error?.error?.message || 'No se pudo crear la clase';
+      this.showModal(this.createModalParams(true, msg));
+      this.showCreateModal = false;
+    }
+  });
+}
 
   showModal(params: ModalDto) {
     this.modal = { ...params };
