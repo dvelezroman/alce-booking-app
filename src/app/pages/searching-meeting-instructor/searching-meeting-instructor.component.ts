@@ -145,13 +145,14 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   handleMeetingCreated(meeting: CreateMeetingDto): void {
     this.bookingService.bookMeeting(meeting).subscribe({
       next: (createdMeeting) => {
-        this.showModal(this.createModalParams(false, 'Clase creada exitosamente'));
         this.showCreateModal = false;
-        this.fetchMeetings(this.filter);
 
         if (this.instructorLink && createdMeeting?.id && meeting.mode === 'ONLINE') {
-          this.assignLinkIfNeeded(createdMeeting.id);
-        } 
+          this.assignLinkIfNeeded(createdMeeting.id); 
+        } else {
+          this.showModal(this.createModalParams(false, 'Clase creada exitosamente.'));
+          this.fetchMeetings(this.filter);
+        }
       },
       error: (error) => {
         const msg = error?.error?.message || 'No se pudo crear la clase';
@@ -171,7 +172,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.bookingService.updateMeetingLink(updateLinkData).subscribe({
       next: () => {
         this.fetchMeetings(this.filter);
-        this.showModal(this.createModalParams(false, 'Link asignado correctamente.'));
+        this.showModal(this.createModalParams(false, 'Clase creada exitosamente'));
       },
       error: () => {
         this.showModal(this.createModalParams(true, 'Clase creada, pero error al asignar link.'));
