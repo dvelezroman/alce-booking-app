@@ -143,12 +143,12 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   }
 
 handleMeetingCreated(meeting: CreateMeetingDto): void {
-  const shouldIncludeLink = meeting.mode === 'ONLINE';
+  const isOnline = meeting.mode === 'ONLINE';
 
   const meetingWithInstructorInfo: CreateMeetingDto = {
     ...meeting,
-    link: shouldIncludeLink ? this.instructorLink ?? undefined : undefined,
-    password: shouldIncludeLink && this.instructorId ? this.instructorId.toString() : undefined,
+    link: isOnline ? this.instructorLink ?? undefined : undefined,
+    password: isOnline && this.instructorId ? this.instructorId.toString() : undefined,
   };
 
   this.bookingService.bookMeeting(meetingWithInstructorInfo).subscribe({
