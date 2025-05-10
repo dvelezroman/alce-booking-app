@@ -1,148 +1,153 @@
 <section class="section">
-    <div class="container">
+  <div class="container">
 
-      <div class="block title-container">
-        <h1 class="title">Buscar Meetings</h1>
-      </div>
+    <div class="block title-container">
+      <h1 class="title">Buscar Meetings</h1>
+    </div>
 
-      <div class="block-search">
-        <form>
-          <!-- Inputs de fecha -->
-          <div class="columns is-mobile">
-            <div class="column">
-              <div class="field">
-                <label class="label">Fecha desde</label>
-                <div class="control input-date-container">
-                  <input class="input" type="date" [(ngModel)]="filter.from" name="from" (ngModelChange)="onFilterChange()">
-                  <span class="icon-calendar material-icons">calendar_today</span>
+    <div class="columns is-variable mt-6">
+      <!-- Formulario de Búsqueda de Meetings -->
+      <div class="column is-half">
+        <div class="block-search">
+          <form>
+            <!-- Inputs de fecha -->
+            <div class="columns is-mobile">
+              <div class="column">
+                <div class="field">
+                  <label class="label">Fecha desde</label>
+                  <div class="control input-date-container">
+                    <input class="input" type="date" [(ngModel)]="filter.from" name="from" (ngModelChange)="onFilterChange()">
+                    <span class="icon-calendar material-icons">calendar_today</span>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div class="column">
-              <div class="field">
-                <label class="label">Fecha hasta</label>
-                <div class="control input-date-container">
-                  <input class="input" type="date" [(ngModel)]="filter.to" name="to" (ngModelChange)="onFilterChange()">
-                  <span class="icon-calendar material-icons">calendar_today</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Input de stage -->
-          <div class="columns is-mobile">
-            <div class="column">
-              <div class="field">
-               <!-- <label class="label">Stage</label>-->
-                <div class="control">
-                  <div class="select is-fullwidth">
-                    <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onFilterChange()">
-                      <option value="">Stages</option>
-                      <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
-                    </select>
+              <div class="column">
+                <div class="field">
+                  <label class="label">Fecha hasta</label>
+                  <div class="control input-date-container">
+                    <input class="input" type="date" [(ngModel)]="filter.to" name="to" (ngModelChange)="onFilterChange()">
+                    <span class="icon-calendar material-icons">calendar_today</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Input de hora -->
-            <div class="column">
-              <div class="field">
-               <!-- <label class="label">Hora</label>-->
-                <div class="control">
-                  <div class="select is-fullwidth">
-                    <select [(ngModel)]="filter.hour" name="hour" (ngModelChange)="onFilterChange()">
-                      <option value="">Todas las horas</option>
-                      <option *ngFor="let hour of availableHours" [value]="hour">{{ hour }}:00</option>
-                    </select>
-                  </div>
+            <!-- Input de Stage -->
+            <div class="field">
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onFilterChange()">
+                    <option value="">Stages</option>
+                    <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+                  </select>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="columns is-mobile">
-            <div class="column">
-              <div class="field">
-                <label class="label">Categoría</label>
-                <div class="control">
-                  <div class="select is-fullwidth">
-                    <select [(ngModel)]="filter.category" name="category" (ngModelChange)="onFilterChange()">
-                      <option [ngValue]="undefined">Todas las categorías</option>
-                      <option *ngFor="let category of ageGroupOptions" [value]="category">{{ category }}</option>
-                    </select>
-                  </div>
+
+            <!-- Input de Hora -->
+            <div class="field">
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select [(ngModel)]="filter.hour" name="hour" (ngModelChange)="onFilterChange()">
+                    <option value="">Todas las horas</option>
+                    <option *ngFor="let hour of availableHours" [value]="hour">{{ hour }}:00</option>
+                  </select>
                 </div>
               </div>
             </div>
-          </div>
-        </form>
+
+            <!-- Input de Categoría -->
+            <div class="field">
+              <label class="label">Categoría</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select [(ngModel)]="filter.category" name="category" (ngModelChange)="onFilterChange()">
+                    <option [ngValue]="undefined">Todas las categorías</option>
+                    <option *ngFor="let category of ageGroupOptions" [value]="category">{{ category }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
 
-      <!-- Botón de Crear Meeting -->
-      <div class="field has-text-centered mt-4" *ngIf="filter.from && filter.hour">
-        <button class="button is-link is-mediun" type="button" (click)="onCreateMeeting()">
-          + Crear meeting
-        </button>
-      </div>
-
-      <!-- Resultados de la búsqueda -->
-      <div class="block-results">
-        <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
-          No hay meetings para el rango asignado.
-        </p>
-
-        <!-- Scrollable container for small devices -->
-        <div class="table-container">
-          <table class="table-results is-fullwidth" *ngIf="meetings && meetings.length > 0">
-            <thead>
-            <tr>
-              <th>Stage</th>
-              <th>Categoría</th>
-              <th>Nombre</th>
-              <!-- <th>Correo</th> -->
-              <th>Fecha</th>
-              <th>Hora</th>
-              <!-- <th>Instructor</th> -->
-              <th>Observación</th>
-              <th>Abrió Enlace</th>
-              <th>Marcar Asistencia</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let meeting of meetings">
-              <td data-label="Stage">{{ meeting.stage?.number || 'Stage no disponible' }}</td>
-              <td data-label="Categoría">{{ meeting.student?.studentClassification || 'Categoría no disponible' }}</td>
-              <td data-label="Nombre" style="white-space: normal; vertical-align: top;">
-                {{ meeting.student?.user?.firstName || 'Nombre no disponible' }}
-                {{ meeting.student?.user?.lastName || '' }}
-              </td>
-              <!-- <td data-label="Usuario">{{ meeting.student?.user?.email || 'Correo no disponible' }}</td> -->
-              <td data-label="Fecha">{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
-              <td data-label="Hora">{{ meeting.localhour }}:00</td>
-              <!-- <td data-label="Instructor">{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td> -->
-              <td data-label="Observación" class="tooltip-container">
-                <span class="tooltip" [hidden]="!meeting.student?.user?.comment" [title]="meeting.student?.user?.comment">
-                  {{ meeting.student?.user?.comment || 'Sin observación' }}
-                </span>
-              </td>
-              <td data-label="Abrió Enlace">
-                <ng-container *ngIf="hasMeetingPassed(meeting.localdate, meeting.localhour); else futureMeeting">
-                  <span *ngIf="meeting.linkOpened; else notOpened">✔️</span>
-                  <ng-template #notOpened>❌</ng-template>
-                </ng-container>
-                <ng-template #futureMeeting>-</ng-template>
-              </td>
-              <td data-label="Marcar Asistencia">
-                <input type="checkbox" [checked]="meeting.present" (change)="toggleSelection(meeting)" [disabled]="!isToday(meeting.localdate)" />
-              </td>
-            </tr>
-            </tbody>
-          </table>
+      <!-- Formulario de Selección de Contenido -->
+      <div class="column is-half">
+        <div class="card-content content-selector-card">
+          <h2 class="title has-text-weight-bold mb-2">Seleccione el Contenido para la Clase</h2>
+          <app-content-selector
+            [stages]="stages"
+            (contentIdsSelected)="onContentIdsSelected($event)"
+          ></app-content-selector>
         </div>
       </div>
     </div>
-  </section>
+
+    <!-- Botón de Crear Meeting -->
+    <div class="field has-text-centered mt-4" *ngIf="filter.from && filter.hour">
+      <button class="button is-link is-mediun" type="button" (click)="onCreateMeeting()">
+        + Crear meeting
+      </button>
+    </div>
+
+    <!-- Resultados de la búsqueda -->
+    <div class="block-results">
+      <p *ngIf="filter.from && filter.to && meetings && meetings.length === 0" class="no-results-message">
+        No hay meetings para el rango asignado.
+      </p>
+
+      <!-- Scrollable container for small devices -->
+      <div class="table-container">
+        <table class="table-results is-fullwidth" *ngIf="meetings && meetings.length > 0">
+          <thead>
+          <tr>
+            <th>Stage</th>
+            <th>Categoría</th>
+            <th>Nombre</th>
+            <!-- <th>Correo</th> -->
+            <th>Fecha</th>
+            <th>Hora</th>
+            <!-- <th>Instructor</th> -->
+            <th>Observación</th>
+            <th>Abrió Enlace</th>
+            <th>Marcar Asistencia</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let meeting of meetings">
+            <td data-label="Stage">{{ meeting.stage?.number || 'Stage no disponible' }}</td>
+            <td data-label="Categoría">{{ meeting.student?.studentClassification || 'Categoría no disponible' }}</td>
+            <td data-label="Nombre" style="white-space: normal; vertical-align: top;">
+              {{ meeting.student?.user?.firstName || 'Nombre no disponible' }}
+              {{ meeting.student?.user?.lastName || '' }}
+            </td>
+            <!-- <td data-label="Usuario">{{ meeting.student?.user?.email || 'Correo no disponible' }}</td> -->
+            <td data-label="Fecha">{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
+            <td data-label="Hora">{{ meeting.localhour }}:00</td>
+            <!-- <td data-label="Instructor">{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td> -->
+            <td data-label="Observación" class="tooltip-container">
+              <span class="tooltip" [hidden]="!meeting.student?.user?.comment" [title]="meeting.student?.user?.comment">
+                {{ meeting.student?.user?.comment || 'Sin observación' }}
+              </span>
+            </td>
+            <td data-label="Abrió Enlace">
+              <ng-container *ngIf="hasMeetingPassed(meeting.localdate, meeting.localhour); else futureMeeting">
+                <span *ngIf="meeting.linkOpened; else notOpened">✔️</span>
+                <ng-template #notOpened>❌</ng-template>
+              </ng-container>
+              <ng-template #futureMeeting>-</ng-template>
+            </td>
+            <td data-label="Marcar Asistencia">
+              <input type="checkbox" [checked]="meeting.present" (change)="toggleSelection(meeting)" [disabled]="!isToday(meeting.localdate)" />
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 <app-create-meeting-modal

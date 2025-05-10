@@ -13,6 +13,7 @@ import { DateTime } from 'luxon';
 import { CreateMeetingModalComponent } from '../../components/create-meeting/create-meeting-modal.component';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
+import { ContentSelectorComponent } from '../../components/content-selector/content-selector.component';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -22,7 +23,8 @@ import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
     RouterModule,
     FormsModule,
     CreateMeetingModalComponent,
-    ModalComponent
+    ModalComponent,
+    ContentSelectorComponent 
   ],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'
@@ -164,6 +166,11 @@ handleMeetingCreated(meeting: CreateMeetingDto): void {
       this.showCreateModal = false;
     }
   });
+}
+
+onContentIdsSelected(ids: number[]) {
+  this.studyContentIds = ids;
+  console.log('Contenidos seleccionados:', this.studyContentIds);
 }
 
   showModal(params: ModalDto) {
