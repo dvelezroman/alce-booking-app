@@ -92,8 +92,8 @@ export class BookingService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  updateAssistance(id: number, present: boolean): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/assistance/${id}`, { present });
+  updateAssistance(id: number, present: boolean, studyContentIds: number[]): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/assistance/${id}`, { present, studyContentIds });
   }
 
   clickAssistanceByStudent(meetingId: number): Observable<any> {
