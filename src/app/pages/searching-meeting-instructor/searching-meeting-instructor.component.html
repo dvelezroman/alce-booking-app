@@ -76,12 +76,26 @@
     </div>
 
       <!-- Formulario de Selección de Contenido -->
-    <div *ngIf="meetings.length > 0" class="card-content content-selector-card">
-      <h2 class="title has-text-weight-bold">Seleccione el Contenido para la Clase</h2>
-      <app-content-selector
-        [stages]="stages"
-        (contentIdsSelected)="onContentIdsSelected($event)"
-      ></app-content-selector>
+    <div *ngIf="meetings.length > 0" class="content-selection-wrapper">
+      <!-- Formulario de Selección -->
+      <div class="content-selector-card">
+        <h2 class="title has-text-weight-bold">Seleccione el Contenido para la Clase</h2>
+        <app-content-selector
+          [stages]="stages"
+          (contentIdsSelected)="onContentIdsSelected($event)">
+        </app-content-selector>
+      </div>
+
+      <!-- Mostrar solo si hay contenidos -->
+      <ng-container *ngIf="studyContentIds.length > 0">
+        <div class="content-summary-box has-text-dark">
+          <button class="delete" (click)="clearSelectedContents()"></button>
+          <h4>Contenidos listos:</h4>
+          <ul>
+            <li *ngFor="let content of studyContentOptions">{{ content.name }}</li>
+          </ul>
+        </div>
+      </ng-container>
     </div>
 
 

@@ -62,5 +62,6 @@ export class ContentSelectorComponent {
 
   confirmSelection() {
   this.emitSelectedContentIds();
+   this.selectedContents = [];
 }
 }

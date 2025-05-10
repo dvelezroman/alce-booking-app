@@ -90,35 +90,35 @@ export class HomeComponent implements OnInit {
 
   }
 
- private loadStudyContents() {
-  this.studyContentService.getAll().subscribe(contents => {
-    this.studyContentOptions = contents.map(c => ({
-      id: c.id,
-      name: `Unidad ${c.unit}: ${c.title}`
-    }));
-    //console.log('Contenidos:', this.studyContentOptions);
-  });
-}
-
-get studyContentNames(): string {
-  if (this.studyContentOptions.length === 0) return 'Sin contenidos asignados';
-  return this.studyContentOptions.map(c => c.name).join('\n');
-}
-
-private loadStudyContentNames(contentIds: number[]) {
-  this.studyContentOptions = [];  // Limpiar antes de volver a cargar
-
-  if (contentIds.length > 0) {
-    const requests = contentIds.map(id => this.studyContentService.getById(id));
-    forkJoin(requests).subscribe(contents => {
+  private loadStudyContents() {
+    this.studyContentService.getAll().subscribe(contents => {
       this.studyContentOptions = contents.map(c => ({
         id: c.id,
         name: `Unidad ${c.unit}: ${c.title}`
       }));
-      console.log('Contenidos cargados:', this.studyContentOptions);
+      //console.log('Contenidos:', this.studyContentOptions);
     });
   }
-}
+
+  get studyContentNames(): string {
+    if (this.studyContentOptions.length === 0) return 'Sin contenidos asignados';
+    return this.studyContentOptions.map(c => c.name).join('\n');
+  }
+
+  private loadStudyContentNames(contentIds: number[]) {
+    this.studyContentOptions = [];  // Limpiar antes de volver a cargar
+
+    if (contentIds.length > 0) {
+      const requests = contentIds.map(id => this.studyContentService.getById(id));
+      forkJoin(requests).subscribe(contents => {
+        this.studyContentOptions = contents.map(c => ({
+          id: c.id,
+          name: `Unidad ${c.unit}: ${c.title}`
+        }));
+        console.log('Contenidos cargados:', this.studyContentOptions);
+      });
+    }
+  }
 
   private initializeCalendarSettings(): void {
     const today = new Date();

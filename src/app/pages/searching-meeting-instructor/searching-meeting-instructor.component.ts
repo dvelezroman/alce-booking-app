@@ -14,6 +14,8 @@ import { CreateMeetingModalComponent } from '../../components/create-meeting/cre
 import { ModalComponent } from '../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ContentSelectorComponent } from '../../components/content-selector/content-selector.component';
+import { StudyContentService } from '../../services/study-content.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -39,6 +41,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   showCreateModal = false;
   instructorLink: string | null = null;
   studyContentIds: number[] = [];
+  studyContentOptions: { id: number; name: string }[] = [];
+  
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -50,6 +54,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   constructor(
     private bookingService: BookingService,
     private stagesService: StagesService,
+    private studyContentService: StudyContentService,
     private store: Store,
   ) {}
 
@@ -170,8 +175,28 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   onContentIdsSelected(ids: number[]) {
     this.studyContentIds = ids;
-    console.log('Contenidos seleccionados:', this.studyContentIds);
+    //console.log('id:', this.studyContentIds);
+    this.loadSelectedContentNames(ids);
   }
+
+  private loadSelectedContentNames(contentIds: number[]) {
+    if (contentIds.length === 0) {
+      this.studyContentOptions = [];
+      return;
+    }
+    const requests = contentIds.map(id => this.studyContentService.getById(id));
+    forkJoin(requests).subscribe(contents => {
+      this.studyContentOptions = contents.map(c => ({
+        id: c.id,
+        name: `Unidad ${c.unit}: ${c.title}`
+      }));
+      //console.log('contenidos seleccionados:', this.studyContentOptions);
+    });
+  }
+
+  clearSelectedContents() {
+  this.studyContentIds = [];
+ }
 
   showModal(params: ModalDto) {
     this.modal = { ...params };
