@@ -53,7 +53,6 @@ export class ContentSelectorComponent {
 
   removeContent(contentId: number) {
     this.selectedContents = this.selectedContents.filter(c => c.id !== contentId);
-    this.emitSelectedContentIds();
   }
 
   private emitSelectedContentIds() {

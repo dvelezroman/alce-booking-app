@@ -145,33 +145,33 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.showCreateModal = true;
   }
 
-handleMeetingCreated(meeting: CreateMeetingDto): void {
-  const isOnline = meeting.mode === 'ONLINE';
+  handleMeetingCreated(meeting: CreateMeetingDto): void {
+    const isOnline = meeting.mode === 'ONLINE';
 
-  const meetingWithInstructorInfo: CreateMeetingDto = {
-    ...meeting,
-    link: isOnline ? this.instructorLink ?? undefined : undefined,
-    password: isOnline && this.instructorId ? this.instructorId.toString() : undefined,
-  };
+    const meetingWithInstructorInfo: CreateMeetingDto = {
+      ...meeting,
+      link: isOnline ? this.instructorLink ?? undefined : undefined,
+      password: isOnline && this.instructorId ? this.instructorId.toString() : undefined,
+    };
 
-  this.bookingService.bookMeeting(meetingWithInstructorInfo).subscribe({
-    next: () => {
-      this.showCreateModal = false;
-      this.showModal(this.createModalParams(false, 'Clase creada exitosamente.'));
-      this.fetchMeetings(this.filter);
-    },
-    error: (error) => {
-      const msg = error?.error?.message || 'No se pudo crear la clase';
-      this.showModal(this.createModalParams(true, msg));
-      this.showCreateModal = false;
-    }
-  });
-}
+    this.bookingService.bookMeeting(meetingWithInstructorInfo).subscribe({
+      next: () => {
+        this.showCreateModal = false;
+        this.showModal(this.createModalParams(false, 'Clase creada exitosamente.'));
+        this.fetchMeetings(this.filter);
+      },
+      error: (error) => {
+        const msg = error?.error?.message || 'No se pudo crear la clase';
+        this.showModal(this.createModalParams(true, msg));
+        this.showCreateModal = false;
+      }
+    });
+  }
 
-onContentIdsSelected(ids: number[]) {
-  this.studyContentIds = ids;
-  console.log('Contenidos seleccionados:', this.studyContentIds);
-}
+  onContentIdsSelected(ids: number[]) {
+    this.studyContentIds = ids;
+    console.log('Contenidos seleccionados:', this.studyContentIds);
+  }
 
   showModal(params: ModalDto) {
     this.modal = { ...params };

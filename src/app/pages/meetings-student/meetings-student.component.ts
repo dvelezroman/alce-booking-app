@@ -9,6 +9,7 @@ import { BookingService } from '../../services/booking.service';
 import { MeetingDTO } from '../../services/dtos/booking.dto';
 import { DateTime } from 'luxon';
 import { FormsModule } from '@angular/forms';
+import { StudyContentService } from '../../services/study-content.service';
 
 @Component({
   selector: 'app-meetings-student',
@@ -41,10 +42,12 @@ export class MeetingsStudentComponent implements OnInit {
   selectedDate: Date | null = null;
   meetingsOfDay: MeetingDTO[] = [];
   showEcuadorHourColumn = false;
+  studyContentOptions: { id: number; name: string }[] = [];
 
   constructor(
     private store: Store,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private studyContentService: StudyContentService
   ) {
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
     this.userData$ = this.store.select(selectUserData);
@@ -61,6 +64,14 @@ export class MeetingsStudentComponent implements OnInit {
         const today = new Date();
         this.getStudentMeetings(today);
       }
+    });
+
+    this.studyContentService.getAll().subscribe(contents => {
+      this.studyContentOptions = contents.map(c => ({
+        id: c.id,
+        name: `Unidad ${c.unit}: ${c.title}`
+      }));
+      console.log('contenidos:', this.studyContentOptions);
     });
   }
 
@@ -195,53 +206,68 @@ export class MeetingsStudentComponent implements OnInit {
       to: until.toISODate()!,
       studentId: this.studentId ?? undefined,
       assigned: true,
-      // status: MeetingStatusEnum.ACTIVE
     }).subscribe({
       next: (meetings) => {
-        const daysWithMeetings = new Map<number, MeetingDTO[]>();
-
-        meetings.forEach((meeting: MeetingDTO) => {
-          const rawDate = typeof meeting.date === 'string'
-            ? meeting.date
-            : meeting.date.toISOString();
-
-            const meetingDate = DateTime.fromISO(rawDate, { zone: 'America/Guayaquil' }).startOf('day');
-
-          if (meetingDate >= now && meetingDate <= until) {
-            const day = meetingDate.day;
-            const month = meetingDate.month - 1;
-            const year = meetingDate.year;
-
-            if (month === selectedDate.getMonth() && year === selectedDate.getFullYear()) {
-              if (!daysWithMeetings.has(day)) {
-                daysWithMeetings.set(day, []);
-              }
-              daysWithMeetings.get(day)?.push(meeting);
-            }
-          }
-        });
-
-        this.currentMonthDays = this.currentMonthDays.map(day => {
-          if (typeof day.day === 'number' && daysWithMeetings.has(day.day)) {
-            return {
-              ...day,
-              hasMeeting: true,
-              meetings: daysWithMeetings.get(day.day) || [],
-              isPast: false
-            };
-          }
-
-          return {
-            ...day,
-            hasMeeting: false,
-            meetings: [],
-            isPast: false
-          };
-        });
+        const daysWithMeetings = this.groupMeetingsByDay(meetings, selectedDate, now, until);
+        this.updateCalendarWithMeetings(daysWithMeetings);
       },
       error: (error) => console.error('Error al obtener reuniones del estudiante:', error)
     });
   }
+
+  private groupMeetingsByDay(meetings: MeetingDTO[], selectedDate: Date, start: DateTime, end: DateTime): Map<number, MeetingDTO[]> {
+    const map = new Map<number, MeetingDTO[]>();
+
+    meetings.forEach((meeting: MeetingDTO) => {
+      const rawDate = typeof meeting.date === 'string' ? meeting.date : meeting.date.toISOString();
+      const meetingDate = DateTime.fromISO(rawDate, { zone: 'America/Guayaquil' }).startOf('day');
+
+      if (meetingDate >= start && meetingDate <= end) {
+        const day = meetingDate.day;
+        const month = meetingDate.month - 1;
+        const year = meetingDate.year;
+
+        if (month === selectedDate.getMonth() && year === selectedDate.getFullYear()) {
+          if (!map.has(day)) map.set(day, []);
+          map.get(day)?.push(meeting);
+        }
+      }
+    });
+
+    return map;
+  }
+
+  private updateCalendarWithMeetings(daysWithMeetings: Map<number, MeetingDTO[]>) {
+    this.currentMonthDays = this.currentMonthDays.map(day => {
+      if (typeof day.day === 'number' && daysWithMeetings.has(day.day)) {
+        return {
+          ...day,
+          hasMeeting: true,
+          meetings: daysWithMeetings.get(day.day) || [],
+          isPast: false
+        };
+    }
+
+    return {
+      ...day,
+      hasMeeting: false,
+      meetings: [],
+      isPast: false
+    };
+  });
+}
+
+getStudyContentList(meeting: MeetingDTO): string {
+  if (!meeting.studyContentId || meeting.studyContentId.length === 0) {
+    return 'Sin contenido';
+  }
+
+  const names = meeting.studyContentId
+    .map(id => this.studyContentOptions.find(option => option.id === id)?.name || `ID: ${id}`)
+    .join(', ');
+
+  return names;
+}
 
   getFormattedSelectedDate(): string {
     if (!this.selectedDate) return '';
