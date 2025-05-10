@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { CreateMeetingDto, FilterMeetingsDto, MeetingDTO, UpdateMeetingLinkDto } from '../../services/dtos/booking.dto';
+import { CreateMeetingDto, FilterMeetingsDto, MeetingDTO } from '../../services/dtos/booking.dto';
 import { BookingService } from '../../services/booking.service';
 import { Store } from '@ngrx/store';
 import { UserDto } from '../../services/dtos/user.dto';
@@ -36,6 +36,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
   showCreateModal = false;
   instructorLink: string | null = null;
+  studyContentIds: number[] = [];
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -58,7 +59,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     this.filter.stageId = '';
     })
-    
+
     this.availableHours = Array.from({ length: 13 }, (_, i) => 8 + i);
 
     this.store.select(selectUserData).subscribe((userData: UserDto | null) => {
@@ -77,12 +78,12 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   isToday(date: Date | string): boolean {
     if (!date) return false;
-  
+
     const today = DateTime.now().setZone('America/Guayaquil').startOf('day');
     const meetingDate = typeof date === 'string'
       ? DateTime.fromISO(date, { zone: 'America/Guayaquil' }).startOf('day')
       : DateTime.fromJSDate(date, { zone: 'America/Guayaquil' }).startOf('day');
-  
+
     return today.toISODate() === meetingDate.toISODate();
   }
 
@@ -109,7 +110,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   toggleSelection(meeting: MeetingDTO) {
     if (meeting && meeting.id) {
       const updatedPresence = !meeting.present;
-      this.bookingService.updateAssistance(meeting.id, !meeting.present).subscribe({
+      this.bookingService.updateAssistance(meeting.id, !meeting.present, this.studyContentIds).subscribe({
         next: () => {
             //console.log(`Asistencia actualizada para ${studentName}: ${asistenciaTexto}`);
           const filterParams: FilterMeetingsDto = {
@@ -129,12 +130,12 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   hasMeetingPassed(localdate: string | Date, hour: number): boolean {
     if (!localdate || hour === undefined) return false;
-  
+
     const meetingDateTime = DateTime.fromISO(String(localdate))
       .set({ hour, minute: 0 })
       .setZone('America/Guayaquil');
     const now = DateTime.now().setZone('America/Guayaquil');
-  
+
     return now > meetingDateTime;
   }
 
