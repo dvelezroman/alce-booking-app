@@ -99,7 +99,7 @@ export class SidebarComponent implements OnInit {
         title: 'Clases y Agendamientos',
         icon: 'event',
         items: [
-          // this.findNavItemByRoute('/meetings-student'),
+          this.findNavItemByRoute('/meetings-student'),
           this.findNavItemByRoute('/booking'),
           this.findNavItemByRoute('/searching-meeting'),
           this.findNavItemByRoute('/searching-meeting-instructor')
