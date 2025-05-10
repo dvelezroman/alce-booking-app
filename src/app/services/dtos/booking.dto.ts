@@ -51,6 +51,8 @@ export interface CreateMeetingDto {
   localhour: number;
   mode: Mode;
   category?: StudentClassification;
+  link?: string;
+  password?: string;
 }
 
 export class FilterMeetingsDto {

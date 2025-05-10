@@ -134,16 +134,16 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.fetchMeetings(filterParams);
   }
 
-  private fetchMeetings(params?: FilterMeetingsDto): void {
-    const searchParams: FilterMeetingsDto = {
-      ...params,
-      instructorId: this.instructorId ? this.instructorId.toString() : undefined,
-    };
+ private fetchMeetings(params?: FilterMeetingsDto): void {
+  const searchParams: FilterMeetingsDto = {
+    ...params,
+    instructorId: this.instructorId ? this.instructorId.toString() : undefined,
+  };
 
-    this.bookingService.searchMeetings(searchParams).subscribe(meetings => {
-      this.meetings = meetings;
-    });
-  }
+  this.bookingService.searchMeetings(searchParams).subscribe(meetings => {
+    this.meetings = meetings.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  });
+}
 
   toggleSelection(meeting: MeetingDTO) {
     if (meeting && meeting.id) {
@@ -181,44 +181,28 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.showCreateModal = true;
   }
 
-  handleMeetingCreated(meeting: CreateMeetingDto): void {
-    this.bookingService.bookMeeting(meeting).subscribe({
-      next: (createdMeeting) => {
-        this.showCreateModal = false;
+ handleMeetingCreated(meeting: CreateMeetingDto): void {
+  const isOnline = meeting.mode === 'ONLINE';
 
-        if (this.instructorLink && createdMeeting?.id && meeting.mode === 'ONLINE') {
-          this.assignLinkIfNeeded(createdMeeting.id); 
-        } else {
-          this.showModal(this.createModalParams(false, 'Clase creada exitosamente.'));
-          this.fetchMeetings(this.filter);
-        }
-      },
-      error: (error) => {
-        const msg = error?.error?.message || 'No se pudo crear la clase';
-        this.showModal(this.createModalParams(true, msg));
-        this.showCreateModal = false;
-      }
-    });
-  }
+  const meetingWithInstructorInfo: CreateMeetingDto = {
+    ...meeting,
+    link: isOnline ? this.instructorLink ?? undefined : undefined,
+    password: isOnline && this.instructorId ? this.instructorId.toString() : undefined,
+  };
 
-  assignLinkIfNeeded(meetingId: number): void {
-    const updateLinkData: UpdateMeetingLinkDto = {
-      link: this.instructorLink!,
-      meetingIds: [meetingId],
-      instructorId: this.instructorId!
-    };
-  
-    this.bookingService.updateMeetingLink(updateLinkData).subscribe({
-      next: () => {
-        this.fetchMeetings(this.filter);
-        this.showModal(this.createModalParams(false, 'Clase creada exitosamente'));
-      },
-      error: () => {
-        this.showModal(this.createModalParams(true, 'Clase creada, pero error al asignar link.'));
-        this.fetchMeetings(this.filter);
-      }
-    });
-  }
+  this.bookingService.bookMeeting(meetingWithInstructorInfo).subscribe({
+    next: () => {
+      this.showCreateModal = false;
+      this.showModal(this.createModalParams(false, 'Clase creada exitosamente.'));
+      this.fetchMeetings(this.filter);
+    },
+    error: (error) => {
+      const msg = error?.error?.message || 'No se pudo crear la clase';
+      this.showModal(this.createModalParams(true, msg));
+      this.showCreateModal = false;
+    }
+  });
+}
 
   showModal(params: ModalDto) {
     this.modal = { ...params };
