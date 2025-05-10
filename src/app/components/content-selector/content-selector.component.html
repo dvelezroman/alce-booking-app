@@ -4,7 +4,7 @@
     <label class="label">Selecciona una Stage</label>
     <div class="control">
       <div class="select is-fullwidth">
-        <select [(ngModel)]="selectedStageId" (change)="onStageChange()">
+        <select [(ngModel)]="selectedStageId" (change)="onStageChange()" required>
           <option [ngValue]="null">Seleccionar...</option>
           <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
         </select>
@@ -17,11 +17,9 @@
     <label class="label">Seleccionar temas</label>
     <div class="control">
       <div class="select is-fullwidth">
-        <select (change)="addContent($event)">
-            <option [ngValue]="null">Seleccionar...</option>
-            <option *ngFor="let content of availableContents" [value]="content.id">
-                {{ content.name }}
-            </option>
+        <select (change)="addContent($event)" required>
+          <option [ngValue]="null">Seleccionar...</option>
+          <option *ngFor="let content of availableContents" [value]="content.id">{{ content.name }}</option>
         </select>
       </div>
     </div>
@@ -35,10 +33,11 @@
     </span>
   </div>
 
-  
   <div class="field mt-4 has-text-centered">
-    <button type="button" class="button is-confirm" (click)="confirmSelection()">
-        Confirmar selección
+    <button type="button" class="button is-confirm"
+            [disabled]="!selectedStageId || selectedContents.length === 0"
+            (click)="confirmSelection()">
+      Confirmar selección
     </button>
   </div>
 </div>

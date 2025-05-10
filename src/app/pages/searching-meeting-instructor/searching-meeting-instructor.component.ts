@@ -175,7 +175,22 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   onContentIdsSelected(ids: number[]) {
     this.studyContentIds = ids;
     //console.log('id:', this.studyContentIds);
-    this.loadSelectedContentNames(ids);
+    this.loadContentNamesWithoutModal(ids);
+  }
+
+  loadContentNamesWithoutModal(contentIds: number[]) {
+    if (contentIds.length === 0) {
+      this.studyContentOptions = [];
+      return;
+    }
+
+    const requests = contentIds.map(id => this.studyContentService.getById(id));
+    forkJoin(requests).subscribe(contents => {
+      this.studyContentOptions = contents.map(c => ({
+        id: c.id,
+        name: `Unidad ${c.unit}: ${c.title}`
+      }));
+    });
   }
 
   loadSelectedContentNames(contentIds: number[]) {

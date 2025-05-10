@@ -18,6 +18,7 @@ export class ContentSelectorComponent {
   selectedStageId: number | null = null;
   availableContents: { id: number; name: string }[] = [];
   selectedContents: { id: number; name: string }[] = [];
+  hasError: boolean = false;
 
   constructor(private studyContentService: StudyContentService) {}
 
@@ -62,6 +63,6 @@ export class ContentSelectorComponent {
 
   confirmSelection() {
   this.emitSelectedContentIds();
-   this.selectedContents = [];
+  this.selectedContents = [];
 }
 }
