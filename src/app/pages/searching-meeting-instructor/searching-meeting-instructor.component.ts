@@ -36,7 +36,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
   showCreateModal = false;
   instructorLink: string | null = null;
-  studyContentsIds: number[] = [];
+  studyContentIds: number[] = [];
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -110,7 +110,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   toggleSelection(meeting: MeetingDTO) {
     if (meeting && meeting.id) {
       const updatedPresence = !meeting.present;
-      this.bookingService.updateAssistance(meeting.id, !meeting.present, this.studyContentsIds).subscribe({
+      this.bookingService.updateAssistance(meeting.id, !meeting.present, this.studyContentIds).subscribe({
         next: () => {
             //console.log(`Asistencia actualizada para ${studentName}: ${asistenciaTexto}`);
           const filterParams: FilterMeetingsDto = {
