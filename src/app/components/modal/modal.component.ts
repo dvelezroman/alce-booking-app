@@ -21,6 +21,7 @@ export class ModalComponent {
   @Input() showButtons: boolean = false;
   @Input() isInfo: boolean = false; 
   @Input() isContentViewer: boolean = false; 
+  @Input() title: string = '';
   shake: boolean = false;
 
   ngOnChanges() {

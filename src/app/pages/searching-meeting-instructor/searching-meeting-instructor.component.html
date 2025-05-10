@@ -122,6 +122,7 @@
             <!-- <th>Correo</th> -->
             <th>Fecha</th>
             <th>Hora</th>
+            <th>Contenido</th>
             <!-- <th>Instructor</th> -->
             <th>Observación</th>
             <th>Abrió Enlace</th>
@@ -139,6 +140,11 @@
             <!-- <td data-label="Usuario">{{ meeting.student?.user?.email || 'Correo no disponible' }}</td> -->
             <td data-label="Fecha">{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
             <td data-label="Hora">{{ meeting.localhour }}:00</td>
+            <td data-label="Contenido">
+              <button class="icon-button" (click)="loadSelectedContentNames(meeting.studyContentId || [])">
+                <span class="material-icons">menu_book</span>
+              </button>
+            </td>
             <!-- <td data-label="Instructor">{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td> -->
             <td data-label="Observación" class="tooltip-container">
               <span class="tooltip" [hidden]="!meeting.student?.user?.comment" [title]="meeting.student?.user?.comment">
@@ -163,7 +169,6 @@
   </div>
 </section>
 
-
 <app-create-meeting-modal
   *ngIf="showCreateModal"
   [fromDate]="filter.from"
@@ -179,5 +184,7 @@
   [isError]="modal.isError"
   [isSuccess]="modal.isSuccess"
   [isInfo]="modal.isInfo"
+  [title]="modal.title || ''"
+  [isContentViewer]="modal.isContentViewer ?? false"
   (close)="closeModal()"
 ></app-modal>

@@ -43,7 +43,6 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   studyContentIds: number[] = [];
   studyContentOptions: { id: number; name: string }[] = [];
   
-
   filter: FilterMeetingsDto = {
     from: '',
     to: '',
@@ -179,24 +178,38 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.loadSelectedContentNames(ids);
   }
 
-  private loadSelectedContentNames(contentIds: number[]) {
+  loadSelectedContentNames(contentIds: number[]) {
     if (contentIds.length === 0) {
-      this.studyContentOptions = [];
-      return;
-    }
+    this.showContentViewer('Sin contenido');
+    return;
+  }
+
     const requests = contentIds.map(id => this.studyContentService.getById(id));
     forkJoin(requests).subscribe(contents => {
       this.studyContentOptions = contents.map(c => ({
         id: c.id,
         name: `Unidad ${c.unit}: ${c.title}`
       }));
-      //console.log('contenidos seleccionados:', this.studyContentOptions);
+      const names = this.studyContentOptions.map(c => c.name).join('\n');
+        this.showContentViewer(names);
     });
   }
 
   clearSelectedContents() {
   this.studyContentIds = [];
+  this.studyContentOptions = [];
  }
+
+ showContentViewer(content: string) {
+  this.modal = {
+    ...modalInitializer(),
+    show: true,
+    message: content,
+    isContentViewer: true,
+    title: 'Contenido de la Clase',
+    close: this.closeModal,
+  };
+}
 
   showModal(params: ModalDto) {
     this.modal = { ...params };
