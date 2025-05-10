@@ -42,6 +42,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   instructorLink: string | null = null;
   studyContentIds: number[] = [];
   studyContentOptions: { id: number; name: string }[] = [];
+  modalContentList: { id: number; name: string }[] = [];
   
   filter: FilterMeetingsDto = {
     from: '',
@@ -201,11 +202,11 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     const requests = contentIds.map(id => this.studyContentService.getById(id));
     forkJoin(requests).subscribe(contents => {
-      this.studyContentOptions = contents.map(c => ({
+      this.modalContentList = contents.map(c => ({
         id: c.id,
         name: `Unidad ${c.unit}: ${c.title}`
       }));
-      const names = this.studyContentOptions.map(c => c.name).join('\n');
+      const names = this.modalContentList.map(c => c.name).join('\n');
         this.showContentViewer(names);
     });
   }
