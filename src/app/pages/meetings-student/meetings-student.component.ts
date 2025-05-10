@@ -10,6 +10,8 @@ import { MeetingDTO } from '../../services/dtos/booking.dto';
 import { DateTime } from 'luxon';
 import { FormsModule } from '@angular/forms';
 import { StudyContentService } from '../../services/study-content.service';
+import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
+import { ModalComponent } from '../../components/modal/modal.component';
 
 @Component({
   selector: 'app-meetings-student',
@@ -17,7 +19,8 @@ import { StudyContentService } from '../../services/study-content.service';
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    ModalComponent
   ],
   templateUrl: './meetings-student.component.html',
   styleUrl: './meetings-student.component.scss'
@@ -43,6 +46,7 @@ export class MeetingsStudentComponent implements OnInit {
   meetingsOfDay: MeetingDTO[] = [];
   showEcuadorHourColumn = false;
   studyContentOptions: { id: number; name: string }[] = [];
+  modal: ModalDto = modalInitializer();
 
   constructor(
     private store: Store,
@@ -261,11 +265,7 @@ getStudyContentList(meeting: MeetingDTO): string {
   if (!meeting.studyContentId || meeting.studyContentId.length === 0) {
     return 'Sin contenido';
   }
-
-  const names = meeting.studyContentId
-    .map(id => this.studyContentOptions.find(option => option.id === id)?.name || `ID: ${id}`)
-    .join(', ');
-
+  const names = meeting.studyContentId.map(id => this.studyContentOptions.find(option => option.id === id)?.name || `ID: ${id}`).join(', ');
   return names;
 }
 
@@ -324,4 +324,18 @@ getStudyContentList(meeting: MeetingDTO): string {
     }
     return 'Asistió';
   }
+
+  showContentModal(content: string) {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: content,
+      isContentViewer: true,
+      close: this.closeModal
+    };
+  }
+
+  closeModal = () => {
+    this.modal = { ...modalInitializer() };
+  };
 }

@@ -1,20 +1,31 @@
 <div *ngIf="showModal" class="modal-overlay">
   <div class="modal-content" [ngClass]="{
-             'error-modal': isError, 
-             'shake-animation': shake && isError, 
-             'pop-up-animation': !isError,
-             'success-modal': isSuccess,
-             'info-modal': isInfo  }">
+    'error-modal': isError && !isContentViewer,
+    'shake-animation': shake && isError && !isContentViewer,
+    'pop-up-animation': !isError || isContentViewer,
+    'success-modal': isSuccess && !isContentViewer,
+    'info-modal': isInfo && !isContentViewer,
+    'content-viewer-modal': isContentViewer
+  }">
 
-    <i *ngIf="isError" class="fas fa-exclamation-circle error-icon"></i>
-    <i *ngIf="isSuccess" class="fas fa-check-circle success-icon"></i>
-    <i *ngIf="isInfo" class="fas fa-question-circle question-icon"></i>
+    <ng-container *ngIf="isContentViewer; else defaultModal">
+      <p>{{ message }}</p>
+      <div class="modal-buttons">
+        <button class="button close-button" (click)="closeModal()">Cerrar</button>
+      </div>
+    </ng-container>
 
-    <p>{{ message }}</p>
+    <ng-template #defaultModal>
+      <i *ngIf="isError" class="fas fa-exclamation-circle error-icon"></i>
+      <i *ngIf="isSuccess" class="fas fa-check-circle success-icon"></i>
+      <i *ngIf="isInfo" class="fas fa-question-circle question-icon"></i>
 
-    <div class="modal-buttons" *ngIf="showButtons">
-      <button class="button confirm-button" (click)="confirm()">Aceptar</button>
-      <button class="button cancel-button" (click)="close.emit()">Cancelar</button>
-    </div>
+      <p>{{ message }}</p>
+
+      <div class="modal-buttons" *ngIf="showButtons">
+        <button class="button confirm-button" (click)="confirm()">Aceptar</button>
+        <button class="button cancel-button" (click)="close.emit()">Cancelar</button>
+      </div>
+    </ng-template>
   </div>
 </div>
