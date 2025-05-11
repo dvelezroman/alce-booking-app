@@ -5,81 +5,91 @@
       <h1 class="title">Buscar Meetings</h1>
     </div>
 
-    <!-- Formulario de Búsqueda de Meetings -->
-    <div class="block-search">
-      <form>
-        <!-- Inputs de fecha -->
-        <div class="columns is-mobile">
-          <div class="column">
-            <div class="field">
-              <label class="label">Fecha desde</label>
-              <div class="control input-date-container">
-                <input class="input" type="date" [(ngModel)]="filter.from" name="from" (ngModelChange)="onFilterChange()">
-                <span class="icon-calendar material-icons">calendar_today</span>
-              </div>
-            </div>
-          </div>
-          <div class="column">
-            <div class="field">
-              <label class="label">Fecha hasta</label>
-              <div class="control input-date-container">
-                <input class="input" type="date" [(ngModel)]="filter.to" name="to" (ngModelChange)="onFilterChange()">
-                <span class="icon-calendar material-icons">calendar_today</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      <div class="columns is-mobile">
-        <div class="column">
-          <div class="field">
-            <label class="label">Stage</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onFilterChange()">
-                  <option value="">Seleccionar stage</option>
-                  <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="column">
-          <div class="field">
-            <label class="label">Hora</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select [(ngModel)]="filter.hour" name="hour" (ngModelChange)="onFilterChange()">
-                  <option value="">Todas las horas</option>
-                  <option *ngFor="let hour of availableHours" [value]="hour">{{ hour }}:00</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
+   <!-- Dropdown para mostrar u ocultar el formulario -->
+    <div class="dropdown-toggle-container">
+      <div class="dropdown-toggle" (click)="showForm = !showForm">
+        <span>Formulario de Búsqueda</span>
+        <span class="icon is-small">
+          <i class="material-icons">{{ showForm ? 'expand_less' : 'expand_more' }}</i>
+        </span>
       </div>
 
-        <!-- Input de Categoría -->
-        <div class="field">
-          <label class="label">Categoría</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select [(ngModel)]="filter.category" name="category" (ngModelChange)="onFilterChange()">
-                <option [ngValue]="undefined">Todas las categorías</option>
-                <option *ngFor="let category of ageGroupOptions" [value]="category">{{ category }}</option>
-              </select>
+      <div [ngClass]="showForm ? 'dropdown-body' : 'dropdown-body-hidden'">
+
+        <div class="block-search">
+          <form>
+            <div class="columns is-mobile">
+              <div class="column">
+                <div class="field">
+                  <label class="label">Fecha desde</label>
+                  <div class="control input-date-container">
+                    <input class="input" type="date" [(ngModel)]="filter.from" name="from" (ngModelChange)="onFilterChange()">
+                    <span class="icon-calendar material-icons">calendar_today</span>
+                  </div>
+                </div>
+              </div>
+              <div class="column">
+                <div class="field">
+                  <label class="label">Fecha hasta</label>
+                  <div class="control input-date-container">
+                    <input class="input" type="date" [(ngModel)]="filter.to" name="to" (ngModelChange)="onFilterChange()">
+                    <span class="icon-calendar material-icons">calendar_today</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+
+            <div class="columns is-mobile">
+              <div class="column">
+                <div class="field">
+                  <label class="label">Stage</label>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onFilterChange()">
+                        <option value="">Seleccionar stage</option>
+                        <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="column">
+                <div class="field">
+                  <label class="label">Hora</label>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select [(ngModel)]="filter.hour" name="hour" (ngModelChange)="onFilterChange()">
+                        <option value="">Todas las horas</option>
+                        <option *ngFor="let hour of availableHours" [value]="hour">{{ hour }}:00</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Categoría</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select [(ngModel)]="filter.category" name="category" (ngModelChange)="onFilterChange()">
+                    <option [ngValue]="undefined">Todas las categorías</option>
+                    <option *ngFor="let category of ageGroupOptions" [value]="category">{{ category }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
 
       <!-- Formulario de Selección de Contenido -->
     <div *ngIf="meetings.length > 0" class="content-selection-wrapper">
       <!-- Formulario de Selección -->
       <div class="content-selector-card">
-        <h2 class="title has-text-weight-bold">Seleccione el Contenido para la Clase</h2>
+        <h2 class="titles has-text-weight-bold">Contenido para la Clase</h2>
         <app-content-selector
           [stages]="stages"
           (contentIdsSelected)="onContentIdsSelected($event)">

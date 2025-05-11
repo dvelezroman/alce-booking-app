@@ -43,6 +43,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   studyContentIds: number[] = [];
   studyContentOptions: { id: number; name: string }[] = [];
   modalContentList: { id: number; name: string }[] = [];
+  showForm = true;
   
   filter: FilterMeetingsDto = {
     from: '',
@@ -111,6 +112,10 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     this.bookingService.searchMeetings(searchParams).subscribe(meetings => {
       this.meetings = meetings;
+      
+        if (this.meetings.length > 0) {
+        this.showForm = false;
+      }
     });
   }
 
