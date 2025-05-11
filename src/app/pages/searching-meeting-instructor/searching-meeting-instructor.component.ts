@@ -112,10 +112,6 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     this.bookingService.searchMeetings(searchParams).subscribe(meetings => {
       this.meetings = meetings;
-      
-        if (this.meetings.length > 0) {
-        this.showForm = false;
-      }
     });
   }
 
