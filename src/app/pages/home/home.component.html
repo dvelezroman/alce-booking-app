@@ -1,6 +1,6 @@
-<section *ngIf="isInstructor" class="page-title">
+<!-- <section *ngIf="isInstructor" class="page-title">
   <h1 class="home-title">Home</h1>
-</section>
+</section> -->
 
 <div class="hero-wrapper" *ngIf="!isInstructor">
   
@@ -132,20 +132,17 @@
     <section class="modal-card-body transparent-body">
       <div class="field">
         <div class="control">
-          <textarea class="textarea text-dark" 
-          [(ngModel)]="meetingContent" 
-          placeholder="Escribe aquí el contenido...">
-          </textarea>
+          <textarea class="textarea text-dark" [value]="studyContentNames" readonly></textarea>
         </div>
       </div>
     </section>
     <footer class="modal-card-foot transparent-footer">
-      <button *ngIf="isUpdating; else addButton" class="button is-success btn-wide btn-blue" (click)="updateMeetingTheme()">
+      <!-- <button *ngIf="isUpdating; else addButton" class="button is-success btn-wide btn-blue" (click)="updateMeetingTheme()">
         Actualizar
-      </button>
-      <ng-template #addButton>
+      </button> -->
+      <!-- <ng-template #addButton>
         <button class="button is-success btn-wide btn-blue" (click)="addMeetingTheme()">Agregar</button>
-      </ng-template>
+      </ng-template> -->
       <button class="button btn-wide btn-purple" (click)="closeThemeModal()">Cancelar</button>
     </footer>
   </div>

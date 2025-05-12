@@ -13,6 +13,9 @@ import { DateTime } from 'luxon';
 import { CreateMeetingModalComponent } from '../../components/create-meeting/create-meeting-modal.component';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
+import { ContentSelectorComponent } from '../../components/content-selector/content-selector.component';
+import { StudyContentService } from '../../services/study-content.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -22,7 +25,8 @@ import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
     RouterModule,
     FormsModule,
     CreateMeetingModalComponent,
-    ModalComponent
+    ModalComponent,
+    ContentSelectorComponent
   ],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'
@@ -37,6 +41,9 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   showCreateModal = false;
   instructorLink: string | null = null;
   studyContentIds: number[] = [];
+  studyContentOptions: { id: number; name: string }[] = [];
+  modalContentList: { id: number; name: string }[] = [];
+  showForm = true;
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -48,6 +55,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   constructor(
     private bookingService: BookingService,
     private stagesService: StagesService,
+    private studyContentService: StudyContentService,
     private store: Store,
   ) {}
 
@@ -143,27 +151,79 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.showCreateModal = true;
   }
 
-handleMeetingCreated(meeting: CreateMeetingDto): void {
-  const isOnline = meeting.mode === 'ONLINE';
+  handleMeetingCreated(meeting: CreateMeetingDto): void {
+    const isOnline = meeting.mode === 'ONLINE';
 
-  const meetingWithInstructorInfo: CreateMeetingDto = {
-    ...meeting,
-    link: isOnline ? this.instructorLink ?? undefined : undefined,
-    password: isOnline && this.instructorId ? this.instructorId.toString() : undefined,
-  };
+    const meetingWithInstructorInfo: CreateMeetingDto = {
+      ...meeting,
+      link: isOnline ? this.instructorLink ?? undefined : undefined,
+      password: isOnline && this.instructorId ? this.instructorId.toString() : undefined,
+    };
 
-  this.bookingService.bookMeeting(meetingWithInstructorInfo).subscribe({
-    next: () => {
-      this.showCreateModal = false;
-      this.showModal(this.createModalParams(false, 'Clase creada exitosamente.'));
-      this.fetchMeetings(this.filter);
-    },
-    error: (error) => {
-      const msg = error?.error?.message || 'No se pudo crear la clase';
-      this.showModal(this.createModalParams(true, msg));
-      this.showCreateModal = false;
+    this.bookingService.bookMeeting(meetingWithInstructorInfo).subscribe({
+      next: () => {
+        this.showCreateModal = false;
+        this.showModal(this.createModalParams(false, 'Clase creada exitosamente.'));
+        this.fetchMeetings(this.filter);
+      },
+      error: (error) => {
+        const msg = error?.error?.message || 'No se pudo crear la clase';
+        this.showModal(this.createModalParams(true, msg));
+        this.showCreateModal = false;
+      }
+    });
+  }
+
+  onContentIdsSelected(ids: number[]) {
+    this.studyContentIds = ids;
+    //console.log('id:', this.studyContentIds);
+    this.loadContentNamesWithoutModal(ids);
+  }
+
+  async loadContentNamesWithoutModal(contentIds: number[]) {
+    if (contentIds.length === 0) {
+      this.studyContentOptions = [];
+      return;
     }
-  });
+
+    const requests = contentIds.map(id => this.studyContentService.getById(id));
+    forkJoin(requests).subscribe(contents => {
+      this.studyContentOptions = contents.map(c => ({
+        id: c.id,
+        name: `Stage ${c.stage.number}, Unidad ${c.unit}: ${c.title}`
+      }));
+    });
+  }
+
+  loadSelectedContentNames(contentIds: number[]) {
+    if (contentIds.length === 0) {
+    this.showContentViewer('Sin contenido');
+    return;
+  }
+    this.studyContentService.getManyStudyContents(contentIds).subscribe(rows => {
+      this.studyContentOptions = rows.map(r => ({
+        id: r.id,
+        name: `Unidad ${r.unit}: ${r.title}`
+      }));
+      const names = this.studyContentOptions.map(c => c.name).join('\n');
+      this.showContentViewer(names);
+    });
+  }
+
+  clearSelectedContents() {
+  this.studyContentIds = [];
+  this.studyContentOptions = [];
+ }
+
+ showContentViewer(content: string) {
+  this.modal = {
+    ...modalInitializer(),
+    show: true,
+    message: content,
+    isContentViewer: true,
+    title: 'Contenido de la Clase',
+    close: this.closeModal,
+  };
 }
 
   showModal(params: ModalDto) {

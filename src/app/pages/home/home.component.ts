@@ -2,16 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { selectIsLoggedIn, selectUserData } from '../../store/user.selector';
 import { UserDto, UserRole } from '../../services/dtos/user.dto';
 import { BookingService } from '../../services/booking.service';
-import {MeetingDTO} from "../../services/dtos/booking.dto";
+import { MeetingDTO} from "../../services/dtos/booking.dto";
 import { FormsModule } from '@angular/forms';
 import { MeetingThemesService } from '../../services/meeting-themes.service';
 import { MeetingThemeDto } from '../../services/dtos/meeting-theme.dto';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
+import { StudyContentService } from '../../services/study-content.service';
 
 @Component({
   selector: 'app-home',
@@ -32,6 +33,8 @@ export class HomeComponent implements OnInit {
   isInstructor: boolean = false;
   isStudent: boolean  = false;
   instructorId: number | null = null;
+  studyContentOptions: { id: number; name: string }[] = [];
+  meetingStudyContents: number[] = [];
 
   selectedMonth!: string;
   selectedYear!: number;
@@ -52,7 +55,8 @@ export class HomeComponent implements OnInit {
 
   constructor(private store: Store,
               private bookingService: BookingService,
-              private meetingThemesService: MeetingThemesService
+              private meetingThemesService: MeetingThemesService,
+              private studyContentService: StudyContentService
   ) {
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
     this.userData$ = this.store.select(selectUserData);
@@ -80,10 +84,26 @@ export class HomeComponent implements OnInit {
         this.generateCurrentMonthDays();
       }
     });
-    this.isLoggedIn$.subscribe(state => {
-      this.isLoggedIn = state;
-    });
+  }
 
+  get studyContentNames(): string {
+    if (this.studyContentOptions.length === 0) return 'Sin contenidos asignados';
+    return this.studyContentOptions.map(c => c.name).join('\n');
+  }
+
+  private loadStudyContentNames(contentIds: number[]) {
+    this.studyContentOptions = [];  // Limpiar antes de volver a cargar
+
+    if (contentIds.length > 0) {
+      const requests = contentIds.map(id => this.studyContentService.getById(id));
+      forkJoin(requests).subscribe(contents => {
+        this.studyContentOptions = contents.map(c => ({
+          id: c.id,
+          name: `Unidad ${c.unit}: ${c.title}`
+        }));
+        console.log('Contenidos cargados:', this.studyContentOptions);
+      });
+    }
   }
 
   private initializeCalendarSettings(): void {
@@ -140,7 +160,6 @@ export class HomeComponent implements OnInit {
   
     const currentMonthIndex = monthMap[this.selectedMonth.toLowerCase()];
     if (currentMonthIndex === undefined) {
-      //console.error('Mes inválido:', this.selectedMonth);
       return;
     }
   
@@ -163,10 +182,9 @@ export class HomeComponent implements OnInit {
   
     const currentMonthIndex = monthMap[this.selectedMonth.toLowerCase()];
     if (currentMonthIndex === undefined) {
-      //console.error('Mes inválido:', this.selectedMonth);
       return;
     }
-  
+    
     const newDate = new Date(this.selectedYear, currentMonthIndex - 1, 1);
     const minDate = new Date(this.minYear, monthMap[this.minMonth.toLowerCase()], 1);
     if (newDate < minDate) return;
@@ -206,11 +224,8 @@ export class HomeComponent implements OnInit {
       this.selectedDate = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), day.day);
   
       if (day.hasMeeting && day.meetings && day.meetings.length > 0) {
-        //console.log(`Reuniones para el día ${this.selectedDate.toDateString()}:`, day.meetings);
         this.meetingsOfDay = [...day.meetings].sort((a, b) => a.hour - b.hour);
-        //console.log('Estructura de meetingsOfDay:', this.meetingsOfDay);
       } else {
-        //console.log(`No hay reuniones para el día ${this.selectedDate.toDateString()}.`);
         this.meetingsOfDay = [];
       }
     } else {
@@ -228,51 +243,65 @@ export class HomeComponent implements OnInit {
   }
 
   getInstructorMeetings(selectedDate: Date) {
-    const month = selectedDate.getMonth();
-    const year = selectedDate.getFullYear();
-    const now = new Date(); 
-  
+    const { month, year } = this.extractMonthAndYear(selectedDate);
+
     this.bookingService.getInstructorMeetingsGroupedByHour({
-      from: new Date(year, month, 1).toISOString(),
-      to: new Date(year, month + 1, 0).toISOString(),
-      instructorId: this.instructorId?.toString()
+      from: this.getMonthStartDate(year, month),
+      to: this.getMonthEndDate(year, month),
+      instructorId: this.instructorId?.toString(),
     }).subscribe({
-      next: (meetings) => {
-        const daysWithMeetings = new Map<number, MeetingDTO[]>(); 
-  
-        meetings.forEach((meeting: MeetingDTO) => {
-          const meetingDate = new Date(meeting.date);
-          const today = new Date();
-          today.setHours(0, 0, 0, 0); 
-        
-          if (meetingDate < today) {
-            return; 
-          }
-          if (meetingDate.getMonth() === month && meetingDate.getFullYear() === year) {
-            const day = meetingDate.getDate();
-            if (!daysWithMeetings.has(day)) {
-              daysWithMeetings.set(day, []);
-            }
-            daysWithMeetings.get(day)?.push(meeting); 
-          }
-        });
-  
-        this.currentMonthDays = this.currentMonthDays.map(day => {
-          if (typeof day.day === 'number' && daysWithMeetings.has(day.day)) {
-            return {
-              ...day,
-              hasMeeting: true,
-              meetings: daysWithMeetings.get(day.day) || []
-            };
-          }
-          return { ...day, hasMeeting: false, meetings: [] };
-        });
-      },
-      error: (error) => console.error('Error al obtener reuniones:', error)
+      next: (meetings) => this.handleMeetingsResponse(meetings, month, year),
+      error: (error) => console.error('Error al obtener reuniones:', error),
     });
   }
 
+  private extractMonthAndYear(date: Date) {
+    return { month: date.getMonth(), year: date.getFullYear() };
+  }
+
+  private getMonthStartDate(year: number, month: number): string {
+    return new Date(year, month, 1).toISOString();
+  }
+
+  private getMonthEndDate(year: number, month: number): string {
+    return new Date(year, month + 1, 0).toISOString();
+  }
+
+  private handleMeetingsResponse(meetings: MeetingDTO[], month: number, year: number) {
+    const daysWithMeetings = this.groupMeetingsByDay(meetings, month, year);
+    this.updateMonthDaysWithMeetings(daysWithMeetings);
+  }
+
+  private groupMeetingsByDay(meetings: MeetingDTO[], month: number, year: number): Map<number, MeetingDTO[]> {
+    const daysMap = new Map<number, MeetingDTO[]>();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    meetings.forEach((meeting) => {
+      const meetingDate = new Date(meeting.date);
+      if (meetingDate < today) return;
+
+      if (meetingDate.getMonth() === month && meetingDate.getFullYear() === year) {
+        const day = meetingDate.getDate();
+        if (!daysMap.has(day)) daysMap.set(day, []);
+        daysMap.get(day)?.push(meeting);
+      }
+    });
+
+    return daysMap;
+  }
+
+  private updateMonthDaysWithMeetings(daysWithMeetings: Map<number, MeetingDTO[]>) {
+    this.currentMonthDays = this.currentMonthDays.map(day => ({
+      ...day,
+      hasMeeting: daysWithMeetings.has(day.day as number),
+      meetings: daysWithMeetings.get(day.day as number) || []
+    }));
+  }
+
   openThemeModal(item: any) {
+   const contentIds = item.meetings?.[0]?.studyContentId || [];
+
     this.selectedMeeting = {
       meetingThemeId: item.meetingThemeId,
       stageId: item.stageId,
@@ -285,7 +314,7 @@ export class HomeComponent implements OnInit {
     this.meetingContent = this.selectedMeeting.description;
     this.isUpdating = !!item.meetingTheme?.id;
     this.isModalOpen = true;
-
+    this.loadStudyContentNames(contentIds);
     //console.log(this.selectedMeeting);
   }
 

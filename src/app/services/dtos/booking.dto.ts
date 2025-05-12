@@ -29,6 +29,7 @@ export interface MeetingDTO {
   markAssistanceAt?: Date;
   markAssistanceById?: number;
   linkOpened?: boolean;
+  studyContentId?: number[];
 }
 
 export interface AssignedByDTO {

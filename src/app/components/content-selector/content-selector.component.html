@@ -1,0 +1,43 @@
+<div class="box">
+  <!-- Select de Stage -->
+  <div class="field">
+    <label class="label">Selecciona una Stage</label>
+    <div class="control">
+      <div class="select is-fullwidth">
+        <select [(ngModel)]="selectedStageId" (change)="onStageChange()" required>
+          <option [ngValue]="null">Seleccionar...</option>
+          <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Select de Temas disponibles -->
+  <div *ngIf="availableContents.length > 0" class="field">
+    <label class="label">Seleccionar temas</label>
+    <div class="control">
+      <div class="select is-fullwidth">
+        <select (change)="addContent($event)" required>
+          <option [ngValue]="null">Seleccionar...</option>
+          <option *ngFor="let content of availableContents" [value]="content.id">{{ content.name }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Badges de Temas seleccionados -->
+  <div *ngIf="selectedContents.length > 0" class="tags mt-4">
+    <span *ngFor="let content of selectedContents" class="tag is-info is-blue">
+      {{ content.name }}
+      <button type="button" class="delete is-small" (click)="removeContent(content.id)"></button>
+    </span>
+  </div>
+
+  <div class="field mt-4 has-text-centered">
+    <button type="button" class="button is-confirm"
+            [disabled]="!selectedStageId || selectedContents.length === 0"
+            (click)="confirmSelection()">
+      Confirmar selección
+    </button>
+  </div>
+</div>

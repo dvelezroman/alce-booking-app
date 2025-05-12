@@ -151,10 +151,21 @@
           </td>
           <td>{{ item.status }}</td>
           <td>{{ item.mode || 'Sin modalidad' }}</td>
-          <td>{{ getMeetingThemeDescription(item.meetingTheme) }}</td>
+          <td>
+            <button  class="icon-button" (click)="showContentModal(getStudyContentList(item))">
+              <span class="material-icons">menu_book</span>
+            </button>
+          </td>
           <td> {{ getAssistanceText(item) }} </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isContentViewer]="modal.isContentViewer ?? false" 
+  (close)="modal.close()">
+</app-modal>

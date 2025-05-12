@@ -47,4 +47,14 @@ export class StudyContentService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  getManyStudyContents(studyContentIds: number[]): Observable<StudyContentDto[]> {
+    const params = new HttpParams({
+      fromObject: {
+        ids: studyContentIds.map(String),
+      },
+    });
+
+    return this.http.get<StudyContentDto[]>(`${this.apiUrl}/batch/content`, { params });
+  }
 }
