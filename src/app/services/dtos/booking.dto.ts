@@ -1,6 +1,7 @@
 import {Mode, Stage, Student, StudentClassification} from "./student.dto";
 import {Instructor} from "./instructor.dto";
 import {MeetingThemeDto} from "./meeting-theme.dto";
+import { StudyContentDto } from "./study-content.dto";
 
 export interface MeetingDTO {
   id?: number;            // Optional for create; required for update
@@ -30,6 +31,7 @@ export interface MeetingDTO {
   markAssistanceById?: number;
   linkOpened?: boolean;
   studyContentId?: number[];
+  studyContent?: StudyContentDto[];
 }
 
 export interface AssignedByDTO {

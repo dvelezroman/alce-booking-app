@@ -42,7 +42,6 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   instructorLink: string | null = null;
   studyContentIds: number[] = [];
   studyContentOptions: { id: number; name: string }[] = [];
-  modalContentList: { id: number; name: string }[] = [];
   showForm = true;
 
   filter: FilterMeetingsDto = {
@@ -176,43 +175,36 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   onContentIdsSelected(ids: number[]) {
     this.studyContentIds = ids;
-    //console.log('id:', this.studyContentIds);
-    this.loadContentNamesWithoutModal(ids);
+    this.loadContentNames(ids);
   }
 
-  async loadContentNamesWithoutModal(contentIds: number[]) {
+  loadContentNames(contentIds: number[]) {
     if (contentIds.length === 0) {
-      this.studyContentOptions = [];
-      return;
-    }
+    this.studyContentOptions = [];
+    return;
+  }
 
     const requests = contentIds.map(id => this.studyContentService.getById(id));
     forkJoin(requests).subscribe(contents => {
       this.studyContentOptions = contents.map(c => ({
         id: c.id,
-        name: `Stage ${c.stage.number}, Unidad ${c.unit}: ${c.title}`
+        name: `Stage ${c.stageId}, Unidad ${c.unit}: ${c.title}`
       }));
     });
   }
 
-  loadSelectedContentNames(contentIds: number[]) {
-    if (contentIds.length === 0) {
-    this.showContentViewer('Sin contenido');
-    return;
-  }
-    this.studyContentService.getManyStudyContents(contentIds).subscribe(rows => {
-      this.studyContentOptions = rows.map(r => ({
-        id: r.id,
-        name: `Unidad ${r.unit}: ${r.title}`
-      }));
-      const names = this.studyContentOptions.map(c => c.name).join('\n');
-      this.showContentViewer(names);
-    });
+  formatStudyContent(meeting: MeetingDTO): string {
+    if (!meeting.studyContent || meeting.studyContent.length === 0) {
+      return 'Sin contenido';
+    }
+    return meeting.studyContent
+      .map(c => `Unidad ${c.unit}: ${c.title}`)
+      .join('\n');
   }
 
   clearSelectedContents() {
-  this.studyContentIds = [];
-  this.studyContentOptions = [];
+    this.studyContentIds = [];
+    this.studyContentOptions = [];
  }
 
  showContentViewer(content: string) {

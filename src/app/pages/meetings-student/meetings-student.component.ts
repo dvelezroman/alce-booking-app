@@ -261,13 +261,13 @@ export class MeetingsStudentComponent implements OnInit {
   });
 }
 
-getStudyContentList(meeting: MeetingDTO): string {
-  if (!meeting.studyContentId || meeting.studyContentId.length === 0) {
-    return 'Sin contenido';
+  getStudyContentList(meeting: MeetingDTO): string {
+    if (!meeting.studyContent || meeting.studyContent.length === 0) {
+      return 'Sin contenido';
+    }
+    const names = meeting.studyContent.map(c => `Unidad ${c.unit}: ${c.title}`).join('\n');
+    return names;
   }
-  const names = meeting.studyContentId.map(id => this.studyContentOptions.find(option => option.id === id)?.name || `ID: ${id}`).join(', ');
-  return names;
-}
 
   getFormattedSelectedDate(): string {
     if (!this.selectedDate) return '';
