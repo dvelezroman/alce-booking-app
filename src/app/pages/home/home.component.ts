@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { forkJoin, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { selectIsLoggedIn, selectUserData } from '../../store/user.selector';
 import { UserDto, UserRole } from '../../services/dtos/user.dto';
 import { BookingService } from '../../services/booking.service';
@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit {
   isInstructor: boolean = false;
   isStudent: boolean  = false;
   instructorId: number | null = null;
-  studyContentOptions: { id: number; name: string }[] = [];
+  studyContentOptions: { id: string; name: string }[] = [];
   meetingStudyContents: number[] = [];
 
   selectedMonth!: string;
@@ -79,7 +79,7 @@ export class HomeComponent implements OnInit {
 
     this.userData$.subscribe(user => {
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
-      this.isStudent    = user?.role === UserRole.STUDENT;     
+      this.isStudent    = user?.role === UserRole.STUDENT;
       if (this.isInstructor) {
         this.generateCurrentMonthDays();
       }
@@ -92,17 +92,15 @@ export class HomeComponent implements OnInit {
   }
 
   private loadStudyContentNames(contentIds: number[]) {
-    this.studyContentOptions = [];  // Limpiar antes de volver a cargar
+    this.studyContentOptions = [];
 
     if (contentIds.length > 0) {
-      const requests = contentIds.map(id => this.studyContentService.getById(id));
-      forkJoin(requests).subscribe(contents => {
-        this.studyContentOptions = contents.map(c => ({
-          id: c.id,
-          name: `Unidad ${c.unit}: ${c.title}`
-        }));
-        console.log('Contenidos cargados:', this.studyContentOptions);
-      });
+      this.studyContentService.getManyStudyContents(contentIds).subscribe(result => {
+        this.studyContentOptions = result.map(r => ({
+          id: r.stage.number,
+          name: `Unidad ${r.unit}: ${r.title}`
+        }))
+      })
     }
   }
 
@@ -123,7 +121,7 @@ export class HomeComponent implements OnInit {
       enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
       julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
     };
-  
+
     const monthIndex = monthMap[this.selectedMonth.toLowerCase()];
     if (monthIndex === undefined) {
       console.error('Mes inválido:', this.selectedMonth);
@@ -132,13 +130,13 @@ export class HomeComponent implements OnInit {
 
     const daysInMonth = new Date(this.selectedYear, monthIndex + 1, 0).getDate();
     const firstDayOfWeek = new Date(this.selectedYear, monthIndex, 1).getDay();
-    
+
     this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({
       day: '',
       dayOfWeek: '',
-      hasMeeting: false 
+      hasMeeting: false
     }));
-  
+
     // Días del mes actual
     this.currentMonthDays = this.currentMonthDays.concat(
       Array.from({ length: daysInMonth }, (_, i) => {
@@ -146,7 +144,7 @@ export class HomeComponent implements OnInit {
         return {
           day: i + 1,
           dayOfWeek: date.toLocaleString('es-ES', { weekday: 'long' }),
-          hasMeeting: false 
+          hasMeeting: false
         };
       })
     );
@@ -157,38 +155,38 @@ export class HomeComponent implements OnInit {
       enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
       julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
     };
-  
+
     const currentMonthIndex = monthMap[this.selectedMonth.toLowerCase()];
     if (currentMonthIndex === undefined) {
       return;
     }
-  
+
     const newDate = new Date(this.selectedYear, currentMonthIndex + 1, 1);
     const maxDate = new Date(this.maxYear, monthMap[this.maxMonth.toLowerCase()], 1);
     if (newDate > maxDate) return;
-  
+
     this.selectedMonth = newDate.toLocaleString('es-ES', { month: 'long' });
     this.selectedYear = newDate.getFullYear();
     this.selectedDay = null;
     this.generateCurrentMonthDays();
     this.getInstructorMeetings(newDate);
   }
-  
+
   prevMonth() {
     const monthMap: Record<string, number> = {
       enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
       julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
     };
-  
+
     const currentMonthIndex = monthMap[this.selectedMonth.toLowerCase()];
     if (currentMonthIndex === undefined) {
       return;
     }
-    
+
     const newDate = new Date(this.selectedYear, currentMonthIndex - 1, 1);
     const minDate = new Date(this.minYear, monthMap[this.minMonth.toLowerCase()], 1);
     if (newDate < minDate) return;
-  
+
     this.selectedMonth = newDate.toLocaleString('es-ES', { month: 'long' });
     this.selectedYear = newDate.getFullYear();
     this.selectedDay = null;
@@ -198,13 +196,13 @@ export class HomeComponent implements OnInit {
 
   isDaySelectable(day: { day: number | string, isNextMonth?: boolean }): boolean {
     if (typeof day.day !== 'number') return false;
-  
+
     const today = new Date();
     const currentMonthIndex = this.getMonthIndex(this.selectedMonth);
     const selectedDate = new Date(this.selectedYear, currentMonthIndex, +day.day);
     const esHoyOMasTarde = selectedDate >= new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const esDomingo = selectedDate.getDay() === 0;
-  
+
     return esHoyOMasTarde && !esDomingo;
   }
 
@@ -222,7 +220,7 @@ export class HomeComponent implements OnInit {
     if (typeof day.day === 'number') {
       this.selectedDay = day.day;
       this.selectedDate = new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), day.day);
-  
+
       if (day.hasMeeting && day.meetings && day.meetings.length > 0) {
         this.meetingsOfDay = [...day.meetings].sort((a, b) => a.hour - b.hour);
       } else {
@@ -238,8 +236,8 @@ export class HomeComponent implements OnInit {
       enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
       julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
     };
-  
-    return monthMap[monthName.toLowerCase()] ?? -1; 
+
+    return monthMap[monthName.toLowerCase()] ?? -1;
   }
 
   getInstructorMeetings(selectedDate: Date) {
