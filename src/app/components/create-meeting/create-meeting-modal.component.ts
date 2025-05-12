@@ -53,7 +53,7 @@ export class CreateMeetingModalComponent implements OnInit {
   }
 
   isHourValid(): boolean {
-    if (!this.hour || !this.isTodayOnly) return true;
+    if (!this.hour || !this.isTodayOnly()) return true;
     const now = DateTime.now().setZone('America/Guayaquil');
     const selectedHour = +this.hour;
     return selectedHour >= now.hour + 2;
@@ -67,9 +67,9 @@ export class CreateMeetingModalComponent implements OnInit {
     if (!this.isTodayOnly()) {
       return 'Solo puedes agendar una clase para el día de hoy.';
     }
-    if (!this.isHourValid()) {
-      return 'Solo se puede agendar clase con dos horas de anticipación.';
-    }
+    // if (!this.isHourValid()) {
+    //   return 'Solo se puede agendar clase con dos horas de anticipación.';
+    // }
     return null;
   }
 
@@ -113,28 +113,28 @@ export class CreateMeetingModalComponent implements OnInit {
     if (!this.selectedStudent || !this.instructorId || !this.fromDate || !this.hour  || !this.selectedMode) {
       this.errorToastMessage = 'Faltan datos para crear la clase';
       this.showErrorToast = true;
-  
+
       setTimeout(() => {
         this.showErrorToast = false;
       }, 3000);
       return;
     }
-  
+
     const [year, month, day] = this.fromDate.split('-').map(Number);
     const formattedMonth = month.toString().padStart(2, '0');
     const formattedDay = day.toString().padStart(2, '0');
     const formattedHour = this.hour.toString().padStart(2, '0');
-  
+
     const formattedDate = `${year}-${formattedMonth}-${formattedDay}T${formattedHour}:00:00-05:00`;
-  
+
     const date = getTimezoneOffsetHours() !== 0
       ? convertEcuadorDateToLocal(formattedDate)
       : formattedDate;
-  
+
     const hour = getTimezoneOffsetHours() !== 0
       ? convertEcuadorHourToLocal(Number(this.hour))
       : Number(this.hour);
-  
+
     const meeting: CreateMeetingDto = {
       studentId: this.selectedStudent.student!.id,
       instructorId: this.instructorId,
@@ -146,7 +146,7 @@ export class CreateMeetingModalComponent implements OnInit {
       mode: this.selectedMode,
       category: this.selectedStudent.student!.studentClassification ?? StudentClassification.ADULTS,
     };
-  
+
     this.meetingCreated.emit(meeting);
   }
-} 
+}
