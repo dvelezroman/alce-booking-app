@@ -26,7 +26,7 @@ import { forkJoin } from 'rxjs';
     FormsModule,
     CreateMeetingModalComponent,
     ModalComponent,
-    ContentSelectorComponent 
+    ContentSelectorComponent
   ],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'
@@ -44,7 +44,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   studyContentOptions: { id: number; name: string }[] = [];
   modalContentList: { id: number; name: string }[] = [];
   showForm = true;
-  
+
   filter: FilterMeetingsDto = {
     from: '',
     to: '',
@@ -180,7 +180,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.loadContentNamesWithoutModal(ids);
   }
 
-  loadContentNamesWithoutModal(contentIds: number[]) {
+  async loadContentNamesWithoutModal(contentIds: number[]) {
     if (contentIds.length === 0) {
       this.studyContentOptions = [];
       return;
@@ -190,7 +190,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     forkJoin(requests).subscribe(contents => {
       this.studyContentOptions = contents.map(c => ({
         id: c.id,
-        name: `Unidad ${c.unit}: ${c.title}`
+        name: `Stage ${c.stage.number}, Unidad ${c.unit}: ${c.title}`
       }));
     });
   }
@@ -200,15 +200,13 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.showContentViewer('Sin contenido');
     return;
   }
-
-    const requests = contentIds.map(id => this.studyContentService.getById(id));
-    forkJoin(requests).subscribe(contents => {
-      this.modalContentList = contents.map(c => ({
-        id: c.id,
-        name: `Unidad ${c.unit}: ${c.title}`
+    this.studyContentService.getManyStudyContents(contentIds).subscribe(rows => {
+      this.studyContentOptions = rows.map(r => ({
+        id: r.id,
+        name: `Unidad ${r.unit}: ${r.title}`
       }));
-      const names = this.modalContentList.map(c => c.name).join('\n');
-        this.showContentViewer(names);
+      const names = this.studyContentOptions.map(c => c.name).join('\n');
+      this.showContentViewer(names);
     });
   }
 
