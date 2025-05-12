@@ -85,6 +85,13 @@
       </div>
     </div>
 
+    <!-- Botón de Crear Meeting -->
+    <div class="field has-text-centered my-4" *ngIf="filter.from && filter.hour">
+      <button class="button is-link is-mediun" type="button" (click)="onCreateMeeting()">
+        + Crear meeting
+      </button>
+    </div>
+
       <!-- Formulario de Selección de Contenido -->
     <div *ngIf="meetings.length > 0" class="content-selection-wrapper">
       <!-- Formulario de Selección -->
@@ -106,15 +113,6 @@
           </ul>
         </div>
       </ng-container>
-    </div>
-
-
-
-    <!-- Botón de Crear Meeting -->
-    <div class="field has-text-centered mt-4" *ngIf="filter.from && filter.hour">
-      <button class="button is-link is-mediun" type="button" (click)="onCreateMeeting()">
-        + Crear meeting
-      </button>
     </div>
 
     <div class="block-results">
