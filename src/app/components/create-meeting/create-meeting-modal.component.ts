@@ -56,7 +56,7 @@ export class CreateMeetingModalComponent implements OnInit {
     if (!this.hour || !this.isTodayOnly) return true;
     const now = DateTime.now().setZone('America/Guayaquil');
     const selectedHour = +this.hour;
-    return now.hour - 2 <= selectedHour;
+    return selectedHour >= now.hour + 2;
   }
 
   canCreateMeeting(): boolean {
@@ -68,7 +68,7 @@ export class CreateMeetingModalComponent implements OnInit {
       return 'Solo puedes agendar una clase para el día de hoy.';
     }
     if (!this.isHourValid()) {
-      return 'Solo puedes agendar una clase hasta 2 horas antes de la hora actual.';
+      return 'Solo se puede agendar clase con dos horas de anticipación.';
     }
     return null;
   }
