@@ -122,16 +122,16 @@ export class ProcessedEventsComponent implements OnInit {
     this.processedEventService.getProcessedEvents(this.filter).subscribe({
       next: (data) => {
         this.events = data;
-        console.log('Eventos recibidos:', data);
+        // console.log('Eventos recibidos:', data);
       },
-      error: (error) => {
-        console.error('Error al obtener eventos:', error);
+      error: () => {
+        // console.error('Error al obtener eventos:', error);
       }
     });
   }
 
-  getUserFullName(user: EventUserDataI): string {
-    return user ? `${user.firstName} ${user.lastName}` : 'Usuario no disponible';
+  getUserFullName(user: EventUserDataI) {
+    return user ? `${user.firstName}, ${user.lastName}` : 'Usuario no disponible';
   }
 
   hideDropdown(): void {
