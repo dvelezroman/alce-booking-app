@@ -15,7 +15,6 @@ import { ModalComponent } from '../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ContentSelectorComponent } from '../../components/content-selector/content-selector.component';
 import { StudyContentService } from '../../services/study-content.service';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -184,8 +183,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     return;
   }
 
-    const requests = contentIds.map(id => this.studyContentService.getById(id));
-    forkJoin(requests).subscribe(contents => {
+    this.studyContentService.getManyStudyContents(contentIds).subscribe(contents => {
       this.studyContentOptions = contents.map(c => ({
         id: c.id,
         name: `Stage ${c.stageId}, Unidad ${c.unit}: ${c.title}`
