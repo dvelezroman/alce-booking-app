@@ -242,7 +242,6 @@ export class HomeComponent implements OnInit {
 
   getInstructorMeetings(selectedDate: Date) {
     const { month, year } = this.extractMonthAndYear(selectedDate);
-
     this.bookingService.getInstructorMeetingsGroupedByHour({
       from: this.getMonthStartDate(year, month),
       to: this.getMonthEndDate(year, month),
@@ -267,6 +266,7 @@ export class HomeComponent implements OnInit {
 
   private handleMeetingsResponse(meetings: MeetingDTO[], month: number, year: number) {
     const daysWithMeetings = this.groupMeetingsByDay(meetings, month, year);
+    console.log(daysWithMeetings);
     this.updateMonthDaysWithMeetings(daysWithMeetings);
   }
 
@@ -277,7 +277,6 @@ export class HomeComponent implements OnInit {
 
     meetings.forEach((meeting) => {
       const meetingDate = new Date(meeting.date);
-      if (meetingDate < today) return;
 
       if (meetingDate.getMonth() === month && meetingDate.getFullYear() === year) {
         const day = meetingDate.getDate();
@@ -339,14 +338,14 @@ export class HomeComponent implements OnInit {
     };
 
     this.meetingThemesService.create(createNewMeetingThemeData).subscribe({
-      next: (response) => {
+      next: () => {
         this.showModal(this.createModalParams(false, 'Contenido de la clase agregado correctamente.'));
         this.closeThemeModal();
         if (this.selectedDate) {
           this.getInstructorMeetings(this.selectedDate);
         }
       },
-      error: (error) => {
+      error: () => {
         this.showModal(this.createModalParams(true, 'No se pudo agregar el contenido de la clase.'));
       }
     });
@@ -366,14 +365,14 @@ export class HomeComponent implements OnInit {
     };
 
     this.meetingThemesService.update(this.selectedMeeting.meetingThemeId, updatedData).subscribe({
-        next: (response) => {
+        next: () => {
             this.showModal(this.createModalParams(false, 'Tema actualizado exitosamente.'));
             this.closeThemeModal();
             if (this.selectedDate) {
                 this.getInstructorMeetings(this.selectedDate); // Actualizamos reuniones solo del mes y año actuales
             }
         },
-        error: (error) => {
+        error: () => {
             this.showModal(this.createModalParams(true, 'Error al actualizar el tema.'));
         }
     });
