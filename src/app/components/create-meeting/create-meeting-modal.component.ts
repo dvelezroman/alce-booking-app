@@ -53,10 +53,10 @@ export class CreateMeetingModalComponent implements OnInit {
   }
 
   isHourValid(): boolean {
-    if (!this.hour || !this.isTodayOnly()) return true;
+    if (!this.hour || !this.isTodayOnly) return true;
     const now = DateTime.now().setZone('America/Guayaquil');
     const selectedHour = +this.hour;
-    return selectedHour >= now.hour + 2;
+    return now.hour - 2 <= selectedHour;
   }
 
   canCreateMeeting(): boolean {
