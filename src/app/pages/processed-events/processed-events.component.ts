@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import {EventTypeE, ProcessedEventDto, ProcessedEventFilterDto} from '../../services/dtos/process-event-filter.dto';
+import {
+  EventTypeE,
+  EventUserDataI,
+  ProcessedEventDto,
+  ProcessedEventFilterDto
+} from '../../services/dtos/process-event-filter.dto';
 import { DateTime } from 'luxon';
 import { ProcessedEventsService } from '../../services/processedEvents.service';
 import { UsersService } from '../../services/users.service';
@@ -125,8 +130,7 @@ export class ProcessedEventsComponent implements OnInit {
     });
   }
 
-  getUserFullName(userId: number): string {
-    const user = this.users.find(u => u.id === userId);
+  getUserFullName(user: EventUserDataI): string {
     return user ? `${user.firstName} ${user.lastName}` : 'Usuario no disponible';
   }
 

@@ -5,10 +5,14 @@ export interface ProcessedEventFilterDto {
   processedById?: number;
   sort?: 'asc' | 'desc';
 }
-
+export interface EventUserDataI {
+  firstName: string;
+  lastName: string;
+}
 export interface ProcessedEventDto {
   id: number;
   processedById: number;
+  processedBy: EventUserDataI;
   eventType: EventTypeE;
   description: string;
   createdAt: string;
