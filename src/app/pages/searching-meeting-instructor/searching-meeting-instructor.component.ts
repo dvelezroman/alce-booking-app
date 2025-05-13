@@ -35,6 +35,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   meetings: MeetingDTO[] = [];
   instructorId: number | null = null;
   modal: ModalDto = modalInitializer();
+  confirmationModal: ModalDto = modalInitializer();
   stages: Stage[] = [];
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
   showCreateModal = false;
@@ -111,6 +112,49 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.bookingService.searchMeetings(searchParams).subscribe(meetings => {
       this.meetings = meetings;
     });
+  }
+
+  onAssistanceCheckboxClick(event: Event, meeting: MeetingDTO) {
+    event.preventDefault(); 
+    this.confirmAssistanceWithContentCheck(meeting);
+  }
+
+  confirmAssistanceWithContentCheck(meeting: MeetingDTO) {
+    const isCancellingAssistance = meeting.present;
+
+    if (isCancellingAssistance) {
+      this.confirmationModal = {
+        ...modalInitializer(),
+        show: true,
+        isInfo: true,
+        message: '¿Estás seguro de cancelar la asistencia?<br>Si cancelas la asistencia también se eliminará el contenido, si lo hubiere.',
+        showButtons: true,
+        confirm: () => {
+          this.toggleSelection(meeting);
+          this.closeConfirmationModal();
+        },
+        close: this.closeConfirmationModal,
+      };
+      return;
+    }
+
+    if (this.studyContentIds.length === 0) {
+      this.confirmationModal = {
+        ...modalInitializer(),
+        show: true,
+        isInfo: true,
+        message: 'Estás a punto de marcar asistencia sin haber confirmado contenidos.<br><br>¿Deseas continuar?',
+        showButtons: true,
+        confirm: () => {
+          this.toggleSelection(meeting);
+          this.closeConfirmationModal();
+        },
+        close: this.closeConfirmationModal,
+      };
+      return;
+    }
+
+    this.toggleSelection(meeting);
   }
 
   toggleSelection(meeting: MeetingDTO) {
@@ -226,6 +270,10 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   closeModal = () => {
     this.modal = { ...modalInitializer() };
   }
+
+  closeConfirmationModal = () => {
+  this.confirmationModal = { ...modalInitializer() };
+}
 
   createModalParams(isError: boolean, message: string): ModalDto {
     return {

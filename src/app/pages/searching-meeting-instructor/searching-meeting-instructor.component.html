@@ -166,8 +166,13 @@
               </ng-container>
               <ng-template #futureMeeting>-</ng-template>
             </td>
-            <td data-label="Marcar Asistencia">
-              <input type="checkbox" [checked]="meeting.present" (change)="toggleSelection(meeting)" [disabled]="!isToday(meeting.localdate)" />
+           <td data-label="Marcar Asistencia">
+              <input 
+                type="checkbox" 
+                [checked]="meeting.present"
+                (click)="onAssistanceCheckboxClick($event, meeting)"
+                [disabled]="!isToday(meeting.localdate)" 
+              />
             </td>
           </tr>
           </tbody>
@@ -196,3 +201,13 @@
   [isContentViewer]="modal.isContentViewer ?? false"
   (close)="closeModal()"
 ></app-modal>
+
+<app-modal
+  [showModal]="confirmationModal.show"
+  [message]="confirmationModal.message"
+  [isInfo]="true"
+  [isError]="false"
+  [showButtons]="confirmationModal.showButtons ?? false"
+  (confirmAction)="confirmationModal.confirm && confirmationModal.confirm()"
+  (close)="confirmationModal.close()"
+/>

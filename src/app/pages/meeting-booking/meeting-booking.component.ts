@@ -800,18 +800,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
 
   // método para seleccionar meetings, abrir y cerrar modal
+
   openMeetingDetailModal(meeting: MeetingDTO, index: number) {
+    clearInterval(this.linkInterval);
     this.selectedMeeting = meeting;
     this.selectedMeetingIndex = index;
-    this.isMeetingDetailModalActive = true;
-    this.updateLinkStatus();
-  }
+    this.updateLinkStatus();  
+    this.isMeetingDetailModalActive = true; 
+}
 
   closeMeetingDetailModal() {
     this.selectedMeeting = null;
     this.isMeetingDetailModalActive = false;
     clearInterval(this.linkInterval);
-
   }
 
   getFormattedLink(link: string | undefined): string {
@@ -833,29 +834,33 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   updateLinkStatus() {
     if (!this.selectedMeeting) return;
 
+    this.calculateLinkStatus(); 
+
+    const ONE_MINUTE = 60 * 1000;
+    this.linkInterval = setInterval(() => {
+      this.calculateLinkStatus();
+    }, ONE_MINUTE);
+  }
+
+  calculateLinkStatus() {
+    if (!this.selectedMeeting) return;
+
     const LINK_ACTIVE_BUFFER_MINUTES_BEFORE = 5 * 60 * 1000;
     const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 6 * 60 * 1000;
-    const ONE_SECOND = 1000;
     const timeZoneOffset = new Date().getTimezoneOffset() / 60;
-    const meetingStart = new Date(this.selectedMeeting.date).getTime() + ((timeZoneOffset) * 60 * 60 * 1000 );
-    // console.log(this.selectedMeeting.date);
-    // console.log(new Date(meetingStart));
-    this.linkInterval = setInterval(() => {
-      const now = new Date().getTime();
-      const start = meetingStart - LINK_ACTIVE_BUFFER_MINUTES_BEFORE;
-      const end = meetingStart + LINK_ACTIVE_BUFFER_MINUTES_AFTER;
-      if (now < start) {
-        // The meeting is in the future, link is visible but not clickable
-        this.linkStatus = 'not-clickable';
-      } else if (now >= start && now <= end) {
-        // The meeting is within the active window (5 minutes before start to 65 minutes after start), link is clickable
-        this.linkStatus = 'clickable';
-      } else {
-        // The meeting has finished, link should not be clickable and show "Not available"
-        this.linkStatus = 'not-available';
-        clearInterval(this.linkInterval);
-      }
-    }, ONE_SECOND);
+    const meetingStart = new Date(this.selectedMeeting.date).getTime() + (timeZoneOffset * 60 * 60 * 1000);
+
+    const now = new Date().getTime();
+    const start = meetingStart - LINK_ACTIVE_BUFFER_MINUTES_BEFORE;
+    const end = meetingStart + LINK_ACTIVE_BUFFER_MINUTES_AFTER;
+
+    if (now < start) {
+      this.linkStatus = 'not-clickable';
+    } else if (now >= start && now <= end) {
+      this.linkStatus = 'clickable';
+    } else {
+      this.linkStatus = 'not-available';
+    }
   }
 
   getMeetingLinkMessage(): string {
