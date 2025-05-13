@@ -229,9 +229,9 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     this.studyContentService.getManyStudyContents(contentIds).subscribe(contents => {
       this.studyContentOptions = contents.map(c => ({
-        id: c.id,
-        name: `Stage ${c.stageId}, Unidad ${c.unit}: ${c.title}`
-      }));
+          id: c.id,
+          name: `Stage ${c.stage?.number || c.stageId}, ${c.title}`
+        }));
     });
   }
 
@@ -240,7 +240,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       return 'Sin contenido';
     }
     return meeting.studyContent
-      .map(c => `Unidad ${c.unit}: ${c.title}`)
+      .map(c => `${c.title}`)
       .join('\n');
   }
 
