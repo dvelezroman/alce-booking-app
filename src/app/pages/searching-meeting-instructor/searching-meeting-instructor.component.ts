@@ -15,6 +15,8 @@ import { ModalComponent } from '../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ContentSelectorComponent } from '../../components/content-selector/content-selector.component';
 import { StudyContentService } from '../../services/study-content.service';
+import { StudyContentPayloadI } from '../../services/dtos/study-content.dto';
+import { StudentContentHistoryModalComponent } from '../../components/contenido/student-content-history-modal/student-content-history-modal.component';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -25,7 +27,8 @@ import { StudyContentService } from '../../services/study-content.service';
     FormsModule,
     CreateMeetingModalComponent,
     ModalComponent,
-    ContentSelectorComponent
+    ContentSelectorComponent,
+    StudentContentHistoryModalComponent
   ],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'
@@ -43,6 +46,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   studyContentIds: number[] = [];
   studyContentOptions: { id: number; name: string }[] = [];
   showForm = true;
+  studentContentHistory: StudyContentPayloadI[] = [];
+  isStudentContentHistoryModalVisible: boolean = false;
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -247,18 +252,44 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   clearSelectedContents() {
     this.studyContentIds = [];
     this.studyContentOptions = [];
- }
+  }
 
- showContentViewer(content: string) {
-  this.modal = {
-    ...modalInitializer(),
-    show: true,
-    message: content,
-    isContentViewer: true,
-    title: 'Contenido de la Clase',
-    close: this.closeModal,
-  };
-}
+
+  loadStudentContentHistory(meeting: MeetingDTO): void {
+    const studentId = meeting.studentId;
+    const to = DateTime.now().toISODate();
+    const from = DateTime.now().minus({ days: 21 }).toISODate();
+
+    this.studyContentService.getStudyContentHistoryForStudentId(studentId, from, to).subscribe({
+      next: (history) => {
+        if (history.length === 0) {
+          this.showModal(this.createModalParams(true, 'No se encontraron contenidos en el historial.'));
+          return;
+        }
+
+        this.studentContentHistory = history;
+        this.isStudentContentHistoryModalVisible = true;
+      },
+      error: () => {
+        this.showModal(this.createModalParams(true, 'Error al cargar el historial de contenidos.'));
+      }
+    });
+  }
+
+    closeStudentContentHistoryModal() {
+    this.isStudentContentHistoryModalVisible = false;
+  }
+
+  showContentViewer(content: string) {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: content,
+      isContentViewer: true,
+      title: 'Contenido de la Clase',
+      close: this.closeModal,
+    };
+  }
 
   showModal(params: ModalDto) {
     this.modal = { ...params };
@@ -272,8 +303,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   }
 
   closeConfirmationModal = () => {
-  this.confirmationModal = { ...modalInitializer() };
-}
+    this.confirmationModal = { ...modalInitializer() };
+  }
 
   createModalParams(isError: boolean, message: string): ModalDto {
     return {
@@ -286,3 +317,4 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     };
   }
 }
+

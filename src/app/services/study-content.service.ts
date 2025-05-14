@@ -70,6 +70,7 @@ export class StudyContentService {
         to: to,
       }
     })
-    return this.http.get<StudyContentPayloadI[]>(`${this.apiUrl}/${studentId}/history`, { params });
+   return this.http.get<StudyContentPayloadI[]>(`${this.apiUrl}/history/${studentId}`, { params });
   }
 }
+

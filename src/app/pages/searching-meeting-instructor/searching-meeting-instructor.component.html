@@ -141,9 +141,14 @@
           <tr *ngFor="let meeting of meetings">
             <td data-label="Stage">{{ meeting.stage?.number || 'Stage no disponible' }}</td>
             <td data-label="Categoría">{{ meeting.student?.studentClassification || 'Categoría no disponible' }}</td>
-            <td data-label="Nombre" style="white-space: normal; vertical-align: top;">
-              {{ meeting.student?.user?.firstName || 'Nombre no disponible' }}
-              {{ meeting.student?.user?.lastName || '' }}
+           <td data-label="Nombre" style="white-space: normal; vertical-align: top;">
+              <span 
+                class="clickable is-clickable" 
+                (click)="loadStudentContentHistory(meeting)"
+              >
+                {{ meeting.student?.user?.firstName || 'Nombre no disponible' }}
+                {{ meeting.student?.user?.lastName || '' }}
+              </span>
             </td>
             <!-- <td data-label="Usuario">{{ meeting.student?.user?.email || 'Correo no disponible' }}</td> -->
             <td data-label="Fecha">{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
@@ -181,6 +186,13 @@
     </div>
   </div>
 </section>
+
+<app-student-content-history-modal
+  *ngIf="isStudentContentHistoryModalVisible"
+  [history]="studentContentHistory"
+  [show]="isStudentContentHistoryModalVisible"
+  (close)="closeStudentContentHistoryModal()"
+></app-student-content-history-modal>
 
 <app-create-meeting-modal
   *ngIf="showCreateModal"

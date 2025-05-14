@@ -1,0 +1,25 @@
+<div class="modal" [ngClass]="{ 'is-active': show }">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Historial de Contenidos</p>
+      <button class="delete" aria-label="close" (click)="onClose()"><i class="fas fa-times-circle"></i></button>
+    </header>
+    <section class="modal-card-body">
+      <ng-container *ngIf="history.length > 0; else emptyHistory">
+        <div *ngFor="let item of history">
+          <p><strong>Fecha:</strong> {{ item.date | date: 'longDate' }}</p>
+          <p><strong>Hora:</strong> {{ item.hour }}:00</p>
+          <p><strong>Stage:</strong> {{ item.stageId }}</p>
+          <p><strong>Unidad:</strong> {{ item.data.unit }}</p>
+          <p><strong>Título:</strong> {{ item.data.title }}</p>
+          <p><strong>Descripción:</strong> {{ item.data.description }}</p>
+          <hr />
+        </div>
+      </ng-container>
+      <ng-template #emptyHistory>
+        <p>No se encontraron contenidos en el historial.</p>
+      </ng-template>
+    </section>
+  </div>
+</div>
