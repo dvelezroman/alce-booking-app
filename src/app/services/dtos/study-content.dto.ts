@@ -37,3 +37,15 @@ export interface StudyContentUpdateDto {
   content?: string;
   enabled?: boolean;
 }
+
+export interface StudyContentPayloadI {
+  data: {
+    unit: number;
+    title: string;
+    description: string;
+    content: string;
+  };
+  date: string; // ISO 8601 format
+  stageId: number;
+  instructorId: number;
+}

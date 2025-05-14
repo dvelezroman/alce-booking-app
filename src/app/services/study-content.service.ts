@@ -2,7 +2,12 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
-import {StudyContentCreateDto, StudyContentDto, StudyContentUpdateDto} from "./dtos/study-content.dto";
+import {
+  StudyContentCreateDto,
+  StudyContentDto,
+  StudyContentPayloadI,
+  StudyContentUpdateDto
+} from "./dtos/study-content.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -56,5 +61,15 @@ export class StudyContentService {
     });
 
     return this.http.get<StudyContentDto[]>(`${this.apiUrl}/batch/content`, { params });
+  }
+
+  getStudyContentHistoryForStudentId(studentId: number, from: string, to: string): Observable<StudyContentPayloadI[]> {
+    const params = new HttpParams({
+      fromObject: {
+        from: from,
+        to: to,
+      }
+    })
+    return this.http.get<StudyContentPayloadI[]>(`${this.apiUrl}/${studentId}/history`, { params });
   }
 }
