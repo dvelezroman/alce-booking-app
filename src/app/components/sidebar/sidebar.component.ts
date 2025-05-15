@@ -50,8 +50,9 @@ export class SidebarComponent implements OnInit {
     { icon: 'create', text: 'Crear Admin / Instructor', route: '/create-instructors', roles: [UserRole.ADMIN] },
     { icon: 'video_call', text: 'Agenda', route: '/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] },
     { icon: 'history', text: 'Eventos', route: '/processed-events', roles: [UserRole.ADMIN] },
-    { icon: 'config', text: 'Configuración', route: '/feature-flag', roles: [UserRole.ADMIN] },
-    { icon: 'reportes', text: 'Reportes', route: '/reports', roles: [UserRole.ADMIN] },
+    { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/feature-flag', roles: [UserRole.ADMIN] },
+    { icon: 'reportes', text: 'Reportes de Estudiante', route: '/reports-detailed', roles: [UserRole.ADMIN] },
+    { icon: 'reportes', text: 'Reportes de Progreso', route: '', roles: [UserRole.ADMIN] },
   ];
 
   navGrouped: {
@@ -130,12 +131,19 @@ export class SidebarComponent implements OnInit {
           this.findNavItemByRoute('/content')
         ].filter(item => item.roles.includes(role))
       },
+     {
+        title: 'Reportes',
+        icon: 'reportes',
+        items: [
+          this.findNavItemByRoute('/reports-detailed'),
+          this.findNavItemByRoute('') 
+        ].filter(item => item.roles.includes(role))
+      },
       {
-        title: 'Reportes y Configuración',
+        title: 'Configuración',
         icon: 'config',
         items: [
-          this.findNavItemByRoute('/reports'),
-          this.findNavItemByRoute('/feature-flag')
+          this.findNavItemByRoute('/feature-flag') 
         ].filter(item => item.roles.includes(role))
       }
     ];
@@ -148,7 +156,9 @@ export class SidebarComponent implements OnInit {
   }
 
   isCategoryActive(items: { icon: string; text: string; route: string; roles: UserRole[] }[]): boolean {
-    return items.some(item => this.currentRoute === item.route || this.currentRoute.startsWith(item.route + '/'));
+    return items
+      .filter(item => item.route) 
+      .some(item => this.currentRoute === item.route || this.currentRoute.startsWith(item.route + '/'));
   }
 
 
