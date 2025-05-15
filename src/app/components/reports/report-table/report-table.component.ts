@@ -12,4 +12,8 @@ import { StudyContentPayloadI } from '../../../services/dtos/study-content.dto';
 })
 export class ReportTableComponent {
   @Input() history: StudyContentPayloadI[] = [];
+
+  getInstructorName(record: any): string {
+    return `${record.instructor.lastName}, ${record.instructor.firstName}`;
+  }
 }

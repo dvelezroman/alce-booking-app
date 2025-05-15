@@ -50,4 +50,8 @@ export interface StudyContentPayloadI {
   hour: number;
   stageId: number;
   instructorId: number;
+  instructor: {
+    firstName: string;
+    lastName: string;
+  }
 }
