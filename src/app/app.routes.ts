@@ -19,6 +19,7 @@ import { ReportsDetailedComponent } from './pages/reports-detail-statist-meeting
 import { MeetingsStudentComponent } from './pages/meetings-student/meetings-student.component';
 import { ProcessedEventsComponent } from './pages/processed-events/processed-events.component';
 import { ContentComponent } from './pages/content/content.component';
+import { ReportsProgressComponent } from './pages/reports-progress/reports-progress.component';
 
 
 
@@ -42,6 +43,7 @@ export const routes: Routes = [
   { path: 'create-students', component: RegisterStudentComponent, canActivate: [AuthGuard]},
   { path: 'create-instructors', component: RegisterInstructorAdminComponent, canActivate: [AuthGuard]},
   { path: 'reports-detailed', component: ReportsDetailedComponent, canActivate: [AuthGuard] },
+  { path: 'reports-progress', component: ReportsProgressComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
 ];

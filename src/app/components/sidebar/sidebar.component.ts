@@ -52,7 +52,7 @@ export class SidebarComponent implements OnInit {
     { icon: 'history', text: 'Eventos', route: '/processed-events', roles: [UserRole.ADMIN] },
     { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/feature-flag', roles: [UserRole.ADMIN] },
     { icon: 'reportes', text: 'Reportes de Estudiante', route: '/reports-detailed', roles: [UserRole.ADMIN] },
-    { icon: 'reportes', text: 'Reportes de Progreso', route: '', roles: [UserRole.ADMIN] },
+    { icon: 'reportes', text: 'Reportes de Progreso', route: '/reports-progress', roles: [UserRole.ADMIN] },
   ];
 
   navGrouped: {
@@ -136,7 +136,7 @@ export class SidebarComponent implements OnInit {
         icon: 'reportes',
         items: [
           this.findNavItemByRoute('/reports-detailed'),
-          this.findNavItemByRoute('') 
+          this.findNavItemByRoute('/reports-progress') 
         ].filter(item => item.roles.includes(role))
       },
       {
