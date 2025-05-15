@@ -44,6 +44,7 @@ export interface StudyContentPayloadI {
     title: string;
     description: string;
     content: string;
+    stage: string;
   };
   date: string; // ISO 8601 format
   hour: number;
