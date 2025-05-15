@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StudyContentService } from '../../services/study-content.service';
-import { Stage } from '../../services/dtos/student.dto';
+
 import { FormsModule } from '@angular/forms';
+import { Stage } from '../../../services/dtos/student.dto';
+import { StudyContentService } from '../../../services/study-content.service';
 
 @Component({
   selector: 'app-content-selector',

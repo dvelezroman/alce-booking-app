@@ -1,1 +1,26 @@
-<p>report-table works!</p>
+<div class="block-results">
+  <div class="table-container">
+    <table class="table-results is-fullwidth" *ngIf="history.length > 0">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Unidad</th>
+          <th>Título</th>
+          <th>Descripción</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of history">
+          <td data-label="Stage">{{ record.data.stage || 'No disponible' }}</td>
+          <td data-label="Unidad">{{ record.data.unit || 'No disponible' }}</td>
+          <td data-label="Título">{{ record.data.title || 'No disponible' }}</td>
+          <td data-label="Descripción">{{ record.data.description || 'No disponible' }}</td>
+          <td data-label="Fecha">{{ record.date | date: 'mediumDate' }}</td>
+          <td data-label="Hora">{{ record.hour }}:00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

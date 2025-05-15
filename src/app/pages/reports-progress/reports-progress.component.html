@@ -4,4 +4,12 @@
   </h1>
 
   <app-report-form (filtersSubmitted)="onFiltersSubmitted($event)"></app-report-form>
+
+  
+  <div class="report-table-wrapper">
+    <app-report-table [history]="studentContentHistory"></app-report-table>
+  </div>
+  <p *ngIf="searchExecuted && studentContentHistory.length === 0" class="no-results-message">
+    No hay contenidos encontrados.
+  </p>
 </section>

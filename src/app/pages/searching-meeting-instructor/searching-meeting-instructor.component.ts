@@ -13,10 +13,10 @@ import { DateTime } from 'luxon';
 import { CreateMeetingModalComponent } from '../../components/create-meeting/create-meeting-modal.component';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
-import { ContentSelectorComponent } from '../../components/content-selector/content-selector.component';
 import { StudyContentService } from '../../services/study-content.service';
 import { StudyContentPayloadI } from '../../services/dtos/study-content.dto';
 import { StudentContentHistoryModalComponent } from '../../components/contenido/student-content-history-modal/student-content-history-modal.component';
+import { ContentSelectorComponent } from '../../components/contenido/content-selector/content-selector.component';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
