@@ -63,14 +63,17 @@ export class StudyContentService {
     return this.http.get<StudyContentDto[]>(`${this.apiUrl}/batch/content`, { params });
   }
 
-  getStudyContentHistoryForStudentId(studentId: number, from: string, to: string): Observable<StudyContentPayloadI[]> {
-    const params = new HttpParams({
-      fromObject: {
-        from: from,
-        to: to,
-      }
-    })
-   return this.http.get<StudyContentPayloadI[]>(`${this.apiUrl}/history/${studentId}`, { params });
+  getStudyContentHistoryForStudentId(studentId: number, from?: string, to?: string): Observable<StudyContentPayloadI[]> {
+    if (from && to) {
+      const params = new HttpParams({
+        fromObject: {
+          from: from,
+          to: to,
+        }
+      })
+      return this.http.get<StudyContentPayloadI[]>(`${this.apiUrl}/history/${studentId}`, { params });
+    }
+   return this.http.get<StudyContentPayloadI[]>(`${this.apiUrl}/history/${studentId}`);
   }
 }
 

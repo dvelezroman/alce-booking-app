@@ -17,19 +17,16 @@ export class ReportsProgressComponent {
   constructor(private studyContentService: StudyContentService) {}
 
   onFiltersSubmitted(filters: { studentId: number; from?: string; to?: string }) {
-    console.log('Filtros recibidos en el padre:', filters);
-    const fromDate = filters.from ?? '';
-    const toDate = filters.to ?? '';
+    const fromDate = filters.from ?? undefined;
+    const toDate = filters.to ?? undefined;
 
     this.studyContentService
       .getStudyContentHistoryForStudentId(filters.studentId, fromDate, toDate)
       .subscribe({
         next: (history) => {
           this.studentContentHistory = history;
-          console.log('Historial cargado:', history);
         },
         error: (err) => {
-          console.error('Error al obtener el historial:', err);
         },
       });
   }
