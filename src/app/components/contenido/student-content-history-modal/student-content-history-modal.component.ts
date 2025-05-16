@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StudyContentPayloadI } from '../../../services/dtos/study-content.dto';
+import { StudyContentDto, StudyContentPayloadI } from '../../../services/dtos/study-content.dto';
+import { StudyContentService } from '../../../services/study-content.service';
 
 @Component({
   selector: 'app-student-content-history-modal',
@@ -9,10 +10,42 @@ import { StudyContentPayloadI } from '../../../services/dtos/study-content.dto';
   templateUrl: './student-content-history-modal.component.html',
   styleUrls: ['./student-content-history-modal.component.scss']
 })
-export class StudentContentHistoryModalComponent {
+export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
   @Input() history: StudyContentPayloadI[] = [];
   @Input() show: boolean = false;
+  @Input() stageId?: number;
+  @Input() stageContents: StudyContentDto[] = [];
+  @Input() instructorName?: string;
+  @Input() stageDescription?: string;
   @Output() close = new EventEmitter<void>();
+
+
+  constructor(private studyContentService: StudyContentService) {}
+
+  ngOnInit(): void {
+    if (this.stageId) {
+      this.loadStageContents(this.stageId);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['stageId'] && this.stageId) {
+      this.loadStageContents(this.stageId);
+    }
+  }
+
+  loadStageContents(stageId: number): void {
+    this.studyContentService.filterBy(stageId).subscribe({
+      next: (contents) => {
+        this.stageContents = contents;
+        //console.log('contenidos cargados:', contents);
+      },
+      error: (err) => {
+        console.error('Error al cargar los contenidos del stage', err);
+        this.stageContents = [];
+      }
+    });
+  }
 
   onClose() {
     this.close.emit();

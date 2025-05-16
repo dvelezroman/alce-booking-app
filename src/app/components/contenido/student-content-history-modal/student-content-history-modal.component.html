@@ -2,24 +2,36 @@
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Historial de Contenidos</p>
+      <p class="modal-card-title">
+        Historial de Contenidos
+       <span *ngIf="stageDescription"> - {{ stageDescription }}</span>
+      </p>
       <button class="delete" aria-label="close" (click)="onClose()"><i class="fas fa-times-circle"></i></button>
     </header>
     <section class="modal-card-body">
-      <ng-container *ngIf="history.length > 0; else emptyHistory">
-        <div *ngFor="let item of history">
-          <p><strong>Fecha:</strong> {{ item.date | date: 'longDate' }}</p>
-          <p><strong>Hora:</strong> {{ item.hour }}:00</p>
-          <p><strong>Stage:</strong> {{ item.stageId }}</p>
-          <p><strong>Unidad:</strong> {{ item.data.unit }}</p>
-          <p><strong>Título:</strong> {{ item.data.title }}</p>
-          <p><strong>Descripción:</strong> {{ item.data.description }}</p>
-          <hr />
-        </div>
-      </ng-container>
-      <ng-template #emptyHistory>
-        <p>No se encontraron contenidos en el historial.</p>
-      </ng-template>
+      <div class="table-container">
+        <table class="table-results is-fullwidth">
+          <thead>
+            <tr>
+              <th *ngFor="let content of stageContents">
+                {{ content.title.split(' ')[0] }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td *ngFor="let content of stageContents">
+                <ng-container *ngFor="let record of history">
+                  <ng-container *ngIf="record.data?.title === content.title">
+                    <div>{{ record.date | date: 'shortDate' }}</div>
+                    <div>{{ instructorName || 'Instructor no disponible' }}</div>
+                  </ng-container>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </div>
 </div>

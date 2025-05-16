@@ -14,7 +14,7 @@ import { CreateMeetingModalComponent } from '../../components/create-meeting/cre
 import { ModalComponent } from '../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { StudyContentService } from '../../services/study-content.service';
-import { StudyContentPayloadI } from '../../services/dtos/study-content.dto';
+import { StudyContentDto, StudyContentPayloadI } from '../../services/dtos/study-content.dto';
 import { StudentContentHistoryModalComponent } from '../../components/contenido/student-content-history-modal/student-content-history-modal.component';
 import { ContentSelectorComponent } from '../../components/contenido/content-selector/content-selector.component';
 
@@ -48,6 +48,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   showForm = true;
   studentContentHistory: StudyContentPayloadI[] = [];
   isStudentContentHistoryModalVisible: boolean = false;
+  studentStageContents: StudyContentDto[] = [];
+  selectedMeeting?: MeetingDTO;
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -256,22 +258,41 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
 
   loadStudentContentHistory(meeting: MeetingDTO): void {
+    //console.log('meeting seleccionado:', meeting);
+    this.selectedMeeting = meeting;
+
     const studentId = meeting.studentId;
+    const stageId = meeting.student?.stageId; 
     const to = DateTime.now().toISODate();
     const from = DateTime.now().minus({ days: 21 }).toISODate();
 
-    this.studyContentService.getStudyContentHistoryForStudentId(studentId, from, to).subscribe({
-      next: (history) => {
-        if (history.length === 0) {
-          this.showModal(this.createModalParams(true, 'No se encontraron contenidos en el historial.'));
-          return;
-        }
+    if (!stageId) {
+      this.showModal(this.createModalParams(true, 'El estudiante no tiene Stage asignado.'));
+      return;
+    }
 
-        this.studentContentHistory = history;
-        this.isStudentContentHistoryModalVisible = true;
+    this.studyContentService.filterBy(stageId).subscribe({
+      next: (stageContents) => {
+        this.studentStageContents = stageContents;
+        //console.log('Contenidos del stage cargados:', stageContents);
+
+        this.studyContentService.getStudyContentHistoryForStudentId(studentId, from, to).subscribe({
+          next: (history) => {
+            if (history.length === 0) {
+              this.showModal(this.createModalParams(true, 'No se encontraron contenidos en el historial.'));
+              return;
+            }
+
+            this.studentContentHistory = history;
+            this.isStudentContentHistoryModalVisible = true;
+          },
+          error: () => {
+            this.showModal(this.createModalParams(true, 'Error al cargar el historial de contenidos.'));
+          }
+        });
       },
       error: () => {
-        this.showModal(this.createModalParams(true, 'Error al cargar el historial de contenidos.'));
+        this.showModal(this.createModalParams(true, 'Error al cargar los contenidos del stage.'));
       }
     });
   }
