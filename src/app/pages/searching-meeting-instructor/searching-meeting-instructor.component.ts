@@ -120,7 +120,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   }
 
   onAssistanceCheckboxClick(event: Event, meeting: MeetingDTO) {
-    event.preventDefault(); 
+    event.preventDefault();
     this.confirmAssistanceWithContentCheck(meeting);
   }
 
@@ -295,7 +295,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.modal = { ...params };
     setTimeout(() => {
       this.modal.close();
-    }, 3000);
+    }, 1000);
   }
 
   closeModal = () => {
