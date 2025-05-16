@@ -50,4 +50,13 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
   onClose() {
     this.close.emit();
   }
+
+  onPreviousStage() {
+  //console.log('anterior stage');
+
+}
+
+onNextStage() {
+  //console.log('siguiente stage');
+}
 }
