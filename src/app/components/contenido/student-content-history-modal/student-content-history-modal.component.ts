@@ -18,6 +18,8 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
   @Input() instructorName?: string;
   @Input() stageDescription?: string;
   @Output() close = new EventEmitter<void>();
+  @Output() previousStage = new EventEmitter<void>();
+  @Output() nextStage = new EventEmitter<void>();  
 
 
   constructor(private studyContentService: StudyContentService) {}
@@ -52,11 +54,10 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
   }
 
   onPreviousStage() {
-  //console.log('anterior stage');
+    this.previousStage.emit();
+  }
 
-}
-
-onNextStage() {
-  //console.log('siguiente stage');
-}
+  onNextStage() {
+    this.nextStage.emit();
+  }
 }

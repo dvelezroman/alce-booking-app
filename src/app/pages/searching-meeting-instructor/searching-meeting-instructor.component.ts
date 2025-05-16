@@ -50,6 +50,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   isStudentContentHistoryModalVisible: boolean = false;
   studentStageContents: StudyContentDto[] = [];
   selectedMeeting?: MeetingDTO;
+  currentStageIndex: number = 0;
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -242,6 +243,17 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     });
   }
 
+  loadStageContents(stageId: number): void {
+    this.studyContentService.filterBy(stageId).subscribe({
+      next: (stageContents) => {
+        this.studentStageContents = stageContents;
+      },
+      error: () => {
+        this.showModal(this.createModalParams(true, 'Error al cargar los contenidos del stage.'));
+      }
+    });
+  }
+
   formatStudyContent(meeting: MeetingDTO): string {
     if (!meeting.studyContent || meeting.studyContent.length === 0) {
       return 'Sin contenido';
@@ -270,6 +282,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       this.showModal(this.createModalParams(true, 'El estudiante no tiene Stage asignado.'));
       return;
     }
+
+    this.currentStageIndex = this.stages.findIndex(s => s.id === stageId);
 
     this.studyContentService.filterBy(stageId).subscribe({
       next: (stageContents) => {
@@ -336,6 +350,32 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       message,
       close: this.closeModal
     };
+  }
+
+  private updateStageDescription() {
+    const currentStage = this.stages[this.currentStageIndex];
+    this.selectedMeeting = {
+      ...this.selectedMeeting,
+      stage: currentStage,
+    } as MeetingDTO;
+  }
+
+  goToPreviousStage() {
+    if (this.currentStageIndex > 0) {
+      this.currentStageIndex--;
+      const previousStage = this.stages[this.currentStageIndex];
+      this.updateStageDescription();
+      this.loadStageContents(previousStage.id);
+    }
+  }
+
+  goToNextStage() {
+    if (this.currentStageIndex < this.stages.length - 1) {
+      this.currentStageIndex++;
+      const nextStage = this.stages[this.currentStageIndex];
+      this.updateStageDescription();
+      this.loadStageContents(nextStage.id);
+    }
   }
 }
 
