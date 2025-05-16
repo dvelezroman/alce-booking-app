@@ -39,7 +39,7 @@ export class ReportsDetailedComponent {
     this.lastFilters = filters;
     this.searchAttempted = true;
     this.showReportButtons = true;
-    this.isReportGenerated = false;
+    this.isReportGenerated = true;
     this.activeReport = 'detailed';
 
     this.reportsService.getDetailedStatistics(
@@ -63,7 +63,6 @@ export class ReportsDetailedComponent {
     if (!this.lastFilters) return;
 
     this.activeReport = 'detailed';
-    this.isReportGenerated = false;
 
     this.reportsService.getDetailedStatistics(
       this.lastFilters.studentId,
@@ -72,11 +71,9 @@ export class ReportsDetailedComponent {
     ).subscribe({
       next: (data) => {
         this.reportData = data || [];
-        this.isReportGenerated = this.reportData.length > 0;
       },
       error: () => {
         this.reportData = [];
-        this.isReportGenerated = false;
       }
     });
   }
@@ -95,7 +92,6 @@ export class ReportsDetailedComponent {
         this.statisticalData = data;
       },
       error: () => {
-        console.error('Error al obtener estadísticas');
         this.statisticalData = null;
       }
     });
@@ -116,7 +112,6 @@ export class ReportsDetailedComponent {
       },
       error: () => {
         this.meetingsData = [];
-        console.error('Error al obtener el reporte de clases');
       }
     });
   }
