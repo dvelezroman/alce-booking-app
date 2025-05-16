@@ -3,217 +3,41 @@
     <div class="title-container">
         <h1 class="title">Reportes del Estudiante</h1>
     </div>
-    <div class="form-block">
-      <form [formGroup]="detailedForm" (ngSubmit)="onSubmit()">
+   
+    <app-reports-student-filter 
+      [isReportGenerated]="isReportGenerated"
+      (filtersSubmitted)="onFiltersSubmitted($event)"
+      (downloadRequested)="openDownloadModal()">
+    </app-reports-student-filter>
 
-        <!-- Campo de búsqueda de estudiante -->
-        <div class="field">
-          <label class="label">Estudiante</label>
-          <div class="control">
-            <input
-              class="input"
-              type="text"
-              placeholder="Nombre del Estudiante"
-              formControlName="studentName"
-              (input)="filterStudents()"
-              (blur)="hideDropdown()"
-              autocomplete="off"/>
-            <!-- Lista desplegable de estudiantes filtrados -->
-            <div *ngIf="showDropdown" class="dropdown">
-              <div *ngIf="filteredStudents.length === 0" class="no-results">
-                No se encontraron estudiantes
-              </div>
-              <ul *ngIf="filteredStudents.length > 0">
-                <li
-                  *ngFor="let student of filteredStudents"
-                  (mousedown)="selectStudent(student)">
-                  {{ student.firstName }} {{ student.lastName }}
-                </li>
-              </ul>
-            </div>
-          </div>
-          <p class="error-message" *ngIf="detailedForm.get('studentName')?.invalid && detailedForm.get('studentName')?.touched">
-            Estudiante es requerido
-          </p>
-        </div>
+    <div class="button-block-reports">
+      <button class="custom-button"
+              [class.active]="activeReport === 'detailed'"
+              [disabled]="!isReportGenerated"
+              (click)="fetchDetailedReport()">Detallado</button>
 
-        <!-- Campos de fecha desde y hasta -->
-        <div class="columns is-mobile">
-          <div class="column">
-            <div class="field">
-              <label class="label">Fecha desde</label>
-              <div class="control date-input-container">
-                <input class="input" type="date" formControlName="from">
-              </div>
-              <p class="error-message" *ngIf="detailedForm.get('from')?.invalid && detailedForm.get('from')?.touched">
-                Fecha desde es requerida
-              </p>
-            </div>
-          </div>
+      <button class="custom-button"
+              [class.active]="activeReport === 'statistical'"
+              [disabled]="!isReportGenerated"
+              (click)="fetchStatisticalReport()">Estadístico</button>
 
-          <div class="column">
-            <div class="field">
-              <label class="label">Fecha hasta</label>
-              <div class="control date-input-container">
-                <input class="input" type="date" formControlName="to">
-              </div>
-              <p class="error-message" *ngIf="detailedForm.get('to')?.invalid && detailedForm.get('to')?.touched">
-                Fecha hasta es requerida
-              </p>
-            </div>
-          </div>
-        </div>
+      <button class="custom-button"
+              [class.active]="activeReport === 'meetings'"
+              [disabled]="!isReportGenerated"
+              (click)="fetchMeetingsReport()">Clases</button>
 
-        <!-- Selector de stage -->
-        <div class="field">
-          <label class="label">Stage</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select formControlName="stageId">
-                <option value="">Selecciona el stage</option>
-                <option *ngFor="let stage of stages" [value]="stage.id">
-                  {{ stage.description }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <!--<p class="error-message" *ngIf="detailedForm.get('stageId')?.invalid && detailedForm.get('stageId')?.touched">
-            Stage es requerido
-          </p>-->
-        </div>
-
-        <!-- Botones -->
-        <div class="button-block">
-          <button class="button is-primary" type="submit" [disabled]="detailedForm.invalid">Enviar</button>
-          <button class="button is-secondary" type="button" (click)="openDownloadModal()"
-            [disabled]="!isReportGenerated">
-            <span class="icon-svg-download">
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b6b6b">
-                <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/>
-              </svg>
-            </span>Descargar
-          </button>
-        </div>
-
-      </form>
     </div>
+
+    <app-reports-results
+      [activeReport]="activeReport"
+      [reportData]="reportData"
+      [statisticalData]="statisticalData"
+      [meetingsData]="meetingsData"
+      [isReportGenerated]="isReportGenerated">
+    </app-reports-results>
+
   </div>
 
-  <div  class="button-block-reports">
-    <button class="custom-button"
-            [class.active]="activeReport === 'detailed'"
-            [disabled]="!isReportGenerated"
-            (click)="onSubmit()">Detallado</button>
-
-    <button class="custom-button"
-            [class.active]="activeReport === 'statistical'"
-            [disabled]="!isReportGenerated"
-            (click)="fetchStatisticalReport()">Estadístico</button>
-
-    <button class="custom-button"
-            [class.active]="activeReport === 'meetings'"
-            [disabled]="!isReportGenerated"
-            (click)="fetchMeetingsReport()">Clases</button>
-
-    <button class="download-button" (click)="summaryReport()">Reporte Completo</button>
-    <button class="download-button" (click)="dailySummaryReport()">Reporte Diario</button>
-  </div>
-
-  <div *ngIf="activeReport === 'detailed' && reportData && reportData.length > 0" class="table-container">
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Estudiante</th>
-          <th>Usuario</th>
-          <th>Stage</th>
-          <th>Instructor</th>
-          <th>Agendadas</th>
-          <th>Presentes</th>
-          <th>Ausentes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let report of reportData">
-          <td>{{ report.student_name }}</td>
-          <td>{{ report.username }}</td>
-          <td>{{ report.stage_description }}</td>
-          <td>{{ report.instructor_name || 'No asignado' }}</td>
-          <td>{{ report.total_meetings }}</td>
-          <td>{{ report.total_present }}</td>
-          <td>{{ report.total_absent }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Tabla de Reporte Estadístico -->
-  <div *ngIf="activeReport === 'statistical' && statisticalData" class="table-container">
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Total Clases</th>
-          <th>Asistencias</th>
-          <th>Faltas</th>
-          <th>Canceladas</th>
-          <th>% Asistencias</th>
-          <th>% Faltas</th>
-          <th>% Canceladas</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ statisticalData.total}}</td>
-          <td>{{ statisticalData.present}}</td>
-          <td>{{ statisticalData.absent}}</td>
-          <td>{{ statisticalData.cancelled}}</td>
-          <td>{{ statisticalData.present_percentage}}%</td>
-          <td>{{ statisticalData.absent_percentage}}%</td>
-          <td>{{ statisticalData.cancelled_percentage}}%</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Tabla de Reporte meeting -->
-  <div *ngIf="activeReport === 'meetings' && meetingsData.length > 0" class="table-container">
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Fecha de Agendado</th>
-          <th>Agendado Por</th>
-          <th>Fecha Clase</th>
-          <th>Hora</th>
-          <th>Abrió Enlace</th>
-          <th>Asistencia</th>
-          <th>Instructor</th>
-          <th>Asistencia Marcada Por</th>
-          <th>Fecha de Asistencia Marcada</th>
-          <th>Modalidad</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let meeting of meetingsData">
-          <td>{{ meeting.assignedAt | luxonDate }}</td>
-          <td>{{ meeting.assignedBy ? (meeting.assignedBy.firstName + ' ' + meeting.assignedBy.lastName) : 'No registrado' }}</td>
-          <td>{{ formatLocalDateOnly(meeting.localdate) }}</td>
-          <td>{{ formatHourNumber(meeting.localhour) }}</td>
-          <td>
-            <span *ngIf="meeting.linkOpened; else notOpened">✔️</span>
-            <ng-template #notOpened>❌</ng-template>
-          </td>
-          <td>{{ meeting.present ? 'Sí' : 'No' }}</td>
-          <td>{{ meeting.instructor ? (meeting.instructor.user?.firstName + ' ' + meeting.instructor.user?.lastName) : 'No registrado' }}</td>
-          <td>{{ meeting.markAssistanceByUser ? (meeting.markAssistanceByUser.firstName + ' ' + meeting.markAssistanceByUser.lastName) : 'No registrado' }}</td>
-          <td>{{ meeting.markAssistanceAt | luxonDate }}</td>
-          <td>{{ meeting.mode }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div *ngIf="searchAttempted && reportData.length === 0" class="no-results">
-    No hay resultados para los criterios seleccionados.
-  </div>
 </section>
 
 <app-modal

@@ -1,0 +1,101 @@
+<!-- DETALLADO -->
+<div *ngIf="isReportGenerated && activeReport === 'detailed'" class="block-results">
+  <div class="table-container">
+    <table class="table-results is-fullwidth" *ngIf="reportData.length > 0">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Estudiante</th>
+          <th>Usuario</th>
+          <th>Instructor</th>
+          <th>Total Clases</th>
+          <th>Asistidas</th>
+          <th>Faltas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let report of reportData">
+          <td>{{ report.stage_description || 'No disponible' }}</td>
+          <td>{{ report.student_name || 'No disponible' }}</td>
+          <td>{{ report.username || 'No disponible' }}</td>
+          <td>{{ report.instructor_name || 'No disponible' }}</td>
+          <td>{{ report.total_meetings }}</td>
+          <td>{{ report.total_present }}</td>
+          <td>{{ report.total_absent }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ESTADÍSTICO -->
+<div *ngIf="isReportGenerated && activeReport === 'statistical' && statisticalData" class="block-results">
+  <div class="table-container">
+    <table class="table-results is-fullwidth">
+      <thead>
+        <tr>
+          <th>Total Clases</th>
+          <th>Asistencias</th>
+          <th>Faltas</th>
+          <th>Canceladas</th>
+          <th>% Asistencias</th>
+          <th>% Faltas</th>
+          <th>% Canceladas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ statisticalData.total }}</td>
+          <td>{{ statisticalData.present }}</td>
+          <td>{{ statisticalData.absent }}</td>
+          <td>{{ statisticalData.cancelled }}</td>
+          <td>{{ statisticalData.present_percentage }}%</td>
+          <td>{{ statisticalData.absent_percentage }}%</td>
+          <td>{{ statisticalData.cancelled_percentage }}%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CLASES -->
+<div *ngIf="isReportGenerated && activeReport === 'meetings'" class="block-results">
+  <div class="table-container">
+    <table class="table-results is-fullwidth" *ngIf="meetingsData.length > 0">
+      <thead>
+        <tr>
+          <th>Fecha de Agendado</th>
+          <th>Agendado Por</th>
+          <th>Fecha Clase</th>
+          <th>Hora</th>
+          <th>Abrió Enlace</th>
+          <th>Asistencia</th>
+          <th>Instructor</th>
+          <th>Asistencia Marcada Por</th>
+          <th>Fecha de Asistencia Marcada</th>
+          <th>Modalidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let meeting of meetingsData">
+          <td>{{ meeting.assignedAt | luxonDate }}</td>
+          <td>{{ meeting.assignedBy ? (meeting.assignedBy.firstName + ' ' + meeting.assignedBy.lastName) : 'No registrado' }}</td>
+          <td>{{ formatLocalDateOnly(meeting.localdate) }}</td>
+          <td>{{ formatHourNumber(meeting.localhour) }}</td>
+          <td>
+            <span *ngIf="meeting.linkOpened; else notOpened">✔️</span>
+            <ng-template #notOpened>❌</ng-template>
+          </td>
+          <td>{{ meeting.present ? 'Sí' : 'No' }}</td>
+          <td>{{ meeting.instructor ? (meeting.instructor.user?.firstName + ' ' + meeting.instructor.user?.lastName) : 'No registrado' }}</td>
+          <td>{{ meeting.markAssistanceByUser ? (meeting.markAssistanceByUser.firstName + ' ' + meeting.markAssistanceByUser.lastName) : 'No registrado' }}</td>
+          <td>{{ meeting.markAssistanceAt | luxonDate }}</td>
+          <td>{{ meeting.mode }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="meetingsData.length === 0">
+      <p>No hay clases registradas en este periodo.</p>
+    </div>
+  </div>
+</div>
