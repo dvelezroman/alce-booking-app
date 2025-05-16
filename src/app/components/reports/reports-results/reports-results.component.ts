@@ -29,4 +29,8 @@ export class ReportsResultsComponent {
   formatHourNumber(hour: number): string {
     return hour.toString().padStart(2, '0') + ':00';
   }
+
+  getLinkOpenedIcon(opened: boolean | undefined): string {
+    return !!opened ? '✔️' : '❌';
+  }
 }

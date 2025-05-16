@@ -6,7 +6,7 @@
         <tr>
           <th>Stage</th>
           <th>Estudiante</th>
-          <th>Usuario</th>
+          <!-- <th>Usuario</th> -->
           <th>Instructor</th>
           <th>Total Clases</th>
           <th>Asistidas</th>
@@ -17,7 +17,7 @@
         <tr *ngFor="let report of reportData">
           <td>{{ report.stage_description || 'No disponible' }}</td>
           <td>{{ report.student_name || 'No disponible' }}</td>
-          <td>{{ report.username || 'No disponible' }}</td>
+          <!-- <td>{{ report.username || 'No disponible' }}</td> -->
           <td>{{ report.instructor_name || 'No disponible' }}</td>
           <td>{{ report.total_meetings }}</td>
           <td>{{ report.total_present }}</td>
@@ -80,10 +80,7 @@
           <td>{{ meeting.assignedBy ? (meeting.assignedBy.firstName + ' ' + meeting.assignedBy.lastName) : 'No registrado' }}</td>
           <td>{{ formatLocalDateOnly(meeting.localdate) }}</td>
           <td>{{ formatHourNumber(meeting.localhour) }}</td>
-          <td>
-            <span *ngIf="meeting.linkOpened; else notOpened">✔️</span>
-            <ng-template #notOpened>❌</ng-template>
-          </td>
+          <td>{{ getLinkOpenedIcon(meeting.linkOpened) }}</td>
           <td>{{ meeting.present ? 'Sí' : 'No' }}</td>
           <td>{{ meeting.instructor ? (meeting.instructor.user?.firstName + ' ' + meeting.instructor.user?.lastName) : 'No registrado' }}</td>
           <td>{{ meeting.markAssistanceByUser ? (meeting.markAssistanceByUser.firstName + ' ' + meeting.markAssistanceByUser.lastName) : 'No registrado' }}</td>
