@@ -103,6 +103,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   }
 
   onFilterChange(): void {
+    this.clearSelectedContents();
+    
     const filterParams: FilterMeetingsDto = {
       ...this.filter,
       hour: this.filter.hour ? this.filter.hour.toString() : undefined,
