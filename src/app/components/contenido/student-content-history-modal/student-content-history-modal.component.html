@@ -48,10 +48,12 @@
           <tbody>
             <tr>
               <td *ngFor="let content of stageContents">
-                <ng-container *ngFor="let record of history">
-                  <ng-container *ngIf="record.data?.title === content.title">
-                    <div>{{ record.date | date: 'shortDate' }}</div>
-                    <div>{{ instructorName || 'Instructor no disponible' }}</div>
+                <ng-container *ngFor="let record of getRecordsByContentTitle(content.title)">
+                  <ng-container *ngFor="let date of record.dates">
+                    <div style="margin-bottom: 1rem;">
+                      <div>{{ date | date: 'shortDate' }}</div>
+                      <div>{{ instructorName || 'Instructor no disponible' }}</div>
+                    </div>
                   </ng-container>
                 </ng-container>
               </td>

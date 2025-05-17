@@ -47,6 +47,7 @@ export interface StudyContentPayloadI {
     stage: string;
   };
   date: string; // ISO 8601 format
+  dates?: string[];
   hour: number;
   stageId: number;
   instructorId: number;

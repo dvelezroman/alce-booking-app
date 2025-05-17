@@ -45,6 +45,10 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
     return this.stageDescription || 'Stage no disponible';
   }
 
+  getRecordsByContentTitle(title: string): StudyContentPayloadI[] {
+    return this.history.filter(r => r.data?.title === title);
+  }
+
   loadStageContents(stageId: number): void {
     this.studyContentService.filterBy(stageId).subscribe({
       next: (contents) => {
