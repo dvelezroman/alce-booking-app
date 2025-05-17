@@ -55,6 +55,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   studentStageContents: StudyContentDto[] = [];
   selectedMeeting?: MeetingDTO;
   currentStageIndex: number = 0;
+  isLoadingContentHistory = false;
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -274,50 +275,61 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.studyContentOptions = [];
   }
 
-
   loadStudentContentHistory(meeting: MeetingDTO): void {
-    //console.log('meeting seleccionado:', meeting);
+    this.isLoadingContentHistory = true;
     this.selectedMeeting = meeting;
 
     const studentId = meeting.studentId;
-    const stageId = meeting.student?.stageId; 
     const to = DateTime.now().toISODate();
     const from = DateTime.now().minus({ days: 21 }).toISODate();
 
-    if (!stageId) {
-      this.showModal(this.createModalParams(true, 'El estudiante no tiene Stage asignado.'));
-      return;
-    }
-
-    this.currentStageIndex = this.stages.findIndex(s => s.id === stageId);
-
-    this.studyContentService.filterBy(stageId).subscribe({
-      next: (stageContents) => {
-        this.studentStageContents = stageContents;
-        //console.log('Contenidos del stage cargados:', stageContents);
-
-        this.studyContentService.getStudyContentHistoryForStudentId(studentId, from, to).subscribe({
-          next: (history) => {
-            if (history.length === 0) {
-              this.showModal(this.createModalParams(true, 'No se encontraron contenidos en el historial.'));
-              return;
-            }
-
-            this.studentContentHistory = history;
-            this.isStudentContentHistoryModalVisible = true;
-          },
-          error: () => {
-            this.showModal(this.createModalParams(true, 'Error al cargar el historial de contenidos.'));
-          }
-        });
-      },
-      error: () => {
-        this.showModal(this.createModalParams(true, 'Error al cargar los contenidos del stage.'));
-      }
+    this.studyContentService.getStudyContentHistoryForStudentId(studentId, from, to).subscribe({
+      next: (history) => this.handleHistoryLoaded(history),
+      error: () => this.handleHistoryError()
     });
   }
 
-    closeStudentContentHistoryModal() {
+  private handleHistoryLoaded(history: StudyContentPayloadI[]): void {
+    if (history.length === 0) {
+      this.finishLoadingWithMessage('No se encontraron contenidos en el historial.');
+      return;
+    }
+
+    this.studentContentHistory = history;
+
+    const oldestContent = [...history].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+    const targetStageIndex = this.stages.findIndex(s => s.description === oldestContent.data?.stage);
+
+    if (targetStageIndex === -1) {
+      this.finishLoadingWithMessage('No se encontró el stage correspondiente.');
+      return;
+    }
+
+    this.currentStageIndex = targetStageIndex;
+    const targetStageId = this.stages[targetStageIndex].id;
+
+    this.studyContentService.filterBy(targetStageId).subscribe({
+      next: (contents) => this.handleStageContentsLoaded(contents),
+      error: () => this.finishLoadingWithMessage('Error al cargar los contenidos del stage.')
+    });
+  }
+
+  private handleStageContentsLoaded(contents: StudyContentDto[]): void {
+    this.studentStageContents = contents;
+    this.isLoadingContentHistory = false;
+    this.isStudentContentHistoryModalVisible = true;
+  }
+
+  private handleHistoryError(): void {
+    this.finishLoadingWithMessage('Error al cargar el historial de contenidos.');
+  }
+
+  private finishLoadingWithMessage(message: string): void {
+    this.isLoadingContentHistory = false;
+    this.showModal(this.createModalParams(true, message));
+  }
+
+  closeStudentContentHistoryModal() {
     this.isStudentContentHistoryModalVisible = false;
   }
 
@@ -366,22 +378,52 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     } as MeetingDTO;
   }
 
+  private stageHasHistoryByDataStage(stageName: string): boolean {
+    return this.studentContentHistory.some(
+      (record: StudyContentPayloadI) => record.data?.stage === stageName
+    );
+  }
+
   goToPreviousStage() {
-    if (this.currentStageIndex > 0) {
-      this.currentStageIndex--;
-      const previousStage = this.stages[this.currentStageIndex];
-      this.updateStageDescription();
-      this.loadStageContents(previousStage.id);
+    let prevIndex = this.currentStageIndex - 1;
+
+    while (prevIndex >= 0) {
+      const prevStage = this.stages[prevIndex];
+      if (this.stageHasHistoryByDataStage(prevStage.description)) {
+        this.currentStageIndex = prevIndex;
+        this.updateStageDescription();
+        this.loadStageContents(prevStage.id);
+        break;
+      }
+      prevIndex--;
     }
   }
 
   goToNextStage() {
-    if (this.currentStageIndex < this.stages.length - 1) {
-      this.currentStageIndex++;
-      const nextStage = this.stages[this.currentStageIndex];
-      this.updateStageDescription();
-      this.loadStageContents(nextStage.id);
+    let nextIndex = this.currentStageIndex + 1;
+
+    while (nextIndex < this.stages.length) {
+      const nextStage = this.stages[nextIndex];
+      if (this.stageHasHistoryByDataStage(nextStage.description)) {
+        this.currentStageIndex = nextIndex;
+        this.updateStageDescription();
+        this.loadStageContents(nextStage.id);
+        break;
+      }
+      nextIndex++;
     }
+  }
+
+  get canGoPrevious(): boolean {
+    return this.stages.slice(0, this.currentStageIndex).some(stage =>
+      this.stageHasHistoryByDataStage(stage.description)
+    );
+  }
+
+  get canGoNext(): boolean {
+    return this.stages.slice(this.currentStageIndex + 1).some(stage =>
+      this.stageHasHistoryByDataStage(stage.description)
+    );
   }
 }
 

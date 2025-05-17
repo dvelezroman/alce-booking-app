@@ -19,7 +19,9 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
   @Input() stageDescription?: string;
   @Output() close = new EventEmitter<void>();
   @Output() previousStage = new EventEmitter<void>();
-  @Output() nextStage = new EventEmitter<void>();  
+  @Output() nextStage = new EventEmitter<void>();
+  @Input() canGoPrevious: boolean = true;
+  @Input() canGoNext: boolean = true;  
 
 
   constructor(private studyContentService: StudyContentService) {}
@@ -34,6 +36,13 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
     if (changes['stageId'] && this.stageId) {
       this.loadStageContents(this.stageId);
     }
+  }
+
+  get currentStageDescription(): string {
+    if (this.stageContents.length > 0 && this.stageContents[0].stage?.description) {
+      return this.stageContents[0].stage.description;
+    }
+    return this.stageDescription || 'Stage no disponible';
   }
 
   loadStageContents(stageId: number): void {

@@ -1,22 +1,40 @@
 <div class="modal" [ngClass]="{ 'is-active': show }">
   <div class="modal-background"></div>
   <div class="modal-card">
+
+    <div class="student-stage-header">
+      <h2 class="student-stage-title">
+        Stage del Estudiante: {{ stageDescription || 'No disponible' }}
+      </h2>
+      <button class="delete" aria-label="close" (click)="onClose()">
+        <i class="fas fa-times-circle"></i>
+      </button>
+    </div>
+
     <header class="modal-card-head">
       <p class="modal-card-title">
-        Historial de Contenidos - {{ stageDescription }}
+         Historial de Contenidos - {{ currentStageDescription }}
         <span class="stage-navigation-buttons">
-          <button class="nav-button" (click)="onPreviousStage()" title="Anterior">
+          <button 
+            class="nav-button" 
+            [disabled]="!canGoPrevious" 
+            [ngClass]="{ 'disabled': !canGoPrevious }"
+            (click)="onPreviousStage()" 
+            title="Anterior">
             <i class="fas fa-chevron-left"></i>
           </button>
-          <button class="nav-button" (click)="onNextStage()" title="Siguiente">
+          <button 
+            class="nav-button" 
+            [disabled]="!canGoNext" 
+            [ngClass]="{ 'disabled': !canGoNext }"
+            (click)="onNextStage()" 
+            title="Siguiente">
             <i class="fas fa-chevron-right"></i>
           </button>
         </span>
       </p>
-      <button class="delete" aria-label="close" (click)="onClose()">
-        <i class="fas fa-times-circle"></i>
-      </button>
     </header>
+
     <section class="modal-card-body">
       <div class="table-container">
         <table class="table-results is-fullwidth">
@@ -42,5 +60,6 @@
         </table>
       </div>
     </section>
+
   </div>
 </div>
