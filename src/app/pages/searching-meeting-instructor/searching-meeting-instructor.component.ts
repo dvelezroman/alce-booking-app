@@ -372,10 +372,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   private updateStageDescription() {
     const currentStage = this.stages[this.currentStageIndex];
-    this.selectedMeeting = {
-      ...this.selectedMeeting,
-      stage: currentStage,
-    } as MeetingDTO;
+    this.loadStageContents(currentStage.id);
   }
 
   private stageHasHistoryByDataStage(stageName: string): boolean {
@@ -386,12 +383,10 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   goToPreviousStage() {
     let prevIndex = this.currentStageIndex - 1;
-
     while (prevIndex >= 0) {
       const prevStage = this.stages[prevIndex];
       if (this.stageHasHistoryByDataStage(prevStage.description)) {
         this.currentStageIndex = prevIndex;
-        this.updateStageDescription();
         this.loadStageContents(prevStage.id);
         break;
       }
@@ -401,12 +396,10 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   goToNextStage() {
     let nextIndex = this.currentStageIndex + 1;
-
     while (nextIndex < this.stages.length) {
       const nextStage = this.stages[nextIndex];
       if (this.stageHasHistoryByDataStage(nextStage.description)) {
         this.currentStageIndex = nextIndex;
-        this.updateStageDescription();
         this.loadStageContents(nextStage.id);
         break;
       }
