@@ -266,7 +266,7 @@ export class HomeComponent implements OnInit {
 
   private handleMeetingsResponse(meetings: MeetingDTO[], month: number, year: number) {
     const daysWithMeetings = this.groupMeetingsByDay(meetings, month, year);
-    console.log(daysWithMeetings);
+    //console.log(daysWithMeetings);
     this.updateMonthDaysWithMeetings(daysWithMeetings);
   }
 

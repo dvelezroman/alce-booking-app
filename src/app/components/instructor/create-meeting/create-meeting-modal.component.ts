@@ -2,11 +2,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, Subject } from 'rxjs';
-import { UserDto } from '../../services/dtos/user.dto';
-import { UsersService } from '../../services/users.service';
-import { CreateMeetingDto } from '../../services/dtos/booking.dto';
-import { convertEcuadorDateToLocal, convertEcuadorHourToLocal, getTimezoneOffsetHours } from '../../shared/utils/dates.util';
-import { Mode, StudentClassification } from '../../services/dtos/student.dto';
+import { UserDto } from '../../../services/dtos/user.dto';
+import { UsersService } from '../../../services/users.service';
+import { CreateMeetingDto } from '../../../services/dtos/booking.dto';
+import { convertEcuadorDateToLocal, convertEcuadorHourToLocal, getTimezoneOffsetHours } from '../../../shared/utils/dates.util';
+import { Mode, StudentClassification } from '../../../services/dtos/student.dto';
 import { DateTime } from 'luxon';
 
 @Component({

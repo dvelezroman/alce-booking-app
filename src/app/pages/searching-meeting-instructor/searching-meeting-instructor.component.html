@@ -120,69 +120,15 @@
         No hay meetings para el rango asignado.
       </p>
 
-      <div class="table-container">
-        <table class="table-results is-fullwidth" *ngIf="meetings && meetings.length > 0">
-          <thead>
-          <tr>
-            <th>Stage</th>
-            <th>Categoría</th>
-            <th>Nombre</th>
-            <!-- <th>Correo</th> -->
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Contenido</th>
-            <!-- <th>Instructor</th> -->
-            <th>Observación</th>
-            <th>Abrió Enlace</th>
-            <th>Marcar Asistencia</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let meeting of meetings">
-            <td data-label="Stage">{{ meeting.stage?.number || 'Stage no disponible' }}</td>
-            <td data-label="Categoría">{{ meeting.student?.studentClassification || 'Categoría no disponible' }}</td>
-           <td data-label="Nombre" style="white-space: normal; vertical-align: top;">
-              <span 
-                class="clickable is-clickable" 
-                (click)="loadStudentContentHistory(meeting)"
-              >
-                {{ meeting.student?.user?.firstName || 'Nombre no disponible' }}
-                {{ meeting.student?.user?.lastName || '' }}
-              </span>
-            </td>
-            <!-- <td data-label="Usuario">{{ meeting.student?.user?.email || 'Correo no disponible' }}</td> -->
-            <td data-label="Fecha">{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
-            <td data-label="Hora">{{ meeting.localhour }}:00</td>
-            <td data-label="Contenido">
-              <button class="icon-button" (click)="showContentViewer(formatStudyContent(meeting))">
-                <span class="material-icons">menu_book</span>
-              </button>
-            </td>
-            <!-- <td data-label="Instructor">{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td> -->
-            <td data-label="Observación" class="tooltip-container">
-              <span class="tooltip" [hidden]="!meeting.student?.user?.comment" [title]="meeting.student?.user?.comment">
-                {{ meeting.student?.user?.comment || 'Sin observación' }}
-              </span>
-            </td>
-            <td data-label="Abrió Enlace">
-              <ng-container *ngIf="hasMeetingPassed(meeting.localdate, meeting.localhour); else futureMeeting">
-                <span *ngIf="meeting.linkOpened; else notOpened">✔️</span>
-                <ng-template #notOpened>❌</ng-template>
-              </ng-container>
-              <ng-template #futureMeeting>-</ng-template>
-            </td>
-           <td data-label="Marcar Asistencia">
-              <input 
-                type="checkbox" 
-                [checked]="meeting.present"
-                (click)="onAssistanceCheckboxClick($event, meeting)"
-                [disabled]="!isToday(meeting.localdate)" 
-              />
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
+      <app-meeting-table
+        [meetings]="meetings"
+        [isToday]="isToday.bind(this)"
+        [hasMeetingPassed]="hasMeetingPassed.bind(this)"
+        [formatStudyContent]="formatStudyContent.bind(this)"
+        (contentViewRequested)="showContentViewer($event)"
+        (studentContentHistoryRequested)="loadStudentContentHistory($event)"
+        (assistanceCheckboxClicked)="onAssistanceCheckboxClick($event.event, $event.meeting)"
+      ></app-meeting-table>
     </div>
   </div>
 </section>

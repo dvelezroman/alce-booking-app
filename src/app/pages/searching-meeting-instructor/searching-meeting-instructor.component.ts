@@ -10,13 +10,14 @@ import { selectInstructorLink, selectUserData } from '../../store/user.selector'
 import {Stage} from "../../services/dtos/student.dto";
 import {StagesService} from "../../services/stages.service";
 import { DateTime } from 'luxon';
-import { CreateMeetingModalComponent } from '../../components/create-meeting/create-meeting-modal.component';
+import { CreateMeetingModalComponent } from '../../components/instructor/create-meeting/create-meeting-modal.component';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { StudyContentService } from '../../services/study-content.service';
 import { StudyContentDto, StudyContentPayloadI } from '../../services/dtos/study-content.dto';
 import { StudentContentHistoryModalComponent } from '../../components/contenido/student-content-history-modal/student-content-history-modal.component';
 import { ContentSelectorComponent } from '../../components/contenido/content-selector/content-selector.component';
+import { MeetingTableComponent } from '../../components/instructor/meeting-table/meeting-table.component';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -28,7 +29,8 @@ import { ContentSelectorComponent } from '../../components/contenido/content-sel
     CreateMeetingModalComponent,
     ModalComponent,
     ContentSelectorComponent,
-    StudentContentHistoryModalComponent
+    StudentContentHistoryModalComponent,
+    MeetingTableComponent
   ],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'
