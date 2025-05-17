@@ -18,6 +18,7 @@ import { StudyContentDto, StudyContentPayloadI } from '../../services/dtos/study
 import { StudentContentHistoryModalComponent } from '../../components/contenido/student-content-history-modal/student-content-history-modal.component';
 import { ContentSelectorComponent } from '../../components/contenido/content-selector/content-selector.component';
 import { MeetingTableComponent } from '../../components/instructor/meeting-table/meeting-table.component';
+import { MeetingFilterComponent } from '../../components/instructor/meeting-filter/meeting-filter.component';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -30,7 +31,8 @@ import { MeetingTableComponent } from '../../components/instructor/meeting-table
     ModalComponent,
     ContentSelectorComponent,
     StudentContentHistoryModalComponent,
-    MeetingTableComponent
+    MeetingTableComponent,
+    MeetingFilterComponent
   ],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'

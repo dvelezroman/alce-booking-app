@@ -1,0 +1,79 @@
+
+    <div class="dropdown-toggle-container">
+      <div class="dropdown-toggle" (click)="showForm = !showForm">
+        <span>Formulario de Búsqueda</span>
+        <span class="icon is-small">
+          <i class="material-icons">{{ showForm ? 'expand_less' : 'expand_more' }}</i>
+        </span>
+      </div>
+
+      <div [ngClass]="showForm ? 'dropdown-body' : 'dropdown-body-hidden'">
+
+        <div class="block-search">
+          <form>
+            <div class="columns is-mobile">
+              <div class="column">
+                <div class="field">
+                  <label class="label">Fecha desde</label>
+                  <div class="control input-date-container">
+                    <input class="input" type="date" [(ngModel)]="filter.from" name="from" (ngModelChange)="onChange()">
+                    <span class="icon-calendar material-icons">calendar_today</span>
+                  </div>
+                </div>
+              </div>
+              <div class="column">
+                <div class="field">
+                  <label class="label">Fecha hasta</label>
+                  <div class="control input-date-container">
+                    <input class="input" type="date" [(ngModel)]="filter.to" name="to" (ngModelChange)="onChange()">
+                    <span class="icon-calendar material-icons">calendar_today</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="columns is-mobile">
+              <div class="column">
+                <div class="field">
+                  <label class="label">Stage</label>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onChange()">
+                        <option value="">Seleccionar stage</option>
+                        <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="column">
+                <div class="field">
+                  <label class="label">Hora</label>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select [(ngModel)]="filter.hour" name="hour" (ngModelChange)="onChange()">
+                        <option value="">Todas las horas</option>
+                        <option *ngFor="let hour of availableHours" [value]="hour">{{ hour }}:00</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Categoría</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select [(ngModel)]="filter.category" name="category" (ngModelChange)="onChange()">
+                    <option [ngValue]="undefined">Todas las categorías</option>
+                    <option *ngFor="let category of ageGroupOptions" [value]="category">{{ category }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
