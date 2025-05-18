@@ -1,0 +1,130 @@
+.time-slots {
+  display: flex;
+  margin-top: .7rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 270px;
+  overflow-y: auto;
+  width: 400px;
+  padding: 7px 0px;
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+}
+
+.ecuador-time-display {
+  margin-top: 8px;
+  font-size: .9rem;
+  color: #333;
+  background-color: transparent; 
+  padding: 10px;
+  border-radius: 0;
+  display: block;
+  box-shadow: none;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.ecuador-time-display strong {
+  font-size: .85rem;
+  margin-right: 8px;
+  color: #111;
+}
+
+.time-slots::-webkit-scrollbar {
+  display: none; 
+}
+
+/* Estilos para las flechas de scroll */
+.scroll-arrow-up,
+.scroll-arrow-down {
+  position: relative;
+  background-color: transparent;
+  color: rgb(146, 100, 238);
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  transition: background-color 0.3s ease;
+}
+
+.scroll-arrow-up {
+  margin-bottom: 10px;
+}
+
+.scroll-arrow-down {
+  margin-top:10px;
+}
+
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .85rem;
+  color: white;
+  width: 200px;
+  min-height: 45px;
+  background: linear-gradient(to right, rgba(68, 144, 226, 0.74) 0%, rgba(194, 68, 226, 0.711) 100%  ); 
+  gap: 5px;
+  cursor: pointer;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.time-text {
+  white-space: nowrap;
+  text-align: center;
+  font-weight: 500;
+  font-size: .85rem;
+  display: inline-block;
+}
+
+.time-text .secondary-time {
+  opacity: 0.8;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.time-text-container, .confirm-box {
+  flex: 1 1 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+  border-radius: 5px;
+  padding: 0 10px;
+  transition: flex-grow 0.7s ease, transform 0.7s ease, opacity 0.5s ease;
+}
+
+.confirm-box {
+  opacity: 0;
+  font-size: 0.9rem;
+  visibility: hidden;
+  background: linear-gradient(to right, rgba(194, 68, 226, 0.673), rgb(194, 68, 226));
+  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.time-slot:hover {
+  box-shadow: none;
+  background: linear-gradient(to right, rgba(68, 144, 226, 0.1) 0%, rgba(194, 68, 226, 0.1) 100%);
+}
+
+.time-slot:hover .confirm-box,
+.time-slot:hover .time-text-container {
+  opacity: 1;
+  visibility: visible;
+  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.time-slot:hover .confirm-box {
+  width: 100%;
+}
+
+.time-slot:hover .time-text-container {
+  background: linear-gradient(to right, rgb(68, 144, 226) 0%, rgba(68, 144, 226, 0.8) 100%);
+}

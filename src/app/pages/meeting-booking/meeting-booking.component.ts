@@ -33,6 +33,7 @@ import { DateTime} from "luxon";
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { MeetingCalendarComponent } from '../../components/meeting-calendar/meeting-calendar.component';
+import { MeetingTimeSlotsComponent } from '../../components/time-slots/meeting-time-slots.component';
 
 
 @Component({
@@ -44,7 +45,8 @@ import { MeetingCalendarComponent } from '../../components/meeting-calendar/meet
     CommonModule,
     RouterModule,
     ModalComponent,
-    MeetingCalendarComponent
+    MeetingCalendarComponent,
+    MeetingTimeSlotsComponent
   ],
   templateUrl: './meeting-booking.component.html',
   styleUrl: './meeting-booking.component.scss'
@@ -58,10 +60,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   private unsubscribe$ = new Subject<void>();
   canScrollLeft = false;
   canScrollRight = false;
-  canScrollUp = false;
-  canScrollDown = false;
-  canGoBack: boolean = false;
-  canGoForward: boolean = true;
 
   meetingType: Mode = Mode.ONLINE;
   mode = Mode;
@@ -72,8 +70,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     isDisabled: false,
     localhour: convertEcuadorHourToLocal(8) + ':00'
   };
-  hoverIndex: number | null = null;
-  timeSlots: { label: string; value: number; isDisabled: boolean, localhour: string }[] = [];
+
   today: string = '';
   selectedMonth!: string;
   selectedYear!: number;
@@ -110,7 +107,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     private ffService: FeatureFlagService,
     private handleDatesService: HandleDatesService
   ) {
-    this.initializeTimeSlots();
+    // this.initializeTimeSlots();
     this.userData$ = this.store.select(selectUserData);
   }
 
@@ -157,10 +154,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.checkScroll();
       this.cdr.detectChanges();
     }, 300);
-
-    setTimeout(() => {
-      this.checkScrollY();
-    }, 0);
   }
 
   private updateEcuadorTime(): void {
@@ -169,7 +162,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.ecuadorDate = nowInEcuador.toFormat("EEEE, dd 'de' LLLL");
     this.cdr.detectChanges(); // Para asegurarte de que actualiza el binding
   }
-
 
   initializeMeetings() {
     const currentDate = new Date();
@@ -195,17 +187,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedYear = year;
     this.selectedMonth = DateTime.fromObject({ month }).setLocale('es').toFormat('LLLL').toUpperCase();
     this.selectedDayFormatted = event.label;
-    this.recalculateTimeSlots({ day: day });
-  }
-
-  initializeTimeSlots() {
-    const startHour = 8; // 8 AM
-    const endHour = 20;  // 8 PM
-    this.timeSlots = Array.from({ length: endHour - startHour + 1 }, (_, i) => {
-      const hour = startHour + i;
-      const localhour = convertEcuadorHourToLocal(hour);
-      return { label: `${hour}:00`, value: hour, isDisabled: false, localhour: `${localhour}:00` };
-    });
   }
 
   formatDate(date: Date): string {
@@ -238,68 +219,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedTimeSlot = { label: "8:00", value: 8, isDisabled: false, localhour: convertEcuadorHourToLocal(8) + ':00' };
   }
 
-  recalculateTimeSlots(day: any) {
+  get monthNumber(): number {
     const monthMap: Record<string, number> = {
       ENERO: 1, FEBRERO: 2, MARZO: 3, ABRIL: 4, MAYO: 5, JUNIO: 6,
       JULIO: 7, AGOSTO: 8, SEPTIEMBRE: 9, OCTUBRE: 10, NOVIEMBRE: 11, DICIEMBRE: 12
     };
-
-    const monthIndex = monthMap[this.selectedMonth];
-    if (!monthIndex) {
-      console.error(`Invalid month: ${this.selectedMonth}`);
-      return;
-    }
-
-    // Get current and selected dates in Ecuador timezone
-    const nowInEcuador = DateTime.now().setZone('America/Guayaquil');
-    const selectedDate = DateTime.fromObject(
-      { year: this.selectedYear, month: monthIndex, day: day.day },
-      { zone: 'America/Guayaquil' }
-    );
-
-    const isSaturday = selectedDate.weekday === 6; // 6 = Saturday
-    const disabledHours = this.getDisabledHoursForDay(day.day, monthIndex - 1);
-
-    const startHour = 8;
-    const endHour = 20;
-    const saturdayEndHour = 13;
-
-    if (isSaturday) {
-      const availableStartHour = selectedDate.hasSame(nowInEcuador, 'day')
-        ? Math.max(startHour, nowInEcuador.hour + 3)
-        : startHour;
-
-      this.timeSlots = availableStartHour >= saturdayEndHour
-        ? []
-        : this.generateTimeSlots(availableStartHour, saturdayEndHour).map(slot => ({
-          ...slot,
-          isDisabled: disabledHours.includes(slot.value)
-        }));
-    } else if (selectedDate.hasSame(nowInEcuador, 'day')) {
-      if (nowInEcuador.hour >= endHour) {
-        this.timeSlots = [];
-      } else {
-        const availableStartHour = Math.max(startHour, nowInEcuador.hour + 2);
-        this.timeSlots = this.generateTimeSlots(availableStartHour, endHour).map(slot => ({
-          ...slot,
-          isDisabled: disabledHours.includes(slot.value)
-        }));
-      }
-    } else {
-      this.timeSlots = this.generateTimeSlots(startHour, endHour).map(slot => ({
-        ...slot,
-        isDisabled: disabledHours.includes(slot.value)
-      }));
-    }
-  }
-
-  generateTimeSlots(startHour: number, endHour: number) {
-    // Create time slots from startHour to endHour (inclusive)
-    return Array.from({ length: endHour - startHour + 1 }, (_, i) => {
-      const hour = startHour + i;
-      const localhour = convertEcuadorHourToLocal(hour);
-      return { label: `${hour}:00`, value: hour, localhour: `${localhour}:00`  };
-    });
+    return monthMap[this.selectedMonth] ?? 1;
   }
 
   selectTimeSlot(time: {label: string, value: number, isDisabled: boolean, localhour: string }) {
@@ -497,7 +422,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.checkScroll();
-    this.checkScrollY();
   }
 
   checkScroll() {
@@ -519,31 +443,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.scheduleList.nativeElement.scrollBy({ left: 330, behavior: 'smooth' });
     setTimeout(() => this.checkScroll(), 300);
   }
-
-  scrollUp() {
-    if (this.timeSlotList) {
-      this.timeSlotList.nativeElement.scrollBy({ top: -400, behavior: 'smooth' });
-      setTimeout(() => this.checkScrollY(), 300);
-    }
-  }
-
-  scrollDown() {
-    if (this.timeSlotList) {
-      this.timeSlotList.nativeElement.scrollBy({ top: 400, behavior: 'smooth' });
-      setTimeout(() => this.checkScrollY(), 300);
-    }
-  }
-
-  checkScrollY() {
-    if (!this.timeSlotList || !this.timeSlotList.nativeElement) {
-      return;
-    }
-    const el = this.timeSlotList.nativeElement;
-    this.canScrollUp = el.scrollTop > 0;
-    const maxScrollTop = el.scrollHeight - el.clientHeight;
-    this.canScrollDown = el.scrollTop < maxScrollTop;
-  }
-
 
   // método para seleccionar meetings, abrir y cerrar modal
 

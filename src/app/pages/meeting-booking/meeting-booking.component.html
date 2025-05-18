@@ -73,53 +73,19 @@
         (daySelected)="onDaySelected($event)"
       ></app-meeting-calendar>
 
-      <!-- Time Slots Selection -->
+      <!-- Time Slots -->
       <section class="selected-date-time shared-box-style">
         <div class="booking-title-absolute">
           <h2 class="title-date">Seleccione una hora</h2>
         </div>
 
-        <!-- hora actual en Ecuador -->
-        <div class="ecuador-time-display">
-          <strong>Hora actual en Ecuador:</strong>
-          <span>{{ ecuadorTime }}</span>
-        </div>
+      <app-meeting-time-slots
+        [selectedDayInfo]="selectedDay !== null ? { year: selectedYear, month: monthNumber, day: selectedDay } : null"
+        [disabledDatesAndHours]="disabledDatesAndHours"
+        [ecuadorTime]="ecuadorTime"
+        (timeSlotSelected)="selectTimeSlot($event)">
+      </app-meeting-time-slots>
 
-        <button class="scroll-arrow-up" (click)="scrollUp()" [class.disabled]="!canScrollUp" aria-label="Scroll up">
-          <i class="fas fa-chevron-up"></i>
-        </button>
-
-        <div class="time-slots" #timeSlotList #timeSlotsRef>
-          <div *ngIf="timeSlots.length === 0">
-            <p>Horarios no disponibles</p>
-          </div>
-
-          <div *ngFor="let time of timeSlots; let i = index"
-              class="time-slot"
-              [class.disabled]="time.isDisabled"
-              (mouseenter)="hoverIndex = i"
-              (mouseleave)="hoverIndex = null">
-
-              <div class="time-text-container">
-                <span class="time-text">
-                  <ng-container *ngIf="time.localhour === time.label; else twoHours">
-                    {{ time.localhour }}
-                  </ng-container>
-                  <ng-template #twoHours>
-                    {{ time.label }} / {{ time.localhour }}
-                  </ng-template>
-                </span>
-              </div>
-
-            <div class="confirm-box" *ngIf="hoverIndex === i && !time.isDisabled" (click)="selectTimeSlot(time)">
-              Confirmar
-            </div>
-          </div>
-        </div>
-
-        <button class="scroll-arrow-down" (click)="scrollDown()" [class.disabled]="!canScrollDown" aria-label="Scroll down">
-          <i class="fas fa-chevron-down"></i>
-        </button>
       </section>
 
       <!-- clases agendadas -->
