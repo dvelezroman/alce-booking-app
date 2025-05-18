@@ -17,10 +17,10 @@
       <p>Horarios no disponibles</p>
     </div>
 
-
     <div *ngFor="let time of timeSlots; let i = index"
         class="time-slot"
         [class.disabled]="time.isDisabled"
+        [title]="time.isDisabled ? 'Horario no disponible' : ''"
         (mouseenter)="hoverIndex = i"
         (mouseleave)="hoverIndex = null">
 
@@ -34,7 +34,6 @@
             </ng-template>
           </span>
         </div>
-
 
         <div class="confirm-box" *ngIf="hoverIndex === i && !time.isDisabled" (click)="onTimeSlotClick(time)">
           Confirmar

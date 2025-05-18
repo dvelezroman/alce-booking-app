@@ -118,6 +118,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.isScheduleEnabled = scheduleFlag?.status ?? true;
     });
 
+    this.getDisabledDates().subscribe();
+    this.getDisabledDatesAndHours().subscribe();
+
     const nowInEcuador = DateTime.now().setZone('America/Guayaquil').setLocale('es');
     this.ecuadorTime = nowInEcuador.toFormat("HH:mm");
     this.ecuadorDate = nowInEcuador.toFormat("EEEE, dd 'de' LLLL");
@@ -597,7 +600,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear).pipe(
       tap(disabledData => {
         this.disabledDatesAndHours = disabledData;
-        //console.log('Horas deshabilitadas:', this.disabledDatesAndHours);
+        console.log('Horas deshabilitadas:', this.disabledDatesAndHours);
       })
     );
   }

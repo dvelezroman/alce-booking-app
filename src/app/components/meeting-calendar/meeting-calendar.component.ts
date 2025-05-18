@@ -13,6 +13,7 @@ import { DisabledDatesAndHours } from '../../services/dtos/handle-date.dto';
 })
 export class MeetingCalendarComponent implements OnInit {
   @Input() isScheduleEnabled: boolean = true;
+  @Input() disabledDates: Record<string, number[]> = {};
   @Input() disabledDatesAndHours: DisabledDatesAndHours = {};
   @Input() resetSelectionTrigger: boolean = false;
 
@@ -36,6 +37,9 @@ export class MeetingCalendarComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['resetSelectionTrigger'] && changes['resetSelectionTrigger'].currentValue) {
       this.resetCalendarSelection();
+    }
+    if (changes['disabledDates'] || changes['disabledDatesAndHours']) {
+      this.generateCurrentMonthDays();
     }
   }
 
@@ -92,7 +96,7 @@ export class MeetingCalendarComponent implements OnInit {
     this.updateNavigationButtons();
   }
 
-    generateCurrentMonthDays(): void {
+  generateCurrentMonthDays(): void {
     const monthMap: Record<MonthKey, number> = {
         ENERO: 1, FEBRERO: 2, MARZO: 3, ABRIL: 4, MAYO: 5, JUNIO: 6,
         JULIO: 7, AGOSTO: 8, SEPTIEMBRE: 9, OCTUBRE: 10, NOVIEMBRE: 11, DICIEMBRE: 12
@@ -123,74 +127,80 @@ export class MeetingCalendarComponent implements OnInit {
         };
         })
     );
-    }
+  }
 
-    isDaySelectable(day: { day: number | null; isDisabled?: boolean }): boolean {
-        if (!day.day || isNaN(day.day) || day.isDisabled) return false;
+  isDaySelectable(day: { day: number | null; isDisabled?: boolean }): boolean {
+    if (!day.day || isNaN(day.day) || day.isDisabled) return false;
 
-        const monthMap: Record<string, number> = {
-            ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-            JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
-        };
-
-        if (!this.selectedMonth || !this.selectedYear || !(this.selectedMonth in monthMap)) {
-            return false;
-        }
-
-        const monthIndex = monthMap[this.selectedMonth];
-
-        const selectedDate = DateTime.fromObject(
-            { year: this.selectedYear, month: monthIndex + 1, day: day.day },
-            { zone: 'America/Guayaquil' }
-        ).startOf('day');
-
-        const today = DateTime.now().setZone('America/Guayaquil').startOf('day');
-
-        const weekday = today.weekday;
-        const weekStart = today.minus({ days: weekday - 1 });
-        const weekEnd = weekStart.plus({ days: 5 });
-        const nextWeekStart = weekStart.plus({ days: 7 });
-        const nextWeekEnd = nextWeekStart.plus({ days: 5 });
-
-        return (
-            selectedDate.weekday !== 7 &&
-            selectedDate >= today &&
-            (
-            (selectedDate >= weekStart && selectedDate <= weekEnd) ||
-            (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd)
-            )
-        );
-        }
-
-    isDayDisabled(day: number, monthIndex: number): boolean {
-        const dayData = this.disabledDatesAndHours[monthIndex.toString()]?.find(d => d.day === day);
-        return dayData ? dayData.hours.length === 0 : false;
-    }
-
-    onDayClick(day: any): void {
-        if (!day.day || day.isDisabled) return;
-        if (!this.isScheduleEnabled) return;
-
-        const selectedDate = `${this.selectedYear}-${this.padNumber(this.getMonthIndex(this.selectedMonth) + 1)}-${this.padNumber(day.day)}`;
-        this.selectedDay = day.day;
-        this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
-
-        this.daySelected.emit({
-            date: selectedDate,
-            label: this.selectedDayFormatted,
-            day: day.day 
-            });
-        }
-
-    private getMonthIndex(monthName: string): number {
-        const monthMap: Record<MonthKey, number> = {
+    const monthMap: Record<string, number> = {
         ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
         JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
-        };
-        return monthMap[monthName as MonthKey];
+    };
+
+    if (!this.selectedMonth || !this.selectedYear || !(this.selectedMonth in monthMap)) {
+        return false;
     }
 
-    private padNumber(n: number): string {
-        return n.toString().padStart(2, '0');
-    }
+    const monthIndex = monthMap[this.selectedMonth];
+
+    const selectedDate = DateTime.fromObject(
+        { year: this.selectedYear, month: monthIndex + 1, day: day.day },
+        { zone: 'America/Guayaquil' }
+    ).startOf('day');
+
+    const today = DateTime.now().setZone('America/Guayaquil').startOf('day');
+
+    const weekday = today.weekday;
+    const weekStart = today.minus({ days: weekday - 1 });
+    const weekEnd = weekStart.plus({ days: 5 });
+    const nextWeekStart = weekStart.plus({ days: 7 });
+    const nextWeekEnd = nextWeekStart.plus({ days: 5 });
+
+    return (
+        selectedDate.weekday !== 7 &&
+        selectedDate >= today &&
+        (
+        (selectedDate >= weekStart && selectedDate <= weekEnd) ||
+        (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd)
+        )
+    );
+  }
+
+  isDayDisabled(day: number, monthIndex: number): boolean {
+    const monthKey = monthIndex.toString();
+    const disabledDays = this.disabledDates[monthKey] || [];
+    const isFullyDisabled = disabledDays.includes(day);
+
+    const dayData = this.disabledDatesAndHours[monthKey]?.find(d => d.day === day);
+    const isAllHoursDisabled = dayData ? dayData.hours.length === 0 : false;
+
+    return isFullyDisabled || isAllHoursDisabled;
+  }
+
+  onDayClick(day: any): void {
+    if (!day.day || day.isDisabled) return;
+    if (!this.isScheduleEnabled) return;
+
+    const selectedDate = `${this.selectedYear}-${this.padNumber(this.getMonthIndex(this.selectedMonth) + 1)}-${this.padNumber(day.day)}`;
+    this.selectedDay = day.day;
+    this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
+
+    this.daySelected.emit({
+        date: selectedDate,
+        label: this.selectedDayFormatted,
+        day: day.day 
+        });
+  }
+
+  private getMonthIndex(monthName: string): number {
+    const monthMap: Record<MonthKey, number> = {
+    ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+    JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+    };
+    return monthMap[monthName as MonthKey];
+  }
+
+  private padNumber(n: number): string {
+    return n.toString().padStart(2, '0');
+  }
 }

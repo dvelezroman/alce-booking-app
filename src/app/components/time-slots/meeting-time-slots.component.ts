@@ -28,7 +28,7 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedDayInfo']) {
+    if (changes['selectedDayInfo'] || changes['disabledDatesAndHours']) {
       if (this.selectedDayInfo) {
         this.recalculateTimeSlots();
       } else {
