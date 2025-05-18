@@ -32,6 +32,7 @@ import { DisabledDatesAndHours, DisabledDays } from '../../services/dtos/handle-
 import { DateTime} from "luxon";
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
+import { MeetingCalendarComponent } from '../../components/meeting-calendar/meeting-calendar.component';
 
 
 @Component({
@@ -42,7 +43,8 @@ import { ModalComponent } from '../../components/modal/modal.component';
     NgForOf,
     CommonModule,
     RouterModule,
-    ModalComponent
+    ModalComponent,
+    MeetingCalendarComponent
   ],
   templateUrl: './meeting-booking.component.html',
   styleUrl: './meeting-booking.component.scss'
@@ -73,16 +75,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   hoverIndex: number | null = null;
   timeSlots: { label: string; value: number; isDisabled: boolean, localhour: string }[] = [];
   today: string = '';
-  maxDate: string = '';
   selectedMonth!: string;
   selectedYear!: number;
-  currentMonthDays: any[] = [];
   selectedDay: number | null = null;
   selectedDayFormatted!: string;
-  todayMonth!: string;
-  todayYear!: number;
-  nextMonth_!: string;
-  nextYear!: number;
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
   meetings: MeetingDTO[] = [];
@@ -99,6 +95,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   ecuadorTime: string = '';
   ecuadorDate: string = '';
   localdateSelected: string = '';
+  resetCalendarSelectionTrigger = false;
 
   modalConfig: ModalDto = modalInitializer();
   showTimeSlotsModal = false;
@@ -133,12 +130,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       if (state?.student?.id) {
         this.initializeMeetings();
       }
-    });
-
-    this.getDisabledDates().subscribe(() => {
-      this.getDisabledDatesAndHours().subscribe(() => {
-        this.initializeCalendar();
-      });
     });
 
     this.updateEcuadorTime();
@@ -179,28 +170,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges(); // Para asegurarte de que actualiza el binding
   }
 
-  private initializeCalendar(): void {
-    this.today = this.getTodayDate();
-    this.maxDate = this.getMaxDate();
-    this.selectedDate = this.today;
-
-    const todayDate = new Date();
-    this.selectedMonth = todayDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
-    this.selectedYear = todayDate.getFullYear();
-    this.todayMonth = this.selectedMonth;
-    this.todayYear = this.selectedYear;
-
-    const nextDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, 1);
-    this.nextMonth_ = nextDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
-    this.nextYear = nextDate.getFullYear();
-
-    this.generateCurrentMonthDays();
-    this.updateNavigationButtons();
-
-    setTimeout(() => {
-      this.checkScroll();
-    }, 100);
-  }
 
   initializeMeetings() {
     const currentDate = new Date();
@@ -218,6 +187,17 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return 'Usuario sin nombres';
   }
 
+  onDaySelected(event: { date: string; label: string; day: number }) {
+    const [year, month, day] = event.date.split('-').map(Number);
+
+    this.selectedDate = event.date;
+    this.selectedDay = day;
+    this.selectedYear = year;
+    this.selectedMonth = DateTime.fromObject({ month }).setLocale('es').toFormat('LLLL').toUpperCase();
+    this.selectedDayFormatted = event.label;
+    this.recalculateTimeSlots({ day: day });
+  }
+
   initializeTimeSlots() {
     const startHour = 8; // 8 AM
     const endHour = 20;  // 8 PM
@@ -226,19 +206,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       const localhour = convertEcuadorHourToLocal(hour);
       return { label: `${hour}:00`, value: hour, isDisabled: false, localhour: `${localhour}:00` };
     });
-  }
-
-//referencias calendario
- scrollToCalendar() {
-  if (this.calendarRef && this.calendarRef.nativeElement) {
-    this.calendarRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-}
-  //referencia a time
-  scrollToTimeSlots() {
-    if (this.timeSlotsRef && this.timeSlotsRef.nativeElement) {
-      this.timeSlotsRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
   }
 
   formatDate(date: Date): string {
@@ -262,210 +229,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const today = new Date();
     const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     return this.formatDate(endOfMonth);
-  }
-
-  updateNavigationButtons() {
-    const today = new Date();
-    const currentMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
-    const currentYear = today.getFullYear();
-    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    const nextMonth = nextMonthDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
-    const nextYear = nextMonthDate.getFullYear();
-
-    this.canGoBack = !(this.selectedMonth === currentMonth && this.selectedYear === currentYear);
-    this.canGoForward = !(this.selectedMonth === nextMonth && this.selectedYear === nextYear);
-  }
-
-  prevMonth() {
-    this.calendarAnimationClass = 'fade-out';
-
-    const today = new Date();
-    const monthMap: Record<MonthKey, number> = {
-      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
-    };
-
-    const currentMonthIndex = monthMap[this.selectedMonth as MonthKey];
-
-    if (currentMonthIndex === undefined) {
-      console.error('Mes inválido en prevMonth:', this.selectedMonth);
-      return;
-    }
-    // Calcula el mes anterior
-    const currentDate = new Date(this.selectedYear, currentMonthIndex, 1);
-    currentDate.setMonth(currentDate.getMonth() - 1);
-
-    const isCurrentMonth =
-      currentDate.getFullYear() === today.getFullYear() &&
-      currentDate.getMonth() === today.getMonth();
-
-    if (isCurrentMonth) {
-      this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
-      this.selectedYear = today.getFullYear();
-    } else {
-      this.selectedMonth = currentDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
-      this.selectedYear = currentDate.getFullYear();
-    }
-
-    this.selectedDay = null;
-    this.selectedDayFormatted = '';
-    this.filterDisabledTimeSlots();
-    this.generateCurrentMonthDays();
-    this.updateNavigationButtons();
-    this.calendarAnimationClass = 'fade-in';
-    this.resetCalendarAnimation();
-  }
-
-  private resetCalendarAnimation() {
-    setTimeout(() => {
-      this.calendarAnimationClass = '';
-    }, 300);
-  }
-
-  generateCurrentMonthDays() {
-    const monthMap: Record<MonthKey, number> = {
-      ENERO: 1, FEBRERO: 2, MARZO: 3, ABRIL: 4, MAYO: 5, JUNIO: 6,
-      JULIO: 7, AGOSTO: 8, SEPTIEMBRE: 9, OCTUBRE: 10, NOVIEMBRE: 11, DICIEMBRE: 12
-    };
-
-    const monthIndex = monthMap[this.selectedMonth as MonthKey];
-    if (!monthIndex) {
-      console.error(`Mes inválido: ${this.selectedMonth}`);
-      this.currentMonthDays = [];
-      return;
-    }
-
-    const startOfMonth = DateTime.fromObject(
-      { year: this.selectedYear, month: monthIndex, day: 1 },
-      { zone: 'America/Guayaquil' }
-    );
-
-    const daysInMonth = startOfMonth.daysInMonth;
-    if (!daysInMonth) {
-      console.error('No se pudo calcular la cantidad de días del mes.');
-      this.currentMonthDays = [];
-      return;
-    }
-    const firstDayOfWeek = startOfMonth.weekday % 7;
-
-    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({
-      day: '',
-      dayOfWeek: '',
-      isDisabled: false,
-    }));
-
-    // Generar días del mes
-    this.currentMonthDays = this.currentMonthDays.concat(
-      Array.from({ length: daysInMonth }, (_, i) => {
-        const date = startOfMonth.plus({ days: i });
-        const day = date.day;
-        const dayOfWeek = date.setLocale('es').toFormat('cccc').toUpperCase();
-
-        const dayData = this.disabledDatesAndHours[(monthIndex - 1).toString()]?.find(d => d.day === day);
-        const isCompletelyDisabled = dayData ? dayData.hours.length === 0 : false;
-
-        return {
-          day,
-          dayOfWeek,
-          date: date.toFormat('yyyy-MM-dd'),
-          isDisabled: isCompletelyDisabled,
-        };
-      })
-    );
-  }
-
-  nextMonth() {
-    this.calendarAnimationClass = 'fade-out';
-    // const today = new Date();
-    const monthMap: Record<MonthKey, number> = {
-      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
-    };
-
-    const currentMonthIndex = monthMap[this.selectedMonth as MonthKey];
-    if (currentMonthIndex === undefined) {
-      return;
-    }
-
-    const currentDate = new Date(this.selectedYear, currentMonthIndex, 1);
-    currentDate.setMonth(currentDate.getMonth() + 1);
-
-    this.selectedMonth = currentDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
-    this.selectedYear = currentDate.getFullYear();
-
-    this.selectedDay = null;
-    this.selectedDayFormatted = '';
-
-    this.filterDisabledTimeSlots()
-    this.generateCurrentMonthDays();
-    this.updateNavigationButtons();
-    this.calendarAnimationClass = 'fade-in';
-    this.resetCalendarAnimation();
-  }
-
-
-  private filterDisabledTimeSlots(): void {
-    this.timeSlots = this.timeSlots.filter(slot => !slot.isDisabled);
-  }
-
-  isDaySelectable(day: { day: number | null; isDisabled?: boolean }): boolean {
-    if (!day.day || isNaN(day.day) || day.isDisabled) return false;
-
-    const monthMap: Record<string, number> = {
-      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
-    };
-
-    if (!this.selectedMonth || !this.selectedYear || !(this.selectedMonth in monthMap)) {
-      return false;
-    }
-
-    const monthIndex = monthMap[this.selectedMonth];
-
-    const selectedDate = DateTime.fromObject(
-      { year: this.selectedYear, month: monthIndex + 1, day: day.day },
-      { zone: 'America/Guayaquil' }
-    ).startOf('day');
-
-    const today = DateTime.now().setZone('America/Guayaquil').startOf('day');
-
-    const weekday = today.weekday;
-    const weekStart = today.minus({ days: weekday - 1 });
-    const weekEnd = weekStart.plus({ days: 5 });
-    const nextWeekStart = weekStart.plus({ days: 7 });
-    const nextWeekEnd = nextWeekStart.plus({ days: 5 });
-
-    return (
-      selectedDate.weekday !== 7 &&
-      selectedDate >= today &&
-      (
-        (selectedDate >= weekStart && selectedDate <= weekEnd) ||
-        (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd)
-      )
-    );
-  }
-
-  selectDay(day: any) {
-    if (!this.isScheduleEnabled) {
-      this.showModalMessage('El agendamiento está deshabilitado por el administrador.');
-      this.hideModalAfterDelay(3000);
-      return;
-    }
-
-    const monthMap: Record<string, number> = {
-      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
-    };
-    const monthIndex = monthMap[this.selectedMonth]; // Índice del mes actual
-    const selectedDate = `${this.selectedYear}-${(monthIndex + 1).toString().padStart(2,'0')}-${day.day.toString().padStart(2,'0')}`;
-    if (this.isDaySelectable(day)) {
-      // console.log(selectedDate);
-      this.selectedDate = selectedDate;
-      this.selectedDay = day.day;
-      this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
-      this.recalculateTimeSlots(day);
-      this.showTimeSlotsModal = true;
-    }
   }
 
   private resetCalendarSelection(): void {
@@ -585,6 +348,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.showSuccessModal = false;
     this.selectedTimeSlot = { label: "8:00", value: 8, isDisabled: false , localhour: convertEcuadorHourToLocal(8) + ':00' };
     this.localdateSelected = '';
+     this.triggerCalendarReset();
   }
 
 
@@ -657,40 +421,22 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       category: this.userData.student.studentClassification,
     };
   }
-  // createBookingData(): CreateMeetingDto {
-  //   if (!this.userData?.student) {
-  //     throw new Error('Student data is required to create booking data.');
-  //   }
-  //
-  //   const [year, month, day] = this.selectedDate.split('-').map(Number);
-  //   const selectedHour = this.selectedTimeSlot.value;
-  //
-  //   const dateInEcuador = DateTime.fromObject(
-  //     { year, month, day, hour: selectedHour, minute: 0 },
-  //     { zone: 'America/Guayaquil' }
-  //   );
-  //
-  //   const ecuadorISO = dateInEcuador.toISO() ?? '';
-  //   const localDateISO = dateInEcuador.setZone(DateTime.local().zoneName).toISO() ?? '';
-  //
-  //   return {
-  //     studentId: this.userData.student.id,
-  //     instructorId: undefined,
-  //     stageId: this.userData.stage?.id,
-  //     date: ecuadorISO,
-  //     hour: selectedHour,
-  //     localdate: localDateISO,
-  //     localhour: dateInEcuador.setZone(DateTime.local().zoneName).hour,
-  //     mode: this.meetingType,
-  //     category: this.userData.student.studentClassification,
-  //   };
-  // }
 
   hideModalAfterDelay(delay: number) {
     setTimeout(() => {
       this.modalConfig.show = false;
-      this.resetCalendarSelection();
+      this.triggerCalendarReset();
     }, delay);
+  }
+
+  private triggerCalendarReset() {
+    this.resetCalendarSelectionTrigger = true;
+    setTimeout(() => this.resetCalendarSelectionTrigger = false, 0);
+    this.selectedDay = null;
+    this.selectedDate = '';
+    this.selectedDayFormatted = '';
+    this.selectedTimeSlot = { label: "8:00", value: 8, isDisabled: false, localhour: convertEcuadorHourToLocal(8) + ':00' };
+    this.localdateSelected = '';
   }
 
   deleteMeeting(meeting:MeetingDTO){

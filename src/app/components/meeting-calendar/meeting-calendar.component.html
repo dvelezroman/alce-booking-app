@@ -1,0 +1,48 @@
+<section class="date-time-selection shared-box-style">
+  <div class="calendar-title">
+    <h2 class="title-date">Seleccione día</h2>
+  </div>
+
+  <div class="ecuador-time-display">
+    <strong>Fecha actual en Ecuador:</strong>
+    <span>{{ ecuadorDate }}</span>
+  </div>
+
+  <div class="month-selector">
+    <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()" aria-label="Mes anterior">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
+    <button *ngIf="canGoForward" class="button is-small next-button" (click)="nextMonth()" aria-label="Mes siguiente">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="calendar">
+    <div class="calendar-header">
+      <div class="calendar-day-header">D</div>
+      <div class="calendar-day-header">L</div>
+      <div class="calendar-day-header">M</div>
+      <div class="calendar-day-header">M</div>
+      <div class="calendar-day-header">J</div>
+      <div class="calendar-day-header">V</div>
+      <div class="calendar-day-header">S</div>
+    </div>
+
+    <div class="calendar-grid" [ngClass]="calendarAnimationClass">
+     <div
+        *ngFor="let day of currentMonthDays"
+        class="calendar-day"
+        (click)="isDaySelectable(day) ? onDayClick(day) : null"
+        [class.selected]="selectedDay === day.day"
+        [class.selectable]="isDaySelectable(day)"
+        [class.unselectable]="!isDaySelectable(day)"
+        [class.disabled]="day.isDisabled"
+        [class.empty]="!day.day"
+        [class.danger]="day.dayOfWeek === 'DOMINGO'"
+        >
+        {{ day.day }}
+        </div>
+    </div>
+  </div>
+</section>

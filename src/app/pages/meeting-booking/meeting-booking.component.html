@@ -64,55 +64,19 @@
   <!-- Date and Time Selection Section -->
   <div class="date-time-scroll-container">
     <div class="date-time-wrapper">
+      
       <!-- Calendar Selection -->
-      <section class="date-time-selection shared-box-style">
-        <div class="calendar-title" (click)="scrollToCalendar()">
-          <h2 class="title-date">Seleccione día</h2>
-        </div>
-        <div class="ecuador-time-display">
-          <strong>Fecha actual en Ecuador:</strong>
-          <span>{{ ecuadorDate }}</span>
-        </div>
-        <div class="month-selector">
-          <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()" aria-label="Previous month">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
-          <button *ngIf="canGoForward" class="button is-small next-button" (click)="nextMonth()" aria-label="Next month">
-            <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-        <div class="calendar" #calendarRef >
-          <div class="calendar-header">
-            <div class="calendar-day-header">D</div>
-            <div class="calendar-day-header">L</div>
-            <div class="calendar-day-header">M</div>
-            <div class="calendar-day-header">M</div>
-            <div class="calendar-day-header">J</div>
-            <div class="calendar-day-header">V</div>
-            <div class="calendar-day-header">S</div>
-          </div>
-          <div class="calendar-grid" [ngClass]="calendarAnimationClass">
-            <div
-              *ngFor="let day of currentMonthDays"
-              class="calendar-day"
-              (click)="isDaySelectable(day) ? selectDay(day) : null"
-              [class.selected]="selectedDay === day.day"
-              [class.selectable]="isDaySelectable(day)"
-              [class.unselectable]="!isDaySelectable(day)"
-              [class.disabled]="day.isDisabled"
-              [class.empty]="!day.day"
-              [class.danger]="day.dayOfWeek === 'DOMINGO'">
-              {{ day.day }}
-            </div>
-          </div>
-        </div>
-      </section>
+      <app-meeting-calendar
+        [disabledDatesAndHours]="disabledDatesAndHours"
+        [isScheduleEnabled]="isScheduleEnabled"
+        [resetSelectionTrigger]="resetCalendarSelectionTrigger"
+        (daySelected)="onDaySelected($event)"
+      ></app-meeting-calendar>
 
       <!-- Time Slots Selection -->
       <section class="selected-date-time shared-box-style">
         <div class="booking-title-absolute">
-          <h2 class="title-date" (click)="scrollToTimeSlots()">Seleccione una hora</h2>
+          <h2 class="title-date">Seleccione una hora</h2>
         </div>
 
         <!-- hora actual en Ecuador -->
