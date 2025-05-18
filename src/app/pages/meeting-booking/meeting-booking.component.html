@@ -74,19 +74,12 @@
       ></app-meeting-calendar>
 
       <!-- Time Slots -->
-      <section class="selected-date-time shared-box-style">
-        <div class="booking-title-absolute">
-          <h2 class="title-date">Seleccione una hora</h2>
-        </div>
-
       <app-meeting-time-slots
         [selectedDayInfo]="selectedDay !== null ? { year: selectedYear, month: monthNumber, day: selectedDay } : null"
         [disabledDatesAndHours]="disabledDatesAndHours"
         [ecuadorTime]="ecuadorTime"
         (timeSlotSelected)="selectTimeSlot($event)">
       </app-meeting-time-slots>
-
-      </section>
 
       <!-- clases agendadas -->
       <section class="scheduled-meetings shared-box-style" *ngIf="meetings.length > 0">

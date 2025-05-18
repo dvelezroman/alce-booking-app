@@ -1,16 +1,16 @@
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+// @keyframes fadeIn {
+//   from { opacity: 0; }
+//   to { opacity: 1; }
+// }
 
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
+// @keyframes fadeOut {
+//   from { opacity: 1; }
+//   to { opacity: 0; }
+// }
 
-.fade-out { animation: fadeOut 0.4s forwards; }
-.fade-in { animation: fadeIn 0.4s forwards; }
+// .fade-out { animation: fadeOut 0.4s forwards; }
+// .fade-in { animation: fadeIn 0.4s forwards; }
 
 /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
 
@@ -54,12 +54,6 @@
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.07);
 }
 
-// .calendar {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-// }
-
 .calendar-title, .booking-title-absolute{
   position: absolute;
   top: -75px;
@@ -78,232 +72,6 @@
   border-radius: 10px;
   white-space: nowrap; 
   min-width: 200px; 
-}
-
-// .month-selector {
-//   position: relative;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   width: 100%;
-//   background-color: transparent;
-// }
-
-// .month-label {
-//   font-weight: bold;
-//   font-size: 1rem;
-// }
-
-// .month-selector button {
-//   width: 2rem;
-//   height: 2rem;
-//   border: 1px solid rgba(128, 128, 128, 0.107);
-//   border-radius: 50%;
-//   background-color: rgba(129, 128, 128, 0.054);
-//   color: rgb(104, 104, 104);
-//   cursor: pointer;
-//   position: absolute;
-//   font-size: .7rem;
-//   transform: translateY(-50%);
-//   transition: all 0.3s ease-in-out;
-// }
-
-// .month-selector button:hover {
-//   box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15); 
-//   transform: translateY(-50%) scale(1.1);  
-// }
-
-// .prev-button { left: 18.5%; top:53%; }
-// .next-button { left: 70%; top: 48%;  }
-
-// .month-selector button.hidden {
-//   visibility: hidden;
-// }
-
-// .calendar-header, .calendar-grid {
-//   display: grid;
-//   grid-template-columns: repeat(7, 1fr);
-//   justify-content: center;
-//   grid-auto-rows: 30px;
-//   gap: 11px;
-//   width: 100%;
-// }
-
-// .calendar-day-header {
-//   text-align: center;
-//   font-size: .9rem;
-//   font-weight: bold;
-//   background-color: transparent;
-// }
-
-// .calendar-day {
-//   display: flex;
-//   width: 12px;
-//   height: 12px;
-//   margin: auto;
-//   justify-content: center;
-//   align-items: center;
-//   padding: 16px;
-//   font-size: .8rem;
-//   border-radius: 50%;
-//   cursor: pointer;
-//   transition: background-color 0.5s ease;
-// }
-
-// .calendar-day.selectable {
-//   border: 1px solid #6eb3fcbc;
-// }
-
-// .calendar-day.selectable:hover, .calendar-day.selected {
-//   background-color: #6eb3fcbc;
-// }
-
-// .calendar-day.unselectable {
-//   background-color: #e9e9e96d;
-//   color: #9f9f9f;
-//   cursor: not-allowed;
-// }
-
-// .calendar-day.empty {
-//   background-color: transparent; 
-//   border: none;
-//   cursor: default;
-//   pointer-events: none;
-// }
-
-// .calendar-day.danger, 
-// .calendar-day.disabled {
-//   background-color: #ffd3d2; 
-// }
-
-.time-slots {
-  display: flex;
-  margin-top: .7rem;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  height: 270px;
-  overflow-y: auto;
-  width: 400px;
-  padding: 7px 0px;
-  scrollbar-width: none; 
-  -ms-overflow-style: none;
-}
-
-.ecuador-time-display {
-  margin-top: 8px;
-  font-size: .9rem;
-  color: #333;
-  background-color: transparent; 
-  padding: 10px;
-  border-radius: 0;
-  display: block;
-  box-shadow: none;
-  white-space: nowrap;
-}
-
-.ecuador-time-display strong {
-  font-size: .85rem;
-  margin-right: 8px;
-  color: #111;
-}
-
-.time-slots::-webkit-scrollbar {
-  display: none; 
-}
-
-/* Estilos para las flechas de scroll */
-.scroll-arrow-up,
-.scroll-arrow-down {
-  position: relative;
-  background-color: transparent;
-  color: rgb(146, 100, 238);
-  border: none;
-  cursor: pointer;
-  padding: 0 1rem;
-  font-size: 1.2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background-color 0.3s ease;
-}
-
-.scroll-arrow-up {
-  margin-bottom: -30px; 
-}
-
-.scroll-arrow-down {
-  margin-top: -15px; 
-}
-
-.time-slot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: .85rem;
-  color: white;
-  width: 200px;
-  min-height: 45px;
-  background: linear-gradient(to right, rgba(68, 144, 226, 0.74) 0%, rgba(194, 68, 226, 0.711) 100%  ); 
-  gap: 5px;
-  cursor: pointer;
-  border-radius: 8px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15);
-}
-
-.time-text {
-  white-space: nowrap;
-  text-align: center;
-  font-weight: 500;
-  font-size: .85rem;
-  display: inline-block;
-}
-
-.time-text .secondary-time {
-  opacity: 0.8;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.time-text-container, .confirm-box {
-  flex: 1 1 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 44px;
-  border-radius: 5px;
-  padding: 0 10px;
-  transition: flex-grow 0.7s ease, transform 0.7s ease, opacity 0.5s ease;
-}
-
-.confirm-box {
-  opacity: 0;
-  font-size: 0.9rem;
-  visibility: hidden;
-  background: linear-gradient(to right, rgba(194, 68, 226, 0.673), rgb(194, 68, 226));
-  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15);
-}
-
-.time-slot:hover {
-  box-shadow: none;
-  background: linear-gradient(to right, rgba(68, 144, 226, 0.1) 0%, rgba(194, 68, 226, 0.1) 100%);
-}
-
-.time-slot:hover .confirm-box,
-.time-slot:hover .time-text-container {
-  opacity: 1;
-  visibility: visible;
-  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.2);
-}
-
-.time-slot:hover .confirm-box {
-  width: 100%;
-}
-
-.time-slot:hover .time-text-container {
-  background: linear-gradient(to right, rgb(68, 144, 226) 0%, rgba(68, 144, 226, 0.8) 100%);
 }
 
 /* tercer bloque de meetings agendadas */
