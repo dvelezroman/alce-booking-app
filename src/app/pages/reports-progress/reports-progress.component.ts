@@ -73,7 +73,6 @@ export class ReportsProgressComponent implements OnInit {
     const targetStageIndex = this.stages.findIndex(s => s.description === oldestContent.data?.stage);
 
     if (targetStageIndex === -1) {
-      console.warn('No se encontró el stage correspondiente.');
       this.studentStageContents = [];
       return;
     }
@@ -90,7 +89,6 @@ export class ReportsProgressComponent implements OnInit {
         this.studentStageContents = contents;
       },
       error: () => {
-        console.error('Error al cargar los contenidos del stage.');
         this.studentStageContents = [];
       },
     });
