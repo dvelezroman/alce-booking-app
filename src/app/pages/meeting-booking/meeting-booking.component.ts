@@ -34,6 +34,7 @@ import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { MeetingCalendarComponent } from '../../components/meeting-calendar/meeting-calendar.component';
 import { MeetingTimeSlotsComponent } from '../../components/time-slots/meeting-time-slots.component';
+import { MeetingScheduleComponent } from '../../components/meeting-list/meeting-schedule.component';
 
 
 @Component({
@@ -41,12 +42,12 @@ import { MeetingTimeSlotsComponent } from '../../components/time-slots/meeting-t
   standalone: true,
   imports: [
     FormsModule,
-    NgForOf,
     CommonModule,
     RouterModule,
     ModalComponent,
     MeetingCalendarComponent,
-    MeetingTimeSlotsComponent
+    MeetingTimeSlotsComponent,
+    MeetingScheduleComponent
   ],
   templateUrl: './meeting-booking.component.html',
   styleUrl: './meeting-booking.component.scss'
@@ -60,6 +61,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   private unsubscribe$ = new Subject<void>();
   canScrollLeft = false;
   canScrollRight = false;
+  isDesktop = false;
 
   meetingType: Mode = Mode.ONLINE;
   mode = Mode;
@@ -107,11 +109,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     private ffService: FeatureFlagService,
     private handleDatesService: HandleDatesService
   ) {
-    // this.initializeTimeSlots();
     this.userData$ = this.store.select(selectUserData);
   }
 
   ngOnInit() {
+    
     this.ffService.getAll().subscribe(ffs => {
       this.ffs = ffs;
       const scheduleFlag = this.ffs.find(f => f.name === 'enable-schedule');
@@ -154,7 +156,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
 
     setTimeout(() => {
-      this.checkScroll();
       this.cdr.detectChanges();
     }, 300);
   }
@@ -311,7 +312,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     next: (meetings: MeetingDTO[]) => {
       this.meetings = meetings;
       this.cdr.detectChanges();
-      setTimeout(() => this.checkScroll(), 300);
+      // setTimeout(() => this.checkScroll(), 300);
     }, error: (error) => {
         console.error('Error fetching meetings:', error);
       }
@@ -421,34 +422,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.meetingToDelete = null;
   }
 
-//scroll flechas del contenedor de los meetings del estudiante y time slots
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.checkScroll();
-  }
-
-  checkScroll() {
-    if (!this.scheduleList || !this.scheduleList.nativeElement) {
-      return;
-    }
-
-    const el = this.scheduleList.nativeElement;
-    this.canScrollLeft = el.scrollLeft > 0;
-    this.canScrollRight = el.scrollWidth > el.clientWidth;
-  }
-
-  scrollLeft() {
-    this.scheduleList.nativeElement.scrollBy({ left: -330, behavior: 'smooth' });
-    setTimeout(() => this.checkScroll(), 300);
-  }
-
-  scrollRight() {
-    this.scheduleList.nativeElement.scrollBy({ left: 330, behavior: 'smooth' });
-    setTimeout(() => this.checkScroll(), 300);
-  }
-
-  // método para seleccionar meetings, abrir y cerrar modal
-
   openMeetingDetailModal(meeting: MeetingDTO, index: number) {
     clearInterval(this.linkInterval);
     this.selectedMeeting = meeting;
@@ -534,55 +507,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     });
   }
 
-  isCurrentWeek(date: Date): boolean {
-    const today = new Date();
-    const dayOfWeek = today.getDay(); // Day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-
-    // Calculate start of the current week (Sunday)
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - dayOfWeek);
-    startOfWeek.setHours(0, 0, 0, 0); // Set to start of the day
-
-    // Calculate end of the current week (Saturday)
-    const endOfWeek = new Date(today);
-    endOfWeek.setDate(today.getDate() + (6 - dayOfWeek));
-    endOfWeek.setHours(23, 59, 59, 999); // Set to end of the day
-
-    // Check if the given date is within the current week
-    const formattedDate = new Date(date);
-    return formattedDate >= startOfWeek && formattedDate <= endOfWeek;
-  }
-
-  capitalizeFirstLetter(value: string | null): string {
-    if (value) {
-      return value.charAt(0).toUpperCase() + value.slice(1);
-    }
-    return '';
-  }
-
-  isToday(date: Date): boolean {
-    const today = new Date();
-    const formattedDate = new Date(date);
-
-    return (
-      formattedDate.getFullYear() === today.getFullYear() &&
-      formattedDate.getMonth() === today.getMonth() &&
-      formattedDate.getDate() === today.getDate()
-    );
-  }
-
-  isTomorrow(date: Date): boolean {
-    const formattedDate = new Date(date);
-    const today = new Date();
-    const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-
-    return (
-      formattedDate.getFullYear() === tomorrow.getFullYear() &&
-      formattedDate.getMonth() === tomorrow.getMonth() &&
-      formattedDate.getDate() === tomorrow.getDate()
-    );
-  }
-
   private getDisabledDates(): Observable<DisabledDays> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
 
@@ -604,14 +528,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       })
     );
   }
-
-  private getDisabledHoursForDay(day: number, monthIndex: number): number[] {
-    const monthData = this.disabledDatesAndHours[monthIndex.toString()];
-    if (!monthData) return [];
-
-    const dayData = monthData.find(d => d.day === day);
-    return dayData ? dayData.hours : [];
-}
 
   private removeDuplicateDays(disabledDays: Record<string, number[]>): Record<string, number[]> {
     const cleanedDisabledDays: Record<string, number[]> = {};
@@ -647,4 +563,5 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return true;
   }
 }
+
 

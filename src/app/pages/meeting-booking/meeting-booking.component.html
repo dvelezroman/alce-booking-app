@@ -16,42 +16,13 @@
       </div>
 
       <!-- Selected Meetings Section -->
-      <div class="student-schedule student-shared-style" *ngIf="meetings.length > 0">
+      <div class="student-schedule student-shared-style block-mobile" *ngIf="meetings.length > 0">
         <h4 class="schedule-title">Agendadas</h4>
-        <div class="scroll-buttons">
-          <button class="scroll-button left" (click)="scrollLeft()" [class.hidden]="!canScrollLeft" aria-label="Scroll left">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <button class="scroll-button right" (click)="scrollRight()" [class.hidden]="!canScrollRight" aria-label="Scroll right">
-            <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-        <div class="schedule-list" #scheduleList>
-          <div *ngFor="let meeting of meetings; let i = index" class="schedule-item" (click)="openMeetingDetailModal(meeting, i)">
-            <div class="meeting-title">
-              <strong>
-                {{ isToday(meeting.date)
-                ? 'Hoy' : isTomorrow(meeting.date)
-                  ? 'Mañana' : isCurrentWeek(meeting.date)
-                    ? capitalizeFirstLetter(meeting.date | date: 'EEEE':'UTC')
-                      : (meeting.date | date: 'mediumDate':'UTC') }}
-              </strong>
-            </div>
-            <div class="meeting-info-container">
-              <div class="schedule-info">
-                <strong>Fecha: </strong> <span>{{ meeting.date | date: 'mediumDate':'UTC' }}</span><br>
-                <strong>Hora: </strong> <span>{{ meeting.hour | number: '2.0' }}:00</span>
-              </div>
-              <div class="schedule-delete">
-                <button class="delete-button" *ngIf="canDeleteMeeting(meeting)" (click)="openDeleteModal(meeting); $event.stopPropagation()">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <app-meeting-schedule
+          [meetings]="meetings"
+          (openDetail)="openMeetingDetailModal($event.meeting, $event.index)"
+          (deleteMeeting)="openDeleteModal($event)">
+        </app-meeting-schedule>
       </div>
       <!-- No Meetings Message -->
       <div class="no-meeting" *ngIf="meetings.length === 0">
@@ -83,44 +54,16 @@
       </app-meeting-time-slots>
 
       <!-- clases agendadas -->
-      <section class="scheduled-meetings shared-box-style" *ngIf="meetings.length > 0">
+      <section class="scheduled-meetings shared-box-style block-desktop" *ngIf="meetings.length > 0">
         <h2 class="title-date">Agendadas</h2>
-        <div class="meetings-list-scroll">
-          <div
-            *ngFor="let meeting of meetings; let i = index"
-            class="meeting-card"
-            (click)="openMeetingDetailModal(meeting, i)"
-          >
-            <div class="meeting-card-header">
-              <i class="fas fa-calendar-alt calendar-icon"></i>
-              <div class="meeting-date-title">
-                <strong>
-                  {{
-                    isToday(meeting.date)
-                      ? 'Hoy'
-                      : isTomorrow(meeting.date)
-                      ? 'Mañana'
-                      : isCurrentWeek(meeting.date)
-                      ? capitalizeFirstLetter(meeting.date | date: 'EEEE':'UTC')
-                      : (meeting.date | date: 'mediumDate':'UTC')
-                  }}
-                </strong>
-              </div>
-              <button
-                *ngIf="canDeleteMeeting(meeting)"
-                class="delete-button"
-                (click)="openDeleteModal(meeting); $event.stopPropagation()"
-              >
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </div>
-            <div class="meeting-card-body">
-              <p><strong>Fecha:</strong> {{ meeting.date | date: 'mediumDate':'UTC' }}</p>
-              <p><strong>Hora:</strong> {{ meeting.hour }}:00</p>
-            </div>
-          </div>
-        </div>
+        <app-meeting-schedule
+          [meetings]="meetings"
+          variant="cards"
+          (openDetail)="openMeetingDetailModal($event.meeting, $event.index)"
+          (deleteMeeting)="openDeleteModal($event)">
+        </app-meeting-schedule>
       </section>
+      
     </div>
   </div>
 </main>
@@ -257,3 +200,4 @@
   (confirmAction)="modalConfig.confirm && modalConfig.confirm()"
   (close)="modalConfig.close()">
 </app-modal>
+

@@ -1,0 +1,242 @@
+.student-shared-style {
+  width: fit-content;
+  max-width: 100%;
+  padding: 18px;
+  border-radius: 12px; 
+
+  background-color: rgba(249, 249, 249, 0.3); 
+}
+
+.student-schedule {
+  position: relative;
+}
+
+.schedule-title {
+  display: flex;
+  font-size: 1.2rem;
+  color: #515357;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.schedule-list {
+  display: flex;
+  flex-wrap: nowrap; 
+  gap: 5px; 
+  padding: .7rem .5rem;
+  border-radius: 10px;
+  border: .5px solid rgba(229, 228, 228, 0.555);
+  background-color: #f0f4f8;
+  width: fit-content;
+  width: auto; 
+  max-width: 100%; 
+  margin: auto;
+  height: auto; 
+  overflow-x: auto;
+  scroll-behavior: smooth; 
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+  box-shadow: inset 0px 0 5px 0px rgba(0, 0, 0, 0.1), 
+            inset -0px 0 5px 0px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-item {
+  position: relative;
+  min-width: 165px; 
+  max-width: 100%;  
+  border: .5px solid rgb(230, 229, 229);
+  background-color: #f2f2f2; 
+  padding: .5rem;
+  border-radius: 15px;
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
+  cursor:  pointer;
+}
+
+.schedule-item:hover {
+  box-shadow: 4px 8px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1.5px);
+}
+
+.scroll-button {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  backdrop-filter: blur(1px);
+  color: rgb(43, 88, 172);
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  z-index: 8;
+  transition: all .6s ease;
+  animation: pulseBackground 2s infinite linear;
+}
+
+.scroll-button.left {
+  left: 25px;
+}
+
+.scroll-button.right {
+  right: 25px;
+}
+
+.scroll-button.hidden {
+  display: none; 
+}
+
+.scroll-button:hover {
+  background-color: rgba(236, 234, 234, 0.879);
+  animation-play-state: paused;
+}
+
+@keyframes pulseBackground {
+  0% {
+    background-color: rgba(235, 235, 235, 0.219);
+  }
+  50% {
+    background-color: rgba(255, 255, 255, 0.58);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.211);
+  }
+}
+
+.meeting-title {
+  font-size: .9rem;
+  color: #474646;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: .3rem;
+}
+
+.meeting-title strong {
+  color: #333333; 
+}
+
+.meeting-info-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.schedule-info strong {
+  color: #333333; 
+}
+
+.schedule-info {
+  color: #565656;
+  font-size: 0.8rem;
+}
+
+.schedule-delete {
+  position: absolute;
+  top: 28px;
+  right: 8px;
+}
+
+.delete-button {
+  margin-top: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+  transition: all .6ms ease;
+}
+
+.delete-button svg {
+  width: 24px; 
+  height: 24px;
+  fill: #d4a2af; 
+  transition: transform 0.3s ease, fill 0.3s ease;
+}
+
+.delete-button:hover svg {
+  transform: scale(1.05); 
+  fill: #c97474;
+}
+
+// ------------------------- //
+
+.meetings-list-scroll {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  max-height: 350px;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s ease;
+}
+.meetings-list-scroll:hover {
+  scrollbar-color: #e7e7e7 transparent;
+}
+
+.meetings-list-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.meetings-list-scroll::-webkit-scrollbar-thumb {
+  background-color: #c2c2c2;
+  border-radius: 4px;
+}
+
+.meeting-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.05); 
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.meeting-card:hover {
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.meeting-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-icon {
+  color: #a379d6;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+
+.meeting-date-title strong {
+  color: #333;
+  font-weight: 600;
+  font-size: .9rem;
+}
+
+.delete-button {
+  color: #ecb7b7 !important;
+  font-size: 1rem;
+}
+
+.delete-button:hover {
+  color: #d74b4b !important;
+}
+
+.meeting-card-body p {
+  margin: 0.3rem 0;
+  font-size: 0.8rem;
+}
+
+.meeting-card-body strong {
+  color: #444;
+  font-weight: 600;
+}
+

@@ -96,8 +96,7 @@
   max-width: 100%;
   padding: 18px;
   border-radius: 12px; 
-  border: 1px solid rgba(210, 210, 210, 0.509); 
-  background-color: rgba(249, 249, 249, 0.3); 
+  background-color: #f2f2f2; 
 }
 
 .student-schedule {
@@ -108,145 +107,10 @@
 .schedule-title {
   display: flex;
   font-size: 1.2rem;
-  color: #515357;
+  color: #626365;
   margin-bottom: 1rem;
   font-weight: bold;
   text-align: center;
-}
-
-.schedule-list {
-  display: flex;
-  flex-wrap: nowrap; 
-  gap: 15px; 
-  padding: .7rem 1rem;
-  border-radius: 10px;
-  border: .5px solid rgba(229, 228, 228, 0.555);
-  background: linear-gradient(to right, #4490e2, #bd75e4);
-  width: fit-content;
-  width: auto; 
-  max-width: 100%; 
-  margin: auto;
-  height: auto; 
-  overflow-x: auto;
-  scroll-behavior: smooth; 
-  scrollbar-width: none; 
-  -ms-overflow-style: none; 
-  box-shadow: inset 0px 0 5px 0px rgba(0, 0, 0, 0.1), 
-            inset -0px 0 5px 0px rgba(0, 0, 0, 0.1);
-}
-
-.schedule-item {
-  min-width: 165px; 
-  max-width: 100%;  
-  border: .5px solid rgba(230, 229, 229, 0.236);
-  background-color: rgba(215, 215, 215, 0.346); 
-  padding: .5rem;
-  border-radius: 15px;
-  display: flex;
-  margin: auto;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15);
-  transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
-  cursor:  pointer;
-}
-
-.schedule-item:hover {
-  box-shadow: 4px 8px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-1.5px);
-}
-
-.scroll-button {
-  position: absolute;
-  top: 65%;
-  transform: translateY(-50%);
-  backdrop-filter: blur(1px);
-  color: rgb(118, 118, 118);
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem .85rem;
-  font-size: 1.2rem;
-  border-radius: 50%;
-  z-index: 8;
-  transition: all .6s ease;
-  animation: pulseBackground 2s infinite linear;
-}
-
-.scroll-button.left {
-  left: 25px;
-}
-
-.scroll-button.right {
-  right: 25px;
-}
-
-.scroll-button.hidden {
-  display: none; 
-}
-
-.scroll-button:hover {
-  background-color: rgba(236, 234, 234, 0.879);
-  animation-play-state: paused;
-}
-
-@keyframes pulseBackground {
-  0% {
-    background-color: rgba(235, 235, 235, 0.219);
-  }
-  50% {
-    background-color: rgba(255, 255, 255, 0.58);
-  }
-  100% {
-    background-color: rgba(255, 255, 255, 0.211);
-  }
-}
-
-.meeting-title {
-  font-size: .9rem;
-  color: #ffffff;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: .3rem;
-}
-
-.meeting-info-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
-}
-
-.schedule-info {
-  color: #ffffff;
-  font-size: 0.85rem;
-}
-
-.schedule-delete {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.delete-button {
-  margin-top: 1rem;
-  background: none;
-  border: none;
-  color: #e1d9db;
-  cursor: pointer;
-  font-size: 1.2rem;
-  padding: 0;
-  transition: all .6ms ease;
-}
-
-.delete-button svg {
-  width: 24px; 
-  height: 24px;
-  fill: #e1d9db; 
-  transition: transform 0.3s ease, fill 0.3s ease;
-}
-
-.delete-button:hover svg {
-  transform: scale(1.05); 
-  fill: #cdcaca;
 }
 
 .no-meeting {
@@ -285,14 +149,6 @@
 }
 
 @media (max-width: 992px) {
-  /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
-// .date-time-wrapper {
-//   min-width: 955px;
-// }
-
-// .calendar-grid {
-//   grid-auto-rows: 32px;
-// }
 
 /* SUB-BLOQUE: time slots */
 .selected-date-time {
@@ -314,6 +170,10 @@
     color: white;
   }
 
+  .student-info {
+    max-width: 100%;
+  }
+
   .student-schedule {
     display: block !important;
     padding: .7rem 0.5rem;
@@ -321,14 +181,6 @@
 
   .schedule-title {
     justify-content: center;
-  }
-
-  .scroll-button.left {
-    left: 8%; 
-  }
-
-  .scroll-button.right {
-    right: 8%; 
   }
 
   /* SEGUNDO BLOQUE: Contenedor general de calendario y time slots */
@@ -340,12 +192,6 @@
     min-width: unset !important;
   }
 
-  // /* SUB-BLOQUE: Calendario */
-  // .date-time-selection,
-  // .selected-date-time {
-  //   margin: 4rem 0;
-  // }
-
   .prev-button {
     top: 53%;
     left: 13.5%; 
@@ -356,10 +202,6 @@
     left: 74%; 
   }
 
-  .scheduled-meetings {
-    display: none !important;
-  }
-
   .date-time-scroll-container {
     overflow-x: hidden !important;
   }
@@ -367,9 +209,7 @@
 }
 
 @media (max-width: 492px) {
-  .student-info {
-    max-width: 90%;
-  }
+
   /* bloque de fechas del usuario modal advertencia de enlace */
   .link-note small {
     font-size: 0.8rem;
@@ -398,3 +238,4 @@
   }
 
 }
+
