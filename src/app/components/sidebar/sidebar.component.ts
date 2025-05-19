@@ -52,7 +52,7 @@ export class SidebarComponent implements OnInit {
     { icon: 'history', text: 'Eventos', route: '/processed-events', roles: [UserRole.ADMIN] },
     { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/feature-flag', roles: [UserRole.ADMIN] },
     { icon: 'reportes', text: 'Reportes de Estudiante', route: '/reports-detailed', roles: [UserRole.ADMIN] },
-    { icon: 'reportes', text: 'Reportes de Progreso', route: '/reports-progress', roles: [UserRole.ADMIN] },
+    { icon: 'reportes', text: 'Reportes de Progreso', route: '/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   ];
 
   navGrouped: {
@@ -136,14 +136,14 @@ export class SidebarComponent implements OnInit {
         icon: 'reportes',
         items: [
           this.findNavItemByRoute('/reports-detailed'),
-          this.findNavItemByRoute('/reports-progress') 
+          this.findNavItemByRoute('/reports-progress')
         ].filter(item => item.roles.includes(role))
       },
       {
         title: 'Configuración',
         icon: 'config',
         items: [
-          this.findNavItemByRoute('/feature-flag') 
+          this.findNavItemByRoute('/feature-flag')
         ].filter(item => item.roles.includes(role))
       }
     ];
@@ -157,7 +157,7 @@ export class SidebarComponent implements OnInit {
 
   isCategoryActive(items: { icon: string; text: string; route: string; roles: UserRole[] }[]): boolean {
     return items
-      .filter(item => item.route) 
+      .filter(item => item.route)
       .some(item => this.currentRoute === item.route || this.currentRoute.startsWith(item.route + '/'));
   }
 
