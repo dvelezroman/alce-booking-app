@@ -40,3 +40,8 @@ export interface FilterAssessmentI {
   type?: AssessmentType;
   note?: any;
 }
+
+export interface AssessmentConfigI {
+  minPointsAssessment: number;
+  maxPointsAssessment: number;
+}
