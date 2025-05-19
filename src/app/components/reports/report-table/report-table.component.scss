@@ -3,6 +3,58 @@
   margin: auto;
 }
 
+.stage-navigation-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  .student-stage-subtitle {
+    margin-bottom: 0.3rem;
+    text-align: center; 
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+  }
+}
+
+.stage-navigation-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+
+  .nav-button {
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+
+    i {
+      color: #333;
+      font-size: 14px;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: #e0e0e0;
+      border-color: #999;
+    }
+
+    &.disabled,
+    &:disabled {
+      opacity: 0.5;
+      background-color: #f5f5f5;
+      border-color: #ddd;
+    }
+  }
+}
+
 .table-container {
   max-width: 1100px;
   width: 100%;
@@ -21,7 +73,7 @@
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  min-width: 950px;
+  min-width: 1080px;
   table-layout: fixed;
   word-wrap: break-word;
 }

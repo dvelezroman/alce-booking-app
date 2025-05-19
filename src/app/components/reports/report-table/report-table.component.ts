@@ -1,7 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StudyContentPayloadI } from '../../../services/dtos/study-content.dto';
-
+import { StudyContentDto, StudyContentPayloadI } from '../../../services/dtos/study-content.dto';
 
 @Component({
   selector: 'app-report-table',
@@ -12,8 +11,40 @@ import { StudyContentPayloadI } from '../../../services/dtos/study-content.dto';
 })
 export class ReportTableComponent {
   @Input() history: StudyContentPayloadI[] = [];
+  @Input() stageContents: StudyContentDto[] = [];
+  @Input() stageDescription?: string;
+  @Input() studentStageDescription?: string;
+  @Input() canGoPrevious: boolean = false;
+  @Input() canGoNext: boolean = false;
+
+  @Output() previousStage = new EventEmitter<void>();
+  @Output() nextStage = new EventEmitter<void>();
+  @Output() hasVisibleResults = new EventEmitter<boolean>();
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.hasVisibleResults.emit(this.stageContents.length > 0 && this.history.length > 0);
+  }
 
   getInstructorName(record: any): string {
-    return `${record.instructor.lastName}, ${record.instructor.firstName}`;
+    const instructor = record?.instructors?.[0];
+    if (!instructor) {
+      return 'Instructor no disponible';
+    }
+
+    const firstName = instructor.firstName ?? 'No disponible';
+    const lastName = instructor.lastName ?? 'No disponible';
+    return `${lastName}, ${firstName}`;
+  }
+
+  getRecordsByContentTitle(title: string): StudyContentPayloadI[] {
+    return this.history.filter(r => r.data?.title === title);
+  }
+
+  onPreviousStage() {
+    this.previousStage.emit();
+  }
+
+  onNextStage() {
+    this.nextStage.emit();
   }
 }

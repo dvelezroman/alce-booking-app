@@ -13,7 +13,7 @@ import { UsersService } from '../../../services/users.service';
   styleUrls: ['./report-form.component.scss'],
 })
 export class ReportFormComponent {
-  @Output() filtersSubmitted = new EventEmitter<{ studentId: number; from?: string; to?: string }>();
+  @Output() filtersSubmitted = new EventEmitter<{ studentId: number; studentStage?: string; from?: string; to?: string }>();
   
   searchTerm: string = '';
   filteredUsers: UserDto[] = [];
@@ -63,7 +63,7 @@ export class ReportFormComponent {
     this.showUserDropdown = false;
     this.showStudentRequiredError = false;
 
-     console.log('estudiante:', user);
+     //console.log('estudiante:', user);
   }
 
   hideDropdown(): void {
@@ -81,9 +81,11 @@ export class ReportFormComponent {
     this.showStudentRequiredError = false;
 
     const studentId = this.selectedStudent?.student?.id ?? 0;
+    const studentStage = this.selectedStudent?.student?.stage?.description ?? 'No disponible';
 
     this.filtersSubmitted.emit({
       studentId: studentId,
+      studentStage: studentStage,
       from: this.fromDate,
       to: this.toDate
     });

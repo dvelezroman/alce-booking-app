@@ -1,26 +1,48 @@
 <div class="block-results">
+
+  <div class="stage-navigation-wrapper" *ngIf="history.length > 0">
+    <h3 class="student-stage-subtitle">
+      {{ stageDescription }}
+    </h3>
+    <span class="stage-navigation-buttons">
+      <button 
+        class="nav-button" 
+        [disabled]="!canGoPrevious" 
+        [ngClass]="{ 'disabled': !canGoPrevious }"
+        (click)="onPreviousStage()" 
+        title="Anterior">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button 
+        class="nav-button" 
+        [disabled]="!canGoNext" 
+        [ngClass]="{ 'disabled': !canGoNext }"
+        (click)="onNextStage()" 
+        title="Siguiente">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </span>
+  </div>
+
   <div class="table-container">
     <table class="table-results is-fullwidth" *ngIf="history.length > 0">
       <thead>
         <tr>
-          <th>Stage</th>
-          <th>Unidad</th>
-          <th>Título</th>
-          <th>Descripción</th>
-          <th>Fecha</th>
-          <th>Hora</th>
-          <th>Instructor</th>
+          <th *ngFor="let content of stageContents">
+            {{ content.title.split(' ')[0] }}
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let record of history">
-          <td data-label="Stage">{{ record.data.stage || 'No disponible' }}</td>
-          <td data-label="Unidad">{{ record.data.unit || 'No disponible' }}</td>
-          <td data-label="Título">{{ record.data.title || 'No disponible' }}</td>
-          <td data-label="Descripción">{{ record.data.description || 'No disponible' }}</td>
-          <td data-label="Fecha">{{ record.date | date: 'mediumDate' }}</td>
-          <td data-label="Hora">{{ record.hour }}:00</td>
-          <td data-label="Instructor">{{ getInstructorName(record) }}</td>
+        <tr>
+          <td *ngFor="let content of stageContents">
+            <ng-container *ngFor="let record of getRecordsByContentTitle(content.title)">
+              <div *ngFor="let date of record.dates" style="margin-bottom: 1rem;">
+                <div>{{ date | date: 'shortDate' }}</div>
+                <div>{{ getInstructorName(record) }}</div>
+              </div>
+            </ng-container>
+          </td>
         </tr>
       </tbody>
     </table>

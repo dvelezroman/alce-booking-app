@@ -7,7 +7,20 @@
 
   
   <div class="report-table-wrapper">
-    <app-report-table [history]="studentContentHistory"></app-report-table>
+    <h2 *ngIf="showStageTitle" class="student-stage-title">
+      Stage del Estudiante: {{ studentStageDescription }}
+    </h2>
+    <app-report-table
+      [history]="studentContentHistory"
+      [stageContents]="studentStageContents"
+      [stageDescription]="stages.length > 0 ? stages[currentStageIndex].description : ''"
+      [studentStageDescription]="studentStageDescription"
+      [canGoPrevious]="canGoPrevious"
+      [canGoNext]="canGoNext"
+      (previousStage)="goToPreviousStage()"
+      (nextStage)="goToNextStage()"
+      (hasVisibleResults)="onHasVisibleResults($event)"
+    ></app-report-table>
   </div>
   <p *ngIf="searchExecuted && studentContentHistory.length === 0" class="no-results-message">
     No hay contenidos encontrados.
