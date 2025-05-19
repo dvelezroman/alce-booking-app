@@ -14,7 +14,7 @@ export class AssessmentPointsConfigService {
     private http: HttpClient,
   ) {}
 
-  getById(id: number): Observable<AssessmentConfigI> {
+  getById(id: number = 1): Observable<AssessmentConfigI> {
     return this.http.get<AssessmentConfigI>(`${this.apiUrl}/${id}`);
   }
 
