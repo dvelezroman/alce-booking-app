@@ -524,7 +524,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear).pipe(
       tap(disabledData => {
         this.disabledDatesAndHours = disabledData;
-        console.log('Horas deshabilitadas:', this.disabledDatesAndHours);
+        //console.log('Horas deshabilitadas:', this.disabledDatesAndHours);
       })
     );
   }

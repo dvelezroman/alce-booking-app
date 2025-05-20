@@ -7,25 +7,36 @@
   <div class="hero-background"></div>
 
   <section class="hero">
-<div class="student-info-steps" *ngIf="isLoggedIn && isStudent">
-  <div class="step">
-    <div class="step-number">1</div>
-    <p class="step-text">Agendar tus próximas clases</p>
-  </div>
-  <div class="step">
-    <div class="step-number">2</div>
-    <p class="step-text">Buscar tus clases por fecha</p>
-  </div>
-  <div class="step">
-    <div class="step-number">3</div>
-    <p class="step-text">Asistir a tus sesiones en línea</p>
-  </div>
-</div>
+    <div class="student-info-steps" *ngIf="isLoggedIn && isStudent">
+      <div class="step">
+        <div class="step-number">1</div>
+        <p class="step-text">Agendar tus próximas clases</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <p class="step-text">Buscar tus clases por fecha</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <p class="step-text">Asistir a tus sesiones en línea</p>
+      </div>
+    </div>
   
     <div *ngIf="!isLoggedIn" class="hero-button-container">
       <a routerLink="/login" class="login-button">Ingresar</a>
     </div>
   </section>
+
+  <a
+    *ngIf="isStudent && isLoggedIn"
+    href="https://www.youtube.com/watch?v=P3990N0e8Pg"
+    target="_blank"
+    class="floating-help-button"
+    aria-label="Ayuda"
+    title="Ayuda"
+  >
+    <span class="material-icons">help_outline</span>
+  </a>
 
 </div>
 
