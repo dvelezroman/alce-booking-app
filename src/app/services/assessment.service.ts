@@ -39,7 +39,7 @@ export class AssessmentService {
     }
 
     if (!!studentId) {
-      params = params.set('unit', studentId.toString());
+      params = params.set('studentId', studentId.toString());
     }
 
     if (!!instructorId) {
@@ -49,6 +49,6 @@ export class AssessmentService {
     if (!!type) {
       params = params.set('type', type);
     }
-    return this.http.get<AssessementI[]>(`${this.apiUrl}/assessments`, { params });
+    return this.http.get<AssessementI[]>(`${this.apiUrl}`, { params });
   }
 }

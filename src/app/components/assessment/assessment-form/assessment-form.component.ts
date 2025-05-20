@@ -67,6 +67,9 @@ export class AssessmentFormComponent {
     this.filteredUsers = [];
     this.showUserDropdown = false;
     this.showStudentRequiredError = false;
+    this.note = '';
+    this.points = null;
+    this.showCommentBox = false;
   }
 
   hideDropdown(): void {
@@ -113,8 +116,10 @@ export class AssessmentFormComponent {
       points: this.points!,
       note: this.note || ''
     };
-
-    console.log('Payload generado:', payload);
+     
     this.assessmentCreated.emit(payload);
+    this.note = '';
+    this.points = null;
+    this.showCommentBox = false;
   }
 }
