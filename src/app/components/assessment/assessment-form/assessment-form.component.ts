@@ -16,8 +16,10 @@ import { AssessmentType, CreateAssessmentI } from '../../../services/dtos/assess
 export class AssessmentFormComponent {
   showPointsError = false;
   showCommentBox = false;
+
   @Input() instructorId: number | null = null;
   @Output() assessmentCreated = new EventEmitter<CreateAssessmentI>();
+  @Output() studentSelected = new EventEmitter<{ studentId: number, stageId: number, instructorId: number }>();
 
   searchTerm: string = '';
   filteredUsers: UserDto[] = [];
@@ -70,6 +72,14 @@ export class AssessmentFormComponent {
     this.note = '';
     this.points = null;
     this.showCommentBox = false;
+
+    if (user.student?.id && user.student?.stage?.id && this.instructorId !== null) {
+      this.studentSelected.emit({
+        studentId: user.student.id,
+        stageId: user.student.stage.id,
+        instructorId: this.instructorId
+      });
+    }
   }
 
   hideDropdown(): void {

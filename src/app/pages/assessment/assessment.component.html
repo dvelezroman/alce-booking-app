@@ -4,8 +4,9 @@
     </h1>
 
   <app-assessment-form
-  [instructorId]="instructorId"
-  (assessmentCreated)="handleAssessmentCreated($event)"
+    [instructorId]="instructorId"
+    (assessmentCreated)="handleAssessmentCreated($event)"
+    (studentSelected)="fetchAssessments($event.studentId.toString(), $event.stageId.toString(), $event.instructorId.toString())"
   ></app-assessment-form>
 
   <div class="assessment-table-wrapper">

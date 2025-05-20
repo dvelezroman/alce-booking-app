@@ -55,7 +55,7 @@ export class AssessmentComponent {
     });
   }
 
-  private fetchAssessments(studentId: string, stageId: string, instructorId: string) {
+  fetchAssessments(studentId: string, stageId: string, instructorId: string) {
     const params: FilterAssessmentI = {
       studentId,
       stageId,
