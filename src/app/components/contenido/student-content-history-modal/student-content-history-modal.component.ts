@@ -72,4 +72,5 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
   onNextStage() {
     this.nextStage.emit();
   }
+
 }
