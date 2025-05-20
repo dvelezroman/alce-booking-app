@@ -13,12 +13,9 @@ import { ModalComponent } from '../../components/modal/modal.component';
 @Component({
   selector: 'app-assessment',
   standalone: true,
-  imports: [CommonModule, 
-            AssessmentFormComponent,
-            ModalComponent
-          ],
+  imports: [CommonModule, AssessmentFormComponent, ModalComponent],
   templateUrl: './assessment.component.html',
-  styleUrl: './assessment.component.scss'
+  styleUrl: './assessment.component.scss',
 })
 export class AssessmentComponent {
   modal: ModalDto = modalInitializer();
@@ -39,11 +36,15 @@ export class AssessmentComponent {
   handleAssessmentCreated(payload: CreateAssessmentI): void {
     this.assessmentService.create(payload).subscribe({
       next: () => {
-        this.showModal(this.createModalParams(false, 'Evaluación registrada correctamente.'));
+        this.showModal(
+          this.createModalParams(false, 'Evaluación registrada correctamente.')
+        );
       },
       error: () => {
-        this.showModal(this.createModalParams(true, 'Error al registrar la evaluación.'));
-      }
+        this.showModal(
+          this.createModalParams(true, 'Error al registrar la evaluación.')
+        );
+      },
     });
   }
 
