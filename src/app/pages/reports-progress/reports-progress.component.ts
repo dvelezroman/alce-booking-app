@@ -18,6 +18,7 @@ export class ReportsProgressComponent implements OnInit {
   studentContentHistory: StudyContentPayloadI[] = [];
   stages: Stage[] = [];
   studentStageContents: StudyContentDto[] = [];
+  stagesWithContent: Stage[] = [];
   currentStageIndex: number = 0;
   searchExecuted = false;
   showStageTitle: boolean = false;
@@ -29,17 +30,31 @@ export class ReportsProgressComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadStages();
+    this.loadStagesWithContent();
   }
 
-  private loadStages(): void {
-    this.stagesService.getAll().subscribe({
-      next: (stages) => {
-        this.stages = stages;
-      },
-      error: () => {
-        console.error('Error al cargar los stages.');
-      },
+  private loadStagesWithContent(): void {
+    this.stagesService.getAll().subscribe(allStages => {
+      const stagesWithContent: Stage[] = [];
+      let processedCount = 0;
+
+      allStages.forEach(stage => {
+        this.studyContentService.filterBy(stage.id).subscribe(contents => {
+          if (contents.length > 0) {
+            stagesWithContent.push(stage);
+          }
+
+          processedCount++;
+          if (processedCount === allStages.length) {
+            this.stagesWithContent = stagesWithContent.sort((a, b) => {
+              const aNum = parseFloat(a.number.replace(/[^0-9.]/g, '')) || 0;
+              const bNum = parseFloat(b.number.replace(/[^0-9.]/g, '')) || 0;
+              return aNum - bNum;
+            });
+            this.stages = this.stagesWithContent;  
+          }
+        });
+      });
     });
   }
 
@@ -94,29 +109,21 @@ export class ReportsProgressComponent implements OnInit {
     });
   }
 
-  goToPreviousStage() {
-    let prevIndex = this.currentStageIndex - 1;
-    while (prevIndex >= 0) {
-      if (this.stageHasHistoryByDataStage(this.stages[prevIndex].description)) {
-        this.currentStageIndex = prevIndex;
-        this.loadStageContents(this.stages[prevIndex].id);
-        break;
-      }
-      prevIndex--;
-    }
+goToPreviousStage() {
+  if (this.currentStageIndex > 0) {
+    this.currentStageIndex--;
+    const stageId = this.stages[this.currentStageIndex].id;
+    this.loadStageContents(stageId);
   }
+}
 
-  goToNextStage() {
-    let nextIndex = this.currentStageIndex + 1;
-    while (nextIndex < this.stages.length) {
-      if (this.stageHasHistoryByDataStage(this.stages[nextIndex].description)) {
-        this.currentStageIndex = nextIndex;
-        this.loadStageContents(this.stages[nextIndex].id);
-        break;
-      }
-      nextIndex++;
-    }
+goToNextStage() {
+  if (this.currentStageIndex < this.stages.length - 1) {
+    this.currentStageIndex++;
+    const stageId = this.stages[this.currentStageIndex].id;
+    this.loadStageContents(stageId);
   }
+}
 
   stageHasHistoryByDataStage(stageDescription: string): boolean {
     return this.studentContentHistory.some(
@@ -124,16 +131,12 @@ export class ReportsProgressComponent implements OnInit {
     );
   }
 
-    get canGoPrevious(): boolean {
-    return this.stages.slice(0, this.currentStageIndex).some(stage =>
-      this.stageHasHistoryByDataStage(stage.description)
-    );
+  get canGoPrevious(): boolean {
+    return this.currentStageIndex > 0;
   }
 
   get canGoNext(): boolean {
-    return this.stages.slice(this.currentStageIndex + 1).some(stage =>
-      this.stageHasHistoryByDataStage(stage.description)
-    );
+    return this.currentStageIndex < this.stages.length - 1;
   }
 
   onHasVisibleResults(visible: boolean) {
