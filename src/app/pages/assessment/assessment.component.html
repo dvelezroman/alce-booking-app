@@ -1,1 +1,21 @@
-<p>assessment works!</p>
+<section class="section">
+    <h1 class="reports-progress-header reports-progress-title">
+        Evaluar Estudiante
+    </h1>
+
+  <app-assessment-form
+  [instructorId]="instructorId"
+  (assessmentCreated)="handleAssessmentCreated($event)"
+  ></app-assessment-form>
+</section>
+
+ <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm && modal.confirm()"
+    (close)="modal.close()"
+  />

@@ -1,0 +1,90 @@
+<div class="form-container">
+
+  <div class="field relative-container">
+    <label class="label">Estudiante</label>
+    <div class="control has-icons-left">
+      <input
+        class="input"
+        [class.is-danger]="showStudentRequiredError"
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+        (focus)="showUserDropdown = true"
+        (blur)="hideDropdown()"
+        placeholder="Escribe el nombre del estudiante"
+      />
+      <span class="icon is-left">
+        <i class="fas fa-search"></i>
+      </span>
+    </div>
+
+    <div
+      class="dropdown-list-fixed"
+      *ngIf="showUserDropdown && filteredUsers.length > 0"
+    >
+      <div
+        class="dropdown-item"
+        *ngFor="let user of filteredUsers"
+        (click)="selectUser(user)"
+      >
+        {{ user.firstName }} {{ user.lastName }}
+      </div>
+    </div>
+    <p *ngIf="showStudentRequiredError" class="help is-danger">
+      Debes seleccionar un estudiante.
+    </p>
+  </div>
+
+  <div class="field mt-4">
+    <label class="label">Tipo de Evaluación</label>
+    <div class="control">
+      <select class="input" [(ngModel)]="type">
+        <option *ngFor="let t of assessmentTypes" [value]="t">{{ t }}</option>
+      </select>
+    </div>
+  </div>
+    <div class="field mt-4 is-flex is-justify-content-space-between">
+        <div class="control" style="width: 48%;">
+            <label class="label">Nota</label>
+            <input
+            class="input"
+            type="number"
+            min="0"
+            max="100"
+            [(ngModel)]="points"
+            placeholder="0-100"
+            />
+            <p *ngIf="showPointsError" class="help is-danger">
+            Ingresar calificación entre 0 - 100.
+            </p>
+        </div>
+
+        <div class="control" style="width: 48%;">
+            <span class="label" style="visibility: hidden;">Comentario</span>
+            <button
+            class="button is-warning is-fullwidth"
+            type="button"
+            [disabled]="points === null || points >= 80"
+            (click)="showCommentBox = !showCommentBox"
+            >
+            Comentario
+            </button>
+        </div>
+    </div>
+
+    <!-- Textarea debajo -->
+    <div *ngIf="showCommentBox" class="field mt-3">
+        <textarea
+            class="textarea full-comment-textarea"
+            placeholder="Escribe un comentario"
+            [(ngModel)]="note"
+            rows="4"
+        ></textarea>
+    </div>
+
+  <div class="field mt-4">
+    <button class="button is-primary is-fullwidth" (click)="submitAssessment()">
+      Generar Evaluación
+    </button>
+  </div>
+</div>

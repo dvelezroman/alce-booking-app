@@ -15,7 +15,7 @@ export class AssessmentService {
   ) {}
 
   create(createData: CreateAssessmentI): Observable<AssessementI> {
-    return this.http.post<AssessementI>(`${this.apiUrl}/assessments`, createData);
+    return this.http.post<AssessementI>(`${this.apiUrl}`, createData);
   }
 
   delete(id: number): Observable<AssessementI> {

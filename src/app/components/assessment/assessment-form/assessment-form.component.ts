@@ -1,0 +1,120 @@
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Subject, debounceTime } from 'rxjs';
+import { UserDto } from '../../../services/dtos/user.dto';
+import { UsersService } from '../../../services/users.service';
+import { AssessmentType, CreateAssessmentI } from '../../../services/dtos/assessment.dto';
+
+@Component({
+  selector: 'app-assessment-form',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './assessment-form.component.html',
+  styleUrls: ['./assessment-form.component.scss'],
+})
+export class AssessmentFormComponent {
+  showPointsError = false;
+  showCommentBox = false;
+  @Input() instructorId: number | null = null;
+  @Output() assessmentCreated = new EventEmitter<CreateAssessmentI>();
+
+  searchTerm: string = '';
+  filteredUsers: UserDto[] = [];
+  selectedStudent?: UserDto;
+  showUserDropdown: boolean = false;
+  searchInput$ = new Subject<string>();
+  
+  assessmentTypes = Object.values(AssessmentType); 
+  type: AssessmentType = AssessmentType.Grammar;
+  points: number | null = null;
+  note: string = '';
+
+  showStudentRequiredError = false;
+
+  constructor(private usersService: UsersService) {
+    this.searchInput$.pipe(debounceTime(300)).subscribe((term: string) => {
+      this.filterUsers(term);
+    });
+  }
+
+  onSearchChange(term: string): void {
+    this.searchInput$.next(term);
+  }
+
+  filterUsers(term: string): void {
+    if (!term || term.trim().length < 2) {
+      this.filteredUsers = [];
+      this.showUserDropdown = false;
+      return;
+    }
+
+    this.usersService.searchUsers(undefined, undefined, undefined, term, term, undefined).subscribe({
+      next: (result) => {
+        this.filteredUsers = result.users;
+        this.showUserDropdown = true;
+      },
+      error: () => {
+        this.filteredUsers = [];
+        this.showUserDropdown = false;
+      }
+    });
+  }
+
+  selectUser(user: UserDto): void {
+    this.selectedStudent = user;
+    this.searchTerm = `${user.firstName} ${user.lastName}`;
+    this.filteredUsers = [];
+    this.showUserDropdown = false;
+    this.showStudentRequiredError = false;
+  }
+
+  hideDropdown(): void {
+    setTimeout(() => {
+      this.showUserDropdown = false;
+    }, 200);
+  }
+
+  get isBelowThreshold(): boolean {
+    return this.points !== null && this.points < 80;
+  }
+
+  private isPointsInvalid(): boolean {
+    return (
+      this.points === null ||
+      isNaN(this.points) ||
+      this.points < 0 ||
+      this.points > 100
+    );
+  }
+
+  submitAssessment(): void {
+    if (
+      !this.selectedStudent?.student?.id ||
+      !this.selectedStudent?.student?.stage?.id ||
+      this.instructorId === null
+    ) {
+      this.showStudentRequiredError = true;
+      return;
+    }
+
+    if (this.isPointsInvalid()) {
+      this.showPointsError = true;
+      return;
+    }
+
+    this.showPointsError = false;
+
+    const payload: CreateAssessmentI = {
+      studentId: this.selectedStudent.student.id,
+      stageId: this.selectedStudent.student.stage.id,
+      instructorId: this.instructorId,
+      type: this.type,
+      points: this.points!,
+      note: this.note || ''
+    };
+
+    console.log('Payload generado:', payload);
+    this.assessmentCreated.emit(payload);
+  }
+}
