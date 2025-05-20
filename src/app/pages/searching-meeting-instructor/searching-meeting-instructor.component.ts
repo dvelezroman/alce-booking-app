@@ -287,8 +287,9 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   loadStageContents(stageId: number): void {
     this.studyContentService.filterBy(stageId).subscribe({
-      next: (stageContents) => {
-        this.studentStageContents = stageContents;
+      next: (contents) => {
+        const validContents = contents.filter(c => typeof c.unit === 'number' && c.unit > 0);
+        this.studentStageContents = validContents;
       },
       error: () => {
         this.showModal(this.createModalParams(true, 'Error al cargar los contenidos del stage.'));
@@ -332,8 +333,13 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     this.studentContentHistory = history;
 
-    const oldestContent = [...history].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
-    const targetStageIndex = this.stages.findIndex(s => s.description === oldestContent.data?.stage);
+    const oldestContent = [...history].sort((a, b) =>
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+    )[0];
+
+    const targetStageIndex = this.stages.findIndex(
+      s => s.description === oldestContent.data?.stage
+    );
 
     if (targetStageIndex === -1) {
       this.finishLoadingWithMessage('No se encontró el stage correspondiente.');
@@ -341,7 +347,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     }
 
     this.currentStageIndex = targetStageIndex;
-    const targetStageId = this.stages[targetStageIndex].id;
+    const targetStageId = this.filteredStages[targetStageIndex].id;
 
     this.studyContentService.filterBy(targetStageId).subscribe({
       next: (contents) => this.handleStageContentsLoaded(contents),
@@ -417,41 +423,29 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   }
 
   goToPreviousStage() {
-    let prevIndex = this.currentStageIndex - 1;
-    while (prevIndex >= 0) {
-      const prevStage = this.stages[prevIndex];
-      if (this.stageHasHistoryByDataStage(prevStage.description)) {
-        this.currentStageIndex = prevIndex;
-        this.loadStageContents(prevStage.id);
-        break;
-      }
-      prevIndex--;
+    const prevIndex = this.currentStageIndex - 1;
+    if (prevIndex >= 0) {
+      this.currentStageIndex = prevIndex;
+      const prevStageId = this.filteredStages[prevIndex].id;
+      this.loadStageContents(prevStageId);
     }
   }
 
   goToNextStage() {
-    let nextIndex = this.currentStageIndex + 1;
-    while (nextIndex < this.stages.length) {
-      const nextStage = this.stages[nextIndex];
-      if (this.stageHasHistoryByDataStage(nextStage.description)) {
-        this.currentStageIndex = nextIndex;
-        this.loadStageContents(nextStage.id);
-        break;
-      }
-      nextIndex++;
+    const nextIndex = this.currentStageIndex + 1;
+    if (nextIndex < this.filteredStages.length) {
+      this.currentStageIndex = nextIndex;
+      const nextStageId = this.filteredStages[nextIndex].id;
+      this.loadStageContents(nextStageId);
     }
   }
 
   get canGoPrevious(): boolean {
-    return this.stages.slice(0, this.currentStageIndex).some(stage =>
-      this.stageHasHistoryByDataStage(stage.description)
-    );
+    return this.currentStageIndex > 0;
   }
 
   get canGoNext(): boolean {
-    return this.stages.slice(this.currentStageIndex + 1).some(stage =>
-      this.stageHasHistoryByDataStage(stage.description)
-    );
+    return this.currentStageIndex < this.filteredStages.length - 1;
   }
 }
 

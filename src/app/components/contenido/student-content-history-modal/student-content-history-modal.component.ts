@@ -52,8 +52,7 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
   loadStageContents(stageId: number): void {
     this.studyContentService.filterBy(stageId).subscribe({
       next: (contents) => {
-        this.stageContents = contents;
-        //console.log('contenidos cargados:', contents);
+        this.stageContents = contents.length > 0 ? contents : [];
       },
       error: (err) => {
         console.error('Error al cargar los contenidos del stage', err);
