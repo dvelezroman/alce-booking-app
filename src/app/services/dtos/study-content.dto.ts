@@ -50,9 +50,9 @@ export interface StudyContentPayloadI {
   dates?: string[];
   hour: number;
   stageId: number;
-  instructorId: number;
-  instructor: {
+ instructorId: number;
+  instructors: {
     firstName: string;
     lastName: string;
-  }
+  }[];
 }

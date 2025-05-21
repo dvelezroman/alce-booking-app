@@ -15,7 +15,6 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
   @Input() show: boolean = false;
   @Input() stageId?: number;
   @Input() stageContents: StudyContentDto[] = [];
-  @Input() instructorName?: string;
   @Input() stageDescription?: string;
   @Output() close = new EventEmitter<void>();
   @Output() previousStage = new EventEmitter<void>();
@@ -44,6 +43,14 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
       return this.stageContents[0].stage.description;
     }
     return this.stageDescription || 'Stage no disponible';
+  }
+
+  getInstructorByIndex(record: StudyContentPayloadI, index: number): string {
+    const instructor = record?.instructors?.[index] || record?.instructors?.[0];
+    if (!instructor) return 'Instructor no disponible';
+    const firstName = instructor.firstName ?? 'No disponible';
+    const lastName = instructor.lastName ?? 'No disponible';
+    return `${lastName}, ${firstName}`;
   }
 
   getRecordsByContentTitle(title: string): StudyContentPayloadI[] {

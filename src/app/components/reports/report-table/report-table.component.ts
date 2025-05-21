@@ -27,12 +27,9 @@ export class ReportTableComponent {
     this.hasVisibleResults.emit(this.stageContents.length > 0 && this.history.length > 0);
   }
 
-  getInstructorName(record: any): string {
-    const instructor = record?.instructors?.[0];
-    if (!instructor) {
-      return 'Instructor no disponible';
-    }
-
+  getInstructorByIndex(record: StudyContentPayloadI, index: number): string {
+    const instructor = record?.instructors?.[index];
+    if (!instructor) return 'Instructor no disponible';
     const firstName = instructor.firstName ?? 'No disponible';
     const lastName = instructor.lastName ?? 'No disponible';
     return `${lastName}, ${firstName}`;

@@ -54,10 +54,10 @@
               <td *ngFor="let content of stageContents; let i = index"
                   [ngClass]="{ 'column-hovered': hoveredColumnIndex === i }">
                 <ng-container *ngFor="let record of getRecordsByContentTitle(content.title)">
-                  <ng-container *ngFor="let date of record.dates">
+                  <ng-container *ngFor="let date of record.dates; let j = index">
                     <div style="margin-bottom: 1rem;">
                       <div>{{ date | date: 'shortDate' }}</div>
-                      <div>{{ instructorName || 'Instructor no disponible' }}</div>
+                      <div>{{ getInstructorByIndex(record, j) }}</div>
                     </div>
                   </ng-container>
                 </ng-container>
