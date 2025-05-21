@@ -12,7 +12,7 @@
       <tr *ngFor="let a of assessments">
         <td data-label="Stage">{{ a.stageId || '-' }}</td>
         <td data-label="Tipo">{{ a.type }}</td>
-        <td data-label="Nota">{{ a.points }}</td>
+        <td data-label="Nota" [ngClass]="{ 'max-point-reached': isMaxReached(a.points) }">{{ a.points }}</td>
         <td data-label="Comentario">
           {{ a.note || 'Sin comentario' }}
         </td>

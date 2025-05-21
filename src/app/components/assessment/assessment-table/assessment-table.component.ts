@@ -11,4 +11,9 @@ import { AssessementI } from '../../../services/dtos/assessment.dto';
 })
 export class AssessmentTableComponent {
   @Input() assessments: AssessementI[] = [];
+  @Input() maxPointsAssessment: number | null = null;
+
+  isMaxReached(points: number): boolean {
+  return this.maxPointsAssessment !== null && points >= this.maxPointsAssessment;
+}
 }

@@ -17,6 +17,7 @@ export class AssessmentFormComponent {
   showPointsError = false;
   showCommentBox = false;
 
+  @Input() blockedTypes: AssessmentType[] = [];
   @Input() instructorId: number | null = null;
   @Output() assessmentCreated = new EventEmitter<CreateAssessmentI>();
   @Output() studentSelected = new EventEmitter<{ studentId: number, stageId: number, instructorId: number }>();

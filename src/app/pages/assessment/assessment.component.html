@@ -5,12 +5,19 @@
 
   <app-assessment-form
     [instructorId]="instructorId"
+    [blockedTypes]="blockedTypes"
     (assessmentCreated)="handleAssessmentCreated($event)"
     (studentSelected)="fetchAssessments($event.studentId.toString(), $event.stageId.toString(), $event.instructorId.toString())"
   ></app-assessment-form>
 
   <div class="assessment-table-wrapper">
-    <app-assessment-table [assessments]="assessments" />
+    <app-assessment-table 
+      [assessments]="assessments"
+      [maxPointsAssessment]="maxPointsAssessment"
+     />
+  </div>
+  <div class="no-results" *ngIf="hasSearched && assessments.length === 0">
+    No hay evaluaciones disponibles para este estudiante.
   </div>
 
 </section>

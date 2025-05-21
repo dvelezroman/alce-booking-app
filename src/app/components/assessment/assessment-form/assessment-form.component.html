@@ -38,7 +38,7 @@
     <label class="label">Tipo de Evaluación</label>
     <div class="control">
       <select class="input" [(ngModel)]="type">
-        <option *ngFor="let t of assessmentTypes" [value]="t">{{ t }}</option>
+        <option *ngFor="let t of assessmentTypes" [value]="t" [disabled]="blockedTypes.includes(t)">{{ t }}</option>
       </select>
     </div>
   </div>
