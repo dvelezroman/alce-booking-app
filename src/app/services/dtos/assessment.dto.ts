@@ -1,8 +1,8 @@
 export enum AssessmentType {
   Speaking = 'Speaking',
   Grammar = 'Grammar',
-  Listening = 'Listening',
-  Writing = 'Writing',
+  // Listening = 'Listening',
+  // Writing = 'Writing',
 }
 
 export interface AssessementI {
