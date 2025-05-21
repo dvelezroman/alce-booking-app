@@ -53,7 +53,7 @@ export class SidebarComponent implements OnInit {
     { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/feature-flag', roles: [UserRole.ADMIN] },
     { icon: 'reportes', text: 'Reportes de Estudiante', route: '/reports-detailed', roles: [UserRole.ADMIN] },
     { icon: 'reportes', text: 'Reportes de Progreso', route: '/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
-    { icon: 'test', text: 'Evaluar Estudiante', route: '/assessment', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
+    { icon: 'test', text: 'Evaluar Estudiante', route: '/assessment', roles: [UserRole.INSTRUCTOR] },
     { icon: 'test', text: 'Reportes de Evaluaciones', route: '/assessment-reports', roles: [UserRole.ADMIN] },
   ];
 
