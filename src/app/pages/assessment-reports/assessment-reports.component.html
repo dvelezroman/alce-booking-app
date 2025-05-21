@@ -1,0 +1,24 @@
+<section class="section">
+  <h1 class="reports-progress-header reports-progress-title">
+    Reportes de Evaluaciones
+  </h1>
+
+  <app-assessment-report-form
+    (searchTriggered)="handleAssessmentSearch($event)">
+  </app-assessment-report-form>
+
+  <div class="assessment-table-wrapper">
+    <app-assessment-table [assessments]="assessments" />
+  </div>
+</section>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm && modal.confirm()"
+  (close)="modal.close()"
+/>

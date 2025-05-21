@@ -1,0 +1,52 @@
+<div class="form-container">
+  <div class="field relative-container">
+    <label class="label">Estudiante</label>
+    <div class="control has-icons-left">
+      <input
+        class="input"
+        [class.is-danger]="showStudentRequiredError"
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+        (focus)="showUserDropdown = true"
+        (blur)="hideDropdown()"
+        placeholder="Escribe el nombre del estudiante"
+      />
+      <span class="icon is-left">
+        <i class="fas fa-search"></i>
+      </span>
+    </div>
+
+    <div
+      class="dropdown-list-fixed"
+      *ngIf="showUserDropdown && filteredUsers.length > 0"
+    >
+      <div
+        class="dropdown-item"
+        *ngFor="let user of filteredUsers"
+        (click)="selectUser(user)"
+      >
+        {{ user.firstName }} {{ user.lastName }}
+      </div>
+    </div>
+    <p *ngIf="showStudentRequiredError" class="help is-danger">
+      Debes seleccionar un estudiante.
+    </p>
+  </div>
+
+  <div class="field mt-4">
+    <label class="label">Tipo de Evaluación</label>
+    <div class="control">
+      <select class="input" [(ngModel)]="type">
+        <option [ngValue]="null">Todos</option>
+        <option *ngFor="let t of assessmentTypes" [value]="t">{{ t }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field mt-4">
+    <button class="button is-primary is-fullwidth" (click)="triggerSearch()">
+      Buscar Evaluaciones
+    </button>
+  </div>
+</div>

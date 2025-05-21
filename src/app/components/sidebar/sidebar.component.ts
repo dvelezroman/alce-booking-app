@@ -54,6 +54,7 @@ export class SidebarComponent implements OnInit {
     { icon: 'reportes', text: 'Reportes de Estudiante', route: '/reports-detailed', roles: [UserRole.ADMIN] },
     { icon: 'reportes', text: 'Reportes de Progreso', route: '/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
     { icon: 'test', text: 'Evaluar Estudiante', route: '/assessment', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
+    { icon: 'test', text: 'Reportes de Evaluaciones', route: '/assessment-reports', roles: [UserRole.ADMIN] },
   ];
 
   navGrouped: {
@@ -144,7 +145,8 @@ export class SidebarComponent implements OnInit {
         icon: 'reportes',
         items: [
           this.findNavItemByRoute('/reports-detailed'),
-          this.findNavItemByRoute('/reports-progress')
+          this.findNavItemByRoute('/reports-progress'),
+          this.findNavItemByRoute('/assessment-reports')
         ].filter(item => item.roles.includes(role))
       },
       {

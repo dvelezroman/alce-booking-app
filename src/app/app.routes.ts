@@ -21,7 +21,7 @@ import { ProcessedEventsComponent } from './pages/processed-events/processed-eve
 import { ContentComponent } from './pages/content/content.component';
 import { ReportsProgressComponent } from './pages/reports-progress/reports-progress.component';
 import { AssessmentComponent } from './pages/assessment/assessment.component';
-
+import { AssessmentReportsComponent } from './pages/assessment-reports/assessment-reports.component';
 
 
 export const routes: Routes = [
@@ -46,6 +46,8 @@ export const routes: Routes = [
   { path: 'reports-detailed', component: ReportsDetailedComponent, canActivate: [AuthGuard] },
   { path: 'reports-progress', component: ReportsProgressComponent, canActivate: [AuthGuard] },
   { path: 'assessment', component: AssessmentComponent, canActivate: [AuthGuard] },
+  { path: 'assessment-reports', component: AssessmentReportsComponent, canActivate: [AuthGuard] },
+
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
 ];
