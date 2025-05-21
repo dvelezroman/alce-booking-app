@@ -17,7 +17,7 @@ export class AssessmentReportFormComponent {
   @Output() searchTriggered = new EventEmitter<{
     studentId: number;
     stageId: number;
-    type: AssessmentType;
+    type: AssessmentType | null;
   }>();
 
   searchTerm: string = '';
@@ -27,7 +27,7 @@ export class AssessmentReportFormComponent {
   searchInput$ = new Subject<string>();
 
   assessmentTypes = Object.values(AssessmentType);
-  type: AssessmentType = AssessmentType.Grammar;
+  type: AssessmentType | null = null;
 
   showStudentRequiredError = false;
 
@@ -62,7 +62,6 @@ export class AssessmentReportFormComponent {
 
   selectUser(user: UserDto): void {
     this.selectedStudent = user;
-    console.log('[SELECTED STUDENT]', this.selectedStudent);
     this.searchTerm = `${user.firstName} ${user.lastName}`;
     this.filteredUsers = [];
     this.showUserDropdown = false;
@@ -76,7 +75,6 @@ export class AssessmentReportFormComponent {
   }
 
   triggerSearch(): void {
-
     if (
       !this.selectedStudent?.student?.id ||
       !this.selectedStudent?.student?.stageId

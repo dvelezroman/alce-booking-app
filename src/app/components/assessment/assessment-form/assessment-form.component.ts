@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
 import { Subject, debounceTime } from 'rxjs';
 import { UserDto } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
@@ -16,6 +16,7 @@ import { AssessmentType, CreateAssessmentI } from '../../../services/dtos/assess
 export class AssessmentFormComponent {
   showPointsError = false;
   showCommentBox = false;
+  showTypeRequiredError = false;
 
   @Input() blockedTypes: AssessmentType[] = [];
   @Input() instructorId: number | null = null;
@@ -29,7 +30,7 @@ export class AssessmentFormComponent {
   searchInput$ = new Subject<string>();
   
   assessmentTypes = Object.values(AssessmentType); 
-  type: AssessmentType = AssessmentType.Grammar;
+  type: AssessmentType | null = null;
   points: number | null = null;
   note: string = '';
 
@@ -102,15 +103,21 @@ export class AssessmentFormComponent {
     );
   }
 
-  submitAssessment(): void {
-    if (
-      !this.selectedStudent?.student?.id ||
-      !this.selectedStudent?.student?.stage?.id ||
-      this.instructorId === null
-    ) {
-      this.showStudentRequiredError = true;
-      return;
+  submitAssessment(typeControl?: NgModel): void {
+    if (typeControl && typeControl.invalid) {
+      typeControl.control.markAsTouched();
     }
+
+    const student = this.selectedStudent?.student;
+    const stageId = student?.stage?.id;
+    const studentId = student?.id;
+
+    const isStudentValid = !!studentId && !!stageId;
+    const isTypeValid = this.type !== null && !this.blockedTypes.includes(this.type);
+
+    this.showStudentRequiredError = !isStudentValid;
+
+    if (!isStudentValid || !isTypeValid) return;
 
     if (this.isPointsInvalid()) {
       this.showPointsError = true;
@@ -120,17 +127,22 @@ export class AssessmentFormComponent {
     this.showPointsError = false;
 
     const payload: CreateAssessmentI = {
-      studentId: this.selectedStudent.student.id,
-      stageId: this.selectedStudent.student.stage.id,
-      instructorId: this.instructorId,
-      type: this.type,
+      studentId: studentId!,
+      stageId: stageId!,
+      instructorId: this.instructorId!,
+      type: this.type!,
       points: this.points!,
       note: this.note || ''
     };
-     
+
     this.assessmentCreated.emit(payload);
+    this.resetForm();
+  }
+
+  private resetForm(): void {
     this.note = '';
     this.points = null;
+    this.type = null;
     this.showCommentBox = false;
   }
 }

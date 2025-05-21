@@ -37,11 +37,33 @@
   <div class="field mt-4">
     <label class="label">Tipo de Evaluación</label>
     <div class="control">
-      <select class="input" [(ngModel)]="type">
-        <option *ngFor="let t of assessmentTypes" [value]="t" [disabled]="blockedTypes.includes(t)">{{ t }}</option>
+      <select
+        name="assessmentType"
+        class="input"
+        [(ngModel)]="type"
+        required
+        [class.is-danger]="typeControl?.invalid && typeControl?.touched"
+        #typeControl="ngModel"
+      >
+        <option [ngValue]="null" disabled>Seleccionar tipo</option>
+        <option
+          *ngFor="let t of assessmentTypes"
+          [value]="t"
+          [disabled]="blockedTypes.includes(t)"
+        >
+          {{ t }}
+        </option>
       </select>
+
+      <p
+        *ngIf="typeControl?.invalid && typeControl?.touched"
+        class="help is-danger"
+      >
+        Debes seleccionar un tipo de evaluación.
+      </p>
     </div>
   </div>
+
   <div class="field mt-4 is-flex is-justify-content-space-between">
     <div class="control" style="width: 48%">
       <label class="label">Nota</label>
@@ -63,7 +85,7 @@
       <button
         class="button is-warning is-fullwidth"
         type="button"
-        [disabled]="points === null || points >= 80"
+        [disabled]="points === null || points >= 85"
         (click)="showCommentBox = !showCommentBox"
       >
         Comentario
@@ -82,7 +104,7 @@
   </div>
 
   <div class="field mt-4">
-    <button class="button is-primary is-fullwidth" (click)="submitAssessment()">
+    <button class="button is-primary is-fullwidth" (click)="submitAssessment(typeControl)">
       Generar Evaluación
     </button>
   </div>

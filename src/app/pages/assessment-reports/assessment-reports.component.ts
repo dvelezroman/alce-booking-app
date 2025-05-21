@@ -7,6 +7,7 @@ import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { AssessmentTableComponent } from '../../components/assessment/assessment-table/assessment-table.component';
 import { AssessmentReportFormComponent } from '../../components/assessment-report-form/assessment-report-form.component';
+import { AssessmentPointsConfigService } from '../../services/assessment-points-config.service';
 
 @Component({
   selector: 'app-assessment-reports',
@@ -24,23 +25,46 @@ export class AssessmentReportsComponent{
   modal: ModalDto = modalInitializer();
   instructorId: number | null = null;
   assessments: AssessementI[] = [];
+  maxPointsAssessment: number | null = null;
 
   constructor(
-    private store: Store,
-    private assessmentService: AssessmentService
+    private assessmentService: AssessmentService,
+    private assessmentPointsConfigService: AssessmentPointsConfigService
   ) {
+  }
+
+   ngOnInit(): void {
+    this.loadAssessmentConfig();
+  }
+
+   loadAssessmentConfig(): void {
+    this.assessmentPointsConfigService.getById().subscribe({
+      next: (config) => {
+        this.maxPointsAssessment = config.maxPointsAssessment;
+        //console.log('maxPointsAssessment:', this.maxPointsAssessment);
+      },
+      error: () => {
+        this.showModal(
+          this.createModalParams(true, 'Error al cargar configuración.')
+        );
+      }
+    });
   }
 
   handleAssessmentSearch(filters: {
     studentId: number;
     stageId: number;
-    type: string;
+    type: AssessmentType | null;
   }): void {
     const params: FilterAssessmentI = {
       studentId: filters.studentId.toString(),
       stageId: filters.stageId.toString(),
       type: filters.type as AssessmentType
     };
+
+    if (filters.type !== null) {
+      params.type = filters.type;
+    }
 
     this.assessmentService.findAll(params).subscribe({
       next: (result) => {

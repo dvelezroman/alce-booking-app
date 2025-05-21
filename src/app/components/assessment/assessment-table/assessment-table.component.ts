@@ -14,6 +14,10 @@ export class AssessmentTableComponent {
   @Input() maxPointsAssessment: number | null = null;
 
   isMaxReached(points: number): boolean {
-  return this.maxPointsAssessment !== null && points >= this.maxPointsAssessment;
-}
+    return this.maxPointsAssessment !== null && points >= this.maxPointsAssessment;
+  }
+
+  isBelowMax(points: number): boolean {
+    return this.maxPointsAssessment !== null && points < this.maxPointsAssessment;
+  }
 }
