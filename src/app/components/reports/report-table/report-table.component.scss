@@ -70,11 +70,10 @@
 }
 
 .table-results {
-  width: 100%;
+   width: auto;
   border-collapse: collapse;
-  table-layout: fixed;
-  min-width: 1180px;
-  table-layout: fixed;
+  table-layout: auto;
+  min-width: 1200px;
   word-wrap: break-word;
 }
 
@@ -86,30 +85,37 @@
 
 .table-results th,
 .table-results td {
+  max-width: 130px;
+  min-width: 135px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   border-left: 1px solid #dcdcdc;
   border-right: 1px solid #dcdcdc;
+  text-align: center;
+  color: #1f1f1f;
+  transition: min-width 0.8s ease-in-out, max-width 0.8s ease-in-out;
+}
+
+.table-results th.column-hovered,
+.table-results td.column-hovered {
+  min-width: max-content;
+  max-width: 500px;
 }
 
 .table-results th {
   padding: 0.55rem;
   font-size: 0.75rem;
-  max-width: 130px; 
-  overflow: hidden;
   background-color: #e5effa;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: center;
-  white-space: nowrap;
-  color: #1f1f1f; 
   cursor: default;
 }
 
 .table-results td {
-  padding: 0.75rem;
+  padding: 0.8rem;
   font-size: 0.7rem;
-  text-align: center;
   background-color: #ffffff;
   border-bottom: 1px solid #ddd;
-  color: #1f1f1f; 
-
+  white-space: normal; 
+  word-wrap: break-word; 
+  overflow-wrap: anywhere; 
 }

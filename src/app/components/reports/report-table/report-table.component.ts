@@ -21,6 +21,8 @@ export class ReportTableComponent {
   @Output() nextStage = new EventEmitter<void>();
   @Output() hasVisibleResults = new EventEmitter<boolean>();
 
+  hoveredColumnIndex: number | null = null;
+
   ngOnChanges(changes: SimpleChanges): void {
     this.hasVisibleResults.emit(this.stageContents.length > 0 && this.history.length > 0);
   }
@@ -46,5 +48,13 @@ export class ReportTableComponent {
 
   onNextStage() {
     this.nextStage.emit();
+  }
+
+  onMouseEnterColumn(index: number): void {
+    this.hoveredColumnIndex = index;
+  }
+
+  onMouseLeaveColumn(): void {
+    this.hoveredColumnIndex = null;
   }
 }

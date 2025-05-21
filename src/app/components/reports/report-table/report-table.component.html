@@ -28,14 +28,19 @@
     <table class="table-results is-fullwidth" *ngIf="history.length > 0">
       <thead>
         <tr>
-          <th *ngFor="let content of stageContents" [title]="content.title">
+          <th *ngFor="let content of stageContents; let i = index"
+              [title]="content.title"
+              (mouseenter)="onMouseEnterColumn(i)"
+              (mouseleave)="onMouseLeaveColumn()"
+              [ngClass]="{ 'column-hovered': hoveredColumnIndex === i }">
             {{ content.title }}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td *ngFor="let content of stageContents">
+          <td *ngFor="let content of stageContents; let i = index"
+              [ngClass]="{ 'column-hovered': hoveredColumnIndex === i }">
             <ng-container *ngFor="let record of getRecordsByContentTitle(content.title)">
               <div *ngFor="let date of record.dates" class="record-date-entry">
                 <div>{{ date | date: 'shortDate' }}</div>

@@ -23,7 +23,8 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
   @Input() canGoPrevious: boolean = true;
   @Input() canGoNext: boolean = true;  
 
-
+ hoveredColumnIndex: number | null = null;
+ 
   constructor(private studyContentService: StudyContentService) {}
 
   ngOnInit(): void {
@@ -71,6 +72,14 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
 
   onNextStage() {
     this.nextStage.emit();
+  }
+
+  onMouseEnterColumn(index: number): void {
+    this.hoveredColumnIndex = index;
+  }
+
+  onMouseLeaveColumn(): void {
+    this.hoveredColumnIndex = null;
   }
 
 }
