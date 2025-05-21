@@ -37,33 +37,25 @@ export class ContentSelectorComponent {
     });
   }
 
- addContent(event: Event) {
-  const target = event.target as HTMLSelectElement | null;
+  addContent(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const contentId = Number(target.value);
+    const content = this.availableContents.find(c => c.id === contentId);
 
-  if (!target || !target.value) {
-    return; 
+    if (content && !this.selectedContents.some(c => c.id === contentId)) {
+      this.selectedContents.push(content);
+    }
+
+    target.value = '';
   }
-  const contentId = Number(target.value);
-  const content = this.availableContents.find(c => c.id === contentId);
-
-  if (content && !this.selectedContents.find(c => c.id === contentId)) {
-    this.selectedContents.push(content);
-  }
-
-  target.value = '';
-}
 
   removeContent(contentId: number) {
     this.selectedContents = this.selectedContents.filter(c => c.id !== contentId);
   }
 
-  private emitSelectedContentIds() {
+  confirmSelection() {
     const ids = this.selectedContents.map(c => c.id);
     this.contentIdsSelected.emit(ids);
+    
   }
-
-  confirmSelection() {
-  this.emitSelectedContentIds();
-  this.selectedContents = [];
-}
 }
