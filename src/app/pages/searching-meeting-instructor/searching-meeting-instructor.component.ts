@@ -337,7 +337,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       new Date(a.date).getTime() - new Date(b.date).getTime()
     )[0];
 
-    const targetStageIndex = this.stages.findIndex(
+    const targetStageIndex = this.filteredStages.findIndex(
       s => s.description === oldestContent.data?.stage
     );
 

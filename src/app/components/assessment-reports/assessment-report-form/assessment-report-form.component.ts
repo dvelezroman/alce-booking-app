@@ -2,11 +2,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime } from 'rxjs';
-import { UsersService } from '../../services/users.service';
-import { AssessmentType } from '../../services/dtos/assessment.dto';
-import { UserDto } from '../../services/dtos/user.dto';
-import { Stage } from '../../services/dtos/student.dto';
-import { StagesService } from '../../services/stages.service';
+import { UsersService } from '../../../services/users.service';
+import { AssessmentType } from '../../../services/dtos/assessment.dto';
+import { UserDto } from '../../../services/dtos/user.dto';
+import { Stage } from '../../../services/dtos/student.dto';
+import { StagesService } from '../../../services/stages.service';
 
 @Component({
   selector: 'app-assessment-report-form',
