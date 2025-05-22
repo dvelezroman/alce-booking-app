@@ -1,65 +1,73 @@
 <div class="table-container">
-  <table class="table-results" *ngIf="stagesWithContent.length > 0 && types.length > 0">
+  <table
+    class="table-results"
+    *ngIf="stagesWithContent.length > 0 && types.length > 0"
+  >
     <thead>
-        <tr>
-            <th
-            *ngFor="let stage of stagesWithContent"
-            [attr.colspan]="types.length"
-            class="left-border right-border"
-            >
-            {{ stage.number }} - {{ stage.description }}
-            </th>
-        </tr>
-        <tr>
-            <ng-container *ngFor="let stage of stagesWithContent">
-            <th
-                *ngFor="let type of types; let j = index"
-                [ngClass]="{
-                'left-border': j === 0,
-                'right-border': j === types.length - 1
-                }"
-            >
-                {{ type }}
-            </th>
-            </ng-container>
-        </tr>
+      <tr>
+        <th
+          *ngFor="let stage of stagesWithContent"
+          [attr.colspan]="types.length"
+          class="left-border right-border"
+        >
+          {{ stage.number }} - {{ stage.description }}
+        </th>
+      </tr>
+      <tr>
+        <ng-container *ngFor="let stage of stagesWithContent">
+          <th
+            *ngFor="let type of types; let j = index"
+            [ngClass]="{
+              'left-border': j === 0,
+              'right-border': j === types.length - 1
+            }"
+          >
+            {{ type }}
+          </th>
+        </ng-container>
+      </tr>
     </thead>
 
     <tbody>
-    <tr>
+      <tr>
         <ng-container *ngFor="let stage of stagesWithContent">
-        <td
+          <td
             *ngFor="let type of types; let j = index"
             [ngClass]="{
-            'left-border': j === 0,
-            'right-border': j === types.length - 1
+              'left-border': j === 0,
+              'right-border': j === types.length - 1
             }"
-        >
-            <ng-container *ngIf="hasAssessments(type, stage.id); else emptyCell">
-            <div
-                *ngFor="let a of groupedAssessments[type][stage.id]; let last = last"
+          >
+            <ng-container
+              *ngIf="hasAssessments(type, stage.id); else emptyCell"
+            >
+              <div
+                *ngFor="
+                  let a of groupedAssessments[type][stage.id];
+                  let last = last
+                "
                 class="assessment-entry"
                 [ngClass]="{ 'bordered-entry': !last }"
-            >
+              >
+                <div class="entry-date">
+                  {{ a.createdAt | date : "dd/MM/yy" }}
+                </div>
                 <div
-                [ngClass]="{
+                  [ngClass]="{
                     'max-point-reached': isMaxReached(a.points),
                     'below-threshold': isBelowMax(a.points)
-                }"
+                  }"
                 >
-                Nota: {{ a.points }}
+                  Nota: {{ a.points }}
                 </div>
-                <div class="entry-date">
-                {{ a.createdAt | date: 'dd/MM/yy' }}
-                </div>
-            </div>
+              </div>
             </ng-container>
             <ng-template #emptyCell>
-            <span style="color: #ccc;">-</span>
+              <span style="color: #ccc">-</span>
             </ng-template>
-        </td>
+          </td>
         </ng-container>
-    </tr>
+      </tr>
     </tbody>
   </table>
 </div>
