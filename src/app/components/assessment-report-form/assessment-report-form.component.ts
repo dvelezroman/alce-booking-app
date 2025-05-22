@@ -5,6 +5,8 @@ import { Subject, debounceTime } from 'rxjs';
 import { UsersService } from '../../services/users.service';
 import { AssessmentType } from '../../services/dtos/assessment.dto';
 import { UserDto } from '../../services/dtos/user.dto';
+import { Stage } from '../../services/dtos/student.dto';
+import { StagesService } from '../../services/stages.service';
 
 @Component({
   selector: 'app-assessment-report-form',
@@ -20,6 +22,8 @@ export class AssessmentReportFormComponent {
     type: AssessmentType | null;
   }>();
 
+  stages: Stage[] = [];
+  selectedStageId: number | null = null;
   searchTerm: string = '';
   filteredUsers: UserDto[] = [];
   selectedStudent?: UserDto;
@@ -30,10 +34,22 @@ export class AssessmentReportFormComponent {
   type: AssessmentType | null = null;
 
   showStudentRequiredError = false;
+  // showStageRequiredError = false;
 
-  constructor(private usersService: UsersService) {
+  constructor(private usersService: UsersService, private stagesService: StagesService) {
     this.searchInput$.pipe(debounceTime(300)).subscribe((term: string) => {
       this.filterUsers(term);
+    });
+  }
+
+   ngOnInit(): void {
+    this.stagesService.getAll().subscribe({
+      next: (response) => {
+        this.stages = response;
+      },
+      error: () => {
+        console.error('Error al cargar stages');
+      }
     });
   }
 
@@ -75,19 +91,12 @@ export class AssessmentReportFormComponent {
   }
 
   triggerSearch(): void {
-    if (
-      !this.selectedStudent?.student?.id ||
-      !this.selectedStudent?.student?.stageId
-    ) {
-      this.showStudentRequiredError = true;
-      return;
-    }
-
-    this.showStudentRequiredError = false;
+    this.showStudentRequiredError = !this.selectedStudent?.student?.id;
+    if (this.showStudentRequiredError) return;
 
     const payload = {
-      studentId: this.selectedStudent.student.id,
-      stageId: this.selectedStudent.student.stageId,
+      studentId: this.selectedStudent!.student!.id,
+      stageId: this.selectedStageId ?? this.selectedStudent!.student!.stageId,
       type: this.type
     };
 

@@ -13,6 +13,7 @@ export interface AssessementI {
   studentId: number;
   stageId: number;
   instructorId: number;
+  createdAt?: string;
 }
 
 export interface CreateAssessmentI {

@@ -35,6 +35,21 @@
   </div>
 
   <div class="field mt-4">
+    <label class="label">Stage</label>
+    <div class="control">
+      <select
+        class="input"
+        [(ngModel)]="selectedStageId"
+      >
+        <option [ngValue]="null">Selecciona un stage</option>
+        <option *ngFor="let stage of stages" [ngValue]="stage.id">
+          {{ stage.description }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field mt-4">
     <label class="label">Tipo de Evaluación</label>
     <div class="control">
       <select class="input" [(ngModel)]="type">

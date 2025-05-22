@@ -5,9 +5,10 @@ import { AssessmentService } from '../../services/assessment.service';
 import { AssessementI, AssessmentType, FilterAssessmentI } from '../../services/dtos/assessment.dto';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
 import { ModalComponent } from '../../components/modal/modal.component';
-import { AssessmentTableComponent } from '../../components/assessment/assessment-table/assessment-table.component';
+
 import { AssessmentReportFormComponent } from '../../components/assessment-report-form/assessment-report-form.component';
 import { AssessmentPointsConfigService } from '../../services/assessment-points-config.service';
+import { AssessmentTableReportsComponent } from '../../components/assessment/assessment-table-reports/assessment-table-reports.component';
 
 @Component({
   selector: 'app-assessment-reports',
@@ -15,7 +16,7 @@ import { AssessmentPointsConfigService } from '../../services/assessment-points-
   imports: [
     CommonModule,
     ModalComponent,
-    AssessmentTableComponent,
+    AssessmentTableReportsComponent,
     AssessmentReportFormComponent
   ],
   templateUrl: './assessment-reports.component.html',
