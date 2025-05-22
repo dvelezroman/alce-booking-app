@@ -42,7 +42,9 @@
           <td *ngFor="let content of stageContents; let i = index"
               [ngClass]="{ 'column-hovered': hoveredColumnIndex === i }">
             <ng-container *ngFor="let record of getRecordsByContentTitle(content.title)">
-              <div *ngFor="let date of record.dates; let j = index" class="record-date-entry">
+              <div *ngFor="let date of record.dates; let j = index; let last = last"
+                  class="record-date-entry"
+                  [ngClass]="{ 'bordered-entry': !last }">
                 <div>{{ date | date: 'shortDate' }}</div>
                 <div>{{ getInstructorByIndex(record, j) }}</div>
               </div>

@@ -109,21 +109,21 @@ export class ReportsProgressComponent implements OnInit {
     });
   }
 
-goToPreviousStage() {
-  if (this.currentStageIndex > 0) {
-    this.currentStageIndex--;
-    const stageId = this.stages[this.currentStageIndex].id;
-    this.loadStageContents(stageId);
+  goToPreviousStage() {
+    if (this.currentStageIndex > 0) {
+      this.currentStageIndex--;
+      const stageId = this.stages[this.currentStageIndex].id;
+      this.loadStageContents(stageId);
+    }
   }
-}
 
-goToNextStage() {
-  if (this.currentStageIndex < this.stages.length - 1) {
-    this.currentStageIndex++;
-    const stageId = this.stages[this.currentStageIndex].id;
-    this.loadStageContents(stageId);
+  goToNextStage() {
+    if (this.currentStageIndex < this.stages.length - 1) {
+      this.currentStageIndex++;
+      const stageId = this.stages[this.currentStageIndex].id;
+      this.loadStageContents(stageId);
+    }
   }
-}
 
   stageHasHistoryByDataStage(stageDescription: string): boolean {
     return this.studentContentHistory.some(

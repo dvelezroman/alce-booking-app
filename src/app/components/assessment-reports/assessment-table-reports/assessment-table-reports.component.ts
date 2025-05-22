@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AssessementI } from '../../../services/dtos/assessment.dto';
+import { AssessementI, AssessmentType } from '../../../services/dtos/assessment.dto';
 import { Stage } from '../../../services/dtos/student.dto';
 import { StudyContentService } from '../../../services/study-content.service';
 import { StagesService } from '../../../services/stages.service';
@@ -60,27 +60,24 @@ export class AssessmentTableReportsComponent implements OnInit {
     });
   }
 
-  private prepareAssessmentGrid(): void {
-    const typesSet = new Set<string>();
-    const grouped: Record<string, Record<number, AssessementI[]>> = {};
+ private prepareAssessmentGrid(): void {
+  this.types = Object.values(AssessmentType);
+  const grouped: Record<string, Record<number, AssessementI[]>> = {};
 
-    for (const a of this.assessments) {
-      typesSet.add(a.type);
-
-      if (!grouped[a.type]) {
-        grouped[a.type] = {};
-      }
-
-      if (!grouped[a.type][a.stageId]) {
-        grouped[a.type][a.stageId] = [];
-      }
-
-      grouped[a.type][a.stageId].push(a);
+  for (const a of this.assessments) {
+    if (!grouped[a.type]) {
+      grouped[a.type] = {};
     }
 
-    this.types = Array.from(typesSet);
-    this.groupedAssessments = grouped;
+    if (!grouped[a.type][a.stageId]) {
+      grouped[a.type][a.stageId] = [];
+    }
+
+    grouped[a.type][a.stageId].push(a);
   }
+
+  this.groupedAssessments = grouped;
+}
 
   private sortStages(stages: Stage[]): Stage[] {
     return stages.sort(
