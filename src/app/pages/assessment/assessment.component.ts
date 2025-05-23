@@ -80,7 +80,7 @@ export class AssessmentComponent implements OnInit {
     const params: FilterAssessmentI = {
       studentId,
       stageId,
-      instructorId
+      // instructorId
     };
 
     this.assessmentService.findAll(params).subscribe({

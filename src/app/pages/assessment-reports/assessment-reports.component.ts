@@ -54,15 +54,17 @@ export class AssessmentReportsComponent{
   }
 
   handleAssessmentSearch(filters: {
-    studentId: number;
+    studentId: number | null;
     stageId: number;
     type: AssessmentType | null;
   }): void {
     const params: FilterAssessmentI = {
-      studentId: filters.studentId.toString(),
-      stageId: filters.stageId.toString(),
-      type: filters.type as AssessmentType
+      stageId: filters.stageId.toString()
     };
+
+    if (filters.studentId !== null) {
+      params.studentId = filters.studentId.toString();
+    }
 
     if (filters.type !== null) {
       params.type = filters.type;

@@ -17,7 +17,7 @@ import { StagesService } from '../../../services/stages.service';
 })
 export class AssessmentReportFormComponent {
   @Output() searchTriggered = new EventEmitter<{
-    studentId: number;
+    studentId: number | null;
     stageId: number;
     type: AssessmentType | null;
   }>();
@@ -34,7 +34,7 @@ export class AssessmentReportFormComponent {
   type: AssessmentType | null = null;
 
   showStudentRequiredError = false;
-  // showStageRequiredError = false;
+  showStageRequiredError = false;
 
   constructor(private usersService: UsersService, private stagesService: StagesService) {
     this.searchInput$.pipe(debounceTime(300)).subscribe((term: string) => {
@@ -90,16 +90,19 @@ export class AssessmentReportFormComponent {
     }, 200);
   }
 
-  triggerSearch(): void {
-    this.showStudentRequiredError = !this.selectedStudent?.student?.id;
-    if (this.showStudentRequiredError) return;
+triggerSearch(): void {
+  const studentId = this.selectedStudent?.student?.id ?? null;
+  const studentStageId = this.selectedStudent?.student?.stageId ?? null;
 
-    const payload = {
-      studentId: this.selectedStudent!.student!.id,
-      stageId: this.selectedStageId ?? this.selectedStudent!.student!.stageId,
-      type: this.type
-    };
+  this.showStageRequiredError = !studentStageId && !this.selectedStageId;
+  if (this.showStageRequiredError) return;
 
-    this.searchTriggered.emit(payload);
-  }
+  const payload = {
+    studentId,
+    stageId: studentStageId ?? this.selectedStageId!,
+    type: this.type
+  };
+
+  this.searchTriggered.emit(payload);
+}
 }
