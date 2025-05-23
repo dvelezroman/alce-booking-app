@@ -10,7 +10,8 @@
   <div class="assessment-table-wrapper">
     <app-assessment-table-reports
        [assessments]="assessments"
-       [maxPointsAssessment]="maxPointsAssessment" 
+       [maxPointsAssessment]="maxPointsAssessment"
+       (evaluationClicked)="showEvaluationDetails($event)" 
     />
   </div>
 </section>
@@ -21,6 +22,8 @@
   [isError]="modal.isError"
   [isSuccess]="modal.isSuccess"
   [isInfo]="modal.isInfo"
+  [title]="modal.title ?? ''"
+  [isContentViewer]="modal.isContentViewer ?? false"
   [showButtons]="modal.showButtons ?? false"
   (confirmAction)="modal.confirm && modal.confirm()"
   (close)="modal.close()"

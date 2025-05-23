@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssessementI, AssessmentType } from '../../../services/dtos/assessment.dto';
 import { Stage } from '../../../services/dtos/student.dto';
@@ -15,6 +15,8 @@ import { StagesService } from '../../../services/stages.service';
 export class AssessmentTableReportsComponent implements OnInit {
   @Input() assessments: AssessementI[] = [];
   @Input() maxPointsAssessment: number | null = null;
+
+  @Output() evaluationClicked = new EventEmitter<AssessementI>();
 
   stagesWithContent: Stage[] = [];
   types: string[] = [];

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { AssessmentService } from '../../services/assessment.service';
 import { AssessementI, AssessmentType, FilterAssessmentI } from '../../services/dtos/assessment.dto';
 import { ModalDto, modalInitializer } from '../../components/modal/modal.dto';
@@ -8,6 +7,8 @@ import { ModalComponent } from '../../components/modal/modal.component';
 import { AssessmentReportFormComponent } from '../../components/assessment-reports/assessment-report-form/assessment-report-form.component';
 import { AssessmentPointsConfigService } from '../../services/assessment-points-config.service';
 import { AssessmentTableReportsComponent } from '../../components/assessment-reports/assessment-table-reports/assessment-table-reports.component';
+import { Instructor } from '../../services/dtos/instructor.dto';
+import { InstructorsService } from '../../services/instructors.service';
 
 @Component({
   selector: 'app-assessment-reports',
@@ -26,15 +27,18 @@ export class AssessmentReportsComponent{
   instructorId: number | null = null;
   assessments: AssessementI[] = [];
   maxPointsAssessment: number | null = null;
+  instructorsMap: Map<number, Instructor> = new Map();
 
   constructor(
     private assessmentService: AssessmentService,
+    private instructorsService: InstructorsService,
     private assessmentPointsConfigService: AssessmentPointsConfigService
   ) {
   }
 
    ngOnInit(): void {
     this.loadAssessmentConfig();
+     this.loadInstructors();
   }
 
    loadAssessmentConfig(): void {
@@ -47,6 +51,18 @@ export class AssessmentReportsComponent{
         this.showModal(
           this.createModalParams(true, 'Error al cargar configuración.')
         );
+      }
+    });
+  }
+
+  loadInstructors(): void {
+    this.instructorsService.getAll().subscribe({
+      next: (instructors) => {
+        this.instructorsMap = new Map(instructors.map(i => [i.id, i]));
+         //console.log('instructores cargados:', instructors);
+      },
+      error: () => {
+        this.showModal(this.createModalParams(true, 'Error al cargar instructores.'));
       }
     });
   }
@@ -95,6 +111,31 @@ export class AssessmentReportsComponent{
       show: true,
       isError,
       isSuccess: !isError,
+      message,
+      close: this.closeModal,
+    };
+  }
+
+  showEvaluationDetails(a: AssessementI): void {
+    const instructor = this.instructorsMap.get(a.instructorId);
+    const instructorName = instructor?.user
+    ? `${instructor.user.lastName}, ${instructor.user.firstName}`
+    : 'Instructor no disponible';
+
+    const formattedDate = new Date(a.createdAt || '').toLocaleDateString();
+
+    const message = `
+      <span >Instructor:</span> ${instructorName}<br>
+      <span >Fecha:</span> ${formattedDate}<br>
+      <span >Nota:</span> ${a.points}<br>
+      ${a.note ? `<span >Comentario:</span> ${a.note}` : ''}
+    `;
+
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      isContentViewer: true,
+      title: 'Detalle de Evaluación',
       message,
       close: this.closeModal,
     };

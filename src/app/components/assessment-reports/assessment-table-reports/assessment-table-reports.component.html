@@ -43,11 +43,11 @@
             >
               <div
                 *ngFor="
-                  let a of groupedAssessments[type][stage.id];
-                  let last = last
-                "
+                  let a of groupedAssessments[type][stage.id]; 
+                  let last = last"
                 class="assessment-entry"
                 [ngClass]="{ 'bordered-entry': !last }"
+                (click)="evaluationClicked.emit(a)"
               >
                 <div class="entry-date">
                   {{ a.createdAt | date : "dd/MM/yy" }}
