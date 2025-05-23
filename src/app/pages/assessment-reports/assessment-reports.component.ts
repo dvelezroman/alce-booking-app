@@ -27,7 +27,6 @@ export class AssessmentReportsComponent{
   instructorId: number | null = null;
   assessments: AssessementI[] = [];
   maxPointsAssessment: number | null = null;
-  instructorsMap: Map<number, Instructor> = new Map();
 
   constructor(
     private assessmentService: AssessmentService,
@@ -38,7 +37,6 @@ export class AssessmentReportsComponent{
 
    ngOnInit(): void {
     this.loadAssessmentConfig();
-     this.loadInstructors();
   }
 
    loadAssessmentConfig(): void {
@@ -51,18 +49,6 @@ export class AssessmentReportsComponent{
         this.showModal(
           this.createModalParams(true, 'Error al cargar configuración.')
         );
-      }
-    });
-  }
-
-  loadInstructors(): void {
-    this.instructorsService.getAll().subscribe({
-      next: (instructors) => {
-        this.instructorsMap = new Map(instructors.map(i => [i.id, i]));
-         //console.log('instructores cargados:', instructors);
-      },
-      error: () => {
-        this.showModal(this.createModalParams(true, 'Error al cargar instructores.'));
       }
     });
   }
@@ -117,9 +103,8 @@ export class AssessmentReportsComponent{
   }
 
   showEvaluationDetails(a: AssessementI): void {
-    const instructor = this.instructorsMap.get(a.instructorId);
-    const instructorName = instructor?.user
-    ? `${instructor.user.lastName}, ${instructor.user.firstName}`
+      const instructorName = a.instructor?.user
+    ? `${a.instructor.user.lastName}, ${a.instructor.user.firstName}`
     : 'Instructor no disponible';
 
     const formattedDate = new Date(a.createdAt || '').toLocaleDateString();

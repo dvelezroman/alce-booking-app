@@ -1,3 +1,5 @@
+import { Instructor } from "./instructor.dto";
+
 export enum AssessmentType {
   Speaking = 'Speaking',
   Grammar = 'Grammar',
@@ -14,6 +16,7 @@ export interface AssessementI {
   stageId: number;
   instructorId: number;
   createdAt?: string;
+  instructor?: Instructor;
 }
 
 export interface CreateAssessmentI {
