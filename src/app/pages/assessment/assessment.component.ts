@@ -65,7 +65,7 @@ export class AssessmentComponent implements OnInit {
         this.showModal(
           this.createModalParams(false, 'Evaluación registrada correctamente.')
         );
-        this.fetchAssessments( payload.studentId.toString(),payload.stageId.toString(), payload.instructorId.toString());
+        this.fetchAssessments( payload.studentId.toString(),payload.stageId.toString());
       },
       error: () => {
         this.showModal(
@@ -75,12 +75,11 @@ export class AssessmentComponent implements OnInit {
     });
   }
 
-  fetchAssessments(studentId: string, stageId: string, instructorId: string) {
+  fetchAssessments(studentId: string, stageId: string) {
     this.hasSearched = true;
     const params: FilterAssessmentI = {
       studentId,
       stageId,
-      // instructorId
     };
 
     this.assessmentService.findAll(params).subscribe({

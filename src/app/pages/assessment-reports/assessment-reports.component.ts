@@ -7,8 +7,10 @@ import { ModalComponent } from '../../components/modal/modal.component';
 import { AssessmentReportFormComponent } from '../../components/assessment-reports/assessment-report-form/assessment-report-form.component';
 import { AssessmentPointsConfigService } from '../../services/assessment-points-config.service';
 import { AssessmentTableReportsComponent } from '../../components/assessment-reports/assessment-table-reports/assessment-table-reports.component';
-import { Instructor } from '../../services/dtos/instructor.dto';
-import { InstructorsService } from '../../services/instructors.service';
+import { Stage } from '../../services/dtos/student.dto';
+import { StagesService } from '../../services/stages.service';
+import { AssessmentMultiTableComponent } from '../../components/assessment-reports/assessment-multiTable/assessment-multi-table.component';
+
 
 @Component({
   selector: 'app-assessment-reports',
@@ -17,40 +19,45 @@ import { InstructorsService } from '../../services/instructors.service';
     CommonModule,
     ModalComponent,
     AssessmentTableReportsComponent,
-    AssessmentReportFormComponent
+    AssessmentReportFormComponent,
+    AssessmentMultiTableComponent
   ],
   templateUrl: './assessment-reports.component.html',
   styleUrl: './assessment-reports.component.scss',
 })
-export class AssessmentReportsComponent{
+export class AssessmentReportsComponent {
   modal: ModalDto = modalInitializer();
   instructorId: number | null = null;
   assessments: AssessementI[] = [];
   maxPointsAssessment: number | null = null;
+  isStudentSelected: boolean = false;
+  stageDescription: string = '';
+  selectedStageId: number | null = null;
+  selectedStudentId: number | null = null;
 
   constructor(
     private assessmentService: AssessmentService,
-    private instructorsService: InstructorsService,
+    private stagesService: StagesService,
     private assessmentPointsConfigService: AssessmentPointsConfigService
-  ) {
-  }
+  ) {}
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.loadAssessmentConfig();
   }
 
-   loadAssessmentConfig(): void {
+  loadAssessmentConfig(): void {
     this.assessmentPointsConfigService.getById().subscribe({
       next: (config) => {
         this.maxPointsAssessment = config.maxPointsAssessment;
-        //console.log('maxPointsAssessment:', this.maxPointsAssessment);
       },
       error: () => {
-        this.showModal(
-          this.createModalParams(true, 'Error al cargar configuración.')
-        );
+        this.showModal(this.createModalParams(true, 'Error al cargar configuración.'));
       }
     });
+  }
+
+  handleStageSelected(stageText: string): void {
+    this.stageDescription = stageText;
   }
 
   handleAssessmentSearch(filters: {
@@ -58,26 +65,22 @@ export class AssessmentReportsComponent{
     stageId: number;
     type: AssessmentType | null;
   }): void {
+    this.isStudentSelected = filters.studentId !== null;
+    this.selectedStudentId = filters.studentId;
+    this.selectedStageId = filters.stageId;
+
     const params: FilterAssessmentI = {
-      stageId: filters.stageId.toString()
+      stageId: filters.stageId.toString(),
+      ...(filters.studentId !== null && { studentId: filters.studentId.toString() }),
+      ...(filters.type && { type: filters.type })
     };
-
-    if (filters.studentId !== null) {
-      params.studentId = filters.studentId.toString();
-    }
-
-    if (filters.type !== null) {
-      params.type = filters.type;
-    }
 
     this.assessmentService.findAll(params).subscribe({
       next: (result) => {
         this.assessments = result;
       },
       error: () => {
-        this.showModal(
-          this.createModalParams(true, 'Error al obtener las evaluaciones.')
-        );
+        this.showModal(this.createModalParams(true, 'Error al obtener las evaluaciones.'));
       }
     });
   }
@@ -105,17 +108,17 @@ export class AssessmentReportsComponent{
   }
 
   showEvaluationDetails(a: AssessementI): void {
-      const instructorName = a.instructor?.user
-    ? `${a.instructor.user.lastName}, ${a.instructor.user.firstName}`
-    : 'Instructor no disponible';
+    const instructorName = a.instructor?.user
+      ? `${a.instructor.user.lastName}, ${a.instructor.user.firstName}`
+      : 'Instructor no disponible';
 
     const formattedDate = new Date(a.createdAt || '').toLocaleDateString();
 
     const message = `
-      <span >Instructor:</span> ${instructorName}<br>
-      <span >Fecha:</span> ${formattedDate}<br>
-      <span >Nota:</span> ${a.points}<br>
-      ${a.note ? `<span >Comentario:</span> ${a.note}` : ''}
+      <span>Instructor:</span> ${instructorName}<br>
+      <span>Fecha:</span> ${formattedDate}<br>
+      <span>Nota:</span> ${a.points}<br>
+      ${a.note ? `<span>Comentario:</span> ${a.note}` : ''}
     `;
 
     this.modal = {

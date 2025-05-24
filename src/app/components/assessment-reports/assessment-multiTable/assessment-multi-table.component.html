@@ -1,0 +1,42 @@
+<div class="table-container" *ngIf="students.length > 0">
+  <h3 class="table-title">{{ stageTitle }}</h3>
+
+  <div class="table-wrapper">
+    <table class="table-results" *ngIf="students.length > 0 && types.length > 0">
+      <thead>
+        <tr>
+          <th class="left-header">Estudiante</th>
+          <th *ngFor="let type of types; let i = index" [class.type-divider]="i !== types.length - 1" class="type-header">{{ type }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of students">
+          <td class="left-header-cell">
+            {{ student.user.lastName }}, {{ student.user.firstName }}
+          </td>
+          <td *ngFor="let type of types; let i = index" [class.type-divider]="i !== types.length - 1">
+            <ng-container *ngIf="getAssessments(student.studentId, type).length > 0; else emptyCell">
+              <div class="inline-notes-wrapper">
+                <div *ngFor="let a of getAssessments(student.studentId, type)"
+                     class="inline-note">
+                  <div class="entry-date">{{ a.createdAt | date: 'dd/MM/yy' }}</div>
+                  <div
+                    [ngClass]="{
+                      'max-point-reached': isMaxReached(a.points),
+                      'below-threshold': isBelowMax(a.points)
+                    }"
+                  >
+                    <strong>Nota:</strong> {{ a.points }}
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #emptyCell>
+              <span style="color: #ccc">-</span>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

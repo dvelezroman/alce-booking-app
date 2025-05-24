@@ -4,15 +4,26 @@
   </h1>
 
   <app-assessment-report-form
-    (searchTriggered)="handleAssessmentSearch($event)">
+    (searchTriggered)="handleAssessmentSearch($event)"
+    (stageSelected)="handleStageSelected($event)">
   </app-assessment-report-form>
 
   <div class="assessment-table-wrapper">
-    <app-assessment-table-reports
-       [assessments]="assessments"
-       [maxPointsAssessment]="maxPointsAssessment"
-       (evaluationClicked)="showEvaluationDetails($event)" 
-    />
+    <ng-container *ngIf="selectedStudentId !== null; else showMultiTable">
+      <app-assessment-table-reports
+        [assessments]="assessments"
+        [maxPointsAssessment]="maxPointsAssessment"
+        (evaluationClicked)="showEvaluationDetails($event)" 
+      />
+    </ng-container>
+
+    <ng-template #showMultiTable>
+      <app-assessment-multi-table
+        [assessments]="assessments"
+        [maxPointsAssessment]="maxPointsAssessment"
+        [stageTitle]="stageDescription"
+      />
+    </ng-template>
   </div>
 </section>
 

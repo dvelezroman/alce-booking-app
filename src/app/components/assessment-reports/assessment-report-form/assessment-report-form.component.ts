@@ -16,6 +16,7 @@ import { StagesService } from '../../../services/stages.service';
   styleUrls: ['./assessment-report-form.component.scss']
 })
 export class AssessmentReportFormComponent {
+  @Output() stageSelected = new EventEmitter<string>();
   @Output() searchTriggered = new EventEmitter<{
     studentId: number | null;
     stageId: number;
@@ -54,6 +55,10 @@ export class AssessmentReportFormComponent {
   }
 
   onSearchChange(term: string): void {
+    if (term.trim().length === 0) {
+      this.selectedStudent = undefined;
+      this.selectedStageId = null; 
+    }
     this.searchInput$.next(term);
   }
 
@@ -96,6 +101,13 @@ triggerSearch(): void {
 
   this.showStageRequiredError = !studentStageId && !this.selectedStageId;
   if (this.showStageRequiredError) return;
+
+  if (!this.selectedStudent && this.selectedStageId !== null) {
+    const selected = this.stages.find(s => s.id === this.selectedStageId);
+    if (selected) {
+      this.stageSelected.emit(`${selected.number} - ${selected.description}`);
+    }
+  }
 
   const payload = {
     studentId,
