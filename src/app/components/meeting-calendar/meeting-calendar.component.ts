@@ -105,6 +105,7 @@ export class MeetingCalendarComponent implements OnInit {
     const monthIndex = monthMap[this.selectedMonth as MonthKey];
     const startOfMonth = DateTime.fromObject({ year: this.selectedYear, month: monthIndex, day: 1 }, { zone: 'America/Guayaquil' });
     const daysInMonth = startOfMonth.daysInMonth;
+    
 
     if (!daysInMonth) {
         console.error('No se pudo obtener la cantidad de días del mes.');
@@ -119,6 +120,7 @@ export class MeetingCalendarComponent implements OnInit {
         Array.from({ length: daysInMonth }, (_, i) => {
         const date = startOfMonth.plus({ days: i });
         const isDisabled = this.isDayDisabled(date.day, monthIndex - 1);
+        
         return {
             day: date.day,
             dayOfWeek: date.setLocale('es').toFormat('cccc').toUpperCase(),
@@ -166,16 +168,30 @@ export class MeetingCalendarComponent implements OnInit {
     );
   }
 
-  isDayDisabled(day: number, monthIndex: number): boolean {
-    const monthKey = monthIndex.toString();
-    const disabledDays = this.disabledDates[monthKey] || [];
-    const isFullyDisabled = disabledDays.includes(day);
+isDayDisabled(day: number, monthIndex: number): boolean {
+  const monthKey = monthIndex.toString();
+  const disabledDays = this.disabledDates[monthKey] || [];
 
-    const dayData = this.disabledDatesAndHours[monthKey]?.find(d => d.day === day);
-    const isAllHoursDisabled = dayData ? dayData.hours.length === 0 : false;
+  const dayData = this.disabledDatesAndHours[monthKey]?.find(d => d.day === day);
+  const uniqueHours = dayData?.hours ? Array.from(new Set(dayData.hours)) : [];
 
-    return isFullyDisabled || isAllHoursDisabled;
+  if (!this.selectedYear || isNaN(this.selectedYear)) {
+    return false; 
   }
+
+  const date = DateTime.fromObject(
+    { year: this.selectedYear, month: monthIndex + 1, day },
+    { zone: 'America/Guayaquil' }
+  );
+
+  const isSaturday = date.weekday === 6;
+  const totalHoursAvailable = isSaturday ? 6 : 13;
+
+  const isAllHoursBlocked = uniqueHours.length >= totalHoursAvailable;
+  const isFullyDisabled = disabledDays.includes(day) && uniqueHours.length === 0;
+
+  return isFullyDisabled || isAllHoursBlocked;
+}
 
   onDayClick(day: any): void {
     if (!day.day || day.isDisabled) return;

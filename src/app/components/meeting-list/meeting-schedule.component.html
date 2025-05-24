@@ -8,35 +8,37 @@
       <i class="fas fa-chevron-right"></i>
     </button>
   </div>
-  <div class="schedule-list" #scheduleList>
-    <div *ngFor="let meeting of meetings; let i = index" class="schedule-item" (click)="handleOpenDetail(meeting, i)">
-      <div class="meeting-title">
-        <strong>
-          {{
-            isToday(meeting.date)
-              ? 'Hoy'
-              : isTomorrow(meeting.date)
-              ? 'Mañana'
-              : isCurrentWeek(meeting.date)
-              ? capitalizeFirstLetter(meeting.date | date: 'EEEE':'UTC')
-              : (meeting.date | date: 'mediumDate':'UTC')
-          }}
-        </strong>
-      </div>
-      <div class="meeting-info-container">
-        <div class="schedule-info">
-          <strong>Fecha: </strong> <span>{{ meeting.date | date: 'mediumDate':'UTC' }}</span><br>
-          <strong>Hora: </strong> <span>{{ meeting.hour | number: '2.0' }}:00</span>
+  <div class="schedule-list-wrapper">
+    <div class="schedule-list" #scheduleList>
+      <div *ngFor="let meeting of meetings; let i = index" class="schedule-item" (click)="handleOpenDetail(meeting, i)">
+        <div class="meeting-title">
+          <strong>
+            {{
+              isToday(meeting.date)
+                ? 'Hoy'
+                : isTomorrow(meeting.date)
+                ? 'Mañana'
+                : isCurrentWeek(meeting.date)
+                ? capitalizeFirstLetter(meeting.date | date: 'EEEE':'UTC')
+                : (meeting.date | date: 'mediumDate':'UTC')
+            }}
+          </strong>
         </div>
-        <div class="schedule-delete">
-          <button
-            class="delete-button"
-            *ngIf="canDeleteMeeting(meeting)"
-            (click)="handleDelete(meeting, $event)">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-              <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
-            </svg>
-          </button>
+        <div class="meeting-info-container">
+          <div class="schedule-info">
+            <strong>Fecha: </strong> <span>{{ meeting.date | date: 'mediumDate':'UTC' }}</span><br>
+            <strong>Hora: </strong> <span>{{ meeting.hour | number: '2.0' }}:00</span>
+          </div>
+          <div class="schedule-delete">
+            <button
+              class="delete-button"
+              *ngIf="canDeleteMeeting(meeting)"
+              (click)="handleDelete(meeting, $event)">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -44,7 +46,11 @@
 </div>
 
 <!-- Vista para escritorio (mayor a 768px) -->
-  <div *ngIf="variant === 'cards'" class="meetings-list-scroll">
+<div *ngIf="variant === 'cards'" class="meetings-list-wrapper-vertical">
+  <div class="shadow-top"></div>
+  <div class="shadow-bottom"></div>
+
+  <div class="meetings-list-scroll">
     <div *ngFor="let meeting of meetings; let i = index" class="meeting-card" (click)="handleOpenDetail(meeting, i)">
       <div class="meeting-card-header">
         <i class="fas fa-calendar-alt calendar-icon"></i>
@@ -64,8 +70,7 @@
         <button
           *ngIf="canDeleteMeeting(meeting)"
           class="delete-button"
-          (click)="handleDelete(meeting, $event)"
-        >
+          (click)="handleDelete(meeting, $event)">
           <i class="fas fa-trash-alt"></i>
         </button>
       </div>
@@ -75,3 +80,4 @@
       </div>
     </div>
   </div>
+</div>

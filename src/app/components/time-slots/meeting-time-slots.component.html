@@ -8,9 +8,9 @@
     <span>{{ ecuadorTime }}</span>
   </div>
   
-  <button class="scroll-arrow-up" aria-label="Scroll up">
+  <!-- <button class="scroll-arrow-up" aria-label="Scroll up">
     <i class="fas fa-chevron-up"></i>
-  </button>
+  </button> -->
 
   <div class="time-slots" #timeSlotList #timeSlotsRef>
     <div *ngIf="timeSlots.length === 0">
@@ -26,11 +26,16 @@
 
         <div class="time-text-container">
           <span class="time-text">
-            <ng-container *ngIf="time.localhour === time.label; else twoHours">
-              {{ time.localhour }}
+            <ng-container *ngIf="time.isDisabled; else normalSlot">
+              Horario no disponible
             </ng-container>
-            <ng-template #twoHours>
-              {{ time.label }} / {{ time.localhour }}
+            <ng-template #normalSlot>
+              <ng-container *ngIf="time.localhour === time.label; else twoHours">
+                {{ time.localhour }}
+              </ng-container>
+              <ng-template #twoHours>
+                {{ time.label }} / {{ time.localhour }}
+              </ng-template>
             </ng-template>
           </span>
         </div>
@@ -41,7 +46,7 @@
     </div>
   </div>
 
-  <button class="scroll-arrow-down" aria-label="Scroll down">
+  <!-- <button class="scroll-arrow-down" aria-label="Scroll down">
     <i class="fas fa-chevron-down"></i>
-  </button>
+  </button> -->
 </section>
