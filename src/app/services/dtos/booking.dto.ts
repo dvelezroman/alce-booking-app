@@ -32,6 +32,7 @@ export interface MeetingDTO {
   linkOpened?: boolean;
   studyContentId?: number[];
   studyContent?: StudyContentDto[];
+  isNewUser?: boolean;
 }
 
 export interface AssignedByDTO {

@@ -31,4 +31,14 @@ export class MeetingTableComponent {
     const content = this.formatStudyContent(meeting);
     this.contentViewRequested.emit(content);
   }
+
+  getStudentDisplayName(meeting: MeetingDTO): string {
+    const firstName = meeting.student?.user?.firstName || 'Nombre no disponible';
+    const lastName = meeting.student?.user?.lastName || '';
+    return `${firstName} ${lastName}`;
+  }
+
+  isNewUser(meeting: MeetingDTO): boolean {
+    return !!meeting.isNewUser;
+  }
 }

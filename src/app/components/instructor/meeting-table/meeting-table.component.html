@@ -19,7 +19,10 @@
         <td data-label="Categoría">{{ meeting.student?.studentClassification || 'Categoría no disponible' }}</td>
         <td data-label="Nombre" style="white-space: normal; vertical-align: top;">
           <span class="clickable is-clickable" (click)="onHistoryClick(meeting)">
-            {{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}
+            {{ getStudentDisplayName(meeting) }}
+            <span *ngIf="isNewUser(meeting)" class="badge-new" title="Estudiante nuevo">
+              Nuevo
+            </span>
           </span>
         </td>
         <td data-label="Fecha">{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
