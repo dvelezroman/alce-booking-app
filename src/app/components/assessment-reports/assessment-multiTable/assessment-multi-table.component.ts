@@ -17,7 +17,7 @@ export class AssessmentMultiTableComponent implements OnChanges {
 
   students: { studentId: number; user: UserDto }[] = [];
   types: AssessmentType[] = [];
-  groupedAssessments: Record<number, Record<AssessmentType, AssessementI[]>> = {}; 
+  groupedAssessments: Record<number, Record<AssessmentType, AssessementI>> = {};
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['assessments']) {
@@ -25,37 +25,40 @@ export class AssessmentMultiTableComponent implements OnChanges {
     }
   }
 
-  private prepareData(): void {
-    this.groupedAssessments = {};
-    const typesSet = new Set<AssessmentType>();
-    const studentMap = new Map<number, { studentId: number; user: UserDto }>();
+private prepareData(): void {
+  this.groupedAssessments = {};
+  const typesSet = new Set<AssessmentType>();
+  const studentMap = new Map<number, { studentId: number; user: UserDto }>();
 
-    for (const a of this.assessments) {
-      const studentId = a.studentId;
-      const type = a.type;
+  for (const a of this.assessments) {
+    const studentId = a.studentId;
+    const type = a.type;
 
-      if (!this.groupedAssessments[studentId]) {
-        this.groupedAssessments[studentId] = Object.values(AssessmentType).reduce((acc, t) => {
-          acc[t] = [];
-          return acc;
-        }, {} as Record<AssessmentType, AssessementI[]>);
-      }
+    typesSet.add(type);
 
-      this.groupedAssessments[studentId][type].push(a);
-      typesSet.add(type);
-
-      if (a.student?.user) {
-        studentMap.set(studentId, { studentId, user: a.student.user });
-      }
+    if (!this.groupedAssessments[studentId]) {
+      this.groupedAssessments[studentId] = {} as Record<AssessmentType, AssessementI>;
     }
 
-    this.types = Object.values(AssessmentType);
-    this.students = Array.from(studentMap.values());
+    // mostrar la nota mas alta por estudiante y tipo
+    const current = this.groupedAssessments[studentId][type];
+    if (!current || a.points > current.points) {
+      this.groupedAssessments[studentId][type] = a;
+    }
+
+    if (a.student?.user) {
+      studentMap.set(studentId, { studentId, user: a.student.user });
+    }
   }
 
+  this.types = Array.from(typesSet);
+  this.students = Array.from(studentMap.values());
+}
+
   getAssessments(studentId: number, type: AssessmentType): AssessementI[] {
-    return this.groupedAssessments[studentId]?.[type] || [];
-  }
+  const best = this.groupedAssessments[studentId]?.[type];
+  return best ? [best] : [];
+}
 
   isMaxReached(points: number): boolean {
     return this.maxPointsAssessment !== null && points >= this.maxPointsAssessment;
