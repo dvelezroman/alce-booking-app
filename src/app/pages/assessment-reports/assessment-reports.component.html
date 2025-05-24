@@ -8,23 +8,25 @@
     (stageSelected)="handleStageSelected($event)">
   </app-assessment-report-form>
 
-  <div class="assessment-table-wrapper">
-    <ng-container *ngIf="selectedStudentId !== null; else showMultiTable">
+  <ng-container *ngIf="selectedStudentId !== null; else multiTable">
+    <div class="assessment-table-wrapper">
       <app-assessment-table-reports
         [assessments]="assessments"
         [maxPointsAssessment]="maxPointsAssessment"
         (evaluationClicked)="showEvaluationDetails($event)" 
       />
-    </ng-container>
+    </div>
+  </ng-container>
 
-    <ng-template #showMultiTable>
+  <ng-template #multiTable>
+    <div class="assessment-wrapper-2">
       <app-assessment-multi-table
         [assessments]="assessments"
         [maxPointsAssessment]="maxPointsAssessment"
         [stageTitle]="stageDescription"
       />
-    </ng-template>
-  </div>
+    </div>
+  </ng-template>
 </section>
 
 <app-modal

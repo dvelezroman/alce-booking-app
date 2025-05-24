@@ -51,7 +51,7 @@ private prepareData(): void {
     }
   }
 
-  this.types = Array.from(typesSet);
+  this.types = Object.values(AssessmentType);
   this.students = Array.from(studentMap.values());
 }
 
