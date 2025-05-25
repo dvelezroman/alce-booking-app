@@ -98,36 +98,40 @@ export class MeetingCalendarComponent implements OnInit {
 
   generateCurrentMonthDays(): void {
     const monthMap: Record<MonthKey, number> = {
-        ENERO: 1, FEBRERO: 2, MARZO: 3, ABRIL: 4, MAYO: 5, JUNIO: 6,
-        JULIO: 7, AGOSTO: 8, SEPTIEMBRE: 9, OCTUBRE: 10, NOVIEMBRE: 11, DICIEMBRE: 12
+      ENERO: 1, FEBRERO: 2, MARZO: 3, ABRIL: 4, MAYO: 5, JUNIO: 6,
+      JULIO: 7, AGOSTO: 8, SEPTIEMBRE: 9, OCTUBRE: 10, NOVIEMBRE: 11, DICIEMBRE: 12
     };
 
     const monthIndex = monthMap[this.selectedMonth as MonthKey];
     const startOfMonth = DateTime.fromObject({ year: this.selectedYear, month: monthIndex, day: 1 }, { zone: 'America/Guayaquil' });
     const daysInMonth = startOfMonth.daysInMonth;
-    
 
     if (!daysInMonth) {
-        console.error('No se pudo obtener la cantidad de días del mes.');
-        this.currentMonthDays = [];
-        return;
+      console.error('No se pudo obtener la cantidad de días del mes.');
+      this.currentMonthDays = [];
+      return;
     }
 
     const firstDayOfWeek = startOfMonth.weekday % 7;
-
     this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', isDisabled: false }));
+
     this.currentMonthDays = this.currentMonthDays.concat(
-        Array.from({ length: daysInMonth }, (_, i) => {
+      Array.from({ length: daysInMonth }, (_, i) => {
         const date = startOfMonth.plus({ days: i });
         const isDisabled = this.isDayDisabled(date.day, monthIndex - 1);
-        
+
+        const dayData = this.disabledDatesAndHours[(monthIndex - 1).toString()]?.find(d => d.day === date.day);
+        const uniqueHours = dayData?.hours ? Array.from(new Set(dayData.hours)) : [];
+        const hasDisabledHours = uniqueHours.length > 0;
+
         return {
-            day: date.day,
-            dayOfWeek: date.setLocale('es').toFormat('cccc').toUpperCase(),
-            date: date.toFormat('yyyy-MM-dd'),
-            isDisabled,
+          day: date.day,
+          dayOfWeek: date.setLocale('es').toFormat('cccc').toUpperCase(),
+          date: date.toFormat('yyyy-MM-dd'),
+          isDisabled,
+          hasDisabledHours
         };
-        })
+      })
     );
   }
 
@@ -168,30 +172,30 @@ export class MeetingCalendarComponent implements OnInit {
     );
   }
 
-isDayDisabled(day: number, monthIndex: number): boolean {
-  const monthKey = monthIndex.toString();
-  const disabledDays = this.disabledDates[monthKey] || [];
+  isDayDisabled(day: number, monthIndex: number): boolean {
+    const monthKey = monthIndex.toString();
+    const disabledDays = this.disabledDates[monthKey] || [];
 
-  const dayData = this.disabledDatesAndHours[monthKey]?.find(d => d.day === day);
-  const uniqueHours = dayData?.hours ? Array.from(new Set(dayData.hours)) : [];
+    const dayData = this.disabledDatesAndHours[monthKey]?.find(d => d.day === day);
+    const uniqueHours = dayData?.hours ? Array.from(new Set(dayData.hours)) : [];
 
-  if (!this.selectedYear || isNaN(this.selectedYear)) {
-    return false; 
+    if (!this.selectedYear || isNaN(this.selectedYear)) {
+      return false; 
+    }
+
+    const date = DateTime.fromObject(
+      { year: this.selectedYear, month: monthIndex + 1, day },
+      { zone: 'America/Guayaquil' }
+    );
+
+    const isSaturday = date.weekday === 6;
+    const totalHoursAvailable = isSaturday ? 6 : 13;
+
+    const isAllHoursBlocked = uniqueHours.length >= totalHoursAvailable;
+    const isFullyDisabled = disabledDays.includes(day) && uniqueHours.length === 0;
+
+    return isFullyDisabled || isAllHoursBlocked;
   }
-
-  const date = DateTime.fromObject(
-    { year: this.selectedYear, month: monthIndex + 1, day },
-    { zone: 'America/Guayaquil' }
-  );
-
-  const isSaturday = date.weekday === 6;
-  const totalHoursAvailable = isSaturday ? 6 : 13;
-
-  const isAllHoursBlocked = uniqueHours.length >= totalHoursAvailable;
-  const isFullyDisabled = disabledDays.includes(day) && uniqueHours.length === 0;
-
-  return isFullyDisabled || isAllHoursBlocked;
-}
 
   onDayClick(day: any): void {
     if (!day.day || day.isDisabled) return;

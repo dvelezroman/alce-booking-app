@@ -36,17 +36,17 @@
 
 .title-date{
   color: rgb(62, 62, 62);
-  padding: 1rem 2rem;
+  padding: .75rem 2rem;
   background-color: rgba(255, 213, 114, 0.777);
   text-align: center;
-  font-size: .85rem;
+  font-size: .8rem;
   border-radius: 10px;
   white-space: nowrap; 
   min-width: 200px; 
 }
 
 .ecuador-time-display {
-  margin-top: 1rem;
+  margin-top: 0rem;
   font-size: 0.75rem; 
   color: #555; 
   text-align: center;
@@ -152,7 +152,7 @@
 }
 
 .calendar-day.unselectable {
-  background-color: #e9e9e96d;
+  background-color: #f0f0f06d;
   color: #9f9f9f;
   cursor: not-allowed;
 }
@@ -167,4 +167,52 @@
 .calendar-day.danger, 
 .calendar-day.disabled {
   background-color: #ffd3d2; 
+}
+
+.calendar-day.partial-disabled {
+  background-color: #e0e0e0;
+  color: #666;
+}
+
+.calendar-legend-container {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+
+  .calendar-legend {
+    display: grid;
+    grid-auto-flow: column; 
+    grid-auto-columns: max-content; 
+    gap: .75rem;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+      font-size: 0.3rem;
+      color: #555;
+      text-align: center;
+    }
+
+    .legend-color {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+    }
+
+    .legend-available {
+      background-color: transparent;
+      border: 1px solid #6eafed;
+    }
+
+    .legend-partial {
+      background-color: #dcdcdc;
+    }
+
+    .legend-disabled {
+      background-color: #ffd3d2;
+    }
+  }
 }

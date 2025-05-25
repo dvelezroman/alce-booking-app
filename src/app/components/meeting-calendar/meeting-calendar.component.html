@@ -38,6 +38,7 @@
         [class.selectable]="isDaySelectable(day)"
         [class.unselectable]="!isDaySelectable(day)"
         [class.disabled]="day.isDisabled"
+        [class.partial-disabled]="!day.isDisabled && day.hasDisabledHours"
         [class.empty]="!day.day"
         [class.danger]="day.dayOfWeek === 'DOMINGO'"
         >
@@ -46,3 +47,20 @@
     </div>
   </div>
 </section>
+
+<div class="calendar-legend-container">
+  <div class="calendar-legend">
+    <div class="legend-item">
+      <span class="legend-color legend-available"></span>
+      Disponible
+    </div>
+    <div class="legend-item">
+      <span class="legend-color legend-partial"></span>
+      Horas no disponibles
+    </div>
+    <div class="legend-item">
+      <span class="legend-color legend-disabled"></span>
+      Día no disponible
+    </div>
+  </div>
+</div>
