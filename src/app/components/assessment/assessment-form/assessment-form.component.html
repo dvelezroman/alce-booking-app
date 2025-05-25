@@ -74,6 +74,7 @@
         min="0"
         max="100"
         [(ngModel)]="points"
+        (ngModelChange)="handlePointsChange($event)"
         placeholder="0-100"
         [disabled]="!type"
       />
@@ -101,12 +102,42 @@
       class="textarea full-comment-textarea"
       placeholder="Escribe un comentario"
       [(ngModel)]="note"
+      (ngModelChange)="handleTextareaChange($event)"
       rows="4"
     ></textarea>
   </div>
 
+  <!-- Input select de recursos -->
+  <div *ngIf="showCommentBox" class="field mt-2">
+    <label class="label">Selecciona Refuerzo</label>
+    <div class="control">
+      <select
+        #resourceSelect
+        class="input"
+        [(ngModel)]="selectedResourceId"
+        (change)="insertResourceIntoComment()"
+      >
+        <option value="" disabled>Selecciona un recurso</option>
+        <option *ngFor="let resource of availableResources" [value]="resource.id">
+          {{ resource.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Array de badge recursos-->
+  <div class="field mt-2" *ngIf="addedResources.length > 0">
+    <label class="label">Recursos Agregados</label>
+    <div class="tags" style="display: flex; flex-wrap: wrap;">
+      <span class="resource-badge" *ngFor="let resource of addedResources">
+        {{ resource.name }}
+        <button (click)="removeResource(resource.id)">✖</button>
+      </span>
+    </div>
+  </div>
+
   <div class="field mt-4">
-    <button class="button is-primary is-fullwidth" (click)="submitAssessment(typeControl)">
+    <button class="button is-primary is-fullwidth" [disabled]="shouldDisableSubmit" (click)="submitAssessment(typeControl)">
       Generar Evaluación
     </button>
   </div>
