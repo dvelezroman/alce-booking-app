@@ -189,23 +189,18 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     }
 
     if (this.studyContentIds.length === 0) {
-      this.confirmationModal = {
+      this.modal = {
         ...modalInitializer(),
         show: true,
-        isInfo: true,
-        message: 'Estás a punto de marcar asistencia sin haber confirmado contenidos.<br><br>¿Deseas continuar?',
-        showButtons: true,
-        confirm: () => {
-          this.toggleSelection(meeting);
-          this.closeConfirmationModal();
-        },
-        close: this.closeConfirmationModal,
+        isError: true,
+        message: 'Para marcar asistencia debes agregar al menos un contenido para la clase.',
+        close: this.closeModal,
       };
       return;
     }
 
-    this.toggleSelection(meeting);
-  }
+      this.toggleSelection(meeting);
+    }
 
   toggleSelection(meeting: MeetingDTO) {
     if (meeting && meeting.id) {
