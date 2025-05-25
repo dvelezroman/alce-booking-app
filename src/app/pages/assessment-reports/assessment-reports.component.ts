@@ -10,6 +10,7 @@ import { AssessmentTableReportsComponent } from '../../components/assessment-rep
 import { Stage } from '../../services/dtos/student.dto';
 import { StagesService } from '../../services/stages.service';
 import { AssessmentMultiTableComponent } from '../../components/assessment-reports/assessment-multiTable/assessment-multi-table.component';
+import { StudyContentService } from '../../services/study-content.service';
 
 
 @Component({
@@ -34,15 +35,18 @@ export class AssessmentReportsComponent {
   stageDescription: string = '';
   selectedStageId: number | null = null;
   selectedStudentId: number | null = null;
+  stagesWithContent: Stage[] = [];
 
   constructor(
     private assessmentService: AssessmentService,
+    private studyContentService: StudyContentService,
     private stagesService: StagesService,
     private assessmentPointsConfigService: AssessmentPointsConfigService
   ) {}
 
   ngOnInit(): void {
     this.loadAssessmentConfig();
+    this.loadStagesWithContent();
   }
 
   loadAssessmentConfig(): void {
@@ -54,6 +58,34 @@ export class AssessmentReportsComponent {
         this.showModal(this.createModalParams(true, 'Error al cargar configuración.'));
       }
     });
+  }
+
+  loadStagesWithContent(): void {
+    this.stagesService.getAll().subscribe(allStages => {
+      const stagesWithContent: Stage[] = [];
+      let processedCount = 0;
+
+      allStages.forEach(stage => {
+        this.studyContentService.filterBy(stage.id).subscribe(contents => {
+          if (contents.length > 0) {
+            stagesWithContent.push(stage);
+          }
+
+          processedCount++;
+          if (processedCount === allStages.length) {
+            this.stagesWithContent = this.sortStages(stagesWithContent);
+          }
+        });
+      });
+    });
+  }
+
+  private sortStages(stages: Stage[]): Stage[] {
+    return stages.sort((a, b) => this.extractStageNumber(a.number) - this.extractStageNumber(b.number));
+  }
+
+  private extractStageNumber(stageLabel: string): number {
+    return parseFloat(stageLabel.replace(/[^0-9.]/g, '')) || 0;
   }
 
   handleStageSelected(stageText: string): void {
