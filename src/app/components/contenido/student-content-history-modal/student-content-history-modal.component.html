@@ -53,14 +53,17 @@
             <tr>
               <td *ngFor="let content of stageContents; let i = index"
                   [ngClass]="{ 'column-hovered': hoveredColumnIndex === i }">
-                <ng-container *ngFor="let record of getRecordsByContentTitle(content.title)">
-                  <ng-container *ngFor="let date of record.dates; let j = index">
-                    <div style="margin-bottom: 1rem;">
-                      <div>{{ date | date: 'shortDate' }}</div>
-                      <div>{{ getInstructorByIndex(record, j) }}</div>
-                    </div>
+                <div class="scroll-wrapper"
+                    [ngClass]="{ 'scrollable-cell': getRecordsByContentTitle(content.title).length > 2 }">
+                  <ng-container *ngFor="let record of getRecordsByContentTitle(content.title)">
+                    <ng-container *ngFor="let date of record.dates; let j = index">
+                      <div class="record-entry" *ngFor="let date of record.dates; let j = index; let last = last">
+                        <div>{{ date | date: 'shortDate' }}</div>
+                        <div>{{ getInstructorByIndex(record, j) }}</div>
+                      </div>
+                    </ng-container>
                   </ng-container>
-                </ng-container>
+                </div>
               </td>
             </tr>
           </tbody>

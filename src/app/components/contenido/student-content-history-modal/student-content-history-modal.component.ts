@@ -50,7 +50,7 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
     if (!instructor) return 'Instructor no disponible';
     const firstName = instructor.firstName ?? 'No disponible';
     const lastName = instructor.lastName ?? 'No disponible';
-    return `${lastName}, ${firstName}`;
+    return `${lastName}`;
   }
 
   getRecordsByContentTitle(title: string): StudyContentPayloadI[] {

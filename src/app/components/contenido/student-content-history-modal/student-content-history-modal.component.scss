@@ -10,7 +10,7 @@
   max-width: 1000px;
   width: 90%;
   max-height: 400px;
-  overflow-x: auto; 
+  overflow-x: auto;
 }
 
 .student-stage-header {
@@ -21,7 +21,7 @@
 }
 
 .modal-card-head {
-  background-color: #ffff !important; 
+  background-color: #ffff !important;
   padding: 0rem 1rem;
 }
 
@@ -60,19 +60,18 @@
   &:hover {
     background-color: #f0f0f0;
   }
-}
 
-.nav-button.disabled {
-  opacity: 0.4;
+  &.disabled {
+    opacity: 0.4;
+  }
 }
 
 .modal-card-body {
   padding: 1rem;
   background-color: #ffffff;
   color: #4f4f4f;
-  max-height: 250px;
-  overflow-y: auto;
-  overflow-x: auto; 
+  overflow-x: auto;
+  overflow-y: hidden;
 
   p {
     font-size: 0.8rem;
@@ -106,7 +105,9 @@ button.delete {
 
 .table-container {
   width: 100%;
+  height: 250px;
   overflow-x: auto;
+  overflow-y: hidden;
   border-radius: 8px;
 }
 
@@ -121,14 +122,15 @@ button.delete {
   position: sticky;
   top: 0;
   background-color: #e5effa;
-  z-index: 1;
+  z-index: 2;
 }
 
 .table-results th,
 .table-results td {
-  padding: 0.55rem;
   font-size: 0.75rem;
+  padding: 0.55rem;
   max-width: 130px;
+  min-width: 135px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -136,25 +138,59 @@ button.delete {
   border-right: 1px solid #dcdcdc;
   text-align: center;
   color: #1f1f1f;
+  vertical-align: top;
   transition: min-width 0.5s ease-in-out, max-width 0.5s ease-in-out;
-}
-
-.table-results th {
-  cursor: default;
-  background-color: #e5effa;
 }
 
 .table-results td {
   font-size: 0.65rem;
   background-color: #ffffff;
   border-bottom: 1px solid #ddd;
-  white-space: normal; 
-  word-wrap: break-word; 
+  white-space: normal;
+  word-wrap: break-word;
   overflow-wrap: anywhere;
+  padding: 0; 
+}
+
+.record-entry {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #ccc;
+  margin-bottom: 0.5rem;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
 }
 
 .table-results th.column-hovered,
 .table-results td.column-hovered {
-  min-width: max-content; 
+  min-width: max-content;
   max-width: 500px;
+}
+
+.scroll-wrapper {
+  max-height: 190px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  display: block;
+  box-sizing: border-box;
+}
+
+.scrollable-cell {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(150, 150, 150, 0.3) transparent;
+}
+
+.scrollable-cell::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable-cell::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollable-cell::-webkit-scrollbar-thumb {
+  background-color: rgba(150, 150, 150, 0.3);
+  border-radius: 4px;
 }
