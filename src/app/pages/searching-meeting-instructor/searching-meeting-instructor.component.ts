@@ -189,13 +189,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     }
 
     if (this.studyContentIds.length === 0) {
-      this.modal = {
-        ...modalInitializer(),
-        show: true,
-        isError: true,
-        message: 'Para marcar asistencia debes agregar al menos un contenido para la clase.',
-        close: this.closeModal,
-      };
+      this.showModal(this.createModalParams(true, 'Para marcar asistencia debes agregar al menos un contenido para la clase.'));
       return;
     }
 
@@ -329,8 +323,10 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.studentContentHistory = history;
 
     const studentStageDescription = this.selectedMeeting?.stage?.description;
+    // Asegura orden correcto antes de buscar
+    this.filteredStages = this.sortStages(this.filteredStages);
 
-    const targetStageIndex = this.stages.findIndex(
+    const targetStageIndex = this.filteredStages.findIndex(
       s => s.description === studentStageDescription
     );
 
@@ -340,7 +336,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     }
 
     this.currentStageIndex = targetStageIndex;
-    const targetStageId = this.stages[targetStageIndex].id;
+    const targetStageId = this.filteredStages[targetStageIndex].id;
 
     this.studyContentService.filterBy(targetStageId).subscribe({
       next: (contents) => this.handleStageContentsLoaded(contents),
@@ -382,7 +378,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.modal = { ...params };
     setTimeout(() => {
       this.modal.close();
-    }, 1000);
+    }, 2000);
   }
 
   closeModal = () => {
