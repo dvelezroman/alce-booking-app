@@ -328,19 +328,19 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     this.studentContentHistory = history;
 
-    const studentStageId = this.selectedMeeting?.student?.stageId;
+    const studentStageDescription = this.selectedMeeting?.stage?.description;
 
-    const targetStageIndex = this.filteredStages.findIndex(
-      s => s.id === studentStageId
+    const targetStageIndex = this.stages.findIndex(
+      s => s.description === studentStageDescription
     );
 
     if (targetStageIndex === -1) {
-      this.finishLoadingWithMessage('No se encontró el stage correspondiente.');
+      this.finishLoadingWithMessage('No se encontró el stage correspondiente al estudiante.');
       return;
     }
 
     this.currentStageIndex = targetStageIndex;
-    const targetStageId = this.filteredStages[targetStageIndex].id;
+    const targetStageId = this.stages[targetStageIndex].id;
 
     this.studyContentService.filterBy(targetStageId).subscribe({
       next: (contents) => this.handleStageContentsLoaded(contents),

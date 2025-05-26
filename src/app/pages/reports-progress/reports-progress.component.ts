@@ -84,8 +84,11 @@ export class ReportsProgressComponent implements OnInit {
       return;
     }
 
-    const oldestContent = [...history].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
-    const targetStageIndex = this.stages.findIndex(s => s.description === oldestContent.data?.stage);
+    const studentStage = this.studentStageDescription;
+
+    const targetStageIndex = this.stages.findIndex(
+      s => s.description === studentStage
+    );
 
     if (targetStageIndex === -1) {
       this.studentStageContents = [];

@@ -56,12 +56,10 @@
                 <div class="scroll-wrapper"
                     [ngClass]="{ 'scrollable-cell': getRecordsByContentTitle(content.title).length > 2 }">
                   <ng-container *ngFor="let record of getRecordsByContentTitle(content.title)">
-                    <ng-container *ngFor="let date of record.dates; let j = index">
-                      <div class="record-entry" *ngFor="let date of record.dates; let j = index; let last = last">
-                        <div>{{ date | date: 'shortDate' }}</div>
-                        <div>{{ getInstructorByIndex(record, j) }}</div>
-                      </div>
-                    </ng-container>
+                    <div class="record-entry" *ngFor="let date of record.dates; let j = index; let last = last">
+                      <div>{{ date | date: 'shortDate' }}</div>
+                      <div>{{ getInstructorByIndex(record, j) }}</div>
+                    </div>
                   </ng-container>
                 </div>
               </td>
