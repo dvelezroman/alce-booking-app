@@ -52,7 +52,7 @@ export class MeetingTableComponent {
   }
 
   hasObservation(meeting: MeetingDTO): boolean {
-    return !!meeting.student?.user?.comment;
+    return !!meeting.assessment?.note || !!meeting.student?.user?.comment;
   }
 
   getObservationTooltip(meeting: MeetingDTO): string {

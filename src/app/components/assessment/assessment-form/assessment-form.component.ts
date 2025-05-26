@@ -119,9 +119,9 @@ export class AssessmentFormComponent implements OnInit {
   get shouldDisableSubmit(): boolean {
     const requiresComment = this.points !== null && this.points < 85;
     const commentIsValid = this.note.trim().length >= 12;
-    const hasResources = this.addedResources.length > 0;
+    // const hasResources = this.addedResources.length > 0;
 
-    return requiresComment && (!commentIsValid || !hasResources);
+    return requiresComment && (!commentIsValid);
   }
 
   insertResourceIntoComment(): void {
