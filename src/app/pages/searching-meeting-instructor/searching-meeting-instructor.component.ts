@@ -328,12 +328,10 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     this.studentContentHistory = history;
 
-    const oldestContent = [...history].sort((a, b) =>
-      new Date(a.date).getTime() - new Date(b.date).getTime()
-    )[0];
+    const studentStageId = this.selectedMeeting?.student?.stageId;
 
     const targetStageIndex = this.filteredStages.findIndex(
-      s => s.description === oldestContent.data?.stage
+      s => s.id === studentStageId
     );
 
     if (targetStageIndex === -1) {
@@ -404,17 +402,6 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       message,
       close: this.closeModal
     };
-  }
-
-  private updateStageDescription() {
-    const currentStage = this.stages[this.currentStageIndex];
-    this.loadStageContents(currentStage.id);
-  }
-
-  private stageHasHistoryByDataStage(stageName: string): boolean {
-    return this.studentContentHistory.some(
-      (record: StudyContentPayloadI) => record.data?.stage === stageName
-    );
   }
 
   goToPreviousStage() {
