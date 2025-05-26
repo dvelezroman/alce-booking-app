@@ -53,7 +53,8 @@
         [isToday]="isToday.bind(this)"
         [hasMeetingPassed]="hasMeetingPassed.bind(this)"
         [formatStudyContent]="formatStudyContent.bind(this)"
-        (contentViewRequested)="showContentViewer($event)"
+        (contentViewRequested)="showContentViewer($event.content, $event.title)"
+        (commentViewRequested)="showContentViewer($event.note, $event.title)"
         (studentContentHistoryRequested)="loadStudentContentHistory($event)"
         (assistanceCheckboxClicked)="onAssistanceCheckboxClick($event.event, $event.meeting)"
       ></app-meeting-table>

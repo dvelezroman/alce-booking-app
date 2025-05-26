@@ -38,25 +38,30 @@ import { MeetingFilterComponent } from '../../components/instructor/meeting-filt
   styleUrl: './searching-meeting-instructor.component.scss'
 })
 export class SearchingMeetingInstructorComponent implements OnInit {
-  availableHours: number[] = [];
+  selectedMeeting?: MeetingDTO;
+
+  stages: Stage[] = [];
   meetings: MeetingDTO[] = [];
+  filteredStages: Stage[] = [];
+  availableHours: number[] = [];
+  studyContentIds: number[] = [];
+  studentStageContents: StudyContentDto[] = [];
+  studentContentHistory: StudyContentPayloadI[] = [];
+  ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
+  studyContentOptions: { id: number; name: string }[] = [];
+
+  currentStageIndex: number = 0;
+
   instructorId: number | null = null;
+  instructorLink: string | null = null;
+
+  showForm: boolean = true;
+  showCreateModal: boolean = false;
+  isLoadingContentHistory: boolean = false;
+  isStudentContentHistoryModalVisible: boolean = false;
+
   modal: ModalDto = modalInitializer();
   confirmationModal: ModalDto = modalInitializer();
-  stages: Stage[] = [];
-  filteredStages: Stage[] = [];
-  ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
-  showCreateModal = false;
-  instructorLink: string | null = null;
-  studyContentIds: number[] = [];
-  studyContentOptions: { id: number; name: string }[] = [];
-  showForm = true;
-  studentContentHistory: StudyContentPayloadI[] = [];
-  isStudentContentHistoryModalVisible: boolean = false;
-  studentStageContents: StudyContentDto[] = [];
-  selectedMeeting?: MeetingDTO;
-  currentStageIndex: number = 0;
-  isLoadingContentHistory = false;
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -363,13 +368,13 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.isStudentContentHistoryModalVisible = false;
   }
 
-  showContentViewer(content: string) {
+  showContentViewer(content: string, title: string = 'Contenido de la Clase'){
     this.modal = {
       ...modalInitializer(),
       show: true,
       message: content,
       isContentViewer: true,
-      title: 'Contenido de la Clase',
+      title,
       close: this.closeModal,
     };
   }

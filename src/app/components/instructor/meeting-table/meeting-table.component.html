@@ -32,17 +32,21 @@
             <span class="material-icons">menu_book</span>
           </button>
         </td>
-        <td data-label="Observación" class="tooltip-container">
-          <span class="tooltip" [hidden]="!meeting.student?.user?.comment" [title]="meeting.student?.user?.comment">
-            {{ meeting.student?.user?.comment || 'Sin observación' }}
-          </span>
+        <td data-label="Observación" class="observation-cell">
+          <ng-container *ngIf="hasObservation(meeting); else noComment">
+            <span class="comment-icon material-icons" title="{{ getObservationTooltip(meeting) }}" (click)="showComment(meeting)">
+              comment
+            </span>
+            <span class="comment-text">
+              {{ meeting.student?.user?.comment }}
+            </span>
+          </ng-container>
+          <ng-template #noComment>
+            <span class="no-comment-text">Sin observación</span>
+          </ng-template>
         </td>
         <td data-label="Abrió Enlace">
-          <ng-container *ngIf="hasMeetingPassed(meeting.localdate, meeting.localhour); else futureMeeting">
-            <span *ngIf="meeting.linkOpened; else notOpened">✔️</span>
-            <ng-template #notOpened>❌</ng-template>
-          </ng-container>
-          <ng-template #futureMeeting>-</ng-template>
+          {{ didOpenLink(meeting) }}
         </td>
         <td data-label="Marcar Asistencia">
           <input 
