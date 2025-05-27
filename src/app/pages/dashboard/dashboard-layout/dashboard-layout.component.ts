@@ -17,9 +17,7 @@ import { ModalDto, modalInitializer } from "../../../components/modal/modal.dto"
   imports: [
     CommonModule,
     RouterModule,
-    ModalComponent,
     SidebarComponent,
-    ModalComponent
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',

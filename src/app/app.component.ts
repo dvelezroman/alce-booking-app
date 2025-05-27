@@ -6,9 +6,8 @@ import { Store } from '@ngrx/store';
 import { setLoggedInStatus, setAdminStatus, unsetUserData } from './store/user.action';
 import { ModalDto, modalInitializer } from './components/modal/modal.dto';
 import { ModalComponent } from './components/modal/modal.component';
-
-import localeEs from '@angular/common/locales/es';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import   localeEs from '@angular/common/locales/es';
 
 registerLocaleData(localeEs);
 
@@ -37,7 +36,11 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Estado de conexión
+    this.setupConnectionListeners();
+    this.checkAccessTokenAndRefreshSession();
+  }
+
+  private setupConnectionListeners(): void {
     window.addEventListener('offline', () => {
       this.isOffline = true;
       this.showModal(this.createModalParams(true, 'Sin conexión a internet'));
@@ -47,19 +50,20 @@ export class AppComponent implements OnInit {
       this.isOffline = false;
       this.showModal(this.createModalParams(false, 'Conectado a internet'));
     });
+  }
 
-    // Verificar token guardado
+  private checkAccessTokenAndRefreshSession(): void {
     const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      this.usersService.refreshLogin().subscribe({
-        error: () => {
-          this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
-          this.store.dispatch(setAdminStatus({ isAdmin: false }));
-          this.store.dispatch(unsetUserData());
-          localStorage.removeItem('accessToken');
-        }
-      });
-    }
+    if (!accessToken) return;
+
+    this.usersService.refreshLogin().subscribe({
+      error: () => {
+        this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
+        this.store.dispatch(setAdminStatus({ isAdmin: false }));
+        this.store.dispatch(unsetUserData());
+        localStorage.removeItem('accessToken');
+      }
+    });
   }
 
   showModal(params: ModalDto) {
