@@ -7,6 +7,7 @@ import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto'
 import { AssessmentTypeI } from '../../../services/dtos/assessment-type.dto';
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 import { FormsModule } from '@angular/forms';
+import { AssessmentConfigI } from '../../../services/dtos/assessment.dto';
 
 @Component({
   selector: 'app-academic-resources',
@@ -23,6 +24,7 @@ import { FormsModule } from '@angular/forms';
 export class AcademicResourcesComponent {
   modal: ModalDto = modalInitializer();
   showConfigForm: boolean = false;
+  configId: number | null = null;
   maxPoints: number | null = null;
   minPoints: number | null = null;
 
@@ -77,15 +79,13 @@ export class AcademicResourcesComponent {
     });
   }
 
-  updateAssessmentConfig(): void {
-    if (this.maxPoints === null || this.minPoints === null) return;
-
-    this.pointsConfigService.update(1, this.maxPoints, this.minPoints).subscribe({
+  saveAssessmentConfig(): void {
+    this.pointsConfigService.update(1, this.maxPoints!, this.minPoints!).subscribe({
       next: () => {
-        this.showNotification('Configuración de evaluación actualizada correctamente', false, true);
+        this.showNotification('Configuración actualizada correctamente', false, true);
       },
       error: () => {
-        this.showNotification('Error al actualizar configuración de evaluación', true);
+        this.showNotification('Error al actualizar configuración', true);
       }
     });
   }

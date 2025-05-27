@@ -48,6 +48,7 @@ export interface FilterAssessmentI {
 }
 
 export interface AssessmentConfigI {
+  id: number;
   minPointsAssessment: number;
   maxPointsAssessment: number;
 }
