@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AssessmentTypeFormComponent } from '../../../components/assessment-types/assessment-type-form/assessment-type-form.component';
-import { LinksService } from '../../../services/assessment-types.service';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { AssessmentTypeI } from '../../../services/dtos/assessment-type.dto';
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 import { FormsModule } from '@angular/forms';
-import { AssessmentConfigI } from '../../../services/dtos/assessment.dto';
+import {AssessmentTypesService} from "../../../services/assessment-types.service";
 
 @Component({
   selector: 'app-academic-resources',
@@ -34,7 +33,7 @@ export class AcademicResourcesComponent {
   { name: 'Grammar', description: 'Ensayo corto sobre el tema de la unidad' },
 ];
 
-  constructor(private linksService: LinksService,
+  constructor(private assessmentTypesService: AssessmentTypesService,
               private pointsConfigService: AssessmentPointsConfigService
   ) {}
 
@@ -44,7 +43,7 @@ export class AcademicResourcesComponent {
   }
 
   loadAssessmentTypes(): void {
-    this.linksService.getAll().subscribe({
+    this.assessmentTypesService.getAll().subscribe({
       next: (types) => {
         this.assessmentTypes = types;
       },
@@ -65,9 +64,9 @@ export class AcademicResourcesComponent {
       }
     });
   }
-  
+
   handleCreateAssessmentType(type: { name: string; description?: string }) {
-    this.linksService.create(type).subscribe({
+    this.assessmentTypesService.create(type).subscribe({
       next: (createdType) => {
         console.log('Tipo creado correctamente:', createdType);
         this.showNotification('Tipo de evaluación creado correctamente', false, true);
