@@ -4,11 +4,12 @@ import { dashboardRoutes } from './pages/dashboard/dashboard-routes';
 import { DashboardLayoutComponent } from './pages/dashboard/dashboard-layout/dashboard-layout.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { AuthGuard } from './pages/auth/auth.guard';
+import { LoginGuard } from './pages/auth/login.guard';
 
 
 export const routes: Routes = [
-  { path: 'home', component: HomePublicComponent },
-  { path: 'login', component: LoginComponent },
+  { path: 'home-public', component: HomePublicComponent, canActivate: [LoginGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   // { path: 'register', component: RegisterComponent },
 
   {
@@ -18,6 +19,6 @@ export const routes: Routes = [
     children: dashboardRoutes
   },
 
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: '**', redirectTo: '/home' },
+  { path: '', redirectTo: '/home-public', pathMatch: 'full' },
+  { path: '**', redirectTo: '/home-public' },
 ];

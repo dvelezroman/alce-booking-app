@@ -209,7 +209,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
 
   onConfirmLogout() {
     this.usersService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/home']);
     this.closeLogoutModal();
   }
 
