@@ -7,7 +7,7 @@ import {AssessmentTypeI, CreateAssessmentTypeI, UpdateAssessmentTypeI} from "./d
 @Injectable({
   providedIn: 'root',
 })
-export class LinksService {
+export class AssessmentTypesService {
   private apiUrl = `${environment.apiUrl}/assessment-types`;
 
   constructor(
