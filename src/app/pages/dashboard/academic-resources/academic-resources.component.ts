@@ -1,45 +1,45 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AssessmentTypeFormComponent } from '../../../components/assessment-types/assessment-type-form/assessment-type-form.component';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { AssessmentTypeI } from '../../../services/dtos/assessment-type.dto';
-import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
-import { FormsModule } from '@angular/forms';
-import {AssessmentTypesService} from "../../../services/assessment-types.service";
+import { AssessmentTypesService } from '../../../services/assessment-types.service';
 
 @Component({
   selector: 'app-academic-resources',
   standalone: true,
   imports: [
-      CommonModule,
-      FormsModule,
-      AssessmentTypeFormComponent,
-      ModalComponent
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AssessmentTypeFormComponent,
+    ModalComponent
   ],
   templateUrl: './academic-resources.component.html',
   styleUrl: './academic-resources.component.scss'
 })
-export class AcademicResourcesComponent {
+export class AcademicResourcesComponent implements OnInit {
   modal: ModalDto = modalInitializer();
   showConfigForm: boolean = false;
-  configId: number | null = null;
-  maxPoints: number | null = null;
-  minPoints: number | null = null;
+  assessmentTypes: AssessmentTypeI[] = [];
+  typeToEdit: AssessmentTypeI | null = null;
+  editForm!: FormGroup;
 
-  // assessmentTypes: AssessmentTypeI[] = [];
-  assessmentTypes: AssessmentTypeI[] = [
-  { name: 'Speaking', description: 'Evaluación hablada con preguntas abiertas' },
-  { name: 'Grammar', description: 'Ensayo corto sobre el tema de la unidad' },
-];
-
-  constructor(private assessmentTypesService: AssessmentTypesService,
-              private pointsConfigService: AssessmentPointsConfigService
-  ) {}
+  constructor(
+    private assessmentTypesService: AssessmentTypesService,
+    private fb: FormBuilder
+  ) {
+     this.editForm = this.fb.group({
+      name: ['', Validators.required],
+      description: ['']
+    });
+  }
 
   ngOnInit(): void {
-    // this.loadAssessmentTypes();
-     this.loadAssessmentConfig();
+    this.loadAssessmentTypes();
+   
   }
 
   loadAssessmentTypes(): void {
@@ -53,40 +53,47 @@ export class AcademicResourcesComponent {
     });
   }
 
-  loadAssessmentConfig(): void {
-    this.pointsConfigService.getById().subscribe({
-      next: (config) => {
-        this.maxPoints = config.maxPointsAssessment;
-        this.minPoints = config.minPointsAssessment;
-      },
-      error: () => {
-        this.showNotification('Error al cargar configuración de evaluación', true);
-      }
-    });
-  }
-
   handleCreateAssessmentType(type: { name: string; description?: string }) {
     this.assessmentTypesService.create(type).subscribe({
-      next: (createdType) => {
-        console.log('Tipo creado correctamente:', createdType);
+      next: () => {
         this.showNotification('Tipo de evaluación creado correctamente', false, true);
+        this.loadAssessmentTypes();
       },
       error: () => {
-        console.error('Error al crear el tipo de evaluación');
-       this.showNotification('Error al crear el tipo de evaluación', true);
+        this.showNotification('Error al crear el tipo de evaluación', true);
       }
     });
   }
 
-  saveAssessmentConfig(): void {
-    this.pointsConfigService.update(1, this.maxPoints!, this.minPoints!).subscribe({
+  openEditModal(type: AssessmentTypeI): void {
+    this.typeToEdit = type;
+    this.editForm.setValue({
+      name: type.name,
+      description: type.description ?? ''
+    });
+  }
+
+  updateAssessmentType(): void {
+    if (!this.typeToEdit || this.editForm.invalid) return;
+
+    const updatedData = this.editForm.value;
+
+    this.assessmentTypesService.update(this.typeToEdit.id!, updatedData).subscribe({
       next: () => {
-        this.showNotification('Configuración actualizada correctamente', false, true);
+        this.showNotification('Tipo de evaluación actualizado correctamente', false, true);
+        this.loadAssessmentTypes();
+        this.typeToEdit = null;
+        this.editForm.reset();
       },
       error: () => {
-        this.showNotification('Error al actualizar configuración', true);
+        this.showNotification('Error al actualizar el tipo de evaluación', true);
       }
     });
+  }
+
+  cancelEdit(): void {
+    this.typeToEdit = null;
+    this.editForm.reset();
   }
 
   showNotification(message: string, isError = false, isSuccess = false) {
@@ -102,5 +109,31 @@ export class AcademicResourcesComponent {
     setTimeout(() => {
       this.modal.show = false;
     }, 2500);
+  }
+
+  deleteAssessmentType(id: number): void {
+    this.assessmentTypesService.delete(id).subscribe({
+      next: () => {
+        this.showNotification('Tipo de evaluación eliminado correctamente', false, true);
+        this.loadAssessmentTypes();
+      },
+      error: () => {
+        this.showNotification('Error al eliminar el tipo de evaluación', true);
+      }
+    });
+
+    this.modal.show = false;
+  }
+
+  confirmDeleteType(type: AssessmentTypeI): void {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: `¿Estás seguro de eliminar el tipo de evaluación?`,
+      isInfo: true,
+      showButtons: true,
+      close: () => this.modal.show = false,
+      confirm: () => this.deleteAssessmentType(type.id!)
+    };
   }
 }

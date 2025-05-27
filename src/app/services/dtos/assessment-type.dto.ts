@@ -1,4 +1,5 @@
 export interface AssessmentTypeI {
+  id: number;
   name: string;
   description: string;
 }

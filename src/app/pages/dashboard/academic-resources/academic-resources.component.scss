@@ -25,40 +25,6 @@
   margin-top: 5rem; 
 }
 
-.dropdown-toggle-container {
-  margin-bottom: 2rem;
-  max-width: 350px;
-  width: 100%;
-  margin: auto;
-}
-
-.dropdown-toggle {
-  cursor: pointer;
-  padding: 0.75rem 1rem;
-  background-color: #e5effa;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #333;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  margin-bottom: 0.5rem;
-}
-
-.dropdown-body {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-.dropdown-body-hidden {
-  display: none;
-}
-
-.material-icons {
-  font-size: 1.1rem;
-}
-
 .search-form {
   background-color: white;
   max-width: 330px;
@@ -90,6 +56,17 @@
   border-radius: 6px;
   padding: 0.5rem 0.75rem;
   box-sizing: border-box;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .search-form .input:focus {
@@ -202,3 +179,68 @@
     font-size: 1rem;
   }
 }
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.15); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.edit-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  max-width: 400px;
+  width: 90%;
+  padding: 0;
+  animation: popUp 0.3s ease-out;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.edit-modal textarea.input {
+  resize: none;
+}
+
+.modal-button {
+  flex: 1;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &.is-primary {
+    background-color: #3273dc;
+    color: white;
+
+    &:hover {
+      background-color: #275fad;
+    }
+  }
+
+  &.is-secondary {
+    background-color: #e0e0e0;
+    color: #333;
+
+    &:hover {
+      background-color: #cacaca;
+    }
+  }
+}
+

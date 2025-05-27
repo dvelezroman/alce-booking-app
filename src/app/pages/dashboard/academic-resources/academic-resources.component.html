@@ -4,45 +4,6 @@
 
 <div class="page-wrapper">
 
-    <div class="dropdown-toggle-container">
-    <div class="dropdown-toggle" (click)="showConfigForm = !showConfigForm">
-        <span>Configuración de Puntos</span>
-        <span class="icon is-small">
-        <i class="material-icons">
-            {{ showConfigForm ? 'expand_less' : 'expand_more' }}
-        </i>
-        </span>
-    </div>
-
-    <div [ngClass]="showConfigForm ? 'dropdown-body' : 'dropdown-body-hidden'">
-        <div class="search-form">
-        <div class="field">
-            <label class="label">Puntos Máximos</label>
-            <input
-            type="number"
-            class="input"
-            [(ngModel)]="maxPoints"
-            placeholder="Ej: 100" />
-        </div>
-
-        <div class="field">
-            <label class="label">Puntos Mínimos para Refuerzo</label>
-            <input
-            type="number"
-            class="input"
-            [(ngModel)]="minPoints"
-            placeholder="Ej: 80" />
-        </div>
-
-        <div class="button-wrapper">
-            <button class="button is-blue" (click)="saveAssessmentConfig()">
-            Guardar Configuración
-            </button>
-        </div>
-        </div>
-    </div>
-    </div>
-
   <app-assessment-type-form
     (formSubmit)="handleCreateAssessmentType($event)"
   ></app-assessment-type-form>
@@ -62,10 +23,10 @@
             <td>{{ type.name }}</td>
             <td>{{ type.description || "-" }}</td>
             <td class="table-actions">
-              <button class="icon-button edit-icon" title="Editar">
+              <button class="icon-button edit-icon" title="Editar" (click)="openEditModal(type)">
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="icon-button delete-icon" title="Eliminar">
+              <button class="icon-button delete-icon" title="Eliminar" (click)="confirmDeleteType(type)">
                 <i class="fas fa-trash"></i>
               </button>
             </td>
@@ -73,6 +34,30 @@
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="typeToEdit">
+  <div class="edit-modal">
+    <form [formGroup]="editForm" (ngSubmit)="updateAssessmentType()" class="search-form">
+      <div class="field">
+        <label class="label">Tipo de Evaluación</label>
+        <input type="text" class="input" formControlName="name" />
+        <p class="error-message" *ngIf="editForm.get('name')?.touched && editForm.get('name')?.invalid">
+          Campo obligatorio.
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label">Descripción (opcional)</label>
+        <textarea class="input" formControlName="description" rows="2"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="submit" class="modal-button is-primary">Actualizar</button>
+        <button type="button" class="modal-button is-secondary" (click)="cancelEdit()">Cancelar</button>
+      </div>
+    </form>
   </div>
 </div>
 

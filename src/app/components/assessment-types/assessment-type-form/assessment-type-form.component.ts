@@ -21,6 +21,16 @@ export class AssessmentTypeFormComponent {
     });
   }
 
+  toggleForm(): void {
+    this.showForm = !this.showForm;
+
+    if (!this.showForm) {
+      this.form.reset(); 
+      this.form.markAsPristine(); 
+      this.form.markAsUntouched();
+    }
+  }
+
   submitForm(): void {
     if (this.form.valid) {
       this.formSubmit.emit(this.form.value);
