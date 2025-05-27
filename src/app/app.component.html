@@ -1,31 +1,21 @@
 <div class="app-container">
   
+  <!-- Estado de conexión -->
   <div [class.show]="isOffline" class="connection-status">
     <i class="fas fa-exclamation-triangle"></i> 
     <p>Sin conexión a internet</p>
   </div>
 
-  <app-header *ngIf="isLoggedIn && (!isRegistered && userData?.role === UserRole.STUDENT)"></app-header>
-  <div class="content-wrapper">
-    <!-- Sidebar, visible solo cuando el usuario está logueado -->
-    <app-sidebar *ngIf="isLoggedIn && (isRegistered || userData?.role !== UserRole.STUDENT)"
-                 [isSidebarClosed]="isSidebarClosed"
-                 (toggleSidebarEvent)="toggleSidebar()"
-                 (logoutEvent)="onConfirmLogout()">
-    </app-sidebar>
+  <!-- Main router outlet: carga login, register, dashboard. -->
+  <router-outlet></router-outlet>
+  <app-spinner></app-spinner>
 
-    <!-- Main content -->
-    <main class="main-content" [ngClass]="{'shrink': isLoggedIn && !isSidebarClosed, 'full-width': !isLoggedIn}">
-      <router-outlet></router-outlet>
-      <app-spinner></app-spinner>
-    </main>
-  </div>
+  <!-- Modal global de conexión -->
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    (close)="modal.close()">
+  </app-modal>
 </div>
-
-<app-modal
-  [showModal]="modal.show"
-  [message]="modal.message"
-  [isError]="modal.isError"
-  [isSuccess]="modal.isSuccess"
-  (close)="modal.close()">
-</app-modal>

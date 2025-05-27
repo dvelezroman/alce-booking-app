@@ -1,52 +1,22 @@
 import { Routes } from '@angular/router';
-import { MeetingBookingComponent } from "./pages/meeting-booking/meeting-booking.component";
-import { LoginComponent } from './pages/login/login.component';
-import { RegisterCompleteComponent } from './pages/register-complete/register-complete.component';
-import { HomeComponent } from './pages/home/home.component';
-import { RegisterComponent } from "./pages/register/register.component";
-import { StageComponent } from "./pages/stage/stage.component";
-import { SearchingMeetingComponent } from './pages/searching-meeting/searching-meeting.component';
-import { SearchingStudentComponent } from './pages/searching-students/searching-student.component';
-import { AuthGuard } from "./auth/auth.guard";
-import { SearchingMeetingInstructorComponent } from './pages/searching-meeting-instructor/searching-meeting-instructor.component';
-import { LinksComponent } from './pages/links/links.component';
-import { AttendanceReportsComponent } from './pages/attendance-reports/attendance-reports.component';
-import { AttendanceInstructorComponent } from './pages/attendance-instructor/attendance-instructor.component';
-import { FeatureFlagComponent } from "./pages/feature-flag/feature-flag.component";
-import { RegisterStudentComponent } from './pages/register-student/register-student.component';
-import { RegisterInstructorAdminComponent } from './pages/register-instructor-admin/register-instructor-admin.component';
-import { ReportsDetailedComponent } from './pages/reports-detail-statist-meeting/reports-detailed.component';
-import { MeetingsStudentComponent } from './pages/meetings-student/meetings-student.component';
-import { ProcessedEventsComponent } from './pages/processed-events/processed-events.component';
-import { ContentComponent } from './pages/content/content.component';
-import { ReportsProgressComponent } from './pages/reports-progress/reports-progress.component';
-import { AssessmentComponent } from './pages/assessment/assessment.component';
-import { AssessmentReportsComponent } from './pages/assessment-reports/assessment-reports.component';
+import { HomePublicComponent } from './pages/home-public/home-public.component';
+import { dashboardRoutes } from './pages/dashboard/dashboard-routes';
+import { DashboardLayoutComponent } from './pages/dashboard/dashboard-layout/dashboard-layout.component';
+import { LoginComponent } from './pages/auth/login/login.component';
+import { AuthGuard } from './pages/auth/auth.guard';
 
 
 export const routes: Routes = [
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomePublicComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'register-complete', component: RegisterCompleteComponent, canActivate: [AuthGuard] },
-  { path: 'booking', component: MeetingBookingComponent, canActivate: [AuthGuard] },
-  { path: 'stage', component: StageComponent, canActivate: [AuthGuard] },
-  { path: 'link', component: LinksComponent},
-  { path: 'content', component: ContentComponent, canActivate: [AuthGuard] },
-  { path: 'meetings-student', component: MeetingsStudentComponent, canActivate: [AuthGuard] },
-  { path: 'searching-meeting', component: SearchingMeetingComponent, canActivate: [AuthGuard]},
-  { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent,canActivate: [AuthGuard]},
-  { path: 'searching-students', component: SearchingStudentComponent, canActivate: [AuthGuard]},
-  { path: 'asistencias-alumnos', component: AttendanceReportsComponent, canActivate: [AuthGuard]},
-  { path: 'asistencias-instructor', component: AttendanceInstructorComponent, canActivate: [AuthGuard]},
-  { path: 'processed-events', component: ProcessedEventsComponent, canActivate: [AuthGuard] },
-  { path: 'feature-flag', component: FeatureFlagComponent, canActivate: [AuthGuard]},
-  { path: 'create-students', component: RegisterStudentComponent, canActivate: [AuthGuard]},
-  { path: 'create-instructors', component: RegisterInstructorAdminComponent, canActivate: [AuthGuard]},
-  { path: 'reports-detailed', component: ReportsDetailedComponent, canActivate: [AuthGuard] },
-  { path: 'reports-progress', component: ReportsProgressComponent, canActivate: [AuthGuard] },
-  { path: 'assessment', component: AssessmentComponent, canActivate: [AuthGuard] },
-  { path: 'assessment-reports', component: AssessmentReportsComponent, canActivate: [AuthGuard] },
+  // { path: 'register', component: RegisterComponent },
+
+  {
+    path: 'dashboard',
+    component: DashboardLayoutComponent,
+    canActivate: [AuthGuard],
+    children: dashboardRoutes
+  },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },

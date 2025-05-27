@@ -1,0 +1,434 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { DateTime } from 'luxon';
+import { ContentSelectorComponent } from '../../../components/contenido/content-selector/content-selector.component';
+import { StudentContentHistoryModalComponent } from '../../../components/contenido/student-content-history-modal/student-content-history-modal.component';
+import { CreateMeetingModalComponent } from '../../../components/instructor/create-meeting/create-meeting-modal.component';
+import { MeetingFilterComponent } from '../../../components/instructor/meeting-filter/meeting-filter.component';
+import { MeetingTableComponent } from '../../../components/instructor/meeting-table/meeting-table.component';
+import { ModalComponent } from '../../../components/modal/modal.component';
+import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
+import { BookingService } from '../../../services/booking.service';
+import { MeetingDTO, FilterMeetingsDto, CreateMeetingDto } from '../../../services/dtos/booking.dto';
+import { Stage } from '../../../services/dtos/student.dto';
+import { StudyContentDto, StudyContentPayloadI } from '../../../services/dtos/study-content.dto';
+import { UserDto } from '../../../services/dtos/user.dto';
+import { StagesService } from '../../../services/stages.service';
+import { StudyContentService } from '../../../services/study-content.service';
+import { selectUserData, selectInstructorLink } from '../../../store/user.selector';
+
+@Component({
+  selector: 'app-searching-meeting-instructor',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    CreateMeetingModalComponent,
+    ModalComponent,
+    ContentSelectorComponent,
+    StudentContentHistoryModalComponent,
+    MeetingTableComponent,
+    MeetingFilterComponent
+  ],
+  templateUrl: './searching-meeting-instructor.component.html',
+  styleUrl: './searching-meeting-instructor.component.scss'
+})
+export class SearchingMeetingInstructorComponent implements OnInit {
+  selectedMeeting?: MeetingDTO;
+
+  stages: Stage[] = [];
+  meetings: MeetingDTO[] = [];
+  filteredStages: Stage[] = [];
+  availableHours: number[] = [];
+  studyContentIds: number[] = [];
+  studentStageContents: StudyContentDto[] = [];
+  studentContentHistory: StudyContentPayloadI[] = [];
+  ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
+  studyContentOptions: { id: number; name: string }[] = [];
+
+  currentStageIndex: number = 0;
+
+  instructorId: number | null = null;
+  instructorLink: string | null = null;
+
+  showForm: boolean = true;
+  showCreateModal: boolean = false;
+  isLoadingContentHistory: boolean = false;
+  isStudentContentHistoryModalVisible: boolean = false;
+
+  modal: ModalDto = modalInitializer();
+  confirmationModal: ModalDto = modalInitializer();
+
+  filter: FilterMeetingsDto = {
+    from: '',
+    to: '',
+    hour: '',
+    assigned: true,
+    category: undefined
+  };
+  constructor(
+    private bookingService: BookingService,
+    private stagesService: StagesService,
+    private studyContentService: StudyContentService,
+    private store: Store,
+  ) {}
+
+  ngOnInit(): void {
+    this.filter.category = undefined;
+    this.loadStagesWithContent();
+
+    this.stagesService.getAll().subscribe(response => {
+      this.stages = response;
+
+    this.filter.stageId = '';
+    })
+
+    this.availableHours = Array.from({ length: 13 }, (_, i) => 8 + i);
+
+    this.store.select(selectUserData).subscribe((userData: UserDto | null) => {
+      if (userData && userData.instructor) {
+        this.instructorId = userData.instructor.id;
+        //console.log('instructor ID:', this.instructorId);
+      } else {
+       // console.log('instructor ID no disponible');
+      }
+    });
+    this.store.select(selectInstructorLink).subscribe(link => {
+      this.instructorLink = link;
+      //console.log('Instructor link:', link);
+    });
+  }
+
+  private loadStagesWithContent(): void {
+    this.stagesService.getAll().subscribe(allStages => {
+      const stagesWithContent: Stage[] = [];
+      let processedCount = 0;
+
+      allStages.forEach(stage => {
+        this.studyContentService.filterBy(stage.id).subscribe(contents => {
+          if (contents.length > 0) stagesWithContent.push(stage);
+
+          processedCount++;
+          if (processedCount === allStages.length) {
+            this.handleStagesLoaded(allStages, stagesWithContent);
+          }
+        });
+      });
+    });
+  }
+
+  private handleStagesLoaded(allStages: Stage[], stagesWithContent: Stage[]): void {
+    this.filteredStages = this.sortStages(stagesWithContent);
+    this.stages = this.sortStages(allStages);
+    this.filter.stageId = '';
+  }
+
+  private sortStages(stages: Stage[]): Stage[] {
+    return stages.sort((a, b) => this.extractStageNumber(a.number) - this.extractStageNumber(b.number));
+  }
+
+  private extractStageNumber(stageLabel: string): number {
+    return parseFloat(stageLabel.replace(/[^0-9.]/g, '')) || 0;
+  }
+  
+
+  isToday(date: Date | string): boolean {
+    if (!date) return false;
+
+    const today = DateTime.now().setZone('America/Guayaquil').startOf('day');
+    const meetingDate = typeof date === 'string'
+      ? DateTime.fromISO(date, { zone: 'America/Guayaquil' }).startOf('day')
+      : DateTime.fromJSDate(date, { zone: 'America/Guayaquil' }).startOf('day');
+
+    return today.toISODate() === meetingDate.toISODate();
+  }
+
+  onFilterChange(): void {
+    this.clearSelectedContents();
+    
+    const filterParams: FilterMeetingsDto = {
+      ...this.filter,
+      hour: this.filter.hour ? this.filter.hour.toString() : undefined,
+      category: this.filter.category ? this.filter.category : undefined
+    };
+    this.fetchMeetings(filterParams);
+  }
+
+  private fetchMeetings(params?: FilterMeetingsDto): void {
+    const searchParams: FilterMeetingsDto = {
+      ...params,
+      instructorId: this.instructorId ? this.instructorId.toString() : undefined,
+    };
+
+    this.bookingService.searchMeetings(searchParams).subscribe(meetings => {
+      this.meetings = meetings;
+    });
+  }
+
+  onAssistanceCheckboxClick(event: Event, meeting: MeetingDTO) {
+    event.preventDefault();
+    this.confirmAssistanceWithContentCheck(meeting);
+  }
+
+  confirmAssistanceWithContentCheck(meeting: MeetingDTO) {
+    const isCancellingAssistance = meeting.present;
+
+    if (isCancellingAssistance) {
+      this.confirmationModal = {
+        ...modalInitializer(),
+        show: true,
+        isInfo: true,
+        message: '¿Estás seguro de cancelar la asistencia?<br>Si cancelas la asistencia también se eliminará el contenido, si lo hubiere.',
+        showButtons: true,
+        confirm: () => {
+          this.toggleSelection(meeting);
+          this.closeConfirmationModal();
+        },
+        close: this.closeConfirmationModal,
+      };
+      return;
+    }
+
+    if (this.studyContentIds.length === 0) {
+      this.showModal(this.createModalParams(true, 'Para marcar asistencia debes agregar al menos un contenido para la clase.'));
+      return;
+    }
+
+      this.toggleSelection(meeting);
+    }
+
+  toggleSelection(meeting: MeetingDTO) {
+    if (meeting && meeting.id) {
+      const updatedPresence = !meeting.present;
+      this.bookingService.updateAssistance(meeting.id, !meeting.present, this.studyContentIds).subscribe({
+        next: () => {
+            //console.log(`Asistencia actualizada para ${studentName}: ${asistenciaTexto}`);
+          const filterParams: FilterMeetingsDto = {
+            ...this.filter,
+          };
+          this.fetchMeetings(filterParams);
+          const messageText = updatedPresence ? 'Presente' : 'Ausente';
+          this.showModal(this.createModalParams(false, `Asistencia actualizada: ${messageText}`));
+        },
+        error: () => {
+          //console.error(`Error al actualizar la asistencia de ${studentName}:`, error);
+          this.showModal(this.createModalParams(true, 'Error al actualizar la asistencia'));
+        }
+      });
+    }
+  }
+
+  hasMeetingPassed(localdate: string | Date, hour: number): boolean {
+    if (!localdate || hour === undefined) return false;
+
+    const meetingDateTime = DateTime.fromISO(String(localdate))
+      .set({ hour, minute: 0 })
+      .setZone('America/Guayaquil');
+    const now = DateTime.now().setZone('America/Guayaquil');
+
+    return now > meetingDateTime;
+  }
+
+  onCreateMeeting(): void {
+    this.showCreateModal = true;
+  }
+
+  handleMeetingCreated(meeting: CreateMeetingDto): void {
+    const isOnline = meeting.mode === 'ONLINE';
+
+    const meetingWithInstructorInfo: CreateMeetingDto = {
+      ...meeting,
+      link: isOnline ? this.instructorLink ?? undefined : undefined,
+      password: isOnline && this.instructorId ? this.instructorId.toString() : undefined,
+    };
+
+    this.bookingService.bookMeeting(meetingWithInstructorInfo).subscribe({
+      next: () => {
+        this.showCreateModal = false;
+        this.showModal(this.createModalParams(false, 'Clase creada exitosamente.'));
+        this.fetchMeetings(this.filter);
+      },
+      error: (error) => {
+        const msg = error?.error?.message || 'No se pudo crear la clase';
+        this.showModal(this.createModalParams(true, msg));
+        this.showCreateModal = false;
+      }
+    });
+  }
+
+  onContentIdsSelected(ids: number[]) {
+    this.studyContentIds = ids;
+    this.loadContentNames(ids);
+  }
+
+  loadContentNames(contentIds: number[]) {
+    if (contentIds.length === 0) {
+    this.studyContentOptions = [];
+    return;
+  }
+
+    this.studyContentService.getManyStudyContents(contentIds).subscribe(contents => {
+      this.studyContentOptions = contents.map(c => ({
+          id: c.id,
+          name: `Stage ${c.stage?.number || c.stageId}, ${c.title}`
+        }));
+    });
+  }
+
+  loadStageContents(stageId: number): void {
+    this.studyContentService.filterBy(stageId).subscribe({
+      next: (contents) => {
+        const validContents = contents.filter(c => typeof c.unit === 'number' && c.unit > 0);
+        this.studentStageContents = validContents;
+      },
+      error: () => {
+        this.showModal(this.createModalParams(true, 'Error al cargar los contenidos del stage.'));
+      }
+    });
+  }
+
+  formatStudyContent(meeting: MeetingDTO): string {
+    if (!meeting.studyContent || meeting.studyContent.length === 0) {
+      return 'Sin contenido';
+    }
+    return meeting.studyContent
+      .map(c => `${c.title}`)
+      .join('\n');
+  }
+
+  clearSelectedContents() {
+    this.studyContentIds = [];
+    this.studyContentOptions = [];
+  }
+
+  loadStudentContentHistory(meeting: MeetingDTO): void {
+    this.isLoadingContentHistory = true;
+    this.selectedMeeting = meeting;
+
+    const studentId = meeting.studentId;
+    const to = DateTime.now().toISODate();
+    const from = DateTime.now().minus({ days: 21 }).toISODate();
+
+    this.studyContentService.getStudyContentHistoryForStudentId(studentId, from, to).subscribe({
+      next: (history) => this.handleHistoryLoaded(history),
+      error: () => this.handleHistoryError()
+    });
+  }
+
+  private handleHistoryLoaded(history: StudyContentPayloadI[]): void {
+    if (history.length === 0) {
+      this.finishLoadingWithMessage('No se encontraron contenidos en el historial.');
+      return;
+    }
+
+    this.studentContentHistory = history;
+
+    const studentStageDescription = this.selectedMeeting?.stage?.description;
+    // Asegura orden correcto antes de buscar
+    this.filteredStages = this.sortStages(this.filteredStages);
+
+    const targetStageIndex = this.filteredStages.findIndex(
+      s => s.description === studentStageDescription
+    );
+
+    if (targetStageIndex === -1) {
+      this.finishLoadingWithMessage('No se encontró el stage correspondiente al estudiante.');
+      return;
+    }
+
+    this.currentStageIndex = targetStageIndex;
+    const targetStageId = this.filteredStages[targetStageIndex].id;
+
+    this.studyContentService.filterBy(targetStageId).subscribe({
+      next: (contents) => this.handleStageContentsLoaded(contents),
+      error: () => this.finishLoadingWithMessage('Error al cargar los contenidos del stage.')
+    });
+  }
+
+  private handleStageContentsLoaded(contents: StudyContentDto[]): void {
+    this.studentStageContents = contents;
+    this.isLoadingContentHistory = false;
+    this.isStudentContentHistoryModalVisible = true;
+  }
+
+  private handleHistoryError(): void {
+    this.finishLoadingWithMessage('Error al cargar el historial de contenidos.');
+  }
+
+  private finishLoadingWithMessage(message: string): void {
+    this.isLoadingContentHistory = false;
+    this.showModal(this.createModalParams(true, message));
+  }
+
+  closeStudentContentHistoryModal() {
+    this.isStudentContentHistoryModalVisible = false;
+  }
+
+  showContentViewer(content: string, title: string = 'Contenido de la Clase'){
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: content,
+      isContentViewer: true,
+      title,
+      close: this.closeModal,
+    };
+  }
+
+  showModal(params: ModalDto) {
+    this.modal = { ...params };
+    setTimeout(() => {
+      this.modal.close();
+    }, 2000);
+  }
+
+  closeModal = () => {
+    this.modal = { ...modalInitializer() };
+  }
+
+  closeConfirmationModal = () => {
+    this.confirmationModal = { ...modalInitializer() };
+  }
+
+  createModalParams(isError: boolean, message: string): ModalDto {
+    return {
+      ...this.modal,
+      show: true,
+      isError,
+      isSuccess: !isError,
+      message,
+      close: this.closeModal
+    };
+  }
+
+  goToPreviousStage() {
+    const prevIndex = this.currentStageIndex - 1;
+    if (prevIndex >= 0) {
+      this.currentStageIndex = prevIndex;
+      const prevStageId = this.filteredStages[prevIndex].id;
+      this.loadStageContents(prevStageId);
+    }
+  }
+
+  goToNextStage() {
+    const nextIndex = this.currentStageIndex + 1;
+    if (nextIndex < this.filteredStages.length) {
+      this.currentStageIndex = nextIndex;
+      const nextStageId = this.filteredStages[nextIndex].id;
+      this.loadStageContents(nextStageId);
+    }
+  }
+
+  get canGoPrevious(): boolean {
+    return this.currentStageIndex > 0;
+  }
+
+  get canGoNext(): boolean {
+    return this.currentStageIndex < this.filteredStages.length - 1;
+  }
+}
+

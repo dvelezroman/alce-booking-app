@@ -35,27 +35,27 @@ export class SidebarComponent implements OnInit {
   currentRoute: string = '';
   homeNavItem: { icon: string; text: string; route: string; roles: UserRole[] } | null = null;
 
-  navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
-    { icon: 'home', text: 'Inicio', route: '/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
-    { icon: 'event', text: 'Mis Clases', route: '/meetings-student', roles: [UserRole.STUDENT] },
-    { icon: 'booking', text: 'Agendar', route: '/booking', roles: [UserRole.STUDENT] },
-    { icon: 'group', text: 'Agenda', route: '/searching-meeting', roles: [UserRole.ADMIN] },
-    { icon: 'school', text: 'Usuarios', route: '/searching-students', roles: [UserRole.ADMIN] },
-    { icon: 'asistencias-student', text: 'Asistencias Estudiantes', route: '/asistencias-alumnos', roles: [UserRole.ADMIN] },
-    { icon: 'asistencias-instructor', text: 'Asistencias Instructores', route: '/asistencias-instructor', roles: [UserRole.ADMIN] },
-    { icon: 'link', text: 'Enlaces', route: '/link', roles: [UserRole.ADMIN] },
-    { icon: 'book', text: 'Contenidos', route: '/content', roles: [UserRole.ADMIN] },
-    { icon: 'stages', text: 'Stages', route: '/stage', roles: [UserRole.ADMIN] },
-    { icon: 'create', text: 'Crear Estudiante', route: '/create-students', roles: [UserRole.ADMIN] },
-    { icon: 'create', text: 'Crear Admin / Instructor', route: '/create-instructors', roles: [UserRole.ADMIN] },
-    { icon: 'video_call', text: 'Agenda', route: '/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] },
-    { icon: 'history', text: 'Eventos', route: '/processed-events', roles: [UserRole.ADMIN] },
-    { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/feature-flag', roles: [UserRole.ADMIN] },
-    { icon: 'reportes', text: 'Reportes de Estudiante', route: '/reports-detailed', roles: [UserRole.ADMIN] },
-    { icon: 'reportes', text: 'Reportes de Progreso', route: '/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
-    { icon: 'test', text: 'Evaluar Estudiante', route: '/assessment', roles: [UserRole.INSTRUCTOR] },
-    { icon: 'test', text: 'Reportes de Evaluaciones', route: '/assessment-reports', roles: [UserRole.ADMIN] },
-  ];
+navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
+  { icon: 'home', text: 'Inicio', route: '/dashboard/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
+  { icon: 'event', text: 'Mis Clases', route: '/dashboard/meetings-student', roles: [UserRole.STUDENT] },
+  { icon: 'booking', text: 'Agendar', route: '/dashboard/booking', roles: [UserRole.STUDENT] },
+  { icon: 'group', text: 'Agenda', route: '/dashboard/searching-meeting', roles: [UserRole.ADMIN] },
+  { icon: 'school', text: 'Usuarios', route: '/dashboard/searching-students', roles: [UserRole.ADMIN] },
+  { icon: 'asistencias-student', text: 'Asistencias Estudiantes', route: '/dashboard/asistencias-alumnos', roles: [UserRole.ADMIN] },
+  { icon: 'asistencias-instructor', text: 'Asistencias Instructores', route: '/dashboard/asistencias-instructor', roles: [UserRole.ADMIN] },
+  { icon: 'link', text: 'Enlaces', route: '/dashboard/link', roles: [UserRole.ADMIN] },
+  { icon: 'book', text: 'Contenidos', route: '/dashboard/content', roles: [UserRole.ADMIN] },
+  { icon: 'stages', text: 'Stages', route: '/dashboard/stage', roles: [UserRole.ADMIN] },
+  { icon: 'create', text: 'Crear Estudiante', route: '/dashboard/create-students', roles: [UserRole.ADMIN] },
+  { icon: 'create', text: 'Crear Admin / Instructor', route: '/dashboard/create-instructors', roles: [UserRole.ADMIN] },
+  { icon: 'video_call', text: 'Agenda', route: '/dashboard/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] },
+  { icon: 'history', text: 'Eventos', route: '/dashboard/processed-events', roles: [UserRole.ADMIN] },
+  { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/dashboard/feature-flag', roles: [UserRole.ADMIN] },
+  { icon: 'reportes', text: 'Reportes de Estudiante', route: '/dashboard/reports-detailed', roles: [UserRole.ADMIN] },
+  { icon: 'reportes', text: 'Reportes de Progreso', route: '/dashboard/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
+  { icon: 'test', text: 'Evaluar Estudiante', route: '/dashboard/assessment', roles: [UserRole.INSTRUCTOR] },
+  { icon: 'test', text: 'Reportes de Evaluaciones', route: '/dashboard/assessment-reports', roles: [UserRole.ADMIN] },
+];
 
   navGrouped: {
     title: string;
@@ -90,73 +90,71 @@ export class SidebarComponent implements OnInit {
 
     const role = this.userData?.role || UserRole.STUDENT;
 
-    const homeItem = this.findNavItemByRoute('/home');
+    const homeItem = this.findNavItemByRoute('/dashboard/home');
     if (homeItem && homeItem.roles.includes(role)) {
       this.homeNavItem = homeItem;
     }
 
 
-    const grouped = [
-
-      {
-        title: 'Clases y Agendamientos',
-        icon: 'event',
-        items: [
-          // this.findNavItemByRoute('/meetings-student'),
-          this.findNavItemByRoute('/booking'),
-          this.findNavItemByRoute('/searching-meeting'),
-          this.findNavItemByRoute('/searching-meeting-instructor')
-        ].filter(item => item.roles.includes(role))
-      },
-      {
-        title: 'Gestión Académica',
-        icon: 'school',
-        items: [
-          this.findNavItemByRoute('/searching-students'),
-          this.findNavItemByRoute('/asistencias-alumnos'),
-          this.findNavItemByRoute('/asistencias-instructor'),
-          this.findNavItemByRoute('/create-students'),
-          this.findNavItemByRoute('/create-instructors')
-        ].filter(item => item.roles.includes(role))
-      },
-      {
-        title: 'Gestión de Eventos',
-        icon: 'history',
-        items: [this.findNavItemByRoute('/processed-events')].filter(item => item.roles.includes(role))
-      },
-      {
-        title: 'Administración de Recursos',
-        icon: 'link',
-        items: [
-          this.findNavItemByRoute('/link'),
-          this.findNavItemByRoute('/stage'),
-          this.findNavItemByRoute('/content')
-        ].filter(item => item.roles.includes(role))
-      },
-      {
-        title: 'Evaluaciones',
-        icon: 'test',
-        items: [
-          this.findNavItemByRoute('/assessment')
-        ].filter(item => item.roles.includes(role))
-      },
-     {
-        title: 'Reportes',
-        icon: 'reportes',
-        items: [
-          this.findNavItemByRoute('/reports-detailed'),
-          this.findNavItemByRoute('/reports-progress'),
-          this.findNavItemByRoute('/assessment-reports')
-        ].filter(item => item.roles.includes(role))
-      },
-      {
-        title: 'Configuración',
-        icon: 'config',
-        items: [
-          this.findNavItemByRoute('/feature-flag')
-        ].filter(item => item.roles.includes(role))
-      }
-    ];
+      const grouped = [
+    {
+      title: 'Clases y Agendamientos',
+      icon: 'event',
+      items: [
+        this.findNavItemByRoute('/dashboard/booking'),
+        this.findNavItemByRoute('/dashboard/searching-meeting'),
+        this.findNavItemByRoute('/dashboard/searching-meeting-instructor')
+      ].filter(item => item.roles.includes(role))
+    },
+    {
+      title: 'Gestión Académica',
+      icon: 'school',
+      items: [
+        this.findNavItemByRoute('/dashboard/searching-students'),
+        this.findNavItemByRoute('/dashboard/asistencias-alumnos'),
+        this.findNavItemByRoute('/dashboard/asistencias-instructor'),
+        this.findNavItemByRoute('/dashboard/create-students'),
+        this.findNavItemByRoute('/dashboard/create-instructors')
+      ].filter(item => item.roles.includes(role))
+    },
+    {
+      title: 'Gestión de Eventos',
+      icon: 'history',
+      items: [this.findNavItemByRoute('/dashboard/processed-events')].filter(item => item.roles.includes(role))
+    },
+    {
+      title: 'Administración de Recursos',
+      icon: 'link',
+      items: [
+        this.findNavItemByRoute('/dashboard/link'),
+        this.findNavItemByRoute('/dashboard/stage'),
+        this.findNavItemByRoute('/dashboard/content')
+      ].filter(item => item.roles.includes(role))
+    },
+    {
+      title: 'Evaluaciones',
+      icon: 'test',
+      items: [
+        this.findNavItemByRoute('/dashboard/assessment')
+      ].filter(item => item.roles.includes(role))
+    },
+    {
+      title: 'Reportes',
+      icon: 'reportes',
+      items: [
+        this.findNavItemByRoute('/dashboard/reports-detailed'),
+        this.findNavItemByRoute('/dashboard/reports-progress'),
+        this.findNavItemByRoute('/dashboard/assessment-reports')
+      ].filter(item => item.roles.includes(role))
+    },
+    {
+      title: 'Configuración',
+      icon: 'config',
+      items: [
+        this.findNavItemByRoute('/dashboard/feature-flag')
+      ].filter(item => item.roles.includes(role))
+    }
+  ];
 
       this.navGrouped = grouped.filter(group => group.items.length > 0);
 

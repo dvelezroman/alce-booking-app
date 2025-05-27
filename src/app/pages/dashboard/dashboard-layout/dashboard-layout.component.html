@@ -1,0 +1,20 @@
+<div class="content-wrapper">
+  <app-sidebar
+    [isSidebarClosed]="isSidebarClosed"
+    (toggleSidebarEvent)="toggleSidebar()"
+    (logoutEvent)="onConfirmLogout()"
+    *ngIf="isLoggedIn && (isRegistered || userData?.role !== UserRole.STUDENT)">
+  </app-sidebar>
+
+  <main class="main-content" [ngClass]="{ 'shrink': isLoggedIn && !isSidebarClosed, 'full-width': !isLoggedIn }">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  (close)="modal.close()">
+</app-modal>

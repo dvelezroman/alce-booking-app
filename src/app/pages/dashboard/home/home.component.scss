@@ -1,0 +1,604 @@
+
+:host {
+  display: block;
+  background-color: #f2f2f2;
+  min-height: 100vh;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.hero-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.hero-background {
+  width: 100%;
+  height: 90%;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  background-image: url('/assets/fondo home1.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 50%; 
+}
+
+.student-info-steps {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  gap: 1.5rem; 
+  flex-wrap: wrap;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  color: #fff;
+  display: flex;
+  align-items: center;   
+  justify-content: center; 
+  border-radius: 50%;
+}
+
+.step-text {
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+.floating-help-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #6c63ff; 
+  color: white;
+  border-radius: 50%;
+  padding: 12px;
+  font-size: 24px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  text-decoration: none;
+}
+
+.floating-help-button:hover {
+  transform: scale(1.1);
+  background-color: #e26a6a; 
+}
+
+.floating-help-button .material-icons {
+  font-size: 30px;
+}
+
+.hero-button-container {
+ background-color: transparent;
+}
+
+.login-button {
+  padding: 0.7rem 2.5rem;
+  font-size: 1rem;
+  color: #4a90e2; 
+  background-color: transparent;
+  border: 1px solid #4a90e2;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #4a90e2;
+  color: white;
+  transform: scale(1.1); 
+}
+
+
+/* CALENDARIO DE MEETINGS INSTRUCTOR */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.fade-out { animation: fadeOut 0.4s forwards; }
+.fade-in { animation: fadeIn 0.4s forwards; }
+
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #28a745; 
+  border-radius: 50%;
+}
+
+.legend-text {
+  font-weight: 500;
+}
+
+.date-time-selection,
+.shared-box-style {
+  position: relative;
+  width: 405px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  margin: auto;
+  margin-top: 12rem;
+  border: 1px solid rgba(210, 210, 210, 0.2);
+  background-color: rgba(255, 255, 255, 0.733);
+  border-radius: 12px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.03);
+}
+
+.calendar-title {
+  position: absolute;
+  top: -75px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.title-date {
+  color: rgba(67, 67, 67, 0.747);
+  padding: 1rem 2rem;
+  background-color: rgba(255, 213, 114, 0.67);
+  text-align: center;
+  font-size: .85rem;
+  font-weight: bold;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.month-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.month-label {
+  font-weight: bold;
+  font-size: 1rem;
+  text-transform: uppercase;
+  color: #333;
+}
+
+.month-selector button {
+  width: 40px;
+  height: 2.5rem;
+  border: 1px solid rgba(128, 128, 128, 0.107);
+  border-radius: 50%;
+  background-color: rgba(129, 128, 128, 0.054);
+  color: rgb(104, 104, 104);
+  cursor: pointer;
+  position: absolute;
+  font-size: .9rem;
+  transform: translateY(-50%);
+  transition: all 0.3s ease-in-out;
+}
+
+.month-selector button:hover {
+  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.05);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.prev-button { left: 18.5%; top: 53%; }
+.next-button { left: 70%; top: 48%; }
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 320px;
+}
+
+.calendar-header,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-size: .9rem;
+  margin-bottom: .8rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.calendar-day {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15px;
+  height: 15px;
+  padding: 18px;
+  font-size: .85rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: #333; 
+  background-color: transparent;
+}
+
+.calendar-day:hover {
+  background-color: #6eb3fcbc;
+}
+
+.calendar-day.selected {
+  background-color: #6eb3fcbc;
+  color: white;
+  font-weight: bold;
+}
+
+.calendar-day.empty {
+  background-color: transparent;
+  border: none;
+  cursor: default;
+  pointer-events: none;
+}
+
+.calendar-day.has-meeting {
+  font-weight: bold;
+  position: relative;
+}
+
+.calendar-day.has-meeting::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: #28a745;
+  border-radius: 50%;
+}
+
+/* MODAL DIA SELECCIONADO */
+/* Contenedor de la tabla de reuniones */
+
+.shared-message-box {
+  border-radius: 8px;
+  max-width: 100%;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  font-size: .85rem;
+}
+.no-meetings-message {
+  @extend .shared-message-box;
+  margin-top: 2rem;
+  color: #666;
+
+}
+
+.meeting-results {
+  @extend .shared-message-box;
+  background-color: #f2f2f2;
+  margin-top: 3rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.meeting-results h3{
+  color: rgb(57, 57, 57);
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Estilos para la tabla */
+.table-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table {
+  min-width: 500px;
+  border-collapse: collapse;
+  background-color: #ffffff; 
+  text-align: center;
+  border-radius: 8px 8px 0 0;
+  font-size: 0.85rem;
+  margin-bottom: 3rem;
+}
+
+.table thead th {
+  background-color: #e5effa;
+  font-weight: 600;
+  color: #333;
+  padding: 0.55rem;
+  border-bottom: none;
+  position: sticky; 
+  top: 0; 
+  z-index: 1;
+}
+
+.table thead th:first-child {
+  border-top-left-radius: 8px; 
+}
+
+.table thead th:last-child {
+  border-top-right-radius: 8px;
+}
+
+.table tbody tr {
+  transition: background-color 0.3s ease;
+}
+
+.table td {
+  padding: 0.75rem;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+.table th, .table td {
+  text-align: center;
+}
+
+button.is-small {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+button.is-small .material-icons {
+  color: #b3b3b3; 
+  font-size: 1.5rem;
+}
+
+button.is-small:hover .material-icons {
+  color: #808080; 
+}
+
+/* MODAL ESTILOS */
+/* Fondo oscurecido */
+.modal-background {
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(3px);
+}
+
+/* Contenedor del modal */
+.modal-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  max-width: 450px;
+  margin: 2rem auto;
+  color: #333;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Header */
+.transparent-header {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ececec;
+  padding: 1.25rem 1.5rem;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+/* Body */
+.transparent-body {
+  background-color: #fff;
+  padding: 1.5rem;
+}
+
+/* Footer */
+.transparent-footer {
+  background-color: #fff;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+/* Texto */
+.text-dark {
+  color: #222;
+}
+
+/* Textarea */
+.textarea {
+  width: 100%;
+  resize: none;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 0.8rem;
+  min-height: 120px;
+  font-size: 0.95rem;
+  background-color: #fafafa;
+  color: #333;
+  transition: border 0.2s ease-in-out;
+}
+
+.textarea:focus {
+  border-color: #7a5af5;
+  outline: none;
+}
+
+::placeholder {
+  color: #aaa;
+}
+
+/* Botones */
+.btn-wide {
+  min-width: 100px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.btn-blue {
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+}
+
+.btn-blue:hover {
+  background-color: #2563eb;
+}
+
+.btn-purple {
+  background-color: #8b5cf6;
+  color: #fff;
+  border: none;
+}
+
+.btn-purple:hover {
+  background-color: #7c3aed;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* responsive calendario y modal de meetings*/
+@media (max-width: 768px) {
+
+  .page-title {
+    text-align: center;
+    background: linear-gradient(45deg, #4a90e2,  #7743a8);
+  }
+  
+  .home-title {
+    color: white;
+  }
+
+  .student-info-steps {
+    gap: 1rem;
+  }
+  .step-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+  .step-text {
+    font-size: 0.85rem;
+    margin-left: 0.4rem;
+  }
+
+  .meeting-results {
+    width: 100%; 
+  }
+}
+
+@media (max-width: 492px){
+
+  .date-time-selection,
+  .shared-box-style {
+    width: 95%;
+    padding: 1.5em;
+    margin-top: 12rem;
+    border-radius: 8px;
+  }
+  
+  .month-label {
+    font-size: 1.1rem;
+  }
+  
+  .calendar {
+    width: 330px;
+  }
+  
+  .calendar-header,
+  .calendar-grid {
+    gap: 6px;
+  }
+  
+  .calendar-day-header {
+    font-size: 1.1rem;
+    margin-bottom: .75rem;
+  }
+  
+
+/* TABLA MEETINGS */
+.no-meetings-message {
+  font-size: 0.9rem;
+  padding: 0.8rem 1rem;
+}
+
+.meeting-results {
+  width: 95%; 
+  margin-top: 1rem;
+}
+
+.meeting-results h3{
+  font-size: .9rem;
+  margin-bottom: 1.5rem;
+}
+
+.table th, .table td {
+font-size: .66rem;
+padding: .3rem;
+padding: 5px 3px;
+}
+
+button.is-small .material-icons {
+  color: #b3b3b3; 
+  font-size: 1.2rem;
+}
+
+.modal-card {
+  max-width: 95%;
+  margin: 1rem auto;
+}
+
+.btn-wide {
+  width: 100%;
+  font-size: 0.9rem;
+  padding: 0.6rem;
+}
+
+.transparent-footer {
+  gap: 15px;
+}
+}
