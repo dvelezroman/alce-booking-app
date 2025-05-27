@@ -11,7 +11,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class AssessmentTypeFormComponent {
   @Output() formSubmit = new EventEmitter<{ name: string; description?: string }>();
-
+  showForm: boolean = false;
   form: FormGroup;
 
   constructor(private fb: FormBuilder) {

@@ -1,33 +1,47 @@
-<form [formGroup]="form" (ngSubmit)="submitForm()" class="search-form">
-  <div class="field">
-    <label class="label">Nombre del Tipo</label>
-    <div class="control">
-      <input
-        type="text"
-        class="input"
-        formControlName="name"
-      />
-      <p class="error-message" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
-        El nombre es obligatorio.
-      </p>
-    </div>
+
+<div class="dropdown-toggle-container">
+  <div class="dropdown-toggle" (click)="showForm = !showForm">
+    <span>Crear tipo de Evaluación</span>
+    <span class="icon is-small">
+      <i class="material-icons">
+        {{ showForm ? 'expand_less' : 'expand_more' }}
+      </i>
+    </span>
   </div>
 
-  <div class="field">
-    <label class="label">Descripción</label>
-    <div class="control">
-      <textarea
-        class="input"
-        formControlName="description"
-        rows="2"
-        placeholder="Descripción breve del tipo...">
-      </textarea>
-    </div>
-  </div>
+  <div [ngClass]="showForm ? 'dropdown-body' : 'dropdown-body-hidden'">
+    <form [formGroup]="form" (ngSubmit)="submitForm()" class="search-form">
+      <div class="field">
+        <label class="label">Tipo de Evaluación</label>
+        <div class="control">
+          <input
+            type="text"
+            class="input"
+            formControlName="name"
+          />
+          <p class="error-message" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+            Campo obligatorio.
+          </p>
+        </div>
+      </div>
 
-  <div class="button-wrapper">
-    <button class="button is-blue" type="submit">
-      Crear Tipo de Evaluación
-    </button>
+      <div class="field">
+        <label class="label">Descripción (opcional)</label>
+        <div class="control">
+          <textarea
+            class="input"
+            formControlName="description"
+            rows="2"
+            placeholder="Descripción breve del tipo...">
+          </textarea>
+        </div>
+      </div>
+
+      <div class="button-wrapper">
+        <button class="button is-blue" type="submit">
+          Crear
+        </button>
+      </div>
+    </form>
   </div>
-</form>
+</div>

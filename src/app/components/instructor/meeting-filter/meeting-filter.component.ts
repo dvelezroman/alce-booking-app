@@ -20,7 +20,6 @@ export class MeetingFilterComponent {
 
   showForm = true;
 
-
   onChange() {
     this.filterChange.emit(this.filter);
  }
