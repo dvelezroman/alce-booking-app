@@ -1,0 +1,74 @@
+<section class="class-booking-header">
+  <h1 class="title is-3">Tipos de Evaluaciones</h1>
+</section>
+
+<div class="page-wrapper">
+
+  <app-assessment-type-form
+    (formSubmit)="handleCreateAssessmentType($event)"
+  ></app-assessment-type-form>
+
+  <div class="block-results" *ngIf="assessmentTypes.length > 0">
+    <div class="table-container">
+      <table class="table-results is-fullwidth">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let type of assessmentTypes">
+            <td>{{ type.name }}</td>
+            <td>{{ type.description || "-" }}</td>
+            <td class="table-actions">
+              <button class="icon-button edit-icon" title="Editar" (click)="openEditModal(type)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="icon-button delete-icon" title="Eliminar" (click)="confirmDeleteType(type)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="typeToEdit">
+  <div class="edit-modal">
+    <form [formGroup]="editForm" (ngSubmit)="updateAssessmentType()" class="search-form">
+      <div class="field">
+        <label class="label">Tipo de Evaluación</label>
+        <input type="text" class="input" formControlName="name" />
+        <p class="error-message" *ngIf="editForm.get('name')?.touched && editForm.get('name')?.invalid">
+          Campo obligatorio.
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label">Descripción (opcional)</label>
+        <textarea class="input" formControlName="description" rows="2"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="submit" class="modal-button is-primary">Actualizar</button>
+        <button type="button" class="modal-button is-secondary" (click)="cancelEdit()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+>
+</app-modal>

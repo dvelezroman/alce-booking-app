@@ -1,0 +1,49 @@
+<div class="dropdown-toggle-container">
+  <div class="dropdown-toggle" (click)="toggleForm()">
+    <span>Crear recurso académico</span>
+    <span class="icon is-small">
+      <i class="material-icons">
+        {{ showForm ? 'expand_less' : 'expand_more' }}
+      </i>
+    </span>
+  </div>
+
+  <div [ngClass]="showForm ? 'dropdown-body' : 'dropdown-body-hidden'">
+    <form [formGroup]="form" (ngSubmit)="submitForm()" class="search-form">
+      <div class="field">
+        <label class="label">Título del recurso</label>
+        <div class="control">
+          <input
+            type="text"
+            class="input"
+            formControlName="title"
+          />
+          <p class="error-message" *ngIf="form.get('title')?.touched && form.get('title')?.invalid">
+            Campo obligatorio.
+          </p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Enlace</label>
+        <div class="control">
+          <input
+            type="text"
+            class="input"
+            formControlName="link"
+            placeholder="https://..."
+          />
+          <p class="error-message" *ngIf="form.get('link')?.touched && form.get('link')?.invalid">
+            Ingresa un enlace válido (debe comenzar con http:// o https://).
+          </p>
+        </div>
+      </div>
+
+      <div class="button-wrapper">
+        <button class="button is-blue" type="submit">
+          Crear
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

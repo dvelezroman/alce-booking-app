@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AssessmentTypeFormComponent } from '../../../components/assessment-types/assessment-type-form/assessment-type-form.component';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
-import { AssessmentTypeI } from '../../../services/dtos/assessment-type.dto';
-import { AssessmentTypesService } from '../../../services/assessment-types.service';
+import { AssessmentResourceI } from '../../../services/dtos/assessment-resources.dto';
+import { AssessmentResourcesService } from '../../../services/assessment-resources.service';
+import { AssessmentResourceFormComponent } from '../../../components/assessment-resource-form/assessment-resource-form.component';
 
 @Component({
   selector: 'app-academic-resources',
@@ -14,7 +14,7 @@ import { AssessmentTypesService } from '../../../services/assessment-types.servi
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    AssessmentTypeFormComponent,
+    AssessmentResourceFormComponent,
     ModalComponent
   ],
   templateUrl: './academic-resources.component.html',
@@ -22,77 +22,75 @@ import { AssessmentTypesService } from '../../../services/assessment-types.servi
 })
 export class AcademicResourcesComponent implements OnInit {
   modal: ModalDto = modalInitializer();
-  showConfigForm: boolean = false;
-  assessmentTypes: AssessmentTypeI[] = [];
-  typeToEdit: AssessmentTypeI | null = null;
+  resources: AssessmentResourceI[] = [];
+  resourceToEdit: AssessmentResourceI | null = null;
   editForm!: FormGroup;
 
   constructor(
-    private assessmentTypesService: AssessmentTypesService,
+    private assessmentResourcesService: AssessmentResourcesService,
     private fb: FormBuilder
   ) {
-     this.editForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['']
+    this.editForm = this.fb.group({
+      title: ['', Validators.required],
+      link: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
-    this.loadAssessmentTypes();
-   
+    this.loadResources();
   }
 
-  loadAssessmentTypes(): void {
-    this.assessmentTypesService.getAll().subscribe({
-      next: (types) => {
-        this.assessmentTypes = types;
+  loadResources(): void {
+    this.assessmentResourcesService.getAll().subscribe({
+      next: (resources) => {
+        this.resources = resources;
       },
       error: () => {
-        this.showNotification('Error al cargar los tipos de evaluación', true);
+        this.showNotification('Error al cargar los recursos', true);
       }
     });
   }
 
-  handleCreateAssessmentType(type: { name: string; description?: string }) {
-    this.assessmentTypesService.create(type).subscribe({
+  handleCreateResource(resource: { title: string; link: string }) {
+    this.assessmentResourcesService.create(resource).subscribe({
       next: () => {
-        this.showNotification('Tipo de evaluación creado correctamente', false, true);
-        this.loadAssessmentTypes();
+        this.showNotification('Recurso creado correctamente', false, true);
+        this.loadResources();
       },
       error: () => {
-        this.showNotification('Error al crear el tipo de evaluación', true);
+        this.showNotification('Error al crear el recurso', true);
       }
     });
   }
 
-  openEditModal(type: AssessmentTypeI): void {
-    this.typeToEdit = type;
+  openEditModal(resource: AssessmentResourceI): void {
+    this.resourceToEdit = resource;
     this.editForm.setValue({
-      name: type.name,
-      description: type.description ?? ''
+      title: resource.title,
+      link: resource.link
     });
   }
 
-  updateAssessmentType(): void {
-    if (!this.typeToEdit || this.editForm.invalid) return;
+  updateResource(): void {
+    if (!this.resourceToEdit || this.editForm.invalid) return;
 
     const updatedData = this.editForm.value;
 
-    this.assessmentTypesService.update(this.typeToEdit.id!, updatedData).subscribe({
+    this.assessmentResourcesService.update(this.resourceToEdit.id, updatedData).subscribe({
       next: () => {
-        this.showNotification('Tipo de evaluación actualizado correctamente', false, true);
-        this.loadAssessmentTypes();
-        this.typeToEdit = null;
+        this.showNotification('Recurso actualizado correctamente', false, true);
+        this.loadResources();
+        this.resourceToEdit = null;
         this.editForm.reset();
       },
       error: () => {
-        this.showNotification('Error al actualizar el tipo de evaluación', true);
+        this.showNotification('Error al actualizar el recurso', true);
       }
     });
   }
 
   cancelEdit(): void {
-    this.typeToEdit = null;
+    this.resourceToEdit = null;
     this.editForm.reset();
   }
 
@@ -111,29 +109,29 @@ export class AcademicResourcesComponent implements OnInit {
     }, 2500);
   }
 
-  deleteAssessmentType(id: number): void {
-    this.assessmentTypesService.delete(id).subscribe({
+  deleteResource(id: number): void {
+    this.assessmentResourcesService.delete(id).subscribe({
       next: () => {
-        this.showNotification('Tipo de evaluación eliminado correctamente', false, true);
-        this.loadAssessmentTypes();
+        this.showNotification('Recurso eliminado correctamente', false, true);
+        this.loadResources();
       },
       error: () => {
-        this.showNotification('Error al eliminar el tipo de evaluación', true);
+        this.showNotification('Error al eliminar el recurso', true);
       }
     });
 
     this.modal.show = false;
   }
 
-  confirmDeleteType(type: AssessmentTypeI): void {
+  confirmDeleteResource(resource: AssessmentResourceI): void {
     this.modal = {
       ...modalInitializer(),
       show: true,
-      message: `¿Estás seguro de eliminar el tipo de evaluación?`,
+      message: `¿Estás seguro de eliminar el recurso "${resource.title}"?`,
       isInfo: true,
       showButtons: true,
       close: () => this.modal.show = false,
-      confirm: () => this.deleteAssessmentType(type.id!)
+      confirm: () => this.deleteResource(resource.id)
     };
   }
 }

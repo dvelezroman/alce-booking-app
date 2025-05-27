@@ -4,29 +4,31 @@
 
 <div class="page-wrapper">
 
-  <app-assessment-type-form
-    (formSubmit)="handleCreateAssessmentType($event)"
-  ></app-assessment-type-form>
+  <app-assessment-resource-form
+    (formSubmit)="handleCreateResource($event)"
+  ></app-assessment-resource-form>
 
-  <div class="block-results" *ngIf="assessmentTypes.length > 0">
+  <div class="block-results" *ngIf="resources.length > 0">
     <div class="table-container">
       <table class="table-results is-fullwidth">
         <thead>
           <tr>
-            <th>Tipo</th>
-            <th>Descripción</th>
+            <th>Título</th>
+            <th>Enlace</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let type of assessmentTypes">
-            <td>{{ type.name }}</td>
-            <td>{{ type.description || "-" }}</td>
+          <tr *ngFor="let resource of resources">
+            <td>{{ resource.title }}</td>
+            <td>
+              <a [href]="resource.link" target="_blank">{{ resource.link }}</a>
+            </td>
             <td class="table-actions">
-              <button class="icon-button edit-icon" title="Editar" (click)="openEditModal(type)">
+              <button class="icon-button edit-icon" title="Editar" (click)="openEditModal(resource)">
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="icon-button delete-icon" title="Eliminar" (click)="confirmDeleteType(type)">
+              <button class="icon-button delete-icon" title="Eliminar" (click)="confirmDeleteResource(resource)">
                 <i class="fas fa-trash"></i>
               </button>
             </td>
@@ -37,20 +39,23 @@
   </div>
 </div>
 
-<div class="modal-backdrop" *ngIf="typeToEdit">
+<div class="modal-backdrop" *ngIf="resourceToEdit">
   <div class="edit-modal">
-    <form [formGroup]="editForm" (ngSubmit)="updateAssessmentType()" class="search-form">
+    <form [formGroup]="editForm" (ngSubmit)="updateResource()" class="search-form">
       <div class="field">
-        <label class="label">Tipo de Evaluación</label>
-        <input type="text" class="input" formControlName="name" />
-        <p class="error-message" *ngIf="editForm.get('name')?.touched && editForm.get('name')?.invalid">
+        <label class="label">Título del Recurso</label>
+        <input type="text" class="input" formControlName="title" />
+        <p class="error-message" *ngIf="editForm.get('title')?.touched && editForm.get('title')?.invalid">
           Campo obligatorio.
         </p>
       </div>
 
       <div class="field">
-        <label class="label">Descripción (opcional)</label>
-        <textarea class="input" formControlName="description" rows="2"></textarea>
+        <label class="label">Enlace del Recurso</label>
+        <input type="url" class="input" formControlName="link" />
+        <p class="error-message" *ngIf="editForm.get('link')?.touched && editForm.get('link')?.invalid">
+          Enlace inválido.
+        </p>
       </div>
 
       <div class="modal-actions">
@@ -70,5 +75,4 @@
   [showButtons]="modal.showButtons ?? false"
   (confirmAction)="modal.confirm?.()"
   (close)="modal.close()"
->
-</app-modal>
+></app-modal>

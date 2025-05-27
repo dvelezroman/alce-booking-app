@@ -55,7 +55,9 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'reportes', text: 'Reportes de Progreso', route: '/dashboard/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Evaluar Estudiante', route: '/dashboard/assessment', roles: [UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Reportes de Evaluaciones', route: '/dashboard/assessment-reports', roles: [UserRole.ADMIN] },
-  { icon: 'book-open', text: 'Recursos Académicos', route: '/dashboard/recursos', roles: [UserRole.ADMIN]},
+  { icon: 'book-open', text: 'Recursos Académicos', route: '/dashboard/resources', roles: [UserRole.ADMIN]},
+  { icon: 'book-type', text: 'Tipos de Evaluación',  route: '/dashboard/assessment-types', roles: [UserRole.ADMIN] 
+}
 ];
 
   navGrouped: {
@@ -130,7 +132,8 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
         this.findNavItemByRoute('/dashboard/link'),
         this.findNavItemByRoute('/dashboard/stage'),
         this.findNavItemByRoute('/dashboard/content'),
-        this.findNavItemByRoute('/dashboard/recursos')
+        this.findNavItemByRoute('/dashboard/resources'),
+        this.findNavItemByRoute('/dashboard/assessment-types')
       ].filter(item => item.roles.includes(role))
     },
     {
