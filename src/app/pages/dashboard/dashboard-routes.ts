@@ -20,7 +20,7 @@ import { SearchingMeetingInstructorComponent } from './searching-meeting-instruc
 import { SearchingMeetingComponent } from './searching-meeting/searching-meeting.component';
 import { SearchingStudentComponent } from './searching-students/searching-student.component';
 import { StageComponent } from './stage/stage.component';
-import { RecursosAcademicosComponent } from './recursos-academicos/recursos-academicos.component';
+import { AcademicResourcesComponent } from './academic-resources/academic-resources.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -30,7 +30,7 @@ export const dashboardRoutes: Routes = [
   { path: 'stage', component: StageComponent },
   { path: 'link', component: LinksComponent },
   { path: 'content', component: ContentComponent },
-  { path: 'recursos', component: RecursosAcademicosComponent },
+  { path: 'recursos', component: AcademicResourcesComponent },
   { path: 'meetings-student', component: MeetingsStudentComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent },
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent },
