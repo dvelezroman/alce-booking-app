@@ -34,7 +34,7 @@ export interface CreateAssessmentI {
   stageId: number;
   instructorId: number;
   assessmentTypeId: number;
-  resourceIds?: number[]; 
+  assessmentResourceIds: number[];
 }
 
 export interface UpdateAssessmentI {

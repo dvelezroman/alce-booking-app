@@ -118,10 +118,6 @@ export class AssessmentFormComponent implements OnInit {
     }, 200);
   }
 
-  get isBelowThreshold(): boolean {
-    return this.points !== null && this.points < 80;
-  }
-
   private isPointsInvalid(): boolean {
     return (
       this.points === null ||
@@ -168,9 +164,7 @@ export class AssessmentFormComponent implements OnInit {
   handlePointsChange(value: number): void {
     this.points = value;
 
-    if (!this.isPointsInvalid()) {
-      this.showPointsError = false;
-    }
+    this.showPointsError = this.isPointsInvalid();
 
     if (
       this.points !== null &&
@@ -235,7 +229,7 @@ export class AssessmentFormComponent implements OnInit {
       points: this.points!,
       note: this.note || '',
       assessmentTypeId: this.assessmentTypeId!,
-      resourceIds: this.addedResources.map(r => r.id)
+       assessmentResourceIds: this.addedResources.map(r => r.id)
     };
 
     this.assessmentCreated.emit(payload);
