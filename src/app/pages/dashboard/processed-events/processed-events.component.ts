@@ -9,15 +9,19 @@ import { ProcessedEventFilterDto, ProcessedEventDto, EventTypeE, EventUserDataI 
 import { UserDto } from '../../../services/dtos/user.dto';
 import { ProcessedEventsService } from '../../../services/processedEvents.service';
 import { UsersService } from '../../../services/users.service';
+import { ModalComponent } from '../../../components/modal/modal.component';
+import { modalInitializer } from '../../../components/modal/modal.dto';
 
 @Component({
   selector: 'app-processed-events',
   standalone: true,
-  imports: [CommonModule, FormsModule, EnumLabelPipe],
+  imports: [CommonModule, FormsModule, EnumLabelPipe, ModalComponent],
   templateUrl: './processed-events.component.html',
   styleUrl: './processed-events.component.scss'
 })
 export class ProcessedEventsComponent implements OnInit {
+  modal = modalInitializer();
+
   filter: ProcessedEventFilterDto = {
     processedById: undefined,
     from: undefined,
@@ -25,6 +29,7 @@ export class ProcessedEventsComponent implements OnInit {
     eventType: undefined,
     sort: 'desc'
   };
+
   searchTerm: string = '';
   events: ProcessedEventDto[] = [];
   eventTypes: { key: string, label: string }[] = [];
@@ -110,13 +115,15 @@ export class ProcessedEventsComponent implements OnInit {
       this.filter.from ||
       this.filter.to ||
       this.filter.processedById ||
-      this.filter.eventType;
+      this.filter.eventType ||
+      this.filter.search;
 
     if (!hasFilters) return;
 
     this.processedEventService.getProcessedEvents(this.filter).subscribe({
       next: (data) => {
         this.events = data;
+        console.log('Filtro enviado:', this.filter);
         // console.log('Eventos recibidos:', data);
       },
       error: () => {
@@ -133,6 +140,34 @@ export class ProcessedEventsComponent implements OnInit {
     setTimeout(() => {
       this.showUserDropdown = false;
     }, 200);
+  }
+
+  showMetadata(metadata: string | null | undefined): void {
+    if (!metadata || metadata === 'null') {
+      this.openContentViewerModal('Sin Detalles', 'Este evento no tiene información adicional registrada.');
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(metadata);
+      const formatted = `<pre>${JSON.stringify(parsed, null, 2)}</pre>`;
+      this.openContentViewerModal('Detalles del Evento', formatted);
+    } catch {
+      this.openContentViewerModal('Detalles del Evento', `<pre>${metadata}</pre>`);
+    }
+  }
+
+  openContentViewerModal(title: string, content: string): void {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      title,
+      isContentViewer: true,
+      message: content,
+      close: () => {
+        this.modal.show = false;
+      }
+    };
   }
 
   // mapEventType(eventType: EventTypeE) {

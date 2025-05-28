@@ -41,6 +41,19 @@
             </p>
           </div>
 
+          <!-- search -->
+          <div class="field">
+            <label class="label">Buscar en detalles del evento</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                name="search"
+                placeholder="Buscar texto en metadatos"
+                [(ngModel)]="filter.search"
+              />
+            </div>
+          </div>
 
           <!-- Fechas -->
           <div class="columns is-mobile">
@@ -93,7 +106,7 @@
                   name="eventType"
                   #eventType="ngModel"
                 >
-                <option [ngValue]="undefined" disabled>Seleccionar evento</option>
+                <option [ngValue]="undefined">Seleccionar evento</option>
                   <option *ngFor="let event of eventTypes" [value]="event.key">
                     {{ event.label }}
                   </option>
@@ -123,6 +136,7 @@
               <th>Usuario</th>
               <th>Tipo de Evento</th>
               <th>Descripción</th>
+              <th>Metadata</th>
               <th>Fecha</th>
             </tr>
           </thead>
@@ -131,6 +145,9 @@
               <td data-label="Usuario">{{ getUserFullName(event.processedBy) }}</td>
               <td data-label="Tipo de Evento">{{ event.eventType | enumLabel: EventTypeE }}</td>
               <td data-label="Descripción">{{ event.description }}</td>
+              <td>
+                <button class="button is-small is-grey" (click)="showMetadata(event.metadata)">Ver</button>
+              </td>
               <td data-label="Fecha">{{ formatDate(event.createdAt || '') }}</td>
             </tr>
           </tbody>
@@ -138,4 +155,12 @@
       </div>
     </div>
   </div>
+
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isContentViewer]="modal.isContentViewer ?? false"
+    [title]="modal.title ?? ''"
+    (close)="modal.close()"
+  ></app-modal>
 

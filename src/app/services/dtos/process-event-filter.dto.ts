@@ -17,6 +17,7 @@ export interface ProcessedEventDto {
   eventType: EventTypeE;
   description: string;
   createdAt: string;
+  metadata?: any;
 }
 
 export enum EventTypeE {
