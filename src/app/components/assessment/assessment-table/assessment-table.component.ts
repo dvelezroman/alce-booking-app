@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssessementI } from '../../../services/dtos/assessment.dto';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-assessment-table',
@@ -12,6 +13,19 @@ import { AssessementI } from '../../../services/dtos/assessment.dto';
 export class AssessmentTableComponent {
   @Input() assessments: AssessementI[] = [];
   @Input() maxPointsAssessment: number | null = null;
+
+  constructor(private sanitizer: DomSanitizer) {}
+
+  formatNoteWithLinks(note: string | null): SafeHtml {
+    if (!note) return 'Sin comentario';
+
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const html = note.replace(urlRegex, (url) => {
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+    });
+
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
 
   isMaxReached(points: number): boolean {
     return this.maxPointsAssessment !== null && points >= this.maxPointsAssessment;

@@ -17,6 +17,7 @@ export class AssessmentFormComponent implements OnInit {
   @ViewChild('resourceSelect') resourceSelect!: ElementRef<HTMLSelectElement>;
   
   @Input() blockedTypes: AssessmentType[] = [];
+  @Input() availableResources: { id: number; name: string; content: string }[] = [];
   @Input() instructorId: number | null = null;
   @Output() assessmentCreated = new EventEmitter<CreateAssessmentI>();
   @Output() studentSelected = new EventEmitter<{ studentId: number, stageId: number, instructorId: number }>();
@@ -38,7 +39,6 @@ export class AssessmentFormComponent implements OnInit {
   
   filteredUsers: UserDto[] = [];
   addedResources: { id: number; name: string; content: string }[] = [];
-  availableResources: { id: number; name: string; content: string }[] = [];
 
 
   constructor(private usersService: UsersService) {
@@ -48,11 +48,6 @@ export class AssessmentFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.availableResources = [
-    //   { id: 1, name: 'PDF de Gramática', content: 'https://recursos.com/gramatica.pdf' },
-    //   { id: 2, name: 'Video de Pronunciación', content: 'https://recursos.com/pronunciacion' },
-    //   { id: 3, name: 'Ficha de ejercicios', content: 'https://recursos.com/ejercicios.pdf' },
-    // ];
   }
 
   onSearchChange(term: string): void {
@@ -231,6 +226,9 @@ export class AssessmentFormComponent implements OnInit {
     this.note = '';
     this.points = null;
     this.type = null;
+    this.selectedResourceId = '';
+    this.addedResources = [];
     this.showCommentBox = false;
+    this.selectedStudent = undefined;
   }
 }

@@ -10,6 +10,8 @@ import { AssessmentService } from '../../../services/assessment.service';
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 import { UserDto } from '../../../services/dtos/user.dto';
 import { selectUserData } from '../../../store/user.selector';
+import { AssessmentResourceI } from '../../../services/dtos/assessment-resources.dto';
+import { AssessmentResourcesService } from '../../../services/assessment-resources.service';
 
 
 @Component({
@@ -25,20 +27,23 @@ import { selectUserData } from '../../../store/user.selector';
 })
 export class AssessmentComponent implements OnInit {
   modal: ModalDto = modalInitializer();
-  instructorId: number | null = null;
   assessments: AssessementI[] = [];
-  maxPointsAssessment: number | null = null;
   blockedTypes: AssessmentType[] = [];
+  resources: AssessmentResourceI[] = [];
+  instructorId: number | null = null;
+  maxPointsAssessment: number | null = null;
   hasSearched: boolean = false;
 
   constructor(
     private store: Store,
     private assessmentService: AssessmentService,
+    private assessmentResourcesService: AssessmentResourcesService,
     private assessmentPointsConfigService: AssessmentPointsConfigService
   ) {}
 
   ngOnInit(): void {
     this.loadAssessmentConfig();
+    this.loadResources();
 
     this.store.select(selectUserData).subscribe((user: UserDto | null) => {
       if (user?.instructor?.id) {
@@ -58,6 +63,27 @@ export class AssessmentComponent implements OnInit {
         );
       }
     });
+  }
+
+  loadResources(): void {
+    this.assessmentResourcesService.getAll().subscribe({
+      next: (resources) => {
+        this.resources = resources;
+      },
+      error: () => {
+        this.showModal(
+          this.createModalParams(true, 'Error al cargar los recursos de refuerzo.')
+        );
+      }
+    });
+  }
+
+  get transformedResources() {
+    return this.resources.map(resource => ({
+      id: resource.id,
+      name: resource.title,
+      content: resource.link,
+    }));
   }
 
   handleAssessmentCreated(payload: CreateAssessmentI): void {

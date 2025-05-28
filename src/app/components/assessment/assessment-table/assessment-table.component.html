@@ -16,9 +16,7 @@
             [ngClass]="{ 'max-point-reached': isMaxReached(a.points), 
                          'below-threshold': isBelowMax(a.points)}">{{ a.points }}
         </td>
-        <td data-label="Comentario">
-          {{ a.note || 'Sin comentario' }}
-        </td>
+        <td data-label="Comentario" [innerHTML]="formatNoteWithLinks(a.note)"></td>
       </tr>
     </tbody>
   </table>
