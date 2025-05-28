@@ -95,6 +95,9 @@ export class AssessmentComponent implements OnInit {
           this.createModalParams(false, 'Evaluación registrada correctamente.')
         );
         this.fetchAssessments( payload.studentId.toString(),payload.stageId.toString());
+        if (response.updatedStage === true) {
+        this.showStagePromotionModal();
+      }
       },
       error: () => {
         this.showModal(
@@ -124,28 +127,37 @@ export class AssessmentComponent implements OnInit {
     });
   }
 
-evaluateBlockedTypes(): void {
-  this.blockedTypes = [];
-  if (this.minPointsAssessment === null) return;
+  evaluateBlockedTypes(): void {
+    this.blockedTypes = [];
+    if (this.minPointsAssessment === null) return;
 
-  const groupedByType: Record<string, number[]> = {};
+    const groupedByType: Record<string, number[]> = {};
 
-  for (const a of this.assessments) {
-    if (!groupedByType[a.type]) {
-      groupedByType[a.type] = [];
+    for (const a of this.assessments) {
+      if (!groupedByType[a.type]) {
+        groupedByType[a.type] = [];
+      }
+      groupedByType[a.type].push(a.points);
     }
-    groupedByType[a.type].push(a.points);
+
+    for (const type in groupedByType) {
+      const isApproved = groupedByType[type].some(p => p >= this.minPointsAssessment!);
+      if (isApproved) {
+        this.blockedTypes.push(type as AssessmentType);
+      }
+    }
   }
 
-  for (const type in groupedByType) {
-    const isApproved = groupedByType[type].some(p => p >= this.minPointsAssessment!);
-    if (isApproved) {
-      this.blockedTypes.push(type as AssessmentType);
-    }
+  private showStagePromotionModal(): void {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      isContentViewer: true,
+      title: '¡Stage aprobado!',
+      message: 'El estudiante ha aprobado su etapa y ha sido promovido al siguiente stage.',
+      close: this.closeModal
+    };
   }
-
-  // console.log('Tipos bloqueados por haber aprobado:', this.blockedTypes);
-}
 
   showModal(params: ModalDto): void {
     this.modal = { ...params };

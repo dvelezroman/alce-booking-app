@@ -24,6 +24,7 @@ export interface AssessementI {
     name: string;
     description: string;
   }
+  updatedStage?: boolean;
 }
 
 export interface CreateAssessmentI {

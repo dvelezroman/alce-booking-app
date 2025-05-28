@@ -97,6 +97,7 @@ export class AssessmentFormComponent implements OnInit {
     this.selectedStudent = user;
     this.searchTerm = `${user.firstName} ${user.lastName}`;
     this.filteredUsers = [];
+    this.assessmentTypeId = null;
     this.showUserDropdown = false;
     this.showStudentRequiredError = false;
     this.note = '';
@@ -247,9 +248,10 @@ export class AssessmentFormComponent implements OnInit {
   }
 
   private resetForm(): void {
+    this.searchTerm = '';
     this.note = '';
     this.points = null;
-    this.type = null;
+    this.assessmentTypeId = null;
     this.selectedResourceId = '';
     this.addedResources = [];
     this.showCommentBox = false;
