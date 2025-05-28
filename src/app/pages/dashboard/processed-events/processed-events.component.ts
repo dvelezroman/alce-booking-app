@@ -123,7 +123,7 @@ export class ProcessedEventsComponent implements OnInit {
     this.processedEventService.getProcessedEvents(this.filter).subscribe({
       next: (data) => {
         this.events = data;
-        console.log('Filtro enviado:', this.filter);
+        // console.log('Filtro enviado:', this.filter);
         // console.log('Eventos recibidos:', data);
       },
       error: () => {

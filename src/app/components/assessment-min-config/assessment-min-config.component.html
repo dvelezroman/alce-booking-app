@@ -1,6 +1,7 @@
+
 <div class="dropdown-toggle-container">
   <div class="dropdown-toggle" (click)="showConfigForm = !showConfigForm">
-    <span>Configurar nota máxima</span>
+    <span>Configurar Nota Mínima</span>
     <span class="icon is-small">
       <i class="material-icons">
         {{ showConfigForm ? 'expand_less' : 'expand_more' }}
@@ -11,17 +12,17 @@
   <div [ngClass]="showConfigForm ? 'dropdown-body' : 'dropdown-body-hidden'">
     <div class="search-form">
       <div class="field">
-        <label class="label">Punto Máximo</label>
+        <label class="label">Nota Mínima</label>
         <input
           type="number"
           class="input"
-          [(ngModel)]="maxPoints"
-          placeholder="Ej: 100"
+          [(ngModel)]="minPoints"
+          placeholder="Ej: 70"
         />
       </div>
 
       <div class="button-wrapper">
-        <button class="button is-blue" (click)="saveAssessmentConfig()">
+        <button class="button is-blue" (click)="saveMinPointsConfig()">
           Actualizar
         </button>
       </div>
