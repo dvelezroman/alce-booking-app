@@ -328,16 +328,19 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.studentContentHistory = history;
 
     const studentStageDescription = this.selectedMeeting?.stage?.description;
-    // Asegura orden correcto antes de buscar
     this.filteredStages = this.sortStages(this.filteredStages);
 
-    const targetStageIndex = this.filteredStages.findIndex(
+    let targetStageIndex = this.filteredStages.findIndex(
       s => s.description === studentStageDescription
     );
 
     if (targetStageIndex === -1) {
-      this.finishLoadingWithMessage('No se encontró el stage correspondiente al estudiante.');
-      return;
+      if (this.filteredStages.length > 0) {
+        targetStageIndex = 0; 
+      } else {
+        this.finishLoadingWithMessage('No hay stages con contenido disponibles.');
+        return;
+      }
     }
 
     this.currentStageIndex = targetStageIndex;

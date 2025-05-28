@@ -18,7 +18,7 @@ export class AssessmentResourceFormComponent {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       title: ['', Validators.required],
-      link: ['', [Validators.required, Validators.pattern('https?://.+')]]
+      link: ['https://', [Validators.required, Validators.pattern('https?://.+')]]
     });
   }
 
