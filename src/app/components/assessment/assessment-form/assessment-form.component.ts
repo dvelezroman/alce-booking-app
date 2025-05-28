@@ -15,13 +15,13 @@ import { AssessmentType, CreateAssessmentI } from '../../../services/dtos/assess
 })
 export class AssessmentFormComponent implements OnInit {
   @ViewChild('resourceSelect') resourceSelect!: ElementRef<HTMLSelectElement>;
-  
+
   @Input() blockedTypes: AssessmentType[] = [];
   @Input() availableResources: { id: number; name: string; content: string }[] = [];
   @Input() instructorId: number | null = null;
   @Output() assessmentCreated = new EventEmitter<CreateAssessmentI>();
   @Output() studentSelected = new EventEmitter<{ studentId: number, stageId: number, instructorId: number }>();
-  
+
   showCommentBox: boolean = false;
   showPointsError: boolean = false;
   showUserDropdown: boolean = false;
@@ -29,14 +29,17 @@ export class AssessmentFormComponent implements OnInit {
   showStudentRequiredError: boolean = false;
 
   searchInput$ = new Subject<string>();
-  assessmentTypes = Object.values(AssessmentType); 
+  // TODO: cambiar, los valores para este array vienen del servicio para traer los tipos de asseessment que hay
+  assessmentTypes = Object.values(AssessmentType);
+  // TODO: esta variable contiene el valor del tipo de assessment seleccionado
+  assessmentTypeId: number | null = null;
   selectedStudent?: UserDto;
   type: AssessmentType | null = null;
   points: number | null = null;
   note: string = '';
   searchTerm: string = '';
   selectedResourceId: string = '';
-  
+
   filteredUsers: UserDto[] = [];
   addedResources: { id: number; name: string; content: string }[] = [];
 
@@ -215,7 +218,8 @@ export class AssessmentFormComponent implements OnInit {
       instructorId: this.instructorId!,
       type: this.type!,
       points: this.points!,
-      note: this.note || ''
+      note: this.note || '',
+      assessmentTypeId: this.assessmentTypeId!,
     };
 
     this.assessmentCreated.emit(payload);
