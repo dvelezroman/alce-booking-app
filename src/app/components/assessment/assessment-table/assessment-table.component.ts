@@ -12,7 +12,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class AssessmentTableComponent {
   @Input() assessments: AssessementI[] = [];
-  @Input() maxPointsAssessment: number | null = null;
+ @Input() minPointsAssessment: number | null = null;
 
   constructor(private sanitizer: DomSanitizer) {}
 
@@ -27,11 +27,11 @@ export class AssessmentTableComponent {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  isMaxReached(points: number): boolean {
-    return this.maxPointsAssessment !== null && points >= this.maxPointsAssessment;
+  isApproved(points: number): boolean {
+    return this.minPointsAssessment !== null && points >= this.minPointsAssessment;
   }
 
-  isBelowMax(points: number): boolean {
-    return this.maxPointsAssessment !== null && points < this.maxPointsAssessment;
+  isNotApproved(points: number): boolean {
+    return this.minPointsAssessment !== null && points < this.minPointsAssessment;
   }
 }

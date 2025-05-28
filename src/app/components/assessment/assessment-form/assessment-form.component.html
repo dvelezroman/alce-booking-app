@@ -34,36 +34,33 @@
     </p>
   </div>
 
-  <div class="field mt-4">
-    <label class="label">Tipo de Evaluación</label>
-    <div class="control">
-      <select
-        name="assessmentType"
-        class="input"
-        [(ngModel)]="type"
-        required
-        [disabled]="!selectedStudent"
-        [class.is-danger]="typeControl?.invalid && typeControl?.touched"
-        #typeControl="ngModel"
-      >
-        <option [ngValue]="null" disabled>Seleccionar tipo</option>
+<div class="field mt-4">
+  <label class="label">Tipo de Evaluación</label>
+  <div class="control">
+    <select
+      name="assessmentType"
+      class="input"
+      [(ngModel)]="assessmentTypeId"
+      required
+      [disabled]="!selectedStudent"
+      [class.is-danger]="typeControl?.invalid && typeControl?.touched"
+      #typeControl="ngModel"
+    >
+      <option [ngValue]="null" disabled>Seleccionar tipo</option>
         <option
-          *ngFor="let t of assessmentTypes"
-          [value]="t"
-          [disabled]="blockedTypes.includes(t)"
-        >
-          {{ t }}
-        </option>
-      </select>
-
-      <p
-        *ngIf="typeControl?.invalid && typeControl?.touched"
-        class="help is-danger"
+        *ngFor="let t of assessmentTypesFromApi"
+        [ngValue]="t.id"
+        [disabled]="isTypeBlocked(t.name)"
       >
-        Debes seleccionar un tipo de evaluación.
-      </p>
-    </div>
+        {{ t.name }}
+      </option>
+    </select>
+
+    <p *ngIf="typeControl?.invalid && typeControl?.touched" class="help is-danger">
+      Debes seleccionar un tipo de evaluación.
+    </p>
   </div>
+</div>
 
   <div class="field mt-4 is-flex is-justify-content-space-between">
     <div class="control" style="width: 48%">
@@ -76,7 +73,7 @@
         [(ngModel)]="points"
         (ngModelChange)="handlePointsChange($event)"
         placeholder="0-100"
-        [disabled]="!type"
+        [disabled]="!assessmentTypeId"
       />
       <p *ngIf="showPointsError" class="help is-danger">
         Ingresar calificación entre 0 - 100.
@@ -88,7 +85,7 @@
       <button
         class="button is-warning is-fullwidth"
         type="button"
-        [disabled]="points === null || points >= 85"
+        [disabled]="points === null || (minPointsAssessment !== null && points >= minPointsAssessment)"
         (click)="showCommentBox = !showCommentBox"
       >
         Comentario
@@ -115,9 +112,9 @@
         #resourceSelect
         class="input"
         [(ngModel)]="selectedResourceId"
-        (change)="insertResourceIntoComment()"
+        (change)="addResourceBySelect()"
       >
-        <option value="" disabled>Selecciona un recurso</option>
+        <option value="" disabled selected>Selecciona un recurso</option>
         <option *ngFor="let resource of availableResources" [value]="resource.id">
           {{ resource.name }}
         </option>

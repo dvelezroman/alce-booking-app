@@ -13,8 +13,8 @@
         <td data-label="Stage">{{ a.stageId || '-' }}</td>
         <td data-label="Tipo">{{ a.type }}</td>
         <td data-label="Nota" 
-            [ngClass]="{ 'max-point-reached': isMaxReached(a.points), 
-                         'below-threshold': isBelowMax(a.points)}">{{ a.points }}
+            [ngClass]="{ 'max-point-reached':  isApproved(a.points), 
+                         'below-threshold': isNotApproved(a.points)}">{{ a.points }}
         </td>
         <td data-label="Comentario" [innerHTML]="formatNoteWithLinks(a.note)"></td>
       </tr>

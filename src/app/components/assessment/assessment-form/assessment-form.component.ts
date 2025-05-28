@@ -5,6 +5,8 @@ import { Subject, debounceTime } from 'rxjs';
 import { UserDto } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
 import { AssessmentType, CreateAssessmentI } from '../../../services/dtos/assessment.dto';
+import { AssessmentTypesService } from '../../../services/assessment-types.service';
+import { AssessmentTypeI } from '../../../services/dtos/assessment-type.dto';
 
 @Component({
   selector: 'app-assessment-form',
@@ -17,6 +19,7 @@ export class AssessmentFormComponent implements OnInit {
   @ViewChild('resourceSelect') resourceSelect!: ElementRef<HTMLSelectElement>;
 
   @Input() blockedTypes: AssessmentType[] = [];
+  @Input() minPointsAssessment: number | null = null;
   @Input() availableResources: { id: number; name: string; content: string }[] = [];
   @Input() instructorId: number | null = null;
   @Output() assessmentCreated = new EventEmitter<CreateAssessmentI>();
@@ -29,10 +32,8 @@ export class AssessmentFormComponent implements OnInit {
   showStudentRequiredError: boolean = false;
 
   searchInput$ = new Subject<string>();
-  // TODO: cambiar, los valores para este array vienen del servicio para traer los tipos de asseessment que hay
-  assessmentTypes = Object.values(AssessmentType);
-  // TODO: esta variable contiene el valor del tipo de assessment seleccionado
   assessmentTypeId: number | null = null;
+  assessmentTypesFromApi: AssessmentTypeI[] = [];
   selectedStudent?: UserDto;
   type: AssessmentType | null = null;
   points: number | null = null;
@@ -44,13 +45,29 @@ export class AssessmentFormComponent implements OnInit {
   addedResources: { id: number; name: string; content: string }[] = [];
 
 
-  constructor(private usersService: UsersService) {
+  constructor(private usersService: UsersService,
+              private assessmentTypesService: AssessmentTypesService
+  ) {
     this.searchInput$.pipe(debounceTime(300)).subscribe((term: string) => {
       this.filterUsers(term);
     });
   }
 
   ngOnInit(): void {
+    this.loadAssessmentTypes();
+  }
+
+  loadAssessmentTypes(): void {
+    this.assessmentTypesService.getAll().subscribe({
+      next: (types) => {
+        console.log('Tipos de evaluación cargados:', types); 
+        this.assessmentTypesFromApi = types;
+      },
+      error: () => {
+        this.assessmentTypesFromApi = [];
+        console.error('Error al cargar los tipos de evaluación.');
+      }
+    });
   }
 
   onSearchChange(term: string): void {
@@ -115,20 +132,18 @@ export class AssessmentFormComponent implements OnInit {
   }
 
   get shouldDisableSubmit(): boolean {
-    const requiresComment = this.points !== null && this.points < 85;
+    const requiresComment = this.points !== null && this.minPointsAssessment !== null && this.points < this.minPointsAssessment;
     const commentIsValid = this.note.trim().length >= 12;
-    // const hasResources = this.addedResources.length > 0;
-
-    return requiresComment && (!commentIsValid);
+    return requiresComment && !commentIsValid;
   }
 
-  insertResourceIntoComment(): void {
+  addResourceBySelect(): void {
     const id = Number(this.selectedResourceId);
     const selected = this.availableResources.find(r => r.id === id);
 
-    if (selected && !this.addedResources.find(r => r.id === selected.id)) {
+    if (selected && !this.addedResources.some(r => r.id === selected.id)) {
       this.addedResources.push(selected);
-      this.note = this.note.trim() + '\n' + selected.content;
+      this.selectedResourceId = '';
     }
   }
 
@@ -152,20 +167,20 @@ export class AssessmentFormComponent implements OnInit {
 
   handlePointsChange(value: number): void {
     this.points = value;
+
     if (!this.isPointsInvalid()) {
       this.showPointsError = false;
     }
 
-     if (this.points !== null && this.points >= 85) {
+    if (
+      this.points !== null &&
+      this.minPointsAssessment !== null &&
+      this.points >= this.minPointsAssessment
+    ) {
       this.showCommentBox = false;
       this.note = '';
       this.addedResources = [];
       this.selectedResourceId = '';
-      setTimeout(() => {
-        if (this.resourceSelect?.nativeElement) {
-          this.resourceSelect.nativeElement.selectedIndex = 0;
-        }
-      });
     }
   }
 
@@ -199,7 +214,7 @@ export class AssessmentFormComponent implements OnInit {
     const studentId = student?.id;
 
     const isStudentValid = !!studentId && !!stageId;
-    const isTypeValid = this.type !== null && !this.blockedTypes.includes(this.type);
+    const isTypeValid = this.assessmentTypeId !== null;
 
     this.showStudentRequiredError = !isStudentValid;
 
@@ -216,14 +231,25 @@ export class AssessmentFormComponent implements OnInit {
       studentId: studentId!,
       stageId: stageId!,
       instructorId: this.instructorId!,
-      type: this.type!,
+      type: this.getSelectedTypeEnum(), 
       points: this.points!,
       note: this.note || '',
       assessmentTypeId: this.assessmentTypeId!,
+      resourceIds: this.addedResources.map(r => r.id)
     };
 
     this.assessmentCreated.emit(payload);
     this.resetForm();
+  }
+
+  private getSelectedTypeEnum(): AssessmentType {
+    const selected = this.assessmentTypesFromApi.find(t => t.id === this.assessmentTypeId);
+    if (!selected) throw new Error('Tipo de evaluación no válido');
+    return selected.name as AssessmentType;
+  }
+
+  isTypeBlocked(typeName: string): boolean {
+    return this.blockedTypes.includes(typeName as AssessmentType);
   }
 
   private resetForm(): void {

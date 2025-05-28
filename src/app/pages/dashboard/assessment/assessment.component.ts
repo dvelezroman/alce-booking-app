@@ -31,7 +31,7 @@ export class AssessmentComponent implements OnInit {
   blockedTypes: AssessmentType[] = [];
   resources: AssessmentResourceI[] = [];
   instructorId: number | null = null;
-  maxPointsAssessment: number | null = null;
+  minPointsAssessment: number | null = null;
   hasSearched: boolean = false;
 
   constructor(
@@ -55,7 +55,7 @@ export class AssessmentComponent implements OnInit {
   loadAssessmentConfig(): void {
     this.assessmentPointsConfigService.getById().subscribe({
       next: (config) => {
-        this.maxPointsAssessment = config.maxPointsAssessment;
+        this.minPointsAssessment = config.minPointsAssessment;
       },
       error: () => {
         this.showModal(
@@ -87,8 +87,10 @@ export class AssessmentComponent implements OnInit {
   }
 
   handleAssessmentCreated(payload: CreateAssessmentI): void {
+     console.log('Payload a enviar:', payload);
     this.assessmentService.create(payload).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('Respuesta del backend:', response); 
         this.showModal(
           this.createModalParams(false, 'Evaluación registrada correctamente.')
         );
@@ -122,28 +124,28 @@ export class AssessmentComponent implements OnInit {
     });
   }
 
-  evaluateBlockedTypes(): void {
-    this.blockedTypes = [];
+evaluateBlockedTypes(): void {
+  this.blockedTypes = [];
+  if (this.minPointsAssessment === null) return;
 
-    if (this.maxPointsAssessment === null) return;
+  const groupedByType: Record<string, number[]> = {};
 
-    const groupedByType: Record<string, number[]> = {};
-
-    for (const a of this.assessments) {
-      if (!groupedByType[a.type]) {
-        groupedByType[a.type] = [];
-      }
-      groupedByType[a.type].push(a.points);
+  for (const a of this.assessments) {
+    if (!groupedByType[a.type]) {
+      groupedByType[a.type] = [];
     }
-
-    for (const type in groupedByType) {
-      const hasMax = groupedByType[type].some(p => p >= this.maxPointsAssessment!);
-      if (hasMax) {
-        this.blockedTypes.push(type as AssessmentType);
-      }
-    }
-    //console.log('evaluaciones bloqueadas:', this.blockedTypes);
+    groupedByType[a.type].push(a.points);
   }
+
+  for (const type in groupedByType) {
+    const isApproved = groupedByType[type].some(p => p >= this.minPointsAssessment!);
+    if (isApproved) {
+      this.blockedTypes.push(type as AssessmentType);
+    }
+  }
+
+  // console.log('Tipos bloqueados por haber aprobado:', this.blockedTypes);
+}
 
   showModal(params: ModalDto): void {
     this.modal = { ...params };
