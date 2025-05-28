@@ -19,6 +19,11 @@ export interface AssessementI {
   createdAt?: string;
   instructor?: Instructor;
   student?: Student;
+  assessmentTypeId: number;
+  assessmentType: {
+    name: string;
+    description: string;
+  }
 }
 
 export interface CreateAssessmentI {
@@ -28,6 +33,7 @@ export interface CreateAssessmentI {
   studentId: number;
   stageId: number;
   instructorId: number;
+  assessmentTypeId: number;
 }
 
 export interface UpdateAssessmentI {
@@ -37,6 +43,7 @@ export interface UpdateAssessmentI {
   studentId: number;
   stageId: number;
   instructorId: number;
+  assessmentTypeId: number;
 }
 
 export interface FilterAssessmentI {
@@ -45,6 +52,7 @@ export interface FilterAssessmentI {
   stageId?: string;
   type?: AssessmentType;
   note?: any;
+  assessmentTypeId?: number;
 }
 
 export interface AssessmentConfigI {
