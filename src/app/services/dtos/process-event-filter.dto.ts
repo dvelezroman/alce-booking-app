@@ -4,6 +4,7 @@ export interface ProcessedEventFilterDto {
   to?: string;
   processedById?: number;
   sort?: 'asc' | 'desc';
+  search?: string;
 }
 export interface EventUserDataI {
   firstName: string;

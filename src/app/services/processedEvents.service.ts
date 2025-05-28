@@ -31,8 +31,9 @@ export class ProcessedEventsService {
       params = params.set('processedById', filters.processedById.toString());
     }
 
-
-
+    if (filters.search) {
+     params = params.set('search', filters.search);
+    }
     return this.http.get<ProcessedEventDto[]>(this.apiUrl, { params });
   }
 }
