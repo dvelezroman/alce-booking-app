@@ -401,41 +401,51 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   }
 
   private generateNotesSection(assessments: AssessementI[]): string {
-    const notes = assessments.filter(a => !!a.note).map(a => {
-      const date = a.createdAt ? new Date(a.createdAt).toLocaleDateString() : '';
-      return `<div style="margin-bottom: 4px;">
-                <span>${a.note}</span><br>
-                <small style="color: #888;">${date}</small>
-              </div>`;
+    const notes = assessments
+      .filter(a => !!a.note)
+      .map(a => {
+        const date = a.createdAt ? new Date(a.createdAt).toLocaleDateString() : '';
+        const instructor = a.instructor?.user?.firstName
+          ? `${a.instructor.user.firstName} ${a.instructor.user.lastName || ''}`
+          : 'Instructor no disponible';
+
+        return `<div style="margin-bottom: 6px;">
+                  <span>${a.note}</span><br>
+                  <small style="color: #888; font-size: 8px;">${date} • ${instructor}</small>
+                </div>`;
       })
       .join('');
 
     return notes
       ? `<div style="margin-bottom: 12px;">
-          <b>Nota:</b><br>
+          <b>Notas:</b><br>
           ${notes}
         </div>`
       : '';
   }
 
   private generateResourcesSection(assessments: AssessementI[]): string {
-    const resourceMap = new Map<number, { resource: AssessmentResourceI; date?: string }>();
+    const resourceMap = new Map<number, { resource: AssessmentResourceI; date?: string; instructor?: string }>();
 
     assessments.forEach(a => {
       const date = a.createdAt ? new Date(a.createdAt).toLocaleDateString() : '';
+      const instructor = a.instructor?.user?.firstName
+        ? `${a.instructor.user.firstName} ${a.instructor.user.lastName || ''}`
+        : 'Instructor no disponible';
+
       (a as any).resources?.forEach((res: AssessmentResourceI) => {
         if (!resourceMap.has(res.id)) {
-          resourceMap.set(res.id, { resource: res, date });
+          resourceMap.set(res.id, { resource: res, date, instructor });
         }
       });
     });
 
     const resourceItems = Array.from(resourceMap.values())
-      .map(({ resource, date }) =>
-        `<div style="margin-bottom: 6px;">
+      .map(({ resource, date, instructor }) =>
+        `<div style="margin-bottom: 5px;">
           <a href="${resource.link}" target="_blank" rel="noopener noreferrer"
               style="color: #007bff; text-decoration: underline;">${resource.title}</a><br>
-          <small style="color: #888;">${date}</small>
+          <small style="color: #888; font-size: 9px;">${date} • ${instructor}</small>
         </div>`
       )
       .join('');
