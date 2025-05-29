@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { FormsModule } from '@angular/forms';
 import { Stage } from '../../../services/dtos/student.dto';
 import { StudyContentService } from '../../../services/study-content.service';

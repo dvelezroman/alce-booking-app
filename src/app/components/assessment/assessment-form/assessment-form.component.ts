@@ -60,7 +60,7 @@ export class AssessmentFormComponent implements OnInit {
   loadAssessmentTypes(): void {
     this.assessmentTypesService.getAll().subscribe({
       next: (types) => {
-        console.log('Tipos de evaluación cargados:', types); 
+        //console.log('Tipos de evaluación cargados:', types); 
         this.assessmentTypesFromApi = types;
       },
       error: () => {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AssessmentConfigFormComponent } from '../../../components/assessment-config-form/assessment-config-form.component';
-import { AssessmentMinConfigComponent } from '../../../components/assessment-min-config/assessment-min-config.component';
+import { AssessmentConfigFormComponent } from '../../../components/assessment-config/assessment-max-config/assessment-config-form.component';
+import { AssessmentMinConfigComponent } from '../../../components/assessment-config/assessment-min-config/assessment-min-config.component';
 
 @Component({
   selector: 'app-assessment-config',

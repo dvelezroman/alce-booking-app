@@ -48,7 +48,7 @@ export class HomePrivateComponent implements OnInit {
   selectedDate: Date | null = null;
   meetingsOfDay: MeetingDTO[] = [];
 
-  isModalOpen: boolean = false;
+  // isModalOpen: boolean = false;
   selectedMeeting: any;
   meetingContent: string = '';
   isUpdating: boolean = false;
@@ -277,6 +277,12 @@ export class HomePrivateComponent implements OnInit {
 
     meetings.forEach((meeting) => {
       const meetingDate = new Date(meeting.date);
+      meetingDate.setHours(0, 0, 0, 0);
+
+      //Filtrar reuniones en el pasado
+      if (meetingDate < today) {
+        return;
+      }
 
       if (meetingDate.getMonth() === month && meetingDate.getFullYear() === year) {
         const day = meetingDate.getDate();
@@ -296,87 +302,87 @@ export class HomePrivateComponent implements OnInit {
     }));
   }
 
-  openThemeModal(item: any) {
-   const contentIds = item.meetings?.[0]?.studyContentId || [];
+  // openThemeModal(item: any) {
+  //  const contentIds = item.meetings?.[0]?.studyContentId || [];
 
-    this.selectedMeeting = {
-      meetingThemeId: item.meetingThemeId,
-      stageId: item.stageId,
-      instructorId: item.instructorId,
-      date: item.date,
-      hour: item.hour,
-      description: item.meetingTheme ? item.meetingTheme.description : ''
-    };
+  //   this.selectedMeeting = {
+  //     meetingThemeId: item.meetingThemeId,
+  //     stageId: item.stageId,
+  //     instructorId: item.instructorId,
+  //     date: item.date,
+  //     hour: item.hour,
+  //     description: item.meetingTheme ? item.meetingTheme.description : ''
+  //   };
 
-    this.meetingContent = this.selectedMeeting.description;
-    this.isUpdating = !!item.meetingTheme?.id;
-    this.isModalOpen = true;
-    this.loadStudyContentNames(contentIds);
-    //console.log(this.selectedMeeting);
-  }
+  //   this.meetingContent = this.selectedMeeting.description;
+  //   this.isUpdating = !!item.meetingTheme?.id;
+  //   this.isModalOpen = true;
+  //   this.loadStudyContentNames(contentIds);
+  //   //console.log(this.selectedMeeting);
+  // }
 
-  closeThemeModal(): void {
-    this.isModalOpen = false;
-    this.meetingContent = '';
-    this.selectedMeeting = null;
-    this.isUpdating = false;
-  }
+  // closeThemeModal(): void {
+  //   this.isModalOpen = false;
+  //   this.meetingContent = '';
+  //   this.selectedMeeting = null;
+  //   this.isUpdating = false;
+  // }
 
-  addMeetingTheme() {
-    this.selectedMeeting.description = this.meetingContent;
+  // addMeetingTheme() {
+  //   this.selectedMeeting.description = this.meetingContent;
 
-    if (!this.selectedMeeting.description.trim()) {
-      return;
-    }
+  //   if (!this.selectedMeeting.description.trim()) {
+  //     return;
+  //   }
 
-    const createNewMeetingThemeData = {
-      description: this.meetingContent,
-      date: this.selectedMeeting.date,
-      hour: this.selectedMeeting.hour,
-      instructorId: this.selectedMeeting.instructorId,
-      stageId: this.selectedMeeting.stageId,
-    };
+  //   const createNewMeetingThemeData = {
+  //     description: this.meetingContent,
+  //     date: this.selectedMeeting.date,
+  //     hour: this.selectedMeeting.hour,
+  //     instructorId: this.selectedMeeting.instructorId,
+  //     stageId: this.selectedMeeting.stageId,
+  //   };
 
-    this.meetingThemesService.create(createNewMeetingThemeData).subscribe({
-      next: () => {
-        this.showModal(this.createModalParams(false, 'Contenido de la clase agregado correctamente.'));
-        this.closeThemeModal();
-        if (this.selectedDate) {
-          this.getInstructorMeetings(this.selectedDate);
-        }
-      },
-      error: () => {
-        this.showModal(this.createModalParams(true, 'No se pudo agregar el contenido de la clase.'));
-      }
-    });
-  }
+  //   this.meetingThemesService.create(createNewMeetingThemeData).subscribe({
+  //     next: () => {
+  //       this.showModal(this.createModalParams(false, 'Contenido de la clase agregado correctamente.'));
+  //       this.closeThemeModal();
+  //       if (this.selectedDate) {
+  //         this.getInstructorMeetings(this.selectedDate);
+  //       }
+  //     },
+  //     error: () => {
+  //       this.showModal(this.createModalParams(true, 'No se pudo agregar el contenido de la clase.'));
+  //     }
+  //   });
+  // }
 
-  updateMeetingTheme() {
-    if (!this.meetingContent.trim()) {
-        return;
-    }
+//   updateMeetingTheme() {
+//     if (!this.meetingContent.trim()) {
+//         return;
+//     }
 
-    const updatedData: MeetingThemeDto = {
-        stageId: this.selectedMeeting.stageId,
-        instructorId: this.selectedMeeting.instructorId,
-        date: this.selectedMeeting.date,
-        hour: this.selectedMeeting.hour,
-        description: this.meetingContent
-    };
+//     const updatedData: MeetingThemeDto = {
+//         stageId: this.selectedMeeting.stageId,
+//         instructorId: this.selectedMeeting.instructorId,
+//         date: this.selectedMeeting.date,
+//         hour: this.selectedMeeting.hour,
+//         description: this.meetingContent
+//     };
 
-    this.meetingThemesService.update(this.selectedMeeting.meetingThemeId, updatedData).subscribe({
-        next: () => {
-            this.showModal(this.createModalParams(false, 'Tema actualizado exitosamente.'));
-            this.closeThemeModal();
-            if (this.selectedDate) {
-                this.getInstructorMeetings(this.selectedDate); // Actualizamos reuniones solo del mes y año actuales
-            }
-        },
-        error: () => {
-            this.showModal(this.createModalParams(true, 'Error al actualizar el tema.'));
-        }
-    });
-}
+//     this.meetingThemesService.update(this.selectedMeeting.meetingThemeId, updatedData).subscribe({
+//         next: () => {
+//             this.showModal(this.createModalParams(false, 'Tema actualizado exitosamente.'));
+//             this.closeThemeModal();
+//             if (this.selectedDate) {
+//                 this.getInstructorMeetings(this.selectedDate); // Actualizamos reuniones solo del mes y año actuales
+//             }
+//         },
+//         error: () => {
+//             this.showModal(this.createModalParams(true, 'Error al actualizar el tema.'));
+//         }
+//     });
+// }
 
   showModal(params: ModalDto) {
     this.modal = { ...params };

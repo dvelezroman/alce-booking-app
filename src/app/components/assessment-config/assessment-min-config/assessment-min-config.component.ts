@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AssessmentPointsConfigService } from '../../services/assessment-points-config.service';
-import { ModalComponent } from '../modal/modal.component';
-import { ModalDto, modalInitializer } from '../modal/modal.dto';
+import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
+import { ModalComponent } from '../../modal/modal.component';
+import { modalInitializer, ModalDto } from '../../modal/modal.dto';
 
 @Component({
-  selector: 'app-assessment-config-form',
+  selector: 'app-assessment-min-config',
   standalone: true,
   imports: [CommonModule, FormsModule, ModalComponent],
-  templateUrl: './assessment-config-form.component.html',
-  styleUrl: './assessment-config-form.component.scss'
+  templateUrl: './assessment-min-config.component.html',
+  styleUrl: './assessment-min-config.component.scss'
 })
-export class AssessmentConfigFormComponent implements OnInit {
-  showConfigForm: boolean = false;
-  maxPoints: number | null = null;
-  minPoints!: number;
+export class AssessmentMinConfigComponent implements OnInit {
+  showConfigForm = false;
+  minPoints: number | null = null;
+  maxPoints!: number;
   modal: ModalDto = modalInitializer();
 
   constructor(private pointsConfigService: AssessmentPointsConfigService) {}
@@ -27,22 +27,22 @@ export class AssessmentConfigFormComponent implements OnInit {
   loadAssessmentConfig(): void {
     this.pointsConfigService.getById().subscribe({
       next: (config) => {
-        this.maxPoints = config.maxPointsAssessment;
         this.minPoints = config.minPointsAssessment;
+        this.maxPoints = config.maxPointsAssessment;
       },
       error: () => {
-        this.showNotification('Error al cargar configuración de evaluación', true);
+        this.showNotification('Error al cargar configuración de refuerzo', true);
       }
     });
   }
 
-  saveAssessmentConfig(): void {
-    this.pointsConfigService.update(1, this.maxPoints!, this.minPoints).subscribe({
+  saveMinPointsConfig(): void {
+    this.pointsConfigService.update(1, this.maxPoints, this.minPoints!).subscribe({
       next: () => {
-        this.showNotification('Configuración actualizada correctamente', false, true);
+        this.showNotification('Nota mínima actualizada correctamente', false, true);
       },
       error: () => {
-        this.showNotification('Error al actualizar configuración', true);
+        this.showNotification('Error al actualizar nota mínima', true);
       }
     });
   }
