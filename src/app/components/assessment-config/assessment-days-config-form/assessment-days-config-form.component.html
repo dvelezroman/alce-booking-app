@@ -1,0 +1,41 @@
+<div class="dropdown-toggle-container">
+  <div class="dropdown-toggle" (click)="showConfigForm = !showConfigForm">
+    <span>Configurar Días de Estudiante Nuevo</span>
+    <span class="icon is-small">
+      <i class="material-icons">
+        {{ showConfigForm ? 'expand_less' : 'expand_more' }}
+      </i>
+    </span>
+  </div>
+
+  <div [ngClass]="showConfigForm ? 'dropdown-body' : 'dropdown-body-hidden'">
+    <div class="search-form">
+      <div class="field">
+        <label class="label">Número de Días</label>
+        <input
+          type="number"
+          class="input"
+          [(ngModel)]="daysAsNewStudent"
+          placeholder="Ej: 30"
+        />
+      </div>
+
+      <div class="button-wrapper">
+        <button class="button is-blue" (click)="saveDaysConfig()">
+          Actualizar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>

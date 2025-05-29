@@ -3,20 +3,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 import { ModalComponent } from '../../modal/modal.component';
-import { modalInitializer, ModalDto } from '../../modal/modal.dto';
+import { ModalDto, modalInitializer } from '../../modal/modal.dto';
 
 @Component({
-  selector: 'app-assessment-min-config',
+  selector: 'app-assessment-days-config-form',
   standalone: true,
   imports: [CommonModule, FormsModule, ModalComponent],
-  templateUrl: './assessment-min-config.component.html',
-  styleUrl: './assessment-min-config.component.scss'
+  templateUrl: './assessment-days-config-form.component.html',
+  styleUrl: './assessment-days-config-form.component.scss'
 })
-export class AssessmentMinConfigComponent implements OnInit {
-  showConfigForm = false;
-  minPoints: number | null = null;
+export class AssessmentDaysConfigFormComponent implements OnInit {
+  showConfigForm: boolean = false;
+  daysAsNewStudent!: number;
+  minPoints!: number;
   maxPoints!: number;
-  daysAsNewStudent: number | null = null;
   modal: ModalDto = modalInitializer();
 
   constructor(private pointsConfigService: AssessmentPointsConfigService) {}
@@ -28,23 +28,23 @@ export class AssessmentMinConfigComponent implements OnInit {
   loadAssessmentConfig(): void {
     this.pointsConfigService.getById().subscribe({
       next: (config) => {
-        this.minPoints = config.minPointsAssessment;
+       this.minPoints = config.minPointsAssessment;
         this.maxPoints = config.maxPointsAssessment;
         this.daysAsNewStudent = config.numberDaysNewStudent;
       },
       error: () => {
-        this.showNotification('Error al cargar configuración de refuerzo', true);
+        this.showNotification('Error al cargar configuración de días', true);
       }
     });
   }
 
-  saveMinPointsConfig(): void {
-    this.pointsConfigService.update(1, this.maxPoints, this.minPoints!, this.daysAsNewStudent!).subscribe({
+  saveDaysConfig(): void {
+    this.pointsConfigService.update(1, this.maxPoints, this.minPoints, this.daysAsNewStudent).subscribe({
       next: () => {
-        this.showNotification('Nota mínima actualizada correctamente', false, true);
+        this.showNotification('Días actualizados correctamente', false, true);
       },
       error: () => {
-        this.showNotification('Error al actualizar nota mínima', true);
+        this.showNotification('Error al actualizar los días', true);
       }
     });
   }

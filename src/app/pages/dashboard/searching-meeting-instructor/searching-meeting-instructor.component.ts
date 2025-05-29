@@ -445,7 +445,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
         `<div style="margin-bottom: 5px;">
           <a href="${resource.link}" target="_blank" rel="noopener noreferrer"
               style="color: #007bff; text-decoration: underline;">${resource.title}</a><br>
-          <small style="color: #888; font-size: 9px;">${date} • ${instructor}</small>
+          <small style="color: #888; font-size: 8px;">${date} • ${instructor}</small>
         </div>`
       )
       .join('');

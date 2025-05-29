@@ -16,6 +16,7 @@ export class AssessmentConfigFormComponent implements OnInit {
   showConfigForm: boolean = false;
   maxPoints: number | null = null;
   minPoints!: number;
+   daysAsNewStudent: number | null = null;
   modal: ModalDto = modalInitializer();
 
   constructor(private pointsConfigService: AssessmentPointsConfigService) {}
@@ -29,6 +30,7 @@ export class AssessmentConfigFormComponent implements OnInit {
       next: (config) => {
         this.maxPoints = config.maxPointsAssessment;
         this.minPoints = config.minPointsAssessment;
+        this.daysAsNewStudent = config.numberDaysNewStudent;
       },
       error: () => {
         this.showNotification('Error al cargar configuración de evaluación', true);
@@ -37,7 +39,7 @@ export class AssessmentConfigFormComponent implements OnInit {
   }
 
   saveAssessmentConfig(): void {
-    this.pointsConfigService.update(1, this.maxPoints!, this.minPoints).subscribe({
+    this.pointsConfigService.update(1, this.maxPoints!, this.minPoints, this.daysAsNewStudent! ).subscribe({
       next: () => {
         this.showNotification('Configuración actualizada correctamente', false, true);
       },
