@@ -25,6 +25,11 @@ export interface AssessementI {
     description: string;
   }
   updatedStage?: boolean;
+   resources?: {
+    id: number;
+    title: string;
+    link: string;
+  }[];
 }
 
 export interface CreateAssessmentI {

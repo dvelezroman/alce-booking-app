@@ -22,6 +22,8 @@ import { selectUserData, selectInstructorLink } from '../../../store/user.select
 import { AssessmentResourcesService } from '../../../services/assessment-resources.service';
 import { AssessmentResourceI } from '../../../services/dtos/assessment-resources.dto';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { AssessmentService } from '../../../services/assessment.service';
+import { AssessementI } from '../../../services/dtos/assessment.dto';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -79,6 +81,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     private stagesService: StagesService,
     private bookingService: BookingService,
     private studyContentService: StudyContentService,
+    private assessmentService: AssessmentService,
     private assessmentResourcesService: AssessmentResourcesService,
   ) {}
 
@@ -379,9 +382,9 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   onCommentViewRequested(event: { meeting: MeetingDTO; title: string }): void {
     const studentId = event.meeting.studentId;
 
-    this.assessmentResourcesService.getAssessmentResourcesByStudentId(studentId).subscribe({
-      next: (resources) => {
-        const message = this.buildHtmlContent(resources);
+    this.assessmentService.findAll({ studentId: String(studentId) }).subscribe({
+      next: (assessments) => {
+        const message = this.buildHtmlAllNotesAndResources(assessments);
         this.showNoteModal(event.title, message);
       },
       error: () => {
@@ -390,21 +393,59 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     });
   }
 
-  private buildHtmlContent(resources: AssessmentResourceI[]): SafeHtml {
-    const resourceHtml = resources.length
-      ? resources
-        .map(r => `<a href="${r.link}" target="_blank" rel="noopener noreferrer" style="color: #007bff; text-decoration: underline;">${r.title}</a>`)
-        .join('<br>')
+  private buildHtmlAllNotesAndResources(assessments: AssessementI[]): SafeHtml {
+    const notesHtml = this.generateNotesSection(assessments);
+    const resourcesHtml = this.generateResourcesSection(assessments);
+    const fullHtml = `${notesHtml}${resourcesHtml}`;
+    return this.sanitizer.bypassSecurityTrustHtml(fullHtml);
+  }
+
+  private generateNotesSection(assessments: AssessementI[]): string {
+    const notes = assessments.filter(a => !!a.note).map(a => {
+      const date = a.createdAt ? new Date(a.createdAt).toLocaleDateString() : '';
+      return `<div style="margin-bottom: 4px;">
+                <span>${a.note}</span><br>
+                <small style="color: #888;">${date}</small>
+              </div>`;
+      })
+      .join('');
+
+    return notes
+      ? `<div style="margin-bottom: 12px;">
+          <b>Nota:</b><br>
+          ${notes}
+        </div>`
+      : '';
+  }
+
+  private generateResourcesSection(assessments: AssessementI[]): string {
+    const resourceMap = new Map<number, { resource: AssessmentResourceI; date?: string }>();
+
+    assessments.forEach(a => {
+      const date = a.createdAt ? new Date(a.createdAt).toLocaleDateString() : '';
+      (a as any).resources?.forEach((res: AssessmentResourceI) => {
+        if (!resourceMap.has(res.id)) {
+          resourceMap.set(res.id, { resource: res, date });
+        }
+      });
+    });
+
+    const resourceItems = Array.from(resourceMap.values())
+      .map(({ resource, date }) =>
+        `<div style="margin-bottom: 6px;">
+          <a href="${resource.link}" target="_blank" rel="noopener noreferrer"
+              style="color: #007bff; text-decoration: underline;">${resource.title}</a><br>
+          <small style="color: #888;">${date}</small>
+        </div>`
+      )
+      .join('');
+
+    return resourceItems
+      ? `<div>
+          <b>Recursos:</b><br>
+          <div style="margin-top: 4px;">${resourceItems}</div>
+        </div>`
       : '<span style="color: #777;">No hay recursos asociados.</span>';
-
-    const html = `
-      <div>
-        <b>Recursos:</b><br>
-        <div style="margin-top: 4px;">${resourceHtml}</div>
-      </div>
-    `;
-
-    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
   private showNoteModal(title: string, message: SafeHtml): void {
