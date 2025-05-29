@@ -19,11 +19,11 @@ import { UserDto } from '../../../services/dtos/user.dto';
 import { StagesService } from '../../../services/stages.service';
 import { StudyContentService } from '../../../services/study-content.service';
 import { selectUserData, selectInstructorLink } from '../../../store/user.selector';
-import { AssessmentResourcesService } from '../../../services/assessment-resources.service';
 import { AssessmentResourceI } from '../../../services/dtos/assessment-resources.dto';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AssessmentService } from '../../../services/assessment.service';
 import { AssessementI } from '../../../services/dtos/assessment.dto';
+import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -56,6 +56,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   studyContentOptions: { id: number; name: string }[] = [];
 
   currentStageIndex: number = 0;
+  minPoints: number = 0; 
 
   instructorId: number | null = null;
   instructorLink: string | null = null;
@@ -82,12 +83,15 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     private bookingService: BookingService,
     private studyContentService: StudyContentService,
     private assessmentService: AssessmentService,
-    private assessmentResourcesService: AssessmentResourcesService,
+    private pointsConfigService: AssessmentPointsConfigService
+
   ) {}
 
   ngOnInit(): void {
     this.filter.category = undefined;
     this.loadStagesWithContent();
+    this.loadAssessmentConfig();
+
 
     this.stagesService.getAll().subscribe(response => {
       this.stages = response;
@@ -108,6 +112,12 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.store.select(selectInstructorLink).subscribe(link => {
       this.instructorLink = link;
       //console.log('Instructor link:', link);
+    });
+  }
+
+  loadAssessmentConfig(): void {
+    this.pointsConfigService.getById().subscribe(config => {
+      this.minPoints = config.minPointsAssessment;
     });
   }
 
@@ -384,7 +394,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     this.assessmentService.findAll({ studentId: String(studentId) }).subscribe({
       next: (assessments) => {
-        const message = this.buildHtmlAllNotesAndResources(assessments);
+        const message = this.buildHtmlAllNotesAndResources(assessments, this.minPoints);
         this.showNoteModal(event.title, message);
       },
       error: () => {
@@ -393,16 +403,38 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     });
   }
 
-  private buildHtmlAllNotesAndResources(assessments: AssessementI[]): SafeHtml {
-    const notesHtml = this.generateNotesSection(assessments);
+  private buildHtmlAllNotesAndResources(assessments: AssessementI[], minPoints: number): SafeHtml {
+    const approvedHtml = this.generateApprovedAssessments(assessments, minPoints);
+    const notesHtml = this.generateNotesSection(assessments, minPoints);
     const resourcesHtml = this.generateResourcesSection(assessments);
-    const fullHtml = `${notesHtml}${resourcesHtml}`;
+    const fullHtml = `${approvedHtml}${notesHtml}${resourcesHtml}`;
     return this.sanitizer.bypassSecurityTrustHtml(fullHtml);
   }
 
-  private generateNotesSection(assessments: AssessementI[]): string {
+  private generateApprovedAssessments(assessments: AssessementI[], minPoints: number): string {
+    const approved = assessments.filter(a => a.points >= minPoints);
+    if (!approved.length) return '';
+
+    const items = approved.map(a => {
+      const date = a.createdAt ? new Date(a.createdAt).toLocaleDateString() : '';
+      const instructor = a.instructor?.user?.firstName
+        ? `${a.instructor.user.firstName} ${a.instructor.user.lastName || ''}`
+        : 'Instructor no disponible';
+      return `<div style="margin-bottom: 6px;">
+                ${a.type}: ${a.points}<br>
+                <small style="color: #888; font-size: 10px;">${date} • ${instructor}</small>
+              </div>`;
+    }).join('');
+
+    return `<div style="margin-bottom: 12px;">
+              <b>Evaluaciones aprobadas:</b><br>
+              ${items}
+            </div>`;
+  }
+
+  private generateNotesSection(assessments: AssessementI[], minPoints: number): string {
     const notes = assessments
-      .filter(a => !!a.note)
+      .filter(a => !!a.note && a.points < minPoints)
       .map(a => {
         const date = a.createdAt ? new Date(a.createdAt).toLocaleDateString() : '';
         const instructor = a.instructor?.user?.firstName
@@ -410,6 +442,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
           : 'Instructor no disponible';
 
         return `<div style="margin-bottom: 6px;">
+                  <span>${a.type}: ${a.points}</span><br>
                   <span>${a.note}</span><br>
                   <small style="color: #888; font-size: 8px;">${date} • ${instructor}</small>
                 </div>`;
@@ -418,7 +451,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     return notes
       ? `<div style="margin-bottom: 12px;">
-          <b>Notas:</b><br>
+          <b>Evaluaciones no aprobadas:</b><br>
           ${notes}
         </div>`
       : '';
