@@ -1,32 +1,46 @@
 <div *ngIf="showModal" class="modal-overlay">
   <div class="modal-content" [ngClass]="{
-    'error-modal': isError && !isContentViewer,
-    'shake-animation': shake && isError && !isContentViewer,
-    'pop-up-animation': !isError || isContentViewer,
-    'success-modal': isSuccess && !isContentViewer,
-    'info-modal': isInfo && !isContentViewer,
-    'content-viewer-modal': isContentViewer
+    'error-modal': isError && !isMetadataViewer,
+    'shake-animation': shake && isError && !isMetadataViewer,
+    'pop-up-animation': (!isError || isContentViewer) && !isMetadataViewer,
+    'success-modal': isSuccess && !isMetadataViewer,
+    'info-modal': isInfo && !isMetadataViewer,
+    'content-viewer-modal': isContentViewer,
+    'is-metadata-viewer': isMetadataViewer
   }">
 
-    <div *ngIf="isContentViewer; else defaultModal">
+    <!-- METADATA VIEWER -->
+    <div *ngIf="isMetadataViewer; else fallbackViewer">
       <h2 class="modal-title">{{ title }}</h2>
-      <div class="modal-message" [innerHTML]="message"></div>
+      <pre class="json-previewer">{{ metadata | json }}</pre>
       <div class="modal-buttons">
         <button class="button close-button" (click)="closeModal()">Cerrar</button>
       </div>
     </div>
 
-    <ng-template #defaultModal>
-      <i *ngIf="isError" class="fas fa-exclamation-circle error-icon"></i>
-      <i *ngIf="isSuccess" class="fas fa-check-circle success-icon"></i>
-      <i *ngIf="isInfo" class="fas fa-question-circle question-icon"></i>
-
-      <p [innerHTML]="message"></p>
-
-      <div class="modal-buttons" *ngIf="showButtons">
-        <button class="button confirm-button" (click)="confirm()">Aceptar</button>
-        <button class="button cancel-button" (click)="close.emit()">Cancelar</button>
+    <!-- OTHER VIEWERS -->
+    <ng-template #fallbackViewer>
+      <div *ngIf="isContentViewer; else defaultModal">
+        <h2 class="modal-title">{{ title }}</h2>
+        <div class="modal-message" [innerHTML]="message"></div>
+        <div class="modal-buttons">
+          <button class="button close-button" (click)="closeModal()">Cerrar</button>
+        </div>
       </div>
+
+      <ng-template #defaultModal>
+        <i *ngIf="isError" class="fas fa-exclamation-circle error-icon"></i>
+        <i *ngIf="isSuccess" class="fas fa-check-circle success-icon"></i>
+        <i *ngIf="isInfo" class="fas fa-question-circle question-icon"></i>
+
+        <p [innerHTML]="message"></p>
+
+        <div class="modal-buttons" *ngIf="showButtons">
+          <button class="button confirm-button" (click)="confirm()">Aceptar</button>
+          <button class="button cancel-button" (click)="close.emit()">Cancelar</button>
+        </div>
+      </ng-template>
     </ng-template>
+
   </div>
 </div>

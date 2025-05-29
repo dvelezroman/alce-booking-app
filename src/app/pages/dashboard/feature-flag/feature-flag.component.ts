@@ -7,8 +7,6 @@ import { FeatureFlagDto } from "../../../services/dtos/feature-flag.dto";
 import { FeatureFlagService } from "../../../services/feature-flag.service";
 import { HandleDatesService } from "../../../services/handle-dates.service";
 import { SelectedDay, DisabledDays, DisabledDatesAndHours } from "../../../services/dtos/handle-date.dto";
-import { AssessmentConfigFormComponent } from "../../../components/assessment-config-form/assessment-config-form.component";
-import { AssessmentMinConfigComponent } from "../../../components/assessment-min-config/assessment-min-config.component";
 
 @Component({
   selector: 'app-feature-flag',
@@ -17,8 +15,6 @@ import { AssessmentMinConfigComponent } from "../../../components/assessment-min
     CommonModule,
     RouterModule,
     FormsModule,
-    AssessmentConfigFormComponent,
-    AssessmentMinConfigComponent
   ],
   templateUrl: './feature-flag.component.html',
   styleUrl: './feature-flag.component.scss'

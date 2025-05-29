@@ -22,6 +22,7 @@ import { SearchingStudentComponent } from './searching-students/searching-studen
 import { StageComponent } from './stage/stage.component';
 import { AcademicResourcesComponent } from './academic-resources/academic-resources.component';
 import { AssessmentTypesComponent } from './assessment-types/assessment-types.component';
+import { AssessmentConfigComponent } from './assessment-config/assessment-config.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -46,5 +47,6 @@ export const dashboardRoutes: Routes = [
   { path: 'reports-progress', component: ReportsProgressComponent },
   { path: 'assessment', component: AssessmentComponent },
   { path: 'assessment-reports', component: AssessmentReportsComponent },
+  { path: 'assessment-config', component: AssessmentConfigComponent },
   { path: 'processed-events', component: ProcessedEventsComponent },
 ];

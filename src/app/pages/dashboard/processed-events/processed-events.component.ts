@@ -142,28 +142,29 @@ export class ProcessedEventsComponent implements OnInit {
     }, 200);
   }
 
-  showMetadata(metadata: string | null | undefined): void {
+  showMetadata(metadata: any): void {
     if (!metadata || metadata === 'null') {
-      this.openContentViewerModal('Sin Detalles', 'Este evento no tiene información adicional registrada.');
+      this.openMetadataModal('Sin Detalles', { mensaje: 'Este evento no tiene información adicional registrada.' });
       return;
     }
 
-    try {
-      const parsed = JSON.parse(metadata);
-      const formatted = `<pre>${JSON.stringify(parsed, null, 2)}</pre>`;
-      this.openContentViewerModal('Detalles del Evento', formatted);
-    } catch {
-      this.openContentViewerModal('Detalles del Evento', `<pre>${metadata}</pre>`);
-    }
+    this.openMetadataModal('Detalles del Evento', metadata);
   }
 
-  openContentViewerModal(title: string, content: string): void {
+  openMetadataModal(title: string, metadata: any): void {
+    let parsed;
+    try {
+      parsed = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
+    } catch {
+      parsed = { raw: metadata };
+    }
+
     this.modal = {
       ...modalInitializer(),
       show: true,
       title,
-      isContentViewer: true,
-      message: content,
+      isMetadataViewer: true, 
+      metadata: parsed,
       close: () => {
         this.modal.show = false;
       }
