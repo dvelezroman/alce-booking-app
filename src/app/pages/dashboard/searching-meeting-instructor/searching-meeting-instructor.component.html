@@ -54,7 +54,7 @@
         [hasMeetingPassed]="hasMeetingPassed.bind(this)"
         [formatStudyContent]="formatStudyContent.bind(this)"
         (contentViewRequested)="showContentViewer($event.content, $event.title)"
-        (commentViewRequested)="showContentViewer($event.note, $event.title)"
+        (commentViewRequested)="onCommentViewRequested($event)"
         (studentContentHistoryRequested)="loadStudentContentHistory($event)"
         (assistanceCheckboxClicked)="onAssistanceCheckboxClick($event.event, $event.meeting)"
       ></app-meeting-table>
@@ -87,20 +87,14 @@
 <app-modal
   [showModal]="modal.show"
   [message]="modal.message"
+  [title]="modal.title || ''"
   [isError]="modal.isError"
   [isSuccess]="modal.isSuccess"
   [isInfo]="modal.isInfo"
-  [title]="modal.title || ''"
   [isContentViewer]="modal.isContentViewer ?? false"
-  (close)="closeModal()"
-></app-modal>
-
-<app-modal
-  [showModal]="confirmationModal.show"
-  [message]="confirmationModal.message"
-  [isInfo]="true"
-  [isError]="false"
-  [showButtons]="confirmationModal.showButtons ?? false"
-  (confirmAction)="confirmationModal.confirm && confirmationModal.confirm()"
-  (close)="confirmationModal.close()"
+  [isMetadataViewer]="modal.isMetadataViewer ?? false"
+  [metadata]="modal.metadata"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm && modal.confirm()"
+  (close)="modal.close()"
 />

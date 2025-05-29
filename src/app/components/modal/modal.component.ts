@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule, NgClass, NgIf} from "@angular/common";
+import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-modal',
@@ -12,7 +13,7 @@ import {CommonModule, NgClass, NgIf} from "@angular/common";
 })
 export class ModalComponent {
   @Input() showModal: boolean = false;
-  @Input() message: string = 'An error occurred'; // Default message
+  @Input() message: string | SafeHtml = 'An error occurred'; // Default message
   @Input() isError: boolean = true;  // Flag to determine error or success
   @Input() isSuccess: boolean = false;  // Success flag for success message
   @Output() confirmAction = new EventEmitter<void>();

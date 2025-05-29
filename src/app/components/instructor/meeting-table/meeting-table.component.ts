@@ -16,7 +16,7 @@ export class MeetingTableComponent {
   @Input() hasMeetingPassed!: (localdate: string | Date, hour: number) => boolean;
   
   @Output() contentViewRequested = new EventEmitter<{ content: string; title: string }>();
-  @Output() commentViewRequested = new EventEmitter<{ note: string; title: string }>();
+  @Output() commentViewRequested = new EventEmitter<{ note: string; title: string; meeting: MeetingDTO }>();
   @Output() studentContentHistoryRequested = new EventEmitter<MeetingDTO>();
   @Output() assistanceCheckboxClicked = new EventEmitter<{ event: Event; meeting: MeetingDTO }>();
 
@@ -38,7 +38,11 @@ export class MeetingTableComponent {
 
   showComment(meeting: MeetingDTO): void {
     const note = meeting.assessment?.note || 'Sin observación registrada.';
-    this.commentViewRequested.emit({ note, title: 'Observación del Instructor' });
+    this.commentViewRequested.emit({
+      note,
+      title: 'Observación del Instructor',
+      meeting
+    });
   }
 
   getStudentDisplayName(meeting: MeetingDTO): string {
@@ -52,7 +56,10 @@ export class MeetingTableComponent {
   }
 
   hasObservation(meeting: MeetingDTO): boolean {
-    return !!meeting.assessment?.note || !!meeting.student?.user?.comment;
+    return !!(
+      meeting.assessment?.note ||
+      meeting.student?.user?.comment
+    );
   }
 
   getObservationTooltip(meeting: MeetingDTO): string {

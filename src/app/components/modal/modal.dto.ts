@@ -1,3 +1,5 @@
+import { SafeHtml } from "@angular/platform-browser";
+
 export const modalInitializer = (): ModalDto => {
   return ({
     show: false,
@@ -15,7 +17,7 @@ export const modalInitializer = (): ModalDto => {
 
 export interface ModalDto {
   show: boolean;
-  message: string;
+  message: string | SafeHtml;
   isError: boolean;
   isSuccess: boolean;
   isInfo: boolean;

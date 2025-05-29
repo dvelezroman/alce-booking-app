@@ -19,6 +19,9 @@ import { UserDto } from '../../../services/dtos/user.dto';
 import { StagesService } from '../../../services/stages.service';
 import { StudyContentService } from '../../../services/study-content.service';
 import { selectUserData, selectInstructorLink } from '../../../store/user.selector';
+import { AssessmentResourcesService } from '../../../services/assessment-resources.service';
+import { AssessmentResourceI } from '../../../services/dtos/assessment-resources.dto';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -71,10 +74,12 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     category: undefined
   };
   constructor(
-    private bookingService: BookingService,
-    private stagesService: StagesService,
-    private studyContentService: StudyContentService,
     private store: Store,
+    private sanitizer: DomSanitizer,
+    private stagesService: StagesService,
+    private bookingService: BookingService,
+    private studyContentService: StudyContentService,
+    private assessmentResourcesService: AssessmentResourcesService,
   ) {}
 
   ngOnInit(): void {
@@ -369,6 +374,48 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   closeStudentContentHistoryModal() {
     this.isStudentContentHistoryModalVisible = false;
+  }
+
+  onCommentViewRequested(event: { meeting: MeetingDTO; title: string }): void {
+    const studentId = event.meeting.studentId;
+
+    this.assessmentResourcesService.getAssessmentResourcesByStudentId(studentId).subscribe({
+      next: (resources) => {
+        const message = this.buildHtmlContent(resources);
+        this.showNoteModal(event.title, message);
+      },
+      error: () => {
+        this.showModal(this.createModalParams(true, 'Error al cargar los recursos del estudiante.'));
+      }
+    });
+  }
+
+  private buildHtmlContent(resources: AssessmentResourceI[]): SafeHtml {
+    const resourceHtml = resources.length
+      ? resources
+        .map(r => `<a href="${r.link}" target="_blank" rel="noopener noreferrer" style="color: #007bff; text-decoration: underline;">${r.title}</a>`)
+        .join('<br>')
+      : '<span style="color: #777;">No hay recursos asociados.</span>';
+
+    const html = `
+      <div>
+        <b>Recursos:</b><br>
+        <div style="margin-top: 4px;">${resourceHtml}</div>
+      </div>
+    `;
+
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
+
+  private showNoteModal(title: string, message: SafeHtml): void {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      title,
+      message,
+      isContentViewer: true,
+      close: this.closeModal,
+    };
   }
 
   showContentViewer(content: string, title: string = 'Contenido de la Clase'){
