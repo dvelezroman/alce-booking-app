@@ -37,4 +37,8 @@ export class AssessmentResourcesService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  getAssessmentResourcesByStudentId(studentId: number): Observable<AssessmentResourceI[]> {
+    return this.http.get<AssessmentResourceI[]>(`${this.apiUrl}/student/${studentId}`);
+  }
 }
