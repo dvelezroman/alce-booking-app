@@ -31,6 +31,7 @@ export class AssessmentReportsComponent {
   instructorId: number | null = null;
   assessments: AssessementI[] = [];
   maxPointsAssessment: number | null = null;
+  minPointsAssessment: number | null = null;
   isStudentSelected: boolean = false;
   stageDescription: string = '';
   selectedStageId: number | null = null;
@@ -53,6 +54,7 @@ export class AssessmentReportsComponent {
     this.assessmentPointsConfigService.getById().subscribe({
       next: (config) => {
         this.maxPointsAssessment = config.maxPointsAssessment;
+        this.minPointsAssessment = config.minPointsAssessment;
       },
       error: () => {
         this.showModal(this.createModalParams(true, 'Error al cargar configuración.'));

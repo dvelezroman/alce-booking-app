@@ -52,13 +52,16 @@
                 <div class="entry-date">
                   {{ a.createdAt | date : "dd/MM/yy" }}
                 </div>
-                <div
-                  [ngClass]="{
-                    'max-point-reached': isMaxReached(a.points),
-                    'below-threshold': isBelowMax(a.points)
-                  }"
-                >
-                  Nota: {{ a.points }}
+                <div>
+                  Nota: 
+                  <span
+                    [ngClass]="{
+                      'max-point-reached': isMaxReached(a.points),
+                      'below-threshold': isBelowMax(a.points)
+                    }"
+                  >
+                    {{ a.points }}
+                  </span>
                 </div>
               </div>
             </ng-container>

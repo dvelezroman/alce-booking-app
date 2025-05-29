@@ -13,6 +13,7 @@ import { Stage } from '../../../services/dtos/student.dto';
 export class AssessmentTableReportsComponent implements OnChanges {
   @Input() assessments: AssessementI[] = [];
   @Input() maxPointsAssessment: number | null = null;
+  @Input() minPointsAssessment: number | null = null;
   @Input() stagesWithContent: Stage[] = [];
 
   @Output() evaluationClicked = new EventEmitter<AssessementI>();
@@ -29,7 +30,9 @@ export class AssessmentTableReportsComponent implements OnChanges {
   }
 
   private prepareAssessmentGrid(): void {
-    this.types = Object.values(AssessmentType);
+    this.types = Array.from(
+      new Set(this.assessments.map(a => a.type))
+    );
     const grouped: Record<string, Record<number, AssessementI[]>> = {};
 
     for (const a of this.assessments) {
@@ -51,11 +54,11 @@ export class AssessmentTableReportsComponent implements OnChanges {
     );
   }
 
-  isMaxReached(points: number): boolean {
-    return this.maxPointsAssessment !== null && points >= this.maxPointsAssessment;
+ isMaxReached(points: number): boolean {
+    return this.minPointsAssessment !== null && points >= this.minPointsAssessment;
   }
 
   isBelowMax(points: number): boolean {
-    return this.maxPointsAssessment !== null && points < this.maxPointsAssessment;
+    return this.minPointsAssessment !== null && points < this.minPointsAssessment;
   }
 }
