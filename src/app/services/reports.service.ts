@@ -121,4 +121,16 @@ export class ReportsService {
 
     return this.http.get(`${this.apiUrl}/statistics/daily/summary/csv`, { params, responseType: 'blob' });
   }
+
+  getInstructorAssistanceGroupedByReport(instructorId: number, from: string, to: string) {
+    let params = new HttpParams();
+
+    if (from) {
+      params = params.set('from', from);
+    }
+    if (to) {
+      params = params.set('to', to);
+    }
+    return this.http.get(`${this.apiUrl}/instructor/${instructorId}/hours`, { params })
+  }
 }
