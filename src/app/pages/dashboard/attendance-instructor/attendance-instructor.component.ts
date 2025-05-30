@@ -7,13 +7,19 @@ import { MeetingThemeDto } from '../../../services/dtos/meeting-theme.dto';
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
 import { convertToLocalTimeZone } from '../../../shared/utils/dates.util';
+import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
+import { ModalComponent } from '../../../components/modal/modal.component';
+import { ReportsService } from '../../../services/reports.service';
+import { AttendanceDailySummaryComponent } from '../../../components/attendance-instructor/attendance-daily-summary/attendance-daily-summary.component';
 
 @Component({
   selector: 'app-attendance-instructor',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ModalComponent,
+    AttendanceDailySummaryComponent
   ],
   templateUrl: './attendance-instructor.component.html',
   styleUrl: './attendance-instructor.component.scss'
@@ -25,9 +31,11 @@ export class AttendanceInstructorComponent implements OnInit {
   selectedInstructorId: number | undefined;
   searchAttempted = false;
   isNameFieldInvalid: boolean = false;
-
-  isModalOpen: boolean = false;
   selectedMeeting: MeetingThemeDto | null = null;
+  attendanceSummary: { localdate: string, localhour: number, count: number }[] = [];
+  isSearchSuccessful: boolean = false;
+  activeView: 'main' | 'summary' = 'main';
+  modal: ModalDto = modalInitializer();
 
   filter = {
     instructorName: '',
@@ -38,7 +46,9 @@ export class AttendanceInstructorComponent implements OnInit {
   showDropdown: boolean = false;
 
   constructor(private usersService: UsersService,
-              private bookingService: BookingService) {}
+              private bookingService: BookingService,
+              private reportsService: ReportsService
+              ) {}
 
   ngOnInit() {
     this.loadInstructors();
@@ -107,6 +117,8 @@ export class AttendanceInstructorComponent implements OnInit {
             //console.log("Reuniones recibidas:", meetings);
             this.meetings = meetings.sort((a: InstructorAttendanceDto, b: InstructorAttendanceDto) => 
               new Date(a.date).getTime() - new Date(b.date).getTime());
+
+              this.isSearchSuccessful = true;
         },
         error: (error) => {
             console.error("Error al obtener las reuniones:", error);
@@ -114,19 +126,54 @@ export class AttendanceInstructorComponent implements OnInit {
     });
   }
 
-  openThemeModal(meeting: InstructorAttendanceDto) {
-    this.selectedMeeting = {
-      date: new Date(meeting.date),
-      description: meeting.meetings[0].meetingTheme?.description || '',
-      hour: meeting.hour,
-      instructorId: meeting.instructorId
+  loadInstructorDailySummary(): void {
+  if (!this.selectedInstructorId) return;
+
+  this.reportsService
+    .getInstructorAssistanceGroupedByReport(
+      this.selectedInstructorId,
+      this.filter.from,
+      this.filter.to
+    )
+    .subscribe({
+      next: (result) => {
+        this.attendanceSummary = result as any;
+      },
+      error: (error) => {
+        console.error('Error al cargar resumen diario:', error);
+      }
+    });
+}
+
+  showContent(meeting: InstructorAttendanceDto): void {
+    if (!meeting.meetings[0].studyContent || meeting.meetings[0].studyContent.length === 0) {
+      this.modal = {
+        ...modalInitializer(),
+        show: true,
+        isContentViewer: true,
+        message: 'No hay contenido disponible para esta clase.',
+        title: 'Sin Contenido',
+        close: () => this.closeModal()
+      };
+      return;
+    }
+
+    const contentHtml = meeting.meetings[0].studyContent
+      .map(c => `<p><span style="font-weight: bold;">Unidad ${c.unit}:</span> ${c.title}</p>`)
+      .join('');
+
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      isContentViewer: true,
+      message: contentHtml,
+      title: 'Contenidos de la Clase',
+      close: () => this.closeModal()
     };
-    this.isModalOpen = true;
   }
 
-  closeThemeModal(): void {
-    this.isModalOpen = false;
-    this.selectedMeeting = null;
+  closeModal(): void {
+    this.modal.show = false;
   }
 
   isFutureDate(date: Date | string): boolean {
