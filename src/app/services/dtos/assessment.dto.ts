@@ -67,4 +67,5 @@ export interface AssessmentConfigI {
   minPointsAssessment: number;
   maxPointsAssessment: number;
   numberDaysNewStudent: number;
+  minHoursScheduled: number;
 }
