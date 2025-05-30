@@ -56,7 +56,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   studyContentOptions: { id: number; name: string }[] = [];
 
   currentStageIndex: number = 0;
-  minPoints: number = 0; 
+  minPoints: number = 0;
 
   instructorId: number | null = null;
   instructorLink: string | null = null;
@@ -152,7 +152,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   private extractStageNumber(stageLabel: string): number {
     return parseFloat(stageLabel.replace(/[^0-9.]/g, '')) || 0;
   }
-  
+
 
   isToday(date: Date | string): boolean {
     if (!date) return false;
@@ -167,7 +167,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   onFilterChange(): void {
     this.clearSelectedContents();
-    
+
     const filterParams: FilterMeetingsDto = {
       ...this.filter,
       hour: this.filter.hour ? this.filter.hour.toString() : undefined,
@@ -265,8 +265,10 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     const meetingWithInstructorInfo: CreateMeetingDto = {
       ...meeting,
-      link: this.instructorLink ?? undefined,
-      password: this.instructorId ? this.instructorId.toString() : undefined,
+      link: isOnline ? this.instructorLink ?? undefined : undefined,
+      password: isOnline && this.instructorId ? this.instructorId.toString() : undefined,
+      // assignedById: user.id, AQUI TIENES QUE ENVIAR el id del user loggeado que es el instructor.
+      createdByInstructor: true,
     };
 
     this.bookingService.bookMeeting(meetingWithInstructorInfo).subscribe({
@@ -359,7 +361,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     if (targetStageIndex === -1) {
       if (this.filteredStages.length > 0) {
-        targetStageIndex = 0; 
+        targetStageIndex = 0;
       } else {
         this.finishLoadingWithMessage('No hay stages con contenido disponibles.');
         return;
