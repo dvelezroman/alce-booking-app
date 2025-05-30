@@ -145,6 +145,7 @@ export class CreateMeetingModalComponent implements OnInit {
       localhour: Number(this.hour),
       mode: this.selectedMode,
       category: this.selectedStudent.student!.studentClassification ?? StudentClassification.ADULTS,
+      createdByInstructor: true
     };
 
     this.meetingCreated.emit(meeting);

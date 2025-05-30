@@ -59,6 +59,7 @@ export interface CreateMeetingDto {
   category?: StudentClassification;
   link?: string;
   password?: string;
+  createdByInstructor?: boolean;
 }
 
 export class FilterMeetingsDto {
