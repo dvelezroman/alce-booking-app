@@ -422,11 +422,11 @@ export class SearchingMeetingInstructorComponent implements OnInit {
         : 'Instructor no disponible';
       return `<div style="margin-bottom: 6px;">
                 ${a.type}: ${a.points}<br>
-                <small style="color: #888; font-size: 10px;">${date} • ${instructor}</small>
+                <small style="color: #888; font-size: 8px;">${date} • ${instructor}</small>
               </div>`;
     }).join('');
 
-    return `<div style="margin-bottom: 12px;">
+    return `<div style="margin-bottom: 10px;">
               <b>Evaluaciones aprobadas:</b><br>
               ${items}
             </div>`;
@@ -443,14 +443,14 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
         return `<div style="margin-bottom: 6px;">
                   <span>${a.type}: ${a.points}</span><br>
-                  <span>${a.note}</span><br>
+                  <span style="font-size: 8px;">${a.note}</span><br>
                   <small style="color: #888; font-size: 8px;">${date} • ${instructor}</small>
                 </div>`;
       })
       .join('');
 
     return notes
-      ? `<div style="margin-bottom: 12px;">
+      ? `<div style="margin-bottom: 10px;">
           <b>Evaluaciones no aprobadas:</b><br>
           ${notes}
         </div>`
