@@ -258,6 +258,11 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   handleMeetingCreated(meeting: CreateMeetingDto): void {
     const isOnline = meeting.mode === 'ONLINE';
 
+      if (isOnline && !this.instructorLink) {
+      this.showModal(this.createModalParams(true, 'No puedes crear una clase ONLINE porque no tienes un link asignado.'));
+      return;
+    }
+
     const meetingWithInstructorInfo: CreateMeetingDto = {
       ...meeting,
       link: isOnline ? this.instructorLink ?? undefined : undefined,
