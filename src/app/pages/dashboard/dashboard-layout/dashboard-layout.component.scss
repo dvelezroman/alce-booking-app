@@ -16,49 +16,120 @@ app-sidebar {
 
 .student-banner {
   position: fixed;
-  bottom: 3.5rem;
-  left: 5.5rem;
-  background-color: #ffe0e0e5;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border-left: 4px solid #e63946;
+  bottom: 2.5rem;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 90%;
+  max-width: 900px;
+  background-color: #ffd9d9e0;
   padding: 1rem 1.5rem;
-  border-radius: 6px;
+  border-radius: 5px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.106);
-  font-size: 0.85rem;
-  width: 400px;
   color: #8b0000;
   z-index: 900;
   opacity: 0;
   animation: slideInLeft 0.6s ease-out forwards;
-  animation-delay: 3s;
-}
+  animation-delay: 2s;
 
-.warning-icon {
-  margin-right: 0.75rem;
-  font-size: 1rem;
-  color: #e63946; 
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  .warning-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    color: #8b0000;
+  }
+
+  .banner-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .banner-title {
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-align: left;
+  }
+
+  .banner-text {
+    font-size: 0.8rem;
+    line-height: 1.3;
+    text-align: left;
+  }
+
+  .highlight-hours {
+    color: #b30000;
+    font-weight: 700;
+  }
+
+  .toggle-banner-btn {
+    background: transparent;
+    border: none;
+    color: #8b0000;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+  }
+
+  &.minimized {
+    padding: 0.5rem 1rem;
+
+    .banner-body {
+      flex: 1;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+
+      .banner-title {
+        display: block;
+        font-weight: 600;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+      }
+
+      .banner-text {
+        display: none;
+      }
+    }
+
+    .warning-icon {
+      margin: 0;
+      align-self: center;
+    }
+
+    .toggle-banner-btn {
+      align-self: center;
+      margin: 0;
+    }
+  }
 }
 
 @media screen and (max-width: 768px) {
   .student-banner {
-    left: 1rem;
     width: 90%;
-    bottom: 3rem;
-    padding: 0.75rem 1rem;
-    font-size: 0.78rem;
+    bottom: 3.5rem;
+    font-size: 0.7rem;
   }
 }
 
 @keyframes slideInLeft {
   from {
     opacity: 0;
-    transform: translateX(-100%);
+    transform: translateY(100%);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 

@@ -8,11 +8,26 @@
 
   <main class="main-content" [ngClass]="{ 'shrink': isLoggedIn && !isSidebarClosed, 'full-width': !isLoggedIn }">
 
-    <div class="student-banner" *ngIf="isLoggedIn && userData?.role === UserRole.STUDENT && userData?.meetingsAlert">
+    <div class="student-banner" [ngClass]="{ 'minimized': !isBannerExpanded }" *ngIf="isLoggedIn && userData?.role === UserRole.STUDENT && userData?.meetingsAlert">
       <span class="material-icons warning-icon">warning_amber</span>
-      <span class="banner-text">
-        Actualmente tienes pocas horas de clase agendadas esta semana.
-      </span>
+
+      <div class="banner-body">
+        <div class="banner-title">
+          <ng-container *ngIf="isBannerExpanded; else minimizedTitle">Aviso:</ng-container>
+          <ng-template #minimizedTitle>Aviso importante &#33;</ng-template>
+        </div>
+        <div class="banner-text">
+          Has agendado menos horas de clase de las recomendadas esta semana,<br />
+          para mantener tu progreso de aprendizaje, te sugerimos tomar al menos 
+          <strong class="highlight-hours">{{ minHoursRequired }}</strong> horas semanales.
+        </div>
+      </div>
+
+      <button class="toggle-banner-btn" (click)="isBannerExpanded = !isBannerExpanded">
+        <span class="material-icons">
+          {{ isBannerExpanded ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
     </div>
 
     <router-outlet></router-outlet>

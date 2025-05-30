@@ -10,6 +10,7 @@ import { selectIsLoggedIn, selectIsRegistered, selectUserData } from "../../../s
 import { UserDto, UserRole } from "../../../services/dtos/user.dto";
 import { setInstructorLink } from "../../../store/user.action";
 import { ModalDto, modalInitializer } from "../../../components/modal/modal.dto";
+import { AssessmentPointsConfigService } from "../../../services/assessment-points-config.service";
 
 @Component({
   standalone: true,
@@ -33,12 +34,15 @@ export class DashboardLayoutComponent implements OnInit {
   isRegistered$: Observable<boolean | undefined>;
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
+  minHoursRequired: number | null = null;
+  isBannerExpanded = true;
   modal: ModalDto = modalInitializer();
 
   constructor(
-        private usersService: UsersService,
-        private store: Store,
-        private router: Router,
+    private store: Store,
+    private router: Router,
+    private usersService: UsersService,
+    private configService: AssessmentPointsConfigService
   ) {
         this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
         this.isRegistered$ = this.store.select(selectIsRegistered);
@@ -63,8 +67,15 @@ export class DashboardLayoutComponent implements OnInit {
             this.router.navigate(['/dashboard/register-complete']);
           }
         });
+
+        this.loadMinHoursRequired();
   }
 
+  loadMinHoursRequired(): void {
+    this.configService.getById().subscribe(config => {
+      this.minHoursRequired = config.minHoursScheduled;
+    });
+  }
 
   toggleSidebar() {
     this.isSidebarClosed = !this.isSidebarClosed;
