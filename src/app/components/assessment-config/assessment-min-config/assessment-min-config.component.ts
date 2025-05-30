@@ -1,66 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
-import { ModalComponent } from '../../modal/modal.component';
-import { modalInitializer, ModalDto } from '../../modal/modal.dto';
 
 @Component({
   selector: 'app-assessment-min-config',
   standalone: true,
-  imports: [CommonModule, FormsModule, ModalComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './assessment-min-config.component.html',
   styleUrl: './assessment-min-config.component.scss'
 })
-export class AssessmentMinConfigComponent implements OnInit {
+export class AssessmentMinConfigComponent {
+  @Input() minPoints: number | null = null;
+  @Output() minPointsChanged = new EventEmitter<number>();
+
   showConfigForm = false;
-  minPoints: number | null = null;
-  maxPoints!: number;
-  daysAsNewStudent: number | null = null;
-  modal: ModalDto = modalInitializer();
 
-  constructor(private pointsConfigService: AssessmentPointsConfigService) {}
-
-  ngOnInit(): void {
-    this.loadAssessmentConfig();
-  }
-
-  loadAssessmentConfig(): void {
-    this.pointsConfigService.getById().subscribe({
-      next: (config) => {
-        this.minPoints = config.minPointsAssessment;
-        this.maxPoints = config.maxPointsAssessment;
-        this.daysAsNewStudent = config.numberDaysNewStudent;
-      },
-      error: () => {
-        this.showNotification('Error al cargar configuración de refuerzo', true);
-      }
-    });
-  }
-
-  saveMinPointsConfig(): void {
-    this.pointsConfigService.update(1, this.maxPoints, this.minPoints!, this.daysAsNewStudent!).subscribe({
-      next: () => {
-        this.showNotification('Nota mínima actualizada correctamente', false, true);
-      },
-      error: () => {
-        this.showNotification('Error al actualizar nota mínima', true);
-      }
-    });
-  }
-
-  showNotification(message: string, isError = false, isSuccess = false): void {
-    this.modal = {
-      ...modalInitializer(),
-      show: true,
-      message,
-      isError,
-      isSuccess,
-      close: () => (this.modal.show = false)
-    };
-
-    setTimeout(() => {
-      this.modal.show = false;
-    }, 2500);
+  save(): void {
+    if (this.minPoints !== null) {
+      this.minPointsChanged.emit(this.minPoints);
+    }
   }
 }

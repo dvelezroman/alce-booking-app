@@ -3,7 +3,34 @@
 </section>
 
 <div class="page-wrapper">
-    <app-assessment-config-form/>
-    <app-assessment-min-config/>
-    <app-assessment-days-config-form/>
+    <app-assessment-config-form
+      [maxPoints]="maxPoints"
+      (maxPointsChanged)="updateMaxPoints($event)"
+    ></app-assessment-config-form>
+
+    <app-assessment-min-config
+      [minPoints]="minPoints"
+      (minPointsChanged)="updateMinPoints($event)"
+    ></app-assessment-min-config>
+
+    <app-assessment-days-config-form
+      [daysAsNewStudent]="daysAsNewStudent"
+      (daysChanged)="updateDays($event)"
+    ></app-assessment-days-config-form>
+
+    <app-assessment-hours-config
+      [minHoursScheduled]="minHoursScheduled"
+      (minHoursChanged)="updateMinHoursScheduled($event)"
+    ></app-assessment-hours-config>
 </div>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>

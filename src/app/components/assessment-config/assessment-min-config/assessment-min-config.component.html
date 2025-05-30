@@ -1,42 +1,31 @@
-
 <div class="dropdown-toggle-container">
   <div class="dropdown-toggle" (click)="showConfigForm = !showConfigForm">
-    <span>Configurar Nota Mínima</span>
+    <span>Configurar nota mínima</span>
     <span class="icon is-small">
-      <i class="material-icons">
-        {{ showConfigForm ? 'expand_less' : 'expand_more' }}
-      </i>
+      <i class="material-icons">{{ showConfigForm ? 'expand_less' : 'expand_more' }}</i>
     </span>
   </div>
 
   <div [ngClass]="showConfigForm ? 'dropdown-body' : 'dropdown-body-hidden'">
-    <div class="search-form">
+    <form class="search-form" (ngSubmit)="save()">
       <div class="field">
-        <label class="label">Nota Mínima</label>
-        <input
-          type="number"
-          class="input"
-          [(ngModel)]="minPoints"
-          placeholder="Ej: 70"
-        />
+        <label class="label">Nota mínima</label>
+        <div class="control">
+          <input
+            type="number"
+            class="input"
+            [(ngModel)]="minPoints"
+            name="minPoints"
+            required
+          />
+        </div>
       </div>
 
       <div class="button-wrapper">
-        <button class="button is-blue" (click)="saveMinPointsConfig()">
-          Actualizar
+        <button class="button is-blue" type="submit">
+          Guardar
         </button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
-
-<app-modal
-  [showModal]="modal.show"
-  [message]="modal.message"
-  [isError]="modal.isError"
-  [isSuccess]="modal.isSuccess"
-  [isInfo]="modal.isInfo"
-  [showButtons]="modal.showButtons ?? false"
-  (confirmAction)="modal.confirm?.()"
-  (close)="modal.close()"
-></app-modal>
