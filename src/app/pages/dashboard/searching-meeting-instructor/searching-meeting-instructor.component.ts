@@ -58,6 +58,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   currentStageIndex: number = 0;
   minPoints: number = 0;
 
+  userId: number | null = null;
   instructorId: number | null = null;
   instructorLink: string | null = null;
 
@@ -101,14 +102,16 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     this.availableHours = Array.from({ length: 13 }, (_, i) => 8 + i);
 
-    this.store.select(selectUserData).subscribe((userData: UserDto | null) => {
-      if (userData && userData.instructor) {
-        this.instructorId = userData.instructor.id;
-        //console.log('instructor ID:', this.instructorId);
-      } else {
-       // console.log('instructor ID no disponible');
+   this.store.select(selectUserData).subscribe((userData: UserDto | null) => {
+    if (userData) {
+      this.userId = userData.id; 
+
+      if (userData.instructor) {
+        this.instructorId = userData.instructor.id; 
       }
-    });
+    }
+  });
+
     this.store.select(selectInstructorLink).subscribe(link => {
       this.instructorLink = link;
       //console.log('Instructor link:', link);
@@ -267,7 +270,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       ...meeting,
       link: isOnline ? this.instructorLink ?? undefined : undefined,
       password: isOnline && this.instructorId ? this.instructorId.toString() : undefined,
-      // assignedById: user.id, AQUI TIENES QUE ENVIAR el id del user loggeado que es el instructor.
+      assignedBy: this.userId ?? undefined,
       createdByInstructor: true,
     };
 
