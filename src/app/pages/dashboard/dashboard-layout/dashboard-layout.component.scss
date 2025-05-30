@@ -14,4 +14,52 @@ app-sidebar {
   z-index: 1000;
 }
 
+.student-banner {
+  position: fixed;
+  bottom: 3.5rem;
+  left: 5.5rem;
+  background-color: #ffe0e0e5;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-left: 4px solid #e63946;
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.106);
+  font-size: 0.85rem;
+  width: 400px;
+  color: #8b0000;
+  z-index: 900;
+  opacity: 0;
+  animation: slideInLeft 0.6s ease-out forwards;
+  animation-delay: 3s;
+}
+
+.warning-icon {
+  margin-right: 0.75rem;
+  font-size: 1rem;
+  color: #e63946; 
+  flex-shrink: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .student-banner {
+    left: 1rem;
+    width: 90%;
+    bottom: 3rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.78rem;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 

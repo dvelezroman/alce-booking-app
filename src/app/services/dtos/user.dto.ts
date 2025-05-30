@@ -28,6 +28,7 @@ export interface UserDto {
   instructor?: Instructor;
   comment?: string;
   status?: UserStatus;
+  meetingsAlert?: boolean;
 }
 
 export interface LoginDto {

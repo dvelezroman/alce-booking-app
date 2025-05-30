@@ -7,6 +7,14 @@
   </app-sidebar>
 
   <main class="main-content" [ngClass]="{ 'shrink': isLoggedIn && !isSidebarClosed, 'full-width': !isLoggedIn }">
+
+    <div class="student-banner" *ngIf="isLoggedIn && userData?.role === UserRole.STUDENT && userData?.meetingsAlert">
+      <span class="material-icons warning-icon">warning_amber</span>
+      <span class="banner-text">
+        Actualmente tienes pocas horas de clase agendadas esta semana.
+      </span>
+    </div>
+
     <router-outlet></router-outlet>
   </main>
 </div>
