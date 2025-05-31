@@ -11,23 +11,24 @@ import { CommonModule } from '@angular/common';
 export class AttendanceSummaryByDayComponent implements OnChanges {
   @Input() rawData: { localdate: string, localhour: number, count: number }[] = [];
 
-  groupedByDay: Record<string, number> = {};
+  groupedByDay: Record<string, { hours: number; stageCount: number }> = {};
 
   ngOnChanges(): void {
-    this.groupByDateCountingHoursOnly();
+    this.groupByDate();
   }
 
-  private groupByDateCountingHoursOnly(): void {
+  private groupByDate(): void {
     this.groupedByDay = {};
 
     for (const item of this.rawData) {
       const date = new Date(item.localdate).toISOString().substring(0, 10);
 
       if (!this.groupedByDay[date]) {
-        this.groupedByDay[date] = 0;
+        this.groupedByDay[date] = { hours: 0, stageCount: 0 };
       }
 
-      this.groupedByDay[date] += 1;
+      this.groupedByDay[date].hours += 1;
+      this.groupedByDay[date].stageCount += item.count;
     }
   }
 
