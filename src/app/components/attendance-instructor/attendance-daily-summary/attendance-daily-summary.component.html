@@ -3,14 +3,18 @@
     <thead>
       <tr>
         <th>Fecha</th>
-        <th>Horas Dictadas</th>
+        <th>Hora</th>
+        <th>Total Stages</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let date of sortedDates">
-        <td>{{ date }}</td>
-        <td>{{ groupedByDay[date] }}</td>
-      </tr>
+      <ng-container *ngFor="let date of sortedDates">
+        <tr *ngFor="let item of groupedByDay[date]">
+          <td>{{ date }}</td>
+          <td>{{ item.localhour }}:00</td>
+          <td>{{ item.count }}</td>
+        </tr>
+      </ng-container>
     </tbody>
   </table>
 </div>

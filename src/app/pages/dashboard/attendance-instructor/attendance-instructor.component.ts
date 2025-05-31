@@ -11,6 +11,7 @@ import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto'
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ReportsService } from '../../../services/reports.service';
 import { AttendanceDailySummaryComponent } from '../../../components/attendance-instructor/attendance-daily-summary/attendance-daily-summary.component';
+import { AttendanceSummaryByDayComponent } from '../../../components/attendance-instructor/attendance-summary-by-day/attendance-summary-by-day.component';
 
 @Component({
   selector: 'app-attendance-instructor',
@@ -19,7 +20,8 @@ import { AttendanceDailySummaryComponent } from '../../../components/attendance-
     CommonModule,
     FormsModule,
     ModalComponent,
-    AttendanceDailySummaryComponent
+    AttendanceDailySummaryComponent,
+    AttendanceSummaryByDayComponent
   ],
   templateUrl: './attendance-instructor.component.html',
   styleUrl: './attendance-instructor.component.scss'
@@ -34,7 +36,7 @@ export class AttendanceInstructorComponent implements OnInit {
   selectedMeeting: MeetingThemeDto | null = null;
   attendanceSummary: { localdate: string, localhour: number, count: number }[] = [];
   isSearchSuccessful: boolean = false;
-  activeView: 'main' | 'summary' = 'main';
+  activeView: 'main' | 'summary' | 'summaryByDay' = 'main';
   modal: ModalDto = modalInitializer();
 
   filter = {
@@ -127,23 +129,57 @@ export class AttendanceInstructorComponent implements OnInit {
   }
 
   loadInstructorDailySummary(): void {
-  if (!this.selectedInstructorId) return;
+    if (!this.selectedInstructorId) return;
 
-  this.reportsService
-    .getInstructorAssistanceGroupedByReport(
-      this.selectedInstructorId,
-      this.filter.from,
-      this.filter.to
-    )
-    .subscribe({
-      next: (result) => {
-        this.attendanceSummary = result as any;
-      },
-      error: (error) => {
-        console.error('Error al cargar resumen diario:', error);
-      }
-    });
-}
+    this.reportsService
+      .getInstructorAssistanceGroupedByReport(
+        this.selectedInstructorId,
+        this.filter.from,
+        this.filter.to
+      )
+      .subscribe({
+        next: (result) => {
+          this.attendanceSummary = result as any;
+        },
+        error: (error) => {
+          console.error('Error al cargar resumen diario:', error);
+        }
+      });
+  }
+
+  validateInstructorSelected(): boolean {
+    this.isNameFieldInvalid = false;
+
+    if (!this.filter.instructorName || !this.selectedInstructorId) {
+      this.isNameFieldInvalid = true;
+      return false;
+    }
+
+    return true;
+  }
+
+  handleViewMeetings(): void {
+    if (!this.validateInstructorSelected()) return;
+    this.searchInstructorAttendance();
+    this.activeView = 'main';
+  }
+
+  handleViewSummary(): void {
+    if (!this.validateInstructorSelected()) return;
+    this.loadInstructorDailySummary();
+    this.activeView = 'summary';
+  }
+
+  handleViewSummaryByDay(): void {
+    if (!this.validateInstructorSelected()) return;
+    this.loadInstructorDailySummary();
+    this.activeView = 'summaryByDay';
+  }
+
+  onInstructorInputChange(): void {
+    this.filterInstructors();
+    this.isNameFieldInvalid = !this.filter.instructorName?.trim();
+  }
 
   showContent(meeting: InstructorAttendanceDto): void {
     if (!meeting.meetings[0].studyContent || meeting.meetings[0].studyContent.length === 0) {

@@ -11,10 +11,11 @@
           <label class="label">Instructor</label>
           <input
             class="input"
+            [ngClass]="{ 'input-error': isNameFieldInvalid }"
             type="text"
             placeholder="Nombre del Instructor"
             [(ngModel)]="filter.instructorName"
-            (input)="filterInstructors()"
+            (input)="onInstructorInputChange()"
             (blur)="hideDropdown()"
             name="instructorName"
             autocomplete="off"/>
@@ -30,6 +31,9 @@
             </ul>
           </div>
         </div>
+        <p class="error-message" *ngIf="isNameFieldInvalid">
+          Campo requerido.
+        </p>
       </div>
 
       <!-- Fechas -->
@@ -66,32 +70,32 @@
         </div>
       </div>
 
-      <!-- Botón de buscar -->
-      <div class="columns is-mobile">
-        <div class="column">
-          <div class="field">
-            <button class="button is-primary is-fullwidth" (click)="searchInstructorAttendance()">Buscar</button>
-          </div>
-        </div>
+     <div class="form-action-buttons">
+        <button
+          type="button"
+          class="toggle-button"
+          [ngClass]="{ 'active-button': activeView === 'main', 'inactive-button': activeView !== 'main' }"
+          (click)="handleViewMeetings()">
+          Ver reuniones
+        </button>
+
+        <button
+          type="button"
+          class="toggle-button"
+          [ngClass]="{ 'active-button': activeView === 'summary', 'inactive-button': activeView !== 'summary' }"
+          (click)="handleViewSummary()">
+          Ver resumen diario
+        </button>
+
+        <button
+          type="button"
+          class="toggle-button"
+          [ngClass]="{ 'active-button': activeView === 'summaryByDay', 'inactive-button': activeView !== 'summaryByDay' }"
+          (click)="handleViewSummaryByDay()">
+          Ver resumen por día
+        </button>
       </div>
     </form>
-
-    <!-- Botones para cambiar de vista -->
-    <div *ngIf="isSearchSuccessful" class="view-toggle-buttons">
-      <button
-        class="toggle-button"
-        [ngClass]="{ 'active-button': activeView === 'main', 'inactive-button': activeView !== 'main' }"
-        (click)="activeView = 'main'">
-        Ver reuniones
-      </button>
-
-      <button
-        class="toggle-button"
-        [ngClass]="{ 'active-button': activeView === 'summary', 'inactive-button': activeView !== 'summary' }"
-        (click)="loadInstructorDailySummary(); activeView = 'summary'">
-        Ver resumen diario
-      </button>
-    </div>
   </div>
 </section>
 
@@ -128,12 +132,12 @@
   No se encontraron clases para los criterios seleccionados.
 </div>
 
-<!-- Tabla resumen diario -->
 <div class="report-table-wrapper" *ngIf="activeView === 'summary' && attendanceSummary.length > 0">
-  <h2 class="student-stage-title">
-    Resumen Diario de Clases Dictadas
-  </h2>
   <app-attendance-daily-summary [rawData]="attendanceSummary"></app-attendance-daily-summary>
+</div>
+
+<div class="report-table-wrapper" *ngIf="activeView === 'summaryByDay' && attendanceSummary.length > 0">
+  <app-attendance-summary-by-day [rawData]="attendanceSummary"></app-attendance-summary-by-day>
 </div>
 
 <!-- Modal -->
