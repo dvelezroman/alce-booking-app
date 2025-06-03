@@ -23,6 +23,7 @@ import { StageComponent } from './stage/stage.component';
 import { AcademicResourcesComponent } from './academic-resources/academic-resources.component';
 import { AssessmentTypesComponent } from './assessment-types/assessment-types.component';
 import { AssessmentConfigComponent } from './assessment-config/assessment-config.component';
+import { ReportUserComponent } from './report-user/report-user.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -45,6 +46,7 @@ export const dashboardRoutes: Routes = [
   { path: 'create-instructors', component: RegisterInstructorAdminComponent },
   { path: 'reports-detailed', component: ReportsDetailedComponent },
   { path: 'reports-progress', component: ReportsProgressComponent },
+  { path: 'report-user', component: ReportUserComponent },
   { path: 'assessment', component: AssessmentComponent },
   { path: 'assessment-reports', component: AssessmentReportsComponent },
   { path: 'assessment-config', component: AssessmentConfigComponent },

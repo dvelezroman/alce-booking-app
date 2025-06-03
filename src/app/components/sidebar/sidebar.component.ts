@@ -52,6 +52,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'history', text: 'Eventos', route: '/dashboard/processed-events', roles: [UserRole.ADMIN] },
   { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/dashboard/feature-flag', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Reportes de Estudiante', route: '/dashboard/reports-detailed', roles: [UserRole.ADMIN] },
+  { icon: 'reportes', text: 'Reportes de Usuario', route: '/dashboard/report-user', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Reportes de Progreso', route: '/dashboard/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Evaluar Estudiante', route: '/dashboard/assessment', roles: [UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Reportes de Evaluaciones', route: '/dashboard/assessment-reports', roles: [UserRole.ADMIN] },
@@ -148,6 +149,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
       title: 'Reportes',
       icon: 'reportes',
       items: [
+        this.findNavItemByRoute('/dashboard/report-user'),
         this.findNavItemByRoute('/dashboard/reports-detailed'),
         this.findNavItemByRoute('/dashboard/reports-progress'),
         this.findNavItemByRoute('/dashboard/assessment-reports')

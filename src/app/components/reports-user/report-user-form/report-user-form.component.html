@@ -1,0 +1,64 @@
+<div class="form-container">
+  <div class="field relative-container">
+    <label class="label">Buscar Estudiante</label>
+    <div class="control has-icons-left">
+      <input
+        class="input"
+        [class.is-danger]="showStudentRequiredError"
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+        (focus)="showUserDropdown = true"
+        (blur)="hideDropdown()"
+        placeholder="Escribe el nombre del estudiante"
+      />
+      <span class="icon is-left">
+        <i class="fas fa-search"></i>
+      </span>
+    </div>
+
+    <div
+      class="dropdown-list-fixed"
+      *ngIf="showUserDropdown && filteredUsers.length > 0"
+    >
+      <div
+        class="dropdown-item"
+        *ngFor="let user of filteredUsers"
+        (click)="selectUser(user)"
+      >
+        {{ user.firstName }} {{ user.lastName }}
+      </div>
+    </div>
+    <p *ngIf="showStudentRequiredError" class="help is-danger">
+      Debes seleccionar un estudiante.
+    </p>
+  </div>
+
+  <div class="field mt-4">
+    <label class="label">Estado</label>
+    <div class="control">
+      <select class="input" [(ngModel)]="statusFilter">
+        <option [ngValue]="null">Todos</option>
+        <option [ngValue]="'active'">Activo</option>
+        <option [ngValue]="'inactive'">Inactivo</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field mt-4">
+    <label class="label">Alertas</label>
+    <div class="control">
+      <select class="input" [(ngModel)]="alertFilter">
+        <option [ngValue]="null">Todos</option>
+        <option [ngValue]="true">Con alertas</option>
+        <option [ngValue]="false">Sin alertas</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field mt-4">
+    <button class="button is-primary is-fullwidth" (click)="searchStudentProgress()">
+      Buscar
+    </button>
+  </div>
+</div>

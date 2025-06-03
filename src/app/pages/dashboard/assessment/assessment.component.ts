@@ -90,7 +90,7 @@ export class AssessmentComponent implements OnInit {
      console.log('Payload a enviar:', payload);
     this.assessmentService.create(payload).subscribe({
       next: (response) => {
-        console.log('Respuesta del backend:', response); 
+        //console.log('Respuesta del backend:', response); 
         this.showModal(
           this.createModalParams(false, 'Evaluación registrada correctamente.')
         );
