@@ -135,7 +135,7 @@ export class ReportsService {
     return this.http.get(`${this.apiUrl}/instructor/${instructorId}/hours`, { params })
   }
 
-  getUsersData(page= 1, limit: 100, studentId?: number, role?: UserRole, userStatus?: UserStatus, stageId?: number, alert?: boolean, newStudents?: boolean) {
+  getUsersData(page= 1, limit: 100, studentId?: number, role?: UserRole, userStatus?: UserStatus, stageId?: number, comment?: boolean, alert?: boolean, newStudents?: boolean) {
     let params = new HttpParams();
     params = params.set('page', page);
     params = params.set('limit', limit);
@@ -150,6 +150,9 @@ export class ReportsService {
     }
     if (stageId) {
       params = params.set('stageId', stageId.toString());
+    }
+    if (comment) {
+      params = params.set('comment', comment.toString());
     }
     if (alert) {
       params = params.set('alert', alert.toString());
