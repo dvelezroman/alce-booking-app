@@ -4,6 +4,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
 import {MeetingDataI, MeetingReportDetailed, StatisticalDataI} from "./dtos/meeting-theme.dto";
+import {UserDto, UserRole, UserStatus} from "./dtos/user.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -132,5 +133,30 @@ export class ReportsService {
       params = params.set('to', to);
     }
     return this.http.get(`${this.apiUrl}/instructor/${instructorId}/hours`, { params })
+  }
+
+  getUsersData(page= 1, limit: 100, studentId?: number, role?: UserRole, userStatus?: UserStatus, stageId?: number, alert?: boolean, newStudents?: boolean) {
+    let params = new HttpParams();
+    params = params.set('page', page);
+    params = params.set('limit', limit);
+    if (studentId) {
+      params = params.set('studentId', studentId.toString());
+    }
+    if (role) {
+      params = params.set('role', role);
+    }
+    if (userStatus) {
+      params = params.set('userStatus', userStatus);
+    }
+    if (stageId) {
+      params = params.set('stageId', stageId.toString());
+    }
+    if (alert) {
+      params = params.set('alert', alert.toString());
+    }
+    if (newStudents) {
+      params = params.set('newStudents', newStudents.toString());
+    }
+    return this.http.get<UserDto[]>(`${this.apiUrl}/users/data`, { params });
   }
 }
