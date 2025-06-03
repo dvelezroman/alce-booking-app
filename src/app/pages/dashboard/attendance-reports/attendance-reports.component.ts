@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, Subject } from 'rxjs';
 import { BookingService } from '../../../services/booking.service';
 import { MeetingDTO, FilterMeetingsDto } from '../../../services/dtos/booking.dto';
 import { MeetingThemeDto } from '../../../services/dtos/meeting-theme.dto';
-import { UserDto } from '../../../services/dtos/user.dto';
+import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
 import { convertToLocalTimeZone } from '../../../shared/utils/dates.util';
 
@@ -12,8 +13,8 @@ import { convertToLocalTimeZone } from '../../../shared/utils/dates.util';
   selector: 'app-attendance-reports',
   standalone: true,
   imports: [
-      CommonModule,
-      FormsModule
+    CommonModule,
+    FormsModule
   ],
   templateUrl: './attendance-reports.component.html',
   styleUrl: './attendance-reports.component.scss'
@@ -36,106 +37,110 @@ export class AttendanceReportsComponent implements OnInit {
     to: '',
     hour: ''
   };
+
   showDropdown: boolean = false;
-  constructor(private usersService: UsersService,
-              private bookingService: BookingService
-  ) {}
+  searchInput$ = new Subject<string>();
 
-  ngOnInit() {
-    this.availableHours = Array.from({ length: 13 }, (_, i) => 8 + i);
-    this.loadStudents();
-    this.filteredStudents = [...this.students];
-
+  constructor(
+    private usersService: UsersService,
+    private bookingService: BookingService
+  ) {
+    this.searchInput$
+      .pipe(debounceTime(300))
+      .subscribe((term: string) => {
+        this.fetchFilteredStudents(term);
+      });
   }
 
-  filterStudents() {
-    const query = this.filter.studentName.trim().toLowerCase();
+  ngOnInit(): void {
+    this.availableHours = Array.from({ length: 13 }, (_, i) => 8 + i);
+  }
 
-    if (query.length > 0 && query !== this.selectedStudentName?.toLowerCase()) {
-      this.filteredStudents = this.students.filter(student =>
-        (student.firstName + ' ' + student.lastName).toLowerCase().includes(query)
-      );
-      this.showDropdown = true;
-    } else {
+  onStudentInputChange(term: string): void {
+    this.searchInput$.next(term);
+  }
+
+  fetchFilteredStudents(term: string): void {
+    const query = term.trim().toLowerCase();
+    if (query.length < 2) {
       this.filteredStudents = [];
       this.showDropdown = false;
+      return;
     }
-  }
 
-  selectStudent(user: UserDto) {
-    this.filter.studentName = `${user.firstName} ${user.lastName}`;
-    this.selectedStudentId = user.student?.id;
-    this.selectedStudentName = this.filter.studentName;
-    this.showDropdown = false;
-  }
-
-  hideDropdown() {
-    setTimeout(() => (this.showDropdown = false), 200);
-  }
-
-  loadStudents() {
-    this.usersService.searchUsers(0, undefined, undefined, undefined, undefined, undefined, 'STUDENT')
+    this.usersService
+      .searchUsers(0, 20, undefined, query, query, undefined, UserRole.STUDENT)
       .subscribe({
-        next: (result) => {
-          this.students = result.users;
-          //console.log('Estudiantes cargados:', this.students);
+        next: (res) => {
+          this.filteredStudents = res.users;
+          this.showDropdown = this.filteredStudents.length > 0;
         },
-        error: (error) => {
-          console.error('Error al cargar estudiantes:', error);
+        error: () => {
+          this.filteredStudents = [];
+          this.showDropdown = false;
         }
       });
   }
 
-  searchAttendance() {
+  selectStudent(user: UserDto): void {
+    this.filter.studentName = `${user.firstName} ${user.lastName}`;
+    this.selectedStudentId = user.student?.id;
+    this.selectedStudentName = this.filter.studentName;
+    this.filteredStudents = [];
+    this.showDropdown = false;
+  }
+
+  hideDropdown(): void {
+    setTimeout(() => {
+      this.showDropdown = false;
+    }, 200);
+  }
+
+  searchAttendance(): void {
     this.isNameFieldInvalid = false;
     this.searchAttempted = false;
 
     if (!this.filter.studentName || !this.selectedStudentId) {
       this.isNameFieldInvalid = true;
       return;
-  }
+    }
+
     const filterParams: FilterMeetingsDto = {
       from: this.filter.from || undefined,
       to: this.filter.to || undefined,
       hour: this.filter.hour ? String(this.filter.hour) : undefined,
       studentId: this.selectedStudentId,
-      assigned: true,
+      assigned: true
     };
-    //console.log("Parámetros enviados al servicio:", filterParams);
+
     setTimeout(() => {
       this.searchAttempted = true;
     }, 1000);
 
     this.fetchMeetings(filterParams);
-}
-
-  private fetchMeetings(params: FilterMeetingsDto) {
-      this.bookingService.searchMeetings(params).subscribe({
-        next: (meetings) => {
-          //console.log("Reuniones recibidas:", meetings);
-           this.meetings = meetings.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        },
-        error: (error) => {
-          console.error("Error al obtener las reuniones:", error);
-        }
-      });
   }
 
-  isFutureDate(date: Date | string): boolean {
-    const meetingDate = new Date(date);
-    const currentDate = convertToLocalTimeZone(new Date().toString());
-
-    return meetingDate > currentDate;
+  private fetchMeetings(params: FilterMeetingsDto): void {
+    this.bookingService.searchMeetings(params).subscribe({
+      next: (meetings: MeetingDTO[]) => {
+        this.meetings = meetings.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
+      },
+      error: (error) => {
+        console.error('Error al obtener las reuniones:', error);
+      }
+    });
   }
 
-  openThemeModal(meeting: MeetingDTO) {
+  openThemeModal(meeting: MeetingDTO): void {
     this.selectedMeeting = {
       meetingThemeId: meeting.meetingThemeId,
       stageId: meeting.stageId,
       instructorId: meeting.instructorId,
       date: meeting.date,
       hour: meeting.hour,
-      description: meeting.meetingTheme ? meeting.meetingTheme.description : ''
+      description: meeting.meetingTheme?.description || ''
     };
     this.isModalOpen = true;
   }
@@ -143,5 +148,12 @@ export class AttendanceReportsComponent implements OnInit {
   closeThemeModal(): void {
     this.isModalOpen = false;
     this.selectedMeeting = null;
+  }
+
+  isFutureDate(date: Date | string): boolean {
+    const meetingDate = new Date(date);
+    const currentDate = convertToLocalTimeZone(new Date().toString());
+
+    return meetingDate > currentDate;
   }
 }

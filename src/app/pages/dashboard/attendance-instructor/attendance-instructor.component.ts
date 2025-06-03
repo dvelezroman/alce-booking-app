@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { debounceTime, Subject } from 'rxjs';
 import { BookingService } from '../../../services/booking.service';
 import { InstructorAttendanceDto, FilterMeetingsDto } from '../../../services/dtos/booking.dto';
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
@@ -21,7 +22,6 @@ import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto'
   styleUrl: './attendance-instructor.component.scss'
 })
 export class AttendanceInstructorComponent implements OnInit {
-  instructors: UserDto[] = [];
   filteredInstructors: UserDto[] = [];
   meetings: InstructorAttendanceDto[] = [];
   selectedInstructorId: number | undefined;
@@ -36,53 +36,63 @@ export class AttendanceInstructorComponent implements OnInit {
     to: '',
     present: 'true',
   };
+
   showDropdown: boolean = false;
+  searchInput$ = new Subject<string>();
 
   constructor(
     private usersService: UsersService,
     private bookingService: BookingService
-  ) {}
-
-  ngOnInit() {
-    this.loadInstructors();
+  ) {
+    this.searchInput$
+      .pipe(debounceTime(300))
+      .subscribe((term: string) => {
+        this.fetchFilteredInstructors(term);
+      });
   }
 
-  filterInstructors() {
-    const query = this.filter.instructorName.trim().toLowerCase();
-    if (query.length > 0) {
-      this.filteredInstructors = this.instructors.filter(instructor =>
-        (instructor.firstName + ' ' + instructor.lastName).toLowerCase().includes(query)
-      );
-      this.showDropdown = true;
-    } else {
+  ngOnInit(): void {}
+
+  onInstructorInputChange(term: string): void {
+    this.searchInput$.next(term);
+  }
+
+  fetchFilteredInstructors(term: string): void {
+    const query = term.trim().toLowerCase();
+    if (query.length < 2) {
       this.filteredInstructors = [];
       this.showDropdown = false;
+      return;
     }
-  }
 
-  selectInstructor(user: UserDto) {
-    this.filter.instructorName = `${user.firstName} ${user.lastName}`;
-    this.selectedInstructorId = user.instructor?.id;
-    this.showDropdown = false;
-  }
-
-  hideDropdown() {
-    setTimeout(() => (this.showDropdown = false), 200);
-  }
-
-  loadInstructors() {
-    this.usersService.searchUsers(0, 100, undefined, undefined, undefined, undefined, UserRole.INSTRUCTOR)
+    this.usersService
+      .searchUsers(0, 20, undefined, query, query, undefined, UserRole.INSTRUCTOR)
       .subscribe({
-        next: (result) => {
-          this.instructors = result.users;
+        next: (res) => {
+          this.filteredInstructors = res.users;
+          this.showDropdown = this.filteredInstructors.length > 0;
         },
-        error: (error) => {
-          console.error('Error al cargar instructores:', error);
+        error: () => {
+          this.filteredInstructors = [];
+          this.showDropdown = false;
         }
       });
   }
 
-  searchInstructorAttendance() {
+  selectInstructor(user: UserDto): void {
+    this.filter.instructorName = `${user.firstName} ${user.lastName}`;
+    this.selectedInstructorId = user.instructor?.id;
+    this.filteredInstructors = [];
+    this.showDropdown = false;
+  }
+
+  hideDropdown(): void {
+    setTimeout(() => {
+      this.showDropdown = false;
+    }, 200);
+  }
+
+  searchInstructorAttendance(): void {
     this.isNameFieldInvalid = false;
     this.searchAttempted = false;
 
@@ -102,7 +112,7 @@ export class AttendanceInstructorComponent implements OnInit {
     this.fetchMeetings(filterParams);
   }
 
-  private fetchMeetings(params: FilterMeetingsDto) {
+  private fetchMeetings(params: FilterMeetingsDto): void {
     this.searchAttempted = true;
 
     this.bookingService.getInstructorMeetingsGroupedByHour(params).subscribe({

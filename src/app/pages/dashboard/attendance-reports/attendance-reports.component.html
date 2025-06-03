@@ -9,26 +9,29 @@
             <div class="field">
                 <div class="control">
                     <input
-                        class="input"
-                        type="text"
-                        placeholder="Nombre del Estudiante"
-                        [(ngModel)]="filter.studentName"
-                        (input)="filterStudents()"
-                        (blur)="hideDropdown()"
-                        name="studentName"
-                        autocomplete="off"/>
-                  <!-- Lista desplegable de estudiantes filtrados -->
+                    class="input"
+                    type="text"
+                    placeholder="Nombre del Estudiante"
+                    [(ngModel)]="filter.studentName"
+                    (input)="onStudentInputChange(filter.studentName)"
+                    (blur)="hideDropdown()"
+                    name="studentName"
+                    autocomplete="off"
+                    />
+
+                    <!-- Lista desplegable de estudiantes filtrados -->
                     <div *ngIf="showDropdown" class="dropdown">
-                        <div *ngIf="filteredStudents.length === 0" class="no-results1">
-                            No se encontraron estudiantes
-                        </div>
-                        <ul *ngIf="filteredStudents.length > 0">
-                            <li
-                                *ngFor="let student of filteredStudents"
-                                (mousedown)="selectStudent(student)">
-                                {{ student.firstName }} {{ student.lastName }}
-                            </li>
-                        </ul>
+                    <div *ngIf="filteredStudents.length === 0" class="no-results1">
+                        No se encontraron estudiantes
+                    </div>
+                    <ul *ngIf="filteredStudents.length > 0">
+                        <li
+                        *ngFor="let student of filteredStudents"
+                        (mousedown)="selectStudent(student)"
+                        >
+                        {{ student.firstName }} {{ student.lastName }}
+                        </li>
+                    </ul>
                     </div>
                 </div>
             </div>
