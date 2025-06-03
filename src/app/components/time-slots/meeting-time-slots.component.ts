@@ -46,7 +46,7 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
     const disabledHours = this.getDisabledHoursForDay(day, month - 1);
     const startHour = 8;
     const endHour = 20;
-    const saturdayEndHour = 13;
+    const saturdayEndHour = 14;
 
     if (isSaturday) {
       const availableStartHour = selectedDate.hasSame(nowInEcuador, 'day') ? Math.max(startHour, nowInEcuador.hour + 3) : startHour;

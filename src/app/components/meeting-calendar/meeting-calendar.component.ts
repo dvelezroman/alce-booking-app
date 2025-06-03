@@ -180,7 +180,7 @@ export class MeetingCalendarComponent implements OnInit {
     const uniqueHours = dayData?.hours ? Array.from(new Set(dayData.hours)) : [];
 
     if (!this.selectedYear || isNaN(this.selectedYear)) {
-      return false; 
+      return false;
     }
 
     const date = DateTime.fromObject(
@@ -189,7 +189,7 @@ export class MeetingCalendarComponent implements OnInit {
     );
 
     const isSaturday = date.weekday === 6;
-    const totalHoursAvailable = isSaturday ? 6 : 13;
+    const totalHoursAvailable = isSaturday ? 7 : 13;
 
     const isAllHoursBlocked = uniqueHours.length >= totalHoursAvailable;
     const isFullyDisabled = disabledDays.includes(day) && uniqueHours.length === 0;
@@ -208,7 +208,7 @@ export class MeetingCalendarComponent implements OnInit {
     this.daySelected.emit({
         date: selectedDate,
         label: this.selectedDayFormatted,
-        day: day.day 
+        day: day.day
         });
   }
 
