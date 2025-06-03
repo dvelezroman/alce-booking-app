@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { AssessmentComponent } from './assessment/assessment.component';
 import { AssessmentReportsComponent } from './assessment-reports/assessment-reports.component';
-import { AttendanceInstructorComponent } from './attendance-instructor/attendance-instructor.component';
+import { ReportInstructorComponent } from './report-attendance-instructor/report-instructor.component';
 import { AttendanceReportsComponent } from './attendance-reports/attendance-reports.component';
 import { ContentComponent } from './content/content.component';
 import { FeatureFlagComponent } from './feature-flag/feature-flag.component';
@@ -24,6 +24,7 @@ import { AcademicResourcesComponent } from './academic-resources/academic-resour
 import { AssessmentTypesComponent } from './assessment-types/assessment-types.component';
 import { AssessmentConfigComponent } from './assessment-config/assessment-config.component';
 import { ReportUserComponent } from './report-user/report-user.component';
+import { AttendanceInstructorComponent } from './attendance-instructor/attendance-instructor.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -39,8 +40,9 @@ export const dashboardRoutes: Routes = [
   { path: 'searching-meeting', component: SearchingMeetingComponent },
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent },
   { path: 'searching-students', component: SearchingStudentComponent },
-  { path: 'asistencias-alumnos', component: AttendanceReportsComponent },
-  { path: 'asistencias-instructor', component: AttendanceInstructorComponent },
+  { path: 'attendance-student', component: AttendanceReportsComponent },
+  { path: 'report-instructor', component: ReportInstructorComponent },
+  { path: 'attendance-instructor', component: AttendanceInstructorComponent },
   { path: 'feature-flag', component: FeatureFlagComponent },
   { path: 'create-students', component: RegisterStudentComponent },
   { path: 'create-instructors', component: RegisterInstructorAdminComponent },

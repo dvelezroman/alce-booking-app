@@ -1,146 +1,117 @@
 <div class="attendance-title">
-  <h1>Asistencias Instructores</h1>
-</div>
-
-<section class="attendance-section">
-  <div class="attendance-search">
-    <form>
-      <!-- Selección de instructor -->
-      <div class="field">
-        <div class="control">
-          <label class="label">Instructor</label>
-          <input
-            class="input"
-            [ngClass]="{ 'input-error': isNameFieldInvalid }"
-            type="text"
-            placeholder="Nombre del Instructor"
-            [(ngModel)]="filter.instructorName"
-            (input)="onInstructorInputChange()"
-            (blur)="hideDropdown()"
-            name="instructorName"
-            autocomplete="off"/>
-          <!-- Dropdown -->
-          <div *ngIf="showDropdown" class="dropdown">
-            <div *ngIf="filteredInstructors.length === 0" class="no-results1">
-              No se encontraron instructores
-            </div>
-            <ul *ngIf="filteredInstructors.length > 0">
-              <li *ngFor="let instructor of filteredInstructors" (mousedown)="selectInstructor(instructor)">
-                {{ instructor.firstName }} {{ instructor.lastName }}
-              </li>
-            </ul>
-          </div>
-        </div>
-        <p class="error-message" *ngIf="isNameFieldInvalid">
-          Campo requerido.
-        </p>
-      </div>
-
-      <!-- Fechas -->
-      <div class="columns is-mobile">
-        <div class="column">
-          <div class="field">
-            <label class="label">Fecha desde</label>
-            <div class="control date-input-container">
-              <input class="input" type="date" [(ngModel)]="filter.from" name="from">
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label">Fecha hasta</label>
-            <div class="control date-input-container">
-              <input class="input" type="date" [(ngModel)]="filter.to" name="to">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Asistidas / no asistidas -->
-      <div class="columns is-mobile">
-        <div class="column move-up">
-          <label class="label">Mostrar:</label>
-          <div class="select is-fullwidth">
-            <select [(ngModel)]="filter.present" name="present">
-              <option *ngFor="let option of [{ value: 'true', label: 'Asistidas' }, { value: 'false', label: 'No Asistidas'}]" [ngValue]="option.value">
-                {{ option.label }}
-              </option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-     <div class="form-action-buttons">
-        <button
-          type="button"
-          class="toggle-button"
-          [ngClass]="{ 'active-button': activeView === 'main', 'inactive-button': activeView !== 'main' }"
-          (click)="handleViewMeetings()">
-          Ver Meetings
-        </button>
-
-        <button
-          type="button"
-          class="toggle-button"
-          [ngClass]="{ 'active-button': activeView === 'summary', 'inactive-button': activeView !== 'summary' }"
-          (click)="handleViewSummary()">
-          Resumen Diario
-        </button>
-
-        <button
-          type="button"
-          class="toggle-button"
-          [ngClass]="{ 'active-button': activeView === 'summaryByDay', 'inactive-button': activeView !== 'summaryByDay' }"
-          (click)="handleViewSummaryByDay()">
-          Resumen Por Día
-        </button>
-      </div>
-    </form>
+    <h1>Asistencias Instructores</h1>
   </div>
-</section>
 
-<!-- Tabla de reuniones -->
-<div class="table-container" *ngIf="activeView === 'main' && meetings.length > 0">
-  <table class="table is-fullwidth">
-    <thead>
-      <tr>
-        <th>Stage</th>
-        <th>Categoría</th>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <th>Modo</th>
-        <th>Nota</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let meeting of meetings">
-        <td>{{ meeting.meetings[0].stage?.number }}</td>
-        <td>{{ meeting.meetings[0].category }}</td>
-        <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
-        <td>{{ meeting.hour }}:00</td>
-        <td>{{ meeting.meetings[0].mode }}</td>
-        <td>
-          <span style="cursor:pointer;" *ngIf="!isFutureDate(meeting.date)" (click)="showContent(meeting)" class="material-icons">menu_book</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <section class="attendance-section">
+    <div class="attendance-search">
+      <form>
+        <!-- Selección de instructor -->
+        <div class="field">
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="Nombre del Instructor"
+              [(ngModel)]="filter.instructorName"
+              (input)="filterInstructors()"
+              (blur)="hideDropdown()"
+              name="instructorName"
+              autocomplete="off"/>
+            <!-- Lista desplegable de instructores filtrados -->
+            <div *ngIf="showDropdown" class="dropdown">
+              <div *ngIf="filteredInstructors.length === 0" class="no-results1">
+                No se encontraron instructores
+              </div>
+              <ul *ngIf="filteredInstructors.length > 0">
+                <li
+                  *ngFor="let instructor of filteredInstructors"
+                  (mousedown)="selectInstructor(instructor)">
+                  {{ instructor.firstName }} {{ instructor.lastName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-<!-- Mensaje si no hay reuniones -->
-<div *ngIf="activeView === 'main' && searchAttempted && meetings.length === 0" class="no-results">
-  No se encontraron clases para los criterios seleccionados.
-</div>
+        <!-- Campos de fecha desde y hasta -->
+        <div class="columns is-mobile">
+          <div class="column">
+            <div class="field">
+              <label class="label">Fecha desde</label>
+              <div class="control date-input-container">
+                <input class="input" type="date" [(ngModel)]="filter.from" name="from">
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">Fecha hasta</label>
+              <div class="control date-input-container">
+                <input class="input" type="date" [(ngModel)]="filter.to" name="to">
+              </div>
+            </div>
+          </div>
+        </div>
 
-<div class="report-table-wrapper" *ngIf="activeView === 'summary' && attendanceSummary.length > 0">
-  <app-attendance-daily-summary [rawData]="attendanceSummary"></app-attendance-daily-summary>
-</div>
+        <div class="columns is-mobile">
+          <div class="column move-up">
+              <label class="label">Mostrar todas las:</label>
+              <div class="select is-fullwidth">
+                  <select [(ngModel)]="filter.present" name="present">
+                      <option *ngFor="let option of [{ value: 'true', label: 'Asistidas' }, { value: 'false', label: 'No Asistidas'}]" [ngValue]="option.value">
+                          {{ option.label }}
+                      </option>
+                  </select>
+              </div>
+          </div>
+        </div>
 
-<div class="report-table-wrapper" *ngIf="activeView === 'summaryByDay' && attendanceSummary.length > 0">
-  <app-attendance-summary-by-day [rawData]="attendanceSummary"></app-attendance-summary-by-day>
-</div>
+        <!-- Botón de buscar -->
+        <div class="columns is-mobile">
+            <div class="column">
+                <div class="field">
+                <button class="button is-confirm is-fullwidth" (click)="searchInstructorAttendance()">Buscar</button>
+                </div>
+            </div>
+        </div>
+      </form>
+    </div>
 
-<!-- Modal -->
+  </section>
+  
+<!-- Tabla de resultados instructores datos -->
+<div class="table-container" *ngIf="meetings.length > 0">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Categoría</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Modo</th>
+          <th>Nota</th>
+<!--            <th>Asistida</th>-->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let meeting of meetings">
+          <td>{{ meeting.meetings[0].stage?.number }}</td>
+          <td>{{ meeting.meetings[0].category }}</td>
+          <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
+          <td>{{ meeting.hour }}:00</td>
+          <td>{{ meeting.meetings[0].mode }}</td>
+          <td>
+            <span style="cursor:pointer;" *ngIf="!isFutureDate(meeting.date)" (click)="showContent(meeting)" class="material-icons">menu_book</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="searchAttempted && meetings.length === 0" class="no-results">
+    No se encontraron clases para los criterios seleccionados.
+  </div>
+
 <app-modal
   [showModal]="modal.show"
   [message]="modal.message"
@@ -151,3 +122,4 @@
   [title]="modal.title || ''"
   (close)="modal.close()"
 ></app-modal>
+
