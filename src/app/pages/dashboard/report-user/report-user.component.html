@@ -4,6 +4,13 @@
   </h1>
 
   <app-report-form (filtersSubmitted)="handleFormSubmit($event)" />
+
+    <div class="report-table-wrapper">
+        <app-report-user-table 
+          [users]="users"
+          (stageClicked)="handleStageClick($event.studentId, $event.stageDescription)"
+        />
+    </div>
 </section>
 
 <app-modal
@@ -12,7 +19,9 @@
   [isError]="modal.isError"
   [isSuccess]="modal.isSuccess"
   [isInfo]="modal.isInfo"
+  [isContentViewer]="modal.isContentViewer ?? false"
   [showButtons]="modal.showButtons ?? false"
+  [title]="modal.title || ''"
   (confirmAction)="modal.confirm && modal.confirm()"
   (close)="modal.close()"
 />

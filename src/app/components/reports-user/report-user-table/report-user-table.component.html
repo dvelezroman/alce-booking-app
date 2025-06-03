@@ -1,1 +1,34 @@
-<p>report-user-table works!</p>
+<div class="table-container">
+  <table class="table-results is-fullwidth" *ngIf="users && users.length > 0">
+    <thead>
+      <tr>
+        <th>Apellidos</th>
+        <th>Nombres</th>
+        <th>Usuario</th>
+        <th>Estado</th>
+        <th>Alerta</th>
+        <th>Stage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td data-label="Apellidos">{{ user.lastName || 'No disponible' }}</td>
+        <td data-label="Nombres">{{ user.firstName || 'No disponible' }}</td>
+        <td data-label="Usuario">
+            <span class="ellipsis-cell" [title]="user.email || 'No disponible'">
+                {{ user.email || 'No disponible' }}
+            </span>
+        </td>
+        <td data-label="Estado">{{ getUserStatusLabel(user.status) }}</td>
+        <td data-label="Alerta">
+          {{ user.meetingsAlert ? 'Con alerta' : 'Sin alerta' }}
+        </td>
+        <td data-label="Stage">
+            <span class="clickable is-clickable" (click)="handleStageClick(user)">
+                {{ getStageLabel(user) }}
+            </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
