@@ -53,3 +53,10 @@ export interface RegisterResponseDto {
     role: UserRole;
   };
 }
+
+export interface UsersResponse {
+  page: number;
+  count: number;
+  totalCount: number;
+  users: UserDto[];
+}

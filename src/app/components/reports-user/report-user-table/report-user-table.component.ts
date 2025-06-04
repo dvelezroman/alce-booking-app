@@ -11,6 +11,10 @@ import { UserDto, UserStatus } from '../../../services/dtos/user.dto';
 })
 export class ReportUserTableComponent {
   @Input() users: UserDto[] = [];
+  @Input() totalUsers: number = 0;
+  @Input() currentPage: number = 1;
+  @Input() itemsPerPage: number = 100;
+  @Output() pageChanged = new EventEmitter<number>();
   @Output() stageClicked = new EventEmitter<{ studentId: number; stageDescription: string }>();
 
   getUserFullName(user: UserDto): string {
@@ -44,5 +48,29 @@ export class ReportUserTableComponent {
     if (studentId) {
       this.stageClicked.emit({ studentId, stageDescription });
     }
+  }
+
+  changePage(page: number): void {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.pageChanged.emit(page);
+    }
+  }
+
+  totalPages(): number {
+    return Math.ceil(this.totalUsers / this.itemsPerPage);
+  }
+
+  visiblePages(): number[] {
+    const total = this.totalPages();
+    const range = [];
+
+    const start = Math.max(1, this.currentPage - 2);
+    const end = Math.min(total, this.currentPage + 2);
+
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+
+    return range;
   }
 }

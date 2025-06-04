@@ -4,7 +4,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
 import {MeetingDataI, MeetingReportDetailed, StatisticalDataI} from "./dtos/meeting-theme.dto";
-import {UserDto, UserRole, UserStatus} from "./dtos/user.dto";
+import {UserDto, UserRole, UsersResponse, UserStatus} from "./dtos/user.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -135,31 +135,29 @@ export class ReportsService {
     return this.http.get(`${this.apiUrl}/instructor/${instructorId}/hours`, { params })
   }
 
-  getUsersData(page: number = 1, limit: number = 100, userId?: number, role?: UserRole, userStatus?: UserStatus, stageId?: number, comment?: boolean, alert?: boolean, newStudents?: boolean) {
-    let params = new HttpParams();
-    params = params.set('page', page);
-    params = params.set('limit', limit);
-    if (userId) {
-      params = params.set('userId', userId.toString());
-    }
-    if (role) {
-      params = params.set('role', role);
-    }
-    if (userStatus) {
-      params = params.set('userStatus', userStatus);
-    }
-    if (stageId) {
-      params = params.set('stageId', stageId.toString());
-    }
-    if (comment) {
-      params = params.set('comment', comment.toString());
-    }
-    if (alert) {
-      params = params.set('alert', alert.toString());
-    }
-    if (newStudents) {
-      params = params.set('newStudents', newStudents.toString());
-    }
-    return this.http.get<UserDto[]>(`${this.apiUrl}/users/data`, { params });
+  getUsersData(
+    page: number,
+    count: number,
+    userId?: number,
+    userRole?: UserRole,
+    userStatus?: UserStatus,
+    stageId?: number,
+    comment?: boolean,
+    alert?: boolean,
+    newStudents?: boolean
+  ) {
+    let params = new HttpParams()
+      // .set('page', page.toString()) 
+      // .set('count', count.toString());
+
+    if (userId) params = params.set('userId', userId.toString());
+    if (userRole) params = params.set('userRole', userRole);
+    if (userStatus) params = params.set('userStatus', userStatus);
+    if (stageId) params = params.set('stageId', stageId.toString());
+    if (comment) params = params.set('comment', comment.toString());
+    if (alert) params = params.set('alert', alert.toString());
+    if (newStudents) params = params.set('newStudents', newStudents.toString());
+
+    return this.http.get<UsersResponse>(`${this.apiUrl}/users/data`, { params });
   }
 }

@@ -15,20 +15,32 @@
         <td data-label="Apellidos">{{ user.lastName || 'No disponible' }}</td>
         <td data-label="Nombres">{{ user.firstName || 'No disponible' }}</td>
         <td data-label="Usuario">
-            <span class="ellipsis-cell" [title]="user.email || 'No disponible'">
-                {{ user.email || 'No disponible' }}
-            </span>
+          <span class="ellipsis-cell" [title]="user.email || 'No disponible'">
+            {{ user.email || 'No disponible' }}
+          </span>
         </td>
         <td data-label="Estado">{{ getUserStatusLabel(user.status) }}</td>
-        <td data-label="Alerta">
-          {{ user.meetingsAlert ? 'Con alerta' : 'Sin alerta' }}
-        </td>
+        <td data-label="Alerta">{{ getAlertLabel(user) }}</td>
         <td data-label="Stage">
-            <span class="clickable is-clickable" (click)="handleStageClick(user)">
-                {{ getStageLabel(user) }}
-            </span>
+          <span class="clickable is-clickable" (click)="handleStageClick(user)">
+            {{ getStageLabel(user) }}
+          </span>
         </td>
       </tr>
     </tbody>
   </table>
+
+</div>
+<div class="custom-pagination-container" *ngIf="totalUsers > itemsPerPage">
+  <button class="pagination-button" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+    Atrás
+  </button>
+
+  <span class="pagination-text">
+    Página {{ currentPage }} of {{ totalPages() }}
+  </span>
+
+  <button class="pagination-button" [disabled]="currentPage >= totalPages()" (click)="changePage(currentPage + 1)">
+   Siguiente
+  </button>
 </div>

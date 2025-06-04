@@ -14,8 +14,8 @@ import { UsersService } from '../../../services/users.service';
 })
 export class ReportFormComponent {
   @Output() filtersSubmitted = new EventEmitter<{
-    userId: number;
-    userRole: UserRole;
+    userId?: number;
+    userRole?: UserRole;
     userStatus?: UserStatus;
     comment?: boolean;
     alert?: boolean;
@@ -29,10 +29,12 @@ export class ReportFormComponent {
   searchInput$ = new Subject<string>();
   selectedUser?: UserDto;
 
+  roleFilter: UserRole | null = null;
   statusFilter: UserStatus | null = null;
+  commentFilter: boolean | null = null;
   alertFilter: boolean | null = null;
 
-  showStudentRequiredError: boolean = false;
+  newStudentsFilter: boolean | null = null;
 
   constructor(private usersService: UsersService) {
     this.searchInput$
@@ -44,6 +46,9 @@ export class ReportFormComponent {
 
   onSearchChange(term: string): void {
     this.searchInput$.next(term);
+      if (term.trim() === '') {
+        this.selectedUser = undefined;
+      }
   }
 
   filterUsers(term: string): void {
@@ -70,9 +75,7 @@ export class ReportFormComponent {
     this.searchTerm = `${user.firstName} ${user.lastName}`;
     this.filteredUsers = [];
     this.showUserDropdown = false;
-    this.showStudentRequiredError = false;
-
-    console.log('usuario seleccionado:', user);
+    console.log('Usuario seleccionado:', user);
   }
 
   hideDropdown(): void {
@@ -82,25 +85,16 @@ export class ReportFormComponent {
   }
 
   searchUserReport(): void {
-    if (!this.selectedUser) {
-      this.showStudentRequiredError = true;
-      return;
-    }
-
-    this.showStudentRequiredError = false;
-
     const filters = {
-      userId: this.selectedUser.id,
-      userRole: this.selectedUser.role!,
+      userId: this.selectedUser?.id,
+      userRole: this.selectedUser?.role ?? this.roleFilter ?? undefined,
       userStatus: this.statusFilter ?? undefined,
-      comment: !!this.selectedUser.comment,
+      comment: this.commentFilter ?? undefined,
       alert: this.alertFilter ?? undefined,
-      stageId: this.selectedUser.student?.stageId,
-      newStudents: false
+      newStudents: this.newStudentsFilter ?? undefined
     };
 
-    console.log('filtros al padre:', filters);
-
+    console.log('filtros enviados al padre:', filters);
     this.filtersSubmitted.emit(filters);
   }
 }
