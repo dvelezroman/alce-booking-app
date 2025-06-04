@@ -147,9 +147,9 @@ export class ReportsService {
     newStudents?: boolean
   ) {
     let params = new HttpParams()
-    params.set('page', page.toString())
+    params = params.set('page', page.toString());
     if (limit) {
-      params.set('limit', limit.toString());
+      params = params.set('limit', limit.toString());
     }
     if (userId) params = params.set('userId', userId.toString());
     if (userRole) params = params.set('userRole', userRole);
@@ -158,7 +158,8 @@ export class ReportsService {
     if (comment) params = params.set('comment', comment.toString());
     if (alert) params = params.set('alert', alert.toString());
     if (newStudents) params = params.set('newStudents', newStudents.toString());
-
+    
+    console.log('page y limit:', params.toString());
     return this.http.get<UsersResponse>(`${this.apiUrl}/users/data`, { params });
   }
 }

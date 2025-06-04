@@ -57,6 +57,7 @@ export class ReportUserComponent {
   }
 
   private fetchUsers(): void {
+    //console.log('page:', this.currentPage, 'limit:', this.itemsPerPage);
     const { userId, userRole, userStatus, comment, alert, newStudents, stageId } = this.lastFiltersUsed;
 
     this.reportsService.getUsersData(

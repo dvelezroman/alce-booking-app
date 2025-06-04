@@ -2,6 +2,7 @@
   <table class="table-results is-fullwidth" *ngIf="users && users.length > 0">
     <thead>
       <tr>
+        <th class="thin-index">#</th>
         <th>Apellidos</th>
         <th>Nombres</th>
         <th>Usuario</th>
@@ -11,7 +12,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
+      <tr *ngFor="let user of users; let i = index">
+        <td class="thin-index" data-label="#"> {{ (currentPage - 1) * itemsPerPage + i + 1 }} </td>
         <td data-label="Apellidos">
           <span class="ellipsis-cell" [title]="user.lastName || 'No disponible'">
             {{ user.lastName || 'No disponible' }}
@@ -49,6 +51,6 @@
   </span>
 
   <button class="pagination-button" [disabled]="currentPage >= totalPages" (click)="changePage(currentPage + 1)">
-   Siguiente
+    Siguiente
   </button>
 </div>
