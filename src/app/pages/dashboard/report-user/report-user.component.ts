@@ -62,7 +62,6 @@ export class ReportUserComponent {
 
     this.reportsService.getUsersData(
       this.currentPage,
-      this.itemsPerPage,
       userId,
       userRole,
       userStatus,

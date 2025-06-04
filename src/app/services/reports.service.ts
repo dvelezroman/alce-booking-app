@@ -137,7 +137,6 @@ export class ReportsService {
 
   getUsersData(
     page: number,
-    limit?: number,
     userId?: number,
     userRole?: UserRole,
     userStatus?: UserStatus,
@@ -147,10 +146,9 @@ export class ReportsService {
     newStudents?: boolean
   ) {
     let params = new HttpParams()
-    params = params.set('page', page.toString());
-    if (limit) {
-      params = params.set('limit', limit.toString());
-    }
+
+    .set('page', page.toString());
+    
     if (userId) params = params.set('userId', userId.toString());
     if (userRole) params = params.set('userRole', userRole);
     if (userStatus) params = params.set('userStatus', userStatus);
@@ -159,7 +157,6 @@ export class ReportsService {
     if (alert) params = params.set('alert', alert.toString());
     if (newStudents) params = params.set('newStudents', newStudents.toString());
     
-    console.log('page y limit:', params.toString());
     return this.http.get<UsersResponse>(`${this.apiUrl}/users/data`, { params });
   }
 }
