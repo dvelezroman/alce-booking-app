@@ -12,8 +12,16 @@
     </thead>
     <tbody>
       <tr *ngFor="let user of users">
-        <td data-label="Apellidos">{{ user.lastName || 'No disponible' }}</td>
-        <td data-label="Nombres">{{ user.firstName || 'No disponible' }}</td>
+        <td data-label="Apellidos">
+          <span class="ellipsis-cell" [title]="user.lastName || 'No disponible'">
+            {{ user.lastName || 'No disponible' }}
+          </span>
+        </td>
+        <td data-label="Nombres">
+          <span class="ellipsis-cell" [title]="user.firstName || 'No disponible'">
+            {{ user.firstName || 'No disponible' }}
+          </span>
+        </td>
         <td data-label="Usuario">
           <span class="ellipsis-cell" [title]="user.email || 'No disponible'">
             {{ user.email || 'No disponible' }}

@@ -54,74 +54,33 @@ export class ReportUserComponent {
     this.fetchUsers();
   }
 
-private fetchUsers(): void {
-  const { userId, userRole, userStatus, comment, alert, newStudents } = this.lastFiltersUsed;
+  private fetchUsers(): void {
+    const { userId, userRole, userStatus, comment, alert, newStudents } = this.lastFiltersUsed;
 
-  this.reportsService.getUsersData( this.currentPage, this.itemsPerPage, userId, userRole, userStatus, undefined, comment, alert, newStudents ).subscribe({
-    next: (response) => {
-      this.users = response.users;
-      this.totalUsers = response.totalCount;
-    },
-    error: () => {
-      this.modal = {
-        ...modalInitializer(),
-        show: true,
-        isError: true,
-        message: 'No se pudo obtener la información del usuario.',
-        title: 'Error',
-        close: () => this.modal.show = false,
-      };
-      setTimeout(() => this.modal.show = false, 3000);
-    }
-  });
-}
+    this.reportsService.getUsersData( this.currentPage, this.itemsPerPage, userId, userRole, userStatus, undefined, comment, alert, newStudents ).subscribe({
+      next: (response) => {
+        this.users = response.users;
+        this.totalUsers = response.totalCount;
+      },
+      error: () => {
+        this.modal = {
+          ...modalInitializer(),
+          show: true,
+          isError: true,
+          message: 'No se pudo obtener la información del usuario.',
+          title: 'Error',
+          close: () => this.modal.show = false,
+        };
+        setTimeout(() => this.modal.show = false, 3000);
+      }
+    });
+  }
 
   totalPages(): number {
     return Math.ceil(this.totalUsers / this.itemsPerPage);
   }
 
   handleStageClick(studentId: number, currentStageDescription: string): void {
-    // this.studyContentService.getStudyContentHistoryForStudentId(studentId).subscribe({
-    //   next: (history) => {
-    //     if (!history.length) {
-    //       this.modal = {
-    //         ...modalInitializer(),
-    //         show: true,
-    //         isContentViewer: true,
-    //         isError: false,
-    //         title: 'Historial de Stages',
-    //         message: 'No hay historial disponible para este estudiante.',
-    //         close: () => this.modal.show = false,
-    //       };
-    //       return;
-    //     }
 
-    //     let message = `<div class="stage-history">`;
-
-    //     for (const item of history) {
-    //       const date = DateTime.fromISO(item.date);
-    //       message += `
-    //         <div class="stage-block">
-    //           <div>${item.data.stage}</div><br>
-    //           Fecha: ${date.toFormat('dd/MM/yyyy')}<br>
-    //           Hora: ${item.hour}:00
-    //         </div>
-    //         <hr>
-    //       `;
-    //     }
-
-    //     message += `</div>`;
-
-    //     this.modal = {
-    //       ...modalInitializer(),
-    //       show: true,
-    //       isContentViewer: true,
-    //       isError: false,
-    //       message,
-    //       title: 'Historial de Stages',
-    //       close: () => this.modal.show = false,
-    //     };
-    //   }
-    // });
   }
 }
