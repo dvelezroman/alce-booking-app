@@ -59,7 +59,17 @@ export class ReportUserComponent {
   private fetchUsers(): void {
     const { userId, userRole, userStatus, comment, alert, newStudents, stageId } = this.lastFiltersUsed;
 
-    this.reportsService.getUsersData( this.currentPage, this.itemsPerPage, userId, userRole, userStatus, stageId, alert, newStudents ).subscribe({
+    this.reportsService.getUsersData(
+      this.currentPage,
+      this.itemsPerPage,
+      userId,
+      userRole,
+      userStatus,
+      stageId,
+      comment,
+      alert,
+      newStudents,
+      ).subscribe({
       next: (response) => {
         this.users = response.users;
         this.totalUsers = response.totalCount;
