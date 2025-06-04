@@ -4,8 +4,8 @@ import { ModalComponent } from '../../../components/modal/modal.component';
 import { ReportFormComponent } from '../../../components/reports-user/report-user-form/report-user-form.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { ReportUserTableComponent } from '../../../components/reports-user/report-user-table/report-user-table.component';
-import { UserDto } from '../../../services/dtos/user.dto';
-import { DateTime } from 'luxon';
+import { UserDto, UserRole, UserStatus } from '../../../services/dtos/user.dto';
+import { ReportsService } from '../../../services/reports.service';
 
 @Component({
   selector: 'app-report-user',
@@ -18,62 +18,49 @@ export class ReportUserComponent {
   modal: ModalDto = modalInitializer();
   users: UserDto[] = [];
 
-  constructor() {}
+  constructor(private reportsService: ReportsService) {}
 
   handleFormSubmit(filters: {
-    studentId: number;
-    studentStage?: string;
-    status?: 'active' | 'inactive' | null;
-    withAlerts?: boolean | null;
+    userId: number;
+    userRole: UserRole;
+    userStatus?: UserStatus;
+    comment?: boolean;
+    alert?: boolean;
+    stageId?: number;
+    newStudents?: boolean;
   }): void {
-    console.log('Filtros recibidos:', filters);
+    this.reportsService.getUsersData(
+      1,
+      100,
+      filters.userId,
+      filters.userRole,
+      filters.userStatus,
+      filters.stageId,
+      filters.comment,
+      filters.alert,
+      filters.newStudents
+    ).subscribe({
+      next: (users) => {
+        this.users = users;
+      },
+      error: () => {
+        this.modal = {
+          ...modalInitializer(),
+          show: true,
+          isError: true,
+          message: 'No se pudo obtener la información del usuario.',
+          title: 'Error',
+          close: () => this.modal.show = false,
+        };
 
+        setTimeout(() => {
+          this.modal.show = false;
+        }, 3000);
+      }
+    });
   }
 
- handleStageClick(studentId: number, currentStageDescription: string): void {
-    // this.studyContentService.getStageHistoryByStudentId(studentId).subscribe({
-    //   next: (history) => {
-    //     let message = `<div class="stage-history">`;
-
-    //     for (const item of history) {
-    //       const from = DateTime.fromISO(item.from);
-    //       const to = item.to ? DateTime.fromISO(item.to) : DateTime.now();
-    //       const days = to.diff(from, 'days').days;
-
-    //       message += `
-    //         <div class="stage-block">
-    //           <div>${item.stage}</div><br>
-    //           Desde: ${from.toFormat('dd/MM/yyyy')}<br>
-    //           ${item.to ? `Hasta: ${to.toFormat('dd/MM/yyyy')}<br>` : ''}
-    //           Días: ${Math.floor(days)}
-    //         </div>
-    //         <hr>
-    //       `;
-    //     }
-
-    //     message += `</div>`;
-
-    //     this.modal = {
-    //       ...modalInitializer(),
-    //       show: true,
-    //       isContentViewer: true,
-    //       isError: false,
-    //       message,
-    //       title: 'Historial de Stages',
-    //       close: () => this.modal.show = false,
-    //     };
-    //   },
-    //   error: () => {
-    //     this.modal = {
-    //       ...modalInitializer(),
-    //       show: true,
-    //       isError: true,
-    //       isSuccess: false,
-    //       message: 'No se pudo cargar el historial de stages del estudiante.',
-    //       title: 'Error',
-    //       close: () => this.modal.show = false,
-    //     };
-    //   },
-    // });
+  handleStageClick(studentId: number, currentStageDescription: string): void {
+    // implementación futura para historial de stages
   }
 }

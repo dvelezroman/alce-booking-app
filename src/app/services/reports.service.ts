@@ -135,12 +135,12 @@ export class ReportsService {
     return this.http.get(`${this.apiUrl}/instructor/${instructorId}/hours`, { params })
   }
 
-  getUsersData(page= 1, limit: 100, studentId?: number, role?: UserRole, userStatus?: UserStatus, stageId?: number, comment?: boolean, alert?: boolean, newStudents?: boolean) {
+  getUsersData(page: number = 1, limit: number = 100, userId?: number, role?: UserRole, userStatus?: UserStatus, stageId?: number, comment?: boolean, alert?: boolean, newStudents?: boolean) {
     let params = new HttpParams();
     params = params.set('page', page);
     params = params.set('limit', limit);
-    if (studentId) {
-      params = params.set('studentId', studentId.toString());
+    if (userId) {
+      params = params.set('userId', userId.toString());
     }
     if (role) {
       params = params.set('role', role);

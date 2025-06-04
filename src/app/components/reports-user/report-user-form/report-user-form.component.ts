@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime } from 'rxjs';
-import { UserDto } from '../../../services/dtos/user.dto';
+import { UserDto, UserRole, UserStatus } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
 
 @Component({
@@ -14,22 +14,25 @@ import { UsersService } from '../../../services/users.service';
 })
 export class ReportFormComponent {
   @Output() filtersSubmitted = new EventEmitter<{
-    studentId: number;
-    studentStage?: string;
-    status?: 'active' | 'inactive' | null;
-    withAlerts?: boolean | null;
+    userId: number;
+    userRole: UserRole;
+    userStatus?: UserStatus;
+    comment?: boolean;
+    alert?: boolean;
+    stageId?: number;
+    newStudents?: boolean;
   }>();
 
   searchTerm: string = '';
   filteredUsers: UserDto[] = [];
   showUserDropdown: boolean = false;
   searchInput$ = new Subject<string>();
-  selectedStudent?: UserDto;
+  selectedUser?: UserDto;
+
+  statusFilter: UserStatus | null = null;
+  alertFilter: boolean | null = null;
 
   showStudentRequiredError: boolean = false;
-
-  statusFilter: 'active' | 'inactive' | null = null;
-  alertFilter: boolean | null = null;
 
   constructor(private usersService: UsersService) {
     this.searchInput$
@@ -63,11 +66,13 @@ export class ReportFormComponent {
   }
 
   selectUser(user: UserDto): void {
-    this.selectedStudent = user;
+    this.selectedUser = user;
     this.searchTerm = `${user.firstName} ${user.lastName}`;
     this.filteredUsers = [];
     this.showUserDropdown = false;
     this.showStudentRequiredError = false;
+
+    console.log('usuario seleccionado:', user);
   }
 
   hideDropdown(): void {
@@ -76,19 +81,26 @@ export class ReportFormComponent {
     }, 200);
   }
 
-  searchStudentProgress(): void {
-    if (!this.selectedStudent?.student?.id) {
+  searchUserReport(): void {
+    if (!this.selectedUser) {
       this.showStudentRequiredError = true;
       return;
     }
 
     this.showStudentRequiredError = false;
 
-    this.filtersSubmitted.emit({
-      studentId: this.selectedStudent.student.id,
-      studentStage: this.selectedStudent.student.stage?.description ?? undefined,
-      status: this.statusFilter,
-      withAlerts: this.alertFilter
-    });
+    const filters = {
+      userId: this.selectedUser.id,
+      userRole: this.selectedUser.role!,
+      userStatus: this.statusFilter ?? undefined,
+      comment: !!this.selectedUser.comment,
+      alert: this.alertFilter ?? undefined,
+      stageId: this.selectedUser.student?.stageId,
+      newStudents: false
+    };
+
+    console.log('filtros al padre:', filters);
+
+    this.filtersSubmitted.emit(filters);
   }
 }

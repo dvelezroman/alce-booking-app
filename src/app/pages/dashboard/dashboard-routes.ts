@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { AssessmentComponent } from './assessment/assessment.component';
 import { AssessmentReportsComponent } from './assessment-reports/assessment-reports.component';
-import { ReportInstructorComponent } from './report-attendance-instructor/report-instructor.component';
+import { ReportInstructorComponent } from './report-instructor/report-instructor.component';
 import { AttendanceReportsComponent } from './attendance-reports/attendance-reports.component';
 import { ContentComponent } from './content/content.component';
 import { FeatureFlagComponent } from './feature-flag/feature-flag.component';
@@ -14,8 +14,8 @@ import { ProcessedEventsComponent } from './processed-events/processed-events.co
 import { RegisterCompleteComponent } from './register-complete/register-complete.component';
 import { RegisterInstructorAdminComponent } from './register-instructor-admin/register-instructor-admin.component';
 import { RegisterStudentComponent } from './register-student/register-student.component';
-import { ReportsDetailedComponent } from './reports-detail-statist-meeting/reports-detailed.component';
-import { ReportsProgressComponent } from './reports-progress/reports-progress.component';
+import { ReportsDetailedComponent } from './report-students/reports-detailed.component';
+import { ReportsProgressComponent } from './report-progress/reports-progress.component';
 import { SearchingMeetingInstructorComponent } from './searching-meeting-instructor/searching-meeting-instructor.component';
 import { SearchingMeetingComponent } from './searching-meeting/searching-meeting.component';
 import { SearchingStudentComponent } from './searching-students/searching-student.component';
