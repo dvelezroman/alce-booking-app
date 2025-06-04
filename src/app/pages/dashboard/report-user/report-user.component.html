@@ -6,11 +6,12 @@
   <app-report-form (filtersSubmitted)="handleFormSubmit($event)" />
 
     <div class="report-table-wrapper">
-      <app-report-user-table 
+      <app-report-user-table
         [users]="users"
         [currentPage]="currentPage"
         [itemsPerPage]="itemsPerPage"
         [totalUsers]="totalUsers"
+        [totalPages]="totalPages"
         (pageChanged)="handlePageChange($event)"
         (stageClicked)="handleStageClick($event.studentId, $event.stageDescription)"
       />

@@ -7,7 +7,6 @@ import { ReportUserTableComponent } from '../../../components/reports-user/repor
 import { UserDto, UserRole, UserStatus } from '../../../services/dtos/user.dto';
 import { ReportsService } from '../../../services/reports.service';
 import { StudyContentService } from '../../../services/study-content.service';
-import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-report-user',
@@ -20,6 +19,7 @@ export class ReportUserComponent {
   modal: ModalDto = modalInitializer();
   users: UserDto[] = [];
   totalUsers: number = 0;
+  totalPages: number = 0;
   currentPage: number = 1;
   itemsPerPage: number = 100;
 
@@ -27,6 +27,7 @@ export class ReportUserComponent {
     userId?: number;
     userRole?: UserRole;
     userStatus?: UserStatus;
+    stageId?: number;
     comment?: boolean;
     alert?: boolean;
     newStudents?: boolean;
@@ -41,6 +42,7 @@ export class ReportUserComponent {
     userRole?: UserRole;
     userStatus?: UserStatus;
     comment?: boolean;
+    stageid?: number;
     alert?: boolean;
     newStudents?: boolean;
   }): void {
@@ -55,12 +57,13 @@ export class ReportUserComponent {
   }
 
   private fetchUsers(): void {
-    const { userId, userRole, userStatus, comment, alert, newStudents } = this.lastFiltersUsed;
+    const { userId, userRole, userStatus, comment, alert, newStudents, stageId } = this.lastFiltersUsed;
 
-    this.reportsService.getUsersData( this.currentPage, this.itemsPerPage, userId, userRole, userStatus, undefined, comment, alert, newStudents ).subscribe({
+    this.reportsService.getUsersData( this.currentPage, this.itemsPerPage, userId, userRole, userStatus, stageId, alert, newStudents ).subscribe({
       next: (response) => {
         this.users = response.users;
         this.totalUsers = response.totalCount;
+        this.totalPages = Math.ceil(this.totalUsers / this.itemsPerPage);
       },
       error: () => {
         this.modal = {
@@ -74,10 +77,6 @@ export class ReportUserComponent {
         setTimeout(() => this.modal.show = false, 3000);
       }
     });
-  }
-
-  totalPages(): number {
-    return Math.ceil(this.totalUsers / this.itemsPerPage);
   }
 
   handleStageClick(studentId: number, currentStageDescription: string): void {

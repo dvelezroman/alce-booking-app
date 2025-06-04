@@ -4,7 +4,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
 import {MeetingDataI, MeetingReportDetailed, StatisticalDataI} from "./dtos/meeting-theme.dto";
-import {UserDto, UserRole, UsersResponse, UserStatus} from "./dtos/user.dto";
+import {UserRole, UsersResponse, UserStatus} from "./dtos/user.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -137,7 +137,7 @@ export class ReportsService {
 
   getUsersData(
     page: number,
-    count: number,
+    limit?: number,
     userId?: number,
     userRole?: UserRole,
     userStatus?: UserStatus,
@@ -147,9 +147,10 @@ export class ReportsService {
     newStudents?: boolean
   ) {
     let params = new HttpParams()
-      // .set('page', page.toString()) 
-      // .set('count', count.toString());
-
+    params.set('page', page.toString())
+    if (limit) {
+      params.set('limit', limit.toString());
+    }
     if (userId) params = params.set('userId', userId.toString());
     if (userRole) params = params.set('userRole', userRole);
     if (userStatus) params = params.set('userStatus', userStatus);

@@ -14,6 +14,7 @@ export class ReportUserTableComponent {
   @Input() totalUsers: number = 0;
   @Input() currentPage: number = 1;
   @Input() itemsPerPage: number = 100;
+  @Input() totalPages: number = 100;
   @Output() pageChanged = new EventEmitter<number>();
   @Output() stageClicked = new EventEmitter<{ studentId: number; stageDescription: string }>();
 
@@ -51,17 +52,13 @@ export class ReportUserTableComponent {
   }
 
   changePage(page: number): void {
-    if (page >= 1 && page <= this.totalPages()) {
+    if (page >= 1 && page <= this.totalPages) {
       this.pageChanged.emit(page);
     }
   }
 
-  totalPages(): number {
-    return Math.ceil(this.totalUsers / this.itemsPerPage);
-  }
-
   visiblePages(): number[] {
-    const total = this.totalPages();
+    const total = this.totalPages;
     const range = [];
 
     const start = Math.max(1, this.currentPage - 2);
