@@ -6,7 +6,8 @@ import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto'
 import { ReportUserTableComponent } from '../../../components/reports-user/report-user-table/report-user-table.component';
 import { UserDto, UserRole, UserStatus } from '../../../services/dtos/user.dto';
 import { ReportsService } from '../../../services/reports.service';
-import { StudyContentService } from '../../../services/study-content.service';
+import { Stage, StudentStageHistory } from '../../../services/dtos/student.dto';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-report-user',
@@ -34,7 +35,6 @@ export class ReportUserComponent {
   } = {};
 
   constructor(private reportsService: ReportsService,
-              private studyContentService: StudyContentService
   ) {}
 
   handleFormSubmit(filters: { userId?: number; userRole?: UserRole; userStatus?: UserStatus; comment?: boolean; 
@@ -79,23 +79,75 @@ export class ReportUserComponent {
       return;
     }
 
-    const { number, description } = selectedUser.student.stage;
-    const createdAt = new Date(selectedUser.student.createdAt).toLocaleDateString('es-EC', {
-      day: '2-digit', month: '2-digit', year: 'numeric'
-    });
+    const history = selectedUser.student.StudentAndStagesHistory;
 
-    const message = `
-      <div class="stage-info-block">
-        <div>Stage actual:  ${description}</div>
-        <div>Inicio del stage: ${createdAt}</div>
-        
-      </div>
-    `;
+    if (!history || history.length === 0) {
+      const message = this.generateCurrentStageHtml( selectedUser.student.stage, selectedUser.student.createdAt );
+
+      this.showModal(message, {
+        title: 'Historial de Stages',
+        isContentViewer: true,
+      });
+      return;
+    }
+
+    const sortedHistory = this.getSortedStageHistory(history);
+    const message = this.generateStageHistoryHtml(sortedHistory);
 
     this.showModal(message, {
       title: 'Historial de Stages',
       isContentViewer: true,
     });
+  }
+
+  private generateCurrentStageHtml(stage: Stage, fromDate: string | Date): string {
+    const stageNumber = stage.number;
+    const stageDescription = stage.description;
+    const from = new Date(fromDate).toLocaleDateString('es-EC', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    return `
+      <div class="stage-info-block">
+        <div>${stageDescription}</div>
+        <div>Desde: ${from}</div>
+      </div>
+    `;
+  }
+
+  private getSortedStageHistory(history: StudentStageHistory[]): StudentStageHistory[] {
+    return [...history].sort(
+      (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+  }
+
+  private generateStageHistoryHtml(history: StudentStageHistory[]): string {
+    let html = `<div class="stage-info-block">`;
+
+    for (let i = 0; i < history.length; i++) {
+      const current = history[i];
+      const next = history[i + 1];
+
+      const stageNumber = current.stage?.number || `STG ${current.stageId}`;
+      const stageDescription = current.stage?.description || '';
+
+      const fromDate = DateTime.fromISO(current.createdAt);
+      const toDate = next ? DateTime.fromISO(next.createdAt) : null;
+
+      const from = fromDate.toFormat('dd/MM/yyyy');
+      const to = toDate ? toDate.toFormat('dd/MM/yyyy') : null;
+      const daysBetween = toDate ? toDate.diff(fromDate, 'days').days : null;
+
+      html += `
+        <div class="stage-item">
+          <div>${stageDescription}</div>
+          <div>Desde: ${from}${to ? ` - Hasta: ${to}` : ''}</div>
+          ${daysBetween ? `<div>Días transcurridos: ${Math.round(daysBetween)} días</div>` : ''}
+          <br />
+        </div>
+      `;
+    }
+
+    html += `</div>`;
+    return html;
   }
   
   private showModal(message: string, options?: {

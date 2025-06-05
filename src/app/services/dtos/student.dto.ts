@@ -19,6 +19,17 @@ export interface Student {
   user?: UserDto;
   stage?: Stage;
   studentClassification?: StudentClassification;
+  StudentAndStagesHistory?: StudentStageHistory[];
+}
+
+export interface StudentStageHistory {
+  id: number;
+  stageId: number;
+  studentId: number;
+  processedByUserId: number;
+  createdAt: string;
+  updatedAt?: string;
+  stage?: Stage;
 }
 
 export enum StudentClassification {
