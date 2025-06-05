@@ -24,16 +24,17 @@ export class ReportFormComponent {
   }>();
 
   searchTerm: string = '';
-  filteredUsers: UserDto[] = [];
-  showUserDropdown: boolean = false;
-  searchInput$ = new Subject<string>();
   selectedUser?: UserDto;
-
+  filteredUsers: UserDto[] = [];
+  searchInput$ = new Subject<string>();
+  
   roleFilter: UserRole | null = null;
   statusFilter: UserStatus | null = null;
-  commentFilter: boolean | null = null;
+  
+  isExpanded: boolean = false;
+  showUserDropdown: boolean = false;
   alertFilter: boolean | null = null;
-
+  commentFilter: boolean | null = null;
   newStudentsFilter: boolean | null = null;
 
   constructor(private usersService: UsersService) {

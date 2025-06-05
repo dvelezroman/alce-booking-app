@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
-import { Stage, RegisterStudentDto } from '../../../services/dtos/student.dto';
+import { Stage, RegisterStudentDto, Mode, StudentClassification } from '../../../services/dtos/student.dto';
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { StagesService } from '../../../services/stages.service';
 import { StudentsService } from '../../../services/students.service';
@@ -21,10 +21,13 @@ import { UsersService } from '../../../services/users.service';
   styleUrl: './register-student.component.scss'
 })
 export class RegisterStudentComponent implements OnInit {
+  modal: ModalDto = modalInitializer();
+
   registerForm: FormGroup;
   stages: Stage[] = [];
-  modes: string[] = ['PRESENCIAL', 'ONLINE'];
-  modal: ModalDto = modalInitializer();
+
+  modes = Object.values(Mode);
+  studentClassifications = Object.values(StudentClassification);
 
 
   constructor(
@@ -40,6 +43,7 @@ export class RegisterStudentComponent implements OnInit {
       idNumber: ['', Validators.required],
       email: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      studentClassification: ['', Validators.required],
       stageId: ['', Validators.required],
       mode: ['', Validators.required],
     });
@@ -73,6 +77,7 @@ export class RegisterStudentComponent implements OnInit {
           userId: userResponse.user.id,
           stageId: parseInt(this.registerForm.value.stageId, 10),
           mode: this.registerForm.value.mode,
+          studentClassification: this.registerForm.value.studentClassification,
         };
 
         this.studentsService.registerStudent(studentData).subscribe({

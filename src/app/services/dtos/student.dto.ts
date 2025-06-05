@@ -5,6 +5,7 @@ export interface RegisterStudentDto {
   stageId?: number;
   mode: Mode;
   userId: number | null | undefined;
+  studentClassification: StudentClassification;
 }
 
 export interface Student {

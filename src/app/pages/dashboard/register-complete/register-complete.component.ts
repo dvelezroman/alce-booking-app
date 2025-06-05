@@ -105,10 +105,11 @@ export class RegisterCompleteComponent implements OnInit, OnDestroy {
     };
 
     const studentData: RegisterStudentDto = {
-      // stageId: parseInt(this.registerForm.controls['stageId'].value, 10),
+      // stageId: parseInt(this.registerForm.controls['stageId'].value, 10), // si aplica
       userId: this.user?.id,
       mode: this.registerForm.controls['mode'].value,
-    }
+      studentClassification: this.registerForm.controls['studentClassification'].value,
+    };
     const instructorData: RegisterInstructorDto = {
       // stageId: parseInt(this.registerForm.controls['stageId'].value, 10),
       userId: this.user?.id,

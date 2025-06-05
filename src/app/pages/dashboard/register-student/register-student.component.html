@@ -76,6 +76,21 @@
         </div>
 
         <div class="field">
+          <label class="label">Clasificación del Estudiante</label>
+          <div class="control">
+            <select class="input" formControlName="studentClassification">
+              <option value="" disabled selected>Seleccionar</option>
+              <option *ngFor="let classification of studentClassifications" [value]="classification">
+                {{ classification }}
+              </option>
+            </select>
+          </div>
+          <div *ngIf="registerForm.get('studentClassification')?.invalid && registerForm.get('studentClassification')?.touched" class="error">
+            Seleccione una clasificación.
+          </div>
+        </div>
+
+        <div class="field">
           <label class="label">Stage</label>
           <div class="control">
             <select class="input" formControlName="stageId">
@@ -84,7 +99,7 @@
             </select>
           </div>
           <div *ngIf="registerForm.get('stageId')?.invalid && registerForm.get('stageId')?.touched" class="error">
-            Por favor, seleccione un Stage.
+            Seleccione un Stage.
           </div>
         </div>
 
@@ -97,7 +112,7 @@
               </select>
             </div>
             <div *ngIf="registerForm.get('mode')?.invalid && registerForm.get('mode')?.touched" class="error">
-              Por favor, seleccione un modo de estudio.
+              Seleccione un modo de estudio.
             </div>
           </div>
 

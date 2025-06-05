@@ -1,5 +1,11 @@
 <div class="form-container">
-  <!-- Búsqueda de usuario -->
+
+  <div class="field mt-2 has-text-right">
+    <button class="button is-small button-secondary" (click)="isExpanded = !isExpanded">
+      {{ isExpanded ? 'Ocultar filtros' : 'Mostrar filtros avanzados' }}
+    </button>
+  </div>
+
   <div class="field relative-container">
     <label class="label">Buscar Usuario</label>
     <div class="control has-icons-left">
@@ -17,86 +23,72 @@
       </span>
     </div>
 
-    <div
-      class="dropdown-list-fixed"
-      *ngIf="showUserDropdown && filteredUsers.length > 0"
-    >
-      <div
-        class="dropdown-item"
-        *ngFor="let user of filteredUsers"
-        (click)="selectUser(user)"
-      >
+    <div class="dropdown-list-fixed" *ngIf="showUserDropdown && filteredUsers.length > 0">
+      <div class="dropdown-item" *ngFor="let user of filteredUsers" (click)="selectUser(user)">
         {{ user.firstName }} {{ user.lastName }}
       </div>
     </div>
-    <!-- <p *ngIf="searchTerm.length >= 2 && filteredUsers.length === 0" class="no-results-text">
-      Sin resultados
-    </p> -->
   </div>
 
-  <!-- Rol -->
-  <div class="field mt-4">
-    <label class="label">Rol</label>
-    <div class="control">
-      <select class="input" [(ngModel)]="roleFilter">
-        <option [ngValue]="null">Todos</option>
-        <option [ngValue]="'STUDENT'">Estudiante</option>
-        <option [ngValue]="'INSTRUCTOR'">Instructor</option>
-        <option [ngValue]="'ADMIN'">Admin</option>
-      </select>
+  <div *ngIf="isExpanded">
+    <div class="field mt-4">
+      <label class="label">Rol</label>
+      <div class="control">
+        <select class="input" [(ngModel)]="roleFilter">
+          <option [ngValue]="null">Todos</option>
+          <option [ngValue]="'STUDENT'">Estudiante</option>
+          <option [ngValue]="'INSTRUCTOR'">Instructor</option>
+          <option [ngValue]="'ADMIN'">Admin</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field mt-4">
+      <label class="label">Estado</label>
+      <div class="control">
+        <select class="input" [(ngModel)]="statusFilter">
+          <option [ngValue]="null">Todos</option>
+          <option [ngValue]="'ACTIVE'">Activo</option>
+          <option [ngValue]="'INACTIVE'">Inactivo</option>
+          <option [ngValue]="'HOLD'">En espera</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field mt-4">
+      <label class="label">Comentario</label>
+      <div class="control">
+        <select class="input" [(ngModel)]="commentFilter">
+          <option [ngValue]="null">Todos</option>
+          <option [ngValue]="true">Con comentario</option>
+          <option [ngValue]="false">Sin comentario</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field mt-4">
+      <label class="label">Alertas</label>
+      <div class="control">
+        <select class="input" [(ngModel)]="alertFilter">
+          <option [ngValue]="null">Todos</option>
+          <option [ngValue]="true">Con alertas</option>
+          <option [ngValue]="false">Sin alertas</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field mt-4">
+      <label class="label">Nuevos estudiantes</label>
+      <div class="control">
+        <select class="input" [(ngModel)]="newStudentsFilter">
+          <option [ngValue]="null">Todos</option>
+          <option [ngValue]="true">Sí</option>
+          <option [ngValue]="false">No</option>
+        </select>
+      </div>
     </div>
   </div>
 
-  <!-- Estado -->
-  <div class="field mt-4">
-    <label class="label">Estado</label>
-    <div class="control">
-      <select class="input" [(ngModel)]="statusFilter">
-        <option [ngValue]="null">Todos</option>
-        <option [ngValue]="'ACTIVE'">Activo</option>
-        <option [ngValue]="'INACTIVE'">Inactivo</option>
-        <option [ngValue]="'HOLD'">En espera</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Comentarios -->
-  <div class="field mt-4">
-    <label class="label">Comentario</label>
-    <div class="control">
-      <select class="input" [(ngModel)]="commentFilter">
-        <option [ngValue]="null">Todos</option>
-        <option [ngValue]="true">Con comentario</option>
-        <option [ngValue]="false">Sin comentario</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Alertas -->
-  <div class="field mt-4">
-    <label class="label">Alertas</label>
-    <div class="control">
-      <select class="input" [(ngModel)]="alertFilter">
-        <option [ngValue]="null">Todos</option>
-        <option [ngValue]="true">Con alertas</option>
-        <option [ngValue]="false">Sin alertas</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Nuevos Estudiantes -->
-  <div class="field mt-4">
-    <label class="label">Nuevos estudiantes</label>
-    <div class="control">
-      <select class="input" [(ngModel)]="newStudentsFilter">
-        <option [ngValue]="null">Todos</option>
-        <option [ngValue]="true">Sí</option>
-        <option [ngValue]="false">No</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Botón buscar -->
   <div class="field mt-4">
     <button class="button is-primary is-fullwidth" (click)="searchUserReport()">
       Buscar

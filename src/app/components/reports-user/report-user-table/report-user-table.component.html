@@ -8,6 +8,7 @@
         <th>Usuario</th>
         <th>Estado</th>
         <th>Alerta</th>
+        <th>Comentario</th>
         <th>Stage</th>
       </tr>
     </thead>
@@ -31,6 +32,11 @@
         </td>
         <td data-label="Estado">{{ getUserStatusLabel(user.status) }}</td>
         <td data-label="Alerta">{{ getAlertLabel(user) }}</td>
+        <td data-label="Comentario">
+          <span class="ellipsis-cell" [title]="user.comment || 'Sin comentario'">
+            {{ user.comment || 'Sin comentario' }}
+          </span>
+        </td>
         <td data-label="Stage">
           <span class="clickable is-clickable" (click)="handleStageClick(user)">
             {{ getStageLabel(user) }}
