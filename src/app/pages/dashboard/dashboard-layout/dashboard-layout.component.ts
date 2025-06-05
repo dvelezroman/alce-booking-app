@@ -11,6 +11,7 @@ import { UserDto, UserRole } from "../../../services/dtos/user.dto";
 import { setInstructorLink } from "../../../store/user.action";
 import { ModalDto, modalInitializer } from "../../../components/modal/modal.dto";
 import { AssessmentPointsConfigService } from "../../../services/assessment-points-config.service";
+import { StudentBannerComponent } from "../../../components/student-banner/student-banner.component";
 
 @Component({
   standalone: true,
@@ -19,6 +20,7 @@ import { AssessmentPointsConfigService } from "../../../services/assessment-poin
     CommonModule,
     RouterModule,
     SidebarComponent,
+     StudentBannerComponent
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
@@ -35,7 +37,9 @@ export class DashboardLayoutComponent implements OnInit {
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
   minHoursRequired: number | null = null;
-  isBannerExpanded = true;
+  isWarningBannerExpanded = true;
+  isInfoBannerExpanded = true;
+  hasAssessmentResources: boolean = false;
   modal: ModalDto = modalInitializer();
 
   constructor(
@@ -51,24 +55,38 @@ export class DashboardLayoutComponent implements OnInit {
   
   ngOnInit(): void {
 
-      this.isLoggedIn$.subscribe(state => {
-          this.isLoggedIn = state;
-        });
-        this.userData$.subscribe(state => {
-          this.userData = state;
-        });
-        const savedLink = localStorage.getItem('instructorLink');
-        if (savedLink) {
-          this.store.dispatch(setInstructorLink({ link: savedLink }));
-        }
-        this.isRegistered$.subscribe(state => {
-          this.isRegistered = state;
-          if (this.isLoggedIn && !this.isRegistered) {
-            this.router.navigate(['/dashboard/register-complete']);
-          }
-        });
+    this.isLoggedIn$.subscribe(state => {
+      this.isLoggedIn = state;
+    });
 
-        this.loadMinHoursRequired();
+    this.userData$.subscribe(data => {
+      this.userData = data;
+      this.hasAssessmentResources = this.checkAssessmentResources(this.userData);
+    });
+
+    const savedLink = localStorage.getItem('instructorLink');
+      if (savedLink) {
+        this.store.dispatch(setInstructorLink({ link: savedLink }));
+      }
+
+    this.isRegistered$.subscribe(state => {
+      this.isRegistered = state;
+      if (this.isLoggedIn && !this.isRegistered) {
+        this.router.navigate(['/dashboard/register-complete']);
+      }
+    });
+
+    this.loadMinHoursRequired();
+  }
+
+  checkAssessmentResources(user: UserDto | null): boolean {
+    return !!user?.assessmentResources && user.assessmentResources.length > 0;
+  }
+
+  get shouldShowAssessmentBanner(): boolean {
+    return this.isLoggedIn &&
+           this.userData?.role === UserRole.STUDENT &&
+          (this.userData.assessmentResources?.length || 0) > 0;
   }
 
   loadMinHoursRequired(): void {

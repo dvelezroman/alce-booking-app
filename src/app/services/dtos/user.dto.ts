@@ -1,5 +1,6 @@
 import {Stage, Student} from "./student.dto";
 import {Instructor} from "./instructor.dto";
+import { AssessmentResourceI } from "./assessment-resources.dto";
 
 export enum UserRole {
   INSTRUCTOR = 'INSTRUCTOR',
@@ -29,6 +30,7 @@ export interface UserDto {
   comment?: string;
   status?: UserStatus;
   meetingsAlert?: boolean;
+  assessmentResources?: AssessmentResourceI[];
 }
 
 export interface LoginDto {

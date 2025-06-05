@@ -1,0 +1,36 @@
+<div
+  class="student-banner"
+  [class.warning-banner]="type === 'warning'"
+  [class.info-banner]="type === 'info'"
+  [class.minimized]="!isExpanded"
+  (click)="toggle()"
+>
+  <span class="material-icons" [ngClass]="{ 'warning-icon': type === 'warning', 'info-icon': type === 'info' }">
+    {{ icon }}
+  </span>
+
+  <div class="banner-body">
+    <div class="banner-title">
+      <ng-container *ngIf="isExpanded; else minimizedTitle">{{ title }}</ng-container>
+      <ng-template #minimizedTitle>{{ title }} &#33;</ng-template>
+    </div>
+
+    <div class="banner-text" *ngIf="isExpanded">
+      <p *ngIf="text">{{ text }}</p>
+
+      <ul *ngIf="(resources?.length ?? 0) > 0" class="resource-list">
+        <li *ngFor="let item of resources">
+          <a [href]="item.link" target="_blank" rel="noopener noreferrer">
+            {{ item.title }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <button class="toggle-banner-btn" (click)="toggle(); $event.stopPropagation()">
+    <span class="material-icons">
+      {{ isExpanded ? 'expand_less' : 'expand_more' }}
+    </span>
+  </button>
+</div>
