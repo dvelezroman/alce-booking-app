@@ -75,7 +75,7 @@ export class ReportFormComponent {
     this.searchTerm = `${user.firstName} ${user.lastName}`;
     this.filteredUsers = [];
     this.showUserDropdown = false;
-    console.log('Usuario seleccionado:', user);
+    //console.log('Usuario seleccionado:', user);
   }
 
   hideDropdown(): void {
@@ -94,7 +94,7 @@ export class ReportFormComponent {
       newStudents: this.newStudentsFilter ?? undefined
     };
 
-    console.log('filtros enviados al padre:', filters);
+   // console.log('filtros enviados al padre:', filters);
     this.filtersSubmitted.emit(filters);
   }
 }

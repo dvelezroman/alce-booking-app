@@ -16,7 +16,7 @@ export class ReportUserTableComponent {
   @Input() itemsPerPage: number = 100;
   @Input() totalPages: number = 100;
   @Output() pageChanged = new EventEmitter<number>();
-  @Output() stageClicked = new EventEmitter<{ studentId: number; stageDescription: string }>();
+  @Output() stageClicked = new EventEmitter<{ studentId: number }>();
 
   getUserFullName(user: UserDto): string {
     return `${user.lastName || ''} ${user.firstName || ''}`.trim();
@@ -47,7 +47,7 @@ export class ReportUserTableComponent {
     const stageDescription = this.getStageLabel(user);
     const studentId = user.student?.id;
     if (studentId) {
-      this.stageClicked.emit({ studentId, stageDescription });
+      this.stageClicked.emit({ studentId });
     }
   }
 

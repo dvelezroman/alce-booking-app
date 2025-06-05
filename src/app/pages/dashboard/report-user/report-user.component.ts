@@ -37,15 +37,8 @@ export class ReportUserComponent {
               private studyContentService: StudyContentService
   ) {}
 
-  handleFormSubmit(filters: {
-    userId?: number;
-    userRole?: UserRole;
-    userStatus?: UserStatus;
-    comment?: boolean;
-    stageid?: number;
-    alert?: boolean;
-    newStudents?: boolean;
-  }): void {
+  handleFormSubmit(filters: { userId?: number; userRole?: UserRole; userStatus?: UserStatus; comment?: boolean; 
+                              stageid?: number; alert?: boolean; newStudents?: boolean }): void {
     this.lastFiltersUsed = filters;
     this.currentPage = 1;
     this.fetchUsers();
@@ -57,39 +50,79 @@ export class ReportUserComponent {
   }
 
   private fetchUsers(): void {
-    //console.log('page:', this.currentPage, 'limit:', this.itemsPerPage);
     const { userId, userRole, userStatus, comment, alert, newStudents, stageId } = this.lastFiltersUsed;
 
-    this.reportsService.getUsersData(
-      this.currentPage,
-      userId,
-      userRole,
-      userStatus,
-      stageId,
-      comment,
-      alert,
-      newStudents,
-      ).subscribe({
+    this.reportsService.getUsersData( this.currentPage, userId, userRole, userStatus, stageId, comment, alert, newStudents )
+    .subscribe({
       next: (response) => {
         this.users = response.users;
         this.totalUsers = response.totalCount;
         this.totalPages = Math.ceil(this.totalUsers / this.itemsPerPage);
       },
       error: () => {
-        this.modal = {
-          ...modalInitializer(),
-          show: true,
-          isError: true,
-          message: 'No se pudo obtener la información del usuario.',
+        this.showModal('No se pudo obtener la información del usuario.', {
           title: 'Error',
-          close: () => this.modal.show = false,
-        };
-        setTimeout(() => this.modal.show = false, 3000);
+          isError: true
+        });
       }
     });
   }
 
-  handleStageClick(studentId: number, currentStageDescription: string): void {
+  handleStageClick(studentId: number): void {
+    const selectedUser = this.users.find(u => u.student?.id === studentId);
 
+    if (!selectedUser?.student?.stage || !selectedUser.student.createdAt) {
+      this.showModal('No hay información de stage disponible.', {
+        title: 'Historial de Stages',
+        isContentViewer: true,
+      });
+      return;
+    }
+
+    const { number, description } = selectedUser.student.stage;
+    const createdAt = new Date(selectedUser.student.createdAt).toLocaleDateString('es-EC', {
+      day: '2-digit', month: '2-digit', year: 'numeric'
+    });
+
+    const message = `
+      <div class="stage-info-block">
+        <div>Stage actual:  ${description}</div>
+        <div>Inicio del stage: ${createdAt}</div>
+        
+      </div>
+    `;
+
+    this.showModal(message, {
+      title: 'Historial de Stages',
+      isContentViewer: true,
+    });
+  }
+  
+  private showModal(message: string, options?: {
+    title?: string;
+    isError?: boolean;
+    isSuccess?: boolean;
+    isInfo?: boolean;
+    isContentViewer?: boolean;
+  }): void {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message,
+      title: options?.title || '',
+      isError: options?.isError ?? false,
+      isSuccess: options?.isSuccess ?? false,
+      isInfo: options?.isInfo ?? false,
+      isContentViewer: options?.isContentViewer ?? false,
+      close: () => this.closeModal(),
+    };
+
+      if (!options?.isContentViewer) {
+    setTimeout(() => this.closeModal(), 3000);
+  }
+  }
+
+  private closeModal(): void {
+    this.modal = { ...modalInitializer() };
   }
 }
