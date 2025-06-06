@@ -93,7 +93,7 @@ export class ContentComponent implements OnInit {
   }
 
   editContent(content: StudyContentDto) {
-    console.log('Editando contenido:', content);
+    //console.log('Editando contenido:', content);
     this.contentToEdit = content;
   }
 
