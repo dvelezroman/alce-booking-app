@@ -50,9 +50,25 @@ export class RegisterStudentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.stagesService.getAll().subscribe(stages => {
-      this.stages = stages;
+    this.stagesService.getAll().subscribe((stages) => {
+      this.stages = this.filterAndSortStages(stages);
     });
+  }
+
+  private filterAndSortStages(stages: Stage[]): Stage[] {
+    return stages
+      .filter(stage => {
+        const desc = stage.description.toUpperCase();
+        return !desc.startsWith('K-STG') && desc !== 'STAGE 1.0';
+      })
+      .sort((a, b) => {
+        const getNumber = (desc: string) => {
+          const match = desc.match(/\d+(\.\d+)?/);
+          return match ? parseFloat(match[0]) : 0;
+        };
+
+        return getNumber(a.description) - getNumber(b.description);
+      });
   }
 
   onSubmit(): void {
