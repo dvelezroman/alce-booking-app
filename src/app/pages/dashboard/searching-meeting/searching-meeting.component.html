@@ -155,11 +155,11 @@
               <th>Stage</th>
               <th>Categoría</th>
               <th>Modalidad</th>
-              <th>Nombre</th>
+              <th class="fixed-col">Nombre</th>
               <th>Correo</th>
               <th>Fecha</th>
               <th>Hora</th>
-              <th>Instructor</th>
+              <th class="fixed-col">Instructor</th>
               <th>Observación</th>
               <th>Asignó</th>
             </tr>
@@ -176,11 +176,26 @@
               <td>{{ meeting.stage?.number || 'Stage no disponible' }}</td>
               <td>{{ meeting.category || 'Categoría no disponible' }}</td>
               <td>{{ meeting.mode || 'Modalidad no disponible' }}</td>
-              <td>{{ meeting.student?.user?.firstName || 'Nombre no disponible' }} {{ meeting.student?.user?.lastName || '' }}</td>
+              <td style="white-space: normal; vertical-align: top;">
+                <div class="name-wrapper" [title]="getStudentDisplayName(meeting)">
+                  <span class="name-text">
+                    {{ getStudentDisplayName(meeting) }}
+                  </span>
+                  <span *ngIf="isNewUser(meeting)" class="badge-new" title="Estudiante nuevo">
+                    Nuevo
+                  </span>
+                </div>
+              </td>
               <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
               <td>{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
               <td>{{ meeting.localhour }}:00</td>
-              <td>{{ meeting.instructor?.user?.firstName || 'No asignada' }} {{ meeting.instructor?.user?.lastName || '' }}</td>
+              <td class="cell-instructor">
+                <div class="name-wrapper" [title]="getInstructorDisplayName(meeting)">
+                  <span class="name-text">
+                    {{ getInstructorDisplayName(meeting) }}
+                  </span>
+                </div>
+              </td>
               <td class="tooltip-container">
                 <span class="tooltip" [hidden]="!meeting.student?.user?.comment">
                   {{ meeting.student?.user?.comment }}

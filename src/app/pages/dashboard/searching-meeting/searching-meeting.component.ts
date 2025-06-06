@@ -158,6 +158,23 @@ export class SearchingMeetingComponent implements OnInit {
     }
   }
 
+  getStudentDisplayName(meeting: MeetingDTO): string {
+    const first = meeting.student?.user?.firstName || '';
+    const last = meeting.student?.user?.lastName || '';
+    return (first + ' ' + last).trim() || 'Nombre no disponible';
+  }
+
+  isNewUser(meeting: MeetingDTO): boolean {
+    return !!meeting.isNewUser;
+  }
+
+  getInstructorDisplayName(meeting: MeetingDTO): string {
+    const first = meeting.instructor?.user?.firstName || '';
+    const last = meeting.instructor?.user?.lastName || '';
+    return (first + ' ' + last).trim() || 'No asignada';
+  }
+
+
   //  showToast(message: string, isSuccess: boolean): void {
   //   this.toastMessage = message;
   //   this.toastType = isSuccess ? 'success' : 'error';

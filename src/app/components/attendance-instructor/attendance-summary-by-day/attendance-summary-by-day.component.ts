@@ -35,4 +35,8 @@ export class AttendanceSummaryByDayComponent implements OnChanges {
   get sortedDates(): string[] {
     return Object.keys(this.groupedByDay).sort();
   }
+
+  get totalHours(): number {
+    return Object.values(this.groupedByDay).reduce((sum, entry) => sum + entry.hours, 0);
+  }
 }

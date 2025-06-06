@@ -114,7 +114,6 @@ export class ProcessedEventsComponent implements OnInit {
     const hasFilters =
       this.filter.from ||
       this.filter.to ||
-      this.filter.processedById ||
       this.filter.eventType ||
       this.filter.search;
 
