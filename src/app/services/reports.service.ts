@@ -135,6 +135,18 @@ export class ReportsService {
     return this.http.get(`${this.apiUrl}/instructor/${instructorId}/hours`, { params })
   }
 
+  getInstructorsMeetingsGroupedByHour(from: string, to: string) {
+    let params = new HttpParams();
+
+    if (from) {
+      params = params.set('from', from);
+    }
+    if (to) {
+      params = params.set('to', to);
+    }
+    return this.http.get(`${this.apiUrl}/instructors/hours`, { params })
+  }
+
   getUsersData(
     page: number,
     userId?: number,
@@ -148,7 +160,7 @@ export class ReportsService {
     let params = new HttpParams()
 
     .set('page', page.toString());
-    
+
     if (userId) params = params.set('userId', userId.toString());
     if (userRole) params = params.set('userRole', userRole);
     if (userStatus) params = params.set('userStatus', userStatus);
@@ -156,7 +168,7 @@ export class ReportsService {
     if (comment) params = params.set('comment', comment.toString());
     if (alert) params = params.set('alert', alert.toString());
     if (newStudents) params = params.set('newStudents', newStudents.toString());
-    
+
     return this.http.get<UsersResponse>(`${this.apiUrl}/users/data`, { params });
   }
 }
