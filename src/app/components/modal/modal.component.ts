@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CommonModule, NgClass, NgIf} from "@angular/common";
+import {CommonModule} from "@angular/common";
 import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
@@ -19,8 +19,8 @@ export class ModalComponent {
   @Output() confirmAction = new EventEmitter<void>();
   @Output() close = new EventEmitter<void>();
   @Input() showButtons: boolean = false;
-  @Input() isInfo: boolean = false; 
-  @Input() isContentViewer: boolean = false; 
+  @Input() isInfo: boolean = false;
+  @Input() isContentViewer: boolean = false;
   @Input() isMetadataViewer: boolean = false;
   @Input() metadata: any = null;
   @Input() title: string = '';
@@ -31,14 +31,14 @@ export class ModalComponent {
       this.shake = true;
       setTimeout(() => {
         this.shake = false;
-      }, 500); 
+      }, 200);
     }
   }
 
   confirm() {
-    this.confirmAction.emit(); 
+    this.confirmAction.emit();
   }
-  
+
   closeModal() {
     this.showModal = false;
     this.close.emit();  // Notify parent component to close the modal
