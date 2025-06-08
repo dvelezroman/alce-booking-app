@@ -300,7 +300,7 @@ export class FeatureFlagComponent implements OnInit {
     const dayOfWeek = selectedDate.getDay();
     const startHour = 8;
     const endHour = 20;
-    const saturdayEndHour = 13;
+    const saturdayEndHour = 14;
     const finalEndHour = (dayOfWeek === 6) ? saturdayEndHour : endHour;
     const disabledHours = this.getDisabledHoursForDay(day.day, monthIndex);
 
