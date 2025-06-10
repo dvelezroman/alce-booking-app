@@ -17,8 +17,12 @@
             [ngClass]="{ 'max-point-reached':  isApproved(a.points), 
                          'below-threshold': isNotApproved(a.points)}">{{ a.points }}
         </td>
-        <td data-label="Comentario" [title]="a.note || ''" [innerHTML]="formatNoteWithLinks(a.note)"></td>
-         <td data-label="Instructor" class="truncate-ellipsis">
+        <td data-label="Comentario"
+            [title]="a.note || ''">
+          <span class="comment-truncate" [innerHTML]="formatNoteWithLinks(a.note)">
+          </span>
+        </td>
+        <td data-label="Instructor" class="comment-truncate">
           {{ a.instructor?.user?.lastName || '-' }}
         </td>
       </tr>
