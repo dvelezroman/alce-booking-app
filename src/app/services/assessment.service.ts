@@ -51,4 +51,8 @@ export class AssessmentService {
     }
     return this.http.get<AssessementI[]>(`${this.apiUrl}`, { params });
   }
+
+  remove(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }
