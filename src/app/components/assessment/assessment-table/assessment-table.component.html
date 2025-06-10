@@ -6,6 +6,7 @@
         <th>Tipo</th>
         <th>Nota</th>
         <th>Comentario</th>
+        <th>Instructor</th>
       </tr>
     </thead>
     <tbody>
@@ -16,7 +17,10 @@
             [ngClass]="{ 'max-point-reached':  isApproved(a.points), 
                          'below-threshold': isNotApproved(a.points)}">{{ a.points }}
         </td>
-        <td data-label="Comentario" [innerHTML]="formatNoteWithLinks(a.note)"></td>
+        <td data-label="Comentario" [title]="a.note || ''" [innerHTML]="formatNoteWithLinks(a.note)"></td>
+         <td data-label="Instructor" class="truncate-ellipsis">
+          {{ a.instructor?.user?.lastName || '-' }}
+        </td>
       </tr>
     </tbody>
   </table>

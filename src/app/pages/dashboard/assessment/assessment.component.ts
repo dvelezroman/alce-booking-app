@@ -31,6 +31,7 @@ export class AssessmentComponent implements OnInit {
   blockedTypes: AssessmentType[] = [];
   resources: AssessmentResourceI[] = [];
   instructorId: number | null = null;
+  currentStageId: number | null = null;
   minPointsAssessment: number | null = null;
   hasSearched: boolean = false;
 
@@ -94,7 +95,8 @@ export class AssessmentComponent implements OnInit {
         this.showModal(
           this.createModalParams(false, 'Evaluación registrada correctamente.')
         );
-        this.fetchAssessments( payload.studentId.toString(),payload.stageId.toString());
+        this.currentStageId = payload.stageId;
+        this.fetchAssessments(payload.studentId.toString());
         if (response.updatedStage === true) {
         this.showStagePromotionModal();
       }
@@ -107,11 +109,11 @@ export class AssessmentComponent implements OnInit {
     });
   }
 
-  fetchAssessments(studentId: string, stageId: string) {
+  fetchAssessments(studentId: string) {
     this.hasSearched = true;
     const params: FilterAssessmentI = {
       studentId,
-      stageId,
+      // stageId,
     };
 
     this.assessmentService.findAll(params).subscribe({
@@ -134,9 +136,12 @@ export class AssessmentComponent implements OnInit {
     const groupedByType: Record<string, number[]> = {};
 
     for (const a of this.assessments) {
+      if (a.stageId !== this.currentStageId) continue;
+
       if (!groupedByType[a.type]) {
         groupedByType[a.type] = [];
       }
+
       groupedByType[a.type].push(a.points);
     }
 
