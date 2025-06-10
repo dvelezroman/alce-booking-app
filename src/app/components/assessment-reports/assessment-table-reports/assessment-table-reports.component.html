@@ -41,29 +41,35 @@
             <ng-container
               *ngIf="hasAssessments(type, stage.id); else emptyCell"
             >
-              <div
-                *ngFor="
-                  let a of groupedAssessments[type][stage.id]; 
-                  let last = last"
-                class="assessment-entry"
-                [ngClass]="{ 'bordered-entry': !last }"
-                (click)="evaluationClicked.emit(a)"
+            <div
+              *ngFor="let a of groupedAssessments[type][stage.id]; let last = last"
+              class="assessment-entry"
+              [ngClass]="{ 'bordered-entry': !last }"
+              (click)="evaluationClicked.emit(a)" 
+            >
+              <button
+                class="delete-button"
+                (click)="onDeleteClick(a); $event.stopPropagation()"
+                title="Eliminar evaluación"
               >
-                <div class="entry-date">
-                  {{ a.createdAt | date : "dd/MM/yy" }}
-                </div>
-                <div>
-                  Nota: 
-                  <span
-                    [ngClass]="{
-                      'max-point-reached': isMaxReached(a.points),
-                      'below-threshold': isBelowMax(a.points)
-                    }"
-                  >
-                    {{ a.points }}
-                  </span>
-                </div>
+                ✖
+              </button>
+
+              <div class="entry-date">
+                {{ a.createdAt | date: 'dd/MM/yy' }}
               </div>
+              <div>
+                Nota:
+                <span
+                  [ngClass]="{
+                    'max-point-reached': isMaxReached(a.points),
+                    'below-threshold': isBelowMax(a.points)
+                  }"
+                >
+                  {{ a.points }}
+                </span>
+              </div>
+            </div>
             </ng-container>
             <ng-template #emptyCell>
               <span style="color: #ccc">-</span>

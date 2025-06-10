@@ -1,6 +1,7 @@
 export interface AssessmentResourceI {
   id: number;
   title: string;
+  note: string;
   link: string;
 }
 

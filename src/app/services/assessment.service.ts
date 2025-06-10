@@ -19,7 +19,7 @@ export class AssessmentService {
   }
 
   delete(id: number): Observable<AssessementI> {
-    return this.http.delete<AssessementI>(`${this.apiUrl}/assessments/${id}`);
+    return this.http.delete<AssessementI>(`${this.apiUrl}/${id}`);
   }
 
   update(id: number, data: UpdateAssessmentI): Observable<AssessementI> {

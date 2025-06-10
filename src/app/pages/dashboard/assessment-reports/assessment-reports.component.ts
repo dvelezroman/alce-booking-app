@@ -164,4 +164,37 @@ export class AssessmentReportsComponent {
       close: this.closeModal,
     };
   }
+
+  deleteAssessment(id: number): void {
+    this.assessmentService.delete(id).subscribe({
+      next: () => {
+        this.closeModal(); 
+        this.handleAssessmentSearch({
+          studentId: this.selectedStudentId,
+          stageId: this.selectedStageId ?? undefined,
+          type: null
+        });
+      },
+      error: () => {
+        this.closeModal();
+        setTimeout(() => {
+          this.showModal(this.createModalParams(true, 'Error al eliminar la evaluación.'));
+        }, 200);
+      }
+    });
+  }
+
+  confirmDelete(assessment: AssessementI): void {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      isInfo: true,
+      title: '¿Eliminar evaluación?',
+      message: `¿Estás seguro de eliminar la evaluación de tipo "${assessment.type}" con nota ${assessment.points}?`,
+      showButtons: true,
+      confirm: () => this.deleteAssessment(assessment.id),
+      close: this.closeModal,
+    };
+  }
+  
 }

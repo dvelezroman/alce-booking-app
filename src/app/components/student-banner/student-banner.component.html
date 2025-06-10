@@ -20,9 +20,15 @@
 
       <ul *ngIf="(resources?.length ?? 0) > 0" class="resource-list">
         <li *ngFor="let item of resources">
-          <a [href]="item.link" target="_blank" rel="noopener noreferrer">
-            {{ item.title }}
-          </a>
+          <div class="resource-note" *ngIf="item.note">
+            <strong>Nota:</strong> {{ item.note }}
+          </div>
+          <div class="resource-recommendation">
+            <strong>Recomendación:</strong>
+            <a [href]="item.link" target="_blank" rel="noopener noreferrer">
+              {{ item.title }}
+            </a>
+          </div>
         </li>
       </ul>
     </div>

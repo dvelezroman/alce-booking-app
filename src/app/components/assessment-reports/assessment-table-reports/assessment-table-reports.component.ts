@@ -17,6 +17,7 @@ export class AssessmentTableReportsComponent implements OnChanges {
   @Input() stagesWithContent: Stage[] = [];
 
   @Output() evaluationClicked = new EventEmitter<AssessementI>();
+  @Output() deleteRequested = new EventEmitter<AssessementI>();
 
   types: string[] = [];
   groupedAssessments: Record<string, Record<number, AssessementI[]>> = {}; 
@@ -60,5 +61,10 @@ export class AssessmentTableReportsComponent implements OnChanges {
 
   isBelowMax(points: number): boolean {
     return this.minPointsAssessment !== null && points < this.minPointsAssessment;
+  }
+
+  onDeleteClick(assessment: AssessementI): void {
+    console.log(assessment.id);
+    this.deleteRequested.emit(assessment);
   }
 }
