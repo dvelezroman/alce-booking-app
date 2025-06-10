@@ -19,9 +19,11 @@ export class AssessmentReportFormComponent {
   @Output() stageSelected = new EventEmitter<string>();
   @Output() searchTriggered = new EventEmitter<{
     studentId: number | null;
-    stageId: number;
+    stageId?: number;
     type: AssessmentType | null;
   }>();
+
+  @Output() studentSelected = new EventEmitter<UserDto>();
 
   stages: Stage[] = [];
   selectedStageId: number | null = null;
@@ -87,6 +89,7 @@ export class AssessmentReportFormComponent {
     this.filteredUsers = [];
     this.showUserDropdown = false;
     this.showStudentRequiredError = false;
+    this.selectedStageId = null;
   }
 
   hideDropdown(): void {
@@ -95,26 +98,32 @@ export class AssessmentReportFormComponent {
     }, 200);
   }
 
-triggerSearch(): void {
-  const studentId = this.selectedStudent?.student?.id ?? null;
-  const studentStageId = this.selectedStudent?.student?.stageId ?? null;
+  triggerSearch(): void {
+    const studentId = this.selectedStudent?.student?.id ?? null;
 
-  this.showStageRequiredError = !studentStageId && !this.selectedStageId;
-  if (this.showStageRequiredError) return;
-
-  if (!this.selectedStudent && this.selectedStageId !== null) {
-    const selected = this.stages.find(s => s.id === this.selectedStageId);
-    if (selected) {
-      this.stageSelected.emit(`${selected.number} - ${selected.description}`);
+    // Si no hay estudiante ni stage, mostramos error
+    if (!this.selectedStudent && !this.selectedStageId) {
+      this.showStageRequiredError = true;
+      return;
     }
+
+    this.showStageRequiredError = false;
+
+    // Si solo se eligió stage (no estudiante), emitimos descripción del stage
+    if (!this.selectedStudent && this.selectedStageId !== null) {
+      const selected = this.stages.find(s => s.id === this.selectedStageId);
+      if (selected) {
+        this.stageSelected.emit(`${selected.number} - ${selected.description}`);
+      }
+    }
+
+    // Limpiar stageId si se seleccionó estudiante
+    const payload = {
+      studentId,
+      stageId: this.selectedStudent ? undefined : this.selectedStageId ?? undefined,
+      type: this.type
+    };
+
+    this.searchTriggered.emit(payload);
   }
-
-  const payload = {
-    studentId,
-    stageId: studentStageId ?? this.selectedStageId!,
-    type: this.type
-  };
-
-  this.searchTriggered.emit(payload);
-}
 }

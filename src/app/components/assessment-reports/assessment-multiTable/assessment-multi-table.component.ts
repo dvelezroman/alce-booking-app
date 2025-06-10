@@ -41,7 +41,6 @@ export class AssessmentMultiTableComponent implements OnChanges {
         this.groupedAssessments[studentId] = {} as Record<AssessmentType, AssessementI>;
       }
 
-      // mostrar la nota mas alta por estudiante y tipo
       const current = this.groupedAssessments[studentId][type];
       if (!current || a.points > current.points) {
         this.groupedAssessments[studentId][type] = a;
@@ -53,7 +52,23 @@ export class AssessmentMultiTableComponent implements OnChanges {
     }
 
     this.types = Array.from(typesSet);
-    this.students = Array.from(studentMap.values());
+    this.students = this.sortStudentsByName(Array.from(studentMap.values()));
+  }
+
+  private sortStudentsByName(
+    students: { studentId: number; user: UserDto }[]
+  ): { studentId: number; user: UserDto }[] {
+    return students.sort((a, b) => {
+      const lastNameA = a.user.lastName?.toLowerCase() || '';
+      const lastNameB = b.user.lastName?.toLowerCase() || '';
+
+      if (lastNameA < lastNameB) return -1;
+      if (lastNameA > lastNameB) return 1;
+
+      const firstNameA = a.user.firstName?.toLowerCase() || '';
+      const firstNameB = b.user.firstName?.toLowerCase() || '';
+      return firstNameA.localeCompare(firstNameB);
+    });
   }
 
   getAssessments(studentId: number, type: AssessmentType): AssessementI[] {
@@ -61,7 +76,7 @@ export class AssessmentMultiTableComponent implements OnChanges {
     return best ? [best] : [];
   }
 
- isMaxReached(points: number): boolean {
+  isMaxReached(points: number): boolean {
     return this.minPointsAssessment !== null && points >= this.minPointsAssessment;
   }
 

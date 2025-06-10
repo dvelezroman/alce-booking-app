@@ -96,15 +96,15 @@ export class AssessmentReportsComponent {
 
   handleAssessmentSearch(filters: {
     studentId: number | null;
-    stageId: number;
+    stageId?: number; 
     type: AssessmentType | null;
   }): void {
     this.isStudentSelected = filters.studentId !== null;
     this.selectedStudentId = filters.studentId;
-    this.selectedStageId = filters.stageId;
+    this.selectedStageId = filters.stageId ?? null;
 
     const params: FilterAssessmentI = {
-      stageId: filters.stageId.toString(),
+      ...(filters.stageId !== undefined && { stageId: filters.stageId.toString() }),
       ...(filters.studentId !== null && { studentId: filters.studentId.toString() }),
       ...(filters.type && { type: filters.type })
     };
