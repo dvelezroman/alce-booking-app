@@ -233,7 +233,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
           };
           this.fetchMeetings(filterParams);
           const messageText = updatedPresence ? 'Presente' : 'Ausente';
-          this.showModal(this.createModalParams(false, `Asistencia actualizada: ${messageText}`));
+          // this.showModal(this.createModalParams(false, `Asistencia actualizada: ${messageText}`));
         },
         error: () => {
           //console.error(`Error al actualizar la asistencia de ${studentName}:`, error);
