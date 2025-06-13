@@ -138,6 +138,7 @@
           <th>Instructor</th>
           <th>Total de Horas</th>
           <th>Total de Stages</th>
+          <th>Acciones</th> <!-- Nueva columna -->
         </tr>
       </thead>
       <tbody>
@@ -145,6 +146,11 @@
           <td>{{ instructor.user.firstName }} {{ instructor.user.lastName }}</td>
           <td>{{ instructor._count }}</td>
           <td>{{ getUniqueStagesCount(instructor) }}</td>
+          <td>
+            <button class="button is-small is-link is-light" (click)="showInstructorDetail(instructor)">
+              Ver detalle
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>

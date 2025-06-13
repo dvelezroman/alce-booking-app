@@ -208,6 +208,23 @@ export class ReportInstructorComponent implements OnInit {
     return Object.keys(this.groupedMeetingsByDate).length === 0;
   }
 
+showInstructorDetail(instructor: InstructorGroupedData): void {
+  const sortedHours = [...instructor.user.hours].sort((a, b) => a.localhour - b.localhour);
+
+  const hourDetails = sortedHours
+    .map(h => ` <p>Hora: ${h.localhour}:00 - ${h.stages.map(s => s.description).join(', ')}</p>`)
+    .join('');
+
+  this.modal = {
+    ...modalInitializer(),
+    show: true,
+    isContentViewer: true,
+    title: `Detalle de horas: ${instructor.user.firstName}`,
+    message: hourDetails,
+    close: () => this.closeModal()
+  };
+}
+
   showContent(meeting: InstructorAttendanceDto): void {
     if (!meeting.meetings[0].studyContent || meeting.meetings[0].studyContent.length === 0) {
       this.modal = {
