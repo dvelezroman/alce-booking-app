@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { BookingService } from '../../../services/booking.service';
-import { InstructorAttendanceDto, FilterMeetingsDto } from '../../../services/dtos/booking.dto';
+import { InstructorAttendanceDto } from '../../../services/dtos/booking.dto';
 import { MeetingThemeDto } from '../../../services/dtos/meeting-theme.dto';
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
@@ -12,6 +11,7 @@ import { ModalComponent } from '../../../components/modal/modal.component';
 import { ReportsService } from '../../../services/reports.service';
 import { AttendanceDailySummaryComponent } from '../../../components/attendance-instructor/attendance-daily-summary/attendance-daily-summary.component';
 import { AttendanceSummaryByDayComponent } from '../../../components/attendance-instructor/attendance-summary-by-day/attendance-summary-by-day.component';
+import { InstructorGroupedData, InstructorsGroupedByDate } from '../../../services/dtos/instructor-attendance-grouped.dto';
 
 @Component({
   selector: 'app-report-instructor',
@@ -30,13 +30,19 @@ export class ReportInstructorComponent implements OnInit {
   instructors: UserDto[] = [];
   filteredInstructors: UserDto[] = [];
   meetings: InstructorAttendanceDto[] = [];
+  groupedMeetingsByDate: InstructorsGroupedByDate = {};
   selectedInstructorId: number | undefined;
   searchAttempted = false;
   isNameFieldInvalid: boolean = false;
+  showFromError: boolean = false;
+  showToError: boolean = false;
   selectedMeeting: MeetingThemeDto | null = null;
   attendanceSummary: { localdate: string, localhour: number, count: number }[] = [];
   isSearchSuccessful: boolean = false;
   activeView: 'main' | 'summary' | 'summaryByDay' = 'main';
+  currentDateIndex = 0;
+  availableDates: string[] = [];
+
   modal: ModalDto = modalInitializer();
 
   filter = {
@@ -48,9 +54,7 @@ export class ReportInstructorComponent implements OnInit {
   showDropdown: boolean = false;
 
   constructor(private usersService: UsersService,
-              private bookingService: BookingService,
-              private reportsService: ReportsService
-              ) {}
+              private reportsService: ReportsService) {}
 
   ngOnInit() {
     this.loadInstructors();
@@ -91,41 +95,61 @@ export class ReportInstructorComponent implements OnInit {
       });
   }
 
-  searchInstructorAttendance() {
+  searchInstructorAttendance(): void {
     this.isNameFieldInvalid = false;
     this.searchAttempted = false;
 
-    if (!this.filter.instructorName || !this.selectedInstructorId) {
-        this.isNameFieldInvalid = true;
-        return;
+    this.showFromError = !this.filter.from;
+    this.showToError = !this.filter.to;
+
+    if (this.showFromError || this.showToError) {
+      return;
     }
-    const filterParams: FilterMeetingsDto = {
-        from: this.filter.from || new Date().toISOString(),
-        to: this.filter.to || undefined,
-        instructorId: this.selectedInstructorId?.toString(),
-        assigned: true,
-        present: this.filter.present,
-    };
 
-    // console.log("Parámetros de búsqueda enviados:", filterParams);
-
-    this.fetchMeetings(filterParams);
+    this.fetchMeetings(this.filter.from, this.filter.to);
   }
 
-  private fetchMeetings(params: FilterMeetingsDto) {
+  private fetchMeetings(from?: string, to?: string): void {
     this.searchAttempted = true;
-    this.bookingService.getInstructorMeetingsGroupedByHour(params).subscribe({
-        next: (meetings) => {
-            //console.log("Reuniones recibidas:", meetings);
-            this.meetings = meetings.sort((a: InstructorAttendanceDto, b: InstructorAttendanceDto) => 
-              new Date(a.date).getTime() - new Date(b.date).getTime());
 
-              this.isSearchSuccessful = true;
-        },
-        error: (error) => {
-            console.error("Error al obtener las reuniones:", error);
-        }
+    this.reportsService.getInstructorsMeetingsGroupedByHour(from || '', to || '').subscribe({
+      next: (response: InstructorsGroupedByDate) => {
+        this.groupedMeetingsByDate = response;
+        this.availableDates = Object.keys(response).sort(); 
+        this.currentDateIndex = 0;
+
+        this.isSearchSuccessful = true;
+      },
+      error: (error) => {
+        console.error('Error al obtener las reuniones:', error);
+      }
     });
+  }
+
+  prevDate(): void {
+    if (this.currentDateIndex > 0) {
+      this.currentDateIndex--;
+    }
+  }
+
+  nextDate(): void {
+    if (this.currentDateIndex < this.availableDates.length - 1) {
+      this.currentDateIndex++;
+    }
+  }
+
+  getUniqueStagesCount(instructor: InstructorGroupedData): number {
+    const stageIds = new Set<number>();
+
+    instructor.user.hours?.forEach(hour => {
+      hour.stages?.forEach(stage => {
+        if (stage.stageId !== undefined) {
+          stageIds.add(stage.stageId);
+        }
+      });
+    });
+
+    return stageIds.size;
   }
 
   loadInstructorDailySummary(): void {
@@ -159,7 +183,6 @@ export class ReportInstructorComponent implements OnInit {
   }
 
   handleViewMeetings(): void {
-    if (!this.validateInstructorSelected()) return;
     this.searchInstructorAttendance();
     this.activeView = 'main';
   }
@@ -179,6 +202,10 @@ export class ReportInstructorComponent implements OnInit {
   onInstructorInputChange(): void {
     this.filterInstructors();
     this.isNameFieldInvalid = !this.filter.instructorName?.trim();
+  }
+
+  isGroupedMeetingsEmpty(): boolean {
+    return Object.keys(this.groupedMeetingsByDate).length === 0;
   }
 
   showContent(meeting: InstructorAttendanceDto): void {

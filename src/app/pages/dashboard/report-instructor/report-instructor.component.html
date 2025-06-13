@@ -11,7 +11,6 @@
           <label class="label">Instructor</label>
           <input
             class="input"
-            [ngClass]="{ 'input-error': isNameFieldInvalid }"
             type="text"
             placeholder="Nombre del Instructor"
             [(ngModel)]="filter.instructorName"
@@ -31,9 +30,9 @@
             </ul>
           </div>
         </div>
-        <p class="error-message" *ngIf="isNameFieldInvalid">
+        <!-- <p class="error-message" *ngIf="isNameFieldInvalid">
           Campo requerido.
-        </p>
+        </p> -->
       </div>
 
       <!-- Fechas -->
@@ -42,16 +41,28 @@
           <div class="field">
             <label class="label">Fecha desde</label>
             <div class="control date-input-container">
-              <input class="input" type="date" [(ngModel)]="filter.from" name="from">
+              <input 
+                class="input" 
+                [ngClass]="{ 'input-error': showFromError }"
+                type="date" 
+                [(ngModel)]="filter.from" 
+                name="from">
             </div>
+            <p class="error-message" *ngIf="showFromError">Campo requerido.</p>
           </div>
         </div>
         <div class="column">
           <div class="field">
             <label class="label">Fecha hasta</label>
             <div class="control date-input-container">
-              <input class="input" type="date" [(ngModel)]="filter.to" name="to">
+              <input 
+                class="input" 
+                [ngClass]="{ 'input-error': showToError }"
+                type="date" 
+                [(ngModel)]="filter.to" 
+                name="to">
             </div>
+            <p class="error-message" *ngIf="showToError">Campo requerido.</p>
           </div>
         </div>
       </div>
@@ -99,36 +110,49 @@
   </div>
 </section>
 
-<!-- Tabla de reuniones -->
-<div class="table-container" *ngIf="activeView === 'main' && meetings.length > 0">
-  <table class="table is-fullwidth">
-    <thead>
-      <tr>
-        <th>Stage</th>
-        <th>Categoría</th>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <th>Modo</th>
-        <th>Nota</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let meeting of meetings">
-        <td>{{ meeting.meetings[0].stage?.number }}</td>
-        <td>{{ meeting.meetings[0].category }}</td>
-        <td>{{ meeting.date | date: 'mediumDate':'UTC' }}</td>
-        <td>{{ meeting.hour }}:00</td>
-        <td>{{ meeting.meetings[0].mode }}</td>
-        <td>
-          <span style="cursor:pointer;" *ngIf="!isFutureDate(meeting.date)" (click)="showContent(meeting)" class="material-icons">menu_book</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<!-- Tabla de reuniones por fecha con navegación -->
+<ng-container *ngIf="activeView === 'main' && availableDates.length > 0">
+  <div class="date-navigation my-4 is-flex is-align-items-center is-justify-content-center">
+  <button class="button is-white is-round is-small mx-4" (click)="prevDate()" [disabled]="currentDateIndex === 0">
+    <span class="material-icons">chevron_left</span>
+  </button>
+
+  <div class="has-text-centered">
+    <div class="has-text-weight-semibold is-size-6 date-label">
+      {{ availableDates[currentDateIndex] }}
+    </div>
+    <div class="is-size-7 has-text-grey mt-1">
+      ({{ currentDateIndex + 1 }}/{{ availableDates.length }})
+    </div>
+  </div>
+
+  <button class="button is-white is-round is-small mx-4" (click)="nextDate()" [disabled]="currentDateIndex === availableDates.length - 1">
+    <span class="material-icons">chevron_right</span>
+  </button>
 </div>
 
+  <div class="table-container">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Instructor</th>
+          <th>Total de Horas</th>
+          <th>Total de Stages</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let instructor of groupedMeetingsByDate[availableDates[currentDateIndex]]">
+          <td>{{ instructor.user.firstName }} {{ instructor.user.lastName }}</td>
+          <td>{{ instructor._count }}</td>
+          <td>{{ getUniqueStagesCount(instructor) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+
 <!-- Mensaje si no hay reuniones -->
-<div *ngIf="activeView === 'main' && searchAttempted && meetings.length === 0" class="no-results">
+<div *ngIf="activeView === 'main' && searchAttempted && isGroupedMeetingsEmpty()" class="no-results">
   No se encontraron clases para los criterios seleccionados.
 </div>
 

@@ -5,6 +5,8 @@ import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
 import {MeetingDataI, MeetingReportDetailed, StatisticalDataI} from "./dtos/meeting-theme.dto";
 import {UserRole, UsersResponse, UserStatus} from "./dtos/user.dto";
+import { InstructorAttendanceDto } from "./dtos/booking.dto";
+import { InstructorsGroupedByDate } from "./dtos/instructor-attendance-grouped.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -123,7 +125,7 @@ export class ReportsService {
     return this.http.get(`${this.apiUrl}/statistics/daily/summary/csv`, { params, responseType: 'blob' });
   }
 
-  getInstructorAssistanceGroupedByReport(instructorId: number, from: string, to: string) {
+  getInstructorAssistanceGroupedByReport(instructorId: number, from: string, to: string): Observable<InstructorsGroupedByDate> {
     let params = new HttpParams();
 
     if (from) {
@@ -132,10 +134,11 @@ export class ReportsService {
     if (to) {
       params = params.set('to', to);
     }
-    return this.http.get(`${this.apiUrl}/instructor/${instructorId}/hours`, { params })
+
+    return this.http.get<InstructorsGroupedByDate>(`${this.apiUrl}/instructor/${instructorId}/hours`, { params });
   }
 
-  getInstructorsMeetingsGroupedByHour(from: string, to: string) {
+  getInstructorsMeetingsGroupedByHour(from: string, to: string): Observable<InstructorsGroupedByDate> {
     let params = new HttpParams();
 
     if (from) {
@@ -144,7 +147,7 @@ export class ReportsService {
     if (to) {
       params = params.set('to', to);
     }
-    return this.http.get(`${this.apiUrl}/instructors/hours`, { params })
+    return this.http.get<InstructorsGroupedByDate>(`${this.apiUrl}/instructors/hours`, { params });
   }
 
   getUsersData(
