@@ -11,6 +11,7 @@
           <label class="label">Instructor</label>
           <input
             class="input"
+             [ngClass]="{ 'input-error': isNameFieldInvalid }"
             type="text"
             placeholder="Nombre del Instructor"
             [(ngModel)]="filter.instructorName"
@@ -30,9 +31,9 @@
             </ul>
           </div>
         </div>
-        <!-- <p class="error-message" *ngIf="isNameFieldInvalid">
+        <p class="error-message" *ngIf="isNameFieldInvalid">
           Campo requerido.
-        </p> -->
+        </p>
       </div>
 
       <!-- Fechas -->
@@ -68,7 +69,7 @@
       </div>
 
       <!-- Asistidas / no asistidas -->
-      <div class="columns is-mobile">
+      <!-- <div class="columns is-mobile">
         <div class="column move-up">
           <label class="label">Mostrar:</label>
           <div class="select is-fullwidth">
@@ -79,7 +80,7 @@
             </select>
           </div>
         </div>
-      </div>
+      </div> -->
 
      <div class="form-action-buttons">
         <button
@@ -87,7 +88,7 @@
           class="toggle-button"
           [ngClass]="{ 'active-button': activeView === 'main', 'inactive-button': activeView !== 'main' }"
           (click)="handleViewMeetings()">
-          Ver Meetings
+          Ver Reporte
         </button>
 
         <button

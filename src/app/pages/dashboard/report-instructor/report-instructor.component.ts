@@ -153,11 +153,17 @@ export class ReportInstructorComponent implements OnInit {
   }
 
   loadInstructorDailySummary(): void {
-    if (!this.selectedInstructorId) return;
+    this.isNameFieldInvalid = !this.filter.instructorName?.trim() || !this.selectedInstructorId;
+    this.showFromError = !this.filter.from;
+    this.showToError = !this.filter.to;
+
+    if (this.isNameFieldInvalid || this.showFromError || this.showToError) {
+      return;
+    }
 
     this.reportsService
       .getInstructorAssistanceGroupedByReport(
-        this.selectedInstructorId,
+        this.selectedInstructorId!,
         this.filter.from,
         this.filter.to
       )
