@@ -248,13 +248,13 @@ export class AssessmentFormComponent implements OnInit {
   }
 
   private resetForm(): void {
-    this.searchTerm = '';
+    // this.searchTerm = '';
     this.note = '';
     this.points = null;
     this.assessmentTypeId = null;
     this.selectedResourceId = '';
     this.addedResources = [];
     this.showCommentBox = false;
-    this.selectedStudent = undefined;
+    // this.selectedStudent = undefined;
   }
 }
