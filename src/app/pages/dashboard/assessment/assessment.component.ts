@@ -88,7 +88,7 @@ export class AssessmentComponent implements OnInit {
   }
 
   handleAssessmentCreated(payload: CreateAssessmentI): void {
-     console.log('Payload a enviar:', payload);
+    // console.log('Payload a enviar:', payload);
     this.assessmentService.create(payload).subscribe({
       next: (response) => {
         //console.log('Respuesta del backend:', response); 
@@ -118,6 +118,7 @@ export class AssessmentComponent implements OnInit {
 
     this.assessmentService.findAll(params).subscribe({
       next: (result) => {
+       // console.log('Evaluaciones del estudiante:', result);
         this.assessments = result;
         this.evaluateBlockedTypes(); 
       },

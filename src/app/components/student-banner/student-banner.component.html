@@ -5,7 +5,10 @@
   [class.minimized]="!isExpanded"
   (click)="toggle()"
 >
-  <span class="material-icons" [ngClass]="{ 'warning-icon': type === 'warning', 'info-icon': type === 'info' }">
+  <span
+    class="material-icons"
+    [ngClass]="{ 'warning-icon': type === 'warning', 'info-icon': type === 'info' }"
+  >
     {{ icon }}
   </span>
 
@@ -16,21 +19,32 @@
     </div>
 
     <div class="banner-text" *ngIf="isExpanded">
-      <p *ngIf="text">{{ text }}</p>
+    <p *ngIf="text">{{ text }}</p>
 
-      <ul *ngIf="(resources?.length ?? 0) > 0" class="resource-list">
-        <li *ngFor="let item of resources">
-          <div class="resource-note" *ngIf="item.note">
-            <strong>Nota:</strong> {{ item.note }}
+      <ng-container *ngFor="let item of assessments">
+        <ng-container *ngIf="item.note || (item.resources?.length ?? 0) > 0">
+          <div class="assessment-block">
+            <p><strong>Evaluación:</strong> {{ item.type }}</p>
+
+            <div class="resource-note" *ngIf="item.note">
+              <strong>Nota:</strong> {{ item.note }}
+            </div>
+
+            <div *ngIf="item.resources?.length">
+              <strong>Recomendación:</strong>
+              <ul class="resource-list">
+                <li *ngFor="let res of item.resources">
+                  <a [href]="res.link" target="_blank" rel="noopener noreferrer">
+                    {{ res.title }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <hr class="separator" *ngIf="relevantAssessments.length > 1" />
           </div>
-          <div class="resource-recommendation">
-            <strong>Recomendación:</strong>
-            <a [href]="item.link" target="_blank" rel="noopener noreferrer">
-              {{ item.title }}
-            </a>
-          </div>
-        </li>
-      </ul>
+        </ng-container>
+      </ng-container>
     </div>
   </div>
 
