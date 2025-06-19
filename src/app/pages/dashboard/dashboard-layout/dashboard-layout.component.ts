@@ -12,8 +12,6 @@ import { setInstructorLink } from "../../../store/user.action";
 import { ModalDto, modalInitializer } from "../../../components/modal/modal.dto";
 import { AssessmentPointsConfigService } from "../../../services/assessment-points-config.service";
 import { StudentBannerComponent } from "../../../components/student-banner/student-banner.component";
-import { AssessmentService } from "../../../services/assessment.service";
-import { AssessementI } from "../../../services/dtos/assessment.dto";
 
 @Component({
   standalone: true,
@@ -39,41 +37,37 @@ export class DashboardLayoutComponent implements OnInit {
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
   minHoursRequired: number | null = null;
+  isWarningBannerExpanded = true;
+  isInfoBannerExpanded = true;
+  hasAssessmentResources: boolean = false;
   modal: ModalDto = modalInitializer();
-
-  studentAssessments: AssessementI[] = [];
-  showNoteBanner = false;
 
   constructor(
     private store: Store,
     private router: Router,
     private usersService: UsersService,
-    private configService: AssessmentPointsConfigService,
-    private assessmentService: AssessmentService
+    private configService: AssessmentPointsConfigService
   ) {
-    this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
-    this.isRegistered$ = this.store.select(selectIsRegistered);
-    this.userData$ = this.store.select(selectUserData);
+        this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
+        this.isRegistered$ = this.store.select(selectIsRegistered);
+        this.userData$ = this.store.select(selectUserData);
   }
-
+  
   ngOnInit(): void {
+
     this.isLoggedIn$.subscribe(state => {
       this.isLoggedIn = state;
     });
 
     this.userData$.subscribe(data => {
       this.userData = data;
-
-      const studentId = this.userData?.student?.id;
-      if (this.userData?.role === UserRole.STUDENT && studentId) {
-        this.fetchStudentAssessments(studentId);
-      }
+      this.hasAssessmentResources = this.checkAssessmentResources(this.userData);
     });
 
     const savedLink = localStorage.getItem('instructorLink');
-    if (savedLink) {
-      this.store.dispatch(setInstructorLink({ link: savedLink }));
-    }
+      if (savedLink) {
+        this.store.dispatch(setInstructorLink({ link: savedLink }));
+      }
 
     this.isRegistered$.subscribe(state => {
       this.isRegistered = state;
@@ -85,28 +79,14 @@ export class DashboardLayoutComponent implements OnInit {
     this.loadMinHoursRequired();
   }
 
-  fetchStudentAssessments(studentId: number): void {
-    this.assessmentService.findAll({ studentId: studentId.toString() }).subscribe({
-      next: (assessments) => {
-        this.studentAssessments = assessments;
-
-        // Mostrar banner si hay al menos una nota o recursos
-        this.showNoteBanner = assessments.some(
-          a => !!a.note || (a.resources && a.resources.length > 0)
-        );
-
-        console.log('Evaluaciones del estudiante:', assessments);
-      },
-      error: () => {
-        console.error('Error al obtener las evaluaciones del estudiante.');
-      }
-    });
+  checkAssessmentResources(user: UserDto | null): boolean {
+    return !!user?.assessmentResources && user.assessmentResources.length > 0;
   }
 
   get shouldShowAssessmentBanner(): boolean {
     return this.isLoggedIn &&
            this.userData?.role === UserRole.STUDENT &&
-           this.showNoteBanner;
+          (this.userData.assessmentResources?.length || 0) > 0;
   }
 
   loadMinHoursRequired(): void {

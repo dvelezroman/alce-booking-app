@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssessmentResourceI } from '../../services/dtos/assessment-resources.dto';
-import { AssessementI } from '../../services/dtos/assessment.dto';
+import { SafeNoteHtmlPipe } from "../../pipes/safe-note-html.pipe";
 
 @Component({
   selector: 'app-student-banner',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SafeNoteHtmlPipe],
   templateUrl: './student-banner.component.html',
   styleUrls: ['./student-banner.component.scss']
 })
@@ -15,15 +15,12 @@ export class StudentBannerComponent {
   @Input() title: string = '';
   @Input() text: string = '';
   @Input() icon: string = 'info';
-  // @Input() resources: AssessmentResourceI[] = [];
-  @Input() assessments: AssessementI[] = [];
+  @Input() resources: AssessmentResourceI[] = [];
+
   isExpanded = true;
 
   toggle() {
     this.isExpanded = !this.isExpanded;
   }
 
-  get relevantAssessments() {
-  return this.assessments?.filter(a => a.note?.trim() || (a.resources?.length ?? 0) > 0) ?? [];
-}
 }
