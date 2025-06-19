@@ -150,6 +150,33 @@ export class ReportUserComponent {
     return html;
   }
   
+  handleDownloadCsv(): void {
+    const { userId, userRole, userStatus, comment, alert, newStudents, stageId } = this.lastFiltersUsed;
+
+    this.reportsService.getUsersDataCsv(
+      this.currentPage,
+      userId,
+      userRole,
+      userStatus,
+      stageId,
+      comment,
+      alert,
+      newStudents
+    ).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'reporte_usuarios.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Error al descargar CSV:', error);
+      }
+    });
+  }
+
   private showModal(message: string, options?: {
     title?: string;
     isError?: boolean;

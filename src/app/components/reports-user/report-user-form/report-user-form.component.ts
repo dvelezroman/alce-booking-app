@@ -13,6 +13,7 @@ import { UsersService } from '../../../services/users.service';
   styleUrls: ['./report-user-form.component.scss']
 })
 export class ReportFormComponent {
+  @Output() downloadCsvRequested = new EventEmitter<void>();
   @Output() filtersSubmitted = new EventEmitter<{
     userId?: number;
     userRole?: UserRole;
@@ -98,4 +99,8 @@ export class ReportFormComponent {
    // console.log('filtros enviados al padre:', filters);
     this.filtersSubmitted.emit(filters);
   }
+
+  emitDownloadCsv(): void {
+  this.downloadCsvRequested.emit();
+}
 }
