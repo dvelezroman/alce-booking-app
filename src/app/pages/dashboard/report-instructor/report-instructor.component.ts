@@ -177,6 +177,30 @@ export class ReportInstructorComponent implements OnInit {
       });
   }
 
+  downloadInstructorHoursCsv(): void {
+    this.showFromError = !this.filter.from;
+    this.showToError = !this.filter.to;
+
+    if (this.showFromError || this.showToError) {
+      return;
+    }
+
+    this.reportsService.getInstructorsMeetingsGroupedByHourCsv(this.filter.from, this.filter.to).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `reporte_horas_instructores_${this.filter.from}_a_${this.filter.to}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      },
+      error: (error) => {
+        console.error('Error al descargar CSV:', error);
+      }
+    });
+  }
+
   validateInstructorSelected(): boolean {
     this.isNameFieldInvalid = false;
 
