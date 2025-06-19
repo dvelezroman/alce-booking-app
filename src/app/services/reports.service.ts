@@ -5,7 +5,6 @@ import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
 import {MeetingDataI, MeetingReportDetailed, StatisticalDataI} from "./dtos/meeting-theme.dto";
 import {UserRole, UsersResponse, UserStatus} from "./dtos/user.dto";
-import { InstructorAttendanceDto } from "./dtos/booking.dto";
 import { InstructorsGroupedByDate } from "./dtos/instructor-attendance-grouped.dto";
 
 @Injectable({
@@ -150,6 +149,18 @@ export class ReportsService {
     return this.http.get<InstructorsGroupedByDate>(`${this.apiUrl}/instructors/hours`, { params });
   }
 
+  getInstructorsMeetingsGroupedByHourCsv(from: string, to: string) {
+    let params = new HttpParams();
+
+    if (from) {
+      params = params.set('from', from);
+    }
+    if (to) {
+      params = params.set('to', to);
+    }
+    return this.http.get(`${this.apiUrl}/instructors/hours/csv`, { params, responseType: 'blob' });
+  }
+
   getUsersData(
     page: number,
     userId?: number,
@@ -160,9 +171,7 @@ export class ReportsService {
     alert?: boolean,
     newStudents?: boolean
   ) {
-    let params = new HttpParams()
-
-    .set('page', page.toString());
+    let params = new HttpParams().set('page', page.toString());
 
     if (userId) params = params.set('userId', userId.toString());
     if (userRole) params = params.set('userRole', userRole);
@@ -173,5 +182,28 @@ export class ReportsService {
     if (newStudents) params = params.set('newStudents', newStudents.toString());
 
     return this.http.get<UsersResponse>(`${this.apiUrl}/users/data`, { params });
+  }
+
+  getUsersDataCsv(
+    page: number,
+    userId?: number,
+    userRole?: UserRole,
+    userStatus?: UserStatus,
+    stageId?: number,
+    comment?: boolean,
+    alert?: boolean,
+    newStudents?: boolean
+  ) {
+    let params = new HttpParams().set('page', page.toString());
+
+    if (userId) params = params.set('userId', userId.toString());
+    if (userRole) params = params.set('userRole', userRole);
+    if (userStatus) params = params.set('userStatus', userStatus);
+    if (stageId) params = params.set('stageId', stageId.toString());
+    if (comment) params = params.set('comment', comment.toString());
+    if (alert) params = params.set('alert', alert.toString());
+    if (newStudents) params = params.set('newStudents', newStudents.toString());
+
+    return this.http.get(`${this.apiUrl}/users/data/csv`, { params, responseType: 'blob' });
   }
 }
