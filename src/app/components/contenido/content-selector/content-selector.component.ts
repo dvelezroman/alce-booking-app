@@ -29,10 +29,12 @@ export class ContentSelectorComponent {
     }
 
     this.studyContentService.filterBy(this.selectedStageId).subscribe(contents => {
-      this.availableContents = contents.map(c => ({
-        id: c.id,
-        name: `Unidad ${c.unit}: ${c.title}`
-      }));
+      this.availableContents = contents
+        .filter(c => c.enabled) 
+        .map(c => ({
+          id: c.id,
+          name: `Unidad ${c.unit}: ${c.title}`
+        }));
     });
   }
 
