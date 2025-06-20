@@ -23,7 +23,7 @@ export class AssessmentFormComponent implements OnInit {
   @Input() availableResources: { id: number; name: string; content: string }[] = [];
   @Input() instructorId: number | null = null;
   @Output() assessmentCreated = new EventEmitter<CreateAssessmentI>();
-  @Output() studentSelected = new EventEmitter<{ studentId: number; instructorId: number; stageId: number }>();
+  @Output() studentSelected = new EventEmitter<{ studentId: number; instructorId: number; stageId: number; user: UserDto }>();
 
   showCommentBox: boolean = false;
   showPointsError: boolean = false;
@@ -108,7 +108,9 @@ export class AssessmentFormComponent implements OnInit {
       this.studentSelected.emit({
         studentId: user.student.id,
         stageId: user.student.stage.id,
-        instructorId: this.instructorId
+        instructorId: this.instructorId,
+        user: user 
+        
       });
     }
   }

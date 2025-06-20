@@ -10,7 +10,20 @@
     [minPointsAssessment]="minPointsAssessment"
     (assessmentCreated)="handleAssessmentCreated($event)"
     (studentSelected)="fetchAssessments($event.studentId.toString(), $event.stageId)"
+    (studentSelected)="handleStudentSelected($event)"
   ></app-assessment-form>
+
+  <div *ngIf="selectedStudent" class="box has-background-light">
+    <p class="is-size-6 has-text-weight-semibold">
+      {{ selectedStudent.firstName }} {{ selectedStudent.lastName }}
+    </p>
+    <p class="is-size-6 has-text-grey-dark">
+      Stage actual:
+      <span class="has-text-weight-semibold">
+        {{ selectedStudent.student?.stage?.description ?? 'No asignado' }}
+      </span>
+    </p>
+  </div>
 
   <div class="assessment-table-wrapper">
     <app-assessment-table 

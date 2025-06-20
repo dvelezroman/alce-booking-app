@@ -12,6 +12,7 @@ import { UserDto } from '../../../services/dtos/user.dto';
 import { selectUserData } from '../../../store/user.selector';
 import { AssessmentResourceI } from '../../../services/dtos/assessment-resources.dto';
 import { AssessmentResourcesService } from '../../../services/assessment-resources.service';
+import { Student } from '../../../services/dtos/student.dto';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class AssessmentComponent implements OnInit {
   resources: AssessmentResourceI[] = [];
   instructorId: number | null = null;
   currentStageId: number | null = null;
+  selectedStudent: UserDto | null = null;
   minPointsAssessment: number | null = null;
   hasSearched: boolean = false;
   private isMinPointLoaded = false;
@@ -108,6 +110,12 @@ export class AssessmentComponent implements OnInit {
       name: resource.title,
       content: resource.link,
     }));
+  }
+
+  handleStudentSelected(payload: { studentId: number; stageId: number; instructorId: number; user: UserDto }): void {
+    this.selectedStudent = payload.user;
+    this.currentStageId = payload.stageId;
+    this.fetchAssessments(payload.studentId.toString(), payload.stageId);
   }
 
   handleAssessmentCreated(payload: CreateAssessmentI): void {
