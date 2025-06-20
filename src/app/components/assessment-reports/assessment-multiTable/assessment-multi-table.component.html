@@ -6,20 +6,35 @@
       <thead>
         <tr>
           <th class="left-header">Estudiante</th>
-          <th *ngFor="let type of types; let i = index" [class.type-divider]="i !== types.length - 1" class="type-header type-cell">{{ type }}</th>
+          <th
+            *ngFor="let type of types; let i = index"
+            [class.type-divider]="i !== types.length - 1"
+            class="type-header type-cell"
+          >
+            {{ type }}
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let student of students">
-          <td class="left-header-cell">
+        <tr *ngFor="let student of students" >
+          <td
+            class="left-header-cell"
+            [class.approved-row]="isStudentApproved(student.studentId)"
+          >
             {{ student.user.lastName }}, {{ student.user.firstName }}
           </td>
-          <td *ngFor="let type of types; let i = index" [class.type-divider]="i !== types.length - 1">
+
+          <td
+            *ngFor="let type of types; let i = index"
+            [class.type-divider]="i !== types.length - 1"
+            [class.approved-row]="isStudentApproved(student.studentId)"
+          >
             <ng-container *ngIf="getAssessments(student.studentId, type).length > 0; else emptyCell">
               <div class="inline-notes-wrapper">
-                <div *ngFor="let a of getAssessments(student.studentId, type)"
-                     class="inline-note">
-                  <!-- <div class="entry-date">{{ a.createdAt | date: 'dd/MM/yy' }}</div> -->
+                <div
+                  *ngFor="let a of getAssessments(student.studentId, type)"
+                  class="inline-note"
+                >
                   <div
                     [ngClass]="{
                       'max-point-reached': isMaxReached(a.points),

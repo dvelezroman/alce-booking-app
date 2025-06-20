@@ -10,13 +10,13 @@
           [attr.colspan]="types.length"
           class="left-border right-border stage-header"
           [ngClass]="{
-            'highlight-column': stage.id === currentStageId,
-            'highlight-stage-header': stage.id === currentStageId
+            'highlight-column': stage.id === highlightStageId,
+            'highlight-stage-header': stage.id === highlightStageId,
           }"
         >
           <div class="stage-header-wrapper">
             <div
-              *ngIf="stage.id === currentStageId"
+              *ngIf="stage.id === highlightStageId"
               class="arrow-icon"
               aria-hidden="true"
             >
@@ -33,7 +33,7 @@
             [ngClass]="{
               'left-border': j === 0,
               'right-border': j === types.length - 1,
-              'highlight-column': stage.id === currentStageId
+              'highlight-column': stage.id === highlightStageId,
             }"
           >
             {{ type }}
@@ -50,7 +50,7 @@
             [ngClass]="{
               'left-border': j === 0,
               'right-border': j === types.length - 1,
-              'highlight-column': stage.id === currentStageId
+              'highlight-column': stage.id === highlightStageId,
             }"
           >
             <ng-container

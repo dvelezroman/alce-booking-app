@@ -100,31 +100,28 @@ export class AssessmentReportFormComponent {
 
   triggerSearch(): void {
     const studentId = this.selectedStudent?.student?.id ?? null;
-    const studentStageId = this.selectedStudent?.student?.stage?.id ?? null;
 
-    // Si no hay estudiante ni stage, mostramos error
-    if (!this.selectedStudent && !this.selectedStageId) {
+    // Validación: debe haber al menos estudiante o stage
+    if (!studentId && !this.selectedStageId) {
       this.showStageRequiredError = true;
       return;
     }
 
     this.showStageRequiredError = false;
 
-    // Si solo se eligió stage (no estudiante), emitimos descripción del stage
-    if (!this.selectedStudent && this.selectedStageId !== null) {
+    if (!studentId && this.selectedStageId !== null) {
       const selected = this.stages.find(s => s.id === this.selectedStageId);
       if (selected) {
         this.stageSelected.emit(`${selected.number} - ${selected.description}`);
       }
     }
 
-    // Limpiar stageId si se seleccionó estudiante
     const payload = {
       studentId,
-      stageId: studentStageId ?? this.selectedStageId ?? undefined,
+      stageId: studentId ? undefined : this.selectedStageId ?? undefined,
       type: this.type
     };
-
+    console.log('Payload enviado al padre:', payload);
     this.searchTriggered.emit(payload);
   }
 }

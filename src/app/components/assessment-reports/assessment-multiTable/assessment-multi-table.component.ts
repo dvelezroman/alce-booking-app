@@ -83,4 +83,18 @@ export class AssessmentMultiTableComponent implements OnChanges {
   isBelowMax(points: number): boolean {
     return this.minPointsAssessment !== null && points < this.minPointsAssessment;
   }
+
+  isStudentApproved(studentId: number): boolean {
+    const min = this.minPointsAssessment;
+    if (min === null) {
+      return false;
+    }
+
+    const approved = this.types.every(type => {
+      const a = this.groupedAssessments[studentId]?.[type];
+      return !!a && a.points >= min;
+    });
+    //console.log(`student ${studentId}`, approved);
+    return approved;
+  }
 }

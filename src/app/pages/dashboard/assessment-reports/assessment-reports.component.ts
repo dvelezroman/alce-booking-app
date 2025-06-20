@@ -36,6 +36,7 @@ export class AssessmentReportsComponent {
   stageDescription: string = '';
   selectedStageId: number | null = null;
   selectedStudentId: number | null = null;
+  highlightStageId: number | null = null;
   stagesWithContent: Stage[] = [];
 
   constructor(
@@ -96,7 +97,7 @@ export class AssessmentReportsComponent {
 
   handleAssessmentSearch(filters: {
     studentId: number | null;
-    stageId?: number; 
+    stageId?: number;
     type: AssessmentType | null;
   }): void {
     this.isStudentSelected = filters.studentId !== null;
@@ -105,13 +106,22 @@ export class AssessmentReportsComponent {
 
     const params: FilterAssessmentI = {
       ...(filters.studentId !== null && { studentId: filters.studentId.toString() }),
+      ...(filters.stageId !== undefined && { stageId: filters.stageId.toString() }),
       ...(filters.type && { type: filters.type })
     };
 
-    this.assessmentService.findAll(params).subscribe({
-      next: (result) => {
-        this.assessments = result; 
-      },
+  this.assessmentService.findAll(params).subscribe({
+    next: (result) => {
+      this.assessments = result;
+
+    if (this.isStudentSelected && result.length > 0) {
+    const student = result[0].student;
+    const currentStageId = student?.stageId ?? null;
+    this.highlightStageId = currentStageId;
+  } else {
+    this.highlightStageId = this.selectedStageId;
+  }
+    },
       error: () => {
         this.showModal(this.createModalParams(true, 'Error al obtener las evaluaciones.'));
       }
