@@ -93,21 +93,36 @@
 
 .assessment-entry {
   position: relative;
+  padding: 1rem 0;
+
+  &:hover .delete-button {
+    opacity: 1;
+  }
 
   .delete-button {
     position: absolute;
-    top: 2px;
-    right: -4px;
+    top: -8px;
+    right: -6px;
     background: transparent;
     border: none;
-    color: #c00;
-    font-size: 0.75rem;
     cursor: pointer;
-    padding: 0;
-    line-height: 1;
+    padding: 0.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb9b9;
+    font-size: 1.8rem;
+    opacity: 0;
+    transition: opacity 0.2s ease, color 0.2s ease;
+
+    .material-icons {
+      font-size: 1.2rem;
+    }
+
+    &:hover {
+      color: #888887; 
+
+    }
   }
 
-  .delete-button:hover {
-    color: #a00;
-  }
 }
