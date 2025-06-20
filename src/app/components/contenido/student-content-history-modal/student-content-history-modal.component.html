@@ -44,7 +44,8 @@
                   [title]="content.title"
                   (mouseenter)="onMouseEnterColumn(i)"
                   (mouseleave)="onMouseLeaveColumn()"
-                  [ngClass]="{ 'column-hovered': hoveredColumnIndex === i }">
+                  [ngClass]="{ 'column-hovered': hoveredColumnIndex === i,
+                               'disabled-column': isContentDisabled(i) }">
                 {{ content.title }}
               </th>
             </tr>
@@ -52,7 +53,8 @@
           <tbody>
             <tr>
               <td *ngFor="let content of stageContents; let i = index"
-                  [ngClass]="{ 'column-hovered': hoveredColumnIndex === i }">
+                  [ngClass]="{ 'column-hovered': hoveredColumnIndex === i,
+                               'disabled-column': isContentDisabled(i) }">
                 <div class="scroll-wrapper"
                     [ngClass]="{ 'scrollable-cell': getRecordsByContentTitle(content.title).length > 2 }">
                   <ng-container *ngFor="let record of getRecordsByContentTitle(content.title)">

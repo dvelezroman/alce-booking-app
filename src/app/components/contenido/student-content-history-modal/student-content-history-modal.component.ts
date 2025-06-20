@@ -89,4 +89,9 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
     this.hoveredColumnIndex = null;
   }
 
+  isContentDisabled(index: number): boolean {
+    const content = this.stageContents[index];
+    return content ? content.enabled === false : false;
+  }
+
 }
