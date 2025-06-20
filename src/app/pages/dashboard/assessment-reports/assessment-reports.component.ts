@@ -104,14 +104,13 @@ export class AssessmentReportsComponent {
     this.selectedStageId = filters.stageId ?? null;
 
     const params: FilterAssessmentI = {
-      ...(filters.stageId !== undefined && { stageId: filters.stageId.toString() }),
       ...(filters.studentId !== null && { studentId: filters.studentId.toString() }),
       ...(filters.type && { type: filters.type })
     };
 
     this.assessmentService.findAll(params).subscribe({
       next: (result) => {
-        this.assessments = result;
+        this.assessments = result; 
       },
       error: () => {
         this.showModal(this.createModalParams(true, 'Error al obtener las evaluaciones.'));

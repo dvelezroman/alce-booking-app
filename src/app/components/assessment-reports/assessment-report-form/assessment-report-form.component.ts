@@ -100,6 +100,7 @@ export class AssessmentReportFormComponent {
 
   triggerSearch(): void {
     const studentId = this.selectedStudent?.student?.id ?? null;
+    const studentStageId = this.selectedStudent?.student?.stage?.id ?? null;
 
     // Si no hay estudiante ni stage, mostramos error
     if (!this.selectedStudent && !this.selectedStageId) {
@@ -120,7 +121,7 @@ export class AssessmentReportFormComponent {
     // Limpiar stageId si se seleccionó estudiante
     const payload = {
       studentId,
-      stageId: this.selectedStudent ? undefined : this.selectedStageId ?? undefined,
+      stageId: studentStageId ?? this.selectedStageId ?? undefined,
       type: this.type
     };
 

@@ -8,9 +8,22 @@
         <th
           *ngFor="let stage of stagesWithContent"
           [attr.colspan]="types.length"
-          class="left-border right-border"
+          class="left-border right-border stage-header"
+          [ngClass]="{
+            'highlight-column': stage.id === currentStageId,
+            'highlight-stage-header': stage.id === currentStageId
+          }"
         >
-          {{ stage.number }} - {{ stage.description }}
+          <div class="stage-header-wrapper">
+            <div
+              *ngIf="stage.id === currentStageId"
+              class="arrow-icon"
+              aria-hidden="true"
+            >
+              ⬇
+            </div>
+            <span>{{ stage.number }} - {{ stage.description }}</span>
+          </div>
         </th>
       </tr>
       <tr>
@@ -19,7 +32,8 @@
             *ngFor="let type of types; let j = index"
             [ngClass]="{
               'left-border': j === 0,
-              'right-border': j === types.length - 1
+              'right-border': j === types.length - 1,
+              'highlight-column': stage.id === currentStageId
             }"
           >
             {{ type }}
@@ -35,7 +49,8 @@
             *ngFor="let type of types; let j = index"
             [ngClass]="{
               'left-border': j === 0,
-              'right-border': j === types.length - 1
+              'right-border': j === types.length - 1,
+              'highlight-column': stage.id === currentStageId
             }"
           >
             <ng-container
