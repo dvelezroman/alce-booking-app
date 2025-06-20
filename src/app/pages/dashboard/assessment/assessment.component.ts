@@ -34,6 +34,8 @@ export class AssessmentComponent implements OnInit {
   currentStageId: number | null = null;
   minPointsAssessment: number | null = null;
   hasSearched: boolean = false;
+  private isMinPointLoaded = false;
+  private isAssessmentsLoaded = false;
 
   constructor(
     private store: Store,
@@ -56,12 +58,33 @@ export class AssessmentComponent implements OnInit {
   loadAssessmentConfig(): void {
     this.assessmentPointsConfigService.getById().subscribe({
       next: (config) => {
-        this.minPointsAssessment = config.minPointsAssessment;
+        if (config.minPointsAssessment != null) {
+          this.minPointsAssessment = config.minPointsAssessment;
+          this.isMinPointLoaded = true;
+
+          if (this.hasSearched) {
+            this.evaluateBlockedTypes();
+          }
+        } else {
+          this.modal = {
+            ...modalInitializer(),
+            show: true,
+            isContentViewer: true,
+            title: 'Error crítico',
+            message: 'No se pudo obtener el puntaje mínimo necesario para evaluar. Por favor recarga la página.',
+            close: () => window.location.reload()
+          };
+        }
       },
       error: () => {
-        this.showModal(
-          this.createModalParams(true, 'Error al cargar la configuración de evaluación.')
-        );
+        this.modal = {
+          ...modalInitializer(),
+          show: true,
+          isContentViewer: true,
+          title: 'Error de conexión',
+          message: 'Error al cargar la configuración de evaluación. Por favor recarga la página.',
+          close: () => window.location.reload()
+        };
       }
     });
   }
@@ -96,7 +119,7 @@ export class AssessmentComponent implements OnInit {
           this.createModalParams(false, 'Evaluación registrada correctamente.')
         );
         this.currentStageId = payload.stageId;
-        this.fetchAssessments(payload.studentId.toString());
+        this.fetchAssessments(payload.studentId.toString(), payload.stageId);
         if (response.updatedStage === true) {
         this.showStagePromotionModal();
       }
@@ -109,23 +132,30 @@ export class AssessmentComponent implements OnInit {
     });
   }
 
-  fetchAssessments(studentId: string) {
+  fetchAssessments(studentId: string, stageId: number): void {
     this.hasSearched = true;
-    const params: FilterAssessmentI = {
-      studentId,
-      // stageId,
-    };
+    this.currentStageId = stageId; 
+
+    const params: FilterAssessmentI = { studentId };
 
     this.assessmentService.findAll(params).subscribe({
       next: (result) => {
-       // console.log('Evaluaciones del estudiante:', result);
         this.assessments = result;
-        this.evaluateBlockedTypes(); 
+        this.isAssessmentsLoaded = true;
+
+        if (this.isMinPointLoaded) {
+          this.evaluateBlockedTypes();
+        }
       },
       error: () => {
-        this.showModal(
-          this.createModalParams(true, 'Error al obtener las evaluaciones.')
-        );
+        this.modal = {
+          ...modalInitializer(),
+          show: true,
+          isContentViewer: true,
+          title: 'Error crítico',
+          message: 'No se pudieron obtener las evaluaciones del estudiante. Por favor recarga la página.',
+          close: () => window.location.reload()
+        };
       }
     });
   }
