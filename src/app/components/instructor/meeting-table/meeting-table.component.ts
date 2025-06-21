@@ -76,4 +76,8 @@ export class MeetingTableComponent {
     if (!this.hasMeetingPassed(meeting.localdate, meeting.localhour)) return '-';
     return meeting.linkOpened ? '✔️' : '❌';
   }
+
+  hasReinforcement(meeting: MeetingDTO): boolean {
+    return meeting.hasReinforcement === true;
+  }
 }

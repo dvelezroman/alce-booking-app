@@ -404,6 +404,11 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     this.assessmentService.findAll({ studentId: String(studentId) }).subscribe({
       next: (assessments) => {
+        const hasNote = assessments.some(a => !!a.note);
+        const hasResources = assessments.some(a => a.resources && a.resources.length > 0);
+        if (hasNote || hasResources) {
+          event.meeting.hasReinforcement = true;
+        }
         const message = this.buildHtmlAllNotesAndResources(assessments, this.minPoints);
         this.showNoteModal(event.title, message);
       },

@@ -35,6 +35,7 @@ export interface MeetingDTO {
   studyContent?: StudyContentDto[];
   isNewUser?: boolean;
   assessment?: AssessementI;
+  hasReinforcement?: boolean;
 }
 
 export interface AssignedByDTO {

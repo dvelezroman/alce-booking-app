@@ -41,8 +41,19 @@
             comment
           </span>
 
-          <span class="comment-text">
+          <span
+            class="comment-text"
+            *ngIf="!hasReinforcement(meeting)"
+          >
             {{ meeting.assessment?.note || meeting.student?.user?.comment || 'Sin observación' }}
+          </span>
+
+          <span
+            *ngIf="hasReinforcement(meeting)"
+            class="reinforcement-badge"
+            title="Este estudiante tiene nota o recursos cargados"
+          >
+            Refuerzo
           </span>
         </td>
         <td data-label="Abrió Enlace">
