@@ -339,7 +339,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     const studentId = meeting.studentId;
     const to = DateTime.now().toISODate();
-    const from = DateTime.now().minus({ days: 21 }).toISODate();
+    const from ='2025-01-01';
 
     this.studyContentService.getStudyContentHistoryForStudentId(studentId, from, to).subscribe({
       next: (history) => this.handleHistoryLoaded(history),
