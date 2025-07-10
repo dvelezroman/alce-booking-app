@@ -421,7 +421,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedMeeting = meeting;
     this.selectedMeetingIndex = index;
     this.updateLinkStatus();
-    this.isMeetingDetailModalActive = true;
+
+      setTimeout(() => {
+        this.isMeetingDetailModalActive = true;
+      }, 200); 
 }
 
   closeMeetingDetailModal() {
@@ -463,9 +466,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const LINK_ACTIVE_BUFFER_MINUTES_BEFORE = 5 * 60 * 1000;
     const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 6 * 60 * 1000;
 
-   const timeZoneOffset = new Date().getTimezoneOffset() / 60; 
-   const meetingStart = new Date(this.selectedMeeting.date).getTime()
-                   + (timeZoneOffset * 60 * 60 * 1000);      // Suma 5 horas
+    const rawDate = this.selectedMeeting.date; 
+    const timeZoneOffset = new Date().getTimezoneOffset() / 60; 
+
+    const meetingStart = new Date(rawDate).getTime()
+                      + (timeZoneOffset * 60 * 60 * 1000); // Suma 5 horas
 
     const now = Date.now();
 
