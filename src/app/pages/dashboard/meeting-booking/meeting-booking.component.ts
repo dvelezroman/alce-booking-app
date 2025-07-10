@@ -461,11 +461,11 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     if (!this.selectedMeeting) return;
 
     const LINK_ACTIVE_BUFFER_MINUTES_BEFORE = 5 * 60 * 1000;
-    const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 6 * 60 * 1000;
+    const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 36 * 60 * 1000;
 
-    // ✅ Esto ya devuelve hora UTC correctamente
-    // const meetingStart = new Date(this.selectedMeeting.date).getTime();
-    const meetingStart = new Date(this.selectedMeeting.date + 'Z').getTime();
+   const timeZoneOffset = new Date().getTimezoneOffset() / 60; 
+   const meetingStart = new Date(this.selectedMeeting.date).getTime()
+                   + (timeZoneOffset * 60 * 60 * 1000);      // Suma 5 horas
 
     const now = Date.now();
 
