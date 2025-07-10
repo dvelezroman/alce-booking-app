@@ -3,14 +3,13 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  HostListener,
   Inject,
   OnInit,
   PLATFORM_ID,
   ViewChild
 } from '@angular/core';
 import {FormsModule} from "@angular/forms";
-import {CommonModule, isPlatformBrowser, NgForOf} from "@angular/common";
+import {CommonModule, isPlatformBrowser} from "@angular/common";
 import {RouterModule} from '@angular/router';
 import {Store} from "@ngrx/store";
 import {Observable, Subject, takeUntil, tap} from "rxjs";
@@ -108,7 +107,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    
+
     this.ffService.getAll().subscribe(ffs => {
       this.ffs = ffs;
       const scheduleFlag = this.ffs.find(f => f.name === 'enable-schedule');
@@ -421,8 +420,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     clearInterval(this.linkInterval);
     this.selectedMeeting = meeting;
     this.selectedMeetingIndex = index;
-    this.updateLinkStatus();  
-    this.isMeetingDetailModalActive = true; 
+    this.updateLinkStatus();
+    this.isMeetingDetailModalActive = true;
 }
 
   closeMeetingDetailModal() {
@@ -450,7 +449,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   updateLinkStatus() {
     if (!this.selectedMeeting) return;
 
-    this.calculateLinkStatus(); 
+    this.calculateLinkStatus();
 
     const ONE_MINUTE = 60 * 1000;
     this.linkInterval = setInterval(() => {
@@ -465,7 +464,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 6 * 60 * 1000;
 
     // ✅ Esto ya devuelve hora UTC correctamente
-    const meetingStart = new Date(this.selectedMeeting.date).getTime();
+    // const meetingStart = new Date(this.selectedMeeting.date).getTime();
+    const meetingStart = new Date(this.selectedMeeting.date + 'Z').getTime();
 
     const now = Date.now();
 
