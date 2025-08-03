@@ -178,6 +178,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   onDaySelected(event: { date: string; label: string; day: number }) {
+    if (this.userData?.dataComplete === false || this.userData?.dataComplete === undefined) {
+      this.showModalMessage("Debes completar tu información personal antes de agendar clases.");
+      return;
+    }
     const [year, month, day] = event.date.split('-').map(Number);
 
     this.selectedDate = event.date;
@@ -387,6 +391,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         this.modalConfig.show = false;
       }
     };
+      setTimeout(() => {
+      this.modalConfig.close();
+    }, 3000);
   }
 
   openDeleteModal(meeting: MeetingDTO): void {

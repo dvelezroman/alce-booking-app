@@ -96,8 +96,8 @@ export class HomePrivateComponent implements OnInit {
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
       this.isStudent = user?.role === UserRole.STUDENT;
 
-      if (this.isStudent) {
-        this.showStudentInfoForm = true; 
+      if (this.isStudent && user?.dataComplete !== true) {
+        this.showStudentInfoForm = true;
       }
 
       if (this.isInstructor) {

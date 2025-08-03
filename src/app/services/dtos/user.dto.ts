@@ -31,6 +31,7 @@ export interface UserDto {
   status?: UserStatus;
   meetingsAlert?: boolean;
   assessmentResources?: AssessmentResourceI[];
+  dataComplete?: boolean;
 }
 
 export interface LoginDto {
