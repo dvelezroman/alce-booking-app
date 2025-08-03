@@ -13,6 +13,7 @@ import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { MeetingThemesService } from '../../../services/meeting-themes.service';
 import { StudyContentService } from '../../../services/study-content.service';
 import { selectIsLoggedIn, selectUserData } from '../../../store/user.selector';
+import { StudentInfoFormComponent } from '../../../components/student-info-form/student-info-form.component';
 
 @Component({
   selector: 'app-home-private',
@@ -21,7 +22,8 @@ import { selectIsLoggedIn, selectUserData } from '../../../store/user.selector';
       CommonModule,
       RouterModule,
       FormsModule,
-      ModalComponent],
+      ModalComponent,
+      StudentInfoFormComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -52,6 +54,7 @@ export class HomePrivateComponent implements OnInit {
   selectedMeeting: any;
   meetingContent: string = '';
   isUpdating: boolean = false;
+  showStudentInfoForm = false;
 
   constructor(private store: Store,
               private bookingService: BookingService,
@@ -68,6 +71,8 @@ export class HomePrivateComponent implements OnInit {
       this.isLoggedIn = state;
     });
 
+    this.checkUserRoleAndFormVisibility();
+
     this.store.select(selectUserData).subscribe((userData: UserDto | null) => {
       if (userData && userData.instructor) {
         this.instructorId = userData.instructor.id;
@@ -80,6 +85,21 @@ export class HomePrivateComponent implements OnInit {
     this.userData$.subscribe(user => {
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
       this.isStudent    = user?.role === UserRole.STUDENT;
+      if (this.isInstructor) {
+        this.generateCurrentMonthDays();
+      }
+    });
+  }
+
+  private checkUserRoleAndFormVisibility(): void {
+    this.userData$.subscribe(user => {
+      this.isInstructor = user?.role === UserRole.INSTRUCTOR;
+      this.isStudent = user?.role === UserRole.STUDENT;
+
+      if (this.isStudent) {
+        this.showStudentInfoForm = true; 
+      }
+
       if (this.isInstructor) {
         this.generateCurrentMonthDays();
       }
@@ -302,87 +322,10 @@ export class HomePrivateComponent implements OnInit {
     }));
   }
 
-  // openThemeModal(item: any) {
-  //  const contentIds = item.meetings?.[0]?.studyContentId || [];
-
-  //   this.selectedMeeting = {
-  //     meetingThemeId: item.meetingThemeId,
-  //     stageId: item.stageId,
-  //     instructorId: item.instructorId,
-  //     date: item.date,
-  //     hour: item.hour,
-  //     description: item.meetingTheme ? item.meetingTheme.description : ''
-  //   };
-
-  //   this.meetingContent = this.selectedMeeting.description;
-  //   this.isUpdating = !!item.meetingTheme?.id;
-  //   this.isModalOpen = true;
-  //   this.loadStudyContentNames(contentIds);
-  //   //console.log(this.selectedMeeting);
-  // }
-
-  // closeThemeModal(): void {
-  //   this.isModalOpen = false;
-  //   this.meetingContent = '';
-  //   this.selectedMeeting = null;
-  //   this.isUpdating = false;
-  // }
-
-  // addMeetingTheme() {
-  //   this.selectedMeeting.description = this.meetingContent;
-
-  //   if (!this.selectedMeeting.description.trim()) {
-  //     return;
-  //   }
-
-  //   const createNewMeetingThemeData = {
-  //     description: this.meetingContent,
-  //     date: this.selectedMeeting.date,
-  //     hour: this.selectedMeeting.hour,
-  //     instructorId: this.selectedMeeting.instructorId,
-  //     stageId: this.selectedMeeting.stageId,
-  //   };
-
-  //   this.meetingThemesService.create(createNewMeetingThemeData).subscribe({
-  //     next: () => {
-  //       this.showModal(this.createModalParams(false, 'Contenido de la clase agregado correctamente.'));
-  //       this.closeThemeModal();
-  //       if (this.selectedDate) {
-  //         this.getInstructorMeetings(this.selectedDate);
-  //       }
-  //     },
-  //     error: () => {
-  //       this.showModal(this.createModalParams(true, 'No se pudo agregar el contenido de la clase.'));
-  //     }
-  //   });
-  // }
-
-//   updateMeetingTheme() {
-//     if (!this.meetingContent.trim()) {
-//         return;
-//     }
-
-//     const updatedData: MeetingThemeDto = {
-//         stageId: this.selectedMeeting.stageId,
-//         instructorId: this.selectedMeeting.instructorId,
-//         date: this.selectedMeeting.date,
-//         hour: this.selectedMeeting.hour,
-//         description: this.meetingContent
-//     };
-
-//     this.meetingThemesService.update(this.selectedMeeting.meetingThemeId, updatedData).subscribe({
-//         next: () => {
-//             this.showModal(this.createModalParams(false, 'Tema actualizado exitosamente.'));
-//             this.closeThemeModal();
-//             if (this.selectedDate) {
-//                 this.getInstructorMeetings(this.selectedDate); // Actualizamos reuniones solo del mes y año actuales
-//             }
-//         },
-//         error: () => {
-//             this.showModal(this.createModalParams(true, 'Error al actualizar el tema.'));
-//         }
-//     });
-// }
+  handleStudentInfoSubmit(data: { email: string; city: string; country: string }) {
+    console.log('Formulario recibido:', data);
+    this.showStudentInfoForm = false; 
+  }
 
   showModal(params: ModalDto) {
     this.modal = { ...params };

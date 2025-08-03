@@ -1,0 +1,54 @@
+<p>student-info-form works!</p>
+<div class="modal" [class.is-active]="isModalOpen">
+  <div class="modal-background"></div>
+
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Completar Información</p>
+      <button class="delete" aria-label="close" (click)="close()"></button>
+    </header>
+
+    <section class="modal-card-body">
+      <form [formGroup]="infoForm" (ngSubmit)="onSubmit()" id="studentInfoForm">
+        <!-- Email -->
+        <div class="field">
+          <label class="label">Correo electrónico</label>
+          <div class="control">
+            <input type="email" class="input" formControlName="email" />
+          </div>
+          <p class="error-message" *ngIf="infoForm.get('email')?.invalid && infoForm.get('email')?.touched">
+            Email válido es obligatorio.
+          </p>
+        </div>
+
+        <!-- Ciudad -->
+        <div class="field">
+          <label class="label">Ciudad</label>
+          <div class="control">
+            <input type="text" class="input" formControlName="city" />
+          </div>
+          <p class="error-message" *ngIf="infoForm.get('city')?.invalid && infoForm.get('city')?.touched">
+            Ciudad es requerida.
+          </p>
+        </div>
+
+        <!-- País -->
+        <div class="field">
+          <label class="label">País</label>
+          <div class="control">
+            <input type="text" class="input" formControlName="country" />
+          </div>
+          <p class="error-message" *ngIf="infoForm.get('country')?.invalid && infoForm.get('country')?.touched">
+            País es requerido.
+          </p>
+        </div>
+      </form>
+    </section>
+
+    <footer class="modal-card-foot">
+      <button type="submit" class="button is-primary" form="studentInfoForm">
+        Guardar
+      </button>
+    </footer>
+  </div>
+</div>
