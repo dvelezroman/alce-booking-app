@@ -21,6 +21,7 @@ export class StudentInfoFormComponent {
       email: ['', [Validators.required, Validators.email]],
       city: ['', [Validators.required, Validators.minLength(2)]],
       country: ['', [Validators.required, Validators.minLength(2)]],
+      contact: ['', [Validators.required, Validators.minLength(11)]],
     });
   }
 
