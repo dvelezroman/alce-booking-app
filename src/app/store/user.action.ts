@@ -24,3 +24,8 @@ export const setInstructorLink = createAction(
   '[User] Set Instructor Link',
   props<{ link: string | null }>()
 );
+
+export const setDataCompleted = createAction(
+  '[User] Set Data Completed',
+  props<{ completed: boolean }>()
+)

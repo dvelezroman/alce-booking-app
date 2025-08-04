@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import {Observable, take} from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
@@ -13,6 +13,7 @@ import { StudyContentService } from '../../../services/study-content.service';
 import { selectIsLoggedIn, selectUserData } from '../../../store/user.selector';
 import { StudentInfoFormComponent } from '../../../components/student-info-form/student-info-form.component';
 import { UsersService } from '../../../services/users.service';
+import { setDataCompleted } from "../../../store/user.action";
 
 @Component({
   selector: 'app-home-private',
@@ -321,7 +322,7 @@ export class HomePrivateComponent implements OnInit {
   }
 
   handleStudentInfoSubmit(data: { email: string; contact: string; city: string; country: string }) {
-    this.userData$.subscribe(user => {
+    this.userData$.pipe(take(1)).subscribe(user => {
       if (!user?.id) {
         this.showModal(this.createModalParams(true, 'No se pudo obtener el ID del usuario.'));
         return;
@@ -333,11 +334,11 @@ export class HomePrivateComponent implements OnInit {
         city: data.city,
         country: data.country,
       };
-      //console.log('Payload enviado:', payload);
+
       this.usersService.update(user.id, payload).subscribe({
         next: () => {
           this.showStudentInfoForm = false;
-          this.usersService.refreshLogin().subscribe();
+          this.store.dispatch(setDataCompleted({ completed: true }));
           this.showModal(this.createModalParams(false, 'Información actualizada con éxito.'));
         },
         error: () => {
