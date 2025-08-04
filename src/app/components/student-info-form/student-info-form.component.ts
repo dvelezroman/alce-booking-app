@@ -60,7 +60,13 @@ export class StudentInfoFormComponent {
     }
 
     const formValue = this.infoForm.value;
-    const contact = `${formValue.countryCode}${formValue.phoneNumber}`;
+
+    let rawNumber: string = formValue.phoneNumber.trim();
+    if (rawNumber.startsWith('0')) {
+      rawNumber = rawNumber.slice(1);
+    }
+
+    const contact = `${formValue.countryCode}${rawNumber}`;
 
     const payload = {
       email: formValue.email,

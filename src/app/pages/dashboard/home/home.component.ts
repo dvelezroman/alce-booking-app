@@ -52,7 +52,7 @@ export class HomePrivateComponent implements OnInit {
   selectedMeeting: any;
   meetingContent: string = '';
   isUpdating: boolean = false;
-  showStudentInfoForm = false;
+  showStudentInfoForm = true;
 
   constructor(private store: Store,
               private bookingService: BookingService,
