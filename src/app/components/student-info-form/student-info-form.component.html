@@ -27,11 +27,49 @@
         <!-- Teléfono -->
         <div class="field">
           <label class="label">Número de contacto</label>
-          <div class="control">
-            <input type="tel" class="input" formControlName="contact" />
+          <div class="field is-grouped">
+            <!-- Código del país -->
+            <div class="control" style="min-width: 120px">
+              <div class="select is-fullwidth">
+                <select formControlName="countryCode">
+                  <option *ngFor="let code of countryCodes" [value]="code.code">
+                    {{ code.name }} ({{ code.code }})
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Número sin prefijo -->
+            <div class="control is-expanded">
+              <input
+                type="tel"
+                class="input"
+                formControlName="phoneNumber"
+              />
+            </div>
           </div>
-          <p class="error-message" *ngIf="infoForm.get('contact')?.invalid && infoForm.get('contact')?.touched">
-            Número de teléfono válido es obligatorio.
+          <p class="error-message" *ngIf="infoForm.get('phoneNumber')?.invalid && infoForm.get('phoneNumber')?.touched">
+            Número de teléfono es obligatorio.
+          </p>
+        </div>
+
+       <!-- País -->
+        <div class="field">
+          <label class="label">País</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select
+                formControlName="country"
+                (change)="onCountryChange($event)"
+              >
+                <option *ngFor="let country of countryCodes" [value]="country.iso">
+                  {{ country.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <p class="error-message" *ngIf="infoForm.get('country')?.invalid && infoForm.get('country')?.touched">
+            País es requerido.
           </p>
         </div>
 
@@ -39,21 +77,17 @@
         <div class="field">
           <label class="label">Ciudad</label>
           <div class="control">
-            <input type="text" class="input" formControlName="city" />
+            <div class="select is-fullwidth">
+              <select formControlName="city">
+                <option value="" disabled selected>Seleccione una ciudad</option>
+                <option *ngFor="let city of cities" [value]="city">
+                  {{ city }}
+                </option>
+              </select>
+            </div>
           </div>
           <p class="error-message" *ngIf="infoForm.get('city')?.invalid && infoForm.get('city')?.touched">
             Ciudad es requerida.
-          </p>
-        </div>
-
-        <!-- País -->
-        <div class="field">
-          <label class="label">País</label>
-          <div class="control">
-            <input type="text" class="input" formControlName="country" />
-          </div>
-          <p class="error-message" *ngIf="infoForm.get('country')?.invalid && infoForm.get('country')?.touched">
-            País es requerido.
           </p>
         </div>
       </form>
