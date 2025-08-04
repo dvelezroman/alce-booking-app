@@ -52,7 +52,7 @@ export class HomePrivateComponent implements OnInit {
   selectedMeeting: any;
   meetingContent: string = '';
   isUpdating: boolean = false;
-  showStudentInfoForm = true;
+  showStudentInfoForm = false;
 
   constructor(private store: Store,
               private bookingService: BookingService,
@@ -333,7 +333,7 @@ export class HomePrivateComponent implements OnInit {
         city: data.city,
         country: data.country,
       };
-
+      console.log('Payload enviado:', payload);
       this.usersService.update(user.id, payload).subscribe({
         next: () => {
           this.showStudentInfoForm = false;
