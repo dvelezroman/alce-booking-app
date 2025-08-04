@@ -333,10 +333,11 @@ export class HomePrivateComponent implements OnInit {
         city: data.city,
         country: data.country,
       };
-      console.log('Payload enviado:', payload);
+      //console.log('Payload enviado:', payload);
       this.usersService.update(user.id, payload).subscribe({
         next: () => {
           this.showStudentInfoForm = false;
+          this.usersService.refreshLogin().subscribe();
           this.showModal(this.createModalParams(false, 'Información actualizada con éxito.'));
         },
         error: () => {

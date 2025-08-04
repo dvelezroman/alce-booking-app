@@ -123,7 +123,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
     this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
       this.userData = state;
-      console.log('USER DATA EN AGENDA:', this.userData);
+      //console.log('USER DATA EN AGENDA:', this.userData);
       if (state?.student?.id) {
         this.initializeMeetings();
       }
