@@ -19,9 +19,9 @@ export class StudentInfoFormComponent {
   constructor(private fb: FormBuilder) {
     this.infoForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
+      contact: ['', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]],
       city: ['', [Validators.required, Validators.minLength(2)]],
       country: ['', [Validators.required, Validators.minLength(2)]],
-      contact: ['', [Validators.required, Validators.minLength(11)]],
     });
   }
 

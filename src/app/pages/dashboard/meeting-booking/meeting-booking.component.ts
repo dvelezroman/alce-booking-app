@@ -123,6 +123,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
     this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
       this.userData = state;
+      console.log('USER DATA EN AGENDA:', this.userData);
       if (state?.student?.id) {
         this.initializeMeetings();
       }
@@ -178,7 +179,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   onDaySelected(event: { date: string; label: string; day: number }) {
-    if (this.userData?.dataComplete === false || this.userData?.dataComplete === undefined) {
+    if (this.userData?.dataCompleted === false) {
       this.showModalMessage("Debes completar tu información personal antes de agendar clases.");
       return;
     }

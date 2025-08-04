@@ -8,12 +8,11 @@ import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { BookingService } from '../../../services/booking.service';
 import { MeetingDTO } from '../../../services/dtos/booking.dto';
-import { MeetingThemeDto } from '../../../services/dtos/meeting-theme.dto';
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
-import { MeetingThemesService } from '../../../services/meeting-themes.service';
 import { StudyContentService } from '../../../services/study-content.service';
 import { selectIsLoggedIn, selectUserData } from '../../../store/user.selector';
 import { StudentInfoFormComponent } from '../../../components/student-info-form/student-info-form.component';
+import { UsersService } from '../../../services/users.service';
 
 @Component({
   selector: 'app-home-private',
@@ -50,7 +49,6 @@ export class HomePrivateComponent implements OnInit {
   selectedDate: Date | null = null;
   meetingsOfDay: MeetingDTO[] = [];
 
-  // isModalOpen: boolean = false;
   selectedMeeting: any;
   meetingContent: string = '';
   isUpdating: boolean = false;
@@ -58,8 +56,8 @@ export class HomePrivateComponent implements OnInit {
 
   constructor(private store: Store,
               private bookingService: BookingService,
-              private meetingThemesService: MeetingThemesService,
-              private studyContentService: StudyContentService
+              private studyContentService: StudyContentService,
+              private usersService: UsersService,
   ) {
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
     this.userData$ = this.store.select(selectUserData);
@@ -96,7 +94,7 @@ export class HomePrivateComponent implements OnInit {
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
       this.isStudent = user?.role === UserRole.STUDENT;
 
-      if (this.isStudent && user?.dataComplete !== true) {
+      if (this.isStudent && user?.dataCompleted === false) {
         this.showStudentInfoForm = true;
       }
 
@@ -322,9 +320,30 @@ export class HomePrivateComponent implements OnInit {
     }));
   }
 
-  handleStudentInfoSubmit(data: { email: string; city: string; country: string }) {
-    console.log('Formulario recibido:', data);
-    this.showStudentInfoForm = false; 
+  handleStudentInfoSubmit(data: { email: string; contact: string; city: string; country: string }) {
+    this.userData$.subscribe(user => {
+      if (!user?.id) {
+        this.showModal(this.createModalParams(true, 'No se pudo obtener el ID del usuario.'));
+        return;
+      }
+
+      const payload = {
+        emailAddress: data.email,
+        contact: data.contact,
+        city: data.city,
+        country: data.country,
+      };
+
+      this.usersService.update(user.id, payload).subscribe({
+        next: () => {
+          this.showStudentInfoForm = false;
+          this.showModal(this.createModalParams(false, 'Información actualizada con éxito.'));
+        },
+        error: () => {
+          this.showModal(this.createModalParams(true, 'Ocurrió un error al actualizar la información.'));
+        }
+      });
+    });
   }
 
   showModal(params: ModalDto) {
