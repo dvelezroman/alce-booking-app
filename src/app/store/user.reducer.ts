@@ -1,5 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
-import {setAdminStatus, setInstructorLink, setLoggedInStatus, setUserData, unsetUserData} from './user.action';
+import {
+  setAdminStatus,
+  setDataCompleted,
+  setInstructorLink,
+  setLoggedInStatus,
+  setUserData,
+  unsetUserData
+} from './user.action';
 import { UserState } from './user.state';
 
 const initialState: UserState = {
@@ -16,4 +23,11 @@ export const userReducer = createReducer(
   on(setUserData, (state, { data }) => ({ ...state, data })),
   on(unsetUserData, () => ({ ...initialState })),
   on(setInstructorLink, (state, { link }) => ({ ...state, instructorLink: link })),
+  on(setDataCompleted, (state, { completed }) => {
+    const stateCopy = { ...state };
+    if (stateCopy && stateCopy.data) {
+      return { ...stateCopy, data: { ...stateCopy.data, dataCompleted: completed } };
+    }
+    return { ...state };
+  }),
 );
