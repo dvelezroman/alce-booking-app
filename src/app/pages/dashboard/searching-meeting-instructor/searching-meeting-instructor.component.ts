@@ -170,12 +170,19 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   onFilterChange(): void {
     this.clearSelectedContents();
-
     const filterParams: FilterMeetingsDto = {
       ...this.filter,
       hour: this.filter.hour ? this.filter.hour.toString() : undefined,
-      category: this.filter.category ? this.filter.category : undefined
+      category: this.filter.category || undefined,
+      stageId: this.filter.stageId || undefined,
     };
+
+    Object.keys(filterParams).forEach(key => {
+      if (filterParams[key as keyof FilterMeetingsDto] === undefined) {
+        delete (filterParams as any)[key];
+      }
+    });
+
     this.fetchMeetings(filterParams);
   }
 
