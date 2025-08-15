@@ -1,0 +1,35 @@
+<div *ngIf="showModal" class="contact-modal-overlay">
+  <div class="contact-modal-content">
+    <div class="modal-header">
+      <h2>Detalles del Estudiante</h2>
+      <button class="close-btn" (click)="handleClose()">✖</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="info-row">
+        <label>Usuario:</label>
+        <span>{{ user?.email || 'No registrado' }}</span>
+      </div>
+      <div class="info-row">
+        <label>Email:</label>
+        <span>{{ user?.emailAddress || 'No registrado' }}</span>
+      </div>
+      <div class="info-row">
+        <label>Teléfono de contacto:</label>
+        <span>{{ user?.contact || 'No registrado' }}</span>
+      </div>
+      <div class="info-row">
+        <label>País:</label>
+        <span>{{ user?.country || 'No registrado' }}</span>
+      </div>
+      <div class="info-row">
+        <label>Fecha de nacimiento:</label>
+        <span>{{ user?.birthday || 'No disponible' }}</span>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="confirm-btn" (click)="handleClose()">Cerrar</button>
+    </div>
+  </div>
+</div>

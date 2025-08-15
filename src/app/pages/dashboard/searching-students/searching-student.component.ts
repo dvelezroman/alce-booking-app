@@ -9,6 +9,7 @@ import { UserDto, UserRole, UserStatus } from '../../../services/dtos/user.dto';
 import { LinksService } from '../../../services/links.service';
 import { StagesService } from '../../../services/stages.service';
 import { UsersService } from '../../../services/users.service';
+import { ContactDetailsModalComponent } from '../../../components/student/contact-details-modal/contact-details-modal.component';
 
 @Component({
   selector: 'app-searching-students-student',
@@ -17,7 +18,8 @@ import { UsersService } from '../../../services/users.service';
     CommonModule,
     ReactiveFormsModule,
     ModalComponent,
-    FormsModule
+    FormsModule,
+    ContactDetailsModalComponent
   ],
   templateUrl: './searching-student.component.html',
   styleUrl: './searching-student.component.scss'
@@ -47,6 +49,9 @@ export class SearchingStudentComponent {
   userToDelete: UserDto | null = null;
   isEditPasswordModalOpen = false;
   noResults: boolean = false;
+
+  showContactModal: boolean = false;
+  selectedUserForContact: UserDto | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -258,6 +263,16 @@ export class SearchingStudentComponent {
         }
       });
     }
+  }
+
+  openContactModal(user: UserDto) {
+    this.selectedUserForContact = user;
+    this.showContactModal = true;
+  }
+
+  closeContactModal() {
+    this.showContactModal = false;
+    this.selectedUserForContact = null;
   }
 
   protected readonly Math = Math;

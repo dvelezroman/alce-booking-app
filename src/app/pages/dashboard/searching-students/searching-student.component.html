@@ -87,19 +87,25 @@
             <th>Rol de Usuario</th>
             <th>Stage</th>
             <th>Activo</th>
-            <th>Correo Electronico</th>
+            <!-- <th>Usuario</th> -->
+            <th>Contacto</th>
             <th>Editar</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let user of users">
             <td>{{ user.idNumber }}</td>
-            <td>{{ user.firstName | titlecase}}</td>
+            <td>{{ user.firstName | titlecase }}</td>
             <td>{{ user.lastName | titlecase }}</td>
             <td>{{ user.role | titlecase }}</td>
             <td>{{ user.student?.stage?.description || 'No Aplica' }}</td>
             <td>{{ user.status === UserStatus.ACTIVE ? '✓' : '❌' }}</td>
-            <td>{{ user.email }}</td>
+            <!-- <td>{{ user.email }}</td> -->
+            <td>
+              <button class="details-btn" (click)="openContactModal(user)">
+                Ver
+              </button>
+            </td>
             <td>
               <i class="fas fa-edit edit-icon" (click)="openEditUSerModal(user)"></i>
               <i class="fas fa-key password-icon" (click)="openEditPasswordModal(user)"></i>
@@ -221,6 +227,13 @@
       </form>
     </div>
 </div>
+
+<!-- Modal de contacto -->
+<app-contact-details-modal
+  [showModal]="showContactModal"
+  [user]="selectedUserForContact"
+  (close)="closeContactModal()">
+</app-contact-details-modal>
 
 
 

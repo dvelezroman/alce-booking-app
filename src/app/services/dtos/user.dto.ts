@@ -18,6 +18,9 @@ export interface UserDto {
   id: number;
   idNumber?: string;
   email: string;
+  emailAddress?: string;
+  contact?: string;
+  country?: string;
   password?: string;
   firstName?: string;
   lastName?: string;
