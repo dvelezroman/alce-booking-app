@@ -1,0 +1,67 @@
+// Contenedor tipo modal que oscurece el fondo
+.global-notice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3); // Fondo oscuro translúcido
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; // Para que se muestre encima de todo
+}
+
+// Banner en el centro
+.global-notice-banner {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  background-color: rgba(255, 244, 228, 0.95); // Fondo claro semitransparente
+  border: 1px solid #f4e3cc;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+
+  .icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .message {
+    flex-grow: 1;
+
+    h4 {
+      margin: 0 0 0.5rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #444;
+    }
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #a94442;
+
+    &:hover {
+      color: #761c19;
+    }
+  }
+}

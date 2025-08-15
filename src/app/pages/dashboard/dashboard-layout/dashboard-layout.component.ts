@@ -12,6 +12,7 @@ import { setInstructorLink } from "../../../store/user.action";
 import { ModalDto, modalInitializer } from "../../../components/modal/modal.dto";
 import { AssessmentPointsConfigService } from "../../../services/assessment-points-config.service";
 import { StudentBannerComponent } from "../../../components/student-banner/student-banner.component";
+import { GlobalNoticeBannerComponent } from "../../../components/global-notice-banner/global-notice-banner.component";
 
 @Component({
   standalone: true,
@@ -20,7 +21,8 @@ import { StudentBannerComponent } from "../../../components/student-banner/stude
     CommonModule,
     RouterModule,
     SidebarComponent,
-    StudentBannerComponent
+    StudentBannerComponent,
+    GlobalNoticeBannerComponent,
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',

@@ -8,6 +8,8 @@
 
   <main class="main-content" [ngClass]="{ 'shrink': isLoggedIn && !isSidebarClosed, 'full-width': !isLoggedIn }">
 
+    <app-global-notice-banner *ngIf="isLoggedIn && userData?.role === UserRole.STUDENT" />
+
     <div class="student-banners-container" *ngIf="isLoggedIn && userData?.role === UserRole.STUDENT">
       <app-student-banner
         *ngIf="userData?.meetingsAlert"
