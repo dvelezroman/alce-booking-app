@@ -1,0 +1,41 @@
+<section class="section">
+
+  <!-- Contenedor principal -->
+  <div class="report-table-wrapper">
+    <div class="user-selector-container">
+      <div class="field relative-container">
+        <label class="label">Buscar Usuario</label>
+
+        <!-- Input de búsqueda -->
+        <div class="control has-icons-left">
+          <input
+            class="input"
+            type="text"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+            (focus)="showUserDropdown = true"
+            (blur)="hideDropdown()"
+            placeholder="Escribe el nombre del usuario"
+          />
+          <span class="icon is-left">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+
+        <!-- Dropdown con usuarios filtrados -->
+        <div
+          class="dropdown-list"
+          *ngIf="showUserDropdown && filteredUsers.length > 0"
+        >
+          <div
+            class="dropdown-item"
+            *ngFor="let user of filteredUsers"
+            (click)="selectUser(user)"
+          >
+            {{ user.firstName }} {{ user.lastName }} — {{ user.email }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

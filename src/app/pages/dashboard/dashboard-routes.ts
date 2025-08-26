@@ -25,6 +25,7 @@ import { AssessmentTypesComponent } from './assessment-types/assessment-types.co
 import { AssessmentConfigComponent } from './assessment-config/assessment-config.component';
 import { ReportUserComponent } from './report-user/report-user.component';
 import { AttendanceInstructorComponent } from './attendance-instructor/attendance-instructor.component';
+import { BroadcastGroupsComponent } from './broadcast-groups/broadcast-groups.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -49,6 +50,7 @@ export const dashboardRoutes: Routes = [
   { path: 'reports-detailed', component: ReportsDetailedComponent },
   { path: 'reports-progress', component: ReportsProgressComponent },
   { path: 'report-user', component: ReportUserComponent },
+  { path: 'broadcast-groups', component: BroadcastGroupsComponent },
   { path: 'assessment', component: AssessmentComponent },
   { path: 'assessment-reports', component: AssessmentReportsComponent },
   { path: 'assessment-config', component: AssessmentConfigComponent },
