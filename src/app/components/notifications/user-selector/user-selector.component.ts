@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime } from 'rxjs';
@@ -12,8 +12,9 @@ import { UsersService } from '../../../services/users.service';
   templateUrl: './user-selector.component.html',
   styleUrls: ['./user-selector.component.scss']
 })
-export class UserSelectorComponent {
+export class UserSelectorComponent implements OnChanges {
   @Output() userSelected = new EventEmitter<UserDto>();
+  @Input() reset = false;
 
   searchTerm: string = '';
   filteredUsers: UserDto[] = [];
@@ -28,6 +29,12 @@ export class UserSelectorComponent {
       .subscribe((term: string) => {
         this.filterUsers(term);
       });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['reset'] && this.reset) {
+      this.clearSelection();
+    }
   }
 
   onSearchChange(term: string): void {
@@ -69,5 +76,13 @@ export class UserSelectorComponent {
     setTimeout(() => {
       this.showUserDropdown = false;
     }, 200);
+  }
+
+  private clearSelection(): void {
+    this.selectedUser = undefined;
+    this.searchTerm = '';
+    this.filteredUsers = [];
+    this.showUserDropdown = false;
+    this.userSelected.emit(undefined as any);
   }
 }

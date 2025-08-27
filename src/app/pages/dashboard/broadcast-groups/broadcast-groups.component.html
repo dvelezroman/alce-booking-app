@@ -1,25 +1,36 @@
 <section class="section">
-  <!-- Título principal igual al resto -->
   <h1 class="reports-progress-header reports-progress-title">
     Notificaciones
   </h1>
 
-  <div class="selectors-wrapper">
-    <!-- Selector de usuarios -->
-    <app-user-selector
-      (userSelected)="handleUserSelect($event)">
-    </app-user-selector>
+  <!-- Panel hijo que ahora incluye la opción de dropdown -->
+  <app-notification-panel
+    (actionSelected)="onActionSelected($event)"
+    (sendOptionSelected)="onSendOptionSelected($event)"
+  ></app-notification-panel>
 
-    <!-- Selector de stages -->
+  <!-- Selectores dinámicos según la opción seleccionada -->
+  <div class="selectors-wrapper">
+    <app-user-selector
+      *ngIf="selectedAction === 'user'"
+      (userSelected)="handleUserSelect($event)"
+      [reset]="resetChildren"
+    ></app-user-selector>
+
     <app-stage-selector
+      *ngIf="selectedAction === 'stage'"
       [stages]="stages"
-      (stageSelected)="handleStageSelect($event)">
-    </app-stage-selector>
+      (stageSelected)="handleStageSelect($event)"
+      [reset]="resetChildren"
+    ></app-stage-selector>
   </div>
 
-  <!-- Información del usuario seleccionado -->
-  <div *ngIf="selectedUser" class="selected-user-info">
-    <p><strong>Usuario seleccionado:</strong> {{ selectedUser.firstName }} {{ selectedUser.lastName }}</p>
+  <!-- Mostrar info del usuario seleccionado -->
+  <div *ngIf="selectedUser && selectedAction === 'user'" class="selected-user-info">
+    <p>
+      <strong>Usuario seleccionado:</strong>
+      {{ selectedUser.firstName }} {{ selectedUser.lastName }}
+    </p>
     <p><strong>Email:</strong> {{ selectedUser.email }}</p>
   </div>
 </section>

@@ -1,1 +1,32 @@
-<p>notification-panel works!</p>
+<div class="notification-panel">
+  <button class="tab-btn" (click)="setActive('create')">
+    Crear grupo
+  </button>
+
+  <button class="tab-btn" (click)="setActive('groups')">
+    Ver grupos
+  </button>
+
+  <button class="tab-btn" (click)="setActive('notifications')">
+    Notificaciones enviadas
+  </button>
+
+  <!-- Botón con dropdown -->
+  <div class="dropdown-wrapper" (click)="$event.stopPropagation()">
+    <button class="tab-btn" (click)="toggleDropdown($event)">
+      Enviar notificación ▾
+    </button>
+
+    <ul class="dropdown" *ngIf="dropdownOpen">
+      <li (click)="selectNotificationOption('user', $event)">
+        Enviar a un usuario
+      </li>
+      <li (click)="selectNotificationOption('stage', $event)">
+        Enviar por stage
+      </li>
+      <li (click)="selectNotificationOption('group', $event)">
+        Enviar a un grupo
+      </li>
+    </ul>
+  </div>
+</div>

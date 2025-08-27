@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Stage } from '../../../services/dtos/student.dto';
 import { FormsModule } from '@angular/forms';
@@ -10,11 +10,18 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './stage-selector.component.html',
   styleUrls: ['./stage-selector.component.scss']
 })
-export class StageSelectorComponent {
+export class StageSelectorComponent implements OnChanges {
   @Input() stages: Stage[] = [];
-  @Output() stageSelected = new EventEmitter<Stage | null>(); 
+  @Input() reset = false;
+  @Output() stageSelected = new EventEmitter<Stage | null>();
 
-  selectedStageId: string = ''; 
+  selectedStageId: string = '';
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['reset'] && this.reset) {
+      this.clearSelection();
+    }
+  }
 
   onStageChange(event: Event) {
     const stageId = (event.target as HTMLSelectElement).value;
@@ -28,5 +35,10 @@ export class StageSelectorComponent {
     if (selected) {
       this.stageSelected.emit(selected);
     }
+  }
+
+  private clearSelection(): void {
+    this.selectedStageId = '';
+    this.stageSelected.emit(null);
   }
 }
