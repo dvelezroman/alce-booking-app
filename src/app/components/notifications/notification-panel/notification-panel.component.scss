@@ -2,10 +2,6 @@
   display: flex;
   gap: 1rem;
   padding: 0.75rem 1rem;
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
@@ -14,16 +10,16 @@
 .tab-btn {
   background-color: transparent;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: .75rem 1rem;
   border-radius: 6px;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   color: #1f2937; 
   transition: background-color 0.2s ease, color 0.2s ease;
 
   &:hover {
-    background-color: #f3f4f6;
+    background-color: #dbdbdb;
     color: #111827;
   }
 
@@ -33,34 +29,68 @@
   }
 }
 
-/* Dropdown */
 .dropdown-wrapper {
   position: relative;
 }
 
 .dropdown {
   position: absolute;
-  top: 110%;
-  left: 0;
+  top: 50px;
+  left: 10%;
   display: flex;
   flex-direction: column;
   background-color: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-  padding: 0.5rem 0;
-  min-width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+  padding: 0rem 0;
+  min-width: 150px;
   z-index: 1000;
 }
 
 .dropdown li {
   padding: 0.5rem 1rem;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #374151;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #f3f4f6;
+    background-color: #dddddd;
+  }
+}
+
+/* Ajustes para pantallas móviles */
+@media (max-width: 640px) {
+  .notification-panel {
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    flex-wrap: nowrap; 
+    overflow-x: auto;
+  }
+
+  .tab-btn {
+    font-size: 0.9rem; 
+    padding: 0.35rem 0.5rem; 
+    white-space: nowrap; 
+  }
+
+  .dropdown-wrapper {
+    position: relative;
+  }
+
+  .dropdown {
+    position: fixed;
+    top: 130px;
+    left: 70%;
+    transform: translateX(-50%);
+    max-width: 120px;
+
+  }
+
+  .dropdown li {
+    font-size: .85rem;
+    padding: 0.5rem 0.75rem;
+    text-align: left;
   }
 }

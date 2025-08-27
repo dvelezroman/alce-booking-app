@@ -4,14 +4,9 @@
   </button>
 
   <button class="tab-btn" (click)="setActive('groups')">
-    Ver grupos
+    Grupos
   </button>
 
-  <button class="tab-btn" (click)="setActive('notifications')">
-    Notificaciones enviadas
-  </button>
-
-  <!-- Botón con dropdown -->
   <div class="dropdown-wrapper" (click)="$event.stopPropagation()">
     <button class="tab-btn" (click)="toggleDropdown($event)">
       Enviar notificación ▾
@@ -19,13 +14,13 @@
 
     <ul class="dropdown" *ngIf="dropdownOpen">
       <li (click)="selectNotificationOption('user', $event)">
-        Enviar a un usuario
+        Usuario
       </li>
       <li (click)="selectNotificationOption('stage', $event)">
-        Enviar por stage
+        Stage
       </li>
       <li (click)="selectNotificationOption('group', $event)">
-        Enviar a un grupo
+        Grupo
       </li>
     </ul>
   </div>

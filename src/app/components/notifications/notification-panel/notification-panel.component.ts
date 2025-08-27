@@ -3,6 +3,7 @@ import { Component, EventEmitter, Output, HostListener } from '@angular/core';
 
 export type PanelType = 'create' | 'groups' | 'notifications';
 export type SendOptionType = 'user' | 'stage' | 'group';
+export type NotificationsOptionType = 'sent';
 
 @Component({
   selector: 'app-notification-panel',
@@ -18,6 +19,7 @@ export class NotificationPanelComponent {
   @Output() actionSelected = new EventEmitter<PanelType>();
   @Output() sendOptionSelected = new EventEmitter<SendOptionType>();
 
+
   setActive(tab: PanelType) {
     this.activeTab = tab;
     this.dropdownOpen = false;
@@ -29,7 +31,6 @@ export class NotificationPanelComponent {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
-  // Seleccionar opción del dropdown
   selectNotificationOption(option: SendOptionType, event: MouseEvent) {
     event.stopPropagation();
     this.dropdownOpen = false;
@@ -37,7 +38,7 @@ export class NotificationPanelComponent {
   }
 
   @HostListener('document:click')
-  closeDropdown() {
+  closeDropdowns() {
     this.dropdownOpen = false;
   }
 }

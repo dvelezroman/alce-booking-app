@@ -25,7 +25,7 @@ import { StagesService } from '../../../services/stages.service';
   styleUrl: './broadcast-groups.component.scss',
 })
 export class BroadcastGroupsComponent implements OnInit {
-  activePanel: 'create' | 'groups' | 'notifications' = 'create';
+  activePanel: 'create' | 'groups' = 'create';
   selectedAction: 'user' | 'stage' | 'group' | '' = '';
   selectedUser: UserDto | null = null;
   stages: Stage[] = [];
@@ -43,19 +43,12 @@ export class BroadcastGroupsComponent implements OnInit {
 
   handleUserSelect(user: UserDto | null) {
     this.selectedUser = user;
-    if (user) {
-      console.log('Usuario seleccionado:', user);
-    }
   }
 
   handleStageSelect(stage: Stage | null): void {
     this.selectedStage = stage;
-    if (stage) {
-      console.log('Stage seleccionado:', stage);
-    }
   }
 
-  /** Limpia toda la selección (usuario, stage, acción) */
   private clearSelection(): void {
     this.selectedAction = '';
     this.selectedUser = null;
@@ -69,27 +62,20 @@ export class BroadcastGroupsComponent implements OnInit {
     console.log('Selecciones limpiadas');
   }
 
-  /** Cambiar de panel limpia todo */
-  onActionSelected(panel: 'create' | 'groups' | 'notifications') {
+  onActionSelected(panel: 'create' | 'groups') {
     this.activePanel = panel;
     this.clearSelection();
-    console.log('Acción seleccionada desde el panel:', panel);
   }
 
-  /** Seleccionar opción de envío */
   onSendOptionSelected(option: 'user' | 'stage' | 'group') {
     this.selectedAction = option;
 
-    // Si la opción no es usuario, limpiamos usuario
     if (option !== 'user') {
       this.selectedUser = null;
     }
 
-    // Si la opción no es stage, limpiamos stage
     if (option !== 'stage') {
       this.selectedStage = null;
     }
-
-    console.log('Opción de envío seleccionada:', option);
   }
 }
