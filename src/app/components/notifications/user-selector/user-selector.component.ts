@@ -1,4 +1,14 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges, OnChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChanges,
+  OnChanges,
+  ElementRef,
+  ViewChild,
+  HostListener,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime } from 'rxjs';
@@ -10,79 +20,142 @@ import { UsersService } from '../../../services/users.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './user-selector.component.html',
-  styleUrls: ['./user-selector.component.scss']
+  styleUrls: ['./user-selector.component.scss'],
 })
 export class UserSelectorComponent implements OnChanges {
-  @Output() userSelected = new EventEmitter<UserDto>();
+  @Input() role: 'student' | 'instructor' | undefined;
+  @Input() stageId: number | undefined;
   @Input() reset = false;
 
-  searchTerm: string = '';
-  filteredUsers: UserDto[] = [];
-  selectedUser?: UserDto;
-  showUserDropdown: boolean = false;
+  @Output() usersSelected = new EventEmitter<UserDto[]>();
 
-  private searchInput$ = new Subject<string>();
+  @ViewChild('containerRef') containerRef!: ElementRef;
+
+  searchTerm: string = '';
+  searchInput$ = new Subject<string>();
+  allUsers: UserDto[] = [];
+  selectedUsers: UserDto[] = [];
+
+  isDropdownOpen = false;
 
   constructor(private usersService: UsersService) {
     this.searchInput$
       .pipe(debounceTime(300))
-      .subscribe((term: string) => {
-        this.filterUsers(term);
-      });
+      .subscribe((term) => this.fetchUsers(term));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['reset'] && this.reset) {
       this.clearSelection();
     }
+
+    if (changes['role'] && !changes['role'].firstChange) {
+      this.searchTerm = '';
+      this.allUsers = [];
+      this.selectedUsers = [];
+      this.usersSelected.emit([]);
+      this.isDropdownOpen = false;
+    }
+
+    if (
+      this.role === 'student' &&
+      changes['stageId'] &&
+      changes['stageId'].currentValue !== changes['stageId'].previousValue
+    ) {
+      this.fetchUsers('');
+    }
   }
 
   onSearchChange(term: string): void {
     this.searchInput$.next(term);
-    if (term.trim() === '') {
-      this.selectedUser = undefined;
-      this.userSelected.emit(undefined as any);
-    }
   }
 
-  private filterUsers(term: string): void {
-    if (!term || term.trim().length < 2) {
-      this.filteredUsers = [];
-      this.showUserDropdown = false;
+  fetchUsers(term: string): void {
+    if (!this.role) {
+      this.allUsers = [];
+      this.isDropdownOpen = false;
       return;
     }
 
-    this.usersService.searchUsers(undefined, undefined, undefined, term, term, undefined).subscribe({
-      next: (result) => {
-        this.filteredUsers = result.users;
-        this.showUserDropdown = true;
-      },
-      error: () => {
-        this.filteredUsers = [];
-        this.showUserDropdown = false;
-      }
-    });
+    const isStudentWithStage = this.role === 'student' && this.stageId;
+    const shouldFetch =
+      term.trim().length >= 2 ||
+      (this.role === 'student' && !!this.stageId) ||
+      this.role === 'instructor';
+
+    if (!shouldFetch) {
+      this.allUsers = [];
+      this.isDropdownOpen = false;
+      return;
+    }
+
+    this.usersService
+      .searchUsers(
+        undefined,
+        undefined,
+        undefined,
+        term,
+        term,
+        undefined,
+        this.role?.toUpperCase(),
+        true,
+        isStudentWithStage ? this.stageId : undefined
+      )
+      .subscribe({
+        next: (res) => {
+          this.allUsers = res.users;
+          this.isDropdownOpen = true;
+        },
+        error: () => {
+          this.allUsers = [];
+          this.isDropdownOpen = false;
+        },
+      });
   }
 
-  selectUser(user: UserDto): void {
-    this.selectedUser = user;
-    this.searchTerm = `${user.firstName} ${user.lastName}`;
-    this.filteredUsers = [];
-    this.showUserDropdown = false;
-    this.userSelected.emit(user);
+  toggleUserSelection(user: UserDto): void {
+    const exists = this.selectedUsers.find((u) => u.id === user.id);
+    if (exists) {
+      this.selectedUsers = this.selectedUsers.filter((u) => u.id !== user.id);
+    } else {
+      this.selectedUsers.push(user);
+    }
+    this.usersSelected.emit(this.selectedUsers);
   }
 
-  hideDropdown(): void {
-    setTimeout(() => {
-      this.showUserDropdown = false;
-    }, 200);
+  isSelected(user: UserDto): boolean {
+    return this.selectedUsers.some((u) => u.id === user.id);
   }
 
-  private clearSelection(): void {
-    this.selectedUser = undefined;
+  clearSelection(): void {
+    this.selectedUsers = [];
     this.searchTerm = '';
-    this.filteredUsers = [];
-    this.showUserDropdown = false;
-    this.userSelected.emit(undefined as any);
+    this.allUsers = [];
+    this.usersSelected.emit([]);
+    this.isDropdownOpen = false;
+  }
+
+  onInputFocus(): void {
+    const shouldPreload =
+      (this.role === 'student' && this.stageId) ||
+      this.role === 'instructor';
+
+    if (shouldPreload && this.allUsers.length === 0) {
+      this.fetchUsers('');
+    }
+
+    this.isDropdownOpen = true;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    if (!this.containerRef?.nativeElement.contains(event.target)) {
+      this.isDropdownOpen = false;
+    }
+  }
+
+  removeUser(user: UserDto): void {
+    this.selectedUsers = this.selectedUsers.filter((u) => u.id !== user.id);
+    this.usersSelected.emit(this.selectedUsers);
   }
 }

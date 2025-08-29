@@ -7,8 +7,49 @@
   <div class="form-container">
     <!-- Selector dinámico según tipo -->
     <ng-container [ngSwitch]="selectedType">
-      <app-user-selector *ngSwitchCase="'user'" />
+      <!-- Caso: USUARIOS -->
+      <ng-container *ngSwitchCase="'user'">
+        <!-- Rol -->
+        <div class="form-group">
+          <label for="role">Rol</label>
+          <select
+            id="role"
+            [(ngModel)]="selectedUserRole"
+            name="role"
+            required
+          >
+            <option [value]="'student'">Estudiante</option>
+            <option [value]="'instructor'">Instructor</option>
+          </select>
+        </div>
+
+        <!-- Etapa (solo si es estudiante) -->
+        <div class="form-group" *ngIf="selectedUserRole === 'student'">
+          <label for="stage">Stage</label>
+          <select
+            id="stage"
+            [(ngModel)]="selectedStageId"
+            name="stage"
+            required
+          >
+            <option *ngFor="let s of stages" [value]="s.id">
+              {{ s.description }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Selector de usuarios -->
+        <app-user-selector
+          [role]="selectedUserRole"
+          [stageId]="selectedUserRole === 'student' ? selectedStageId : undefined"
+          (usersSelected)="handleUsersSelected($event)"
+        />
+      </ng-container>
+
+      <!-- Caso: ETAPAS -->
       <app-stage-selector *ngSwitchCase="'stage'" [stages]="stages" />
+
+      <!-- Caso: GRUPOS -->
       <app-group-list *ngSwitchCase="'group'" />
     </ng-container>
 

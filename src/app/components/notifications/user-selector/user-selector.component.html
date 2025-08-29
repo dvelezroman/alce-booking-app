@@ -1,39 +1,60 @@
 <section class="section">
-
-  <!-- Contenedor principal -->
   <div class="report-table-wrapper">
-    <div class="user-selector-container">
+    <div class="user-selector-container" #containerRef>
       <div class="field relative-container">
-        <label class="label">Buscar Usuario</label>
+        <label class="label">Buscar {{ role === 'student' ? 'Estudiantes' : 'Instructores' }}</label>
 
-        <!-- Input de búsqueda -->
         <div class="control has-icons-left">
           <input
             class="input"
             type="text"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearchChange($event)"
-            (focus)="showUserDropdown = true"
-            (blur)="hideDropdown()"
-            placeholder="Escribe el nombre del usuario"
+            (focus)="onInputFocus()"
+            placeholder="Buscar usuario por nombre"
           />
           <span class="icon is-left">
             <i class="fas fa-search"></i>
           </span>
         </div>
 
-        <!-- Dropdown con usuarios filtrados -->
         <div
           class="dropdown-list"
-          *ngIf="showUserDropdown && filteredUsers.length > 0"
+          *ngIf="isDropdownOpen && allUsers.length > 0"
         >
           <div
             class="dropdown-item"
-            *ngFor="let user of filteredUsers"
-            (click)="selectUser(user)"
+            *ngFor="let user of allUsers"
+            (click)="toggleUserSelection(user)"
+            [class.selected]="isSelected(user)"
           >
-            {{ user.firstName }} {{ user.lastName }} — {{ user.email }}
+            <input
+              type="checkbox"
+              [checked]="isSelected(user)"
+              (click)="$event.stopPropagation()"
+              (change)="toggleUserSelection(user)"
+            />
+            {{ user.firstName }} {{ user.lastName }} - {{ role?.toUpperCase() }}
           </div>
+        </div>
+
+        <div class="selected-users" *ngIf="selectedUsers.length > 0">
+          <strong class="selected-label">Seleccionados:</strong>
+          <ul>
+            <li *ngFor="let user of selectedUsers" class="selected-user-item">
+              <span class="user-name">
+                {{ user.firstName }} {{ user.lastName }}
+              </span>
+              <button
+                type="button"
+                class="delete-btn"
+                (click)="removeUser(user)"
+                aria-label="Eliminar usuario"
+              >
+                ×
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
