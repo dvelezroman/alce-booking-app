@@ -1,0 +1,53 @@
+<div class="notification-form-wrapper">
+  <h2 class="form-title">Nueva Notificación</h2>
+  <p class="form-subtitle">
+    Envía notificaciones a usuarios, grupos o por etapa educativa
+  </p>
+
+  <div class="form-container">
+    <!-- Selector dinámico según tipo -->
+    <ng-container [ngSwitch]="selectedType">
+      <app-user-selector *ngSwitchCase="'user'" />
+      <app-stage-selector *ngSwitchCase="'stage'" [stages]="stages" />
+      <app-group-list *ngSwitchCase="'group'" />
+    </ng-container>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="submitForm()" #formRef="ngForm">
+      <!-- Título -->
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input
+          id="title"
+          name="title"
+          type="text"
+          [(ngModel)]="title"
+          required
+          placeholder="Título de la notificación"
+        />
+      </div>
+
+      <!-- Mensaje -->
+      <div class="form-group">
+        <label for="message">Mensaje</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="4"
+          [(ngModel)]="message"
+          required
+          placeholder="Escribe tu mensaje aquí..."
+        ></textarea>
+      </div>
+
+      <!-- Botón -->
+      <button
+        type="submit"
+        [disabled]="!formRef.form.valid"
+        class="send-btn"
+      >
+        Enviar Notificación
+      </button>
+    </form>
+  </div>
+</div>

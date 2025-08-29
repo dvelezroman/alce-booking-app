@@ -5,11 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { UserDto } from '../../../services/dtos/user.dto';
 import { Stage } from '../../../services/dtos/student.dto';
 
-import { UserSelectorComponent } from '../../../components/notifications/user-selector/user-selector.component';
-import { StageSelectorComponent } from '../../../components/notifications/stage-selector/stage-selector.component';
 import { NotificationPanelComponent } from '../../../components/notifications/notification-panel/notification-panel.component';
 
 import { StagesService } from '../../../services/stages.service';
+import { NotificationFormWrapperComponent } from '../../../components/notifications/notification-form-wrapper/notification-form-wrapper.component';
 
 @Component({
   selector: 'app-broadcast-groups',
@@ -17,9 +16,8 @@ import { StagesService } from '../../../services/stages.service';
   imports: [
     CommonModule,
     FormsModule,
-    UserSelectorComponent,
-    StageSelectorComponent,
     NotificationPanelComponent,
+    NotificationFormWrapperComponent
   ],
   templateUrl: './broadcast-groups.component.html',
   styleUrl: './broadcast-groups.component.scss',

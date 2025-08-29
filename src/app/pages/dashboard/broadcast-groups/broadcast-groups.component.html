@@ -7,19 +7,10 @@
     (sendOptionSelected)="onSendOptionSelected($event)"
   ></app-notification-panel>
 
-  <!-- Selectores dinámicos según la opción seleccionada -->
-  <div class="selectors-wrapper">
-    <app-user-selector
-      *ngIf="selectedAction === 'user'"
-      (userSelected)="handleUserSelect($event)"
-      [reset]="resetChildren"
-    ></app-user-selector>
+  <app-notification-form-wrapper
+    *ngIf="selectedAction"
+    [selectedType]="selectedAction"
+    [stages]="stages" 
+  ></app-notification-form-wrapper>
 
-    <app-stage-selector
-      *ngIf="selectedAction === 'stage'"
-      [stages]="stages"
-      (stageSelected)="handleStageSelect($event)"
-      [reset]="resetChildren"
-    ></app-stage-selector>
-  </div>
 </section>
