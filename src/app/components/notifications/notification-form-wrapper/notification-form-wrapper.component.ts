@@ -61,6 +61,19 @@ export class NotificationFormWrapperComponent implements OnInit {
     });
   }
 
+  get titleText(): string {
+    switch (this.selectedType) {
+      case 'user':
+        return 'Nueva notificación a usuario(s)';
+      case 'stage':
+        return 'Nueva notificación por stage';
+      case 'group':
+        return 'Nueva notificación por grupo';
+      default:
+        return 'Nueva notificación';
+    }
+  }
+
   getFormSubtitle(): string {
     switch (this.selectedType) {
       case 'user':

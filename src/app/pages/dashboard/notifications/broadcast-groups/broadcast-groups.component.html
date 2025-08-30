@@ -7,11 +7,22 @@
     (sendOptionSelected)="onSendOptionSelected($event)"
   ></app-notification-panel>
 
+  <!-- Formulario visible solo cuando hay tipo seleccionado -->
   <app-notification-form-wrapper
     *ngIf="selectedAction"
     [selectedType]="selectedAction"
     [stages]="stages" 
     (submitNotification)="handleNotificationSubmit($event)"
   ></app-notification-form-wrapper>
-
 </section>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [metadata]="modal.metadata"
+  (close)="modal.close()"
+  (confirmAction)="modal.confirm && modal.confirm()"
+></app-modal>

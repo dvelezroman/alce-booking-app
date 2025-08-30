@@ -25,7 +25,9 @@ import { AssessmentTypesComponent } from './assessment-types/assessment-types.co
 import { AssessmentConfigComponent } from './assessment-config/assessment-config.component';
 import { ReportUserComponent } from './report-user/report-user.component';
 import { AttendanceInstructorComponent } from './attendance-instructor/attendance-instructor.component';
-import { BroadcastGroupsComponent } from './broadcast-groups/broadcast-groups.component';
+import { BroadcastGroupsComponent } from './notifications/broadcast-groups/broadcast-groups.component';
+import { NotificationsStatusComponent } from './notifications/notifications-status/notifications-status.component';
+import { GroupsComponent } from './notifications/groups/groups.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -39,7 +41,10 @@ export const dashboardRoutes: Routes = [
   { path: 'assessment-types', component: AssessmentTypesComponent },
   { path: 'meetings-student', component: MeetingsStudentComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent },
-  { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent },
+  {
+    path: 'searching-meeting-instructor',
+    component: SearchingMeetingInstructorComponent,
+  },
   { path: 'searching-students', component: SearchingStudentComponent },
   { path: 'attendance-student', component: AttendanceReportsComponent },
   { path: 'report-instructor', component: ReportInstructorComponent },
@@ -55,4 +60,6 @@ export const dashboardRoutes: Routes = [
   { path: 'assessment-reports', component: AssessmentReportsComponent },
   { path: 'assessment-config', component: AssessmentConfigComponent },
   { path: 'processed-events', component: ProcessedEventsComponent },
+  { path: 'notifications-status', component: NotificationsStatusComponent },
+  { path: 'notifications-groups', component: GroupsComponent },
 ];

@@ -40,12 +40,26 @@ export interface CreateNotificationDto {
   stageId?: number;
   title: string;
   message: NotificationMessage
-  notificationType: 'Announce' | 'Advice' | 'Commentary' | 'Mandatory' | 'System' | 'Meeting' | 'Assessment';
+  notificationType: NotificationTypeEnum;
   priority: number;
   scheduledAt?: string;
   expiresAt?: string;
   metadata?: Record<string, any>;
   maxRetries?: number;
+}
+
+export interface FilterNotificationDto {
+  notificationType?: Notification['notificationType'];
+  scope?: Notification['scope'];
+  status?: Notification['status'];
+  priority?: number;
+  userId?: number;
+  fromUserId?: number;
+  fromDate?: string;
+  toDate?: string;
+  unreadOnly?: boolean;
+  page?: number;
+  limit?: number;
 }
 
 export enum NotificationScopeEnum {

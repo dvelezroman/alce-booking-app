@@ -1,0 +1,53 @@
+<section class="notifications-section">
+  <h1 class="reports-progress-header reports-progress-title">
+    Historial
+  </h1>
+
+  <div class="notification-container">
+    <div class="filter-container-enhanced">
+        <label for="statusFilter" class="filter-label">Filtrar por estado:</label>
+        <select
+            id="statusFilter"
+            class="filter-select"
+            [(ngModel)]="statusFilter"
+            (change)="fetchNotifications()"
+        >
+            <option value="">Todos</option> 
+            <option value="PENDING">Pendiente</option>
+            <option value="SENT">Enviado</option>
+            <option value="DELIVERED">Entregado</option>
+            <option value="READ">Leído</option>
+            <option value="FAILED">Fallido</option>
+        </select>
+        </div>
+
+    <table class="notification-table" *ngIf="notifications.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+          <th>Prioridad</th>
+          <th>Programada</th>
+          <th>Enviada</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let notification of notifications">
+          <td>{{ notification.id }}</td>
+          <td>{{ notification.title }}</td>
+          <td>{{ notification.notificationType }}</td>
+          <td>{{ notification.status }}</td>
+          <td>{{ notification.priority }}</td>
+          <td>{{ notification.scheduledAt || '—' }}</td>
+          <td>{{ notification.sentAt || '—' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="no-results" *ngIf="notifications?.length === 0">
+      No se encontraron notificaciones para este estado.
+    </div>
+  </div>
+</section>
