@@ -1,13 +1,19 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
+
 import { UserSelectorComponent } from '../user-selector/user-selector.component';
 import { StageSelectorComponent } from '../stage-selector/stage-selector.component';
 import { GroupListComponent } from '../group-list/group-list.component';
+
 import { Stage } from '../../../services/dtos/student.dto';
 import { UserDto } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
+import { selectUserData } from '../../../store/user.selector';
+import { CreateNotificationDto, NotificationScopeEnum, NotificationTypeEnum } from '../../../services/dtos/notification.dto';
+
 
 @Component({
   selector: 'app-notification-form-wrapper',
@@ -22,21 +28,51 @@ import { UsersService } from '../../../services/users.service';
   templateUrl: './notification-form-wrapper.component.html',
   styleUrl: './notification-form-wrapper.component.scss',
 })
-export class NotificationFormWrapperComponent {
+export class NotificationFormWrapperComponent implements OnInit {
   @Input() selectedType: 'user' | 'stage' | 'group' = 'user';
   @Input() stages: Stage[] = [];
+
+  @Output() submitNotification = new EventEmitter<CreateNotificationDto>();
 
   @ViewChild('formRef') formRef!: NgForm;
 
   title = '';
   message = '';
   selectedUserRole: 'student' | 'instructor' = 'student';
+  notificationType = NotificationTypeEnum.Announce;
+  notificationTypes = Object.values(NotificationTypeEnum);
   selectedStageId: number | null = null;
   selectedUsers: UserDto[] = [];
   users: UserDto[] = [];
   totalUsersInStage: number = 0;
 
-  constructor(private usersService: UsersService) {}
+  userId: number | null = null;
+
+  constructor(
+    private usersService: UsersService,
+    private store: Store
+  ) {}
+
+  ngOnInit(): void {
+    this.store.select(selectUserData).subscribe((user: UserDto | null) => {
+      if (user) {
+        this.userId = user.id;
+      }
+    });
+  }
+
+  getFormSubtitle(): string {
+    switch (this.selectedType) {
+      case 'user':
+        return 'Selecciona los usuarios a los que deseas enviar esta notificación.';
+      case 'stage':
+        return 'Selecciona una etapa y se notificará a todos los estudiantes dentro de ella.';
+      case 'group':
+        return 'Selecciona un grupo para enviar la notificación a sus integrantes.';
+      default:
+        return 'Envía notificaciones a usuarios, grupos o por etapa educativa.';
+    }
+  }
 
   handleUsersSelected(users: UserDto[]) {
     this.selectedUsers = users;
@@ -78,22 +114,49 @@ export class NotificationFormWrapperComponent {
   }
 
   submitForm() {
-    if (!this.formRef.valid) return;
+    if (!this.formRef.valid || !this.userId) return;
 
-    const payload: any = {
-      type: this.selectedType,
+    const to = this.selectedUsers.map((u) => u.id);
+    let scope: NotificationScopeEnum;
+    switch (this.selectedType) {
+      case 'user':
+        scope = NotificationScopeEnum.INDIVIDUAL;
+        break;
+      case 'stage':
+        scope = NotificationScopeEnum.STAGE_STUDENTS;
+        break;
+      case 'group':
+        scope = NotificationScopeEnum.ALL_USERS;
+        break;
+      default:
+        scope = NotificationScopeEnum.INDIVIDUAL;
+    }
+    const stageId = this.selectedUserRole === 'student' && this.selectedStageId != null
+      ? +this.selectedStageId
+      : undefined;
+
+    const payload = {
+      from: this.userId,
+      to,
+      scope,
+      stageId,
       title: this.title,
-      message: this.message,
+      message: {
+        body: this.message,
+        action: 'join_meeting',
+      },
+      notificationType: this.notificationType,
+      priority: 1,
+      scheduledAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 86400000).toISOString(),
+      metadata: {
+        source: 'meeting_system',
+        category: 'reminder',
+      },
+      maxRetries: 3,
     };
 
-    if (this.selectedType === 'user') {
-      payload.userIds = this.selectedUsers.map((u) => u.id);
-      payload.userRole = this.selectedUserRole;
-      if (this.selectedUserRole === 'student') {
-        payload.stageId = this.selectedStageId;
-      }
-    }
-
-    console.log('Enviando notificación:', payload);
+    //console.log('enviando notificación al padre:', payload);
+    this.submitNotification.emit(payload);
   }
 }

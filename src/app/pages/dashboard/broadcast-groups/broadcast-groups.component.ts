@@ -9,6 +9,7 @@ import { NotificationPanelComponent } from '../../../components/notifications/no
 
 import { StagesService } from '../../../services/stages.service';
 import { NotificationFormWrapperComponent } from '../../../components/notifications/notification-form-wrapper/notification-form-wrapper.component';
+import { CreateNotificationDto } from '../../../services/dtos/notification.dto';
 
 @Component({
   selector: 'app-broadcast-groups',
@@ -75,5 +76,9 @@ export class BroadcastGroupsComponent implements OnInit {
     if (option !== 'stage') {
       this.selectedStage = null;
     }
+  }
+
+  handleNotificationSubmit(payload: CreateNotificationDto): void {
+    //console.log('recibido desde el hijo:', payload);
   }
 }
