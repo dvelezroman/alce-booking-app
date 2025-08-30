@@ -16,7 +16,7 @@ export class NotificationsStatusComponent implements OnInit {
   statusFilter: 'SENT' | 'PENDING' | 'DELIVERED' | 'READ' | 'FAILED' | '' = '';
   typeFilter: Notification['notificationType'] | '' = '';
   scopeFilter: Notification['scope'] | '' = '';
-  loading = false;
+  showFilters = false;
 
   fromDate: string = '';
   toDate: string = '';
@@ -30,9 +30,11 @@ export class NotificationsStatusComponent implements OnInit {
     this.fetchNotifications();
   }
 
-  fetchNotifications(): void {
-    this.loading = true;
+  toggleFilters(): void {
+    this.showFilters = !this.showFilters;
+  }
 
+  fetchNotifications(): void {
     const filters: FilterNotificationDto = {
       fromDate: this.fromDate,
       toDate: this.toDate,
@@ -53,11 +55,9 @@ export class NotificationsStatusComponent implements OnInit {
     this.notificationService.getNotifications(filters).subscribe({
       next: (data) => {
         this.notifications = data;
-        this.loading = false;
       },
       error: (err) => {
         console.error('Error fetching notifications:', err);
-        this.loading = false;
       },
     });
   }

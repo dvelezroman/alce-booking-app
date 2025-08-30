@@ -2,56 +2,63 @@
   <h1 class="reports-progress-header reports-progress-title">Historial</h1>
 
   <div class="notification-container">
-    <!-- Filtros -->
-    <div class="filter-container-enhanced">
-      <div class="filter-group">
-        <label for="statusFilter" class="filter-label">Estado</label>
-        <select id="statusFilter" class="filter-select" [(ngModel)]="statusFilter" (change)="fetchNotifications()">
-          <option value="">Todos</option>
-          <option value="PENDING">Pendiente</option>
-          <option value="SENT">Enviado</option>
-          <option value="DELIVERED">Entregado</option>
-          <option value="READ">Leído</option>
-          <option value="FAILED">Fallido</option>
-        </select>
-      </div>
+    <!-- Botón para mostrar/ocultar filtros -->
+  <div class="filter-toggle-wrapper">
+    <button class="filter-toggle-button" (click)="toggleFilters()">
+      {{ showFilters ? 'Ocultar filtros' : 'Filtrar' }}
+    </button>
+  </div>
 
-      <div class="filter-group">
-        <label for="typeFilter" class="filter-label">Tipo</label>
-        <select id="typeFilter" class="filter-select" [(ngModel)]="typeFilter" (change)="fetchNotifications()">
-          <option value="">Todos</option>
-          <option value="Announce">Anuncio</option>
-          <option value="Advice">Consejo</option>
-          <option value="Commentary">Comentario</option>
-          <option value="Mandatory">Obligatorio</option>
-          <option value="System">Sistema</option>
-          <option value="Meeting">Reunión</option>
-          <option value="Assessment">Evaluación</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label for="scopeFilter" class="filter-label">Ámbito</label>
-        <select id="scopeFilter" class="filter-select" [(ngModel)]="scopeFilter" (change)="fetchNotifications()">
-          <option value="">Todos</option>
-          <option value="INDIVIDUAL">Individual</option>
-          <option value="ALL_USERS">Todos los usuarios</option>
-          <option value="ALL_STUDENTS">Todos los estudiantes</option>
-          <option value="ALL_INSTRUCTORS">Todos los instructores</option>
-          <option value="STAGE_STUDENTS">Estudiantes por etapa</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label for="fromDate" class="filter-label">Desde</label>
-        <input id="fromDate" type="date" [(ngModel)]="fromDate" (change)="fetchNotifications()" />
-      </div>
-
-      <div class="filter-group">
-        <label for="toDate" class="filter-label">Hasta</label>
-        <input id="toDate" type="date" [(ngModel)]="toDate" (change)="fetchNotifications()" />
-      </div>
+  <!-- Bloque de filtros condicional -->
+  <div class="filter-container-enhanced" *ngIf="showFilters">
+    <div class="filter-group">
+      <label for="statusFilter" class="filter-label">Estado</label>
+      <select id="statusFilter" class="filter-select" [(ngModel)]="statusFilter" (change)="fetchNotifications()">
+        <option value="">Todos</option>
+        <option value="PENDING">Pendiente</option>
+        <option value="SENT">Enviado</option>
+        <option value="DELIVERED">Entregado</option>
+        <option value="READ">Leído</option>
+        <option value="FAILED">Fallido</option>
+      </select>
     </div>
+
+    <div class="filter-group">
+      <label for="typeFilter" class="filter-label">Tipo</label>
+      <select id="typeFilter" class="filter-select" [(ngModel)]="typeFilter" (change)="fetchNotifications()">
+        <option value="">Todos</option>
+        <option value="Announce">Anuncio</option>
+        <option value="Advice">Consejo</option>
+        <option value="Commentary">Comentario</option>
+        <option value="Mandatory">Obligatorio</option>
+        <option value="System">Sistema</option>
+        <option value="Meeting">Reunión</option>
+        <option value="Assessment">Evaluación</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="scopeFilter" class="filter-label">Ámbito</label>
+      <select id="scopeFilter" class="filter-select" [(ngModel)]="scopeFilter" (change)="fetchNotifications()">
+        <option value="">Todos</option>
+        <option value="INDIVIDUAL">Individual</option>
+        <option value="ALL_USERS">Todos los usuarios</option>
+        <option value="ALL_STUDENTS">Todos los estudiantes</option>
+        <option value="ALL_INSTRUCTORS">Todos los instructores</option>
+        <option value="STAGE_STUDENTS">Estudiantes por etapa</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="fromDate" class="filter-label">Desde</label>
+      <input id="fromDate" type="date" [(ngModel)]="fromDate" (change)="fetchNotifications()" />
+    </div>
+
+    <div class="filter-group">
+      <label for="toDate" class="filter-label">Hasta</label>
+      <input id="toDate" type="date" [(ngModel)]="toDate" (change)="fetchNotifications()" />
+    </div>
+  </div>
 
     <!-- Tabla de notificaciones -->
     <div class="table-container">
