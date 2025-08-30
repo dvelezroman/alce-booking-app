@@ -13,9 +13,11 @@ import { FormsModule } from '@angular/forms';
 export class StageSelectorComponent implements OnChanges {
   @Input() stages: Stage[] = [];
   @Input() reset = false;
-  @Output() stageSelected = new EventEmitter<Stage | null>();
+  @Input() totalUsers: number | null = null;
+  @Output() stageSelected = new EventEmitter<number | null>();
 
   selectedStageId: string = '';
+  totalUsersInStage: number = 0;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['reset'] && this.reset) {
@@ -24,17 +26,8 @@ export class StageSelectorComponent implements OnChanges {
   }
 
   onStageChange(event: Event) {
-    const stageId = (event.target as HTMLSelectElement).value;
-
-    if (!stageId) {
-      this.stageSelected.emit(null);
-      return;
-    }
-
-    const selected = this.stages.find(stage => stage.id === +stageId);
-    if (selected) {
-      this.stageSelected.emit(selected);
-    }
+    const stageId = +(event.target as HTMLSelectElement).value;
+    this.stageSelected.emit(stageId || null);
   }
 
   private clearSelection(): void {

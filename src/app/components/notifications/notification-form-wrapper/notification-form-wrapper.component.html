@@ -23,7 +23,7 @@
           </select>
         </div>
 
-        <!-- Etapa (solo si es estudiante) -->
+        <!-- stages (solo si es estudiante) -->
         <div class="form-group" *ngIf="selectedUserRole === 'student'">
           <label for="stage">Stage</label>
           <select
@@ -41,21 +41,26 @@
         <!-- Selector de usuarios -->
         <app-user-selector
           [role]="selectedUserRole"
-          [stageId]="selectedUserRole === 'student' ? selectedStageId : undefined"
+          [stageId]="selectedUserRole === 'student' && selectedStageId != null ? selectedStageId : undefined"
           (usersSelected)="handleUsersSelected($event)"
         />
       </ng-container>
 
-      <!-- Caso: ETAPAS -->
-      <app-stage-selector *ngSwitchCase="'stage'" [stages]="stages" />
+      <!-- Caso: stages -->
+      <app-stage-selector
+        *ngSwitchCase="'stage'"
+        [stages]="stages"
+        [totalUsers]="totalUsersInStage"
+        (stageSelected)="handleStageChange($event)"
+      />
 
-      <!-- Caso: GRUPOS -->
+      <!-- Caso: grupos -->
       <app-group-list *ngSwitchCase="'group'" />
     </ng-container>
 
     <!-- Formulario -->
     <form (ngSubmit)="submitForm()" #formRef="ngForm">
-      <!-- Título -->
+
       <div class="form-group">
         <label for="title">Título</label>
         <input
@@ -68,7 +73,6 @@
         />
       </div>
 
-      <!-- Mensaje -->
       <div class="form-group">
         <label for="message">Mensaje</label>
         <textarea
@@ -81,7 +85,6 @@
         ></textarea>
       </div>
 
-      <!-- Botón -->
       <button
         type="submit"
         [disabled]="!formRef.form.valid"
