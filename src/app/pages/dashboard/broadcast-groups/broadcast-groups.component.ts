@@ -36,7 +36,18 @@ export class BroadcastGroupsComponent implements OnInit {
 
   ngOnInit() {
     this.stagesService.getAll().subscribe((response: Stage[]) => {
-      this.stages = response;
+      this.stages = response
+        .filter((s) => {
+          const match = s.description.match(/stage\s+(\d+)/i);
+          if (!match) return false;
+          const num = +match[1];
+          return num >= 1 && num <= 19;
+        })
+        .sort((a, b) => {
+          const aNum = +(a.description.match(/stage\s+(\d+)/i)?.[1] || 0);
+          const bNum = +(b.description.match(/stage\s+(\d+)/i)?.[1] || 0);
+          return aNum - bNum;
+        });
     });
   }
 

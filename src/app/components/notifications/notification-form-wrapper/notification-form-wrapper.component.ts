@@ -156,7 +156,6 @@ export class NotificationFormWrapperComponent implements OnInit {
       maxRetries: 3,
     };
 
-    //console.log('enviando notificación al padre:', payload);
     this.submitNotification.emit(payload);
   }
 }
