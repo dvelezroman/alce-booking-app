@@ -22,12 +22,11 @@
   line-height: 75px;
   font-weight: bold;
   margin: 0;
+
   @media (max-width: 640px) {
-  .reports-progress-title {
     font-size: 1rem;
     line-height: 2.75rem;
   }
-}
 }
 
 .notification-container {
@@ -38,35 +37,45 @@
 
 .filter-container-enhanced {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap:nowrap;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 1rem;
   margin-bottom: 1rem;
 
-  @media (max-width: 640px) {
+  @media (max-width: 750px) {
+    flex-direction: column;
     align-items: center;
-    width: 100%;
+  }
+}
+
+// Agrupación de cada filtro (label + input)
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+
+  @media (max-width: 750px) {
+    width: 90%;
   }
 }
 
 .filter-label {
   font-weight: 600;
   color: #333;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-
-  @media (max-width: 640px) {
-    text-align: center;
-    font-size: 0.9rem;
-  }
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
 }
 
-.filter-select {
-  width: 90%;
-  max-width: 280px;
+//  Select y input uniformes
+.filter-select,
+input[type='date'] {
+  width: 100%;
   padding: 0.5rem 1rem;
   border-radius: 8px;
   border: 1px solid #ccc;
-  font-size: 1rem;
+  font-size: .85rem;
   background-color: #fff;
   color: #333;
   transition: border-color 0.3s ease;
@@ -77,29 +86,112 @@
   }
 
   @media (max-width: 640px) {
-    width: 90%;
-    max-width: 280px;
-    font-size: .8rem;
+    font-size: 0.85rem;
   }
 }
 
-.notification-table {
+// FILTROS DE FECHAS
+.date-filters {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  label {
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 500;
+  }
+
+  input[type='date'] {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    color: #333;
+  }
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+}
+
+.table-container {
+  max-width: 100%;
   width: 100%;
+  margin: auto;
+  display: flex;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 8px;
+  max-height: 475px;
+  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: auto;
+  margin-left: 20px;
+}
+
+/* Estilo de la tabla */
+.table-results {
+  width: 100%;
+  margin: auto;
   border-collapse: collapse;
-  background-color: #fff;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  table-layout: fixed;
+  min-width: 1000px;
+  word-wrap: break-word;
 }
 
-.notification-table th,
-.notification-table td {
-  padding: 0.75rem;
-  text-align: left;
-  border-bottom: 1px solid #e0e0e0;
+.table-results th:first-child,
+.table-results td:first-child {
+  width: 45px;
 }
 
-.notification-table th {
-  background-color: #f0f0f0;
+.table-results th {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.55rem;
+  font-size: 0.8rem;
   font-weight: bold;
+  color: black;
+  border-bottom: 1px solid #ececec;
+  background-color: #e5effa;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table-results td {
+  text-align: center;
+  overflow: hidden;
+  padding: 10px 5px;
+  font-size: 0.75rem;
+  vertical-align: middle;
+  color: rgb(104, 104, 104);
+  border-bottom: 1px solid rgb(221, 221, 221);
+}
+
+.fixed-name-col {
+  min-width: 150px;
+  max-width: 150px;
+}
+
+.name-wrapper {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-width: 150px;
+}
+
+.name-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .no-results {
