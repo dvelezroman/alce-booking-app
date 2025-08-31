@@ -80,3 +80,27 @@ export enum NotificationTypeEnum {
   Assessment = 'Assessment',
 }
 export type NotificationType = keyof typeof NotificationTypeEnum;
+
+export interface CreateNotificationGroupDto {
+  name: string;
+  description: string;
+  userIds: number[];
+}
+
+export interface NotificationGroupDto {
+  id: number;
+  name: string;
+  description: string;
+  userIds: number[];
+  createdAt: string;
+  updatedAt: string;
+  users: UserDto[];
+}
+
+export interface FilterNotificationGroupDto {
+  name?: string;
+  description?: string;
+  userId?: number;
+  page?: number;
+  limit?: number;
+}

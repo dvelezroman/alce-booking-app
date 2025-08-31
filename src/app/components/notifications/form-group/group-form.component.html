@@ -1,1 +1,54 @@
-<p>group-form works!</p>
+<div class="box">
+
+  <form [formGroup]="form" (ngSubmit)="submitForm()">
+    <div class="field">
+      <label class="label">Nombre</label>
+      <div class="control">
+        <input
+          type="text"
+          class="input"
+          formControlName="name"
+          placeholder="Nombre del grupo"
+        />
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Descripción</label>
+      <div class="control">
+        <input
+          type="text"
+          class="input"
+          formControlName="description"
+          placeholder="Descripción del grupo"
+        />
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Seleccionar tipo de usuario</label>
+      <div class="control">
+        <div class="select is-fullwidth">
+          <select (change)="onRoleChange($event)">
+            <option [ngValue]="null">-- Selecciona --</option>
+            <option value="student">Estudiantes</option>
+            <option value="instructor">Instructores</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field mt-3" *ngIf="selectedRole">
+      <label class="label">Usuarios del grupo</label>
+      <app-user-selector
+        [role]="selectedRole"
+        (usersSelected)="onUsersSelected($event)"
+      >
+      </app-user-selector>
+    </div>
+
+    <div class="field mt-4">
+      <button class="button is-primary" type="submit">Crear grupo</button>
+    </div>
+  </form>
+</div>
