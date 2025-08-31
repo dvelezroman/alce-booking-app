@@ -12,7 +12,8 @@ import { Stage } from '../../../services/dtos/student.dto';
 import { UserDto } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
 import { selectUserData } from '../../../store/user.selector';
-import { CreateNotificationDto, NotificationScopeEnum, NotificationTypeEnum } from '../../../services/dtos/notification.dto';
+import { CreateNotificationDto, NotificationGroupDto, NotificationScopeEnum, NotificationTypeEnum } from '../../../services/dtos/notification.dto';
+import { NotificationGroupService } from '../../../services/notification-group.service';
 
 
 @Component({
@@ -45,11 +46,14 @@ export class NotificationFormWrapperComponent implements OnInit {
   selectedUsers: UserDto[] = [];
   users: UserDto[] = [];
   totalUsersInStage: number = 0;
+  groups: NotificationGroupDto[] = [];
+  selectedGroupId: number | null = null;
 
   userId: number | null = null;
 
   constructor(
     private usersService: UsersService,
+    private notificationGroupService: NotificationGroupService,
     private store: Store
   ) {}
 
@@ -59,6 +63,17 @@ export class NotificationFormWrapperComponent implements OnInit {
         this.userId = user.id;
       }
     });
+
+    if (this.selectedType === 'group') {
+      this.notificationGroupService.getGroups().subscribe({
+        next: (res) => {
+          this.groups = res.notificationGroups || [];
+        },
+        error: () => {
+          this.groups = [];
+        }
+      });
+    }
   }
 
   get titleText(): string {
