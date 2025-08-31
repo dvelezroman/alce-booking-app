@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { GroupFormComponent } from '../../../../components/notifications/form-group/group-form.component';
 import { GroupListComponent } from '../../../../components/notifications/group-list/group-list.component';
 import { NotificationGroupService } from '../../../../services/notification-group.service';
-import { NotificationGroupDto } from '../../../../services/dtos/notification.dto';
+import { CreateNotificationGroupDto, NotificationGroupDto } from '../../../../services/dtos/notification.dto';
+import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
+import { ModalComponent } from '../../../../components/modal/modal.component';
 
 @Component({
   selector: 'app-groups',
@@ -14,6 +16,7 @@ import { NotificationGroupDto } from '../../../../services/dtos/notification.dto
     FormsModule,
     GroupFormComponent,
     GroupListComponent,
+    ModalComponent,
   ],
   templateUrl: './groups.component.html',
   styleUrl: './groups.component.scss',
@@ -23,6 +26,7 @@ export class GroupsComponent implements OnInit {
   groups: NotificationGroupDto[] = [];
   loading = false;
   groupToEdit?: NotificationGroupDto;
+  modal: ModalDto = modalInitializer();
 
   constructor(private notificationService: NotificationGroupService) {}
 
@@ -36,9 +40,16 @@ export class GroupsComponent implements OnInit {
   }
 
   openEditGroup(group: NotificationGroupDto) {
-    this.groupToEdit = group;
-    this.showModal = true;
-  }
+    this.notificationService.getGroupById(group.id).subscribe({
+      next: (fullGroup) => {
+        this.groupToEdit = fullGroup;
+        this.showModal = true;
+      },
+      error: (err) => {
+        console.error('Error al obtener grupo completo:', err);
+      },
+    });
+}
 
   closeModal() {
     this.showModal = false;
@@ -59,12 +70,78 @@ export class GroupsComponent implements OnInit {
     });
   }
 
-  onGroupCreated() {
-    this.closeModal();
-    this.loadGroups();
+  handleFormSubmit(event: {
+    payload: CreateNotificationGroupDto;
+    id?: number;
+  }) {
+    if (event.id) {
+      // EDITAR
+      this.notificationService.updateGroup(event.id, event.payload).subscribe({
+        next: () => {
+          this.showModalMessage({
+            title: 'Grupo actualizado',
+            message: 'El grupo fue actualizado correctamente.',
+            isSuccess: true,
+          });
+        },
+        error: () => {
+          this.showModalMessage({
+            title: 'Error al actualizar',
+            message: 'No se pudo actualizar el grupo.',
+            isError: true,
+          });
+        },
+      });
+    } else {
+      // CREAR
+      this.notificationService.createGroup(event.payload).subscribe({
+        next: () => {
+          this.showModalMessage({
+            title: 'Grupo creado',
+            message: 'El grupo fue creado correctamente.',
+            isSuccess: true,
+          });
+        },
+        error: () => {
+          this.showModalMessage({
+            title: 'Error al crear',
+            message: 'No se pudo crear el grupo.',
+            isError: true,
+          });
+        },
+      });
+    }
   }
 
-  onGroupUpdated() {
+  private showModalMessage({
+    title,
+    message,
+    isSuccess = false,
+    isError = false,
+  }: {
+    title: string;
+    message: string;
+    isSuccess?: boolean;
+    isError?: boolean;
+  }) {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      title,
+      message,
+      isSuccess,
+      isError,
+      close: () => {
+        this.modal.show = false;
+        this.modal = modalInitializer();
+      },
+    };
+
+    setTimeout(() => {
+      this.modal.show = false;
+      this.modal = modalInitializer();
+    }, 2000);
+
     this.closeModal();
     this.loadGroups();
   }

@@ -16,11 +16,7 @@
   width: 100%;
   max-width: 360px;
 
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  }
-
+  // Ocultar el botón por defecto
   .edit-icon-button {
     position: absolute;
     top: 0.5rem;
@@ -30,9 +26,22 @@
     font-size: 1.2rem;
     cursor: pointer;
     color: #6b7280;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
 
     &:hover {
       color: #1f2937;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+
+    .edit-icon-button {
+      opacity: 1;
+      pointer-events: auto;
     }
   }
 

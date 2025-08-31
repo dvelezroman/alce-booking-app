@@ -90,44 +90,44 @@ export class BroadcastGroupsComponent implements OnInit {
 
   handleNotificationSubmit(payload: CreateNotificationDto): void {
     this.notificationService.create(payload).subscribe({
-      next: (response) => {
-        this.showSuccessModal();
+      next: () => {
+        this.showModal({
+          isSuccess: true,
+          title: 'Notificación enviada',
+          message: 'La notificación ha sido enviada con éxito.',
+        });
         this.clearSelection();
       },
       error: (err) => {
         console.error('Error al crear notificación:', err);
-        this.showErrorModal();
+        this.showModal({
+          isError: true,
+          title: 'Error al enviar',
+          message: 'Ocurrió un error al enviar la notificación. Por favor, intenta nuevamente.',
+        });
       },
     });
   }
 
-  private showSuccessModal(): void {
+  private showModal({ title = '', message = '', isSuccess = false, isError = false , duration = 2000 }: {
+    title?: string;
+    message?: string;
+    isSuccess?: boolean;
+    isError?: boolean;
+    duration?: number;
+  }): void {
     this.modal = {
       ...modalInitializer(),
       show: true,
-      title: 'Notificación enviada',
-      message: 'La notificación ha sido enviada con éxito.',
-      isSuccess: true,
+      title,
+      message,
+      isSuccess,
+      isError,
       close: () => (this.modal.show = false),
     };
 
     setTimeout(() => {
       this.modal.show = false;
-    }, 3000);
-  }
-
-  private showErrorModal(): void {
-    this.modal = {
-      ...modalInitializer(),
-      show: true,
-      title: 'Error al enviar',
-      message:
-        'Ocurrió un error al enviar la notificación. Por favor, intenta nuevamente.',
-      isError: true,
-      close: () => (this.modal.show = false),
-    };
-    setTimeout(() => {
-      this.modal.show = false;
-    }, 3000);
+    }, duration);
   }
 }

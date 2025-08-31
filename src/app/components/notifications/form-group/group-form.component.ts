@@ -1,17 +1,29 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { UserSelectorComponent } from '../user-selector/user-selector.component'; 
+import { UserSelectorComponent } from '../user-selector/user-selector.component';
 import { UserDto } from '../../../services/dtos/user.dto';
+import { CreateNotificationGroupDto, NotificationGroupDto } from '../../../services/dtos/notification.dto';
 import { NotificationGroupService } from '../../../services/notification-group.service';
-import { CreateNotificationGroupDto,  NotificationGroupDto } from '../../../services/dtos/notification.dto';
 
 @Component({
   selector: 'app-group-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, UserSelectorComponent],
   templateUrl: './group-form.component.html',
-  styleUrl: './group-form.component.scss'
+  styleUrl: './group-form.component.scss',
 })
 export class GroupFormComponent implements OnChanges {
   form: FormGroup;
@@ -19,13 +31,12 @@ export class GroupFormComponent implements OnChanges {
   selectedUsers: UserDto[] = [];
 
   @Input() groupToEdit?: NotificationGroupDto;
-  @Output() groupCreated = new EventEmitter<void>();
-  @Output() groupUpdated = new EventEmitter<void>();
+  @Output() formSubmitted = new EventEmitter<{
+    payload: CreateNotificationGroupDto;
+    id?: number;
+  }>();
 
-  constructor(
-    private fb: FormBuilder,
-    private notificationGroupService: NotificationGroupService
-  ) {
+  constructor(private fb: FormBuilder, private notificationGroupService: NotificationGroupService) {
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
@@ -40,13 +51,24 @@ export class GroupFormComponent implements OnChanges {
         description: this.groupToEdit.description,
         userIds: this.groupToEdit.userIds,
       });
-
       this.selectedUsers = this.groupToEdit.users || [];
-    }else {
+    } else {
       this.form.reset();
       this.selectedUsers = [];
       this.selectedRole = null;
     }
+  }
+
+  get groupSummaryText(): string {
+    if (!this.groupToEdit) return '';
+
+    if (this.groupToEdit.users?.length) {
+      return this.groupToEdit.users
+        .map(u => `${u.firstName} ${u.lastName} (${u.email})`)
+        .join(', ');
+    }
+
+    return this.groupToEdit.userIds?.join(', ') ?? '';
   }
 
   onRoleChange(event: Event) {
@@ -62,6 +84,43 @@ export class GroupFormComponent implements OnChanges {
     this.form.get('userIds')?.setValue(ids);
   }
 
+  get displayedUsers() {
+    if (this.groupToEdit?.users?.length) {
+      return this.groupToEdit.users.map((u) => ({
+        id: u.id,
+        label: `${u.firstName} ${u.lastName}`.trim()
+      }));
+    }
+
+    if (this.groupToEdit?.userIds?.length) {
+      return this.groupToEdit.userIds.map((id) => ({
+        id,
+        label: String(id)
+      }));
+    }
+
+    return [];
+  }
+
+  removeUserFromGroup(userId: number) {
+    if (!this.groupToEdit?.id) return;
+
+    this.notificationGroupService
+      .removeUsersFromGroup(this.groupToEdit.id, [userId])
+      .subscribe({
+        next: () => {
+
+          this.groupToEdit!.users = this.groupToEdit!.users?.filter(u => u.id !== userId);
+          this.groupToEdit!.userIds = this.groupToEdit!.userIds?.filter(id => id !== userId);
+          this.selectedUsers = this.selectedUsers.filter(u => u.id !== userId);
+          this.form.get('userIds')?.setValue(this.selectedUsers.map(u => u.id));
+        },
+        error: (err) => {
+          console.error('Error al eliminar usuario del grupo', err);
+        }
+      });
+  }
+
   submitForm() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -69,30 +128,11 @@ export class GroupFormComponent implements OnChanges {
     }
 
     const payload: CreateNotificationGroupDto = this.form.value;
+    const id = this.groupToEdit?.id;
 
-    if (this.groupToEdit) {
-      this.notificationGroupService.updateGroup(this.groupToEdit.id, payload).subscribe({
-        next: () => {
-          console.log('Grupo actualizado exitosamente');
-          this.groupUpdated.emit();
-        },
-        error: (err) => {
-          console.error('Error al actualizar grupo:', err);
-        },
-      });
-    } else {
-      this.notificationGroupService.createGroup(payload).subscribe({
-        next: () => {
-          console.log('Grupo creado exitosamente');
-          this.groupCreated.emit();
-          this.form.reset();
-          this.selectedRole = null;
-          this.selectedUsers = [];
-        },
-        error: (err) => {
-          console.error('Error al crear grupo:', err);
-        },
-      });
-    }
+    this.formSubmitted.emit({ payload, id });
+    this.form.reset();
+    this.selectedRole = null;
+    this.selectedUsers = [];
   }
 }

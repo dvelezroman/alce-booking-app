@@ -49,4 +49,11 @@ export class NotificationGroupService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
+   // Eliminar usuarios de un grupo
+  removeUsersFromGroup(groupId: number, userIds: number[]): Observable<void> {
+    return this.http.request<void>('delete', `${this.apiUrl}/${groupId}/users`, {
+      body: { userIds },
+    });
+  }
+
 }

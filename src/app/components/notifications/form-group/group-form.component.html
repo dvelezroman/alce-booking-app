@@ -25,15 +25,24 @@
       </div>
     </div>
 
-    <!-- se muestra solo cuando se edita un grupo -->
-    <div class="field" *ngIf="groupToEdit">
-      <label class="label">Usuarios del grupo</label>
-      <div class="control">
-        <textarea
-          class="textarea"
-          readonly
-          rows="2"
-        >{{ groupToEdit.userIds.join(', ') }}</textarea>
+    <!-- Lista de IDs de usuarios actuales con opción a eliminar -->
+    <div class="field" *ngIf="displayedUsers.length">
+      <label class="label">Usuarios actuales</label>
+      <div class="pseudo-textarea">
+        <div
+          class="pseudo-textarea-line"
+          *ngFor="let user of displayedUsers"
+        >
+          <span>{{ user.label }}</span>
+          <button
+            type="button"
+            class="delete-user-btn"
+            (click)="removeUserFromGroup(user.id)"
+            title="Eliminar"
+          >
+            ✖
+          </button>
+        </div>
       </div>
     </div>
 
@@ -54,12 +63,13 @@
       <app-user-selector
         [role]="selectedRole"
         (usersSelected)="onUsersSelected($event)"
-      >
-      </app-user-selector>
+      ></app-user-selector>
     </div>
 
     <div class="field mt-4">
-      <button class="button is-primary" type="submit">Crear grupo</button>
+      <button class="button is-primary" type="submit">
+        {{ groupToEdit ? 'Actualizar grupo' : 'Crear grupo' }}
+      </button>
     </div>
   </form>
 </div>
