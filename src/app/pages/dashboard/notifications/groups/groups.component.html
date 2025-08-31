@@ -18,7 +18,11 @@
     </div>
   </div>
 
-  <app-group-list [groups]="groups" (editGroup)="openEditGroup($event)"></app-group-list>
+  <app-group-list
+    [groups]="groups"
+    (editGroup)="openEditGroup($event)"
+    (viewGroupMembers)="openGroupMembers($event)"
+  ></app-group-list>
 
   <!-- MODAL GRUPO -->
   <div class="modal" [ngClass]="{ 'is-active': showModal }">
@@ -39,7 +43,6 @@
     </div>
   </div>
 
-  <!-- MODAL DE ÉXITO / ERROR -->
   <app-modal
     [showModal]="modal.show"
     [message]="modal.message"
@@ -48,4 +51,11 @@
     [isSuccess]="modal.isSuccess"
     (close)="modal.close()"
   ></app-modal>
+
+  <app-group-members-modal
+    *ngIf="selectedGroup"
+    [group]="selectedGroup"
+    [show]="showMembersModal"
+    (close)="closeMembersModal()"
+  />
 </section>

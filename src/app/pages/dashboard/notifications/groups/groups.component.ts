@@ -7,6 +7,7 @@ import { NotificationGroupService } from '../../../../services/notification-grou
 import { CreateNotificationGroupDto, NotificationGroupDto } from '../../../../services/dtos/notification.dto';
 import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../../components/modal/modal.component';
+import { GroupMembersModalComponent } from '../../../../components/notifications/group-members-modal/group-members-modal.component';
 
 @Component({
   selector: 'app-groups',
@@ -17,6 +18,7 @@ import { ModalComponent } from '../../../../components/modal/modal.component';
     GroupFormComponent,
     GroupListComponent,
     ModalComponent,
+    GroupMembersModalComponent
   ],
   templateUrl: './groups.component.html',
   styleUrl: './groups.component.scss',
@@ -27,6 +29,8 @@ export class GroupsComponent implements OnInit {
   loading = false;
   groupToEdit?: NotificationGroupDto;
   modal: ModalDto = modalInitializer();
+  showMembersModal = false;
+  selectedGroup?: NotificationGroupDto;
 
   constructor(private notificationService: NotificationGroupService) {}
 
@@ -144,5 +148,15 @@ export class GroupsComponent implements OnInit {
 
     this.closeModal();
     this.loadGroups();
+  }
+
+  openGroupMembers(group: NotificationGroupDto) {
+    this.selectedGroup = group;
+    this.showMembersModal = true;
+  }
+
+  closeMembersModal() {
+    this.showMembersModal = false;
+    this.selectedGroup = undefined;
   }
 }

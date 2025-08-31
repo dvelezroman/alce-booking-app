@@ -11,9 +11,15 @@ import { NotificationGroupDto } from '../../../services/dtos/notification.dto';
 })
 export class GroupListComponent {
   @Input() groups: NotificationGroupDto[] = [];
+
   @Output() editGroup = new EventEmitter<NotificationGroupDto>();
+  @Output() viewGroupMembers = new EventEmitter<NotificationGroupDto>();
 
   onEditClick(group: NotificationGroupDto) {
     this.editGroup.emit(group);
+  }
+
+  onCardClick(group: NotificationGroupDto) {
+    this.viewGroupMembers.emit(group);
   }
 }

@@ -3,10 +3,14 @@
 </div>
 
 <div *ngIf="groups.length > 0" class="group-grid">
-  <div *ngFor="let group of groups" class="group-card relative">
+  <div
+    *ngFor="let group of groups"
+    class="group-card relative cursor-pointer"
+    (click)="onCardClick(group)"
+  >
     <button
       class="edit-icon-button"
-      (click)="onEditClick(group)"
+      (click)="onEditClick(group); $event.stopPropagation()"
       title="Editar grupo"
     >
       ✏️
