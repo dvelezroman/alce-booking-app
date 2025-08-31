@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { CreateNotificationGroupDto, FilterNotificationGroupDto, NotificationGroupDto } from './dtos/notification.dto';
+import { CreateNotificationGroupDto, FilterNotificationGroupDto, NotificationGroupDto, NotificationGroupListResponse } from './dtos/notification.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,7 @@ export class NotificationGroupService {
   }
 
   // Obtener todos los grupos
-    getGroups(filters?: FilterNotificationGroupDto): Observable<NotificationGroupDto[]> {
+  getGroups(filters?: FilterNotificationGroupDto): Observable<NotificationGroupListResponse> {
     let params = new HttpParams();
 
     if (filters) {
@@ -31,7 +31,22 @@ export class NotificationGroupService {
       if (filters.limit !== undefined) params = params.set('limit', filters.limit.toString());
     }
 
-    return this.http.get<NotificationGroupDto[]>(this.apiUrl, { params });
+    return this.http.get<NotificationGroupListResponse>(this.apiUrl, { params });
+  }
+
+  // Obtener grupo
+  getGroupById(id: number): Observable<NotificationGroupDto> {
+    return this.http.get<NotificationGroupDto>(`${this.apiUrl}/${id}`);
+  }
+
+  // Actualizar grupo
+  updateGroup(id: number, groupData: Partial<CreateNotificationGroupDto>): Observable<NotificationGroupDto> {
+    return this.http.put<NotificationGroupDto>(`${this.apiUrl}/${id}`, groupData);
+  }
+
+  // Eliminar grupo
+  deleteGroup(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
 }

@@ -25,6 +25,18 @@
       </div>
     </div>
 
+    <!-- se muestra solo cuando se edita un grupo -->
+    <div class="field" *ngIf="groupToEdit">
+      <label class="label">Usuarios del grupo</label>
+      <div class="control">
+        <textarea
+          class="textarea"
+          readonly
+          rows="2"
+        >{{ groupToEdit.userIds.join(', ') }}</textarea>
+      </div>
+    </div>
+
     <div class="field">
       <label class="label">Seleccionar tipo de usuario</label>
       <div class="control">
@@ -39,7 +51,6 @@
     </div>
 
     <div class="field mt-3" *ngIf="selectedRole">
-      <label class="label">Usuarios del grupo</label>
       <app-user-selector
         [role]="selectedRole"
         (usersSelected)="onUsersSelected($event)"

@@ -19,16 +19,27 @@
     </div>
   </div>
 
+  <app-group-list
+    [groups]="groups"
+    (editGroup)="openEditGroup($event)"
+  ></app-group-list>
+
   <!-- MODAL -->
   <div class="modal" [ngClass]="{ 'is-active': showModal }">
     <div class="modal-background" (click)="closeModal()"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Nuevo Grupo de Notificación</p>
+        <p class="modal-card-title">
+          {{ groupToEdit ? 'Editar Grupo de Notificación' : 'Nuevo Grupo de Notificación' }}
+        </p>
         <button class="delete" aria-label="close" (click)="closeModal()"></button>
       </header>
       <section class="modal-card-body">
-        <app-group-form (groupCreated)="onGroupCreated()"></app-group-form>
+        <app-group-form
+          [groupToEdit]="groupToEdit"
+          (groupCreated)="onGroupCreated()"
+          (groupUpdated)="onGroupUpdated()"
+        ></app-group-form>
       </section>
     </div>
   </div>

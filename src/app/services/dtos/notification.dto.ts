@@ -104,3 +104,11 @@ export interface FilterNotificationGroupDto {
   page?: number;
   limit?: number;
 }
+
+export interface NotificationGroupListResponse {
+  notificationGroups: NotificationGroupDto[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}

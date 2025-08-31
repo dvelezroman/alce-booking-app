@@ -1,1 +1,23 @@
-<p>group-list works!</p>
+<div *ngIf="groups.length === 0" class="empty-state">
+  <p class="empty-text">No hay grupos disponibles.</p>
+</div>
+
+<div *ngIf="groups.length > 0" class="group-grid">
+  <div *ngFor="let group of groups" class="group-card relative">
+    <button
+      class="edit-icon-button"
+      (click)="onEditClick(group)"
+      title="Editar grupo"
+    >
+      ✏️
+    </button>
+
+    <h2 class="group-title">{{ group.name }}</h2>
+    <p class="group-description">{{ group.description }}</p>
+    <div class="group-meta">
+      <p><strong>Creado:</strong> {{ group.createdAt | date: 'medium' }}</p>
+      <p><strong>Modificado:</strong> {{ group.updatedAt | date: 'medium' }}</p>
+      <p><strong>Usuarios:</strong> {{ group.userIds.length }}</p>
+    </div>
+  </div>
+</div>
