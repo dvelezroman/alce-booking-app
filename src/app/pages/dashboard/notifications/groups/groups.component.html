@@ -22,7 +22,7 @@
     <app-group-list
       [groups]="groups"
       (editGroup)="openEditGroup($event)"
-      (viewGroupMembers)="openGroupMembers($event)"
+      (viewGroupMembers)="openGroupMembersModal($event)"
     ></app-group-list>
   </div>
 
@@ -57,6 +57,7 @@
   <app-group-members-modal
     *ngIf="selectedGroup"
     [group]="selectedGroup"
+    [members]="groupMembers"
     [show]="showMembersModal"
     (close)="closeMembersModal()"
   />

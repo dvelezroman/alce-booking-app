@@ -8,6 +8,7 @@ import { CreateNotificationGroupDto, NotificationGroupDto } from '../../../../se
 import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../../components/modal/modal.component';
 import { GroupMembersModalComponent } from '../../../../components/notifications/group-members-modal/group-members-modal.component';
+import { UserDto } from '../../../../services/dtos/user.dto';
 
 @Component({
   selector: 'app-groups',
@@ -31,6 +32,7 @@ export class GroupsComponent implements OnInit {
   modal: ModalDto = modalInitializer();
   showMembersModal = false;
   selectedGroup?: NotificationGroupDto;
+  groupMembers: UserDto[] = [];
 
   constructor(private notificationService: NotificationGroupService) {}
 
@@ -52,8 +54,23 @@ export class GroupsComponent implements OnInit {
       error: (err) => {
         console.error('Error al obtener grupo completo:', err);
       },
+    }); 
+  }
+
+  openGroupMembersModal(group: NotificationGroupDto) {
+    this.selectedGroup = group;
+
+    this.notificationService.getUsersByGroupId(group.id).subscribe({
+      next: (users) => {
+        this.groupMembers = users;
+        this.showMembersModal = true;
+      },
+      error: (err) => {
+        console.error('Error al obtener integrantes del grupo:', err);
+        this.groupMembers = [];
+      },
     });
-}
+  }
 
   closeModal() {
     this.showModal = false;

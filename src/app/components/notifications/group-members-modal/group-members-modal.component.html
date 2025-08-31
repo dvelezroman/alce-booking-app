@@ -27,12 +27,12 @@
       <ng-template #fallbackIds>
         <p><strong>Usuarios:</strong></p>
         <ul class="user-list">
-          <li *ngFor="let id of group?.userIds">
-            <span>{{ id }}</span>
+          <li *ngFor="let user of members">
+            <span>{{ user.firstName }} {{ user.lastName }}</span>
             <button
               class="delete-user-btn"
               title="Eliminar"
-              (click)="removeUserFromGroup(id)"
+              (click)="removeUserFromGroup(user.id)"
             >
               ✖
             </button>

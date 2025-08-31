@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CreateNotificationGroupDto, FilterNotificationGroupDto, NotificationGroupDto, NotificationGroupListResponse } from './dtos/notification.dto';
+import { UserDto } from './dtos/user.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -37,6 +38,11 @@ export class NotificationGroupService {
   // Obtener grupo
   getGroupById(id: number): Observable<NotificationGroupDto> {
     return this.http.get<NotificationGroupDto>(`${this.apiUrl}/${id}`);
+  }
+
+  // Obtener los usuarios de un grupo
+  getUsersByGroupId(groupId: number): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(`${this.apiUrl}/${groupId}/users`);
   }
 
   // Actualizar grupo
