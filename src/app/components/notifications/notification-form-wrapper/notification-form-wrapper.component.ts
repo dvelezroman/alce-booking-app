@@ -6,7 +6,6 @@ import { Store } from '@ngrx/store';
 
 import { UserSelectorComponent } from '../user-selector/user-selector.component';
 import { StageSelectorComponent } from '../stage-selector/stage-selector.component';
-import { GroupListComponent } from '../group-list/group-list.component';
 
 import { Stage } from '../../../services/dtos/student.dto';
 import { UserDto } from '../../../services/dtos/user.dto';
@@ -24,7 +23,6 @@ import { NotificationGroupService } from '../../../services/notification-group.s
     FormsModule,
     UserSelectorComponent,
     StageSelectorComponent,
-    GroupListComponent,
   ],
   templateUrl: './notification-form-wrapper.component.html',
   styleUrl: './notification-form-wrapper.component.scss',
