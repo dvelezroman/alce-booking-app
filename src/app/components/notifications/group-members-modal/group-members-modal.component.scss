@@ -1,11 +1,19 @@
 .modal-card {
-  background-color: #f9fafb;
+   background-color: #f9fafb;
   color: #1f2937;
   font-size: 0.9rem;
   font-weight: 400;
   border-radius: 6px;
   overflow: hidden;
   position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+
+   @media (max-width: 768px) {
+    width: 90%;
+    max-width: none;
+  }
 
   .modal-card-head {
     background-color: #f3f4f6;
@@ -34,9 +42,10 @@
       margin-bottom: 0.75rem;
     }
 
-    ul {
-      padding-left: 1rem;
-      list-style-type: disc;
+    .user-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
       max-height: 250px;
       overflow-y: auto;
       background-color: #fff;
@@ -44,26 +53,28 @@
       padding: 1rem;
 
       li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         padding: 0.3rem 0;
         font-size: 0.85rem;
+
+        span {
+          flex: 1;
+        }
+
+        .delete-user-btn {
+          background: none;
+          border: none;
+          font-size: 1rem;
+          color: #b91c1c; // rojo
+          cursor: pointer;
+
+          &:hover {
+            color: #7f1d1d;
+          }
+        }
       }
     }
-  }
-}
-
-// ✅ Estilo del botón de cerrar completamente visible
-.custom-close-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: #1f2937;
-  cursor: pointer;
-  line-height: 1;
-
-  &:hover {
-    color: #111827;
   }
 }

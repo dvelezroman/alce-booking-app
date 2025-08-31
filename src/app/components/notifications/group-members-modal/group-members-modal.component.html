@@ -4,23 +4,39 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">{{ group?.name }}</p>
-      <button class="custom-close-button" (click)="onClose()">&times;</button>
+      <button class="delete" aria-label="close" (click)="onClose()"></button>
     </header>
 
     <section class="modal-card-body">
       <div *ngIf="group?.users?.length; else fallbackIds">
         <p><strong>Integrantes:</strong></p>
-        <ul>
-          <li *ngFor="let user of group?.users || []">
-            {{ user.firstName }} {{ user.lastName }}
+        <ul class="user-list">
+          <li *ngFor="let user of group?.users">
+            <span>{{ user.firstName }} {{ user.lastName }}</span>
+            <button
+              class="delete-user-btn"
+              title="Eliminar"
+              (click)="removeUserFromGroup(user.id)"
+            >
+              ✖
+            </button>
           </li>
         </ul>
       </div>
 
       <ng-template #fallbackIds>
         <p><strong>Usuarios:</strong></p>
-        <ul>
-          <li *ngFor="let id of group?.userIds">{{ id }}</li>
+        <ul class="user-list">
+          <li *ngFor="let id of group?.userIds">
+            <span>{{ id }}</span>
+            <button
+              class="delete-user-btn"
+              title="Eliminar"
+              (click)="removeUserFromGroup(id)"
+            >
+              ✖
+            </button>
+          </li>
         </ul>
       </ng-template>
     </section>

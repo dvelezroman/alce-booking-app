@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationGroupDto } from '../../../services/dtos/notification.dto';
+import { NotificationGroupService } from '../../../services/notification-group.service';
 
 @Component({
   selector: 'app-group-members-modal',
@@ -15,7 +16,25 @@ export class GroupMembersModalComponent {
 
   @Output() close = new EventEmitter<void>();
 
+  private notificationGroupService = inject(NotificationGroupService);
+
   onClose() {
-  this.close.emit();
-}
+    this.close.emit();
+  }
+
+  removeUserFromGroup(userId: number) {
+    if (!this.group?.id) return;
+
+    this.notificationGroupService
+      .removeUsersFromGroup(this.group.id, [userId])
+      .subscribe({
+        next: () => {
+          this.group!.users = this.group!.users?.filter((u) => u.id !== userId);
+          this.group!.userIds = this.group!.userIds?.filter((id) => id !== userId);
+        },
+        error: (err) => {
+          console.error('Error al eliminar usuario del grupo', err);
+        }
+      });
+  }
 }
