@@ -161,16 +161,15 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
         this.findNavItemByRoute('/dashboard/assessment-reports')
       ].filter(item => item.roles.includes(role))
     },
-    {
-      title: 'Notificaciones',
-      icon: 'notifications',
-      items: [
-        this.findNavItemByRoute('/dashboard/broadcast-groups'),
-        this.findNavItemByRoute('/dashboard/notifications-status'),
-        this.findNavItemByRoute('/dashboard/notifications-groups'),
-        this.findNavItemByRoute('/dashboard/notifications-inbox'),
-      ].filter(item => item.roles.includes(role))
-    },
+    // {
+    //   title: 'Notificaciones',
+    //   icon: 'notifications',
+    //   items: [
+    //     this.findNavItemByRoute('/dashboard/broadcast-groups'),
+    //     this.findNavItemByRoute('/dashboard/notifications-status'),
+    //     this.findNavItemByRoute('/dashboard/notifications-groups'),
+    //   ].filter(item => item.roles.includes(role))
+    // },
     {
       title: 'Configuración',
       icon: 'config',
