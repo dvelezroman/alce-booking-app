@@ -170,8 +170,6 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
     //     this.findNavItemByRoute('/dashboard/broadcast-groups'),
     //     this.findNavItemByRoute('/dashboard/notifications-status'),
     //     this.findNavItemByRoute('/dashboard/notifications-groups'),
-    //     this.findNavItemByRoute('/dashboard/notifications-inbox'),
-    //     this.findNavItemByRoute('/dashboard/notifications-sent'),
     //   ].filter(item => item.roles.includes(role))
     // },
     {
