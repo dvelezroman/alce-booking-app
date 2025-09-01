@@ -35,6 +35,7 @@
         >
           <span>{{ user.label }}</span>
           <button
+            *ngIf="!groupToEdit"
             type="button"
             class="delete-user-btn"
             (click)="removeUserFromGroup(user.id)"
@@ -46,7 +47,7 @@
       </div>
     </div>
 
-    <div class="field">
+    <div class="field" *ngIf="!groupToEdit">
       <label class="label">Seleccionar tipo de usuario</label>
       <div class="control">
         <div class="select is-fullwidth">
@@ -59,7 +60,7 @@
       </div>
     </div>
 
-    <div class="field mt-3" *ngIf="selectedRole">
+    <div class="field mt-3" *ngIf="!groupToEdit && selectedRole">
       <app-user-selector
         [role]="selectedRole"
         (usersSelected)="onUsersSelected($event)"
