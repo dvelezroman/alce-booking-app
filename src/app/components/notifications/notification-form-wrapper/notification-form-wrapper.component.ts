@@ -182,10 +182,10 @@ export class NotificationFormWrapperComponent implements OnInit {
       case 'group': {
         const g = this.groups.find(gr => gr.id === this.selectedGroupId);
         to = g?.userIds ?? [];
-        scope = NotificationScopeEnum.ALL_USERS;
+        scope = NotificationScopeEnum.INDIVIDUAL;
 
         if (!this.selectedGroupId || to.length === 0) {
-          console.warn('No hay destinatarios para el grupo seleccionado.');
+          //console.warn('No hay destinatarios para el grupo seleccionado.');
           return;
         }
         break;
@@ -197,7 +197,7 @@ export class NotificationFormWrapperComponent implements OnInit {
         to = (this.users ?? []).map(u => u.id);
 
         if (!this.selectedStageId || to.length === 0) {
-          console.warn('No hay destinatarios para el stage seleccionado.');
+          //console.warn('No hay destinatarios para el stage seleccionado.');
           return;
         }
         break;
@@ -209,7 +209,7 @@ export class NotificationFormWrapperComponent implements OnInit {
         to = this.selectedUsers.map(u => u.id);
 
         if (to.length === 0) {
-          console.warn('Selecciona al menos un usuario.');
+          //console.warn('Selecciona al menos un usuario.');
           return;
         }
         break;

@@ -2,7 +2,18 @@
   <div class="report-table-wrapper">
     <div class="user-selector-container" #containerRef>
       <div class="field relative-container">
-        <label class="label">Buscar {{ role === 'student' ? 'Estudiantes' : 'Instructores' }}</label>
+        <label class="label">
+          Buscar
+          {{
+            role === 'student'
+              ? 'Estudiantes'
+              : role === 'instructor'
+                ? 'Instructores'
+                : role === 'admin'
+                  ? 'Administradores'
+                  : 'Usuarios'
+          }}
+        </label>
 
         <div class="control has-icons-left">
           <input

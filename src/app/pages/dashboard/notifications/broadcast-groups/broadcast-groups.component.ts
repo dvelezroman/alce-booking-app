@@ -89,59 +89,44 @@ export class BroadcastGroupsComponent implements OnInit {
   }
 
   handleNotificationSubmit(payload: CreateNotificationDto): void {
-    const isBulkContext = this.selectedAction === 'group' || this.selectedAction === 'stage';
-    const ids = payload.to ?? [];
 
-    if (isBulkContext && ids.length > 1) {
+  const ids = Array.isArray(payload.to)
+    ? Array.from(new Set(payload.to.filter((x): x is number => typeof x === 'number')))
+    : [];
 
-      const items: CreateNotificationDto[] = ids.map(id => ({
-        ...payload,
-        to: [id],
-        scope: NotificationScopeEnum.INDIVIDUAL,
-      }));
-
-      const body: CreateNotificationsBulkDto = { notifications: items };
-
-      this.notificationService.createBulk(body).subscribe({
-        next: () => {
-          this.showModal({
-            isSuccess: true,
-            title: 'Notificaciones enviadas',
-            message: `Se enviaron ${items.length} notificaciones.`,
-          });
-          this.clearSelection();
-        },
-        error: (err) => {
-          console.error('Error en envío bulk:', err);
-          this.showModal({
-            isError: true,
-            title: 'Error al enviar',
-            message: 'Ocurrió un error al enviar las notificaciones en lote.',
-          });
-        },
-      });
-
-    } else {
-      this.notificationService.create(payload).subscribe({
-        next: () => {
-          this.showModal({
-            isSuccess: true,
-            title: 'Notificación enviada',
-            message: 'La notificación ha sido enviada con éxito.',
-          });
-          this.clearSelection();
-        },
-        error: (err) => {
-          console.error('Error al crear notificación:', err);
-          this.showModal({
-            isError: true,
-            title: 'Error al enviar',
-            message: 'Ocurrió un error al enviar la notificación.',
-          });
-        },
-      });
-    }
+  if (ids.length === 0) {
+    this.showModal({
+      isError: true,
+      title: 'Sin destinatarios',
+      message: 'No se encontró ningún usuario para enviar la notificación.',
+    });
+    return;
   }
+
+  const finalPayload: CreateNotificationDto = {
+    ...payload,
+    to: ids,
+  };
+
+  this.notificationService.create(finalPayload).subscribe({
+    next: () => {
+      this.showModal({
+        isSuccess: true,
+        title: 'Notificación enviada',
+        message: 'La notificación ha sido enviada con éxito.',
+      });
+      this.clearSelection();
+    },
+    error: (err) => {
+      console.error('Error al crear notificación:', err);
+      this.showModal({
+        isError: true,
+        title: 'Error al enviar',
+        message: 'Ocurrió un error al enviar la notificación.',
+      });
+    },
+  });
+}
 
   private showModal({ title = '', message = '', isSuccess = false, isError = false , duration = 2000 }: {
     title?: string;

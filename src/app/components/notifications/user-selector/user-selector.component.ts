@@ -23,7 +23,7 @@ import { UsersService } from '../../../services/users.service';
   styleUrls: ['./user-selector.component.scss'],
 })
 export class UserSelectorComponent implements OnChanges {
-  @Input() role: 'student' | 'instructor' | undefined;
+  @Input() role: 'student' | 'instructor' | 'admin' | undefined;
   @Input() stageId: number | undefined;
   @Input() reset = false;
 
@@ -86,6 +86,7 @@ export class UserSelectorComponent implements OnChanges {
       term.trim().length >= 2 ||
       (this.role === 'student' && !!this.stageId) ||
       this.role === 'instructor';
+      this.role === 'admin';
 
     if (!shouldFetch) {
       this.allUsers = [];
@@ -151,6 +152,7 @@ export class UserSelectorComponent implements OnChanges {
     const shouldPreload =
       (this.role === 'student' && this.stageId) ||
       this.role === 'instructor';
+      this.role === 'admin';
 
     if (shouldPreload && this.allUsers.length === 0) {
       this.fetchUsers('');
