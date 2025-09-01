@@ -45,6 +45,11 @@ export class NotificationGroupService {
     return this.http.get<UserDto[]>(`${this.apiUrl}/${groupId}/users`);
   }
 
+  // Agregar usuarios a un grupo
+  addUsersToGroup(groupId: number, userIds: number[]): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${groupId}/users`, { userIds });
+  }
+
   // Actualizar grupo
   updateGroup(id: number, groupData: Partial<CreateNotificationGroupDto>): Observable<NotificationGroupDto> {
     return this.http.put<NotificationGroupDto>(`${this.apiUrl}/${id}`, groupData);

@@ -34,7 +34,8 @@ export class GroupsComponent implements OnInit {
   selectedGroup?: NotificationGroupDto;
   groupMembers: UserDto[] = [];
 
-  constructor(private notificationService: NotificationGroupService) {}
+  constructor(private notificationGroupService: NotificationGroupService,
+   ) {}
 
   ngOnInit(): void {
     this.loadGroups();
@@ -46,7 +47,7 @@ export class GroupsComponent implements OnInit {
   }
 
   openEditGroup(group: NotificationGroupDto) {
-    this.notificationService.getGroupById(group.id).subscribe({
+    this.notificationGroupService.getGroupById(group.id).subscribe({
       next: (fullGroup) => {
         this.groupToEdit = fullGroup;
         this.showModal = true;
@@ -60,7 +61,7 @@ export class GroupsComponent implements OnInit {
   openGroupMembersModal(group: NotificationGroupDto) {
     this.selectedGroup = group;
 
-    this.notificationService.getUsersByGroupId(group.id).subscribe({
+    this.notificationGroupService.getUsersByGroupId(group.id).subscribe({
       next: (users) => {
         this.groupMembers = users;
         this.showMembersModal = true;
@@ -79,7 +80,7 @@ export class GroupsComponent implements OnInit {
 
   loadGroups() {
     this.loading = true;
-    this.notificationService.getGroups().subscribe({
+    this.notificationGroupService.getGroups().subscribe({
       next: (res) => {
         this.groups = res.notificationGroups;
         this.loading = false;
@@ -97,7 +98,7 @@ export class GroupsComponent implements OnInit {
   }) {
     if (event.id) {
       // EDITAR
-      this.notificationService.updateGroup(event.id, event.payload).subscribe({
+      this.notificationGroupService.updateGroup(event.id, event.payload).subscribe({
         next: () => {
           this.showModalMessage({
             title: 'Grupo actualizado',
@@ -115,7 +116,7 @@ export class GroupsComponent implements OnInit {
       });
     } else {
       // CREAR
-      this.notificationService.createGroup(event.payload).subscribe({
+      this.notificationGroupService.createGroup(event.payload).subscribe({
         next: () => {
           this.showModalMessage({
             title: 'Grupo creado',
@@ -132,6 +133,26 @@ export class GroupsComponent implements OnInit {
         },
       });
     }
+  }
+
+  onAddUsers({ groupId, userIds }: { groupId: number; userIds: number[] }) {
+    this.notificationGroupService.addUsersToGroup(groupId, userIds).subscribe({
+      next: () => {
+
+        this.notificationGroupService.getUsersByGroupId(groupId).subscribe({
+          next: (updatedUsers) => {
+            this.groupMembers = updatedUsers;
+            this.loadGroups();
+          },
+          error: (err) => {
+            console.error('Error al actualizar miembros del grupo:', err);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error al agregar usuarios desde el padre', err);
+      }
+    });
   }
 
   private showModalMessage({

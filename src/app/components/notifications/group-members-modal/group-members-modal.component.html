@@ -8,6 +8,7 @@
     </header>
 
     <section class="modal-card-body">
+      <!-- Usuarios actuales -->
       <div *ngIf="group?.users?.length; else fallbackIds">
         <p><strong>Integrantes:</strong></p>
         <ul class="user-list">
@@ -39,6 +40,48 @@
           </li>
         </ul>
       </ng-template>
+
+      <!-- NUEVOS BLOQUES -->
+
+      <!-- Selector de tipo de usuario -->
+      <div class="field mt-5">
+        <label class="label">Seleccionar tipo de usuario</label>
+        <div class="control">
+          <div class="select is-fullwidth">
+            <select (change)="onRoleChange($event)">
+              <option [ngValue]="null">-- Selecciona --</option>
+              <option value="student">Estudiantes</option>
+              <option value="instructor">Instructores</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selector de usuarios -->
+      <div class="field mt-3" *ngIf="selectedRole">
+        <app-user-selector
+          [role]="selectedRole"
+          (usersSelected)="onUsersSelected($event)"
+        ></app-user-selector>
+      </div>
+
+      <!-- Botón para agregar -->
+      <div class="field mt-4" *ngIf="selectedUsers.length">
+        <div class="button-center-wrapper">
+          <button class="button is-primary" (click)="addUsersToGroup()">
+            Agregar al grupo
+          </button>
+        </div>
+      </div>
     </section>
   </div>
 </div>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [title]="modal.title ?? ''"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  (close)="modal.close()"
+></app-modal>
