@@ -24,9 +24,14 @@ export class NotificationsStatusComponent implements OnInit {
   constructor(private notificationService: NotificationService) {}
 
   ngOnInit(): void {
-    const today = new Date().toISOString().slice(0, 10);
-    this.fromDate = today;
-    this.toDate = today;
+    const today = new Date();
+    const twoDaysAgo = new Date(today);
+
+    twoDaysAgo.setDate(today.getDate() - 5);
+
+    this.fromDate = twoDaysAgo.toISOString().slice(0, 10);
+    this.toDate = today.toISOString().slice(0, 10);
+
     this.fetchNotifications();
   }
 
@@ -53,8 +58,12 @@ export class NotificationsStatusComponent implements OnInit {
     }
 
     this.notificationService.getNotifications(filters).subscribe({
-      next: (data) => {
-        this.notifications = data;
+      next: (data: any) => {
+        this.notifications = Array.isArray(data)
+          ? data
+          : (data?.notifications ?? []);
+
+        console.log('notificaciones recibidas:', this.notifications);
       },
       error: (err) => {
         console.error('Error fetching notifications:', err);

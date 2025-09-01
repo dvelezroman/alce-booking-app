@@ -28,6 +28,7 @@ import { AttendanceInstructorComponent } from './attendance-instructor/attendanc
 import { BroadcastGroupsComponent } from './notifications/broadcast-groups/broadcast-groups.component';
 import { NotificationsStatusComponent } from './notifications/notifications-status/notifications-status.component';
 import { GroupsComponent } from './notifications/groups/groups.component';
+import { InboxComponent } from './notifications/inbox/inbox.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -62,4 +63,5 @@ export const dashboardRoutes: Routes = [
   { path: 'processed-events', component: ProcessedEventsComponent },
   { path: 'notifications-status', component: NotificationsStatusComponent },
   { path: 'notifications-groups', component: GroupsComponent },
+  { path: 'notifications-inbox', component: InboxComponent },
 ];

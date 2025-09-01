@@ -1,0 +1,117 @@
+.filters-panel {
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  padding: 12px;
+  background: color-mix(in oklab, white 80%, transparent);
+}
+
+.row {
+  display: grid;
+  gap: 12px;
+}
+
+.row-top {
+  grid-template-columns: 1fr;
+}
+
+.row-bottom {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .row-top {
+    grid-template-columns: 1fr auto auto;
+    align-items: end;
+  }
+  .row-bottom {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-search .input {
+  width: 100%;
+}
+
+.field-priority .hint {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.field-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.input,
+.select {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  background: white;
+}
+
+.segmented {
+  display: inline-flex;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.segmented-btn {
+  padding: 8px 10px;
+  font-size: 12px;
+  background: #ffffff;
+  border: none;
+  cursor: default;
+}
+
+.segmented-btn + .segmented-btn {
+  border-left: 1px solid #d1d5db;
+}
+
+.segmented-btn.is-active {
+  background: #10b981;
+  color: white;
+}
+
+.divider {
+  border: none;
+  height: 1px;
+  background: #e5e7eb;
+  margin: 12px 0;
+}
+
+/* Dark mode opcional */
+:host-context(.dark) {
+  .filters-panel {
+    background: color-mix(in oklab, #0b0f14 85%, transparent);
+    border-color: #1f2937;
+  }
+  .label { color: #d1d5db; }
+  .input, .select {
+    background: #0f172a;
+    border-color: #1f2937;
+    color: #e5e7eb;
+  }
+  .segmented { border-color: #1f2937; }
+  .segmented-btn { background: #0f172a; color: #e5e7eb; }
+  .segmented-btn + .segmented-btn { border-left-color: #1f2937; }
+  .segmented-btn.is-active { background: #0284c7; }
+  .divider { background: #1f2937; }
+  .field-priority .hint { color: #94a3b8; }
+}

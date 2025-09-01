@@ -112,3 +112,23 @@ export interface NotificationGroupListResponse {
   limit: number;
   totalPages: number;
 }
+
+export interface NotificationListResponse {
+  notifications: Notification[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+// bandeja de entrada
+export interface InboxFilters {
+  search?: string;
+  status?: 'SENT' | 'PENDING' | 'DELIVERED' | 'READ' | 'FAILED' | '';
+  type?: Notification['notificationType'] | '';
+  scope?: Notification['scope'] | '';
+  fromDate?: string;
+  toDate?: string;
+  priorityBucket?: 'all' | 'priority' | 'other';
+  readState?: 'all' | 'unread' | 'read';
+}
