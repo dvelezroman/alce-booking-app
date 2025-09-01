@@ -35,6 +35,7 @@ export interface NotificationMessage {
 }
 
 export interface CreateNotificationDto {
+  from: number;
   to: number[];
   scope: 'INDIVIDUAL' | 'ALL_USERS' | 'ALL_STUDENTS' | 'ALL_INSTRUCTORS' | 'STAGE_STUDENTS';
   stageId?: number;

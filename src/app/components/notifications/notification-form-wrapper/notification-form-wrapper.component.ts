@@ -11,9 +11,13 @@ import { Stage } from '../../../services/dtos/student.dto';
 import { UserDto } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
 import { selectUserData } from '../../../store/user.selector';
-import { CreateNotificationDto, NotificationGroupDto, NotificationScopeEnum, NotificationTypeEnum } from '../../../services/dtos/notification.dto';
+import {
+  CreateNotificationDto,
+  NotificationGroupDto,
+  NotificationScopeEnum,
+  NotificationTypeEnum
+} from '../../../services/dtos/notification.dto';
 import { NotificationGroupService } from '../../../services/notification-group.service';
-
 
 @Component({
   selector: 'app-notification-form-wrapper',
@@ -28,7 +32,7 @@ import { NotificationGroupService } from '../../../services/notification-group.s
   styleUrl: './notification-form-wrapper.component.scss',
 })
 export class NotificationFormWrapperComponent implements OnInit {
-  @Input() selectedType: 'user' | 'stage' | 'group' = 'user';
+  @Input() selectedType: 'user' | 'stage' | 'group' | 'role' = 'user';
   @Input() stages: Stage[] = [];
 
   @Output() submitNotification = new EventEmitter<CreateNotificationDto>();
@@ -37,20 +41,31 @@ export class NotificationFormWrapperComponent implements OnInit {
 
   title = '';
   message = '';
-  selectedUserRole: 'student' | 'instructor' = 'student';
   notificationType = NotificationTypeEnum.Announce;
   notificationTypes = Object.values(NotificationTypeEnum);
-  selectedStageId: number | null = null;
+  userId: number | null = null;
+
+  // USER 
+  selectedUserRole: 'student' | 'instructor' = 'student';
   selectedUsers: UserDto[] = [];
+
+  // STAGE
+  selectedStageId: number | null = null;
   users: UserDto[] = [];
-  totalUsersInStage: number = 0;
+  totalUsersInStage = 0;
+
+  // GROUP
   groups: NotificationGroupDto[] = [];
   selectedGroupId: number | null = null;
   selectedGroupMembers = 0;
 
-  userId: number | null = null;
+  // ROLE 
+  selectedBroadcastRole: '' | 'student' | 'instructor' | 'admin' = '';
+  roleUsers: UserDto[] = [];
+  totalUsersByRole = 0;
 
-  priority = 1; 
+  // Prioridad
+  priority = 1;
   priorityOptions = [
     { value: 0, label: 'Baja' },
     { value: 1, label: 'Normal' },
@@ -66,9 +81,7 @@ export class NotificationFormWrapperComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.select(selectUserData).subscribe((user: UserDto | null) => {
-      if (user) {
-        this.userId = user.id;
-      }
+      if (user) this.userId = user.id;
     });
 
     if (this.selectedType === 'group') {
@@ -77,9 +90,7 @@ export class NotificationFormWrapperComponent implements OnInit {
           this.groups = res.notificationGroups || [];
           this.updateGroupMembers();
         },
-        error: () => {
-          this.groups = [];
-        }
+        error: () => (this.groups = []),
       });
     }
   }
@@ -89,17 +100,9 @@ export class NotificationFormWrapperComponent implements OnInit {
     this.updateGroupMembers();
   }
 
-  // calcula integrantes del grupo seleccionado
   private updateGroupMembers() {
     const g = this.groups.find(gr => gr.id === this.selectedGroupId);
     this.selectedGroupMembers = g?.userIds?.length ?? 0;
-  }
-
-  // contador dinámico según el modo
-  get recipientsCount(): number {
-    if (this.selectedType === 'group') return this.selectedGroupMembers || 0;
-    if (this.selectedType === 'stage') return this.totalUsersInStage || 0;
-    return this.selectedUsers.length || 0;
   }
 
   private getGroupUserIds(): number[] {
@@ -107,55 +110,21 @@ export class NotificationFormWrapperComponent implements OnInit {
     return g?.userIds ?? [];
   }
 
-  get titleText(): string {
-    switch (this.selectedType) {
-      case 'user':
-        return 'Nueva notificación a usuario(s)';
-      case 'stage':
-        return 'Nueva notificación por stage';
-      case 'group':
-        return 'Nueva notificación por grupo';
-      default:
-        return 'Nueva notificación';
-    }
-  }
-
-  getFormSubtitle(): string {
-    switch (this.selectedType) {
-      case 'user':
-        return 'Selecciona los usuarios a los que deseas enviar esta notificación.';
-      case 'stage':
-        return 'Selecciona una etapa y se notificará a todos los estudiantes dentro de ella.';
-      case 'group':
-        return 'Selecciona un grupo para enviar la notificación a sus integrantes.';
-      default:
-        return 'Envía notificaciones a usuarios, grupos o por etapa educativa.';
-    }
-  }
-
-  handleUsersSelected(users: UserDto[]) {
-    this.selectedUsers = users;
-  }
-
   handleStageChange(stageId: number | null) {
     this.selectedStageId = stageId;
-    this.selectedUsers = [];
-    if (stageId) {
-      this.fetchUsersByStage(stageId);
-    } else {
+    this.selectedUsers = []; 
+    if (stageId) this.fetchUsersByStage(stageId);
+    else {
       this.users = [];
+      this.totalUsersInStage = 0;
     }
   }
 
   fetchUsersByStage(stageId: number) {
     this.usersService
       .searchUsers(
-        undefined,
-        undefined,
-        undefined,
-        '',
-        '',
-        undefined,
+        undefined, undefined, undefined,
+        '', '', undefined,
         'STUDENT',
         true,
         stageId
@@ -172,6 +141,76 @@ export class NotificationFormWrapperComponent implements OnInit {
       });
   }
 
+  setBroadcastRole(role: '' | 'student' | 'instructor' | 'admin') {
+    this.selectedBroadcastRole = role;
+
+    if (!role) {
+      this.roleUsers = [];
+      this.totalUsersByRole = 0;
+      return;
+    }
+
+    this.fetchUsersByRole(role);
+  }
+
+  private fetchUsersByRole(role: 'student' | 'instructor' | 'admin') {
+    const roleParam = role.toUpperCase(); 
+    this.usersService
+      .searchUsers(
+        undefined, undefined, undefined,
+        '', '', undefined,
+        roleParam,
+        true,
+        undefined
+      )
+      .subscribe({
+        next: (res) => {
+          this.roleUsers = res.users || [];
+          this.totalUsersByRole = res.total || this.roleUsers.length;
+        },
+        error: () => {
+          this.roleUsers = [];
+          this.totalUsersByRole = 0;
+        },
+      });
+  }
+
+  handleUsersSelected(users: UserDto[]) {
+    this.selectedUsers = users;
+  }
+
+  get titleText(): string {
+    switch (this.selectedType) {
+      case 'user':  return 'Nueva notificación a usuario(s)';
+      case 'stage': return 'Nueva notificación por stage';
+      case 'group': return 'Nueva notificación por grupo';
+      case 'role':  return 'Nueva notificación por rol';
+      default:      return 'Nueva notificación';
+    }
+  }
+
+  getFormSubtitle(): string {
+    switch (this.selectedType) {
+      case 'user':
+        return 'Selecciona los usuarios a los que deseas enviar esta notificación.';
+      case 'stage':
+        return 'Selecciona una etapa y se notificará a todos los estudiantes dentro de ella.';
+      case 'group':
+        return 'Selecciona un grupo para enviar la notificación a sus integrantes.';
+      case 'role':
+        return 'Elige un rol y se enviará a todos los usuarios con ese rol.';
+      default:
+        return 'Envía notificaciones a usuarios, grupos, por etapa o por rol.';
+    }
+  }
+
+  get recipientsCount(): number {
+    if (this.selectedType === 'group') return this.selectedGroupMembers || 0;
+    if (this.selectedType === 'stage') return this.totalUsersInStage || 0;
+    if (this.selectedType === 'role')  return this.totalUsersByRole || 0;
+    return this.selectedUsers.length || 0;
+  }
+
   submitForm() {
     if (!this.formRef.valid || !this.userId) return;
 
@@ -180,64 +219,52 @@ export class NotificationFormWrapperComponent implements OnInit {
 
     switch (this.selectedType) {
       case 'group': {
-        const g = this.groups.find(gr => gr.id === this.selectedGroupId);
-        to = g?.userIds ?? [];
-        scope = NotificationScopeEnum.INDIVIDUAL;
-
-        if (!this.selectedGroupId || to.length === 0) {
-          //console.warn('No hay destinatarios para el grupo seleccionado.');
-          return;
-        }
+        to = this.getGroupUserIds();
+        scope = NotificationScopeEnum.INDIVIDUAL; 
+        if (!this.selectedGroupId || to.length === 0) return;
         break;
       }
 
       case 'stage': {
-        scope = NotificationScopeEnum.STAGE_STUDENTS;
-
         to = (this.users ?? []).map(u => u.id);
+        scope = NotificationScopeEnum.STAGE_STUDENTS;
+        if (!this.selectedStageId || to.length === 0) return;
+        break;
+      }
 
-        if (!this.selectedStageId || to.length === 0) {
-          //console.warn('No hay destinatarios para el stage seleccionado.');
-          return;
-        }
+      case 'role': {
+        to = (this.roleUsers ?? []).map(u => u.id);
+        scope = NotificationScopeEnum.INDIVIDUAL; 
+        if (!this.selectedBroadcastRole || to.length === 0) return;
         break;
       }
 
       case 'user':
       default: {
-        scope = NotificationScopeEnum.INDIVIDUAL;
         to = this.selectedUsers.map(u => u.id);
-
-        if (to.length === 0) {
-          //console.warn('Selecciona al menos un usuario.');
-          return;
-        }
+        scope = NotificationScopeEnum.INDIVIDUAL;
+        if (to.length === 0) return;
         break;
       }
     }
 
-    const stageId = this.selectedUserRole === 'student' && this.selectedStageId != null
-      ? +this.selectedStageId
-      : undefined;
+    const stageId =
+      this.selectedUserRole === 'student' && this.selectedStageId != null
+        ? +this.selectedStageId
+        : undefined;
 
-    const payload = {
-      from: this.userId,
+    const payload: CreateNotificationDto = {
+      from: this.userId!,
       to,
       scope,
       stageId,
       title: this.title,
-      message: {
-        body: this.message,
-        action: 'join_meeting',
-      },
+      message: { body: this.message, action: 'join_meeting' },
       notificationType: this.notificationType,
       priority: this.priority,
       scheduledAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 86400000).toISOString(),
-      metadata: {
-        source: 'meeting_system',
-        category: 'reminder',
-      },
+      metadata: { source: 'meeting_system', category: 'reminder' },
       maxRetries: 3,
     };
 

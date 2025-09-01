@@ -47,6 +47,26 @@
         />
       </ng-container>
 
+      <!-- Caso: rol -->
+      <div *ngSwitchCase="'role'">
+        <div class="compose-assist">
+          <div class="form-group compact">
+            <label for="broadcastRole">Rol</label>
+            <select
+              id="broadcastRole"
+              name="broadcastRole"
+              [(ngModel)]="selectedBroadcastRole"
+              (ngModelChange)="setBroadcastRole($event)"
+              required
+            >
+              <option [value]="'student'">Estudiante</option>
+              <option [value]="'instructor'">Instructor</option>
+              <option [value]="'admin'">Administrador</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <!-- Caso: stages -->
       <app-stage-selector
         *ngSwitchCase="'stage'"

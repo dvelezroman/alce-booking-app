@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, HostListener } from '@angular/core';
 
 export type PanelType = 'create' | 'groups' | 'notifications';
-export type SendOptionType = 'user' | 'stage' | 'group';
+export type SendOptionType = 'user' | 'stage' | 'group' | 'role';
 export type NotificationsOptionType = 'sent';
 
 @Component({

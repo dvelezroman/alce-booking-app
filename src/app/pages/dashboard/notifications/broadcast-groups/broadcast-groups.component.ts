@@ -25,8 +25,9 @@ import { ModalComponent } from '../../../../components/modal/modal.component';
   styleUrl: './broadcast-groups.component.scss',
 })
 export class BroadcastGroupsComponent implements OnInit {
-  selectedAction: 'user' | 'stage' | 'group' | '' = '';
+  selectedAction: 'user' | 'stage' | 'group' | 'role' | '' = '';
   selectedUser: UserDto | null = null;
+  selectedRole: 'student' | 'instructor' | 'admin' | null = null;
   stages: Stage[] = [];
   selectedStage: Stage | null = null;
   modal: ModalDto = modalInitializer();
@@ -67,6 +68,7 @@ export class BroadcastGroupsComponent implements OnInit {
     this.selectedAction = '';
     this.selectedUser = null;
     this.selectedStage = null;
+    this.selectedRole = null;
     this.resetChildren = true;
 
     setTimeout(() => {
@@ -76,17 +78,24 @@ export class BroadcastGroupsComponent implements OnInit {
     console.log('Selecciones limpiadas');
   }
 
-  onSendOptionSelected(option: 'user' | 'stage' | 'group') {
-    this.selectedAction = option;
+onSendOptionSelected(option: 'user' | 'stage' | 'group' | 'role') {
+  this.selectedAction = option;
 
-    if (option !== 'user') {
-      this.selectedUser = null;
-    }
-
-    if (option !== 'stage') {
-      this.selectedStage = null;
-    }
+  // Si no es usuario, limpiamos el usuario seleccionado
+  if (option !== 'user') {
+    this.selectedUser = null;
   }
+
+  // Si no es stage, limpiamos el stage seleccionado
+  if (option !== 'stage') {
+    this.selectedStage = null;
+  }
+
+  // Si no es role, limpiamos el rol seleccionado (por si lo agregamos en el form)
+  if (option !== 'role') {
+    this.selectedRole = null;
+  }
+}
 
   handleNotificationSubmit(payload: CreateNotificationDto): void {
 
