@@ -95,6 +95,20 @@
     </div>
 
     <div class="form-group">
+        <label for="priority">Prioridad</label>
+        <select
+          id="priority"
+          name="priority"
+          [(ngModel)]="priority"
+          required
+        >
+          <option *ngFor="let opt of priorityOptions" [ngValue]="opt.value">
+            {{ opt.label }}
+          </option>
+        </select>
+      </div>
+
+    <div class="form-group">
       <label for="title">Título</label>
       <input
         id="title"

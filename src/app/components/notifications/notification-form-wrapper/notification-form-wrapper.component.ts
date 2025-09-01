@@ -49,6 +49,14 @@ export class NotificationFormWrapperComponent implements OnInit {
 
   userId: number | null = null;
 
+  priority = 1; 
+  priorityOptions = [
+    { value: 0, label: 'Baja' },
+    { value: 1, label: 'Normal' },
+    { value: 2, label: 'Alta' },
+    { value: 3, label: 'Urgente' },
+  ];
+
   constructor(
     private usersService: UsersService,
     private notificationGroupService: NotificationGroupService,
@@ -172,7 +180,7 @@ export class NotificationFormWrapperComponent implements OnInit {
         action: 'join_meeting',
       },
       notificationType: this.notificationType,
-      priority: 1,
+      priority: this.priority,
       scheduledAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 86400000).toISOString(),
       metadata: {
