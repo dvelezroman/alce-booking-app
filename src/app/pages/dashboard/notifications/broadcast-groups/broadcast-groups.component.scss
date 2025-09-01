@@ -3,13 +3,29 @@
   min-height: 100vh;
   width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   box-sizing: border-box;
-    padding-top: 90px;
+  padding-top: 90px;
 }
 
-/* Contenedor para el panel de acciones */
+/* Contenedor central que define el ancho útil de la página */
+.content {
+  width: 90%;
+  max-width: 1400px; /* puedes subir a 1600 si deseas */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  
+  gap: 1.25rem;
+}
+
+/* Permite que el hijo crezca más: override del max-width del componente hijo */
+:host ::ng-deep .notification-form-wrapper {
+  max-width: 1200px;
+  width: 100%;
+}
+
+/* Contenedor para el panel de acciones (se mantiene) */
 .notification-actions {
   display: flex;
   flex-direction: column;
@@ -19,7 +35,6 @@
   margin: 3rem 0 0 1.5rem;
 }
 
-/* Etiqueta del select */
 .notification-actions .label {
   color: #222;
   font-weight: 300;
@@ -27,7 +42,6 @@
   margin-bottom: 0.5rem;
 }
 
-/* Estilos del select (mismo estilo que inputs anteriores) */
 .notification-actions .input {
   background-color: transparent !important;
   color: #5f5f5f !important;
@@ -35,21 +49,18 @@
   font-size: 1rem;
   padding: 0.5rem 0.75rem;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   width: 100%;
   max-width: 400px;
   appearance: none;
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color .2s ease, box-shadow .2s ease;
 
-  &::placeholder {
-    color: #828282;
-  }
-
+  &::placeholder { color: #828282; }
   &:focus {
     background-color: transparent !important;
     border-color: #468af8;
-    box-shadow: 0 0 6px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 0 6px rgba(59,130,246,0.3);
     outline: none;
   }
 }
@@ -64,13 +75,10 @@
   text-align: left;
   padding: 0;
 
-  &:hover {
-    text-decoration: underline;
-    color: #1d4ed8;
-  }
+  &:hover { text-decoration: underline; color: #1d4ed8; }
 }
 
-/* Contenedor de los selectores */
+/* Contenedor de los selectores (se mantiene) */
 .selectors-wrapper {
   display: flex;
   gap: 1.5rem;
@@ -80,12 +88,9 @@
   margin-top: 2rem;
   flex-wrap: wrap;
 
-  @media (max-width: 768px) {
-    gap: 0.5rem;
-  }
+  @media (max-width: 768px) { gap: 0.5rem; }
 }
 
-/* Ajuste de cada selector */
 app-user-selector,
 app-stage-selector {
   flex: 1;
@@ -93,7 +98,7 @@ app-stage-selector {
   max-width: 600px;
 }
 
-/* Cabecera igual que en reportes */
+/* Cabecera fija */
 .reports-progress-header {
   position: fixed;
   top: 0;
@@ -110,13 +115,11 @@ app-stage-selector {
   line-height: 75px;
   color: #333;
   font-weight: bold;
-  @media (max-width: 640px) {
 
-  .reports-progress-title {
+  @media (max-width: 640px) {
     font-size: 1rem;
     line-height: 2.75rem;
   }
-}
 }
 
 /* Info del usuario seleccionado */
@@ -127,16 +130,12 @@ app-stage-selector {
   padding: 1rem;
   margin-top: 1.5rem;
   width: 85%;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 
   p {
     margin: 0.3rem 0;
     color: #222;
 
-    strong {
-      color: #333;
-    }
+    strong { color: #333; }
   }
 }
-
-

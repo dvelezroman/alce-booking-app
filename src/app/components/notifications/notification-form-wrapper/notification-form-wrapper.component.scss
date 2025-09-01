@@ -5,7 +5,7 @@
   padding: 2rem;
   margin-top: 2rem;
   width: 100%;
-  max-width: 900px;
+  max-width: 100%;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
@@ -38,6 +38,18 @@
   width: 100%;
 }
 
+/* Bloque asistente (rol + stage) más compacto, en fila si hay espacio */
+.compose-assist {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+    align-items: end;
+  }
+}
+
 app-user-selector,
 app-stage-selector,
 app-group-list {
@@ -49,14 +61,86 @@ app-group-list {
 form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem; /* un poco más compacto */
   width: 100%;
 }
 
+/* 🔹 Toolbar superior tipo Gmail */
+.compose-toolbar {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+  align-items: end;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fafafa;
+
+  @media (min-width: 768px) {
+    grid-template-columns: auto auto 1fr; /* Tipo | Prioridad | Destinatarios (grow) */
+    column-gap: 12px;
+  }
+
+  .toolbar-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    select {
+      width: 100%;
+      background-color: #fff;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      font-size: .9rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      transition: box-shadow 0.2s ease;
+
+      &:focus {
+        border-color: #468af8;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        outline: none;
+      }
+    }
+  }
+
+  .toolbar-label {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #374151;
+  }
+
+  .grow { align-self: end; }
+
+  .recipients-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #374151;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    
+    strong {
+    color: #111827;
+    font-weight: 500;
+  }
+  }
+}
+
+/* Grupos estándar */
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  &.compact {
+    gap: 0.4rem;
+  }
 
   label {
     font-size: 0.85rem;
@@ -90,6 +174,13 @@ form {
   }
 }
 
+/* Footer de envío */
+.compose-footer {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
 .send-btn {
   display: inline-flex;
   align-items: center;
@@ -109,7 +200,7 @@ form {
   }
 
   &:hover {
-    background-color: #60a266;
+    background-color: #3e6ee8; 
   }
 
   &:disabled {
@@ -117,4 +208,3 @@ form {
     cursor: not-allowed;
   }
 }
-

@@ -9,33 +9,33 @@
     <ng-container [ngSwitch]="selectedType">
       <!-- Caso: USUARIOS -->
       <ng-container *ngSwitchCase="'user'">
-        <!-- Rol -->
-        <div class="form-group">
-          <label for="role">Rol</label>
-          <select
-            id="role"
-            [(ngModel)]="selectedUserRole"
-            name="role"
-            required
-          >
-            <option [value]="'student'">Estudiante</option>
-            <option [value]="'instructor'">Instructor</option>
-          </select>
-        </div>
+        <div class="compose-assist">
+          <div class="form-group compact">
+            <label for="role">Rol</label>
+            <select
+              id="role"
+              [(ngModel)]="selectedUserRole"
+              name="role"
+              required
+            >
+              <option [value]="'student'">Estudiante</option>
+              <option [value]="'instructor'">Instructor</option>
+            </select>
+          </div>
 
-        <!-- stages (solo si es estudiante) -->
-        <div class="form-group" *ngIf="selectedUserRole === 'student'">
-          <label for="stage">Stage</label>
-          <select
-            id="stage"
-            [(ngModel)]="selectedStageId"
-            name="stage"
-            required
-          >
-            <option *ngFor="let s of stages" [value]="s.id">
-              {{ s.description }}
-            </option>
-          </select>
+          <div class="form-group compact" *ngIf="selectedUserRole === 'student'">
+            <label for="stage">Stage</label>
+            <select
+              id="stage"
+              [(ngModel)]="selectedStageId"
+              name="stage"
+              required
+            >
+              <option *ngFor="let s of stages" [value]="s.id">
+                {{ s.description }}
+              </option>
+            </select>
+          </div>
         </div>
 
         <!-- Selector de usuarios -->
@@ -63,8 +63,9 @@
             name="group"
             required
             [(ngModel)]="selectedGroupId"
+            (ngModelChange)="onGroupChange($event)"
           >
-            <option *ngFor="let group of groups" [value]="group.id">
+            <option *ngFor="let group of groups" [ngValue]="group.id">
               {{ group.name }}
             </option>
           </select>
@@ -75,70 +76,82 @@
     <!-- Formulario -->
     <form (ngSubmit)="submitForm()" #formRef="ngForm">
 
-    <!-- Tipo de notificación -->
-    <div class="form-group">
-      <label for="notificationType">Tipo de notificación</label>
-      <select
-        id="notificationType"
-        name="notificationType"
-        [(ngModel)]="notificationType"
-        required
-      >
-        <option value="Announce">Anuncio</option>
-        <option value="Advice">Consejo</option>
-        <option value="Commentary">Comentario</option>
-        <option value="Mandatory">Obligatoria</option>
-        <option value="System">Sistema</option>
-        <option value="Meeting">Reunión</option>
-        <option value="Assessment">Evaluación</option>
-      </select>
-    </div>
+      <!-- Toolbar superior tipo Gmail (filtros compactos) -->
+      <div class="compose-toolbar">
+        <div class="toolbar-item">
+          <label for="notificationType" class="toolbar-label">Tipo</label>
+          <select
+            id="notificationType"
+            name="notificationType"
+            [(ngModel)]="notificationType"
+            required
+          >
+            <option value="Announce">Anuncio</option>
+            <option value="Advice">Consejo</option>
+            <option value="Commentary">Comentario</option>
+            <option value="Mandatory">Obligatoria</option>
+            <option value="System">Sistema</option>
+            <option value="Meeting">Reunión</option>
+            <option value="Assessment">Evaluación</option>
+          </select>
+        </div>
 
-    <div class="form-group">
-        <label for="priority">Prioridad</label>
-        <select
-          id="priority"
-          name="priority"
-          [(ngModel)]="priority"
-          required
-        >
-          <option *ngFor="let opt of priorityOptions" [ngValue]="opt.value">
-            {{ opt.label }}
-          </option>
-        </select>
+        <div class="toolbar-item">
+          <label for="priority" class="toolbar-label">Prioridad</label>
+          <select
+            id="priority"
+            name="priority"
+            [(ngModel)]="priority"
+            required
+          >
+            <option *ngFor="let opt of priorityOptions" [ngValue]="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Resumen destinatarios (opcional, estilo Gmail “To: …”) -->
+        <div class="toolbar-item grow">
+          <span class="recipients-pill">
+            Destinatarios: <strong>{{ recipientsCount }}</strong>
+          </span>
+        </div>
       </div>
 
-    <div class="form-group">
-      <label for="title">Título</label>
-      <input
-        id="title"
-        name="title"
-        type="text"
-        [(ngModel)]="title"
-        required
-        placeholder="Título de la notificación"
-      />
-    </div>
+      <!-- Campos principales -->
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input
+          id="title"
+          name="title"
+          type="text"
+          [(ngModel)]="title"
+          required
+          placeholder="Título de la notificación"
+        />
+      </div>
 
-    <div class="form-group">
-      <label for="message">Mensaje</label>
-      <textarea
-        id="message"
-        name="message"
-        rows="4"
-        [(ngModel)]="message"
-        required
-        placeholder="Escribe tu mensaje aquí..."
-      ></textarea>
-    </div>
+      <div class="form-group">
+        <label for="message">Mensaje</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="6"
+          [(ngModel)]="message"
+          required
+          placeholder="Escribe tu mensaje aquí..."
+        ></textarea>
+      </div>
 
-    <button
-      type="submit"
-      [disabled]="!formRef.form.valid"
-      class="send-btn"
-    >
-      Enviar Notificación
-    </button>
-  </form>
+      <div class="compose-footer">
+        <button
+          type="submit"
+          [disabled]="!formRef.form.valid"
+          class="send-btn"
+        >
+          Enviar Notificación
+        </button>
+      </div>
+    </form>
   </div>
 </div>

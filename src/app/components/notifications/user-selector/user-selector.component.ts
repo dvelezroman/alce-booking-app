@@ -38,6 +38,8 @@ export class UserSelectorComponent implements OnChanges {
 
   isDropdownOpen = false;
 
+  private fetchSeq = 0;
+
   constructor(private usersService: UsersService) {
     this.searchInput$
       .pipe(debounceTime(300))
@@ -55,6 +57,8 @@ export class UserSelectorComponent implements OnChanges {
       this.selectedUsers = [];
       this.usersSelected.emit([]);
       this.isDropdownOpen = false;
+
+      this.fetchSeq++;
     }
 
     if (
@@ -89,6 +93,10 @@ export class UserSelectorComponent implements OnChanges {
       return;
     }
 
+    const seq = ++this.fetchSeq;
+    const expectedRole = this.role;
+    const expectedStage = this.stageId;
+
     this.usersService
       .searchUsers(
         undefined,
@@ -103,6 +111,10 @@ export class UserSelectorComponent implements OnChanges {
       )
       .subscribe({
         next: (res) => {
+          if (seq !== this.fetchSeq) return;
+          if (this.role !== expectedRole) return;
+          if (expectedRole === 'student' && this.stageId !== expectedStage) return;
+          
           this.allUsers = res.users;
           this.isDropdownOpen = true;
         },

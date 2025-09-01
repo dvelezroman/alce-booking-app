@@ -19,7 +19,10 @@ export class NotificationPanelComponent {
   @Output() actionSelected = new EventEmitter<PanelType>();
   @Output() sendOptionSelected = new EventEmitter<SendOptionType>();
 
-
+  ngOnInit() {
+    this.actionSelected.emit(this.activeTab);
+  }
+  
   setActive(tab: PanelType) {
     this.activeTab = tab;
     this.dropdownOpen = false;

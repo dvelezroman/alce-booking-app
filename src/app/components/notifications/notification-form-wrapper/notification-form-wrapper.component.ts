@@ -46,6 +46,7 @@ export class NotificationFormWrapperComponent implements OnInit {
   totalUsersInStage: number = 0;
   groups: NotificationGroupDto[] = [];
   selectedGroupId: number | null = null;
+  selectedGroupMembers = 0;
 
   userId: number | null = null;
 
@@ -74,12 +75,31 @@ export class NotificationFormWrapperComponent implements OnInit {
       this.notificationGroupService.getGroups().subscribe({
         next: (res) => {
           this.groups = res.notificationGroups || [];
+          this.updateGroupMembers();
         },
         error: () => {
           this.groups = [];
         }
       });
     }
+  }
+
+  onGroupChange(groupId: number | null) {
+    this.selectedGroupId = groupId;
+    this.updateGroupMembers();
+  }
+
+  // 👇 nuevo: calcula integrantes del grupo seleccionado
+  private updateGroupMembers() {
+    const g = this.groups.find(gr => gr.id === this.selectedGroupId);
+    this.selectedGroupMembers = g?.userIds?.length ?? 0;
+  }
+
+  // 👇 nuevo: contador dinámico según el modo
+  get recipientsCount(): number {
+    if (this.selectedType === 'group') return this.selectedGroupMembers || 0;
+    if (this.selectedType === 'stage') return this.totalUsersInStage || 0;
+    return this.selectedUsers.length || 0;
   }
 
   get titleText(): string {

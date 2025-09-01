@@ -1,19 +1,22 @@
 <section class="section">
-  <h1 class="reports-progress-header reports-progress-title">
-    Envíos
-  </h1>
+  <div class="content">
+    <h1 class="reports-progress-header reports-progress-title">
+      Envíos
+    </h1>
 
-  <app-notification-panel
-    (sendOptionSelected)="onSendOptionSelected($event)"
-  ></app-notification-panel>
+    <app-notification-panel
+      (sendOptionSelected)="onSendOptionSelected($event)"
+    ></app-notification-panel>
 
-  <!-- Formulario visible solo cuando hay tipo seleccionado -->
-  <app-notification-form-wrapper
-    *ngIf="selectedAction"
-    [selectedType]="selectedAction"
-    [stages]="stages" 
-    (submitNotification)="handleNotificationSubmit($event)"
-  ></app-notification-form-wrapper>
+    <!-- Formulario visible solo cuando hay tipo seleccionado -->
+    <app-notification-form-wrapper
+      *ngIf="selectedAction"
+      [selectedType]="selectedAction"
+      [stages]="stages" 
+      (submitNotification)="handleNotificationSubmit($event)"
+      class="form-wrapper-host"
+    ></app-notification-form-wrapper>
+  </div>
 </section>
 
 <app-modal
