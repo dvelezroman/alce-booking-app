@@ -15,7 +15,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { UserSelectorComponent } from '../user-selector/user-selector.component';
 import { UserDto } from '../../../services/dtos/user.dto';
-import { CreateNotificationGroupDto, NotificationGroupDto } from '../../../services/dtos/notification.dto';
+import {
+  CreateNotificationGroupDto,
+  NotificationGroupDto,
+} from '../../../services/dtos/notification.dto';
 import { NotificationGroupService } from '../../../services/notification-group.service';
 
 @Component({
@@ -29,6 +32,7 @@ export class GroupFormComponent implements OnChanges {
   form: FormGroup;
   selectedRole: 'student' | 'instructor' | null = null;
   selectedUsers: UserDto[] = [];
+  members: UserDto[] = [];
 
   @Input() groupToEdit?: NotificationGroupDto;
   @Output() formSubmitted = new EventEmitter<{
@@ -36,7 +40,10 @@ export class GroupFormComponent implements OnChanges {
     id?: number;
   }>();
 
-  constructor(private fb: FormBuilder, private notificationGroupService: NotificationGroupService) {
+  constructor(
+    private fb: FormBuilder,
+    private notificationGroupService: NotificationGroupService
+  ) {
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
@@ -51,24 +58,37 @@ export class GroupFormComponent implements OnChanges {
         description: this.groupToEdit.description,
         userIds: this.groupToEdit.userIds,
       });
+
       this.selectedUsers = this.groupToEdit.users || [];
+      this.notificationGroupService
+        .getUsersByGroupId(this.groupToEdit.id)
+        .subscribe({
+          next: (users) => {
+            this.members = users;
+          },
+          error: (err) => {
+            console.error('Error al obtener miembros:', err);
+            this.members = [];
+          },
+        });
     } else {
       this.form.reset();
       this.selectedUsers = [];
       this.selectedRole = null;
+      this.members = [];
     }
   }
 
-  get groupSummaryText(): string {
-    if (!this.groupToEdit) return '';
+  get selectedUserNames(): { id: number; name: string }[] {
+    const ids: number[] = this.form.get('userIds')?.value || [];
 
-    if (this.groupToEdit.users?.length) {
-      return this.groupToEdit.users
-        .map(u => `${u.firstName} ${u.lastName} (${u.email})`)
-        .join(', ');
-    }
-
-    return this.groupToEdit.userIds?.join(', ') ?? '';
+    return ids.map((id: number) => {
+      const user = this.members.find((m) => m.id === id);
+      return {
+        id,
+        name: `${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim()
+      };
+    });
   }
 
   onRoleChange(event: Event) {
@@ -88,14 +108,14 @@ export class GroupFormComponent implements OnChanges {
     if (this.groupToEdit?.users?.length) {
       return this.groupToEdit.users.map((u) => ({
         id: u.id,
-        label: `${u.firstName} ${u.lastName}`.trim()
+        label: `${u.firstName} ${u.lastName}`.trim(),
       }));
     }
 
     if (this.groupToEdit?.userIds?.length) {
       return this.groupToEdit.userIds.map((id) => ({
         id,
-        label: String(id)
+        label: String(id),
       }));
     }
 
@@ -109,15 +129,22 @@ export class GroupFormComponent implements OnChanges {
       .removeUsersFromGroup(this.groupToEdit.id, [userId])
       .subscribe({
         next: () => {
-
-          this.groupToEdit!.users = this.groupToEdit!.users?.filter(u => u.id !== userId);
-          this.groupToEdit!.userIds = this.groupToEdit!.userIds?.filter(id => id !== userId);
-          this.selectedUsers = this.selectedUsers.filter(u => u.id !== userId);
-          this.form.get('userIds')?.setValue(this.selectedUsers.map(u => u.id));
+          this.groupToEdit!.users = this.groupToEdit!.users?.filter(
+            (u) => u.id !== userId
+          );
+          this.groupToEdit!.userIds = this.groupToEdit!.userIds?.filter(
+            (id) => id !== userId
+          );
+          this.selectedUsers = this.selectedUsers.filter(
+            (u) => u.id !== userId
+          );
+          this.form.get('userIds')?.setValue(
+            this.selectedUsers.map((u) => u.id)
+          );
         },
         error: (err) => {
           console.error('Error al eliminar usuario del grupo', err);
-        }
+        },
       });
   }
 
@@ -134,5 +161,6 @@ export class GroupFormComponent implements OnChanges {
     this.form.reset();
     this.selectedRole = null;
     this.selectedUsers = [];
+    this.members = [];
   }
 }

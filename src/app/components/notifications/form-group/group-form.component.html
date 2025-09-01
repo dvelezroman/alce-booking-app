@@ -26,14 +26,14 @@
     </div>
 
     <!-- Lista de IDs de usuarios actuales con opción a eliminar -->
-    <div class="field" *ngIf="displayedUsers.length">
+    <div class="field" *ngIf="selectedUserNames.length">
       <label class="label">Usuarios actuales</label>
       <div class="pseudo-textarea">
         <div
           class="pseudo-textarea-line"
-          *ngFor="let user of displayedUsers"
+          *ngFor="let user of selectedUserNames"
         >
-          <span>{{ user.label }}</span>
+          <span>{{ user.name }}</span>
           <button
             *ngIf="!groupToEdit"
             type="button"

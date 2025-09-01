@@ -51,6 +51,17 @@ export class GroupMembersModalComponent {
     this.form.get('userIds')?.setValue([]);
   }
 
+  get selectedUserNames(): { id: number; name: string }[] {
+    const ids = this.form.get('userIds')?.value || [];
+    return ids.map((id: number) => {
+      const user = this.members.find((m) => m.id === id);
+      return {
+        id,
+        name: user ? `${user.firstName} ${user.lastName}` : `ID: ${id}`,
+      };
+    });
+  }
+
   onUsersSelected(users: UserDto[]) {
     const existingUserIds = new Set(this.members.map((u) => u.id));
     const selectedUserIds = users.map((u) => u.id);

@@ -72,6 +72,7 @@ export class GroupsComponent implements OnInit {
       },
     });
   }
+  
 
   closeModal() {
     this.showModal = false;
