@@ -26,6 +26,7 @@ export interface MeetingDTO {
   status: string;
   meetings?: MeetingDTO[];
   assignedBy?: AssignedByDTO;
+  assignedById?: number;
   assignedAt?: Date;
   markAssistanceByUser?: MarkedAssistanceByDTO;
   markAssistanceAt?: Date;
