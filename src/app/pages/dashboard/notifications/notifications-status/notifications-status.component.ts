@@ -21,12 +21,37 @@ export class NotificationsStatusComponent implements OnInit {
   fromDate: string = '';
   toDate: string = '';
 
+  // 🟢 Mapas de traducción a español
+  statusMap: Record<string, string> = {
+    SENT: 'Enviado',
+    PENDING: 'Pendiente',
+    DELIVERED: 'Entregado',
+    READ: 'Leído',
+    FAILED: 'Fallido',
+  };
+
+  typeMap: Record<string, string> = {
+    Announce: 'Anuncio',
+    Advice: 'Consejo',
+    Commentary: 'Comentario',
+    Mandatory: 'Obligatorio',
+    System: 'Sistema',
+    Meeting: 'Reunión',
+    Assessment: 'Evaluación',
+  };
+
+  priorityMap: Record<number, string> = {
+    0: 'Baja',
+    1: 'Normal',
+    2: 'Alta',
+    3: 'Urgente',
+  };
+
   constructor(private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     const today = new Date();
     const twoDaysAgo = new Date(today);
-
     twoDaysAgo.setDate(today.getDate() - 5);
 
     this.fromDate = twoDaysAgo.toISOString().slice(0, 10);
@@ -41,8 +66,8 @@ export class NotificationsStatusComponent implements OnInit {
 
   fetchNotifications(): void {
     const filters: FilterNotificationDto = {
-      fromDate: this.fromDate,
-      toDate: this.toDate,
+      // fromDate: this.fromDate,
+      // toDate: this.toDate,
     };
 
     if (this.statusFilter) {

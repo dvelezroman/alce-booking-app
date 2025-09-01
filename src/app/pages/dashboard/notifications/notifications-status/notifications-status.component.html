@@ -62,35 +62,33 @@
 
     <!-- Tabla de notificaciones -->
     <div class="table-container">
-      <table class="table-results is-fullwidth" *ngIf="notifications.length > 0">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th class="fixed-name-col">Título</th>
-            <th>Tipo</th>
-            <th>Estado</th>
-            <th>Prioridad</th>
-            <th>Programada</th>
-            <th>Enviada</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let notification of notifications">
-            <td>{{ notification.id }}</td>
-            <td>
-              <div class="name-wrapper" [title]="notification.title">
-                <span class="name-text">{{ notification.title }}</span>
-              </div>
-            </td>
-            <td>{{ notification.notificationType }}</td>
-            <td>{{ notification.status }}</td>
-            <td>{{ notification.priority }}</td>
-            <td>{{ notification.scheduledAt || '—' }}</td>
-            <td>{{ notification.sentAt || '—' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <table class="table-results is-fullwidth" *ngIf="notifications.length > 0">
+    <thead>
+      <tr>
+        <th class="fixed-name-col">Título</th>
+        <th>Tipo</th>
+        <th>Estado</th>
+        <th>Prioridad</th>
+        <th>Programada</th>
+        <th>Enviada</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let notification of notifications">
+        <td class="title-cell">
+          <div class="name-wrapper" [title]="notification.title">
+            <span class="name-text">{{ notification.title }}</span>
+          </div>
+        </td>
+        <td>{{ typeMap[notification.notificationType] || notification.notificationType }}</td>
+        <td>{{ statusMap[notification.status] || notification.status }}</td>
+        <td>{{ priorityMap[notification.priority] || notification.priority }}</td>
+        <td>{{ notification.scheduledAt || '—' }}</td>
+        <td>{{ notification.sentAt || '—' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
     <!-- Sin resultados -->
     <div class="no-results" *ngIf="notifications?.length === 0">
