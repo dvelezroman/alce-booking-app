@@ -100,11 +100,7 @@ export class SearchingMeetingComponent implements OnInit {
 
   private fetchMeetings(params?: FilterMeetingsDto): void {
     this.bookingService.searchMeetings(params ?? this.filter).subscribe(meetings => {
-      if (this.filter.assigned) {
-        this.meetings = meetings.filter(meeting => !!meeting.link);
-      } else {
-        this.meetings = meetings
-      }
+      this.meetings = meetings;
       this.meetings.sort((a, b) => {
         const stageA = a.stage?.number ? parseFloat(a.stage.number.replace(/[^0-9.]/g, '')) : Infinity;
         const stageB = b.stage?.number ? parseFloat(b.stage.number.replace(/[^0-9.]/g, '')) : Infinity;
@@ -128,12 +124,12 @@ export class SearchingMeetingComponent implements OnInit {
 
   assignLink(): void {
     const link = this.selectedInstructor?.meetingLink?.link?.trim();
-  
+
     if (!this.selectedInstructor || !link) {
       this.showModalMessage('No se puede asignar este instructor porque no tiene enlace asignado.');
       return;
     }
-    
+
     if (this.selectedMeetingIds.length) {
       const updateLinkParams: UpdateMeetingLinkDto = {
         link,
@@ -144,7 +140,7 @@ export class SearchingMeetingComponent implements OnInit {
       this.bookingService.updateMeetingLink(updateLinkParams).subscribe({
         next: response => {
           //console.log('Link asignado correctamente', response);
-          this.showModalMessage('El link fue asignado correctamente.', false, false, true); 
+          this.showModalMessage('El link fue asignado correctamente.', false, false, true);
           this.closeModal();
           this.selectedMeetingIds = [];
           this.fetchMeetings();
@@ -201,7 +197,7 @@ export class SearchingMeetingComponent implements OnInit {
         this.modalConfig.show = false;
       }
     };
-  
+
     // Auto cierre con delay
     setTimeout(() => {
       this.modalConfig.show = false;
