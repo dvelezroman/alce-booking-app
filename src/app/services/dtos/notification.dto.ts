@@ -48,6 +48,10 @@ export interface CreateNotificationDto {
   maxRetries?: number;
 }
 
+export interface CreateNotificationsBulkDto {
+  notifications: CreateNotificationDto[];
+}
+
 export interface FilterNotificationDto {
   notificationType?: Notification['notificationType'];
   scope?: Notification['scope'];

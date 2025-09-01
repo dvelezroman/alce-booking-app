@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   CreateNotificationDto,
+  CreateNotificationsBulkDto,
   FilterNotificationDto,
   Notification,
   NotificationListResponse,
@@ -17,6 +18,10 @@ export class NotificationService {
 
   create(createData: CreateNotificationDto): Observable<Notification> {
     return this.http.post<Notification>(`${this.apiUrl}`, createData);
+  }
+
+  createBulk(payload: CreateNotificationsBulkDto): Observable<NotificationListResponse> {
+    return this.http.post<NotificationListResponse>(`${this.apiUrl}/bulk`, payload);
   }
 
   getNotifications(filters: FilterNotificationDto): Observable<Notification[] | NotificationListResponse> {

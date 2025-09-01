@@ -97,7 +97,7 @@ export class NotificationsStatusComponent implements OnInit {
           (a.scheduledAt ? new Date(a.scheduledAt).getTime() : 0)
         );
 
-        console.log('notificaciones recibidas:', this.notifications);
+        //console.log('notificaciones recibidas:', this.notifications);
       },
       error: (err) => {
         console.error('Error fetching notifications:', err);

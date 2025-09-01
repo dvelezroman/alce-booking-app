@@ -89,17 +89,22 @@ export class NotificationFormWrapperComponent implements OnInit {
     this.updateGroupMembers();
   }
 
-  // 👇 nuevo: calcula integrantes del grupo seleccionado
+  // calcula integrantes del grupo seleccionado
   private updateGroupMembers() {
     const g = this.groups.find(gr => gr.id === this.selectedGroupId);
     this.selectedGroupMembers = g?.userIds?.length ?? 0;
   }
 
-  // 👇 nuevo: contador dinámico según el modo
+  // contador dinámico según el modo
   get recipientsCount(): number {
     if (this.selectedType === 'group') return this.selectedGroupMembers || 0;
     if (this.selectedType === 'stage') return this.totalUsersInStage || 0;
     return this.selectedUsers.length || 0;
+  }
+
+  private getGroupUserIds(): number[] {
+    const g = this.groups.find(gr => gr.id === this.selectedGroupId);
+    return g?.userIds ?? [];
   }
 
   get titleText(): string {
@@ -134,7 +139,7 @@ export class NotificationFormWrapperComponent implements OnInit {
 
   handleStageChange(stageId: number | null) {
     this.selectedStageId = stageId;
-
+    this.selectedUsers = [];
     if (stageId) {
       this.fetchUsersByStage(stageId);
     } else {
@@ -170,21 +175,47 @@ export class NotificationFormWrapperComponent implements OnInit {
   submitForm() {
     if (!this.formRef.valid || !this.userId) return;
 
-    const to = this.selectedUsers.map((u) => u.id);
+    let to: number[] = [];
     let scope: NotificationScopeEnum;
+
     switch (this.selectedType) {
-      case 'user':
-        scope = NotificationScopeEnum.INDIVIDUAL;
-        break;
-      case 'stage':
-        scope = NotificationScopeEnum.STAGE_STUDENTS;
-        break;
-      case 'group':
+      case 'group': {
+        const g = this.groups.find(gr => gr.id === this.selectedGroupId);
+        to = g?.userIds ?? [];
         scope = NotificationScopeEnum.ALL_USERS;
+
+        if (!this.selectedGroupId || to.length === 0) {
+          console.warn('No hay destinatarios para el grupo seleccionado.');
+          return;
+        }
         break;
-      default:
+      }
+
+      case 'stage': {
+        scope = NotificationScopeEnum.STAGE_STUDENTS;
+
+        to = (this.users ?? []).map(u => u.id);
+
+        if (!this.selectedStageId || to.length === 0) {
+          console.warn('No hay destinatarios para el stage seleccionado.');
+          return;
+        }
+        break;
+      }
+
+      case 'user':
+      default: {
         scope = NotificationScopeEnum.INDIVIDUAL;
+        to = this.selectedUsers.map(u => u.id);
+
+        if (to.length === 0) {
+          console.warn('Selecciona al menos un usuario.');
+          return;
+        }
+        break;
+      }
     }
+
     const stageId = this.selectedUserRole === 'student' && this.selectedStageId != null
       ? +this.selectedStageId
       : undefined;
