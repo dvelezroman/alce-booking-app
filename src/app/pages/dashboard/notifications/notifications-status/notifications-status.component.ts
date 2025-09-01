@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from '../../../../services/notification.service';
 import { FilterNotificationDto, Notification } from '../../../../services/dtos/notification.dto';
+import { formatToEcuadorTime } from '../../../../shared/utils/dates.util';
 
 @Component({
   selector: 'app-notifications-status',
@@ -21,7 +22,6 @@ export class NotificationsStatusComponent implements OnInit {
   fromDate: string = '';
   toDate: string = '';
 
-  // 🟢 Mapas de traducción a español
   statusMap: Record<string, string> = {
     SENT: 'Enviado',
     PENDING: 'Pendiente',
@@ -64,6 +64,10 @@ export class NotificationsStatusComponent implements OnInit {
     this.showFilters = !this.showFilters;
   }
 
+  formatDate(dateStr?: string): string {
+    return dateStr ? formatToEcuadorTime(dateStr) : '—';
+  }
+
   fetchNotifications(): void {
     const filters: FilterNotificationDto = {
       // fromDate: this.fromDate,
@@ -84,9 +88,14 @@ export class NotificationsStatusComponent implements OnInit {
 
     this.notificationService.getNotifications(filters).subscribe({
       next: (data: any) => {
-        this.notifications = Array.isArray(data)
+        const result = Array.isArray(data)
           ? data
           : (data?.notifications ?? []);
+
+         this.notifications = result.sort((a: Notification, b: Notification) =>
+          (b.scheduledAt ? new Date(b.scheduledAt).getTime() : 0) -
+          (a.scheduledAt ? new Date(a.scheduledAt).getTime() : 0)
+        );
 
         console.log('notificaciones recibidas:', this.notifications);
       },

@@ -74,3 +74,12 @@ export const convertEcuadorDateToLocal = (dateStr: string): string =>{
   // Convert to local timezone
   return dateInEcuador.setZone(localTz).toFormat("yyyy-MM-dd HH:mm:ss");
 }
+
+export const formatToEcuadorTime = (dateStr: string): string => {
+  const ecuadorTz = "America/Guayaquil";
+  const date = DateTime.fromISO(dateStr, { zone: 'utc' }); 
+
+  if (!date.isValid) return '—';
+
+  return date.setZone(ecuadorTz).toFormat("dd/MM/yyyy HH:mm");
+};
