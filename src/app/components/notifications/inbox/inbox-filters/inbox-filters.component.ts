@@ -19,8 +19,7 @@ export class InboxFiltersComponent implements OnChanges {
     fromDate: '',
     toDate: '',
     priority: '',
-    readState: 'all',
-    search: '', 
+    readState: 'all', 
   };
   @Output() valueChange = new EventEmitter<InboxFilters>();
 
@@ -41,14 +40,6 @@ export class InboxFiltersComponent implements OnChanges {
 
   private emit() {
     this.valueChange.emit({ ...this.value });
-  }
-
-  // ——— Search (solo front) ———
-  handleSearchChange(): void {
-    const term = (this.searchLocal || '').trim();
-    // mínimo 2 letras para aplicar; si no, limpiar
-    this.value.search = term.length >= 2 ? term : '';
-    this.emit();
   }
 
   // ——— Prioridad (numérica) ———

@@ -29,6 +29,7 @@ import { BroadcastGroupsComponent } from './notifications/broadcast-groups/broad
 import { NotificationsStatusComponent } from './notifications/notifications-status/notifications-status.component';
 import { GroupsComponent } from './notifications/groups/groups.component';
 import { InboxComponent } from './notifications/inbox/inbox.component';
+import { NotificationDetailComponent } from './notifications/notification-detail/notification-detail.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -42,10 +43,7 @@ export const dashboardRoutes: Routes = [
   { path: 'assessment-types', component: AssessmentTypesComponent },
   { path: 'meetings-student', component: MeetingsStudentComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent },
-  {
-    path: 'searching-meeting-instructor',
-    component: SearchingMeetingInstructorComponent,
-  },
+  { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent },
   { path: 'searching-students', component: SearchingStudentComponent },
   { path: 'attendance-student', component: AttendanceReportsComponent },
   { path: 'report-instructor', component: ReportInstructorComponent },
@@ -64,4 +62,5 @@ export const dashboardRoutes: Routes = [
   { path: 'notifications-status', component: NotificationsStatusComponent },
   { path: 'notifications-groups', component: GroupsComponent },
   { path: 'notifications-inbox', component: InboxComponent },
+  { path: 'notifications-detail', component: NotificationDetailComponent },
 ];

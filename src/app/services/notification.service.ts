@@ -78,4 +78,8 @@ export class NotificationService {
     //console.log('user params =>', params.toString());
     return this.http.get<NotificationListResponse>(`${this.apiUrl}/user`, { params });
   }
+
+  getNotificationById(id: number | string): Observable<Notification> {
+    return this.http.get<Notification>(`${this.apiUrl}/${id}`);
+  }
 }

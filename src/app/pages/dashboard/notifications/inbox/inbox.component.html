@@ -24,8 +24,6 @@
 
     <!-- Lista de notificaciones -->
     <section class="notifications-list">
-      <!-- Cargando -->
-      <div *ngIf="loading" class="loading">Cargando notificaciones…</div>
 
       <!-- Error -->
       <div *ngIf="!loading && errorMsg" class="error">
@@ -48,7 +46,10 @@
         <div
           class="table-row"
           *ngFor="let n of notifications; trackBy: trackById"
-          [class.unread]="!n.readBy || n.readBy.length === 0"
+          [class.unread]="!n.isRead"
+          (click)="onRowClick(n)"
+          role="button"
+          tabindex="0"
         >
           <!-- De -->
           <div class="col-from">

@@ -6,6 +6,7 @@ import {
 } from '../../../../components/notifications/inbox/inbox-filters/inbox-filters.component';
 import { NotificationService } from '../../../../services/notification.service';
 import { InboxFilters, Notification, NotificationListResponse } from '../../../../services/dtos/notification.dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inbox',
@@ -35,7 +36,9 @@ export class InboxComponent implements OnInit {
   loading = false;
   errorMsg = '';
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService,
+              private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.fetchNotifications();
@@ -88,4 +91,22 @@ export class InboxComponent implements OnInit {
   trackById(index: number, n: Notification): number {
     return n.id;
   }
+
+  onRowClick(n: Notification) {
+    if (!n?.id) return;
+
+    this.notificationService.getNotificationById(n.id).subscribe({
+      next: (full) => {
+        console.log('[Inbox] Fetched notification → id:', full?.id);
+        this.router.navigate(
+          ['/dashboard/notifications-detail'],
+          { state: { notification: full } }
+        );
+      },
+      error: (err) => {
+        console.error('[Inbox] Error al obtener notificación:', err);
+        this.router.navigate(['/dashboard/notifications-inbox']);
+      },
+    });
+}
 }

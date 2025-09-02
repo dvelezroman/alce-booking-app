@@ -1,0 +1,113 @@
+<section class="notif-detail-root">
+  <!-- Top bar / actions -->
+  <header class="topbar">
+    <div class="left">
+      <a class="btn back" routerLink="/dashboard/notifications-inbox" aria-label="Volver">
+        ←
+      </a>
+    </div>
+
+    <div class="right">
+      <div class="actions">
+        <button class="icon-btn" title="Eliminar">🗑️</button>
+        <button class="icon-btn" title="Más">⋮</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main column only -->
+  <div class="layout single">
+    <article class="message-col">
+      <!-- From block -->
+      <div class="from-row">
+        <div class="avatar">
+            <span>
+            {{
+                (notification?.fromUser?.firstName ||
+                notification?.fromUser?.lastName ||
+                notification?.fromUser?.email ||
+                'N') | slice: 0:1
+            }}
+            {{ (notification?.fromUser?.lastName || '') | slice: 0:1 }}
+            </span>
+        </div>
+
+        <div class="from-meta">
+            <div class="from-line">
+            <strong class="name">
+                {{ notification?.fromUser?.firstName }} {{ notification?.fromUser?.lastName }}
+            </strong>
+            <span class="email" *ngIf="!notification?.fromUser?.firstName && !notification?.fromUser?.lastName">
+                {{ notification?.fromUser?.email }}
+            </span>
+            <span class="dot">·</span>
+            <span class="time">
+                {{ notification?.createdAt | date: 'EEE d MMM y, HH:mm' }}
+            </span>
+            </div>
+
+            <div class="to-line">
+            Para: <span class="audience">{{ toDisplayName || 'Tú' }}</span>
+            <span
+                *ngIf="notification?.scope === 'STAGE_STUDENTS' && notification?.stage?.description"
+                class="audience"
+            >
+                ({{ notification?.stage?.description }})
+            </span>
+            </div>
+
+            <!-- Nuevo bloque: título del mensaje -->
+            <div class="title-line" *ngIf="notification?.title">
+            {{ notification?.title }}
+            </div>
+        </div>
+      </div>
+
+      <!-- DETAILS -->
+      <details class="meta-disclosure">
+        <summary>
+          <span>Detalles</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </summary>
+
+        <div class="card details-card">
+          <dl class="meta-list">
+            <div class="row"><dt>Estado</dt><dd>{{ estadoLabel }}</dd></div>
+            <!-- <div class="row"><dt>Creada</dt><dd>{{ notification?.createdAt | date: 'short' }}</dd></div> -->
+            <div class="row" *ngIf="notification?.sentAt"><dt>Enviada</dt><dd>{{ notification?.sentAt | date: 'short' }}</dd></div>
+            <!-- <div class="row" *ngIf="notification?.deliveredAt"><dt>Entregada</dt><dd>{{ notification?.deliveredAt | date: 'short' }}</dd></div> -->
+            <!-- <div class="row" *ngIf="notification?.updatedAt"><dt>Actualizada</dt><dd>{{ notification?.updatedAt | date: 'short' }}</dd></div> -->
+            <div class="row" *ngIf="notification?.expiresAt"><dt>Expira</dt><dd>{{ notification?.expiresAt | date: 'short' }}</dd></div>
+            <div class="row"><dt>Tipo</dt><dd>{{ tipoLabel }}</dd></div>
+            <div class="row" *ngIf="notification?.priority !== null && notification?.priority !== undefined">
+                <dt>Prioridad</dt><dd>{{ prioridadLabel }}</dd>
+            </div>
+            <div class="row"><dt>Ámbito</dt><dd>{{ notification?.scope }}</dd></div>
+            <!-- <div class="row" *ngIf="notification?.message?.action">
+              <dt>Acción</dt><dd>{{ notification?.message?.action }}</dd>
+            </div> -->
+            <!-- <div class="row" *ngIf="notification?.metadata">
+              <dt>Metadata</dt>
+              <dd>{{ notification?.metadata | json }}</dd>
+            </div> -->
+          </dl>
+        </div>
+      </details>
+
+      <!-- Content -->
+      <div class="content">
+        <p class="body-text" *ngIf="notification?.message?.body as body">
+          {{ body }}
+        </p>
+      </div>
+
+      <!-- Banners opcionales -->
+      <div class="alert warn" *ngIf="notification?.expiresAt">
+        Esta notificación tiene fecha de caducidad.
+      </div>
+      <div class="alert danger" *ngIf="notification?.status === 'FAILED'">
+        {{ notification?.errorMessage || 'No se pudo entregar.' }}
+      </div>
+    </article>
+  </div>
+</section>
