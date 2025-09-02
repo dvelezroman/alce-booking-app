@@ -93,7 +93,10 @@ export class InboxComponent implements OnInit {
 
     this.notificationService.getUserNotifications(opts).subscribe({
       next: (res) => {
-        this.notifications = res.notifications || [];
+        this.notifications = (res.notifications || [])
+        .sort((a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
         this.total = res.total || 0;
         this.unreadCount = this.notifications.filter(n => this.isUnread(n)).length;
         this.loading = false;
