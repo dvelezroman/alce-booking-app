@@ -18,6 +18,7 @@ import {
   NotificationTypeEnum
 } from '../../../services/dtos/notification.dto';
 import { NotificationGroupService } from '../../../services/notification-group.service';
+import { InstructorStageService } from '../../../services/instructor-stage.service';
 
 @Component({
   selector: 'app-notification-form-wrapper',
@@ -46,9 +47,11 @@ export class NotificationFormWrapperComponent implements OnInit {
   notificationType = NotificationTypeEnum.Announce;
   notificationTypes = Object.values(NotificationTypeEnum);
   userId: number | null = null;
+  stageInstructors: UserDto[] = [];
+  selectedInstructorId: number | null = null;
 
   // USER 
-  selectedUserRole: 'student' | 'instructor' = 'student';
+  selectedUserRole: 'student' | 'instructor' | 'admin' = 'student';
   selectedUsers: UserDto[] = [];
 
   // STAGE
@@ -76,14 +79,20 @@ export class NotificationFormWrapperComponent implements OnInit {
   ];
 
   constructor(
+    private store: Store,
     private usersService: UsersService,
+    private instructorStageService: InstructorStageService,
     private notificationGroupService: NotificationGroupService,
-    private store: Store
   ) {}
 
   ngOnInit(): void {
     this.store.select(selectUserData).subscribe((user: UserDto | null) => {
-      if (user) this.userId = user.id;
+      if (user) {
+        this.userId = user.id;
+        if (this.userRole === UserRole.STUDENT && user.stage?.id) {
+          this.selectedStageId = user.stage.id;
+        }
+      }
     });
 
     if (this.selectedType === 'group') {
@@ -94,6 +103,35 @@ export class NotificationFormWrapperComponent implements OnInit {
         },
         error: () => (this.groups = []),
       });
+    }
+  }
+
+  private loadStageInstructors(stageId: number) {
+    this.instructorStageService.list({ stageId }).subscribe({
+      next: (links) => {
+        this.stageInstructors = (links || [])
+          .map(l => l?.instructor?.user)
+          .filter(Boolean) as UserDto[];
+
+        if (this.stageInstructors.length === 1) {
+          this.selectedInstructorId = this.stageInstructors[0].id;
+        }
+      },
+      error: () => {
+        this.stageInstructors = [];
+        this.selectedInstructorId = null;
+      }
+    });
+  }
+
+  onUserRoleChange(next: 'student' | 'instructor' | 'admin') {
+    this.selectedUserRole = next;
+
+    // aplica si es student y selecciona instructor
+    if (this.userRole === UserRole.STUDENT && next === 'instructor') {
+      if (this.selectedStageId) {
+        this.loadStageInstructors(this.selectedStageId);
+      }
     }
   }
 

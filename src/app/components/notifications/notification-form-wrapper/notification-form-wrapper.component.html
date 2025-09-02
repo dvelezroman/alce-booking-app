@@ -17,6 +17,7 @@
               [(ngModel)]="selectedUserRole"
               name="role"
               required
+              (ngModelChange)="onUserRoleChange($event)"
             >
               <option *ngIf="userRole === UserRole.STUDENT" [value]="'instructor'">
                 Instructor
@@ -30,7 +31,7 @@
             </select>
           </div>
 
-          <div class="form-group compact" *ngIf="selectedUserRole === 'student'">
+          <div class="form-group compact" *ngIf="selectedUserRole === 'student' && userRole !== UserRole.STUDENT">
             <label for="stage">Stage</label>
             <select
               id="stage"
@@ -45,8 +46,28 @@
           </div>
         </div>
 
+        <!-- select para instructores del stage del student -->
+        <div
+          class="form-group"
+          *ngIf="userRole === UserRole.STUDENT && selectedUserRole === 'instructor'"
+        >
+          <label for="instr">Instructor de tu stage</label>
+          <select
+            id="instr"
+            [(ngModel)]="selectedInstructorId"
+            name="instr"
+            required
+          >
+            <option [ngValue]="null" disabled>Seleccione un instructor</option>
+            <option *ngFor="let i of stageInstructors" [ngValue]="i.id">
+              {{ i.firstName }} {{ i.lastName }}
+            </option>
+          </select>
+        </div>
+
         <!-- Selector de usuarios -->
         <app-user-selector
+          *ngIf="!(userRole === UserRole.STUDENT && selectedUserRole === 'instructor')"
           [role]="selectedUserRole"
           [stageId]="selectedUserRole === 'student' && selectedStageId != null ? selectedStageId : undefined"
           (usersSelected)="handleUsersSelected($event)"

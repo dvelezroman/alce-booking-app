@@ -14,6 +14,7 @@ import { NotificationService } from '../../../../services/notification.service';
 import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../../components/modal/modal.component';
 import { selectUserData } from '../../../../store/user.selector';
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'app-broadcast-groups',
@@ -41,14 +42,27 @@ export class BroadcastGroupsComponent implements OnInit {
   userRole: UserRole | null = null;
 
   constructor(
+    private store: Store,
     private stagesService: StagesService,
+    private usersService: UsersService,
     private notificationService: NotificationService,
-    private store: Store
   ) {}
 
   ngOnInit() {
     this.store.select(selectUserData).pipe(take(1)).subscribe((u: UserDto | null) => {
-      this.userRole = u?.role ?? null;
+      if (u?.role) {
+        this.userRole = u.role;
+      } else {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+        if (token) {
+          this.usersService.refreshLogin().subscribe({
+            next: (resp) => { this.userRole = resp.role ?? null; },
+            error: () =>   { this.userRole = null; }
+          });
+        } else {
+          this.userRole = null;
+        }
+      }
     });
 
     this.stagesService.getAll().subscribe((response: Stage[]) => {
