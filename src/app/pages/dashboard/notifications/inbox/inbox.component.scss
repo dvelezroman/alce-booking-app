@@ -154,24 +154,43 @@ $table-min-width: 600px;
 .table-row {
   border-bottom: 1px solid #f3f4f6;
   cursor: default;
-  transition: background-color .15s ease;
+  transition: background-color 0.15s ease;
 
   &:hover { background: #f9fafb; }
 
+  /* Notificaciones no leídas */
   &.unread {
     background: #fdfefe;
-    .col-title .title { font-weight: 700; color: #111827; }
-    .col-from { font-weight: 600; color: #111827; }
+
+    .col-title .title {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .col-from {
+      font-weight: 600;
+      color: #111827;
+    }
   }
 
-  .col-from, .col-title, .col-date {
+  /* Notificaciones LEÍDAS */
+  &:not(.unread) {
+    .col-from {
+      color: #8a8e95;
+      font-weight: 500;
+    }
+  }
+
+  .col-from,
+  .col-title,
+  .col-date {
     min-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  /* indicador de no leído */
+  /* Indicador de no leído (puntito azul) */
   .col-from {
     position: relative;
     padding-left: 14px;
@@ -188,7 +207,10 @@ $table-min-width: 600px;
       transform: translateY(-50%);
     }
   }
-  &.unread .col-from::before { background: #2563eb; }
+
+  &.unread .col-from::before {
+    background: #2563eb; /* Solo aparece para no leídas */
+  }
 }
 
 /* Asunto: título + snippet en una sola fila */

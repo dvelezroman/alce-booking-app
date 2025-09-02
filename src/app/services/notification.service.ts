@@ -82,4 +82,8 @@ export class NotificationService {
   getNotificationById(id: number | string): Observable<Notification> {
     return this.http.get<Notification>(`${this.apiUrl}/${id}`);
   }
+
+  markSingleAsRead(notificationId: number) {
+    return this.http.post<Notification>(`${this.apiUrl}/mark-single-as-read`, { notificationId });
+  }
 }

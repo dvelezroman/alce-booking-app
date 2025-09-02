@@ -19,6 +19,7 @@ export interface Notification {
   scheduledAt?: string;
   sentAt?: string;
   deliveredAt?: string;
+  readAt?: string | null;
   readBy: number[]; 
   expiresAt?: string;
   metadata?: Record<string, any>;

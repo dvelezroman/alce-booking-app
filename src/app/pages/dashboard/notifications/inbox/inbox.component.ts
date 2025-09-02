@@ -7,6 +7,7 @@ import {
 import { NotificationService } from '../../../../services/notification.service';
 import { InboxFilters, Notification, NotificationListResponse } from '../../../../services/dtos/notification.dto';
 import { Router } from '@angular/router';
+import { switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-inbox',
@@ -95,18 +96,18 @@ export class InboxComponent implements OnInit {
   onRowClick(n: Notification) {
     if (!n?.id) return;
 
-    this.notificationService.getNotificationById(n.id).subscribe({
+    this.notificationService.markSingleAsRead(n.id).pipe(
+      tap(updated => console.log('[Inbox] Marked as read →', { id: n.id, readAt: updated?.readAt, readBy: updated?.readBy })),
+      switchMap(() => this.notificationService.getNotificationById(n.id))
+    ).subscribe({
       next: (full) => {
-        console.log('[Inbox] Fetched notification → id:', full?.id);
-        this.router.navigate(
-          ['/dashboard/notifications-detail'],
-          { state: { notification: full } }
-        );
+        console.log('[Inbox] Detail after mark →', { id: full.id, readAt: full.readAt, readBy: full.readBy });
+        this.router.navigate(['/dashboard/notifications-detail'], { state: { notification: full } });
       },
       error: (err) => {
-        console.error('[Inbox] Error al obtener notificación:', err);
+        console.error('[Inbox] Error mark/get →', err);
         this.router.navigate(['/dashboard/notifications-inbox']);
-      },
+      }
     });
-}
+  }
 }
