@@ -16,14 +16,20 @@
   width: 100%;
   max-width: 360px;
 
-  // Ocultar el botón por defecto
-  .edit-icon-button {
+  // Contenedor de botones
+  .card-actions {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  // Botón de editar
+  .edit-icon-button {
     border: none;
     background: transparent;
-    font-size: 1.2rem;
+    font-size: 1rem;
     cursor: pointer;
     color: #6b7280;
     opacity: 0;
@@ -35,15 +41,33 @@
     }
   }
 
+  // Botón de eliminar
+  .delete-icon-button {
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #787777;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      color: #535353;
+    }
+  }
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 
-    .edit-icon-button {
+    .edit-icon-button,
+    .delete-icon-button {
       opacity: 1;
       pointer-events: auto;
     }
   }
+}
 
   .group-title {
     font-size: 1rem;
@@ -71,4 +95,3 @@
       }
     }
   }
-}

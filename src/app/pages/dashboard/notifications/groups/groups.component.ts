@@ -198,4 +198,43 @@ export class GroupsComponent implements OnInit {
     this.showMembersModal = false;
     this.selectedGroup = undefined;
   }
+
+  onRequestDelete(group: NotificationGroupDto) {
+    this.openConfirmDelete(group);
+  }
+
+  private openConfirmDelete(group: NotificationGroupDto) {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      title: 'Eliminar grupo',
+      message: `¿Seguro que deseas eliminar el grupo <strong>${group.name}</strong>? Esta acción no se puede deshacer.`,
+      isInfo: true,
+      showButtons: true,
+      close: () => { this.modal.show = false; },
+      confirm: () => this.confirmDelete(group.id),
+    };
+  }
+
+  private confirmDelete(groupId: number) {
+    this.modal.show = false;
+
+    this.notificationGroupService.deleteGroup(groupId).subscribe({
+      next: () => {
+        this.showModalMessage({
+          title: 'Grupo eliminado',
+          message: 'El grupo fue eliminado correctamente.',
+          isSuccess: true,
+        });
+        this.loadGroups();
+      },
+      error: () => {
+        this.showModalMessage({
+          title: 'Error al eliminar',
+          message: 'No se pudo eliminar el grupo. Intenta nuevamente.',
+          isError: true,
+        });
+      },
+    });
+  }
 }

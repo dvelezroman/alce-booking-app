@@ -23,6 +23,7 @@
       [groups]="groups"
       (editGroup)="openEditGroup($event)"
       (viewGroupMembers)="openGroupMembersModal($event)"
+      (deleteGroup)="onRequestDelete($event)"
     ></app-group-list>
   </div>
 
@@ -48,9 +49,12 @@
   <app-modal
     [showModal]="modal.show"
     [message]="modal.message"
-    [title]="modal.title ?? ''"
     [isError]="modal.isError"
     [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [title]="modal.title || ''"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm && modal.confirm()"
     (close)="modal.close()"
   ></app-modal>
 

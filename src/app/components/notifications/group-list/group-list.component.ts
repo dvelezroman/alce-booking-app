@@ -14,6 +14,7 @@ export class GroupListComponent {
 
   @Output() editGroup = new EventEmitter<NotificationGroupDto>();
   @Output() viewGroupMembers = new EventEmitter<NotificationGroupDto>();
+  @Output() deleteGroup = new EventEmitter<NotificationGroupDto>();
 
   onEditClick(group: NotificationGroupDto) {
     this.editGroup.emit(group);
@@ -21,5 +22,10 @@ export class GroupListComponent {
 
   onCardClick(group: NotificationGroupDto) {
     this.viewGroupMembers.emit(group);
+  }
+
+  onDeleteClick(group: NotificationGroupDto, ev: MouseEvent) {
+    ev.stopPropagation();
+    this.deleteGroup.emit(group);
   }
 }

@@ -8,13 +8,25 @@
     class="group-card relative cursor-pointer"
     (click)="onCardClick(group)"
   >
-    <button
-      class="edit-icon-button"
-      (click)="onEditClick(group); $event.stopPropagation()"
-      title="Editar grupo"
-    >
-      ✏️
-    </button>
+    <div class="card-actions">
+      <!-- Botón editar -->
+      <button
+        class="edit-icon-button"
+        (click)="onEditClick(group); $event.stopPropagation()"
+        title="Editar grupo"
+      >
+        <i class="fas fa-edit"></i>
+      </button>
+
+      <!-- Botón eliminar -->
+      <button
+        class="delete-icon-button"
+        (click)="onDeleteClick(group, $event)"
+        title="Eliminar grupo"
+      >
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
 
     <h2 class="group-title">{{ group.name }}</h2>
     <p class="group-description">{{ group.description }}</p>
