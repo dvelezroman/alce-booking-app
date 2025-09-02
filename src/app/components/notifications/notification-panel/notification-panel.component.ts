@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, HostListener } from '@angular/core';
+import { Component, EventEmitter, Output, HostListener, Input } from '@angular/core';
+import { UserRole } from '../../../services/dtos/user.dto';
 
 export type PanelType = 'create' | 'groups' | 'notifications';
 export type SendOptionType = 'user' | 'stage' | 'group' | 'role';
@@ -13,8 +14,12 @@ export type NotificationsOptionType = 'sent';
   styleUrl: './notification-panel.component.scss',
 })
 export class NotificationPanelComponent {
+  
   activeTab: PanelType = 'create';
   dropdownOpen = false;
+  
+  @Input() userRole: UserRole | null = null;
+  protected readonly UserRole = UserRole;
 
   @Output() actionSelected = new EventEmitter<PanelType>();
   @Output() sendOptionSelected = new EventEmitter<SendOptionType>();

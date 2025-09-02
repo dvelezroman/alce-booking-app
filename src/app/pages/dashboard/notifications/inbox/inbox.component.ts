@@ -7,7 +7,10 @@ import {
 import { NotificationService } from '../../../../services/notification.service';
 import { InboxFilters, Notification, NotificationListResponse } from '../../../../services/dtos/notification.dto';
 import { Router } from '@angular/router';
-import { switchMap, tap } from 'rxjs';
+import { switchMap, take, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { selectUserData } from '../../../../store/user.selector';
+import { UserDto } from '../../../../services/dtos/user.dto';
 
 @Component({
   selector: 'app-inbox',
@@ -17,6 +20,8 @@ import { switchMap, tap } from 'rxjs';
   styleUrl: './inbox.component.scss',
 })
 export class InboxComponent implements OnInit {
+  private currentUserId: number | null = null; 
+
   filters: InboxFilters = {
   status: '',
   type: '',
@@ -26,7 +31,6 @@ export class InboxComponent implements OnInit {
   priority: '',
   readState: 'all',
 };
-
 
   notifications: Notification[] = [];
   unreadCount = 0;
@@ -38,11 +42,24 @@ export class InboxComponent implements OnInit {
   errorMsg = '';
 
   constructor(private notificationService: NotificationService,
-              private router: Router
+              private router: Router,
+              private store: Store,
   ) {}
 
   ngOnInit(): void {
-    this.fetchNotifications();
+    this.store.select(selectUserData).pipe(take(1)).subscribe((u: UserDto | null) => {
+      this.currentUserId = u?.id ?? null;
+      this.fetchNotifications();
+    });
+  }
+
+  isUnread(n: Notification): boolean {
+    if (n.isRead === true)  return false;
+    if (n.isRead === false) return true;
+    if (this.currentUserId == null) {
+      return !(n.readBy && n.readBy.length > 0);
+    }
+    return !n.readBy?.includes(this.currentUserId);
   }
 
   onFiltersChange(next: InboxFilters) {
@@ -78,7 +95,7 @@ export class InboxComponent implements OnInit {
       next: (res) => {
         this.notifications = res.notifications || [];
         this.total = res.total || 0;
-        this.unreadCount = this.notifications.filter(n => !n.readBy || n.readBy.length === 0).length;
+        this.unreadCount = this.notifications.filter(n => this.isUnread(n)).length;
         this.loading = false;
       },
       error: (err) => {
@@ -101,7 +118,6 @@ export class InboxComponent implements OnInit {
       switchMap(() => this.notificationService.getNotificationById(n.id))
     ).subscribe({
       next: (full) => {
-        console.log('[Inbox] Detail after mark →', { id: full.id, readAt: full.readAt, readBy: full.readBy });
         this.router.navigate(['/dashboard/notifications-detail'], { state: { notification: full } });
       },
       error: (err) => {
