@@ -42,7 +42,7 @@ export class NotificationService {
     return this.http.get<Notification[] | NotificationListResponse>(this.apiUrl, { params });
   }
 
-  getUserNotifications(opts?: { readDays?: number; page?: number; limit?: number; })
+  getUserNotifications(opts?: { readDays?: number; page?: number; limit?: number;  fromDate?: string; toDate?: string; })
     : Observable<NotificationListResponse> {
     let params = new HttpParams();
 

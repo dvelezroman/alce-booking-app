@@ -5,9 +5,11 @@
   background: color-mix(in oklab, white 80%, transparent);
 }
 
-/* Grid base */
 .row { display: grid; gap: 10px; }
 .row-top { grid-template-columns: 1fr; }
+.row-bottom {
+  grid-template-columns: 1fr;
+}
 
 @media (min-width: 768px) {
   .row-top {
@@ -17,7 +19,6 @@
   }
 }
 
-/* Campos */
 .field { display: flex; flex-direction: column; }
 .label {
   font-size: 11px;
@@ -26,7 +27,6 @@
   margin-bottom: 4px;
 }
 
-/* Inputs y selects compactos */
 .input,
 .select {
   border: 1px solid #d1d5db;
@@ -50,7 +50,6 @@
   opacity: 1;
 }
 
-/* Estado focus visible */
 .filters-panel .input:focus,
 .filters-panel .select:focus {
   outline: none;
@@ -86,10 +85,28 @@
 .segmented-btn.is-active { background: #0284c7; color: #fff; }
 .segmented-btn:not(.is-active):hover { background: #f3f4f6; }
 
-/* Divider más corto */
 .divider {
   border: none;
   height: 1px;
   background: #e5e7eb;
   margin: 8px 0;
+}
+
+.field-dates {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+}
+
+.date-col {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.field-dates .input[type='date'] {
+  height: 36px;
+  padding: 6px 8px;
 }

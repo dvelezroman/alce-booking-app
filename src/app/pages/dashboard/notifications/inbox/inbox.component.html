@@ -7,19 +7,95 @@
         <p class="subtitle">Revisa tus notificaciones recibidas</p>
       </div>
       <div class="stats">
-        <span class="unread">No leídas: <strong>0</strong></span>
+        <span class="unread">
+          No leídas: <strong>{{ unreadCount }}</strong>
+        </span>
       </div>
     </header>
 
     <!-- Filtros -->
-    <app-inbox-filters></app-inbox-filters>
+    <app-inbox-filters
+      [value]="filters"
+      (valueChange)="onFiltersChange($event)"
+    ></app-inbox-filters>
 
     <!-- Separador -->
     <div class="divider"></div>
 
     <!-- Lista de notificaciones -->
     <section class="notifications-list">
-      <p class="placeholder">Aquí mostraremos la lista de notificaciones</p>
+      <!-- Cargando -->
+      <div *ngIf="loading" class="loading">Cargando notificaciones…</div>
+
+      <!-- Error -->
+      <div *ngIf="!loading && errorMsg" class="error">
+        {{ errorMsg }}
+      </div>
+
+      <!-- Sin resultados -->
+      <div *ngIf="!loading && !errorMsg && notifications.length === 0" class="placeholder">
+        No hay notificaciones para los filtros seleccionados.
+      </div>
+
+      <!-- Tabla estilo Gmail -->
+      <div *ngIf="!loading && notifications.length > 0" class="table-wrapper">
+        <div class="table-header">
+          <div class="col-from">De</div>
+          <div class="col-title">Asunto</div>
+          <div class="col-extra">Tipo / Prioridad / Estado</div>
+          <div class="col-date">Fecha</div>
+        </div>
+
+        <div
+          class="table-row"
+          *ngFor="let n of notifications; trackBy: trackById"
+          [class.unread]="!n.readBy || n.readBy.length === 0"
+        >
+          <!-- Columna: De -->
+          <div class="col-from">
+            {{ n.fromUser.firstName || '' }} {{ n.fromUser.lastName || '' }}
+            <span *ngIf="!n.fromUser?.firstName && !n.fromUser?.lastName">
+              {{ n.fromUser.email || '—' }}
+            </span>
+          </div>
+
+          <!-- Columna: Asunto + cuerpo -->
+          <div class="col-title">
+            <div class="title" [title]="n.title">{{ n.title }}</div>
+            <div class="snippet" *ngIf="n.message?.body as body">
+              {{ body.length > 120 ? (body | slice: 0:120) + '…' : body }}
+            </div>
+          </div>
+
+          <!-- Columna: tipo / prioridad / estado -->
+          <div class="col-extra">
+            <span class="chip type">{{ n.notificationType }}</span>
+            <span
+              class="chip"
+              [ngClass]="{
+                'prio-low': n.priority === 0,
+                'prio-normal': n.priority === 1,
+                'prio-high': n.priority === 2,
+                'prio-urgent': n.priority === 3
+              }"
+            >
+              {{ n.priority === 3
+                ? 'Urgente'
+                : n.priority === 2
+                ? 'Alta'
+                : n.priority === 1
+                ? 'Normal'
+                : 'Baja' }}
+            </span>
+            <span class="chip status">{{ n.status }}</span>
+          </div>
+
+          <!-- Columna: Fecha -->
+          <div class="col-date">
+            {{ n.createdAt | date: 'short' }}
+          </div>
+        </div>
+      </div>
     </section>
   </div>
 </section>

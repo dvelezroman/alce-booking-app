@@ -2,9 +2,9 @@
   <!-- Fila 1: búsqueda + prioridad + lectura -->
   <div class="row row-top">
     <!-- Buscar -->
-   <div class="field field-search">
-    <label class="label">Buscar</label>
-    <input
+    <div class="field field-search">
+      <label class="label">Buscar</label>
+      <input
         type="text"
         class="input"
         placeholder="Título o mensaje…"
@@ -13,7 +13,7 @@
         [ngModelOptions]="{ standalone: true }"
         [(ngModel)]="searchLocal"
         (ngModelChange)="handleSearchChange()"
-    />
+      />
     </div>
 
     <!-- Prioridad -->
@@ -79,5 +79,29 @@
     </div>
   </div>
 
-  <hr class="divider" />
+<hr class="divider" />
+
+  <!-- Fila 2: Fechas -->
+  <div class="row row-bottom">
+    <div class="field field-dates">
+      <div class="date-col">
+        <label class="label">Desde</label>
+        <input
+          type="date"
+          class="input"
+          [(ngModel)]="fromDate"
+          (change)="onDateChange()"
+        />
+      </div>
+      <div class="date-col">
+        <label class="label">Hasta</label>
+        <input
+          type="date"
+          class="input"
+          [(ngModel)]="toDate"
+          (change)="onDateChange()"
+        />
+      </div>
+    </div>
+  </div>
 </section>

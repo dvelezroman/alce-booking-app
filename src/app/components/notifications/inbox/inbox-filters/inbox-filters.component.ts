@@ -6,6 +6,8 @@ export interface InboxFilters {
   search?: string;
   priorityBucket?: 'all' | 'priority' | 'other';
   readState?: 'all' | 'unread' | 'read';
+  fromDate?: string;
+  toDate?: string;
 }
 
 @Component({
@@ -20,15 +22,20 @@ export class InboxFiltersComponent implements OnChanges {
     search: '',
     priorityBucket: 'all',
     readState: 'all',
+    fromDate: '',
+    toDate: '',
   };
   @Output() valueChange = new EventEmitter<InboxFilters>();
 
-  /** Modelo local solo para el input de búsqueda */
   searchLocal = '';
+  fromDate = '';
+  toDate = '';
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['value']) {
       this.searchLocal = this.value?.search ?? '';
+      this.fromDate = this.value?.fromDate ?? '';
+      this.toDate = this.value?.toDate ?? '';
     }
   }
 
@@ -36,7 +43,6 @@ export class InboxFiltersComponent implements OnChanges {
     this.valueChange.emit({ ...this.value });
   }
 
-  /** Actualiza el @Input.value desde el modelo local y emite */
   handleSearchChange(): void {
     this.value.search = this.searchLocal;
     this.emit();
@@ -51,6 +57,12 @@ export class InboxFiltersComponent implements OnChanges {
   setReadState(state: 'all' | 'unread' | 'read') {
     if (this.value.readState === state) return;
     this.value.readState = state;
+    this.emit();
+  }
+
+  onDateChange(): void {
+    this.value.fromDate = this.fromDate || '';
+    this.value.toDate = this.toDate || '';
     this.emit();
   }
 }
