@@ -6,27 +6,28 @@
 }
 
 .row { display: grid; gap: 10px; }
-.row-top { grid-template-columns: 1fr; }
-.row-bottom {
-  grid-template-columns: 1fr;
+
+/* Fila superior: Prioridad + Lectura (sin espacios sobrantes) */
+.row-top {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, max-content);
+  align-items: start; 
+  justify-content: start;
 }
 
-@media (min-width: 768px) {
-  .row-top {
-    grid-template-columns: minmax(250px, 1fr) auto auto;
-    align-items: start;
-    column-gap: 12px;
-  }
-}
+/* Fila inferior: Fechas */
+.row-bottom { grid-template-columns: 1fr; }
 
-.field { display: flex; flex-direction: column; }
+.field { display: flex; flex-direction: column; width: max-content; }
 .label {
   font-size: 11px;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
+/* Inputs / selects */
 .input,
 .select {
   border: 1px solid #d1d5db;
@@ -45,11 +46,6 @@
   caret-color: #0284c7;
 }
 
-.filters-panel .input::placeholder {
-  color: #9ca3af;
-  opacity: 1;
-}
-
 .filters-panel .input:focus,
 .filters-panel .select:focus {
   outline: none;
@@ -57,8 +53,7 @@
   box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
 }
 
-.field-search .input { width: 100%; }
-
+/* ---- Segmented control compacto ---- */
 .segmented {
   display: inline-flex;
   border: 1px solid #d1d5db;
@@ -67,6 +62,7 @@
   align-items: center;
   height: 36px;
   white-space: nowrap;
+  width: auto;
 }
 
 .segmented-btn {
@@ -75,8 +71,8 @@
   background: #ffffff;
   border: none;
   cursor: pointer;
-  height: 100%;
-  display: flex;
+  height: 36px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: background-color .15s ease, color .15s ease;
@@ -85,28 +81,44 @@
 .segmented-btn.is-active { background: #0284c7; color: #fff; }
 .segmented-btn:not(.is-active):hover { background: #f3f4f6; }
 
+/* Divider */
 .divider {
   border: none;
   height: 1px;
   background: #e5e7eb;
-  margin: 8px 0;
+  margin: 10px 0;
 }
 
+/* Fechas (segunda fila) */
 .field-dates {
   display: flex;
   flex-direction: row;
   gap: 10px;
   width: 100%;
 }
-
 .date-col {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-width: 0;
 }
-
 .field-dates .input[type='date'] {
   height: 36px;
   padding: 6px 8px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .row-top {
+    grid-template-columns: 1fr;
+    justify-content: start;
+  }
+
+  .field { 
+    width: max-content;
+  }
+
+  .segmented { 
+    width: auto;
+  }
 }

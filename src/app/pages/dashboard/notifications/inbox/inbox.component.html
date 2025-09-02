@@ -3,8 +3,8 @@
     <!-- Header -->
     <header class="inbox-header">
       <div class="title-block">
-        <h1 class="title">Bandeja de Entrada</h1>
-        <p class="subtitle">Revisa tus notificaciones recibidas</p>
+        <h1 class="title">Recibidos</h1>
+        <p class="subtitle">Notificaciones recibidas</p>
       </div>
       <div class="stats">
         <span class="unread">
@@ -37,12 +37,11 @@
         No hay notificaciones para los filtros seleccionados.
       </div>
 
-      <!-- Tabla estilo Gmail -->
+          <!-- Tabla -->
       <div *ngIf="!loading && notifications.length > 0" class="table-wrapper">
         <div class="table-header">
           <div class="col-from">De</div>
           <div class="col-title">Asunto</div>
-          <div class="col-extra">Tipo / Prioridad / Estado</div>
           <div class="col-date">Fecha</div>
         </div>
 
@@ -51,7 +50,7 @@
           *ngFor="let n of notifications; trackBy: trackById"
           [class.unread]="!n.readBy || n.readBy.length === 0"
         >
-          <!-- Columna: De -->
+          <!-- De -->
           <div class="col-from">
             {{ n.fromUser.firstName || '' }} {{ n.fromUser.lastName || '' }}
             <span *ngIf="!n.fromUser?.firstName && !n.fromUser?.lastName">
@@ -59,38 +58,18 @@
             </span>
           </div>
 
-          <!-- Columna: Asunto + cuerpo -->
+          <!-- Asunto (título + snippet en una sola fila) -->
           <div class="col-title">
-            <div class="title" [title]="n.title">{{ n.title }}</div>
-            <div class="snippet" *ngIf="n.message?.body as body">
-              {{ body.length > 120 ? (body | slice: 0:120) + '…' : body }}
+            <div class="subject-row">
+              <span class="title" [title]="n.title">{{ n.title }}</span>
+              <span class="sep">—</span>
+              <span class="snippet-inline" *ngIf="n.message?.body as body">
+                {{ body }}
+              </span>
             </div>
           </div>
 
-          <!-- Columna: tipo / prioridad / estado -->
-          <div class="col-extra">
-            <span class="chip type">{{ n.notificationType }}</span>
-            <span
-              class="chip"
-              [ngClass]="{
-                'prio-low': n.priority === 0,
-                'prio-normal': n.priority === 1,
-                'prio-high': n.priority === 2,
-                'prio-urgent': n.priority === 3
-              }"
-            >
-              {{ n.priority === 3
-                ? 'Urgente'
-                : n.priority === 2
-                ? 'Alta'
-                : n.priority === 1
-                ? 'Normal'
-                : 'Baja' }}
-            </span>
-            <span class="chip status">{{ n.status }}</span>
-          </div>
-
-          <!-- Columna: Fecha -->
+          <!-- Fecha -->
           <div class="col-date">
             {{ n.createdAt | date: 'short' }}
           </div>

@@ -1,14 +1,8 @@
+// inbox-filters.component.ts
 import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-export interface InboxFilters {
-  search?: string;
-  priorityBucket?: 'all' | 'priority' | 'other';
-  readState?: 'all' | 'unread' | 'read';
-  fromDate?: string;
-  toDate?: string;
-}
+import { InboxFilters } from '../../../../services/dtos/notification.dto';
 
 @Component({
   selector: 'app-inbox-filters',
@@ -19,23 +13,29 @@ export interface InboxFilters {
 })
 export class InboxFiltersComponent implements OnChanges {
   @Input() value: InboxFilters = {
-    search: '',
-    priorityBucket: 'all',
-    readState: 'all',
+    status: '',
+    type: '',
+    scope: '',
     fromDate: '',
     toDate: '',
+    priority: '',
+    readState: 'all',
+    search: '', 
   };
   @Output() valueChange = new EventEmitter<InboxFilters>();
 
+  // locales
   searchLocal = '';
   fromDate = '';
   toDate = '';
+  priorityLocal: 0 | 1 | 2 | 3 | '' = '';
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['value']) {
-      this.searchLocal = this.value?.search ?? '';
-      this.fromDate = this.value?.fromDate ?? '';
-      this.toDate = this.value?.toDate ?? '';
+      this.searchLocal   = this.value?.search ?? '';
+      this.fromDate      = this.value?.fromDate ?? '';
+      this.toDate        = this.value?.toDate ?? '';
+      this.priorityLocal = (this.value?.priority ?? '') as 0 | 1 | 2 | 3 | '';
     }
   }
 
@@ -43,26 +43,46 @@ export class InboxFiltersComponent implements OnChanges {
     this.valueChange.emit({ ...this.value });
   }
 
+  // ——— Search (solo front) ———
   handleSearchChange(): void {
-    this.value.search = this.searchLocal;
+    const term = (this.searchLocal || '').trim();
+    // mínimo 2 letras para aplicar; si no, limpiar
+    this.value.search = term.length >= 2 ? term : '';
     this.emit();
   }
 
-  setPriorityBucket(bucket: 'all' | 'priority' | 'other') {
-    if (this.value.priorityBucket === bucket) return;
-    this.value.priorityBucket = bucket;
+  // ——— Prioridad (numérica) ———
+  setPriority(level: 0 | 1 | 2 | 3 | ''): void {
+    this.priorityLocal = level;
+    this.value.priority = level;
     this.emit();
   }
 
+  // ——— Lectura ———
   setReadState(state: 'all' | 'unread' | 'read') {
     if (this.value.readState === state) return;
     this.value.readState = state;
     this.emit();
   }
 
+  // ——— Fechas ———
   onDateChange(): void {
     this.value.fromDate = this.fromDate || '';
-    this.value.toDate = this.toDate || '';
+    this.value.toDate   = this.toDate   || '';
+    this.emit();
+  }
+
+  // ——— (Opcionales) status/type/scope ———
+  setStatus(status: InboxFilters['status']) {
+    this.value.status = status ?? '';
+    this.emit();
+  }
+  setType(type: InboxFilters['type']) {
+    this.value.type = (type ?? '') as InboxFilters['type'];
+    this.emit();
+  }
+  setScope(scope: InboxFilters['scope']) {
+    this.value.scope = (scope ?? '') as InboxFilters['scope'];
     this.emit();
   }
 }

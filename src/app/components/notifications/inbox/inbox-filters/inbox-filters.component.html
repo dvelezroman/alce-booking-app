@@ -1,49 +1,30 @@
 <section class="filters-panel">
   <!-- Fila 1: búsqueda + prioridad + lectura -->
   <div class="row row-top">
-    <!-- Buscar -->
-    <div class="field field-search">
-      <label class="label">Buscar</label>
-      <input
-        type="text"
-        class="input"
-        placeholder="Título o mensaje…"
-        aria-label="Buscar por título o mensaje"
-        name="search"
-        [ngModelOptions]="{ standalone: true }"
-        [(ngModel)]="searchLocal"
-        (ngModelChange)="handleSearchChange()"
-      />
-    </div>
 
     <!-- Prioridad -->
     <div class="field field-priority">
       <span class="label">Prioridad</span>
       <div class="segmented">
-        <button
-          type="button"
-          class="segmented-btn"
-          [class.is-active]="value.priorityBucket === 'priority'"
-          (click)="setPriorityBucket('priority')"
-        >
-          Prioritarios
-        </button>
-        <button
-          type="button"
-          class="segmented-btn"
-          [class.is-active]="value.priorityBucket === 'other'"
-          (click)="setPriorityBucket('other')"
-        >
-          Otros
-        </button>
-        <button
-          type="button"
-          class="segmented-btn"
-          [class.is-active]="value.priorityBucket === 'all'"
-          (click)="setPriorityBucket('all')"
-        >
-          Todos
-        </button>
+        <button type="button" class="segmented-btn"
+                [class.is-active]="priorityLocal === 3"
+                (click)="setPriority(3)">Urgente</button>
+
+        <button type="button" class="segmented-btn"
+                [class.is-active]="priorityLocal === 2"
+                (click)="setPriority(2)">Alta</button>
+
+        <button type="button" class="segmented-btn"
+                [class.is-active]="priorityLocal === 1"
+                (click)="setPriority(1)">Normal</button>
+
+        <button type="button" class="segmented-btn"
+                [class.is-active]="priorityLocal === 0"
+                (click)="setPriority(0)">Baja</button>
+
+        <button type="button" class="segmented-btn"
+                [class.is-active]="priorityLocal === ''"
+                (click)="setPriority('')">Todas</button>
       </div>
     </div>
 
@@ -90,7 +71,7 @@
           type="date"
           class="input"
           [(ngModel)]="fromDate"
-          (change)="onDateChange()"
+          (ngModelChange)="onDateChange()"
         />
       </div>
       <div class="date-col">
@@ -99,7 +80,7 @@
           type="date"
           class="input"
           [(ngModel)]="toDate"
-          (change)="onDateChange()"
+          (ngModelChange)="onDateChange()"
         />
       </div>
     </div>

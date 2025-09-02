@@ -42,14 +42,40 @@ export class NotificationService {
     return this.http.get<Notification[] | NotificationListResponse>(this.apiUrl, { params });
   }
 
-  getUserNotifications(opts?: { readDays?: number; page?: number; limit?: number;  fromDate?: string; toDate?: string; })
-    : Observable<NotificationListResponse> {
+  getUserNotifications(opts?: {
+    readDays?: number;
+    page?: number;
+    limit?: number;
+    fromDate?: string;
+    toDate?: string;
+    status?: 'SENT' | 'PENDING' | 'DELIVERED' | 'READ' | 'FAILED';
+    type?: string;
+    scope?: string;
+    priority?: 0 | 1 | 2 | 3;
+    isRead?: boolean;
+  }): Observable<NotificationListResponse> {
     let params = new HttpParams();
 
-    if (opts?.readDays != null) params = params.set('readDays', String(opts.readDays));
-    if (opts?.page != null)     params = params.set('page', String(opts.page));
-    if (opts?.limit != null)    params = params.set('limit', String(opts.limit));
+    const setIf = (key: string, val: unknown) => {
+      if (val !== undefined && val !== '') {
+        params = params.set(key, String(val));
+      }
+    };
 
+    setIf('readDays', opts?.readDays);
+    setIf('page',     opts?.page);
+    setIf('limit',    opts?.limit);
+
+    setIf('fromDate', opts?.fromDate);
+    setIf('toDate',   opts?.toDate);
+
+    setIf('status',   opts?.status);
+    setIf('type',     opts?.type);
+    setIf('scope',    opts?.scope);
+    setIf('priority', opts?.priority);
+    setIf('isRead',   opts?.isRead);
+
+    //console.log('user params =>', params.toString());
     return this.http.get<NotificationListResponse>(`${this.apiUrl}/user`, { params });
   }
 }

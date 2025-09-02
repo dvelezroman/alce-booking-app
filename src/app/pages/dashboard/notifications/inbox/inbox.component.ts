@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   InboxFiltersComponent,
-  InboxFilters,
+
 } from '../../../../components/notifications/inbox/inbox-filters/inbox-filters.component';
 import { NotificationService } from '../../../../services/notification.service';
-import { Notification, NotificationListResponse } from '../../../../services/dtos/notification.dto';
+import { InboxFilters, Notification, NotificationListResponse } from '../../../../services/dtos/notification.dto';
 
 @Component({
   selector: 'app-inbox',
@@ -16,12 +16,14 @@ import { Notification, NotificationListResponse } from '../../../../services/dto
 })
 export class InboxComponent implements OnInit {
   filters: InboxFilters = {
-    search: '',
-    priorityBucket: 'all',
-    readState: 'all',
-    fromDate: '',
-    toDate: '',
-  };
+  status: '',
+  type: '',
+  scope: '',
+  fromDate: '',
+  toDate: '',
+  priority: '',
+  readState: 'all',
+};
 
 
   notifications: Notification[] = [];
@@ -49,27 +51,30 @@ export class InboxComponent implements OnInit {
     this.loading = true;
     this.errorMsg = '';
 
-    const opts: {
-      readDays?: number;
-      page?: number;
-      limit?: number;
-      fromDate?: string;
-      toDate?: string;
-    } = {
+    const isRead =
+      this.filters.readState === 'unread' ? false :
+      this.filters.readState === 'read'   ? true  :
+      undefined;
+
+    const opts: any = {
       page: this.page,
       limit: this.limit,
+      fromDate: this.filters.fromDate || undefined,
+      toDate: this.filters.toDate || undefined,
+      status: this.filters.status || undefined,
+      type: this.filters.type || undefined,
+      scope: this.filters.scope || undefined,
+      priority: this.filters.priority !== '' ? this.filters.priority : undefined,
+      isRead,
     };
 
-    if (this.filters.fromDate) opts.fromDate = this.filters.fromDate;
-    if (this.filters.toDate) opts.toDate = this.filters.toDate;
+    Object.keys(opts).forEach(k => opts[k] === undefined && delete opts[k]);
 
     this.notificationService.getUserNotifications(opts).subscribe({
-      next: (res: NotificationListResponse) => {
+      next: (res) => {
         this.notifications = res.notifications || [];
         this.total = res.total || 0;
         this.unreadCount = this.notifications.filter(n => !n.readBy || n.readBy.length === 0).length;
-
-        console.log('[Inbox] fetched:', { opts, res });
         this.loading = false;
       },
       error: (err) => {

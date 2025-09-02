@@ -25,6 +25,7 @@ export interface Notification {
   retryCount?: number;
   maxRetries?: number;
   errorMessage?: string;
+  isRead?: boolean;
 }
 
 export interface NotificationMessage {
@@ -134,6 +135,6 @@ export interface InboxFilters {
   scope?: Notification['scope'] | '';
   fromDate?: string;
   toDate?: string;
-  priorityBucket?: 'all' | 'priority' | 'other';
+  priority?: 0 | 1 | 2 | 3 | '';
   readState?: 'all' | 'unread' | 'read';
 }
