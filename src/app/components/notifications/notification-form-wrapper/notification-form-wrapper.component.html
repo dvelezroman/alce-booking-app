@@ -18,9 +18,15 @@
               name="role"
               required
             >
-              <option [value]="'student'">Estudiante</option>
-              <option [value]="'instructor'">Instructor</option>
-              <option [value]="'admin'">Administrador</option>
+              <option *ngIf="userRole === UserRole.STUDENT" [value]="'instructor'">
+                Instructor
+              </option>
+
+              <ng-container *ngIf="userRole !== UserRole.STUDENT">
+                <option [value]="'student'">Estudiante</option>
+                <option [value]="'instructor'">Instructor</option>
+                <option [value]="'admin'">Administrador</option>
+              </ng-container>
             </select>
           </div>
 

@@ -8,7 +8,7 @@ import { UserSelectorComponent } from '../user-selector/user-selector.component'
 import { StageSelectorComponent } from '../stage-selector/stage-selector.component';
 
 import { Stage } from '../../../services/dtos/student.dto';
-import { UserDto } from '../../../services/dtos/user.dto';
+import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
 import { selectUserData } from '../../../store/user.selector';
 import {
@@ -34,6 +34,8 @@ import { NotificationGroupService } from '../../../services/notification-group.s
 export class NotificationFormWrapperComponent implements OnInit {
   @Input() selectedType: 'user' | 'stage' | 'group' | 'role' = 'user';
   @Input() stages: Stage[] = [];
+  @Input() userRole: UserRole | null = null;
+  protected readonly UserRole = UserRole;
 
   @Output() submitNotification = new EventEmitter<CreateNotificationDto>();
 
