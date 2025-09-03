@@ -1,1 +1,51 @@
-<p>notifications-sent works!</p>
+<section class="sent-root">
+  <div class="sent-page">
+    <!-- Header -->
+    <header class="sent-header">
+      <div class="title-block">
+        <h1 class="title">Enviados</h1>
+        <p class="subtitle">Notificaciones enviadas</p>
+      </div>
+    </header>
+
+    <!-- Separador -->
+    <div class="divider"></div>
+
+    <!-- Lista de notificaciones enviadas -->
+    <section class="notifications-list">
+      <!-- Sin resultados -->
+      <div *ngIf="items.length === 0" class="placeholder">
+        No has enviado ninguna notificación.
+      </div>
+
+      <!-- Tabla -->
+      <app-sent-list *ngIf="items.length > 0" [items]="items"></app-sent-list>
+
+      <div class="pagination" *ngIf="total > 0">
+        <button
+          class="pg-btn"
+          (click)="onPrev()"
+          [disabled]="page === 1"
+          aria-label="Página anterior"
+        >
+          ‹
+        </button>
+
+        <span class="pg-info">
+          Página {{ page }}
+          <span class="sep">·</span>
+          Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }}
+        </span>
+
+        <button
+          class="pg-btn"
+          (click)="onNext()"
+          [disabled]="page * limit >= total"
+          aria-label="Página siguiente"
+        >
+          ›
+        </button>
+      </div>
+    </section>
+  </div>
+</section>

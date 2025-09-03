@@ -1,0 +1,136 @@
+.sent-root {
+  background-color: #f3f4f6;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  padding: 24px 16px;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.sent-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background-color: #f9fafb;
+  min-height: calc(100vh - 64px);
+
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 12px;
+    border-radius: 0;
+  }
+}
+
+/* ===== Header ===== */
+.sent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+
+  .title-block {
+    .title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .title-block {
+      .title {
+        text-align: center;
+      }
+      .subtitle {
+        text-align: center;
+      }
+    }
+  }
+}
+
+/* ===== Divider ===== */
+.divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 4px 0;
+}
+
+/* ===== Lista de notificaciones ===== */
+.notifications-list {
+  border-radius: 12px;
+  background-color: white;
+  padding: 0;
+  min-height: 300px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  .placeholder {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #9ca3af;
+    padding: 16px 0;
+  }
+}
+
+/* ===== Paginación ===== */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 12px 8px;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 8px;
+
+  .pg-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+
+    &:hover:not(:disabled) {
+      background: #f9fafb;
+    }
+
+    &:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+  }
+
+  .pg-info {
+    font-size: 12.5px;
+    color: #374151;
+
+    .sep {
+      color: #9ca3af;
+      margin: 0 4px;
+    }
+  }
+}

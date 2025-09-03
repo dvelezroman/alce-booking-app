@@ -242,7 +242,7 @@ export class NotificationFormWrapperComponent implements OnInit {
 
       case 'stage': {
         to = (this.users ?? []).map(u => u.id);
-        scope = NotificationScopeEnum.INDIVIDUAL;
+        scope = NotificationScopeEnum.STAGE_STUDENTS;
         if (!this.selectedStageId || to.length === 0) return;
         break;
       }
