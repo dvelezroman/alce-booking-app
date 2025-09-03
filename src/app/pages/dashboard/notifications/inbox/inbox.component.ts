@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InboxFiltersComponent } from '../../../../components/notifications/inbox/inbox-filters/inbox-filters.component';
 import { NotificationService } from '../../../../services/notification.service';
-import { InboxFilters, Notification } from '../../../../services/dtos/notification.dto';
+import { Notification } from '../../../../services/dtos/notification.dto';
 import { Router } from '@angular/router';
-import { Observable, switchMap, take, tap } from 'rxjs';
+import { Observable, switchMap, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserData } from '../../../../store/user.selector';
 import { UserDto } from '../../../../services/dtos/user.dto';
@@ -17,35 +17,30 @@ import { UserDto } from '../../../../services/dtos/user.dto';
   styleUrl: './inbox.component.scss',
 })
 export class InboxComponent implements OnInit {
-  private currentUserId: number | null = null; 
-
-  filters: InboxFilters = {
-  status: '',
-  type: '',
-  scope: '',
-  fromDate: '',
-  toDate: '',
-  priority: '',
-  readState: 'all',
-};
+  private currentUserId: number | null = null;
 
   notifications: Notification[] = [];
-
   unreadCount$!: Observable<number>;
+
   page = 1;
   limit = 30;
   total = 0;
 
+  readDays = 30;
+
   loading = false;
   errorMsg = '';
 
-  constructor(private notificationService: NotificationService,
-              private router: Router,
-              private store: Store,
+  constructor(
+    private notificationService: NotificationService,
+    private router: Router,
+    private store: Store,
   ) {}
 
   ngOnInit(): void {
     this.unreadCount$ = this.notificationService.unreadCount$;
+
+    const r = this.last30DaysRange();
 
     this.store.select(selectUserData).pipe(take(1)).subscribe((u: UserDto | null) => {
       this.currentUserId = u?.id ?? null;
@@ -53,46 +48,28 @@ export class InboxComponent implements OnInit {
     });
   }
 
-  isUnread(n: Notification): boolean {
-    if (n.isRead === true)  return false;
-    if (n.isRead === false) return true;
-    if (this.currentUserId == null) {
-      return !(n.readBy && n.readBy.length > 0);
-    }
-    return !n.readBy?.includes(this.currentUserId);
+  private last30DaysRange(): { fromDate: string; toDate: string } {
+    const to = new Date();
+    const from = new Date();
+    from.setDate(to.getDate() - 30);
+    return { fromDate: from.toISOString(), toDate: to.toISOString() };
   }
 
-  onFiltersChange(next: InboxFilters) {
-    this.filters = { ...next };
+  onReadDaysChange(days: number) {
+    this.readDays = days;
     this.page = 1;
     this.fetchNotifications();
-    this.notificationService.loadUnreadCount().subscribe();
   }
 
   fetchNotifications() {
     this.loading = true;
     this.errorMsg = '';
 
-    const isRead =
-      this.filters.readState === 'unread' ? false :
-      this.filters.readState === 'read'   ? true  :
-      undefined;
-
-    const opts: any = {
+    this.notificationService.getUserNotifications({
       page: this.page,
       limit: this.limit,
-      fromDate: this.filters.fromDate || undefined,
-      toDate: this.filters.toDate || undefined,
-      status: this.filters.status || undefined,
-      type: this.filters.type || undefined,
-      scope: this.filters.scope || undefined,
-      priority: this.filters.priority !== '' ? this.filters.priority : undefined,
-      isRead,
-    };
-
-    Object.keys(opts).forEach(k => opts[k] === undefined && delete opts[k]);
-
-    this.notificationService.getUserNotifications(opts).subscribe({
+      readDays: this.readDays,
+    }).subscribe({
       next: (res) => {
         this.notifications = (res.notifications || [])
           .sort((a: any, b: any) =>
@@ -112,6 +89,15 @@ export class InboxComponent implements OnInit {
   trackById(index: number, n: Notification): number {
     return n.id;
   }
+
+  // isUnread(n: Notification): boolean {
+  //   if (n.isRead === true)  return false;
+  //   if (n.isRead === false) return true;
+  //   if (this.currentUserId == null) {
+  //     return !(n.readBy && n.readBy.length > 0);
+  //   }
+  //   return !n.readBy?.includes(this.currentUserId);
+  // }
 
   onRowClick(n: Notification) {
     if (!n?.id) return;

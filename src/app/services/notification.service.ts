@@ -46,39 +46,24 @@ export class NotificationService {
   }
 
   getUserNotifications(opts?: {
-    readDays?: number;
     page?: number;
     limit?: number;
-    fromDate?: string;
-    toDate?: string;
-    status?: 'SENT' | 'PENDING' | 'DELIVERED' | 'READ' | 'FAILED';
-    type?: string;
-    scope?: string;
-    priority?: 0 | 1 | 2 | 3;
-    isRead?: boolean;
+    readDays?: number;
   }): Observable<NotificationListResponse> {
     let params = new HttpParams();
 
-    const setIf = (key: string, val: unknown) => {
-      if (val !== undefined && val !== '') {
-        params = params.set(key, String(val));
-      }
-    };
+    if (opts?.page != null) {
+      params = params.set('page', String(opts.page));
+    }
 
-    setIf('readDays', opts?.readDays);
-    setIf('page',     opts?.page);
-    setIf('limit',    opts?.limit);
+    if (opts?.limit != null) {
+      params = params.set('limit', String(opts.limit));
+    }
 
-    setIf('fromDate', opts?.fromDate);
-    setIf('toDate',   opts?.toDate);
+    if (opts?.readDays != null) {
+      params = params.set('readDays', String(opts.readDays));
+    }
 
-    setIf('status',   opts?.status);
-    setIf('type',     opts?.type);
-    setIf('scope',    opts?.scope);
-    setIf('priority', opts?.priority);
-    setIf('isRead',   opts?.isRead);
-
-    //console.log('user params =>', params.toString());
     return this.http.get<NotificationListResponse>(`${this.apiUrl}/user`, { params });
   }
 
