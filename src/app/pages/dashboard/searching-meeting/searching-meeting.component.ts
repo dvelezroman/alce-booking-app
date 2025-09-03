@@ -100,7 +100,11 @@ export class SearchingMeetingComponent implements OnInit {
 
   private fetchMeetings(params?: FilterMeetingsDto): void {
     this.bookingService.searchMeetings(params ?? this.filter).subscribe(meetings => {
-      this.meetings = meetings;
+      if (this.filter.assigned) {
+        this.meetings = meetings.filter(meeting => !!meeting.link);
+      } else {
+        this.meetings = meetings
+      }
       this.meetings.sort((a, b) => {
         const stageA = a.stage?.number ? parseFloat(a.stage.number.replace(/[^0-9.]/g, '')) : Infinity;
         const stageB = b.stage?.number ? parseFloat(b.stage.number.replace(/[^0-9.]/g, '')) : Infinity;
