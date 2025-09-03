@@ -1,88 +1,11 @@
-<section class="filters-panel">
-  <!-- Fila 1: búsqueda + prioridad + lectura -->
-  <div class="row row-top">
-
-    <!-- Prioridad -->
-    <!-- <div class="field field-priority">
-      <span class="label">Prioridad</span>
-      <div class="segmented">
-        <button type="button" class="segmented-btn"
-                [class.is-active]="priorityLocal === 3"
-                (click)="setPriority(3)">Urgente</button>
-
-        <button type="button" class="segmented-btn"
-                [class.is-active]="priorityLocal === 2"
-                (click)="setPriority(2)">Alta</button>
-
-        <button type="button" class="segmented-btn"
-                [class.is-active]="priorityLocal === 1"
-                (click)="setPriority(1)">Normal</button>
-
-        <button type="button" class="segmented-btn"
-                [class.is-active]="priorityLocal === 0"
-                (click)="setPriority(0)">Baja</button>
-
-        <button type="button" class="segmented-btn"
-                [class.is-active]="priorityLocal === ''"
-                (click)="setPriority('')">Todas</button>
-      </div>
-    </div> -->
-
-    <!-- Lectura -->
-    <!-- <div class="field field-read">
-      <span class="label">Lectura</span>
-      <div class="segmented">
-        <button
-          type="button"
-          class="segmented-btn"
-          [class.is-active]="value.readState === 'unread'"
-          (click)="setReadState('unread')"
-        >
-          No leídos
-        </button>
-        <button
-          type="button"
-          class="segmented-btn"
-          [class.is-active]="value.readState === 'read'"
-          (click)="setReadState('read')"
-        >
-          Leídos
-        </button>
-        <button
-          type="button"
-          class="segmented-btn"
-          [class.is-active]="value.readState === 'all'"
-          (click)="setReadState('all')"
-        >
-          Todos
-        </button>
-      </div>
-    </div> -->
-  </div>
-
-<!-- <hr class="divider" /> -->
-
-  <!-- Fila 2: Fechas -->
-  <div class="row row-bottom">
-    <div class="field field-dates">
-      <div class="date-col">
-        <label class="label">Desde</label>
-        <input
-          type="date"
-          class="input"
-          [(ngModel)]="fromDate"
-          (ngModelChange)="onDateChange()"
-        />
-      </div>
-      <div class="date-col">
-        <label class="label">Hasta</label>
-        <input
-          type="date"
-          class="input"
-          [(ngModel)]="toDate"
-          (ngModelChange)="onDateChange()"
-        />
-      </div>
-    </div>
-  </div>
-</section>
+<div class="filters">
+  <label for="readDays">Ver últimos días:</label>
+  <input
+    id="readDays"
+    type="number"
+    min="1"
+    max="365"
+    [ngModel]="readDays"
+    (ngModelChange)="onChange($event)"
+  />
+</div>

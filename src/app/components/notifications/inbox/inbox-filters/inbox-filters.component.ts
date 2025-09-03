@@ -1,8 +1,6 @@
-// inbox-filters.component.ts
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { InboxFilters } from '../../../../services/dtos/notification.dto';
 
 @Component({
   selector: 'app-inbox-filters',
@@ -11,69 +9,13 @@ import { InboxFilters } from '../../../../services/dtos/notification.dto';
   templateUrl: './inbox-filters.component.html',
   styleUrl: './inbox-filters.component.scss',
 })
-export class InboxFiltersComponent implements OnChanges {
-  @Input() value: InboxFilters = {
-    status: '',
-    type: '',
-    scope: '',
-    fromDate: '',
-    toDate: '',
-    priority: '',
-    readState: 'all', 
-  };
-  @Output() valueChange = new EventEmitter<InboxFilters>();
+export class InboxFiltersComponent {
+  @Input() readDays: number = 30;
+  @Output() readDaysChange = new EventEmitter<number>();
 
-  // locales
-  searchLocal = '';
-  fromDate = '';
-  toDate = '';
-  priorityLocal: 0 | 1 | 2 | 3 | '' = '';
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['value']) {
-      this.searchLocal   = this.value?.search ?? '';
-      this.fromDate      = this.value?.fromDate ?? '';
-      this.toDate        = this.value?.toDate ?? '';
-      this.priorityLocal = (this.value?.priority ?? '') as 0 | 1 | 2 | 3 | '';
-    }
-  }
-
-  private emit() {
-    this.valueChange.emit({ ...this.value });
-  }
-
-  // ——— Prioridad (numérica) ———
-  setPriority(level: 0 | 1 | 2 | 3 | ''): void {
-    this.priorityLocal = level;
-    this.value.priority = level;
-    this.emit();
-  }
-
-  // ——— Lectura ———
-  setReadState(state: 'all' | 'unread' | 'read') {
-    if (this.value.readState === state) return;
-    this.value.readState = state;
-    this.emit();
-  }
-
-  // ——— Fechas ———
-  onDateChange(): void {
-    this.value.fromDate = this.fromDate || '';
-    this.value.toDate   = this.toDate   || '';
-    this.emit();
-  }
-
-  // ——— (Opcionales) status/type/scope ———
-  setStatus(status: InboxFilters['status']) {
-    this.value.status = status ?? '';
-    this.emit();
-  }
-  setType(type: InboxFilters['type']) {
-    this.value.type = (type ?? '') as InboxFilters['type'];
-    this.emit();
-  }
-  setScope(scope: InboxFilters['scope']) {
-    this.value.scope = (scope ?? '') as InboxFilters['scope'];
-    this.emit();
+  onChange(val: string) {
+    const n = Math.max(1, Math.min(365, Number(val) || 1));
+    this.readDays = n;
+    this.readDaysChange.emit(n);
   }
 }
