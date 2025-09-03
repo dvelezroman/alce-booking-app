@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  InboxFiltersComponent,
-
-} from '../../../../components/notifications/inbox/inbox-filters/inbox-filters.component';
+import { InboxFiltersComponent } from '../../../../components/notifications/inbox/inbox-filters/inbox-filters.component';
 import { NotificationService } from '../../../../services/notification.service';
-import { InboxFilters, Notification, NotificationListResponse } from '../../../../services/dtos/notification.dto';
+import { InboxFilters, Notification } from '../../../../services/dtos/notification.dto';
 import { Router } from '@angular/router';
 import { switchMap, take, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -117,7 +114,7 @@ export class InboxComponent implements OnInit {
     if (!n?.id) return;
 
     this.notificationService.markSingleAsRead(n.id).pipe(
-      tap(updated => console.log('[Inbox] Marked as read →', { id: n.id, readAt: updated?.readAt, readBy: updated?.readBy })),
+      //tap(updated => console.log('[Inbox] Marked as read →', { id: n.id, readAt: updated?.readAt, readBy: updated?.readBy })),
       switchMap(() => this.notificationService.getNotificationById(n.id))
     ).subscribe({
       next: (full) => {

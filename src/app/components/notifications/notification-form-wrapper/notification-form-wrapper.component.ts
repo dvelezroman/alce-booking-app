@@ -18,7 +18,6 @@ import {
   NotificationTypeEnum
 } from '../../../services/dtos/notification.dto';
 import { NotificationGroupService } from '../../../services/notification-group.service';
-import { InstructorStageService } from '../../../services/instructor-stage.service';
 
 @Component({
   selector: 'app-notification-form-wrapper',
@@ -27,7 +26,7 @@ import { InstructorStageService } from '../../../services/instructor-stage.servi
     CommonModule,
     FormsModule,
     UserSelectorComponent,
-    StageSelectorComponent,
+    // StageSelectorComponent,
   ],
   templateUrl: './notification-form-wrapper.component.html',
   styleUrl: './notification-form-wrapper.component.scss',
@@ -47,10 +46,8 @@ export class NotificationFormWrapperComponent implements OnInit {
   notificationType = NotificationTypeEnum.Announce;
   notificationTypes = Object.values(NotificationTypeEnum);
   userId: number | null = null;
-  stageInstructors: UserDto[] = [];
-  selectedInstructorId: number | null = null;
 
-  // USER 
+  // USER
   selectedUserRole: 'student' | 'instructor' | 'admin' = 'student';
   selectedUsers: UserDto[] = [];
 
@@ -64,7 +61,7 @@ export class NotificationFormWrapperComponent implements OnInit {
   selectedGroupId: number | null = null;
   selectedGroupMembers = 0;
 
-  // ROLE 
+  // ROLE
   selectedBroadcastRole: '' | 'student' | 'instructor' | 'admin' = '';
   roleUsers: UserDto[] = [];
   totalUsersByRole = 0;
@@ -81,16 +78,18 @@ export class NotificationFormWrapperComponent implements OnInit {
   constructor(
     private store: Store,
     private usersService: UsersService,
-    private instructorStageService: InstructorStageService,
     private notificationGroupService: NotificationGroupService,
   ) {}
 
   ngOnInit(): void {
+    // Setear userId y fijar rol por defecto
     this.store.select(selectUserData).subscribe((user: UserDto | null) => {
       if (user) {
         this.userId = user.id;
-        if (this.userRole === UserRole.STUDENT && user.stage?.id) {
-          this.selectedStageId = user.stage.id;
+
+        // Si es STUDENT: solo podrá elegir INSTRUCTOR y usaremos el user-selector para listar todos los instructores
+        if (this.userRole === UserRole.STUDENT) {
+          this.selectedUserRole = 'instructor';
         }
       }
     });
@@ -106,33 +105,9 @@ export class NotificationFormWrapperComponent implements OnInit {
     }
   }
 
-  private loadStageInstructors(stageId: number) {
-    this.instructorStageService.list({ stageId }).subscribe({
-      next: (links) => {
-        this.stageInstructors = (links || [])
-          .map(l => l?.instructor?.user)
-          .filter(Boolean) as UserDto[];
-
-        if (this.stageInstructors.length === 1) {
-          this.selectedInstructorId = this.stageInstructors[0].id;
-        }
-      },
-      error: () => {
-        this.stageInstructors = [];
-        this.selectedInstructorId = null;
-      }
-    });
-  }
-
   onUserRoleChange(next: 'student' | 'instructor' | 'admin') {
     this.selectedUserRole = next;
-
-    // aplica si es student y selecciona instructor
-    if (this.userRole === UserRole.STUDENT && next === 'instructor') {
-      if (this.selectedStageId) {
-        this.loadStageInstructors(this.selectedStageId);
-      }
-    }
+    this.selectedUsers = []; // limpiar selección al cambiar de rol
   }
 
   onGroupChange(groupId: number | null) {
@@ -152,7 +127,7 @@ export class NotificationFormWrapperComponent implements OnInit {
 
   handleStageChange(stageId: number | null) {
     this.selectedStageId = stageId;
-    this.selectedUsers = []; 
+    this.selectedUsers = [];
     if (stageId) this.fetchUsersByStage(stageId);
     else {
       this.users = [];
@@ -194,7 +169,7 @@ export class NotificationFormWrapperComponent implements OnInit {
   }
 
   private fetchUsersByRole(role: 'student' | 'instructor' | 'admin') {
-    const roleParam = role.toUpperCase(); 
+    const roleParam = role.toUpperCase();
     this.usersService
       .searchUsers(
         undefined, undefined, undefined,
@@ -260,7 +235,7 @@ export class NotificationFormWrapperComponent implements OnInit {
     switch (this.selectedType) {
       case 'group': {
         to = this.getGroupUserIds();
-        scope = NotificationScopeEnum.INDIVIDUAL; 
+        scope = NotificationScopeEnum.INDIVIDUAL;
         if (!this.selectedGroupId || to.length === 0) return;
         break;
       }
@@ -274,7 +249,7 @@ export class NotificationFormWrapperComponent implements OnInit {
 
       case 'role': {
         to = (this.roleUsers ?? []).map(u => u.id);
-        scope = NotificationScopeEnum.INDIVIDUAL; 
+        scope = NotificationScopeEnum.INDIVIDUAL;
         if (!this.selectedBroadcastRole || to.length === 0) return;
         break;
       }
@@ -288,6 +263,7 @@ export class NotificationFormWrapperComponent implements OnInit {
       }
     }
 
+    // Solo adjuntamos stageId si el remitente está enviando a STUDENT por stage
     const stageId =
       this.selectedUserRole === 'student' && this.selectedStageId != null
         ? +this.selectedStageId
