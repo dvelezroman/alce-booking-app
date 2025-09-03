@@ -1,0 +1,57 @@
+.unread-banner {
+  position: fixed;
+  top: 40px;
+  left: 64px;
+  z-index: 900;
+  animation: slideIn .25s ease-out;
+
+  .bubble {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #e6e7e7;
+    color: #474747;
+    border-radius: 999px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.18);
+    font-size: .9rem;
+    line-height: 1;
+
+    strong {
+      color: #222;
+      font-weight: 500;
+    }
+
+    .bell {
+      font-size: 1rem;
+    }
+
+    .close {
+      margin-left: 6px;
+      border: 0;
+      background: transparent;
+      color: #777;
+      font-size: 16px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 2px;
+
+      &:hover {
+        color: #333;
+      }
+    }
+  }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-10px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+@media (max-width: 640px) {
+  .unread-banner { left: 70px; top: 80px; }
+  .unread-banner .bubble {
+    font-size: .85rem;
+    padding: 8px 12px;
+  }
+}
