@@ -13,6 +13,7 @@ import { ModalDto, modalInitializer } from "../../../components/modal/modal.dto"
 import { AssessmentPointsConfigService } from "../../../services/assessment-points-config.service";
 import { StudentBannerComponent } from "../../../components/student-banner/student-banner.component";
 import { GlobalNoticeBannerComponent } from "../../../components/global-notice-banner/global-notice-banner.component";
+import { NotificationService } from "../../../services/notification.service";
 
 @Component({
   standalone: true,
@@ -28,6 +29,8 @@ import { GlobalNoticeBannerComponent } from "../../../components/global-notice-b
   styleUrl: './dashboard-layout.component.scss',
 })
 export class DashboardLayoutComponent implements OnInit {
+
+  unreadCount = 0;
 
   protected readonly UserRole = UserRole;
 
@@ -48,6 +51,7 @@ export class DashboardLayoutComponent implements OnInit {
     private store: Store,
     private router: Router,
     private usersService: UsersService,
+    private notificationService: NotificationService,
     private configService: AssessmentPointsConfigService
   ) {
         this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
@@ -59,11 +63,13 @@ export class DashboardLayoutComponent implements OnInit {
 
     this.isLoggedIn$.subscribe(state => {
       this.isLoggedIn = state;
+      if (state) this.refreshUnreadCount();
     });
 
     this.userData$.subscribe(data => {
       this.userData = data;
       this.hasAssessmentResources = this.checkAssessmentResources(this.userData);
+      if (data) this.refreshUnreadCount();
     });
 
     const savedLink = localStorage.getItem('instructorLink');
@@ -79,6 +85,13 @@ export class DashboardLayoutComponent implements OnInit {
     });
 
     this.loadMinHoursRequired();
+  }
+
+  private refreshUnreadCount(): void {
+    this.notificationService.getUnreadCount().subscribe({
+      next: (res) => { this.unreadCount = res?.count ?? 0; },
+      error: () => { this.unreadCount = 0; }
+    });
   }
 
   checkAssessmentResources(user: UserDto | null): boolean {
