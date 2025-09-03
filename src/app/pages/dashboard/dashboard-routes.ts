@@ -30,6 +30,7 @@ import { NotificationsStatusComponent } from './notifications/notifications-stat
 import { GroupsComponent } from './notifications/groups/groups.component';
 import { InboxComponent } from './notifications/inbox/inbox.component';
 import { NotificationDetailComponent } from './notifications/notification-detail/notification-detail.component';
+import { NotificationsSentComponent } from './notifications/notifications-sent/notifications-sent.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -63,4 +64,5 @@ export const dashboardRoutes: Routes = [
   { path: 'notifications-groups', component: GroupsComponent },
   { path: 'notifications-inbox', component: InboxComponent },
   { path: 'notifications-detail', component: NotificationDetailComponent },
+  { path: 'notifications-sent', component: NotificationsSentComponent },
 ];

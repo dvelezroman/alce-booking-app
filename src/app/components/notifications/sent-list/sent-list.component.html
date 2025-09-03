@@ -1,1 +1,73 @@
-<p>sent-list works!</p>
+<div class="table-wrapper" *ngIf="items.length > 0; else emptyState">
+  <!-- Encabezado -->
+  <div class="table-header">
+    <div class="col-from">De</div>
+    <div class="col-title">Asunto</div>
+    <div class="col-extra">Tipo / Prioridad / Estado</div>
+    <div class="col-date">Fecha</div>
+  </div>
+
+  <!-- Filas -->
+  <div
+    class="table-row"
+    *ngFor="let n of items; trackBy: trackById"
+    [class.unread]="!n.readBy || n.readBy.length === 0"
+  >
+    <!-- Columna: De -->
+    <div class="col-from">
+      {{ n.fromUser.firstName || "" }} {{ n.fromUser.lastName || "" }}
+      <span
+        *ngIf="!n.fromUser?.firstName && !n.fromUser?.lastName"
+        class="from-email"
+      >
+        {{ n.fromUser.email || "—" }}
+      </span>
+    </div>
+
+    <!-- Columna: Asunto + cuerpo -->
+    <div class="col-title">
+      <div class="title" [title]="n.title">{{ n.title }}</div>
+      <div class="snippet" *ngIf="n.message?.body as body">
+        {{ body.length > 120 ? (body | slice : 0 : 120) + "…" : body }}
+      </div>
+    </div>
+
+    <!-- Columna: tipo / prioridad / estado -->
+    <div class="col-extra">
+      <span class="chip type">{{ n.notificationType }}</span>
+
+      <span
+        class="chip"
+        [ngClass]="{
+          'prio-low': n.priority === 0,
+          'prio-normal': n.priority === 1,
+          'prio-high': n.priority === 2,
+          'prio-urgent': n.priority === 3
+        }"
+      >
+        {{
+          n.priority === 3
+            ? "Urgente"
+            : n.priority === 2
+            ? "Alta"
+            : n.priority === 1
+            ? "Normal"
+            : "Baja"
+        }}
+      </span>
+
+      <span class="chip status">{{ n.status }}</span>
+    </div>
+
+    <!-- Columna: Fecha -->
+    <div class="col-date">
+      {{ n.createdAt | date : "short" }}
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyState>
+  <div class="empty-state">
+    <p>No tienes resultados para mostrar.</p>
+  </div>
+</ng-template>
