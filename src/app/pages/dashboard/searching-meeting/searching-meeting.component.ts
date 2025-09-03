@@ -101,7 +101,7 @@ export class SearchingMeetingComponent implements OnInit {
   private fetchMeetings(params?: FilterMeetingsDto): void {
     this.bookingService.searchMeetings(params ?? this.filter).subscribe(meetings => {
       if (this.filter.assigned) {
-        this.meetings = meetings.filter(meeting => !!meeting.link || !!meeting.instructorId);
+        this.meetings = meetings.filter(meeting => !!meeting.link);
       } else {
         this.meetings = meetings
       }
