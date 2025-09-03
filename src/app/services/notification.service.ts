@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   CreateNotificationDto,
@@ -13,6 +13,9 @@ import {
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   private apiUrl = `${environment.apiUrl}/notifications`;
+
+  private unreadCountSubject = new BehaviorSubject<number>(0);
+  unreadCount$ = this.unreadCountSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -83,11 +86,21 @@ export class NotificationService {
     return this.http.get<Notification>(`${this.apiUrl}/${id}`);
   }
 
-  markSingleAsRead(notificationId: number) {
-    return this.http.post<Notification>(`${this.apiUrl}/mark-single-as-read`, { notificationId });
+  markSingleAsRead(notificationId: number): Observable<number> {
+    return this.http
+      .post<Notification>(`${this.apiUrl}/mark-single-as-read`, { notificationId })
+      .pipe(
+        switchMap(() => this.loadUnreadCount())
+      );
   }
 
-  getUnreadCount(): Observable<{ count: number }> {
-    return this.http.get<{ count: number }>(`${this.apiUrl}/unread-count`);
+   loadUnreadCount() {
+    return this.http
+      .get<{ count: number }>(`${this.apiUrl}/unread-count`)
+      .pipe(
+        tap(res => this.unreadCountSubject.next(res?.count ?? 0)),
+        map(res => res.count ?? 0)
+      );
   }
+
 }
