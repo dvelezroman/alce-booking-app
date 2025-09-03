@@ -30,7 +30,7 @@ import { NotificationService } from "../../../services/notification.service";
 })
 export class DashboardLayoutComponent implements OnInit {
 
-  unreadCount = 0;
+  unreadCount$!: Observable<number>;
 
   protected readonly UserRole = UserRole;
 
@@ -61,15 +61,21 @@ export class DashboardLayoutComponent implements OnInit {
   
   ngOnInit(): void {
 
-    this.isLoggedIn$.subscribe(state => {
+    this.unreadCount$ = this.notificationService.unreadCount$;
+
+    this.isLoggedIn$.subscribe((state) => {
       this.isLoggedIn = state;
-      if (state) this.refreshUnreadCount();
+      if (state) {
+        this.notificationService.loadUnreadCount().subscribe();
+      }
     });
 
     this.userData$.subscribe(data => {
       this.userData = data;
       this.hasAssessmentResources = this.checkAssessmentResources(this.userData);
-      if (data) this.refreshUnreadCount();
+       if (data) {
+        this.notificationService.loadUnreadCount().subscribe();
+      }
     });
 
     const savedLink = localStorage.getItem('instructorLink');
@@ -85,13 +91,6 @@ export class DashboardLayoutComponent implements OnInit {
     });
 
     this.loadMinHoursRequired();
-  }
-
-  private refreshUnreadCount(): void {
-    this.notificationService.getUnreadCount().subscribe({
-      next: (res) => { this.unreadCount = res?.count ?? 0; },
-      error: () => { this.unreadCount = 0; }
-    });
   }
 
   checkAssessmentResources(user: UserDto | null): boolean {

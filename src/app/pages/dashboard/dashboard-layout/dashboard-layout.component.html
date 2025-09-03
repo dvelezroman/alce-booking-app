@@ -1,7 +1,7 @@
 <div class="content-wrapper">
   <app-sidebar
     [isSidebarClosed]="isSidebarClosed"
-    [unreadCount]="unreadCount"
+    [unreadCount]="unreadCount$ | async"
     (toggleSidebarEvent)="toggleSidebar()"
     (logoutEvent)="onConfirmLogout()"
     *ngIf="isLoggedIn && (isRegistered || userData?.role !== UserRole.STUDENT)">

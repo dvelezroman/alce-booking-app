@@ -21,7 +21,7 @@ import { ModalComponent } from '../modal/modal.component';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent implements OnInit {
-  @Input() unreadCount: number = 0;
+  @Input() unreadCount: number | null = 0;
   @Input() isSidebarClosed = false;
   @Output() toggleSidebarEvent = new EventEmitter<unknown>();
   @Output() logoutEvent = new EventEmitter<void>();
