@@ -4,7 +4,7 @@ import { InboxFiltersComponent } from '../../../../components/notifications/inbo
 import { NotificationService } from '../../../../services/notification.service';
 import { InboxFilters, Notification } from '../../../../services/dtos/notification.dto';
 import { Router } from '@angular/router';
-import { switchMap, take, tap } from 'rxjs';
+import { Observable, switchMap, take, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserData } from '../../../../store/user.selector';
 import { UserDto } from '../../../../services/dtos/user.dto';
@@ -30,9 +30,10 @@ export class InboxComponent implements OnInit {
 };
 
   notifications: Notification[] = [];
-  unreadCount = 0;
+
+  unreadCount$!: Observable<number>;
   page = 1;
-  limit = 20;
+  limit = 30;
   total = 0;
 
   loading = false;
@@ -44,6 +45,8 @@ export class InboxComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.unreadCount$ = this.notificationService.unreadCount$;
+
     this.store.select(selectUserData).pipe(take(1)).subscribe((u: UserDto | null) => {
       this.currentUserId = u?.id ?? null;
       this.fetchNotifications();
@@ -63,6 +66,7 @@ export class InboxComponent implements OnInit {
     this.filters = { ...next };
     this.page = 1;
     this.fetchNotifications();
+    this.notificationService.loadUnreadCount().subscribe();
   }
 
   fetchNotifications() {
@@ -91,11 +95,10 @@ export class InboxComponent implements OnInit {
     this.notificationService.getUserNotifications(opts).subscribe({
       next: (res) => {
         this.notifications = (res.notifications || [])
-        .sort((a: any, b: any) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+          .sort((a: any, b: any) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
         this.total = res.total || 0;
-        this.unreadCount = this.notifications.filter(n => this.isUnread(n)).length;
         this.loading = false;
       },
       error: (err) => {
@@ -114,7 +117,6 @@ export class InboxComponent implements OnInit {
     if (!n?.id) return;
 
     this.notificationService.markSingleAsRead(n.id).pipe(
-      //tap(updated => console.log('[Inbox] Marked as read →', { id: n.id, readAt: updated?.readAt, readBy: updated?.readBy })),
       switchMap(() => this.notificationService.getNotificationById(n.id))
     ).subscribe({
       next: (full) => {

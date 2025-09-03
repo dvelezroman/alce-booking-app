@@ -94,7 +94,7 @@ export class NotificationService {
       );
   }
 
-   loadUnreadCount() {
+  loadUnreadCount() {
     return this.http
       .get<{ count: number }>(`${this.apiUrl}/unread-count`)
       .pipe(
