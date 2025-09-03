@@ -47,6 +47,8 @@ export class NotificationsSentComponent implements OnInit {
     this.notificationService
       .getNotifications({
         fromUserId: this.currentUserId,
+        userId: this.currentUserId,
+        //fromUserId: this.currentUserId,
         page: this.page,
         limit: this.limit
       })
