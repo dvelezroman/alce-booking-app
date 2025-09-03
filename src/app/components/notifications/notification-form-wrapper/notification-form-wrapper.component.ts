@@ -26,7 +26,7 @@ import { NotificationGroupService } from '../../../services/notification-group.s
     CommonModule,
     FormsModule,
     UserSelectorComponent,
-    // StageSelectorComponent,
+    StageSelectorComponent,
   ],
   templateUrl: './notification-form-wrapper.component.html',
   styleUrl: './notification-form-wrapper.component.scss',
