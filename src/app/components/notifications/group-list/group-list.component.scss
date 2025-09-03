@@ -1,97 +1,179 @@
-.group-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
-  justify-items: center;
+/* Contenedor vertical de cards */
+.group-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
+/* CARD */
 .group-card {
   position: relative;
-  background-color: #ffffff;
-  padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  max-width: 900px;
   width: 100%;
-  max-width: 360px;
-
-  // Contenedor de botones
-  .card-actions {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    display: flex;
-    gap: 0.6rem;
-  }
-
-  // Botón de editar
-  .edit-icon-button {
-    border: none;
-    background: transparent;
-    font-size: 1rem;
-    cursor: pointer;
-    color: #6b7280;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-
-    &:hover {
-      color: #1f2937;
-    }
-  }
-
-  // Botón de eliminar
-  .delete-icon-button {
-    border: none;
-    background: transparent;
-    font-size: 1rem;
-    cursor: pointer;
-    color: #787777;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-
-    &:hover {
-      color: #535353;
-    }
-  }
+  margin: auto;
+  transition: box-shadow .15s ease, transform .15s ease;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-
-    .edit-icon-button,
-    .delete-icon-button {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    box-shadow: 0 6px 18px rgba(0,0,0,.10);
+    transform: translateY(-1px);
   }
 }
 
-  .group-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 0.5rem;
-  }
+.group-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
 
-  .group-description {
-    font-size: 0.85rem;
-    color: #4b5563;
-    margin-bottom: 1rem;
-  }
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
 
-  .group-meta {
-    font-size: 0.85rem;
-    color: #6b7280;
+.group-title {
+  margin: 0;
+  font-weight: 800;
+  color: #111827;
+  font-size: 1.2rem;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-    p {
-      margin: 0.25rem 0;
+/* Pill de integrantes */
+.pill.members-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 0.8rem;
+  border: 1px solid #e5e7eb;
 
-      strong {
-        color: #111827;
-        font-weight: 600;
-      }
-    }
-  }
+  i { font-size: 0.8rem; }
+  .count { font-weight: 700; }
+}
+
+.group-description {
+  margin: 6px 0 10px;
+  color: #4b5563;
+  font-size: .9rem;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Meta: fechas */
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  i { font-size: 0.95rem; }
+}
+
+.meta-sep {
+  color: #9ca3af;
+}
+
+/* Acciones (kebab + dropdown) */
+.card-actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  /* SIEMPRE visible */
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Botón de 3 puntos */
+.menu-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background .15s ease, transform .05s ease;
+  pointer-events: auto;
+
+  i { font-size: 1.05rem; color: #4b5563; }
+  &:hover { background: #f3f4f6; }
+  &:active { transform: scale(0.98); }
+}
+
+/* Dropdown del menú */
+.action-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  min-width: 160px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  padding: 6px;
+  list-style: none;
+  z-index: 10;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #111827;
+  cursor: pointer;
+  transition: background .12s ease;
+
+  i { font-size: 0.85rem; }
+
+  &:hover { background: #f3f4f6; }
+}
+
+.menu-item.add-user i {
+  color: #a53be7;
+}
+
+.menu-item.add-user:hover {
+  background: #ecfdf5;
+}
+
+.menu-item.edit i   { color: #2563eb; }
+.menu-item.delete i { color: #6b7280; }
+
+@media (max-width: 640px) {
+  .group-card { padding: 14px 16px; }
+
+  .group-title { font-size: .95rem; }
+  .pill.members-pill { font-size: 0.72rem; padding: 3px 7px; }
+
+  .group-description { font-size: 0.78rem; }
+  .meta-row { font-size: 0.68rem; }
+}

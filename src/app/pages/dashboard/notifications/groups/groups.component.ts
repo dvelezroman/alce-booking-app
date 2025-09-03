@@ -208,7 +208,7 @@ export class GroupsComponent implements OnInit {
       ...modalInitializer(),
       show: true,
       title: 'Eliminar grupo',
-      message: `¿Seguro que deseas eliminar el grupo <strong>${group.name}</strong>? Esta acción no se puede deshacer.`,
+      message: `¿Deseas eliminar el grupo? Esta acción no se puede deshacer.`,
       isInfo: true,
       showButtons: true,
       close: () => { this.modal.show = false; },

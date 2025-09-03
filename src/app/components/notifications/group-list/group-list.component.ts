@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationGroupDto } from '../../../services/dtos/notification.dto';
 
@@ -16,16 +16,30 @@ export class GroupListComponent {
   @Output() viewGroupMembers = new EventEmitter<NotificationGroupDto>();
   @Output() deleteGroup = new EventEmitter<NotificationGroupDto>();
 
+  openMenuId: number | null = null;
+
   onEditClick(group: NotificationGroupDto) {
     this.editGroup.emit(group);
+    this.openMenuId = null;
   }
 
   onCardClick(group: NotificationGroupDto) {
     this.viewGroupMembers.emit(group);
   }
 
-  onDeleteClick(group: NotificationGroupDto, ev: MouseEvent) {
-    ev.stopPropagation();
+  onDeleteClick(group: NotificationGroupDto, ev?: MouseEvent) {
+    ev?.stopPropagation();
     this.deleteGroup.emit(group);
+    this.openMenuId = null;
+  }
+
+  toggleMenu(group: NotificationGroupDto, ev: MouseEvent) {
+    ev.stopPropagation();
+    this.openMenuId = this.openMenuId === group.id ? null : group.id;
+  }
+
+  @HostListener('document:click')
+  closeAllMenus() {
+    this.openMenuId = null;
   }
 }
