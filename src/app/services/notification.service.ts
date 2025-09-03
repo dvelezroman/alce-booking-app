@@ -86,4 +86,8 @@ export class NotificationService {
   markSingleAsRead(notificationId: number) {
     return this.http.post<Notification>(`${this.apiUrl}/mark-single-as-read`, { notificationId });
   }
+
+  getUnreadCount(): Observable<{ count: number }> {
+    return this.http.get<{ count: number }>(`${this.apiUrl}/unread-count`);
+  }
 }

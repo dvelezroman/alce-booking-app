@@ -30,6 +30,8 @@ export class UserSelectorComponent implements OnChanges {
   @Output() usersSelected = new EventEmitter<UserDto[]>();
 
   @ViewChild('containerRef') containerRef!: ElementRef;
+  private readonly DEFAULT_PAGE = 0;
+  private readonly DEFAULT_LIMIT = 500;
 
   searchTerm: string = '';
   searchInput$ = new Subject<string>();
@@ -100,8 +102,8 @@ export class UserSelectorComponent implements OnChanges {
 
     this.usersService
       .searchUsers(
-        undefined,
-        undefined,
+        this.DEFAULT_PAGE,
+        this.DEFAULT_LIMIT,
         undefined,
         term,
         term,
