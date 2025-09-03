@@ -2,38 +2,70 @@
   <p class="empty-text">No hay grupos disponibles.</p>
 </div>
 
-<div *ngIf="groups.length > 0" class="group-grid">
+<div *ngIf="groups.length > 0" class="group-stack">
   <div
     *ngFor="let group of groups"
-    class="group-card relative cursor-pointer"
-    (click)="onCardClick(group)"
+    class="group-card"
   >
-    <div class="card-actions">
-      <!-- Botón editar -->
-      <button
-        class="edit-icon-button"
-        (click)="onEditClick(group); $event.stopPropagation()"
-        title="Editar grupo"
-      >
-        <i class="fas fa-edit"></i>
-      </button>
+    <!-- Contenido -->
+    <div class="group-content">
+      <div class="title-row">
+        <h2 class="group-title">{{ group.name }}</h2>
 
-      <!-- Botón eliminar -->
-      <button
-        class="delete-icon-button"
-        (click)="onDeleteClick(group, $event)"
-        title="Eliminar grupo"
-      >
-        <i class="fas fa-trash"></i>
-      </button>
+        <span class="pill members-pill" title="Integrantes">
+          <i class="fas fa-users"></i>
+          <span class="count">{{ group.userIds.length || 0 }}</span>
+        </span>
+      </div>
+
+      <p class="group-description">{{ group.description }}</p>
+
+      <div class="meta-row">
+        <span class="meta-item">
+          <i class="far fa-calendar-plus"></i>
+          {{ group.createdAt | date:'d MMM y' }}
+        </span>
+        <span class="meta-sep">/</span>
+        <span class="meta-item">
+          <i class="far fa-edit"></i>
+          {{ group.updatedAt | date:'d MMM y' }}
+        </span>
+      </div>
     </div>
 
-    <h2 class="group-title">{{ group.name }}</h2>
-    <p class="group-description">{{ group.description }}</p>
-    <div class="group-meta">
-      <p><strong>Creado:</strong> {{ group.createdAt | date: 'medium' }}</p>
-      <p><strong>Modificado:</strong> {{ group.updatedAt | date: 'medium' }}</p>
-      <p><strong>Usuarios:</strong> {{ group.userIds.length }}</p>
+    <!-- Acciones: menú 3 puntos -->
+    <div class="card-actions" (click)="$event.stopPropagation()">
+      <button
+        class="menu-btn"
+        (click)="toggleMenu(group, $event)"
+        aria-haspopup="menu"
+        [attr.aria-expanded]="openMenuId === group.id"
+        title="Más acciones"
+      >
+        <i class="fas fa-ellipsis-vertical"></i>
+      </button>
+
+      <ul
+        class="action-menu"
+        *ngIf="openMenuId === group.id"
+        role="menu"
+        aria-label="Acciones de grupo"
+      >
+        <li role="menuitem" class="menu-item edit" (click)="onEditClick(group)">
+          <i class="fas fa-pen"></i>
+          Editar
+        </li>
+
+        <li role="menuitem" class="menu-item add-user" (click)="onCardClick(group)">
+          <i class="fas fa-user-plus"></i>
+          Agregar usuario
+        </li>
+
+        <li role="menuitem" class="menu-item menu-delete" (click)="onDeleteClick(group, $event)">
+          <i class="fas fa-trash-alt"></i>
+          Eliminar
+        </li>
+      </ul>
     </div>
   </div>
 </div>
