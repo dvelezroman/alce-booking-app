@@ -14,6 +14,7 @@ import { AssessmentPointsConfigService } from "../../../services/assessment-poin
 import { StudentBannerComponent } from "../../../components/student-banner/student-banner.component";
 import { GlobalNoticeBannerComponent } from "../../../components/global-notice-banner/global-notice-banner.component";
 import { NotificationService } from "../../../services/notification.service";
+import { UnreadBannerComponent } from "../../../components/banner/unread-banner/unread-banner.component";
 
 @Component({
   standalone: true,
@@ -22,6 +23,7 @@ import { NotificationService } from "../../../services/notification.service";
     CommonModule,
     RouterModule,
     SidebarComponent,
+    UnreadBannerComponent,
     StudentBannerComponent,
     GlobalNoticeBannerComponent,
   ],
