@@ -75,6 +75,7 @@ export enum NotificationScopeEnum {
   ALL_STUDENTS = 'ALL_STUDENTS',
   ALL_INSTRUCTORS = 'ALL_INSTRUCTORS',
   STAGE_STUDENTS = 'STAGE_STUDENTS',
+  ALL_ADMINS = 'ALL_ADMINS', 
 }
 
 export enum NotificationTypeEnum {

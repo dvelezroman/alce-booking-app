@@ -1,13 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs/operators';
-
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Location } from '@angular/common';  
 import { Notification } from '../../../../services/dtos/notification.dto';
-import { UserDto } from '../../../../services/dtos/user.dto';
+import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { selectUserData } from '../../../../store/user.selector';
-
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'app-notification-detail',
@@ -16,9 +17,14 @@ import { selectUserData } from '../../../../store/user.selector';
   templateUrl: './notification-detail.component.html',
   styleUrls: ['./notification-detail.component.scss'],
 })
-export class NotificationDetailComponent implements OnInit {
+export class NotificationDetailComponent implements OnInit, OnDestroy {
   notification?: Notification;
   toDisplayName = '';
+
+  userRole: UserRole | null = null;
+  protected readonly UserRole = UserRole;
+
+  private destroy$ = new Subject<void>();
 
   private readonly statusEs: Record<Notification['status'], string> = {
     PENDING: 'Pendiente',
@@ -51,9 +57,11 @@ export class NotificationDetailComponent implements OnInit {
   prioridadLabel = '—';
 
   constructor(
-    private router: Router,
     private store: Store,
+    private router: Router,
+    private location: Location,
     private cdr: ChangeDetectorRef,
+    private usersService: UsersService
   ) {}
 
   ngOnInit(): void {
@@ -70,17 +78,43 @@ export class NotificationDetailComponent implements OnInit {
 
     this.store
       .select(selectUserData)
-      .pipe(take(1))
-      .subscribe({
-        next: (user: UserDto | null) => {
-          const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim();
-          this.toDisplayName = fullName || user?.email || '';
-          this.cdr.markForCheck(); 
-        },
-        error: () => {
-          this.toDisplayName = '';
-          this.cdr.markForCheck();
-        },
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user: UserDto | null) => {
+        if (user) {
+          this.applyUser(user);
+        } else {
+          const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+          if (token) {
+            this.usersService.refreshLogin().subscribe({
+              next: (u) => this.applyUser(u),
+              error: () => { /* null */ }
+            });
+          }
+        }
       });
+  }
+
+  private applyUser(user: UserDto) {
+    this.userRole = user.role ?? null;
+    const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
+    this.toDisplayName = fullName || user.email || '';
+    this.cdr.markForCheck();
+  }
+
+  get isAdmin(): boolean {
+    return this.userRole === UserRole.ADMIN;
+  }
+
+  trackByUid(index: number, uid: number): number {
+    return uid;
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

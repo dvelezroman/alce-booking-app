@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NotificationService } from '../../../../services/notification.service';
 import { FilterNotificationDto, Notification, NotificationListResponse } from '../../../../services/dtos/notification.dto';
 import { formatToEcuadorTime } from '../../../../shared/utils/dates.util';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notifications-status',
@@ -25,7 +26,7 @@ export class NotificationsStatusComponent implements OnInit {
 
   // paginación
   page = 1;
-  limit = 30;
+  limit = 20;
   total = 0;
 
   // maps
@@ -54,15 +55,17 @@ export class NotificationsStatusComponent implements OnInit {
     3: 'Urgente',
   };
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService, private router: Router ) {}
 
   ngOnInit(): void {
     const today = new Date();
     const daysAgo = new Date(today);
-    daysAgo.setDate(today.getDate() - 5);
+    daysAgo.setDate(today.getDate() - 1);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
 
     this.fromDate = daysAgo.toISOString().slice(0, 10);
-    this.toDate = today.toISOString().slice(0, 10);
+    this.toDate = tomorrow.toISOString().slice(0, 10);
 
     this.fetchNotifications();
   }
@@ -75,11 +78,42 @@ export class NotificationsStatusComponent implements OnInit {
     return dateStr ? formatToEcuadorTime(dateStr) : '—';
   }
 
+  // helper: nombre del remitente
+  senderName(n: Notification): string {
+    const fn = n.fromUser?.firstName?.trim() || '';
+    const ln = n.fromUser?.lastName?.trim() || '';
+    const full = `${fn} ${ln}`.trim();
+    return full || n.fromUser?.email || `ID ${n.fromUser?.id ?? n.from}`;
+  }
+
+  // helper: label genérico para otros scopes
+  scopeLabel(n: Notification): string {
+    switch (n.scope) {
+      case 'ALL_USERS': return 'Todos los usuarios';
+      case 'ALL_STUDENTS': return 'Todos los estudiantes';
+      case 'ALL_INSTRUCTORS': return 'Todos los instructores';
+      case 'INDIVIDUAL': return `${n.to?.length ?? 0}`;
+      case 'STAGE_STUDENTS': {
+        const stageTxt = n.stage?.number ? `Etapa ${n.stage.number}` : 'Etapa';
+        return n.to?.length ? `${stageTxt} · ${n.to.length}` : stageTxt;
+      }
+      default: return n.scope || '—';
+    }
+  }
+
+  onRowClick(n: Notification) {
+    this.router.navigate(
+      ['/dashboard/notifications-detail'],
+      { state: { notification: n } }
+    );
+  }
+
   fetchNotifications(): void {
     const filters: FilterNotificationDto = {
       page: this.page,
       limit: this.limit,
     };
+    
 
     // (opcional) si tu backend respeta fechas:
     if (this.fromDate) filters.fromDate = this.fromDate;
