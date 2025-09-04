@@ -23,7 +23,7 @@ export class InboxComponent implements OnInit {
   unreadCount$!: Observable<number>;
 
   page = 1;
-  limit = 30;
+  limit = 20;
   total = 0;
 
   readDays = 30;

@@ -65,26 +65,58 @@
       <table class="table-results is-fullwidth" *ngIf="notifications.length > 0">
         <thead>
           <tr>
-            <th class="fixed-name-col">Título</th>
-            <th>Tipo</th>
+            <th>De</th>
+            <th>Destinatarios</th>
+            <th>Título</th>
             <th>Estado</th>
-            <th>Prioridad</th>
-            <th>Programada</th>
             <th>Enviada</th>
           </tr>
         </thead>
+
         <tbody>
-          <tr *ngFor="let notification of notifications">
+          <tr
+            *ngFor="let n of notifications"
+            (click)="onRowClick(n)"
+            style="cursor: pointer"
+          >
+            <!-- De -->
+            <td>
+              {{ senderName(n) }}
+            </td>
+
+            <!-- Destinatarios -->
+            <td>
+              <ng-container [ngSwitch]="n.scope">
+                <ng-container *ngSwitchCase="'INDIVIDUAL'">
+                  {{ n.to.length || 0 }}
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'STAGE_STUDENTS'">
+                  <span *ngIf="n.stage?.number; else stageFallback">
+                    Etapa {{ n.stage?.number }}
+                  </span>
+                  <ng-template #stageFallback>Etapa</ng-template>
+                  <span *ngIf="n.to?.length as cnt"> · {{ cnt }}</span>
+                </ng-container>
+
+                <ng-container *ngSwitchDefault>
+                  {{ scopeLabel(n) }}
+                </ng-container>
+              </ng-container>
+            </td>
+            <!-- Título -->
             <td class="title-cell">
-              <div class="name-wrapper" [title]="notification.title">
-                <span class="name-text">{{ notification.title }}</span>
+              <div class="name-wrapper" [title]="n.title">
+                <span class="name-text">{{ n.title }}</span>
               </div>
             </td>
-            <td>{{ typeMap[notification.notificationType] || notification.notificationType }}</td>
-            <td>{{ statusMap[notification.status] || notification.status }}</td>
-            <td>{{ priorityMap[notification.priority] || notification.priority }}</td>
-            <td>{{ formatDate(notification.scheduledAt) }}</td>
-            <td>{{ formatDate(notification.sentAt) }}</td>
+
+            <!-- Estado -->
+            <td>{{ statusMap[n.status] || n.status }}</td>
+
+
+            <!-- Enviada -->
+            <td>{{ formatDate(n.sentAt) }}</td>
           </tr>
         </tbody>
       </table>

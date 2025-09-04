@@ -107,7 +107,7 @@ export class NotificationFormWrapperComponent implements OnInit {
 
   onUserRoleChange(next: 'student' | 'instructor' | 'admin') {
     this.selectedUserRole = next;
-    this.selectedUsers = []; // limpiar selección al cambiar de rol
+    this.selectedUsers = [];
   }
 
   onGroupChange(groupId: number | null) {
@@ -249,8 +249,14 @@ export class NotificationFormWrapperComponent implements OnInit {
 
       case 'role': {
         to = (this.roleUsers ?? []).map(u => u.id);
-        scope = NotificationScopeEnum.INDIVIDUAL;
         if (!this.selectedBroadcastRole || to.length === 0) return;
+
+        scope =
+          this.selectedBroadcastRole === 'student'
+            ? NotificationScopeEnum.ALL_STUDENTS
+            : this.selectedBroadcastRole === 'instructor'
+            ? NotificationScopeEnum.ALL_INSTRUCTORS
+            : NotificationScopeEnum.INDIVIDUAL;
         break;
       }
 
