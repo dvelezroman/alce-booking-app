@@ -3,96 +3,121 @@
 
   <div class="notification-container">
     <!-- Botón para mostrar/ocultar filtros -->
-  <div class="filter-toggle-wrapper">
-    <button class="filter-toggle-button" (click)="toggleFilters()">
-      {{ showFilters ? 'Ocultar filtros' : 'Filtros' }}
-    </button>
-  </div>
-
-  <!-- Bloque de filtros condicional -->
-  <div class="filter-container-enhanced" *ngIf="showFilters">
-    <div class="filter-group">
-      <label for="statusFilter" class="filter-label">Estado</label>
-      <select id="statusFilter" class="filter-select" [(ngModel)]="statusFilter" (change)="fetchNotifications()">
-        <option value="">Todos</option>
-        <option value="PENDING">Pendiente</option>
-        <option value="SENT">Enviado</option>
-        <option value="DELIVERED">Entregado</option>
-        <option value="READ">Leído</option>
-        <option value="FAILED">Fallido</option>
-      </select>
+    <div class="filter-toggle-wrapper">
+      <button class="filter-toggle-button" (click)="toggleFilters()">
+        {{ showFilters ? 'Ocultar filtros' : 'Filtros' }}
+      </button>
     </div>
 
-    <div class="filter-group">
-      <label for="typeFilter" class="filter-label">Tipo</label>
-      <select id="typeFilter" class="filter-select" [(ngModel)]="typeFilter" (change)="fetchNotifications()">
-        <option value="">Todos</option>
-        <option value="Announce">Anuncio</option>
-        <option value="Advice">Consejo</option>
-        <option value="Commentary">Comentario</option>
-        <option value="Mandatory">Obligatorio</option>
-        <option value="System">Sistema</option>
-        <option value="Meeting">Reunión</option>
-        <option value="Assessment">Evaluación</option>
-      </select>
+    <!-- Bloque de filtros condicional -->
+    <div class="filter-container-enhanced" *ngIf="showFilters">
+      <div class="filter-group">
+        <label for="statusFilter" class="filter-label">Estado</label>
+        <select id="statusFilter" class="filter-select" [(ngModel)]="statusFilter" (change)="fetchNotifications()">
+          <option value="">Todos</option>
+          <option value="PENDING">Pendiente</option>
+          <option value="SENT">Enviado</option>
+          <option value="DELIVERED">Entregado</option>
+          <option value="READ">Leído</option>
+          <option value="FAILED">Fallido</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="typeFilter" class="filter-label">Tipo</label>
+        <select id="typeFilter" class="filter-select" [(ngModel)]="typeFilter" (change)="fetchNotifications()">
+          <option value="">Todos</option>
+          <option value="Announce">Anuncio</option>
+          <option value="Advice">Consejo</option>
+          <option value="Commentary">Comentario</option>
+          <option value="Mandatory">Obligatorio</option>
+          <option value="System">Sistema</option>
+          <option value="Meeting">Reunión</option>
+          <option value="Assessment">Evaluación</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="scopeFilter" class="filter-label">Ámbito</label>
+        <select id="scopeFilter" class="filter-select" [(ngModel)]="scopeFilter" (change)="fetchNotifications()">
+          <option value="">Todos</option>
+          <option value="INDIVIDUAL">Individual</option>
+          <option value="ALL_USERS">Todos los usuarios</option>
+          <option value="ALL_STUDENTS">Todos los estudiantes</option>
+          <option value="ALL_INSTRUCTORS">Todos los instructores</option>
+          <option value="STAGE_STUDENTS">Estudiantes por etapa</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="fromDate" class="filter-label">Desde</label>
+        <input id="fromDate" type="date" [(ngModel)]="fromDate" (change)="fetchNotifications()" />
+      </div>
+
+      <div class="filter-group">
+        <label for="toDate" class="filter-label">Hasta</label>
+        <input id="toDate" type="date" [(ngModel)]="toDate" (change)="fetchNotifications()" />
+      </div>
     </div>
 
-    <div class="filter-group">
-      <label for="scopeFilter" class="filter-label">Ámbito</label>
-      <select id="scopeFilter" class="filter-select" [(ngModel)]="scopeFilter" (change)="fetchNotifications()">
-        <option value="">Todos</option>
-        <option value="INDIVIDUAL">Individual</option>
-        <option value="ALL_USERS">Todos los usuarios</option>
-        <option value="ALL_STUDENTS">Todos los estudiantes</option>
-        <option value="ALL_INSTRUCTORS">Todos los instructores</option>
-        <option value="STAGE_STUDENTS">Estudiantes por etapa</option>
-      </select>
-    </div>
-
-    <div class="filter-group">
-      <label for="fromDate" class="filter-label">Desde</label>
-      <input id="fromDate" type="date" [(ngModel)]="fromDate" (change)="fetchNotifications()" />
-    </div>
-
-    <div class="filter-group">
-      <label for="toDate" class="filter-label">Hasta</label>
-      <input id="toDate" type="date" [(ngModel)]="toDate" (change)="fetchNotifications()" />
-    </div>
-  </div>
-
-    <!-- Tabla de notificaciones -->
+      <!-- Tabla de notificaciones -->
     <div class="table-container">
-  <table class="table-results is-fullwidth" *ngIf="notifications.length > 0">
-    <thead>
-      <tr>
-        <th class="fixed-name-col">Título</th>
-        <th>Tipo</th>
-        <th>Estado</th>
-        <th>Prioridad</th>
-        <th>Programada</th>
-        <th>Enviada</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let notification of notifications">
-        <td class="title-cell">
-          <div class="name-wrapper" [title]="notification.title">
-            <span class="name-text">{{ notification.title }}</span>
-          </div>
-        </td>
-        <td>{{ typeMap[notification.notificationType] || notification.notificationType }}</td>
-        <td>{{ statusMap[notification.status] || notification.status }}</td>
-        <td>{{ priorityMap[notification.priority] || notification.priority }}</td>
-        <td>{{ formatDate(notification.scheduledAt) }}</td>
-        <td>{{ formatDate(notification.sentAt) }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+      <table class="table-results is-fullwidth" *ngIf="notifications.length > 0">
+        <thead>
+          <tr>
+            <th class="fixed-name-col">Título</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>Programada</th>
+            <th>Enviada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let notification of notifications">
+            <td class="title-cell">
+              <div class="name-wrapper" [title]="notification.title">
+                <span class="name-text">{{ notification.title }}</span>
+              </div>
+            </td>
+            <td>{{ typeMap[notification.notificationType] || notification.notificationType }}</td>
+            <td>{{ statusMap[notification.status] || notification.status }}</td>
+            <td>{{ priorityMap[notification.priority] || notification.priority }}</td>
+            <td>{{ formatDate(notification.scheduledAt) }}</td>
+            <td>{{ formatDate(notification.sentAt) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Sin resultados -->
     <div class="no-results" *ngIf="notifications?.length === 0">
       No se encontraron notificaciones.
+    </div>
+
+      <!-- Paginación -->
+    <div class="pagination" *ngIf="total > 0">
+      <button
+        class="pg-btn"
+        (click)="onPrev()"
+        [disabled]="page === 1"
+        aria-label="Página anterior">
+        ‹
+      </button>
+
+      <span class="pg-info">
+        Página {{ page }}
+        <span class="sep">·</span>
+        Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }}
+      </span>
+
+      <button
+        class="pg-btn"
+        (click)="onNext()"
+        [disabled]="page * limit >= total"
+        aria-label="Página siguiente">
+        ›
+      </button>
     </div>
   </div>
 </section>
