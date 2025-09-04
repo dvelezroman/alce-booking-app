@@ -9,11 +9,14 @@ import { Notification } from '../../../../services/dtos/notification.dto';
 import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { selectUserData } from '../../../../store/user.selector';
 import { UsersService } from '../../../../services/users.service';
+import { ModalComponent } from '../../../../components/modal/modal.component';
+import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
+import { NotificationService } from '../../../../services/notification.service';
 
 @Component({
   selector: 'app-notification-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ModalComponent],
   templateUrl: './notification-detail.component.html',
   styleUrls: ['./notification-detail.component.scss'],
 })
@@ -25,6 +28,9 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   protected readonly UserRole = UserRole;
 
   private destroy$ = new Subject<void>();
+
+  modal: ModalDto = modalInitializer();
+  deleting = false;
 
   private readonly statusEs: Record<Notification['status'], string> = {
     PENDING: 'Pendiente',
@@ -61,7 +67,8 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     private router: Router,
     private location: Location,
     private cdr: ChangeDetectorRef,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -111,6 +118,79 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   goBack(): void {
     this.location.back();
+  }
+
+    onDeleteClick(): void {
+    if (!this.notification?.id) return;
+    this.openConfirmDelete(this.notification.id);
+  }
+
+  private openConfirmDelete(notificationId: number): void {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      title: 'Eliminar notificación',
+      message: '¿Deseas eliminar esta notificación? Esta acción no se puede deshacer.',
+      isInfo: true,
+      showButtons: true,
+      close: () => { this.modal.show = false; },
+      confirm: () => this.confirmDelete(notificationId),
+    };
+  }
+
+  private confirmDelete(notificationId: number): void {
+    this.modal.show = false;
+    this.deleting = true;
+
+    this.notificationService.deleteNotification(notificationId).subscribe({
+      next: () => {
+        this.deleting = false;
+        this.showModalMessage({
+          title: 'Notificación eliminada',
+          message: 'La notificación fue eliminada correctamente.',
+          isSuccess: true,
+        });
+        setTimeout(() => this.location.back(), 500);
+      },
+      error: () => {
+        this.deleting = false;
+        this.showModalMessage({
+          title: 'Error al eliminar',
+          message: 'No se pudo eliminar la notificación. Intenta nuevamente.',
+          isError: true,
+        });
+      },
+    });
+  }
+
+  private showModalMessage({
+    title,
+    message,
+    isSuccess = false,
+    isError = false,
+  }: {
+    title: string;
+    message: string;
+    isSuccess?: boolean;
+    isError?: boolean;
+  }) {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      title,
+      message,
+      isSuccess,
+      isError,
+      close: () => {
+        this.modal.show = false;
+        this.modal = modalInitializer();
+      },
+    };
+
+    setTimeout(() => {
+      this.modal.show = false;
+      this.modal = modalInitializer();
+    }, 2000);
   }
 
   ngOnDestroy(): void {
