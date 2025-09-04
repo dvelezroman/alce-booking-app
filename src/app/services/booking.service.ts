@@ -62,7 +62,7 @@ export class BookingService {
       params = params.set('stageId', stageId);
     }
 
-    if (assigned) {
+    if (assigned !== undefined) {
       params = params.set('assigned', assigned);
     }
 
