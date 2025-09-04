@@ -113,6 +113,7 @@ export class NotificationsStatusComponent implements OnInit {
       page: this.page,
       limit: this.limit,
     };
+    
 
 
     // (opcional) si tu backend respeta fechas:

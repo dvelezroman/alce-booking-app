@@ -4,7 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Location } from '@angular/common';  
+import { Location } from '@angular/common';
 import { Notification } from '../../../../services/dtos/notification.dto';
 import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { selectUserData } from '../../../../store/user.selector';
