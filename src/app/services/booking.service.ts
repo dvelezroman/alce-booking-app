@@ -37,6 +37,7 @@ export class BookingService {
       mode,
     } = filterParams;
     let params = new HttpParams();
+    console.log(filterParams);
 
     if (from) {
       if (to) {
