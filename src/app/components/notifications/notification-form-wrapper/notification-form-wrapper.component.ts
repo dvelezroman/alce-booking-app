@@ -75,6 +75,11 @@ export class NotificationFormWrapperComponent implements OnInit {
     { value: 3, label: 'Urgente' },
   ];
 
+  showScheduleInputs = false;
+  scheduledAtLocal = '';
+  expiresAtLocal   = '';
+  datesInvalid = false;
+
   constructor(
     private store: Store,
     private usersService: UsersService,
@@ -103,6 +108,46 @@ export class NotificationFormWrapperComponent implements OnInit {
         error: () => (this.groups = []),
       });
     }
+
+    const now = new Date();
+    const in1day = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    this.scheduledAtLocal = this.toLocalInput(now);
+    this.expiresAtLocal   = this.toLocalInput(in1day);
+  }
+
+  
+
+  private toLocalInput(d: Date): string {
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    const mm = pad(d.getMonth() + 1);
+    const dd = pad(d.getDate());
+    const hh = pad(d.getHours());
+    const mi = pad(d.getMinutes());
+    return `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+  }
+
+  /** Validar y ajustar expiración si es necesario */
+  onScheduledChange(val: string) {
+    this.scheduledAtLocal = val;
+    const sched = new Date(val);
+    const exp   = new Date(this.expiresAtLocal);
+    if (!this.expiresAtLocal || exp <= sched) {
+      const e = new Date(sched.getTime() + 24 * 60 * 60 * 1000);
+      this.expiresAtLocal = this.toLocalInput(e);
+    }
+    this.validateDates();
+  }
+
+  onExpiresChange(val: string) {
+    this.expiresAtLocal = val;
+    this.validateDates();
+  }
+
+  private validateDates() {
+    const sched = new Date(this.scheduledAtLocal);
+    const exp   = new Date(this.expiresAtLocal);
+    this.datesInvalid = isNaN(+sched) || isNaN(+exp) || exp <= sched;
   }
 
   onUserRoleChange(next: 'student' | 'instructor' | 'admin') {
@@ -275,6 +320,9 @@ export class NotificationFormWrapperComponent implements OnInit {
         ? +this.selectedStageId
         : undefined;
 
+    const scheduledAtISO = new Date(this.scheduledAtLocal).toISOString();
+    const expiresAtISO   = new Date(this.expiresAtLocal).toISOString();
+
     const payload: CreateNotificationDto = {
       from: this.userId!,
       to,
@@ -284,8 +332,8 @@ export class NotificationFormWrapperComponent implements OnInit {
       message: { body: this.message, action: 'join_meeting' },
       notificationType: this.notificationType,
       priority: this.priority,
-      scheduledAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 86400000).toISOString(),
+      scheduledAt: scheduledAtISO,
+      expiresAt: expiresAtISO,
       metadata: { source: 'meeting_system', category: 'reminder' },
       maxRetries: 3,
     };
