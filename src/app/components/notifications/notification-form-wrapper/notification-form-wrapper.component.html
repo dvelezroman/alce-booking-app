@@ -46,25 +46,6 @@
           </div>
         </div>
 
-        <!-- select para instructores del stage del student -->
-        <!-- <div
-          class="form-group"
-          *ngIf="userRole === UserRole.STUDENT && selectedUserRole === 'instructor'"
-        >
-          <label for="instr">Instructor de tu stage</label>
-          <select
-            id="instr"
-            [(ngModel)]="selectedInstructorId"
-            name="instr"
-            required
-          >
-            <option [ngValue]="null" disabled>Seleccione un instructor</option>
-            <option *ngFor="let i of stageInstructors" [ngValue]="i.id">
-              {{ i.firstName }} {{ i.lastName }}
-            </option>
-          </select>
-        </div> -->
-
         <!-- Selector de usuarios -->
         <app-user-selector
           
@@ -123,46 +104,84 @@
 
     <!-- Formulario -->
     <form (ngSubmit)="submitForm()" #formRef="ngForm">
+      <!-- Contenedor para alinear ambos toolbars -->
+      <div class="toolbars-wrapper">
+        <!-- Toolbar superior tipo Gmail -->
+        <div class="compose-toolbar">
+          <div class="toolbar-item">
+            <label for="notificationType" class="toolbar-label">Tipo</label>
+            <select
+              id="notificationType"
+              name="notificationType"
+              [(ngModel)]="notificationType"
+              required
+            >
+              <option value="Announce">Anuncio</option>
+              <option value="Advice">Consejo</option>
+              <option value="Commentary">Comentario</option>
+              <option value="Mandatory">Obligatoria</option>
+              <option value="System">Sistema</option>
+              <option value="Meeting">Reunión</option>
+              <option value="Assessment">Evaluación</option>
+            </select>
+          </div>
 
-      <!-- Toolbar superior tipo Gmail (filtros compactos) -->
-      <div class="compose-toolbar">
-        <div class="toolbar-item">
-          <label for="notificationType" class="toolbar-label">Tipo</label>
-          <select
-            id="notificationType"
-            name="notificationType"
-            [(ngModel)]="notificationType"
-            required
-          >
-            <option value="Announce">Anuncio</option>
-            <option value="Advice">Consejo</option>
-            <option value="Commentary">Comentario</option>
-            <option value="Mandatory">Obligatoria</option>
-            <option value="System">Sistema</option>
-            <option value="Meeting">Reunión</option>
-            <option value="Assessment">Evaluación</option>
-          </select>
+          <div class="toolbar-item">
+            <label for="priority" class="toolbar-label">Prioridad</label>
+            <select
+              id="priority"
+              name="priority"
+              [(ngModel)]="priority"
+              required
+            >
+              <option *ngFor="let opt of priorityOptions" [ngValue]="opt.value">
+                {{ opt.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Resumen destinatarios -->
+          <div class="toolbar-item grow">
+            <span class="recipients-pill">
+              Destinatarios: <strong>{{ recipientsCount }}</strong>
+            </span>
+          </div>
         </div>
 
-        <div class="toolbar-item">
-          <label for="priority" class="toolbar-label">Prioridad</label>
-          <select
-            id="priority"
-            name="priority"
-            [(ngModel)]="priority"
-            required
-          >
-            <option *ngFor="let opt of priorityOptions" [ngValue]="opt.value">
-              {{ opt.label }}
-            </option>
-          </select>
-        </div>
+        <!-- NUEVO BLOQUE para programar envío y expiración -->
+        <div
+          class="compose-toolbar"
+          *ngIf="userRole === UserRole.ADMIN || userRole === UserRole.INSTRUCTOR"
+        >
+          <div class="toolbar-item">
+            <label for="scheduledAt" class="toolbar-label">Programar envío</label>
+            <input
+              id="scheduledAt"
+              name="scheduledAt"
+              type="datetime-local"
+              [(ngModel)]="scheduledAtLocal"
+              (ngModelChange)="onScheduledChange($event)"
+              required
+            />
+          </div>
 
-        <!-- Resumen destinatarios (opcional, estilo Gmail “To: …”) -->
-        <div class="toolbar-item grow">
-          <span class="recipients-pill">
-            Destinatarios: <strong>{{ recipientsCount }}</strong>
-          </span>
+          <div class="toolbar-item">
+            <label for="expiresAt" class="toolbar-label">Expira</label>
+            <input
+              id="expiresAt"
+              name="expiresAt"
+              type="datetime-local"
+              [(ngModel)]="expiresAtLocal"
+              (ngModelChange)="onExpiresChange($event)"
+              required
+            />
+          </div>
+
+          <div class="toolbar-item" *ngIf="datesInvalid">
+            <span class="error-msg">
+              La fecha de expiración debe ser posterior a la fecha de envío.
+            </span>
+          </div>
         </div>
       </div>
 
@@ -194,7 +213,7 @@
       <div class="compose-footer">
         <button
           type="submit"
-          [disabled]="!formRef.form.valid"
+          [disabled]="!formRef.form.valid || datesInvalid"
           class="send-btn"
         >
           Enviar Notificación
