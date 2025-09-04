@@ -102,16 +102,17 @@ export class InboxComponent implements OnInit {
   onRowClick(n: Notification) {
     if (!n?.id) return;
 
-    this.notificationService.markSingleAsRead(n.id).pipe(
-      switchMap(() => this.notificationService.getNotificationById(n.id))
-    ).subscribe({
-      next: (full) => {
-        this.router.navigate(['/dashboard/notifications-detail'], { state: { notification: full } });
-      },
-      error: (err) => {
-        console.error('[Inbox] Error mark/get →', err);
-        this.router.navigate(['/dashboard/notifications-inbox']);
-      }
+    const go = () =>
+      this.router.navigate(
+        ['/dashboard/notifications-detail'],
+        { state: { notification: n } }
+      );
+
+    if (n.isRead) { go(); return; }
+
+    this.notificationService.markSingleAsRead(n.id).subscribe({
+      next: () => go(),
+      error: () => go(),
     });
   }
 }
