@@ -63,4 +63,21 @@ export class PwaService {
     return window.matchMedia('(display-mode: standalone)').matches ||
            (window.navigator as any).standalone === true;
   }
+
+  /**
+   * Check if push notifications are supported
+   */
+  isPushNotificationSupported(): boolean {
+    return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  }
+
+  /**
+   * Get notification permission status
+   */
+  getNotificationPermission(): NotificationPermission {
+    if ('Notification' in window) {
+      return Notification.permission;
+    }
+    return 'denied';
+  }
 }

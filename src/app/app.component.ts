@@ -9,6 +9,7 @@ import { ModalComponent } from './components/modal/modal.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { PwaInstallComponent } from './components/pwa-install/pwa-install.component';
 import { OfflineIndicatorComponent } from './components/offline-indicator/offline-indicator.component';
+import { NotificationPermissionComponent } from './components/notification-permission/notification-permission.component';
 import { PwaService } from './services/pwa.service';
 import { SwUpdate } from '@angular/service-worker';
 import   localeEs from '@angular/common/locales/es';
@@ -24,7 +25,8 @@ registerLocaleData(localeEs);
     ModalComponent,
     SpinnerComponent,
     PwaInstallComponent,
-    OfflineIndicatorComponent
+    OfflineIndicatorComponent,
+    NotificationPermissionComponent
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' }
