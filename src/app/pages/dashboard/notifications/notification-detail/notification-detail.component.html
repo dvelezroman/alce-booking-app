@@ -2,7 +2,7 @@
   <!-- Top bar / actions -->
   <header class="topbar">
     <div class="left">
-      <a class="btn back" routerLink="/dashboard/notifications-inbox" aria-label="Volver">
+      <a class="btn back" (click)="goBack()" aria-label="Volver">
         ←
       </a>
     </div>
@@ -100,6 +100,23 @@
           {{ body }}
         </p>
       </div>
+
+      <section
+        class="recipients-card card"
+        *ngIf="isAdmin && notification?.scope === 'INDIVIDUAL' && notification?.to?.length"
+      >
+        <header class="recipients-header">
+          <h3 class="section-title">
+            Destinatarios <span class="count">({{ notification?.to?.length }})</span>
+          </h3>
+        </header>
+
+        <div class="recipients-list">
+          <span class="chip" *ngFor="let uid of notification!.to; trackBy: trackByUid">
+            ID {{ uid }}
+          </span>
+        </div>
+      </section>
 
       <!-- Banners opcionales -->
       <div class="alert warn" *ngIf="notification?.expiresAt">
