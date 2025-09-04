@@ -307,7 +307,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
 
   loadMeetings(from?: string, to?: string, hour?: string, studentId?: number, status?: MeetingStatusEnum): void {
-    this.bookingService.searchMeetings({ from, to, hour, studentId, assigned: true, status }).subscribe({
+    this.bookingService.searchMeetings({ from, to, hour, studentId, assigned: undefined, status }).subscribe({
     next: (meetings: MeetingDTO[]) => {
       this.meetings = meetings;
       this.cdr.detectChanges();
