@@ -9,11 +9,11 @@
 
   <main class="main-content" [ngClass]="{ 'shrink': isLoggedIn && !isSidebarClosed, 'full-width': !isLoggedIn }">
 
-    <app-unread-banner
+    <!-- <app-unread-banner
       *ngIf="isLoggedIn"
       [count]="(unreadCount$ | async) ?? 0"
       [showDurationMs]="10000">
-    </app-unread-banner>
+    </app-unread-banner> -->
 
     <app-global-notice-banner *ngIf="isLoggedIn && userData?.role === UserRole.STUDENT" />
 
