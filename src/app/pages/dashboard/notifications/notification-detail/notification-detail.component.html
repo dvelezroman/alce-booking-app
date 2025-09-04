@@ -9,7 +9,9 @@
 
     <div class="right">
       <div class="actions">
-        <button class="icon-btn" title="Eliminar">🗑️</button>
+        <button class="icon-btn" title="Eliminar" *ngIf="isAdmin"
+        (click)="onDeleteClick()"
+        [disabled]="deleting">🗑️</button>
         <button class="icon-btn" title="Más">⋮</button>
       </div>
     </div>
@@ -128,3 +130,15 @@
     </article>
   </div>
 </section>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [title]="modal.title || ''"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm && modal.confirm()"
+  (close)="modal.close()"
+></app-modal>
