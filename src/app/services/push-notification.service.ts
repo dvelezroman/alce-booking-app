@@ -36,7 +36,7 @@ export interface PushNotificationPayload {
 })
 export class PushNotificationService {
   private apiUrl = `${environment.apiUrl}/push-notifications`;
-  private vapidPublicKey = 'BEl62iUYgUivxIkv69yViEuiBIa40HI0F8V7VWtA_8XgK3Jdf3B4Yb8MqVszAesCUQ3vEWlBJ6qUt8Y4mXvnU0'; // Replace with your VAPID key
+  private vapidPublicKey = environment.vapidPublicKey;
   
   private subscriptionSubject = new BehaviorSubject<PushSubscription | null>(null);
   public subscription$ = this.subscriptionSubject.asObservable();
