@@ -68,6 +68,8 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'notifications', text: 'Enviadas', route: '/dashboard/notifications-sent', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT],  },
   { icon: 'notifications', text: 'Notificaciones Recibidas', route: '/dashboard/notifications-inbox', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT],  },
   { icon: 'notifications', text: 'Notificaciones Enviadas', route: '/dashboard/notifications-sent', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT],  },
+  { icon: 'whatsapp', text: 'Enviar por WhatsApp', route: '/dashboard/whatsapp', roles: [UserRole.ADMIN] ,
+},
 
 ];
 
@@ -134,7 +136,8 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
     {
       title: 'Gestión de Eventos',
       icon: 'history',
-      items: [this.findNavItemByRoute('/dashboard/processed-events')].filter(item => item.roles.includes(role))
+      items: [this.findNavItemByRoute('/dashboard/processed-events'),
+      ].filter(item => item.roles.includes(role))
     },
     {
       title: 'Administración de Recursos',
@@ -165,15 +168,22 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
         this.findNavItemByRoute('/dashboard/assessment-reports')
       ].filter(item => item.roles.includes(role))
     },
+    // {
+    //   title: 'Notificaciones',
+    //   icon: 'notifications',
+    //   items: [
+    //     this.findNavItemByRoute('/dashboard/broadcast-groups'),
+    //     this.findNavItemByRoute('/dashboard/notifications-status'),
+    //     this.findNavItemByRoute('/dashboard/notifications-groups'),
+    //     this.findNavItemByRoute('/dashboard/notifications-inbox'),
+    //     this.findNavItemByRoute('/dashboard/notifications-sent'),
+    //   ].filter(item => item.roles.includes(role))
+    // },
     {
-      title: 'Notificaciones',
-      icon: 'notifications',
+      title: 'WhatsApp',
+      icon: 'whatsapp',
       items: [
-        this.findNavItemByRoute('/dashboard/broadcast-groups'),
-        this.findNavItemByRoute('/dashboard/notifications-status'),
-        this.findNavItemByRoute('/dashboard/notifications-groups'),
-        this.findNavItemByRoute('/dashboard/notifications-inbox'),
-        this.findNavItemByRoute('/dashboard/notifications-sent'),
+        this.findNavItemByRoute('/dashboard/whatsapp')
       ].filter(item => item.roles.includes(role))
     },
     {
