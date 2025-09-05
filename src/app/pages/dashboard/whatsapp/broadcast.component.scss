@@ -1,0 +1,90 @@
+:host { display: block; }
+
+.section.whatsapp-section {
+  background-color: #f2f2f2;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  box-sizing: border-box;
+  padding-top: 90px;
+}
+
+/* Contenedor central (igual patrón que usas) */
+.content {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  @media (max-width: 640px) { width: 100%; }
+}
+
+/* Cabecera fija (como en tu ejemplo) */
+.reports-progress-header {
+  position: fixed; top: 0; left: 0; width: 100%;
+  background-color: #f2f2f2; color: #353535; z-index: 10; text-align: center;
+}
+.reports-progress-title {
+  font-size: 1.5rem; line-height: 75px; color: #333; font-weight: bold;
+  @media (max-width: 640px) { font-size: 1rem; line-height: 2.75rem; }
+}
+
+/* Header interno de la página */
+.wb-header {
+  margin-top: .25rem;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 1.25rem;
+
+  .wb-title {
+    .badge {
+      display: inline-block; padding: .25rem .5rem; font-size: .75rem; border-radius: .5rem;
+      background: #e2e8f0; color: #334155; margin-bottom: .35rem;
+    }
+    h2 { margin: 0; font-size: 1.6rem; font-weight: 700; color: #0f172a; }
+    .subtitle { margin: .25rem 0 0; color: #475569; font-size: .95rem; }
+  }
+  .wb-actions .btn {
+    padding: .5rem .85rem; border-radius: .5rem; border: 1px solid #cbd5e1; background: #fff; cursor: not-allowed;
+  }
+}
+
+/* Grid con más respiro y proporción 7/5 */
+.wb-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: .75rem;
+
+  .wb-left,
+  .wb-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+}
+
+/* Tarjetas más aire y sombra suave */
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 6px 16px rgba(15,23,42,.05);
+
+  &.card--padded { padding: 1.25rem; }
+}
+
+/* Preview pegada arriba al hacer scroll en desktop */
+.sticky-panel { position: sticky; top: 96px; }
+
+/* Separación antes de Schedule */
+.mt-32 { margin-top: 2rem; }
+
+/* Footer fijo sutil */
+.footer {
+  position: sticky; bottom: 0; margin-top: 1.25rem;
+  background: rgba(255,255,255,.95);
+  backdrop-filter: saturate(180%) blur(8px);
+}
