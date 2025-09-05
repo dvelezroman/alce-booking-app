@@ -70,9 +70,12 @@ self.addEventListener('push', (event) => {
 
   console.log('Final notification data:', notificationData);
 
-  // Show notification
+  // Show notification and update unread count
   event.waitUntil(
-    self.registration.showNotification(notificationData.title, notificationData)
+    Promise.all([
+      self.registration.showNotification(notificationData.title, notificationData),
+      updateUnreadNotificationCount()
+    ])
   );
 });
 
@@ -83,6 +86,8 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
   if (event.action === 'dismiss') {
+    // Decrease unread count when notification is dismissed
+    event.waitUntil(updateUnreadNotificationCount(-1));
     return;
   }
 
@@ -90,20 +95,25 @@ self.addEventListener('notificationclick', (event) => {
   const urlToOpen = event.notification.data?.url || '/dashboard/notifications';
   
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      // Check if app is already open
-      for (const client of clientList) {
-        if (client.url.includes(self.location.origin) && 'focus' in client) {
-          client.navigate(urlToOpen);
-          return client.focus();
+    Promise.all([
+      // Decrease unread count when notification is clicked
+      updateUnreadNotificationCount(-1),
+      // Navigate to the app
+      clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+        // Check if app is already open
+        for (const client of clientList) {
+          if (client.url.includes(self.location.origin) && 'focus' in client) {
+            client.navigate(urlToOpen);
+            return client.focus();
+          }
         }
-      }
-      
-      // Open new window if app is not open
-      if (clients.openWindow) {
-        return clients.openWindow(urlToOpen);
-      }
-    })
+        
+        // Open new window if app is not open
+        if (clients.openWindow) {
+          return clients.openWindow(urlToOpen);
+        }
+      })
+    ])
   );
 });
 
@@ -173,6 +183,10 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
+  
+  if (event.data && event.data.type === 'UPDATE_UNREAD_COUNT') {
+    updateUnreadNotificationCount(event.data.count);
+  }
 });
 
 // Handle service worker activation
@@ -192,3 +206,75 @@ self.addEventListener('install', (event) => {
     self.skipWaiting()
   );
 });
+
+// Function to update unread notification count
+async function updateUnreadNotificationCount(increment = 1) {
+  try {
+    // Get current unread count from storage
+    const result = await self.registration.getNotifications();
+    const currentCount = result.length;
+    
+    // Calculate new count
+    const newCount = currentCount + increment;
+    
+    // Store the count in IndexedDB or send message to main app
+    await storeUnreadCount(newCount);
+    
+    // Send message to all clients (main app windows)
+    const clients = await self.clients.matchAll();
+    clients.forEach(client => {
+      client.postMessage({
+        type: 'UNREAD_COUNT_UPDATE',
+        count: newCount
+      });
+    });
+    
+    console.log(`Updated unread notification count to: ${newCount}`);
+  } catch (error) {
+    console.error('Error updating unread notification count:', error);
+  }
+}
+
+// Function to store unread count
+async function storeUnreadCount(count) {
+  try {
+    // Store in IndexedDB
+    const db = await openDB();
+    const transaction = db.transaction(['unreadCount'], 'readwrite');
+    const store = transaction.objectStore('unreadCount');
+    await store.put({ id: 1, count: count, timestamp: Date.now() });
+  } catch (error) {
+    console.error('Error storing unread count:', error);
+  }
+}
+
+// Function to get unread count
+async function getUnreadCount() {
+  try {
+    const db = await openDB();
+    const transaction = db.transaction(['unreadCount'], 'readonly');
+    const store = transaction.objectStore('unreadCount');
+    const result = await store.get(1);
+    return result ? result.count : 0;
+  } catch (error) {
+    console.error('Error getting unread count:', error);
+    return 0;
+  }
+}
+
+// Function to open IndexedDB
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('NotificationDB', 1);
+    
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('unreadCount')) {
+        db.createObjectStore('unreadCount', { keyPath: 'id' });
+      }
+    };
+  });
+}

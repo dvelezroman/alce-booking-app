@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { NotificationService } from './notification.service';
 import { Store } from '@ngrx/store';
 import { selectUserData } from '../store/user.selector';
+import { NotificationCountService } from './notification-count.service';
 
 export interface PushSubscription {
   endpoint: string;
@@ -49,7 +50,8 @@ export class PushNotificationService {
   constructor(
     private http: HttpClient,
     private notificationService: NotificationService,
-    private store: Store
+    private store: Store,
+    private notificationCountService: NotificationCountService
   ) {
     this.checkPermission();
     this.loadExistingSubscription();
@@ -223,10 +225,16 @@ export class PushNotificationService {
       silent: payload.silent || false
     });
 
+    // Increment unread count when showing local notification
+    this.notificationCountService.incrementCount();
+
     // Handle notification click
     notification.onclick = (event) => {
       event.preventDefault();
       window.focus();
+      
+      // Decrement unread count when notification is clicked
+      this.notificationCountService.decrementCount();
       
       // Navigate to notifications page or specific notification
       if (payload.data?.url) {
