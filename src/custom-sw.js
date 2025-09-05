@@ -18,6 +18,12 @@ self.addEventListener('push', (event) => {
       timestamp: Date.now()
     },
     requireInteraction: true,
+    // Mobile-optimized settings
+    vibrate: [200, 100, 200], // Vibration pattern for mobile (Android)
+    silent: false, // Ensure sound plays on mobile
+    renotify: true, // Replace existing notifications
+    // iOS Safari specific settings
+    sound: '/assets/sounds/notification.mp3', // Custom sound for iOS
     actions: [
       {
         action: 'view',
@@ -102,15 +108,19 @@ self.addEventListener('notificationclick', (event) => {
       clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
         // Check if app is already open
         for (const client of clientList) {
-          if (client.url.includes(self.location.origin) && 'focus' in client) {
-            client.navigate(urlToOpen);
+          if (client.url.includes(self.location.origin)) {
+            // App is open, navigate to the specific page
+            if ('navigate' in client) {
+              client.navigate(urlToOpen);
+            }
             return client.focus();
           }
         }
         
-        // Open new window if app is not open
+        // App is not open, launch it
         if (clients.openWindow) {
-          return clients.openWindow(urlToOpen);
+          // For mobile, this will launch the PWA
+          return clients.openWindow(self.location.origin + urlToOpen);
         }
       })
     ])
