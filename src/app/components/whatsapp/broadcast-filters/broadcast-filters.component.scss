@@ -1,0 +1,138 @@
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+
+  .row {
+    display: flex;
+    gap: .65rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    min-width: 160px;
+
+    &--inline {
+      flex-direction: row;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    /* Labels más pequeños */
+    label {
+      font-size: .78rem;
+      color: #1f2937;
+      font-weight: 600;
+    }
+
+    /* Selects compactos */
+    select {
+      border: 1px solid #cbd5e1;
+      border-radius: .5rem;
+      padding: .4rem .55rem;
+      background: #fff;
+      color: #1f2937;
+      font-size: .8rem;
+    }
+  }
+
+  /* Segmentos de botones */
+  .segmented {
+    display: inline-flex;
+    border: 1px solid #cbd5e1;
+    border-radius: .5rem;
+    overflow: hidden;
+    flex-wrap: wrap;
+
+    &__btn {
+      background: #fff;
+      padding: .4rem .65rem;
+      border: none;
+      font-size: .82rem;
+      color: #1f2937;
+      cursor: pointer;
+
+      &--active {
+        background: #709cf4;
+        color: #fff;
+      }
+    }
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  /* ====== RESPONSIVE ====== */
+  @media (max-width: 768px) {
+    gap: .55rem;
+
+    .row {
+      gap: .55rem;
+      align-items: stretch;
+    }
+
+    .field {
+      min-width: 140px;
+
+      label {
+        font-size: .72rem;
+      }
+
+      select {
+        padding: .38rem .5rem;
+        font-size: .75rem;
+      }
+    }
+
+    .segmented {
+      &__btn {
+        padding: .35rem .55rem;
+        font-size: .75rem;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    gap: .45rem;
+
+    .row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: .45rem;
+    }
+
+    .field {
+      min-width: 100%;
+
+      label {
+        font-size: .7rem;
+      }
+
+      select {
+        width: 100%;
+        padding: .35rem .45rem;
+        font-size: .72rem;
+      }
+    }
+
+    .segmented {
+      width: 100%;
+
+      &__btn {
+        flex: 1 1 auto;
+        text-align: center;
+        padding: .32rem .45rem;
+        font-size: .72rem;
+      }
+    }
+
+    .spacer {
+      display: none;
+    }
+  }
+}

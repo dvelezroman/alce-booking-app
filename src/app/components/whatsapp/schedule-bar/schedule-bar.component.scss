@@ -1,0 +1,115 @@
+.schedule {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .65rem;
+  flex-wrap: wrap;
+
+  /* Columna izquierda (modos y fecha/hora) */
+  .left {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+  }
+
+  /* Texto a la derecha (tiempo estimado) */
+  .right {
+    color: #374151;
+    font-size: .8rem;
+    font-weight: 500;
+  }
+
+  /* Radios (Enviar ahora / Programar) */
+  .radio {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .82rem;
+    color: #1f2937;
+    font-weight: 600;
+
+    input {
+      accent-color: #0ea5e9;
+      cursor: pointer;
+    }
+  }
+
+  /* Inputs de fecha, hora y zona horaria */
+  .datetime {
+    display: inline-flex;
+    gap: .4rem;
+    align-items: center;
+    flex-wrap: wrap;
+
+    input,
+    select {
+      border: 1px solid #cbd5e1;
+      border-radius: .5rem;
+      padding: .4rem .55rem;
+      background: #fff;
+      color: #1f2937;
+      font-size: .8rem;
+      cursor: not-allowed;
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .left {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: .45rem;
+      width: 100%;
+    }
+
+    .datetime {
+      width: 100%;
+      gap: .45rem;
+
+      input,
+      select {
+        width: 100%;
+        font-size: .75rem;
+        padding: .35rem .5rem;
+      }
+    }
+
+    .radio {
+      font-size: .75rem;
+    }
+
+    .right {
+      width: 100%;
+      text-align: left;
+      font-size: .72rem;
+      margin-top: .4rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    gap: .45rem;
+
+    .radio {
+      font-size: .7rem;
+    }
+
+    .datetime input,
+    .datetime select {
+      padding: .3rem .45rem;
+      font-size: .7rem;
+    }
+
+    .right {
+      font-size: .68rem;
+    }
+  }
+}
