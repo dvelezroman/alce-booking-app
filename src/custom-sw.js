@@ -4,6 +4,8 @@
 // Listen for push events
 self.addEventListener('push', (event) => {
   console.log('Push event received:', event);
+  console.log('Event data type:', typeof event.data);
+  console.log('Event data methods:', Object.getOwnPropertyNames(event.data));
 
   let notificationData = {
     title: 'Nueva notificación',
@@ -33,49 +35,36 @@ self.addEventListener('push', (event) => {
   // Parse push data if available
   if (event.data) {
     try {
-      // Try different methods to get the data
-      let pushData = null;
+      const pushText = event.data.text();
+      console.log('Push data received as text:', pushText);
       
-      // Method 1: Try to get as JSON directly
-      try {
-        pushData = event.data.json();
-        console.log('Push data as JSON:', pushData);
-      } catch (jsonError) {
-        console.log('Not JSON, trying as text...');
-        
-        // Method 2: Try to get as text and parse
+      if (pushText) {
         try {
-          const pushText = event.data.text();
-          console.log('Push data as text:', pushText);
+          const pushData = JSON.parse(pushText);
+          console.log('Successfully parsed push data:', pushData);
           
-          if (pushText) {
-            // Try to parse as JSON
-            try {
-              pushData = JSON.parse(pushText);
-              console.log('Parsed push data:', pushData);
-            } catch (parseError) {
-              // If not JSON, use as body
-              console.log('Not JSON, using as body');
-              notificationData.body = pushText;
-              notificationData.title = 'Nueva notificación';
-            }
+          if (pushData && typeof pushData === 'object') {
+            notificationData = {
+              ...notificationData,
+              title: pushData.title || notificationData.title,
+              body: pushData.body || notificationData.body,
+              icon: pushData.icon || notificationData.icon,
+              badge: pushData.badge || notificationData.badge,
+              tag: pushData.tag || notificationData.tag,
+              data: pushData.data || notificationData.data,
+              requireInteraction: pushData.requireInteraction !== undefined ? pushData.requireInteraction : notificationData.requireInteraction,
+              silent: pushData.silent !== undefined ? pushData.silent : notificationData.silent,
+              actions: pushData.actions || notificationData.actions
+            };
           }
-        } catch (textError) {
-          console.error('Error getting push data as text:', textError);
+        } catch (parseError) {
+          console.error('Error parsing push data as JSON:', parseError);
+          notificationData.body = pushText;
+          notificationData.title = 'Nueva notificación';
         }
       }
-      
-      // If we successfully parsed JSON data, use it
-      if (pushData && typeof pushData === 'object') {
-        notificationData = {
-          ...notificationData,
-          ...pushData
-        };
-      }
-      
     } catch (error) {
       console.error('Error processing push data:', error);
-      console.log('Raw push data:', event.data);
     }
   }
 
