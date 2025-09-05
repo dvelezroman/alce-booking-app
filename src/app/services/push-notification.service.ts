@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, from, of } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { catchError, switchMap, tap, take } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { NotificationService } from './notification.service';
+import { Store } from '@ngrx/store';
+import { selectUserData } from '../store/user.selector';
 
 export interface PushSubscription {
   endpoint: string;
@@ -46,7 +48,8 @@ export class PushNotificationService {
 
   constructor(
     private http: HttpClient,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private store: Store
   ) {
     this.checkPermission();
     this.loadExistingSubscription();
@@ -180,9 +183,9 @@ export class PushNotificationService {
    */
   private async saveSubscriptionToServer(subscription: PushSubscription): Promise<void> {
     try {
+      // Backend will extract userId from JWT token
       await this.http.post(`${this.apiUrl}/subscribe`, {
-        subscription,
-        userId: this.getCurrentUserId()
+        subscription
       }).toPromise();
     } catch (error) {
       console.error('Error saving subscription to server:', error);
@@ -194,9 +197,8 @@ export class PushNotificationService {
    */
   private async removeSubscriptionFromServer(): Promise<void> {
     try {
-      await this.http.delete(`${this.apiUrl}/unsubscribe`, {
-        params: { userId: this.getCurrentUserId().toString() }
-      }).toPromise();
+      // Backend will extract userId from JWT token
+      await this.http.delete(`${this.apiUrl}/unsubscribe`).toPromise();
     } catch (error) {
       console.error('Error removing subscription from server:', error);
     }
@@ -248,29 +250,38 @@ export class PushNotificationService {
    * Check for unread notifications and show push notification
    */
   checkUnreadNotifications(): Observable<boolean> {
-    return this.notificationService.getNotifications({ 
-      unreadOnly: true,
-      userId: this.getCurrentUserId()
-    }).pipe(
-      tap((response) => {
-        const unreadCount = Array.isArray(response) ? response.length : response.total || 0;
-        if (unreadCount > 0) {
-          this.showLocalNotification({
-            title: 'Nuevas notificaciones',
-            body: `Tienes ${unreadCount} notificación${unreadCount > 1 ? 'es' : ''} sin leer`,
-            tag: 'unread-notifications',
-            data: { url: '/dashboard/notifications' },
-            requireInteraction: true
-          });
+    return this.getCurrentUserId().pipe(
+      switchMap(userId => {
+        if (!userId || userId === 0) {
+          console.warn('Cannot check notifications: user not logged in');
+          return of(false);
         }
-      }),
-      switchMap((response) => {
-        const unreadCount = Array.isArray(response) ? response.length : response.total || 0;
-        return of(unreadCount > 0);
-      }),
-      catchError((error) => {
-        console.error('Error checking unread notifications:', error);
-        return of(false);
+        
+        return this.notificationService.getNotifications({ 
+          unreadOnly: true,
+          userId: userId
+        }).pipe(
+          tap((response) => {
+            const unreadCount = Array.isArray(response) ? response.length : response.total || 0;
+            if (unreadCount > 0) {
+              this.showLocalNotification({
+                title: 'Nuevas notificaciones',
+                body: `Tienes ${unreadCount} notificación${unreadCount > 1 ? 'es' : ''} sin leer`,
+                tag: 'unread-notifications',
+                data: { url: '/dashboard/notifications' },
+                requireInteraction: true
+              });
+            }
+          }),
+          switchMap((response) => {
+            const unreadCount = Array.isArray(response) ? response.length : response.total || 0;
+            return of(unreadCount > 0);
+          }),
+          catchError((error) => {
+            console.error('Error checking unread notifications:', error);
+            return of(false);
+          })
+        );
       })
     );
   }
@@ -315,16 +326,18 @@ export class PushNotificationService {
   }
 
   /**
-   * Get current user ID from localStorage or store
+   * Get current user ID from store
    */
-  private getCurrentUserId(): number {
-    // This should match how you get the current user ID in your app
-    const userData = localStorage.getItem('userData');
-    if (userData) {
-      const user = JSON.parse(userData);
-      return user.id;
-    }
-    return 0; // Fallback
+  private getCurrentUserId(): Observable<number> {
+    return this.store.select(selectUserData).pipe(
+      take(1),
+      switchMap(userData => {
+        if (userData && userData.id) {
+          return of(userData.id);
+        }
+        return of(0);
+      })
+    );
   }
 
   /**
@@ -341,5 +354,29 @@ export class PushNotificationService {
     return this.subscription$.pipe(
       switchMap(subscription => of(!!subscription))
     );
+  }
+
+  /**
+   * Subscribe to push notifications after user login
+   * Call this method after user successfully logs in
+   */
+  async subscribeAfterLogin(): Promise<PushSubscription | null> {
+    // Check if already subscribed
+    const currentSubscription = this.subscriptionSubject.value;
+    if (currentSubscription) {
+      console.log('Already subscribed to push notifications');
+      return currentSubscription;
+    }
+
+    // Subscribe to push notifications
+    return await this.subscribeToPush();
+  }
+
+  /**
+   * Check if user is logged in
+   */
+  async isUserLoggedIn(): Promise<boolean> {
+    const userId = await this.getCurrentUserId().toPromise();
+    return !!(userId && userId > 0);
   }
 }
