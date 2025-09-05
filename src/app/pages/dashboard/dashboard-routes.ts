@@ -31,7 +31,7 @@ import { GroupsComponent } from './notifications/groups/groups.component';
 import { InboxComponent } from './notifications/inbox/inbox.component';
 import { NotificationDetailComponent } from './notifications/notification-detail/notification-detail.component';
 import { NotificationsSentComponent } from './notifications/notifications-sent/notifications-sent.component';
-import { BroadcastComponent } from './whatsapp/broadcast/broadcast.component';
+import { BroadcastComponent } from './whatsapp/broadcast.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },

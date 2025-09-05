@@ -1,0 +1,37 @@
+<div class="filters">
+  <div class="row">
+    <div class="field">
+      <label>Tipo de envío</label>
+      <div class="segmented">
+        <button
+          class="segmented__btn"
+          type="button"
+          [class.segmented__btn--active]="sendType==='broadcast'"
+          [attr.aria-pressed]="sendType==='broadcast'"
+          (click)="sendType='broadcast'">
+          Grupos de difusión
+        </button>
+        <button
+          class="segmented__btn"
+          type="button"
+          [class.segmented__btn--active]="sendType==='groups'"
+          [attr.aria-pressed]="sendType==='groups'"
+          (click)="sendType='groups'">
+          Grupos
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Grupo</label>
+      <select>
+        <option disabled selected>Seleccionar...</option>
+        <option value="1">Difusión Instructores</option>
+        <option value="2">Difusión B</option>
+        <option value="3">Grupo · stage 3</option>
+      </select>
+    </div>
+
+    <div class="spacer"></div>
+  </div>
+</div>
