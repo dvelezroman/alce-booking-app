@@ -1,7 +1,10 @@
+// src/app/pages/dashboard/notifications/notifications-sent/notifications-sent.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { filter, take } from 'rxjs';
+import { filter } from 'rxjs';
+import { Router } from '@angular/router';
+
 import { NotificationService } from '../../../../services/notification.service';
 import { selectUserData } from '../../../../store/user.selector';
 import { UserDto } from '../../../../services/dtos/user.dto';
@@ -9,17 +12,16 @@ import {
   Notification as AppNotification,
   NotificationListResponse
 } from '../../../../services/dtos/notification.dto';
-import { SentListComponent } from '../../../../components/notifications/sent-list/sent-list.component';
 
 @Component({
   selector: 'app-notifications-sent',
   standalone: true,
-  imports: [CommonModule, SentListComponent],
+  imports: [CommonModule],
   templateUrl: './notifications-sent.component.html',
   styleUrl: './notifications-sent.component.scss'
 })
 export class NotificationsSentComponent implements OnInit {
-   Math = Math;
+  Math = Math;
   private currentUserId: number | null = null;
 
   items: AppNotification[] = [];
@@ -29,6 +31,7 @@ export class NotificationsSentComponent implements OnInit {
 
   constructor(
     private store: Store,
+    private router: Router,
     private notificationService: NotificationService
   ) {}
 
@@ -60,6 +63,7 @@ export class NotificationsSentComponent implements OnInit {
   get startIndex(): number {
     return this.total === 0 ? 0 : (this.page - 1) * this.limit + 1;
   }
+
   get endIndex(): number {
     return Math.min(this.page * this.limit, this.total);
   }
@@ -80,5 +84,12 @@ export class NotificationsSentComponent implements OnInit {
 
   trackById(index: number, n: AppNotification) {
     return n.id;
+  }
+
+  onRowClick(notification: AppNotification): void {
+    this.router.navigate(
+      ['/dashboard/notifications-detail'],
+      { state: { notification } }
+    );
   }
 }
