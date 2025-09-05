@@ -19,11 +19,13 @@ export class GroupListComponent {
   openMenuId: number | null = null;
 
   onEditClick(group: NotificationGroupDto) {
+    this.openMenuId = null; 
     this.editGroup.emit(group);
     this.openMenuId = null;
   }
 
   onCardClick(group: NotificationGroupDto) {
+    this.openMenuId = null;
     this.viewGroupMembers.emit(group);
   }
 
