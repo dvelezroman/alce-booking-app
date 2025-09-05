@@ -104,7 +104,7 @@ export class NotificationsStatusComponent implements OnInit {
   onRowClick(n: Notification) {
     this.router.navigate(
       ['/dashboard/notifications-detail'],
-      { state: { notification: n } }
+      { state: { notification: n, origin: 'status' } }
     );
   }
 
