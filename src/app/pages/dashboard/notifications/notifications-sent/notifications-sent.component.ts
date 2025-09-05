@@ -89,7 +89,7 @@ export class NotificationsSentComponent implements OnInit {
   onRowClick(notification: AppNotification): void {
     this.router.navigate(
       ['/dashboard/notifications-detail'],
-      { state: { notification } }
+      { state: { notification, origin: 'sent' } }
     );
   }
 }

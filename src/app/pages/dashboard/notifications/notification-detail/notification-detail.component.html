@@ -49,13 +49,7 @@
             </div>
 
             <div class="to-line">
-            Para: <span class="audience">{{ toDisplayName || 'Tú' }}</span>
-            <span
-                *ngIf="notification?.scope === 'STAGE_STUDENTS' && notification?.stage?.description"
-                class="audience"
-            >
-                ({{ notification?.stage?.description }})
-            </span>
+              Para: <span class="audience">{{ audienceLine }}</span>
             </div>
 
             <!-- Nuevo bloque: título del mensaje -->
@@ -105,7 +99,7 @@
 
       <section
         class="recipients-card card"
-        *ngIf="isAdmin && recipientIds.length"
+        *ngIf="showRecipients && recipientIds.length"
       >
         <header class="recipients-header">
           <h3 class="section-title">

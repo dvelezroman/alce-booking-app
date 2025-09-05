@@ -48,7 +48,7 @@ export class InboxComponent implements OnInit {
 
   onReadDaysChange(days: number) {
     this.readDays = days;
-    this.page = 1; // reinicia a la primera página cuando cambian los filtros
+    this.page = 1;
     this.fetchNotifications();
   }
 
@@ -110,7 +110,7 @@ export class InboxComponent implements OnInit {
     const go = () =>
       this.router.navigate(
         ['/dashboard/notifications-detail'],
-        { state: { notification: n } }
+        { state: { notification: n, origin: 'inbox' } }
       );
 
     if (n.isRead) { go(); return; }
