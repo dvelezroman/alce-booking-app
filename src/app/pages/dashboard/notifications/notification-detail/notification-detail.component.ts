@@ -4,7 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Location } from '@angular/common';  
+import { Location } from '@angular/common';
 import { Notification } from '../../../../services/dtos/notification.dto';
 import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { selectUserData } from '../../../../store/user.selector';
@@ -94,7 +94,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
           if (token) {
             this.usersService.refreshLogin().subscribe({
               next: (u) => this.applyUser(u),
-              error: () => { /* null */ }
+              error: () => { /* noop */ }
             });
           }
         }
@@ -112,6 +112,20 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.userRole === UserRole.ADMIN;
   }
 
+  /** Lista de IDs a renderizar: si `to` tiene datos, usamos `to`; si no, `readBy`; si no, vacío. */
+  get recipientIds(): number[] {
+    const n = this.notification;
+    if (!n) return [];
+    if (Array.isArray(n.to) && n.to.length > 0) return n.to;
+    if (Array.isArray(n.readBy) && n.readBy.length > 0) return n.readBy;
+    return [];
+  }
+
+  /** True si el uid está en readBy (lo leyó). */
+  isReadBy(uid: number): boolean {
+    return !!this.notification?.readBy?.includes(uid);
+  }
+
   trackByUid(index: number, uid: number): number {
     return uid;
   }
@@ -120,7 +134,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.location.back();
   }
 
-    onDeleteClick(): void {
+  onDeleteClick(): void {
     if (!this.notification?.id) return;
     this.openConfirmDelete(this.notification.id);
   }

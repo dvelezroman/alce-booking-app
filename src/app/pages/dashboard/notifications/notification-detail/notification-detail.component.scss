@@ -65,36 +65,36 @@
     gap: 16px; /* Espacio entre badge y botones */
   }
 
-  .badge.status {
-    font-size: 12px;
-    padding: 4px 8px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: #f6f7fb;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
+  // .badge.status {
+  //   font-size: 12px;
+  //   padding: 4px 8px;
+  //   border-radius: 999px;
+  //   border: 1px solid var(--border);
+  //   background: #f6f7fb;
+  //   text-transform: uppercase;
+  //   letter-spacing: 0.02em;
 
-    &[data-status="SENT"] {
-      background: #ecfeff;
-      border-color: #a5f3fc;
-    }
-    &[data-status="DELIVERED"] {
-      background: #ecfffb;
-      border-color: #99f6e4;
-    }
-    &[data-status="READ"] {
-      background: #f0fdf4;
-      border-color: #86efac;
-    }
-    &[data-status="FAILED"] {
-      background: #fef2f2;
-      border-color: #fecaca;
-    }
-    &[data-status="PENDING"] {
-      background: #fff7ed;
-      border-color: #fed7aa;
-    }
-  }
+  //   &[data-status="SENT"] {
+  //     background: #ecfeff;
+  //     border-color: #a5f3fc;
+  //   }
+  //   &[data-status="DELIVERED"] {
+  //     background: #ecfffb;
+  //     border-color: #99f6e4;
+  //   }
+  //   &[data-status="READ"] {
+  //     background: #f0fdf4;
+  //     border-color: #86efac;
+  //   }
+  //   &[data-status="FAILED"] {
+  //     background: #fef2f2;
+  //     border-color: #fecaca;
+  //   }
+  //   &[data-status="PENDING"] {
+  //     background: #fff7ed;
+  //     border-color: #fed7aa;
+  //   }
+  // }
 
   .actions {
     display: flex;
@@ -217,22 +217,26 @@
           gap: 8px;
           .name {
             font-weight: 600;
+            font-size: 14px;
             color: #0f172a;
           }
           .email,
           .time,
           .dot {
             color: var(--muted);
-            font-size: 13px;
+            font-size: 11px;
           }
         }
         .to-line {
           margin-top: 2px;
           color: var(--muted);
-          font-size: 13px;
+          font-size: 12px;
           .audience {
             font-weight: 500;
           }
+        }
+        .title-line{
+          font-size: 14px;
         }
       }
     }
@@ -344,6 +348,9 @@
   width: 90%;
   margin: 0 auto;
   max-width: 1200px;
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 }
 
 .recipients-card {
@@ -369,6 +376,7 @@
         font-weight: 500;
         color: #6b7280;
         margin-left: 4px;
+        font-size: 0.75rem;
       }
     }
   }
@@ -377,15 +385,22 @@
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-
-    .chip {
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      color: #374151;
-      padding: 2px 8px;
-      font-size: 12px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
   }
+
+  .chip {
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #374151;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 10px;
+  }
+
+  /* Leído */
+  .chip.read {
+    border-color: #16a34a;
+    background: #e8fce9;
+    color: #166534;
+    font-weight: 600;
+}
 }
