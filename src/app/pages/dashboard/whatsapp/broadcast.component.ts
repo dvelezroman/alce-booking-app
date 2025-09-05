@@ -4,7 +4,6 @@ import { BroadcastFiltersComponent } from '../../../components/whatsapp/broadcas
 import { GroupSelectorComponent } from '../../../components/whatsapp/group-selector/group-selector.component';
 import { MessageComposerComponent } from '../../../components/whatsapp/message-composer/message-composer.component';
 import { ScheduleBarComponent } from '../../../components/whatsapp/schedule-bar/schedule-bar.component';
-import { SummaryFooterComponent } from '../../../components/whatsapp/summary-footer/summary-footer.component';
 
 @Component({
   selector: 'app-broadcast',
@@ -15,8 +14,7 @@ import { SummaryFooterComponent } from '../../../components/whatsapp/summary-foo
     GroupSelectorComponent,
     MessageComposerComponent,
     ScheduleBarComponent,
-    SummaryFooterComponent,
-  ],
+    ],
   templateUrl: './broadcast.component.html',
   styleUrls: ['./broadcast.component.scss'],
 })
