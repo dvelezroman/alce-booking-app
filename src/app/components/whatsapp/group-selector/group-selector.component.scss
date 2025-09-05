@@ -1,0 +1,220 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+
+  .panel__head {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    justify-content: space-between;
+
+    /* Título reducido */
+    h3 {
+      margin: 0;
+      font-size: .9rem;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    /* Input búsqueda */
+    .search input {
+      border: 1px solid #cbd5e1;
+      border-radius: .5rem;
+      padding: .4rem .55rem;
+      width: 220px;
+      max-width: 100%;
+      font-size: .8rem;
+      color: #1f2937;
+      background: #fff;
+
+      &::placeholder {
+        color: #6b7280;
+        font-size: .78rem;
+      }
+    }
+  }
+
+  .lists {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .6rem;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+    }
+    }
+
+  .list {
+    border: 1px dashed #e2e8f0;
+    border-radius: .65rem;
+    padding: .65rem;
+
+    .list__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: .4rem;
+
+      /* Título más pequeño */
+      strong {
+        color: #1f2937;
+        font-size: .85rem;
+        font-weight: 700;
+      }
+
+      /* Subtexto reducido */
+      .hint {
+        color: #4b5563;
+        font-size: .78rem;
+        font-weight: 500;
+      }
+    }
+
+    .items {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .45rem;
+      border: 1px solid #e2e8f0;
+      border-radius: .5rem;
+      background: #fff;
+
+      &__left {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+      }
+
+      /* Título principal reducido */
+      .title {
+        font-weight: 600;
+        font-size: .82rem;
+        color: #111827;
+      }
+
+      /* Subtexto reducido */
+      .sub {
+        font-size: .72rem;
+        color: #4b5563;
+      }
+
+      /* Botón más pequeño */
+      .btn-link {
+        border: none;
+        background: transparent;
+        color: #0ea5e9;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: .78rem;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .empty {
+      border: 1px dashed #cbd5e1;
+      border-radius: .5rem;
+      padding: .75rem;
+      color: #374151;
+      text-align: center;
+      font-size: .78rem; /* ↓ reducido */
+      font-weight: 500;
+      background: #f9fafb;
+    }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    gap: .5rem;
+
+    .panel__head {
+      flex-direction: column;
+      align-items: stretch;
+      gap: .4rem;
+
+      h3 {
+        font-size: .85rem;
+      }
+
+      .search input {
+        width: 100%;
+        padding: .35rem .5rem;
+        font-size: .75rem;
+      }
+    }
+
+    .list {
+      padding: .55rem;
+
+      .list__head {
+        strong { font-size: .78rem; }
+        .hint  { font-size: .7rem; }
+      }
+
+      .item {
+        padding: .4rem;
+
+        .title { font-size: .76rem; }
+        .sub   { font-size: .68rem; }
+        .btn-link { font-size: .72rem; }
+      }
+
+      .empty {
+        font-size: .72rem;
+        padding: .65rem;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .panel__head h3 {
+        font-size: .8rem;
+    }
+
+    .item {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: .5rem;
+
+        .item__left {
+        display: flex;
+        align-items: flex-start;
+        gap: .4rem;
+        text-align: left;
+        }
+
+        .title {
+        font-size: .7rem;
+        text-align: left;
+        }
+
+        .sub {
+        font-size: .65rem;
+        text-align: left;
+        }
+
+        .btn-link {
+        align-self: center;
+        font-size: .7rem;
+        }
+    }
+
+    .empty {
+        font-size: .68rem;
+        padding: .6rem;
+    }
+    }
+}
