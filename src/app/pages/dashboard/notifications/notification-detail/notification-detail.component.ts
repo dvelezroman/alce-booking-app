@@ -32,6 +32,9 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   modal: ModalDto = modalInitializer();
   deleting = false;
 
+  showRecipients = false;
+  private origin: 'inbox' | 'sent' | 'status' | 'unknown' = 'unknown';
+
   private readonly statusEs: Record<Notification['status'], string> = {
     PENDING: 'Pendiente',
     SENT: 'Enviada',
@@ -72,12 +75,17 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const st = history.state as { notification?: Notification };
+    const st = history.state as { notification?: Notification; origin?: 'inbox' | 'sent' | 'status' };
     if (st?.notification) {
       this.notification = st.notification;
+      this.origin = st.origin ?? 'unknown';
+
       this.estadoLabel = this.statusEs[this.notification.status];
       this.tipoLabel = this.typeEs[this.notification.notificationType];
       this.prioridadLabel = this.priorityEs(this.notification.priority);
+
+      // Base rule: never show recipients when coming from inbox
+      this.showRecipients = this.notification.scope === 'INDIVIDUAL' && this.origin !== 'inbox';
     } else {
       this.router.navigate(['/dashboard/notifications-inbox']);
       return;
@@ -101,10 +109,45 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       });
   }
 
+  private scopeLabel(scope?: string): string {
+    switch (scope) {
+      case 'ALL_USERS': return 'Todos los usuarios';
+      case 'ALL_STUDENTS': return 'Todos los estudiantes';
+      case 'ALL_INSTRUCTORS': return 'Todos los instructores';
+      case 'INDIVIDUAL': return 'Individual';
+      case 'STAGE_STUDENTS': return 'Estudiantes por etapa';
+      default: return scope || '';
+    }
+  }
+
+  /** Texto para "Para:": prioriza to -> stage -> scope, y usa scope si hay muchos IDs */
+  get audienceLine(): string {
+    const n = this.notification;
+    if (!n) return '';
+
+    // 1) to (IDs)
+    if (Array.isArray(n.to) && n.to.length > 0) {
+      if (n.to.length === 1) return `ID: ${n.to[0]}`;
+      // muchos IDs => mostrar scope
+      return this.scopeLabel(n.scope);
+    }
+
+    // 2) stage
+    if (n.stage?.description) return n.stage.description;
+    if (n.stage?.number) return String(n.stage.number);
+
+    // 3) scope
+    return this.scopeLabel(n.scope);
+  }
+
   private applyUser(user: UserDto) {
     this.userRole = user.role ?? null;
     const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
     this.toDisplayName = fullName || user.email || '';
+
+    // Complete rule: only admins can see recipients (and not from inbox)
+    this.showRecipients = this.showRecipients && this.userRole === UserRole.ADMIN;
+
     this.cdr.markForCheck();
   }
 
