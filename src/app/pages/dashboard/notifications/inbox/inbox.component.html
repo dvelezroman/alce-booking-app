@@ -35,7 +35,7 @@
         No hay notificaciones para los filtros seleccionados.
       </div>
 
-          <!-- Tabla -->
+      <!-- Tabla -->
       <div *ngIf="!loading && notifications.length > 0" class="table-wrapper">
         <div class="table-header">
           <div class="col-from">De</div>
@@ -75,6 +75,31 @@
             {{ n.createdAt | date: 'short' }}
           </div>
         </div>
+      </div>
+
+      <!-- Paginación -->
+      <div class="pagination" *ngIf="total > 0">
+        <button
+          class="pg-btn"
+          (click)="onPrev()"
+          [disabled]="page === 1"
+          aria-label="Página anterior">
+          ‹
+        </button>
+
+        <span class="pg-info">
+          Página {{ page }}
+          <span class="sep">·</span>
+          Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }}
+        </span>
+
+        <button
+          class="pg-btn"
+          (click)="onNext()"
+          [disabled]="page * limit >= total"
+          aria-label="Página siguiente">
+          ›
+        </button>
       </div>
     </section>
   </div>
