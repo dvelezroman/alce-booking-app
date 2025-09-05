@@ -19,15 +19,60 @@
       </div>
 
       <!-- Tabla -->
-      <app-sent-list *ngIf="items.length > 0" [items]="items"></app-sent-list>
+      <div *ngIf="items.length > 0" class="table-wrapper">
+        <div class="table-header">
+          <div class="col-from">Para</div>
+          <div class="col-title">Asunto</div>
+          <div class="col-date">Fecha</div>
+        </div>
 
+        <div
+          class="table-row"
+          *ngFor="let n of items; trackBy: trackById"
+          (click)="onRowClick(n)"
+          role="button"
+          tabindex="0"
+        >
+          <!-- Para -->
+          <div class="col-from">
+            <ng-container [ngSwitch]="n.scope">
+              <span *ngSwitchCase="'INDIVIDUAL'">
+                {{ n.to.length || 0 }} destinatario(s)
+              </span>
+              <span *ngSwitchCase="'STAGE_STUDENTS'">
+                {{ n.stage?.number || 'Etapa' }} · {{ n.to.length || 0 }}
+              </span>
+              <span *ngSwitchDefault>
+                {{ n.scope }}
+              </span>
+            </ng-container>
+          </div>
+
+          <!-- Asunto (título + snippet en una sola fila) -->
+          <div class="col-title">
+            <div class="subject-row">
+              <span class="title" [title]="n.title">{{ n.title }}</span>
+              <span class="sep">—</span>
+              <span class="snippet-inline" *ngIf="n.message?.body as body">
+                {{ body }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Fecha -->
+          <div class="col-date">
+            {{ n.createdAt | date: 'short' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Paginación -->
       <div class="pagination" *ngIf="total > 0">
         <button
           class="pg-btn"
           (click)="onPrev()"
           [disabled]="page === 1"
-          aria-label="Página anterior"
-        >
+          aria-label="Página anterior">
           ‹
         </button>
 
@@ -41,8 +86,7 @@
           class="pg-btn"
           (click)="onNext()"
           [disabled]="page * limit >= total"
-          aria-label="Página siguiente"
-        >
+          aria-label="Página siguiente">
           ›
         </button>
       </div>
