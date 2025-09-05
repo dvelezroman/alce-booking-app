@@ -33,15 +33,53 @@ self.addEventListener('push', (event) => {
   // Parse push data if available
   if (event.data) {
     try {
-      const pushData = event.data.json();
-      notificationData = {
-        ...notificationData,
-        ...pushData
-      };
+      // Try different methods to get the data
+      let pushData = null;
+      
+      // Method 1: Try to get as JSON directly
+      try {
+        pushData = event.data.json();
+        console.log('Push data as JSON:', pushData);
+      } catch (jsonError) {
+        console.log('Not JSON, trying as text...');
+        
+        // Method 2: Try to get as text and parse
+        try {
+          const pushText = event.data.text();
+          console.log('Push data as text:', pushText);
+          
+          if (pushText) {
+            // Try to parse as JSON
+            try {
+              pushData = JSON.parse(pushText);
+              console.log('Parsed push data:', pushData);
+            } catch (parseError) {
+              // If not JSON, use as body
+              console.log('Not JSON, using as body');
+              notificationData.body = pushText;
+              notificationData.title = 'Nueva notificación';
+            }
+          }
+        } catch (textError) {
+          console.error('Error getting push data as text:', textError);
+        }
+      }
+      
+      // If we successfully parsed JSON data, use it
+      if (pushData && typeof pushData === 'object') {
+        notificationData = {
+          ...notificationData,
+          ...pushData
+        };
+      }
+      
     } catch (error) {
-      console.error('Error parsing push data:', error);
+      console.error('Error processing push data:', error);
+      console.log('Raw push data:', event.data);
     }
   }
+
+  console.log('Final notification data:', notificationData);
 
   // Show notification
   event.waitUntil(
