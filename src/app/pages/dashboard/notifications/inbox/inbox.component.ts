@@ -4,7 +4,7 @@ import { InboxFiltersComponent } from '../../../../components/notifications/inbo
 import { NotificationService } from '../../../../services/notification.service';
 import { Notification } from '../../../../services/dtos/notification.dto';
 import { Router } from '@angular/router';
-import { Observable, switchMap, take } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserData } from '../../../../store/user.selector';
 import { UserDto } from '../../../../services/dtos/user.dto';
@@ -40,24 +40,15 @@ export class InboxComponent implements OnInit {
   ngOnInit(): void {
     this.unreadCount$ = this.notificationService.unreadCount$;
 
-    const r = this.last30DaysRange();
-
     this.store.select(selectUserData).pipe(take(1)).subscribe((u: UserDto | null) => {
       this.currentUserId = u?.id ?? null;
       this.fetchNotifications();
     });
   }
 
-  private last30DaysRange(): { fromDate: string; toDate: string } {
-    const to = new Date();
-    const from = new Date();
-    from.setDate(to.getDate() - 30);
-    return { fromDate: from.toISOString(), toDate: to.toISOString() };
-  }
-
   onReadDaysChange(days: number) {
     this.readDays = days;
-    this.page = 1;
+    this.page = 1; // reinicia a la primera página cuando cambian los filtros
     this.fetchNotifications();
   }
 
@@ -75,7 +66,7 @@ export class InboxComponent implements OnInit {
           .sort((a: any, b: any) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
-        this.total = res.total || 0;
+        this.total = res.total || this.notifications.length || 0;
         this.loading = false;
       },
       error: (err) => {
@@ -86,18 +77,32 @@ export class InboxComponent implements OnInit {
     });
   }
 
+  get startIndex(): number {
+    return this.total === 0 ? 0 : (this.page - 1) * this.limit + 1;
+  }
+
+  get endIndex(): number {
+    const end = this.page * this.limit;
+    return end > this.total ? this.total : end;
+  }
+
+  onPrev(): void {
+    if (this.page > 1) {
+      this.page--;
+      this.fetchNotifications();
+    }
+  }
+
+  onNext(): void {
+    if (this.page * this.limit < this.total) {
+      this.page++;
+      this.fetchNotifications();
+    }
+  }
+
   trackById(index: number, n: Notification): number {
     return n.id;
   }
-
-  // isUnread(n: Notification): boolean {
-  //   if (n.isRead === true)  return false;
-  //   if (n.isRead === false) return true;
-  //   if (this.currentUserId == null) {
-  //     return !(n.readBy && n.readBy.length > 0);
-  //   }
-  //   return !n.readBy?.includes(this.currentUserId);
-  // }
 
   onRowClick(n: Notification) {
     if (!n?.id) return;
