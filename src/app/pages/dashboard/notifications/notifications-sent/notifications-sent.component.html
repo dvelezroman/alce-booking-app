@@ -8,6 +8,32 @@
       </div>
     </header>
 
+    <!-- Toggle filtros -->
+    <div class="filter-toggle-wrapper">
+      <button class="filter-toggle-button" (click)="toggleFilters()">
+        {{ showFilters ? 'Ocultar filtros' : 'Filtros' }}
+      </button>
+    </div>
+
+    <!-- Filtros Desde / Hasta (usa .date-filters) -->
+    <div *ngIf="showFilters" class="date-filters">
+      <label for="fromDate">Desde</label>
+      <input
+        id="fromDate"
+        type="date"
+        [(ngModel)]="fromDate"
+        (change)="onFilterChange()"
+      />
+
+      <label for="toDate">Hasta</label>
+      <input
+        id="toDate"
+        type="date"
+        [(ngModel)]="toDate"
+        (change)="onFilterChange()"
+      />
+    </div>
+
     <!-- Separador -->
     <div class="divider"></div>
 
