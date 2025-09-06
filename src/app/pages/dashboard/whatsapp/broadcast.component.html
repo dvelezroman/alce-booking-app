@@ -2,11 +2,29 @@
   <div class="content">
     <h1 class="reports-progress-header reports-progress-title">Envíos por WhatsApp</h1>
 
-    <app-broadcast-filters class="card card--padded"></app-broadcast-filters>
+    <app-broadcast-filters
+      class="card card--padded"
+      [mode]="filters.mode"
+      [query]="filters.query"
+      [selectedGroupId]="filters.selectedGroupId"
+      [groups]="groups"
+      [diffusionGroups]="diffusionGroups"
+      (modeChange)="onModeChange($event)"
+      (filterChange)="onFilterChange($event)">
+    </app-broadcast-filters>
 
     <div class="wb-grid">
       <div class="wb-left">
-        <app-group-selector class="card card--padded"></app-group-selector>
+        <app-group-selector
+          class="card card--padded"
+          [mode]="filters.mode"
+          [query]="filters.query"
+          [selectedGroupId]="filters.selectedGroupId"
+          [groups]="groups"
+          [diffusionGroups]="diffusionGroups"
+          [loading]="loading"
+          (selectionChange)="onSelectionChange($event)">
+        </app-group-selector>
       </div>
 
       <div class="wb-right">
@@ -19,9 +37,12 @@
     <!-- Footer simplificado -->
     <div class="footer-bar">
       <div class="footer-actions">
-        <button class="btn btn-outline" disabled>Guardar borrador</button>
-        <button class="btn btn-primary" disabled>Enviar</button>
+        <button class="btn btn-outline" [disabled]="loading">Guardar borrador</button>
+        <button class="btn btn-primary" [disabled]="loading || !selectedGroupIds.length">Enviar</button>
       </div>
     </div>
+
+    <!-- Error (opcional) -->
+    <div *ngIf="error" class="card card--padded" style="color:#b91c1c;">{{ error }}</div>
   </div>
 </section>
