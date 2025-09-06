@@ -2,40 +2,69 @@
   <div class="panel__head">
     <h3>Selecciona grupos</h3>
     <div class="search">
-      <input type="text" placeholder="Buscar por nombre…" />
+      <!-- El filtro real viene del padre; aquí solo mostramos el texto si quieres -->
+      <input type="text" placeholder="Buscar por nombre…" [value]="query || ''" disabled />
     </div>
   </div>
 
   <div class="lists">
+    <!-- Lista: Disponibles -->
     <div class="list">
       <div class="list__head">
         <strong>Disponibles</strong>
-        <span class="hint">0 seleccionados</span>
+        <span class="hint">{{ selectedIds.length }} seleccionados</span>
       </div>
 
-      <ul class="items">
-        <li class="item">
-          <div class="item__left">
-            <input type="checkbox" />
-            <div>
-              <div class="title">Difusión · Instructores</div>
-              <div class="sub">56 miembros</div>
-            </div>
-          </div>
-          <button class="btn-link">Ver</button>
-        </li>
-      </ul>
+      <!-- loading / vacío / items -->
+      <ng-container *ngIf="!loading; else loadingTpl">
+        <ul class="items" *ngIf="available.length; else emptyAvail">
+          <!-- Disponibles -->
+            <li class="item" *ngFor="let g of available">
+              <div class="item__left">
+                <input #chk type="checkbox"
+                      [checked]="selectedIds.includes(g.id)"
+                      (change)="toggle(g.id, chk.checked)" />
+                <div>
+                  <div class="title">{{ g.title }}</div>
+                  <div class="sub">{{ g.sub }}</div>
+                </div>
+              </div>
+              <button class="btn-link" type="button">Ver</button>
+            </li>
+        </ul>
+        <ng-template #emptyAvail>
+          <div class="empty">No hay grupos para mostrar.</div>
+        </ng-template>
+      </ng-container>
+      <ng-template #loadingTpl>
+        <div class="empty">Cargando…</div>
+      </ng-template>
     </div>
 
+    <!-- Lista: Seleccionados -->
     <div class="list">
       <div class="list__head">
         <strong>Seleccionados</strong>
-        <span class="hint">0 grupos</span>
+        <span class="hint">{{ selectedIds.length }} {{ selectedIds.length === 1 ? 'grupo' : 'grupos' }}</span>
       </div>
 
-      <div class="empty">
+      <div class="empty" *ngIf="!selectedIds.length">
         Aún no has seleccionado grupos.
       </div>
+
+      <ul class="items" *ngIf="selectedIds.length">
+        <li class="item" *ngFor="let id of selectedIds">
+          <div class="item__left">
+            <input #chkSel type="checkbox" [checked]="true"
+                  (change)="toggle(id, false)" />
+            <div>
+              <div class="title">{{ getGroupTitle(id) }}</div>
+              <div class="sub">{{ getGroupSub(id) }}</div>
+            </div>
+          </div>
+          <button class="btn-link" type="button">Ver</button>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

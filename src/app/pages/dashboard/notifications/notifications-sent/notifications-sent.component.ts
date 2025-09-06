@@ -1,6 +1,7 @@
 // src/app/pages/dashboard/notifications/notifications-sent/notifications-sent.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { filter } from 'rxjs';
 import { Router } from '@angular/router';
@@ -16,7 +17,7 @@ import {
 @Component({
   selector: 'app-notifications-sent',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './notifications-sent.component.html',
   styleUrl: './notifications-sent.component.scss'
 })
@@ -29,6 +30,11 @@ export class NotificationsSentComponent implements OnInit {
   page = 1;
   limit = 20;
 
+  // Filtros
+  showFilters = false;
+  fromDate = '';
+  toDate = '';
+
   constructor(
     private store: Store,
     private router: Router,
@@ -36,12 +42,30 @@ export class NotificationsSentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const today = new Date();
+    const daysAgo = new Date(today);
+    daysAgo.setDate(today.getDate() - 1);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    this.fromDate = daysAgo.toISOString().slice(0, 10);
+    this.toDate = tomorrow.toISOString().slice(0, 10);
+
     this.store.select(selectUserData)
       .pipe(filter((u): u is UserDto => !!u))
       .subscribe((u: UserDto) => {
         this.currentUserId = u.id;
         this.fetch();
       });
+  }
+
+  toggleFilters(): void {
+    this.showFilters = !this.showFilters;
+  }
+
+  onFilterChange(): void {
+    this.page = 1;
+    this.fetch();
   }
 
   fetch(): void {
@@ -53,13 +77,23 @@ export class NotificationsSentComponent implements OnInit {
         userId: this.currentUserId,
         //fromUserId: this.currentUserId,
         page: this.page,
-        limit: this.limit
+        limit: this.limit,
+        fromDate: this.fromDate || undefined,
+        toDate: this.toDate || undefined,
       })
       .subscribe((res) => {
         const r = res as NotificationListResponse;
-        this.items = (r.notifications || []) as AppNotification[];
+        this.items = this.sortNotifications(r.notifications || []);
         this.total = r.total ?? this.items.length;
       });
+  }
+
+  private sortNotifications(notifications: AppNotification[]): AppNotification[] {
+    return [...notifications].sort((a, b) => {
+      const dateA = new Date(a.sentAt || a.createdAt).getTime();
+      const dateB = new Date(b.sentAt || b.createdAt).getTime();
+      return dateB - dateA;
+    });
   }
 
   get startIndex(): number {
