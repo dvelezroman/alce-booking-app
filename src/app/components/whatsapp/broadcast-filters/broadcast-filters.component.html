@@ -3,20 +3,18 @@
     <div class="field">
       <label>Tipo de envío</label>
       <div class="segmented">
-        <button
-          class="segmented__btn"
-          type="button"
-          [class.segmented__btn--active]="sendType==='broadcast'"
-          [attr.aria-pressed]="sendType==='broadcast'"
-          (click)="sendType='broadcast'">
+        <button class="segmented__btn"
+                type="button"
+                [class.segmented__btn--active]="mode === 'broadcast'"
+                [attr.aria-pressed]="mode === 'broadcast'"
+                (click)="onToggleMode('broadcast')">
           Grupos de difusión
         </button>
-        <button
-          class="segmented__btn"
-          type="button"
-          [class.segmented__btn--active]="sendType==='groups'"
-          [attr.aria-pressed]="sendType==='groups'"
-          (click)="sendType='groups'">
+        <button class="segmented__btn"
+                type="button"
+                [class.segmented__btn--active]="mode === 'groups'"
+                [attr.aria-pressed]="mode === 'groups'"
+                (click)="onToggleMode('groups')">
           Grupos
         </button>
       </div>
@@ -24,11 +22,13 @@
 
     <div class="field">
       <label>Grupo</label>
-      <select>
-        <option disabled selected>Seleccionar...</option>
-        <option value="1">Difusión Instructores</option>
-        <option value="2">Difusión B</option>
-        <option value="3">Grupo · stage 3</option>
+      <select #stageSelect (change)="onStageChange(stageSelect.value)">
+        <option value="" [selected]="!selectedGroupId">Seleccionar...</option>
+        <option *ngFor="let opt of options"
+                [value]="opt.id"
+                [selected]="selectedGroupId === opt.id">
+          {{ opt.label }}
+        </option>
       </select>
     </div>
 
