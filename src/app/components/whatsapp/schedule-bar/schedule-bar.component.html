@@ -1,24 +1,42 @@
 <div class="schedule">
   <div class="left">
     <label class="radio">
-      <input type="radio" name="sendMode" checked />
+      <input
+        type="radio"
+        name="sendMode"
+        [checked]="sendMode === 'now'"
+        (change)="onModeChange('now')"
+      />
       <span>Enviar ahora</span>
     </label>
+
     <label class="radio">
-      <input type="radio" name="sendMode" />
+      <input
+        type="radio"
+        name="sendMode"
+        [checked]="sendMode === 'schedule'"
+        (change)="onModeChange('schedule')"
+      />
       <span>Programar</span>
     </label>
 
     <div class="datetime">
-      <input type="date" disabled />
-      <input type="time" disabled />
-      <select disabled>
-        <option>America/Guayaquil</option>
-      </select>
+      <input
+        type="date"
+        [(ngModel)]="dateStr"
+        (change)="onDateTimeChange()"
+        [disabled]="sendMode !== 'schedule'"
+      />
+      <input
+        type="time"
+        [(ngModel)]="timeStr"
+        (change)="onDateTimeChange()"
+        [disabled]="sendMode !== 'schedule'"
+      />
     </div>
   </div>
 
   <div class="right">
-    <span class="muted">Tiempo estimado: —</span>
+    <span class="muted">Tiempo estimado: {{ etaText }}</span>
   </div>
 </div>

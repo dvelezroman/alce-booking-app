@@ -50,7 +50,7 @@ export class BroadcastComponent implements OnInit {
   constructor(private whatsappSvc: WhatsAppGroupService) {}
 
   ngOnInit(): void {
-   // this.loadData();
+    //this.loadData();
   }
 
   private loadData(): void {

@@ -13,14 +13,6 @@ export class WhatsAppGroupService {
 
   constructor(private http: HttpClient) {}
 
-  checkApiHealth(): Observable<any> {
-  return this.http.get(`${environment. whatsappApiUrl}/health`);
-}
-
-  checkApiWelcome(): Observable<any> {
-    return this.http.get(`${environment. whatsappApiUrl}/`);
-  }
-
   getGroups(): Observable<GetWhatsAppGroupsResponse> {
     return this.http.get<GetWhatsAppGroupsResponse>(`${this.apiUrl}/groups`);
   }
