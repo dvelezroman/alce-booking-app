@@ -1,37 +1,13 @@
 <div class="filters">
   <div class="row">
     <div class="field">
-      <label>Tipo de envío</label>
-      <div class="segmented">
-        <button class="segmented__btn"
-                type="button"
-                [class.segmented__btn--active]="mode === 'broadcast'"
-                [attr.aria-pressed]="mode === 'broadcast'"
-                (click)="onToggleMode('broadcast')">
-          Grupos de difusión
-        </button>
-        <button class="segmented__btn"
-                type="button"
-                [class.segmented__btn--active]="mode === 'groups'"
-                [attr.aria-pressed]="mode === 'groups'"
-                (click)="onToggleMode('groups')">
-          Grupos
-        </button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Grupo</label>
-      <select #stageSelect (change)="onStageChange(stageSelect.value)">
-        <option value="" [selected]="!selectedGroupId">Seleccionar...</option>
-        <option *ngFor="let opt of options"
-                [value]="opt.id"
-                [selected]="selectedGroupId === opt.id">
-          {{ opt.label }}
-        </option>
+      <label>Seleccionar destino</label>
+      <select [ngModel]="selectedType" (ngModelChange)="onTypeChange($event)">
+        <option [ngValue]="null">-- Selecciona --</option>
+        <option value="group">Grupo</option>
+        <option value="diffusion">Grupo de difusión</option>
+        <option value="contact">Contactos</option>
       </select>
     </div>
-
-    <div class="spacer"></div>
   </div>
 </div>
