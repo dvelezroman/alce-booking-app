@@ -11,8 +11,6 @@ import { WhatsAppGroup } from '../../../services/dtos/whatsapp-group.dto';
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
 import { forkJoin } from 'rxjs';
 
-type Mode = 'broadcast' | 'groups';
-
 export interface BroadcastFilterState {
   query: string | null;
   selectedGroupId: string | null;

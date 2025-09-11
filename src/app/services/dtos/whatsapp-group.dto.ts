@@ -61,3 +61,18 @@ export interface GroupContactsResponseDto {
   group: GroupRefDto;
   contacts: GroupContactDto[];
 }
+
+
+
+export interface Contact {
+  id: string;
+  name: string;
+  phone?: string;
+}
+
+export interface Group {
+  id: string;
+  name: string;
+  description: string;
+  members: string[]; 
+}

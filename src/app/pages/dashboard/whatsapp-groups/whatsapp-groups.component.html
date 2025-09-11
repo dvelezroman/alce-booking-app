@@ -1,0 +1,26 @@
+<section class="section whatsapp-groups">
+  <div class="content">
+    <!-- Header -->
+    <header class="header">
+      <h1 class="title">Gestión de Grupos</h1>
+      <p class="subtitle">Crea y administra los grupos de WhatsApp</p>
+      <button class="btn btn-primary" (click)="onCreateGroup()">+ Crear grupo</button>
+    </header>
+
+    <!-- Formulario -->
+    <app-group-form
+      *ngIf="showForm"
+      [contacts]="contacts"
+      [group]="selectedGroup"
+      class="card card--padded mt-20"
+      (close)="onCloseForm()">
+    </app-group-form>
+
+    <!-- Listado -->
+    <app-group-list
+      class="card card--padded"
+      [groups]="groups"
+      (editGroup)="onEditGroup($event)">
+    </app-group-list>
+  </div>
+</section>

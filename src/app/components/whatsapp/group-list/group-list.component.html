@@ -1,0 +1,18 @@
+<section class="group-list">
+  <h2 class="title">Lista de Grupos</h2>
+  <div class="list-container">
+    <div *ngIf="!groups || groups.length === 0" class="placeholder">
+      No hay grupos disponibles.
+    </div>
+
+    <ul *ngIf="groups && groups.length > 0" class="groups">
+      <li *ngFor="let g of groups" class="group-item" (click)="onEdit(g)">
+        <div class="info">
+          <h3>{{ g.name }}</h3>
+          <p class="desc">{{ g.description }}</p>
+        </div>
+        <span class="members">{{ g.members }} integrantes</span>
+      </li>
+    </ul>
+  </div>
+</section>
