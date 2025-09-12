@@ -7,20 +7,23 @@
       <button class="btn btn-primary" (click)="onCreateGroup()">Crear grupo</button>
     </header>
 
-    <!-- Formulario -->
-    <app-group-form
-      *ngIf="showForm"
-      [contacts]="contacts"
-      [group]="selectedGroup"
-      class="card card--padded mt-20"
-      (close)="onCloseForm()">
-    </app-group-form>
+    <!-- Contenedor en fila -->
+    <div class="groups-row">
+      <!-- Formulario -->
+      <app-group-form
+        *ngIf="showForm"
+        [contacts]="contacts"
+        [group]="selectedGroup"
+        class="card card--padded"
+        (close)="onCloseForm()">
+      </app-group-form>
 
-    <!-- Listado -->
-    <app-group-list
-      class="card card--padded"
-      [groups]="groups"
-      (editGroup)="onEditGroup($event)">
-    </app-group-list>
+      <!-- Listado -->
+      <app-group-list
+        class="card card--padded"
+        [groups]="groups"
+        (editGroup)="onEditGroup($event)">
+      </app-group-list>
+    </div>
   </div>
 </section>

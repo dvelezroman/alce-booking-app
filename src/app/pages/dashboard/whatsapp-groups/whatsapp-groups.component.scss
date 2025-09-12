@@ -71,10 +71,25 @@
   }
 }
 
-.divider {
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.mt-20 {
+.groups-row {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
   margin-top: 1.25rem;
+
+  app-group-form,
+  app-group-list {
+    flex: 1 1 0; 
+    min-width: 0;
+  }
+
+  @media (max-width: 1060px) {
+    flex-direction: column;
+    align-items: center;
+
+    app-group-form,
+    app-group-list {
+      width: 100%;
+    }
+  }
 }

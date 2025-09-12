@@ -44,7 +44,7 @@ export class NotificationsSentComponent implements OnInit {
   ngOnInit(): void {
     const today = new Date();
     const daysAgo = new Date(today);
-    daysAgo.setDate(today.getDate() - 1);
+    daysAgo.setDate(today.getDate() - 30);
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
 
