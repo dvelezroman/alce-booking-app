@@ -28,15 +28,7 @@ export class WhatsappConfigComponent {
   constructor(private whatsappService: WhatsAppGroupService) {}
 
   ngOnInit(): void {
-   //this.loadStatus();
-   this.status = {
-      isClientInitialized: true,
-      isClientAuthenticated: true,
-      isClientReady: false,
-      webHelpersInjected: true,
-      hasQRCode: true,
-      status: 'waiting_qr',
-    };
+   this.loadStatus();
   }
 
   loadStatus(): void {
@@ -49,7 +41,7 @@ export class WhatsappConfigComponent {
         this.loadingStatus = false;
       },
       error: (err) => {
-        this.errorStatus = 'Error al obtener estado: ' + (err.message || err.statusText);
+        this.errorStatus = 'No se pudo obtener el estado de WhatsApp.';
         this.loadingStatus = false;
       }
     });
@@ -63,7 +55,7 @@ export class WhatsappConfigComponent {
         //console.log('Grupos sincronizados:', this.groups);
       },
       error: (err) => {
-        this.errorGroups = 'Error al cargar grupos: ' + (err.message || err.statusText);
+        this.errorGroups = 'Error al cargar grupos';
         this.loadingGroups = false;
       },
       complete: () => {
@@ -80,7 +72,7 @@ export class WhatsappConfigComponent {
         //console.log('Difusiones sincronizadas:', this.diffusionGroups);
       },
       error: (err) => {
-        this.errorDiffusions = 'Error al cargar difusiones: ' + (err.message || err.statusText);
+        this.errorDiffusions = 'Error al cargar difusiones';
         this.loadingDiffusions = false;
       },
       complete: () => {
