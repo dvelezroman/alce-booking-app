@@ -1,0 +1,33 @@
+<div *ngIf="showPermissionBanner" class="notification-permission-banner">
+  <div class="notification-permission-content">
+    <div class="notification-permission-icon">
+      <i class="material-icons">notifications</i>
+    </div>
+
+    <div class="notification-permission-text">
+      <h4>Recibe notificaciones</h4>
+      <p>Mantente al día con tus clases y notificaciones importantes</p>
+    </div>
+
+    <div class="notification-permission-actions">
+      <button 
+        class="btn-activate" 
+        (click)="enableNotifications()"
+        [disabled]="isLoading">
+        <span *ngIf="!isLoading">Activar</span>
+        <span *ngIf="isLoading" class="loading-spinner"></span>
+      </button>
+      <button class="btn-dismiss" (click)="dismissBanner()">
+        Ahora no
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showSuccessMessage" class="notification-success-message">
+  <div class="notification-success-content">
+    <i class="material-icons">check_circle</i>
+    <span>¡Notificaciones activadas! Recibirás alertas sobre nuevas notificaciones.</span>
+    <button class="btn-close" (click)="dismissSuccess()">×</button>
+  </div>
+</div>

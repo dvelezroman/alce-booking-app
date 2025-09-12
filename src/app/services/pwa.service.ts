@@ -19,7 +19,7 @@ export class PwaService {
       swUpdate.versionUpdates
         .pipe(
           filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'),
-          map(evt => ({
+          map((evt: VersionReadyEvent) => ({
             type: 'UPDATE_AVAILABLE',
             current: evt.currentVersion,
             available: evt.latestVersion,

@@ -1,7 +1,7 @@
 .section.whatsapp-groups {
   background-color: #f2f2f2;
   min-height: 100vh;
-  padding-top: 80px;
+  padding-top: 90px; // un poco más para que no se solape con el título fijo
 }
 
 .content {
@@ -11,22 +11,42 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  @media (max-width: 800px){
+
+  @media (max-width: 800px) {
     width: 100%;
   }
 }
 
+/* Título principal de la página */
+.reports-progress-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f2f2f2;
+  color: #353535;
+  z-index: 10;
+  text-align: center;
+}
+
+.reports-progress-title {
+  font-size: 1.5rem;
+  line-height: 75px;
+  color: #333;
+  font-weight: bold;
+
+  @media (max-width: 640px) {
+    font-size: 1.3rem;
+    line-height: 3.75rem;
+  }
+}
+
+/* Header interno solo para subtítulo y botón */
 .header {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   align-items: flex-start;
-
-  .title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #111827;
-  }
 
   .subtitle {
     color: #4b5563;
@@ -37,7 +57,8 @@
     margin-top: 0.5rem;
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
-    font-weight: 600;
+    font-weight: 500;
+    font-size: 0.85rem;
     background: #3b82f6;
     color: #fff;
     border: none;
