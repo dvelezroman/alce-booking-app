@@ -3,12 +3,59 @@
     <!-- Título fijo -->
     <h1 class="page-title">Configuración de WhatsApp</h1>
 
+    <!-- Estado del cliente -->
+    <div class="status-block">
+
+      <div *ngIf="errorStatus" class="status-error">
+        {{ errorStatus }}
+      </div>
+
+      <div *ngIf="status && !errorStatus" class="status-info">
+        <div class="status-header">
+          <h2 class="status-title">Estado de WhatsApp</h2>
+          <span 
+            class="status-indicator" 
+            [ngClass]="{ 'ready': status.isClientReady, 'not-ready': !status.isClientReady }">
+          </span>
+        </div>
+        <ul class="status-list">
+          <li>
+            Inicializado:
+            <span *ngIf="status.isClientInitialized" class="ok">✔</span>
+            <span *ngIf="!status.isClientInitialized" class="fail">✘</span>
+          </li>
+
+          <li>
+            Autenticado:
+            <span *ngIf="status.isClientAuthenticated" class="ok">✔</span>
+            <span *ngIf="!status.isClientAuthenticated" class="fail">✘</span>
+          </li>
+
+          <li>
+            Cliente listo:
+            <span *ngIf="status.isClientReady" class="ok">✔</span>
+            <span *ngIf="!status.isClientReady" class="fail">✘</span>
+          </li>
+
+          <li>
+            QR disponible:
+            <span *ngIf="status.hasQRCode" class="ok"><i class="fas fa-qrcode"></i></span>
+            <span *ngIf="!status.hasQRCode" class="fail">—</span>
+          </li>
+        </ul>
+      </div>
+
+      <div *ngIf="loadingStatus && !errorStatus" class="status-loading">
+        <p>Cargando estado...</p>
+      </div>
+    </div>
+
     <!-- Bloque de sincronización -->
-    <div class="sync-block">
+    <div class="sync-block card">
       <h2 class="sync-title">Sincronizar</h2>
       <div class="actions">
         <button 
-          class="btn btn-primary" 
+          class="btn btn-outline" 
           (click)="syncGroups()" 
           [disabled]="loadingGroups">
           <span *ngIf="!loadingGroups">Grupos</span>
@@ -16,7 +63,7 @@
         </button>
 
         <button 
-          class="btn btn-secondary" 
+          class="btn btn-outline" 
           (click)="syncDiffusions()" 
           [disabled]="loadingDiffusions">
           <span *ngIf="!loadingDiffusions">Difusiones</span>
@@ -29,37 +76,39 @@
     <div class="results">
 
       <!-- Grupos -->
-      <div class="card">
-        <h3>Grupos sincronizados</h3>
+      <ng-container *ngIf="groups.length > 0 && !errorGroups; else showGroupError">
+        <div class="card">
+          <h3>Grupos sincronizados</h3>
+          <ul>
+            <li *ngFor="let g of groups">
+              <strong>{{ g.name }}</strong> — {{ g.participantsCount }} miembros
+            </li>
+          </ul>
+        </div>
+      </ng-container>
+      <ng-template #showGroupError>
         <div *ngIf="errorGroups" class="error-msg">
           {{ errorGroups }}
         </div>
-        <ul *ngIf="groups.length > 0 && !errorGroups; else noGroups">
-          <li *ngFor="let g of groups">
-            <strong>{{ g.name }}</strong> — {{ g.participantsCount }} miembros
-          </li>
-        </ul>
-        <ng-template #noGroups>
-          <p *ngIf="!errorGroups">No hay grupos sincronizados.</p>
-        </ng-template>
-      </div>
+      </ng-template>
 
       <!-- Difusiones -->
-      <div class="card">
-        <h3>Difusiones sincronizadas</h3>
+      <ng-container *ngIf="diffusionGroups.length > 0 && !errorDiffusions; else showDiffusionError">
+        <div class="card">
+          <h3>Difusiones sincronizadas</h3>
+          <ul>
+            <li *ngFor="let d of diffusionGroups">
+              <strong>{{ d.name }}</strong> — {{ d.participantsCount }} contactos
+            </li>
+          </ul>
+        </div>
+      </ng-container>
+      <ng-template #showDiffusionError>
         <div *ngIf="errorDiffusions" class="error-msg">
           {{ errorDiffusions }}
         </div>
-        <ul *ngIf="diffusionGroups.length > 0 && !errorDiffusions; else noDiffusions">
-          <li *ngFor="let d of diffusionGroups">
-            <strong>{{ d.name }}</strong> — {{ d.participantsCount }} contactos
-          </li>
-        </ul>
-        <ng-template #noDiffusions>
-          <p *ngIf="!errorDiffusions">No hay difusiones sincronizadas.</p>
-        </ng-template>
-      </div>
-      
+      </ng-template>
+
     </div>
   </div>
 </section>

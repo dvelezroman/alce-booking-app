@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Group } from '../../../services/dtos/whatsapp-group.dto';
+import { Group, WhatsAppStatus } from '../../../services/dtos/whatsapp-group.dto';
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
 import { WhatsAppGroupService } from '../../../services/whatsapp-group.service';
 
@@ -19,9 +19,41 @@ export class WhatsappConfigComponent {
   diffusionGroups: DiffusionGroup[] = [];
 
   errorGroups: string | null = null;
-  errorDiffusions: string | null = null;  
+  errorDiffusions: string | null = null; 
+
+  status: WhatsAppStatus | null = null;
+  loadingStatus = false;
+  errorStatus: string | null = null;
 
   constructor(private whatsappService: WhatsAppGroupService) {}
+
+  ngOnInit(): void {
+   //this.loadStatus();
+   this.status = {
+      isClientInitialized: true,
+      isClientAuthenticated: true,
+      isClientReady: false,
+      webHelpersInjected: true,
+      hasQRCode: true,
+      status: 'waiting_qr',
+    };
+  }
+
+  loadStatus(): void {
+    this.loadingStatus = true;
+    this.errorStatus = null;
+
+    this.whatsappService.getStatus().subscribe({
+      next: (res) => {
+        this.status = res;
+        this.loadingStatus = false;
+      },
+      error: (err) => {
+        this.errorStatus = 'Error al obtener estado: ' + (err.message || err.statusText);
+        this.loadingStatus = false;
+      }
+    });
+  }
 
   syncGroups(): void {
     this.loadingGroups = true;

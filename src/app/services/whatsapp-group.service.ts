@@ -50,6 +50,4 @@ export class WhatsAppGroupService {
     return this.http.get<WhatsAppStatus>(`${this.apiUrl}/status`);
   }
 
-  
-
 }
