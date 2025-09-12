@@ -115,6 +115,7 @@ export class NotificationsStatusComponent implements OnInit {
     };
     
 
+
     // (opcional) si tu backend respeta fechas:
     if (this.fromDate) filters.fromDate = this.fromDate;
     if (this.toDate)   filters.toDate   = this.toDate;

@@ -1,4 +1,4 @@
-import { Component, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, LOCALE_ID, OnInit, Optional, Inject } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { UsersService } from './services/users.service';
@@ -7,6 +7,12 @@ import { setLoggedInStatus, setAdminStatus, unsetUserData } from './store/user.a
 import { ModalDto, modalInitializer } from './components/modal/modal.dto';
 import { ModalComponent } from './components/modal/modal.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { PwaInstallComponent } from './components/pwa-install/pwa-install.component';
+import { OfflineIndicatorComponent } from './components/offline-indicator/offline-indicator.component';
+import { NotificationPermissionComponent } from './components/notification-permission/notification-permission.component';
+import { PwaInstallBannerComponent } from './components/pwa-install-banner/pwa-install-banner.component';
+import { PwaService } from './services/pwa.service';
+import { SwUpdate } from '@angular/service-worker';
 import   localeEs from '@angular/common/locales/es';
 
 registerLocaleData(localeEs);
@@ -18,7 +24,11 @@ registerLocaleData(localeEs);
     CommonModule,
     RouterOutlet,
     ModalComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    PwaInstallComponent,
+    OfflineIndicatorComponent,
+    NotificationPermissionComponent,
+    PwaInstallBannerComponent
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' }
@@ -32,12 +42,18 @@ export class AppComponent implements OnInit {
 
   constructor(
     private usersService: UsersService,
-    private store: Store
+    private store: Store,
+    private pwaService: PwaService,
+    @Optional() @Inject(SwUpdate) private swUpdate: SwUpdate
   ) {}
 
   ngOnInit() {
     this.setupConnectionListeners();
-    this.checkAccessTokenAndRefreshSession();
+    this.checkAccessTokenAndRefreshSession();     
+    // Initialize PWA service with service worker
+    if (this.swUpdate) {
+      this.pwaService.setSwUpdate(this.swUpdate);
+    }
   }
 
   private setupConnectionListeners(): void {
