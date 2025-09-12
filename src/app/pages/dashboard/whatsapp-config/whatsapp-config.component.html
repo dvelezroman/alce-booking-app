@@ -1,0 +1,59 @@
+<section class="section whatsapp-config">
+  <div class="content">
+    <!-- Título fijo -->
+    <h1 class="page-title">Configuración de WhatsApp</h1>
+
+    <!-- Bloque de sincronización -->
+    <div class="sync-block">
+      <h2 class="sync-title">Sincronizar</h2>
+      <div class="actions">
+        <button 
+          class="btn btn-primary" 
+          (click)="syncGroups()" 
+          [disabled]="loadingGroups">
+          <span *ngIf="!loadingGroups">Grupos</span>
+          <span *ngIf="loadingGroups">Cargando...</span>
+        </button>
+
+        <button 
+          class="btn btn-secondary" 
+          (click)="syncDiffusions()" 
+          [disabled]="loadingDiffusions">
+          <span *ngIf="!loadingDiffusions">Difusiones</span>
+          <span *ngIf="loadingDiffusions">Cargando...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Resultados -->
+    <div class="results">
+
+      <!-- Grupos -->
+      <div class="card">
+        <h3>Grupos sincronizados</h3>
+        <ul *ngIf="groups.length > 0; else noGroups">
+          <li *ngFor="let g of groups">
+            <strong>{{ g.name }}</strong> — {{ g.participantsCount }} miembros
+          </li>
+        </ul>
+        <ng-template #noGroups>
+          <p>No hay grupos sincronizados.</p>
+        </ng-template>
+      </div>
+
+      <!-- Difusiones -->
+      <div class="card">
+        <h3>Difusiones sincronizadas</h3>
+        <ul *ngIf="diffusionGroups.length > 0; else noDiffusions">
+          <li *ngFor="let d of diffusionGroups">
+            <strong>{{ d.name }}</strong> — {{ d.participantsCount }} contactos
+          </li>
+        </ul>
+        <ng-template #noDiffusions>
+          <p>No hay difusiones sincronizadas.</p>
+        </ng-template>
+      </div>
+      
+    </div>
+  </div>
+</section>

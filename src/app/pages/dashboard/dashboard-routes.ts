@@ -33,6 +33,7 @@ import { NotificationDetailComponent } from './notifications/notification-detail
 import { NotificationsSentComponent } from './notifications/notifications-sent/notifications-sent.component';
 import { BroadcastComponent } from './whatsapp/broadcast.component';
 import { WhatsAppGroupsComponent } from './whatsapp-groups/whatsapp-groups.component';
+import { WhatsappConfigComponent } from './whatsapp-config/whatsapp-config.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -69,4 +70,5 @@ export const dashboardRoutes: Routes = [
   { path: 'notifications-sent', component: NotificationsSentComponent },
   { path: 'whatsapp', component: BroadcastComponent },
   { path: 'whatsapp-groups', component: WhatsAppGroupsComponent },
+  { path: 'whatsapp-config', component: WhatsappConfigComponent },
 ];

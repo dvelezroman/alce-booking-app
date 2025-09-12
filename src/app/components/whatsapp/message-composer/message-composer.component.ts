@@ -22,5 +22,5 @@ export class MessageComposerComponent {
     return this.message.length;
   }
 
-  readonly maxChars = 4096;
+  readonly maxChars = 100;
 }

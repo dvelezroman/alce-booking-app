@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { GetWhatsAppGroupsResponse,  GroupContactsRequestDto,  GroupContactsResponseDto } from './dtos/whatsapp-group.dto';
-import {  DiffusionContactsRequestDto,  DiffusionContactsResponseDto,  GetDiffusionGroupsResponse } from './dtos/whatsapp-diffusion-group.dto';
+import { GetGroupsResponse, GetWhatsAppContactsResponse, WhatsAppStatus } from './dtos/whatsapp-group.dto';
+import { GetDiffusionGroupsResponse } from './dtos/whatsapp-diffusion-group.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -13,19 +13,30 @@ export class WhatsAppGroupService {
 
   constructor(private http: HttpClient) {}
 
-  getGroups(): Observable<GetWhatsAppGroupsResponse> {
-    return this.http.get<GetWhatsAppGroupsResponse>(`${this.apiUrl}/groups`);
+  getGroups(): Observable<GetGroupsResponse> {
+    return this.http.get<GetGroupsResponse>(`${this.apiUrl}/groups`);
   }
 
   getDiffusionGroups(): Observable<GetDiffusionGroupsResponse> {
-    return this.http.get<GetDiffusionGroupsResponse>(`${this.apiUrl}/diffusion-groups`);
+    return this.http.get<GetDiffusionGroupsResponse>(`${this.apiUrl}/broadcasts`);
   }
 
-  getGroupContacts( payload: GroupContactsRequestDto ): Observable<GroupContactsResponseDto> {
-    return this.http.post<GroupContactsResponseDto>(`${this.apiUrl}/group-contacts`,payload);
+  getContacts(): Observable<GetWhatsAppContactsResponse> {
+    return this.http.get<GetWhatsAppContactsResponse>(`${this.apiUrl}/contacts`);
   }
 
-  getDiffusionContacts( payload: DiffusionContactsRequestDto ): Observable<DiffusionContactsResponseDto> {
-    return this.http.post<DiffusionContactsResponseDto>(`${this.apiUrl}/diffusion-contacts`,payload);
+  getGroupsFromDatabase(): Observable<GetGroupsResponse> {
+    return this.http.get<GetGroupsResponse>(`${this.apiUrl}/groups/database`);
   }
+
+  getDiffusionGroupsFromDatabase(): Observable<GetDiffusionGroupsResponse> {
+    return this.http.get<GetDiffusionGroupsResponse>(`${this.apiUrl}/broadcasts/database`);
+  }
+
+  getStatus(): Observable<WhatsAppStatus> {
+    return this.http.get<WhatsAppStatus>(`${this.apiUrl}/status`);
+  }
+
+  
+
 }

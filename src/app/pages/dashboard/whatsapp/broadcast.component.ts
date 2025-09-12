@@ -7,7 +7,7 @@ import { MessageComposerComponent } from '../../../components/whatsapp/message-c
 import { ScheduleBarComponent } from '../../../components/whatsapp/schedule-bar/schedule-bar.component';
 
 import { WhatsAppGroupService } from '../../../services/whatsapp-group.service';
-import { WhatsAppGroup } from '../../../services/dtos/whatsapp-group.dto';
+import { Group as WhatsAppGroup } from '../../../services/dtos/whatsapp-group.dto';
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
 import { forkJoin } from 'rxjs';
 

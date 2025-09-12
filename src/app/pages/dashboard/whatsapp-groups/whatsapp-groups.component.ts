@@ -35,9 +35,9 @@ export class WhatsAppGroupsComponent implements OnInit {
   /** Simulación fetch grupos */
   fetchGroups() {
     this.groups = [
-      { id: '1', name: 'Inspectores', description: 'Grupo 1', members: ['1', '2'] },
-      { id: '2', name: 'Estudiantes', description: 'Grupo 2', members: ['2', '3'] },
-      { id: '3', name: 'Stages', description: 'Grupo 3', members: ['1', '3'] },
+      // { id: '1', name: 'Inspectores', description: 'Grupo 1', members: ['1', '2'] },
+      // { id: '2', name: 'Estudiantes', description: 'Grupo 2', members: ['2', '3'] },
+      // { id: '3', name: 'Stages', description: 'Grupo 3', members: ['1', '3'] },
     ];
   }
 

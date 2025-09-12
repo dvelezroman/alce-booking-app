@@ -1,65 +1,53 @@
-/** Participantes de un grupo de WhatsApp */
-export interface WhatsAppParticipant {
+export interface GroupParticipant {
   id: string;
   name: string;
   isAdmin: boolean;
   isSuperAdmin: boolean;
 }
 
-/** Modelo principal de un grupo de WhatsApp */
-export interface WhatsAppGroup {
+export interface Group {
   id: string;
   name: string;
   description: string;
   participantsCount: number;
   isGroup: boolean;
-  createdAt: string; // ISO string
-  participants: WhatsAppParticipant[];
+  createdAt: string;
+  participants: GroupParticipant[];
 }
 
-/** Respuesta al obtener todos los grupos */
-export interface GetWhatsAppGroupsResponse {
+export interface GetGroupsResponse {
   status: string;
   totalGroups: number;
-  groups: WhatsAppGroup[];
+  groups: Group[];
 }
 
-/* ==================== NUEVO: CONTACTOS DE UN GRUPO ==================== */
-
-/** Payload que se envía al endpoint POST /whatsapp/group-contacts */
-export interface GroupContactsRequestDto {
-  groupName: string;   // nombre o ID del grupo
-  searchById: boolean; // true = usar groupName como ID
+export interface WhatsAppStatus {
+  isClientInitialized: boolean;
+  isClientAuthenticated: boolean;
+  isClientReady: boolean;
+  webHelpersInjected: boolean;
+  hasQRCode: boolean;
+  status: string;
 }
 
-/** Contacto individual de WhatsApp */
-export interface GroupContactDto {
+
+export interface WhatsAppContact {
   id: string;
   name: string;
-  phone: string;
   pushname: string;
+  phone: string;
   isBusiness: boolean;
   isVerified: boolean;
-  profilePicUrl: string;
-  status: string; // estado o descripción del contacto
+  profilePicUrl?: string;
+  status?: string;
+  isOnline?: boolean;
+  lastSeen?: string;
 }
 
-/** Referencia básica del grupo en la respuesta */
-export interface GroupRefDto {
-  id?: string;
-  name?: string;
-  description?: string;
-  participantsCount?: number;
-  isGroup?: boolean;
-  isBroadcast?: boolean;
-  createdAt?: string;
-}
-
-/** Respuesta al obtener contactos de un grupo */
-export interface GroupContactsResponseDto {
+export interface GetWhatsAppContactsResponse {
   status: string;
-  group: GroupRefDto;
-  contacts: GroupContactDto[];
+  totalContacts: number;
+  contacts: WhatsAppContact[];
 }
 
 

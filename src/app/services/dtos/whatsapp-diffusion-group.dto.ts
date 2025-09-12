@@ -1,8 +1,8 @@
 export interface DiffusionParticipant {
-  id?: string;
-  name?: string;
-  isAdmin?: boolean;
-  isSuperAdmin?: boolean;
+  id: string;
+  name: string;
+  isAdmin: boolean;
+  isSuperAdmin: boolean;
 }
 
 export interface DiffusionGroup {
@@ -11,15 +11,15 @@ export interface DiffusionGroup {
   description: string;
   participantsCount: number;
   isGroup: boolean;
-  isBroadcast: boolean;
   createdAt: string;
   participants: DiffusionParticipant[];
+  isBroadcast?: boolean;
 }
 
 export interface GetDiffusionGroupsResponse {
   status: string;
-  totalDiffusionGroups: number;
-  diffusionGroups: DiffusionGroup[];
+  totalGroups: number;
+  groups: DiffusionGroup[];
 }
 
 /** Payload que se envía al endpoint POST /whatsapp/diffusion-contacts */

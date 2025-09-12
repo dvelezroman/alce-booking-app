@@ -7,9 +7,9 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WhatsAppGroup } from '../../../services/dtos/whatsapp-group.dto';
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
 import { SelectionType } from '../broadcast-filters/broadcast-filters.component';
+import { Group } from '../../../services/dtos/whatsapp-group.dto';
 
 interface UiItem {
   id: string;
@@ -29,7 +29,7 @@ export class GroupSelectorComponent implements OnChanges {
   @Input() type: SelectionType = null; // ahora usamos el mismo tipo del filtro padre
   @Input() query: string | null = null;
   @Input() selectedGroupId: string | number | null = null;
-  @Input() groups: WhatsAppGroup[] = [];
+  @Input() groups: Group[] = [];
   @Input() diffusionGroups: DiffusionGroup[] = [];
   @Input() contacts: { id: string; name: string; phone?: string }[] = [];
   @Input() loading = false;
