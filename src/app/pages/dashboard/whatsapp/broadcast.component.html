@@ -39,9 +39,18 @@
     <!-- Footer simplificado -->
     <div class="footer-bar">
       <div class="footer-actions">
-        <button class="btn btn-primary" (click)="onSend()" [disabled]="loading || !selectedGroupIds.length">Enviar</button>
+        <button class="btn btn-primary" (click)="onSend()" [disabled]="loading">Enviar</button>
       </div>
     </div>
 
   </div>
 </section>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  (close)="modal.close()">
+</app-modal>

@@ -11,6 +11,8 @@ import { WhatsAppGroupService } from '../../../services/whatsapp-group.service';
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
 import { forkJoin } from 'rxjs';
 import { Group } from '../../../services/dtos/whatsapp-group.dto';
+import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
+import { ModalComponent } from '../../../components/modal/modal.component';
 
 export interface BroadcastFilterState {
   query: string | null;
@@ -27,6 +29,7 @@ export interface BroadcastFilterState {
     GroupSelectorComponent,
     MessageComposerComponent,
     ScheduleBarComponent,
+    ModalComponent,
   ],
   templateUrl: './broadcast.component.html',
   styleUrls: ['./broadcast.component.scss'],
@@ -47,6 +50,8 @@ export class BroadcastComponent implements OnInit {
   };
 
   selectedGroupIds: string[] = [];
+  modal: ModalDto = modalInitializer();
+  private modalTimer: number | undefined;
 
   constructor(private whatsappSvc: WhatsAppGroupService) {}
 
@@ -108,7 +113,6 @@ export class BroadcastComponent implements OnInit {
 
   onSelectionChange(ids: string[]) {
     this.selectedGroupIds = ids;
-    //console.log('[Broadcast padre] grupos/ids seleccionados:', ids);
   }
 
   onMessageChange(msg: string) {
@@ -116,10 +120,135 @@ export class BroadcastComponent implements OnInit {
   }
 
   onSend() {
-    console.log('Payload listo para enviar:', {
-      type: this.filters.type,
-      recipients: this.selectedGroupIds,
-      message: this.message,
+    if (!this.filters.type || !this.message.trim()) {
+      this.showErrorModal('Debes seleccionar un destino y escribir un mensaje.');
+      return;
+    }
+
+    switch (this.filters.type) {
+      case 'contact':
+        this.sendToContacts();
+        break;
+      case 'group':
+        this.sendToGroups();
+        break;
+      case 'diffusion':
+        this.sendToDiffusions();
+        break;
+    }
+  }
+
+  /** ===== Enviar a contactos ===== */
+  private sendToContacts() {
+    if (!this.selectedGroupIds.length) {
+      this.showErrorModal('Debes seleccionar al menos un contacto.');
+      return;
+    }
+
+    this.selectedGroupIds.forEach((id) => {
+      const contact = this.contacts.find((c) => c.id === id);
+      if (contact?.phone) {
+        this.whatsappSvc.sendMessageToContact({
+          phone: contact.phone,
+          message: this.message,
+        }).subscribe({
+          next: (res) => {
+            //console.log('Mensaje enviado a contacto:', res);
+            this.showSuccessModal(`Mensaje enviado a ${contact.name || contact.phone}`);
+          },
+          error: (err) => {
+            console.error(err);
+            this.showErrorModal(`Error al enviar mensaje a ${contact?.name || 'contacto'}`);
+          }
+        });
+      }
     });
+  }
+
+  /** ===== Enviar a grupos ===== */
+  private sendToGroups() {
+    if (!this.selectedGroupIds.length) {
+      this.showErrorModal('Debes seleccionar al menos un grupo.');
+      return;
+    }
+
+    this.selectedGroupIds.forEach((id) => {
+      const group = this.groups.find((g) => g.id === id);
+      if (group) {
+        this.whatsappSvc.sendMessageToGroup({
+          groupName: group.name,
+          message: this.message,
+          searchById: false,
+        }).subscribe({
+          next: (res) => {
+            //console.log('Mensaje enviado a grupo:', res);
+            this.showSuccessModal(`Mensaje enviado al grupo ${group.name}`);
+          },
+          error: (err) => {
+            console.error(err);
+            this.showErrorModal(`Error al enviar mensaje al grupo ${group?.name}`);
+          }
+        });
+      }
+    });
+  }
+
+  /** ===== Enviar a difusiones ===== */
+  private sendToDiffusions() {
+    if (!this.selectedGroupIds.length) {
+      this.showErrorModal('Debes seleccionar al menos una lista de difusión.');
+      return;
+    }
+
+    this.selectedGroupIds.forEach((id) => {
+      const diffusion = this.diffusionGroups.find((d) => d.id === id);
+      if (diffusion) {
+        this.whatsappSvc.sendMessageToDiffusion({
+          groupName: diffusion.name,
+          message: this.message,
+          searchById: false,
+        }).subscribe({
+          next: (res) => {
+            //console.log('Mensaje enviado a difusión:', res);
+            this.showSuccessModal(`Mensaje enviado a la difusión ${diffusion.name}`);
+          },
+          error: (err) => {
+            console.error(err);
+            this.showErrorModal(`Error al enviar mensaje a la difusión ${diffusion?.name}`);
+          }
+        });
+      }
+    });
+  }
+
+  private showSuccessModal(msg: string) {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: msg,
+      isSuccess: true,
+      close: () => (this.modal.show = false),
+    };
+    this.autoHideModal();
+  }
+
+  private showErrorModal(msg: string) {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: msg,
+      isError: true,
+      close: () => (this.modal.show = false),
+    };
+    this.autoHideModal();
+  }
+
+  private autoHideModal(ms = 2000) {
+    if (this.modalTimer) {
+      clearTimeout(this.modalTimer);
+    }
+    this.modalTimer = window.setTimeout(() => {
+      this.modal.show = false;
+    }, ms);
   }
 }
