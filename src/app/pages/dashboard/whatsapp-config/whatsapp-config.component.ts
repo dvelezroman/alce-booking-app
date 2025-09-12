@@ -18,6 +18,9 @@ export class WhatsappConfigComponent {
   groups: Group[] = [];
   diffusionGroups: DiffusionGroup[] = [];
 
+  errorGroups: string | null = null;
+  errorDiffusions: string | null = null;  
+
   constructor(private whatsappService: WhatsAppGroupService) {}
 
   syncGroups(): void {
@@ -25,10 +28,10 @@ export class WhatsappConfigComponent {
     this.whatsappService.getGroups().subscribe({
       next: (res) => {
         this.groups = res.groups;
-        console.log('Grupos sincronizados:', this.groups);
+        //console.log('Grupos sincronizados:', this.groups);
       },
       error: (err) => {
-        console.error('Error al sincronizar grupos:', err);
+        this.errorGroups = 'Error al cargar grupos: ' + (err.message || err.statusText);
         this.loadingGroups = false;
       },
       complete: () => {
@@ -42,10 +45,10 @@ export class WhatsappConfigComponent {
     this.whatsappService.getDiffusionGroups().subscribe({
       next: (res) => {
         this.diffusionGroups = res.groups;
-        console.log('Difusiones sincronizadas:', this.diffusionGroups);
+        //console.log('Difusiones sincronizadas:', this.diffusionGroups);
       },
       error: (err) => {
-        console.error('Error al sincronizar difusiones:', err);
+        this.errorDiffusions = 'Error al cargar difusiones: ' + (err.message || err.statusText);
         this.loadingDiffusions = false;
       },
       complete: () => {

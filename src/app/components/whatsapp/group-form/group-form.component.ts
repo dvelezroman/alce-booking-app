@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Contact, Group } from '../../../services/dtos/whatsapp-group.dto';
+import { Group, WhatsAppContact } from '../../../services/dtos/whatsapp-group.dto';
 
 @Component({
   selector: 'app-group-form',
@@ -11,14 +11,14 @@ import { Contact, Group } from '../../../services/dtos/whatsapp-group.dto';
   styleUrls: ['./group-form.component.scss'],
 })
 export class GroupFormComponent implements OnInit, OnChanges {
-  @Input() contacts: Contact[] = [];
+  @Input() contacts: WhatsAppContact[] = [];
   @Input() group: Group | null = null;
   @Output() close = new EventEmitter<void>();
 
   groupName = '';
   description = '';
   selectedContactId: string | null = null;
-  selectedContacts: Contact[] = [];
+  selectedContacts: WhatsAppContact[] = [];
 
   ngOnInit(): void {
     if (this.group) {
@@ -35,9 +35,10 @@ export class GroupFormComponent implements OnInit, OnChanges {
   private loadGroupData(group: Group) {
     this.groupName = group.name;
     this.description = group.description;
-    this.selectedContacts = this.contacts.filter(c =>
-      group.members.includes(c.id)
-    );
+
+    const participantIds = group.participants.map(p => p.id);
+
+    this.selectedContacts = this.contacts.filter(c => participantIds.includes(c.id));
   }
 
   onSelectChange() {

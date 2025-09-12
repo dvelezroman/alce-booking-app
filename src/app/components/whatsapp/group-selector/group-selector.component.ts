@@ -1,11 +1,4 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
 import { SelectionType } from '../broadcast-filters/broadcast-filters.component';
@@ -26,7 +19,7 @@ interface UiItem {
 })
 export class GroupSelectorComponent implements OnChanges {
   /** ======= Inputs desde el padre ======= */
-  @Input() type: SelectionType = null; // ahora usamos el mismo tipo del filtro padre
+  @Input() type: SelectionType = null;
   @Input() query: string | null = null;
   @Input() selectedGroupId: string | number | null = null;
   @Input() groups: Group[] = [];

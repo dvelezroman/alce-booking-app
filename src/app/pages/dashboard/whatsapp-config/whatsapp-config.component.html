@@ -31,26 +31,32 @@
       <!-- Grupos -->
       <div class="card">
         <h3>Grupos sincronizados</h3>
-        <ul *ngIf="groups.length > 0; else noGroups">
+        <div *ngIf="errorGroups" class="error-msg">
+          {{ errorGroups }}
+        </div>
+        <ul *ngIf="groups.length > 0 && !errorGroups; else noGroups">
           <li *ngFor="let g of groups">
             <strong>{{ g.name }}</strong> — {{ g.participantsCount }} miembros
           </li>
         </ul>
         <ng-template #noGroups>
-          <p>No hay grupos sincronizados.</p>
+          <p *ngIf="!errorGroups">No hay grupos sincronizados.</p>
         </ng-template>
       </div>
 
       <!-- Difusiones -->
       <div class="card">
         <h3>Difusiones sincronizadas</h3>
-        <ul *ngIf="diffusionGroups.length > 0; else noDiffusions">
+        <div *ngIf="errorDiffusions" class="error-msg">
+          {{ errorDiffusions }}
+        </div>
+        <ul *ngIf="diffusionGroups.length > 0 && !errorDiffusions; else noDiffusions">
           <li *ngFor="let d of diffusionGroups">
             <strong>{{ d.name }}</strong> — {{ d.participantsCount }} contactos
           </li>
         </ul>
         <ng-template #noDiffusions>
-          <p>No hay difusiones sincronizadas.</p>
+          <p *ngIf="!errorDiffusions">No hay difusiones sincronizadas.</p>
         </ng-template>
       </div>
       

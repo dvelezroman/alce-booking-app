@@ -7,9 +7,10 @@ import { MessageComposerComponent } from '../../../components/whatsapp/message-c
 import { ScheduleBarComponent } from '../../../components/whatsapp/schedule-bar/schedule-bar.component';
 
 import { WhatsAppGroupService } from '../../../services/whatsapp-group.service';
-import { Group as WhatsAppGroup } from '../../../services/dtos/whatsapp-group.dto';
+
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
 import { forkJoin } from 'rxjs';
+import { Group } from '../../../services/dtos/whatsapp-group.dto';
 
 export interface BroadcastFilterState {
   query: string | null;
@@ -34,7 +35,7 @@ export class BroadcastComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  groups: WhatsAppGroup[] = [];
+  groups: Group[] = [];
   diffusionGroups: DiffusionGroup[] = [];
   contacts: { id: string; name: string; phone?: string }[] = [];
   message: string = '';
@@ -54,21 +55,56 @@ export class BroadcastComponent implements OnInit {
   }
 
   onTypeChange(type: SelectionType) {
-  this.filters = { ...this.filters, type };
-  console.log('[Broadcast padre] tipo seleccionado:', type);
+    this.filters = { ...this.filters, type };
+    console.log('[Broadcast padre] tipo seleccionado:', type);
 
-  switch (type) {
-    case 'group':
-      // Aquí irá this.whatsappSvc.getGroups()...
-      break;
-    case 'diffusion':
-      // Aquí irá this.whatsappSvc.getDiffusionGroups()...
-      break;
-    case 'contact':
-      // Aquí irá this.whatsappSvc.getContacts()...
-      break;
+    this.loading = true;
+    this.error = null;
+
+    switch (type) {
+      case 'group':
+        this.whatsappSvc.getGroups().subscribe({
+          next: (res) => {
+            this.groups = res.groups || [];
+            this.loading = false;
+          },
+          error: (err) => {
+            console.error('Error al obtener grupos:', err);
+            this.error = 'No se pudieron cargar los grupos';
+            this.loading = false;
+          }
+        });
+        break;
+
+      case 'diffusion':
+        this.whatsappSvc.getDiffusionGroups().subscribe({
+          next: (res) => {
+            this.diffusionGroups = res.groups || [];
+            this.loading = false;
+          },
+          error: (err) => {
+            console.error('Error al obtener difusiones:', err);
+            this.error = 'No se pudieron cargar los grupos de difusiones';
+            this.loading = false;
+          }
+        });
+        break;
+
+      case 'contact':
+        this.whatsappSvc.getContacts().subscribe({
+          next: (res) => {
+            this.contacts = res.contacts || [];
+            this.loading = false;
+          },
+          error: (err) => {
+            console.error('Error al obtener contactos:', err);
+            this.error = 'No se pudieron cargar los contactos';
+            this.loading = false;
+          }
+        });
+        break;
+    }
   }
-}
 
   onSelectionChange(ids: string[]) {
     this.selectedGroupIds = ids;

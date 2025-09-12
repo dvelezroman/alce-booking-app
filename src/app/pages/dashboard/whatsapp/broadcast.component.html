@@ -8,10 +8,14 @@
       (typeChange)="onTypeChange($event)">
     </app-broadcast-filters>
 
+    <!-- Error (opcional) -->
+    <div *ngIf="error" class="card card--padded" style="color:#b91c1c; font-size: .85rem;">{{ error }}</div>
+
     <div class="wb-grid">
       <div class="wb-left">
         <app-group-selector
           class="card card--padded"
+          [type]="filters.type"
           [query]="filters.query"
           [selectedGroupId]="filters.selectedGroupId"
           [groups]="groups"
@@ -39,7 +43,5 @@
       </div>
     </div>
 
-    <!-- Error (opcional) -->
-    <div *ngIf="error" class="card card--padded" style="color:#b91c1c;">{{ error }}</div>
   </div>
 </section>

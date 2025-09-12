@@ -52,15 +52,15 @@ export interface GetWhatsAppContactsResponse {
 
 
 
-export interface Contact {
-  id: string;
-  name: string;
-  phone?: string;
-}
+// export interface Contact {
+//   id: string;
+//   name: string;
+//   phone?: string;
+// }
 
-export interface Group {
-  id: string;
-  name: string;
-  description: string;
-  members: string[]; 
-}
+// export interface Group {
+//   id: string;
+//   name: string;
+//   description: string;
+//   members: string[]; 
+// }
