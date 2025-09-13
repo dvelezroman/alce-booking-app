@@ -2,47 +2,38 @@
   <div class="content">
     <h1 class="reports-progress-header reports-progress-title">Envíos por WhatsApp</h1>
 
-    <app-broadcast-filters
-      class="card card--padded"
-      [selectedType]="filters.type"
-      (typeChange)="onTypeChange($event)">
-    </app-broadcast-filters>
+    <!-- Bloque único -->
+    <div class="card card--padded big-block">
+      <app-broadcast-filters
+        [selectedType]="filters.type"
+        (typeChange)="onTypeChange($event)">
+      </app-broadcast-filters>
 
-    <!-- Error (opcional) -->
-    <div *ngIf="error" class="card card--padded" style="color:#b91c1c; font-size: .85rem;">{{ error }}</div>
+      <!-- Error (opcional) -->
+      <div *ngIf="error" class="error-msg">{{ error }}</div>
 
-    <div class="wb-grid">
-      <div class="wb-left">
-        <app-group-selector
-          class="card card--padded"
-          [type]="filters.type"
-          [query]="filters.query"
-          [selectedGroupId]="filters.selectedGroupId"
-          [groups]="groups"
-          [contacts]="contacts"
-          [diffusionGroups]="diffusionGroups"
-          [loading]="loading"
-          (selectionChange)="onSelectionChange($event)">
-        </app-group-selector>
-      </div>
+      <app-group-selector
+        [type]="filters.type"
+        [query]="filters.query"
+        [selectedGroupId]="filters.selectedGroupId"
+        [groups]="groups"
+        [contacts]="contacts"
+        [diffusionGroups]="diffusionGroups"
+        [loading]="loading"
+        (selectionChange)="onSelectionChange($event)">
+      </app-group-selector>
 
-      <div class="wb-right">
-        <app-message-composer
-          class="card card--padded"
-          (messageChange)="onMessageChange($event)">
-        </app-message-composer>
-      </div>
-    </div>
+      <app-message-composer
+        (messageChange)="onMessageChange($event)">
+      </app-message-composer>
 
-    <app-schedule-bar class="card card--padded mt-32"></app-schedule-bar>
-
-    <!-- Footer simplificado -->
-    <div class="footer-bar">
-      <div class="footer-actions">
-        <button class="btn btn-primary" (click)="onSend()" [disabled]="loading">Enviar</button>
+      <!-- Footer simplificado -->
+      <div class="footer-bar">
+        <div class="footer-actions">
+          <button class="btn btn-primary" (click)="onSend()" [disabled]="loading">Enviar</button>
+        </div>
       </div>
     </div>
-
   </div>
 </section>
 
