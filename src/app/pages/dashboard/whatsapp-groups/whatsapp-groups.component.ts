@@ -24,7 +24,7 @@ export class WhatsAppGroupsComponent implements OnInit {
   constructor(private whatsappSvc: WhatsAppGroupService) {}
 
   ngOnInit(): void {
-    //this.loadGroupsAndContacts();
+    this.loadGroupsAndContacts();
   }
 
   loadGroupsAndContacts() {
@@ -59,6 +59,7 @@ export class WhatsAppGroupsComponent implements OnInit {
 
   /** Crear nuevo grupo */
   onCreateGroup() {
+    if (this.showForm) return; 
     this.selectedGroup = null;
     this.showForm = true;
   }
