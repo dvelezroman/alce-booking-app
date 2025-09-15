@@ -10,7 +10,7 @@ import { SendContactMessageDto, SendContactMessageResponse, SendDiffusionMessage
   providedIn: 'root',
 })
 export class WhatsAppGroupService {
-  private apiUrl = `${environment.whatsappApiUrl}/whatsapp`;
+  private apiUrl = `${environment.apiUrl}/whatsapp`;
 
   constructor(private http: HttpClient) {}
 

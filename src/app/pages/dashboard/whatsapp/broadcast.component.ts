@@ -4,12 +4,8 @@ import { CommonModule } from '@angular/common';
 import { BroadcastFiltersComponent, SelectionType } from '../../../components/whatsapp/broadcast-filters/broadcast-filters.component';
 import { GroupSelectorComponent } from '../../../components/whatsapp/group-selector/group-selector.component';
 import { MessageComposerComponent } from '../../../components/whatsapp/message-composer/message-composer.component';
-import { ScheduleBarComponent } from '../../../components/whatsapp/schedule-bar/schedule-bar.component';
-
 import { WhatsAppGroupService } from '../../../services/whatsapp-group.service';
-
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
-import { forkJoin } from 'rxjs';
 import { Group } from '../../../services/dtos/whatsapp-group.dto';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
@@ -28,7 +24,6 @@ export interface BroadcastFilterState {
     BroadcastFiltersComponent,
     GroupSelectorComponent,
     MessageComposerComponent,
-    ScheduleBarComponent,
     ModalComponent,
   ],
   templateUrl: './broadcast.component.html',
