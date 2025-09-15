@@ -2,8 +2,12 @@
   <div class="panel__head">
     <h3>Selecciona grupos</h3>
     <div class="search">
-      <!-- El filtro real viene del padre; aquí solo mostramos el texto si quieres -->
-      <input type="text" placeholder="Buscar por nombre…" [value]="query || ''" disabled />
+      <input
+        type="text"
+        placeholder="Buscar por nombre…"
+        [(ngModel)]="query"
+        (ngModelChange)="buildAvailable()"
+      />
     </div>
   </div>
 
@@ -29,7 +33,7 @@
                   <div class="sub">{{ g.sub }}</div>
                 </div>
               </div>
-              <button class="btn-link" type="button">Ver</button>
+              <!-- <button class="btn-link" type="button">Ver</button> -->
             </li>
         </ul>
         <ng-template #emptyAvail>

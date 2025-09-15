@@ -56,7 +56,7 @@ export class BroadcastComponent implements OnInit {
 
   onTypeChange(type: SelectionType) {
     this.filters = { ...this.filters, type };
-    console.log('[Broadcast padre] tipo seleccionado:', type);
+    //console.log('[Broadcast padre] tipo seleccionado:', type);
 
     this.loading = true;
     this.error = null;

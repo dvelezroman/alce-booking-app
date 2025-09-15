@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
 import { SelectionType } from '../broadcast-filters/broadcast-filters.component';
 import { Group } from '../../../services/dtos/whatsapp-group.dto';
+import { FormsModule } from '@angular/forms';
 
 interface UiItem {
   id: string;
@@ -13,7 +14,7 @@ interface UiItem {
 @Component({
   selector: 'app-group-selector',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './group-selector.component.html',
   styleUrls: ['./group-selector.component.scss'],
 })
@@ -39,7 +40,7 @@ export class GroupSelectorComponent implements OnChanges {
   }
 
   /** Construye lista visible según el tipo elegido */
-  private buildAvailable(): void {
+  buildAvailable(): void {
     const q = (this.query || '').toLowerCase().trim();
 
     if (this.type === 'diffusion') {
