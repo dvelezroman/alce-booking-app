@@ -30,14 +30,29 @@ export class WhatsAppGroupsComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // Traer grupos
+    // Traer grupos normales
     this.whatsappSvc.getGroups().subscribe({
       next: (res) => {
-        this.groups = res.groups || [];
+        const normalGroups = res.groups || [];
+        // Traer grupos de difusión y unir
+        this.whatsappSvc.getDiffusionGroups().subscribe({
+          next: (res2) => {
+            const diffusionGroups = res2.groups || [];
+            this.groups = [...normalGroups, ...diffusionGroups];
+          },
+          error: (err) => {
+            console.error('Error al cargar grupos de difusión:', err);
+            this.error = 'No se pudieron cargar los grupos de difusión.';
+          },
+          complete: () => {
+            this.loading = false;
+          }
+        });
       },
       error: (err) => {
         console.error('Error al cargar grupos:', err);
         this.error = 'No se pudieron cargar los grupos.';
+        this.loading = false;
       },
     });
 
@@ -49,10 +64,7 @@ export class WhatsAppGroupsComponent implements OnInit {
       error: (err) => {
         console.error('Error al cargar contactos:', err);
         this.error = 'No se pudieron cargar los contactos.';
-      },
-      complete: () => {
-        this.loading = false;
-      },
+      }
     });
   }
 
