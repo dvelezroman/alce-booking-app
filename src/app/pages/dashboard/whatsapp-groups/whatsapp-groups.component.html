@@ -3,38 +3,31 @@
     <!-- Título principal al inicio -->
     <h1 class="reports-progress-header reports-progress-title">Gestión de Grupos</h1>
 
-    <header class="header">
-      <button 
-        class="btn btn-primary" 
-        (click)="onCreateGroup()" 
-        [disabled]="showForm"
-        [attr.aria-disabled]="showForm"
-      >
-        Crear grupo</button>
-    </header>
-
     <!-- Error -->
     <div *ngIf="error" class="error-msg">
       {{ error }}
     </div>
 
-    <!-- Contenedor en fila -->
+    <!-- Contenedor -->
     <div class="groups-row" *ngIf="!error">
-      <!-- Formulario -->
-      <app-group-form
-        *ngIf="showForm"
-        [contacts]="contacts"
-        [group]="selectedGroup"
-        class="card card--padded"
-        (close)="onCloseForm()">
-      </app-group-form>
-
       <!-- Listado -->
       <app-group-list
         class="card card--padded"
         [groups]="groups"
-        (editGroup)="onEditGroup($event)">
+        (editGroup)="onSelectGroup($event)">
       </app-group-list>
+    </div>
+  </div>
+
+  <!-- ===== Modal detalle ===== -->
+  <div class="modal-backdrop" *ngIf="selectedGroup" (click)="onCloseDetail()"></div>
+  <div class="modal" *ngIf="selectedGroup">
+    <div class="modal-content">
+      <button class="close-btn" (click)="onCloseDetail()">×</button>
+      <app-group-detail
+        [group]="selectedGroup"
+        [contacts]="contacts">
+      </app-group-detail>
     </div>
   </div>
 </section>

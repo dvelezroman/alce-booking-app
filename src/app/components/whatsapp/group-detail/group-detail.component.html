@@ -1,0 +1,27 @@
+<div class="group-detail">
+  <!-- Encabezado -->
+  <h2 class="group-title">{{ group?.name }}</h2>
+  <p class="group-desc">{{ group?.description }}</p>
+
+  <!-- Info adicional -->
+  <div class="group-meta">
+    <div class="meta-item left">
+      <i class="icon-calendar"></i>
+      Creado: {{ group?.createdAt | date: 'short' }}
+    </div>
+    <div class="meta-item right">
+      <i class="icon-users"></i>
+      Participantes: {{ group?.participantsCount }}
+    </div>
+  </div>
+
+  <!-- Integrantes -->
+  <h3 class="sub-title">Integrantes</h3>
+  <ul class="participants">
+    <li *ngFor="let p of group?.participants">
+      <span class="name">{{ p.name }}</span>
+      <span class="role" *ngIf="p.isSuperAdmin">Admin</span>
+      <span class="role" *ngIf="!p.isSuperAdmin && p.isAdmin">Admin</span>
+    </li>
+  </ul>
+</div>

@@ -63,8 +63,8 @@
       background: #2563eb;
     }
   }
-  
 }
+
 .header .btn[disabled],
 .header .btn[aria-disabled="true"] {
   opacity: .6;
@@ -91,7 +91,7 @@
 
   app-group-form,
   app-group-list {
-    flex: 1 1 0; 
+    flex: 1 1 0;
     min-width: 0;
   }
 
@@ -103,5 +103,57 @@
     app-group-list {
       width: 100%;
     }
+  }
+}
+
+/* ===== Modal Detalle de Grupo ===== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 50;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .75rem;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 650px;
+  width: 100%;
+  padding: 2rem 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow-y: auto;
+  max-height: 80vh;
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #111827;
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #374151;
+
+  &:hover {
+    color: #111827;
   }
 }
