@@ -1,0 +1,46 @@
+<div class="table-wrapper" *ngIf="messages.length > 0; else emptyState">
+  <!-- Encabezado -->
+  <div class="table-header">
+    <div class="col-to">Para</div>
+    <div class="col-message">Mensaje</div>
+    <div class="col-extra">Tipo / Estado</div>
+    <div class="col-date">Fechas</div>
+  </div>
+
+  <!-- Filas -->
+  <div
+    class="table-row"
+    *ngFor="let msg of messages"
+  >
+    <!-- Columna: Destinatario -->
+    <div class="col-to">
+      {{ msg.recipientName || msg.recipientId }}
+    </div>
+
+    <!-- Columna: mensaje -->
+    <div class="col-message">
+      <div class="snippet">
+        {{ msg.message.length > 120 ? (msg.message | slice:0:120) + '…' : msg.message }}
+      </div>
+    </div>
+
+    <!-- Columna: tipo / estado -->
+    <div class="col-extra">
+      <span class="chip type">{{ msg.recipientType }}</span>
+      <span class="chip status" [ngClass]="msg.status.toLowerCase()">{{ msg.status }}</span>
+    </div>
+
+    <!-- Columna: fechas -->
+    <div class="col-date">
+      <div *ngIf="msg.sentAt">Enviado: {{ msg.sentAt | date:'short' }}</div>
+      <div *ngIf="msg.deliveredAt">Entregado: {{ msg.deliveredAt | date:'short' }}</div>
+      <div *ngIf="msg.readAt">Leído: {{ msg.readAt | date:'short' }}</div>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyState>
+  <div class="empty-state">
+    <p>No hay mensajes disponibles.</p>
+  </div>
+</ng-template>

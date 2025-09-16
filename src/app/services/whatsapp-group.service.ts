@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { GetGroupsResponse, GetWhatsAppContactsResponse, WhatsAppStatus } from './dtos/whatsapp-group.dto';
 import { GetDiffusionGroupsResponse } from './dtos/whatsapp-diffusion-group.dto';
 import { SendContactMessageDto, SendContactMessageResponse, SendDiffusionMessageDto, SendDiffusionMessageResponse, SendGroupMessageDto, SendGroupMessageResponse } from './dtos/whatsapp-send.dto';
+import { GetWhatsAppMessagesFilters, GetWhatsAppMessagesResponse } from './dtos/whatssapp-messages.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -48,6 +49,18 @@ export class WhatsAppGroupService {
 
   getStatus(): Observable<WhatsAppStatus> {
     return this.http.get<WhatsAppStatus>(`${this.apiUrl}/status`);
+  }
+
+  getMessages(filters?: GetWhatsAppMessagesFilters): Observable<GetWhatsAppMessagesResponse> {
+    let params = new HttpParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+          params = params.set(key, value.toString());
+        }
+      });
+    }
+    return this.http.get<GetWhatsAppMessagesResponse>(`${this.apiUrl}/messages`, { params } );
   }
 
 }

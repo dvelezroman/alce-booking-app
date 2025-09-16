@@ -1,0 +1,79 @@
+<section class="section whatsapp-section">
+  <div class="content">
+    <h1 class="reports-progress-header reports-progress-title">Mensajes Enviados</h1>
+
+    <!-- Bloque único -->
+    <div class="card card--padded big-block">
+      <!-- Filtros -->
+      <div class="filters">
+        <label>
+          Estado:
+          <select [(ngModel)]="filters.status" (change)="onFiltersChange()">
+            <option value="">Todos</option>
+            <option value="SENT">Enviados</option>
+            <option value="DELIVERED">Entregados</option>
+            <option value="READ">Leídos</option>
+            <option value="FAILED">Fallidos</option>
+          </select>
+        </label>
+
+        <label>
+          Tipo destino:
+          <select [(ngModel)]="filters.recipientType" (change)="onFiltersChange()">
+            <option value="">Todos</option>
+            <option value="INDIVIDUAL">Individual</option>
+            <option value="GROUP">Grupo</option>
+            <option value="BROADCAST">Difusión</option>
+          </select>
+        </label>
+
+        <label>
+          Fecha inicio:
+          <input type="date" [(ngModel)]="filters.startDate" (change)="onFiltersChange()" />
+        </label>
+
+        <label>
+          Fecha fin:
+          <input type="date" [(ngModel)]="filters.endDate" (change)="onFiltersChange()" />
+        </label>
+      </div>
+
+      <!-- Error (opcional) -->
+      <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+      <!-- Lista de mensajes -->
+      <div class="messages-container">
+        <app-message-list
+            [messages]="messages"
+            [loading]="loading"
+            [error]="error">
+        </app-message-list>
+        </div>
+
+      <!-- Paginación -->
+        <div class="pagination" *ngIf="totalMessages > 0">
+        <button
+            class="pg-btn"
+            (click)="onPrev()"
+            [disabled]="page === 1"
+            aria-label="Página anterior">
+            ‹
+        </button>
+
+        <span class="pg-info">
+            Página {{ page }}
+            <span class="sep">·</span>
+            Mostrando {{ startIndex }} – {{ endIndex }} de {{ totalMessages }}
+        </span>
+
+        <button
+            class="pg-btn"
+            (click)="onNext()"
+            [disabled]="page * limit >= totalMessages"
+            aria-label="Página siguiente">
+            ›
+        </button>
+        </div>
+    </div>
+  </div>
+</section>

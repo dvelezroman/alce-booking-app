@@ -68,7 +68,9 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'notifications', text: 'Enviadas', route: '/dashboard/notifications-sent', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT],  },
   { icon: 'whatsapp', text: 'Enviar mensaje', route: '/dashboard/whatsapp', roles: [UserRole.ADMIN] , },
   { icon: 'whatsapp', text: 'Grupos', route: '/dashboard/whatsapp-groups', roles: [UserRole.ADMIN], },
-  { icon: 'whatsapp', text: 'Ajustes de WhatsApp', route: '/dashboard/whatsapp-config', roles: [UserRole.ADMIN], }
+  { icon: 'whatsapp', text: 'Ajustes de WhatsApp', route: '/dashboard/whatsapp-config', roles: [UserRole.ADMIN], },
+  { icon: 'whatsapp', text: 'Mensajes enviados', route: '/dashboard/whatsapp-sent-messages', roles: [UserRole.ADMIN] },
+  { icon: 'whatsapp', text: 'Mensajes recibidos', route: '/dashboard/whatsapp-received-messages', roles: [UserRole.ADMIN] },
 ];
 
   navGrouped: {
@@ -183,6 +185,8 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
       items: [
         this.findNavItemByRoute('/dashboard/whatsapp'),
         this.findNavItemByRoute('/dashboard/whatsapp-groups'),
+        this.findNavItemByRoute('/dashboard/whatsapp-sent-messages'),
+        this.findNavItemByRoute('/dashboard/whatsapp-received-messages'),
       ].filter(item => item.roles.includes(role))
     },
     {
