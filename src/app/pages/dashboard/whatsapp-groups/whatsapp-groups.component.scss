@@ -110,8 +110,10 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.35);
   z-index: 50;
+  opacity: 0;
+  animation: fadeIn 0.25s ease forwards;
 }
 
 .modal {
@@ -134,6 +136,9 @@
   position: relative;
   overflow-y: auto;
   max-height: 80vh;
+  opacity: 0;
+  transform: scale(0.65);
+  animation: popIn 0.4s ease forwards;
 
   h2 {
     font-size: 1.25rem;
@@ -155,5 +160,26 @@
 
   &:hover {
     color: #111827;
+  }
+}
+
+/* ===== Keyframes ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
