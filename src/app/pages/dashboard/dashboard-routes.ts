@@ -74,5 +74,5 @@ export const dashboardRoutes: Routes = [
   { path: 'whatsapp-groups', component: WhatsAppGroupsComponent },
   { path: 'whatsapp-config', component: WhatsappConfigComponent },
   { path: 'whatsapp-sent-messages', component: WhatsappSentMessagesComponent },
-  { path: 'whatsapp-received-messages', component: WhatsappReceivedMessagesComponent },
+  // { path: 'whatsapp-received-messages', component: WhatsappReceivedMessagesComponent },
 ];

@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+
 import { WhatsAppGroupService } from '../../../services/whatsapp-group.service';
 import { MessageListComponent } from '../../../components/whatsapp/message-list/message-list.component';
 import { GetWhatsAppMessagesFilters, GetWhatsAppMessagesResponse, WhatsAppMessage } from '../../../services/dtos/whatssapp-messages.dto';
@@ -16,7 +18,7 @@ import { GetWhatsAppMessagesFilters, GetWhatsAppMessagesResponse, WhatsAppMessag
   templateUrl: './whatsapp-sent-messages.component.html',
   styleUrls: ['./whatsapp-sent-messages.component.scss'],
 })
-export class WhatsappSentMessagesComponent implements OnInit {
+export class WhatsappSentMessagesComponent implements OnInit, OnDestroy {
   /** Estado */
   messages: WhatsAppMessage[] = [];
   totalMessages = 0;
@@ -31,17 +33,42 @@ export class WhatsappSentMessagesComponent implements OnInit {
   filters: GetWhatsAppMessagesFilters = {
     page: this.page,
     limit: this.limit,
-    status: '', 
+    status: '',
     startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
     endDate: new Date().toISOString(),
+    recipientName: '',
   };
+
+  /** RxJS para debounce */
+  private searchSubject = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
   constructor(private whatsappSvc: WhatsAppGroupService) {}
 
   ngOnInit(): void {
     this.loadMessages();
+
+    // Debounce búsqueda por nombre destinatario
+    this.searchSubject
+      .pipe(
+        debounceTime(800),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((value) => {
+        this.filters.recipientName = value;
+        this.page = 1;
+        this.filters.page = this.page;
+        this.loadMessages();
+      });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /** Fetch */
   loadMessages(): void {
     this.loading = true;
     this.error = null;
@@ -90,5 +117,25 @@ export class WhatsappSentMessagesComponent implements OnInit {
     this.page = 1;
     this.filters.page = this.page;
     this.loadMessages();
+  }
+
+  /** Search con debounce */
+  onRecipientSearch(value: string): void {
+    this.searchSubject.next(value);
+  }
+
+  /** Contador filtros */
+  get filteredCount(): number {
+    if (this.filters.status === 'FAILED') {
+      return this.messages.filter(m => m.status === 'FAILED').length;
+    }
+
+    if (this.filters.status) {
+      return this.messages.filter(m => m.status === this.filters.status).length;
+    }
+
+    return this.messages.filter(m =>
+      ['SENT', 'DELIVERED', 'READ', 'FAILED'].includes(m.status)
+    ).length;
   }
 }

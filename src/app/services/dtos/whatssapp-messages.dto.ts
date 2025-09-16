@@ -30,6 +30,7 @@ export interface GetWhatsAppMessagesFilters {
   limit?: number;
   status?: 'SENT' | 'DELIVERED' | 'READ' | 'FAILED' | '';
   recipientType?: 'INDIVIDUAL' | 'GROUP' | 'BROADCAST';
+  recipientName?: string;
   recipientId?: string;
   startDate?: string;
   endDate?: string; 
