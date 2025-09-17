@@ -5,7 +5,7 @@ export interface Notification {
   id: number;
   from: number;
   fromUser: UserDto;
-  to: number[];
+  to: UserDto[];
   scope: 'INDIVIDUAL' | 'ALL_USERS' | 'ALL_STUDENTS' | 'ALL_INSTRUCTORS' | 'STAGE_STUDENTS';
   stageId?: number;
   stage?: Stage;

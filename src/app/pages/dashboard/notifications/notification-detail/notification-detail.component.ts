@@ -120,23 +120,27 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Texto para "Para:": prioriza to -> stage -> scope, y usa scope si hay muchos IDs */
   get audienceLine(): string {
     const n = this.notification;
     if (!n) return '';
 
-    // 1) to (IDs)
     if (Array.isArray(n.to) && n.to.length > 0) {
-      if (n.to.length === 1) return `ID: ${n.to[0]}`;
-      // muchos IDs => mostrar scope
+      if (n.scope === 'INDIVIDUAL') {
+        if (n.to.length === 1) {
+          const u = n.to[0] as UserDto;
+          return [u.firstName, u.lastName].filter(Boolean).join(' ').trim() || u.email || `ID: ${u.id}`;
+        }
+        return (n.to as UserDto[])
+          .map(u => [u.firstName, u.lastName].filter(Boolean).join(' ').trim() || u.email || `ID: ${u.id}`)
+          .join(', ');
+      }
+
       return this.scopeLabel(n.scope);
     }
 
-    // 2) stage
     if (n.stage?.description) return n.stage.description;
     if (n.stage?.number) return String(n.stage.number);
 
-    // 3) scope
     return this.scopeLabel(n.scope);
   }
 
@@ -156,11 +160,17 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   }
 
   /** Lista de IDs a renderizar: si `to` tiene datos, usamos `to`; si no, `readBy`; si no, vacío. */
-  get recipientIds(): number[] {
+  get recipients(): UserDto[] {
     const n = this.notification;
     if (!n) return [];
-    if (Array.isArray(n.to) && n.to.length > 0) return n.to;
-    if (Array.isArray(n.readBy) && n.readBy.length > 0) return n.readBy;
+    if (Array.isArray(n.to) && n.to.length > 0) {
+      return n.to;
+    }
+
+    if (Array.isArray(n.readBy) && n.readBy.length > 0) {
+      return n.readBy.map(id => ({ id } as UserDto));
+    }
+
     return [];
   }
 
@@ -169,8 +179,8 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return !!this.notification?.readBy?.includes(uid);
   }
 
-  trackByUid(index: number, uid: number): number {
-    return uid;
+  trackByUid(index: number, user: UserDto): number {
+    return user.id;
   }
 
   goBack(): void {
