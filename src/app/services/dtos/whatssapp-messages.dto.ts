@@ -32,6 +32,6 @@ export interface GetWhatsAppMessagesFilters {
   recipientType?: 'INDIVIDUAL' | 'GROUP' | 'BROADCAST';
   recipientName?: string;
   recipientId?: string;
-  startDate?: string;
-  endDate?: string; 
+  sentAtFrom?: string;
+  sentAtTo?: string; 
 }

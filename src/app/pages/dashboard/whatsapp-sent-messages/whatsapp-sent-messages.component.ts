@@ -34,8 +34,8 @@ export class WhatsappSentMessagesComponent implements OnInit, OnDestroy {
     page: this.page,
     limit: this.limit,
     status: '',
-    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    endDate: new Date().toISOString(),
+    sentAtFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    sentAtTo: new Date().toISOString(), 
     recipientName: '',
   };
 
