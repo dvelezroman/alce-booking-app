@@ -45,6 +45,8 @@ export class BroadcastComponent implements OnInit {
     type: null,
   };
 
+  titleForSelector = 'Selecciona grupos';
+
   selectedGroupIds: string[] = [];
   modal: ModalDto = modalInitializer();
   private modalTimer: number | undefined;
@@ -60,6 +62,7 @@ export class BroadcastComponent implements OnInit {
 
     switch (type) {
       case 'group':
+        this.titleForSelector = 'Selecciona grupos';
         this.whatsappSvc.getGroups().subscribe({
           next: (res) => {
             this.groups = res.groups || [];
@@ -73,6 +76,7 @@ export class BroadcastComponent implements OnInit {
         break;
 
       case 'diffusion':
+        this.titleForSelector = 'Selecciona lista de difusión';
         this.whatsappSvc.getDiffusionGroups().subscribe({
           next: (res) => {
             this.diffusionGroups = res.groups || [];
@@ -86,8 +90,13 @@ export class BroadcastComponent implements OnInit {
         break;
 
       case 'contact':
+        this.titleForSelector = 'Busca y selecciona el contacto';
         this.loading = false;
         break;
+
+      default:
+        this.titleForSelector = 'Selecciona destino';
+        this.loading = false;
     }
   }
 

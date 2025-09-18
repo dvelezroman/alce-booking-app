@@ -31,6 +31,7 @@ export class GroupSelectorComponent implements OnChanges {
   @Input() groups: Group[] = [];
   @Input() diffusionGroups: DiffusionGroup[] = [];
   @Input() loading = false;
+  @Input() title: string = 'Selecciona grupos';
 
   /** ======= Outputs hacia el padre ======= */
   @Output() selectionChange = new EventEmitter<string[]>();
@@ -122,7 +123,7 @@ export class GroupSelectorComponent implements OnChanges {
     const seq = ++this.fetchSeq;
 
     this.usersService
-      .searchUsers(0, 15, undefined, term, term)
+      .searchUsers(0, 12, undefined, term, term)
       .subscribe({
         next: (res) => {
           if (seq !== this.fetchSeq) return;
