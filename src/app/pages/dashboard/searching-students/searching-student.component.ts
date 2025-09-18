@@ -179,13 +179,6 @@ export class SearchingStudentComponent {
       status: user.status === UserStatus.ACTIVE,
     });
 
-    if (user.role === UserRole.STUDENT) {
-      this.editUserForm.get('comment')?.setValidators([Validators.required]);
-    } else {
-      this.editUserForm.get('comment')?.clearValidators();
-    }
-    this.editUserForm.get('comment')?.updateValueAndValidity();
-
     if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
       this.editUserForm.patchValue({ linkId: user.instructor.meetingLink.id });
     }
