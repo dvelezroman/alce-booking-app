@@ -72,7 +72,7 @@ export class SearchingStudentComponent {
       linkId: [''],
       ageGroup: [''],
       studentId: [''],
-      comment: ['', Validators.required],
+      comment: [''],
     });
   }
 
@@ -162,6 +162,7 @@ export class SearchingStudentComponent {
   openEditUSerModal(user: UserDto) {
     this.selectedUser = user;
     this.isEditModalOpen = true;
+
     this.editUserForm.patchValue({
       idNumber: user.idNumber,
       email: user.email,
@@ -177,6 +178,14 @@ export class SearchingStudentComponent {
       comment: user.comment,
       status: user.status === UserStatus.ACTIVE,
     });
+
+    if (user.role === UserRole.STUDENT) {
+      this.editUserForm.get('comment')?.setValidators([Validators.required]);
+    } else {
+      this.editUserForm.get('comment')?.clearValidators();
+    }
+    this.editUserForm.get('comment')?.updateValueAndValidity();
+
     if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
       this.editUserForm.patchValue({ linkId: user.instructor.meetingLink.id });
     }
