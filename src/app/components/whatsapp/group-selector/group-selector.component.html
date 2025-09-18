@@ -6,7 +6,7 @@
         type="text"
         placeholder="Buscar por nombre…"
         [(ngModel)]="query"
-        (ngModelChange)="buildAvailable()"
+        (ngModelChange)="searchInput$.next($event)"
       />
     </div>
   </div>
@@ -22,24 +22,30 @@
       <!-- loading / vacío / items -->
       <ng-container *ngIf="!loading; else loadingTpl">
         <ul class="items" *ngIf="available.length; else emptyAvail">
-          <!-- Disponibles -->
-            <li class="item" *ngFor="let g of available">
-              <div class="item__left">
-                <input #chk type="checkbox"
-                      [checked]="selectedIds.includes(g.id)"
-                      (change)="toggle(g.id, chk.checked)" />
-                <div>
-                  <div class="title">{{ g.title }}</div>
-                  <div class="sub">{{ g.sub }}</div>
+          <li class="item" *ngFor="let g of available">
+            <div class="item__left">
+              <input 
+                #chk 
+                type="checkbox"
+                [checked]="selectedIds.includes(g.id)"
+                [disabled]="type === 'contact' && !g.phone" 
+                (change)="toggle(g.id, chk.checked)" 
+              />
+              <div>
+                <div class="title">
+                  {{ g.title }} 
+                  <span *ngIf="type === 'contact' && g.phone"> - {{ g.phone }}</span>
                 </div>
+               <!-- <div class="sub">{{ g.sub }}</div> -->
               </div>
-              <!-- <button class="btn-link" type="button">Ver</button> -->
-            </li>
+            </div>
+          </li>
         </ul>
         <ng-template #emptyAvail>
-          <div class="empty">No hay grupos para mostrar.</div>
+          <div class="empty">No hay resultados.</div>
         </ng-template>
       </ng-container>
+
       <ng-template #loadingTpl>
         <div class="empty">Cargando…</div>
       </ng-template>
@@ -49,24 +55,22 @@
     <div class="list">
       <div class="list__head">
         <strong>Seleccionados</strong>
-        <span class="hint">{{ selectedIds.length }} {{ selectedIds.length === 1 ? 'grupo' : 'grupos' }}</span>
+        <span class="hint">{{ selectedIds.length }} {{ selectedIds.length === 1 ? 'ítem' : 'ítems' }}</span>
       </div>
 
       <div class="empty" *ngIf="!selectedIds.length">
-        Aún no has seleccionado grupos.
+        Aún no has seleccionado nada.
       </div>
 
       <ul class="items" *ngIf="selectedIds.length">
         <li class="item" *ngFor="let id of selectedIds">
           <div class="item__left">
-            <input #chkSel type="checkbox" [checked]="true"
-                  (change)="toggle(id, false)" />
+            <input #chkSel type="checkbox" [checked]="true" (change)="toggle(id, false)" />
             <div>
               <div class="title">{{ getGroupTitle(id) }}</div>
-              <div class="sub">{{ getGroupSub(id) }}</div>
+              <!-- <div class="sub">{{ getGroupSub(id) }}</div> -->
             </div>
           </div>
-          <!-- <button class="btn-link" type="button">Ver</button> -->
         </li>
       </ul>
     </div>

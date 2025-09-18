@@ -13,7 +13,7 @@ import { ModalComponent } from '../../../components/modal/modal.component';
 export interface BroadcastFilterState {
   query: string | null;
   selectedGroupId: string | null;
-  type: SelectionType; 
+  type: SelectionType;
 }
 
 @Component({
@@ -35,7 +35,8 @@ export class BroadcastComponent implements OnInit {
 
   groups: Group[] = [];
   diffusionGroups: DiffusionGroup[] = [];
-  contacts: { id: string; name: string; phone?: string }[] = [];
+  selectedContacts: { id: string; name: string; phone?: string }[] = [];
+
   message: string = '';
 
   filters: BroadcastFilterState = {
@@ -50,14 +51,10 @@ export class BroadcastComponent implements OnInit {
 
   constructor(private whatsappSvc: WhatsAppGroupService) {}
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   onTypeChange(type: SelectionType) {
     this.filters = { ...this.filters, type };
-    //console.log('[Broadcast padre] tipo seleccionado:', type);
-
     this.loading = true;
     this.error = null;
 
@@ -68,11 +65,10 @@ export class BroadcastComponent implements OnInit {
             this.groups = res.groups || [];
             this.loading = false;
           },
-          error: (err) => {
-            console.error('Error al obtener grupos:', err);
+          error: () => {
             this.error = 'No se pudieron cargar los grupos';
             this.loading = false;
-          }
+          },
         });
         break;
 
@@ -82,32 +78,26 @@ export class BroadcastComponent implements OnInit {
             this.diffusionGroups = res.groups || [];
             this.loading = false;
           },
-          error: (err) => {
-            console.error('Error al obtener difusiones:', err);
+          error: () => {
             this.error = 'No se pudieron cargar los grupos de difusiones';
             this.loading = false;
-          }
+          },
         });
         break;
 
       case 'contact':
-        this.whatsappSvc.getContacts().subscribe({
-          next: (res) => {
-            this.contacts = res.contacts || [];
-            this.loading = false;
-          },
-          error: (err) => {
-            console.error('Error al obtener contactos:', err);
-            this.error = 'No se pudieron cargar los contactos';
-            this.loading = false;
-          }
-        });
+        this.loading = false;
         break;
     }
   }
 
+  /** Recibe los IDs seleccionados (para grupos/difusiones) */
   onSelectionChange(ids: string[]) {
     this.selectedGroupIds = ids;
+  }
+
+  onContactsSelected(contacts: { id: string; name: string; phone?: string }[]) {
+    this.selectedContacts = contacts;
   }
 
   onMessageChange(msg: string) {
@@ -135,27 +125,26 @@ export class BroadcastComponent implements OnInit {
 
   /** ===== Enviar a contactos ===== */
   private sendToContacts() {
-    if (!this.selectedGroupIds.length) {
+    if (!this.selectedContacts.length) {
       this.showErrorModal('Debes seleccionar al menos un contacto.');
       return;
     }
 
-    this.selectedGroupIds.forEach((id) => {
-      const contact = this.contacts.find((c) => c.id === id);
-      if (contact?.phone) {
-        this.whatsappSvc.sendMessageToContact({
-          phone: contact.phone,
-          message: this.message,
-        }).subscribe({
-          next: (res) => {
-            //console.log('Mensaje enviado a contacto:', res);
-            this.showSuccessModal(`Mensaje enviado a ${contact.name || contact.phone}`);
-          },
-          error: (err) => {
-            console.error(err);
-            this.showErrorModal(`Error al enviar mensaje a ${contact?.name || 'contacto'}`);
-          }
-        });
+    this.selectedContacts.forEach((c) => {
+      if (c.phone) {
+        this.whatsappSvc
+          .sendMessageToContact({
+            phone: c.phone,
+            message: this.message,
+          })
+          .subscribe({
+            next: () => {
+              this.showSuccessModal(`Mensaje enviado a ${c.name || c.phone}`);
+            },
+            error: () => {
+              this.showErrorModal(`Error al enviar mensaje a ${c.name || 'contacto'}`);
+            },
+          });
       }
     });
   }
@@ -170,20 +159,20 @@ export class BroadcastComponent implements OnInit {
     this.selectedGroupIds.forEach((id) => {
       const group = this.groups.find((g) => g.id === id);
       if (group) {
-        this.whatsappSvc.sendMessageToGroup({
-          groupName: group.name,
-          message: this.message,
-          searchById: false,
-        }).subscribe({
-          next: (res) => {
-            //console.log('Mensaje enviado a grupo:', res);
-            this.showSuccessModal(`Mensaje enviado al grupo ${group.name}`);
-          },
-          error: (err) => {
-            console.error(err);
-            this.showErrorModal(`Error al enviar mensaje al grupo ${group?.name}`);
-          }
-        });
+        this.whatsappSvc
+          .sendMessageToGroup({
+            groupName: group.name,
+            message: this.message,
+            searchById: false,
+          })
+          .subscribe({
+            next: () => {
+              this.showSuccessModal(`Mensaje enviado al grupo ${group.name}`);
+            },
+            error: () => {
+              this.showErrorModal(`Error al enviar mensaje al grupo ${group?.name}`);
+            },
+          });
       }
     });
   }
@@ -198,20 +187,20 @@ export class BroadcastComponent implements OnInit {
     this.selectedGroupIds.forEach((id) => {
       const diffusion = this.diffusionGroups.find((d) => d.id === id);
       if (diffusion) {
-        this.whatsappSvc.sendMessageToDiffusion({
-          groupName: diffusion.name,
-          message: this.message,
-          searchById: false,
-        }).subscribe({
-          next: (res) => {
-            //console.log('Mensaje enviado a difusión:', res);
-            this.showSuccessModal(`Mensaje enviado a la difusión ${diffusion.name}`);
-          },
-          error: (err) => {
-            console.error(err);
-            this.showErrorModal(`Error al enviar mensaje a la difusión ${diffusion?.name}`);
-          }
-        });
+        this.whatsappSvc
+          .sendMessageToDiffusion({
+            groupName: diffusion.name,
+            message: this.message,
+            searchById: false,
+          })
+          .subscribe({
+            next: () => {
+              this.showSuccessModal(`Mensaje enviado a la difusión ${diffusion.name}`);
+            },
+            error: () => {
+              this.showErrorModal(`Error al enviar mensaje a la difusión ${diffusion?.name}`);
+            },
+          });
       }
     });
   }

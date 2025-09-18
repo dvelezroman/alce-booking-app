@@ -1,14 +1,19 @@
-import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Subject, debounceTime } from 'rxjs';
+
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
 import { SelectionType } from '../broadcast-filters/broadcast-filters.component';
 import { Group } from '../../../services/dtos/whatsapp-group.dto';
-import { FormsModule } from '@angular/forms';
+import { UsersService } from '../../../services/users.service';
+import { UserDto } from '../../../services/dtos/user.dto';
 
 interface UiItem {
   id: string;
   title: string;
   sub: string;
+  phone?: string;
 }
 
 @Component({
@@ -25,18 +30,39 @@ export class GroupSelectorComponent implements OnChanges {
   @Input() selectedGroupId: string | number | null = null;
   @Input() groups: Group[] = [];
   @Input() diffusionGroups: DiffusionGroup[] = [];
-  @Input() contacts: { id: string; name: string; phone?: string }[] = [];
   @Input() loading = false;
 
-  /** ======= Output hacia el padre ======= */
+  /** ======= Outputs hacia el padre ======= */
   @Output() selectionChange = new EventEmitter<string[]>();
+  @Output() queryChange = new EventEmitter<string>();
+  @Output() contactsSelected = new EventEmitter<{ id: string; name: string; phone?: string }[]>();
 
   /** ======= Estado interno (UI) ======= */
   available: UiItem[] = [];
   selectedIds: string[] = [];
 
-  ngOnChanges(_: SimpleChanges): void {
-    this.buildAvailable();
+  searchInput$ = new Subject<string>();
+  private fetchSeq = 0;
+
+  constructor(private usersService: UsersService) {
+    this.searchInput$
+      .pipe(debounceTime(800))
+      .subscribe((term) => {
+        this.queryChange.emit(term);
+        if (this.type === 'contact') {
+          this.fetchUsers(term);
+        } else {
+          this.buildAvailable();
+        }
+      });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['query'] && this.type === 'contact') {
+      this.searchInput$.next(this.query || '');
+    } else {
+      this.buildAvailable();
+    }
   }
 
   /** Construye lista visible según el tipo elegido */
@@ -78,19 +104,7 @@ export class GroupSelectorComponent implements OnChanges {
         sub: `${g.participantsCount} miembros`,
       }));
     } else if (this.type === 'contact') {
-      let list = this.contacts || [];
-      if (q) {
-        list = list.filter(
-          (c) =>
-            (c.name || '').toLowerCase().includes(q) ||
-            (c.phone || '').toLowerCase().includes(q)
-        );
-      }
-      this.available = list.map((c) => ({
-        id: c.id,
-        title: c.name,
-        sub: c.phone ? `Tel: ${c.phone}` : 'Contacto',
-      }));
+      this.fetchUsers(q);
     } else {
       this.available = [];
     }
@@ -100,15 +114,82 @@ export class GroupSelectorComponent implements OnChanges {
       this.available.some((a) => a.id === id)
     );
     this.selectionChange.emit(this.selectedIds);
+    this.emitSelectedContacts();
+  }
+
+  /** Fetch de usuarios cuando type === 'contact' */
+  fetchUsers(term: string): void {
+    const seq = ++this.fetchSeq;
+
+    this.usersService
+      .searchUsers(0, 15, undefined, term, term)
+      .subscribe({
+        next: (res) => {
+          if (seq !== this.fetchSeq) return;
+          this.available = res.users.map((u: UserDto) => ({
+            id: String(u.id),
+            title: `${(u.firstName || '')} ${(u.lastName || '')}`.trim() || u.email,
+            sub: u.email || 'Usuario',
+            phone: u.contact || undefined,
+          }));
+          this.emitSelectedContacts();
+        },
+        error: () => {
+          this.available = [];
+        },
+      });
   }
 
   /** Marca / desmarca un ítem */
+  // toggle(id: string, checked: boolean) {
+  //   const set = new Set(this.selectedIds);
+  //   if (checked) set.add(id);
+  //   else set.delete(id);
+  //   this.selectedIds = Array.from(set);
+
+  //   this.selectionChange.emit(this.selectedIds);
+  //   this.emitSelectedContacts();
+  // }
+
+
+  //  permitir un contacto seleccionado
   toggle(id: string, checked: boolean) {
-    const set = new Set(this.selectedIds);
-    if (checked) set.add(id);
-    else set.delete(id);
-    this.selectedIds = Array.from(set);
+    if (this.type === 'contact') {
+      this.selectedIds = checked ? [id] : [];
+    } else {
+      const set = new Set(this.selectedIds);
+      if (checked) set.add(id);
+      else set.delete(id);
+      this.selectedIds = Array.from(set);
+    }
+
     this.selectionChange.emit(this.selectedIds);
+    this.emitSelectedContacts();
+  }
+
+  private emitSelectedContacts() {
+    const selectedContacts = this.available
+      .filter(a => this.selectedIds.includes(a.id))
+      .map(a => ({
+        id: a.id,
+        name: a.title,
+        phone: a.phone,
+      }));
+
+    this.contactsSelected.emit(selectedContacts);
+  }
+
+  getContactDisplay(id: string): string {
+    const item = this.available.find((v) => v.id === id);
+    if (!item) return id;
+
+    if (this.type === 'contact') {
+      return item.phone
+        ? `${item.title}`
+        : item.title;
+    }
+
+    return item.title;
   }
 
   getGroupTitle(id: string): string {

@@ -112,6 +112,7 @@ export class SearchingStudentComponent {
       this.usersService.searchUsers((this.currentPage - 1) * this.itemsPerPage, this.itemsPerPage, undefined, firstName, lastName, undefined, UserRole.STUDENT, undefined, stageId)
         .subscribe({
           next: result => {
+            console.log(result.users)
             this.users = result.users;
             this.totalUsers = result.total;
             if (this.users.length === 0) setTimeout(() => this.noResults = true, 1000);
