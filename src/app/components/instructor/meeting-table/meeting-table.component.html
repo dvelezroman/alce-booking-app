@@ -45,7 +45,7 @@
             class="comment-text"
             *ngIf="!hasReinforcement(meeting)"
           >
-            {{ meeting.assessment?.note || meeting.student?.user?.comment || 'Sin observación' }}
+           {{ (meeting.assessments && meeting.assessments[0].note) || meeting.student?.user?.comment || 'Sin observación' }}
           </span>
 
           <span

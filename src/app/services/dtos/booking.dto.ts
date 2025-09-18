@@ -35,7 +35,7 @@ export interface MeetingDTO {
   studyContentId?: number[];
   studyContent?: StudyContentDto[];
   isNewUser?: boolean;
-  assessment?: AssessementI;
+  assessments?: AssessementI[];
   hasReinforcement?: boolean;
 }
 

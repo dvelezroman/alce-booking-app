@@ -37,7 +37,10 @@ export class MeetingTableComponent {
   }
 
   showComment(meeting: MeetingDTO): void {
-    const note = meeting.assessment?.note || 'Sin observación registrada.';
+    const note = meeting.assessments && meeting.assessments.length > 0
+      ? meeting.assessments[0].note || 'Sin observación registrada.'
+      : 'Sin observación registrada.';
+
     this.commentViewRequested.emit({
       note,
       title: 'Observación del Instructor',
@@ -57,7 +60,7 @@ export class MeetingTableComponent {
 
   hasObservation(meeting: MeetingDTO): boolean {
     return !!(
-      meeting.assessment?.note ||
+      (meeting.assessments && meeting.assessments.some(a => !!a.note)) ||
       meeting.student?.user?.comment
     );
   }

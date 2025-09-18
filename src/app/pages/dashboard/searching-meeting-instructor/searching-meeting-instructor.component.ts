@@ -411,6 +411,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
     this.assessmentService.findAll({ studentId: String(studentId) }).subscribe({
       next: (assessments) => {
+        console.log(studentId, assessments);
         const hasNote = assessments.some(a => !!a.note);
         const hasResources = assessments.some(a => a.resources && a.resources.length > 0);
         if (hasNote || hasResources) {
@@ -424,6 +425,20 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       }
     });
   }
+
+  // onCommentViewRequested(event: { meeting: MeetingDTO; title: string }): void {
+  //   const meeting = event.meeting;
+  //   const assessments = meeting.assessments || [];
+  //   const hasNote = assessments.some(a => !!a.note);
+  //   const hasResources = assessments.some(a => a.resources && a.resources.length > 0);
+
+  //   if (hasNote || hasResources) {
+  //     meeting.hasReinforcement = true;
+  //   }
+
+  //   const message = this.buildHtmlAllNotesAndResources(assessments, this.minPoints);
+  //   this.showNoteModal(event.title, message);
+  // }
 
   private buildHtmlAllNotesAndResources(assessments: AssessementI[], minPoints: number): SafeHtml {
     const approvedHtml = this.generateApprovedAssessments(assessments, minPoints);
@@ -444,7 +459,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
         : 'Instructor no disponible';
       return `<div style="margin-bottom: 6px;">
                 ${a.type}: ${a.points}<br>
-                <small style="color: #888; font-size: 8px;">${date} • ${instructor}</small>
+                <small style="color: #888; font-size: 10px;">${date} • ${instructor}</small>
               </div>`;
     }).join('');
 
@@ -465,8 +480,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
         return `<div style="margin-bottom: 6px;">
                   <span>${a.type}: ${a.points}</span><br>
-                  <span style="font-size: 8px;">${a.note}</span><br>
-                  <small style="color: #888; font-size: 8px;">${date} • ${instructor}</small>
+                  <span style="font-size: 10px;">${a.note}</span><br>
+                  <small style="color: #888; font-size: 10px;">${date} • ${instructor}</small>
                 </div>`;
       })
       .join('');
