@@ -72,7 +72,7 @@ export class SearchingStudentComponent {
       linkId: [''],
       ageGroup: [''],
       studentId: [''],
-      comment: [''],
+      comment: ['', Validators.required],
     });
   }
 
