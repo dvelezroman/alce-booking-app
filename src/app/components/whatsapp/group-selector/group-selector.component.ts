@@ -6,14 +6,16 @@ import { Subject, debounceTime } from 'rxjs';
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
 import { SelectionType } from '../broadcast-filters/broadcast-filters.component';
 import { Group } from '../../../services/dtos/whatsapp-group.dto';
-import { UsersService } from '../../../services/users.service';
-import { UserDto } from '../../../services/dtos/user.dto';
+import { WhatsAppContact } from '../../../services/dtos/whatsapp-group.dto';
+import { getInitials, translateWhatsappStatus } from '../../../shared/utils/capitalized.util';
 
 interface UiItem {
   id: string;
   title: string;
   sub: string;
   phone?: string;
+  fromWhatsapp?: boolean;
+  avatar?: string;
 }
 
 @Component({
@@ -30,6 +32,7 @@ export class GroupSelectorComponent implements OnChanges {
   @Input() selectedGroupId: string | number | null = null;
   @Input() groups: Group[] = [];
   @Input() diffusionGroups: DiffusionGroup[] = [];
+  @Input() contacts: WhatsAppContact[] = [];
   @Input() loading = false;
   @Input() title: string = 'Selecciona grupos';
 
@@ -43,23 +46,21 @@ export class GroupSelectorComponent implements OnChanges {
   selectedIds: string[] = [];
 
   searchInput$ = new Subject<string>();
-  private fetchSeq = 0;
 
-  constructor(private usersService: UsersService) {
+  getInitials = getInitials;  
+  translateWhatsappStatus = translateWhatsappStatus;
+
+  constructor() {
     this.searchInput$
-      .pipe(debounceTime(800))
+      .pipe(debounceTime(500))
       .subscribe((term) => {
         this.queryChange.emit(term);
-        if (this.type === 'contact') {
-          this.fetchUsers(term);
-        } else {
-          this.buildAvailable();
-        }
+        this.buildAvailable();
       });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['query'] && this.type === 'contact') {
+    if (changes['query']) {
       this.searchInput$.next(this.query || '');
     } else {
       this.buildAvailable();
@@ -105,7 +106,24 @@ export class GroupSelectorComponent implements OnChanges {
         sub: `${g.participantsCount} miembros`,
       }));
     } else if (this.type === 'contact') {
-      this.fetchUsers(q);
+      let list = this.contacts || [];
+      if (q) {
+        list = list.filter(
+          (c) =>
+            (c.name || '').toLowerCase().includes(q) ||
+            (c.pushname || '').toLowerCase().includes(q) ||
+            (c.phone || '').toLowerCase().includes(q) ||
+            (c.email || '').toLowerCase().includes(q)
+        );
+      }
+      this.available = list.map((c) => ({
+        id: c.id,
+        title: c.name || c.pushname || c.phone,
+        sub: c.email || c.status || 'Contacto',
+        phone: c.phone,
+        fromWhatsapp: !!c.fromWhatsapp, 
+        avatar: c.profilePicUrl || undefined
+      }));
     } else {
       this.available = [];
     }
@@ -118,42 +136,7 @@ export class GroupSelectorComponent implements OnChanges {
     this.emitSelectedContacts();
   }
 
-  /** Fetch de usuarios cuando type === 'contact' */
-  fetchUsers(term: string): void {
-    const seq = ++this.fetchSeq;
-
-    this.usersService
-      .searchUsers(0, 12, undefined, term, term)
-      .subscribe({
-        next: (res) => {
-          if (seq !== this.fetchSeq) return;
-          this.available = res.users.map((u: UserDto) => ({
-            id: String(u.id),
-            title: `${(u.firstName || '')} ${(u.lastName || '')}`.trim() || u.email,
-            sub: u.email || 'Usuario',
-            phone: u.contact || undefined,
-          }));
-          this.emitSelectedContacts();
-        },
-        error: () => {
-          this.available = [];
-        },
-      });
-  }
-
   /** Marca / desmarca un ítem */
-  // toggle(id: string, checked: boolean) {
-  //   const set = new Set(this.selectedIds);
-  //   if (checked) set.add(id);
-  //   else set.delete(id);
-  //   this.selectedIds = Array.from(set);
-
-  //   this.selectionChange.emit(this.selectedIds);
-  //   this.emitSelectedContacts();
-  // }
-
-
-  //  permitir un contacto seleccionado
   toggle(id: string, checked: boolean) {
     if (this.type === 'contact') {
       this.selectedIds = checked ? [id] : [];
@@ -170,8 +153,8 @@ export class GroupSelectorComponent implements OnChanges {
 
   private emitSelectedContacts() {
     const selectedContacts = this.available
-      .filter(a => this.selectedIds.includes(a.id))
-      .map(a => ({
+      .filter((a) => this.selectedIds.includes(a.id))
+      .map((a) => ({
         id: a.id,
         name: a.title,
         phone: a.phone,
@@ -183,13 +166,6 @@ export class GroupSelectorComponent implements OnChanges {
   getContactDisplay(id: string): string {
     const item = this.available.find((v) => v.id === id);
     if (!item) return id;
-
-    if (this.type === 'contact') {
-      return item.phone
-        ? `${item.title}`
-        : item.title;
-    }
-
     return item.title;
   }
 
@@ -199,5 +175,9 @@ export class GroupSelectorComponent implements OnChanges {
 
   getGroupSub(id: string): string {
     return this.available.find((v) => v.id === id)?.sub || '';
+  }
+
+  get selectedItems(): UiItem[] {
+    return this.available.filter(a => this.selectedIds.includes(a.id));
   }
 }

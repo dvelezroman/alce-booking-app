@@ -6,7 +6,7 @@ import { GroupSelectorComponent } from '../../../components/whatsapp/group-selec
 import { MessageComposerComponent } from '../../../components/whatsapp/message-composer/message-composer.component';
 import { WhatsAppGroupService } from '../../../services/whatsapp-group.service';
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
-import { Group } from '../../../services/dtos/whatsapp-group.dto';
+import { Group, WhatsAppContact } from '../../../services/dtos/whatsapp-group.dto';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 
@@ -46,6 +46,7 @@ export class BroadcastComponent implements OnInit {
   };
 
   titleForSelector = 'Selecciona grupos';
+  contacts: WhatsAppContact[] = [];
 
   selectedGroupIds: string[] = [];
   modal: ModalDto = modalInitializer();
@@ -89,9 +90,18 @@ export class BroadcastComponent implements OnInit {
         });
         break;
 
-      case 'contact':
+       case 'contact':
         this.titleForSelector = 'Busca y selecciona el contacto';
-        this.loading = false;
+        this.whatsappSvc.getContactsFromDatabase().subscribe({
+          next: (res) => {
+            this.contacts = res.contacts || [];
+            this.loading = false;
+          },
+          error: () => {
+            this.error = 'No se pudieron cargar los contactos';
+            this.loading = false;
+          },
+        });
         break;
 
       default:

@@ -42,6 +42,8 @@ export interface WhatsAppContact {
   status?: string;
   isOnline?: boolean;
   lastSeen?: string;
+  fromWhatsapp?: boolean;
+  email?: string; 
 }
 
 export interface GetWhatsAppContactsResponse {

@@ -19,11 +19,11 @@
         <span class="hint">{{ selectedIds.length }} seleccionados</span>
       </div>
 
-      <!-- loading / vacío / items -->
       <ng-container *ngIf="!loading; else loadingTpl">
         <ul class="items" *ngIf="available.length; else emptyAvail">
           <li class="item" *ngFor="let g of available">
             <div class="item__left">
+              <!-- Checkbox -->
               <input 
                 #chk 
                 type="checkbox"
@@ -31,13 +31,30 @@
                 [disabled]="type === 'contact' && !g.phone" 
                 (change)="toggle(g.id, chk.checked)" 
               />
-              <div>
-                <div class="title">
-                  {{ g.title }} 
-                  <span *ngIf="type === 'contact' && g.phone"> - {{ g.phone }}</span>
+
+              <!-- Avatar o Iniciales -->
+              <!-- <ng-container *ngIf="g.avatar; else initialsTpl">
+                <img [src]="g.avatar" alt="avatar" class="avatar" />
+              </ng-container> -->
+              <ng-template #initialsTpl>
+                <div class="avatar initials">
+                  {{ getInitials(g.title) }}
                 </div>
-               <!-- <div class="sub">{{ g.sub }}</div> -->
+              </ng-template>
+
+              <!-- Info -->
+              <div class="contact-info">
+                <div class="title">
+                  {{ g.title }}
+                  <span *ngIf="type === 'contact' && g.phone">  {{ g.phone }}</span>
+                </div>
+                <!-- <div class="sub" *ngIf="g.sub">{{ translateWhatsappStatus(g.sub) }}</div> -->
               </div>
+            </div>
+
+            <!-- Ícono WhatsApp -->
+            <div class="item__right" *ngIf="g.fromWhatsapp">
+              <i class="fab fa-whatsapp whatsapp-icon"></i>
             </div>
           </li>
         </ul>
@@ -62,14 +79,35 @@
         Aún no has seleccionado nada.
       </div>
 
-      <ul class="items" *ngIf="selectedIds.length">
-        <li class="item" *ngFor="let id of selectedIds">
+      <ul class="items" *ngIf="selectedItems.length">
+        <li class="item" *ngFor="let g of selectedItems">
           <div class="item__left">
-            <input #chkSel type="checkbox" [checked]="true" (change)="toggle(id, false)" />
-            <div>
-              <div class="title">{{ getGroupTitle(id) }}</div>
-              <!-- <div class="sub">{{ getGroupSub(id) }}</div> -->
+            <!-- Checkbox desmarcar -->
+            <input #chkSel type="checkbox" [checked]="true" (change)="toggle(g.id, false)" />
+
+            <!-- Avatar o Iniciales -->
+            <!-- <ng-container *ngIf="g.avatar; else initialsTplSel">
+              <img [src]="g.avatar" alt="avatar" class="avatar" />
+            </ng-container> -->
+            <ng-template #initialsTplSel>
+              <div class="avatar initials">
+                {{ getInitials(g.title) }}
+              </div>
+            </ng-template>
+
+            <!-- Info -->
+            <div class="contact-info">
+              <div class="title">
+                {{ g.title }}
+                <span *ngIf="type === 'contact' && g.phone">  {{ g.phone }}</span>
+              </div>
+              <!-- <div class="sub" *ngIf="g.sub">{{ translateWhatsappStatus(g.sub) }}</div> -->
             </div>
+          </div>
+
+          <!-- Ícono WhatsApp -->
+          <div class="item__right" *ngIf="g.fromWhatsapp">
+            <i class="fab fa-whatsapp whatsapp-icon"></i>
           </div>
         </li>
       </ul>

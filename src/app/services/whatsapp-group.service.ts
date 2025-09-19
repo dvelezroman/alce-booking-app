@@ -39,6 +39,10 @@ export class WhatsAppGroupService {
     return this.http.get<GetWhatsAppContactsResponse>(`${this.apiUrl}/contacts`);
   }
 
+  getContactsFromDatabase(): Observable<GetWhatsAppContactsResponse> {
+    return this.http.get<GetWhatsAppContactsResponse>(`${this.apiUrl}/contacts/database`);
+  }
+
   getGroupsFromDatabase(): Observable<GetGroupsResponse> {
     return this.http.get<GetGroupsResponse>(`${this.apiUrl}/groups/database`);
   }
