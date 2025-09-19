@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Group, WhatsAppStatus } from '../../../services/dtos/whatsapp-group.dto';
+import { Group, WhatsAppContact, WhatsAppStatus } from '../../../services/dtos/whatsapp-group.dto';
 import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.dto';
 import { WhatsAppGroupService } from '../../../services/whatsapp-group.service';
 
@@ -14,12 +14,15 @@ import { WhatsAppGroupService } from '../../../services/whatsapp-group.service';
 export class WhatsappConfigComponent {
   loadingGroups = false;
   loadingDiffusions = false;
+  loadingContacts = false;
 
   groups: Group[] = [];
   diffusionGroups: DiffusionGroup[] = [];
+  contacts: WhatsAppContact[] = [];
 
   errorGroups: string | null = null;
   errorDiffusions: string | null = null; 
+  errorContacts: string | null = null;
 
   status: WhatsAppStatus | null = null;
   loadingStatus = false;
@@ -43,6 +46,20 @@ export class WhatsappConfigComponent {
       error: (err) => {
         this.errorStatus = 'No se pudo obtener el estado de WhatsApp.';
         this.loadingStatus = false;
+      }
+    });
+  }
+
+  syncContacts(): void {
+    this.loadingContacts = true;
+    this.whatsappService.getContactsFromDatabase().subscribe({
+      next: (res) => {
+        this.contacts = res.contacts;
+        this.loadingContacts = false;
+      },
+      error: () => {
+        this.errorContacts = 'Error al sincronizar contactos';
+        this.loadingContacts = false;
       }
     });
   }

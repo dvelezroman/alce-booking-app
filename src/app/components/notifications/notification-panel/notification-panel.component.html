@@ -13,7 +13,8 @@
       </button>
 
       <ul class="dropdown" *ngIf="dropdownOpen">
-        <li (click)="selectNotificationOption('user', $event)">
+        <li *ngIf="userRole === UserRole.ADMIN || userRole === UserRole.INSTRUCTOR"
+            (click)="selectNotificationOption('user', $event)">
           <i class="fas fa-user"></i> Usuario(s)
         </li>
         <li *ngIf="userRole === UserRole.ADMIN" (click)="selectNotificationOption('role', $event)">

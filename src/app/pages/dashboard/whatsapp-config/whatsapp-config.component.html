@@ -65,6 +65,14 @@
           <span *ngIf="!loadingDiffusions">Difusiones</span>
           <span *ngIf="loadingDiffusions">Cargando...</span>
         </button>
+
+        <button 
+          class="btn btn-outline" 
+          (click)="syncContacts()" 
+          [disabled]="loadingContacts">
+          <span *ngIf="!loadingContacts">Contactos</span>
+          <span *ngIf="loadingContacts">Cargando...</span>
+        </button>
       </div>
     </div>
 
@@ -74,7 +82,10 @@
       <!-- Grupos -->
       <ng-container *ngIf="groups.length > 0 && !errorGroups; else showGroupError">
         <div class="card">
-          <h3>Grupos sincronizados</h3>
+          <div class="card-header">
+            <h3>Grupos</h3>
+            <span class="count">{{ groups.length }} grupos</span>
+          </div>
           <ul>
             <li *ngFor="let g of groups">
               <strong>{{ g.name }}</strong> — {{ g.participantsCount }} miembros
@@ -91,7 +102,10 @@
       <!-- Difusiones -->
       <ng-container *ngIf="diffusionGroups.length > 0 && !errorDiffusions; else showDiffusionError">
         <div class="card">
-          <h3>Difusiones sincronizadas</h3>
+          <div class="card-header">
+            <h3>Difusiones</h3>
+            <span class="count">{{ diffusionGroups.length }} difusiones</span>
+          </div>
           <ul>
             <li *ngFor="let d of diffusionGroups">
               <strong>{{ d.name }}</strong> — {{ d.participantsCount }} contactos
@@ -102,6 +116,27 @@
       <ng-template #showDiffusionError>
         <div *ngIf="errorDiffusions" class="error-msg">
           {{ errorDiffusions }}
+        </div>
+      </ng-template>
+
+      <!-- Contactos -->
+      <ng-container *ngIf="contacts.length > 0 && !errorContacts; else showContactsError">
+        <div class="card">
+          <div class="card-header">
+            <h3>Contactos</h3>
+            <span class="count">{{ contacts.length }} contactos</span>
+          </div>
+          <ul>
+            <li *ngFor="let c of contacts">
+              <strong>{{ c.name || c.pushname || c.phone }}</strong>
+              <span *ngIf="c.phone"> — {{ c.phone }}</span>
+            </li>
+          </ul>
+        </div>
+      </ng-container>
+      <ng-template #showContactsError>
+        <div *ngIf="errorContacts" class="error-msg">
+          {{ errorContacts }}
         </div>
       </ng-template>
 

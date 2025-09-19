@@ -51,18 +51,3 @@ export interface GetWhatsAppContactsResponse {
   totalContacts: number;
   contacts: WhatsAppContact[];
 }
-
-
-
-// export interface Contact {
-//   id: string;
-//   name: string;
-//   phone?: string;
-// }
-
-// export interface Group {
-//   id: string;
-//   name: string;
-//   description: string;
-//   members: string[]; 
-// }
