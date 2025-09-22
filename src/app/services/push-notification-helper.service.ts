@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PushNotificationService } from './push-notification.service';
 import { environment } from '../../environments/environment';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +38,7 @@ export class PushNotificationHelperService {
     }
 
     // Check if already subscribed
-    const isSubscribed = await this.pushNotificationService.isSubscribed().toPromise();
+    const isSubscribed = await firstValueFrom(this.pushNotificationService.isSubscribed());
     if (isSubscribed) {
       this.devLog('User already subscribed to push notifications');
       return;
@@ -70,7 +71,7 @@ export class PushNotificationHelperService {
       return false;
     }
 
-    const isSubscribed = await this.pushNotificationService.isSubscribed().toPromise();
+    const isSubscribed = await firstValueFrom(this.pushNotificationService.isSubscribed());
     if (isSubscribed) {
       return false;
     }

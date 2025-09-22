@@ -61,8 +61,43 @@ async function debugPushSubscription() {
       return;
     }
     
+    // Test subscription check endpoint first
+    console.log('5. Testing subscription check endpoint...');
+    try {
+      const checkResponse = await fetch(`${apiUrl}/has-subscription`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log('Subscription check response status:', checkResponse.status);
+      const checkResponseText = await checkResponse.text();
+      console.log('Subscription check response body:', checkResponseText);
+      
+      if (checkResponse.ok) {
+        console.log('✅ Subscription check endpoint is working correctly');
+        try {
+          const checkResponseJson = JSON.parse(checkResponseText);
+          console.log('✅ Subscription check response structure is valid:', {
+            hasActiveSubscription: 'hasActiveSubscription' in checkResponseJson,
+            hasSubscriptionCount: 'subscriptionCount' in checkResponseJson,
+            hasUserId: 'userId' in checkResponseJson,
+            hasActiveSubscriptionValue: checkResponseJson.hasActiveSubscription
+          });
+        } catch (parseError) {
+          console.warn('⚠️ Subscription check response is not valid JSON:', parseError.message);
+        }
+      } else {
+        console.error('❌ Subscription check endpoint returned error:', checkResponse.status, checkResponseText);
+      }
+    } catch (error) {
+      console.error('❌ Subscription check API test error:', error.message);
+    }
+
     // Test API connectivity with actual subscription endpoint
-    console.log('5. Testing subscription endpoint...');
+    console.log('6. Testing subscription endpoint...');
     try {
       const testSubscription = {
         subscription: {

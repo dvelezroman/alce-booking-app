@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, from, of } from 'rxjs';
+import { BehaviorSubject, Observable, from, of, firstValueFrom } from 'rxjs';
 import { catchError, switchMap, tap, take } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { NotificationService } from './notification.service';
@@ -231,7 +231,7 @@ export class PushNotificationService {
         requestBody: requestBody
       });
 
-      const response = await this.http.post(`${this.apiUrl}/subscribe`, requestBody).toPromise();
+      const response = await firstValueFrom(this.http.post(`${this.apiUrl}/subscribe`, requestBody));
 
       this.devLog('Push subscription saved successfully:', response);
       
@@ -270,7 +270,7 @@ export class PushNotificationService {
   private async removeSubscriptionFromServer(): Promise<void> {
     try {
       // Backend will extract userId from JWT token
-      await this.http.delete(`${this.apiUrl}/unsubscribe`).toPromise();
+      await firstValueFrom(this.http.delete(`${this.apiUrl}/unsubscribe`));
     } catch (error) {
       this.errorLog('Error removing subscription from server:', error);
     }
@@ -454,7 +454,29 @@ export class PushNotificationService {
    * Check if user is logged in
    */
   async isUserLoggedIn(): Promise<boolean> {
-    const userId = await this.getCurrentUserId().toPromise();
+    const userId = await firstValueFrom(this.getCurrentUserId());
     return !!(userId && userId > 0);
+  }
+
+  /**
+   * Check if user has an active push subscription
+   */
+  async hasActiveSubscription(): Promise<boolean> {
+    try {
+      this.devLog('Checking if user has active push subscription...');
+      
+      const response = await firstValueFrom(this.http.get<{
+        hasActiveSubscription: boolean;
+        subscriptionCount: number;
+        userId: number;
+      }>(`${this.apiUrl}/has-subscription`));
+
+      this.devLog('Subscription check response:', response);
+      
+      return response?.hasActiveSubscription || false;
+    } catch (error) {
+      this.errorLog('Error checking active subscription:', error);
+      return false;
+    }
   }
 }

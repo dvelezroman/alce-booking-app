@@ -1,6 +1,6 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable, Subject, tap} from 'rxjs';
+import {Observable, Subject, tap, firstValueFrom} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Store} from "@ngrx/store";
 import {setAdminStatus, setInstructorLink, setLoggedInStatus, setUserData, unsetUserData} from "../store/user.action";
@@ -120,32 +120,46 @@ export class UsersService implements OnInit{
           return;
         }
 
-        // Check if already subscribed
-        const isSubscribed = await this.pushNotificationService.isSubscribed().toPromise();
-        if (isSubscribed) {
-          this.devLog('User already subscribed to push notifications');
+        // Check if user already has an active subscription on the server
+        const hasActiveSubscription = await this.pushNotificationService.hasActiveSubscription();
+        if (hasActiveSubscription) {
+          this.devLog('User already has an active push subscription on server');
+          // Start periodic notification checks even if already subscribed
+          this.pushNotificationService.startPeriodicNotificationCheck(5);
           return;
         }
 
-        // Check current permission status
-        const permission = await this.pushNotificationService.requestPermission();
-        if (permission === 'granted') {
-          // User granted permission, subscribe to push notifications
-          const subscription = await this.pushNotificationService.subscribeToPush();
-          if (subscription) {
-            this.devLog('Successfully subscribed to push notifications after login');
-            // Start periodic notification checks
-            this.pushNotificationService.startPeriodicNotificationCheck(5);
-          }
-        } else if (permission === 'denied') {
-          this.devLog('User denied push notification permission');
-        } else {
-          this.devLog('User dismissed push notification permission request');
+        // Check if already subscribed locally
+        const isSubscribed = await firstValueFrom(this.pushNotificationService.isSubscribed());
+        if (isSubscribed) {
+          this.devLog('User already subscribed locally to push notifications');
+          return;
         }
+
+        this.devLog('User does not have active subscription, showing permission request...');
+        
+        // Show notification permission banner/toast
+        this.showPushNotificationPermissionBanner();
+
       }, 1000); // Wait 1 second after login
     } catch (error) {
       console.error('Error subscribing to push notifications after login:', error);
     }
+  }
+
+  /**
+   * Show push notification permission banner
+   */
+  private showPushNotificationPermissionBanner(): void {
+    // This will trigger the notification permission component to show
+    // The component should be listening for this event
+    const event = new CustomEvent('show-push-notification-banner', {
+      detail: {
+        message: '¿Te gustaría recibir notificaciones push para estar al día con las novedades?',
+        showBanner: true
+      }
+    });
+    window.dispatchEvent(event);
   }
 
   logout(): void {
