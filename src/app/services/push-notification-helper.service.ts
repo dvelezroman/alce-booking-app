@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PushNotificationService } from './push-notification.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,15 @@ export class PushNotificationHelperService {
   constructor(private pushNotificationService: PushNotificationService) {}
 
   /**
+   * Log only in development mode
+   */
+  private devLog(message: string, ...args: any[]): void {
+    if (!environment.production) {
+      console.log(`[PushNotificationHelper] ${message}`, ...args);
+    }
+  }
+
+  /**
    * Offer push notifications to user after login
    * Call this method after user successfully logs in
    */
@@ -16,20 +26,20 @@ export class PushNotificationHelperService {
     // Check if user is logged in
     const isLoggedIn = await this.pushNotificationService.isUserLoggedIn();
     if (!isLoggedIn) {
-      console.log('User not logged in, skipping push notification offer');
+      this.devLog('User not logged in, skipping push notification offer');
       return;
     }
 
     // Check if push notifications are supported
     if (!this.pushNotificationService.isSupported()) {
-      console.log('Push notifications not supported');
+      this.devLog('Push notifications not supported');
       return;
     }
 
     // Check if already subscribed
     const isSubscribed = await this.pushNotificationService.isSubscribed().toPromise();
     if (isSubscribed) {
-      console.log('User already subscribed to push notifications');
+      this.devLog('User already subscribed to push notifications');
       return;
     }
 
@@ -39,14 +49,14 @@ export class PushNotificationHelperService {
       // User granted permission, subscribe to push notifications
       const subscription = await this.pushNotificationService.subscribeToPush();
       if (subscription) {
-        console.log('Successfully subscribed to push notifications');
+        this.devLog('Successfully subscribed to push notifications');
         // You can show a success message to the user here
       }
     } else if (permission === 'denied') {
-      console.log('User denied push notification permission');
+      this.devLog('User denied push notification permission');
       // You can show a message explaining how to enable notifications in browser settings
     } else {
-      console.log('User dismissed push notification permission request');
+      this.devLog('User dismissed push notification permission request');
     }
   }
 

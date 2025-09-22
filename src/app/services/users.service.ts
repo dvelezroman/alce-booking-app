@@ -8,6 +8,7 @@ import {LoginDto, LoginResponseDto, RegisterResponseDto, UserDto, UserRole} from
 import {Router} from "@angular/router";
 import {selectUserData} from "../store/user.selector";
 import { LinksService } from './links.service';
+import { PushNotificationService } from './push-notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,8 +24,18 @@ export class UsersService implements OnInit{
     private store: Store,
     private linksService: LinksService,
     private router: Router,
+    private pushNotificationService: PushNotificationService,
   ) {
     this.userData$ = this.store.select(selectUserData);
+  }
+
+  /**
+   * Log only in development mode
+   */
+  private devLog(message: string, ...args: any[]): void {
+    if (!environment.production) {
+      console.log(`[UsersService] ${message}`, ...args);
+    }
   }
 
   ngOnInit(): void {
@@ -72,7 +83,10 @@ export class UsersService implements OnInit{
             localStorage.setItem('instructorLink', link);
             this.store.dispatch(setInstructorLink({ link }));
           }
+          
+          // Subscribe to push notifications after successful login
           if (response.accessToken) {
+            this.subscribeToPushNotificationsAfterLogin();
             this.router.navigate(['register-complete']);
           }
         })
@@ -91,6 +105,47 @@ export class UsersService implements OnInit{
           this.store.dispatch(setUserData({ data: response }));
         })
       );
+  }
+
+  /**
+   * Subscribe to push notifications after successful login
+   */
+  private async subscribeToPushNotificationsAfterLogin(): Promise<void> {
+    try {
+      // Wait a bit to ensure the user is fully logged in
+      setTimeout(async () => {
+        // Check if push notifications are supported
+        if (!this.pushNotificationService.isSupported()) {
+          this.devLog('Push notifications not supported, skipping subscription');
+          return;
+        }
+
+        // Check if already subscribed
+        const isSubscribed = await this.pushNotificationService.isSubscribed().toPromise();
+        if (isSubscribed) {
+          this.devLog('User already subscribed to push notifications');
+          return;
+        }
+
+        // Check current permission status
+        const permission = await this.pushNotificationService.requestPermission();
+        if (permission === 'granted') {
+          // User granted permission, subscribe to push notifications
+          const subscription = await this.pushNotificationService.subscribeToPush();
+          if (subscription) {
+            this.devLog('Successfully subscribed to push notifications after login');
+            // Start periodic notification checks
+            this.pushNotificationService.startPeriodicNotificationCheck(5);
+          }
+        } else if (permission === 'denied') {
+          this.devLog('User denied push notification permission');
+        } else {
+          this.devLog('User dismissed push notification permission request');
+        }
+      }, 1000); // Wait 1 second after login
+    } catch (error) {
+      console.error('Error subscribing to push notifications after login:', error);
+    }
   }
 
   logout(): void {
