@@ -40,6 +40,22 @@ export interface PushNotificationPayload {
 export class PushNotificationService {
   private apiUrl = `${environment.apiUrl}/push-notifications`;
   private vapidPublicKey = environment.vapidPublicKey;
+
+  /**
+   * Log only in development mode
+   */
+  private devLog(message: string, ...args: any[]): void {
+    if (!environment.production) {
+      console.log(`[PushNotification] ${message}`, ...args);
+    }
+  }
+
+  /**
+   * Log errors in both development and production
+   */
+  private errorLog(message: string, ...args: any[]): void {
+    console.error(`[PushNotification] ${message}`, ...args);
+  }
   
   private subscriptionSubject = new BehaviorSubject<PushSubscription | null>(null);
   public subscription$ = this.subscriptionSubject.asObservable();
@@ -90,7 +106,7 @@ export class PushNotificationService {
       this.permissionSubject.next(permission);
       return permission;
     } catch (error) {
-      console.error('Error requesting notification permission:', error);
+      this.errorLog('Error requesting notification permission:', error);
       this.permissionSubject.next('denied');
       return 'denied';
     }
@@ -100,22 +116,33 @@ export class PushNotificationService {
    * Subscribe to push notifications
    */
   async subscribeToPush(): Promise<PushSubscription | null> {
+    this.devLog('Starting push notification subscription process...');
+    
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-      console.warn('Push messaging is not supported');
+      this.devLog('Push messaging is not supported');
       return null;
     }
 
+    this.devLog('Push messaging is supported, requesting permission...');
     const permission = await this.requestPermission();
     if (permission !== 'granted') {
-      console.warn('Notification permission not granted');
+      this.devLog('Notification permission not granted:', permission);
       return null;
     }
 
+    this.devLog('Permission granted, creating push subscription...');
     try {
       const registration = await navigator.serviceWorker.ready;
+      this.devLog('Service worker ready, subscribing to push manager...');
+      
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKey)
+      });
+
+      this.devLog('Push subscription created:', {
+        endpoint: subscription.endpoint,
+        hasKeys: !!subscription.getKey('p256dh') && !!subscription.getKey('auth')
       });
 
       const pushSubscription: PushSubscription = {
@@ -126,12 +153,14 @@ export class PushNotificationService {
         }
       };
 
+      this.devLog('Push subscription object created, saving to server...');
       this.subscriptionSubject.next(pushSubscription);
       await this.saveSubscriptionToServer(pushSubscription);
       
+      this.devLog('Push subscription process completed successfully');
       return pushSubscription;
     } catch (error) {
-      console.error('Error subscribing to push notifications:', error);
+      this.errorLog('Error subscribing to push notifications:', error);
       return null;
     }
   }
@@ -152,7 +181,7 @@ export class PushNotificationService {
       }
       return false;
     } catch (error) {
-      console.error('Error unsubscribing from push notifications:', error);
+      this.errorLog('Error unsubscribing from push notifications:', error);
       return false;
     }
   }
@@ -176,7 +205,7 @@ export class PushNotificationService {
         this.subscriptionSubject.next(pushSubscription);
       }
     } catch (error) {
-      console.error('Error loading existing subscription:', error);
+      this.errorLog('Error loading existing subscription:', error);
     }
   }
 
@@ -185,12 +214,27 @@ export class PushNotificationService {
    */
   private async saveSubscriptionToServer(subscription: PushSubscription): Promise<void> {
     try {
-      // Backend will extract userId from JWT token
-      await this.http.post(`${this.apiUrl}/subscribe`, {
+      this.devLog('Saving push subscription to server:', {
+        apiUrl: this.apiUrl,
+        endpoint: subscription.endpoint,
+        hasKeys: !!subscription.keys
+      });
+
+      const response = await this.http.post(`${this.apiUrl}/subscribe`, {
         subscription
       }).toPromise();
+
+      this.devLog('Push subscription saved successfully:', response);
     } catch (error) {
-      console.error('Error saving subscription to server:', error);
+      this.errorLog('Error saving subscription to server:', error);
+      this.devLog('API URL:', this.apiUrl);
+      this.devLog('Subscription data:', subscription);
+      
+      // Log more details about the error
+      if (error instanceof Error) {
+        this.errorLog('Error message:', error.message);
+        this.devLog('Error stack:', error.stack);
+      }
     }
   }
 
@@ -202,7 +246,7 @@ export class PushNotificationService {
       // Backend will extract userId from JWT token
       await this.http.delete(`${this.apiUrl}/unsubscribe`).toPromise();
     } catch (error) {
-      console.error('Error removing subscription from server:', error);
+      this.errorLog('Error removing subscription from server:', error);
     }
   }
 
@@ -211,7 +255,7 @@ export class PushNotificationService {
    */
   showLocalNotification(payload: PushNotificationPayload): void {
     if (Notification.permission !== 'granted') {
-      console.warn('Notification permission not granted');
+      this.devLog('Notification permission not granted');
       return;
     }
 
@@ -261,7 +305,7 @@ export class PushNotificationService {
     return this.getCurrentUserId().pipe(
       switchMap(userId => {
         if (!userId || userId === 0) {
-          console.warn('Cannot check notifications: user not logged in');
+          this.devLog('Cannot check notifications: user not logged in');
           return of(false);
         }
         
@@ -286,7 +330,7 @@ export class PushNotificationService {
             return of(unreadCount > 0);
           }),
           catchError((error) => {
-            console.error('Error checking unread notifications:', error);
+            this.errorLog('Error checking unread notifications:', error);
             return of(false);
           })
         );
@@ -372,7 +416,7 @@ export class PushNotificationService {
     // Check if already subscribed
     const currentSubscription = this.subscriptionSubject.value;
     if (currentSubscription) {
-      console.log('Already subscribed to push notifications');
+      this.devLog('Already subscribed to push notifications');
       return currentSubscription;
     }
 
