@@ -61,18 +61,54 @@ async function debugPushSubscription() {
       return;
     }
     
-    // Test API connectivity
+    // Test API connectivity with actual subscription endpoint
+    console.log('5. Testing subscription endpoint...');
     try {
-      const testResponse = await fetch(`${apiUrl}/test`, {
-        method: 'GET',
+      const testSubscription = {
+        subscription: {
+          endpoint: 'https://fcm.googleapis.com/fcm/send/test-endpoint',
+          keys: {
+            p256dh: 'test-p256dh-key',
+            auth: 'test-auth-key'
+          }
+        }
+      };
+      
+      console.log('Sending test request:', testSubscription);
+      
+      const testResponse = await fetch(`${apiUrl}/subscribe`, {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify(testSubscription)
       });
-      console.log('API test response status:', testResponse.status);
+      
+      console.log('API response status:', testResponse.status);
+      console.log('API response headers:', Object.fromEntries(testResponse.headers.entries()));
+      
+      const responseText = await testResponse.text();
+      console.log('API response body:', responseText);
+      
+      if (testResponse.ok) {
+        console.log('✅ API endpoint is working correctly');
+        try {
+          const responseJson = JSON.parse(responseText);
+          console.log('✅ Response structure is valid:', {
+            hasId: 'id' in responseJson,
+            hasUserId: 'userId' in responseJson,
+            hasEndpoint: 'endpoint' in responseJson,
+            hasIsActive: 'isActive' in responseJson
+          });
+        } catch (parseError) {
+          console.warn('⚠️ Response is not valid JSON:', parseError.message);
+        }
+      } else {
+        console.error('❌ API endpoint returned error:', testResponse.status, responseText);
+      }
     } catch (error) {
-      console.log('API test error (this might be expected):', error.message);
+      console.error('❌ API test error:', error.message);
     }
     
     console.log('5. Ready to test subscription...');
@@ -83,5 +119,70 @@ async function debugPushSubscription() {
   }
 }
 
+// Test function to manually test subscription
+async function testPushSubscription() {
+  if (window.location.hostname !== 'localhost' && !window.location.hostname.includes('127.0.0.1')) {
+    console.warn('Test function only works in development mode');
+    return;
+  }
+  
+  console.log('=== Manual Push Subscription Test ===');
+  
+  const accessToken = localStorage.getItem('accessToken');
+  if (!accessToken) {
+    console.error('❌ No access token found. Please log in first.');
+    return;
+  }
+  
+  try {
+    // Get a real push subscription
+    const registration = await navigator.serviceWorker.ready;
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: 'BOVYepzMrdf4xm-otXeH_iTT-8A6-ZxbSCA_sk6GJoPJn5sjlNFZejP5AQtCMyMzAsBn-ToWKcTXhclm_sSTgZA'
+    });
+    
+    console.log('✅ Push subscription created:', subscription.endpoint);
+    
+    // Convert to our format
+    const pushSubscription = {
+      subscription: {
+        endpoint: subscription.endpoint,
+        keys: {
+          p256dh: btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh')))),
+          auth: btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('auth'))))
+        }
+      }
+    };
+    
+    console.log('Sending subscription to server...');
+    
+    const response = await fetch('https://alce-api.porto-rockcity-app.com/v0/push-notifications/subscribe', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(pushSubscription)
+    });
+    
+    console.log('Response status:', response.status);
+    const responseText = await response.text();
+    console.log('Response body:', responseText);
+    
+    if (response.ok) {
+      console.log('✅ Subscription saved successfully!');
+    } else {
+      console.error('❌ Failed to save subscription');
+    }
+    
+  } catch (error) {
+    console.error('❌ Error:', error);
+  }
+}
+
 // Run the debug function
 debugPushSubscription();
+
+// Make test function available globally
+window.testPushSubscription = testPushSubscription;

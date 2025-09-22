@@ -214,17 +214,36 @@ export class PushNotificationService {
    */
   private async saveSubscriptionToServer(subscription: PushSubscription): Promise<void> {
     try {
+      const requestBody = {
+        subscription: {
+          endpoint: subscription.endpoint,
+          keys: {
+            p256dh: subscription.keys.p256dh,
+            auth: subscription.keys.auth
+          }
+        }
+      };
+
       this.devLog('Saving push subscription to server:', {
         apiUrl: this.apiUrl,
         endpoint: subscription.endpoint,
-        hasKeys: !!subscription.keys
+        hasKeys: !!subscription.keys,
+        requestBody: requestBody
       });
 
-      const response = await this.http.post(`${this.apiUrl}/subscribe`, {
-        subscription
-      }).toPromise();
+      const response = await this.http.post(`${this.apiUrl}/subscribe`, requestBody).toPromise();
 
       this.devLog('Push subscription saved successfully:', response);
+      
+      // Verify the response structure
+      if (response && typeof response === 'object') {
+        this.devLog('Response contains:', {
+          id: (response as any).id,
+          userId: (response as any).userId,
+          isActive: (response as any).isActive,
+          createdAt: (response as any).createdAt
+        });
+      }
     } catch (error) {
       this.errorLog('Error saving subscription to server:', error);
       this.devLog('API URL:', this.apiUrl);
@@ -234,6 +253,13 @@ export class PushNotificationService {
       if (error instanceof Error) {
         this.errorLog('Error message:', error.message);
         this.devLog('Error stack:', error.stack);
+      }
+      
+      // Log HTTP error details if available
+      if (error && typeof error === 'object' && 'status' in error) {
+        this.errorLog('HTTP Error Status:', (error as any).status);
+        this.errorLog('HTTP Error Message:', (error as any).message);
+        this.errorLog('HTTP Error Body:', (error as any).error);
       }
     }
   }
