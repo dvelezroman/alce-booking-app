@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { PushNotificationService } from '../../services/push-notification.service';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-notification-permission',
@@ -35,7 +35,7 @@ export class NotificationPermissionComponent implements OnInit, OnDestroy {
     }
 
     // Listen for custom event to show banner after login
-    window.addEventListener('show-push-notification-banner', this.handleShowBannerEvent.bind(this));
+    window.addEventListener('show-push-notification-banner', this.handleShowBannerEvent.bind(this) as EventListener);
 
     // Estado del permiso
     this.subscriptions.push(
@@ -62,14 +62,15 @@ export class NotificationPermissionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
-    window.removeEventListener('show-push-notification-banner', this.handleShowBannerEvent.bind(this));
+    window.removeEventListener('show-push-notification-banner', this.handleShowBannerEvent.bind(this) as EventListener);
   }
 
   /**
    * Handle the custom event to show push notification banner
    */
-  private handleShowBannerEvent(event: CustomEvent): void {
-    this.devLog('Received show banner event:', event.detail);
+  private handleShowBannerEvent(event: Event): void {
+    const customEvent = event as CustomEvent;
+    this.devLog('Received show banner event:', customEvent.detail);
     this.showPermissionBanner = true;
   }
 
