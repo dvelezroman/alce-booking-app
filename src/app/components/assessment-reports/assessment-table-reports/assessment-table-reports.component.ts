@@ -12,14 +12,16 @@ import { Stage } from '../../../services/dtos/student.dto';
 })
 export class AssessmentTableReportsComponent implements OnChanges {
   @Input() assessments: AssessementI[] = [];
+  @Input() stagesWithContent: Stage[] = [];
+  
   @Input() maxPointsAssessment: number | null = null;
   @Input() minPointsAssessment: number | null = null;
-  @Input() stagesWithContent: Stage[] = [];
 
-  @Output() evaluationClicked = new EventEmitter<AssessementI>();
-  @Output() deleteRequested = new EventEmitter<AssessementI>();
   @Input() currentStageId: number | null = null;
   @Input() highlightStageId: number | null = null;
+  
+  @Output() evaluationClicked = new EventEmitter<AssessementI>();
+  @Output() deleteRequested = new EventEmitter<AssessementI>();
 
   types: string[] = [];
   groupedAssessments: Record<string, Record<number, AssessementI[]>> = {}; 
@@ -66,7 +68,7 @@ export class AssessmentTableReportsComponent implements OnChanges {
   }
 
   onDeleteClick(assessment: AssessementI): void {
-    console.log(assessment.id);
+    //console.log(assessment.id);
     this.deleteRequested.emit(assessment);
   }
 }

@@ -19,6 +19,8 @@ export class MeetingTableComponent {
   @Output() commentViewRequested = new EventEmitter<{ note: string; title: string; meeting: MeetingDTO }>();
   @Output() studentContentHistoryRequested = new EventEmitter<MeetingDTO>();
   @Output() assistanceCheckboxClicked = new EventEmitter<{ event: Event; meeting: MeetingDTO }>();
+  
+  @Output() evaluationRequested = new EventEmitter<number>();
 
   onHistoryClick(meeting: MeetingDTO) {
     this.studentContentHistoryRequested.emit(meeting);
@@ -82,5 +84,11 @@ export class MeetingTableComponent {
 
   hasReinforcement(meeting: MeetingDTO): boolean {
     return meeting.hasReinforcement === true;
+  }
+
+  onEvaluationClick(meeting: MeetingDTO) {
+    if (meeting.studentId) {
+      this.evaluationRequested.emit(meeting.studentId);
+    }
   }
 }

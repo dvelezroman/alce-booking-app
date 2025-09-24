@@ -67,6 +67,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   isLoadingContentHistory: boolean = false;
   isStudentContentHistoryModalVisible: boolean = false;
 
+  assessmentsByStudent: AssessementI[] = [];
+
   modal: ModalDto = modalInitializer();
   confirmationModal: ModalDto = modalInitializer();
 
@@ -600,6 +602,21 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   get canGoNext(): boolean {
     return this.currentStageIndex < this.filteredStages.length - 1;
+  }
+
+
+  onEvaluationRequested(studentId: number) {
+    if (!studentId) return;
+
+    this.assessmentService.findAll({ studentId: String(studentId) }).subscribe({
+      next: (assessments) => {
+        this.assessmentsByStudent = assessments;
+        //console.log(this.assessmentsByStudent);
+      },
+      error: () => {
+        this.showModal(this.createModalParams(true, 'Error al cargar las evaluaciones del estudiante.'));
+      }
+    });
   }
 }
 
