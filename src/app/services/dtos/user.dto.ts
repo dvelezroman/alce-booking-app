@@ -35,6 +35,7 @@ export interface UserDto {
   meetingsAlert?: boolean;
   assessmentResources?: AssessmentResourceI[];
   dataCompleted?: boolean;
+  temporaryComment?: string;
 }
 
 export interface LoginDto {

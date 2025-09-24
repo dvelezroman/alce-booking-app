@@ -73,6 +73,7 @@ export class SearchingStudentComponent {
       ageGroup: [''],
       studentId: [''],
       comment: [''],
+      temporaryComment: [''],
     });
   }
 
@@ -176,6 +177,7 @@ export class SearchingStudentComponent {
       studentId: user.student?.id,
       linkId: '',
       comment: user.comment,
+      temporaryComment: user.temporaryComment,
       status: user.status === UserStatus.ACTIVE,
     });
 
