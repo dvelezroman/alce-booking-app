@@ -1,1 +1,100 @@
-<p>evaluation-modal works!</p>
+<div class="modal-overlay" *ngIf="visible">
+  <div class="modal-content">
+    <button class="close-button" (click)="closeModal()">✖</button>
+
+    <div class="student-header">
+      <h2>{{ studentName }}</h2>
+      <p>Stage actual: {{ studentStage }}</p>
+    </div>
+
+    <div class="table-container">
+      <table
+        class="table-results"
+        *ngIf="stagesWithContent.length > 0 && types.length > 0"
+      >
+        <thead>
+          <tr>
+            <th
+              *ngFor="let stage of stagesWithContent"
+              [attr.colspan]="types.length"
+              class="left-border right-border stage-header"
+              [ngClass]="{
+                'highlight-column': stage.id === highlightStageId,
+                'highlight-stage-header': stage.id === highlightStageId,
+              }"
+              [attr.id]="stage.id === highlightStageId ? 'highlighted-stage' : null"
+            >
+              <div class="stage-header-wrapper">
+                <div
+                  *ngIf="stage.id === highlightStageId"
+                  class="arrow-icon"
+                  aria-hidden="true"
+                >
+                  ⬇
+                </div>
+                <span>{{ stage.number }} - {{ stage.description }}</span>
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <ng-container *ngFor="let stage of stagesWithContent">
+              <th
+                *ngFor="let type of types; let j = index"
+                [ngClass]="{
+                  'left-border': j === 0,
+                  'right-border': j === types.length - 1,
+                  'highlight-column': stage.id === highlightStageId,
+                }"
+              >
+                {{ type }}
+              </th>
+            </ng-container>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <ng-container *ngFor="let stage of stagesWithContent">
+              <td
+                *ngFor="let type of types; let j = index"
+                [ngClass]="{
+                  'left-border': j === 0,
+                  'right-border': j === types.length - 1,
+                  'highlight-column': stage.id === highlightStageId,
+                }"
+              >
+                <ng-container
+                  *ngIf="hasAssessments(type, stage.id); else emptyCell"
+                >
+                  <div
+                    *ngFor="let a of groupedAssessments[type][stage.id]; let last = last"
+                    class="assessment-entry"
+                    [ngClass]="{ 'bordered-entry': !last }"
+                  >
+                    <div class="entry-date">
+                      {{ a.createdAt | date: 'dd/MM/yy' }}
+                    </div>
+                    <div>
+                      Nota:
+                      <span
+                        [ngClass]="{
+                          'max-point-reached': isMaxReached(a.points),
+                          'below-threshold': isBelowMax(a.points)
+                        }"
+                      >
+                        {{ a.points }}
+                      </span>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-template #emptyCell>
+                  <span style="color: #ccc">-</span>
+                </ng-template>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

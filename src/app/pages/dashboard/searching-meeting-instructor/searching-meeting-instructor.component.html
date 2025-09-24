@@ -107,5 +107,15 @@
   (confirmAction)="confirmationModal.confirm && confirmationModal.confirm()"
   (close)="confirmationModal.close()"
 />
+
+<app-evaluation-modal
+  [visible]="showEvaluationModal"
+  [assessments]="assessmentsByStudent"
+  [stagesWithContent]="filteredStages"
+  [maxPointsAssessment]="null"
+  [minPointsAssessment]="minPoints"
+  [highlightStageId]="highlightStageId"
+  (closed)="showEvaluationModal = false">
+</app-evaluation-modal>
   
   

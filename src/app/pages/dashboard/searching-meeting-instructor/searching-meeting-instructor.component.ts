@@ -24,6 +24,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AssessmentService } from '../../../services/assessment.service';
 import { AssessementI } from '../../../services/dtos/assessment.dto';
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
+import { EvaluationModalComponent } from '../../../components/instructor/evaluation-modal/evaluation-modal.component';
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -37,7 +38,8 @@ import { AssessmentPointsConfigService } from '../../../services/assessment-poin
     ContentSelectorComponent,
     StudentContentHistoryModalComponent,
     MeetingTableComponent,
-    MeetingFilterComponent
+    MeetingFilterComponent,
+    EvaluationModalComponent
   ],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'
@@ -68,8 +70,10 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   isStudentContentHistoryModalVisible: boolean = false;
 
   assessmentsByStudent: AssessementI[] = [];
+  showEvaluationModal: boolean = false;
 
   modal: ModalDto = modalInitializer();
+  highlightStageId: number | null = null;
   confirmationModal: ModalDto = modalInitializer();
 
   filter: FilterMeetingsDto = {
@@ -611,6 +615,8 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.assessmentService.findAll({ studentId: String(studentId) }).subscribe({
       next: (assessments) => {
         this.assessmentsByStudent = assessments;
+        this.highlightStageId = assessments[0]?.student?.stageId || null;
+        this.showEvaluationModal = true;
         //console.log(this.assessmentsByStudent);
       },
       error: () => {
@@ -618,5 +624,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       }
     });
   }
+
+  
 }
 
