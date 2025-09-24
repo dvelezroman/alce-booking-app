@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class PwaInstallBannerService {
 
   private deferredPrompt: any = null;
 
-  constructor() {
+  constructor(private usersService: UsersService) {
     this.initializeInstallPrompt();
   }
 
@@ -26,6 +27,9 @@ export class PwaInstallBannerService {
     window.addEventListener('appinstalled', () => {
       this.hideBanner();
       this.setDontShowAgain(true);
+
+      this.usersService.logout();
+      window.location.href = '/login';
     });
   }
 

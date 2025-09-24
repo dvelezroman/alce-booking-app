@@ -1,6 +1,7 @@
 import { Injectable, Optional } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter, map } from 'rxjs/operators';
+import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class PwaService {
   private promptEvent: any;
   private swUpdate?: SwUpdate;
 
-  constructor() {
+  constructor(private usersService: UsersService) {
     // Service worker will be injected when available
   }
 
@@ -38,6 +39,11 @@ export class PwaService {
       event.preventDefault();
       this.promptEvent = event;
     });
+
+    window.addEventListener('appinstalled', () => {
+      this.usersService.logout();
+      window.location.href = '/login';
+    });
   }
 
   public async installPwa(): Promise<boolean> {
@@ -48,7 +54,14 @@ export class PwaService {
     this.promptEvent.prompt();
     const result = await this.promptEvent.userChoice;
     this.promptEvent = null;
-    return result.outcome === 'accepted';
+
+    if (result.outcome === 'accepted') {
+      this.usersService.logout();
+      window.location.href = '/login';
+      return true;
+    }
+
+    return false;
   }
 
   public canInstall(): boolean {
