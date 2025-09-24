@@ -35,3 +35,10 @@ export interface GetWhatsAppMessagesFilters {
   sentAtFrom?: string;
   sentAtTo?: string; 
 }
+
+export interface GetWhatsAppDailyUsageResponse {
+  messagesUsed: number;
+  messagesRemaining: number;
+  limit: number;
+  date: string;
+}

@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { GetGroupsResponse, GetWhatsAppContactsResponse, WhatsAppStatus } from './dtos/whatsapp-group.dto';
 import { GetDiffusionGroupsResponse } from './dtos/whatsapp-diffusion-group.dto';
 import { SendContactMessageDto, SendContactMessageResponse, SendDiffusionMessageDto, SendDiffusionMessageResponse, SendGroupMessageDto, SendGroupMessageResponse } from './dtos/whatsapp-send.dto';
-import { GetWhatsAppMessagesFilters, GetWhatsAppMessagesResponse } from './dtos/whatssapp-messages.dto';
+import { GetWhatsAppDailyUsageResponse, GetWhatsAppMessagesFilters, GetWhatsAppMessagesResponse } from './dtos/whatssapp-messages.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -65,6 +65,10 @@ export class WhatsAppGroupService {
       });
     }
     return this.http.get<GetWhatsAppMessagesResponse>(`${this.apiUrl}/messages`, { params } );
+  }
+
+  getDailyUsage(): Observable<GetWhatsAppDailyUsageResponse> {
+    return this.http.get<GetWhatsAppDailyUsageResponse>(`${this.apiUrl}/daily-usage`);
   }
 
 }

@@ -31,8 +31,23 @@
 
       <!-- Footer simplificado -->
       <div class="footer-bar">
+        <div class="footer-left">
+          <p class="footer-usage" *ngIf="usage">
+            {{ usage.messagesUsed }}/{{ usage.limit }} enviados · 
+            <strong>{{ usage.messagesRemaining }}</strong> restantes
+          </p>
+          <p class="footer-limit" *ngIf="usage && usage.messagesRemaining === 0">
+            Has alcanzado el límite diario.
+          </p>
+        </div>
+
         <div class="footer-actions">
-          <button class="btn btn-primary" (click)="onSend()" [disabled]="loading">Enviar</button>
+          <button 
+            class="btn btn-primary" 
+            (click)="onSend()" 
+            [disabled]="loading || (usage && usage.messagesRemaining === 0)">
+            Enviar
+          </button>
         </div>
       </div>
     </div>

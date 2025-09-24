@@ -9,6 +9,7 @@ import { DiffusionGroup } from '../../../services/dtos/whatsapp-diffusion-group.
 import { Group, WhatsAppContact } from '../../../services/dtos/whatsapp-group.dto';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
+import { GetWhatsAppDailyUsageResponse } from '../../../services/dtos/whatssapp-messages.dto';
 
 export interface BroadcastFilterState {
   query: string | null;
@@ -33,6 +34,8 @@ export class BroadcastComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
+  usage: GetWhatsAppDailyUsageResponse | null = null;
+
   groups: Group[] = [];
   diffusionGroups: DiffusionGroup[] = [];
   selectedContacts: { id: string; name: string; phone?: string }[] = [];
@@ -54,7 +57,21 @@ export class BroadcastComponent implements OnInit {
 
   constructor(private whatsappSvc: WhatsAppGroupService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadDailyUsage();
+  }
+
+  private loadDailyUsage() {
+    this.whatsappSvc.getDailyUsage().subscribe({
+      next: (res) => {
+        this.usage = res;
+      },
+      error: (err) => {
+        console.error('Error cargando uso diario', err);
+        this.usage = null;
+      }
+    });
+  }
 
   onTypeChange(type: SelectionType) {
     this.filters = { ...this.filters, type };
