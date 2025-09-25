@@ -15,6 +15,9 @@ import { StudentBannerComponent } from "../../../components/student-banner/stude
 import { GlobalNoticeBannerComponent } from "../../../components/global-notice-banner/global-notice-banner.component";
 import { NotificationService } from "../../../services/notification.service";
 import { UnreadBannerComponent } from "../../../components/banner/unread-banner/unread-banner.component";
+import { NotificationPermissionComponent } from "../../../components/notification-permission/notification-permission.component";
+import { PwaInstallBannerComponent } from "../../../components/pwa-install-banner/pwa-install-banner.component";
+import { PwaInstallComponent } from "../../../components/pwa-install/pwa-install.component";
 
 @Component({
   standalone: true,
@@ -26,6 +29,9 @@ import { UnreadBannerComponent } from "../../../components/banner/unread-banner/
     UnreadBannerComponent,
     StudentBannerComponent,
     GlobalNoticeBannerComponent,
+    NotificationPermissionComponent,
+    PwaInstallComponent,
+    PwaInstallBannerComponent
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',

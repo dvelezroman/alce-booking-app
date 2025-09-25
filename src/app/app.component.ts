@@ -25,10 +25,10 @@ registerLocaleData(localeEs);
     RouterOutlet,
     ModalComponent,
     SpinnerComponent,
-    PwaInstallComponent,
     OfflineIndicatorComponent,
-    NotificationPermissionComponent,
-    PwaInstallBannerComponent
+    // PwaInstallComponent,
+    // NotificationPermissionComponent,
+    // PwaInstallBannerComponent
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' }
