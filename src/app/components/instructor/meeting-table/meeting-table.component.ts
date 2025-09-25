@@ -30,11 +30,18 @@ export class MeetingTableComponent {
     this.assistanceCheckboxClicked.emit({ event, meeting });
   }
 
+  // showContent(meeting: MeetingDTO) {
+  //   const content = this.formatStudyContent(meeting);
+  //   this.contentViewRequested.emit({
+  //     content,
+  //     title: 'Contenido de la Clase'
+  //   });
+  // }
+
   showContent(meeting: MeetingDTO) {
-    const content = this.formatStudyContent(meeting);
     this.contentViewRequested.emit({
-      content,
-      title: 'Contenido de la Clase'
+      content: meeting.user?.temporaryComment || 'Sin comentario',
+      title: 'Comentario Temporal'
     });
   }
 

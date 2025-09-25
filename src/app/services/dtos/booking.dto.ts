@@ -3,6 +3,7 @@ import {Instructor} from "./instructor.dto";
 import {MeetingThemeDto} from "./meeting-theme.dto";
 import { StudyContentDto } from "./study-content.dto";
 import { AssessementI } from "./assessment.dto";
+import { UserDto } from "./user.dto";
 
 export interface MeetingDTO {
   id?: number;            // Optional for create; required for update
@@ -37,6 +38,7 @@ export interface MeetingDTO {
   isNewUser?: boolean;
   assessments?: AssessementI[];
   hasReinforcement?: boolean;
+  user?: UserDto;
 }
 
 export interface AssignedByDTO {

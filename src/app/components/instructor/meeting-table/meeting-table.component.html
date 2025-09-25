@@ -7,7 +7,8 @@
         <th>Nombre</th>
         <th>Fecha</th>
         <th>Hora</th>
-        <th>Contenido</th>
+        <!-- <th>Contenido</th> -->
+        <th>Comentario</th>
         <th>Observación</th>
         <th>Evaluaciones</th>
         <th>Abrió Enlace</th>
@@ -28,10 +29,18 @@
         </td>
         <td data-label="Fecha">{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
         <td data-label="Hora">{{ meeting.localhour }}:00</td>
-        <td data-label="Contenido">
+        <!-- <td data-label="Contenido">
           <button class="icon-button" (click)="showContent(meeting)">
             <span class="material-icons">menu_book</span>
           </button>
+        </td> -->
+        <td data-label="Comentario">
+          <button class="icon-button" (click)="showContent(meeting)">
+            <span class="material-icons">menu_book</span>
+          </button>
+          <span class="comment-text">
+            {{ meeting.user?.temporaryComment }}
+          </span>
         </td>
         <td data-label="Observación" class="observation-cell">
           <span
