@@ -92,8 +92,10 @@
 
       <!-- Content -->
       <div class="content">
-        <p class="body-text" *ngIf="notification?.message?.body as body">
-          {{ body }}
+        <p 
+          class="body-text" 
+          *ngIf="notification?.message?.body as body" 
+          [innerHTML]="body | safeNoteHtml">
         </p>
       </div>
 
@@ -112,7 +114,8 @@
             class="chip"
             *ngFor="let user of recipients; trackBy: trackByUid"
             [class.read]="isReadBy(user.id)"
-          >
+            >
+            <span class="whatsapp-checks" *ngIf="isReadBy(user.id)">✔</span>
             {{ user.firstName }} {{ user.lastName }}
             <span *ngIf="user.email">({{ user.email }})</span>
           </span>

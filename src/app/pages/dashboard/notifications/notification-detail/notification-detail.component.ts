@@ -12,11 +12,12 @@ import { UsersService } from '../../../../services/users.service';
 import { ModalComponent } from '../../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
 import { NotificationService } from '../../../../services/notification.service';
+import { SafeNoteHtmlPipe } from "../../../../pipes/safe-note-html.pipe";
 
 @Component({
   selector: 'app-notification-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, ModalComponent],
+  imports: [CommonModule, RouterModule, ModalComponent, SafeNoteHtmlPipe],
   templateUrl: './notification-detail.component.html',
   styleUrls: ['./notification-detail.component.scss'],
 })

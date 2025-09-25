@@ -302,11 +302,24 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       background: var(--bg-soft);
+
       .body-text {
         white-space: pre-wrap;
         font-size: 13px;
         line-height: 1.6;
         color: var(--text);
+        overflow-wrap: break-word;
+        word-break: break-word;
+        max-width: 100%;
+      }
+
+      @media (max-width: 640px) {
+        padding: 10px;
+
+        .body-text {
+          font-size: 12px;
+          line-height: 1.5;
+        }
       }
     }
 
@@ -388,19 +401,22 @@
   }
 
   .chip {
-    border: 1px solid #e5e7eb;
     background: #fff;
     color: #374151;
     border-radius: 999px;
-    padding: 4px 10px;
+    padding: 2px 5px;
     font-size: 10px;
   }
 
   /* Leído */
   .chip.read {
-    border-color: #16a34a;
-    background: #e8fce9;
     color: #166534;
     font-weight: 600;
-}
+  }
+
+  .whatsapp-checks {
+    font-size: 10px;
+    color: #166534;
+    margin-right: 4px;
+  }
 }

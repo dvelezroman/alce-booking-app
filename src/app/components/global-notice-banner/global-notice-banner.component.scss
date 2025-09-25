@@ -71,22 +71,25 @@
       list-style-type: decimal;
 
       li {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.8rem;
         line-height: 1.6;
         font-size: 0.88rem;
         color: #444;
 
         img {
-          margin-top: 0.3rem;
           display: block;
+          margin: 12px auto; /* 🔹 centrado con separación arriba/abajo */
           max-width: 100%;
           height: auto;
+          border-radius: 6px;
         }
 
         .install-images {
           display: flex;
-          gap: 8px;
-          margin-top: 6px;
+          justify-content: center; /* 🔹 centra horizontal */
+          align-items: center;
+          gap: 16px; /* 🔹 espacio entre imágenes */
+          margin: 12px 0; /* 🔹 separación arriba y abajo */
           flex-wrap: wrap;
           max-width: 100%;
 
@@ -105,6 +108,13 @@
           }
         }
       }
+    }
+
+    /* Imágenes en pasos móviles */
+    ol.mobile-steps li img {
+      display: block;
+      margin: 12px auto;
+      border-radius: 6px;
     }
   }
 
@@ -153,15 +163,15 @@
 
   .global-notice-banner .message .install-images {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
   }
 
-  .global-notice-banner .message .install-images .img-small {
-    max-width: 100px;
-  }
-
+  .global-notice-banner .message .install-images .img-small,
   .global-notice-banner .message .install-images .img-large {
-    max-width: 100px;
+    max-width: 80%;
+    height: auto;
   }
 
   .global-notice-banner .notice-actions .confirm-btn {
