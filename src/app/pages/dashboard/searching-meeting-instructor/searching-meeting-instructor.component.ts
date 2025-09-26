@@ -412,37 +412,37 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     this.isStudentContentHistoryModalVisible = false;
   }
 
-  // onCommentViewRequested(event: { meeting: MeetingDTO; title: string }): void {
-  //   const studentId = event.meeting.studentId;
-
-  //   this.assessmentService.findAll({ studentId: String(studentId) }).subscribe({
-  //     next: (assessments) => {
-  //       console.log(studentId, assessments);
-  //       const hasNote = assessments.some(a => !!a.note);
-  //       const hasResources = assessments.some(a => a.resources && a.resources.length > 0);
-  //       if (hasNote || hasResources) {
-  //         event.meeting.hasReinforcement = true;
-  //       }
-  //       const message = this.buildHtmlAllNotesAndResources(assessments, this.minPoints);
-  //       this.showNoteModal(event.title, message);
-  //     },
-  //     error: () => {
-  //       this.showModal(this.createModalParams(true, 'Error al cargar los recursos del estudiante.'));
-  //     }
-  //   });
-  // }
-
   onCommentViewRequested(event: { meeting: MeetingDTO; title: string }): void {
-    const comment = event.meeting.user?.temporaryComment || 'Sin comentario temporal';
+    const studentId = event.meeting.studentId;
 
-    const message = `
-      <div class="temporary-comment">
-        <p>${comment}</p>
-      </div>
-    `;
-
-    this.showNoteModal(event.title, message);
+    this.assessmentService.findAll({ studentId: String(studentId) }).subscribe({
+      next: (assessments) => {
+        console.log(studentId, assessments);
+        const hasNote = assessments.some(a => !!a.note);
+        const hasResources = assessments.some(a => a.resources && a.resources.length > 0);
+        if (hasNote || hasResources) {
+          event.meeting.hasReinforcement = true;
+        }
+        const message = this.buildHtmlAllNotesAndResources(assessments, this.minPoints);
+        this.showNoteModal(event.title, message);
+      },
+      error: () => {
+        this.showModal(this.createModalParams(true, 'Error al cargar los recursos del estudiante.'));
+      }
+    });
   }
+
+  // onCommentViewRequested(event: { meeting: MeetingDTO; title: string }): void {
+  //   const comment = event.meeting.user?.temporaryComment || 'Sin comentario temporal';
+
+  //   const message = `
+  //     <div class="temporary-comment">
+  //       <p>${comment}</p>
+  //     </div>
+  //   `;
+
+  //   this.showNoteModal(event.title, message);
+  // }
 
   // onCommentViewRequested(event: { meeting: MeetingDTO; title: string }): void {
   //   const meeting = event.meeting;
