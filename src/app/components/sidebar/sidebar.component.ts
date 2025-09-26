@@ -101,6 +101,10 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.currentRoute = event.urlAfterRedirects;
+
+        if (window.innerWidth <= 768) {
+          this.isSidebarClosed = true;
+        }
       }
     });
 
@@ -235,6 +239,10 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   }
 
   openLogoutModal(): void {
+    if (window.innerWidth <= 768) {
+      this.isSidebarClosed = true;
+    }
+    
     this.modalConfig = {
       show: true,
       message: "¿Estás seguro de cerrar sesión?",
