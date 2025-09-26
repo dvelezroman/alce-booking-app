@@ -432,17 +432,17 @@ export class SearchingMeetingInstructorComponent implements OnInit {
     });
   }
 
-  // onCommentViewRequested(event: { meeting: MeetingDTO; title: string }): void {
-  //   const comment = event.meeting.user?.temporaryComment || 'Sin comentario temporal';
+  onTemporaryCommentViewRequested(event: { meeting: MeetingDTO; title: string }): void {
+    const comment = event.meeting.user?.temporaryComment || 'Sin comentario temporal';
 
-  //   const message = `
-  //     <div class="temporary-comment">
-  //       <p>${comment}</p>
-  //     </div>
-  //   `;
+    const message = `
+      <div class="temporary-comment">
+        <p>${comment}</p>
+      </div>
+    `;
 
-  //   this.showNoteModal(event.title, message);
-  // }
+    this.showNoteModal(event.title, message);
+  }
 
   // onCommentViewRequested(event: { meeting: MeetingDTO; title: string }): void {
   //   const meeting = event.meeting;
