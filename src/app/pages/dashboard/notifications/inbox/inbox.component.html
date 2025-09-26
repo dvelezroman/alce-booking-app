@@ -1,11 +1,12 @@
 <section class="inbox-root">
   <div class="inbox-page">
     <!-- Header -->
+    <h1 class="inbox-page-title">
+      Notificaciones Recibidas
+    </h1>
+
+    <!-- Header (solo stats ahora) -->
     <header class="inbox-header">
-      <div class="title-block">
-        <h1 class="title">Recibidos</h1>
-        <p class="subtitle">Notificaciones recibidas</p>
-      </div>
       <div class="stats">
         <span class="unread">
           No leídas: <strong>{{ unreadCount$ | async }}</strong>
@@ -32,7 +33,7 @@
 
       <!-- Sin resultados -->
       <div *ngIf="!loading && !errorMsg && notifications.length === 0" class="placeholder">
-        No hay notificaciones para los filtros seleccionados.
+        No hay notificaciones para el número de días seleccionado.
       </div>
 
       <!-- Tabla -->

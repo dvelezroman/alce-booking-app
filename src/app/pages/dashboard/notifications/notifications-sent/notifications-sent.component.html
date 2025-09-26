@@ -1,12 +1,9 @@
 <section class="sent-root">
   <div class="sent-page">
     <!-- Header -->
-    <header class="sent-header">
-      <div class="title-block">
-        <h1 class="title">Enviados</h1>
-        <p class="subtitle">Notificaciones enviadas</p>
-      </div>
-    </header>
+    <h1 class="sent-page-title">
+      Notificaciones Enviadas
+    </h1>
 
     <!-- Toggle filtros -->
     <div class="filter-toggle-wrapper">
@@ -17,21 +14,25 @@
 
     <!-- Filtros Desde / Hasta (usa .date-filters) -->
     <div *ngIf="showFilters" class="date-filters">
-      <label for="fromDate">Desde</label>
-      <input
-        id="fromDate"
-        type="date"
-        [(ngModel)]="fromDate"
-        (change)="onFilterChange()"
-      />
+      <div class="date-filter">
+        <label for="fromDate">Desde</label>
+        <input
+          id="fromDate"
+          type="date"
+          [(ngModel)]="fromDate"
+          (change)="onFilterChange()"
+        />
+      </div>
 
-      <label for="toDate">Hasta</label>
-      <input
-        id="toDate"
-        type="date"
-        [(ngModel)]="toDate"
-        (change)="onFilterChange()"
-      />
+      <div class="date-filter">
+        <label for="toDate">Hasta</label>
+        <input
+          id="toDate"
+          type="date"
+          [(ngModel)]="toDate"
+          (change)="onFilterChange()"
+        />
+      </div>
     </div>
 
     <!-- Separador -->
