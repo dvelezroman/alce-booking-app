@@ -72,6 +72,16 @@ export class AssessmentFormComponent implements OnInit {
 
   onSearchChange(term: string): void {
     this.searchInput$.next(term);
+
+    if (!term || term.trim() === '') {
+      this.selectedStudent = undefined;
+      this.studentSelected.emit({
+        studentId: 0,
+        stageId: 0,
+        instructorId: this.instructorId ?? 0,
+        user: {} as UserDto
+      });
+    }
   }
 
   filterUsers(term: string): void {
