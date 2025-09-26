@@ -5,7 +5,6 @@
   width: 100%;
   padding: 24px 16px;
   box-sizing: border-box;
-
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -20,6 +19,7 @@
   width: 90%;
   max-width: 1400px;
   margin: 0 auto;
+  margin-top: 5rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
 
@@ -30,40 +30,40 @@
   }
 }
 
-/* ===== Header ===== */
-.sent-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e5e7eb;
+/* ===== Nuevo título fijo para Sent ===== */
+.sent-page-title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f2f2f2;
+  color: #111827;
+  z-index: 20;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 1rem 0; 
+  line-height: 3rem;
+  margin: 0;
+}
 
-  .title-block {
-    .title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #111827;
-    }
+.sent-page-title .subtitle {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: normal;
+  color: #6b7280;
+  margin-top: .25rem;
+}
 
-    .subtitle {
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
+
+@media screen and (max-width: 492px) {
+  .sent-page-title {
+    font-size: 1.3rem;
+    padding: 0.8rem 0;
   }
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-
-    .title-block {
-      .title {
-        text-align: center;
-      }
-      .subtitle {
-        text-align: center;
-      }
-    }
+  .sent-page {
+    margin-top: 4.5rem;
   }
 }
 
@@ -95,26 +95,37 @@
 .date-filters {
   display: flex;
   gap: 1.5rem;
-  align-items: center;
+}
 
-  label {
-    font-size: 0.75rem;
-    color: #333;
-    font-weight: 500;
-  }
+.date-filter {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-width: 500px;
+}
 
-  input[type='date'] {
-    padding: 0.5rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: .85rem;
-    color: #333;
-  }
+.date-filter label {
+  font-size: 0.75rem;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
 
-  @media (max-width: 640px) {
+.date-filter input[type='date'] {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.85rem;
+  color: #333;
+  height: 38px;
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .date-filters {
     flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
+    gap: 0.75rem;
   }
 }
 
