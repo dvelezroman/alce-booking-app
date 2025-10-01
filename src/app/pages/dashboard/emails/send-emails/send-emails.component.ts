@@ -6,50 +6,57 @@ import { take } from 'rxjs/operators';
 
 import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { Stage } from '../../../../services/dtos/student.dto';
-import { NotificationPanelComponent } from '../../../../components/notifications/notification-panel/notification-panel.component';
-import { StagesService } from '../../../../services/stages.service';
-import { CreateNotificationDto, NotificationGroupDto } from '../../../../services/dtos/notification.dto';
-import { NotificationService } from '../../../../services/notification.service';
 import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../../components/modal/modal.component';
 import { selectUserData } from '../../../../store/user.selector';
 import { UsersService } from '../../../../services/users.service';
+import { StagesService } from '../../../../services/stages.service';
+import { EmailPanelComponent } from '../../../../components/emails/email-panel/email-panel.component';
+import { EmailFormWrapperComponent } from '../../../../components/emails/email-form-wrapper/email-form-wrapper.component';
 import { NotificationGroupService } from '../../../../services/notification-group.service';
-import { NotificationFormWrapperComponent } from '../../../../components/notifications/notification-form-wrapper/notification-form-wrapper.component';
+import { NotificationGroupDto } from '../../../../services/dtos/notification.dto';
+
+// ⚡ DTO temporal, luego lo cambias por el real desde backend
+export interface CreateEmailDto {
+  to: (number | string)[];
+  subject: string;
+  body: string;
+}
 
 @Component({
-  selector: 'app-broadcast-groups',
+  selector: 'app-send-emails',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    NotificationPanelComponent,
-    NotificationFormWrapperComponent,
     ModalComponent,
+    EmailPanelComponent,
+    EmailFormWrapperComponent
   ],
-  templateUrl: './broadcast-groups.component.html',
-  styleUrl: './broadcast-groups.component.scss',
+  templateUrl: './send-emails.component.html',
+  styleUrl: './send-emails.component.scss',
 })
-export class BroadcastGroupsComponent implements OnInit {
+export class SendEmailsComponent implements OnInit {
   protected readonly UserRole = UserRole;
 
   selectedAction: 'user' | 'stage' | 'group' | 'role' | '' = '';
   selectedUser: any = null;
   selectedRole: 'student' | 'instructor' | 'admin' | null = null;
+  userRole: UserRole | null = null;
+
   stages: Stage[] = [];
   selectedStage: Stage | null = null;
-  modal: ModalDto = modalInitializer();
-  resetChildren = false;
-  userRole: UserRole | null = null;
 
   groups: NotificationGroupDto[] = [];
   loadingGroups = false;
+  
+  modal: ModalDto = modalInitializer();
+  resetChildren = false;
 
   constructor(
     private store: Store,
     private stagesService: StagesService,
     private usersService: UsersService,
-    private notificationService: NotificationService,
     private notificationGroupService: NotificationGroupService
   ) {}
 
@@ -86,18 +93,18 @@ export class BroadcastGroupsComponent implements OnInit {
     });
   }
 
-  private loadGroups() {
+  loadGroups() {
     this.loadingGroups = true;
     this.notificationGroupService.getGroups().subscribe({
       next: (res) => {
-        this.groups = res.notificationGroups;
+        this.groups = res.notificationGroups || [];
         this.loadingGroups = false;
       },
       error: (err) => {
-        console.error('Error al obtener grupos:', err);
+        console.error('Error al obtener grupos', err);
         this.groups = [];
         this.loadingGroups = false;
-      }
+      },
     });
   }
 
@@ -118,45 +125,28 @@ export class BroadcastGroupsComponent implements OnInit {
     if (option !== 'user')  this.selectedUser  = null;
     if (option !== 'stage') this.selectedStage = null;
     if (option !== 'role')  this.selectedRole  = null;
-    if (option === 'group') {
-      this.loadGroups();
-    }
+    if (option === 'group') { this.loadGroups() }
   }
 
-  handleNotificationSubmit(payload: CreateNotificationDto): void {
-    const ids = Array.isArray(payload.to)
-      ? Array.from(new Set(payload.to.filter((x): x is number => typeof x === 'number')))
-      : [];
+  handleEmailSubmit(payload: CreateEmailDto): void {
+    console.log('📧 Email payload listo para enviar:', payload);
 
-    if (ids.length === 0) {
+    if (!payload.to || payload.to.length === 0) {
       this.showModal({
         isError: true,
         title: 'Sin destinatarios',
-        message: 'No se encontró ningún usuario para enviar la notificación.',
+        message: 'Debes seleccionar al menos un destinatario o ingresar un correo válido.',
       });
       return;
     }
 
-    const finalPayload: CreateNotificationDto = { ...payload, to: ids };
-
-    this.notificationService.create(finalPayload).subscribe({
-      next: () => {
-        this.showModal({
-          isSuccess: true,
-          title: 'Notificación enviada',
-          message: 'La notificación ha sido enviada con éxito.',
-        });
-        this.clearSelection();
-      },
-      error: (err) => {
-        console.error('Error al crear notificación:', err);
-        this.showModal({
-          isError: true,
-          title: 'Error al enviar',
-          message: 'Ocurrió un error al enviar la notificación.',
-        });
-      },
+    this.showModal({
+      isSuccess: true,
+      title: 'Email preparado',
+      message: 'Se simuló el envío correctamente (console.log).',
     });
+
+    this.clearSelection();
   }
 
   private showModal({ title = '', message = '', isSuccess = false, isError = false , duration = 2000 }: {
