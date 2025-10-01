@@ -1,0 +1,161 @@
+.email-form-wrapper {
+  background-color: #ffffff;
+  border: 1px solid #d1e7dd;
+  border-radius: 12px;
+  padding: 2rem;
+  margin:0 0 2rem 0;
+  width: 100%;
+  max-width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+
+  @media (max-width: 640px) {
+    padding: 1.2rem;
+  }
+}
+
+.form-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.form-subtitle {
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin-bottom: 1rem;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Bloque asistente (rol + stage) más compacto */
+.compose-assist {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+    align-items: end;
+  }
+}
+
+app-user-selector,
+app-stage-selector {
+  flex: 1;
+  min-width: 280px;
+  max-width: 100%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Resumen destinatarios */
+.recipients-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #374151;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+
+  strong {
+    color: #111827;
+    font-weight: 500;
+  }
+}
+
+/* Grupos estándar */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &.compact {
+    gap: 0.4rem;
+  }
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  input[type="text"],
+  textarea,
+  select {
+    width: 100%;
+    background-color: #fff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    font-size: .9rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    resize: vertical;
+    transition: box-shadow 0.2s ease;
+
+    &::placeholder {
+      color: #9ca3af;
+    }
+
+    &:focus {
+      border-color: #468af8;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      outline: none;
+    }
+  }
+}
+
+/* Footer de envío */
+.compose-footer {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+.send-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #3e6ee8;
+  color: #fff;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  .icon {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    background-color: #345ed0;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

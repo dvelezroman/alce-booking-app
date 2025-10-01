@@ -39,10 +39,19 @@ export class NotificationPanelComponent {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
-  selectNotificationOption(option: SendOptionType, event: MouseEvent) {
-    event.stopPropagation();
+  selectNotificationOption(option: SendOptionType | string, event?: Event | MouseEvent): void {
+    event?.stopPropagation?.();
+
+    const map: Record<string, SendOptionType> = {
+      user: 'user',
+      stage: 'stage',
+      group: 'group',
+      role: 'role',
+    };
+    const normalized = map[String(option)] ?? 'user';
+
     this.dropdownOpen = false;
-    this.sendOptionSelected.emit(option);
+    this.sendOptionSelected.emit(normalized);
   }
 
   @HostListener('document:click')
