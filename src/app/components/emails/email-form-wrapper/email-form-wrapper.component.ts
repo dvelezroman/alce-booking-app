@@ -13,12 +13,14 @@ import { NotificationGroupDto } from '../../../services/dtos/notification.dto';
 
 export interface CreateEmailDto {
   from: number;
-  to: number[];
+  to: string[];
   scope: string;
   stageId?: number;
   subject: string;
   body: string;
   metadata?: any;
+  priority?: number;
+  groupId?: number;
 }
 
 @Component({
@@ -65,6 +67,15 @@ export class EmailFormWrapperComponent implements OnInit {
   // GROUP
   selectedGroupId: number | null = null;
   selectedGroupMembers = 0;
+
+   // PRIORIDAD 👇
+  priority = 1;
+  priorityOptions = [
+    { value: 0, label: 'Baja' },
+    { value: 1, label: 'Normal' },
+    { value: 2, label: 'Alta' },
+    { value: 3, label: 'Urgente' },
+  ];
 
   constructor(
     private store: Store,
@@ -186,33 +197,43 @@ export class EmailFormWrapperComponent implements OnInit {
   submitForm() {
     if (!this.formRef.valid || !this.userId) return;
 
-    let to: number[] = [];
+    let to: string[] = [];
     let scope: string;
 
     switch (this.selectedType) {
       case 'stage': {
-        to = (this.users ?? []).map(u => u.id);
+        to = (this.users ?? [])
+          .map(u => u.emailAddress || u.email)
+          .filter((email): email is string => !!email);
         scope = 'STAGE';
         if (!this.selectedStageId || to.length === 0) return;
         break;
       }
 
       case 'role': {
-        to = (this.roleUsers ?? []).map(u => u.id);
+        to = (this.roleUsers ?? [])
+          .map(u => u.emailAddress || u.email)
+          .filter((email): email is string => !!email);
         if (!this.selectedBroadcastRole || to.length === 0) return;
         scope = `ROLE_${this.selectedBroadcastRole.toUpperCase()}`;
         break;
       }
 
       case 'group': {
+        const g = this.groups.find(gr => gr.id === this.selectedGroupId);
+        to = g?.users
+          ?.map(u => u.emailAddress || u.email)
+          .filter((email): email is string => !!email) ?? [];
         scope = 'GROUP';
-        if (!this.selectedGroupId) return;
+        if (!this.selectedGroupId || to.length === 0) return;
         break;
       }
 
       case 'user':
       default: {
-        to = this.selectedUsers.map(u => u.id);
+        to = this.selectedUsers
+          .map(u => u.emailAddress || u.email)
+          .filter((email): email is string => !!email);
         scope = 'INDIVIDUAL';
         if (to.length === 0) return;
         break;
@@ -231,11 +252,12 @@ export class EmailFormWrapperComponent implements OnInit {
       stageId,
       subject: this.subject,
       body: this.body,
+      priority: this.priority,
       metadata: { source: 'email_system' },
       ...(this.selectedGroupId ? { groupId: this.selectedGroupId } : {}),
     };
 
-    console.log('Email payload listo:', payload);
+    console.log('📧 Email payload listo:', payload);
     this.submitEmail.emit(payload);
   }
 }
