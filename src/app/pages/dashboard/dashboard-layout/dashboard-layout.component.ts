@@ -18,6 +18,7 @@ import { UnreadBannerComponent } from "../../../components/banner/unread-banner/
 import { NotificationPermissionComponent } from "../../../components/notification-permission/notification-permission.component";
 import { PwaInstallBannerComponent } from "../../../components/pwa-install-banner/pwa-install-banner.component";
 import { PwaInstallComponent } from "../../../components/pwa-install/pwa-install.component";
+import { PushNotificationService } from "../../../services/push-notification.service";
 
 @Component({
   standalone: true,
@@ -55,12 +56,15 @@ export class DashboardLayoutComponent implements OnInit {
   hasAssessmentResources: boolean = false;
   modal: ModalDto = modalInitializer();
 
+  showNotificationBanner = false;
+
   constructor(
     private store: Store,
     private router: Router,
     private usersService: UsersService,
     private notificationService: NotificationService,
-    private configService: AssessmentPointsConfigService
+    private configService: AssessmentPointsConfigService,
+    private pushNotificationService: PushNotificationService
   ) {
         this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
         this.isRegistered$ = this.store.select(selectIsRegistered);
@@ -68,28 +72,29 @@ export class DashboardLayoutComponent implements OnInit {
   }
   
   ngOnInit(): void {
-
     this.unreadCount$ = this.notificationService.unreadCount$;
 
-    this.isLoggedIn$.subscribe((state) => {
+    this.isLoggedIn$.subscribe(async (state) => {
       this.isLoggedIn = state;
       if (state) {
         this.notificationService.loadUnreadCount().subscribe();
+        const hasSubscription = await this.pushNotificationService.hasActiveSubscription();
+        this.showNotificationBanner = !hasSubscription;
       }
     });
 
     this.userData$.subscribe(data => {
       this.userData = data;
       this.hasAssessmentResources = this.checkAssessmentResources(this.userData);
-       if (data) {
+      if (data) {
         this.notificationService.loadUnreadCount().subscribe();
       }
     });
 
     const savedLink = localStorage.getItem('instructorLink');
-      if (savedLink) {
-        this.store.dispatch(setInstructorLink({ link: savedLink }));
-      }
+    if (savedLink) {
+      this.store.dispatch(setInstructorLink({ link: savedLink }));
+    }
 
     this.isRegistered$.subscribe(state => {
       this.isRegistered = state;
