@@ -113,11 +113,28 @@
 
     <!-- Formulario -->
     <form (ngSubmit)="submitForm()" #formRef="ngForm">
-      <!-- Resumen destinatarios -->
-      <div class="toolbar-item grow">
-        <span class="recipients-pill">
-          Destinatarios: <strong>{{ recipientsCount }}</strong>
-        </span>
+      <!-- Toolbar superior tipo Email -->
+      <div class="compose-toolbar">
+        <div class="toolbar-item">
+          <label for="priority" class="toolbar-label">Prioridad</label>
+          <select
+            id="priority"
+            name="priority"
+            [(ngModel)]="priority"
+            required
+          >
+            <option *ngFor="let opt of priorityOptions" [ngValue]="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Resumen destinatarios -->
+        <div class="toolbar-item grow">
+          <span class="recipients-pill">
+            Destinatarios: <strong>{{ recipientsCount }}</strong>
+          </span>
+        </div>
       </div>
 
       <!-- Campos principales -->
@@ -146,7 +163,11 @@
       </div>
 
       <div class="compose-footer">
-        <button type="submit" [disabled]="!formRef.form.valid" class="send-btn">
+        <button
+          type="submit"
+          [disabled]="!formRef.form.valid"
+          class="send-btn"
+        >
           Enviar Email
         </button>
       </div>
