@@ -36,6 +36,10 @@ import { WhatsAppGroupsComponent } from './whatsapp-groups/whatsapp-groups.compo
 import { WhatsappConfigComponent } from './whatsapp-config/whatsapp-config.component';
 import { WhatsappSentMessagesComponent } from './whatsapp-sent-messages/whatsapp-sent-messages.component';
 import { WhatsappReceivedMessagesComponent } from './whatsapp-received-messages/whatsapp-received-messages.component';
+import { SendEmailsComponent } from './emails/send-emails/send-emails.component';
+import { HistorialEmailComponent } from './emails/historial-email/historial-email.component';
+import { InboxEmailComponent } from './emails/inbox-email/inbox-email.component';
+import { SentEmailComponent } from './emails/sent-email/sent-email.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -75,4 +79,8 @@ export const dashboardRoutes: Routes = [
   { path: 'whatsapp-config', component: WhatsappConfigComponent },
   { path: 'whatsapp-sent-messages', component: WhatsappSentMessagesComponent },
   // { path: 'whatsapp-received-messages', component: WhatsappReceivedMessagesComponent },
+  { path: 'send-emails', component: SendEmailsComponent },
+  { path: 'sent-email', component: SentEmailComponent },
+  { path: 'inbox-email', component: InboxEmailComponent },
+  { path: 'historial-email', component: HistorialEmailComponent },
 ];

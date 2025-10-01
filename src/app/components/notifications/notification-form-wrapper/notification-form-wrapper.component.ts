@@ -17,7 +17,6 @@ import {
   NotificationScopeEnum,
   NotificationTypeEnum
 } from '../../../services/dtos/notification.dto';
-import { NotificationGroupService } from '../../../services/notification-group.service';
 
 @Component({
   selector: 'app-notification-form-wrapper',
@@ -35,6 +34,8 @@ export class NotificationFormWrapperComponent implements OnInit {
   @Input() selectedType: 'user' | 'stage' | 'group' | 'role' = 'user';
   @Input() stages: Stage[] = [];
   @Input() userRole: UserRole | null = null;
+  @Input() groups: NotificationGroupDto[] = [];
+
   protected readonly UserRole = UserRole;
 
   @Output() submitNotification = new EventEmitter<CreateNotificationDto>();
@@ -57,7 +58,6 @@ export class NotificationFormWrapperComponent implements OnInit {
   totalUsersInStage = 0;
 
   // GROUP
-  groups: NotificationGroupDto[] = [];
   selectedGroupId: number | null = null;
   selectedGroupMembers = 0;
 
@@ -83,7 +83,6 @@ export class NotificationFormWrapperComponent implements OnInit {
   constructor(
     private store: Store,
     private usersService: UsersService,
-    private notificationGroupService: NotificationGroupService,
   ) {}
 
   ngOnInit(): void {
@@ -92,30 +91,20 @@ export class NotificationFormWrapperComponent implements OnInit {
       if (user) {
         this.userId = user.id;
 
-        // Si es STUDENT: solo podrá elegir INSTRUCTOR y usaremos el user-selector para listar todos los instructores
+        // Si es STUDENT: solo podrá elegir INSTRUCTOR
         if (this.userRole === UserRole.STUDENT) {
           this.selectedUserRole = 'instructor';
         }
       }
     });
 
-    if (this.selectedType === 'group') {
-      this.notificationGroupService.getGroups().subscribe({
-        next: (res) => {
-          this.groups = res.notificationGroups || [];
-          this.updateGroupMembers();
-        },
-        error: () => (this.groups = []),
-      });
-    }
+    // ✅ Ya no hacemos fetch aquí de grupos, los recibe el @Input() groups del padre
 
     const now = new Date();
     const in1day = new Date(now.getTime() + 24 * 60 * 60 * 1000);
     this.scheduledAtLocal = this.toLocalInput(now);
     this.expiresAtLocal   = this.toLocalInput(in1day);
   }
-
-  
 
   private toLocalInput(d: Date): string {
     const pad = (n: number) => String(n).padStart(2, '0');
@@ -127,7 +116,6 @@ export class NotificationFormWrapperComponent implements OnInit {
     return `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
   }
 
-  /** Validar y ajustar expiración si es necesario */
   onScheduledChange(val: string) {
     this.scheduledAtLocal = val;
     const sched = new Date(val);
@@ -182,13 +170,7 @@ export class NotificationFormWrapperComponent implements OnInit {
 
   fetchUsersByStage(stageId: number) {
     this.usersService
-      .searchUsers(
-        undefined, undefined, undefined,
-        '', '', undefined,
-        'STUDENT',
-        true,
-        stageId
-      )
+      .searchUsers(undefined, undefined, undefined, '', '', undefined, 'STUDENT', true, stageId)
       .subscribe({
         next: (res) => {
           this.users = res.users;
@@ -216,13 +198,7 @@ export class NotificationFormWrapperComponent implements OnInit {
   private fetchUsersByRole(role: 'student' | 'instructor' | 'admin') {
     const roleParam = role.toUpperCase();
     this.usersService
-      .searchUsers(
-        undefined, undefined, undefined,
-        '', '', undefined,
-        roleParam,
-        true,
-        undefined
-      )
+      .searchUsers(undefined, undefined, undefined, '', '', undefined, roleParam, true, undefined)
       .subscribe({
         next: (res) => {
           this.roleUsers = res.users || [];
@@ -314,7 +290,6 @@ export class NotificationFormWrapperComponent implements OnInit {
       }
     }
 
-    // Solo adjuntamos stageId si el remitente está enviando a STUDENT por stage
     const stageId =
       this.selectedUserRole === 'student' && this.selectedStageId != null
         ? +this.selectedStageId

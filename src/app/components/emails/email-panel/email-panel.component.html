@@ -1,7 +1,8 @@
-<div class="notification-panel">
+<div class="email-panel">
   <div class="info-wrapper centered-block">
     <p class="instruction-text">
-      Selecciona a quién deseas enviar la notificación: puede ser a un usuario individual, por stage, por rol o a un grupo previamente creado.
+      Selecciona a quién deseas enviar el correo: puede ser a un usuario
+      individual, por stage, por rol o a un grupo previamente creado.
     </p>
 
     <!-- Versión Desktop / Tablets -->
@@ -9,7 +10,7 @@
       <span
         class="badge-option"
         *ngIf="userRole === UserRole.ADMIN || userRole === UserRole.INSTRUCTOR"
-        (click)="selectNotificationOption('user', $event)"
+        (click)="selectEmailOption('user', $event)"
       >
         <i class="fas fa-user"></i> Usuario(s)
       </span>
@@ -17,7 +18,7 @@
       <span
         class="badge-option"
         *ngIf="userRole === UserRole.ADMIN"
-        (click)="selectNotificationOption('role', $event)"
+        (click)="selectEmailOption('role', $event)"
       >
         <i class="fas fa-id-badge"></i> Rol
       </span>
@@ -25,7 +26,7 @@
       <span
         class="badge-option"
         *ngIf="userRole === UserRole.ADMIN"
-        (click)="selectNotificationOption('stage', $event)"
+        (click)="selectEmailOption('stage', $event)"
       >
         <i class="fas fa-layer-group"></i> Stage
       </span>
@@ -33,7 +34,7 @@
       <span
         class="badge-option"
         *ngIf="userRole === UserRole.ADMIN"
-        (click)="selectNotificationOption('group', $event)"
+        (click)="selectEmailOption('group', $event)"
       >
         <i class="fas fa-users"></i> Grupo
       </span>
@@ -41,14 +42,19 @@
 
     <!-- Versión Mobile -->
     <div class="select-wrapper sm:hidden">
-      <label for="notificationOption" class="sr-only">Opción de envío</label>
+      <label for="emailOption" class="sr-only">Opción de envío</label>
       <select
-        id="notificationOption"
-        class="notification-select"
-        (change)="selectNotificationOption($any($event.target)?.value, $event)"
+        id="emailOption"
+        class="email-select"
+        (change)="selectEmailOption($any($event.target)?.value, $event)"
       >
         <option value="" disabled selected>Selecciona una opción</option>
-        <option *ngIf="userRole === UserRole.ADMIN || userRole === UserRole.INSTRUCTOR" value="user">
+        <option
+          *ngIf="
+            userRole === UserRole.ADMIN || userRole === UserRole.INSTRUCTOR
+          "
+          value="user"
+        >
           Usuario(s)
         </option>
         <option *ngIf="userRole === UserRole.ADMIN" value="role">Rol</option>

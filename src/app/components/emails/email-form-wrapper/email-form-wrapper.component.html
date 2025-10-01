@@ -1,0 +1,155 @@
+<div class="email-form-wrapper">
+  <h2 class="form-title">{{ titleText }}</h2>
+  <p class="form-subtitle">Selecciona los destinatarios y redacta el correo.</p>
+
+  <div class="form-container">
+    <!-- Selector dinámico según tipo -->
+    <ng-container [ngSwitch]="selectedType">
+      <!-- Caso: USUARIOS -->
+      <ng-container *ngSwitchCase="'user'">
+        <div class="compose-assist">
+          <div class="form-group compact">
+            <label for="role">Rol</label>
+            <select
+              id="role"
+              [(ngModel)]="selectedUserRole"
+              name="role"
+              required
+              (ngModelChange)="onUserRoleChange($event)"
+            >
+              <option
+                *ngIf="userRole === UserRole.STUDENT"
+                [value]="'instructor'"
+              >
+                Instructor
+              </option>
+
+              <ng-container *ngIf="userRole !== UserRole.STUDENT">
+                <option [value]="'student'">Estudiante</option>
+                <option [value]="'instructor'">Instructor</option>
+                <option [value]="'admin'">Administrador</option>
+              </ng-container>
+            </select>
+          </div>
+
+          <div
+            class="form-group compact"
+            *ngIf="
+              selectedUserRole === 'student' && userRole !== UserRole.STUDENT
+            "
+          >
+            <label for="stage">Stage</label>
+            <select
+              id="stage"
+              [(ngModel)]="selectedStageId"
+              name="stage"
+              required
+            >
+              <option *ngFor="let s of stages" [value]="s.id">
+                {{ s.description }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Selector de usuarios -->
+        <app-user-selector
+          [role]="selectedUserRole"
+          [stageId]="
+            selectedUserRole === 'student' && selectedStageId != null
+              ? selectedStageId
+              : undefined
+          "
+          (usersSelected)="handleUsersSelected($event)"
+        />
+      </ng-container>
+
+      <!-- Caso: rol -->
+      <div *ngSwitchCase="'role'">
+        <div class="compose-assist">
+          <div class="form-group compact">
+            <label for="broadcastRole">Rol</label>
+            <select
+              id="broadcastRole"
+              name="broadcastRole"
+              [(ngModel)]="selectedBroadcastRole"
+              (ngModelChange)="setBroadcastRole($event)"
+              required
+            >
+              <option [value]="'student'">Estudiante</option>
+              <option [value]="'instructor'">Instructor</option>
+              <option [value]="'admin'">Administrador</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Caso: stages -->
+      <app-stage-selector
+        *ngSwitchCase="'stage'"
+        [stages]="stages"
+        [totalUsers]="totalUsersInStage"
+        (stageSelected)="handleStageChange($event)"
+      />
+
+      <!-- Caso: grupos -->
+      <div *ngSwitchCase="'group'">
+        <div class="form-group">
+          <label for="group">Grupo</label>
+          <select
+            id="group"
+            name="group"
+            [(ngModel)]="selectedGroupId"
+            (ngModelChange)="onGroupChange($event)"
+            required
+          >
+            <option *ngFor="let g of groups" [value]="g.id">
+              {{ g.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="submitForm()" #formRef="ngForm">
+      <!-- Resumen destinatarios -->
+      <div class="toolbar-item grow">
+        <span class="recipients-pill">
+          Destinatarios: <strong>{{ recipientsCount }}</strong>
+        </span>
+      </div>
+
+      <!-- Campos principales -->
+      <div class="form-group">
+        <label for="subject">Asunto</label>
+        <input
+          id="subject"
+          name="subject"
+          type="text"
+          [(ngModel)]="subject"
+          required
+          placeholder="Asunto del correo"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="body">Mensaje</label>
+        <textarea
+          id="body"
+          name="body"
+          rows="8"
+          [(ngModel)]="body"
+          required
+          placeholder="Escribe tu mensaje aquí..."
+        ></textarea>
+      </div>
+
+      <div class="compose-footer">
+        <button type="submit" [disabled]="!formRef.form.valid" class="send-btn">
+          Enviar Email
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

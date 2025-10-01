@@ -1,27 +1,29 @@
 <section class="section">
   <div class="content">
     <h1 class="reports-progress-header reports-progress-title">
-      Envío de Notificaciones
+      Envío de Emails
     </h1>
 
-    <app-notification-panel
+    <!-- Panel de opciones -->
+    <app-email-panel
       [userRole]="userRole"
       (sendOptionSelected)="onSendOptionSelected($event)"
-    ></app-notification-panel>
+    ></app-email-panel>
 
     <!-- Formulario visible solo cuando hay tipo seleccionado -->
-    <app-notification-form-wrapper
+    <app-email-form-wrapper
       *ngIf="selectedAction"
       [selectedType]="selectedAction"
-      [stages]="stages" 
+      [stages]="stages"
       [userRole]="userRole"
       [groups]="groups"
-      (submitNotification)="handleNotificationSubmit($event)"
+      (submitEmail)="handleEmailSubmit($event)"
       class="form-wrapper-host"
-    ></app-notification-form-wrapper>
+    ></app-email-form-wrapper>
   </div>
 </section>
 
+<!-- Modal de feedback -->
 <app-modal
   [showModal]="modal.show"
   [message]="modal.message"
