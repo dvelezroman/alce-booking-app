@@ -1,0 +1,119 @@
+.global-notice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem;
+}
+
+.global-notice-banner {
+  max-width: 700px;
+  width: 100%;
+  margin: auto;
+  padding: 1.5rem 2rem;
+  background-color: #fff8f0;
+  border: 1px solid #ffe2c6;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+
+  max-height: 80vh;
+  overflow-y: auto;
+
+  &.warning {
+    background-color: #fff8f0;
+    border-color: #facc15;
+  }
+
+  .message {
+    flex-grow: 1;
+    width: 100%;
+
+    .title-with-icon {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      h4 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #b45309;
+      }
+    }
+
+    .notice-subtitle {
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #d97706;
+    }
+  }
+
+  .notice-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+
+    .confirm-btn {
+      background-color: #f97316;
+      color: #fff;
+      padding: 0.6rem 2rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #ea580c;
+      }
+    }
+  }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .global-notice-banner {
+    padding: 1rem 1.2rem;
+    align-items: center; 
+    text-align: center;  
+  }
+
+  .global-notice-banner .message {
+    text-align: center; 
+  }
+
+  .global-notice-banner .message .title-with-icon {
+    justify-content: center;
+  }
+
+  .global-notice-banner .message h4 {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .global-notice-banner .message .notice-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .global-notice-banner .notice-actions .confirm-btn {
+    font-size: 0.8rem;
+    padding: 0.5rem 1.2rem;
+  }
+}

@@ -19,6 +19,7 @@ import { NotificationPermissionComponent } from "../../../components/notificatio
 import { PwaInstallBannerComponent } from "../../../components/pwa-install-banner/pwa-install-banner.component";
 import { PwaInstallComponent } from "../../../components/pwa-install/pwa-install.component";
 import { PushNotificationService } from "../../../services/push-notification.service";
+import { MaintenanceAnnouncementComponent } from "../../../components/maintenance-announcement/maintenance-announcement.component";
 
 @Component({
   standalone: true,
@@ -32,7 +33,8 @@ import { PushNotificationService } from "../../../services/push-notification.ser
     GlobalNoticeBannerComponent,
     NotificationPermissionComponent,
     PwaInstallComponent,
-    PwaInstallBannerComponent
+    PwaInstallBannerComponent,
+    MaintenanceAnnouncementComponent,
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
