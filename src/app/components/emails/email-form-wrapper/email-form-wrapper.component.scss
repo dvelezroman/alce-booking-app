@@ -145,6 +145,8 @@ form {
     cursor: pointer;
     margin: 0;
   }
+
+  
 }
 
 /* Input manual */
@@ -170,6 +172,12 @@ form {
   }
 }
 
+.manual-email-error {
+  font-size: 0.8rem;
+  color: #dc2626;
+  margin-top: 0.25rem;
+}
+
 .hint {
   display: block;
   font-size: 0.78rem;
@@ -184,52 +192,87 @@ form {
   font-style: normal;
 }
 
-/* Toolbar superior (prioridad + resumen) */
+/* Toolbar superior (solo destinatarios) */
 .compose-toolbar {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   border: 1px solid #e5e7eb;
   background: #f9fafb;
   border-radius: 8px;
   padding: 0.75rem 1rem;
+  gap: 1rem;
 }
 
 .toolbar-item {
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  align-items: center;
+  gap: 0.75rem;
 
-  .toolbar-label {
-    font-size: 0.8rem;
+  .recipients-pill {
+    font-size: 0.9rem;
     font-weight: 500;
-    color: #374151;
+    color: #1f2937;
   }
 
-  select {
-    background: #fff;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.9rem;
-    color: #374151;
-    transition: border 0.2s;
+  .recipients-warning {
+    color: #dc2626;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
 
-    &:focus {
-      border-color: #468af8;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
-      outline: none;
+    &::before {
+      content: "⚠️";
+      font-size: 1rem;
     }
+  }
+}
+
+.invalid-users-select {
+  background: #fff;
+  border: 1px solid #dc2626;
+  color: #9ca3af;
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+
+  &:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
   }
 }
 
 /* Footer de envío */
 .compose-footer {
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
   padding-top: 4px;
+
+  .invalid-warning {
+    font-size: 0.85rem;
+    font-weight: 500;
+     color: #b45309;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &::before {
+      content: "⚠️";
+      font-size: 1rem;
+    }
+
+    strong {
+      color: #92400e;
+      font-weight: 700;
+    }
+  }
 }
 
 .send-btn {

@@ -70,9 +70,13 @@
             name="manualEmail"
             type="email"
             [(ngModel)]="manualEmail"
+            (ngModelChange)="validateManualEmail()"
             placeholder="correo@ejemplo.com"
             required
           />
+          <div *ngIf="manualEmailError" class="manual-email-error">
+            {{ manualEmailError }}
+          </div>
         </div>
 
         <!-- Selector de usuarios si NO es manual -->
@@ -87,7 +91,7 @@
             [maxSelectable]="1"
             (usersSelected)="handleUsersSelected($event)"
           />
-          <small class="hint">Selecciona exactamente 1 usuario.</small>
+          <!-- <small class="hint">Selecciona exactamente 1 usuario.</small> -->
         </ng-container>
       </ng-container>
 
@@ -143,24 +147,21 @@
       <!-- Toolbar superior tipo Email -->
       <div class="compose-toolbar">
         <div class="toolbar-item">
-          <label for="priority" class="toolbar-label">Prioridad</label>
-          <select
-            id="priority"
-            name="priority"
-            [(ngModel)]="priority"
-            required
-          >
-            <option *ngFor="let opt of priorityOptions" [ngValue]="opt.value">
-              {{ opt.label }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Resumen destinatarios -->
-        <div class="toolbar-item grow">
           <span class="recipients-pill">
             Destinatarios: <strong>{{ recipientsCount }}</strong>
           </span>
+
+          <!-- Si hay inválidos -->
+          <span *ngIf="invalidUsers.length > 0" class="recipients-warning">
+            {{ invalidUsers.length }} sin email válido
+          </span>
+
+          <select *ngIf="invalidUsers.length > 1" class="invalid-users-select">
+            <option selected disabled>Usuarios sin email válido</option>
+            <option *ngFor="let u of invalidUsers" disabled>
+              {{ u.firstName }} {{ u.lastName }}
+            </option>
+          </select>
         </div>
       </div>
 
@@ -190,6 +191,10 @@
       </div>
 
       <div class="compose-footer">
+        <div *ngIf="!isUserMode && invalidUsers.length > 0" class="invalid-warning">
+          Este email no lo recibirán <strong>{{ invalidUsers.length }}</strong> usuario(s) porque no tienen un email válido.
+        </div>
+
         <button
           type="submit"
           [disabled]="!formRef.form.valid"

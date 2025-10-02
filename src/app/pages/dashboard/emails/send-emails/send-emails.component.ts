@@ -130,18 +130,8 @@ export class SendEmailsComponent implements OnInit {
   }
 
   // Stage, Role, Group (uso de SendBulkEmailRequest)
-  handleEmailSubmit(payload: { to: string[], subject: string, body: string }): void {
-    const bulkPayload: SendBulkEmailRequest = {
-      recipients: payload.to.map(email => ({ to: email, name: '' } as BulkEmailRecipient)),
-      subject: payload.subject,
-      content: payload.body,
-      contentType: 'html',
-      fromName: 'ALCE College',
-    };
-
-    console.log('📧 Bulk email listo para enviar:', bulkPayload);
-
-    if (!bulkPayload.recipients.length) {
+  handleEmailSubmit(payload: SendBulkEmailRequest): void {
+    if (!payload.recipients.length) {
       this.showModal({
         isError: true,
         title: 'Sin destinatarios',
@@ -150,18 +140,29 @@ export class SendEmailsComponent implements OnInit {
       return;
     }
 
-    this.showModal({
-      isSuccess: true,
-      title: 'Email preparado (bulk)',
-      message: 'Se simuló el envío correctamente (console.log).',
+    this.emailService.sendBulkEmail(payload).subscribe({
+      next: (res) => {
+        this.showModal({
+          isSuccess: true,
+          title: 'Emails enviados',
+          message: `Se enviaron ${res.length} emails correctamente.`,
+        });
+        this.clearSelection();
+      },
+      error: (err) => {
+        console.error('Error al enviar bulk email:', err);
+        this.showModal({
+          isError: true,
+          title: 'Error al enviar',
+          message: 'Hubo un problema enviando los emails. Intenta nuevamente.',
+        });
+      }
     });
-
-    this.clearSelection();
   }
 
   // Individual (SendEmailRequest)
   handleSingleEmailSubmit(payload: SendEmailRequest): void {
-   // console.log('📧 Email individual listo para enviar:', payload);
+    //console.log('📧 Email individual listo para enviar:', payload);
 
     if (!payload.to) {
       this.showModal({
@@ -210,5 +211,13 @@ export class SendEmailsComponent implements OnInit {
       close: () => (this.modal.show = false),
     };
     setTimeout(() => { this.modal.show = false; }, duration);
+  }
+
+  handleInvalidSingleEmail(user: UserDto): void {
+    this.showModal({
+      isError: true,
+      title: 'Email inválido',
+      message: `El usuario ${user.firstName} ${user.lastName} no tiene un email válido.`,
+    });
   }
 }
