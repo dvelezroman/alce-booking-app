@@ -156,10 +156,10 @@
               <th>Categoría</th>
               <th>Modalidad</th>
               <th class="fixed-col">Nombre</th>
-              <th>Correo</th>
               <th>Fecha</th>
               <th>Hora</th>
               <th class="fixed-col">Instructor</th>
+              <th>Comentario</th>
               <th>Observación</th>
               <th>Asignó</th>
             </tr>
@@ -186,7 +186,6 @@
                   </span>
                 </div>
               </td>
-              <td>{{ meeting.student?.user?.email || 'Correo no disponible' }}</td>
               <td>{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
               <td>{{ meeting.localhour }}:00</td>
               <td class="cell-instructor">
@@ -195,6 +194,11 @@
                     {{ getInstructorDisplayName(meeting) }}
                   </span>
                 </div>
+              </td>
+              <td>
+                <span class="comment-text">
+                  {{ meeting.student?.user?.temporaryComment }}
+                </span>
               </td>
               <td class="tooltip-container">
                 <span class="tooltip" [hidden]="!meeting.student?.user?.comment">
