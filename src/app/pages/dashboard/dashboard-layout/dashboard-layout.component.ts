@@ -34,7 +34,7 @@ import { MaintenanceAnnouncementComponent } from "../../../components/maintenanc
     NotificationPermissionComponent,
     PwaInstallComponent,
     PwaInstallBannerComponent,
-    MaintenanceAnnouncementComponent,
+    // MaintenanceAnnouncementComponent,
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
