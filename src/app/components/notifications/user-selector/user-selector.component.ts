@@ -26,7 +26,6 @@ export class UserSelectorComponent implements OnChanges {
   @Input() role: 'student' | 'instructor' | 'admin' | undefined;
   @Input() stageId: number | undefined;
   @Input() reset = false;
-
   @Input() maxSelectable: number | null = null;
 
   @Output() usersSelected = new EventEmitter<UserDto[]>();
@@ -89,7 +88,7 @@ export class UserSelectorComponent implements OnChanges {
     const shouldFetch =
       term.trim().length >= 2 ||
       (this.role === 'student' && !!this.stageId) ||
-      this.role === 'instructor';
+      this.role === 'instructor' ||
       this.role === 'admin';
 
     if (!shouldFetch) {
@@ -119,7 +118,7 @@ export class UserSelectorComponent implements OnChanges {
           if (seq !== this.fetchSeq) return;
           if (this.role !== expectedRole) return;
           if (expectedRole === 'student' && this.stageId !== expectedStage) return;
-          
+
           this.allUsers = res.users;
           this.isDropdownOpen = true;
         },
@@ -161,7 +160,7 @@ export class UserSelectorComponent implements OnChanges {
   onInputFocus(): void {
     const shouldPreload =
       (this.role === 'student' && this.stageId) ||
-      this.role === 'instructor';
+      this.role === 'instructor' ||
       this.role === 'admin';
 
     if (shouldPreload && this.allUsers.length === 0) {

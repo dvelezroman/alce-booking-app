@@ -192,9 +192,9 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
       icon: 'email',
       items: [
         this.findNavItemByRoute('/dashboard/send-emails'),
-        this.findNavItemByRoute('/dashboard/inbox-email'),
-        this.findNavItemByRoute('/dashboard/historial-email'),
-        this.findNavItemByRoute('/dashboard/sent-email'),
+        // this.findNavItemByRoute('/dashboard/inbox-email'),
+        // this.findNavItemByRoute('/dashboard/historial-email'),
+        // this.findNavItemByRoute('/dashboard/sent-email'),
       ].filter(item => item.roles.includes(role))
     },
     {

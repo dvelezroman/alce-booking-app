@@ -161,7 +161,7 @@ export class SendEmailsComponent implements OnInit {
 
   // Individual (SendEmailRequest)
   handleSingleEmailSubmit(payload: SendEmailRequest): void {
-    console.log('📧 Email individual listo para enviar:', payload);
+   // console.log('📧 Email individual listo para enviar:', payload);
 
     if (!payload.to) {
       this.showModal({
@@ -174,7 +174,7 @@ export class SendEmailsComponent implements OnInit {
 
     this.emailService.sendEmail(payload).subscribe({
       next: (res: EmailResponse) => {
-        console.log('Respuesta backend:', res);
+       // console.log('Respuesta backend:', res);
         this.showModal({
           isSuccess: true,
           title: 'Email enviado',
