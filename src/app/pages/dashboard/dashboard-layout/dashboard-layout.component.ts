@@ -1,5 +1,4 @@
 import { Router, RouterModule } from "@angular/router";
-import { ModalComponent } from "../../../components/modal/modal.component";
 import { SidebarComponent } from "../../../components/sidebar/sidebar.component";
 import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
@@ -19,7 +18,6 @@ import { NotificationPermissionComponent } from "../../../components/notificatio
 import { PwaInstallBannerComponent } from "../../../components/pwa-install-banner/pwa-install-banner.component";
 import { PwaInstallComponent } from "../../../components/pwa-install/pwa-install.component";
 import { PushNotificationService } from "../../../services/push-notification.service";
-import { MaintenanceAnnouncementComponent } from "../../../components/maintenance-announcement/maintenance-announcement.component";
 
 @Component({
   standalone: true,
@@ -34,7 +32,7 @@ import { MaintenanceAnnouncementComponent } from "../../../components/maintenanc
     NotificationPermissionComponent,
     PwaInstallComponent,
     PwaInstallBannerComponent,
-    MaintenanceAnnouncementComponent,
+    // MaintenanceAnnouncementComponent,
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
@@ -72,7 +70,7 @@ export class DashboardLayoutComponent implements OnInit {
         this.isRegistered$ = this.store.select(selectIsRegistered);
         this.userData$ = this.store.select(selectUserData);
   }
-  
+
   ngOnInit(): void {
     this.unreadCount$ = this.notificationService.unreadCount$;
 
