@@ -10,6 +10,7 @@ import { selectUserData } from '../../../store/user.selector';
 import { UserSelectorComponent } from '../../notifications/user-selector/user-selector.component';
 import { StageSelectorComponent } from '../../notifications/stage-selector/stage-selector.component';
 import { NotificationGroupDto } from '../../../services/dtos/notification.dto';
+import { SendEmailRequest } from '../../../services/dtos/email.dto';
 
 export interface CreateEmailDto {
   from: number;
@@ -43,6 +44,7 @@ export class EmailFormWrapperComponent implements OnInit {
   protected readonly UserRole = UserRole;
 
   @Output() submitEmail = new EventEmitter<CreateEmailDto>();
+  @Output() submitSingleEmail = new EventEmitter<SendEmailRequest>();
 
   @ViewChild('formRef') formRef!: NgForm;
 
@@ -53,6 +55,8 @@ export class EmailFormWrapperComponent implements OnInit {
   // USER
   selectedUserRole: 'student' | 'instructor' | 'admin' = 'student';
   selectedUsers: UserDto[] = [];
+  manualMode = false;
+  manualEmail = '';
 
   // STAGE
   selectedStageId: number | null = null;
@@ -68,7 +72,7 @@ export class EmailFormWrapperComponent implements OnInit {
   selectedGroupId: number | null = null;
   selectedGroupMembers = 0;
 
-   // PRIORIDAD 👇
+  // PRIORIDAD
   priority = 1;
   priorityOptions = [
     { value: 0, label: 'Baja' },
@@ -93,6 +97,34 @@ export class EmailFormWrapperComponent implements OnInit {
     });
   }
 
+  // helpers
+  get isUserMode(): boolean {
+    return this.selectedType === 'user';
+  }
+
+  private isValidEmail(email: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  private getSelectedSingleEmail(): string | null {
+    if (this.manualMode) {
+      const e = (this.manualEmail || '').trim();
+      return e && this.isValidEmail(e) ? e : null;
+    }
+    const u = this.selectedUsers[0];
+    const email = u?.emailAddress || u?.email || '';
+    return email && this.isValidEmail(email) ? email : null;
+  }
+
+  canSubmitForSelectedType(): boolean {
+    if (!this.subject || !this.body) return false;
+    if (this.isUserMode) {
+      return !!this.getSelectedSingleEmail();
+    }
+    return this.recipientsCount > 0;
+  }
+
+  // --- STAGE
   handleStageChange(stageId: number | null) {
     this.selectedStageId = stageId;
     this.selectedUsers = [];
@@ -111,6 +143,13 @@ export class EmailFormWrapperComponent implements OnInit {
   private updateGroupMembers() {
     const g = this.groups.find(gr => gr.id === this.selectedGroupId);
     this.selectedGroupMembers = g?.userIds?.length ?? 0;
+  }
+
+  onManualModeChange(value: boolean) {
+    this.manualMode = value;
+    if (!value) {
+      this.manualEmail = '';
+    }
   }
 
   fetchUsersByStage(stageId: number) {
@@ -136,26 +175,18 @@ export class EmailFormWrapperComponent implements OnInit {
 
   setBroadcastRole(role: '' | 'student' | 'instructor' | 'admin') {
     this.selectedBroadcastRole = role;
-
     if (!role) {
       this.roleUsers = [];
       this.totalUsersByRole = 0;
       return;
     }
-
     this.fetchUsersByRole(role);
   }
 
   private fetchUsersByRole(role: 'student' | 'instructor' | 'admin') {
     const roleParam = role.toUpperCase();
     this.usersService
-      .searchUsers(
-        undefined, undefined, undefined,
-        '', '', undefined,
-        roleParam,
-        true,
-        undefined
-      )
+      .searchUsers(undefined, undefined, undefined, '', '', undefined, roleParam, true, undefined)
       .subscribe({
         next: (res) => {
           this.roleUsers = res.users || [];
@@ -174,12 +205,12 @@ export class EmailFormWrapperComponent implements OnInit {
   }
 
   handleUsersSelected(users: UserDto[]) {
-    this.selectedUsers = users;
+    this.selectedUsers = this.isUserMode ? users.slice(0, 1) : users;
   }
 
   get titleText(): string {
     switch (this.selectedType) {
-      case 'user':  return 'Nuevo email a usuario(s)';
+      case 'user':  return 'Nuevo email a usuario';
       case 'stage': return 'Nuevo email por stage';
       case 'role':  return 'Nuevo email por rol';
       case 'group': return 'Nuevo email por grupo';
@@ -188,62 +219,65 @@ export class EmailFormWrapperComponent implements OnInit {
   }
 
   get recipientsCount(): number {
+    if (this.isUserMode) {
+      return this.getSelectedSingleEmail() ? 1 : 0;
+    }
     if (this.selectedType === 'stage') return this.totalUsersInStage || 0;
     if (this.selectedType === 'role')  return this.totalUsersByRole || 0;
-    if (this.selectedType === 'group') return this.selectedGroupId || 0;
+    if (this.selectedType === 'group') return this.selectedGroupMembers || 0;
     return this.selectedUsers.length || 0;
   }
 
   submitForm() {
     if (!this.formRef.valid || !this.userId) return;
 
+    // Caso 1: individual
+    if (this.isUserMode) {
+      const singleTo = this.getSelectedSingleEmail();
+      if (!singleTo) return;
+
+      const singlePayload: SendEmailRequest = {
+        to: singleTo,
+        subject: this.subject,
+        content: this.body,
+        contentType: 'html',
+        fromName: 'ALCE College',
+        replyTo: 'noreply@alce-college.com',
+      };
+
+      this.submitSingleEmail.emit(singlePayload);
+      return;
+    }
+
+    // Caso 2: stage / role / group
     let to: string[] = [];
     let scope: string;
 
     switch (this.selectedType) {
       case 'stage': {
-        to = (this.users ?? [])
-          .map(u => u.emailAddress || u.email)
-          .filter((email): email is string => !!email);
+        to = (this.users ?? []).map(u => u.emailAddress || u.email).filter((e): e is string => !!e);
         scope = 'STAGE';
         if (!this.selectedStageId || to.length === 0) return;
         break;
       }
-
       case 'role': {
-        to = (this.roleUsers ?? [])
-          .map(u => u.emailAddress || u.email)
-          .filter((email): email is string => !!email);
+        to = (this.roleUsers ?? []).map(u => u.emailAddress || u.email).filter((e): e is string => !!e);
         if (!this.selectedBroadcastRole || to.length === 0) return;
         scope = `ROLE_${this.selectedBroadcastRole.toUpperCase()}`;
         break;
       }
-
       case 'group': {
         const g = this.groups.find(gr => gr.id === this.selectedGroupId);
-        to = g?.users
-          ?.map(u => u.emailAddress || u.email)
-          .filter((email): email is string => !!email) ?? [];
+        to = g?.users?.map(u => u.emailAddress || u.email).filter((e): e is string => !!e) ?? [];
         scope = 'GROUP';
         if (!this.selectedGroupId || to.length === 0) return;
         break;
       }
-
-      case 'user':
-      default: {
-        to = this.selectedUsers
-          .map(u => u.emailAddress || u.email)
-          .filter((email): email is string => !!email);
-        scope = 'INDIVIDUAL';
-        if (to.length === 0) return;
-        break;
-      }
+      default:
+        return;
     }
 
-    const stageId =
-      this.selectedUserRole === 'student' && this.selectedStageId != null
-        ? +this.selectedStageId
-        : undefined;
+    const stageId = this.selectedUserRole === 'student' && this.selectedStageId != null ? +this.selectedStageId : undefined;
 
     const payload: CreateEmailDto = {
       from: this.userId!,
@@ -257,7 +291,6 @@ export class EmailFormWrapperComponent implements OnInit {
       ...(this.selectedGroupId ? { groupId: this.selectedGroupId } : {}),
     };
 
-    console.log('📧 Email payload listo:', payload);
     this.submitEmail.emit(payload);
   }
 }

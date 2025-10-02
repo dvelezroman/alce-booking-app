@@ -27,6 +27,8 @@ export class UserSelectorComponent implements OnChanges {
   @Input() stageId: number | undefined;
   @Input() reset = false;
 
+  @Input() maxSelectable: number | null = null;
+
   @Output() usersSelected = new EventEmitter<UserDto[]>();
 
   @ViewChild('containerRef') containerRef!: ElementRef;
@@ -130,11 +132,17 @@ export class UserSelectorComponent implements OnChanges {
 
   toggleUserSelection(user: UserDto): void {
     const exists = this.selectedUsers.find((u) => u.id === user.id);
+
     if (exists) {
       this.selectedUsers = this.selectedUsers.filter((u) => u.id !== user.id);
     } else {
-      this.selectedUsers.push(user);
+      if (this.maxSelectable === 1) {
+        this.selectedUsers = [user];
+      } else if (!this.maxSelectable || this.selectedUsers.length < this.maxSelectable) {
+        this.selectedUsers.push(user);
+      }
     }
+
     this.usersSelected.emit(this.selectedUsers);
   }
 

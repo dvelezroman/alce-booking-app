@@ -15,13 +15,13 @@ import { EmailPanelComponent } from '../../../../components/emails/email-panel/e
 import { EmailFormWrapperComponent } from '../../../../components/emails/email-form-wrapper/email-form-wrapper.component';
 import { NotificationGroupService } from '../../../../services/notification-group.service';
 import { NotificationGroupDto } from '../../../../services/dtos/notification.dto';
-
-// ⚡ DTO temporal, luego lo cambias por el real desde backend
-export interface CreateEmailDto {
-  to: (number | string)[];
-  subject: string;
-  body: string;
-}
+import { 
+  SendEmailRequest, 
+  SendBulkEmailRequest, 
+  BulkEmailRecipient, 
+  EmailResponse
+} from '../../../../services/dtos/email.dto';
+import { EmailService } from '../../../../services/email.services';
 
 @Component({
   selector: 'app-send-emails',
@@ -40,7 +40,7 @@ export class SendEmailsComponent implements OnInit {
   protected readonly UserRole = UserRole;
 
   selectedAction: 'user' | 'stage' | 'group' | 'role' | '' = '';
-  selectedUser: any = null;
+  selectedUser: UserDto | null = null;
   selectedRole: 'student' | 'instructor' | 'admin' | null = null;
   userRole: UserRole | null = null;
 
@@ -55,8 +55,9 @@ export class SendEmailsComponent implements OnInit {
 
   constructor(
     private store: Store,
-    private stagesService: StagesService,
     private usersService: UsersService,
+    private emailService: EmailService,
+    private stagesService: StagesService,
     private notificationGroupService: NotificationGroupService
   ) {}
 
@@ -128,25 +129,68 @@ export class SendEmailsComponent implements OnInit {
     if (option === 'group') { this.loadGroups() }
   }
 
-  handleEmailSubmit(payload: CreateEmailDto): void {
-    console.log('📧 Email payload listo para enviar:', payload);
+  // Stage, Role, Group (uso de SendBulkEmailRequest)
+  handleEmailSubmit(payload: { to: string[], subject: string, body: string }): void {
+    const bulkPayload: SendBulkEmailRequest = {
+      recipients: payload.to.map(email => ({ to: email, name: '' } as BulkEmailRecipient)),
+      subject: payload.subject,
+      content: payload.body,
+      contentType: 'html',
+      fromName: 'ALCE College',
+    };
 
-    if (!payload.to || payload.to.length === 0) {
+    console.log('📧 Bulk email listo para enviar:', bulkPayload);
+
+    if (!bulkPayload.recipients.length) {
       this.showModal({
         isError: true,
         title: 'Sin destinatarios',
-        message: 'Debes seleccionar al menos un destinatario o ingresar un correo válido.',
+        message: 'Debes seleccionar al menos un destinatario.',
       });
       return;
     }
 
     this.showModal({
       isSuccess: true,
-      title: 'Email preparado',
+      title: 'Email preparado (bulk)',
       message: 'Se simuló el envío correctamente (console.log).',
     });
 
     this.clearSelection();
+  }
+
+  // Individual (SendEmailRequest)
+  handleSingleEmailSubmit(payload: SendEmailRequest): void {
+    console.log('📧 Email individual listo para enviar:', payload);
+
+    if (!payload.to) {
+      this.showModal({
+        isError: true,
+        title: 'Sin destinatario',
+        message: 'Debes seleccionar un destinatario válido.',
+      });
+      return;
+    }
+
+    this.emailService.sendEmail(payload).subscribe({
+      next: (res: EmailResponse) => {
+        console.log('Respuesta backend:', res);
+        this.showModal({
+          isSuccess: true,
+          title: 'Email enviado',
+          message: `Se envió correctamente a ${res.to}.`,
+        });
+        this.clearSelection();
+      },
+      error: (err) => {
+        console.error(' Error al enviar email', err);
+        this.showModal({
+          isError: true,
+          title: 'Error al enviar',
+          message: 'No se pudo enviar el email. Intenta nuevamente.',
+        });
+      }
+    });
   }
 
   private showModal({ title = '', message = '', isSuccess = false, isError = false , duration = 2000 }: {

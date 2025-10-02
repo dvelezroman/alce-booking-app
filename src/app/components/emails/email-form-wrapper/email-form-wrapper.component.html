@@ -6,8 +6,10 @@
     <!-- Selector dinámico según tipo -->
     <ng-container [ngSwitch]="selectedType">
       <!-- Caso: USUARIOS -->
+      <!-- Caso: USUARIOS -->
       <ng-container *ngSwitchCase="'user'">
         <div class="compose-assist">
+          <!-- Selector de Rol -->
           <div class="form-group compact">
             <label for="role">Rol</label>
             <select
@@ -17,10 +19,7 @@
               required
               (ngModelChange)="onUserRoleChange($event)"
             >
-              <option
-                *ngIf="userRole === UserRole.STUDENT"
-                [value]="'instructor'"
-              >
+              <option *ngIf="userRole === UserRole.STUDENT" [value]="'instructor'">
                 Instructor
               </option>
 
@@ -32,11 +31,10 @@
             </select>
           </div>
 
+          <!-- Stage si es student -->
           <div
             class="form-group compact"
-            *ngIf="
-              selectedUserRole === 'student' && userRole !== UserRole.STUDENT
-            "
+            *ngIf="selectedUserRole === 'student' && userRole !== UserRole.STUDENT"
           >
             <label for="stage">Stage</label>
             <select
@@ -52,16 +50,45 @@
           </div>
         </div>
 
-        <!-- Selector de usuarios -->
-        <app-user-selector
-          [role]="selectedUserRole"
-          [stageId]="
-            selectedUserRole === 'student' && selectedStageId != null
-              ? selectedStageId
-              : undefined
-          "
-          (usersSelected)="handleUsersSelected($event)"
-        />
+        <!-- Toggle: modo manual -->
+        <div class="form-group compact toggle-inline">
+          <input
+            id="manualMode"
+            type="checkbox"
+            [ngModel]="manualMode"
+            (ngModelChange)="onManualModeChange($event)"
+            name="manualMode"
+          />
+          <label for="manualMode">Enviar a un email que no está en contactos</label>
+        </div>
+
+        <!-- Input de email manual -->
+        <div class="form-group compact" *ngIf="manualMode">
+          <label for="manualEmail">Email del destinatario</label>
+          <input
+            id="manualEmail"
+            name="manualEmail"
+            type="email"
+            [(ngModel)]="manualEmail"
+            placeholder="correo@ejemplo.com"
+            required
+          />
+        </div>
+
+        <!-- Selector de usuarios si NO es manual -->
+        <ng-container *ngIf="!manualMode">
+          <app-user-selector
+            [role]="selectedUserRole"
+            [stageId]="
+              selectedUserRole === 'student' && selectedStageId != null
+                ? selectedStageId
+                : undefined
+            "
+            [maxSelectable]="1"
+            (usersSelected)="handleUsersSelected($event)"
+          />
+          <small class="hint">Selecciona exactamente 1 usuario.</small>
+        </ng-container>
       </ng-container>
 
       <!-- Caso: rol -->
