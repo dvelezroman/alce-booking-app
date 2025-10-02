@@ -163,14 +163,15 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
     }
   }
 
-  onGroupChange(groupId: number | null) {
-    this.selectedGroupId = groupId;
+  onGroupChange(groupId: number | string | null) {
+    this.selectedGroupId = groupId != null ? +groupId : null;
     this.updateGroupMembers();
   }
 
   private updateGroupMembers() {
     const g = this.groups.find(gr => gr.id === this.selectedGroupId);
-    this.selectedGroupMembers = g?.userIds?.length ?? 0;
+    const total = (g?.users?.length ?? g?.userIds?.length ?? 0);
+    this.selectedGroupMembers = total;
   }
 
   onManualModeChange(value: boolean) {
