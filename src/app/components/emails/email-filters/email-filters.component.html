@@ -1,0 +1,79 @@
+<div class="email-filters">
+  <!-- Tipo de destinatario -->
+  <div class="filter-item">
+    <label for="recipientType">Tipo</label>
+    <select
+      id="recipientType"
+      [(ngModel)]="filters.recipientType"
+      (change)="onFilterChange('recipientType', filters.recipientType!)"
+    >
+      <option value="">Todos</option>
+      <option value="INDIVIDUAL">Individual</option>
+      <option value="GROUP">Grupo</option>
+    </select>
+  </div>
+
+  <!-- Email destinatario con debounce -->
+  <div class="filter-item">
+    <label for="recipientEmail">Email</label>
+    <input
+      id="recipientEmail"
+      type="text"
+      [(ngModel)]="filters.recipientEmail"
+      (ngModelChange)="onRecipientEmailChange($event)"
+      placeholder="usuario@correo.com"
+    />
+  </div>
+
+  <!-- Estado -->
+  <div class="filter-item">
+    <label for="status">Estado</label>
+    <select
+      id="status"
+      [(ngModel)]="filters.status"
+      (change)="onFilterChange('status', filters.status!)"
+    >
+      <option value="">Todos</option>
+      <option value="SENT">Enviado</option>
+      <option value="FAILED">Fallido</option>
+      <option value="QUEUED">En cola</option>
+    </select>
+  </div>
+
+  <!-- Fecha desde -->
+  <div class="filter-item">
+    <label for="createdAtFrom">Creado desde</label>
+    <input
+      id="createdAtFrom"
+      type="date"
+      [ngModel]="filters.createdAtFrom"
+      (change)="onDateChange('createdAtFrom', $event)"
+    />
+  </div>
+
+  <!-- Fecha hasta -->
+  <div class="filter-item">
+    <label for="createdAtTo">Creado hasta</label>
+    <input
+      id="createdAtTo"
+      type="date"
+      [ngModel]="filters.createdAtTo"
+      (change)="onDateChange('createdAtTo', $event)"
+    />
+  </div>
+</div>
+
+<!-- Nuevo bloque para “Resultados por página” -->
+<div class="results-per-page">
+  <label for="limit">Resultados por página</label>
+  <select
+    id="limit"
+    [ngModel]="filters.limit"
+    (ngModelChange)="onLimitChange($event)"
+    >
+    <option value="10">10</option>
+    <option value="20">20</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+    </select>
+</div>
