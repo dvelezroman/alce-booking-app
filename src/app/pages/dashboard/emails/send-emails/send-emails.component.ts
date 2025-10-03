@@ -43,7 +43,7 @@ import { EmailService } from '../../../../services/email.service';
 export class SendEmailsComponent implements OnInit {
   protected readonly UserRole = UserRole;
 
-  selectedAction: 'user' | 'stage' | 'group' | 'role' | '' = '';
+  selectedAction: 'user' | 'stage' | 'group' | 'role' | '' = 'user';
   selectedUser: UserDto | null = null;
   selectedRole: 'student' | 'instructor' | 'admin' | null = null;
   userRole: UserRole | null = null;
@@ -91,6 +91,8 @@ export class SendEmailsComponent implements OnInit {
           }
         }
       });
+
+      this.onSendOptionSelected('user');
 
     this.stagesService.getAll().subscribe((response: Stage[]) => {
       this.stages = response

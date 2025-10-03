@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, HostListener, Input } from '@angular/core';
 import { UserRole } from '../../../services/dtos/user.dto';
+import { FormsModule } from '@angular/forms';
 
 export type EmailPanelType = 'create' | 'groups' | 'emails';
 export type SendEmailOptionType = 'user' | 'stage' | 'group' | 'role';
@@ -8,7 +9,7 @@ export type SendEmailOptionType = 'user' | 'stage' | 'group' | 'role';
 @Component({
   selector: 'app-email-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './email-panel.component.html',
   styleUrl: './email-panel.component.scss',
 })
@@ -16,6 +17,7 @@ export class EmailPanelComponent {
   activeTab: EmailPanelType = 'create';
   dropdownOpen = false;
 
+  @Input() selectedOption: 'user' | 'stage' | 'group' | 'role' | '' = '';
   @Input() userRole: UserRole | null = null;
   protected readonly UserRole = UserRole;
 

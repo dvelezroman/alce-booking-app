@@ -8,6 +8,7 @@
     <div class="badge-options hidden sm:flex">
       <span
         class="badge-option"
+        [class.active]="selectedOption === 'user'"
         *ngIf="userRole === UserRole.ADMIN || userRole === UserRole.INSTRUCTOR"
         (click)="selectEmailOption('user', $event)"
       >
@@ -16,6 +17,7 @@
 
       <span
         class="badge-option"
+        [class.active]="selectedOption === 'role'"
         *ngIf="userRole === UserRole.ADMIN"
         (click)="selectEmailOption('role', $event)"
       >
@@ -24,6 +26,7 @@
 
       <span
         class="badge-option"
+        [class.active]="selectedOption === 'stage'"
         *ngIf="userRole === UserRole.ADMIN"
         (click)="selectEmailOption('stage', $event)"
       >
@@ -32,6 +35,7 @@
 
       <span
         class="badge-option"
+        [class.active]="selectedOption === 'group'"
         *ngIf="userRole === UserRole.ADMIN"
         (click)="selectEmailOption('group', $event)"
       >
@@ -45,13 +49,12 @@
       <select
         id="emailOption"
         class="email-select"
+        [ngModel]="selectedOption"
         (change)="selectEmailOption($any($event.target)?.value, $event)"
       >
-        <option value="" disabled selected>Selecciona una opción</option>
+        <option value="" disabled>Selecciona una opción</option>
         <option
-          *ngIf="
-            userRole === UserRole.ADMIN || userRole === UserRole.INSTRUCTOR
-          "
+          *ngIf="userRole === UserRole.ADMIN || userRole === UserRole.INSTRUCTOR"
           value="user"
         >
           Usuario(s)
