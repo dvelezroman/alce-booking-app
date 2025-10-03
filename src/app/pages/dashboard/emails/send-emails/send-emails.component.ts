@@ -23,6 +23,7 @@ import {
   SendBulkEmailRequest,
   BulkEmailRecipient,
   EmailResponse,
+  SendTemplateEmailRequest,
 } from '../../../../services/dtos/email.dto';
 import { EmailService } from '../../../../services/email.service';
 
@@ -150,7 +151,7 @@ export class SendEmailsComponent implements OnInit {
     }
   }
 
-  // Stage, Role, Group (uso de SendBulkEmailRequest)
+  // Stage, Role, Group (bulk)
   handleEmailSubmit(payload: SendBulkEmailRequest): void {
     if (!payload.recipients.length) {
       this.showModal({
@@ -181,10 +182,8 @@ export class SendEmailsComponent implements OnInit {
     });
   }
 
-  // Individual (SendEmailRequest)
+  // Individual manual
   handleSingleEmailSubmit(payload: SendEmailRequest): void {
-    //console.log('📧 Email individual listo para enviar:', payload);
-
     if (!payload.to) {
       this.showModal({
         isError: true,
@@ -196,7 +195,6 @@ export class SendEmailsComponent implements OnInit {
 
     this.emailService.sendEmail(payload).subscribe({
       next: (res: EmailResponse) => {
-        // console.log('Respuesta backend:', res);
         this.showModal({
           isSuccess: true,
           title: 'Email enviado',
@@ -205,11 +203,42 @@ export class SendEmailsComponent implements OnInit {
         this.clearSelection();
       },
       error: (err) => {
-        console.error(' Error al enviar email', err);
+        console.error('Error al enviar email', err);
         this.showModal({
           isError: true,
           title: 'Error al enviar',
           message: 'No se pudo enviar el email. Intenta nuevamente.',
+        });
+      },
+    });
+  }
+
+  // 🚀 Nuevo: Envío con plantilla
+  handleTemplateEmailSubmit(payload: SendTemplateEmailRequest): void {
+    if (!payload.to || !payload.templateName) {
+      this.showModal({
+        isError: true,
+        title: 'Plantilla incompleta',
+        message: 'Debes seleccionar un destinatario y una plantilla válida.',
+      });
+      return;
+    }
+
+    this.emailService.sendTemplateEmail(payload).subscribe({
+      next: (res: EmailResponse) => {
+        this.showModal({
+          isSuccess: true,
+          title: 'Email con plantilla enviado',
+          message: `Se envió correctamente a ${res.to}.`,
+        });
+        this.clearSelection();
+      },
+      error: (err) => {
+        console.error('Error al enviar con plantilla', err);
+        this.showModal({
+          isError: true,
+          title: 'Error al enviar',
+          message: 'No se pudo enviar el email con plantilla. Intenta nuevamente.',
         });
       },
     });

@@ -1,4 +1,13 @@
-import { Component, Input, ViewChild, OnInit, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChild,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +23,7 @@ import {
   SendEmailRequest,
   SendBulkEmailRequest,
   BulkEmailRecipient,
+  SendTemplateEmailRequest,
 } from '../../../services/dtos/email.dto';
 
 @Component({
@@ -37,15 +47,43 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
 
   @Output() submitEmail = new EventEmitter<SendBulkEmailRequest>();
   @Output() submitSingleEmail = new EventEmitter<SendEmailRequest>();
-
+  @Output() submitTemplateEmail = new EventEmitter<SendTemplateEmailRequest>();
   @Output() invalidSingleEmail = new EventEmitter<UserDto>();
+
 
   @ViewChild('formRef') formRef!: NgForm;
 
+  // NUEVO: modo de envío
+  sendMode: 'manual' | 'template' = 'manual';
+
+  // Campos para envío manual
   subject = '';
   body = '';
-  userId: number | null = null;
 
+  // Campos para plantillas
+  templateName = '';
+  templateVarsText = '';
+
+  // Mock de plantillas disponibles
+  templates = [
+    {
+      name: 'welcome-alce',
+      displayName: 'Welcome to ALCE College',
+      description: 'Correo de bienvenida con saludo personalizado.'
+    },
+    {
+      name: 'class-notice',
+      displayName: 'Aviso de clases',
+      description: 'Notificación sobre nuevas clases o cambios en horario.'
+    },
+    {
+      name: 'payment-reminder',
+      displayName: 'Recordatorio de pago',
+      description: 'Aviso automático de recordatorio de pagos pendientes.'
+    }
+  ];
+
+  userId: number | null = null;
   manualEmailError = '';
 
   // USER
@@ -68,10 +106,7 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
   selectedGroupId: number | null = null;
   selectedGroupMembers = 0;
 
-  constructor(
-    private store: Store,
-    private usersService: UsersService,
-  ) {}
+  constructor(private store: Store, private usersService: UsersService) {}
 
   ngOnInit(): void {
     this.store.select(selectUserData).subscribe((user: UserDto | null) => {
@@ -93,6 +128,8 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
   resetForm() {
     this.subject = '';
     this.body = '';
+    this.templateName = '';
+    this.templateVarsText = '';
     this.manualMode = false;
     this.manualEmail = '';
     this.manualEmailError = '';
@@ -105,6 +142,7 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
     this.totalUsersInStage = 0;
     this.selectedGroupId = null;
     this.selectedGroupMembers = 0;
+    this.sendMode = 'manual';
 
     if (this.formRef) {
       this.formRef.resetForm();
@@ -120,18 +158,16 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
-  /** NUEVO HELPER: devuelve el email correcto según el rol */
   private getUserEmailByRole(u: UserDto): string | null {
     if (!u) return null;
-
     if (u.role === 'STUDENT') {
-      return u.emailAddress && this.isValidEmail(u.emailAddress) ? u.emailAddress : null;
+      return u.emailAddress && this.isValidEmail(u.emailAddress)
+        ? u.emailAddress
+        : null;
     }
-
     if (u.role === 'INSTRUCTOR' || u.role === 'ADMIN') {
       return u.email && this.isValidEmail(u.email) ? u.email : null;
     }
-
     return null;
   }
 
@@ -145,14 +181,18 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
   }
 
   canSubmitForSelectedType(): boolean {
-    if (!this.subject || !this.body) return false;
-    if (this.isUserMode) {
-      return !!this.getSelectedSingleEmail();
+    if (this.sendMode === 'manual') {
+      if (!this.subject || !this.body) return false;
+      if (this.isUserMode) {
+        return !!this.getSelectedSingleEmail();
+      }
+      return this.recipientsCount > 0;
+    } else {
+      return !!this.templateName;
     }
-    return this.recipientsCount > 0;
   }
 
-  // --- STAGE
+  // Stage
   handleStageChange(stageId: number | null) {
     this.selectedStageId = stageId;
     this.selectedUsers = [];
@@ -169,8 +209,8 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
   }
 
   private updateGroupMembers() {
-    const g = this.groups.find(gr => gr.id === this.selectedGroupId);
-    const total = (g?.users?.length ?? g?.userIds?.length ?? 0);
+    const g = this.groups.find((gr) => gr.id === this.selectedGroupId);
+    const total = g?.users?.length ?? g?.userIds?.length ?? 0;
     this.selectedGroupMembers = total;
   }
 
@@ -189,14 +229,20 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
       this.manualEmailError = '';
       return;
     }
-    this.manualEmailError = this.isValidEmail(email) ? '' : 'Correo inválido, revisa el formato';
+    this.manualEmailError = this.isValidEmail(email)
+      ? ''
+      : 'Correo inválido, revisa el formato';
   }
 
   fetchUsersByStage(stageId: number) {
     this.usersService
       .searchUsers(
-        undefined, undefined, undefined,
-        '', '', undefined,
+        undefined,
+        undefined,
+        undefined,
+        '',
+        '',
+        undefined,
         'STUDENT',
         true,
         stageId
@@ -226,7 +272,17 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
   private fetchUsersByRole(role: 'student' | 'instructor' | 'admin') {
     const roleParam = role.toUpperCase();
     this.usersService
-      .searchUsers(undefined, undefined, undefined, '', '', undefined, roleParam, true, undefined)
+      .searchUsers(
+        undefined,
+        undefined,
+        undefined,
+        '',
+        '',
+        undefined,
+        roleParam,
+        true,
+        undefined
+      )
       .subscribe({
         next: (res) => {
           this.roleUsers = res.users || [];
@@ -250,11 +306,16 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
 
   get titleText(): string {
     switch (this.selectedType) {
-      case 'user':  return 'Nuevo email a usuario';
-      case 'stage': return 'Nuevo email por stage';
-      case 'role':  return 'Nuevo email por rol';
-      case 'group': return 'Nuevo email por grupo';
-      default:      return 'Nuevo email';
+      case 'user':
+        return 'Nuevo email a usuario';
+      case 'stage':
+        return 'Nuevo email por stage';
+      case 'role':
+        return 'Nuevo email por rol';
+      case 'group':
+        return 'Nuevo email por grupo';
+      default:
+        return 'Nuevo email';
     }
   }
 
@@ -263,16 +324,18 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
       return this.getSelectedSingleEmail() ? 1 : 0;
     }
     if (this.selectedType === 'stage') {
-      return (this.users ?? []).filter(u => this.getUserEmailByRole(u)).length;
+      return (this.users ?? []).filter((u) => this.getUserEmailByRole(u)).length;
     }
     if (this.selectedType === 'role') {
-      return (this.roleUsers ?? []).filter(u => this.getUserEmailByRole(u)).length;
+      return (this.roleUsers ?? []).filter((u) =>
+        this.getUserEmailByRole(u)
+      ).length;
     }
     if (this.selectedType === 'group') {
-      const g = this.groups.find(gr => gr.id === this.selectedGroupId);
-      return g?.users?.filter(u => this.getUserEmailByRole(u)).length ?? 0;
+      const g = this.groups.find((gr) => gr.id === this.selectedGroupId);
+      return g?.users?.filter((u) => this.getUserEmailByRole(u)).length ?? 0;
     }
-    return this.selectedUsers.filter(u => this.getUserEmailByRole(u)).length;
+    return this.selectedUsers.filter((u) => this.getUserEmailByRole(u)).length;
   }
 
   get invalidUsers(): UserDto[] {
@@ -283,20 +346,44 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
     } else if (this.selectedType === 'role') {
       users = this.roleUsers ?? [];
     } else if (this.selectedType === 'group') {
-      const g = this.groups.find(gr => gr.id === this.selectedGroupId);
+      const g = this.groups.find((gr) => gr.id === this.selectedGroupId);
       users = g?.users ?? [];
     } else if (this.isUserMode) {
       users = this.selectedUsers ?? [];
     }
 
-    // usar siempre el helper
-    return users.filter(u => !this.getUserEmailByRole(u));
+    return users.filter((u) => !this.getUserEmailByRole(u));
   }
 
   submitForm() {
     if (!this.formRef.valid || !this.userId) return;
 
-    // Caso 1: individual
+    //  Caso especial: envío con plantilla
+    if (this.sendMode === 'template') {
+      const to = this.getSelectedSingleEmail();
+      if (!to || !this.templateName) return;
+
+      let variables: Record<string, string> = {};
+      try {
+        variables = this.templateVarsText ? JSON.parse(this.templateVarsText) : {};
+      } catch {
+        alert('Formato inválido en variables (JSON requerido)');
+        return;
+      }
+
+      const templatePayload: SendTemplateEmailRequest = {
+        to,
+        templateName: this.templateName,
+        variables,
+        fromName: 'ALCE College',
+        replyTo: 'noreply@alce-college.com',
+      };
+
+      this.submitTemplateEmail.emit(templatePayload);
+      return;
+    }
+
+    //  Caso 1: individual (manual clásico)
     if (this.isUserMode) {
       const singleUser = this.selectedUsers[0];
       const singleTo = this.getSelectedSingleEmail();
@@ -319,7 +406,7 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
       return;
     }
 
-    // Caso 2: stage / role / group
+    //  Caso 2: stage / role / group (bulk)
     let recipients: BulkEmailRecipient[] = [];
 
     switch (this.selectedType) {

@@ -6,7 +6,6 @@
     <!-- Selector dinámico según tipo -->
     <ng-container [ngSwitch]="selectedType">
       <!-- Caso: USUARIOS -->
-      <!-- Caso: USUARIOS -->
       <ng-container *ngSwitchCase="'user'">
         <div class="compose-assist">
           <!-- Selector de Rol -->
@@ -165,29 +164,78 @@
         </div>
       </div>
 
-      <!-- Campos principales -->
-      <div class="form-group">
-        <label for="subject">Asunto</label>
-        <input
-          id="subject"
-          name="subject"
-          type="text"
-          [(ngModel)]="subject"
+      <!-- NUEVO: selector de modo de envío -->
+     <div class="form-group">
+        <label for="sendMode">Modo de envío</label>
+        <select
+          id="sendMode"
+          name="sendMode"
+          [(ngModel)]="sendMode"
           required
-          placeholder="Asunto del correo"
-        />
+        >
+          <option value="" disabled selected>Selecciona el modo de envío</option>
+          <option value="manual">Redactar manualmente</option>
+          <option value="template">Usar plantilla</option>
+        </select>
       </div>
 
-      <div class="form-group">
-        <label for="body">Mensaje</label>
-        <textarea
-          id="body"
-          name="body"
-          rows="8"
-          [(ngModel)]="body"
-          required
-          placeholder="Escribe tu mensaje aquí..."
-        ></textarea>
+      <!-- Campos principales si es manual -->
+      <div *ngIf="sendMode === 'manual'">
+        <div class="form-group">
+          <label for="subject">Asunto</label>
+          <input
+            id="subject"
+            name="subject"
+            type="text"
+            [(ngModel)]="subject"
+            required
+            placeholder="Asunto del correo"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="body">Mensaje</label>
+          <textarea
+            id="body"
+            name="body"
+            rows="8"
+            [(ngModel)]="body"
+            required
+            placeholder="Escribe tu mensaje aquí..."
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Campos de plantilla -->
+      <div *ngIf="sendMode === 'template'">
+        <div class="form-group">
+          <label for="templateName">Plantilla</label>
+          <select
+            id="templateName"
+            name="templateName"
+            [(ngModel)]="templateName"
+            required
+            class="styled-select"
+          >
+            <option value="" disabled selected>Selecciona una plantilla</option>
+            <option *ngFor="let t of templates" [value]="t.name">
+              {{ t.displayName }} — {{ t.description }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group template-vars">
+          <label for="templateVars">Datos de la plantilla</label>
+          <textarea
+            id="templateVars"
+            name="templateVars"
+            rows="4"
+            class="styled-textarea"
+            [(ngModel)]="templateVarsText"
+            placeholder="Ejemplo: nombre = Juan, curso = Inglés Básico"
+          ></textarea>
+          <small class="hint">Introduce los valores que se usarán en la plantilla (ej. nombre, curso, fecha).</small>
+        </div>
       </div>
 
       <div class="compose-footer">
@@ -197,7 +245,7 @@
 
         <button
           type="submit"
-          [disabled]="!formRef.form.valid"
+          [disabled]="!formRef.form.valid || !canSubmitForSelectedType()"
           class="send-btn"
         >
           Enviar Email
