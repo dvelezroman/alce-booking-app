@@ -83,3 +83,11 @@ export const formatToEcuadorTime = (dateStr: string): string => {
 
   return date.setZone(ecuadorTz).toFormat("dd/MM/yyyy HH:mm");
 };
+
+export const formatBirthday = (dateStr: string): string => {
+  if (!dateStr) return "No registrado";
+  const date = DateTime.fromISO(dateStr);
+  if (!date.isValid) return "Fecha inválida";
+
+  return date.setLocale("es").toFormat("dd 'de' LLLL 'de' yyyy"); 
+};
