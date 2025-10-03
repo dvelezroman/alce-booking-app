@@ -2,16 +2,20 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CITIES_BY_COUNTRY, COUNTRY_CODES, CountryCode } from '../../shared/country-code';
+import { ModalComponent } from '../modal/modal.component';
+import { ModalDto, modalInitializer } from '../modal/modal.dto';
 
 @Component({
   selector: 'app-users-info-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ModalComponent],
   templateUrl: './user-info-form.component.html',
   styleUrls: ['./user-info-form.component.scss'],
 })
 export class UserInfoFormComponent {
   @Input() isModalOpen: boolean = false;
+  @Input() dataCompleted: boolean = false;
+
   @Output() closeModal = new EventEmitter<void>();
   @Output() formSubmit = new EventEmitter<any>();
 
@@ -20,6 +24,8 @@ export class UserInfoFormComponent {
   cities: string[] = [];
   selectedCountryIso = 'EC';
   selectedCountryCode = '+593';
+
+  modal: ModalDto = modalInitializer();
 
   constructor(private fb: FormBuilder) {
     this.infoForm = this.fb.group({
@@ -79,6 +85,23 @@ export class UserInfoFormComponent {
   }
 
   close(): void {
+    if (!this.dataCompleted) {
+      this.modal = {
+        ...modalInitializer(),
+        show: true,
+        isError: true,
+        title: 'Atención',
+        message: 'Debes completar y guardar el formulario antes de poder cerrarlo.',
+        close: () => (this.modal.show = false),
+      };
+
+      setTimeout(() => {
+        this.modal.show = false;
+      }, 3000);
+
+      return;
+    }
+
     this.closeModal.emit();
   }
 }

@@ -21,6 +21,7 @@ export interface UserDto {
   emailAddress?: string;
   contact?: string;
   country?: string;
+  city?: string;
   password?: string;
   firstName?: string;
   lastName?: string;

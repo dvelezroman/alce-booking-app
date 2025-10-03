@@ -24,11 +24,16 @@ import { ModalComponent } from '../../../components/modal/modal.component';
 })
 export class ProfileComponent {
   userData$: Observable<UserDto | null>;
+  dataCompleted: boolean = false;
   showUserInfoForm = false;
   modal: ModalDto = modalInitializer();
 
   constructor(private store: Store, private usersService: UsersService) {
     this.userData$ = this.store.select(selectUserData);
+
+    this.userData$.subscribe(user => {
+      this.dataCompleted = user?.dataCompleted ?? false;
+    });
   }
 
   formatBirthday(dateStr: string | undefined): string {

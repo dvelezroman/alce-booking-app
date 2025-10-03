@@ -19,10 +19,9 @@
       </div>
 
       <div class="profile-details">
-        <p>
-          <strong>Contacto:</strong> {{ user.contact || "No especificado" }}
-        </p>
+        <p><strong>Contacto:</strong> {{ user.contact || "No especificado" }}</p>
         <p><strong>País:</strong> {{ user.country || "No especificado" }}</p>
+        <p><strong>Ciudad:</strong> {{ user.city || "No especificado" }}</p>
         <p>
           <strong>Cumpleaños:</strong>
           {{ user?.birthday ? formatBirthday(user.birthday) : "No registrado" }}
@@ -49,9 +48,9 @@
     <app-users-info-form
       *ngIf="showUserInfoForm"
       [isModalOpen]="true"
+      [dataCompleted]="dataCompleted"
       (formSubmit)="handleUserInfoSubmit($event)"
-      (closeModal)="showUserInfoForm = false"
-    >
+      (closeModal)="showUserInfoForm = false" >
     </app-users-info-form>
 
     <!-- Modal de feedback -->

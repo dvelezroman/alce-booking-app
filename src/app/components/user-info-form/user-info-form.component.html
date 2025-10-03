@@ -96,9 +96,18 @@
     </section>
 
     <footer class="modal-card-foot">
-      <button type="submit" class="button is-primary" form="studentInfoForm">
+      <button type="submit" class="button is-primary" form="studentInfoForm" >
         Guardar
       </button>
     </footer>
   </div>
 </div>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [title]="modal.title || ''"
+  (close)="modal.close()">
+</app-modal>
