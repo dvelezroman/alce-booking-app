@@ -1,0 +1,326 @@
+.email-detail-root {
+  --bg-page: #f8f9fa;
+  --bg-card: #ffffff;
+  --bg-soft: #fdfdfd;
+  --border: #e5e7eb;
+  --muted: #667085;
+  --text: #0f172a;
+
+  background: var(--bg-page);
+  color: var(--text);
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* Contenedor principal */
+  .container {
+    width: 100%;
+    max-width: 960px;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-page);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+
+    .btn.back {
+      font-size: 22px;
+      line-height: 1;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: var(--bg-soft);
+        border-radius: 8px;
+      }
+    }
+
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+
+      .icon-btn {
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        border-radius: 8px;
+        padding: 6px 8px;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.05s ease;
+
+        &:hover {
+          background: var(--bg-soft);
+        }
+
+        &:active {
+          transform: scale(0.97);
+        }
+      }
+    }
+  }
+
+  /* Layout principal */
+  .layout.single {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Card del mensaje */
+    .message-col {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+    .from-row {
+        display: grid;
+        grid-template-columns: 48px 1fr;
+        gap: 12px;
+        margin-bottom: 10px;
+
+        .avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #e5e7eb;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        color: #374151;
+        }
+
+        .from-meta {
+        .from-line {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            .name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0f172a;
+            }
+
+            .email,
+            .time,
+            .dot {
+            color: var(--muted);
+            font-size: 11px;
+            }
+        }
+
+        .to-line {
+            margin-top: 2px;
+            color: var(--muted);
+            font-size: 12px;
+
+            .audience {
+            font-weight: 500;
+            font-size: 16px;
+            }
+        }
+
+        /* NUEVO: Remitente */
+        .from-email {
+            margin-top: 2px;
+            font-size: 12px;
+            color: var(--muted);
+
+            strong {
+            color: #0f172a;
+            font-weight: 600;
+            }
+        }
+        }
+    }
+
+
+    /* Detalles desplegables */
+    .meta-disclosure {
+      margin: 8px 0 12px;
+
+      summary {
+        list-style: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #2563eb;
+        user-select: none;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      &[open] summary .chev {
+        transform: rotate(180deg);
+      }
+
+      .chev {
+        transition: transform 0.15s ease;
+      }
+
+      .details-card {
+        margin-top: 10px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--bg-soft);
+
+        .meta-list {
+          .row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 5px;
+            font-size: 11px;
+            padding: 5px 0;
+            color: #0f172a;
+            border-bottom: 1px dashed #eef0f2;
+
+            &:last-child {
+              border-bottom: 0;
+            }
+
+            dt {
+              color: var(--muted);
+            }
+
+            dd {
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+
+    /* Cuerpo del mensaje */
+    .content {
+      margin-top: 10px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-soft);
+
+      .body-text {
+        white-space: pre-wrap;
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--text);
+        overflow-wrap: break-word;
+        word-break: break-word;
+        max-width: 100%;
+      }
+
+      @media (max-width: 640px) {
+        padding: 10px;
+
+        .body-text {
+          font-size: 12px;
+          line-height: 1.5;
+        }
+      }
+    }
+
+    /* Ajustes cuando el contenido viene como HTML */
+        .content .body-text {
+        line-height: 1.3 !important;
+        font-size: 13px !important;
+
+        p {
+            margin: 0.3em 0 !important;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin: 0.5em 0 0.3em 0 !important;
+            line-height: 1.1 !important;
+            font-size: 1em !important;
+        }
+
+        div, section, article, table, tr, td {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        ul, ol {
+            margin: 0.3em 0 0.3em 1em !important;
+            padding: 0 !important;
+        }
+
+        li {
+            margin: 0.2em 0 !important;
+        }
+        }
+
+    /* Alertas */
+    .alert {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      border: 1px solid;
+
+      &.warn {
+        background: #fffbeb;
+        border-color: #fde68a;
+      }
+
+      &.danger {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+    }
+  }
+}
+
+/* Ajustes globales */
+.email-detail-root {
+  background: #f8f9fa;
+  min-height: 100vh;
+
+  .layout.single {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .message-col {
+    width: 90%;
+    margin: 0 auto;
+    max-width: 1200px;
+
+    @media (max-width: 640px) {
+      width: 100%;
+    }
+  }
+}

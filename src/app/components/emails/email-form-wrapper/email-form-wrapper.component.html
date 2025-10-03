@@ -171,6 +171,7 @@
           id="sendMode"
           name="sendMode"
           [(ngModel)]="sendMode"
+          (ngModelChange)="onSendModeChange($event)"
           required
         >
           <option value="" disabled selected>Selecciona el modo de envío</option>
@@ -214,12 +215,13 @@
             id="templateName"
             name="templateName"
             [(ngModel)]="templateName"
+            (ngModelChange)="onTemplateChange($event)"
             required
             class="styled-select"
           >
             <option value="" disabled selected>Selecciona una plantilla</option>
             <option *ngFor="let t of templates" [value]="t.name">
-              {{ t.displayName }} — {{ t.description }}
+              {{ t.displayName }}
             </option>
           </select>
         </div>

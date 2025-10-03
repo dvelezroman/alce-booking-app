@@ -1,0 +1,95 @@
+<section class="email-detail-root">
+  <!-- Top bar / acciones -->
+  <header class="topbar">
+    <div class="left">
+      <a class="btn back" (click)="goBack()" aria-label="Volver"> ← </a>
+    </div>
+
+    <div class="right">
+      <div class="actions">
+        <button class="icon-btn" title="Más">⋮</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Layout principal -->
+  <div class="layout single" *ngIf="email">
+    <article class="message-col">
+      <!-- From / To -->
+      <div class="from-row">
+        <div class="avatar">
+          <span>{{ (email.recipientEmail || "E")[0] | uppercase }}</span>
+        </div>
+
+        <div class="from-meta">
+          <div class="from-line">
+            <strong class="name">
+              {{ email.recipientName || email.recipientEmail }}
+            </strong>
+            <span class="dot">·</span>
+            <span class="time">
+              {{ email.createdAt | date : "EEE d MMM y, HH:mm" }}
+            </span>
+          </div>
+
+          <div class="to-line">
+            Asunto: <span class="audience">{{ email.subject }}</span>
+          </div>
+          <div class="from-email">
+            De: <strong>ALCE College</strong> &lt;noreply&#64;alce-college.com&gt;
+          </div>
+        </div>
+      </div>
+
+      <!-- Detalles -->
+      <details class="meta-disclosure">
+        <summary>
+          <span>Detalles</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </summary>
+
+        <div class="card details-card">
+          <dl class="meta-list">
+            <div class="row">
+              <dt>Estado</dt>
+              <dd>{{ email.status }}</dd>
+            </div>
+            <div class="row">
+              <dt>Enviado</dt>
+              <dd>{{ email.sentAt | date : "short" }}</dd>
+            </div>
+            <div class="row">
+              <dt>Actualizado</dt>
+              <dd>{{ email.updatedAt | date : "short" }}</dd>
+            </div>
+            <div class="row">
+              <dt>Tipo destinatario</dt>
+              <dd>{{ email.recipientType }}</dd>
+            </div>
+            <div class="row">
+              <dt>Message ID</dt>
+              <dd>{{ email.messageId }}</dd>
+            </div>
+          </dl>
+        </div>
+      </details>
+
+      <!-- Contenido -->
+      <div class="content">
+        <div
+          *ngIf="email.contentType === 'html'; else plainText"
+          class="body-text"
+          [innerHTML]="email.content"
+        ></div>
+        <ng-template #plainText>
+          <pre class="body-text">{{ email.content }}</pre>
+        </ng-template>
+      </div>
+
+      <!-- Alertas -->
+      <div class="alert danger" *ngIf="email.status === 'FAILED'">
+        {{ email.errorMessage || "No se pudo entregar." }}
+      </div>
+    </article>
+  </div>
+</section>

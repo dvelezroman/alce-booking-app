@@ -67,21 +67,21 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
   // Mock de plantillas disponibles
   templates = [
     {
-      name: 'welcome-alce',
-      displayName: 'Welcome to ALCE College',
-      description: 'Correo de bienvenida con saludo personalizado.'
+      "name": "welcome",
+      "displayName": "Welcome to ALCE College",
+      "variables": ["nombre", "curso"]
     },
     {
-      name: 'class-notice',
-      displayName: 'Aviso de clases',
-      description: 'Notificación sobre nuevas clases o cambios en horario.'
+      "name": "class-notice",
+      "displayName": "Aviso de clases",
+      "variables": ["fecha", "hora"]
     },
     {
-      name: 'payment-reminder',
-      displayName: 'Recordatorio de pago',
-      description: 'Aviso automático de recordatorio de pagos pendientes.'
+      "name": "payment-reminder",
+      "displayName": "Recordatorio de pago",
+      "variables": [ "monto", "fechaVencimiento"]
     }
-  ];
+  ]
 
   userId: number | null = null;
   manualEmailError = '';
@@ -219,6 +219,26 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
     if (!value) {
       this.manualEmail = '';
       this.manualEmailError = '';
+    }
+  }
+
+  onTemplateChange(templateName: string) {
+    const selected = this.templates.find(t => t.name === templateName);
+    if (selected && selected.variables) {
+      const varsObj: any = {};
+      selected.variables.forEach(v => varsObj[v] = "");
+      this.templateVarsText = JSON.stringify(varsObj, null, 2);
+    } else {
+      this.templateVarsText = "{}";
+    }
+  }
+
+  onSendModeChange(mode: 'manual' | 'template') {
+    this.sendMode = mode;
+
+    if (mode === 'manual') {
+      this.templateName = '';
+      this.templateVarsText = '';
     }
   }
 
