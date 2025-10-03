@@ -160,14 +160,17 @@ export class EmailFormWrapperComponent implements OnInit, OnChanges {
 
   private getUserEmailByRole(u: UserDto): string | null {
     if (!u) return null;
-    if (u.role === 'STUDENT') {
-      return u.emailAddress && this.isValidEmail(u.emailAddress)
-        ? u.emailAddress
-        : null;
+    
+    // Try emailAddress first, fallback to email if emailAddress is not valid
+    if (u.emailAddress && this.isValidEmail(u.emailAddress)) {
+      return u.emailAddress;
     }
-    if (u.role === 'INSTRUCTOR' || u.role === 'ADMIN') {
-      return u.email && this.isValidEmail(u.email) ? u.email : null;
+    
+    // Fallback to email field if emailAddress is not valid or fails
+    if (u.email && this.isValidEmail(u.email)) {
+      return u.email;
     }
+    
     return null;
   }
 
