@@ -30,10 +30,10 @@ export class EmailFiltersComponent implements OnInit {
     this.filtersChange.emit(this.filters);
   }
 
-  onLimitChange(value: string) {
-    const parsed = parseInt(value, 10);
-    this.onFilterChange('limit', parsed);
-  }
+  // onLimitChange(value: string) {
+  //   const parsed = parseInt(value, 10);
+  //   this.onFilterChange('limit', parsed);
+  // }
 
   onDateChange(key: keyof GetEmailMessagesQuery, event: Event) {
     const input = event.target as HTMLInputElement;

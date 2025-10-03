@@ -6,17 +6,17 @@ import { Store } from '@ngrx/store';
 
 import { selectUserData } from '../../../../store/user.selector';
 import { UserDto } from '../../../../services/dtos/user.dto';
-import { EmailMessage, GetEmailMessagesResponse } from '../../../../services/dtos/email.dto';
+import {
+  EmailMessage,
+  GetEmailMessagesResponse,
+} from '../../../../services/dtos/email.dto';
 import { EmailFiltersComponent } from '../../../../components/emails/email-filters/email-filters.component';
-import { EmailService } from '../../../../services/email.services';
+import { EmailService } from '../../../../services/email.service';
 
 @Component({
   selector: 'app-historial-email',
   standalone: true,
-  imports: [
-    CommonModule,
-    EmailFiltersComponent,
-  ],
+  imports: [CommonModule, EmailFiltersComponent],
   templateUrl: './historial-email.component.html',
   styleUrl: './historial-email.component.scss',
 })
@@ -25,7 +25,7 @@ export class HistorialEmailComponent implements OnInit {
 
   emails: EmailMessage[] = [];
   page = 1;
-  limit = 20;
+  limit = 0;
   total = 0;
 
   loading = false;
@@ -42,14 +42,17 @@ export class HistorialEmailComponent implements OnInit {
   constructor(
     private emailService: EmailService,
     private router: Router,
-    private store: Store,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
-    this.store.select(selectUserData).pipe(take(1)).subscribe((u: UserDto | null) => {
-      this.currentUserId = u?.id ?? null;
-      this.fetchEmails();
-    });
+    this.store
+      .select(selectUserData)
+      .pipe(take(1))
+      .subscribe((u: UserDto | null) => {
+        this.currentUserId = u?.id ?? null;
+        this.fetchEmails();
+      });
   }
 
   onFiltersChange(newFilters: any) {
@@ -62,29 +65,33 @@ export class HistorialEmailComponent implements OnInit {
     this.loading = true;
     this.errorMsg = '';
 
-    this.emailService.getEmailMessages({
-      page: this.page,
-      limit: this.filters.limit || this.limit,
-      recipientType: this.filters.recipientType,
-      recipientEmail: this.filters.recipientEmail,
-      status: this.filters.status,
-      createdAtFrom: this.filters.createdAtFrom || '',
-      createdAtTo: this.filters.createdAtTo || ''
-    }).subscribe({
-      next: (res: GetEmailMessagesResponse) => {
-        this.emails = (res.messages || [])
-          .sort((a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    this.emailService
+      .getEmailMessages({
+        page: this.page,
+        limit: this.filters.limit || this.limit,
+        recipientType: this.filters.recipientType,
+        recipientEmail: this.filters.recipientEmail,
+        status: this.filters.status,
+        createdAtFrom: this.filters.createdAtFrom || '',
+        createdAtTo: this.filters.createdAtTo || '',
+      })
+      .subscribe({
+        next: (res: GetEmailMessagesResponse) => {
+          this.emails = (res.messages || []).sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
-        this.total = res.totalMessages || this.emails.length || 0;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('[HistorialEmail] error:', err);
-        this.errorMsg = 'No se pudieron cargar los correos enviados.';
-        this.loading = false;
-      },
-    });
+          this.total = res.totalMessages || this.emails.length || 0;
+          this.page = res.page;
+          this.limit = res.limit;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('[HistorialEmail] error:', err);
+          this.errorMsg = 'No se pudieron cargar los correos enviados.';
+          this.loading = false;
+        },
+      });
   }
 
   get startIndex(): number {
@@ -98,10 +105,14 @@ export class HistorialEmailComponent implements OnInit {
 
   getStatusLabel(status: string): string {
     switch (status) {
-      case 'SENT': return 'Enviado';
-      case 'FAILED': return 'Fallido';
-      case 'QUEUED': return 'En cola';
-      default: return status;
+      case 'SENT':
+        return 'Enviado';
+      case 'FAILED':
+        return 'Fallido';
+      case 'QUEUED':
+        return 'En cola';
+      default:
+        return status;
     }
   }
 
@@ -126,9 +137,8 @@ export class HistorialEmailComponent implements OnInit {
   onRowClick(e: EmailMessage) {
     if (!e?.id) return;
 
-    this.router.navigate(
-      ['/dashboard/email-detail'],
-      { state: { email: e, origin: 'historial-email' } }
-    );
+    this.router.navigate(['/dashboard/email-detail'], {
+      state: { email: e, origin: 'historial-email' },
+    });
   }
 }

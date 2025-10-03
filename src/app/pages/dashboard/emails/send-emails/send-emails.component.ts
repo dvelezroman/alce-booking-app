@@ -6,7 +6,10 @@ import { take } from 'rxjs/operators';
 
 import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { Stage } from '../../../../services/dtos/student.dto';
-import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
+import {
+  ModalDto,
+  modalInitializer,
+} from '../../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../../components/modal/modal.component';
 import { selectUserData } from '../../../../store/user.selector';
 import { UsersService } from '../../../../services/users.service';
@@ -15,13 +18,13 @@ import { EmailPanelComponent } from '../../../../components/emails/email-panel/e
 import { EmailFormWrapperComponent } from '../../../../components/emails/email-form-wrapper/email-form-wrapper.component';
 import { NotificationGroupService } from '../../../../services/notification-group.service';
 import { NotificationGroupDto } from '../../../../services/dtos/notification.dto';
-import { 
-  SendEmailRequest, 
-  SendBulkEmailRequest, 
-  BulkEmailRecipient, 
-  EmailResponse
+import {
+  SendEmailRequest,
+  SendBulkEmailRequest,
+  BulkEmailRecipient,
+  EmailResponse,
 } from '../../../../services/dtos/email.dto';
-import { EmailService } from '../../../../services/email.services';
+import { EmailService } from '../../../../services/email.service';
 
 @Component({
   selector: 'app-send-emails',
@@ -31,7 +34,7 @@ import { EmailService } from '../../../../services/email.services';
     FormsModule,
     ModalComponent,
     EmailPanelComponent,
-    EmailFormWrapperComponent
+    EmailFormWrapperComponent,
   ],
   templateUrl: './send-emails.component.html',
   styleUrl: './send-emails.component.scss',
@@ -49,7 +52,7 @@ export class SendEmailsComponent implements OnInit {
 
   groups: NotificationGroupDto[] = [];
   loadingGroups = false;
-  
+
   modal: ModalDto = modalInitializer();
   resetChildren = false;
 
@@ -62,21 +65,31 @@ export class SendEmailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.store.select(selectUserData).pipe(take(1)).subscribe((u: UserDto | null) => {
-      if (u?.role) {
-        this.userRole = u.role;
-      } else {
-        const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-        if (token) {
-          this.usersService.refreshLogin().subscribe({
-            next: (resp) => { this.userRole = resp.role ?? null; },
-            error: () =>   { this.userRole = null; }
-          });
+    this.store
+      .select(selectUserData)
+      .pipe(take(1))
+      .subscribe((u: UserDto | null) => {
+        if (u?.role) {
+          this.userRole = u.role;
         } else {
-          this.userRole = null;
+          const token =
+            typeof window !== 'undefined'
+              ? localStorage.getItem('accessToken')
+              : null;
+          if (token) {
+            this.usersService.refreshLogin().subscribe({
+              next: (resp) => {
+                this.userRole = resp.role ?? null;
+              },
+              error: () => {
+                this.userRole = null;
+              },
+            });
+          } else {
+            this.userRole = null;
+          }
         }
-      }
-    });
+      });
 
     this.stagesService.getAll().subscribe((response: Stage[]) => {
       this.stages = response
@@ -109,8 +122,12 @@ export class SendEmailsComponent implements OnInit {
     });
   }
 
-  handleUserSelect(user: UserDto | null) { this.selectedUser = user; }
-  handleStageSelect(stage: Stage | null) { this.selectedStage = stage; }
+  handleUserSelect(user: UserDto | null) {
+    this.selectedUser = user;
+  }
+  handleStageSelect(stage: Stage | null) {
+    this.selectedStage = stage;
+  }
 
   private clearSelection(): void {
     this.selectedAction = '';
@@ -118,15 +135,19 @@ export class SendEmailsComponent implements OnInit {
     this.selectedStage = null;
     this.selectedRole = null;
     this.resetChildren = true;
-    setTimeout(() => { this.resetChildren = false; }, 0);
+    setTimeout(() => {
+      this.resetChildren = false;
+    }, 0);
   }
 
   onSendOptionSelected(option: 'user' | 'stage' | 'group' | 'role') {
     this.selectedAction = option;
-    if (option !== 'user')  this.selectedUser  = null;
+    if (option !== 'user') this.selectedUser = null;
     if (option !== 'stage') this.selectedStage = null;
-    if (option !== 'role')  this.selectedRole  = null;
-    if (option === 'group') { this.loadGroups() }
+    if (option !== 'role') this.selectedRole = null;
+    if (option === 'group') {
+      this.loadGroups();
+    }
   }
 
   // Stage, Role, Group (uso de SendBulkEmailRequest)
@@ -156,7 +177,7 @@ export class SendEmailsComponent implements OnInit {
           title: 'Error al enviar',
           message: 'Hubo un problema enviando los emails. Intenta nuevamente.',
         });
-      }
+      },
     });
   }
 
@@ -175,7 +196,7 @@ export class SendEmailsComponent implements OnInit {
 
     this.emailService.sendEmail(payload).subscribe({
       next: (res: EmailResponse) => {
-       // console.log('Respuesta backend:', res);
+        // console.log('Respuesta backend:', res);
         this.showModal({
           isSuccess: true,
           title: 'Email enviado',
@@ -190,11 +211,17 @@ export class SendEmailsComponent implements OnInit {
           title: 'Error al enviar',
           message: 'No se pudo enviar el email. Intenta nuevamente.',
         });
-      }
+      },
     });
   }
 
-  private showModal({ title = '', message = '', isSuccess = false, isError = false , duration = 2000 }: {
+  private showModal({
+    title = '',
+    message = '',
+    isSuccess = false,
+    isError = false,
+    duration = 2000,
+  }: {
     title?: string;
     message?: string;
     isSuccess?: boolean;
@@ -210,7 +237,9 @@ export class SendEmailsComponent implements OnInit {
       isError,
       close: () => (this.modal.show = false),
     };
-    setTimeout(() => { this.modal.show = false; }, duration);
+    setTimeout(() => {
+      this.modal.show = false;
+    }, duration);
   }
 
   handleInvalidSingleEmail(user: UserDto): void {

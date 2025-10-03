@@ -14,7 +14,7 @@ import {
   GetEmailMessagesQuery,
   GetEmailMessagesResponse,
   EmailMessage,
-} from '../services/dtos/email.dto';
+} from './dtos/email.dto';
 
 @Injectable({ providedIn: 'root' })
 export class EmailService {
@@ -39,8 +39,8 @@ export class EmailService {
   getEmailMessages(filters: GetEmailMessagesQuery): Observable<GetEmailMessagesResponse> {
     let params = new HttpParams();
 
-    if (filters.page != null) params = params.set('page', String(filters.page));
-    if (filters.limit != null) params = params.set('limit', String(filters.limit));
+    // if (filters.page != null) params = params.set('page', String(filters.page));
+    // if (filters.limit != null) params = params.set('limit', String(filters.limit));
     if (filters.recipientType) params = params.set('recipientType', filters.recipientType);
     if (filters.recipientEmail) params = params.set('recipientEmail', filters.recipientEmail);
     if (filters.status) params = params.set('status', filters.status);
