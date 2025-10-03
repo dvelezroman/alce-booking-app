@@ -4,13 +4,13 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CITIES_BY_COUNTRY, COUNTRY_CODES, CountryCode } from '../../shared/country-code';
 
 @Component({
-  selector: 'app-student-info-form',
+  selector: 'app-users-info-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './student-info-form.component.html',
-  styleUrls: ['./student-info-form.component.scss'],
+  templateUrl: './user-info-form.component.html',
+  styleUrls: ['./user-info-form.component.scss'],
 })
-export class StudentInfoFormComponent {
+export class UserInfoFormComponent {
   @Input() isModalOpen: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
   @Output() formSubmit = new EventEmitter<any>();

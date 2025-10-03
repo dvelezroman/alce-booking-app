@@ -11,9 +11,9 @@ import { MeetingDTO } from '../../../services/dtos/booking.dto';
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { StudyContentService } from '../../../services/study-content.service';
 import { selectIsLoggedIn, selectUserData } from '../../../store/user.selector';
-import { StudentInfoFormComponent } from '../../../components/student-info-form/student-info-form.component';
 import { UsersService } from '../../../services/users.service';
 import { setDataCompleted } from "../../../store/user.action";
+import { UserInfoFormComponent } from '../../../components/user-info-form/user-info-form.component';
 
 @Component({
   selector: 'app-home-private',
@@ -23,7 +23,8 @@ import { setDataCompleted } from "../../../store/user.action";
       RouterModule,
       FormsModule,
       ModalComponent,
-      StudentInfoFormComponent],
+      UserInfoFormComponent
+    ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -53,7 +54,8 @@ export class HomePrivateComponent implements OnInit {
   selectedMeeting: any;
   meetingContent: string = '';
   isUpdating: boolean = false;
-  showStudentInfoForm = false;
+  // showStudentInfoForm = false;
+  showUserInfoForm = false;
 
   constructor(private store: Store,
               private bookingService: BookingService,
@@ -95,8 +97,8 @@ export class HomePrivateComponent implements OnInit {
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
       this.isStudent = user?.role === UserRole.STUDENT;
 
-      if (this.isStudent && user?.dataCompleted === false) {
-        this.showStudentInfoForm = true;
+      if ((this.isInstructor || user?.role === UserRole.ADMIN) && user?.dataCompleted === false) {
+        this.showUserInfoForm = true;
       }
 
       if (this.isInstructor) {
@@ -321,7 +323,7 @@ export class HomePrivateComponent implements OnInit {
     }));
   }
 
-  handleStudentInfoSubmit(data: { email: string; contact: string; city: string; country: string }) {
+  handleUserInfoSubmit(data: { email: string; contact: string; city: string; country: string }) {
     this.userData$.pipe(take(1)).subscribe(user => {
       if (!user?.id) {
         this.showModal(this.createModalParams(true, 'No se pudo obtener el ID del usuario.'));
@@ -337,7 +339,7 @@ export class HomePrivateComponent implements OnInit {
 
       this.usersService.update(user.id, payload).subscribe({
         next: () => {
-          this.showStudentInfoForm = false;
+          this.showUserInfoForm = false;
           this.store.dispatch(setDataCompleted({ completed: true }));
           this.showModal(this.createModalParams(false, 'Información actualizada con éxito.'));
         },

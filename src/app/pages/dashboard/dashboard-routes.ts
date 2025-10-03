@@ -41,10 +41,12 @@ import { HistorialEmailComponent } from './emails/historial-email/historial-emai
 import { InboxEmailComponent } from './emails/inbox-email/inbox-email.component';
 import { SentEmailComponent } from './emails/sent-email/sent-email.component';
 import { EmailDetailComponent } from './emails/email-detail/email-detail.component';
+import { ProfileComponent } from './profile/profile.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomePrivateComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: 'register-complete', component: RegisterCompleteComponent },
   { path: 'booking', component: MeetingBookingComponent },
   { path: 'stage', component: StageComponent },
