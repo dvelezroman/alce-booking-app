@@ -32,11 +32,11 @@ export class HistorialEmailComponent implements OnInit {
   errorMsg = '';
 
   filters: any = {
-    page: this.page,
-    limit: this.limit,
     recipientType: '',
     recipientEmail: '',
     status: '',
+    createdAtFrom: '',
+    createdAtTo: '',
   };
 
   constructor(
@@ -56,7 +56,7 @@ export class HistorialEmailComponent implements OnInit {
   }
 
   onFiltersChange(newFilters: any) {
-    this.filters = { ...this.filters, ...newFilters, page: 1 };
+    this.filters = { ...this.filters, ...newFilters };
     this.page = 1;
     this.fetchEmails();
   }
@@ -68,12 +68,11 @@ export class HistorialEmailComponent implements OnInit {
     this.emailService
       .getEmailMessages({
         page: this.page,
-        limit: this.filters.limit || this.limit,
         recipientType: this.filters.recipientType,
         recipientEmail: this.filters.recipientEmail,
         status: this.filters.status,
-        createdAtFrom: this.filters.createdAtFrom || '',
-        createdAtTo: this.filters.createdAtTo || '',
+        createdAtFrom: this.filters.createdAtFrom,
+        createdAtTo: this.filters.createdAtTo,
       })
       .subscribe({
         next: (res: GetEmailMessagesResponse) => {
@@ -81,9 +80,11 @@ export class HistorialEmailComponent implements OnInit {
             (a, b) =>
               new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
-          this.total = res.totalMessages || this.emails.length || 0;
-          this.page = res.page;
-          this.limit = res.limit;
+
+          this.page = Number(res.page) || this.page;
+          this.limit = Number(res.limit) || this.emails.length || 0;
+          this.total = Number(res.totalMessages) || this.emails.length || 0;
+
           this.loading = false;
         },
         error: (err) => {
