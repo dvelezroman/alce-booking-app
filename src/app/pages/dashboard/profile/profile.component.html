@@ -1,1 +1,38 @@
-<p>profile works!</p>
+<section class="section">
+  <div class="content">
+    <!-- Cabecera -->
+    <h1 class="reports-progress-header reports-progress-title">
+      Perfil de Usuario
+    </h1>
+
+    <!-- Card con datos -->
+    <div class="profile-card" *ngIf="userData$ | async as user">
+      <div class="profile-header">
+        <div class="avatar">
+          {{ user.firstName?.[0] || '?' }}{{ user.lastName?.[0] || '' }}
+        </div>
+        <div class="user-info">
+          <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+          <p class="role">{{ user.role }}</p>
+          <p class="email">{{ user.emailAddress || user.email }}</p>
+        </div>
+      </div>
+
+      <div class="profile-details">
+        <p><strong>ID:</strong> {{ user.id }}</p>
+        <p><strong>Cédula:</strong> {{ user.idNumber || 'No registrado' }}</p>
+        <p><strong>Contacto:</strong> {{ user.contact || 'No especificado' }}</p>
+        <p><strong>País:</strong> {{ user.country || 'No especificado' }}</p>
+        <p><strong>Cumpleaños:</strong> {{ user.birthday || 'No especificado' }}</p>
+        <p><strong>Estado:</strong> {{ user.status || 'Activo' }}</p>
+        <p><strong>Comentario:</strong> {{ user.comment || 'Ninguno' }}</p>
+        <p><strong>Datos completados:</strong> {{ user.dataCompleted ? 'Sí' : 'No' }}</p>
+      </div>
+
+      <!-- Botón para editar -->
+      <div class="profile-actions">
+        <button class="edit-btn">Editar información</button>
+      </div>
+    </div>
+  </div>
+</section>

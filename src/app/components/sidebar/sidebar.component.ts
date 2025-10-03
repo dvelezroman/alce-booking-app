@@ -35,9 +35,11 @@ export class SidebarComponent implements OnInit {
   categoryStates: Record<string, boolean> = {};
   currentRoute: string = '';
   homeNavItem: { icon: string; text: string; route: string; roles: UserRole[] } | null = null;
+  profileNavItem: { icon: string; text: string; route: string; roles: UserRole[] } | null = null;
 
 navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'home', text: 'Inicio', route: '/dashboard/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
+  { icon: 'user', text: 'Perfil', route: '/dashboard/profile', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
   { icon: 'event', text: 'Mis Clases', route: '/dashboard/meetings-student', roles: [UserRole.STUDENT] },
   { icon: 'booking', text: 'Agendar', route: '/dashboard/booking', roles: [UserRole.STUDENT] },
   { icon: 'group', text: 'Agenda', route: '/dashboard/searching-meeting', roles: [UserRole.ADMIN] },
@@ -117,6 +119,11 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
     const homeItem = this.findNavItemByRoute('/dashboard/home');
     if (homeItem && homeItem.roles.includes(role)) {
       this.homeNavItem = homeItem;
+    }
+
+    const profileItem = this.findNavItemByRoute('/dashboard/profile');
+    if (profileItem && profileItem.roles.includes(role)) {
+      this.profileNavItem = profileItem;
     }
 
 
