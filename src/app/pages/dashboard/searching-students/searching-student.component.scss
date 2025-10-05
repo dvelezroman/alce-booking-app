@@ -134,7 +134,7 @@
     border: 1px solid #d2d2d2;
     border-radius: 5px;
     font-size: .8rem;
-    background-color: #f6f6f6;
+    background-color: #ffffff;
     color: #333;
     box-sizing: border-box;
   }
@@ -150,7 +150,7 @@
     font-size: 0.8rem;
     color: #4a4a4a;
     border: 1px solid #d2d2d2;
-    background-color: #f6f6f6;
+    background-color: #ffffff;
     border-radius: 5px;
   }
 
@@ -383,7 +383,7 @@
   align-items: center;
   position: relative;
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
+  // border-bottom: 1px solid #e0e0e0;
 }
 
 .edit-user-modal-title {
@@ -391,7 +391,9 @@
   font-size: 1.2rem;
   text-align: center;
   color: #333;
+  font-weight: 600;
   margin: 0;
+  margin-bottom: 1rem;
 }
 
 .edit-user-close {
@@ -414,6 +416,22 @@
   overflow-y: auto;
   height: 60vh;
   padding: 1rem 1.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent; 
+
+   &::-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 4px;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: #9ca3af;
+  }
 
    @media (max-width: 480px) {
     padding: 0.5rem 0.85rem;
@@ -429,9 +447,27 @@
   display: block;
   margin-bottom: 0.2rem;
   font-size: 0.85rem;
-  font-weight: 400;
+  font-weight: 600;
   margin-left: 5px;
   color: #333;
+}
+
+
+/* Checkbox estilo activado */
+.form-field-edit input[type="checkbox"] {
+  accent-color: #3b82f6; 
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.form-field-edit input[type="checkbox"]:hover {
+  box-shadow: 0 0 4px rgba(59, 130, 246, 0.4);
+}
+
+.form-field-edit input[type="checkbox"]:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
 }
 
 .form-field-edit input,
@@ -439,10 +475,10 @@
   width: 100%;
   padding: 0.3rem 0.7rem;
   font-size: 0.8rem;
-  height: 32px;
-  background-color: #f0f0f0;
+  height: 36px;
+  background-color: #ffffff;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
   box-sizing: border-box;
 }
 
@@ -461,7 +497,7 @@ select::-ms-expand {
   display: flex;
   justify-content: center;
   padding: 1.5rem 1rem;
-  border-top: 1px solid #e0e0e0;
+  // border-top: 1px solid #e0e0e0;
 }
 
 .edit-user-modal-foot .button {
@@ -486,11 +522,12 @@ select::-ms-expand {
 
 /* Botón morado (Cancelar) */
 .edit-user-modal-foot .delete-cancel-button {
-  background-color: #7c3aed;
+  background-color: #d7d7d7;
+  color: rgb(42, 41, 41);
 }
 
 .edit-user-modal-foot .delete-cancel-button:hover {
-  background-color: #5b21b6;
+  background-color: #aaaaaa;
 }
 
 /* modal de password */
@@ -589,6 +626,7 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 
   .edit-user-modal-card {
-    width:360px;
+    width:350px;
+    margin-top:1rem;
   }
 }
