@@ -1,14 +1,10 @@
 <div class="login-container">
-  <!-- <div class="logo-container">
-    <img src="/assets/logo imagen alce.png" alt="Logo">
-  </div> -->
-
   <div class="box">
     <h1 class="title">Iniciar Sesión</h1>
     <p class="subtitle">Ingresa tus datos para continuar</p>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <!-- Campo Email con etiqueta flotante -->
+      <!-- Campo Email -->
       <div class="field">
         <div class="floating-label">
           <input
@@ -27,7 +23,7 @@
         </div>
       </div>
 
-      <!-- Campo Password con etiqueta flotante -->
+      <!-- Campo Password -->
       <div class="field">
         <div class="floating-label">
           <input
@@ -37,7 +33,7 @@
             placeholder=" "
             (input)="onPasswordInput()"
             [ngClass]="{ 'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched }">
-          <label>Password</label>
+          <label>Contraseña</label>
 
           <!-- Icono dinámico -->
           <div class="toggle-password" (click)="togglePasswordVisibility()">
@@ -45,14 +41,17 @@
                           (passwordVisible ? 'fa fa-eye' : 'fa fa-eye-slash') : 'fa fa-lock'"></i>
           </div>
         </div>
+
         <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
           Se requiere contraseña
         </div>
-<!--        <div class="forgot-password-container">-->
-<!--          <a [routerLink]="['/forgot-password']" class="forgot-password-link">-->
-<!--            Olvidaste la clave?-->
-<!--          </a>-->
-<!--        </div>-->
+
+        <!-- 🔹 Enlace Olvidaste tu contraseña -->
+        <div class="forgot-password-container">
+          <a [routerLink]="['/forgot-password']" class="forgot-password-link">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
       </div>
 
       <!-- Botón para iniciar sesión -->
@@ -62,19 +61,10 @@
         </div>
       </div>
     </form>
-
-    <!-- Link para registro -->
-<!--    <div class="toggle-container">-->
-<!--      <p class="nu">-->
-<!--        Nuevo usuario?-->
-<!--        <a [routerLink]="['/register']">Registrarse</a>-->
-<!--      </p>-->
-<!--    </div>-->
   </div>
 </div>
 
-
-<!-- Modal de notificación -->
+<!-- Modal -->
 <app-modal
   [showModal]="modal.show"
   [message]="modal.message"

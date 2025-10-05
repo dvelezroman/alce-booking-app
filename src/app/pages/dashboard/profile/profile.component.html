@@ -32,6 +32,33 @@
           <strong>Datos completados:</strong>
           {{ user.dataCompleted ? "Sí" : "No" }}
         </p>
+
+        <!-- Campo de contraseña -->
+        <div class="password-change">
+          <label for="password">Cambiar contraseña</label>
+          <div class="password-wrapper">
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              class="password-input"
+              [(ngModel)]="newPassword"
+              [placeholder]="user?.password ? user.password : '********'"
+            />
+
+            <button
+              *ngIf="newPassword.trim().length > 0"
+              class="btn-eye"
+              type="button"
+              (click)="togglePasswordVisibility()"
+            >
+              <i [ngClass]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+            </button>
+
+            <button class="btn-change" (click)="togglePasswordEdit()">
+              {{ isEditingPassword ? 'Guardar' : 'Cambiar' }}
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Botón para editar -->
@@ -49,6 +76,7 @@
       *ngIf="showUserInfoForm"
       [isModalOpen]="true"
       [dataCompleted]="dataCompleted"
+      [userData]="user" 
       (formSubmit)="handleUserInfoSubmit($event)"
       (closeModal)="showUserInfoForm = false" >
     </app-users-info-form>

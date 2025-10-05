@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CITIES_BY_COUNTRY, COUNTRY_CODES, CountryCode } from '../../shared/country-code';
 import { ModalComponent } from '../modal/modal.component';
@@ -12,9 +12,10 @@ import { ModalDto, modalInitializer } from '../modal/modal.dto';
   templateUrl: './user-info-form.component.html',
   styleUrls: ['./user-info-form.component.scss'],
 })
-export class UserInfoFormComponent {
+export class UserInfoFormComponent implements OnChanges {
   @Input() isModalOpen: boolean = false;
   @Input() dataCompleted: boolean = false;
+  @Input() userData: any | null = null;
 
   @Output() closeModal = new EventEmitter<void>();
   @Output() formSubmit = new EventEmitter<any>();
@@ -39,17 +40,37 @@ export class UserInfoFormComponent {
     this.loadCities(this.selectedCountryIso);
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['userData'] && this.userData) {
+      const phone = this.userData.contact
+        ? this.userData.contact.replace(/^\+593/, '0')
+        : '';
+
+      const country = this.userData.country || 'EC';
+      const city = this.userData.city || '';
+
+      this.infoForm.patchValue({
+        email: this.userData.emailAddress || this.userData.email || '',
+        countryCode: '+593',
+        phoneNumber: phone,
+        country,
+        city,
+      });
+
+      this.loadCities(country);
+    }
+  }
+
   onCountryChange(event: Event): void {
     const iso = (event.target as HTMLSelectElement).value;
-
     this.selectedCountryIso = iso;
+
     const country = this.countryCodes.find(c => c.iso === iso);
     this.selectedCountryCode = country?.code || '+000';
 
     this.infoForm.patchValue({
       country: iso,
       countryCode: this.selectedCountryCode,
-      city: '',
     });
 
     this.loadCities(iso);

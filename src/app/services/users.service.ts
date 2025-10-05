@@ -226,4 +226,14 @@ export class UsersService implements OnInit{
 
     return this.http.get<{ users: UserDto[], total: number }>(`${this.apiUrl}/search`, { params });
   }
+
+  requestPasswordReset(email: string): Observable<any> {
+    const body = { emailAddress: email };
+    return this.http.post(`${this.apiUrl}/restore-password`, body);
+  }
+
+  updateUserPassword(id: number, password: string): Observable<any> {
+    const payload = { password };
+    return this.http.put(`${this.apiUrl}/profile/${id}`, payload);
+  }
 }

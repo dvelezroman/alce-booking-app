@@ -5,11 +5,13 @@ import { DashboardLayoutComponent } from './pages/dashboard/dashboard-layout/das
 import { LoginComponent } from './pages/auth/login/login.component';
 import { AuthGuard } from './pages/auth/auth.guard';
 import { LoginGuard } from './pages/auth/login.guard';
+import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
 
 
 export const routes: Routes = [
   { path: 'home-public', component: HomePublicComponent, canActivate: [LoginGuard] },
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   // { path: 'register', component: RegisterComponent },
 
   {

@@ -87,4 +87,5 @@ export const dashboardRoutes: Routes = [
   { path: 'inbox-email', component: InboxEmailComponent },
   { path: 'historial-email', component: HistorialEmailComponent },
   { path: 'email-detail', component: EmailDetailComponent },
+  
 ];
