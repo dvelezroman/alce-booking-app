@@ -45,6 +45,7 @@
               [placeholder]="user?.password ? user.password : '********'"
             />
 
+            <!-- Ícono visible solo si el usuario escribe -->
             <button
               *ngIf="newPassword.trim().length > 0"
               class="btn-eye"
@@ -54,10 +55,23 @@
               <i [ngClass]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
             </button>
 
-            <button class="btn-change" (click)="togglePasswordEdit()">
-              {{ isEditingPassword ? 'Guardar' : 'Cambiar' }}
+            <!-- Botón 'Guardar' solo si la contraseña tiene 6+ caracteres -->
+            <button
+              *ngIf="newPassword.trim().length >= 6"
+              class="btn-change"
+              (click)="togglePasswordEdit()"
+            >
+              Cambiar
             </button>
           </div>
+
+          <!--  Mensaje de error si es menor a 6 caracteres -->
+          <p
+            *ngIf="newPassword.trim().length > 0 && newPassword.trim().length < 6"
+            class="password-error"
+          >
+            La contraseña debe tener al menos 6 caracteres.
+          </p>
         </div>
       </div>
 

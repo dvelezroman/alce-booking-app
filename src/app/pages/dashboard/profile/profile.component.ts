@@ -57,7 +57,7 @@ export class ProfileComponent {
     if (!this.isEditingPassword) {
       this.isEditingPassword = true;
       this.newPassword = '';
-      console.log('🟦Modo edición activado para cambiar contraseña');
+      console.log('Modo edición activado para cambiar contraseña');
       return;
     }
 
