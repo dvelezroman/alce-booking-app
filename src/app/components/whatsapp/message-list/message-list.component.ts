@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WhatsAppMessage } from '../../../services/dtos/whatssapp-messages.dto';
 
@@ -13,4 +13,10 @@ export class MessageListComponent {
   @Input() messages: WhatsAppMessage[] = [];
   @Input() loading = false;
   @Input() error: string | null = null;
+
+  @Output() messageSelected = new EventEmitter<WhatsAppMessage>();
+
+  onSelectMessage(msg: WhatsAppMessage): void {
+    this.messageSelected.emit(msg);
+  }
 }

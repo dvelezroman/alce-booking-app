@@ -42,6 +42,7 @@ import { InboxEmailComponent } from './emails/inbox-email/inbox-email.component'
 import { SentEmailComponent } from './emails/sent-email/sent-email.component';
 import { EmailDetailComponent } from './emails/email-detail/email-detail.component';
 import { ProfileComponent } from './profile/profile.component';
+import { WhatsAppMessageDetailComponent } from './whatsapp-message-detail/whatsapp-message-detail.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -81,6 +82,7 @@ export const dashboardRoutes: Routes = [
   { path: 'whatsapp-groups', component: WhatsAppGroupsComponent },
   { path: 'whatsapp-config', component: WhatsappConfigComponent },
   { path: 'whatsapp-sent-messages', component: WhatsappSentMessagesComponent },
+  { path: 'whatsapp-message-detail', component: WhatsAppMessageDetailComponent },
   // { path: 'whatsapp-received-messages', component: WhatsappReceivedMessagesComponent },
   { path: 'send-emails', component: SendEmailsComponent },
   { path: 'sent-email', component: SentEmailComponent },

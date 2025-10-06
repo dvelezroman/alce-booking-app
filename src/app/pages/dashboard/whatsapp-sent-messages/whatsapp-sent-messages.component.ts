@@ -6,6 +6,7 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { WhatsAppGroupService } from '../../../services/whatsapp-group.service';
 import { MessageListComponent } from '../../../components/whatsapp/message-list/message-list.component';
 import { GetWhatsAppMessagesFilters, GetWhatsAppMessagesResponse, WhatsAppMessage } from '../../../services/dtos/whatssapp-messages.dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-whatsapp-sent-messages',
@@ -43,7 +44,7 @@ export class WhatsappSentMessagesComponent implements OnInit, OnDestroy {
   private searchSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
 
-  constructor(private whatsappSvc: WhatsAppGroupService) {}
+  constructor(private whatsappSvc: WhatsAppGroupService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadMessages();
@@ -138,4 +139,12 @@ export class WhatsappSentMessagesComponent implements OnInit, OnDestroy {
       ['SENT', 'DELIVERED', 'READ', 'FAILED'].includes(m.status)
     ).length;
   }
+
+  onRowClick(msg: WhatsAppMessage) {
+  if (!msg?.id) return;
+
+  this.router.navigate(['/dashboard/whatsapp-message-detail'], {
+    state: { message: msg, origin: 'whatsapp-sent-messages' },
+  });
+}
 }

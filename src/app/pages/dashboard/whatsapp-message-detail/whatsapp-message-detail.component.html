@@ -1,0 +1,65 @@
+<section class="whatsapp-detail-root">
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="left">
+      <a class="btn back" (click)="goBack()" aria-label="Volver">
+        ←
+      </a>
+    </div>
+  </header>
+
+  <!-- Contenedor principal -->
+  <div class="layout single">
+    <article class="message-col" *ngIf="message">
+      <!-- Info destinatario -->
+      <div class="from-row">
+        <div class="avatar">
+          <span>
+            {{ message.recipientName ? (message.recipientName | slice:0:1) : 'W' }}
+          </span>
+        </div>
+
+        <div class="from-meta">
+          <div class="from-line">
+            <strong class="name">{{ message.recipientName || message.recipientId }}</strong>
+            <span class="dot">·</span>
+            <span class="time">{{ message.sentAt | date: 'EEE d MMM y, HH:mm' }}</span>
+          </div>
+          <div class="to-line">
+            Estado: <span class="audience">{{ message.status }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detalles -->
+      <details class="meta-disclosure">
+        <summary>
+          <span>Detalles</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </summary>
+
+        <div class="card details-card">
+          <dl class="meta-list">
+            <div class="row"><dt>ID Mensaje</dt><dd>{{ message.messageId }}</dd></div>
+            <div class="row"><dt>Tipo</dt><dd>{{ message.recipientType }}</dd></div>
+            <div class="row"><dt>Cantidad</dt><dd>{{ message.quantity }}</dd></div>
+            <div class="row" *ngIf="message.deliveredAt"><dt>Entregado</dt><dd>{{ message.deliveredAt | date:'short' }}</dd></div>
+            <div class="row" *ngIf="message.readAt"><dt>Leído</dt><dd>{{ message.readAt | date:'short' }}</dd></div>
+            <div class="row"><dt>Creado</dt><dd>{{ message.createdAt | date:'short' }}</dd></div>
+          </dl>
+        </div>
+      </details>
+
+      <!-- Cuerpo del mensaje -->
+      <div class="content">
+        <h3>Mensaje</h3>
+        <p class="body-text">{{ message.message }}</p>
+      </div>
+
+      <!-- Error -->
+      <div class="alert danger" *ngIf="message.errorMessage">
+        {{ message.errorMessage }}
+      </div>
+    </article>
+  </div>
+</section>

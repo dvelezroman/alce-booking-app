@@ -72,6 +72,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'whatsapp', text: 'Grupos', route: '/dashboard/whatsapp-groups', roles: [UserRole.ADMIN], },
   { icon: 'whatsapp', text: 'Ajustes de WhatsApp', route: '/dashboard/whatsapp-config', roles: [UserRole.ADMIN], },
   { icon: 'whatsapp', text: 'Mensajes enviados', route: '/dashboard/whatsapp-sent-messages', roles: [UserRole.ADMIN] },
+  
   // { icon: 'whatsapp', text: 'Mensajes recibidos', route: '/dashboard/whatsapp-received-messages', roles: [UserRole.ADMIN] },
   { icon: 'email', text: 'Enviar Email', route: '/dashboard/send-emails', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'inbox', text: 'Inbox Emails', route: '/dashboard/inbox-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
