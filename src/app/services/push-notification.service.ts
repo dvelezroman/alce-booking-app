@@ -132,12 +132,13 @@ export class PushNotificationService {
 
     this.devLog('Permission granted, creating push subscription...');
     try {
-      const registration = await navigator.serviceWorker.ready;
-      this.devLog('Service worker ready, subscribing to push manager...');
+      // Register the custom service worker for push notifications
+      const registration = await this.registerPushServiceWorker();
+      this.devLog('Push service worker ready, subscribing to push manager...');
       
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKey)
+        applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKey) as ArrayBuffer
       });
 
       this.devLog('Push subscription created:', {
@@ -166,11 +167,47 @@ export class PushNotificationService {
   }
 
   /**
+   * Register the custom service worker for push notifications
+   */
+  private async registerPushServiceWorker(): Promise<ServiceWorkerRegistration> {
+    try {
+      // First, try to get existing registration
+      let registration = await navigator.serviceWorker.getRegistration('/custom-sw.js');
+      
+      if (!registration) {
+        // Register the custom service worker
+        this.devLog('Registering custom service worker for push notifications...');
+        registration = await navigator.serviceWorker.register('/custom-sw.js', {
+          scope: '/'
+        });
+        this.devLog('Custom service worker registered successfully');
+      } else {
+        this.devLog('Custom service worker already registered');
+      }
+
+      // Wait for the service worker to be ready
+      await navigator.serviceWorker.ready;
+      return registration;
+    } catch (error) {
+      this.errorLog('Error registering push service worker:', error);
+      // Fallback to the default service worker
+      return await navigator.serviceWorker.ready;
+    }
+  }
+
+  /**
    * Unsubscribe from push notifications
    */
   async unsubscribeFromPush(): Promise<boolean> {
     try {
-      const registration = await navigator.serviceWorker.ready;
+      // Try to get subscription from custom service worker first
+      let registration = await navigator.serviceWorker.getRegistration('/custom-sw.js');
+      
+      if (!registration) {
+        // Fallback to default service worker
+        registration = await navigator.serviceWorker.ready;
+      }
+      
       const subscription = await registration.pushManager.getSubscription();
       
       if (subscription) {
@@ -191,7 +228,14 @@ export class PushNotificationService {
    */
   private async loadExistingSubscription(): Promise<void> {
     try {
-      const registration = await navigator.serviceWorker.ready;
+      // Try to get subscription from custom service worker first
+      let registration = await navigator.serviceWorker.getRegistration('/custom-sw.js');
+      
+      if (!registration) {
+        // Fallback to default service worker
+        registration = await navigator.serviceWorker.ready;
+      }
+      
       const subscription = await registration.pushManager.getSubscription();
       
       if (subscription) {
