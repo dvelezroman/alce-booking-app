@@ -58,8 +58,6 @@ export class HomePrivateComponent implements OnInit {
   // showStudentInfoForm = false;
   showUserInfoForm: boolean = false;
 
-  tutors: { id: number; fullName: string }[] = [];
-
   constructor(private store: Store,
               private bookingService: BookingService,
               private studyContentService: StudyContentService,
@@ -94,22 +92,6 @@ export class HomePrivateComponent implements OnInit {
         this.generateCurrentMonthDays();
       }
     });
-
-    this.loadTutors();
-  }
-
-  private loadTutors(): void {
-    this.usersService
-      .searchUsers(0, 1000, undefined, undefined, undefined, undefined, UserRole.INSTRUCTOR)
-      .subscribe({
-        next: (res: { users: UserDto[]; total: number }) => {
-          this.tutors = (res.users || []).map(u => ({
-            id: u.id,
-            fullName: `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() || u.email,
-          }));
-        },
-        error: (err) => console.error('Error cargando tutores:', err),
-      });
   }
 
   private checkUserRoleAndFormVisibility(): void {
@@ -352,14 +334,24 @@ export class HomePrivateComponent implements OnInit {
     }));
   }
 
-  handleUserInfoSubmit(data: { email: string; contact: string; city: string; country: string; birthday: string; occupation: string;  }) {
+  handleUserInfoSubmit(data: {
+    email: string;
+    contact: string;
+    city: string;
+    country: string;
+    birthday: string;
+    occupation: string;
+    tutorName?: string;
+    tutorEmail?: string;
+    tutorPhone?: string;
+  }) {
     this.userData$.pipe(take(1)).subscribe(user => {
       if (!user?.id) {
         this.showModal(this.createModalParams(true, 'No se pudo obtener el ID del usuario.'));
         return;
       }
 
-      const payload = {
+      const payload: any = {
         emailAddress: data.email,
         birthday: data.birthday,
         contact: data.contact,
@@ -368,20 +360,27 @@ export class HomePrivateComponent implements OnInit {
         occupation: data.occupation,
       };
 
+      if (user.role === 'STUDENT' && data.tutorName) {
+        payload.tutorName = data.tutorName;
+        payload.tutorEmail = data.tutorEmail;
+        payload.tutorPhone = data.tutorPhone;
+      }
+
       this.usersService.update(user.id, payload).subscribe({
         next: () => {
           this.showUserInfoForm = false;
-          this.store.dispatch(updateUserData({ user: payload })); 
+          this.store.dispatch(updateUserData({ user: { ...user, ...payload } }));
           this.store.dispatch(setDataCompleted({ completed: true }));
+
           this.showModal(this.createModalParams(false, 'Información actualizada con éxito.'));
         },
         error: () => {
           this.showModal(this.createModalParams(true, 'Ocurrió un error al actualizar la información.'));
-        }
+        },
       });
     });
   }
-
+  
   showModal(params: ModalDto) {
     this.modal = { ...params };
     setTimeout(() => {

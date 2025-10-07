@@ -11,6 +11,8 @@ import { StagesService } from '../../../services/stages.service';
 import { UsersService } from '../../../services/users.service';
 import { ContactDetailsModalComponent } from '../../../components/student/contact-details-modal/contact-details-modal.component';
 import { EditUserModalComponent } from '../../../components/searching-student-user/edit-user-modal/edit-user-modal.component';
+import { InstructorsService } from '../../../services/instructors.service';
+import { Instructor } from '../../../services/dtos/instructor.dto';
 
 @Component({
   selector: 'app-searching-students-student',
@@ -55,16 +57,24 @@ export class SearchingStudentComponent {
   showContactModal: boolean = false;
   selectedUserForContact: UserDto | null = null;
 
+  instructors: Instructor[] = [];
+
   constructor(
     private fb: FormBuilder,
     private usersService: UsersService,
     private stagesService: StagesService,
-    private linksService: LinksService
+    private linksService: LinksService,
+    private instructorsService: InstructorsService
   ) {}
 
   ngOnInit() {
     this.stagesService.getAll().subscribe((stages) => (this.stages = stages));
     this.linksService.getAll().subscribe((links) => (this.links = links));
+
+    this.instructorsService.getAll().subscribe({
+      next: (instructors) => this.instructors = instructors,
+      error: (err) => console.error('Error al obtener instructores:', err)
+    });
 
     // Formularios de búsqueda
     this.studentForm = this.fb.group({

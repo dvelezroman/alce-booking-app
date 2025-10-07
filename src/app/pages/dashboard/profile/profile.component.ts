@@ -26,7 +26,6 @@ export class ProfileComponent {
   dataCompleted = false;
   showUserInfoForm = false;
   modal: ModalDto = modalInitializer();
-  tutors: { id: number; fullName: string }[] = [];
 
   // Campos para contraseña
   isEditingPassword = false;
@@ -38,26 +37,9 @@ export class ProfileComponent {
     this.userData$.subscribe(user => {
       this.user = user;
       this.dataCompleted = user?.dataCompleted ?? false;
-
-      if (user?.role === UserRole.STUDENT) {
-        this.loadTutors();
-      }
     });
   }
 
-   private loadTutors(): void {
-    this.instructorsService.getAll().subscribe({
-      next: (instructors) => {
-        this.tutors = instructors.map(inst => ({
-          id: inst.id,
-          fullName: `${inst.user?.firstName || ''} ${inst.user?.lastName || ''}`.trim(),
-        }));
-      },
-      error: (err) => {
-        console.error('Error al obtener instructores:', err);
-      }
-    });
-  }
 
   formatBirthday(dateStr: string | undefined): string {
     return dateStr ? formatBirthday(dateStr) : 'No registrado';
@@ -107,9 +89,20 @@ export class ProfileComponent {
     });
   }
 
-  handleUserInfoSubmit(data: { email: string; contact: string; city: string; country: string, occupation: string; birthday: string; tutorId?: number }) {
+  handleUserInfoSubmit(data: {
+    email: string;
+    contact: string;
+    city: string;
+    country: string;
+    occupation: string;
+    birthday: string;
+    tutorName?: string;
+    tutorEmail?: string;
+    tutorPhone?: string;
+  }) {
     if (!this.user?.id) return;
-    const payload = {
+
+    const payload: any = {
       emailAddress: data.email,
       birthday: data.birthday,
       contact: data.contact,
@@ -118,8 +111,11 @@ export class ProfileComponent {
       occupation: data.occupation,
     };
 
-    if (this.user.role === 'STUDENT' && data.tutorId) {
-      (payload as any).tutorId = data.tutorId;
+    // 👇 Solo agregamos los campos del tutor si existen
+    if (this.user.role === 'STUDENT') {
+      if (data.tutorName) payload.tutorName = data.tutorName;
+      if (data.tutorEmail) payload.tutorEmail = data.tutorEmail;
+      if (data.tutorPhone) payload.tutorPhone = data.tutorPhone;
     }
 
     this.usersService.update(this.user.id, payload).subscribe({
@@ -129,7 +125,10 @@ export class ProfileComponent {
         this.store.dispatch(setDataCompleted({ completed: true }));
         this.showModal(false, 'Información actualizada con éxito');
       },
-      error: () => this.showModal(true, 'Error al actualizar la información'),
+      error: (err) => {
+        console.error('❌ Error al actualizar usuario:', err);
+        this.showModal(true, 'Error al actualizar la información.');
+      },
     });
   }
 

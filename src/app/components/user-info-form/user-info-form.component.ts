@@ -26,7 +26,6 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
   @Input() isModalOpen: boolean = false;
   @Input() dataCompleted: boolean = false;
   @Input() userData: any | null = null;
-  @Input() tutors: { id: number; fullName: string }[] = [];
 
   @Output() closeModal = new EventEmitter<void>();
   @Output() formSubmit = new EventEmitter<any>();
@@ -51,17 +50,16 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       country: ['EC', [Validators.required]],
       city: ['', [Validators.required]],
       occupation: ['', [Validators.required]],
-      tutorId: [''],
+      tutorName: [''],
+      tutorEmail: [''],
+      tutorPhone: [''],
     });
 
     this.loadCities(this.selectedCountryIso);
   }
 
   ngOnInit(): void {
-    // si ya viene userData cargado antes del ngOnChanges
-    if (this.userData) {
-      this.patchFormValues();
-    }
+    if (this.userData) this.patchFormValues();
 
     this.infoForm.get('birthday')?.valueChanges.subscribe((birthday: string) => {
       this.isMinor = this.isStudent && !!birthday && this.calculateAge(birthday) < 18;
@@ -70,12 +68,10 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['userData'] && this.userData) {
-      this.patchFormValues();
-    }
+    if (changes['userData'] && this.userData) this.patchFormValues();
   }
 
-  /** Parchea el formulario con los valores del usuario */
+  /** Parchea los valores iniciales del formulario */
   private patchFormValues(): void {
     const phone = this.userData.contact
       ? this.userData.contact.replace(/^\+593/, '0')
@@ -84,8 +80,9 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
     const country = this.userData.country || 'EC';
     const city = this.userData.city || '';
     const birthday = this.userData.birthday ? this.formatBirthday(this.userData.birthday) : '';
-    
+
     this.isStudent = this.userData.role === 'STUDENT';
+    this.isMinor = this.isStudent && !!birthday && this.calculateAge(birthday) < 18;
 
     this.infoForm.patchValue({
       email: this.userData.emailAddress || '',
@@ -95,16 +92,16 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       country,
       city,
       occupation: this.userData.occupation || '',
-      tutorId: this.userData?.tutorId || '',
+      tutorName: this.userData.tutorName || '',
+      tutorEmail: this.userData.tutorEmail || '',
+      tutorPhone: this.userData.tutorPhone || '',
     });
-
-    this.isMinor = this.isStudent && !!birthday && this.calculateAge(birthday) < 18;
 
     this.loadCities(country);
     this.cdr.detectChanges();
   }
 
-   /** Calcular edad */
+  /** Calcular edad */
   private calculateAge(dateStr: string): number {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return 0;
@@ -117,9 +114,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
 
   /** Ajusta formato de fecha compatible con input[type=date] */
   private formatBirthday(date: string): string {
-    // si ya viene en formato YYYY-MM-DD lo deja igual
     if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
-
     const parsed = new Date(date);
     if (isNaN(parsed.getTime())) return '';
     return parsed.toISOString().split('T')[0];
@@ -151,15 +146,11 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
     }
 
     const formValue = this.infoForm.value;
-
     let rawNumber: string = formValue.phoneNumber.trim();
-    if (rawNumber.startsWith('0')) {
-      rawNumber = rawNumber.slice(1);
-    }
-
+    if (rawNumber.startsWith('0')) rawNumber = rawNumber.slice(1);
     const contact = `${formValue.countryCode}${rawNumber}`;
 
-    const payload: Partial<UserDto>= {
+    const payload: Partial<UserDto> = {
       email: formValue.email,
       birthday: formValue.birthday,
       contact,
@@ -168,11 +159,13 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       occupation: formValue.occupation,
     };
 
-    if (this.isStudent && this.isMinor && formValue.tutorId) {
-      (payload as any).tutorId = formValue.tutorId;
+    if (this.isStudent && this.isMinor) {
+      (payload as any).tutorName = formValue.tutorName;
+      (payload as any).tutorEmail = formValue.tutorEmail;
+      (payload as any).tutorPhone = formValue.tutorPhone;
     }
-    console.log('📤 Datos enviados al padre:', payload);
 
+    console.log('📤 Datos enviados al padre:', payload);
     this.formSubmit.emit(payload);
   }
 
@@ -187,9 +180,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
         close: () => (this.modal.show = false),
       };
 
-      setTimeout(() => {
-        this.modal.show = false;
-      }, 3000);
+      setTimeout(() => (this.modal.show = false), 3000);
       return;
     }
 

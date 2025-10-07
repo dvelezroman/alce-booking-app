@@ -24,6 +24,7 @@ export class EditUserModalComponent {
   @Output() save = new EventEmitter<any>();
 
   form!: FormGroup;
+  isMinor = false;
   protected readonly UserRole = UserRole;
 
   constructor(private fb: FormBuilder) {}
@@ -33,11 +34,10 @@ export class EditUserModalComponent {
   }
 
   ngOnChanges() {
-    if (this.user) {
-      this.patchForm(this.user);
-    }
+    if (this.user) this.patchForm(this.user);
   }
 
+  /** Inicializa formulario */
   private initForm() {
     this.form = this.fb.group({
       idNumber: [{ value: '', disabled: true }, Validators.required],
@@ -46,9 +46,12 @@ export class EditUserModalComponent {
       role: ['', Validators.required],
       stageId: [''],
       email: [''],
-      emailAddress: [''], 
-      contact: [''], 
+      emailAddress: [''],
+      contact: [''],
       birthday: [''],
+      tutorName: [''],
+      tutorEmail: [''],
+      tutorPhone: [''],
       occupation: [''],
       status: [false],
       register: [''],
@@ -62,8 +65,12 @@ export class EditUserModalComponent {
       startClassDate: [''],
       endClassDate: [''],
     });
+
+    // Detectar si es menor de edad
+    this.form.get('birthday')?.valueChanges.subscribe((value) => this.checkIfMinor(value));
   }
 
+  /** Pasa los valores del usuario al formulario */
   private patchForm(user: UserDto) {
     this.form.patchValue({
       idNumber: user.idNumber,
@@ -76,35 +83,61 @@ export class EditUserModalComponent {
       city: user.city,
       role: user.role,
       occupation: user.occupation,
+      birthday: user.birthday ? this.formatLocalDate(user.birthday) : '',
       status: user.status === UserStatus.ACTIVE,
       comment: user.comment,
       temporaryComment: user.temporaryComment,
       stageId: user.student?.stage?.id || '',
       ageGroup: user.student?.studentClassification || '',
       studentId: user.student?.id || '',
-      startClassDate: user.student?.startClassDate
-        ? new Date(user.student.startClassDate).toISOString().split('T')[0]
-        : '',
-      endClassDate: user.student?.endClassDate
-        ? new Date(user.student.endClassDate).toISOString().split('T')[0]
-        : '',
+      startClassDate: user.student?.startClassDate ? new Date(user.student.startClassDate).toISOString().split('T')[0] : '',
+      endClassDate: user.student?.endClassDate ? new Date(user.student.endClassDate).toISOString().split('T')[0] : '',
       createdAt: user.createdAt ? new Date(user.createdAt).toISOString().split('T')[0] : '',
       updatedAt: user.updatedAt ? new Date(user.updatedAt).toISOString().split('T')[0] : '',
-      linkId: user.instructor?.meetingLink?.id || ''
+      linkId: user.instructor?.meetingLink?.id || '',
+      tutorName: (user as any).tutorName || '',
+      tutorEmail: (user as any).tutorEmail || '',
+      tutorPhone: (user as any).tutorPhone || ''
     });
+
+    if (user.birthday) this.checkIfMinor(user.birthday);
   }
 
-  onSubmit() {
-    if (this.form.valid) {
-      const updated = { ...this.form.getRawValue() };
-      updated.status = updated.status ? UserStatus.ACTIVE : UserStatus.INACTIVE;
-      // Si no hay link, eliminar del payload
-      if (!updated.linkId) delete updated.linkId;
+  /** Convierte fecha a formato local YYYY-MM-DD */
+  private formatLocalDate(dateString: string): string {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }
 
-      this.save.emit(updated);
+  /** Verifica si es menor de edad */
+  private checkIfMinor(birthday: string): void {
+    if (!birthday) {
+      this.isMinor = false;
+      return;
     }
+
+    const birth = new Date(birthday);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) age--;
+
+    this.isMinor = age < 18;
   }
 
+  /** Envía datos al backend */
+  onSubmit() {
+    if (this.form.invalid) return;
+
+    const updated = { ...this.form.getRawValue() };
+    updated.status = updated.status ? UserStatus.ACTIVE : UserStatus.INACTIVE;
+
+    if (!updated.linkId) delete updated.linkId;
+
+    this.save.emit(updated);
+  }
+
+  /** Cierra modal */
   onClose() {
     this.close.emit();
   }

@@ -13,7 +13,7 @@
     </header>
 
     <section class="modal-card-body">
-      <!-- 👇 el *ngIf garantiza que no se renderice hasta tener el form listo -->
+      <!-- 👇 Se muestra solo si el form está inicializado -->
       <form *ngIf="infoForm" [formGroup]="infoForm" (ngSubmit)="onSubmit()" id="studentInfoForm">
         <!-- Email -->
         <div class="field">
@@ -37,15 +37,46 @@
           </p>
         </div>
 
-        <!-- Tutor (solo aparece si el usuario es STUDENT y menor de edad) -->
-        <div class="field" *ngIf="isStudent && isMinor">
-          <label class="label">Tutor (opcional)</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select formControlName="tutorId">
-                <option value="">Seleccione un tutor</option>
-                <option *ngFor="let t of tutors" [value]="t.id">{{ t.fullName }}</option>
-              </select>
+        <!-- Datos del tutor (solo si es menor de edad) -->
+        <div *ngIf="isStudent && isMinor">
+          <p class="has-text-weight-semibold mb-2">Datos del Representante</p>
+
+          <!-- Nombre del tutor -->
+          <div class="field">
+            <label class="label">Nombre del tutor</label>
+            <div class="control">
+              <input
+                type="text"
+                class="input"
+                placeholder="Nombre completo"
+                formControlName="tutorName"
+              />
+            </div>
+          </div>
+
+          <!-- Email del tutor -->
+          <div class="field">
+            <label class="label">Correo del tutor</label>
+            <div class="control">
+              <input
+                type="email"
+                class="input"
+                placeholder="correo@ejemplo.com"
+                formControlName="tutorEmail"
+              />
+            </div>
+          </div>
+
+          <!-- Teléfono del tutor -->
+          <div class="field">
+            <label class="label">Teléfono del tutor</label>
+            <div class="control">
+              <input
+                type="text"
+                class="input"
+                placeholder="+593..."
+                formControlName="tutorPhone"
+              />
             </div>
           </div>
         </div>
@@ -73,6 +104,7 @@
           </p>
         </div>
 
+        <!-- Ocupación -->
         <div class="field">
           <label class="label">Ocupación</label>
           <div class="control">
@@ -80,7 +112,7 @@
               type="text"
               class="input"
               formControlName="occupation"
-              placeholder="Ej. Profesor de Inglés"
+              placeholder="Ej. Estudiante de inglés"
             />
           </div>
           <p

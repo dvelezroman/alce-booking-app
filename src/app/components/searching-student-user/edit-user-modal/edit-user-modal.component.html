@@ -37,6 +37,30 @@
           <input type="text" id="email" formControlName="email" readonly />
         </div>
 
+        <!-- FECHA DE NACIMIENTO -->
+        <div class="form-field-edit">
+          <label for="birthday">Fecha de Nacimiento</label>
+          <input type="date" id="birthday" formControlName="birthday" />
+        </div>
+
+       <!-- Campos de tutor: solo si es menor -->
+        <div *ngIf="user?.role === UserRole.STUDENT && isMinor">
+          <div class="form-field-edit">
+            <label for="tutorName">Nombre del Representante</label>
+            <input type="text" id="tutorName" formControlName="tutorName" placeholder="Nombre completo" />
+          </div>
+
+          <div class="form-field-edit">
+            <label for="tutorEmail">Correo del Representante</label>
+            <input type="email" id="tutorEmail" formControlName="tutorEmail" placeholder="correo@ejemplo.com" />
+          </div>
+
+          <div class="form-field-edit">
+            <label for="tutorPhone">Teléfono del Representante</label>
+            <input type="text" id="tutorPhone" formControlName="tutorPhone" placeholder="+593..." />
+          </div>
+        </div>
+
         <!-- INFORMACIÓN DE CONTACTO -->
         <div class="form-field-edit">
           <label for="emailAddress">Correo</label>
