@@ -12,7 +12,7 @@ import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { StudyContentService } from '../../../services/study-content.service';
 import { selectIsLoggedIn, selectUserData } from '../../../store/user.selector';
 import { UsersService } from '../../../services/users.service';
-import { setDataCompleted } from "../../../store/user.action";
+import { setDataCompleted, updateUserData } from "../../../store/user.action";
 import { UserInfoFormComponent } from '../../../components/user-info-form/user-info-form.component';
 
 @Component({
@@ -95,25 +95,28 @@ export class HomePrivateComponent implements OnInit {
   }
 
   private checkUserRoleAndFormVisibility(): void {
-  this.userData$.subscribe(user => {
-    this.isInstructor = user?.role === UserRole.INSTRUCTOR;
-    this.isStudent = user?.role === UserRole.STUDENT;
+    this.userData$.subscribe(user => {
+      if (!user) return;
 
-    const needsForm =
-      user && (
-        user.dataCompleted === false ||
-        user.birthday === null ||
-        user.birthday === undefined ||
-        user.birthday === ''
-      );
+      this.isInstructor = user.role === UserRole.INSTRUCTOR;
+      this.isStudent = user.role === UserRole.STUDENT;
 
-    this.showUserInfoForm = !!needsForm;
+      const needsForm = user.dataCompleted === false || user.birthday == null;
 
-    if (this.isInstructor) {
-      this.generateCurrentMonthDays();
-    }
-  });
-}
+      this.showUserInfoForm = needsForm;
+
+      if (this.isInstructor) {
+        this.generateCurrentMonthDays();
+      }
+
+      // console.log(' Verificando visibilidad del formulario', {
+      //   id: user.id,
+      //   dataCompleted: user.dataCompleted,
+      //   birthday: user.birthday,
+      //   showUserInfoForm: this.showUserInfoForm,
+      // });
+    });
+  }
 
   get studyContentNames(): string {
     if (this.studyContentOptions.length === 0) return 'Sin contenidos asignados';
@@ -331,7 +334,7 @@ export class HomePrivateComponent implements OnInit {
     }));
   }
 
-  handleUserInfoSubmit(data: { email: string; contact: string; city: string; country: string }) {
+  handleUserInfoSubmit(data: { email: string; contact: string; city: string; country: string; birthday: string  }) {
     this.userData$.pipe(take(1)).subscribe(user => {
       if (!user?.id) {
         this.showModal(this.createModalParams(true, 'No se pudo obtener el ID del usuario.'));
@@ -340,6 +343,7 @@ export class HomePrivateComponent implements OnInit {
 
       const payload = {
         emailAddress: data.email,
+        birthday: data.birthday,
         contact: data.contact,
         city: data.city,
         country: data.country,
@@ -348,6 +352,7 @@ export class HomePrivateComponent implements OnInit {
       this.usersService.update(user.id, payload).subscribe({
         next: () => {
           this.showUserInfoForm = false;
+          this.store.dispatch(updateUserData({ user: payload })); 
           this.store.dispatch(setDataCompleted({ completed: true }));
           this.showModal(this.createModalParams(false, 'Información actualizada con éxito.'));
         },

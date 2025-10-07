@@ -5,7 +5,8 @@ import {
   setInstructorLink,
   setLoggedInStatus,
   setUserData,
-  unsetUserData
+  unsetUserData,
+  updateUserData,
 } from './user.action';
 import { UserState } from './user.state';
 
@@ -30,4 +31,15 @@ export const userReducer = createReducer(
     }
     return { ...state };
   }),
+
+  on(updateUserData, (state, { user }) => {
+    if (!state.data) return state;
+    return {
+      ...state,
+      data: {
+        ...state.data,
+        ...user,
+      },
+    };
+  })
 );

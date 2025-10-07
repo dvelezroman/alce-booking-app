@@ -76,7 +76,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       : '';
 
     this.infoForm.patchValue({
-      email: this.userData.emailAddress || this.userData.email || '',
+      email: this.userData.emailAddress || '',
       birthday,
       countryCode: '+593',
       phoneNumber: phone,
@@ -141,6 +141,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       city: formValue.city,
       country: formValue.country,
     };
+    console.log('📤 Datos enviados al padre:', payload);
 
     this.formSubmit.emit(payload);
   }

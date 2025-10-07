@@ -29,3 +29,8 @@ export const setDataCompleted = createAction(
   '[User] Set Data Completed',
   props<{ completed: boolean }>()
 )
+
+export const updateUserData = createAction(
+  '[User] Update User Data',
+  props<{ user: Partial<UserDto> }>()
+);
