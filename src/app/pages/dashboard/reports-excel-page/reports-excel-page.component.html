@@ -1,0 +1,23 @@
+<section class="section">
+  <h1 class="reports-excel-header reports-excel-title">
+    Reportes Excel de Usuarios
+  </h1>
+
+  <!-- Botón para alternar modos -->
+  <div class="mode-toggle">
+    <button class="button" (click)="toggleMode()">
+      {{ currentMode === "users" ? "Ver Inasistencias" : "Ver Usuarios" }}
+    </button>
+  </div>
+
+  <div class="content-wrapper">
+    <app-reports-users-excel
+      [stages]="stages"
+      [instructors]="instructors"
+      [mode]="currentMode"
+      (downloadExcel)="handleDownloadUsersExcel($event)"
+      (downloadAbsentExcel)="handleDownloadAbsentExcel($event)"
+    >
+    </app-reports-users-excel>
+  </div>
+</section>

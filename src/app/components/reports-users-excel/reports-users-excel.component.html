@@ -1,0 +1,85 @@
+<!-- FORMULARIO: Usuarios -->
+<div class="users-excel-form" *ngIf="mode === 'users'">
+  <h3>Descargar Excel de Usuarios</h3>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="filters-form">
+
+    <div class="field">
+      <label class="label">Rol</label>
+      <select formControlName="role" class="input">
+        <option value="">Todos</option>
+        <option *ngFor="let r of userRoles" [value]="r">{{ r }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="label">Estado</label>
+      <select formControlName="status" class="input">
+        <option value="">Todos</option>
+        <option *ngFor="let s of userStatuses" [value]="s">{{ s }}</option>
+      </select>
+    </div>
+
+    <!-- Campo Stage solo visible para rol Student -->
+    <div class="field" *ngIf="showStage()">
+      <label class="label">Stage</label>
+      <select formControlName="stageId" class="input">
+        <option value="">Todos</option>
+        <option *ngFor="let st of stages" [value]="st.id">{{ st.description }}</option>
+      </select>
+    </div>
+
+    <div class="field checkbox" *ngIf="showStage()">
+      <label>
+        <input type="checkbox" formControlName="noClasses" />
+        Solo estudiantes sin clases
+      </label>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="button">Descargar Excel</button>
+      <button type="button" class="button secondary" (click)="resetFilters()">Limpiar</button>
+    </div>
+  </form>
+</div>
+
+<!-- FORMULARIO: Inasistencias -->
+<div class="users-excel-form" *ngIf="mode === 'absents'">
+  <h3>Descargar Excel de Inasistencias</h3>
+
+  <form [formGroup]="absentForm" (ngSubmit)="onSubmit()" class="filters-form">
+
+    <div class="field">
+      <label class="label">Instructor</label>
+      <select formControlName="instructorId" class="input">
+        <option value="">Seleccionar</option>
+        <option *ngFor="let i of instructors" [value]="i.id">
+          {{ i.user?.firstName }} {{ i.user?.lastName }}
+        </option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="label">Desde</label>
+      <input type="date" formControlName="from" class="input" />
+    </div>
+
+    <div class="field">
+      <label class="label">Hasta</label>
+      <input type="date" formControlName="to" class="input" />
+    </div>
+
+    <div class="field">
+      <label class="label">Stage (opcional)</label>
+      <select formControlName="stageId" class="input">
+        <option value="">Todos</option>
+        <option *ngFor="let st of stages" [value]="st.id">{{ st.description }}</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="button">Descargar Excel</button>
+      <button type="button" class="button secondary" (click)="absentForm.reset()">Limpiar</button>
+    </div>
+  </form>
+</div>

@@ -43,6 +43,7 @@ import { SentEmailComponent } from './emails/sent-email/sent-email.component';
 import { EmailDetailComponent } from './emails/email-detail/email-detail.component';
 import { ProfileComponent } from './profile/profile.component';
 import { WhatsAppMessageDetailComponent } from './whatsapp-message-detail/whatsapp-message-detail.component';
+import { ReportsExcelPageComponent } from './reports-excel-page/reports-excel-page.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -68,6 +69,7 @@ export const dashboardRoutes: Routes = [
   { path: 'reports-detailed', component: ReportsDetailedComponent },
   { path: 'reports-progress', component: ReportsProgressComponent },
   { path: 'report-user', component: ReportUserComponent },
+  { path: 'report-excel', component: ReportsExcelPageComponent },
   { path: 'broadcast-groups', component: BroadcastGroupsComponent },
   { path: 'assessment', component: AssessmentComponent },
   { path: 'assessment-reports', component: AssessmentReportsComponent },

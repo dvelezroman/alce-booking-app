@@ -6,6 +6,7 @@ import {Injectable} from "@angular/core";
 import {MeetingDataI, MeetingReportDetailed, StatisticalDataI} from "./dtos/meeting-theme.dto";
 import {UserRole, UsersResponse, UserStatus} from "./dtos/user.dto";
 import { InstructorsGroupedByDate } from "./dtos/instructor-attendance-grouped.dto";
+import { AbsentStudentsExcelFilterDto, UsersExcelFilterDto } from "./dtos/reports.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -205,5 +206,28 @@ export class ReportsService {
     if (newStudents) params = params.set('newStudents', newStudents.toString());
 
     return this.http.get(`${this.apiUrl}/users/data/csv`, { params, responseType: 'blob' });
+  }
+
+  downloadAbsentStudentsExcel(filters: AbsentStudentsExcelFilterDto) {
+    let params = new HttpParams()
+      .set('from', filters.from)
+      .set('to', filters.to);
+
+    if (filters.stageId) params = params.set('stageId', filters.stageId.toString());
+
+    const url = `${this.apiUrl}/instructor/${filters.instructorId}/absent-students/excel`;
+    return this.http.get(url, { params, responseType: 'blob' });
+  }
+
+  downloadUsersExcel(filters: UsersExcelFilterDto) {
+    let params = new HttpParams();
+
+    if (filters.role) params = params.set('role', filters.role);
+    if (filters.status) params = params.set('status', filters.status);
+    if (filters.stageId !== undefined && filters.stageId !== null) params = params.set('stageId', filters.stageId.toString());
+    if (filters.noClasses !== undefined && filters.noClasses !== null) params = params.set('noClasses', String(filters.noClasses));
+
+
+    return this.http.get(`${this.apiUrl}/users/excel`, { params, responseType: 'blob' });
   }
 }

@@ -57,6 +57,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'reporte', text: 'Reportes de Instructores', route: '/dashboard/report-instructor', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Reportes de Estudiante', route: '/dashboard/reports-detailed', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Reportes de Usuario', route: '/dashboard/report-user', roles: [UserRole.ADMIN] },
+  { icon: 'excel', text: 'Reportes Excel', route: '/dashboard/report-excel', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Reportes de Progreso', route: '/dashboard/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Evaluar Estudiante', route: '/dashboard/assessment', roles: [UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Reportes de Evaluaciones', route: '/dashboard/assessment-reports', roles: [UserRole.ADMIN] },
@@ -178,6 +179,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
       icon: 'reportes',
       items: [
         this.findNavItemByRoute('/dashboard/report-user'),
+        this.findNavItemByRoute('/dashboard/report-excel'),
         this.findNavItemByRoute('/dashboard/report-instructor'),
         this.findNavItemByRoute('/dashboard/reports-detailed'),
         this.findNavItemByRoute('/dashboard/reports-progress'),
