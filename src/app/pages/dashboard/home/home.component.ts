@@ -58,6 +58,8 @@ export class HomePrivateComponent implements OnInit {
   // showStudentInfoForm = false;
   showUserInfoForm: boolean = false;
 
+  tutors: { id: number; fullName: string }[] = [];
+
   constructor(private store: Store,
               private bookingService: BookingService,
               private studyContentService: StudyContentService,
@@ -92,6 +94,22 @@ export class HomePrivateComponent implements OnInit {
         this.generateCurrentMonthDays();
       }
     });
+
+    this.loadTutors();
+  }
+
+  private loadTutors(): void {
+    this.usersService
+      .searchUsers(0, 1000, undefined, undefined, undefined, undefined, UserRole.INSTRUCTOR)
+      .subscribe({
+        next: (res: { users: UserDto[]; total: number }) => {
+          this.tutors = (res.users || []).map(u => ({
+            id: u.id,
+            fullName: `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim() || u.email,
+          }));
+        },
+        error: (err) => console.error('Error cargando tutores:', err),
+      });
   }
 
   private checkUserRoleAndFormVisibility(): void {

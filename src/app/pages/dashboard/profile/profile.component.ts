@@ -3,14 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { UserDto } from '../../../services/dtos/user.dto';
+import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { selectUserData } from '../../../store/user.selector';
 import { UsersService } from '../../../services/users.service';
-import { setDataCompleted } from '../../../store/user.action';
+import { setDataCompleted, updateUserData } from '../../../store/user.action';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { UserInfoFormComponent } from '../../../components/user-info-form/user-info-form.component';
 import { formatBirthday } from '../../../shared/utils/dates.util';
+import { InstructorsService } from '../../../services/instructors.service';
 
 @Component({
   selector: 'app-profile',
@@ -25,17 +26,36 @@ export class ProfileComponent {
   dataCompleted = false;
   showUserInfoForm = false;
   modal: ModalDto = modalInitializer();
+  tutors: { id: number; fullName: string }[] = [];
 
   // Campos para contraseña
   isEditingPassword = false;
   showPassword = false;
   newPassword = '';
 
-  constructor(private store: Store, private usersService: UsersService) {
+  constructor(private store: Store, private usersService: UsersService, private instructorsService: InstructorsService) {
     this.userData$ = this.store.select(selectUserData);
     this.userData$.subscribe(user => {
       this.user = user;
       this.dataCompleted = user?.dataCompleted ?? false;
+
+      if (user?.role === UserRole.STUDENT) {
+        this.loadTutors();
+      }
+    });
+  }
+
+   private loadTutors(): void {
+    this.instructorsService.getAll().subscribe({
+      next: (instructors) => {
+        this.tutors = instructors.map(inst => ({
+          id: inst.id,
+          fullName: `${inst.user?.firstName || ''} ${inst.user?.lastName || ''}`.trim(),
+        }));
+      },
+      error: (err) => {
+        console.error('Error al obtener instructores:', err);
+      }
     });
   }
 
@@ -87,18 +107,25 @@ export class ProfileComponent {
     });
   }
 
-  handleUserInfoSubmit(data: { email: string; contact: string; city: string; country: string }) {
+  handleUserInfoSubmit(data: { email: string; contact: string; city: string; country: string, occupation: string; birthday: string; tutorId?: number }) {
     if (!this.user?.id) return;
     const payload = {
       emailAddress: data.email,
+      birthday: data.birthday,
       contact: data.contact,
       city: data.city,
       country: data.country,
+      occupation: data.occupation,
     };
+
+    if (this.user.role === 'STUDENT' && data.tutorId) {
+      (payload as any).tutorId = data.tutorId;
+    }
 
     this.usersService.update(this.user.id, payload).subscribe({
       next: () => {
         this.showUserInfoForm = false;
+        this.store.dispatch(updateUserData({ user: { ...this.user!, ...payload } }));
         this.store.dispatch(setDataCompleted({ completed: true }));
         this.showModal(false, 'Información actualizada con éxito');
       },

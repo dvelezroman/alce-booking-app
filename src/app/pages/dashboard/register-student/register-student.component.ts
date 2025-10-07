@@ -25,6 +25,8 @@ export class RegisterStudentComponent implements OnInit {
 
   registerForm: FormGroup;
   stages: Stage[] = [];
+  instructors: UserDto[] = [];
+  isMinor = false;
 
   modes = Object.values(Mode);
   studentClassifications = Object.values(StudentClassification);
@@ -43,18 +45,48 @@ export class RegisterStudentComponent implements OnInit {
       idNumber: ['', Validators.required],
       email: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      birthday: ['', Validators.required],
       studentClassification: ['', Validators.required],
       stageId: ['', Validators.required],
       mode: ['', Validators.required],
       startClassDate: [''],
       endClassDate: [''], 
+      tutorId: [''],
     });
   }
 
   ngOnInit(): void {
+    // Obtener stages
     this.stagesService.getAll().subscribe((stages) => {
       this.stages = this.filterAndSortStages(stages);
     });
+
+    // Obtener instructores para el campo tutor
+    this.usersService.searchUsers(0, 1000, undefined, undefined, undefined, undefined, UserRole.INSTRUCTOR)
+      .subscribe({
+        next: (res) => this.instructors = res.users,
+        error: (err) => console.error('Error cargando instructores:', err)
+      });
+
+    // Detectar si el estudiante es menor
+      this.registerForm.get('birthday')?.valueChanges.subscribe((birthday: string) => {
+      this.isMinor = this.calculateAge(birthday) < 18;
+
+      const tutorControl = this.registerForm.get('tutorId');
+      if (!this.isMinor) {
+        tutorControl?.setValue('');
+      }
+    });
+  }
+
+  private calculateAge(birthDateString: string): number {
+    if (!birthDateString) return 0;
+    const today = new Date();
+    const birthDate = new Date(birthDateString);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+    return age;
   }
 
   private filterAndSortStages(stages: Stage[]): Stage[] {
@@ -86,6 +118,7 @@ export class RegisterStudentComponent implements OnInit {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
       idNumber: this.registerForm.value.idNumber.toString(),
+      birthday: this.registerForm.value.birthday,
       role: UserRole.STUDENT,
     };
 
@@ -105,7 +138,8 @@ export class RegisterStudentComponent implements OnInit {
           mode: this.registerForm.value.mode,
           studentClassification: this.registerForm.value.studentClassification,
           startClassDate,
-          endClassDate
+          endClassDate,
+          tutorId: this.isMinor ? Number(this.registerForm.value.tutorId) : null,
         };
 
         this.studentsService.registerStudent(studentData).subscribe({

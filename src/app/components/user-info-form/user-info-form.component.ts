@@ -13,6 +13,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CITIES_BY_COUNTRY, COUNTRY_CODES, CountryCode } from '../../shared/country-code';
 import { ModalComponent } from '../modal/modal.component';
 import { ModalDto, modalInitializer } from '../modal/modal.dto';
+import { UserDto } from '../../services/dtos/user.dto';
 
 @Component({
   selector: 'app-users-info-form',
@@ -25,6 +26,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
   @Input() isModalOpen: boolean = false;
   @Input() dataCompleted: boolean = false;
   @Input() userData: any | null = null;
+  @Input() tutors: { id: number; fullName: string }[] = [];
 
   @Output() closeModal = new EventEmitter<void>();
   @Output() formSubmit = new EventEmitter<any>();
@@ -34,6 +36,9 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
   cities: string[] = [];
   selectedCountryIso = 'EC';
   selectedCountryCode = '+593';
+
+  isStudent = false;
+  isMinor = false;
 
   modal: ModalDto = modalInitializer();
 
@@ -46,6 +51,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       country: ['EC', [Validators.required]],
       city: ['', [Validators.required]],
       occupation: ['', [Validators.required]],
+      tutorId: [''],
     });
 
     this.loadCities(this.selectedCountryIso);
@@ -56,6 +62,11 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
     if (this.userData) {
       this.patchFormValues();
     }
+
+    this.infoForm.get('birthday')?.valueChanges.subscribe((birthday: string) => {
+      this.isMinor = this.isStudent && !!birthday && this.calculateAge(birthday) < 18;
+      this.cdr.detectChanges();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -72,9 +83,9 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
 
     const country = this.userData.country || 'EC';
     const city = this.userData.city || '';
-    const birthday = this.userData.birthday
-      ? this.formatBirthday(this.userData.birthday)
-      : '';
+    const birthday = this.userData.birthday ? this.formatBirthday(this.userData.birthday) : '';
+    
+    this.isStudent = this.userData.role === 'STUDENT';
 
     this.infoForm.patchValue({
       email: this.userData.emailAddress || '',
@@ -84,12 +95,24 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       country,
       city,
       occupation: this.userData.occupation || '',
+      tutorId: this.userData?.tutorId || '',
     });
 
-    this.loadCities(country);
+    this.isMinor = this.isStudent && !!birthday && this.calculateAge(birthday) < 18;
 
-    // 🔥 Forzamos la detección de cambios para que Angular actualice la vista
+    this.loadCities(country);
     this.cdr.detectChanges();
+  }
+
+   /** Calcular edad */
+  private calculateAge(dateStr: string): number {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return 0;
+    const today = new Date();
+    let age = today.getFullYear() - d.getFullYear();
+    const m = today.getMonth() - d.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < d.getDate())) age--;
+    return age;
   }
 
   /** Ajusta formato de fecha compatible con input[type=date] */
@@ -136,7 +159,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
 
     const contact = `${formValue.countryCode}${rawNumber}`;
 
-    const payload = {
+    const payload: Partial<UserDto>= {
       email: formValue.email,
       birthday: formValue.birthday,
       contact,
@@ -144,6 +167,10 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       country: formValue.country,
       occupation: formValue.occupation,
     };
+
+    if (this.isStudent && this.isMinor && formValue.tutorId) {
+      (payload as any).tutorId = formValue.tutorId;
+    }
     console.log('📤 Datos enviados al padre:', payload);
 
     this.formSubmit.emit(payload);

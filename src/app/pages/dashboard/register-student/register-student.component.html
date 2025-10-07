@@ -19,6 +19,9 @@
               formControlName="firstName"
               placeholder="Ingrese sus nombres" />
           </div>
+          <div class="error-message" *ngIf="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid">
+            El nombre es obligatorio.
+          </div>
         </div>
 
         <div class="field">
@@ -29,6 +32,9 @@
               class="input"
               formControlName="lastName"
               placeholder="Ingrese sus apellidos" />
+          </div>
+          <div class="error-message" *ngIf="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid">
+            El apellido es obligatorio.
           </div>
         </div>
       </div>
@@ -44,6 +50,9 @@
               formControlName="idNumber"
               placeholder="Ingrese cédula" />
           </div>
+          <div class="error-message" *ngIf="registerForm.get('idNumber')?.touched && registerForm.get('idNumber')?.invalid">
+            La cédula es obligatoria.
+          </div>
         </div>
 
         <div class="field">
@@ -55,16 +64,41 @@
               formControlName="email"
               placeholder="Ingrese correo" />
           </div>
+          <div class="error-message" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+            El correo es obligatorio.
+          </div>
         </div>
+      </div>
 
+      <!-- Fila 3 (contraseña + cumpleaños) -->
+      <div class="form-row two-cols">
         <div class="field">
           <label class="label">Contraseña</label>
           <div class="control">
             <input
-              type="text"
+              type="password"
               class="input"
               formControlName="password"
               placeholder="Ingrese contraseña" />
+          </div>
+          <div class="error-message" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.errors?.['required']">
+            La contraseña es obligatoria.
+          </div>
+          <div class="error-message" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.errors?.['minlength']">
+            La contraseña debe tener al menos 6 caracteres.
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Fecha de Nacimiento</label>
+          <div class="control">
+            <input
+              type="date"
+              class="input"
+              formControlName="birthday" />
+          </div>
+          <div class="error-message" *ngIf="registerForm.get('birthday')?.touched && registerForm.get('birthday')?.invalid">
+            La fecha de nacimiento es obligatoria.
           </div>
         </div>
       </div>
@@ -73,7 +107,7 @@
       <h2 class="section-title">Datos Académicos</h2>
       <div class="section-separator"></div>
 
-      <!-- Fila 3 -->
+      <!-- Fila 4 -->
       <div class="form-row three-cols">
         <div class="field">
           <label class="label">Clasificación</label>
@@ -85,6 +119,9 @@
               </option>
             </select>
           </div>
+          <div class="error-message" *ngIf="registerForm.get('studentClassification')?.touched && registerForm.get('studentClassification')?.invalid">
+            La clasificación es obligatoria.
+          </div>
         </div>
 
         <div class="field">
@@ -95,8 +132,12 @@
               <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
             </select>
           </div>
+          <div class="error-message" *ngIf="registerForm.get('stageId')?.touched && registerForm.get('stageId')?.invalid">
+            Debe seleccionar un stage.
+          </div>
         </div>
 
+        <!-- Modo -->
         <div class="field">
           <label class="label">Modo</label>
           <div class="control">
@@ -105,10 +146,29 @@
               <option *ngFor="let mode of modes" [value]="mode">{{ mode }}</option>
             </select>
           </div>
+          <div class="error-message" *ngIf="registerForm.get('mode')?.touched && registerForm.get('mode')?.invalid">
+            El modo es obligatorio.
+          </div>
+        </div>
+
+        <!-- Tutor visible solo si menor -->
+        <div class="field" *ngIf="isMinor">
+          <label class="label">Tutor (Instructor)</label>
+          <div class="control">
+            <select class="input" formControlName="tutorId">
+              <option value="">Seleccione un tutor</option>
+              <option *ngFor="let tutor of instructors" [value]="tutor.id">
+                {{ tutor.firstName }} {{ tutor.lastName }}
+              </option>
+            </select>
+          </div>
+          <!-- <div class="error-message" *ngIf="registerForm.get('tutorId')?.touched && registerForm.get('tutorId')?.invalid">
+            El tutor es obligatorio para menores de edad.
+          </div> -->
         </div>
       </div>
 
-      <!-- Fila 4 -->
+      <!-- Fila 5 -->
       <div class="form-row two-cols">
         <div class="field">
           <label class="label">Inicio de Clases (opcional)</label>
@@ -127,13 +187,14 @@
 
       <!-- 🔸 Botón -->
       <div class="field field-button">
-        <button class="button">Registrar</button>
+        <button class="button" >Registrar</button>
       </div>
 
     </form>
   </div>
 </div>
 
+<!-- Modal -->
 <app-modal
   [showModal]="modal.show"
   [message]="modal.message"

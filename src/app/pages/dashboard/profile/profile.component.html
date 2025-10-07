@@ -33,6 +33,20 @@
           {{ user.dataCompleted ? "Sí" : "No" }}
         </p>
 
+        <!-- Tutor info (solo si existe y el usuario es STUDENT) -->
+        <div *ngIf="user.role === 'STUDENT' && user.student && (user.student.tutorName || user.student.tutorEmail || user.student.tutorPhone)" class="tutor-info">
+          <h3 class="mt-4 mb-2"><strong>Información del Tutor</strong></h3>
+          <p *ngIf="user.student.tutorName">
+            <strong>Nombre:</strong> {{ user.student.tutorName }}
+          </p>
+          <p *ngIf="user.student.tutorEmail">
+            <strong>Email:</strong> {{ user.student.tutorEmail }}
+          </p>
+          <p *ngIf="user.student.tutorPhone">
+            <strong>Teléfono:</strong> {{ user.student.tutorPhone }}
+          </p>
+        </div>
+
         <!-- Campo de contraseña -->
         <div class="password-change">
           <label for="password">Cambiar contraseña</label>
@@ -91,6 +105,7 @@
       [isModalOpen]="true"
       [dataCompleted]="dataCompleted"
       [userData]="user" 
+      [tutors]="tutors"
       (formSubmit)="handleUserInfoSubmit($event)"
       (closeModal)="showUserInfoForm = false" >
     </app-users-info-form>

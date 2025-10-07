@@ -8,6 +8,7 @@ export interface RegisterStudentDto {
   studentClassification: StudentClassification;
   startClassDate?: string | null;
   endClassDate?: string | null;
+  tutorId?: number | null;
 }
 
 export interface Student {
@@ -25,6 +26,10 @@ export interface Student {
   StudentAndStagesHistory?: StudentStageHistory[];
   startClassDate?: string | null;
   endClassDate?: string | null;
+  tutorId?: number | null;
+  tutorName?: string | null;
+  tutorEmail?: string | null;
+  tutorPhone?: string | null;
 }
 
 export interface StudentStageHistory {

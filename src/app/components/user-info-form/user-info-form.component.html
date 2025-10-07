@@ -37,6 +37,19 @@
           </p>
         </div>
 
+        <!-- Tutor (solo aparece si el usuario es STUDENT y menor de edad) -->
+        <div class="field" *ngIf="isStudent && isMinor">
+          <label class="label">Tutor (opcional)</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select formControlName="tutorId">
+                <option value="">Seleccione un tutor</option>
+                <option *ngFor="let t of tutors" [value]="t.id">{{ t.fullName }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
         <!-- Teléfono -->
         <div class="field">
           <label class="label">Número de contacto</label>
