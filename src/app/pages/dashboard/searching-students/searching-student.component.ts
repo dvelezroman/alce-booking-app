@@ -67,6 +67,7 @@ export class SearchingStudentComponent {
       stageId: [''],
       email: [''],
       birthday: [''],
+      occupation: [''],
       status: [false],
       register: [''],
       linkId: [''],
@@ -74,6 +75,10 @@ export class SearchingStudentComponent {
       studentId: [''],
       comment: [''],
       temporaryComment: [''],
+      createdAt: [{ value: '', disabled: true }],
+      updatedAt: [{ value: '', disabled: true }],
+      startClassDate: [''],
+      endClassDate: [''],
     });
   }
 
@@ -164,7 +169,7 @@ export class SearchingStudentComponent {
     this.selectedUser = user;
     this.isEditModalOpen = true;
 
-    this.editUserForm.patchValue({
+    const baseData = {
       idNumber: user.idNumber,
       email: user.email,
       birthday: user.birthday,
@@ -172,6 +177,7 @@ export class SearchingStudentComponent {
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
+      occupation: user.occupation || '',
       stageId: user.student?.stage?.id,
       ageGroup: user.student?.studentClassification,
       studentId: user.student?.id,
@@ -179,7 +185,20 @@ export class SearchingStudentComponent {
       comment: user.comment,
       temporaryComment: user.temporaryComment,
       status: user.status === UserStatus.ACTIVE,
-    });
+      createdAt: user.createdAt ? new Date(user.createdAt).toISOString().split('T')[0] : '',
+      updatedAt: user.updatedAt ? new Date(user.updatedAt).toISOString().split('T')[0] : '',
+    };
+
+    const studentDates = {
+      startClassDate: user.student?.startClassDate
+        ? new Date(user.student.startClassDate).toISOString().split('T')[0]
+        : '',
+      endClassDate: user.student?.endClassDate
+        ? new Date(user.student.endClassDate).toISOString().split('T')[0]
+        : '',
+    };
+
+    this.editUserForm.patchValue({ ...baseData, ...studentDates });
 
     if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
       this.editUserForm.patchValue({ linkId: user.instructor.meetingLink.id });
@@ -278,6 +297,21 @@ export class SearchingStudentComponent {
   closeContactModal() {
     this.showContactModal = false;
     this.selectedUserForContact = null;
+  }
+
+  getStartClassDate(user: UserDto): string {
+    const date = user?.student?.startClassDate;
+    return date ? new Date(date).toISOString().split('T')[0] : '';
+  }
+
+  getEndClassDate(user: UserDto): string {
+    const date = user?.student?.endClassDate;
+    return date ? new Date(date).toISOString().split('T')[0] : '';
+  }
+
+  getCreatedAt(user: UserDto): string {
+    const date = user?.createdAt;
+    return date ? new Date(date).toISOString().split('T')[0] : '';
   }
 
   protected readonly Math = Math;

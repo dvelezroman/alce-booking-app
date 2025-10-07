@@ -142,16 +142,16 @@
 
     <section class="edit-user-modal-body">
       <form [formGroup]="editUserForm">
+
+        <!-- ESTADO -->
         <div class="form-field-edit">
           <label for="status">Activar Usuario</label>
-          <input
-            type="checkbox"
-            id="status"
-            formControlName="status"
-          />
+          <input type="checkbox" id="status" formControlName="status" />
         </div>
+
+        <!-- DATOS BÁSICOS -->
         <div class="form-field-edit">
-          <label for="idNumber">Numero de Identificación</label>
+          <label for="idNumber">Número de Identificación</label>
           <input
             type="number"
             id="idNumber"
@@ -172,7 +172,7 @@
           />
         </div>
 
-        <!-- NUEVOS CAMPOS -->
+        <!-- INFORMACIÓN DE CONTACTO -->
         <div class="form-field-edit">
           <label for="emailAddress">Correo</label>
           <input
@@ -220,8 +220,44 @@
             readonly
           />
         </div>
-        <!-- FIN NUEVOS CAMPOS -->
 
+        <!-- Ocupación -->
+        <div class="form-field-edit">
+          <label for="occupation">Ocupación</label>
+          <input
+            type="text"
+            id="occupation"
+            formControlName="occupation"
+            [value]="selectedUser?.occupation || ''"
+            placeholder="Ej. Software Engineer"
+          />
+        </div>
+
+        <!-- FECHA DE CREACIÓN -->
+        <div class="form-field-edit">
+          <label for="createdAt">Fecha de Creación del Usuario</label>
+          <input
+            type="date"
+            id="createdAt"
+            formControlName="createdAt"
+            [value]="selectedUser?.createdAt ? (selectedUser!.createdAt | date:'yyyy-MM-dd') : ''"
+            readonly
+          />
+        </div>
+
+        <!-- Fecha de actualización del usuario -->
+        <div class="form-field-edit">
+          <label for="updatedAt">Última Actualización</label>
+          <input
+            type="date"
+            id="updatedAt"
+            formControlName="updatedAt"
+            [value]="selectedUser?.updatedAt ? (selectedUser!.updatedAt | date:'yyyy-MM-dd') : ''"
+            readonly
+          />
+        </div>
+
+        <!-- DATOS PERSONALES -->
         <div class="form-field-edit">
           <label for="firstName">First Name</label>
           <input
@@ -242,6 +278,7 @@
           />
         </div>
 
+        <!-- ROLE -->
         <div class="form-field-edit">
           <label for="role">Role</label>
           <select id="roles" class="input" formControlName="role">
@@ -249,47 +286,75 @@
           </select>
         </div>
 
-        <div *ngIf="selectedUser?.role === UserRole.STUDENT" class="form-field-edit">
-          <label for="ageGroup">Categoría de Edad</label>
-          <select id="ageGroup" formControlName="ageGroup">
-            <option *ngFor="let group of ageGroupOptions" [value]="group">{{ group }}</option>
-          </select>
-        </div>
+        <!-- SECCIÓN SOLO PARA STUDENT -->
+        <ng-container *ngIf="selectedUser?.role === UserRole.STUDENT">
+          
+          <div class="form-field-edit">
+            <label for="ageGroup">Categoría de Edad</label>
+            <select id="ageGroup" formControlName="ageGroup">
+              <option *ngFor="let group of ageGroupOptions" [value]="group">{{ group }}</option>
+            </select>
+          </div>
 
-        <div class="form-field-edit" *ngIf="selectedUser?.role === UserRole.INSTRUCTOR">
-          <label for="links">URL Meeting</label>
-          <select id="links" class="input" formControlName="linkId">
-            <option value="">Seleccione un Link (URL)</option>
-            <option *ngFor="let link of links" [value]="link.id">{{ link.description }}</option>
-          </select>
-        </div>
+          <div class="form-field-edit">
+            <label for="stageId">Stage</label>
+            <select id="stages" class="input" formControlName="stageId">
+              <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+            </select>
+          </div>
 
-        <div class="form-field-edit" *ngIf="selectedUser?.role === UserRole.STUDENT">
-          <label for="stageId">Stage</label>
-          <select id="stages" class="input" formControlName="stageId">
-            <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
-          </select>
-        </div>
+          <div class="form-field-edit">
+            <label for="startClassDate">Inicio de Clases</label>
+            <input
+              type="date"
+              id="startClassDate"
+              [ngModel]="getStartClassDate(selectedUser!)"
+              readonly
+            />
+          </div>
 
-        <div class="form-field-edit">
-          <label for="comment">Observación</label>
-          <input
-            type="text"
-            id="comment"
-            formControlName="comment"
-            [value]="selectedUser?.comment"
-          />
-        </div>
+          <div class="form-field-edit">
+            <label for="endClassDate">Fin de Clases</label>
+            <input
+              type="date"
+              id="endClassDate"
+              [ngModel]="getEndClassDate(selectedUser!)"
+              readonly
+            />
+          </div>
 
-        <div class="form-field-edit">
-          <label for="temporaryComment">Comentario Temporal</label>
-          <input
-            type="text"
-            id="temporaryComment"
-            formControlName="temporaryComment"
-            [value]="selectedUser?.temporaryComment"
-          />
-        </div>
+          <div class="form-field-edit">
+            <label for="comment">Observación</label>
+            <input
+              type="text"
+              id="comment"
+              formControlName="comment"
+              [value]="selectedUser?.comment"
+            />
+          </div>
+
+          <div class="form-field-edit">
+            <label for="temporaryComment">Comentario Temporal</label>
+            <input
+              type="text"
+              id="temporaryComment"
+              formControlName="temporaryComment"
+              [value]="selectedUser?.temporaryComment"
+            />
+          </div>
+
+        </ng-container>
+
+        <!-- SECCIÓN SOLO PARA INSTRUCTOR -->
+        <ng-container *ngIf="selectedUser?.role === UserRole.INSTRUCTOR">
+          <div class="form-field-edit">
+            <label for="links">URL Meeting</label>
+            <select id="links" class="input" formControlName="linkId">
+              <option value="">Seleccione un Link (URL)</option>
+              <option *ngFor="let link of links" [value]="link.id">{{ link.description }}</option>
+            </select>
+          </div>
+        </ng-container>
       </form>
     </section>
 

@@ -1,30 +1,94 @@
 <div *ngIf="showModal" class="contact-modal-overlay">
   <div class="contact-modal-content">
     <div class="modal-header">
-      <h2>Detalles del Estudiante</h2>
-      <button class="close-btn" (click)="handleClose()">✖</button>
+      <h2>Detalles del Usuario</h2>
+      <!-- <button class="close-btn" (click)="handleClose()">✖</button> -->
     </div>
 
-    <div class="modal-body">
-      <div class="info-row">
-        <label>Usuario:</label>
-        <span>{{ user?.email || 'No registrado' }}</span>
+    <div class="modal-body grid-container">
+      <!-- Columna izquierda -->
+      <div class="grid-column">
+        <div class="info-row">
+          <label>Usuario:</label>
+          <span>{{ user?.email || 'No registrado' }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>Email:</label>
+          <span>{{ user?.emailAddress || 'No registrado' }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>Teléfono:</label>
+          <span>{{ user?.contact || 'No registrado' }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>País:</label>
+          <span>{{ user?.country || 'No registrado' }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>Ciudad:</label>
+          <span>{{ user?.city || 'No registrado' }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>Ocupación:</label>
+          <span>{{ user?.occupation || 'No especificada' }}</span>
+        </div>
       </div>
-      <div class="info-row">
-        <label>Email:</label>
-        <span>{{ user?.emailAddress || 'No registrado' }}</span>
-      </div>
-      <div class="info-row">
-        <label>Teléfono de contacto:</label>
-        <span>{{ user?.contact || 'No registrado' }}</span>
-      </div>
-      <div class="info-row">
-        <label>País:</label>
-        <span>{{ user?.country || 'No registrado' }}</span>
-      </div>
-      <div class="info-row">
-        <label>Fecha de nacimiento:</label>
-        <span>{{ user?.birthday || 'No disponible' }}</span>
+
+      <!-- Columna derecha -->
+      <div class="grid-column">
+        <div class="info-row">
+          <label>Fecha de nacimiento:</label>
+          <span>{{ user?.birthday ? (user?.birthday | date: 'yyyy-MM-dd') : 'No disponible' }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>Creado el:</label>
+          <span>{{ user?.createdAt ? (user?.createdAt | date: 'yyyy-MM-dd') : 'No disponible' }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>Actualizado el:</label>
+          <span>{{ user?.updatedAt ? (user?.updatedAt | date: 'yyyy-MM-dd') : 'No disponible' }}</span>
+        </div>
+
+        <ng-container *ngIf="user?.student">
+          <div class="info-row">
+            <label>Stage:</label>
+            <span>{{ user?.student?.stage?.description || 'No asignado' }}</span>
+          </div>
+
+          <div class="info-row">
+            <label>Categoría de edad:</label>
+            <span>{{ user?.student?.studentClassification || 'No definida' }}</span>
+          </div>
+
+          <div class="info-row">
+            <label>Inicio de clases:</label>
+            <span>
+              {{
+                user?.student?.startClassDate
+                  ? (user?.student?.startClassDate | date: 'yyyy-MM-dd')
+                  : 'No disponible'
+              }}
+            </span>
+          </div>
+
+          <div class="info-row">
+            <label>Fin de clases:</label>
+            <span>
+              {{
+                user?.student?.endClassDate
+                  ? (user?.student?.endClassDate | date: 'yyyy-MM-dd')
+                  : 'No disponible'
+              }}
+            </span>
+          </div>
+        </ng-container>
       </div>
     </div>
 

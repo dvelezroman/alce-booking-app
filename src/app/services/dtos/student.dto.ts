@@ -21,6 +21,8 @@ export interface Student {
   stage?: Stage;
   studentClassification?: StudentClassification;
   StudentAndStagesHistory?: StudentStageHistory[];
+  startClassDate?: string | null;
+  endClassDate?: string | null;
 }
 
 export interface StudentStageHistory {

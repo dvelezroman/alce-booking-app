@@ -37,6 +37,9 @@ export interface UserDto {
   assessmentResources?: AssessmentResourceI[];
   dataCompleted?: boolean;
   temporaryComment?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  occupation?: string; 
 }
 
 export interface LoginDto {
