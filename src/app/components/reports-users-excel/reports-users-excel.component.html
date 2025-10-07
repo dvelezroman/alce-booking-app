@@ -5,11 +5,14 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="filters-form">
 
     <div class="field">
-      <label class="label">Rol</label>
+      <label class="label">Rol <span class="required">*</span></label>
       <select formControlName="role" class="input">
-        <option value="">Todos</option>
+        <option value="">Seleccionar rol</option>
         <option *ngFor="let r of userRoles" [value]="r">{{ r }}</option>
       </select>
+      <div class="error" *ngIf="form.get('role')?.invalid && form.get('role')?.touched">
+        Debe seleccionar un rol.
+      </div>
     </div>
 
     <div class="field">
@@ -50,23 +53,32 @@
   <form [formGroup]="absentForm" (ngSubmit)="onSubmit()" class="filters-form">
 
     <div class="field">
-      <label class="label">Instructor</label>
+      <label class="label">Instructor <span class="required">*</span></label>
       <select formControlName="instructorId" class="input">
-        <option value="">Seleccionar</option>
+        <option value="">Seleccionar instructor</option>
         <option *ngFor="let i of instructors" [value]="i.id">
           {{ i.user?.firstName }} {{ i.user?.lastName }}
         </option>
       </select>
+      <div class="error" *ngIf="absentForm.get('instructorId')?.invalid && absentForm.get('instructorId')?.touched">
+        Debe seleccionar un instructor.
+      </div>
     </div>
 
     <div class="field">
-      <label class="label">Desde</label>
+      <label class="label">Desde <span class="required">*</span></label>
       <input type="date" formControlName="from" class="input" />
+      <div class="error" *ngIf="absentForm.get('from')?.invalid && absentForm.get('from')?.touched">
+        La fecha de inicio es obligatoria.
+      </div>
     </div>
 
     <div class="field">
-      <label class="label">Hasta</label>
+      <label class="label">Hasta <span class="required">*</span></label>
       <input type="date" formControlName="to" class="input" />
+      <div class="error" *ngIf="absentForm.get('to')?.invalid && absentForm.get('to')?.touched">
+        La fecha de fin es obligatoria.
+      </div>
     </div>
 
     <div class="field">

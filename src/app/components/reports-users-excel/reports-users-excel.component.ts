@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Stage } from '../../services/dtos/student.dto';
 import { UsersExcelFilterDto, AbsentStudentsExcelFilterDto } from '../../services/dtos/reports.dto';
 import { UserRole, UserStatus } from '../../services/dtos/user.dto';
@@ -28,16 +28,16 @@ export class ReportsUsersExcelComponent {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      role: [''],
+      role: ['', Validators.required],
       status: [''],
       stageId: [''],
       noClasses: [false]
     });
 
     this.absentForm = this.fb.group({
-      instructorId: [''],
-      from: [''],
-      to: [''],
+      instructorId: ['', Validators.required],
+      from: ['', Validators.required],
+      to: ['', Validators.required],
       stageId: ['']
     });
 
@@ -51,27 +51,42 @@ export class ReportsUsersExcelComponent {
 
   onSubmit(): void {
     if (this.mode === 'users') {
+      if (this.form.invalid) {
+        this.form.markAllAsTouched();
+        return;
+      }
+
       const filters: UsersExcelFilterDto = {
-        role: this.form.value.role || undefined,
+        role: this.form.value.role,
         status: this.form.value.status || undefined,
         stageId: this.form.value.stageId ? Number(this.form.value.stageId) : undefined,
         noClasses: this.form.value.noClasses ?? false
       };
+
       this.downloadExcel.emit(filters);
     } else {
+      if (this.absentForm.invalid) {
+        this.absentForm.markAllAsTouched();
+        return;
+      }
+
       const filters: AbsentStudentsExcelFilterDto = {
         instructorId: Number(this.absentForm.value.instructorId),
         from: this.absentForm.value.from,
         to: this.absentForm.value.to,
-        stageId: this.absentForm.value.stageId ? Number(this.absentForm.value.stageId) : ('' as any)
+        stageId: this.absentForm.value.stageId ? Number(this.absentForm.value.stageId) : undefined
       };
-     // console.log('Emitting user Excel filters:', filters);
+
       this.downloadAbsentExcel.emit(filters);
     }
   }
 
   resetFilters(): void {
-    this.form.reset();
+    if (this.mode === 'users') {
+      this.form.reset();
+    } else {
+      this.absentForm.reset();
+    }
   }
 
   /** Retorna true si debe mostrarse el campo stage */
