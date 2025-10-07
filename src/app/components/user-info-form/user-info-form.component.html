@@ -1,20 +1,20 @@
-
 <div class="modal" [class.is-active]="isModalOpen">
   <div class="modal-background"></div>
 
   <div class="modal-card">
     <header class="modal-card-head">
-    <div>
+      <div>
         <p class="modal-card-title">Completar Información</p>
         <p class="modal-subtitle">
           Completa estos datos para continuar usando la plataforma.
         </p>
-    </div>
-    <button class="delete" aria-label="close" (click)="close()"></button>
+      </div>
+      <button class="delete" aria-label="close" (click)="close()"></button>
     </header>
 
     <section class="modal-card-body">
-      <form [formGroup]="infoForm" (ngSubmit)="onSubmit()" id="studentInfoForm">
+      <!-- 👇 el *ngIf garantiza que no se renderice hasta tener el form listo -->
+      <form *ngIf="infoForm" [formGroup]="infoForm" (ngSubmit)="onSubmit()" id="studentInfoForm">
         <!-- Email -->
         <div class="field">
           <label class="label">Correo electrónico</label>
@@ -26,11 +26,21 @@
           </p>
         </div>
 
+        <!-- Fecha de nacimiento -->
+        <div class="field">
+          <label class="label">Fecha de nacimiento</label>
+          <div class="control">
+            <input type="date" class="input" formControlName="birthday" />
+          </div>
+          <p class="error-message" *ngIf="infoForm.get('birthday')?.invalid && infoForm.get('birthday')?.touched">
+            Fecha de nacimiento es requerida.
+          </p>
+        </div>
+
         <!-- Teléfono -->
         <div class="field">
           <label class="label">Número de contacto</label>
           <div class="field is-grouped">
-            <!-- Código del país -->
             <div class="control" style="min-width: 120px">
               <div class="select is-fullwidth">
                 <select formControlName="countryCode">
@@ -41,13 +51,8 @@
               </div>
             </div>
 
-            <!-- Número sin prefijo -->
             <div class="control is-expanded">
-              <input
-                type="tel"
-                class="input"
-                formControlName="phoneNumber"
-              />
+              <input type="tel" class="input" formControlName="phoneNumber" />
             </div>
           </div>
           <p class="error-message" *ngIf="infoForm.get('phoneNumber')?.invalid && infoForm.get('phoneNumber')?.touched">
@@ -55,15 +60,12 @@
           </p>
         </div>
 
-       <!-- País -->
+        <!-- País -->
         <div class="field">
           <label class="label">País</label>
           <div class="control">
             <div class="select is-fullwidth">
-              <select
-                formControlName="country"
-                (change)="onCountryChange($event)"
-              >
+              <select formControlName="country" (change)="onCountryChange($event)">
                 <option *ngFor="let country of countryCodes" [value]="country.iso">
                   {{ country.name }}
                 </option>
@@ -81,10 +83,8 @@
           <div class="control">
             <div class="select is-fullwidth">
               <select formControlName="city">
-                <option value="" disabled selected>Seleccione una ciudad</option>
-                <option *ngFor="let city of cities" [value]="city">
-                  {{ city }}
-                </option>
+                <option value="" disabled>Seleccione una ciudad</option>
+                <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
               </select>
             </div>
           </div>
@@ -96,7 +96,7 @@
     </section>
 
     <footer class="modal-card-foot">
-      <button type="submit" class="button is-primary" form="studentInfoForm" >
+      <button type="submit" class="button is-primary" form="studentInfoForm">
         Guardar
       </button>
     </footer>
@@ -109,5 +109,5 @@
   [isError]="modal.isError"
   [isSuccess]="modal.isSuccess"
   [title]="modal.title || ''"
-  (close)="modal.close()">
-</app-modal>
+  (close)="modal.close()"
+></app-modal>

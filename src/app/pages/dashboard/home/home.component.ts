@@ -33,6 +33,7 @@ export class HomePrivateComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   isLoggedIn: boolean = false;
   userData$: Observable<UserDto | null>;
+  userData: UserDto | null = null;
   isInstructor: boolean = false;
   isStudent: boolean  = false;
   instructorId: number | null = null;
@@ -55,7 +56,7 @@ export class HomePrivateComponent implements OnInit {
   meetingContent: string = '';
   isUpdating: boolean = false;
   // showStudentInfoForm = false;
-  showUserInfoForm = false;
+  showUserInfoForm: boolean = false;
 
   constructor(private store: Store,
               private bookingService: BookingService,
@@ -84,6 +85,7 @@ export class HomePrivateComponent implements OnInit {
     });
 
     this.userData$.subscribe(user => {
+      this.userData = user;
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
       this.isStudent    = user?.role === UserRole.STUDENT;
       if (this.isInstructor) {
@@ -93,19 +95,25 @@ export class HomePrivateComponent implements OnInit {
   }
 
   private checkUserRoleAndFormVisibility(): void {
-    this.userData$.subscribe(user => {
-      this.isInstructor = user?.role === UserRole.INSTRUCTOR;
-      this.isStudent = user?.role === UserRole.STUDENT;
+  this.userData$.subscribe(user => {
+    this.isInstructor = user?.role === UserRole.INSTRUCTOR;
+    this.isStudent = user?.role === UserRole.STUDENT;
 
-      if (user && user.dataCompleted === false) {
-        this.showUserInfoForm = true;
-      }
+    const needsForm =
+      user && (
+        user.dataCompleted === false ||
+        user.birthday === null ||
+        user.birthday === undefined ||
+        user.birthday === ''
+      );
 
-      if (this.isInstructor) {
-        this.generateCurrentMonthDays();
-      }
-    });
-  }
+    this.showUserInfoForm = !!needsForm;
+
+    if (this.isInstructor) {
+      this.generateCurrentMonthDays();
+    }
+  });
+}
 
   get studyContentNames(): string {
     if (this.studyContentOptions.length === 0) return 'Sin contenidos asignados';
