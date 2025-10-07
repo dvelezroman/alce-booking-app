@@ -215,7 +215,7 @@ export class ReportsService {
 
     if (filters.stageId) params = params.set('stageId', filters.stageId.toString());
 
-    const url = `${this.apiUrl}/instructor/${filters.instructorId}/absent-students/excel`;
+    const url = `${this.apiUrl}/absent-students/excel`;
     return this.http.get(url, { params, responseType: 'blob' });
   }
 

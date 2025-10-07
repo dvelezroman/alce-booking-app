@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
 import { Stage } from '../../services/dtos/student.dto';
 import { UsersExcelFilterDto, AbsentStudentsExcelFilterDto } from '../../services/dtos/reports.dto';
 import { UserRole, UserStatus } from '../../services/dtos/user.dto';
-import { Instructor } from '../../services/dtos/instructor.dto';
 
 @Component({
   selector: 'app-reports-users-excel',
@@ -15,7 +14,6 @@ import { Instructor } from '../../services/dtos/instructor.dto';
 })
 export class ReportsUsersExcelComponent {
   @Input() stages: Stage[] = [];
-  @Input() instructors: Instructor[] = [];
   @Input() mode: 'users' | 'absents' = 'users';
 
   @Output() downloadExcel = new EventEmitter<UsersExcelFilterDto>();
@@ -27,6 +25,7 @@ export class ReportsUsersExcelComponent {
   userStatuses = Object.values(UserStatus);
 
   constructor(private fb: FormBuilder) {
+    // Formulario de usuarios
     this.form = this.fb.group({
       role: ['', Validators.required],
       status: [''],
@@ -34,19 +33,46 @@ export class ReportsUsersExcelComponent {
       noClasses: [false]
     });
 
-    this.absentForm = this.fb.group({
-      instructorId: ['', Validators.required],
-      from: ['', Validators.required],
-      to: ['', Validators.required],
-      stageId: ['']
-    });
+    // Formulario de inasistencias
+    this.absentForm = this.fb.group(
+      {
+        from: [''],
+        to: [''],
+        stageId: ['']
+      },
+      { validators: this.fromRequiredIfNoTo }
+    );
 
-    // Suscribirse a cambios de rol para ocultar/limpiar stage cuando no sea student
+    // Ocultar stage cuando el rol no sea STUDENT
     this.form.get('role')?.valueChanges.subscribe((role) => {
       if (role !== UserRole.STUDENT) {
         this.form.patchValue({ stageId: '' }, { emitEvent: false });
       }
     });
+  }
+
+  /** Valida que si no se coloca "to", "from" sea requerido */
+  private fromRequiredIfNoTo(control: AbstractControl) {
+    const from = control.get('from')?.value;
+    const to = control.get('to')?.value;
+
+    if (!to && !from) {
+      control.get('from')?.setErrors({ requiredIfNoTo: true });
+      return { requiredIfNoTo: true };
+    } else {
+      if (control.get('from')?.hasError('requiredIfNoTo')) {
+        control.get('from')?.setErrors(null);
+      }
+      return null;
+    }
+  }
+
+  /** Convierte la fecha a formato YYYY-MM-DD si existe */
+  private formatDate(value: any): string | undefined {
+    if (!value) return undefined;
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return undefined;
+    return date.toISOString().split('T')[0];
   }
 
   onSubmit(): void {
@@ -71,9 +97,8 @@ export class ReportsUsersExcelComponent {
       }
 
       const filters: AbsentStudentsExcelFilterDto = {
-        instructorId: Number(this.absentForm.value.instructorId),
-        from: this.absentForm.value.from,
-        to: this.absentForm.value.to,
+        from: this.formatDate(this.absentForm.value.from) || '',
+        to: this.formatDate(this.absentForm.value.to) || '',
         stageId: this.absentForm.value.stageId ? Number(this.absentForm.value.stageId) : undefined
       };
 

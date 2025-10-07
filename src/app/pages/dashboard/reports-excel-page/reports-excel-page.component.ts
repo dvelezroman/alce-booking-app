@@ -21,7 +21,7 @@ import { ReportsUsersExcelComponent } from '../../../components/reports-users-ex
 export class ReportsExcelPageComponent implements OnInit {
 
   loading = false;
-  instructors: Instructor[] = [];
+  // instructors: Instructor[] = [];
   stages: Stage[] = [];
   currentMode: 'users' | 'absents' = 'users';
 
@@ -30,7 +30,7 @@ export class ReportsExcelPageComponent implements OnInit {
              private instructorsService: InstructorsService) {}
 
   ngOnInit(): void {
-    this.fetchInstructors();
+    // this.fetchInstructors();
     this.fetchStages()
   }
 
@@ -40,17 +40,17 @@ export class ReportsExcelPageComponent implements OnInit {
   }
 
   /** Obtener instructores */
-  private fetchInstructors(): void {
-    this.instructorsService.getAll().subscribe({
-      next: (data) => {
-        this.instructors = data;
-      },
-      error: (err) => {
-        console.error('Error al obtener instructores:', err);
-        this.instructors = [];
-      }
-    });
-  }
+  // private fetchInstructors(): void {
+  //   this.instructorsService.getAll().subscribe({
+  //     next: (data) => {
+  //       this.instructors = data;
+  //     },
+  //     error: (err) => {
+  //       console.error('Error al obtener instructores:', err);
+  //       this.instructors = [];
+  //     }
+  //   });
+  // }
 
    /** Obtener stages (solo STAGE 0 a 19) */
   private fetchStages(): void {

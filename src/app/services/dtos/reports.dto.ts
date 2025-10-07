@@ -16,7 +16,7 @@ export interface UsersExcelFilterDto {
  * Endpoint: GET /v0/reports/instructor/{instructorId}/absent-students/excel
  */
 export interface AbsentStudentsExcelFilterDto {
-  instructorId: number;
+  // instructorId: number;
   from: string;
   to: string;
   stageId?: number;

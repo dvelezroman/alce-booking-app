@@ -53,19 +53,6 @@
   <form [formGroup]="absentForm" (ngSubmit)="onSubmit()" class="filters-form">
 
     <div class="field">
-      <label class="label">Instructor <span class="required">*</span></label>
-      <select formControlName="instructorId" class="input">
-        <option value="">Seleccionar instructor</option>
-        <option *ngFor="let i of instructors" [value]="i.id">
-          {{ i.user?.firstName }} {{ i.user?.lastName }}
-        </option>
-      </select>
-      <div class="error" *ngIf="absentForm.get('instructorId')?.invalid && absentForm.get('instructorId')?.touched">
-        Debe seleccionar un instructor.
-      </div>
-    </div>
-
-    <div class="field">
       <label class="label">Desde <span class="required">*</span></label>
       <input type="date" formControlName="from" class="input" />
       <div class="error" *ngIf="absentForm.get('from')?.invalid && absentForm.get('from')?.touched">
