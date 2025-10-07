@@ -27,6 +27,7 @@ export class UserSelectorComponent implements OnChanges {
   @Input() stageId: number | undefined;
   @Input() reset = false;
   @Input() maxSelectable: number | null = null;
+  @Input() resetTrigger = 0; 
 
   @Output() usersSelected = new EventEmitter<UserDto[]>();
 
@@ -50,7 +51,7 @@ export class UserSelectorComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['reset'] && this.reset) {
+    if (changes['resetTrigger'] && !changes['resetTrigger'].firstChange) {
       this.clearSelection();
     }
 

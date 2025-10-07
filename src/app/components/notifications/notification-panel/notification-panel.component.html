@@ -1,13 +1,14 @@
 <div class="notification-panel">
   <div class="info-wrapper centered-block">
     <p class="instruction-text">
-      Selecciona a quién deseas enviar la notificación: puede ser a un usuario individual, por stage, por rol o a un grupo previamente creado.
+     Tipo de envío.
     </p>
 
     <!-- Versión Desktop / Tablets -->
     <div class="badge-options hidden sm:flex">
       <span
         class="badge-option"
+        [class.active]="activeOption === 'user'"
         *ngIf="userRole === UserRole.ADMIN || userRole === UserRole.INSTRUCTOR"
         (click)="selectNotificationOption('user', $event)"
       >
@@ -16,6 +17,7 @@
 
       <span
         class="badge-option"
+        [class.active]="activeOption === 'role'"
         *ngIf="userRole === UserRole.ADMIN"
         (click)="selectNotificationOption('role', $event)"
       >
@@ -24,6 +26,7 @@
 
       <span
         class="badge-option"
+        [class.active]="activeOption === 'stage'"
         *ngIf="userRole === UserRole.ADMIN"
         (click)="selectNotificationOption('stage', $event)"
       >
@@ -32,6 +35,7 @@
 
       <span
         class="badge-option"
+        [class.active]="activeOption === 'group'"
         *ngIf="userRole === UserRole.ADMIN"
         (click)="selectNotificationOption('group', $event)"
       >
@@ -41,16 +45,12 @@
 
     <!-- Versión Mobile -->
     <div class="select-wrapper sm:hidden">
-      <label for="notificationOption" class="sr-only">Opción de envío</label>
       <select
-        id="notificationOption"
         class="notification-select"
-        (change)="selectNotificationOption($any($event.target)?.value, $event)"
+        [(ngModel)]="activeOption"
+        (change)="selectNotificationOption(activeOption, $event)"
       >
-        <option value="" disabled selected>Selecciona una opción</option>
-        <option *ngIf="userRole === UserRole.ADMIN || userRole === UserRole.INSTRUCTOR" value="user">
-          Usuario(s)
-        </option>
+        <option value="user">Usuario(s)</option>
         <option *ngIf="userRole === UserRole.ADMIN" value="role">Rol</option>
         <option *ngIf="userRole === UserRole.ADMIN" value="stage">Stage</option>
         <option *ngIf="userRole === UserRole.ADMIN" value="group">Grupo</option>

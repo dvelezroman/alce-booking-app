@@ -105,7 +105,6 @@ export class BroadcastGroupsComponent implements OnInit {
   handleStageSelect(stage: Stage | null) { this.selectedStage = stage; }
 
   private clearSelection(): void {
-    this.selectedAction = '';
     this.selectedUser = null;
     this.selectedStage = null;
     this.selectedRole = null;

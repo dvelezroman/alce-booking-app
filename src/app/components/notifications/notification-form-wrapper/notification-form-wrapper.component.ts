@@ -79,6 +79,7 @@ export class NotificationFormWrapperComponent implements OnInit {
   scheduledAtLocal = '';
   expiresAtLocal   = '';
   datesInvalid = false;
+  userResetTick = 0;
 
   constructor(
     private store: Store,
@@ -98,12 +99,9 @@ export class NotificationFormWrapperComponent implements OnInit {
       }
     });
 
-    // ✅ Ya no hacemos fetch aquí de grupos, los recibe el @Input() groups del padre
-
     const now = new Date();
-    const in1day = new Date(now.getTime() + 24 * 60 * 60 * 1000);
     this.scheduledAtLocal = this.toLocalInput(now);
-    this.expiresAtLocal   = this.toLocalInput(in1day);
+    this.expiresAtLocal = '';
   }
 
   private toLocalInput(d: Date): string {
@@ -295,8 +293,15 @@ export class NotificationFormWrapperComponent implements OnInit {
         ? +this.selectedStageId
         : undefined;
 
-    const scheduledAtISO = new Date(this.scheduledAtLocal).toISOString();
-    const expiresAtISO   = new Date(this.expiresAtLocal).toISOString();
+    const scheduledAtISO: string | undefined =
+      this.scheduledAtLocal && this.scheduledAtLocal.trim()
+        ? new Date(this.scheduledAtLocal).toISOString()
+        : undefined;
+
+    const expiresAtISO: string | undefined =
+      this.expiresAtLocal && this.expiresAtLocal.trim()
+        ? new Date(this.expiresAtLocal).toISOString()
+        : undefined;
 
     const payload: CreateNotificationDto = {
       from: this.userId!,
@@ -314,5 +319,17 @@ export class NotificationFormWrapperComponent implements OnInit {
     };
 
     this.submitNotification.emit(payload);
+
+    this.expiresAtLocal = '';
+    this.datesInvalid = false;
+    this.title = '';
+    this.message = '';
+
+
+    if (this.selectedType === 'user') {
+      this.selectedUsers = [];
+      this.userResetTick++;
+    }
   }
+
 }

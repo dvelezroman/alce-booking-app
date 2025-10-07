@@ -52,6 +52,7 @@
           [role]="selectedUserRole"
           [stageId]="selectedUserRole === 'student' && selectedStageId != null ? selectedStageId : undefined"
           (usersSelected)="handleUsersSelected($event)"
+          [resetTrigger]="userResetTick"
         />
       </ng-container>
 
@@ -161,7 +162,7 @@
               type="datetime-local"
               [(ngModel)]="scheduledAtLocal"
               (ngModelChange)="onScheduledChange($event)"
-              required
+              placeholder="(opcional)"
             />
           </div>
 
@@ -173,7 +174,7 @@
               type="datetime-local"
               [(ngModel)]="expiresAtLocal"
               (ngModelChange)="onExpiresChange($event)"
-              required
+              placeholder="(opcional)"
             />
           </div>
 

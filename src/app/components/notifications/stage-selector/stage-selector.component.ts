@@ -14,6 +14,7 @@ export class StageSelectorComponent implements OnChanges {
   @Input() stages: Stage[] = [];
   @Input() reset = false;
   @Input() totalUsers: number | null = null;
+  
   @Output() stageSelected = new EventEmitter<number | null>();
 
   selectedStageId: string = '';
