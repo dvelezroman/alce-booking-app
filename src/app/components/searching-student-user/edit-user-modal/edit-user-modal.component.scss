@@ -1,0 +1,209 @@
+/* Estilos específicos para el modal de editar usuario */
+.modal {
+  z-index: 1100;
+}
+
+/* Fondo del modal */
+.edit-user-modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+/* Contenedor principal del modal */
+.edit-user-modal-card {
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 500px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+
+  @media (max-width: 480px) {
+    width: 350px;
+  }
+}
+
+/* Cabecera del modal */
+.edit-user-modal-head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 0.5rem 1rem;
+}
+
+.edit-user-modal-title {
+  flex-grow: 1;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #333;
+  font-weight: 600;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.edit-user-close {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 1.5rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #7b7979;
+}
+
+.edit-user-close:hover {
+  color: #373737;
+}
+
+/* Cuerpo del modal con scroll */
+.edit-user-modal-body {
+  overflow-y: auto;
+  height: 60vh;
+  padding: 1rem 1.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent; 
+
+   &::-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 4px;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: #9ca3af;
+  }
+
+   @media (max-width: 480px) {
+    padding: 0.5rem 0.85rem;
+  }
+}
+
+/* Campos del formulario */
+.form-field-edit {
+  margin-bottom: 1rem;
+}
+
+.form-field-edit label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 5px;
+  color: #333;
+}
+
+/* Checkbox estilo activado */
+.form-field-edit input[type="checkbox"] {
+  accent-color: #3b82f6; 
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.form-field-edit input[type="checkbox"]:hover {
+  box-shadow: 0 0 4px rgba(59, 130, 246, 0.4);
+}
+
+.form-field-edit input[type="checkbox"]:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.form-field-edit input,
+.form-field-edit select {
+  width: 100%;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  height: 36px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+/* Pie del modal */
+.edit-user-modal-foot {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+}
+
+.edit-user-modal-foot .button {
+  padding: 0.5rem 1.5rem;
+  font-size: .9rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 0.5rem;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+/* Botón azul (Actualizar) */
+.edit-user-modal-foot .button.is-success {
+  background-color: #007bff;
+}
+
+.edit-user-modal-foot .button.is-success:hover {
+  background-color: #0056b3;
+}
+
+/* Botón gris (Cancelar) */
+.edit-user-modal-foot .delete-cancel-button {
+  background-color: #d7d7d7;
+  color: rgb(42, 41, 41);
+}
+
+.edit-user-modal-foot .delete-cancel-button:hover {
+  background-color: #aaaaaa;
+}
+
+.form-field-edit input,
+.form-field-edit select,
+.form-field-edit textarea {
+  color: #222;
+}
+
+.form-field-edit input::placeholder,
+.form-field-edit select::placeholder,
+.form-field-edit textarea::placeholder {
+  color: #555;
+  opacity: 1;
+}
+
+.form-field-edit input[readonly],
+.form-field-edit select[readonly] {
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.form-field-edit select {
+  color: #222;
+  background-color: #fff;
+}

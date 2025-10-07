@@ -10,6 +10,7 @@ import { LinksService } from '../../../services/links.service';
 import { StagesService } from '../../../services/stages.service';
 import { UsersService } from '../../../services/users.service';
 import { ContactDetailsModalComponent } from '../../../components/student/contact-details-modal/contact-details-modal.component';
+import { EditUserModalComponent } from '../../../components/searching-student-user/edit-user-modal/edit-user-modal.component';
 
 @Component({
   selector: 'app-searching-students-student',
@@ -17,14 +18,16 @@ import { ContactDetailsModalComponent } from '../../../components/student/contac
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ModalComponent,
     FormsModule,
-    ContactDetailsModalComponent
+    ModalComponent,
+    ContactDetailsModalComponent,
+    EditUserModalComponent,
   ],
   templateUrl: './searching-student.component.html',
-  styleUrl: './searching-student.component.scss'
+  styleUrls: ['./searching-student.component.scss'],
 })
 export class SearchingStudentComponent {
+  // --- Variables principales ---
   screenWidth: number = 0;
   isStudentForm = true;
   studentForm!: FormGroup;
@@ -32,23 +35,22 @@ export class SearchingStudentComponent {
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
   links: MeetingLinkDto[] = [];
+  stages: Stage[] = [];
 
   users: UserDto[] = [];
   totalUsers: number = 0;
   currentPage: number = 1;
   itemsPerPage: number = 100;
+  showStageColumn: boolean = true;
+  noResults: boolean = false;
 
-  stages: Stage[] = [];
-
+  // --- Modales ---
   modalConfig: ModalDto = modalInitializer();
   selectedUser: UserDto | null = null;
   isEditModalOpen = false;
-  editUserForm!: FormGroup;
-  showStageColumn: boolean = true;
 
-  userToDelete: UserDto | null = null;
   isEditPasswordModalOpen = false;
-  noResults: boolean = false;
+  userToDelete: UserDto | null = null;
 
   showContactModal: boolean = false;
   selectedUserForContact: UserDto | null = null;
@@ -57,35 +59,14 @@ export class SearchingStudentComponent {
     private fb: FormBuilder,
     private usersService: UsersService,
     private stagesService: StagesService,
-    private linksService: LinksService,
-  ) {
-    this.editUserForm = this.fb.group({
-      idNumber: [{ value: '', disabled: true }, Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      role: [{ value: '' }, Validators.required],
-      stageId: [''],
-      email: [''],
-      birthday: [''],
-      occupation: [''],
-      status: [false],
-      register: [''],
-      linkId: [''],
-      ageGroup: [''],
-      studentId: [''],
-      comment: [''],
-      temporaryComment: [''],
-      createdAt: [{ value: '', disabled: true }],
-      updatedAt: [{ value: '', disabled: true }],
-      startClassDate: [''],
-      endClassDate: [''],
-    });
-  }
+    private linksService: LinksService
+  ) {}
 
   ngOnInit() {
-    this.stagesService.getAll().subscribe(stages => this.stages = stages);
-    this.linksService.getAll().subscribe(links => this.links = links);
+    this.stagesService.getAll().subscribe((stages) => (this.stages = stages));
+    this.linksService.getAll().subscribe((links) => (this.links = links));
 
+    // Formularios de búsqueda
     this.studentForm = this.fb.group({
       userId: [''],
       firstName: [''],
@@ -95,12 +76,13 @@ export class SearchingStudentComponent {
 
     this.userForm = this.fb.group({
       email: ['', Validators.required],
-      role: ['', Validators.required]
+      role: ['', Validators.required],
     });
 
     this.screenWidth = window.innerWidth;
   }
 
+  // --- Búsqueda ---
   toggleForm() {
     this.isStudentForm = !this.isStudentForm;
     this.users = [];
@@ -115,35 +97,91 @@ export class SearchingStudentComponent {
 
     if (this.isStudentForm) {
       const { firstName, lastName, stageId } = this.studentForm.value;
-      this.usersService.searchUsers((this.currentPage - 1) * this.itemsPerPage, this.itemsPerPage, undefined, firstName, lastName, undefined, UserRole.STUDENT, undefined, stageId)
+      this.usersService
+        .searchUsers(
+          (this.currentPage - 1) * this.itemsPerPage,
+          this.itemsPerPage,
+          undefined,
+          firstName,
+          lastName,
+          undefined,
+          UserRole.STUDENT,
+          undefined,
+          stageId
+        )
         .subscribe({
-          next: result => {
-            console.log(result.users)
+          next: (result) => {
             this.users = result.users;
             this.totalUsers = result.total;
-            if (this.users.length === 0) setTimeout(() => this.noResults = true, 1000);
+            if (this.users.length === 0) setTimeout(() => (this.noResults = true), 1000);
           },
-          error: error => {
+          error: (error) => {
             console.log('Error:', error);
             this.showErrorModal('Error occurred while searching users.');
-          }
+          },
         });
     } else {
       const { email, role } = this.userForm.value;
-      this.usersService.searchUsers((this.currentPage - 1) * this.itemsPerPage, this.itemsPerPage, email, undefined, undefined, undefined, role, undefined)
+      this.usersService
+        .searchUsers(
+          (this.currentPage - 1) * this.itemsPerPage,
+          this.itemsPerPage,
+          email,
+          undefined,
+          undefined,
+          undefined,
+          role,
+          undefined
+        )
         .subscribe({
-          next: result => {
+          next: (result) => {
             this.users = result.users;
             this.totalUsers = result.total;
           },
-          error: error => {
+          error: (error) => {
             console.log('Error:', error);
             this.showErrorModal('Error occurred while searching users.');
-          }
+          },
         });
     }
   }
 
+  // --- MODAL: Editar usuario ---
+  openEditUserModal(user: UserDto) {
+    this.selectedUser = user;
+    this.isEditModalOpen = true;
+  }
+
+  closeEditModal() {
+    this.isEditModalOpen = false;
+    this.selectedUser = null;
+  }
+
+  updateUserFromChild(payload: any) {
+    if (this.selectedUser) {
+      this.usersService.update(this.selectedUser.id, payload).subscribe({
+        next: () => {
+          // Actualiza en memoria (sin esperar al backend)
+          const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
+          if (index !== -1) {
+            this.users[index] = {
+              ...this.users[index],
+              ...payload
+            };
+          }
+
+          this.isEditModalOpen = false;
+          this.showSuccessModal('Usuario actualizado exitosamente.');
+        },
+        error: (error) => {
+          console.error('Error updating user:', error);
+          this.showErrorModal('Ocurrió un error al actualizar el usuario.');
+        }
+      });
+    }
+  }
+
+  // --- MODAL: Password ---
   openEditPasswordModal(user: UserDto): void {
     this.selectedUser = { ...user };
     this.isEditPasswordModalOpen = true;
@@ -155,7 +193,7 @@ export class SearchingStudentComponent {
       const updateData = { password: this.selectedUser.password };
       this.usersService.update(this.selectedUser.id, updateData).subscribe({
         next: () => this.closeEditPasswordModal(),
-        error: () => console.error('No se pudo actualizar el password del Link!')
+        error: () => console.error('No se pudo actualizar el password del Link!'),
       });
     }
   }
@@ -165,101 +203,18 @@ export class SearchingStudentComponent {
     this.selectedUser = null;
   }
 
-  openEditUSerModal(user: UserDto) {
-    this.selectedUser = user;
-    this.isEditModalOpen = true;
-
-    const baseData = {
-      idNumber: user.idNumber,
-      email: user.email,
-      birthday: user.birthday,
-      register: user.register,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      occupation: user.occupation || '',
-      stageId: user.student?.stage?.id,
-      ageGroup: user.student?.studentClassification,
-      studentId: user.student?.id,
-      linkId: '',
-      comment: user.comment,
-      temporaryComment: user.temporaryComment,
-      status: user.status === UserStatus.ACTIVE,
-      createdAt: user.createdAt ? new Date(user.createdAt).toISOString().split('T')[0] : '',
-      updatedAt: user.updatedAt ? new Date(user.updatedAt).toISOString().split('T')[0] : '',
-    };
-
-    const studentDates = {
-      startClassDate: user.student?.startClassDate
-        ? new Date(user.student.startClassDate).toISOString().split('T')[0]
-        : '',
-      endClassDate: user.student?.endClassDate
-        ? new Date(user.student.endClassDate).toISOString().split('T')[0]
-        : '',
-    };
-
-    this.editUserForm.patchValue({ ...baseData, ...studentDates });
-
-    if (user.role === UserRole.INSTRUCTOR && user.instructor?.meetingLink?.link) {
-      this.editUserForm.patchValue({ linkId: user.instructor.meetingLink.id });
-    }
+  // --- MODAL: Contacto ---
+  openContactModal(user: UserDto) {
+    this.selectedUserForContact = user;
+    this.showContactModal = true;
   }
 
-  updateUser() {
-    if (this.editUserForm.valid && this.selectedUser) {
-      const updatedUser = { ...this.editUserForm.value };
-      updatedUser.status = updatedUser.status ? UserStatus.ACTIVE : UserStatus.INACTIVE;
-      if (!updatedUser.linkId) delete updatedUser.linkId;
-      this.usersService.update(this.selectedUser.id, updatedUser).subscribe({
-        next: () => {
-          this.isEditModalOpen = false;
-          this.showSuccessModal('Usuario actualizado exitosamente.');
-          this.searchUsers();
-        },
-        error: (error) => {
-          console.error('Error updating user:', error);
-          this.showErrorModal('Ocurrió un error al actualizar el usuario.');
-        }
-      });
-    }
+  closeContactModal() {
+    this.showContactModal = false;
+    this.selectedUserForContact = null;
   }
 
-  closeEditModal() {
-    this.isEditModalOpen = false;
-  }
-
-  changePage(page: number) {
-    this.currentPage = page;
-    this.searchUsers();
-  }
-
-  showSuccessModal(message: string) {
-    this.modalConfig = {
-      show: true,
-      message,
-      isSuccess: true,
-      isError: false,
-      isInfo: false,
-      showButtons: false,
-      close: () => this.modalConfig.show = false
-    };
-    setTimeout(() => this.modalConfig.show = false, 3000);
-  }
-
-  showErrorModal(message: string) {
-    this.modalConfig = {
-      show: true,
-      message,
-      isSuccess: false,
-      isError: true,
-      isInfo: false,
-      showButtons: false,
-      close: () => this.modalConfig.show = false
-    };
-    setTimeout(() => this.modalConfig.show = false, 3000);
-  }
-
-  // MODAL ELIMINACIÓN
+  // --- MODAL: Eliminación ---
   openDeleteModal(user: UserDto): void {
     this.userToDelete = user;
     this.modalConfig = {
@@ -269,8 +224,8 @@ export class SearchingStudentComponent {
       isSuccess: false,
       isInfo: true,
       showButtons: true,
-      close: () => this.modalConfig.show = false,
-      confirm: () => this.confirmDelete()
+      close: () => (this.modalConfig.show = false),
+      confirm: () => this.confirmDelete(),
     };
   }
 
@@ -284,21 +239,45 @@ export class SearchingStudentComponent {
         error: (error) => {
           console.error('Error al eliminar el usuario:', error);
           this.showErrorModal('No se pudo eliminar el usuario');
-        }
+        },
       });
     }
   }
 
-  openContactModal(user: UserDto) {
-    this.selectedUserForContact = user;
-    this.showContactModal = true;
+  // --- Paginación ---
+  changePage(page: number) {
+    this.currentPage = page;
+    this.searchUsers();
   }
 
-  closeContactModal() {
-    this.showContactModal = false;
-    this.selectedUserForContact = null;
+  // --- Modales de mensajes ---
+  showSuccessModal(message: string) {
+    this.modalConfig = {
+      show: true,
+      message,
+      isSuccess: true,
+      isError: false,
+      isInfo: false,
+      showButtons: false,
+      close: () => (this.modalConfig.show = false),
+    };
+    setTimeout(() => (this.modalConfig.show = false), 3000);
   }
 
+  showErrorModal(message: string) {
+    this.modalConfig = {
+      show: true,
+      message,
+      isSuccess: false,
+      isError: true,
+      isInfo: false,
+      showButtons: false,
+      close: () => (this.modalConfig.show = false),
+    };
+    setTimeout(() => (this.modalConfig.show = false), 3000);
+  }
+
+  // --- Helpers ---
   getStartClassDate(user: UserDto): string {
     const date = user?.student?.startClassDate;
     return date ? new Date(date).toISOString().split('T')[0] : '';

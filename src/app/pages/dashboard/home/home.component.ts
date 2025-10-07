@@ -334,7 +334,7 @@ export class HomePrivateComponent implements OnInit {
     }));
   }
 
-  handleUserInfoSubmit(data: { email: string; contact: string; city: string; country: string; birthday: string  }) {
+  handleUserInfoSubmit(data: { email: string; contact: string; city: string; country: string; birthday: string; occupation: string;  }) {
     this.userData$.pipe(take(1)).subscribe(user => {
       if (!user?.id) {
         this.showModal(this.createModalParams(true, 'No se pudo obtener el ID del usuario.'));
@@ -347,6 +347,7 @@ export class HomePrivateComponent implements OnInit {
         contact: data.contact,
         city: data.city,
         country: data.country,
+        occupation: data.occupation,
       };
 
       this.usersService.update(user.id, payload).subscribe({

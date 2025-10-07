@@ -107,7 +107,7 @@
               </button>
             </td>
             <td>
-              <i class="fas fa-edit edit-icon" (click)="openEditUSerModal(user)"></i>
+              <i class="fas fa-edit edit-icon" (click)="openEditUserModal(user)"></i>
               <i class="fas fa-key password-icon" (click)="openEditPasswordModal(user)"></i>
               <i class="fas fa-trash delete-icon" (click)="openDeleteModal(user)"></i>
             </td>
@@ -124,278 +124,55 @@
     </div>
   </div>
 
-<!-- Mensaje para cuando no hay resultados -->
+  <!-- Mensaje para cuando no hay resultados -->
   <div *ngIf="noResults" class="no-results-message">
     <p>No se encontraron resultados.</p>
     <i class="fas fa-user-slash"></i>
   </div>
 
 
-<!-- Modal para editar usuario -->
-<div class="modal" [ngClass]="{ 'is-active': isEditModalOpen }">
-  <div class="edit-user-modal-background"></div>
-  <div class="edit-user-modal-card">
-    <header class="edit-user-modal-head">
-      <p class="edit-user-modal-title">Datos del Usuario</p>
-      <button class="edit-user-close" aria-label="close" (click)="closeEditModal()">&times;</button>
-    </header>
+  <!-- Modal de edición (migrado al hijo) -->
+  <app-edit-user-modal
+    [showModal]="isEditModalOpen"
+    [user]="selectedUser"
+    [stages]="stages"
+    [links]="links"
+    [roles]="roles"
+    [ageGroupOptions]="ageGroupOptions"
+    (close)="closeEditModal()"
+    (save)="updateUserFromChild($event)">
+  </app-edit-user-modal>
 
-    <section class="edit-user-modal-body">
-      <form [formGroup]="editUserForm">
+  <div id="editPasswordModal" class="modal" [ngClass]="{ 'is-active': isEditPasswordModalOpen }">
+    <div class="edit-user-modal-background"></div>
+    <div class="modal-content">
 
-        <!-- ESTADO -->
-        <div class="form-field-edit">
-          <label for="status">Activar Usuario</label>
-          <input type="checkbox" id="status" formControlName="status" />
-        </div>
-
-        <!-- DATOS BÁSICOS -->
-        <div class="form-field-edit">
-          <label for="idNumber">Número de Identificación</label>
-          <input
-            type="number"
-            id="idNumber"
-            formControlName="idNumber"
-            [value]="selectedUser?.idNumber"
-            readonly
-          />
-        </div>
-
-        <div class="form-field-edit">
-          <label for="email">Usuario</label>
-          <input
-            type="text"
-            id="email"
-            readonly
-            formControlName="email"
-            [value]="selectedUser?.email"
-          />
-        </div>
-
-        <!-- INFORMACIÓN DE CONTACTO -->
-        <div class="form-field-edit">
-          <label for="emailAddress">Correo</label>
-          <input
-            type="email"
-            id="emailAddress"
-            formControlName="emailAddress"
-            [value]="selectedUser?.emailAddress || ''"
-            placeholder="correo@ejemplo.com"
-            readonly
-          />
-        </div>
-
-        <div class="form-field-edit">
-          <label for="contact">Contacto</label>
-          <input
-            type="tel"
-            id="contact"
-            formControlName="contact"
-            [value]="selectedUser?.contact || ''"
-            placeholder="+593999000000"
-            readonly
-          />
-        </div>
-
-        <div class="form-field-edit">
-          <label for="country">País</label>
-          <input
-            type="text"
-            id="country"
-            formControlName="country"
-            [value]="selectedUser?.country || ''"
-            placeholder="EC / Ecuador"
-            readonly
-          />
-        </div>
-
-        <div class="form-field-edit">
-          <label for="city">Ciudad</label>
-          <input
-            type="text"
-            id="city"
-            formControlName="city"
-            [value]="selectedUser?.city || ''"
-            placeholder="Portoviejo"
-            readonly
-          />
-        </div>
-
-        <!-- Ocupación -->
-        <div class="form-field-edit">
-          <label for="occupation">Ocupación</label>
-          <input
-            type="text"
-            id="occupation"
-            formControlName="occupation"
-            [value]="selectedUser?.occupation || ''"
-            placeholder="Ej. Software Engineer"
-          />
-        </div>
-
-        <!-- FECHA DE CREACIÓN -->
-        <div class="form-field-edit">
-          <label for="createdAt">Fecha de Creación del Usuario</label>
-          <input
-            type="date"
-            id="createdAt"
-            formControlName="createdAt"
-            [value]="selectedUser?.createdAt ? (selectedUser!.createdAt | date:'yyyy-MM-dd') : ''"
-            readonly
-          />
-        </div>
-
-        <!-- Fecha de actualización del usuario -->
-        <div class="form-field-edit">
-          <label for="updatedAt">Última Actualización</label>
-          <input
-            type="date"
-            id="updatedAt"
-            formControlName="updatedAt"
-            [value]="selectedUser?.updatedAt ? (selectedUser!.updatedAt | date:'yyyy-MM-dd') : ''"
-            readonly
-          />
-        </div>
-
-        <!-- DATOS PERSONALES -->
-        <div class="form-field-edit">
-          <label for="firstName">First Name</label>
-          <input
-            type="text"
-            id="firstNameInput"
-            formControlName="firstName"
-            [value]="selectedUser?.firstName"
-          />
-        </div>
-
-        <div class="form-field-edit">
-          <label for="lastName">Last Name</label>
-          <input
-            type="text"
-            id="lastNameInput"
-            formControlName="lastName"
-            [value]="selectedUser?.lastName"
-          />
-        </div>
-
-        <!-- ROLE -->
-        <div class="form-field-edit">
-          <label for="role">Role</label>
-          <select id="roles" class="input" formControlName="role">
-            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
-          </select>
-        </div>
-
-        <!-- SECCIÓN SOLO PARA STUDENT -->
-        <ng-container *ngIf="selectedUser?.role === UserRole.STUDENT">
-          
-          <div class="form-field-edit">
-            <label for="ageGroup">Categoría de Edad</label>
-            <select id="ageGroup" formControlName="ageGroup">
-              <option *ngFor="let group of ageGroupOptions" [value]="group">{{ group }}</option>
-            </select>
+        <h3 class="title is-4">
+          {{ selectedUser?.password ? 'Editar Password' : 'Agregar Password' }}
+        </h3>
+        <form (ngSubmit)="updatePassword()">
+          <div class="field">
+            <label class="label">Nueva contraseña</label>
+            <div *ngIf="selectedUser" class="control">
+              <input class="input" type="text" [(ngModel)]="selectedUser.password" name="password" placeholder="Nuevo Password" required />
+            </div>
           </div>
 
-          <div class="form-field-edit">
-            <label for="stageId">Stage</label>
-            <select id="stages" class="input" formControlName="stageId">
-              <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
-            </select>
+          <div class="buttons-container">
+            <button type="submit" class="button update-link-btn">Actualizar</button>
+            <button type="button" class="button cancel-link-btn" (click)="closeEditPasswordModal()">Cancelar</button>
           </div>
-
-          <div class="form-field-edit">
-            <label for="startClassDate">Inicio de Clases</label>
-            <input
-              type="date"
-              id="startClassDate"
-              [ngModel]="getStartClassDate(selectedUser!)"
-              readonly
-            />
-          </div>
-
-          <div class="form-field-edit">
-            <label for="endClassDate">Fin de Clases</label>
-            <input
-              type="date"
-              id="endClassDate"
-              [ngModel]="getEndClassDate(selectedUser!)"
-              readonly
-            />
-          </div>
-
-          <div class="form-field-edit">
-            <label for="comment">Observación</label>
-            <input
-              type="text"
-              id="comment"
-              formControlName="comment"
-              [value]="selectedUser?.comment"
-            />
-          </div>
-
-          <div class="form-field-edit">
-            <label for="temporaryComment">Comentario Temporal</label>
-            <input
-              type="text"
-              id="temporaryComment"
-              formControlName="temporaryComment"
-              [value]="selectedUser?.temporaryComment"
-            />
-          </div>
-
-        </ng-container>
-
-        <!-- SECCIÓN SOLO PARA INSTRUCTOR -->
-        <ng-container *ngIf="selectedUser?.role === UserRole.INSTRUCTOR">
-          <div class="form-field-edit">
-            <label for="links">URL Meeting</label>
-            <select id="links" class="input" formControlName="linkId">
-              <option value="">Seleccione un Link (URL)</option>
-              <option *ngFor="let link of links" [value]="link.id">{{ link.description }}</option>
-            </select>
-          </div>
-        </ng-container>
-      </form>
-    </section>
-
-    <footer class="edit-user-modal-foot">
-      <button class="button is-success" (click)="updateUser()" [disabled]="editUserForm.invalid">
-        Actualizar
-      </button>
-      <button class="button delete-cancel-button" (click)="closeEditModal()">Cancelar</button>
-    </footer>
+        </form>
+      </div>
   </div>
-</div>
 
-<div id="editPasswordModal" class="modal" [ngClass]="{ 'is-active': isEditPasswordModalOpen }">
-  <div class="edit-user-modal-background"></div>
-  <div class="modal-content">
+  <!-- Modal de contacto -->
+  <app-contact-details-modal
+    [showModal]="showContactModal"
+    [user]="selectedUserForContact"
+    (close)="closeContactModal()">
+  </app-contact-details-modal>
 
-      <h3 class="title is-4">
-        {{ selectedUser?.password ? 'Editar Password' : 'Agregar Password' }}
-      </h3>
-      <form (ngSubmit)="updatePassword()">
-        <div class="field">
-          <label class="label">Nueva contraseña</label>
-          <div *ngIf="selectedUser" class="control">
-            <input class="input" type="text" [(ngModel)]="selectedUser.password" name="password" placeholder="Nuevo Password" required />
-          </div>
-        </div>
-
-        <div class="buttons-container">
-          <button type="submit" class="button update-link-btn">Actualizar</button>
-          <button type="button" class="button cancel-link-btn" (click)="closeEditPasswordModal()">Cancelar</button>
-        </div>
-      </form>
-    </div>
-</div>
-
-<!-- Modal de contacto -->
-<app-contact-details-modal
-  [showModal]="showContactModal"
-  [user]="selectedUserForContact"
-  (close)="closeContactModal()">
-</app-contact-details-modal>
 
 
 

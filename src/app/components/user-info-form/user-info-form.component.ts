@@ -45,6 +45,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]],
       country: ['EC', [Validators.required]],
       city: ['', [Validators.required]],
+      occupation: ['', [Validators.required]],
     });
 
     this.loadCities(this.selectedCountryIso);
@@ -82,6 +83,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       phoneNumber: phone,
       country,
       city,
+      occupation: this.userData.occupation || '',
     });
 
     this.loadCities(country);
@@ -140,6 +142,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       contact,
       city: formValue.city,
       country: formValue.country,
+      occupation: formValue.occupation,
     };
     console.log('📤 Datos enviados al padre:', payload);
 
