@@ -1,9 +1,15 @@
 <div class="register-container">
-    <div class="box">
-      <h1 class="title">Registro de Estudiante</h1>
+  <div class="box">
+    <h1 class="title">Registro de Estudiante</h1>
 
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 
+      <!-- 🔸 SECCIÓN: Datos Personales -->
+      <h2 class="section-title">Datos Personales</h2>
+      <div class="section-separator"></div>
+
+      <!-- Fila 1 -->
+      <div class="form-row two-cols">
         <div class="field">
           <label class="label">Nombres</label>
           <div class="control">
@@ -11,10 +17,7 @@
               type="text"
               class="input"
               formControlName="firstName"
-              placeholder="Ingrese sus nombres">
-          </div>
-          <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" class="error">
-            Nombres es obligatorio.
+              placeholder="Ingrese sus nombres" />
           </div>
         </div>
 
@@ -25,58 +28,55 @@
               type="text"
               class="input"
               formControlName="lastName"
-              placeholder="Ingrese sus apellidos">
-          </div>
-          <div *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched" class="error">
-            Apellidos es obligatorio.
+              placeholder="Ingrese sus apellidos" />
           </div>
         </div>
+      </div>
 
+      <!-- Fila 2 -->
+      <div class="form-row three-cols">
         <div class="field">
-          <label class="label">Número de Identificación o Cédula</label>
+          <label class="label">Cédula</label>
           <div class="control">
             <input
               type="number"
               class="input"
               formControlName="idNumber"
-              placeholder="Ingrese número de identificación">
-          </div>
-          <div *ngIf="registerForm.get('idNumber')?.invalid && registerForm.get('idNumber')?.touched" class="error">
-            La cédula es obligatoria.
+              placeholder="Ingrese cédula" />
           </div>
         </div>
 
         <div class="field">
-          <label class="label">Usuario o Correo Electrónico</label>
-          <div class="control floating-label">
+          <label class="label">Correo</label>
+          <div class="control">
             <input
               type="email"
-              class="input with-icon"
+              class="input"
               formControlName="email"
-              placeholder="Ingrese su correo"
-              [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}">
-          </div>
-          <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
-            Este campo es obligatorio
+              placeholder="Ingrese correo" />
           </div>
         </div>
 
         <div class="field">
           <label class="label">Contraseña</label>
-          <div class="control-label">
+          <div class="control">
             <input
               type="text"
-              class="input with-icon"
+              class="input"
               formControlName="password"
-              placeholder="Ingrese una contraseña">
-          </div>
-          <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
-            La contraseña debe tener al menos 6 caracteres
+              placeholder="Ingrese contraseña" />
           </div>
         </div>
+      </div>
 
+      <!-- 🔸 SECCIÓN: Datos Académicos -->
+      <h2 class="section-title">Datos Académicos</h2>
+      <div class="section-separator"></div>
+
+      <!-- Fila 3 -->
+      <div class="form-row three-cols">
         <div class="field">
-          <label class="label">Clasificación del Estudiante</label>
+          <label class="label">Clasificación</label>
           <div class="control">
             <select class="input" formControlName="studentClassification">
               <option value="" disabled selected>Seleccionar</option>
@@ -84,9 +84,6 @@
                 {{ classification }}
               </option>
             </select>
-          </div>
-          <div *ngIf="registerForm.get('studentClassification')?.invalid && registerForm.get('studentClassification')?.touched" class="error">
-            Seleccione una clasificación.
           </div>
         </div>
 
@@ -98,34 +95,46 @@
               <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
             </select>
           </div>
-          <div *ngIf="registerForm.get('stageId')?.invalid && registerForm.get('stageId')?.touched" class="error">
-            Seleccione un Stage.
+        </div>
+
+        <div class="field">
+          <label class="label">Modo</label>
+          <div class="control">
+            <select class="input" formControlName="mode">
+              <option value="" disabled selected>Seleccionar</option>
+              <option *ngFor="let mode of modes" [value]="mode">{{ mode }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila 4 -->
+      <div class="form-row two-cols">
+        <div class="field">
+          <label class="label">Inicio de Clases</label>
+          <div class="control">
+            <input type="date" class="input" formControlName="startClassDate" />
           </div>
         </div>
 
         <div class="field">
-            <label class="label">Modo de Estudio</label>
-            <div class="control">
-              <select class="input" formControlName="mode">
-                <option value="" disabled selected>Seleccionar</option>
-                <option *ngFor="let mode of modes" [value]="mode">{{ mode }}</option>
-              </select>
-            </div>
-            <div *ngIf="registerForm.get('mode')?.invalid && registerForm.get('mode')?.touched" class="error">
-              Seleccione un modo de estudio.
-            </div>
-          </div>
-
-        <div class="field">
-          <div class="field-button">
-            <button class="button">Registrar</button>
+          <label class="label">Fin de Cursada</label>
+          <div class="control">
+            <input type="date" class="input" formControlName="endClassDate" />
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <!-- 🔸 Botón -->
+      <div class="field field-button">
+        <button class="button">Registrar</button>
+      </div>
+
+    </form>
   </div>
+</div>
 
-  <app-modal
+<app-modal
   [showModal]="modal.show"
   [message]="modal.message"
   [isError]="modal.isError"

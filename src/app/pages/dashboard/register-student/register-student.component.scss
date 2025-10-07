@@ -1,116 +1,175 @@
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background-color: #f8f9fa; 
-  }
-  
-  .register-container {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f2f2f2;
-    padding: .8rem;
-  }
-  
-  .box {
-    width: 100%;
-    max-width: 450px; 
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 2rem;
-
-  }
-  
-  .title {
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 1.3rem;
-    color: #333333; 
-  }
-  
-  .label {
-    font-size: .75rem;
-    color: #6c6c6c; 
-    margin-bottom: .3rem;
-  }
-  
-  .field.extra-space {
-    margin-bottom: 1.3rem; 
-  }
-  
-  .columns .field {
-    margin-bottom: 0.3rem; 
-  }
-  
-  .input {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 0.5rem;
-    height: 32px;
-    font-size: .8rem;
-    background-color: #f9f9f9; 
-    color: #5f5f5f; 
-  
-    &:focus {
-      border-color: #007bff; 
-      outline: none;
-    }
-  }
-
-  select.input {
-    padding: 0 0.75rem;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #f8f9fa; 
 }
 
-  input[type="number"]::-webkit-inner-spin-button, 
-  input[type="number"]::-webkit-outer-spin-button {
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2f2f2;
+  padding: 0.8rem;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.box {
+  width: 100%;
+  max-width: 900px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  border: 1px solid rgb(241, 241, 241);
+}
+
+/* TÍTULOS */
+.title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.3rem;
+  color: #333333; 
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #161616;
+  margin-top: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.section-separator {
+  border-top: 1px solid #e0e0e0;
+  margin-bottom: 1.2rem;
+}
+
+/* CAMPOS */
+.label {
+  font-size: 0.8rem;
+  color: #5e5e5e;
+  margin-bottom: 0.3rem;
+}
+
+.field.extra-space {
+  margin-bottom: 1.3rem; 
+}
+
+.columns .field {
+  margin-bottom: 0.3rem; 
+}
+
+.input {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem;
+  height: 35px;
+  font-size: 0.85rem;
+  background-color: #ffffff;
+  color: #5f5f5f;
+
+  &:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+}
+
+select.input {
+  padding: 0 0.75rem;
+}
+
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-  input[type="number"] {
-  -moz-appearance: textfield; 
-  -webkit-appearance: none; 
-  appearance: none; 
+input[type="number"] {
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 input::placeholder {
-  color: #999; 
-  opacity: 1;  
+  color: #999;
+  opacity: 1;
 }
-  
-  .error {
-    color: #d9534f; 
-    font-size: 0.7rem;
+
+.error {
+  color: #d9534f;
+  font-size: 0.7rem;
+  margin-top: 0.2rem;
+}
+
+.floating-label {
+  position: relative;
+}
+
+.control-label {
+  position: relative;
+}
+
+.field-button {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+/* BOTÓN */
+.button {
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  width: 150px;
+  margin: 0 auto;
+
+  &:hover {
+    background-color: #2563eb;
+  }
+}
+
+/* ESTRUCTURA DE FILAS RESPONSIVA */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Dos columnas iguales */
+.form-row.two-cols > .field {
+  flex: 1 1 calc(50% - 0.5rem);
+}
+
+/* Tres columnas iguales */
+.form-row.three-cols > .field {
+  flex: 1 1 calc(33.33% - 0.5rem);
+}
+
+/* Campos individuales */
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+/* RESPONSIVE */
+@media (max-width: 767px) {
+  .box {
+    max-width: 450px;
+    padding: 2rem 1.2rem;
   }
 
-  .floating-label {
-    position: relative;
+  .form-row.two-cols > .field,
+  .form-row.three-cols > .field {
+    flex: 1 1 100%;
   }
-  
-  .control-label {
-    position: relative;
+
+  .section-title {
+    font-size: 0.9rem;
   }
-  
-  .field-button {
-    margin-top: 1.5rem;
-    text-align: center; 
-  }
-  
-  .button {
-    background-color: #3b82f6;
-    color: #ffffff;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: .85rem;
-    cursor: pointer;
-    width: 120px; 
-    margin: 0 auto;
-  
-    &:hover {
-     background-color: 2563eb;
-    }
-  }
+}

@@ -6,6 +6,8 @@ export interface RegisterStudentDto {
   mode: Mode;
   userId: number | null | undefined;
   studentClassification: StudentClassification;
+  startClassDate?: string | null;
+  endClassDate?: string | null;
 }
 
 export interface Student {

@@ -46,6 +46,8 @@ export class RegisterStudentComponent implements OnInit {
       studentClassification: ['', Validators.required],
       stageId: ['', Validators.required],
       mode: ['', Validators.required],
+      startClassDate: [''],
+      endClassDate: [''], 
     });
   }
 
@@ -87,6 +89,14 @@ export class RegisterStudentComponent implements OnInit {
       role: UserRole.STUDENT,
     };
 
+     const startClassDate = this.registerForm.value.startClassDate
+        ? new Date(this.registerForm.value.startClassDate).toISOString()
+        : null;
+
+      const endClassDate = this.registerForm.value.endClassDate
+        ? new Date(this.registerForm.value.endClassDate).toISOString()
+        : null;
+
     this.usersService.create(userData).subscribe({
       next: (userResponse) => {
         const studentData: RegisterStudentDto = {
@@ -94,6 +104,8 @@ export class RegisterStudentComponent implements OnInit {
           stageId: parseInt(this.registerForm.value.stageId, 10),
           mode: this.registerForm.value.mode,
           studentClassification: this.registerForm.value.studentClassification,
+          startClassDate,
+          endClassDate
         };
 
         this.studentsService.registerStudent(studentData).subscribe({
