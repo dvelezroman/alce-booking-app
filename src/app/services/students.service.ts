@@ -71,37 +71,24 @@ export class StudentsService implements OnInit{
   }
 
   updateStudentById(id: number, data: Partial<Student>): Observable<Student> {
-    return this.http.patch<Student>(`${this.apiUrl}/${id}`, data).pipe(
-      tap((updatedStudent: Student) => {
-        // Obtenemos el usuario actual del store una sola vez
-        this.store.select((state: any) => state.user?.data)
-          .pipe(take(1))
-          .subscribe((currentUser: UserDto | null) => {
+  return this.http.patch<Student>(`${this.apiUrl}/${id}`, data).pipe(
+    tap((updatedStudent) => {
+      // ✅ Actualizar snapshot en localStorage (sin duplicar token)
+      if (typeof window !== 'undefined' && localStorage) {
+        const raw = localStorage.getItem('userData');
+        const current: UserDto | null = raw ? JSON.parse(raw) : null;
 
-            if (!currentUser) {
-              console.warn(' No hay usuario actual en store para actualizar.');
-              return;
-            }
+        if (current) {
+          const merged: UserDto = {
+            ...current, // mantiene el accessToken y demás datos
+            student: { ...(current.student || {}), ...updatedStudent },
+          };
 
-            const mergedUser: UserDto = {
-              ...currentUser,
-              student: {
-                ...(currentUser.student || {}),
-                ...updatedStudent,
-              },
-              accessToken: (currentUser as any).accessToken,
-            };
-
-            // Actualizar en store
-            this.store.dispatch(setUserData({ data: mergedUser }));
-
-            // Persistir también en localStorage
-            if (typeof window !== 'undefined' && localStorage) {
-              localStorage.setItem('userData', JSON.stringify(mergedUser));
-            }
-          });
-      })
-    );
-  }
+          localStorage.setItem('userData', JSON.stringify(merged));
+        }
+      }
+    })
+  );
+}
 }
 
