@@ -95,9 +95,9 @@ export class EditUserModalComponent {
       createdAt: user.createdAt ? new Date(user.createdAt).toISOString().split('T')[0] : '',
       updatedAt: user.updatedAt ? new Date(user.updatedAt).toISOString().split('T')[0] : '',
       linkId: user.instructor?.meetingLink?.id || '',
-      tutorName: (user as any).tutorName || '',
-      tutorEmail: (user as any).tutorEmail || '',
-      tutorPhone: (user as any).tutorPhone || ''
+      tutorName: user.student?.tutorName || (user as any).tutorName || '',
+      tutorEmail: user.student?.tutorEmail || (user as any).tutorEmail || '',
+      tutorPhone: user.student?.tutorPhone || (user as any).tutorPhone || '',
     });
 
     if (user.birthday) this.checkIfMinor(user.birthday);

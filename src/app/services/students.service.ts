@@ -1,6 +1,6 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable, Subject, takeUntil, tap, withLatestFrom} from 'rxjs';
+import {Observable, Subject, take, takeUntil, tap, withLatestFrom} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Store} from "@ngrx/store";
 import {Mode, RegisterStudentDto, RegisterStudentResponseDto, Student} from "./dtos/student.dto";
@@ -69,4 +69,39 @@ export class StudentsService implements OnInit{
       params: params
     });
   }
+
+  updateStudentById(id: number, data: Partial<Student>): Observable<Student> {
+    return this.http.patch<Student>(`${this.apiUrl}/${id}`, data).pipe(
+      tap((updatedStudent: Student) => {
+        // Obtenemos el usuario actual del store una sola vez
+        this.store.select((state: any) => state.user?.data)
+          .pipe(take(1))
+          .subscribe((currentUser: UserDto | null) => {
+
+            if (!currentUser) {
+              console.warn(' No hay usuario actual en store para actualizar.');
+              return;
+            }
+
+            const mergedUser: UserDto = {
+              ...currentUser,
+              student: {
+                ...(currentUser.student || {}),
+                ...updatedStudent,
+              },
+              accessToken: (currentUser as any).accessToken,
+            };
+
+            // Actualizar en store
+            this.store.dispatch(setUserData({ data: mergedUser }));
+
+            // Persistir también en localStorage
+            if (typeof window !== 'undefined' && localStorage) {
+              localStorage.setItem('userData', JSON.stringify(mergedUser));
+            }
+          });
+      })
+    );
+  }
 }
+

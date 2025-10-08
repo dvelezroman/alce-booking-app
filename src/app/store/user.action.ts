@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import {UserDto} from "../services/dtos/user.dto";
+import { Student } from '../services/dtos/student.dto';
 
 export const setAdminStatus = createAction(
   '[User] Set Admin Status',
@@ -33,4 +34,9 @@ export const setDataCompleted = createAction(
 export const updateUserData = createAction(
   '[User] Update User Data',
   props<{ user: Partial<UserDto> }>()
+);
+
+export const updateStudentData = createAction(
+  '[User] Update Student Data',
+  props<{ student: Partial<Student> }>()
 );

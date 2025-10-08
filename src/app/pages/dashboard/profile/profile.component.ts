@@ -6,12 +6,13 @@ import { Observable } from 'rxjs';
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { selectUserData } from '../../../store/user.selector';
 import { UsersService } from '../../../services/users.service';
-import { setDataCompleted, updateUserData } from '../../../store/user.action';
+import { setDataCompleted, updateStudentData, updateUserData } from '../../../store/user.action';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { UserInfoFormComponent } from '../../../components/user-info-form/user-info-form.component';
 import { formatBirthday } from '../../../shared/utils/dates.util';
 import { InstructorsService } from '../../../services/instructors.service';
+import { StudentsService } from '../../../services/students.service';
 
 @Component({
   selector: 'app-profile',
@@ -32,7 +33,10 @@ export class ProfileComponent {
   showPassword = false;
   newPassword = '';
 
-  constructor(private store: Store, private usersService: UsersService, private instructorsService: InstructorsService) {
+  constructor( private store: Store,
+               private usersService: UsersService,
+               private instructorsService: InstructorsService,
+               private studentsService: StudentsService) {
     this.userData$ = this.store.select(selectUserData);
     this.userData$.subscribe(user => {
       this.user = user;
@@ -102,7 +106,15 @@ export class ProfileComponent {
   }) {
     if (!this.user?.id) return;
 
-    const payload: any = {
+    const payload = this.buildUserPayload(data);
+
+    //  Llamar a la función que actualiza el perfil del usuario
+    this.updateUserProfile(payload, data);
+  }
+
+  /** Construye el payload base del usuario */
+  private buildUserPayload(data: any): any {
+    return {
       emailAddress: data.email,
       birthday: data.birthday,
       contact: data.contact,
@@ -110,26 +122,49 @@ export class ProfileComponent {
       country: data.country,
       occupation: data.occupation,
     };
+  }
 
-    // 👇 Solo agregamos los campos del tutor si existen
-    if (this.user.role === 'STUDENT') {
-      if (data.tutorName) payload.tutorName = data.tutorName;
-      if (data.tutorEmail) payload.tutorEmail = data.tutorEmail;
-      if (data.tutorPhone) payload.tutorPhone = data.tutorPhone;
-    }
-
-    this.usersService.update(this.user.id, payload).subscribe({
+  /** Actualiza el perfil del usuario */
+  private updateUserProfile(payload: any, data: any): void {
+    this.usersService.update(this.user!.id, payload).subscribe({
       next: () => {
         this.showUserInfoForm = false;
         this.store.dispatch(updateUserData({ user: { ...this.user!, ...payload } }));
         this.store.dispatch(setDataCompleted({ completed: true }));
         this.showModal(false, 'Información actualizada con éxito');
+
+        this.updateTutorInfoIfNeeded(data);
       },
       error: (err) => {
         console.error('❌ Error al actualizar usuario:', err);
         this.showModal(true, 'Error al actualizar la información.');
       },
     });
+  }
+
+  /** Actualiza los datos del tutor solo si aplica */
+  private updateTutorInfoIfNeeded(data: any): void {
+    if (
+      this.user?.role === 'STUDENT' &&
+      this.user.student?.id &&
+      (data.tutorName || data.tutorEmail || data.tutorPhone)
+    ) {
+      const tutorPayload = {
+        tutorName: data.tutorName || null,
+        tutorEmail: data.tutorEmail || null,
+        tutorPhone: data.tutorPhone || null,
+      };
+
+      this.studentsService.updateStudentById(this.user.student.id, tutorPayload).subscribe({
+        next: (updatedStudent) => {
+          this.store.dispatch(updateStudentData({ student: { ...this.user!.student!, ...updatedStudent } }));
+          this.showModal(false, 'Información del representante actualizada con éxito.');
+        },
+        error: () => {
+          this.showModal(true, 'Error al actualizar la información del representante.');
+        },
+      });
+    }
   }
 
   private showModal(isError: boolean, message: string): void {

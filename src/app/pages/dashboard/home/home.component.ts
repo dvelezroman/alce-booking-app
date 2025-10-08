@@ -12,8 +12,9 @@ import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { StudyContentService } from '../../../services/study-content.service';
 import { selectIsLoggedIn, selectUserData } from '../../../store/user.selector';
 import { UsersService } from '../../../services/users.service';
-import { setDataCompleted, updateUserData } from "../../../store/user.action";
+import { setDataCompleted, updateStudentData, updateUserData } from "../../../store/user.action";
 import { UserInfoFormComponent } from '../../../components/user-info-form/user-info-form.component';
+import { StudentsService } from '../../../services/students.service';
 
 @Component({
   selector: 'app-home-private',
@@ -62,6 +63,7 @@ export class HomePrivateComponent implements OnInit {
               private bookingService: BookingService,
               private studyContentService: StudyContentService,
               private usersService: UsersService,
+              private studentsService: StudentsService,
   ) {
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
     this.userData$ = this.store.select(selectUserData);
@@ -101,21 +103,46 @@ export class HomePrivateComponent implements OnInit {
       this.isInstructor = user.role === UserRole.INSTRUCTOR;
       this.isStudent = user.role === UserRole.STUDENT;
 
-      const needsForm = user.dataCompleted === false || user.birthday == null;
+      const noBirthday = !user.birthday;
+      const notCompleted = user.dataCompleted === false;
+
+      // Calcular si el estudiante es menor de edad
+      const isMinor =
+        user.role === UserRole.STUDENT &&
+        !!user.birthday &&
+        this.calculateAge(user.birthday) < 18;
+
+      // Verificar si los datos del tutor están incompletos
+      const missingTutorData =
+        user.role === UserRole.STUDENT &&
+        isMinor &&
+        (!user.student?.tutorName || !user.student?.tutorEmail || !user.student?.tutorPhone);
+
+      //  Mostrar formulario si:
+      // 1 Los datos no están completos, o
+      // 2️Falta fecha de nacimiento, o
+      // 3️Es menor de edad y no tiene datos del tutor
+      const needsForm = notCompleted || noBirthday || missingTutorData;
 
       this.showUserInfoForm = needsForm;
 
       if (this.isInstructor) {
         this.generateCurrentMonthDays();
       }
-
-      // console.log(' Verificando visibilidad del formulario', {
-      //   id: user.id,
-      //   dataCompleted: user.dataCompleted,
-      //   birthday: user.birthday,
-      //   showUserInfoForm: this.showUserInfoForm,
-      // });
     });
+  }
+
+  /** Calcular edad (reutilizable) */
+  private calculateAge(dateStr: string): number {
+    const birthDate = new Date(dateStr);
+    if (isNaN(birthDate.getTime())) return 0;
+
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) age--;
+
+    return age;
   }
 
   get studyContentNames(): string {
@@ -351,33 +378,77 @@ export class HomePrivateComponent implements OnInit {
         return;
       }
 
-      const payload: any = {
-        emailAddress: data.email,
-        birthday: data.birthday,
-        contact: data.contact,
-        city: data.city,
-        country: data.country,
-        occupation: data.occupation,
+      const payload = this.buildUserPayload(data);
+
+      // Actualiza el perfil del usuario
+      this.updateUserProfile(user, payload, data);
+    });
+  }
+
+  /** Construye el payload base del usuario */
+  private buildUserPayload(data: any): any {
+    return {
+      emailAddress: data.email,
+      birthday: data.birthday,
+      contact: data.contact,
+      city: data.city,
+      country: data.country,
+      occupation: data.occupation,
+    };
+  }
+
+  /** Ejecuta la actualización del perfil del usuario */
+  private updateUserProfile(user: any, payload: any, data: any): void {
+    this.usersService.update(user.id, payload).subscribe({
+      next: () => {
+        this.handleUserUpdateSuccess(user, payload);
+        this.updateTutorInfoIfNeeded(user, data);
+      },
+      error: () => {
+        this.showModal(this.createModalParams(true, 'Ocurrió un error al actualizar la información.'));
+      },
+    });
+  }
+
+  /** Maneja el éxito de la actualización del usuario */
+  private handleUserUpdateSuccess(user: any, payload: any): void {
+    this.showUserInfoForm = false;
+    this.store.dispatch(updateUserData({ user: { ...user, ...payload } }));
+    this.store.dispatch(setDataCompleted({ completed: true }));
+    this.showModal(this.createModalParams(false, 'Información actualizada con éxito.'));
+  }
+
+  /** Actualiza los datos del tutor si corresponde */
+  private updateTutorInfoIfNeeded(user: any, data: any): void {
+    if (
+      user.role === 'STUDENT' &&
+      user.student?.id &&
+      (data.tutorName || data.tutorEmail || data.tutorPhone)
+    ) {
+      const tutorPayload = {
+        tutorName: data.tutorName || null,
+        tutorEmail: data.tutorEmail || null,
+        tutorPhone: data.tutorPhone || null,
       };
 
-      if (user.role === 'STUDENT' && data.tutorName) {
-        payload.tutorName = data.tutorName;
-        payload.tutorEmail = data.tutorEmail;
-        payload.tutorPhone = data.tutorPhone;
-      }
+      this.updateTutorProfile(user.student.id, tutorPayload);
+    }
+  }
 
-      this.usersService.update(user.id, payload).subscribe({
-        next: () => {
-          this.showUserInfoForm = false;
-          this.store.dispatch(updateUserData({ user: { ...user, ...payload } }));
-          this.store.dispatch(setDataCompleted({ completed: true }));
-
-          this.showModal(this.createModalParams(false, 'Información actualizada con éxito.'));
-        },
-        error: () => {
-          this.showModal(this.createModalParams(true, 'Ocurrió un error al actualizar la información.'));
-        },
-      });
+  /** Ejecuta la actualización del perfil del tutor */
+  private updateTutorProfile(studentId: number, tutorPayload: any): void {
+    this.studentsService.updateStudentById(studentId, tutorPayload).subscribe({
+      next: (updatedStudent) => {
+        if (this.userData?.student) {
+          this.store.dispatch(
+            updateStudentData({ student: { ...this.userData.student, ...updatedStudent } })
+          );
+        }
+        this.showModal(this.createModalParams(false, 'Datos del representante actualizados con éxito.'));
+      },
+      error: () => {
+        this.showModal(this.createModalParams(true, 'Error al actualizar los datos del representante.'));
+      },
     });
   }
   

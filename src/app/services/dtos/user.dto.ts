@@ -40,6 +40,7 @@ export interface UserDto {
   createdAt?: string;
   updatedAt?: string;
   occupation?: string; 
+  accessToken?: string;
 }
 
 export interface LoginDto {

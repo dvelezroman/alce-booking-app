@@ -70,13 +70,27 @@
           <!-- Teléfono del tutor -->
           <div class="field">
             <label class="label">Teléfono del tutor</label>
-            <div class="control">
-              <input
-                type="text"
-                class="input"
-                placeholder="+593..."
-                formControlName="tutorPhone"
-              />
+            <div class="field is-grouped">
+              <!-- Selector de código de país -->
+              <div class="control" style="min-width: 120px">
+                <div class="select is-fullwidth">
+                  <select formControlName="tutorCountryCode" (change)="onTutorCountryChange($event)">
+                    <option *ngFor="let code of countryCodes" [value]="code.code">
+                      {{ code.name }} ({{ code.code }})
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Input de número -->
+              <div class="control is-expanded">
+                <input
+                  type="tel"
+                  class="input"
+                  formControlName="tutorPhone"
+                  placeholder="999001087"
+                />
+              </div>
             </div>
           </div>
         </div>

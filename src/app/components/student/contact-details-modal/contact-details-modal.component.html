@@ -2,7 +2,6 @@
   <div class="contact-modal-content">
     <div class="modal-header">
       <h2>Detalles del Usuario</h2>
-      <!-- <button class="close-btn" (click)="handleClose()">✖</button> -->
     </div>
 
     <div class="modal-body grid-container">
@@ -88,6 +87,34 @@
               }}
             </span>
           </div>
+
+          <!-- ✅ Sección del Tutor (solo si existen datos del tutor) -->
+          <ng-container
+            *ngIf="
+              user?.student?.tutorName ||
+              user?.student?.tutorEmail ||
+              user?.student?.tutorPhone
+            "
+          >
+            <div class="tutor-section">
+              <h3>Datos del Tutor / Representante</h3>
+
+              <div class="info-row">
+                <label>Nombre:</label>
+                <span>{{ user?.student?.tutorName || 'No registrado' }}</span>
+              </div>
+
+              <div class="info-row">
+                <label>Email:</label>
+                <span>{{ user?.student?.tutorEmail || 'No registrado' }}</span>
+              </div>
+
+              <div class="info-row">
+                <label>Teléfono:</label>
+                <span>{{ user?.student?.tutorPhone || 'No registrado' }}</span>
+              </div>
+            </div>
+          </ng-container>
         </ng-container>
       </div>
     </div>

@@ -13,6 +13,9 @@ import { ContactDetailsModalComponent } from '../../../components/student/contac
 import { EditUserModalComponent } from '../../../components/searching-student-user/edit-user-modal/edit-user-modal.component';
 import { InstructorsService } from '../../../services/instructors.service';
 import { Instructor } from '../../../services/dtos/instructor.dto';
+import { StudentsService } from '../../../services/students.service';
+import { updateStudentData } from '../../../store/user.action';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-searching-students-student',
@@ -61,10 +64,12 @@ export class SearchingStudentComponent {
 
   constructor(
     private fb: FormBuilder,
+    private store: Store, 
     private usersService: UsersService,
     private stagesService: StagesService,
     private linksService: LinksService,
-    private instructorsService: InstructorsService
+    private instructorsService: InstructorsService,
+    private studentsService: StudentsService
   ) {}
 
   ngOnInit() {
@@ -168,28 +173,77 @@ export class SearchingStudentComponent {
   }
 
   updateUserFromChild(payload: any) {
-    if (this.selectedUser) {
-      this.usersService.update(this.selectedUser.id, payload).subscribe({
-        next: () => {
-          // Actualiza en memoria (sin esperar al backend)
-          const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
-          if (index !== -1) {
-            this.users[index] = {
-              ...this.users[index],
-              ...payload
-            };
-          }
+    if (!this.selectedUser) return;
 
-          this.isEditModalOpen = false;
-          this.showSuccessModal('Usuario actualizado exitosamente.');
-        },
-        error: (error) => {
-          console.error('Error updating user:', error);
-          this.showErrorModal('Ocurrió un error al actualizar el usuario.');
-        }
-      });
-    }
+    this.updateUserProfile(payload);
   }
+
+  /**  Actualiza los datos generales del usuario */
+  private updateUserProfile(payload: any): void {
+    this.usersService.update(this.selectedUser!.id, payload).subscribe({
+      next: () => {
+        this.updateUserInList(payload);
+        this.showSuccessModal('Usuario actualizado exitosamente.');
+
+        // Enviar datos del tutor si aplica
+        this.updateTutorInfoIfNeeded(payload);
+      },
+      error: (error) => {
+        console.error(' Error actualizando usuario:', error);
+        this.showErrorModal('Ocurrió un error al actualizar el usuario.');
+      }
+    });
+  }
+
+  /** Actualiza el usuario en la lista local sin esperar reload */
+  private updateUserInList(payload: any): void {
+    const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
+    if (index !== -1) {
+      this.users[index] = {
+        ...this.users[index],
+        ...payload
+      };
+    }
+    this.isEditModalOpen = false;
+  }
+
+  /** Envía la información del tutor al endpoint de student si aplica */
+private updateTutorInfoIfNeeded(payload: any): void {
+  if (
+    this.selectedUser?.role === 'STUDENT' &&
+    this.selectedUser?.student?.id &&
+    (payload.tutorName || payload.tutorEmail || payload.tutorPhone)
+  ) {
+    const tutorPayload = {
+      tutorName: payload.tutorName || null,
+      tutorEmail: payload.tutorEmail || null,
+      tutorPhone: payload.tutorPhone || null,
+    };
+
+    this.studentsService.updateStudentById(this.selectedUser.student.id, tutorPayload).subscribe({
+      next: (updatedStudent) => {
+        // Actualizar también el store global (para sincronizar el estado)
+        this.store.dispatch(
+          updateStudentData({ student: { ...this.selectedUser!.student!, ...updatedStudent } })
+        );
+
+        // Actualizar la lista local visible en el admin sin esperar reload
+        const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
+        if (index !== -1) {
+          this.users[index] = {
+            ...this.users[index],
+            student: { ...this.users[index].student, ...updatedStudent },
+          };
+        }
+
+        this.showSuccessModal('Datos del representante actualizados con éxito.');
+      },
+      error: () => {
+        this.showErrorModal('Error al actualizar los datos del representante.');
+      },
+    });
+  }
+}
 
   // --- MODAL: Password ---
   openEditPasswordModal(user: UserDto): void {
