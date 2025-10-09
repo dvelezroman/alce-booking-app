@@ -95,6 +95,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   isMeetingDetailModalActive = false;
   showSuccessModal = false;
 
+  isSpinning = false;
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private store: Store,
@@ -168,6 +170,13 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     toDate.setDate(currentDate.getDate() + 10); // Add 10 days
     const formattedToDate = toDate.toISOString().split('T')[0];
     this.loadMeetings(this.getTodayDate(), formattedToDate, undefined, this.userData?.student?.id, MeetingStatusEnum.ACTIVE);
+  }
+
+  onRefreshClick(): void {
+    if (this.isSpinning) return;
+    this.isSpinning = true;
+    this.initializeMeetings(); 
+    setTimeout(() => (this.isSpinning = false), 2000);
   }
 
   userName() {

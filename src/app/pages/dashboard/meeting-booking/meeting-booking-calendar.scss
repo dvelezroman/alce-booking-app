@@ -71,17 +71,95 @@
 
 .scheduled-meetings .title-date {
   position: absolute;
-  top: -60px;
+  top: -100px;
   left: 50%;
-  font-size: .8rem;
   transform: translateX(-50%);
-  padding: .75rem 2rem;
+  padding: 0.75rem 2rem;
   text-align: center;
   white-space: nowrap;
   border-radius: 10px;
-  min-width: 200px; 
+  min-width: 200px;
   background-color: rgba(255, 213, 114, 0.777);
   z-index: 2;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #111827;
+  border: 1px dashed #d1d5db;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+
+  &:hover {
+    background-color: rgba(255, 213, 114, 0.9);
+    transform: translateX(-50%) scale(1.03);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .refresh-icon {
+    font-size: 0.9rem;
+    margin-left: 0.4rem;
+    color: #111827;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s ease;
+  }
+
+  /* 🌀 Animación del giro */
+  &.spinning .refresh-icon {
+    animation: spin 1s linear infinite;
+    color: #345ed0;
+  }
+
+  @keyframes spin {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
+
+/* boton actualizar agenda desde movil pantalla  */
+.refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: rgba(255, 213, 114, 0.85);
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  color: #111827;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem auto 1rem;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+
+  i {
+    font-size: 0.9rem;
+    transition: transform 0.3s ease, color 0.2s ease;
+  }
+
+  &:hover {
+    background-color: rgba(255, 213, 114, 0.95);
+    transform: scale(1.03);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  &.spinning i {
+    animation: spin 1s linear infinite;
+    color: #345ed0;
+  }
+}
+
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Scroll interno para las tarjetas */

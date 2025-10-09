@@ -18,6 +18,16 @@
       <!-- Selected Meetings Section -->
       <div class="student-schedule student-shared-style block-mobile" *ngIf="meetings.length > 0">
         <h4 class="schedule-title">Agendadas</h4>
+        <button
+          class="refresh-button"
+          [class.spinning]="isSpinning"
+          (click)="onRefreshClick()"
+          title="Actualizar agenda"
+          aria-label="Actualizar agenda"
+        >
+          <i class="fas fa-sync-alt"></i>
+          Actualizar
+        </button>
         <app-meeting-schedule
           [meetings]="meetings"
           (openDetail)="openMeetingDetailModal($event.meeting, $event.index)"
@@ -52,9 +62,20 @@
         (timeSlotSelected)="selectTimeSlot($event)">
       </app-meeting-time-slots>
 
-      <!-- clases agendadas -->
+      <!-- clases agendadas para escritorio -->
       <section class="scheduled-meetings shared-box-style block-desktop" *ngIf="meetings.length > 0">
-        <h2 class="title-date">Agendadas</h2>
+        <h2>
+          <button
+            class="title-date"
+            [class.spinning]="isSpinning"
+            (click)="onRefreshClick()"
+            title="Actualizar agenda"
+            aria-label="Actualizar agenda"
+          >
+            Agendadas
+            <i class="fas fa-sync-alt refresh-icon" [class.spin]="isSpinning"></i>
+          </button>
+        </h2>
         <app-meeting-schedule
           [meetings]="meetings"
           variant="cards"
