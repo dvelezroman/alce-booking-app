@@ -17,75 +17,90 @@
         </div>
       </div>
 
-      <!-- 🔹 Bloque de datos del representante -->
+       <!-- Datos Personales -->
+      <div class="profile-details personal-block">
+        <div class="block-header">
+          <h3>Datos Personales</h3>
+        </div>
+
+        <div class="block-content">
+          <p><strong>Contacto:</strong> {{ user.contact || "No especificado" }}</p>
+          <p><strong>País:</strong> {{ user.country || "No especificado" }}</p>
+          <p><strong>Ciudad:</strong> {{ user.city || "No especificado" }}</p>
+          <p>
+            <strong>Cumpleaños:</strong>
+            {{ user?.birthday ? formatBirthday(user.birthday) : "No registrado" }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Datos Académicos -->
+      <div class="profile-details institution-block">
+        <div class="block-header">
+          <h3>Datos Académicos</h3>
+        </div>
+
+        <div class="block-content">
+          <p *ngIf="user.occupation">
+            <strong>Ocupación:</strong> {{ user.occupation }}
+          </p>
+
+          <p *ngIf="user.role === 'STUDENT' && user.student?.stage">
+            <strong>Etapa:</strong>
+            {{ user.student?.stage?.number || user.student?.stage?.description }}
+          </p>
+
+          <p *ngIf="user.status"><strong>Estado:</strong> {{ user.status }}</p>
+          <p *ngIf="user.comment"><strong>Comentario:</strong> {{ user.comment }}</p>
+          <p *ngIf="user.dataCompleted !== undefined">
+            <strong>Datos completados:</strong>
+            {{ user.dataCompleted ? "Sí" : "No" }}
+          </p>
+
+          <div class="dates-column">
+            <p *ngIf="user.role === 'STUDENT' && user.student?.createdAt">
+              <strong>Creado:</strong>
+              {{ user.student?.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+            </p>
+            <p *ngIf="user.role !== 'STUDENT' && user.createdAt">
+              <strong>Creado:</strong>
+              {{ user.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+            </p>
+
+            <p *ngIf="user.role === 'STUDENT' && user.student?.updatedAt">
+              <strong>Actualizado:</strong>
+              {{ user.student?.updatedAt | date: 'dd/MM/yyyy HH:mm' }}
+            </p>
+            <p *ngIf="user.role !== 'STUDENT' && user.updatedAt">
+              <strong>Actualizado:</strong>
+              {{ user.updatedAt | date: 'dd/MM/yyyy HH:mm' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!--  Bloque de datos del representante -->
       <div
-        *ngIf="user.role === 'STUDENT' && user.student && (user.student.tutorName || user.student.tutorEmail || user.student.tutorPhone)"
+        *ngIf="
+          user.role === 'STUDENT' &&
+          user.student &&
+          (user.student.tutorName || user.student.tutorEmail || user.student.tutorPhone)
+        "
         class="representative-block"
       >
-        <h3>Información del Representante</h3>
-        <p *ngIf="user.student.tutorName">
-          <strong>Nombre:</strong> {{ user.student.tutorName }}
-        </p>
-        <p *ngIf="user.student.tutorEmail">
-          <strong>Email:</strong> {{ user.student.tutorEmail }}
-        </p>
-        <p *ngIf="user.student.tutorPhone">
-          <strong>Teléfono:</strong> {{ user.student.tutorPhone }}
-        </p>
-      </div>
+        <div class="block-header">
+          <h3>Información del Representante</h3>
+        </div>
 
-      <!-- Datos personales -->
-      <div class="section-title">
-        <h3>Datos Personales</h3>
-      </div>
-      <div class="profile-details personal-block">
-        <p><strong>Contacto:</strong> {{ user.contact || "No especificado" }}</p>
-        <p><strong>País:</strong> {{ user.country || "No especificado" }}</p>
-        <p><strong>Ciudad:</strong> {{ user.city || "No especificado" }}</p>
-        <p>
-          <strong>Cumpleaños:</strong>
-          {{ user?.birthday ? formatBirthday(user.birthday) : "No registrado" }}
-        </p>
-      </div>
-
-      <!-- Datos de la institución -->
-      <div class="section-title">
-        <h3>Datos Académicos</h3>
-      </div>
-      <div class="profile-details institution-block">
-        <p *ngIf="user.occupation">
-          <strong>Ocupación:</strong> {{ user.occupation }}
-        </p>
-
-        <p *ngIf="user.role === 'STUDENT' && user.student?.stage">
-          <strong>Etapa:</strong>
-          {{ user.student?.stage?.number || user.student?.stage?.description }}
-        </p>
-
-        <p *ngIf="user.status"><strong>Estado:</strong> {{ user.status }}</p>
-        <p *ngIf="user.comment"><strong>Comentario:</strong> {{ user.comment }}</p>
-        <p *ngIf="user.dataCompleted !== undefined">
-          <strong>Datos completados:</strong>
-          {{ user.dataCompleted ? "Sí" : "No" }}
-        </p>
-
-        <div class="dates-column">
-          <p *ngIf="user.role === 'STUDENT' && user.student?.createdAt">
-            <strong>Creado:</strong>
-            {{ user.student?.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+        <div class="block-content">
+          <p *ngIf="user.student.tutorName">
+            <strong>Nombre:</strong> {{ user.student.tutorName }}
           </p>
-          <p *ngIf="user.role !== 'STUDENT' && user.createdAt">
-            <strong>Creado:</strong>
-            {{ user.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+          <p *ngIf="user.student.tutorEmail">
+            <strong>Email:</strong> {{ user.student.tutorEmail }}
           </p>
-
-          <p *ngIf="user.role === 'STUDENT' && user.student?.updatedAt">
-            <strong>Actualizado:</strong>
-            {{ user.student?.updatedAt | date: 'dd/MM/yyyy HH:mm' }}
-          </p>
-          <p *ngIf="user.role !== 'STUDENT' && user.updatedAt">
-            <strong>Actualizado:</strong>
-            {{ user.updatedAt | date: 'dd/MM/yyyy HH:mm' }}
+          <p *ngIf="user.student.tutorPhone">
+            <strong>Teléfono:</strong> {{ user.student.tutorPhone }}
           </p>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-unread-banner',
@@ -15,6 +16,8 @@ export class UnreadBannerComponent implements OnChanges {
 
   visible = false;
   private hideTimer?: any;
+
+  constructor(private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['count']) {
@@ -35,5 +38,11 @@ export class UnreadBannerComponent implements OnChanges {
   close() {
     this.visible = false;
     clearTimeout(this.hideTimer);
+  }
+
+   goToNotifications() {
+    this.visible = false;
+    clearTimeout(this.hideTimer);
+    this.router.navigate(['/dashboard/notifications-inbox']);
   }
 }
