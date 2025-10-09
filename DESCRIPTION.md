@@ -258,3 +258,4 @@ npx http-server dist/booking-app/browser
 
 *This application represents a comprehensive solution for educational management, combining modern web technologies with user-friendly design to create an efficient and effective learning management system.*
 
+
