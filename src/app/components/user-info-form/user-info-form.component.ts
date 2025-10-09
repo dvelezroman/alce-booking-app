@@ -292,4 +292,9 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
 
     this.closeModal.emit();
   }
+
+  /** Permite cerrar el modal sin completar el formulario */
+  cancelLater(): void {
+    this.closeModal.emit();
+  }
 }
