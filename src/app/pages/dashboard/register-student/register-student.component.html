@@ -150,19 +150,35 @@
             El modo es obligatorio.
           </div>
         </div>
+      </div>
 
-        <!-- Tutor visible solo si menor -->
-        <!-- <div class="field" *ngIf="isMinor">
-          <label class="label">Tutor (Instructor)</label>
-          <div class="control">
-            <select class="input" formControlName="tutorId">
-              <option value="">Seleccione un tutor</option>
-              <option *ngFor="let tutor of instructors" [value]="tutor.id">
-                {{ tutor.firstName }} {{ tutor.lastName }}
-              </option>
-            </select>
+      <!-- Tutor visible solo si es menor -->
+      <div *ngIf="isMinor" class="tutor-section">
+        <h2 class="section-title">Datos del Tutor</h2>
+        <div class="section-separator"></div>
+
+        <div class="form-row three-cols">
+          <div class="field">
+            <label class="label">Nombre del Tutor</label>
+            <div class="control">
+              <input type="text" class="input" formControlName="tutorName" placeholder="Ingrese el nombre del tutor" />
+            </div>
           </div>
-        </div> -->
+
+          <div class="field">
+            <label class="label">Correo del Tutor</label>
+            <div class="control">
+              <input type="email" class="input" formControlName="tutorEmail" placeholder="Ingrese el correo del tutor" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Teléfono del Tutor</label>
+            <div class="control">
+              <input type="tel" class="input" formControlName="tutorPhone" placeholder="Ingrese el teléfono del tutor" />
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Fila 5 -->

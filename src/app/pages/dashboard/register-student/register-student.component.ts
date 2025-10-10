@@ -51,7 +51,9 @@ export class RegisterStudentComponent implements OnInit {
       mode: ['', Validators.required],
       startClassDate: [''],
       endClassDate: [''], 
-      tutorId: [''],
+      tutorName: [''],
+      tutorEmail: [''],
+      tutorPhone: [''],
     });
   }
 
@@ -146,6 +148,12 @@ export class RegisterStudentComponent implements OnInit {
           studentData.endClassDate = new Date(this.registerForm.value.endClassDate).toISOString();
         }
 
+        if (this.isMinor) {
+          studentData.tutorName = this.registerForm.value.tutorName;
+          studentData.tutorEmail = this.registerForm.value.tutorEmail;
+          studentData.tutorPhone = this.registerForm.value.tutorPhone;
+        }
+
         this.studentsService.registerStudent(studentData).subscribe({
           next: () => {
             this.showModal(this.createModalParams(false, 'Registro exitoso.'));
@@ -161,7 +169,18 @@ export class RegisterStudentComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al crear usuario:', error);
-        this.showModal(this.createModalParams(true, 'No se pudo registrar el usuario.'));
+
+        if (error?.error?.code === 422) {
+          // Muestra mensaje específico del backend
+          this.showModal(
+            this.createModalParams(true, 'Ya existe un usuario registrado con ese numero de cédula.')
+          );
+        } else {
+          // Mensaje genérico
+          this.showModal(
+            this.createModalParams(true, 'No se pudo registrar el usuario.')
+          );
+        }
       },
     });
   }
