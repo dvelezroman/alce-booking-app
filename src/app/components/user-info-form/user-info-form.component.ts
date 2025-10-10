@@ -254,42 +254,57 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
     this.formSubmit.emit(payload);
   }
 
+  // close(): void {
+  //   // Si el usuario es estudiante menor de edad, verificar datos del tutor antes de cerrar
+  //   if (this.isStudent && this.isMinor) {
+  //     const formValue = this.infoForm.value;
+  //     const tutorName = formValue.tutorName?.trim();
+  //     const tutorEmail = formValue.tutorEmail?.trim();
+  //     const tutorPhone = formValue.tutorPhone?.trim();
+
+  //     if (!tutorName || !tutorEmail || !tutorPhone) {
+  //       this.modal = {
+  //         ...modalInitializer(),
+  //         show: true,
+  //         isError: true,
+  //         title: 'Campos obligatorios',
+  //         message: 'Debes completar todos los datos del representante antes de cerrar el formulario.',
+  //         close: () => (this.modal.show = false),
+  //       };
+  //       setTimeout(() => (this.modal.show = false), 3000);
+  //       return;
+  //     }
+  //   }
+
+  //   // Si no ha completado los datos generales, también impedir el cierre
+  //   if (!this.dataCompleted) {
+  //     this.modal = {
+  //       ...modalInitializer(),
+  //       show: true,
+  //       isError: true,
+  //       title: 'Atención',
+  //       message: 'Debes completar y guardar el formulario antes de poder cerrarlo.',
+  //       close: () => (this.modal.show = false),
+  //     };
+  //     setTimeout(() => (this.modal.show = false), 3000);
+  //     return;
+  //   }
+
+  //   this.closeModal.emit();
+  // }
+
   close(): void {
-    // Si el usuario es estudiante menor de edad, verificar datos del tutor antes de cerrar
-    if (this.isStudent && this.isMinor) {
-      const formValue = this.infoForm.value;
-      const tutorName = formValue.tutorName?.trim();
-      const tutorEmail = formValue.tutorEmail?.trim();
-      const tutorPhone = formValue.tutorPhone?.trim();
-
-      if (!tutorName || !tutorEmail || !tutorPhone) {
-        this.modal = {
-          ...modalInitializer(),
-          show: true,
-          isError: true,
-          title: 'Campos obligatorios',
-          message: 'Debes completar todos los datos del representante antes de cerrar el formulario.',
-          close: () => (this.modal.show = false),
-        };
-        setTimeout(() => (this.modal.show = false), 3000);
-        return;
-      }
-    }
-
-    // Si no ha completado los datos generales, también impedir el cierre
-    if (!this.dataCompleted) {
+    if (!this.dataCompleted || (this.isStudent && this.isMinor)) {
       this.modal = {
         ...modalInitializer(),
         show: true,
-        isError: true,
-        title: 'Atención',
-        message: 'Debes completar y guardar el formulario antes de poder cerrarlo.',
+        isError: false,
+        title: 'Recordatorio',
+        message: 'Podrás completar estos datos más tarde.',
         close: () => (this.modal.show = false),
       };
-      setTimeout(() => (this.modal.show = false), 3000);
-      return;
+      setTimeout(() => (this.modal.show = false), 2500);
     }
-
     this.closeModal.emit();
   }
 
