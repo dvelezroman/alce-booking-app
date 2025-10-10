@@ -294,25 +294,50 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
   // }
 
   close(): void {
-    if (!this.dataCompleted || (this.isStudent && this.isMinor)) {
-      this.modal = {
-        ...modalInitializer(),
-        show: true,
-        isError: false,
-        title: 'Recordatorio',
-        message: 'Podrás completar estos datos más tarde.',
-        close: () => (this.modal.show = false),
-      };
-
-      setTimeout(() => {
-        this.modal.show = false;
-        this.closeModal.emit(); 
-      }, 2500);
-
+    if (this.dataCompleted) {
+      this.closeModal.emit();
       return;
     }
 
-    this.closeModal.emit();
+    // Si el usuario es estudiante menor y no ha completado datos del tutor
+    if (this.isStudent && this.isMinor) {
+      const formValue = this.infoForm.value;
+      const tutorName = formValue.tutorName?.trim();
+      const tutorEmail = formValue.tutorEmail?.trim();
+      const tutorPhone = formValue.tutorPhone?.trim();
+
+      if (!tutorName || !tutorEmail || !tutorPhone) {
+        this.modal = {
+          ...modalInitializer(),
+          show: true,
+          isError: false,
+          title: 'Recordatorio',
+          message: 'Podrás completar los datos de tu representante más tarde.',
+          close: () => (this.modal.show = false),
+        };
+
+        setTimeout(() => {
+          this.modal.show = false;
+          this.closeModal.emit();
+        }, 2500);
+        return;
+      }
+    }
+
+    // Si no ha completado toda la información general
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      isError: false,
+      title: 'Recordatorio',
+      message: 'Podrás completar estos datos más tarde.',
+      close: () => (this.modal.show = false),
+    };
+
+    setTimeout(() => {
+      this.modal.show = false;
+      this.closeModal.emit();
+    }, 2500);
   }
 
   /** Permite cerrar el modal sin completar el formulario */
