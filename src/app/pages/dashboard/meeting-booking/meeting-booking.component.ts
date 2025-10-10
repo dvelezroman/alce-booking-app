@@ -575,6 +575,23 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
     return true;
   }
+
+  openInfoModal(): void {
+    this.modalConfig = {
+      show: true,
+      message:
+        "El botón de recarga sirve para actualizar tu agenda en caso de que no aparezcan los enlaces de tus clases. Si mantienes la página abierta por mucho tiempo, puede que necesites usarlo para ver la información actualizada.",
+      isInfo: true,
+      isError: false,
+      isSuccess: false,
+      showButtons: false,
+      close: () => (this.modalConfig.show = false),
+    };
+
+    setTimeout(() => {
+      this.modalConfig.show = false;
+    }, 9000);
+  }
 }
 
 

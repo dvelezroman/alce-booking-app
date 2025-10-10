@@ -303,8 +303,15 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
         message: 'Podrás completar estos datos más tarde.',
         close: () => (this.modal.show = false),
       };
-      setTimeout(() => (this.modal.show = false), 2500);
+
+      setTimeout(() => {
+        this.modal.show = false;
+        this.closeModal.emit(); 
+      }, 2500);
+
+      return;
     }
+
     this.closeModal.emit();
   }
 

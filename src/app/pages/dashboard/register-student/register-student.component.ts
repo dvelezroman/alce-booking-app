@@ -132,15 +132,19 @@ export class RegisterStudentComponent implements OnInit {
 
     this.usersService.create(userData).subscribe({
       next: (userResponse) => {
-        const studentData: RegisterStudentDto = {
+        const studentData: any = {
           userId: userResponse.user.id,
           stageId: parseInt(this.registerForm.value.stageId, 10),
           mode: this.registerForm.value.mode,
           studentClassification: this.registerForm.value.studentClassification,
-          startClassDate,
-          endClassDate,
-          tutorId: this.isMinor ? Number(this.registerForm.value.tutorId) : null,
         };
+
+        if (this.registerForm.value.startClassDate) {
+          studentData.startClassDate = new Date(this.registerForm.value.startClassDate).toISOString();
+        }
+        if (this.registerForm.value.endClassDate) {
+          studentData.endClassDate = new Date(this.registerForm.value.endClassDate).toISOString();
+        }
 
         this.studentsService.registerStudent(studentData).subscribe({
           next: () => {
