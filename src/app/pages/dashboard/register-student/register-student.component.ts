@@ -114,6 +114,25 @@ export class RegisterStudentComponent implements OnInit {
       return;
     }
 
+    const { stageId, mode, studentClassification } = this.registerForm.value;
+    if (!stageId || !mode || !studentClassification) {
+      this.showModal(
+        this.createModalParams(true, 'Debe completar todos los datos académicos antes de continuar.')
+      );
+      return;
+    }
+
+    if (this.isMinor) {
+      const { tutorName, tutorEmail, tutorPhone } = this.registerForm.value;
+
+      if (!tutorName?.trim() || !tutorEmail?.trim() || !tutorPhone?.trim()) {
+        this.showModal(
+          this.createModalParams(true, 'Debe completar los datos del tutor antes de continuar.')
+        );
+        return;
+      }
+    }
+
     const userData: Omit<UserDto, 'id'> = {
       firstName: this.registerForm.value.firstName,
       lastName: this.registerForm.value.lastName,

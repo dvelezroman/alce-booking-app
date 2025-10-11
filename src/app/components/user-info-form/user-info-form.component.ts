@@ -293,7 +293,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
   //   this.closeModal.emit();
   // }
 
-  close(): void {
+  close(): void { 
     if (this.dataCompleted) {
       this.closeModal.emit();
       return;
