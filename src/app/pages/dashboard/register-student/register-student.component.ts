@@ -44,6 +44,7 @@ export class RegisterStudentComponent implements OnInit {
       lastName: ['', Validators.required],
       idNumber: ['', Validators.required],
       email: ['', Validators.required],
+      emailAddress: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       birthday: ['', Validators.required],
       studentClassification: ['', Validators.required],
@@ -141,6 +142,7 @@ export class RegisterStudentComponent implements OnInit {
       idNumber: this.registerForm.value.idNumber.toString(),
       birthday: this.registerForm.value.birthday,
       role: UserRole.STUDENT,
+      // emailAddress: this.registerForm.value.emailAddress
     };
 
      const startClassDate = this.registerForm.value.startClassDate
@@ -192,7 +194,7 @@ export class RegisterStudentComponent implements OnInit {
         if (error?.error?.code === 422) {
           // Muestra mensaje específico del backend
           this.showModal(
-            this.createModalParams(true, 'Ya existe un usuario registrado con ese numero de cédula.')
+            this.createModalParams(true, 'Ya existe un usuario registrado con esos datos.')
           );
         } else {
           // Mensaje genérico

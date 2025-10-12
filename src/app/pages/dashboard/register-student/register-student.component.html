@@ -39,44 +39,27 @@
         </div>
       </div>
 
-      <!-- Fila 2 -->
-      <div class="form-row three-cols">
+      <!-- Fila 2 (Usuario y Correo) -->
+      <div class="form-row two-cols">
         <div class="field">
-          <label class="label">Cédula</label>
-          <div class="control">
-            <input
-              type="number"
-              class="input"
-              formControlName="idNumber"
-              placeholder="Ingrese cédula" />
-          </div>
-          <div class="error-message" *ngIf="registerForm.get('idNumber')?.touched && registerForm.get('idNumber')?.invalid">
-            La cédula es obligatoria.
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Usuario o Correo</label>
+          <label class="label">Usuario de acceso (para iniciar sesión)</label>
           <div class="control">
             <input
               type="email"
               class="input"
               formControlName="email"
-              placeholder="Ingrese correo" />
+              placeholder="Ingrese nombre de usuario" />
           </div>
           <div class="error-message" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
-            El campo es obligatorio.
+            El usuario es obligatorio.
           </div>
         </div>
-      </div>
 
-      <!-- Fila 3 (contraseña + cumpleaños) -->
-      <div class="form-row two-cols">
         <div class="field">
-          <label class="label">Contraseña</label>
+          <label class="label">Contraseña (para iniciar sesión) </label>
           <div class="control">
             <input
-              type="password"
+              type="text"
               class="input"
               formControlName="password"
               placeholder="Ingrese contraseña" />
@@ -86,6 +69,25 @@
           </div>
           <div class="error-message" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.errors?.['minlength']">
             La contraseña debe tener al menos 6 caracteres.
+          </div>
+        </div>
+        
+      </div>
+
+      <!-- Fila 3 (Cédula + Contraseña + Cumpleaños) -->
+      <div class="form-row three-cols">
+
+        <div class="field">
+          <label class="label">Código Secuencial</label>
+          <div class="control">
+            <input
+              type="number"
+              class="input"
+              formControlName="idNumber"
+              placeholder="Ingrese el código del estudiante" />
+          </div>
+          <div class="error-message" *ngIf="registerForm.get('idNumber')?.touched && registerForm.get('idNumber')?.invalid">
+            El código es obligatorio.
           </div>
         </div>
 
@@ -148,6 +150,57 @@
           </div>
           <div class="error-message" *ngIf="registerForm.get('mode')?.touched && registerForm.get('mode')?.invalid">
             El modo es obligatorio.
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila 5 (Correo + Fechas) -->
+      <div class="form-row three-cols">
+        <div class="field">
+          <label class="label">Correo electrónico</label>
+          <div class="control">
+            <input
+              type="email"
+              class="input"
+              formControlName="emailAddress"
+              placeholder="Ingrese el correo personal"
+            />
+          </div>
+
+          <!-- Error si está vacío -->
+          <div
+            class="error-message"
+            *ngIf="
+              registerForm.get('emailAddress')?.touched &&
+              registerForm.get('emailAddress')?.errors?.['required']
+            "
+          >
+            El correo es obligatorio.
+          </div>
+
+          <!-- Error si el formato es incorrecto -->
+          <div
+            class="error-message"
+            *ngIf="
+              registerForm.get('emailAddress')?.touched &&
+              registerForm.get('emailAddress')?.errors?.['email']
+            "
+          >
+            Ingrese un correo válido.
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Inicio de Clases (opcional)</label>
+          <div class="control">
+            <input type="date" class="input" formControlName="startClassDate" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Fin de Cursada (opcional)</label>
+          <div class="control">
+            <input type="date" class="input" formControlName="endClassDate" />
           </div>
         </div>
       </div>
@@ -225,23 +278,6 @@
             >
               El teléfono del representante es obligatorio.
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fila 5 -->
-      <div class="form-row two-cols">
-        <div class="field">
-          <label class="label">Inicio de Clases (opcional)</label>
-          <div class="control">
-            <input type="date" class="input" formControlName="startClassDate" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Fin de Cursada (opcional)</label>
-          <div class="control">
-            <input type="date" class="input" formControlName="endClassDate" />
           </div>
         </div>
       </div>
