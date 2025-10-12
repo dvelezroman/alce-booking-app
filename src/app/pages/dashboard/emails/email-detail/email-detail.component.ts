@@ -31,7 +31,7 @@ export class EmailDetailComponent implements OnInit, OnDestroy {
     if (st?.email) {
       this.email = st.email;
       this.origin = st.origin ?? 'unknown';
-      console.log('[EmailDetail] recibido:', this.email);
+      //console.log('[EmailDetail] recibido:', this.email);
     } else {
       // Si no vino nada, vuelve al historial
       this.router.navigate(['/dashboard/historial-email']);

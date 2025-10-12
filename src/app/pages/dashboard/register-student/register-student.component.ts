@@ -142,7 +142,7 @@ export class RegisterStudentComponent implements OnInit {
       idNumber: this.registerForm.value.idNumber.toString(),
       birthday: this.registerForm.value.birthday,
       role: UserRole.STUDENT,
-      // emailAddress: this.registerForm.value.emailAddress
+      emailAddress: this.registerForm.value.emailAddress
     };
 
      const startClassDate = this.registerForm.value.startClassDate
