@@ -1,21 +1,24 @@
 <section class="section">
-  <h1 class="reports-excel-header reports-excel-title">
-    Reportes 
-  </h1>
+  <h1 class="reports-excel-header reports-excel-title">Reportes</h1>
 
-  <!-- Botón para alternar modos -->
+  <!-- Selector de tipo de reporte -->
   <div class="mode-toggle">
-    <button class="button" (click)="toggleMode()">
-      {{ currentMode === "users" ? "Ver Inasistencias" : "Ver Usuarios" }}
-    </button>
+    <label for="report-mode" class="label">Seleccionar tipo de reporte:</label>
+    <select id="report-mode" class="input" [(ngModel)]="currentMode" name="reportMode">
+      <option value="users">Usuarios</option>
+      <option value="absents">Estudiantes ausentes</option>
+      <option value="noMeetings">Estudiantes sin clases agendadas</option>
+    </select>
   </div>
 
+  <!-- Contenedor del formulario correspondiente -->
   <div class="content-wrapper">
     <app-reports-users-excel
       [stages]="stages"
       [mode]="currentMode"
       (downloadExcel)="handleDownloadUsersExcel($event)"
       (downloadAbsentExcel)="handleDownloadAbsentExcel($event)"
+      (downloadStudentsWithoutMeetingsExcel)="handleDownloadStudentsWithoutMeetingsExcel($event)"
     >
     </app-reports-users-excel>
   </div>

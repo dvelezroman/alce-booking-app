@@ -1,6 +1,6 @@
 <!-- FORMULARIO: Usuarios -->
 <div class="users-excel-form" *ngIf="mode === 'users'">
-  <h3>Descargar Excel de Usuarios</h3>
+  <h3>Datos Usuarios</h3>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="filters-form">
 
@@ -48,7 +48,7 @@
 
 <!-- FORMULARIO: Inasistencias -->
 <div class="users-excel-form" *ngIf="mode === 'absents'">
-  <h3>Descargar Excel de Inasistencias</h3>
+  <h3>Descargar Inasistencias de Estudiantes</h3>
 
   <form [formGroup]="absentForm" (ngSubmit)="onSubmit()" class="filters-form">
 
@@ -79,6 +79,43 @@
     <div class="actions">
       <button type="submit" class="button">Descargar Excel</button>
       <button type="button" class="button secondary" (click)="absentForm.reset()">Limpiar</button>
+    </div>
+  </form>
+</div>
+
+<!-- FORMULARIO: Estudiantes sin reuniones -->
+<div class="users-excel-form" *ngIf="mode === 'noMeetings'">
+  <h3>Descarga de Estudiantes sin Clases Agendadas</h3>
+
+  <form [formGroup]="noMeetingsForm" (ngSubmit)="onSubmit()" class="filters-form">
+
+    <div class="field">
+      <label class="label">Desde <span class="required">*</span></label>
+      <input type="date" formControlName="from" class="input" />
+      <div class="error" *ngIf="noMeetingsForm.get('from')?.invalid && noMeetingsForm.get('from')?.touched">
+        La fecha de inicio es obligatoria.
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Hasta <span class="required">*</span></label>
+      <input type="date" formControlName="to" class="input" />
+      <div class="error" *ngIf="noMeetingsForm.get('to')?.invalid && noMeetingsForm.get('to')?.touched">
+        La fecha de fin es obligatoria.
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Stage (opcional)</label>
+      <select formControlName="stageId" class="input">
+        <option value="">Todos</option>
+        <option *ngFor="let st of stages" [value]="st.id">{{ st.description }}</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="button">Descargar Excel</button>
+      <button type="button" class="button secondary" (click)="resetFilters()">Limpiar</button>
     </div>
   </form>
 </div>

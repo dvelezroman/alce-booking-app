@@ -14,13 +14,16 @@ import { UserRole, UserStatus } from '../../services/dtos/user.dto';
 })
 export class ReportsUsersExcelComponent {
   @Input() stages: Stage[] = [];
-  @Input() mode: 'users' | 'absents' = 'users';
+  @Input() mode: 'users' | 'absents' | 'noMeetings' = 'users';
 
   @Output() downloadExcel = new EventEmitter<UsersExcelFilterDto>();
   @Output() downloadAbsentExcel = new EventEmitter<AbsentStudentsExcelFilterDto>();
+  @Output() downloadStudentsWithoutMeetingsExcel = new EventEmitter<AbsentStudentsExcelFilterDto>();
 
   form: FormGroup;
   absentForm: FormGroup;
+  noMeetingsForm: FormGroup;
+
   userRoles = Object.values(UserRole);
   userStatuses = Object.values(UserStatus);
 
@@ -42,6 +45,13 @@ export class ReportsUsersExcelComponent {
       },
       { validators: this.fromRequiredIfNoTo }
     );
+
+     // Estudiantes sin reuniones
+    this.noMeetingsForm = this.fb.group({
+      from: ['', Validators.required],
+      to: ['', Validators.required],
+      stageId: [''],
+    });
 
     // Ocultar stage cuando el rol no sea STUDENT
     this.form.get('role')?.valueChanges.subscribe((role) => {
@@ -81,37 +91,46 @@ export class ReportsUsersExcelComponent {
         this.form.markAllAsTouched();
         return;
       }
-
       const filters: UsersExcelFilterDto = {
         role: this.form.value.role,
         status: this.form.value.status || undefined,
         stageId: this.form.value.stageId ? Number(this.form.value.stageId) : undefined,
-        noClasses: this.form.value.noClasses ?? false
+        noClasses: this.form.value.noClasses ?? false,
       };
-
       this.downloadExcel.emit(filters);
-    } else {
+    }
+
+    else if (this.mode === 'absents') {
       if (this.absentForm.invalid) {
         this.absentForm.markAllAsTouched();
         return;
       }
-
       const filters: AbsentStudentsExcelFilterDto = {
         from: this.formatDate(this.absentForm.value.from) || '',
         to: this.formatDate(this.absentForm.value.to) || '',
-        stageId: this.absentForm.value.stageId ? Number(this.absentForm.value.stageId) : undefined
+        stageId: this.absentForm.value.stageId ? Number(this.absentForm.value.stageId) : undefined,
       };
-
       this.downloadAbsentExcel.emit(filters);
+    }
+
+    else if (this.mode === 'noMeetings') {
+      if (this.noMeetingsForm.invalid) {
+        this.noMeetingsForm.markAllAsTouched();
+        return;
+      }
+      const filters: AbsentStudentsExcelFilterDto = {
+        from: this.formatDate(this.noMeetingsForm.value.from) || '',
+        to: this.formatDate(this.noMeetingsForm.value.to) || '',
+        stageId: this.noMeetingsForm.value.stageId ? Number(this.noMeetingsForm.value.stageId) : undefined,
+      };
+      this.downloadStudentsWithoutMeetingsExcel.emit(filters);
     }
   }
 
   resetFilters(): void {
-    if (this.mode === 'users') {
-      this.form.reset();
-    } else {
-      this.absentForm.reset();
-    }
+    if (this.mode === 'users') this.form.reset();
+    else if (this.mode === 'absents') this.absentForm.reset();
+    else if (this.mode === 'noMeetings') this.noMeetingsForm.reset();
   }
 
   /** Retorna true si debe mostrarse el campo stage */

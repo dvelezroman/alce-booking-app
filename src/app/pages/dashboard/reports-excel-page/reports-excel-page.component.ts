@@ -7,12 +7,14 @@ import { StagesService } from '../../../services/stages.service';
 import { Stage } from '../../../services/dtos/student.dto';
 import { CommonModule } from '@angular/common';
 import { ReportsUsersExcelComponent } from '../../../components/reports-users-excel/reports-users-excel.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-reports-excel-page',
   standalone: true,
   imports: [ 
       CommonModule,
+      FormsModule,
       ReportsUsersExcelComponent,
     ],
   templateUrl: './reports-excel-page.component.html',
@@ -97,6 +99,22 @@ export class ReportsExcelPageComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al descargar Excel de ausentes:', err);
+        this.loading = false;
+      }
+    });
+  }
+
+  /** Descargar Excel de estudiantes sin reuniones */
+  handleDownloadStudentsWithoutMeetingsExcel(filters: AbsentStudentsExcelFilterDto): void {
+    this.loading = true;
+
+    this.reportsService.downloadStudentsWithoutMeetingsExcel(filters).subscribe({
+      next: (blob) => {
+        this.downloadFile(blob, 'estudiantes_sin_reuniones.xlsx');
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error al descargar Excel de estudiantes sin reuniones:', err);
         this.loading = false;
       }
     });

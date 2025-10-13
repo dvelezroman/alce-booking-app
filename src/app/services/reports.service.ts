@@ -230,4 +230,17 @@ export class ReportsService {
 
     return this.http.get(`${this.apiUrl}/users/excel`, { params, responseType: 'blob' });
   }
+
+  downloadStudentsWithoutMeetingsExcel(filters: AbsentStudentsExcelFilterDto) {
+    let params = new HttpParams()
+      .set('from', filters.from)
+      .set('to', filters.to);
+
+    if (filters.stageId) {
+      params = params.set('stageId', filters.stageId.toString());
+    }
+
+    const url = `${this.apiUrl}/students-without-meetings/excel`;
+    return this.http.get(url, { params, responseType: 'blob' });
+  }
 }
