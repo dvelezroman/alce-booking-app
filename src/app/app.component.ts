@@ -55,6 +55,8 @@ export class AppComponent implements OnInit {
       this.pwaService.setSwUpdate(this.swUpdate);
       // Set up periodic update checks
       this.pwaService.setupPeriodicUpdates();
+      // Check for legacy versions (for existing users)
+      this.pwaService.checkForLegacyVersion();
     }
   }
 

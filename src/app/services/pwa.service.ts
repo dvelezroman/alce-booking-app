@@ -18,6 +18,9 @@ export class PwaService {
   setSwUpdate(swUpdate: SwUpdate) {
     this.swUpdate = swUpdate;
     if (swUpdate && swUpdate.isEnabled) {
+      // Check for updates immediately when service worker is available
+      this.checkForUpdates();
+
       // Handle version updates
       swUpdate.versionUpdates
         .pipe(
@@ -53,6 +56,9 @@ export class PwaService {
             this.reRegisterServiceWorker();
           }
         });
+
+      // Check for updates on app startup (for existing users)
+      this.checkForUpdatesOnStartup();
     }
   }
 
@@ -160,6 +166,175 @@ export class PwaService {
   }
 
   /**
+   * Check if user has a very old version and force complete update
+   */
+  public async checkForLegacyVersion(): Promise<void> {
+    try {
+      const appVersion = localStorage.getItem('appVersion');
+      const currentVersion = this.getCurrentAppVersion();
+      
+      // If no version stored or very old version, force complete update
+      if (!appVersion || this.isLegacyVersion(appVersion)) {
+        console.log('Legacy version detected, forcing complete update...');
+        await this.forceCompleteUpdate();
+        localStorage.setItem('appVersion', currentVersion);
+      }
+    } catch (error) {
+      console.error('Error checking for legacy version:', error);
+    }
+  }
+
+  /**
+   * Get current app version from package.json or manifest
+   */
+  private getCurrentAppVersion(): string {
+    // Try to get version from environment or use build timestamp
+    try {
+      // You can set this in environment.ts or get from build process
+      const buildTime = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+      return buildTime;
+    } catch {
+      // Fallback to timestamp
+      return Date.now().toString();
+    }
+  }
+
+  /**
+   * Check if version is legacy (older than 24 hours)
+   */
+  private isLegacyVersion(version: string): boolean {
+    try {
+      const versionTime = parseInt(version);
+      const currentTime = Date.now();
+      const oneDayAgo = currentTime - (24 * 60 * 60 * 1000);
+      return versionTime < oneDayAgo;
+    } catch {
+      return true; // If version can't be parsed, consider it legacy
+    }
+  }
+
+  /**
+   * Force complete update for legacy versions
+   */
+  private async forceCompleteUpdate(): Promise<void> {
+    try {
+      console.log('Forcing complete update for legacy version...');
+      
+      // Clear all storage
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      // Clear all caches
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map(cacheName => caches.delete(cacheName))
+        );
+      }
+      
+      // Clear IndexedDB
+      await this.clearIndexedDB();
+      
+      // Unregister all service workers
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(
+          registrations.map(registration => registration.unregister())
+        );
+      }
+      
+      // Force reload to get fresh version
+      window.location.reload();
+      
+    } catch (error) {
+      console.error('Error forcing complete update:', error);
+      // As fallback, just reload
+      window.location.reload();
+    }
+  }
+
+  /**
+   * Check for updates on app startup (for existing users with old versions)
+   */
+  private async checkForUpdatesOnStartup(): Promise<void> {
+    try {
+      // Check if this is an existing user with an old version
+      const lastUpdateCheck = localStorage.getItem('lastUpdateCheck');
+      const currentTime = Date.now();
+      const oneHourAgo = currentTime - (60 * 60 * 1000);
+
+      // If it's been more than an hour since last check, or never checked
+      if (!lastUpdateCheck || parseInt(lastUpdateCheck) < oneHourAgo) {
+        console.log('Checking for updates on startup (existing user)...');
+        
+        // Force a fresh check for updates
+        await this.checkForUpdates();
+        
+        // Update the last check time
+        localStorage.setItem('lastUpdateCheck', currentTime.toString());
+      }
+
+      // Also check if service worker is outdated
+      await this.checkServiceWorkerVersion();
+      
+    } catch (error) {
+      console.error('Error checking for updates on startup:', error);
+    }
+  }
+
+  /**
+   * Check if service worker version is outdated
+   */
+  private async checkServiceWorkerVersion(): Promise<void> {
+    try {
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.getRegistration();
+        
+        if (registration) {
+          // Check if service worker is controlling the page
+          if (!registration.active || !navigator.serviceWorker.controller) {
+            console.log('Service worker not controlling page, forcing update...');
+            await this.forceReRegister();
+            return;
+          }
+
+          // Check if service worker is outdated by comparing with server
+          const response = await fetch('/ngsw.json?t=' + Date.now(), { cache: 'no-cache' });
+          if (response.ok) {
+            const serverManifest = await response.json();
+            const currentManifest = await this.getCurrentManifest();
+            
+            if (currentManifest && serverManifest.hash !== currentManifest.hash) {
+              console.log('Service worker manifest outdated, forcing update...');
+              await this.forceReRegister();
+            }
+          }
+        } else {
+          console.log('No service worker registration found, registering...');
+          // Service worker not registered, it will be registered by Angular
+        }
+      }
+    } catch (error) {
+      console.error('Error checking service worker version:', error);
+    }
+  }
+
+  /**
+   * Get current service worker manifest
+   */
+  private async getCurrentManifest(): Promise<any> {
+    try {
+      const response = await fetch('/ngsw.json', { cache: 'no-cache' });
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (error) {
+      console.error('Error getting current manifest:', error);
+    }
+    return null;
+  }
+
+  /**
    * Set up periodic update checks
    */
   public setupPeriodicUpdates(): void {
@@ -177,6 +352,11 @@ export class PwaService {
 
     // Check for updates when the app comes back online
     window.addEventListener('online', () => {
+      this.checkForUpdates();
+    });
+
+    // Check for updates when the app regains focus
+    window.addEventListener('focus', () => {
       this.checkForUpdates();
     });
   }
