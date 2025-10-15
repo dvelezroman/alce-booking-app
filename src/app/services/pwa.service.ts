@@ -27,11 +27,59 @@ export class PwaService {
           }))
         )
         .subscribe(() => {
-          if (confirm('New version available. Load New Version?')) {
+          // Automatically activate the new version without user confirmation
+          console.log('New version available, activating automatically...');
+          swUpdate.activateUpdate().then(() => {
             window.location.reload();
-          }
+          });
         });
     }
+  }
+
+  /**
+   * Check for updates in a stable way (no infinite loops)
+   */
+  public async checkForUpdates(): Promise<void> {
+    if (!this.swUpdate || !this.swUpdate.isEnabled) {
+      return;
+    }
+
+    try {
+      // Only check if we haven't checked recently
+      const lastCheck = localStorage.getItem('lastUpdateCheck');
+      const now = Date.now();
+      const oneHourAgo = now - (60 * 60 * 1000);
+
+      if (!lastCheck || parseInt(lastCheck) < oneHourAgo) {
+        console.log('Checking for updates...');
+        await this.swUpdate.checkForUpdate();
+        localStorage.setItem('lastUpdateCheck', now.toString());
+      }
+    } catch (error) {
+      console.error('Error checking for updates:', error);
+    }
+  }
+
+  /**
+   * Set up stable periodic update checks (no infinite loops)
+   */
+  public setupPeriodicUpdates(): void {
+    // Check for updates when the page becomes visible (but not too often)
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        // Add a small delay to prevent rapid checks
+        setTimeout(() => {
+          this.checkForUpdates();
+        }, 5000); // 5 second delay
+      }
+    });
+
+    // Check for updates when the app comes back online
+    window.addEventListener('online', () => {
+      setTimeout(() => {
+        this.checkForUpdates();
+      }, 2000); // 2 second delay
+    });
   }
 
   public initPwaPrompt() {

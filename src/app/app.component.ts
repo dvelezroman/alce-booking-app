@@ -53,6 +53,8 @@ export class AppComponent implements OnInit {
     // Initialize PWA service with service worker
     if (this.swUpdate) {
       this.pwaService.setSwUpdate(this.swUpdate);
+      // Set up stable periodic update checks
+      this.pwaService.setupPeriodicUpdates();
     }
   }
 
