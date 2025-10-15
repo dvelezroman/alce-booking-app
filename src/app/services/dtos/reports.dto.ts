@@ -8,7 +8,7 @@ export interface UsersExcelFilterDto {
   role?: UserRole;
   status?: UserStatus;
   stageId?: number;
-  noClasses?: boolean;
+  noClasses?: boolean | null;
 }
 
 /**

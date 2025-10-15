@@ -227,7 +227,6 @@ export class ReportsService {
     if (filters.stageId !== undefined && filters.stageId !== null) params = params.set('stageId', filters.stageId.toString());
     if (filters.noClasses !== undefined && filters.noClasses !== null) params = params.set('noClasses', String(filters.noClasses));
 
-
     return this.http.get(`${this.apiUrl}/users/excel`, { params, responseType: 'blob' });
   }
 

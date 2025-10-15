@@ -33,7 +33,7 @@ export class ReportsUsersExcelComponent {
       role: ['', Validators.required],
       status: [''],
       stageId: [''],
-      noClasses: [false]
+      noClasses: [null]
     });
 
     // Formulario de inasistencias
@@ -95,7 +95,7 @@ export class ReportsUsersExcelComponent {
         role: this.form.value.role,
         status: this.form.value.status || undefined,
         stageId: this.form.value.stageId ? Number(this.form.value.stageId) : undefined,
-        noClasses: this.form.value.noClasses ?? false,
+        noClasses: this.form.value.noClasses || null,
       };
       this.downloadExcel.emit(filters);
     }
