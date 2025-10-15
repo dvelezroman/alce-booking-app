@@ -32,59 +32,152 @@ export class PwaService {
             return of(null);
           })
         )
-        .subscribe(() => {
-          // Automatically activate the new version without user confirmation
-          console.log('New version available, activating automatically...');
-          swUpdate.activateUpdate().then(() => {
-            window.location.reload();
-          });
+        .subscribe((updateInfo) => {
+          if (updateInfo) {
+            console.log('New version available, activating automatically...', updateInfo);
+            this.activateUpdate();
+          }
+        });
+
+      // Handle unrecoverable state
+      swUpdate.unrecoverable
+        .pipe(
+          catchError(error => {
+            console.error('Unrecoverable state error:', error);
+            return of(null);
+          })
+        )
+        .subscribe((event: any) => {
+          if (event) {
+            console.error('Unrecoverable state detected, re-registering service worker...');
+            this.reRegisterServiceWorker();
+          }
         });
     }
   }
 
+  private async activateUpdate(): Promise<void> {
+    if (!this.swUpdate) return;
+    
+    try {
+      console.log('Activating service worker update...');
+      await this.swUpdate.activateUpdate();
+      console.log('Service worker update activated, reloading page...');
+      window.location.reload();
+    } catch (error) {
+      console.error('Error activating update:', error);
+      // If activation fails, try to re-register the service worker
+      this.reRegisterServiceWorker();
+    }
+  }
+
+  private async reRegisterServiceWorker(): Promise<void> {
+    try {
+      console.log('Re-registering service worker...');
+      
+      // Unregister current service worker
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const registration of registrations) {
+          console.log('Unregistering service worker:', registration.scope);
+          await registration.unregister();
+        }
+      }
+
+      // Clear all caches
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map(cacheName => {
+            console.log('Deleting cache:', cacheName);
+            return caches.delete(cacheName);
+          })
+        );
+      }
+
+      // Clear IndexedDB
+      await this.clearIndexedDB();
+
+      // Wait a bit before re-registering
+      setTimeout(() => {
+        console.log('Re-registering service worker after cleanup...');
+        window.location.reload();
+      }, 1000);
+
+    } catch (error) {
+      console.error('Error re-registering service worker:', error);
+      // As a last resort, force reload
+      window.location.reload();
+    }
+  }
+
+  private async clearIndexedDB(): Promise<void> {
+    try {
+      // Clear notification database
+      if ('indexedDB' in window) {
+        const dbNames = ['NotificationDB', 'ngsw-db'];
+        for (const dbName of dbNames) {
+          try {
+            const deleteReq = indexedDB.deleteDatabase(dbName);
+            await new Promise((resolve, reject) => {
+              deleteReq.onsuccess = () => resolve(true);
+              deleteReq.onerror = () => reject(deleteReq.error);
+            });
+            console.log('Cleared IndexedDB:', dbName);
+          } catch (error) {
+            console.warn('Could not clear IndexedDB:', dbName, error);
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Error clearing IndexedDB:', error);
+    }
+  }
+
   /**
-   * Check for updates in a stable way (no infinite loops)
+   * Manually check for service worker updates
    */
   public async checkForUpdates(): Promise<void> {
     if (!this.swUpdate || !this.swUpdate.isEnabled) {
+      console.log('Service worker not available for updates');
       return;
     }
 
     try {
-      // Only check if we haven't checked recently
-      const lastCheck = localStorage.getItem('lastUpdateCheck');
-      const now = Date.now();
-      const oneHourAgo = now - (60 * 60 * 1000);
-
-      if (!lastCheck || parseInt(lastCheck) < oneHourAgo) {
-        console.log('Checking for updates...');
-        await this.swUpdate.checkForUpdate();
-        localStorage.setItem('lastUpdateCheck', now.toString());
-      }
+      console.log('Manually checking for updates...');
+      await this.swUpdate.checkForUpdate();
     } catch (error) {
       console.error('Error checking for updates:', error);
     }
   }
 
   /**
-   * Set up stable periodic update checks (no infinite loops)
+   * Force service worker re-registration
+   */
+  public async forceReRegister(): Promise<void> {
+    console.log('Force re-registering service worker...');
+    await this.reRegisterServiceWorker();
+  }
+
+  /**
+   * Set up periodic update checks
    */
   public setupPeriodicUpdates(): void {
-    // Check for updates when the page becomes visible (but not too often)
+    // Check for updates every 30 minutes
+    setInterval(() => {
+      this.checkForUpdates();
+    }, 30 * 60 * 1000);
+
+    // Check for updates when the page becomes visible
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
-        // Add a small delay to prevent rapid checks
-        setTimeout(() => {
-          this.checkForUpdates();
-        }, 5000); // 5 second delay
+        this.checkForUpdates();
       }
     });
 
     // Check for updates when the app comes back online
     window.addEventListener('online', () => {
-      setTimeout(() => {
-        this.checkForUpdates();
-      }, 2000); // 2 second delay
+      this.checkForUpdates();
     });
   }
 
