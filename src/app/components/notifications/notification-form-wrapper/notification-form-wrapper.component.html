@@ -149,35 +149,50 @@
           </div>
         </div>
 
-        <!-- NUEVO BLOQUE para programar envío y expiración -->
+        <!-- Bloque: Programar envío / Expira -->
         <div
-          class="compose-toolbar"
+          class="schedule-toolbar-block"
           *ngIf="userRole === UserRole.ADMIN || userRole === UserRole.INSTRUCTOR"
         >
-          <div class="toolbar-item">
-            <label for="scheduledAt" class="toolbar-label">Programar envío</label>
+          <!-- Fila superior: No expirar alineado a la izquierda -->
+          <div class="schedule-top-row">
+            <label class="toolbar-label" for="noExpire">No expirar</label>
             <input
-              id="scheduledAt"
-              name="scheduledAt"
-              type="datetime-local"
-              [(ngModel)]="scheduledAtLocal"
-              (ngModelChange)="onScheduledChange($event)"
-              placeholder="(opcional)"
+              type="checkbox"
+              id="noExpire"
+              name="noExpire"
+              [(ngModel)]="noExpire"
+              (ngModelChange)="onNoExpireToggle($event)"
             />
           </div>
 
-          <div class="toolbar-item">
-            <label for="expiresAt" class="toolbar-label">Expira</label>
-            <input
-              id="expiresAt"
-              name="expiresAt"
-              type="datetime-local"
-              [(ngModel)]="expiresAtLocal"
-              (ngModelChange)="onExpiresChange($event)"
-              placeholder="(opcional)"
-            />
+          <!-- Fila inferior: fechas lado a lado -->
+          <div class="schedule-dates-row">
+            <div class="toolbar-item">
+              <label for="scheduledAt" class="toolbar-label">Programar envío</label>
+              <input
+                id="scheduledAt"
+                name="scheduledAt"
+                type="datetime-local"
+                [(ngModel)]="scheduledAtLocal"
+                (ngModelChange)="onScheduledChange($event)"
+              />
+            </div>
+
+            <div class="toolbar-item">
+              <label for="expiresAt" class="toolbar-label">Expira</label>
+              <input
+                id="expiresAt"
+                name="expiresAt"
+                type="datetime-local"
+                [(ngModel)]="expiresAtLocal"
+                (ngModelChange)="onExpiresChange($event)"
+                [disabled]="noExpire"
+              />
+            </div>
           </div>
 
+          <!-- Error -->
           <div class="toolbar-item" *ngIf="datesInvalid">
             <span class="error-msg">
               La fecha de expiración debe ser posterior a la fecha de envío.

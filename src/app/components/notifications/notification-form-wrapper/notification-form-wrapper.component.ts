@@ -39,7 +39,6 @@ export class NotificationFormWrapperComponent implements OnInit {
   protected readonly UserRole = UserRole;
 
   @Output() submitNotification = new EventEmitter<CreateNotificationDto>();
-
   @ViewChild('formRef') formRef!: NgForm;
 
   title = '';
@@ -77,9 +76,11 @@ export class NotificationFormWrapperComponent implements OnInit {
 
   showScheduleInputs = false;
   scheduledAtLocal = '';
-  expiresAtLocal   = '';
+  expiresAtLocal = '';
   datesInvalid = false;
   userResetTick = 0;
+
+  noExpire = false;
 
   constructor(
     private store: Store,
@@ -87,12 +88,9 @@ export class NotificationFormWrapperComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Setear userId y fijar rol por defecto
     this.store.select(selectUserData).subscribe((user: UserDto | null) => {
       if (user) {
         this.userId = user.id;
-
-        // Si es STUDENT: solo podrá elegir INSTRUCTOR
         if (this.userRole === UserRole.STUDENT) {
           this.selectedUserRole = 'instructor';
         }
@@ -101,7 +99,9 @@ export class NotificationFormWrapperComponent implements OnInit {
 
     const now = new Date();
     this.scheduledAtLocal = this.toLocalInput(now);
-    this.expiresAtLocal = '';
+
+    const defaultExpire = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    this.expiresAtLocal = this.toLocalInput(defaultExpire);
   }
 
   private toLocalInput(d: Date): string {
@@ -117,7 +117,8 @@ export class NotificationFormWrapperComponent implements OnInit {
   onScheduledChange(val: string) {
     this.scheduledAtLocal = val;
     const sched = new Date(val);
-    const exp   = new Date(this.expiresAtLocal);
+    const exp = new Date(this.expiresAtLocal);
+    // Si no hay expiración o la actual es anterior, poner 1 día después
     if (!this.expiresAtLocal || exp <= sched) {
       const e = new Date(sched.getTime() + 24 * 60 * 60 * 1000);
       this.expiresAtLocal = this.toLocalInput(e);
@@ -131,9 +132,26 @@ export class NotificationFormWrapperComponent implements OnInit {
   }
 
   private validateDates() {
+    if (this.noExpire) {
+      this.datesInvalid = false;
+      return;
+    }
     const sched = new Date(this.scheduledAtLocal);
-    const exp   = new Date(this.expiresAtLocal);
+    const exp = new Date(this.expiresAtLocal);
     this.datesInvalid = isNaN(+sched) || isNaN(+exp) || exp <= sched;
+  }
+
+  onNoExpireToggle(val: boolean) {
+    this.noExpire = val;
+    if (val) {
+      this.expiresAtLocal = '';
+      this.datesInvalid = false;
+    } else if (this.scheduledAtLocal && !this.expiresAtLocal) {
+      // Si se desmarca, establecer por defecto 1 día después
+      const sched = new Date(this.scheduledAtLocal);
+      const e = new Date(sched.getTime() + 24 * 60 * 60 * 1000);
+      this.expiresAtLocal = this.toLocalInput(e);
+    }
   }
 
   onUserRoleChange(next: 'student' | 'instructor' | 'admin') {
@@ -183,13 +201,11 @@ export class NotificationFormWrapperComponent implements OnInit {
 
   setBroadcastRole(role: '' | 'student' | 'instructor' | 'admin') {
     this.selectedBroadcastRole = role;
-
     if (!role) {
       this.roleUsers = [];
       this.totalUsersByRole = 0;
       return;
     }
-
     this.fetchUsersByRole(role);
   }
 
@@ -225,16 +241,11 @@ export class NotificationFormWrapperComponent implements OnInit {
 
   getFormSubtitle(): string {
     switch (this.selectedType) {
-      case 'user':
-        return 'Selecciona los usuarios a los que deseas enviar esta notificación.';
-      case 'stage':
-        return 'Selecciona una etapa y se notificará a todos los estudiantes dentro de ella.';
-      case 'group':
-        return 'Selecciona un grupo para enviar la notificación a sus integrantes.';
-      case 'role':
-        return 'Elige un rol y se enviará a todos los usuarios con ese rol.';
-      default:
-        return 'Envía notificaciones a usuarios, grupos, por etapa o por rol.';
+      case 'user':  return 'Selecciona los usuarios a los que deseas enviar esta notificación.';
+      case 'stage': return 'Selecciona una etapa y se notificará a todos los estudiantes dentro de ella.';
+      case 'group': return 'Selecciona un grupo para enviar la notificación a sus integrantes.';
+      case 'role':  return 'Elige un rol y se enviará a todos los usuarios con ese rol.';
+      default:      return 'Envía notificaciones a usuarios, grupos, por etapa o por rol.';
     }
   }
 
@@ -246,13 +257,18 @@ export class NotificationFormWrapperComponent implements OnInit {
   }
 
   submitForm() {
+   
     if (!this.formRef.valid || !this.userId) return;
 
+    // Variables base: destinatarios (to) y alcance (scope)
     let to: number[] = [];
     let scope: NotificationScopeEnum;
 
+    // Determina el tipo de notificación según "selectedType"
+    // y construye la lista de destinatarios "to" según el caso.
     switch (this.selectedType) {
       case 'group': {
+        //  Enviar a un grupo: obtiene los IDs de usuarios del grupo
         to = this.getGroupUserIds();
         scope = NotificationScopeEnum.INDIVIDUAL;
         if (!this.selectedGroupId || to.length === 0) return;
@@ -260,6 +276,7 @@ export class NotificationFormWrapperComponent implements OnInit {
       }
 
       case 'stage': {
+        // Enviar por stage (etapa): obtiene los usuarios del stage seleccionado
         to = (this.users ?? []).map(u => u.id);
         scope = NotificationScopeEnum.STAGE_STUDENTS;
         if (!this.selectedStageId || to.length === 0) return;
@@ -267,9 +284,11 @@ export class NotificationFormWrapperComponent implements OnInit {
       }
 
       case 'role': {
+        // Enviar por rol: obtiene los usuarios con el rol elegido
         to = (this.roleUsers ?? []).map(u => u.id);
         if (!this.selectedBroadcastRole || to.length === 0) return;
 
+        // Define el alcance del envío según el rol seleccionado
         scope =
           this.selectedBroadcastRole === 'student'
             ? NotificationScopeEnum.ALL_STUDENTS
@@ -281,6 +300,7 @@ export class NotificationFormWrapperComponent implements OnInit {
 
       case 'user':
       default: {
+        // Enviar a usuarios específicos (seleccionados manualmente)
         to = this.selectedUsers.map(u => u.id);
         scope = NotificationScopeEnum.INDIVIDUAL;
         if (to.length === 0) return;
@@ -288,48 +308,82 @@ export class NotificationFormWrapperComponent implements OnInit {
       }
     }
 
+    // Determina el stage (solo si aplica a estudiantes)
     const stageId =
       this.selectedUserRole === 'student' && this.selectedStageId != null
         ? +this.selectedStageId
         : undefined;
 
-    const scheduledAtISO: string | undefined =
-      this.scheduledAtLocal && this.scheduledAtLocal.trim()
-        ? new Date(this.scheduledAtLocal).toISOString()
-        : undefined;
+    // Convierte la fecha programada local en ISO (UTC)
+    const scheduledDate = this.scheduledAtLocal
+      ? new Date(this.scheduledAtLocal)
+      : new Date();
+    const scheduledAtISO = scheduledDate.toISOString();
 
-    const expiresAtISO: string | undefined =
-      this.expiresAtLocal && this.expiresAtLocal.trim()
-        ? new Date(this.expiresAtLocal).toISOString()
-        : undefined;
+    // Calcula la fecha de expiración según el estado del checkbox “No expira”
+    let expiresAtISO: string | undefined;
 
+    if (this.noExpire) {
+      // Si “No expira” → no se envía fecha de expiración
+      expiresAtISO = undefined;
+    } else if (this.expiresAtLocal && this.expiresAtLocal.trim()) {
+      // Si el usuario eligió manualmente una fecha → se usa tal cual
+      expiresAtISO = new Date(this.expiresAtLocal).toISOString();
+    } else {
+      // Si no eligió fecha → se pone automáticamente un día después
+      const exp = new Date(scheduledDate.getTime() + 24 * 60 * 60 * 1000);
+      expiresAtISO = exp.toISOString();
+    }
+
+    // Flags de persistencia: controlan si la notificación se puede borrar
+    const isPersistent = this.noExpire;
+    const isDeletable = !this.noExpire;
+
+    // Construye el payload final con toda la información
     const payload: CreateNotificationDto = {
       from: this.userId!,
       to,
       scope,
       stageId,
       title: this.title,
-      message: { body: this.message, action: 'join_meeting' },
+      message: {
+        body: this.message,
+        action: 'join_meeting'
+      },
       notificationType: this.notificationType,
       priority: this.priority,
       scheduledAt: scheduledAtISO,
       expiresAt: expiresAtISO,
-      metadata: { source: 'meeting_system', category: 'reminder' },
+      metadata: {
+        source: 'meeting_system',
+        category: 'reminder'
+      },
       maxRetries: 3,
+      isTemporal: false,
+      temporalWindowType: 'FIXED_DAYS',
+      temporalWindowValue: 7,
+      temporalWindowStart: scheduledAtISO,
+      temporalWindowEnd: expiresAtISO
+        ? new Date(new Date(expiresAtISO).getTime() + 6 * 24 * 60 * 60 * 1000).toISOString()
+        : undefined,
+      temporalStageId: stageId,
+      isPersistent,
+      isDeletable
     };
 
+    // Emite el evento hacia el componente padre para que lo envíe al backend
     this.submitNotification.emit(payload);
 
+    // Limpia los campos del formulario tras enviar
     this.expiresAtLocal = '';
     this.datesInvalid = false;
     this.title = '';
     this.message = '';
 
-
+    // Reinicia selección de usuarios si el tipo es “user”
     if (this.selectedType === 'user') {
       this.selectedUsers = [];
       this.userResetTick++;
     }
   }
-
 }

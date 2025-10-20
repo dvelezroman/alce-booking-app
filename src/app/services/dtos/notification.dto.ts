@@ -49,6 +49,14 @@ export interface CreateNotificationDto {
   expiresAt?: string;
   metadata?: Record<string, any>;
   maxRetries?: number;
+  isPersistent?: boolean;
+  isDeletable?: boolean;
+  isTemporal?: boolean;
+  temporalWindowType?: 'FIXED_DAYS' | 'ROLLING';
+  temporalWindowValue?: number;
+  temporalWindowStart?: string;
+  temporalWindowEnd?: string;
+  temporalStageId?: number;
 }
 
 export interface CreateNotificationsBulkDto {
