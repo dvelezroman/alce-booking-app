@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.setupConnectionListeners();
-    this.checkAccessTokenAndRefreshSession();     
+    this.checkAccessTokenAndRefreshSession();
     // Initialize PWA service with service worker
     if (this.swUpdate) {
       this.pwaService.setSwUpdate(this.swUpdate);
