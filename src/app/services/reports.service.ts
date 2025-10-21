@@ -102,7 +102,7 @@ export class ReportsService {
       params = params.set('stageId', stageId.toString());
     }
 
-    return this.http.get(`${this.apiUrl}/statistics/total/summary/csv`, { params, responseType: 'blob' });
+    return this.http.get(`${this.apiUrl}/statistics/total/summary/excel`, { params, responseType: 'blob' });
   }
 
   getCsvDailySummaryReport(from: string, to: string, studentId?: number, stageId?: number) {
