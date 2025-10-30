@@ -34,9 +34,11 @@ import { Store } from '@ngrx/store';
 export class SearchingStudentComponent {
   // --- Variables principales ---
   screenWidth: number = 0;
-  isStudentForm = true;
+  //isStudentForm = true;
+  currentForm: 'student' | 'user' | 'code' = 'student';
   studentForm!: FormGroup;
   userForm!: FormGroup;
+  codeForm!: FormGroup;
   roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
   ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
   links: MeetingLinkDto[] = [];
@@ -94,23 +96,54 @@ export class SearchingStudentComponent {
       role: ['', Validators.required],
     });
 
+    this.codeForm = this.fb.group({
+      idNumber: ['', Validators.required],
+    });
+
     this.screenWidth = window.innerWidth;
   }
 
-  // --- Búsqueda ---
-  toggleForm() {
-    this.isStudentForm = !this.isStudentForm;
+  changeForm(formType: 'student' | 'user' | 'code') {
+    this.currentForm = formType;
+
+    // Limpiar los formularios
+    this.studentForm.reset({
+      userId: '',
+      firstName: '',
+      lastName: '',
+      stageId: '',
+    });
+
+    this.userForm.reset({
+      email: '',
+      role: '',
+    });
+
+    this.codeForm.reset({
+      idNumber: '',
+    });
+
+    // Limpiar los resultados y la paginación
     this.users = [];
     this.totalUsers = 0;
     this.currentPage = 1;
+    this.noResults = false;
   }
+
+  // --- Búsqueda ---
+  // toggleForm() {
+  //   this.isStudentForm = !this.isStudentForm;
+  //   this.users = [];
+  //   this.totalUsers = 0;
+  //   this.currentPage = 1;
+  // }
 
   searchUsers() {
     this.noResults = false;
     const role = this.userForm.value.role;
     this.showStageColumn = !role || role === 'STUDENT';
 
-    if (this.isStudentForm) {
+    if (this.currentForm === 'student') {
       const { firstName, lastName, stageId } = this.studentForm.value;
       this.usersService
         .searchUsers(
@@ -135,7 +168,7 @@ export class SearchingStudentComponent {
             this.showErrorModal('Error occurred while searching users.');
           },
         });
-    } else {
+    } else if (this.currentForm === 'user') {
       const { email, role } = this.userForm.value;
       this.usersService
         .searchUsers(
@@ -159,6 +192,31 @@ export class SearchingStudentComponent {
           },
         });
     }
+  }
+
+  searchByCode() {
+    this.noResults = false;
+    const { idNumber } = this.codeForm.value;
+
+    if (!idNumber || idNumber.trim() === '') {
+      this.showErrorModal('Por favor ingrese un código válido.');
+      return;
+    }
+
+    this.studentsService.findStudents({ idNumber }).subscribe({
+      next: (students) => {
+        this.users = students.map((s) => s.user as UserDto);
+        this.totalUsers = this.users.length;
+        
+        if (this.users.length === 0) {
+          setTimeout(() => (this.noResults = true), 1000);
+        }
+      },
+      error: (error) => {
+        console.error('Error al buscar estudiante por código:', error);
+        this.showErrorModal('Ocurrió un error al buscar por código.');
+      },
+    });
   }
 
   // --- MODAL: Editar usuario ---

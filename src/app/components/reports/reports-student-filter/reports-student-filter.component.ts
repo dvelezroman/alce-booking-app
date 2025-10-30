@@ -49,7 +49,12 @@ export class ReportsStudentFilterComponent implements OnInit {
     });
   }
 
+  // Si el campo de búsqueda se limpia, también reseteamos el estudiante seleccionado
   onSearchChange(term: string): void {
+    if (!term || term.trim() === '') {
+      this.selectedStudent = undefined;
+    }
+
     this.searchInput$.next(term);
   }
 

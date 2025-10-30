@@ -40,66 +40,57 @@
     will-change: transform;
   }
 
-  /* Estilos del switch */
-  .form-switch-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.3rem;
-    margin-bottom: 2rem;
-  }
+  /* === SWITCH DE TRES OPCIONES (Estudiante / Usuario / Código) === */
+.form-switch-container.triple {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f9fafb;
+  margin: 0 auto 2rem auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
 
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 30px;
-    height: 16px;
-  }
+/* Cada opción */
+.switch-label {
+  flex: 1;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #6b7280;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.25s ease;
+}
 
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
+/* Opción activa */
+.switch-label.bold-text {
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+  color: white !important;
+  font-weight: 600;
+}
 
-  .slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: -2.5px;
-    bottom: 0;
-    background-color: #ccc;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
+.switch-label:not(.bold-text):hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
 
-  .slider:before {
-    position: absolute;
-    content: '';
-    height: 12px;
-    width: 12px;
-    left: 3px;
-    bottom: 2px;
-    background-color: rgb(255, 255, 255);
-    border-radius: 50%;
-    transition: 0.2s;
-  }
-
-  input:checked + .slider:before {
-    transform: translateX(15px);
+/* Adaptación para móvil */
+@media (max-width: 640px) {
+  .form-switch-container.triple {
+    width: 80%;
+    border-radius: 8px;
   }
 
   .switch-label {
-    font-size: .9rem;
-    font-weight: 400;
-    color: #8c8b8b;
+    font-size: 0.85rem;
+    padding: 0.6rem;
   }
-
-  .bold-text {
-    font-weight: 400;
-    color: #2c2b2b;
-  }
+}
 
   .form-card-container {
     width: 100%;
@@ -162,7 +153,7 @@
   /* Botón de búsqueda */
   .search-button {
     width: 100%;
-    padding: 0.85rem;
+    padding: 0.7rem;
     background-color: #4490e2;
     color: #ffffff;
     border: none;

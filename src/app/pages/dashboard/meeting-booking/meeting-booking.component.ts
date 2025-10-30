@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {CommonModule, isPlatformBrowser} from "@angular/common";
-import {RouterModule} from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import {Store} from "@ngrx/store";
 import {Observable, Subject, takeUntil, tap} from "rxjs";
 import { DateTime} from "luxon";
@@ -29,6 +29,7 @@ import { FeatureFlagService } from '../../../services/feature-flag.service';
 import { HandleDatesService } from '../../../services/handle-dates.service';
 import { convertEcuadorHourToLocal, getTimezoneOffsetHours, convertEcuadorDateToLocal } from '../../../shared/utils/dates.util';
 import { selectUserData } from '../../../store/user.selector';
+import { NotificationService } from '../../../services/notification.service';
 
 
 @Component({
@@ -90,6 +91,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   localdateSelected: string = '';
   resetCalendarSelectionTrigger = false;
 
+  hasUnreadNotifications: boolean = false;
+
   modalConfig: ModalDto = modalInitializer();
   showTimeSlotsModal = false;
   isMeetingDetailModalActive = false;
@@ -103,7 +106,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     private bookingService: BookingService,
     private cdr: ChangeDetectorRef,
     private ffService: FeatureFlagService,
-    private handleDatesService: HandleDatesService
+    private handleDatesService: HandleDatesService,
+    private notificationService: NotificationService,
+    private router: Router
   ) {
     this.userData$ = this.store.select(selectUserData);
   }
@@ -135,6 +140,12 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.ecuadorTimeInterval = setInterval(() => {
       this.updateEcuadorTime();
       } , 60000);
+
+    this.notificationService.unreadCount$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(count => {
+        this.hasUnreadNotifications = count > 0;
+      });
   }
 
   ngOnDestroy() {
@@ -192,6 +203,21 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     //   this.showModalMessage("Debes completar tu información personal antes de agendar clases.");
     //   return;
     // }
+
+    if (this.hasUnreadNotifications) {
+      this.showModalMessage(
+        "Tienes notificaciones pendientes por leer. Por favor, revísalas antes de agendar clases.",
+        true
+      );
+
+      setTimeout(() => {
+        this.router.navigate(['/dashboard/notifications-inbox']);
+      }, 3000);
+
+      this.hideModalAfterDelay(3000);
+      return; 
+    }
+
     const [year, month, day] = event.date.split('-').map(Number);
 
     this.selectedDate = event.date;

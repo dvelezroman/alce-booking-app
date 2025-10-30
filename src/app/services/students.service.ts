@@ -71,24 +71,46 @@ export class StudentsService implements OnInit{
   }
 
   updateStudentById(id: number, data: Partial<Student>): Observable<Student> {
-  return this.http.patch<Student>(`${this.apiUrl}/${id}`, data).pipe(
-    tap((updatedStudent) => {
-      // ✅ Actualizar snapshot en localStorage (sin duplicar token)
-      if (typeof window !== 'undefined' && localStorage) {
-        const raw = localStorage.getItem('userData');
-        const current: UserDto | null = raw ? JSON.parse(raw) : null;
+    return this.http.patch<Student>(`${this.apiUrl}/${id}`, data).pipe(
+      tap((updatedStudent) => {
+        // ✅ Actualizar snapshot en localStorage (sin duplicar token)
+        if (typeof window !== 'undefined' && localStorage) {
+          const raw = localStorage.getItem('userData');
+          const current: UserDto | null = raw ? JSON.parse(raw) : null;
 
-        if (current) {
-          const merged: UserDto = {
-            ...current, // mantiene el accessToken y demás datos
-            student: { ...(current.student || {}), ...updatedStudent },
-          };
+          if (current) {
+            const merged: UserDto = {
+              ...current, // mantiene el accessToken y demás datos
+              student: { ...(current.student || {}), ...updatedStudent },
+            };
 
-          localStorage.setItem('userData', JSON.stringify(merged));
+            localStorage.setItem('userData', JSON.stringify(merged));
+          }
         }
+      })
+    );
+  }
+
+  // Buscar estudiantes con filtros
+  findStudents(filters: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    idNumber?: string;
+    status?: string;
+    mode?: string;
+    stageId?: number;
+    classification?: string;
+  }): Observable<Student[]> {
+    let params = new HttpParams();
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        params = params.set(key, value.toString());
       }
-    })
-  );
-}
+    });
+
+    return this.http.get<Student[]>(`${this.apiUrl}`, { params });
+  }
 }
 
