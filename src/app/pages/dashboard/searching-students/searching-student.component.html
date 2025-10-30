@@ -19,19 +19,36 @@
   <div class="main-form-container">
 
       <!-- Switch para cambiar entre estudiante y usuario -->
-      <div class="form-switch-container">
-          <span class="switch-label" [ngClass]="{ 'bold-text': isStudentForm }">Estudiante</span>
-          <label class="switch">
-            <input type="checkbox" (change)="toggleForm()">
-            <span class="slider"></span>
-          </label>
-          <span class="switch-label" [ngClass]="{ 'bold-text': !isStudentForm }">Usuario</span>
+      <div class="form-switch-container triple">
+        <span
+          class="switch-label"
+          [ngClass]="{ 'bold-text': currentForm === 'student' }"
+          (click)="changeForm('student')"
+        >
+          Estudiante
+        </span>
+
+        <span
+          class="switch-label"
+          [ngClass]="{ 'bold-text': currentForm === 'user' }"
+          (click)="changeForm('user')"
+        >
+          Usuario
+        </span>
+
+        <span
+          class="switch-label"
+          [ngClass]="{ 'bold-text': currentForm === 'code' }"
+          (click)="changeForm('code')"
+        >
+          Código
+        </span>
       </div>
 
       <div class="form-card-container">
         <div class="form-card">
           <!-- Formulario de Estudiante -->
-          <div *ngIf="isStudentForm" class="form-wrapper">
+          <div *ngIf="currentForm === 'student'" class="form-wrapper">
             <form [formGroup]="studentForm" (ngSubmit)="searchUsers()">
               <div class="form-field">
                 <select id="stageId" formControlName="stageId">
@@ -52,7 +69,7 @@
           </div>
       
           <!-- Formulario de Usuario -->
-          <div *ngIf="!isStudentForm" class="form-wrapper">
+          <div *ngIf="currentForm === 'user'" class="form-wrapper">
             <form [formGroup]="userForm" (ngSubmit)="searchUsers()">
               <div class="form-field">
                 <input type="email" id="emailInput" formControlName="email" placeholder="Ingrese el Email" />
@@ -65,6 +82,22 @@
               </div>
               <div class="form-action">
                 <button class="search-button" type="submit">Buscar Usuario</button>
+              </div>
+            </form>
+          </div>
+
+          <div *ngIf="currentForm === 'code'" class="form-wrapper">
+            <form [formGroup]="codeForm" (ngSubmit)="searchByCode()">
+              <div class="form-field">
+                <input
+                  type="text"
+                  id="idNumber"
+                  formControlName="idNumber"
+                  placeholder="Ingrese el código del estudiante (ID Number)"
+                />
+              </div>
+              <div class="form-action">
+                <button class="search-button" type="submit">Buscar por Código</button>
               </div>
             </form>
           </div>

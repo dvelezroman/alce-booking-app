@@ -28,7 +28,7 @@ import { PushNotificationService } from "../../../services/push-notification.ser
     SidebarComponent,
     UnreadBannerComponent,
     StudentBannerComponent,
-    GlobalNoticeBannerComponent,
+    // GlobalNoticeBannerComponent,
     NotificationPermissionComponent,
     PwaInstallComponent,
     PwaInstallBannerComponent,
