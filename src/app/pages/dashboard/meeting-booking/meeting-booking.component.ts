@@ -91,7 +91,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   localdateSelected: string = '';
   resetCalendarSelectionTrigger = false;
 
-  hasUnreadNotifications: boolean = false;
+  // hasUnreadNotifications: boolean = false;
 
   modalConfig: ModalDto = modalInitializer();
   showTimeSlotsModal = false;
@@ -141,11 +141,16 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.updateEcuadorTime();
       } , 60000);
 
-    this.notificationService.unreadCount$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(count => {
-        this.hasUnreadNotifications = count > 0;
-      });
+    // this.notificationService.loadUnreadCount().subscribe(count => {
+    //   //console.log('[Booking] Conteo actualizado desde backend:', count);
+    //   this.hasUnreadNotifications = count > 0;
+    // });
+
+    // this.notificationService.unreadCount$
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe(count => {
+    //     this.hasUnreadNotifications = count > 0;
+    //   });
   }
 
   ngOnDestroy() {
@@ -167,6 +172,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.cdr.detectChanges();
     }, 300);
   }
+
+  
 
   private updateEcuadorTime(): void {
     const nowInEcuador = DateTime.now().setZone('America/Guayaquil').setLocale('es');
@@ -199,33 +206,50 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   onDaySelected(event: { date: string; label: string; day: number }) {
-    // if (this.userData?.dataCompleted === false) {
-    //   this.showModalMessage("Debes completar tu información personal antes de agendar clases.");
-    //   return;
-    // }
+  // Verificar en el backend si hay notificaciones sin leer
+  this.notificationService.loadUnreadCount().subscribe({
+    next: (count) => {
+      if (count > 0) {
+        // Si hay notificaciones sin leer, bloqueamos selección
+        this.showModalMessage(
+          "Tienes notificaciones pendientes por leer. Por favor, revísalas antes de agendar clases.",
+          true
+        );
 
-    if (this.hasUnreadNotifications) {
-      this.showModalMessage(
-        "Tienes notificaciones pendientes por leer. Por favor, revísalas antes de agendar clases.",
-        true
-      );
+        setTimeout(() => {
+          this.router.navigate(['/dashboard/notifications-inbox']);
+        }, 3000);
 
-      setTimeout(() => {
-        this.router.navigate(['/dashboard/notifications-inbox']);
-      }, 3000);
+        this.hideModalAfterDelay(3000);
+        return;
+      }
 
-      this.hideModalAfterDelay(3000);
-      return; 
+      // Si no hay notificaciones sin leer, continuamos normalmente
+      const [year, month, day] = event.date.split('-').map(Number);
+      this.selectedDate = event.date;
+      this.selectedDay = day;
+      this.selectedYear = year;
+      this.selectedMonth = DateTime.fromObject({ month })
+        .setLocale('es')
+        .toFormat('LLLL')
+        .toUpperCase();
+      this.selectedDayFormatted = event.label;
+    },
+    error: (err) => {
+      console.error('[Booking] Error al verificar notificaciones:', err);
+      // Si hay error en el fetch, permitimos continuar normalmente
+      const [year, month, day] = event.date.split('-').map(Number);
+      this.selectedDate = event.date;
+      this.selectedDay = day;
+      this.selectedYear = year;
+      this.selectedMonth = DateTime.fromObject({ month })
+        .setLocale('es')
+        .toFormat('LLLL')
+        .toUpperCase();
+      this.selectedDayFormatted = event.label;
     }
-
-    const [year, month, day] = event.date.split('-').map(Number);
-
-    this.selectedDate = event.date;
-    this.selectedDay = day;
-    this.selectedYear = year;
-    this.selectedMonth = DateTime.fromObject({ month }).setLocale('es').toFormat('LLLL').toUpperCase();
-    this.selectedDayFormatted = event.label;
-  }
+  });
+}
 
   formatDate(date: Date): string {
     const year = date.getFullYear();
