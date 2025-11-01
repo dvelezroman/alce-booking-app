@@ -150,31 +150,41 @@ export class ReportUserComponent {
     return html;
   }
   
-  handleDownloadCsv(): void {
-    const { userId, userRole, userStatus, comment, alert, newStudents, stageId } = this.lastFiltersUsed;
+  handleDownloadExcel(filters?: {
+    userId?: number;
+    userRole?: UserRole;
+    userStatus?: UserStatus;
+    comment?: boolean;
+    alert?: boolean;
+    newStudents?: boolean;
+    stageId?: number;
+  }): void {
+    const { userId, userRole, userStatus, comment, alert, newStudents, stageId } = filters || this.lastFiltersUsed;
 
-    this.reportsService.getUsersDataCsv(
-      this.currentPage,
-      userId,
-      userRole,
-      userStatus,
-      stageId,
-      comment,
-      alert,
-      newStudents
-    ).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'reporte_usuarios.csv';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (error) => {
-        console.error('Error al descargar CSV:', error);
-      }
-    });
+    this.reportsService
+      .getUsersDataExcel(
+        this.currentPage,
+        userId,
+        userRole,
+        userStatus,
+        stageId,
+        comment,
+        alert,
+        newStudents
+      )
+      .subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'reporte_usuarios.xlsx';
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (error) => {
+          console.error('Error al descargar Excel:', error);
+        },
+      });
   }
 
   private showModal(message: string, options?: {
