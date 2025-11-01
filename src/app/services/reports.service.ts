@@ -185,7 +185,7 @@ export class ReportsService {
     return this.http.get<UsersResponse>(`${this.apiUrl}/users/data`, { params });
   }
 
-  getUsersDataCsv(
+  getUsersDataExcel(
     page: number,
     userId?: number,
     userRole?: UserRole,
@@ -205,7 +205,10 @@ export class ReportsService {
     if (alert) params = params.set('alert', alert.toString());
     if (newStudents) params = params.set('newStudents', newStudents.toString());
 
-    return this.http.get(`${this.apiUrl}/users/data/csv`, { params, responseType: 'blob' });
+    return this.http.get(`${this.apiUrl}/users/data/excel`, {
+      params,
+      responseType: 'blob',
+    });
   }
 
   downloadAbsentStudentsExcel(filters: AbsentStudentsExcelFilterDto) {

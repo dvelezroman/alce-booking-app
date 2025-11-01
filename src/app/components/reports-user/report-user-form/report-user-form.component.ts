@@ -13,7 +13,16 @@ import { UsersService } from '../../../services/users.service';
   styleUrls: ['./report-user-form.component.scss']
 })
 export class ReportFormComponent {
-  @Output() downloadCsvRequested = new EventEmitter<void>();
+  @Output() downloadExcelRequested = new EventEmitter<{
+    userId?: number;
+    userRole?: UserRole;
+    userStatus?: UserStatus;
+    comment?: boolean;
+    alert?: boolean;
+    stageId?: number;
+    newStudents?: boolean;
+  }>();
+
   @Output() filtersSubmitted = new EventEmitter<{
     userId?: number;
     userRole?: UserRole;
@@ -28,10 +37,10 @@ export class ReportFormComponent {
   selectedUser?: UserDto;
   filteredUsers: UserDto[] = [];
   searchInput$ = new Subject<string>();
-  
+
   roleFilter: UserRole | null = null;
   statusFilter: UserStatus | null = null;
-  
+
   isExpanded: boolean = false;
   showUserDropdown: boolean = false;
   alertFilter: boolean | null = null;
@@ -48,9 +57,9 @@ export class ReportFormComponent {
 
   onSearchChange(term: string): void {
     this.searchInput$.next(term);
-      if (term.trim() === '') {
-        this.selectedUser = undefined;
-      }
+    if (term.trim() === '') {
+      this.selectedUser = undefined;
+    }
   }
 
   filterUsers(term: string): void {
@@ -77,7 +86,6 @@ export class ReportFormComponent {
     this.searchTerm = `${user.firstName} ${user.lastName}`;
     this.filteredUsers = [];
     this.showUserDropdown = false;
-    //console.log('Usuario seleccionado:', user);
   }
 
   hideDropdown(): void {
@@ -87,20 +95,29 @@ export class ReportFormComponent {
   }
 
   searchUserReport(): void {
-    const filters = {
+    const filters = this.getCurrentFilters();
+    this.filtersSubmitted.emit(filters);
+  }
+
+  emitDownloadExcel(): void {
+    const filters = this.getCurrentFilters();
+    this.downloadExcelRequested.emit(filters);
+  }
+
+  clearSelectedUser(): void {
+    this.selectedUser = undefined;
+    this.searchTerm = '';
+  }
+
+  private getCurrentFilters() {
+    return {
       userId: this.selectedUser?.id,
       userRole: this.selectedUser?.role ?? this.roleFilter ?? undefined,
       userStatus: this.statusFilter ?? undefined,
       comment: this.commentFilter ?? undefined,
       alert: this.alertFilter ?? undefined,
-      newStudents: this.newStudentsFilter ?? undefined
+      newStudents: this.newStudentsFilter ?? undefined,
+      stageId: undefined
     };
-
-   // console.log('filtros enviados al padre:', filters);
-    this.filtersSubmitted.emit(filters);
   }
-
-  emitDownloadCsv(): void {
-  this.downloadCsvRequested.emit();
-}
 }

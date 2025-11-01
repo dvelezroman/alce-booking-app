@@ -34,7 +34,7 @@
     <div class="field mt-4">
       <label class="label">Rol</label>
       <div class="control">
-        <select class="input" [(ngModel)]="roleFilter">
+        <select class="input" [(ngModel)]="roleFilter" (change)="clearSelectedUser()">
           <option [ngValue]="null">Todos</option>
           <option [ngValue]="'STUDENT'">Estudiante</option>
           <option [ngValue]="'INSTRUCTOR'">Instructor</option>
@@ -46,7 +46,7 @@
     <div class="field mt-4">
       <label class="label">Estado</label>
       <div class="control">
-        <select class="input" [(ngModel)]="statusFilter">
+        <select class="input" [(ngModel)]="statusFilter" (change)="clearSelectedUser()">
           <option [ngValue]="null">Todos</option>
           <option [ngValue]="'ACTIVE'">Activo</option>
           <option [ngValue]="'INACTIVE'">Inactivo</option>
@@ -58,7 +58,7 @@
     <div class="field mt-4">
       <label class="label">Comentario</label>
       <div class="control">
-        <select class="input" [(ngModel)]="commentFilter">
+        <select class="input" [(ngModel)]="commentFilter" (change)="clearSelectedUser()">
           <option [ngValue]="null">Todos</option>
           <option [ngValue]="true">Con comentario</option>
           <option [ngValue]="false">Sin comentario</option>
@@ -69,7 +69,7 @@
     <div class="field mt-4">
       <label class="label">Alertas</label>
       <div class="control">
-        <select class="input" [(ngModel)]="alertFilter">
+        <select class="input" [(ngModel)]="alertFilter" (change)="clearSelectedUser()">
           <option [ngValue]="null">Todos</option>
           <option [ngValue]="true">Con alertas</option>
           <option [ngValue]="false">Sin alertas</option>
@@ -80,7 +80,7 @@
     <div class="field mt-4">
       <label class="label">Nuevos estudiantes</label>
       <div class="control">
-        <select class="input" [(ngModel)]="newStudentsFilter">
+        <select class="input" [(ngModel)]="newStudentsFilter" (change)="clearSelectedUser()">
           <option [ngValue]="null">Todos</option>
           <option [ngValue]="true">Sí</option>
           <option [ngValue]="false">No</option>
@@ -94,8 +94,8 @@
       Buscar
     </button>
 
-    <button class="button is-secondary" (click)="emitDownloadCsv()">
-      Descargar CSV
+    <button class="button is-secondary" (click)="emitDownloadExcel()">
+      Descargar
     </button>
   </div>
 </div>

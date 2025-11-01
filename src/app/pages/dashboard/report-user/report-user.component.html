@@ -4,20 +4,21 @@
   </h1>
 
   <app-report-form 
-    (filtersSubmitted)="handleFormSubmit($event)" 
-    (downloadCsvRequested)="handleDownloadCsv()"/>
+  (filtersSubmitted)="handleFormSubmit($event)" 
+  (downloadExcelRequested)="handleDownloadExcel($event)"
+  />
 
-    <div class="report-table-wrapper">
-      <app-report-user-table
-        [users]="users"
-        [currentPage]="currentPage"
-        [itemsPerPage]="itemsPerPage"
-        [totalUsers]="totalUsers"
-        [totalPages]="totalPages"
-        (pageChanged)="handlePageChange($event)"
-       (stageClicked)="handleStageClick($event.studentId)"
-      />
-    </div>
+  <div class="report-table-wrapper">
+    <app-report-user-table
+      [users]="users"
+      [currentPage]="currentPage"
+      [itemsPerPage]="itemsPerPage"
+      [totalUsers]="totalUsers"
+      [totalPages]="totalPages"
+      (pageChanged)="handlePageChange($event)"
+      (stageClicked)="handleStageClick($event.studentId)"
+    />
+  </div>
 </section>
 
 <app-modal
