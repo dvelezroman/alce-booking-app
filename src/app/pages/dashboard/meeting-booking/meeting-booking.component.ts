@@ -351,10 +351,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
           this.hideModalAfterDelay(2000);
           this.initializeMeetings();
         },
-        error: () => {
-          this.showModalMessage("Ya tienes una meeting agendada en la fecha y hora seleccionada.");
-          this.showSuccessModal = false;
-          this.hideModalAfterDelay(2000);
+        error: (err) => {
+          const backendMsg = err?.error?.message;
+
+          if (backendMsg?.includes("No se puede programar una clase")) {
+            this.showModalMessage(backendMsg);
+            this.showSuccessModal = false;
+            this.hideModalAfterDelay(5000);
+
+          } else {
+            this.showModalMessage("Ya tienes una meeting agendada en la fecha y hora seleccionada.");
+            this.showSuccessModal = false;
+            this.hideModalAfterDelay(3000);
+          }
         }
       });
     } else {
