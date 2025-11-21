@@ -34,6 +34,12 @@
         class="progress-bar-fill"
         [style.width.%]="stageProgress"
         [attr.data-value]="stageProgress + '%'"
+        [ngClass]="{
+          'progress-low': stageProgress < 40,
+          'progress-medium': stageProgress >= 40 && stageProgress < 70,
+          'progress-high': stageProgress >= 70 && stageProgress < 100,
+          'progress-full': stageProgress === 100
+        }"
       ></div>
     </div>
   </div>
