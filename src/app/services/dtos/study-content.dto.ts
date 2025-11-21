@@ -11,6 +11,7 @@ export interface StudyContentDto {
   description: string;
   content?: string;
   enabled: boolean;
+  measurable: boolean
   createdAt: Date;
   updatedAt: Date;
   disabledAt?: Date;
@@ -23,6 +24,7 @@ export interface StudyContentCreateDto {
   description: string;
   content?: string;
   enabled: boolean;
+  measurable: boolean
   createdAt: Date;
   updatedAt: Date;
   disabledAt?: Date;
@@ -36,6 +38,7 @@ export interface StudyContentUpdateDto {
   description?: string;
   content?: string;
   enabled?: boolean;
+  measurable: boolean
 }
 
 export interface StudyContentPayloadI {

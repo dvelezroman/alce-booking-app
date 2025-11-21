@@ -23,7 +23,8 @@ export class EditContentModalComponent implements OnInit {
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(5)]],
       textContent: [''],
-      enabled: [true] 
+      enabled: [true],
+      measurable: [false]  
     });
   }
 
@@ -35,7 +36,8 @@ export class EditContentModalComponent implements OnInit {
         description: this.content.description,
         textContent: this.content.content
           ? this.tryExtractText(this.content.content)
-          : ''
+          : '',
+        measurable: this.content.measurable
       });
     }
   }
@@ -63,7 +65,8 @@ export class EditContentModalComponent implements OnInit {
       title: formValues.title,
       description: formValues.description,
       content: formValues.textContent ? JSON.stringify(formValues.textContent.trim()) : '',
-      enabled: formValues.enabled 
+      enabled: formValues.enabled,
+      measurable: this.content.measurable 
     };
   
     this.update.emit(updatedData);
