@@ -6,6 +6,8 @@ import { Stage } from '../../../services/dtos/student.dto';
 import { StudyContentPayloadI, StudyContentDto } from '../../../services/dtos/study-content.dto';
 import { StagesService } from '../../../services/stages.service';
 import { StudyContentService } from '../../../services/study-content.service';
+import { StageProgressList } from '../../../services/dtos/stage-progress.dto';
+import { StageProgressService } from '../../../services/stage-progress';
 
 
 @Component({
@@ -25,9 +27,13 @@ export class ReportsProgressComponent implements OnInit {
   showStageTitle: boolean = false;
   studentStageDescription: string = '';
 
+  studentProgress: StageProgressList = [];
+  studentCurrentStageProgress: number = 0;
+
   constructor(
     private studyContentService: StudyContentService,
-    private stagesService: StagesService
+    private stagesService: StagesService,
+    private stageProgressService: StageProgressService
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +72,7 @@ export class ReportsProgressComponent implements OnInit {
     const fromDate = filters.from ?? undefined;
     const toDate = filters.to ?? undefined;
 
+    //  Fetch historial de contenidos del estudiante
     this.studyContentService
       .getStudyContentHistoryForStudentId(filters.studentId, fromDate, toDate)
       .subscribe({
@@ -77,6 +84,18 @@ export class ReportsProgressComponent implements OnInit {
           this.studentContentHistory = [];
         },
       });
+
+    //  Fetch progreso del estudiante
+    this.stageProgressService.getProgressByStudent(filters.studentId).subscribe({
+      next: (progressList) => {
+        if (progressList.length > 0) {
+          this.studentCurrentStageProgress = Number(progressList[0].progress);
+        }
+      },
+      error: () => {
+        this.studentCurrentStageProgress = 0;
+      }
+    });
   }
 
   private identifyAndLoadCurrentStage(history: StudyContentPayloadI[]): void {

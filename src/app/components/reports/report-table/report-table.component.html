@@ -24,6 +24,20 @@
     </span>
   </div>
 
+  <div *ngIf="showProgress" class="progress-wrapper">
+    <h3 class="progress-title">
+      Progreso del {{ studentStageDescription }}
+    </h3>
+
+    <div class="progress-bar-container">
+      <div
+        class="progress-bar-fill"
+        [style.width.%]="stageProgress"
+        [attr.data-value]="stageProgress + '%'"
+      ></div>
+    </div>
+  </div>
+
   <div class="table-container">
     <table class="table-results is-fullwidth" *ngIf="history.length > 0">
       <thead>
