@@ -9,14 +9,10 @@
 
     <!-- Barra -->
     <div class="progress-bar">
-    <div
-        class="fill"
-        [style.width.%]="item.progress"
-        [ngClass]="{
-        'low': item.progress <= 20,
-        'mid': item.progress > 20 && item.progress < 100,
-        'full': item.progress == 100
-        }"
+   <div
+      class="fill"
+      [style.width.%]="item.progress"
+      [style.background]="getColor(item.progress)"
     ></div>
     <span class="percent">{{ item.progress }}%</span>
     </div>

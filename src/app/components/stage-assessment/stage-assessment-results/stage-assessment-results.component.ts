@@ -11,5 +11,11 @@ import { StageProgressByStage } from '../../../services/dtos/stage-progress.dto'
 })
 export class StageAssessmentResultsComponent {
   @Input() progressList: StageProgressByStage = [];
+
+  getColor(progress: number): string {
+    // HUE va de 280° (púrpura) → 210° (azul)
+    const hue = 280 - (progress * 0.9);
+    return `hsl(${hue}, 75%, 65%)`;
+  }
   
 }
