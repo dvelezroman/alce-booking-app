@@ -5,11 +5,8 @@
 }
 
 .stage-form {
-  width: 300px;
+  width: 400px;
   max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
   margin: 6rem auto 0;
   background: #ffffff;
   padding: 1.5rem 1.3rem; 
@@ -17,14 +14,24 @@
   box-shadow: 0px 4px 16px rgba(0,0,0,0.06);
 }
 
-.form-group label {
-  font-weight: 500;
-  font-size: .85rem;
-  color: #444;
-  margin-bottom: 0.35rem;
+/* === FILA (SELECT + BOTÓN) === */
+.form-row {
+  display: flex;
+  align-items: flex-end;
+  gap: .5rem;
 }
 
-/* SELECT NORMAL */
+.form-group {
+  flex: 1;
+}
+
+.form-group label {
+  font-weight: 500;
+  font-size: .8rem;
+  color: #555;
+}
+
+/* SELECT */
 .input {
   width: 100%;
   font-size: .85rem;
@@ -45,15 +52,15 @@
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
 }
 
-/* Placeholder disabled */
 .input option[disabled] {
   color: #757575;
 }
 
 /* BOTÓN */
 .submit-btn {
-  padding: 0.5rem;
-  font-size: 1rem;
+  height: 32px; 
+  padding: 0 1rem;
+  font-size: .80rem;
   color: #fff;
   background: #3B82F6;
   border: none;
@@ -67,7 +74,7 @@
 }
 
 .submit-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
@@ -75,5 +82,18 @@
 @media (max-width: 768px) {
   .stage-form {
     max-width: 100%;
+  }
+
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .submit-btn {
+    width: 120px;
+    height: 32px; 
+    padding: 0 1rem;
+    font-size: .80rem;
+    margin: 0 auto;
   }
 }
