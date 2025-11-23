@@ -7,6 +7,17 @@
     (stageSelected)="onStageSelected($event)">
   </app-stage-assessment-filter>
 
+  <!-- BUSCADOR(sobre TODA la lista) -->
+  <div class="search-wrapper" *ngIf="stageProgressList.length > 0">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Buscar estudiante..."
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+    />
+  </div>
+
   <div class="content-wrapper">
     <app-stage-assessment-results
       *ngIf="pagedList.length > 0"

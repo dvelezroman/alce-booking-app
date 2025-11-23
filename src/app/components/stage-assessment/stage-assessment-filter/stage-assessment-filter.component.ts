@@ -21,15 +21,50 @@ export class StageAssessmentFilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.stagesService.getAll().subscribe({
-      next: (stages) => (this.stages = stages),
+      next: (stages) => {
+        this.stages = this.prepareStages(stages);
+      },
       error: () => (this.stages = []),
     });
   }
 
+  // MÉTODO PRINCIPAL Aplica filtro + ordenamiento
+  private prepareStages(stages: Stage[]): Stage[] {
+    const valid = this.filterValidStages(stages);
+    return this.sortStages(valid);
+  }
+
+
+   // 1) FILTRA SOLO ACTIVITIES + STG 0–19
+  private filterValidStages(stages: Stage[]): Stage[] {
+    return stages.filter((s) => {
+      const num = s.number?.trim().toUpperCase();
+
+      if (num === "ACTIVITIES") return true;
+
+      // STG 0 a STG 19 
+      return /^STG\s*(1?\d|0)$/.test(num);
+    });
+  }
+
+   // 2) ORDENA: ACTIVITIES → STG 0 → STG 1 → … STG 19 
+  private sortStages(stages: Stage[]): Stage[] {
+    const activities = stages.find(s => s.number.toUpperCase() === "ACTIVITIES");
+    const withoutActivities = stages.filter(s => s.number.toUpperCase() !== "ACTIVITIES");
+
+    // Orden STG 0 → STG 19
+    withoutActivities.sort((a, b) => {
+      const aNum = parseInt(a.number.replace("STG", "").trim(), 10);
+      const bNum = parseInt(b.number.replace("STG", "").trim(), 10);
+      return aNum - bNum;
+    });
+
+    return activities ? [activities, ...withoutActivities] : withoutActivities;
+  }
+
   onStageChange() {
-    const id = this.selectedStageId ? Number(this.selectedStageId) : undefined;
-    if (id) {
-      this.stageSelected.emit(id);
+    if (this.selectedStageId) {
+      this.stageSelected.emit(this.selectedStageId);
     }
   }
 
