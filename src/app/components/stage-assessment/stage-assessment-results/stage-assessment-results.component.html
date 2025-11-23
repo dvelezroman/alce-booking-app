@@ -1,0 +1,26 @@
+<div class="results-list">
+
+  <div class="item" *ngFor="let item of progressList">
+
+    <!-- Nombre -->
+    <div class="student-name">
+      {{ item.student.user?.firstName }} {{ item.student.user?.lastName }}
+    </div>
+
+    <!-- Barra -->
+    <div class="progress-bar">
+    <div
+        class="fill"
+        [style.width.%]="item.progress"
+        [ngClass]="{
+        'low': item.progress <= 20,
+        'mid': item.progress > 20 && item.progress < 100,
+        'full': item.progress == 100
+        }"
+    ></div>
+    <span class="percent">{{ item.progress }}%</span>
+    </div>
+
+  </div>
+
+</div>

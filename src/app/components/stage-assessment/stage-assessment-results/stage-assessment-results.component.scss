@@ -1,0 +1,103 @@
+.results-list {
+  width: 90%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .student-name {
+    width: 55%;
+    font-weight: 400;
+    color: #333;
+    font-size: .85rem;
+  }
+
+  /* ---- Barra ---- */
+  .progress-bar {
+    width: 45%;
+    height: 20px;
+    background: #e5e5e5;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .fill {
+    height: 100%;
+    transition: width 0.4s ease;
+    border-radius: 10px;
+    position: relative;
+  }
+
+  /* === COLORES DE LA BARRA === */
+
+  /* 0% → 20% */
+  .fill.low {
+    background: #a955f7ca; 
+  }
+
+  .fill.mid {
+    background: linear-gradient(
+      90deg,
+      #a955f7ca 0%,
+      #c084fcca 40%,
+      #3c92f4d1 80%
+    );
+  }
+
+  /* SOLO 100% */
+  .fill.full {
+    background: #0889e4;
+  }
+
+  /* ---- Porcentaje oculto ---- */
+  .percent {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #333; 
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 1.5px 6px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+    }
+
+  /* Mostrar porcentaje SOLO en hover */
+  .progress-bar:hover .percent {
+    opacity: 1;
+    color: #333;
+  }
+}
+
+/* ========================= */
+/*   RESPONSIVE (MÓVIL)     */
+/* ========================= */
+/* Scroll horizontal en pantallas pequeñas sin cambiar diseño */
+@media (max-width: 768px) {
+  .results-list {
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .item {
+    min-width: 600px; /* Mantiene el mismo diseño y activa scroll */
+  }
+}
+

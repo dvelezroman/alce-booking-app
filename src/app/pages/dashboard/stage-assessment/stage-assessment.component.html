@@ -1,0 +1,17 @@
+<h2 class="title stage">Progreso por Stage</h2>
+
+<section class="stage-assessment-section">
+
+  <!-- FORMULARIO-->
+  <app-stage-assessment-filter
+    (stageSelected)="onStageSelected($event)">
+  </app-stage-assessment-filter>
+
+  <div class="content-wrapper">
+    <app-stage-assessment-results
+      *ngIf="stageProgressList.length > 0"
+      [progressList]="stageProgressList">
+    </app-stage-assessment-results>
+  </div>
+
+</section>

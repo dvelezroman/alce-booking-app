@@ -1,0 +1,28 @@
+<div class="form-wrapper">
+  <form (ngSubmit)="onSubmit()" #stageForm="ngForm" class="stage-form">
+
+    <div class="form-group">
+      <label for="stageId">Stage</label>
+      <select
+        id="stageId"
+        class="input"
+        name="stageId"
+        required
+        [(ngModel)]="selectedStageId"
+      >
+        <option [ngValue]="null" disabled>
+          Seleccione un Stage
+        </option>
+
+        <option *ngFor="let s of stages" [ngValue]="s.id">
+          {{ s.description }}
+        </option>
+      </select>
+    </div>
+
+    <button class="submit-btn" type="submit" [disabled]="stageForm.invalid">
+      Buscar
+    </button>
+
+  </form>
+</div>

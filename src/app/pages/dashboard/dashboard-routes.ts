@@ -44,6 +44,7 @@ import { EmailDetailComponent } from './emails/email-detail/email-detail.compone
 import { ProfileComponent } from './profile/profile.component';
 import { WhatsAppMessageDetailComponent } from './whatsapp-message-detail/whatsapp-message-detail.component';
 import { ReportsExcelPageComponent } from './reports-excel-page/reports-excel-page.component';
+import { StageAssessmentComponent } from './stage-assessment/stage-assessment.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -74,6 +75,7 @@ export const dashboardRoutes: Routes = [
   { path: 'assessment', component: AssessmentComponent },
   { path: 'assessment-reports', component: AssessmentReportsComponent },
   { path: 'assessment-config', component: AssessmentConfigComponent },
+  { path: 'stage-assessment', component: StageAssessmentComponent },
   { path: 'processed-events', component: ProcessedEventsComponent },
   { path: 'notifications-status', component: NotificationsStatusComponent },
   { path: 'notifications-groups', component: GroupsComponent },
