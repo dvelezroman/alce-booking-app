@@ -1,4 +1,4 @@
-<h2 class="title stage">Progreso por Stage</h2>
+<h2 class="title stage">Progresos por Stage</h2>
 
 <section class="stage-assessment-section">
 
@@ -9,9 +9,20 @@
 
   <div class="content-wrapper">
     <app-stage-assessment-results
-      *ngIf="stageProgressList.length > 0"
-      [progressList]="stageProgressList">
+      *ngIf="pagedList.length > 0"
+      [progressList]="pagedList">
     </app-stage-assessment-results>
+  </div>
+
+   <!-- PAGINATION -->
+  <div class="pagination" *ngIf="total > 0">
+    <button class="pg-btn" (click)="onPrev()" [disabled]="page === 1">‹</button>
+
+    <span class="pg-info">
+      Página {{ page }} · Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }}
+    </span>
+
+    <button class="pg-btn" (click)="onNext()" [disabled]="page * limit >= total">›</button>
   </div>
 
 </section>
