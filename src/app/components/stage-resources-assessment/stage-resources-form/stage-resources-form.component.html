@@ -1,0 +1,82 @@
+<div class="dropdown-toggle-container">
+  <div class="dropdown-toggle" (click)="toggleForm()">
+    <span>Crear recurso por Stage</span>
+    <span class="icon is-small">
+      <i class="material-icons">
+        {{ showForm ? 'expand_less' : 'expand_more' }}
+      </i>
+    </span>
+  </div>
+
+  <div [ngClass]="showForm ? 'dropdown-body' : 'dropdown-body-hidden'">
+    <form [formGroup]="form" (ngSubmit)="submitForm()" class="search-form">
+
+      <!-- STAGE SELECT -->
+      <div class="field">
+        <label class="label">Stage</label>
+        <div class="control">
+          <select class="input" formControlName="stageId">
+            <option [ngValue]="null" disabled>Seleccione un Stage</option>
+            <option *ngFor="let s of stages" [ngValue]="s.id">
+              {{ s.description }}
+            </option>
+          </select>
+
+          <p class="error-message"
+             *ngIf="form.get('stageId')?.touched && form.get('stageId')?.invalid">
+            Seleccione un stage válido.
+          </p>
+        </div>
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="field">
+        <label class="label">Descripción</label>
+        <div class="control">
+          <input
+            type="text"
+            class="input"
+            formControlName="description"
+          />
+          <p class="error-message"
+             *ngIf="form.get('description')?.touched && form.get('description')?.invalid">
+            La descripción es obligatoria.
+          </p>
+        </div>
+      </div>
+
+      <!-- URL -->
+      <div class="field">
+        <label class="label">Enlace</label>
+        <div class="control">
+          <input
+            type="text"
+            class="input"
+            formControlName="url"
+            placeholder="https://..."
+          />
+          <p class="error-message"
+             *ngIf="form.get('url')?.touched && form.get('url')?.invalid">
+            Ingresa un enlace válido.
+          </p>
+        </div>
+      </div>
+
+      <!-- ACTIVE -->
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox" formControlName="active" />
+          <span style="margin-left: 6px;">Recurso activo</span>
+        </label>
+      </div>
+
+      <!-- BUTTON -->
+      <div class="button-wrapper">
+        <button class="button is-blue" type="submit">
+          Crear
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -45,6 +45,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { WhatsAppMessageDetailComponent } from './whatsapp-message-detail/whatsapp-message-detail.component';
 import { ReportsExcelPageComponent } from './reports-excel-page/reports-excel-page.component';
 import { StageAssessmentComponent } from './stage-assessment/stage-assessment.component';
+import { StageAssessmentResourcesComponent } from './stage-assessment-resources/stage-assessment-resources.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -56,6 +57,7 @@ export const dashboardRoutes: Routes = [
   { path: 'link', component: LinksComponent },
   { path: 'content', component: ContentComponent },
   { path: 'resources', component: AcademicResourcesComponent },
+  { path: 'stage-assessment-resources', component: StageAssessmentResourcesComponent },
   { path: 'assessment-types', component: AssessmentTypesComponent },
   { path: 'meetings-student', component: MeetingsStudentComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent },

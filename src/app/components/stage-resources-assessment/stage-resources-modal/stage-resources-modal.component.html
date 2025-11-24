@@ -1,0 +1,35 @@
+<div class="modal-backdrop" *ngIf="resourceToEdit">
+  <div class="edit-modal">
+
+    <form [formGroup]="editForm" (ngSubmit)="submit()" class="search-form">
+
+      <div class="field">
+        <label class="label">Descripción</label>
+        <input type="text" class="input" formControlName="description" />
+        <p class="error-message" *ngIf="editForm.get('description')?.touched && editForm.get('description')?.invalid">
+          Campo obligatorio.
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label">Enlace</label>
+        <input type="url" class="input" formControlName="url" />
+        <p class="error-message" *ngIf="editForm.get('url')?.touched && editForm.get('url')?.invalid">
+          Enlace inválido.
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label">Activado</label>
+        <input type="checkbox" formControlName="active" class="checkbox-input" />
+      </div>
+
+      <div class="modal-actions">
+        <button type="submit" class="modal-button is-primary">Actualizar</button>
+        <button type="button" class="modal-button is-secondary" (click)="close()">Cancelar</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

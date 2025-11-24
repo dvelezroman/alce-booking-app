@@ -1,0 +1,79 @@
+<section class="class-booking-header">
+  <h1 class="title is-3">Recursos por Stage</h1>
+</section>
+
+<div class="page-wrapper">
+  <!-- FORMULARIO HIJO -->
+  <app-stage-resources-form 
+   (formSubmit)="onFormSubmit($event)">
+  </app-stage-resources-form>
+
+  <!-- TABLA DE RESULTADOS -->
+  <div class="block-results" *ngIf="resources.length > 0">
+    <div class="table-container">
+      <table class="table-results is-fullwidth">
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th>Descripción</th>
+            <th>Link</th>
+            <th>Activado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let resource of resources">
+            <td>
+              {{ resource.stage?.description }}
+            </td>
+
+            <td>{{ resource.description }}</td>
+
+            <td>
+              <a [href]="resource.url" target="_blank" class="link-truncate">
+                {{ resource.url }}
+              </a>
+            </td>
+
+            <td>
+              <span class="tag is-success has-text-white" *ngIf="resource.active">Sí</span>
+              <span class="tag is-danger has-text-white" *ngIf="!resource.active">No</span>
+            </td>
+
+            <td class="table-actions">
+              <button class="icon-button edit-icon" title="Editar" (click)="openEditModal(resource)">
+                <i class="fas fa-edit"></i>
+              </button>
+
+              <button
+                class="icon-button delete-icon"
+                title="Eliminar"
+                (click)="confirmDeleteResource(resource)"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<app-stage-resources-modal
+  [resourceToEdit]="resourceToEdit"
+  (update)="updateResource($event)"
+  (cancel)="resourceToEdit = null"
+></app-stage-resources-modal>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>
