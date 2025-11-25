@@ -1,0 +1,48 @@
+<div class="modal-backdrop" *ngIf="isOpen">
+  <div class="edit-modal">
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+      <!-- Recursos -->
+      <div class="field">
+        <label class="label">Evaluación</label>
+
+        <select class="input" formControlName="stageAssessmentResourceId" required>
+            <option [ngValue]="null" disabled>Seleccione...</option>
+            <option *ngFor="let r of resources" [value]="r.id">
+            {{ r.description }}
+            </option>
+        </select>
+
+        <p class="error-message"
+            *ngIf="form.get('stageAssessmentResourceId')?.touched && form.get('stageAssessmentResourceId')?.invalid">
+            Debe seleccionar una evaluación.
+        </p>
+        </div>
+
+      <!-- Fecha -->
+      <div class="field">
+        <label class="label">Fecha límite</label>
+
+        <input type="datetime-local" class="input" formControlName="dueDate" />
+
+        <p class="error-message"
+            *ngIf="form.get('dueDate')?.touched && form.get('dueDate')?.invalid">
+            Debe seleccionar una fecha límite.
+        </p>
+        </div>
+
+      <div class="info-box">
+        Estudiantes seleccionados:
+        <strong>{{ studentIds.length }}</strong>
+      </div>
+
+      <div class="modal-actions">
+        <button type="submit" class="modal-button is-primary">Crear</button>
+        <button type="button" class="modal-button is-secondary" (click)="close()">Cancelar</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

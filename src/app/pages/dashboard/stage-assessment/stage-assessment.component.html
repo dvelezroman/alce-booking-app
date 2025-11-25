@@ -2,12 +2,23 @@
 
 <section class="stage-assessment-section">
 
-  <!-- FORMULARIO-->
+  <!-- FORMULARIO -->
   <app-stage-assessment-filter
     (stageSelected)="onStageSelected($event)">
   </app-stage-assessment-filter>
 
-  <!-- BUSCADOR(sobre TODA la lista) -->
+  <!-- BOTÓN PARA ABRIR MODAL -->
+  <div class="top-actions" *ngIf="stageProgressList.length > 0">
+    <button
+      class="add-btn"
+      [disabled]="selectedStudentIds.length === 0"
+      (click)="openCreateAssessmentModal()"
+    >
+      + Agregar evaluación
+    </button>
+  </div>
+
+  <!-- BUSCADOR -->
   <div class="search-wrapper" *ngIf="stageProgressList.length > 0">
     <div class="search-box">
       <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -25,11 +36,13 @@
   <div class="content-wrapper">
     <app-stage-assessment-results
       *ngIf="pagedList.length > 0"
-      [progressList]="pagedList">
+      [progressList]="pagedList"
+      [resetSelection]="resetSelectionFlag"
+      (selectionChange)="onStudentSelection($event)">
     </app-stage-assessment-results>
   </div>
 
-   <!-- PAGINATION -->
+  <!-- PAGINATION -->
   <div class="pagination" *ngIf="total > 0">
     <button class="pg-btn" (click)="onPrev()" [disabled]="page === 1">‹</button>
 
@@ -41,3 +54,21 @@
   </div>
 
 </section>
+
+<app-stage-assessment-create-modal
+  [isOpen]="isCreateModalOpen"
+  [stageId]="selectedStageId!"
+  [studentIds]="selectedStudentIds"
+  [resources]="resourcesList"
+  (closeModal)="isCreateModalOpen = false"
+  (submitForm)="onCreateAssessment($event)">
+</app-stage-assessment-create-modal>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  (confirm)="modal.confirm && modal.confirm()"
+></app-modal>

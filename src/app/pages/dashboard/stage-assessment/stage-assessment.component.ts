@@ -1,12 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { StageAssessmentFilterComponent } from '../../../components/stage-assessment/stage-assessment-filter/stage-assessment-filter.component';
 import { StageAssessmentResultsComponent } from "../../../components/stage-assessment/stage-assessment-results/stage-assessment-results.component";
-
 import { StageProgressService } from '../../../services/stage-progress';
 import { StageProgressByStage } from '../../../services/dtos/stage-progress.dto';
 import { FormsModule } from '@angular/forms';
+import { StageAssessmentCreateModalComponent } from '../../../components/stage-assessment/stage-assessment-create-modal/stage-assessment-create-modal.component';
+import { StageAssessmentResource } from '../../../services/dtos/stage-resources.dto';
+import { StageAssessmentResourcesService } from '../../../services/stage-assessment-resources.service';
+import { StageAssessmentService } from '../../../services/stage-assessment.service';
+import { ModalComponent } from '../../../components/modal/modal.component';
+import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 
 @Component({
   selector: 'app-stage-assessment',
@@ -15,7 +19,9 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     FormsModule,
     StageAssessmentFilterComponent,
-    StageAssessmentResultsComponent
+    StageAssessmentResultsComponent,
+    StageAssessmentCreateModalComponent,
+    ModalComponent,
   ],
   templateUrl: './stage-assessment.component.html',
   styleUrl: './stage-assessment.component.scss',
@@ -23,6 +29,11 @@ import { FormsModule } from '@angular/forms';
 export class StageAssessmentComponent implements OnInit {
 
   selectedStageId?: number;
+  selectedStudentIds: number[] = [];
+
+  isCreateModalOpen: boolean = false;
+  resourcesList: StageAssessmentResource[] = [];
+  resetSelectionFlag = false;
 
   // --- LISTAS ---
   stageProgressList: StageProgressByStage = [];
@@ -37,15 +48,29 @@ export class StageAssessmentComponent implements OnInit {
   // --- BUSCADOR ---
   searchTerm: string = "";
 
-  constructor(private stageProgressService: StageProgressService) {}
+  @Input() show: boolean = false;
+  modal: ModalDto = modalInitializer();
+
+  constructor(private stageProgressService: StageProgressService,
+              private stageAssessmentService: StageAssessmentService,
+              private stageAssessmentResourcesService: StageAssessmentResourcesService,
+  ) {}
 
   ngOnInit() {}
 
   // Cuando selecciona un stage
   onStageSelected(stageId: number) {
     this.selectedStageId = stageId;
+    this.selectedStudentIds = [];
+    this.resetSelectionFlag = true;
+
     if (!stageId) return;
     this.fetchProgressForStage(stageId);
+
+    this.stageAssessmentResourcesService.getAll({ stageId }).subscribe({
+      next: (data) => this.resourcesList = data,
+      error: (err) => console.error("Error obteniendo recursos:", err)
+    });
   }
 
   // Fetch principal
@@ -71,6 +96,33 @@ export class StageAssessmentComponent implements OnInit {
     });
   }
 
+  openCreateAssessmentModal() {
+    this.isCreateModalOpen = true;
+  }
+
+  onCreateAssessment(payload: any) {
+    this.stageAssessmentService.create(payload).subscribe({
+      next: () => {
+        this.showNotification("Evaluación creada correctamente", false, true);
+
+        // Refrescar lista
+        if (this.selectedStageId) {
+          this.fetchProgressForStage(this.selectedStageId);
+        }
+
+        // Limpiar selección
+        this.selectedStudentIds = [];
+        this.resetSelectionFlag = true;
+
+        // Cerrar modal
+        this.isCreateModalOpen = false;
+      },
+      error: () => {
+        this.showNotification("Error al crear evaluación", true);
+      }
+    });
+  }
+
   // ==== BUSCADOR ====
   onSearch() {
     const term = this.searchTerm.toLowerCase().trim();
@@ -89,6 +141,11 @@ export class StageAssessmentComponent implements OnInit {
     this.total = this.filteredList.length;
     this.page = 1;
     this.updatePagedList();
+  }
+
+  onStudentSelection(ids: number[]) {
+    this.selectedStudentIds = ids;
+    //console.log(ids);
   }
 
   // ==== PAGINACIÓN ====
@@ -121,5 +178,21 @@ export class StageAssessmentComponent implements OnInit {
   get endIndex(): number {
     const end = this.page * this.limit;
     return end > this.total ? this.total : end;
+  }
+
+  private showNotification(message: string, isError = false, isSuccess = false) {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message,
+      isError,
+      isSuccess,
+      isInfo: false,
+      close: () => (this.modal.show = false)
+    };
+
+    setTimeout(() => {
+      this.modal.show = false;
+    }, 2000);
   }
 }
