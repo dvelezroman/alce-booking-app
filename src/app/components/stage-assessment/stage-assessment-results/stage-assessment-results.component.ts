@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StageProgressByStage, StageProgressDto } from '../../../services/dtos/stage-progress.dto';
 
@@ -12,15 +12,14 @@ import { StageProgressByStage, StageProgressDto } from '../../../services/dtos/s
 export class StageAssessmentResultsComponent implements OnChanges {
 
   @Input() progressList: StageProgressByStage = [];
+  @Input() selectedIds: number[] = [];
   @Input() resetSelection: boolean = false;
 
-  /** IDs seleccionados */
-  selectedStudentIds: number[] = [];
   @Output() selectionChange = new EventEmitter<number[]>();
 
-  ngOnChanges() {
-    if (this.resetSelection) {
-      this.selectedStudentIds = [];
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['resetSelection'] && this.resetSelection) {
+      this.selectedIds = []; 
       this.selectionChange.emit([]);
     }
   }
@@ -34,18 +33,17 @@ export class StageAssessmentResultsComponent implements OnChanges {
   toggleSelection(item: StageProgressDto): void {
     const id = item.studentId;
 
-    if (this.selectedStudentIds.includes(id)) {
-      this.selectedStudentIds = this.selectedStudentIds.filter(x => x !== id);
+    if (this.selectedIds.includes(id)) {
+      this.selectedIds = this.selectedIds.filter(x => x !== id);
     } else {
-      this.selectedStudentIds.push(id);
+      this.selectedIds = [...this.selectedIds, id];
     }
 
-    //console.log('Seleccionados:', this.selectedStudentIds);
-    this.selectionChange.emit(this.selectedStudentIds);
+    this.selectionChange.emit(this.selectedIds);
   }
 
   /** Saber si está seleccionado */
   isSelected(id: number): boolean {
-    return this.selectedStudentIds.includes(id);
+    return this.selectedIds.includes(id);
   }
 }
