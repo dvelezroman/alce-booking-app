@@ -9,7 +9,7 @@
 
         <select class="input" formControlName="stageAssessmentResourceId" required>
             <option [ngValue]="null" disabled>Seleccione...</option>
-            <option *ngFor="let r of resources" [value]="r.id">
+            <option *ngFor="let r of resources" [value]="r.id" [disabled]="!r.active">
             {{ r.description }}
             </option>
         </select>

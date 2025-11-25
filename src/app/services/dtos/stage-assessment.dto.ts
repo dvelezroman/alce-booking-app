@@ -27,3 +27,8 @@ export interface StageAssessment {
   students?: any[];
   createdBy?: any;
 }
+
+export interface StudentAssessmentStatus {
+  hasActive: boolean;
+  count: number;
+}

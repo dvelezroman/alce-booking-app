@@ -61,6 +61,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'reportes', text: 'Progreso', route: '/dashboard/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Evaluar Estudiante', route: '/dashboard/assessment', roles: [UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Control de Stage', route: '/dashboard/stage-assessment', roles: [UserRole.ADMIN] },
+  { icon: 'assessment', text: 'Evaluaciones Pendientes', route: '/dashboard/stage-assessment-student', roles: [UserRole.STUDENT] },
   { icon: 'test', text: 'Evaluaciones', route: '/dashboard/assessment-reports', roles: [UserRole.ADMIN] },
   { icon: 'book-open', text: 'Recursos Académicos', route: '/dashboard/resources', roles: [UserRole.ADMIN]},
   { icon: 'book-open', text: 'Recursos Stages', route: '/dashboard/stage-assessment-resources', roles: [UserRole.ADMIN]},
@@ -139,6 +140,13 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
         this.findNavItemByRoute('/dashboard/booking'),
         this.findNavItemByRoute('/dashboard/searching-meeting'),
         this.findNavItemByRoute('/dashboard/searching-meeting-instructor')
+      ].filter(item => item.roles.includes(role))
+    },
+    {
+      title: 'Evaluaciones',
+      icon: 'assessment',
+      items: [
+        this.findNavItemByRoute('/dashboard/stage-assessment-student'),
       ].filter(item => item.roles.includes(role))
     },
     {

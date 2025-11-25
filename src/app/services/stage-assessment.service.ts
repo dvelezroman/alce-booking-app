@@ -6,7 +6,8 @@ import { environment } from '../../environments/environment';
 import {
   CreateStageAssessmentDto,
   StageAssessmentFilters,
-  StageAssessment
+  StageAssessment,
+  StudentAssessmentStatus
 } from './dtos/stage-assessment.dto';
 
 @Injectable({
@@ -65,8 +66,8 @@ export class StageAssessmentService {
   }
 
   /** Verificar si un estudiante tiene assessments activos */
-  checkActiveByStudent(studentId: number): Observable<{ active: boolean }> {
-    return this.http.get<{ active: boolean }>(
+  checkActiveByStudent(studentId: number): Observable<StudentAssessmentStatus> {
+    return this.http.get<StudentAssessmentStatus>(
       `${this.apiUrl}/student/${studentId}/active`
     );
   }
