@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class StudentBannerComponent {
 
+  @Input() videoUrl: string | null = null;
   @Output() close = new EventEmitter<void>();
 
   closeBanner() {
@@ -17,7 +18,9 @@ export class StudentBannerComponent {
   }
 
   goToVideo() {
-    window.open('https://www.youtube.com/', '_blank');
+    if (this.videoUrl) {
+      window.open(this.videoUrl, '_blank');
+    }
   }
 
   goToWhatsapp() {

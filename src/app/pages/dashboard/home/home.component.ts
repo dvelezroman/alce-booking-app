@@ -23,6 +23,7 @@ import { StudentsService } from '../../../services/students.service';
 import { InstructorCalendarComponent } from '../../../components/home/instructor-calendar/instructor-calendar.component';
 import { StudentBannerComponent } from "../../../components/home/student-banner/student-banner.component";
 import { StudentCuencaBannerComponent } from "../../../components/home/student-cuenca-banner/student-cuenca-banner.component";
+import { StudentCuencaCommBannerComponent } from "../../../components/home/student-cuenca-comm-banner/student-cuenca-comm-banner.component";
 
 @Component({
   selector: 'app-home-private',
@@ -35,7 +36,8 @@ import { StudentCuencaBannerComponent } from "../../../components/home/student-c
     UserInfoFormComponent,
     InstructorCalendarComponent,
     StudentBannerComponent,
-    StudentCuencaBannerComponent
+    StudentCuencaBannerComponent,
+    StudentCuencaCommBannerComponent
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -59,6 +61,7 @@ export class HomePrivateComponent implements OnInit {
   showBanner = true;
 
   showBannerCuenca: boolean = false;
+  showBannerCuencaComm: boolean = false;
   isCuenca: boolean = false;
 
   constructor(
@@ -91,6 +94,7 @@ export class HomePrivateComponent implements OnInit {
       this.isCuenca = (user?.city || '').toLowerCase() === 'cuenca';
       
       this.showBannerCuenca = this.isCuenca;
+      this.showBannerCuencaComm = this.isCuenca;
     });
   }
 
