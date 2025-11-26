@@ -16,10 +16,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CITIES_BY_COUNTRY, COUNTRY_CODES, CountryCode } from '../../shared/country-code';
-import { ModalComponent } from '../modal/modal.component';
-import { ModalDto, modalInitializer } from '../modal/modal.dto';
-import { UserDto } from '../../services/dtos/user.dto';
+import {
+  CITIES_BY_COUNTRY,
+  COUNTRY_CODES,
+  CountryCode,
+} from '../../../shared/country-code';
+import { ModalComponent } from '../../modal/modal.component';
+import { ModalDto, modalInitializer } from '../../modal/modal.dto';
+import { UserDto } from '../../../services/dtos/user.dto';
 
 @Component({
   selector: 'app-users-info-form',
@@ -55,7 +59,10 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
       email: ['', [Validators.required, Validators.email]],
       birthday: ['', [Validators.required]],
       countryCode: ['+593', Validators.required],
-      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]],
+      phoneNumber: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9]{7,15}$')],
+      ],
       country: ['EC', [Validators.required]],
       city: ['', [Validators.required]],
       occupation: ['', [Validators.required]],
@@ -71,23 +78,33 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
   ngOnInit(): void {
     if (this.userData) this.patchFormValues();
 
-    this.infoForm.get('birthday')?.valueChanges.subscribe((birthday: string) => {
-      this.isMinor = this.isStudent && !!birthday && this.calculateAge(birthday) < 18;
+    this.infoForm
+      .get('birthday')
+      ?.valueChanges.subscribe((birthday: string) => {
+        this.isMinor =
+          this.isStudent && !!birthday && this.calculateAge(birthday) < 18;
 
-      if (this.isMinor) {
-        this.addTutorValidators();
-      } else {
-        this.removeTutorValidators();
-      }
+        if (this.isMinor) {
+          this.addTutorValidators();
+        } else {
+          this.removeTutorValidators();
+        }
 
-      this.cdr.detectChanges();
-    });
+        this.cdr.detectChanges();
+      });
   }
 
   private addTutorValidators(): void {
     this.infoForm.get('tutorName')?.setValidators([Validators.required]);
-    this.infoForm.get('tutorEmail')?.setValidators([Validators.required, Validators.email]);
-    this.infoForm.get('tutorPhone')?.setValidators([Validators.required, Validators.pattern('^[0-9]{7,15}$')]);
+    this.infoForm
+      .get('tutorEmail')
+      ?.setValidators([Validators.required, Validators.email]);
+    this.infoForm
+      .get('tutorPhone')
+      ?.setValidators([
+        Validators.required,
+        Validators.pattern('^[0-9]{7,15}$'),
+      ]);
     this.infoForm.updateValueAndValidity();
   }
 
@@ -119,7 +136,9 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
 
     const country = this.userData.country || 'EC';
     const city = this.userData.city || '';
-    const birthday = this.userData.birthday ? this.formatBirthday(this.userData.birthday) : '';
+    const birthday = this.userData.birthday
+      ? this.formatBirthday(this.userData.birthday)
+      : '';
 
     this.isStudent = this.userData.role === 'STUDENT';
     this.isMinor =
@@ -216,7 +235,8 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
           show: true,
           isError: true,
           title: 'Campos obligatorios',
-          message: 'Debes completar todos los datos del representante antes de guardar.',
+          message:
+            'Debes completar todos los datos del representante antes de guardar.',
           close: () => (this.modal.show = false),
         };
         setTimeout(() => (this.modal.show = false), 3000);
@@ -293,7 +313,7 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
   //   this.closeModal.emit();
   // }
 
-  close(): void { 
+  close(): void {
     if (this.dataCompleted) {
       this.closeModal.emit();
       return;

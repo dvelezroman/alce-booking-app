@@ -44,14 +44,18 @@ export class StageAssessmentCreateModalComponent {
       this.form.markAllAsTouched();
       return;
     }
+
     const raw = this.form.value;
-    const due = raw.dueDate + ":00.000Z";
+
+    // raw.dueDate = "2025-11-26T22:00"
+    const dueDate = raw.dueDate.split('T')[0]; 
+    // → "2025-11-26"
 
     const payload = {
       stageId: this.stageId,
       studentIds: this.studentIds,
-      stageAssessmentResourceId: +(this.form.value.stageAssessmentResourceId),
-      dueDate: due
+      stageAssessmentResourceId: Number(raw.stageAssessmentResourceId),
+      dueDate: dueDate
     };
 
     console.log("Payload listo para enviar:", payload);

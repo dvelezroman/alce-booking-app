@@ -3,5 +3,20 @@
   [message]="modal.message"
   [isError]="modal.isError"
   [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
   (close)="modal.show = false">
 </app-modal>
+
+<h2 class="title stage">Mis evaluaciones</h2>
+
+<div class="page-wrapper">
+  <section class="stage-assessment-student-section">
+
+    <!-- ESTADO VACÍO -->
+    <div class="empty-state" *ngIf="!hasActiveAssessments">
+      <img src="assets/carpeta_vacia.png" alt="Sin evaluaciones" class="empty-img" />
+      <p>No tienes evaluaciones asignadas.</p>
+    </div>
+
+  </section>
+</div>

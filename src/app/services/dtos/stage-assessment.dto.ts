@@ -13,15 +13,12 @@ export interface StageAssessmentFilters {
 
 export interface StageAssessment {
   id: number;
-
   stageId: number;
   studentIds: number[];
   stageAssessmentResourceId: number;
   dueDate: string;
-
   createdAt: string;
   updatedAt: string;
-
   stage?: any;
   resource?: any;
   students?: any[];

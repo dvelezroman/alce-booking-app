@@ -1,0 +1,134 @@
+<!-- TÍTULO GENERAL -->
+<h2 class="main-calendar-title">Clases Programadas</h2>
+
+<!-- CONTENEDOR PRINCIPAL -->
+<div class="calendar-layout">
+
+  <!-- PANEL IZQUIERDO: CALENDARIO -->
+  <section class="calendar-panel date-time-selection shared-box-style">
+
+    <!-- <div class="calendar-legend">
+      <span class="legend-dot"></span>
+      <span class="legend-text">Día con clases programadas</span>
+    </div> -->
+
+    <div class="month-selector">
+      <button *ngIf="selectedMonth !== minMonth || selectedYear !== minYear"
+              class="button is-small prev-button"
+              (click)="prevMonth()"
+              aria-label="Mes anterior">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
+
+      <button *ngIf="selectedMonth !== maxMonth || selectedYear !== maxYear"
+              class="button is-small next-button"
+              (click)="nextMonth()"
+              aria-label="Mes siguiente">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <div class="calendar">
+      <div class="calendar-header">
+        <div class="calendar-day-header">D</div>
+        <div class="calendar-day-header">L</div>
+        <div class="calendar-day-header">M</div>
+        <div class="calendar-day-header">M</div>
+        <div class="calendar-day-header">J</div>
+        <div class="calendar-day-header">V</div>
+        <div class="calendar-day-header">S</div>
+      </div>
+
+      <div class="calendar-grid">
+        <div
+          *ngFor="let day of currentMonthDays"
+          class="calendar-day"
+          [ngClass]="{
+            'empty': day.day === '',
+            'selected': selectedDay === day.day,
+            'has-meeting': day.hasMeeting && !day.isPast,
+            'past-meeting': day.hasMeeting && day.isPast
+          }"
+          (click)="showMeetingsOfDay(day)"
+        >
+          {{ day.day }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- PANEL DERECHO: CARDS DE CLASES PENDIENTES -->
+  <section class="pending-panel">
+
+    <h3 class="pending-title">Clases pendientes</h3>
+
+    <!-- Si no hay pendientes -->
+    <div *ngIf="datesSorted.length === 0" class="empty-pending">
+      <p>No tienes clases pendientes.</p>
+    </div>
+
+    <!--  AGRUPADAS POR DÍA -->
+    <div *ngFor="let dateKey of datesSorted" class="pending-group">
+
+      <!-- Título del grupo (Hoy, Mañana, Martes 28 de noviembre...) -->
+      <h4 class="group-title">
+        {{ formatGroupTitle(dateKey) }}
+      </h4>
+
+      <!-- Lista de cards -->
+      <div class="pending-list">
+        <div *ngFor="let cls of groupedPending[dateKey]" class="pending-card">
+
+          <div class="pending-info">
+            <p><strong>Hora:</strong> {{ cls.hour }}:00</p>
+            <p><strong>Stage:</strong> {{ cls.meetings?.[0]?.stage?.number || 'Sin etapa' }}</p>
+            <p><strong>Categoría:</strong> {{ cls.meetings?.[0]?.category || 'Sin categoría' }}</p>
+            <p><strong>Modalidad:</strong> {{ cls.meetings?.[0]?.mode || 'Sin modalidad' }}</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+<!-- MENSAJE SI NO HAY CLASES DEL DÍA -->
+<div *ngIf="meetingsOfDay.length === 0 && selectedDay !== null" class="no-meetings-message">
+  <p>No hay clases programadas para este día.</p>
+</div>
+
+
+<!-- TABLA DE RESULTADOS -->
+<div *ngIf="meetingsOfDay.length > 0" class="meeting-results">
+  <h3 class="title is-5">Clases para el {{ selectedDate | date: 'EEEE, d MMMM' }}</h3>
+  
+  <div class="table-responsive">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Categoría</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Modalidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of meetingsOfDay">
+          <td>{{ item.meetings?.[0]?.stage?.number || 'Sin etapa' }}</td>
+          <td>{{ item.meetings?.[0]?.category || 'Sin categoría' }}</td>
+          <td>{{ item.date | date: 'mediumDate' }}</td>
+          <td>{{ item.hour }}:00</td>
+          <td>{{ item.meetings?.[0]?.mode || 'Sin modalidad' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
