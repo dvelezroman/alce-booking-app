@@ -37,6 +37,14 @@
 
 </div>
 
+<app-student-cuenca-banner
+  *ngIf="showBannerCuenca"
+  [show]="showBannerCuenca"
+  (close)="showBannerCuenca = false">
+</app-student-cuenca-banner>
+
+<app-student-banner *ngIf="showBanner" (close)="showBanner = false"></app-student-banner>
+
 <app-instructor-calendar
   *ngIf="isInstructor && instructorId"
   [instructorId]="instructorId">

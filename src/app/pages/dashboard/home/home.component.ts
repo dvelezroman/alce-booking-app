@@ -21,6 +21,8 @@ import {
 import { UserInfoFormComponent } from '../../../components/home/user-info-form/user-info-form.component';
 import { StudentsService } from '../../../services/students.service';
 import { InstructorCalendarComponent } from '../../../components/home/instructor-calendar/instructor-calendar.component';
+import { StudentBannerComponent } from "../../../components/home/student-banner/student-banner.component";
+import { StudentCuencaBannerComponent } from "../../../components/home/student-cuenca-banner/student-cuenca-banner.component";
 
 @Component({
   selector: 'app-home-private',
@@ -32,7 +34,9 @@ import { InstructorCalendarComponent } from '../../../components/home/instructor
     ModalComponent,
     UserInfoFormComponent,
     InstructorCalendarComponent,
-  ],
+    StudentBannerComponent,
+    StudentCuencaBannerComponent
+],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -41,19 +45,21 @@ export class HomePrivateComponent implements OnInit {
 
   isLoggedIn$: Observable<boolean>;
   isLoggedIn: boolean = false;
-
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
 
   isInstructor: boolean = false;
   isStudent: boolean = false;
-
   instructorId: number | null = null;
 
   studyContentOptions: { id: string; name: string }[] = [];
   meetingStudyContents: number[] = [];
-
   showUserInfoForm: boolean = false;
+
+  showBanner = true;
+
+  showBannerCuenca: boolean = false;
+  isCuenca: boolean = false;
 
   constructor(
     private store: Store,
@@ -82,6 +88,9 @@ export class HomePrivateComponent implements OnInit {
       this.userData = user;
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
       this.isStudent = user?.role === UserRole.STUDENT;
+      this.isCuenca = (user?.city || '').toLowerCase() === 'cuenca';
+      
+      this.showBannerCuenca = this.isCuenca;
     });
   }
 
