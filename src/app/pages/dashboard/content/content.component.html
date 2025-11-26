@@ -68,6 +68,7 @@
               <th>Título</th>
               <th>Descripción</th>
               <th>Contenido</th>
+              <th>Calculable</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -76,14 +77,21 @@
 <!--              <td>{{ content.id }}</td>-->
               <td>{{ content.stage.number }}</td>
               <td>{{ content.unit }}</td>
-              <td>{{ content.title }}</td>
-              <td>{{ content.description }}</td>
+              <td><span class="truncate-2" [title]="content.title">{{ content.title }}</span></td>
+              <td><span class="truncate-2" [title]="content.description">{{ content.description }}</span></td>
 <!--              <td>-->
 <!--                <span [ngClass]="content.enabled ? 'has-text-success' : 'has-text-danger'">-->
 <!--                  {{ content.enabled ? 'Activo' : 'Inactivo' }}-->
 <!--                </span>-->
 <!--              </td>-->
               <td>{{ parseContent(content.content) }}</td>
+              <td>
+                  <span
+                    [ngClass]="content.measurable ? 'has-text-success' : 'has-text-danger'"
+                  >
+                    {{ content.measurable ? 'Sí' : 'No' }}
+                  </span>
+                </td>
               <td class="table-actions">
                 <button (click)="editContent(content)" class="icon-button edit-icon" title="Editar">
                   <i class="fas fa-edit"></i>

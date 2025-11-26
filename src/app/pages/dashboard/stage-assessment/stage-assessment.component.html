@@ -1,0 +1,76 @@
+<h2 class="title stage">Progresos por Stage</h2>
+
+<section class="stage-assessment-section">
+
+  <!-- FORMULARIO -->
+  <app-stage-assessment-filter
+    (stageSelected)="onStageSelected($event)">
+  </app-stage-assessment-filter>
+
+  <!-- BOTÓN PARA ABRIR MODAL -->
+  <div class="top-actions" *ngIf="stageProgressList.length > 0">
+    <button
+      class="add-btn"
+      [disabled]="selectedStudentIds.length === 0"
+      (click)="openCreateAssessmentModal()"
+    >
+      + Agregar evaluación
+    </button>
+  </div>
+
+  <!-- BUSCADOR -->
+  <div class="search-wrapper" *ngIf="stageProgressList.length > 0">
+    <div class="search-box">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Buscar estudiante..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+      />
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="content-wrapper">
+    <app-stage-assessment-results
+      *ngIf="pagedList.length > 0"
+      [progressList]="pagedList"
+      [resetSelection]="resetSelectionFlag"
+      [selectedIds]="selectedStudentIds"
+      (selectionChange)="onStudentSelection($event)">
+    </app-stage-assessment-results>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" *ngIf="total > 0">
+    <button class="pg-btn" (click)="onPrev()" [disabled]="page === 1">‹</button>
+
+    <span class="pg-info">
+      Página {{ page }} · Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }}
+    </span>
+
+    <button class="pg-btn" (click)="onNext()" [disabled]="page * limit >= total">›</button>
+  </div>
+
+</section>
+
+<app-stage-assessment-create-modal
+  [isOpen]="isCreateModalOpen"
+  [stageId]="selectedStageId!"
+  [studentIds]="selectedStudentIds"
+  [resources]="resourcesList"
+  (closeModal)="isCreateModalOpen = false"
+  (submitForm)="onCreateAssessment($event)">
+</app-stage-assessment-create-modal>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  (confirm)="modal.confirm && modal.confirm()"
+></app-modal>

@@ -17,6 +17,9 @@ export class ReportTableComponent {
   @Input() canGoPrevious: boolean = false;
   @Input() canGoNext: boolean = false;
 
+  @Input() stageProgress: number = 0;
+  @Input() showProgress: boolean = false;
+
   @Output() previousStage = new EventEmitter<void>();
   @Output() nextStage = new EventEmitter<void>();
   @Output() hasVisibleResults = new EventEmitter<boolean>();

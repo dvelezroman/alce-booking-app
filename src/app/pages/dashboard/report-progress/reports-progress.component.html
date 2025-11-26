@@ -5,7 +5,6 @@
 
   <app-report-form (filtersSubmitted)="onFiltersSubmitted($event)"></app-report-form>
 
-  
   <div class="report-table-wrapper">
     <h2 *ngIf="showStageTitle" class="student-stage-title">
       Stage del Estudiante: {{ studentStageDescription }}
@@ -17,6 +16,8 @@
       [studentStageDescription]="studentStageDescription"
       [canGoPrevious]="canGoPrevious"
       [canGoNext]="canGoNext"
+      [stageProgress]="studentCurrentStageProgress"
+      [showProgress]="searchExecuted"
       (previousStage)="goToPreviousStage()"
       (nextStage)="goToNextStage()"
       (hasVisibleResults)="onHasVisibleResults($event)"

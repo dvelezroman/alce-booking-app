@@ -1,0 +1,27 @@
+<div class="results-list">
+
+  <div
+    class="item"
+    *ngFor="let item of progressList"
+    (click)="toggleSelection(item)"
+    [class.selected]="isSelected(item.studentId)"
+  >
+
+    <!-- Nombre -->
+    <div class="student-name">
+      {{ item.student.user?.firstName }} {{ item.student.user?.lastName }}
+    </div>
+
+    <!-- Barra -->
+    <div class="progress-bar">
+      <div
+        class="fill"
+        [style.width.%]="item.progress"
+        [style.background]="getColor(item.progress)"
+      ></div>
+      <span class="percent">{{ item.progress }}%</span>
+    </div>
+
+  </div>
+
+</div>

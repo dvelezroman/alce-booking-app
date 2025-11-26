@@ -9,7 +9,7 @@ import { UsersService } from '../../../services/users.service';
 import { setDataCompleted, updateStudentData, updateUserData } from '../../../store/user.action';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
-import { UserInfoFormComponent } from '../../../components/user-info-form/user-info-form.component';
+import { UserInfoFormComponent } from '../../../components/home/user-info-form/user-info-form.component';
 import { formatBirthday } from '../../../shared/utils/dates.util';
 import { InstructorsService } from '../../../services/instructors.service';
 import { StudentsService } from '../../../services/students.service';
@@ -63,7 +63,7 @@ export class ProfileComponent {
     if (!this.isEditingPassword) {
       this.isEditingPassword = true;
       this.newPassword = '';
-      console.log('Modo edición activado para cambiar contraseña');
+      //console.log('Modo edición activado para cambiar contraseña');
       return;
     }
 
@@ -81,16 +81,16 @@ export class ProfileComponent {
     if (!this.user?.id) return;
 
     this.usersService.updateUserPassword(this.user.id, this.newPassword).subscribe({
-      next: () => {
-        this.isEditingPassword = false;
-        this.newPassword = '';
-        this.showPassword = false;
-        this.showModal(false, 'Contraseña actualizada correctamente.');
-      },
-      error: () => {
-        this.showModal(true, 'Error al actualizar la contraseña.');
-      },
-    });
+        next: () => {
+          this.isEditingPassword = false;
+          this.newPassword = '';
+          this.showPassword = false;
+          this.showModal(false, 'Contraseña actualizada correctamente.');
+        },
+        error: () => {
+          this.showModal(true, 'Error al actualizar la contraseña.');
+        },
+      });
   }
 
   handleUserInfoSubmit(data: {
@@ -156,14 +156,14 @@ export class ProfileComponent {
       };
 
       this.studentsService.updateStudentById(this.user.student.id, tutorPayload).subscribe({
-        next: (updatedStudent) => {
-          this.store.dispatch(updateStudentData({ student: { ...this.user!.student!, ...updatedStudent } }));
-          this.showModal(false, 'Información del representante actualizada con éxito.');
-        },
-        error: () => {
-          this.showModal(true, 'Error al actualizar la información del representante.');
-        },
-      });
+          next: (updatedStudent) => {
+            this.store.dispatch(updateStudentData({ student: { ...this.user!.student!, ...updatedStudent } }));
+            this.showModal(false, 'Información del representante actualizada con éxito.');
+          },
+          error: () => {
+            this.showModal(true, 'Error al actualizar la información del representante.');
+          },
+        });
     }
   }
 

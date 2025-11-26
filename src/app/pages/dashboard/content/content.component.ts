@@ -66,11 +66,17 @@ export class ContentComponent implements OnInit {
     this.showModal = false;
   }
 
+  private getStageNumber(value: string): number {
+    return Number(value.replace(/\D+/g, ''));
+  }
+
   searchContent() {
     const { stageId, unit } = this.filterForm.value;
     this.studyContentService.filterBy(stageId, unit).subscribe({
       next: (results) => {
-        this.filteredContents = results;
+        this.filteredContents = results.sort((a, b) => {
+          return this.getStageNumber(a.stage.number) - this.getStageNumber(b.stage.number);
+        });
       },
       error: (err) => {
         console.error('Error al filtrar contenido:', err);

@@ -1,27 +1,50 @@
 <div class="block-results">
 
   <div class="stage-navigation-wrapper" *ngIf="history.length > 0">
+
+    <button 
+      class="nav-button left-btn"
+      [disabled]="!canGoPrevious"
+      [ngClass]="{ 'disabled': !canGoPrevious }"
+      (click)="onPreviousStage()"
+      title="Anterior">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+
     <h3 class="student-stage-subtitle">
       {{ stageDescription }}
     </h3>
-    <span class="stage-navigation-buttons">
-      <button 
-        class="nav-button" 
-        [disabled]="!canGoPrevious" 
-        [ngClass]="{ 'disabled': !canGoPrevious }"
-        (click)="onPreviousStage()" 
-        title="Anterior">
-        <i class="fas fa-chevron-left"></i>
-      </button>
-      <button 
-        class="nav-button" 
-        [disabled]="!canGoNext" 
-        [ngClass]="{ 'disabled': !canGoNext }"
-        (click)="onNextStage()" 
-        title="Siguiente">
-        <i class="fas fa-chevron-right"></i>
-      </button>
-    </span>
+
+    <button 
+      class="nav-button right-btn"
+      [disabled]="!canGoNext"
+      [ngClass]="{ 'disabled': !canGoNext }"
+      (click)="onNextStage()"
+      title="Siguiente">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+
+  </div>
+
+  <div *ngIf="showProgress" class="progress-wrapper">
+    <h3 class="progress-title">
+      Avance 
+      <!-- del {{ studentStageDescription }} -->
+    </h3>
+
+    <div class="progress-bar-container">
+      <div
+        class="progress-bar-fill"
+        [style.width.%]="stageProgress"
+        [attr.data-value]="stageProgress + '%'"
+        [ngClass]="{
+          'progress-low': stageProgress < 40,
+          'progress-medium': stageProgress >= 40 && stageProgress < 70,
+          'progress-high': stageProgress >= 70 && stageProgress < 100,
+          'progress-full': stageProgress === 100
+        }"
+      ></div>
+    </div>
   </div>
 
   <div class="table-container">

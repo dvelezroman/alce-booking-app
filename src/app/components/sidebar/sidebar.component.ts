@@ -41,7 +41,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'home', text: 'Inicio', route: '/dashboard/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
   { icon: 'user', text: 'Perfil', route: '/dashboard/profile', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
   { icon: 'event', text: 'Mis Clases', route: '/dashboard/meetings-student', roles: [UserRole.STUDENT] },
-  { icon: 'booking', text: 'Agendar', route: '/dashboard/booking', roles: [UserRole.STUDENT] },
+  { icon: 'booking', text: 'Clases y Agendamientos', route: '/dashboard/booking', roles: [UserRole.STUDENT] },
   { icon: 'group', text: 'Agenda', route: '/dashboard/searching-meeting', roles: [UserRole.ADMIN] },
   { icon: 'school', text: 'Usuarios', route: '/dashboard/searching-students', roles: [UserRole.ADMIN] },
   { icon: 'asistencias-student', text: 'Asistencias Estudiantes', route: '/dashboard/attendance-student', roles: [UserRole.ADMIN] },
@@ -60,8 +60,11 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'excel', text: 'Inasistencias / info. de Usuarios', route: '/dashboard/report-excel', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Progreso', route: '/dashboard/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Evaluar Estudiante', route: '/dashboard/assessment', roles: [UserRole.INSTRUCTOR] },
+  { icon: 'test', text: 'Control de Stage', route: '/dashboard/stage-assessment', roles: [UserRole.ADMIN] },
+  { icon: 'assessment', text: 'Evaluaciones Pendientes', route: '/dashboard/stage-assessment-student', roles: [UserRole.STUDENT] },
   { icon: 'test', text: 'Evaluaciones', route: '/dashboard/assessment-reports', roles: [UserRole.ADMIN] },
   { icon: 'book-open', text: 'Recursos Académicos', route: '/dashboard/resources', roles: [UserRole.ADMIN]},
+  { icon: 'book-open', text: 'Recursos Stages', route: '/dashboard/stage-assessment-resources', roles: [UserRole.ADMIN]},
   { icon: 'book-type', text: 'Tipos de Evaluación',  route: '/dashboard/assessment-types', roles: [UserRole.ADMIN]},
   { icon: 'settings', text: 'Configuración de Evaluación', route: '/dashboard/assessment-config', roles: [UserRole.ADMIN] },
   { icon: 'notifications', text: 'Enviar', route: '/dashboard/broadcast-groups', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR], },
@@ -131,12 +134,19 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
 
       const grouped = [
     {
-      title: 'Clases y Agendamientos',
+      title: 'Agenda',
       icon: 'event',
       items: [
         this.findNavItemByRoute('/dashboard/booking'),
         this.findNavItemByRoute('/dashboard/searching-meeting'),
         this.findNavItemByRoute('/dashboard/searching-meeting-instructor')
+      ].filter(item => item.roles.includes(role))
+    },
+    {
+      title: 'Evaluaciones',
+      icon: 'assessment',
+      items: [
+        this.findNavItemByRoute('/dashboard/stage-assessment-student'),
       ].filter(item => item.roles.includes(role))
     },
     {
@@ -151,9 +161,11 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
       ].filter(item => item.roles.includes(role))
     },
     {
-      title: 'Gestión de Eventos',
+      title: 'Gestión',
       icon: 'history',
-      items: [this.findNavItemByRoute('/dashboard/processed-events'),
+      items: [
+        this.findNavItemByRoute('/dashboard/processed-events'),
+        this.findNavItemByRoute('/dashboard/stage-assessment')
       ].filter(item => item.roles.includes(role))
     },
     {
@@ -164,6 +176,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
         this.findNavItemByRoute('/dashboard/stage'),
         this.findNavItemByRoute('/dashboard/content'),
         this.findNavItemByRoute('/dashboard/resources'),
+        this.findNavItemByRoute('/dashboard/stage-assessment-resources'),
         this.findNavItemByRoute('/dashboard/assessment-types')
       ].filter(item => item.roles.includes(role))
     },

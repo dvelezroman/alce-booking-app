@@ -28,7 +28,8 @@ export class ContentFormComponent {
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(5)]],
       textContent: [''],
-      enabled: [true]
+      enabled: [true],
+      measurable: [false]
     });
   }
 
@@ -46,7 +47,8 @@ export class ContentFormComponent {
       title: formValues.title,
       description: formValues.description,
       content: formValues.textContent ? JSON.stringify(formValues.textContent) : '',
-      enabled: formValues.enabled
+      enabled: formValues.enabled,
+      measurable: formValues.measurable
     };
   
     this.formSubmit.emit(formData);
