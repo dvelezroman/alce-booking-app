@@ -1,1 +1,37 @@
-<p>stage-assessment-card works!</p>
+<div class="assessment-card">
+
+  <div class="header-row">
+    <h3 class="title">
+      {{ assessment.stageAssessmentResource?.description || 'Recurso sin título' }}
+    </h3>
+
+    <!-- Estado visual -->
+    <span class="status pending">
+      Pendiente
+    </span>
+  </div>
+
+  <div class="info">
+    <p>
+      <strong>Fecha límite:</strong>
+      {{ assessment.dueDate | date:'fullDate' }}
+    </p>
+
+    <p *ngIf="assessment.stage">
+      <strong>Stage:</strong>
+      {{ assessment.stage?.number || 'Sin etapa' }}
+    </p>
+
+    <!-- <p *ngIf="assessment.stageAssessmentResource?.url">
+      <strong>Recurso:</strong>
+      <span class="resource-link">Abrir recurso</span>
+    </p> -->
+  </div>
+
+  <div class="actions">
+    <button class="btn-open" (click)="handleOpenAndFinish()">
+      Ver recurso
+    </button>
+  </div>
+
+</div>
