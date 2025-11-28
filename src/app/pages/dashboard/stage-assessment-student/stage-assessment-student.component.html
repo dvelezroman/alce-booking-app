@@ -13,18 +13,18 @@
   <section class="stage-assessment-student-section">
 
     <!-- ESTADO VACÍO -->
-    <div class="empty-state" *ngIf="!hasActiveAssessments">
+    <div *ngIf="!loading && !hasActiveAssessments" class="empty-state">
       <img src="assets/carpeta_vacia.png" alt="Sin evaluaciones" class="empty-img" />
       <p>No tienes evaluaciones asignadas.</p>
     </div>
 
-    <!-- TEXTO DE CUANTAS PENDIENTES -->
-    <p *ngIf="hasActiveAssessments" class="pending-count">
+    <!-- TEXTO DE CUÁNTAS PENDIENTES -->
+    <p *ngIf="!loading && hasActiveAssessments" class="pending-count">
       Tienes <strong>{{ assessments.length }}</strong> evaluaciones pendientes.
     </p>
 
     <!-- LISTA DE CARDS -->
-    <div *ngIf="hasActiveAssessments" class="cards-wrapper">
+    <div *ngIf="!loading && hasActiveAssessments" class="cards-wrapper">
       <app-stage-assessment-card
         *ngFor="let a of assessments"
         [assessment]="a"

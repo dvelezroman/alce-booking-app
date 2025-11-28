@@ -21,9 +21,10 @@ import {
 import { UserInfoFormComponent } from '../../../components/home/user-info-form/user-info-form.component';
 import { StudentsService } from '../../../services/students.service';
 import { InstructorCalendarComponent } from '../../../components/home/instructor-calendar/instructor-calendar.component';
-import { StudentBannerComponent } from "../../../components/home/student-banner/student-banner.component";
-import { StudentCuencaBannerComponent } from "../../../components/home/student-cuenca-banner/student-cuenca-banner.component";
-import { StudentCuencaCommBannerComponent } from "../../../components/home/student-cuenca-comm-banner/student-cuenca-comm-banner.component";
+import { StudentBannerComponent } from '../../../components/home/student-banner/student-banner.component';
+import { StudentCuencaBannerComponent } from '../../../components/home/student-cuenca-banner/student-cuenca-banner.component';
+import { StudentCuencaCommBannerComponent } from '../../../components/home/student-cuenca-comm-banner/student-cuenca-comm-banner.component';
+import { CountdownBannerComponent } from '../../../components/home/countdown-banner/countdown-banner.component';
 
 @Component({
   selector: 'app-home-private',
@@ -37,8 +38,9 @@ import { StudentCuencaCommBannerComponent } from "../../../components/home/stude
     InstructorCalendarComponent,
     StudentBannerComponent,
     StudentCuencaBannerComponent,
-    StudentCuencaCommBannerComponent
-],
+    StudentCuencaCommBannerComponent,
+    CountdownBannerComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -92,7 +94,7 @@ export class HomePrivateComponent implements OnInit {
       this.isInstructor = user?.role === UserRole.INSTRUCTOR;
       this.isStudent = user?.role === UserRole.STUDENT;
       this.isCuenca = (user?.city || '').toLowerCase() === 'cuenca';
-      
+
       this.showBannerCuenca = this.isCuenca;
       this.showBannerCuencaComm = this.isCuenca;
     });

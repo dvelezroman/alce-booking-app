@@ -65,8 +65,11 @@ export class StageAssessmentService {
   }
 
   /** Marcar assessment como terminado para un estudiante */
-  markFinished(id: number): Observable<StageAssessment> {
-    return this.http.post<StageAssessment>(`${this.apiUrl}/${id}/mark-finished`, {});
+  markFinished(id: number, studentId: number): Observable<StageAssessment> {
+    return this.http.post<StageAssessment>(
+      `${this.apiUrl}/${id}/mark-finished`,
+      { studentId }
+    );
   }
 
   /** Verificar si un estudiante tiene assessments activos */
