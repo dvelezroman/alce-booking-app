@@ -88,10 +88,19 @@ export class CountdownBannerComponent implements OnInit, OnDestroy {
     const now = Date.now();
 
     this.countdowns = this.countdowns.map(cd => {
-      const diff = new Date(cd.dueDate).getTime() - now;
+
+      const [datePart] = cd.dueDate.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const target = new Date(year, month - 1, day, 0, 0, 0).getTime();
+
+      const diff = target - now;
 
       if (diff <= 0) {
-        return { ...cd, days: 0, hours: '00', minutes: '00', seconds: '00', isUrgent: false };
+        return {
+          ...cd,
+          days: 0, hours: '00', minutes: '00', seconds: '00',
+          isUrgent: false
+        };
       }
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
