@@ -1,3 +1,5 @@
+import { StageAssessmentResource } from "./stage-resources.dto";
+
 export interface CreateStageAssessmentDto {
   stageId: number;
   studentIds: number[];
@@ -9,6 +11,7 @@ export interface StageAssessmentFilters {
   stageId?: number;
   createdBy?: number;
   stageAssessmentResourceId?: number;
+  studentId?: number;
 }
 
 export interface StageAssessment {
@@ -17,15 +20,17 @@ export interface StageAssessment {
   studentIds: number[];
   stageAssessmentResourceId: number;
   dueDate: string;
-  createdAt: string;
-  updatedAt: string;
+  finished: number[];
+  createdBy: number;
   stage?: any;
-  resource?: any;
-  students?: any[];
-  createdBy?: any;
+  creator?: any;
+  stageAssessmentResource?: StageAssessmentResource;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface StudentAssessmentStatus {
   hasActive: boolean;
   count: number;
+  assessments: StageAssessment[];
 }

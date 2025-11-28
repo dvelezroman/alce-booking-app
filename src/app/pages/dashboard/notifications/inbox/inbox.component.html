@@ -32,8 +32,9 @@
       </div>
 
       <!-- Sin resultados -->
-      <div *ngIf="!loading && !errorMsg && notifications.length === 0" class="placeholder">
-        No hay notificaciones para el número de días seleccionado.
+      <div *ngIf="!loading && !errorMsg && notifications.length === 0" class="empty-state">
+        <img src="assets/carpeta_vacia.png" alt="Sin notificaciones" class="empty-img" />
+        <p>No hay notificaciones disponibles.</p>
       </div>
 
       <!-- Tabla -->
@@ -55,7 +56,7 @@
           <!-- De -->
           <div class="col-from">
             {{ n.fromUser.firstName || '' }} {{ n.fromUser.lastName || '' }}
-            <span *ngIf="!n.fromUser?.firstName && !n.fromUser?.lastName">
+            <span *ngIf="!n.fromUser.firstName && !n.fromUser.lastName">
               {{ n.fromUser.email || '—' }}
             </span>
           </div>
@@ -65,7 +66,7 @@
             <div class="subject-row">
               <span class="title" [title]="n.title">{{ n.title }}</span>
               <span class="sep">—</span>
-              <span class="snippet-inline" *ngIf="n.message?.body as body">
+              <span class="snippet-inline" *ngIf="n.message.body as body">
                 {{ body }}
               </span>
             </div>

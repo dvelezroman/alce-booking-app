@@ -18,5 +18,19 @@
       <p>No tienes evaluaciones asignadas.</p>
     </div>
 
+    <!-- TEXTO DE CUANTAS PENDIENTES -->
+    <p *ngIf="hasActiveAssessments" class="pending-count">
+      Tienes <strong>{{ assessments.length }}</strong> evaluaciones pendientes.
+    </p>
+
+    <!-- LISTA DE CARDS -->
+    <div *ngIf="hasActiveAssessments" class="cards-wrapper">
+      <app-stage-assessment-card
+        *ngFor="let a of assessments"
+        [assessment]="a"
+        (openAndFinish)="onOpenAndFinish($event)">
+      </app-stage-assessment-card>
+    </div>
+
   </section>
 </div>

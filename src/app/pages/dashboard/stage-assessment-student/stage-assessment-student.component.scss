@@ -59,6 +59,41 @@
     font-size: 0.9rem;
   }
 
+.pending-count {
+  margin: 0.5rem 0 1rem;
+  font-size: 0.95rem;
+  color: #383838;
+  font-weight: 500;
+
+  strong {
+    color: #29292a;
+  }
+}
+
+.cards-wrapper {
+  max-height: 650px;
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: #2563eb #e5e7eb;
+  }
+
+  .cards-wrapper::-webkit-scrollbar {
+    width: 6px;
+    }
+  .cards-wrapper::-webkit-scrollbar-track {
+    background: #e5e7eb;
+    border-radius: 10px;
+    }
+  .cards-wrapper::-webkit-scrollbar-thumb {
+    background: #2563eb;
+    border-radius: 10px;
+    }
+
 @media (max-width: 600px) {
   .empty-state {
     padding: 20px 10px;
@@ -66,11 +101,16 @@
   }
 
   .empty-img {
-    width: 120px;
+    width: 90px;
     opacity: 0.85;
   }
 
   .empty-state p {
     font-size: 0.85rem;
+  }
+
+  .cards-wrapper {
+    max-height: 450px;
+    padding-right: 4px;
   }
 }

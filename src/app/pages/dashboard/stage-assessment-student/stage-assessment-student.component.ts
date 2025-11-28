@@ -8,10 +8,17 @@ import { selectUserData } from '../../../store/user.selector';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 
+import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
+import { StageAssessmentCardComponent } from '../../../components/stage-assessment/stage-assessment-card/stage-assessment-card.component';
+
 @Component({
   selector: 'app-stage-assessment-student',
   standalone: true,
-  imports: [CommonModule, ModalComponent],
+  imports: [
+    CommonModule,
+    ModalComponent,
+    StageAssessmentCardComponent,
+  ],
   templateUrl: './stage-assessment-student.component.html',
   styleUrls: ['./stage-assessment-student.component.scss']
 })
@@ -19,6 +26,8 @@ export class StageAssessmentStudentComponent implements OnInit {
 
   studentId: number | null = null;
   hasActiveAssessments: boolean = false;
+
+  assessments: StageAssessment[] = [];
 
   modal: ModalDto = modalInitializer();
 
@@ -30,25 +39,42 @@ export class StageAssessmentStudentComponent implements OnInit {
   ngOnInit(): void {
     this.store.select(selectUserData).pipe(take(1)).subscribe((u: UserDto | null) => {
       this.studentId = u?.student?.id ?? null;
-      console.log(this.studentId);
 
       if (!this.studentId) {
-        this.showNotification("Error al verificar evaluaciones activas.", true);
+        this.showNotification("No se pudo obtener tu información.", true);
         return;
       }
 
-      this.checkActiveAssessments();
+      this.loadAssessments();
     });
   }
 
-  private checkActiveAssessments() {
+  /** cargar los assessments del backend */
+  private loadAssessments() {
     this.stageAssessmentService.checkActiveByStudent(this.studentId!).subscribe({
       next: (res) => {
         this.hasActiveAssessments = res.hasActive;
-        console.log(res.count);
+        this.assessments = res.assessments ?? [];
+
+        console.log("Assessments recibidos:", this.assessments);
       },
       error: () => {
-        this.showNotification("Error al verificar evaluaciones activas.", true);
+        this.showNotification("Error al obtener tus evaluaciones.", true);
+      }
+    });
+  }
+
+  /** parámetros que recibe del hijo */
+  onOpenAndFinish(assessmentId: number) {
+    this.stageAssessmentService.markFinished(assessmentId).subscribe({
+      next: () => {
+        this.showNotification("Evaluación marcada como completada.", false, true);
+
+        // Recargar lista
+        this.loadAssessments();
+      },
+      error: () => {
+        this.showNotification("Error al marcar como completado.", true);
       }
     });
   }
@@ -64,7 +90,7 @@ export class StageAssessmentStudentComponent implements OnInit {
       close: () => (this.modal.show = false)
     };
 
-    setTimeout(() => (this.modal.show = false), 2000);
+    setTimeout(() => (this.modal.show = false), 2500);
   }
-  
+
 }

@@ -41,6 +41,10 @@ export class StageAssessmentService {
         filters.stageAssessmentResourceId
       );
     }
+    
+    if (filters?.studentId !== undefined) {
+      params = params.set('studentId', filters.studentId);
+    }
 
     return this.http.get<StageAssessment[]>(`${this.apiUrl}`, { params });
   }
