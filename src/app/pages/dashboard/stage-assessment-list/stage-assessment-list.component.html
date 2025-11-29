@@ -22,7 +22,8 @@
         [assessments]="assessments"
         [loading]="loading"
         (assignedClick)="onAssigned($event)"
-        (finishedClick)="onFinished($event)">
+        (finishedClick)="onFinished($event)"
+        (deleteClick)="onDeleteAssessment($event)">
     </app-assessment-table>
 
   </div>
@@ -39,3 +40,14 @@
   [userIds]="modalUsers"
   (close)="closeModal()">
 </app-assessment-modal>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>

@@ -16,6 +16,7 @@ export class AssessmentTableComponent {
 
   @Output() assignedClick = new EventEmitter<StageAssessment>();
   @Output() finishedClick = new EventEmitter<StageAssessment>();
+  @Output() deleteClick = new EventEmitter<StageAssessment>();
 
   onAssignedClick(a: StageAssessment) {
     this.assignedClick.emit(a);
@@ -23,5 +24,9 @@ export class AssessmentTableComponent {
 
   onFinishedClick(a: StageAssessment) {
     this.finishedClick.emit(a);
+  }
+
+  onDelete(a: StageAssessment) {
+    this.deleteClick.emit(a);
   }
 }

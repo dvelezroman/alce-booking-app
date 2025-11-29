@@ -1,4 +1,4 @@
-<div class="table-wrapper" *ngIf="!loading && assessments.length > 0">
+<div class="table-wrapper" *ngIf=" assessments.length > 0">
 
   <div class="table-scroll">
     <table class="assessment-table">
@@ -10,6 +10,7 @@
           <th>Asignados</th>
           <th>Finalizados</th>
           <th>Fecha Límite</th>
+          <th>Acciones</th>
         </tr>
       </thead>
 
@@ -52,6 +53,11 @@
 
           <td>
             {{ a.dueDate | date:'medium' }}
+          </td>
+          <td>
+            <button class="delete-btn" (click)="onDelete(a)">
+                <i class="fa-solid fa-trash"></i>
+            </button>
           </td>
 
         </tr>
