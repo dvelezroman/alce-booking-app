@@ -66,6 +66,10 @@ export class HomePrivateComponent implements OnInit {
   showBannerCuencaComm: boolean = false;
   isCuenca: boolean = false;
 
+  cuencaVideoUrl = "https://youtube.com/shorts/trxmLXdmBEQ?feature=share";
+  generalVideoUrl = "https://youtube.com/shorts/Dgv94Lt-nck?feature=share";
+  selectedVideoUrl: string | null = null;
+
   constructor(
     private store: Store,
     private studyContentService: StudyContentService,
@@ -97,7 +101,15 @@ export class HomePrivateComponent implements OnInit {
 
       this.showBannerCuenca = this.isCuenca;
       this.showBannerCuencaComm = this.isCuenca;
+
+      if (this.isCuenca) {
+        this.selectedVideoUrl = this.cuencaVideoUrl;
+      } else {
+        this.selectedVideoUrl = this.generalVideoUrl;
+      }
     });
+
+    
   }
 
   private checkUserRoleAndFormVisibility(): void {
