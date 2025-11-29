@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs';
+import { filter, take } from 'rxjs';
 import { UserDto } from '../../../services/dtos/user.dto';
 import { StageAssessmentService } from '../../../services/stage-assessment.service';
 import { selectUserData } from '../../../store/user.selector';
@@ -26,6 +26,7 @@ export class StageAssessmentStudentComponent implements OnInit {
 
   studentId: number | null = null;
   hasActiveAssessments: boolean = false;
+  loading: boolean = true;
 
   assessments: StageAssessment[] = [];
 
@@ -37,40 +38,45 @@ export class StageAssessmentStudentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.store.select(selectUserData).pipe(take(1)).subscribe((u: UserDto | null) => {
-      this.studentId = u?.student?.id ?? null;
+    this.store.select(selectUserData)
+      .pipe(
+        filter((u): u is UserDto => !!u),
+        take(1)
+      )
+      .subscribe((u) => {
+        this.studentId = u.student?.id ?? null;
 
-      if (!this.studentId) {
-        this.showNotification("No se pudo obtener tu información.", true);
-        return;
-      }
+        if (!this.studentId) {
+          this.showNotification("No se pudo obtener tu información.", true);
+          return;
+        }
 
-      this.loadAssessments();
-    });
+        this.loadAssessments();
+      });
   }
 
   /** cargar los assessments del backend */
   private loadAssessments() {
+    this.loading = true;
     this.stageAssessmentService.checkActiveByStudent(this.studentId!).subscribe({
       next: (res) => {
         this.hasActiveAssessments = res.hasActive;
         this.assessments = res.assessments ?? [];
-
-        console.log("Assessments recibidos:", this.assessments);
+        this.loading = false;
       },
       error: () => {
+        this.loading = false;
         this.showNotification("Error al obtener tus evaluaciones.", true);
       }
     });
   }
 
-  /** parámetros que recibe del hijo */
+ /** parámetros que recibe del hijo */
   onOpenAndFinish(assessmentId: number) {
-    this.stageAssessmentService.markFinished(assessmentId).subscribe({
-      next: () => {
-        this.showNotification("Evaluación marcada como completada.", false, true);
+    if (!this.studentId) return;
 
-        // Recargar lista
+    this.stageAssessmentService.markFinished(assessmentId, this.studentId).subscribe({
+      next: () => {
         this.loadAssessments();
       },
       error: () => {
