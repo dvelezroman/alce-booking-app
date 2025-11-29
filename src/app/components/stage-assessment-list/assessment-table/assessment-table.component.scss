@@ -5,72 +5,73 @@
   margin-top: 1.5rem;
 }
 
-/* Contenedor superior que incluye header y body */
+/* Contenedor scrolleable */
 .table-scroll {
   width: 100%;
-  min-width: 700px;
+  min-width: 800px;
+  max-height: 550px;
+  overflow-y: auto;
   position: relative;
 }
 
-/* =============== */
-/* TABLA - HEADER  */
-/* =============== */
-
-.table-header-only {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table-header-only th {
-  padding: 0.75rem 1rem;
-  text-align: left;
-  font-weight: 600;
-  color: #374151;
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: #f3f4f6;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-/* =============== */
-/* TABLA - BODY    */
-/* =============== */
-
-.table-body-scroll {
-  max-height: 550px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-/* Tabla del contenido */
+/* Tabla */
 .assessment-table {
   width: 100%;
   border-collapse: collapse;
   background: #ffffff;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
 }
 
+/* HEADER FIJO */
+.assessment-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f7f7f7;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  text-align: left;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Filas */
 .assessment-table td {
   padding: 0.75rem 1rem;
   color: #4b5563;
   border-bottom: 1px solid #f1f1f1;
-  max-width: 240px;
+  max-width: 200px;
 }
 
 .assessment-table tbody tr:hover {
   background: #f9fafa;
 }
 
-/* ===================== */
-/* CELDAS INTERACTIVAS   */
-/* ===================== */
+/* Celda de recurso */
+.col-resource {
+  font-weight: 600;
+  color: #111827;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
+.truncate-text {
+  display: inline-block;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Celdas clickeables */
 .clickable-cell {
   cursor: pointer;
   transition: 0.2s ease;
 }
 
+/* Botón eliminar */
 .delete-btn {
   background: #fee2e2;
   color: #b91c1c;
@@ -85,6 +86,7 @@
   }
 }
 
+/* Recurso */
 .col-resource {
   font-weight: 600;
   color: #111827;
@@ -103,29 +105,16 @@
   background: #dbeafe;
   color: #1e3a8a;
 }
-
 .badge-green {
   background: #dcfce7;
   color: #166534;
 }
-
 .badge-red {
   background: #fee2e2;
   color: #991b1b;
 }
 
-/* Texto vacío */
-.empty-text {
-  text-align: center;
-  color: #353536;
-  margin-top: 2rem;
-  font-size: 0.9rem;
-}
-
-/* --------------------------- */
-/* RESPONSIVE */
-/* --------------------------- */
-
+/* Responsive */
 @media (max-width: 768px) {
   .assessment-table {
     font-size: 0.8rem;
