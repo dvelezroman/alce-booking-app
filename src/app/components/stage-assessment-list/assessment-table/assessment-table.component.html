@@ -1,7 +1,9 @@
-<div class="table-wrapper" *ngIf=" assessments.length > 0">
+<div class="table-wrapper" *ngIf="assessments.length > 0">
 
   <div class="table-scroll">
-    <table class="assessment-table">
+
+    <!-- HEADER FIJO -->
+    <table class="assessment-table table-header-only">
       <thead>
         <tr>
           <th>Recurso</th>
@@ -13,56 +15,63 @@
           <th>Acciones</th>
         </tr>
       </thead>
-
-      <tbody>
-        <tr *ngFor="let a of assessments">
-
-          <td class="col-resource">
-            {{ a.stageAssessmentResource?.description || 'Sin descripción' }}
-          </td>
-
-          <td>{{ a.stage?.description || '—' }}</td>
-
-          <td>
-            {{ a.creator?.firstName }} {{ a.creator?.lastName }}
-          </td>
-
-          <!-- ASIGNADOS (clickeable) -->
-          <td 
-            class="clickable-cell"
-            (click)="onAssignedClick(a)"
-          >
-            <span class="badge badge-blue">
-              {{ a.studentIds.length }}
-            </span>
-          </td>
-
-          <!-- FINALIZADOS (clickeable) -->
-          <td 
-            class="clickable-cell"
-            (click)="onFinishedClick(a)"
-          >
-            <span 
-              class="badge"
-              [class.badge-green]="a.finished.length"
-              [class.badge-red]="!a.finished.length"
-            >
-              {{ a.finished.length || 0 }}
-            </span>
-          </td>
-
-          <td>
-            {{ a.dueDate | date:'medium' }}
-          </td>
-          <td>
-            <button class="delete-btn" (click)="onDelete(a)">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-          </td>
-
-        </tr>
-      </tbody>
     </table>
+
+    <!-- BODY SCROLLEABLE -->
+    <div class="table-body-scroll">
+      <table class="assessment-table">
+        <tbody>
+          <tr *ngFor="let a of assessments">
+
+            <td class="col-resource">
+              {{ a.stageAssessmentResource?.description || 'Sin descripción' }}
+            </td>
+
+            <td>{{ a.stage?.description || '—' }}</td>
+
+            <td>
+              {{ a.creator?.firstName }} {{ a.creator?.lastName }}
+            </td>
+
+            <!-- ASIGNADOS (clickeable) -->
+            <td 
+              class="clickable-cell"
+              (click)="onAssignedClick(a)"
+            >
+              <span class="badge badge-blue">
+                {{ a.studentIds.length }}
+              </span>
+            </td>
+
+            <!-- FINALIZADOS (clickeable) -->
+            <td 
+              class="clickable-cell"
+              (click)="onFinishedClick(a)"
+            >
+              <span 
+                class="badge"
+                [class.badge-green]="a.finished.length"
+                [class.badge-red]="!a.finished.length"
+              >
+                {{ a.finished.length || 0 }}
+              </span>
+            </td>
+
+            <td>
+              {{ a.dueDate | date:'medium' }}
+            </td>
+
+            <td>
+              <button class="delete-btn" (click)="onDelete(a)">
+                  <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 
 </div>

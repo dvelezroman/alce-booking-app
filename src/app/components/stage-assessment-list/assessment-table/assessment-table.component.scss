@@ -1,48 +1,56 @@
 /* Wrapper general */
 .table-wrapper {
   width: 100%;
-  overflow-x: auto; 
+  overflow-x: auto;
   margin-top: 1.5rem;
 }
 
-/* Scroll container */
+/* Contenedor superior que incluye header y body */
 .table-scroll {
   width: 100%;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-
-  /* min-width para móviles */
   min-width: 700px;
+  position: relative;
 }
 
-/* Tabla */
-.assessment-table {
+/* =============== */
+/* TABLA - HEADER  */
+/* =============== */
+
+.table-header-only {
   width: 100%;
   border-collapse: collapse;
-  background: #ffffff;
-  border-radius: 10px;
-  overflow: hidden;
-  font-size: 0.8rem;
 }
 
-/* Encabezado */
-.assessment-table thead {
-  background: #f3f4f6;
-}
-
-.assessment-table th {
+.table-header-only th {
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
   color: #374151;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
   background: #f3f4f6;
   border-bottom: 1px solid #e5e7eb;
 }
 
-/* Filas */
+/* =============== */
+/* TABLA - BODY    */
+/* =============== */
+
+.table-body-scroll {
+  max-height: 550px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Tabla del contenido */
+.assessment-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  font-size: 0.8rem;
+}
+
 .assessment-table td {
   padding: 0.75rem 1rem;
   color: #4b5563;
@@ -50,18 +58,17 @@
   max-width: 240px;
 }
 
+.assessment-table tbody tr:hover {
+  background: #f9fafa;
+}
+
+/* ===================== */
+/* CELDAS INTERACTIVAS   */
+/* ===================== */
+
 .clickable-cell {
   cursor: pointer;
   transition: 0.2s ease;
-}
-
-// .clickable-cell:hover {
-//   background: #eef2ffca;
-// }
-
-/* Hover elegante */
-.assessment-table tbody tr:hover {
-  background: #f9fafa;
 }
 
 .delete-btn {
@@ -78,7 +85,6 @@
   }
 }
 
-/* Columna recurso */
 .col-resource {
   font-weight: 600;
   color: #111827;
