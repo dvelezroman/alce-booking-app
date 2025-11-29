@@ -1,0 +1,33 @@
+<h2 class="title stage">Evaluaciones Asignadas</h2>
+
+<section class="stage-assessment-section">
+
+  <div class="filters-toggle-wrapper">
+    <button class="filters-btn" (click)="toggleFilters()">
+      <i class="fa-solid fa-filter"></i> Filtros
+    </button>
+  </div>
+
+  <!-- FILTRO -->
+  <div class="filters-container" *ngIf="showFilters">
+    <app-assessment-filters
+      (filtersChange)="onFiltersChanged($event)">
+    </app-assessment-filters>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div class="content-wrapper">
+
+    <app-assessment-table
+        [assessments]="assessments"
+        [loading]="loading">
+    </app-assessment-table>
+
+  </div>
+
+    <p class="info" *ngIf="false">
+      No existen resultados para los filtros aplicados.
+    </p>
+
+
+</section>

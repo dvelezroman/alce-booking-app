@@ -1,0 +1,58 @@
+<div class="table-wrapper" *ngIf="!loading && assessments.length > 0">
+
+  <div class="table-scroll">
+    <table class="assessment-table">
+      <thead>
+        <tr>
+          <th>Recurso</th>
+          <th>Stage</th>
+          <th>Creador</th>
+          <th>Asignados</th>
+          <th>Finalizados</th>
+          <th>Fecha Límite</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let a of assessments">
+
+          <td class="col-resource">
+            {{ a.stageAssessmentResource?.description || 'Sin descripción' }}
+          </td>
+
+          <td>{{ a.stage?.description || '—' }}</td>
+
+          <td>
+            {{ a.creator?.firstName }} {{ a.creator?.lastName }}
+          </td>
+
+          <td>
+            <span class="badge badge-blue">{{ a.studentIds.length }}</span>
+          </td>
+
+          <td>
+            <span 
+              class="badge" 
+              [class.badge-green]="a.finished.length"
+              [class.badge-red]="!a.finished.length">
+              {{ a.finished.length || 0 }}
+            </span>
+          </td>
+
+          <td>
+            {{ a.dueDate | date:'medium' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<p class="empty-text" *ngIf="!loading && assessments.length === 0">
+  No existen resultados para los filtros aplicados.
+</p>
+
+<div class="loading" *ngIf="loading">
+  <div class="spinner"></div>
+</div>

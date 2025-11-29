@@ -1,0 +1,66 @@
+<div class="filters-container">
+
+  <!-- TÍTULO -->
+  <!-- <h2 class="filters-title"></h2> -->
+
+  <!-- GRID DE FILTROS -->
+  <div class="filters-grid">
+
+    <!-- STAGE -->
+    <div class="filter-item">
+      <label class="filter-label">Stage</label>
+      <select [(ngModel)]="selectedStageId" class="filter-select">
+        <option [ngValue]="null">Todos</option>
+        <option *ngFor="let s of stages" [value]="s.id">{{ s.number }}</option>
+      </select>
+    </div>
+
+    <!-- ADMIN (CREADO POR) -->
+    <div class="filter-item">
+      <label class="filter-label">Creado por</label>
+
+      <app-user-selector
+        role="admin"
+        [maxSelectable]="1"
+        [resetTrigger]="resetUsersTrigger"
+        (usersSelected)="onAdminSelected($event)">
+      </app-user-selector>
+    </div>
+
+    <!-- STUDENT -->
+    <div class="filter-item">
+      <label class="filter-label">Estudiante</label>
+
+      <app-user-selector
+        role="student"
+        [maxSelectable]="1"
+        [resetTrigger]="resetUsersTrigger"
+        (usersSelected)="onStudentSelected($event)">
+      </app-user-selector>
+    </div>
+
+    <!-- RESOURCE -->
+    <div class="filter-item">
+      <label class="filter-label">Recurso / Material</label>
+      <select [(ngModel)]="selectedResourceId" class="filter-select">
+        <option [ngValue]="null">Todos</option>
+        <option *ngFor="let r of resources" [value]="r.id">
+          {{ r.description }}
+        </option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- BOTONES -->
+  <div class="filters-actions">
+    <button class="btn-apply" (click)="applyFilters()">
+      Aplicar filtros
+    </button>
+
+    <button class="btn-clear" (click)="clearFilters()">
+      Limpiar
+    </button>
+  </div>
+
+</div>

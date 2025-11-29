@@ -1,0 +1,131 @@
+.filters-container {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  animation: fadeIn .25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.filters-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  color: #111827;
+}
+
+.filters-grid {
+  display: grid;
+  gap: 1.2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.filter-label {
+  font-size: .85rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.filter-select {
+  width: 100%;
+  padding: .55rem .75rem;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: .9rem;
+  transition: .2s;
+
+  &:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .2);
+    background: #fff;
+    outline: none;
+  }
+}
+
+.filters-actions {
+  display: flex;
+  gap: .75rem;
+  margin-top: 1.5rem;
+  justify-content: flex-end;
+}
+
+.btn-apply {
+  background: #2563EB;  
+  padding: .55rem 1.2rem;
+  font-size: .85rem;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  transition: .2s ease;
+
+  &:hover {
+    background: #1D4ED8;
+  }
+}
+
+.btn-clear {
+  background: #f3f4f6;
+  padding: .55rem 1.2rem;
+  font-size: .85rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  color: #374151;
+  transition: .2s;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .filters-title {
+    font-size: .9rem;
+    margin-bottom: 1rem;
+  }
+
+  .btn-apply,
+  .btn-clear {
+    padding: .45rem 1rem;
+    font-size: .85rem;
+    border-radius: 8px;
+  }
+}
+
+
+/* ====================================================== */
+/* 📱 EXTRA RESPONSIVE (<= 480px): full width y columnas  */
+/* ====================================================== */
+@media (max-width: 480px) {
+
+  .filters-container {
+    padding: 1rem;
+  }
+
+  .filters-actions {
+    flex-direction: column;
+    gap: .5rem;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .filters-title {
+    font-size: .85rem;
+  }
+}
