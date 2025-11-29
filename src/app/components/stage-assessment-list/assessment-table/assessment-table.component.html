@@ -26,15 +26,26 @@
             {{ a.creator?.firstName }} {{ a.creator?.lastName }}
           </td>
 
-          <td>
-            <span class="badge badge-blue">{{ a.studentIds.length }}</span>
+          <!-- ASIGNADOS (clickeable) -->
+          <td 
+            class="clickable-cell"
+            (click)="onAssignedClick(a)"
+          >
+            <span class="badge badge-blue">
+              {{ a.studentIds.length }}
+            </span>
           </td>
 
-          <td>
+          <!-- FINALIZADOS (clickeable) -->
+          <td 
+            class="clickable-cell"
+            (click)="onFinishedClick(a)"
+          >
             <span 
-              class="badge" 
+              class="badge"
               [class.badge-green]="a.finished.length"
-              [class.badge-red]="!a.finished.length">
+              [class.badge-red]="!a.finished.length"
+            >
               {{ a.finished.length || 0 }}
             </span>
           </td>
@@ -42,6 +53,7 @@
           <td>
             {{ a.dueDate | date:'medium' }}
           </td>
+
         </tr>
       </tbody>
     </table>

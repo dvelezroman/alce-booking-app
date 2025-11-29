@@ -1,0 +1,24 @@
+<div class="modal-backdrop" *ngIf="show">
+  <div class="modal-container">
+
+    <div class="modal-header">
+      <h3>{{ title }}</h3>
+      <button class="close-btn" (click)="onClose()">×</button>
+    </div>
+
+    <div class="modal-body">
+
+      <ul class="users-list" *ngIf="userIds.length > 0; else emptyState">
+        <li class="user-item" *ngFor="let id of userIds">
+          <span class="name">ID: {{ id }}</span>
+        </li>
+      </ul>
+
+      <ng-template #emptyState>
+        <p class="empty">No hay datos disponibles.</p>
+      </ng-template>
+
+    </div>
+
+  </div>
+</div>

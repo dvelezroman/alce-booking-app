@@ -20,7 +20,9 @@
 
     <app-assessment-table
         [assessments]="assessments"
-        [loading]="loading">
+        [loading]="loading"
+        (assignedClick)="onAssigned($event)"
+        (finishedClick)="onFinished($event)">
     </app-assessment-table>
 
   </div>
@@ -29,5 +31,11 @@
       No existen resultados para los filtros aplicados.
     </p>
 
-
 </section>
+
+<app-assessment-modal
+  [show]="showModal"
+  [title]="modalTitle"
+  [userIds]="modalUsers"
+  (close)="closeModal()">
+</app-assessment-modal>
