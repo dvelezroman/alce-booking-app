@@ -11,89 +11,152 @@
         </h3>
       </div>
       <div class="student-row student-shared-style">
-        <p class="student-email">{{ userData?.email }}</p>
+        <!-- <p class="student-email">{{ userData?.email }}</p> -->
         <p class="student-stage">{{ userData?.stage?.description }}</p>
       </div>
 
+      <!-- BLOQUE DE PROGRESO DEL ESTUDIANTE -->
+      <div class="student-progress-container">
+
+        <div class="progress-bar-outer">
+          <div
+            class="progress-bar-inner"
+            [style.width.%]="studentProgress?.progress"
+          ></div>
+        </div>
+
+        <span class="progress-value">
+          {{ studentProgress?.progress }}%
+        </span>
+      </div>
+
       <!-- Selected Meetings Section -->
-      <div class="student-schedule student-shared-style block-mobile" *ngIf="meetings.length > 0">
-        <h4 class="schedule-title">Agendadas</h4>
-        <button
-          class="refresh-button"
-          [class.spinning]="isSpinning"
-          (click)="onRefreshClick()"
-          title="Actualizar agenda"
-          aria-label="Actualizar agenda"
-        >
-          <i class="fas fa-sync-alt"></i>
-          Actualizar
-        </button>
+      <!-- BLOQUE MOVIL -->
+      <div class="student-schedule student-shared-style block-mobile">
+
+        <!-- Título con número (opcional si usas pasos) -->
+        <div class="mobile-header-row">
+          <h4 class="schedule-title">Agendadas</h4>
+
+          <button
+            class="refresh-icon-button-mobile"
+            [class.spinning]="isSpinning"
+            (click)="onRefreshClick()"
+            aria-label="Actualizar agenda"
+          >
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+
+        <!-- CUANDO HAY CLASES -->
         <app-meeting-schedule
+          *ngIf="meetings.length > 0"
           [meetings]="meetings"
           (openDetail)="openMeetingDetailModal($event.meeting, $event.index)"
           (deleteMeeting)="openDeleteModal($event)">
         </app-meeting-schedule>
+
+        <!-- CUANDO NO HAY CLASES -->
+        <div class="no-meeting" *ngIf="meetings.length === 0">
+          <p>No tienes fechas de clases programadas</p>
+        </div>
+
       </div>
-      <!-- No Meetings Message -->
-      <!-- <div class="no-meeting" *ngIf="meetings.length === 0">
-        <p>No tienes fechas de clases programadas</p>
-      </div> -->
     </section>
   </div>
 
   <!-- Date and Time Selection Section -->
   <div class="date-time-scroll-container">
+
     <div class="date-time-wrapper">
-      
-      <!-- Calendar Selection -->
-      <app-meeting-calendar
-        [disabledDates]="disabledDates"
-        [disabledDatesAndHours]="disabledDatesAndHours"
-        [isScheduleEnabled]="isScheduleEnabled"
-        [resetSelectionTrigger]="resetCalendarSelectionTrigger"
-        (daySelected)="onDaySelected($event)"
-      ></app-meeting-calendar>
 
-      <!-- Time Slots -->
-      <app-meeting-time-slots
-        [selectedDayInfo]="selectedDay !== null ? { year: selectedYear, month: monthNumber, day: selectedDay } : null"
-        [disabledDatesAndHours]="disabledDatesAndHours"
-        [ecuadorTime]="ecuadorTime"
-        (timeSlotSelected)="selectTimeSlot($event)">
-      </app-meeting-time-slots>
+      <!-- CALENDARIO -->
+      <div class="booking-block">
+        <h2 class="block-title-header">
+          <span class="step-number">1</span>
+          Seleccione día
+        </h2>
 
-      <!-- clases agendadas para escritorio -->
-      <section class="scheduled-meetings shared-box-style block-desktop" *ngIf="meetings.length > 0">
-        <h2>
-          <button
-            class="title-date"
-            [class.spinning]="isSpinning"
-            (click)="onRefreshClick()"
-            title="Actualizar agenda"
-            aria-label="Actualizar agenda"
-          >
-            Agendadas
-            <i class="fas fa-sync-alt refresh-icon" [class.spin]="isSpinning"></i>
-          </button>
+        <app-meeting-calendar
+          [disabledDates]="disabledDates"
+          [disabledDatesAndHours]="disabledDatesAndHours"
+          [isScheduleEnabled]="isScheduleEnabled"
+          [resetSelectionTrigger]="resetCalendarSelectionTrigger"
+          (daySelected)="onDaySelected($event)"
+        ></app-meeting-calendar>
+      </div>
 
+      <!-- TIME SLOTS -->
+      <div class="booking-block">
+        <h2 class="block-title-header">
+          <span class="step-number">2</span>
+          Seleccione una hora
+        </h2>
+
+        <app-meeting-time-slots
+          [selectedDayInfo]="selectedDay !== null ? { year: selectedYear, month: monthNumber, day: selectedDay } : null"
+          [disabledDatesAndHours]="disabledDatesAndHours"
+          [ecuadorTime]="ecuadorTime"
+          (timeSlotSelected)="selectTimeSlot($event)">
+        </app-meeting-time-slots>
+      </div>
+
+      <!-- AGENDADAS version desktop -->
+      <div class="booking-block booking-block-desktop-only">
+
+        <!-- Título general del bloque  -->
+        <h2 class="block-title-header">
+          <span class="step-number">3</span>
+          Agendadas
+        </h2>
+
+        <!-- ENCABEZADO QUE SIEMPRE SE MUESTRA -->
+        <h2 class="agendadas-header">
           <button
             class="info-button"
             (click)="openInfoModal()"
-            title="Información sobre el botón de recarga"
-            aria-label="Información"
           >
             <i class="fas fa-info-circle"></i>
           </button>
+
+          <button
+            class="refresh-button-desktop"
+            [class.spinning]="isSpinning"
+            (click)="onRefreshClick()"
+          >
+            Refrescar
+            <i class="fas fa-sync-alt refresh-icon"></i>
+          </button>
         </h2>
-        <app-meeting-schedule
-          [meetings]="meetings"
-          variant="cards"
-          (openDetail)="openMeetingDetailModal($event.meeting, $event.index)"
-          (deleteMeeting)="openDeleteModal($event)">
-        </app-meeting-schedule>
-      </section>
-      
+
+        <!-- BLOQUE CUANDO NO HAY CLASES -->
+        <section
+          class="scheduled-meetings shared-box-style block-desktop"
+          *ngIf="meetings.length === 0"
+        >
+          <div class="empty-state">
+            <i class="fas fa-calendar-times empty-icon"></i>
+            <p class="empty-text">Aún no tienes clases agendadas</p>
+          </div>
+        </section>
+
+        <!-- BLOQUE CUANDO HAY CLASES -->
+        <section
+          class="scheduled-meetings shared-box-style block-desktop"
+          *ngIf="meetings.length > 0"
+        >
+          <app-meeting-schedule
+            [meetings]="meetings"
+            variant="cards"
+            (openDetail)="openMeetingDetailModal($event.meeting, $event.index)"
+            (deleteMeeting)="openDeleteModal($event)"
+          >
+          </app-meeting-schedule>
+        </section>
+
+      </div>
     </div>
+
   </div>
 </main>
 

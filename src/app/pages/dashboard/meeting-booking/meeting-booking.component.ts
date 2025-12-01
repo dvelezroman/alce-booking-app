@@ -30,6 +30,8 @@ import { HandleDatesService } from '../../../services/handle-dates.service';
 import { convertEcuadorHourToLocal, getTimezoneOffsetHours, convertEcuadorDateToLocal } from '../../../shared/utils/dates.util';
 import { selectUserData } from '../../../store/user.selector';
 import { NotificationService } from '../../../services/notification.service';
+import { StageProgressDto, StageProgressList } from '../../../services/dtos/stage-progress.dto';
+import { StageProgressService } from '../../../services/stage-progress';
 
 
 @Component({
@@ -91,6 +93,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   localdateSelected: string = '';
   resetCalendarSelectionTrigger = false;
 
+  studentId: number | null = null;
+  studentProgress: StageProgressDto | null = null;
+  loadingProgress = false;
+
   // hasUnreadNotifications: boolean = false;
 
   modalConfig: ModalDto = modalInitializer();
@@ -108,7 +114,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     private ffService: FeatureFlagService,
     private handleDatesService: HandleDatesService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private stageProgressService: StageProgressService      
   ) {
     this.userData$ = this.store.select(selectUserData);
   }
@@ -132,7 +139,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.userData = state;
       //console.log('USER DATA EN AGENDA:', this.userData);
       if (state?.student?.id) {
+        this.studentId = state.student.id;
         this.initializeMeetings();
+        this.loadStudentProgress();
       }
     });
 
@@ -140,17 +149,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.ecuadorTimeInterval = setInterval(() => {
       this.updateEcuadorTime();
       } , 60000);
-
-    // this.notificationService.loadUnreadCount().subscribe(count => {
-    //   //console.log('[Booking] Conteo actualizado desde backend:', count);
-    //   this.hasUnreadNotifications = count > 0;
-    // });
-
-    // this.notificationService.unreadCount$
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe(count => {
-    //     this.hasUnreadNotifications = count > 0;
-    //   });
   }
 
   ngOnDestroy() {
@@ -173,7 +171,26 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }, 300);
   }
 
-  
+  loadStudentProgress(): void {
+    if (!this.studentId) return;
+
+    this.loadingProgress = true;
+
+    this.stageProgressService.getProgressByStudent(this.studentId).subscribe({
+      next: (progressList) => {
+        if (Array.isArray(progressList) && progressList.length > 0) {
+          this.studentProgress = progressList[0]; 
+        } else {
+          this.studentProgress = null;
+        }
+        this.loadingProgress = false;
+      },
+      error: () => {
+        this.studentProgress = null;
+        this.loadingProgress = false;
+      }
+    });
+  }
 
   private updateEcuadorTime(): void {
     const nowInEcuador = DateTime.now().setZone('America/Guayaquil').setLocale('es');

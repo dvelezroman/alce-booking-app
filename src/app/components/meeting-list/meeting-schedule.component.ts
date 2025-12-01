@@ -19,11 +19,6 @@ export class MeetingScheduleComponent {
   canScrollLeft = false;
   canScrollRight = false;
 
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.checkScroll();
-  }
-
   ngAfterViewInit() {
     setTimeout(() => this.checkScroll(), 300);
   }
