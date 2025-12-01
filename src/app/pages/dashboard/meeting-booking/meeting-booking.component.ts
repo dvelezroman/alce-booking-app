@@ -515,12 +515,14 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.selectedMeetingIndex = index;
     this.updateLinkStatus();
     this.isMeetingDetailModalActive = true;
+    document.body.classList.add('no-scroll');
 }
 
   closeMeetingDetailModal() {
     this.selectedMeeting = null;
     this.isMeetingDetailModalActive = false;
     clearInterval(this.linkInterval);
+    document.body.classList.remove('no-scroll');
   }
 
   getFormattedLink(link: string | undefined): string {

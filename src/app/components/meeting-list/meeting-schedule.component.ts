@@ -19,6 +19,11 @@ export class MeetingScheduleComponent {
   canScrollLeft = false;
   canScrollRight = false;
 
+  @HostListener('window:resize', ['$event'])
+    onResize(event: Event) {
+      this.checkScroll();
+  }
+
   ngAfterViewInit() {
     setTimeout(() => this.checkScroll(), 300);
   }
@@ -26,8 +31,9 @@ export class MeetingScheduleComponent {
   checkScroll() {
     if (!this.scheduleList?.nativeElement) return;
     const el = this.scheduleList.nativeElement;
-    this.canScrollLeft = el.scrollLeft > 0;
-    this.canScrollRight = el.scrollWidth > el.clientWidth;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    this.canScrollLeft = el.scrollLeft > 5;
+    this.canScrollRight = el.scrollLeft < maxScroll - 5;
   }
 
   scrollLeft() {
@@ -39,6 +45,8 @@ export class MeetingScheduleComponent {
     this.scheduleList.nativeElement.scrollBy({ left: 330, behavior: 'smooth' });
     setTimeout(() => this.checkScroll(), 300);
   }
+
+  
 
   isToday(date: Date): boolean {
     const today = new Date();
