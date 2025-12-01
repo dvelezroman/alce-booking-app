@@ -18,6 +18,7 @@ export interface StageAssessment {
   id: number;
   stageId: number;
   studentIds: number[];
+  students?: StageAssessmentStudent[];
   stageAssessmentResourceId: number;
   dueDate: string;
   finished: number[];
@@ -27,6 +28,14 @@ export interface StageAssessment {
   stageAssessmentResource?: StageAssessmentResource;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface StageAssessmentStudent {
+  studentId: number;
+  userId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
 export interface StudentAssessmentStatus {

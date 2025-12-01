@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AssessmentFiltersComponent } from '../../../components/stage-assessment-list/assessment-filters/assessment-filters.component';
-import { StageAssessmentFilters, StageAssessment } from '../../../services/dtos/stage-assessment.dto';
+import { StageAssessmentFilters, StageAssessment, StageAssessmentStudent } from '../../../services/dtos/stage-assessment.dto';
 import { StageAssessmentService } from '../../../services/stage-assessment.service';
 import { AssessmentTableComponent } from "../../../components/stage-assessment-list/assessment-table/assessment-table.component";
 import { AssessmentModalComponent } from '../../../components/stage-assessment-list/assessment-modal/assessment-modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
+import { UserDto } from '../../../services/dtos/user.dto';
 
 @Component({
   selector: 'app-stage-assessment-list',
@@ -33,7 +34,7 @@ export class StageAssessmentListComponent implements OnInit {
   // === Modal ===
   showModal = false;
   modalTitle = '';
-  modalUsers: number[] = [];
+  modalUsers: StageAssessmentStudent[] = [];
 
   modal: ModalDto = modalInitializer();
   assessmentToDelete: StageAssessment | null = null;
@@ -79,7 +80,7 @@ export class StageAssessmentListComponent implements OnInit {
   // ========================
   onAssigned(a: StageAssessment) {
     this.modalTitle = 'Estudiantes asignados';
-    this.modalUsers = a.studentIds ?? [];
+    this.modalUsers = a.students ?? [];
     this.showModal = true;
   }
 
@@ -88,7 +89,11 @@ export class StageAssessmentListComponent implements OnInit {
   // ========================
   onFinished(a: StageAssessment) {
     this.modalTitle = 'Estudiantes que finalizaron';
-    this.modalUsers = a.finished ?? [];
+
+    this.modalUsers = a.students
+      ? a.students.filter(s => a.finished.includes(s.studentId))
+      : [];
+
     this.showModal = true;
   }
 

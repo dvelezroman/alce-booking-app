@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { StageAssessmentStudent } from '../../../services/dtos/stage-assessment.dto';
 
 @Component({
   selector: 'app-assessment-modal',
@@ -12,7 +13,7 @@ export class AssessmentModalComponent {
 
   @Input() show = false;
   @Input() title = '';
-  @Input() userIds: number[] = [];
+  @Input() users: StageAssessmentStudent[] = [];
 
   @Output() close = new EventEmitter<void>();
 
