@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AssessmentFiltersComponent } from '../../../components/stage-assessment-list/assessment-filters/assessment-filters.component';
-import { StageAssessmentFilters, StageAssessment } from '../../../services/dtos/stage-assessment.dto';
+import { StageAssessmentFilters, StageAssessment, StageAssessmentStudent } from '../../../services/dtos/stage-assessment.dto';
 import { StageAssessmentService } from '../../../services/stage-assessment.service';
 import { AssessmentTableComponent } from "../../../components/stage-assessment-list/assessment-table/assessment-table.component";
 import { AssessmentModalComponent } from '../../../components/stage-assessment-list/assessment-modal/assessment-modal.component';
@@ -34,7 +34,7 @@ export class StageAssessmentListComponent implements OnInit {
   // === Modal ===
   showModal = false;
   modalTitle = '';
-  modalUsers: UserDto[] = [];
+  modalUsers: StageAssessmentStudent[] = [];
 
   modal: ModalDto = modalInitializer();
   assessmentToDelete: StageAssessment | null = null;
@@ -91,7 +91,7 @@ export class StageAssessmentListComponent implements OnInit {
     this.modalTitle = 'Estudiantes que finalizaron';
 
     this.modalUsers = a.students
-      ? a.students.filter(s => a.finished.includes(s.id))
+      ? a.students.filter(s => a.finished.includes(s.studentId))
       : [];
 
     this.showModal = true;

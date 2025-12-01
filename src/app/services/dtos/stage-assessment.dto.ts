@@ -1,5 +1,4 @@
 import { StageAssessmentResource } from "./stage-resources.dto";
-import { UserDto } from "./user.dto";
 
 export interface CreateStageAssessmentDto {
   stageId: number;
@@ -19,7 +18,7 @@ export interface StageAssessment {
   id: number;
   stageId: number;
   studentIds: number[];
-  students?: UserDto[];
+  students?: StageAssessmentStudent[];
   stageAssessmentResourceId: number;
   dueDate: string;
   finished: number[];
@@ -29,6 +28,14 @@ export interface StageAssessment {
   stageAssessmentResource?: StageAssessmentResource;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface StageAssessmentStudent {
+  studentId: number;
+  userId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
 export interface StudentAssessmentStatus {
