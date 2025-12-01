@@ -37,7 +37,17 @@
 
 </div>
 
-<app-countdown-banner></app-countdown-banner>
+<app-countdown-banner
+  (pendingCount)="pendingAssessmentsCount = $event"
+  (showAnnouncement)="showAssessmentAnnouncement = $event">
+</app-countdown-banner>
+
+<app-assessment-announcement
+  *ngIf="showAssessmentAnnouncement && pendingAssessmentsCount > 0"
+  [show]="showAssessmentAnnouncement"
+  [count]="pendingAssessmentsCount"
+  (closed)="onAnnouncementClosed()">
+</app-assessment-announcement>
 
 <app-student-cuenca-banner
   *ngIf="showBannerCuenca"

@@ -166,6 +166,7 @@ export class UsersService implements OnInit{
     if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('instructorLink');
+      localStorage.removeItem('assessment_announced');
       localStorage.removeItem('globalNoticeDismissed');
       this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
       this.store.dispatch(setAdminStatus({ isAdmin: false }));
