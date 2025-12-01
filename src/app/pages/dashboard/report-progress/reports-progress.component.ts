@@ -9,7 +9,6 @@ import { StudyContentService } from '../../../services/study-content.service';
 import { StageProgressList } from '../../../services/dtos/stage-progress.dto';
 import { StageProgressService } from '../../../services/stage-progress';
 
-
 @Component({
   selector: 'app-reports-progress',
   standalone: true,
@@ -27,6 +26,8 @@ export class ReportsProgressComponent implements OnInit {
   showStageTitle: boolean = false;
   studentStageDescription: string = '';
 
+  selectedStudentId: number | null = null;
+  filtersStudentId: number = 0;
   studentProgress: StageProgressList = [];
   studentCurrentStageProgress: number = 0;
 
@@ -67,35 +68,40 @@ export class ReportsProgressComponent implements OnInit {
 
   onFiltersSubmitted(filters: { studentId: number; studentStage?: string; from?: string; to?: string }) {
     this.searchExecuted = true;
+    this.selectedStudentId = filters.studentId;
+    this.filtersStudentId = filters.studentId;   
     this.studentStageDescription = filters.studentStage || 'No disponible';
 
     const fromDate = filters.from ?? undefined;
     const toDate = filters.to ?? undefined;
 
-    //  Fetch historial de contenidos del estudiante
+    // 1) Historial de contenidos
     this.studyContentService
       .getStudyContentHistoryForStudentId(filters.studentId, fromDate, toDate)
       .subscribe({
         next: (history) => {
           this.studentContentHistory = history;
           this.identifyAndLoadCurrentStage(history);
+
+          // 2) DESPUÉS de saber cuál es el stage actual (currentStageIndex),
+          //    cargamos el progreso para ese stage concreto:
+          if (this.currentStageIndex >= 0 && this.stages[this.currentStageIndex]) {
+            const stageId = this.stages[this.currentStageIndex].id;
+            this.loadStageProgress(stageId, filters.studentId);
+          } else {
+            this.studentCurrentStageProgress = 0;
+          }
         },
         error: () => {
           this.studentContentHistory = [];
+          this.studentCurrentStageProgress = 0;
         },
       });
 
-    //  Fetch progreso del estudiante
-    this.stageProgressService.getProgressByStudent(filters.studentId).subscribe({
-      next: (progressList) => {
-        if (progressList.length > 0) {
-          this.studentCurrentStageProgress = Number(progressList[0].progress);
-        }
-      },
-      error: () => {
-        this.studentCurrentStageProgress = 0;
-      }
-    });
+    // ⚠️ IMPORTANTE:
+    // Ya no se usa getProgressByStudent aquí,
+    // porque eso siempre trae el stage actual del estudiante,
+    // no el que se está mostrando en el reporte.
   }
 
   private identifyAndLoadCurrentStage(history: StudyContentPayloadI[]): void {
@@ -132,11 +138,36 @@ export class ReportsProgressComponent implements OnInit {
     });
   }
 
+  private loadStageProgress(stageId: number, studentId: number): void {
+    this.studentCurrentStageProgress = 0;
+
+    this.stageProgressService
+      .getProgressByStudentByStage(studentId, stageId)
+      .subscribe({
+        next: (resp) => {
+          // Si backend devuelve algo raro o vacío, garantizamos número o 0
+          const raw = resp && (resp as any).progress;
+          const value = raw !== undefined && raw !== null ? Number(raw) : 0;
+          this.studentCurrentStageProgress = isNaN(value) ? 0 : value;
+        },
+        error: () => {
+          this.studentCurrentStageProgress = 0;
+        }
+      });
+  }
+
   goToPreviousStage() {
     if (this.currentStageIndex > 0) {
       this.currentStageIndex--;
       const stageId = this.stages[this.currentStageIndex].id;
+
       this.loadStageContents(stageId);
+
+      if (this.filtersStudentId) {
+        this.loadStageProgress(stageId, this.filtersStudentId);
+      } else {
+        this.studentCurrentStageProgress = 0;
+      }
     }
   }
 
@@ -144,7 +175,14 @@ export class ReportsProgressComponent implements OnInit {
     if (this.currentStageIndex < this.stages.length - 1) {
       this.currentStageIndex++;
       const stageId = this.stages[this.currentStageIndex].id;
+
       this.loadStageContents(stageId);
+
+      if (this.filtersStudentId) {
+        this.loadStageProgress(stageId, this.filtersStudentId);
+      } else {
+        this.studentCurrentStageProgress = 0;
+      }
     }
   }
 
