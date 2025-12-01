@@ -1,0 +1,53 @@
+<h2 class="title stage">Evaluaciones Asignadas</h2>
+
+<section class="stage-assessment-section">
+
+  <div class="filters-toggle-wrapper">
+    <button class="filters-btn" (click)="toggleFilters()">
+      <i class="fa-solid fa-filter"></i> Filtros
+    </button>
+  </div>
+
+  <!-- FILTRO -->
+  <div class="filters-container" *ngIf="showFilters">
+    <app-assessment-filters
+      (filtersChange)="onFiltersChanged($event)">
+    </app-assessment-filters>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div class="content-wrapper">
+
+    <app-assessment-table
+        [assessments]="assessments"
+        [loading]="loading"
+        (assignedClick)="onAssigned($event)"
+        (finishedClick)="onFinished($event)"
+        (deleteClick)="onDeleteAssessment($event)">
+    </app-assessment-table>
+
+  </div>
+
+    <p class="info" *ngIf="false">
+      No existen resultados para los filtros aplicados.
+    </p>
+
+</section>
+
+<app-assessment-modal
+  [show]="showModal"
+  [title]="modalTitle"
+  [userIds]="modalUsers"
+  (close)="closeModal()">
+</app-assessment-modal>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>
