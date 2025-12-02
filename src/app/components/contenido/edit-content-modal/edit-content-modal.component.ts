@@ -66,7 +66,7 @@ export class EditContentModalComponent implements OnInit {
       description: formValues.description,
       content: formValues.textContent ? JSON.stringify(formValues.textContent.trim()) : '',
       enabled: formValues.enabled,
-      measurable: this.content.measurable 
+      measurable: formValues.measurable
     };
   
     this.update.emit(updatedData);
