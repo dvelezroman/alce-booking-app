@@ -1,11 +1,10 @@
 <div class="countdown-banner" *ngIf="showBanner">
 
-  <h3 class="title">Evaluaciones pendientes</h3>
+  <div class="title-row">
+    <h3 class="title">Evaluaciones pendientes</h3>
 
-  <div class="header-row">
-    <div class="help-wrapper" (click)="goToHelp()">
-      <!-- <span class="help-text">Ayuda</span> -->
-      <div class="help-icon">?</div>
+    <div class="help-icon" (click)="goToHelp()">
+      ?
     </div>
   </div>
 
@@ -14,6 +13,7 @@
       <span class="resource-name link" (click)="goToAssessmentPage()">
         {{ c.description }}
       </span>
+
       <span class="time-block" [class.urgent]="c.isUrgent">
         {{ formatTime(c) }}
       </span>
