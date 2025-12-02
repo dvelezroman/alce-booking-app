@@ -25,6 +25,7 @@ import { StudentBannerComponent } from '../../../components/home/student-banner/
 import { StudentCuencaBannerComponent } from '../../../components/home/student-cuenca-banner/student-cuenca-banner.component';
 import { StudentCuencaCommBannerComponent } from '../../../components/home/student-cuenca-comm-banner/student-cuenca-comm-banner.component';
 import { CountdownBannerComponent } from '../../../components/home/countdown-banner/countdown-banner.component';
+import { AssessmentAnnouncementComponent } from "../../../components/home/assessment-announcement/assessment-announcement.component";
 
 @Component({
   selector: 'app-home-private',
@@ -40,7 +41,8 @@ import { CountdownBannerComponent } from '../../../components/home/countdown-ban
     StudentCuencaBannerComponent,
     StudentCuencaCommBannerComponent,
     CountdownBannerComponent,
-  ],
+    AssessmentAnnouncementComponent
+],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -65,6 +67,9 @@ export class HomePrivateComponent implements OnInit {
   showBannerCuenca: boolean = false;
   showBannerCuencaComm: boolean = false;
   isCuenca: boolean = false;
+
+  pendingAssessmentsCount: number = 0;
+  showAssessmentAnnouncement: boolean = false;
 
   cuencaVideoUrl = "https://youtube.com/shorts/trxmLXdmBEQ?feature=share";
   generalVideoUrl = "https://youtube.com/shorts/Dgv94Lt-nck?feature=share";
@@ -107,6 +112,11 @@ export class HomePrivateComponent implements OnInit {
       } else {
         this.selectedVideoUrl = this.generalVideoUrl;
       }
+
+      // mostrar anuncio si inicia sesión y no lo ha visto antes
+    if (this.isStudent && this.isLoggedIn && this.shouldShowAnnouncement()) {
+      this.showAssessmentAnnouncement = true;
+    }
     });
 
     
@@ -306,5 +316,13 @@ export class HomePrivateComponent implements OnInit {
       message,
       close: this.closeModal,
     };
+  }
+
+  private shouldShowAnnouncement(): boolean {
+    return !localStorage.getItem('assessment_announced');
+  }
+
+  onAnnouncementClosed() {
+    this.showAssessmentAnnouncement = false;
   }
 }
