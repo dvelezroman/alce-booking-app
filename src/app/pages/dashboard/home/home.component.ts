@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, take } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -77,6 +77,7 @@ export class HomePrivateComponent implements OnInit {
 
   constructor(
     private store: Store,
+    private router: Router,
     private studyContentService: StudyContentService,
     private usersService: UsersService,
     private studentsService: StudentsService
@@ -320,6 +321,10 @@ export class HomePrivateComponent implements OnInit {
 
   private shouldShowAnnouncement(): boolean {
     return !localStorage.getItem('assessment_announced');
+  }
+
+  goToBooking() {
+    this.router.navigate(['/dashboard/booking']);
   }
 
   onAnnouncementClosed() {

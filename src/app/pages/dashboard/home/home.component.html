@@ -1,9 +1,22 @@
 
+
 <div class="hero-wrapper" *ngIf="!isInstructor">
   
-  <div class="hero-background"></div>
+  <div class="hero-background">
+    <img src="/assets/fondo_isLoggin.png" class="hero-image" alt="header image" />
+  </div>
 
-  <section class="hero">
+  <section class="hero-content">
+
+    <!-- BOTÓN AGENDAR -->
+    <button 
+      *ngIf="isStudent && isLoggedIn"
+      class="agenda-button"
+      (click)="goToBooking()">
+      Agendar tus clases
+    </button>
+
+    <!-- PASOS -->
     <div class="student-info-steps" *ngIf="isLoggedIn && isStudent">
       <div class="step">
         <div class="step-number">1</div>
@@ -18,20 +31,14 @@
         <p class="step-text">Asistir a tus sesiones en línea</p>
       </div>
     </div>
-  
-    <div *ngIf="!isLoggedIn" class="hero-button-container">
-      <a routerLink="/login" class="login-button">Ingresar</a>
-    </div>
+
   </section>
 
   <a
     *ngIf="isStudent && isLoggedIn"
     href="https://www.youtube.com/watch?v=P3990N0e8Pg"
     target="_blank"
-    class="floating-help-button"
-    aria-label="Ayuda"
-    title="Ayuda"
-  >
+    class="floating-help-button">
     <span class="material-icons">help_outline</span>
   </a>
 
@@ -86,5 +93,6 @@
   [isSuccess]="modal.isSuccess"
   (close)="modal.close()">
 </app-modal>
+
 
 
