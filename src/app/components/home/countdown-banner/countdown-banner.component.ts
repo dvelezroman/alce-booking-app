@@ -169,6 +169,10 @@ export class CountdownBannerComponent implements OnInit, OnDestroy {
     return `${c.hours}:${c.minutes}:${c.seconds}`;
   }
 
+  goToHelp() {
+    this.router.navigate(['/dashboard/assessment-help']);
+  }
+
   ngOnDestroy() {
     if (this.intervalSub) this.intervalSub.unsubscribe();
   }

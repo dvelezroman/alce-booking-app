@@ -1,17 +1,23 @@
 <div class="countdown-banner" *ngIf="showBanner">
 
-  <h3 class="title">Evaluaciones pendientes</h3>
+  <div class="title-row">
+    <h3 class="title">Evaluaciones pendientes</h3>
+
+    <div class="help-icon" (click)="goToHelp()">
+      ?
+    </div>
+  </div>
 
   <div class="countdown-item" *ngFor="let c of countdowns">
-
     <div class="row">
-      <span class="resource-name link" (click)="goToAssessmentPage()">{{ c.description }}</span>
+      <span class="resource-name link" (click)="goToAssessmentPage()">
+        {{ c.description }}
+      </span>
 
       <span class="time-block" [class.urgent]="c.isUrgent">
         {{ formatTime(c) }}
       </span>
     </div>
-
   </div>
 
 </div>
