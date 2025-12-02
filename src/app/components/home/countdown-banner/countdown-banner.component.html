@@ -2,16 +2,22 @@
 
   <h3 class="title">Evaluaciones pendientes</h3>
 
+  <div class="header-row">
+    <div class="help-wrapper" (click)="goToHelp()">
+      <!-- <span class="help-text">Ayuda</span> -->
+      <div class="help-icon">?</div>
+    </div>
+  </div>
+
   <div class="countdown-item" *ngFor="let c of countdowns">
-
     <div class="row">
-      <span class="resource-name link" (click)="goToAssessmentPage()">{{ c.description }}</span>
-
+      <span class="resource-name link" (click)="goToAssessmentPage()">
+        {{ c.description }}
+      </span>
       <span class="time-block" [class.urgent]="c.isUrgent">
         {{ formatTime(c) }}
       </span>
     </div>
-
   </div>
 
 </div>
