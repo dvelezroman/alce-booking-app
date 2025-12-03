@@ -1,75 +1,89 @@
+/* CONTENEDOR PRINCIPAL */
 .form-container {
   margin: 1rem auto;
-  font-size: 0.8rem;
-  padding: 2rem;
-  max-width: 400px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.7rem;
+  max-width: 390px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  font-size: 0.85rem;
+  transition: box-shadow 0.2s ease;
 }
 
+.form-container:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+}
+
+/* LABELS */
 .label {
-  color: #3b3b3b !important; 
-  font-size: 0.8rem;
-  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #111;
+  margin-bottom: 0.3rem;
   display: block;
 }
 
+/* INPUTS */
 .input,
 .select select {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  color: #333;
-  font-size: 0.8rem;
-  background-color: #fff;
-  height: 35px;
+  width: 100%;
+  border: 1px solid #eaeaea;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 0rem 0.8rem;
+  font-size: 0.85rem;
+  color: #111;
+  transition: all 0.2s ease;
+}
+
+.input:focus,
+.select select:focus {
+  outline: none;
+  background: #fff;
+}
+
+/* Placeholder */
+.input::placeholder {
+  color: #999;
+}
+
+/* Elimina spinners */
+input[type='number'] {
+  appearance: textfield;
 }
 
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
-  margin: 0;
 }
 
-input[type='number'] {
-  appearance: textfield;
-  -webkit-appearance: none;
-  -moz-appearance: textfield;
-
-  &::-webkit-inner-spin-button,
-  &::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+/* Fechas con ícono */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* ICONOS IZQUIERDOS */
 .has-icons-left .icon.is-left {
   position: absolute;
   left: 0px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: #999;
-  font-size: 0.9rem;
+  color: #888;
 }
 
 .has-icons-left .input {
-  padding-left: 2rem;
+  padding-left: 2.2rem;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-}
-
-.input::placeholder {
-  color: #999;
-  font-size: 0.8rem;
-}
-
+/* Dropdown */
 .relative-container {
   position: relative;
 }
@@ -79,43 +93,60 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   top: 100%;
   left: 0;
   right: 0;
-  z-index: 10;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
   background: #fff;
-  max-height: 200px;
+  max-height: 220px;
   overflow-y: auto;
-  margin-top: 0.2rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 0.25rem;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  z-index: 10;
 }
 
 .dropdown-item {
-  padding: 0.5rem;
-  font-size: 0.8rem;
-  color: #333;
+  padding: 0.55rem;
+  font-size: 0.85rem;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 .dropdown-item:hover {
-  background-color: #f0f0f0;
+  background: #f5f5f5;
 }
 
 .button.is-primary {
-  background-color: #3273dc;
+  background: #2563eb;
   color: #fff;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
   border: none;
-  border-radius: 4px;
-  padding: 0.5rem;
   font-size: 0.85rem;
-  transition: background-color 0.3s ease;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 
 .button.is-primary:hover {
-  background-color: #275fad;
+  background: #1e40af;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
 }
 
+.button.is-primary:active {
+  transform: scale(0.97);
+}
+
+/* Errores */
 .help.is-danger {
-  color: #e53935; 
-  font-size: 0.7rem;
-  margin-top: 0.25rem;
+  color: #e53935;
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    padding: 1.2rem 1.5rem;
+    margin: 0.8rem auto;
+    font-size: 0.8rem;
+  }
 }

@@ -1,0 +1,77 @@
+<div class="live-classes-container" *ngIf="!loading && meetings.length > 0">
+  <h3 class="live-classes-title">
+    {{ filterMode === "today" ? "Clases del día" : "Todas las clases" }}
+  </h3>
+
+  <!-- 🔵 Selector Hoy / Todas -->
+  <div class="filter-row">
+    <button
+      class="filter-btn"
+      [class.active]="filterMode === 'today'"
+      (click)="changeFilter('today')"
+    >
+      Hoy
+    </button>
+
+    <button
+      class="filter-btn"
+      [class.active]="filterMode === 'all'"
+      (click)="changeFilter('all')"
+    >
+      Todas
+    </button>
+  </div>
+
+  <div class="reels-outer-wrapper">
+    <div class="reels-wrapper">
+      <div class="reels-scroll">
+        <div class="reel-card" *ngFor="let m of meetings">
+          <div class="reel-header">
+
+            <!-- Fecha principal -->
+            <p class="date">{{ formatDateTitle(m.date) }}</p>
+
+            <!-- Hora principal -->
+            <p class="primary-hour">
+                {{ m.hour }}:00
+            </p>
+
+            <!-- 🔵 Mostrar "Hora Ecuador" solo si difiere -->
+            <ng-container *ngIf="m.localhour !== m.hour">
+                <p class="secondary-hour">
+                <span class="label-ecu">Hora Ecuador:</span>
+
+                <!-- Si cambia la fecha -->
+                <ng-container *ngIf="m.localdate !== m.date">
+                    {{ m.localhour }}:00
+                </ng-container>
+
+                <!-- Si es la misma fecha -->
+                <ng-container *ngIf="m.localdate === m.date">
+                    {{ m.localhour }}:00
+                </ng-container>
+                </p>
+            </ng-container>
+
+          </div>
+
+          <div class="reel-body">
+            <p class="label">Instructor:</p>
+            <p class="instructor">
+              {{ m.instructor?.user?.firstName ?? "No asignado" }}
+              {{ m.instructor?.user?.lastName ?? "" }}
+            </p>
+          </div>
+
+          <button
+            class="enter-btn"
+            [disabled]="!canEnter(m) || !hasValidLink(m)"
+            (click)="enterClass(m)"
+          >
+            Entrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

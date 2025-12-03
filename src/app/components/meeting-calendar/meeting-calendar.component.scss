@@ -52,44 +52,64 @@
   align-items: center;
 }
 
+/* --- SELECTOR DE MES NUEVO --- */
 .month-selector {
-  position: relative;
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  background-color: transparent;
+  justify-content: space-between;
+  padding: 0 0.3rem;
+  margin-bottom: 0.8rem;
 }
 
 .month-label {
-  font-weight: bold;
-  font-size: .9rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #5c5c5d;
 }
 
-.month-selector button {
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid rgba(128, 128, 128, 0.528);
+/* Contenedor de flechas */
+.month-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Botones */
+.nav-btn {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.054);
-  color: rgb(104, 104, 104);
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4b5563;
   cursor: pointer;
-  position: absolute;
-  font-size: .7rem;
-  transform: translateY(-50%);
-  transition: all 0.3s ease-in-out;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
 }
 
-.month-selector button:hover {
-  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15); 
-  transform: translateY(-50%) scale(1.1);  
+/* Hover solo activo */
+.nav-btn:not(.disabled):hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+  transform: translateY(-2px);
 }
 
-.prev-button { left: 00%; top:53%; }
-.next-button { left: 90%; top: 45%;  }
+.nav-btn:not(.disabled):active {
+  transform: translateY(0);
+}
 
-.month-selector button.hidden {
-  visibility: hidden;
+/* --- ESTADO DESACTIVADO --- */
+.nav-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+  border-color: #e5e7eb;
+  background: #fafafa;
+  color: #9ca3af;
 }
 
 .calendar-header, .calendar-grid {
@@ -204,5 +224,18 @@
     .legend-disabled {
       background-color: #ffd3d2;
     }
+  }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .month-label {
+    font-size: 0.9rem;
+  }
+
+  .nav-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
   }
 }

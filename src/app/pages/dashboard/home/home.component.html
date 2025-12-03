@@ -13,11 +13,17 @@
       *ngIf="isStudent && isLoggedIn"
       class="agenda-button"
       (click)="goToBooking()">
-      Agendar tus clases
+      Agenda tus clases
     </button>
 
+    <div class="live-classes-wrapper" *ngIf="isStudent && isLoggedIn">
+      <app-student-live-classes
+        (meetingsCount)="hasLiveClasses = $event > 0">
+      </app-student-live-classes>
+    </div>
+
     <!-- PASOS -->
-    <div class="student-info-steps" *ngIf="isLoggedIn && isStudent">
+    <div class="student-info-steps" *ngIf="isLoggedIn && isStudent && !hasLiveClasses">
       <div class="step">
         <div class="step-number">1</div>
         <p class="step-text">Agendar tus próximas clases</p>
