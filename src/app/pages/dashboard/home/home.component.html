@@ -1,4 +1,9 @@
-
+<div class="banner-wrapper">
+  <app-countdown-banner
+    (pendingCount)="pendingAssessmentsCount = $event"
+    (showAnnouncement)="showAssessmentAnnouncement = $event">
+  </app-countdown-banner>
+</div>
 
 <div class="hero-wrapper" *ngIf="!isInstructor">
   
@@ -42,14 +47,6 @@
 
   <section class="hero-content">
 
-    <!-- BOTÓN AGENDAR -->
-    <!-- <button 
-      *ngIf="isStudent && isLoggedIn"
-      class="agenda-button"
-      (click)="goToBooking()">
-      Agenda tus clases
-    </button> -->
-
     <div class="live-classes-wrapper" *ngIf="isStudent && isLoggedIn">
       <app-student-live-classes
         (meetingsCount)="hasLiveClasses = $event > 0">
@@ -85,10 +82,10 @@
 
 </div>
 
-<app-countdown-banner
+<!-- <app-countdown-banner
   (pendingCount)="pendingAssessmentsCount = $event"
   (showAnnouncement)="showAssessmentAnnouncement = $event">
-</app-countdown-banner>
+</app-countdown-banner> -->
 
 <app-assessment-announcement
   *ngIf="showAssessmentAnnouncement && pendingAssessmentsCount > 0"
