@@ -1,0 +1,29 @@
+<!-- Si no hay studentId o hay error, no mostramos nada -->
+<div *ngIf="studentId && !loading && hasProgress" class="stage-progress-card">
+
+  <div class="stage-progress-header">
+    <div class="stage-progress-title">
+      <p class="stage-name">
+        {{ user?.stage?.description || 'Stage actual' }}
+      </p>
+    </div>
+
+    <div class="stage-progress-percent">
+      {{ progressPercent }}%
+    </div>
+  </div>
+
+  <div class="stage-progress-bar">
+    <div class="stage-progress-fill" [style.width.%]="progressPercent"></div>
+  </div>
+
+  <p class="stage-progress-helper">
+    Sigue asistiendo a tus clases para avanzar al siguiente nivel.
+  </p>
+</div>
+
+<!-- Estado cargando -->
+<div *ngIf="studentId && loading" class="stage-progress-card skeleton">
+  <div class="skeleton-header"></div>
+  <div class="skeleton-bar"></div>
+</div>

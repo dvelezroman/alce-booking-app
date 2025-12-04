@@ -27,6 +27,7 @@ import { StudentCuencaCommBannerComponent } from '../../../components/home/stude
 import { CountdownBannerComponent } from '../../../components/home/countdown-banner/countdown-banner.component';
 import { AssessmentAnnouncementComponent } from "../../../components/home/assessment-announcement/assessment-announcement.component";
 import { StudentLiveClassesComponent } from "../../../components/student-live-classes/student-live-classes.component";
+import { StudentStageProgressComponent } from "../../../components/student/student-stage-progress/student-stage-progress.component";
 
 @Component({
   selector: 'app-home-private',
@@ -43,7 +44,8 @@ import { StudentLiveClassesComponent } from "../../../components/student-live-cl
     StudentCuencaCommBannerComponent,
     CountdownBannerComponent,
     AssessmentAnnouncementComponent,
-    StudentLiveClassesComponent
+    StudentLiveClassesComponent,
+    StudentStageProgressComponent
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

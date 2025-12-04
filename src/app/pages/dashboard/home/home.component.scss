@@ -21,7 +21,9 @@ html, body {
 .hero-background {
   width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   margin-top: 3rem;
 }
 
@@ -50,20 +52,11 @@ html, body {
   color: #4b5563;
 }
 
-/* Bloque 2: CONTENIDO */
-.hero-content {
-  width: 100%;
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
 /* Botón agendar */
 .agenda-button {
-  background: transparent;
-  color: #2563eb;
+  margin-top: 2rem;
+  background: #2563eb;
+  color: #ffffff;
   padding: 0.8rem 2rem;
   border: 1px solid #2563eb;
   border-radius: 12px;
@@ -74,9 +67,31 @@ html, body {
 }
 
 .agenda-button:hover {
-  background: #2563eb;
-  color: white;
   transform: translateY(-2px);
+}
+
+.level-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #374151;
+  margin-bottom: 0rem;
+  width: 100%;
+  text-align: center;
+}
+
+.progress-block {
+  width: 90%;
+  max-width: 420px;
+}
+
+/* Bloque 2: CONTENIDO */
+.hero-content {
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .live-classes-wrapper {
@@ -146,6 +161,10 @@ html, body {
     margin-top: 3rem;
   }
 
+  .hero-content{
+    margin-top: .75rem;
+  }
+
   .hero-image {
     width: 100%;
     max-width: 260px;
@@ -157,11 +176,11 @@ html, body {
   }
 
   .greet-title {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
   }
 
   .greet-subtitle {
-    font-size: 1rem;
+    font-size: .95rem;
   }
 
   .agenda-button {
@@ -184,5 +203,31 @@ html, body {
 
   .student-info-steps {
     gap: 0.6rem;
+  }
+}
+
+@media (max-width: 490px) {
+
+  .hero-background {
+    border-radius: 18px;
+    margin: 3rem auto 0;
+    width: 90%;
+  }
+
+   .student-greeting {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px 16px;
+    width: 100%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .greet-title,
+  .greet-subtitle {
+    text-align: left !important;
+  }
+
+  .progress-block {
+    width: 100%;
   }
 }

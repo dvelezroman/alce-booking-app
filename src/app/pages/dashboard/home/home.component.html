@@ -4,36 +4,58 @@
   
   <div class="hero-background">
 
-    <!-- Si es estudiante → mostramos saludo -->
+    <!-- SALUDO -->
     <div *ngIf="isStudent && isLoggedIn" class="student-greeting">
       <h1 class="greet-title">Hola, {{ userData?.firstName }} 👋</h1>
       <p class="greet-subtitle">Listo para tu próxima clase</p>
+
+      <button 
+        class="agenda-button agenda-under-greeting"
+        (click)="goToBooking()">
+        Agenda tus clases
+      </button>
+      
     </div>
 
-    <!-- Si NO es estudiante → mantenemos la imagen -->
+    <p 
+      *ngIf="isStudent && isLoggedIn" 
+      class="level-title"
+    >
+      Tu nivel actual
+    </p>
+
+    <!-- PROGRESO -->
+    <app-student-stage-progress 
+      *ngIf="isStudent && isLoggedIn"
+      class="progress-block">
+    </app-student-stage-progress>
+
+    <!-- Imagen solo si NO es estudiante -->
     <img 
       *ngIf="!isStudent"
       src="/assets/fondo_isLoggin.png"
       class="hero-image"
       alt="header image"
     />
+
   </div>
 
   <section class="hero-content">
 
     <!-- BOTÓN AGENDAR -->
-    <button 
+    <!-- <button 
       *ngIf="isStudent && isLoggedIn"
       class="agenda-button"
       (click)="goToBooking()">
       Agenda tus clases
-    </button>
+    </button> -->
 
     <div class="live-classes-wrapper" *ngIf="isStudent && isLoggedIn">
       <app-student-live-classes
         (meetingsCount)="hasLiveClasses = $event > 0">
       </app-student-live-classes>
     </div>
+
 
     <!-- PASOS -->
     <div class="student-info-steps" *ngIf="isLoggedIn && isStudent && !hasLiveClasses">
