@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, take } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -26,6 +26,7 @@ import { StudentCuencaBannerComponent } from '../../../components/home/student-c
 import { StudentCuencaCommBannerComponent } from '../../../components/home/student-cuenca-comm-banner/student-cuenca-comm-banner.component';
 import { CountdownBannerComponent } from '../../../components/home/countdown-banner/countdown-banner.component';
 import { AssessmentAnnouncementComponent } from "../../../components/home/assessment-announcement/assessment-announcement.component";
+import { StudentLiveClassesComponent } from "../../../components/student-live-classes/student-live-classes.component";
 
 @Component({
   selector: 'app-home-private',
@@ -41,7 +42,8 @@ import { AssessmentAnnouncementComponent } from "../../../components/home/assess
     StudentCuencaBannerComponent,
     StudentCuencaCommBannerComponent,
     CountdownBannerComponent,
-    AssessmentAnnouncementComponent
+    AssessmentAnnouncementComponent,
+    StudentLiveClassesComponent
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -75,8 +77,11 @@ export class HomePrivateComponent implements OnInit {
   generalVideoUrl = "https://youtube.com/shorts/Dgv94Lt-nck?feature=share";
   selectedVideoUrl: string | null = null;
 
+  hasLiveClasses: boolean = false;
+
   constructor(
     private store: Store,
+    private router: Router,
     private studyContentService: StudyContentService,
     private usersService: UsersService,
     private studentsService: StudentsService
@@ -320,6 +325,10 @@ export class HomePrivateComponent implements OnInit {
 
   private shouldShowAnnouncement(): boolean {
     return !localStorage.getItem('assessment_announced');
+  }
+
+  goToBooking() {
+    this.router.navigate(['/dashboard/booking']);
   }
 
   onAnnouncementClosed() {
