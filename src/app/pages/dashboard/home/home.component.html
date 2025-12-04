@@ -3,7 +3,20 @@
 <div class="hero-wrapper" *ngIf="!isInstructor">
   
   <div class="hero-background">
-    <img src="/assets/fondo_isLoggin.png" class="hero-image" alt="header image" />
+
+    <!-- Si es estudiante → mostramos saludo -->
+    <div *ngIf="isStudent && isLoggedIn" class="student-greeting">
+      <h1 class="greet-title">Hola, {{ userData?.firstName }} 👋</h1>
+      <p class="greet-subtitle">Listo para tu próxima clase</p>
+    </div>
+
+    <!-- Si NO es estudiante → mantenemos la imagen -->
+    <img 
+      *ngIf="!isStudent"
+      src="/assets/fondo_isLoggin.png"
+      class="hero-image"
+      alt="header image"
+    />
   </div>
 
   <section class="hero-content">

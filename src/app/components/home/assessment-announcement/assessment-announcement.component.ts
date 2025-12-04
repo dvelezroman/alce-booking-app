@@ -20,6 +20,11 @@ export class AssessmentAnnouncementComponent {
 
   close() {
     localStorage.setItem('assessment_announced', 'true');
+    this.router.navigate(['/dashboard/stage-assessment-student']);
+    this.closed.emit();
+  }
+
+  closeOnly() {
     this.closed.emit();
   }
 
