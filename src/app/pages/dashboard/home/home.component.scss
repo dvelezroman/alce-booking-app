@@ -9,6 +9,13 @@ html, body {
   background: #f2f2f2 !important;
 }
 
+.banner-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
 /* HERO WRAPPER */
 .hero-wrapper {
   width: 100%;
@@ -21,8 +28,10 @@ html, body {
 .hero-background {
   width: 100%;
   display: flex;
-  justify-content: center;
-  margin-top: 3rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .hero-image {
@@ -31,33 +40,65 @@ html, body {
   display: block;
 }
 
-/* Bloque 2: CONTENIDO */
-.hero-content {
+.student-greeting {
+  text-align: center;
+  padding: 0px 0px 25px;
   width: 100%;
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
+}
+
+.greet-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.greet-subtitle {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #4b5563;
 }
 
 /* Botón agendar */
 .agenda-button {
-  background: transparent;
-  color: #2563eb;
-  padding: 0.8rem 2rem;
+  margin-top: 2rem;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 0.75rem 2rem;
   border: 1px solid #2563eb;
   border-radius: 12px;
-  font-size: .9rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s ease;
 }
 
 .agenda-button:hover {
-  background: #2563eb;
-  color: white;
   transform: translateY(-2px);
+}
+
+.level-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #374151;
+  margin-bottom: 0rem;
+  width: 100%;
+  text-align: center;
+}
+
+.progress-block {
+  width: 90%;
+  max-width: 420px;
+}
+
+/* Bloque 2: CONTENIDO */
+.hero-content {
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .live-classes-wrapper {
@@ -71,6 +112,7 @@ html, body {
 
 .live-classes-wrapper app-student-live-classes {
   width: 100%;
+  margin-bottom: 3rem;
   display: block;
 }
 
@@ -124,13 +166,29 @@ html, body {
 @media (max-width: 768px) {
 
   .hero-background {
-    margin-top: 3rem;
+    margin-top: 2rem;
+  }
+
+  .hero-content{
+    margin-top: .75rem;
   }
 
   .hero-image {
     width: 100%;
     max-width: 260px;
     display: block;
+  }
+
+  .student-greeting {
+    text-align: center;
+  }
+
+  .greet-title {
+    font-size: 1.35rem;
+  }
+
+  .greet-subtitle {
+    font-size: .95rem;
   }
 
   .agenda-button {
@@ -153,5 +211,30 @@ html, body {
 
   .student-info-steps {
     gap: 0.6rem;
+  }
+}
+
+@media (max-width: 490px) {
+
+  .hero-background {
+    border-radius: 18px;
+    margin: 2rem auto 0;
+    width: 90%;
+  }
+
+   .student-greeting {
+    // background: #ffffff;
+    // border-radius: 16px;
+    width: 100%;
+    // box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .greet-title,
+  .greet-subtitle {
+    text-align: left !important;
+  }
+
+  .progress-block {
+    width: 100%;
   }
 }

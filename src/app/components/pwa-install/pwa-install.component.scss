@@ -1,23 +1,27 @@
+/* WRAPPER → ya NO ocupa todo el ancho */
 .pwa-install-banner {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(135deg, #1976d2, #1565c0);
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  background: linear-gradient(135deg, #556b8e, #3f516a);
   color: white;
   padding: 14px 18px;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  animation: slideUp 0.3s ease-out;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.16);
+  z-index: 997;
+  animation: slideDown 0.3s ease-out;
   font-family: 'Inter', sans-serif;
 }
 
+/* CONTENIDO */
 .pwa-install-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 14px;
 }
 
 .pwa-install-text {
@@ -32,22 +36,28 @@
   font-size: 22px;
 }
 
+/* BOTONES */
 .pwa-install-buttons {
   display: flex;
-  gap: 10px;
+  gap: 14px;
 }
 
 /* Botón instalar */
+.btn-install,
+.btn-dismiss {
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  min-width: 100px;
+  text-align: center;
+}
+
+/* estilos individuales */
 .btn-install {
   background-color: #43a047;
   color: #fff;
   border: none;
-  padding: 7px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .btn-install:hover {
@@ -55,16 +65,10 @@
   transform: translateY(-1px);
 }
 
-/* Botón descartar */
 .btn-dismiss {
   background: transparent;
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.7);
-  padding: 7px 16px;
-  font-size: 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .btn-dismiss:hover {
@@ -72,25 +76,29 @@
   transform: translateY(-1px);
 }
 
-@keyframes slideUp {
+/* Animacion */
+@keyframes slideDown {
   from {
-    transform: translateY(100%);
+    transform: translate(-50%, -20px);
+    opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translate(-50%, 0);
+    opacity: 1;
   }
 }
 
-@media (max-width: 768px) {
-  .pwa-install-content {
-    flex-direction: column;
-    gap: 12px;
-    text-align: center;
+/* RESPONSIVE */
+@media (max-width: 480px) {
+  .pwa-install-banner {
+    width: 94%;
+    max-width: 94%;
+    padding: 12px 14px;
   }
 
-  .pwa-install-text {
-    font-size: 14px;
-    justify-content: center;
+  .pwa-install-content {
+    flex-direction: column;
+    text-align: center;
   }
 
   .pwa-install-text i {
