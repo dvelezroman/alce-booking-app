@@ -54,27 +54,61 @@ html, body {
 }
 
 .greet-subtitle {
-  font-size: 1.1rem;
+  font-size: .95rem;
   font-weight: 500;
   color: #4b5563;
 }
 
 /* Botón agendar */
 .agenda-button {
-  margin-top: 2rem;
-  background: #2563eb;
+  margin-top: 3rem;
+  padding: 0.78rem 2.4rem;
+  width: fit-content;
+  background: linear-gradient(135deg, #546dff, #a56bff); 
   color: #ffffff;
-  padding: 0.75rem 2rem;
-  border: 1px solid #2563eb;
-  border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
+  border: none;
+  border-radius: 16px;
   cursor: pointer;
-  transition: 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(109, 82, 255, 0.28);
+}
+
+.agenda-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 26px rgba(109, 82, 255, 0.38);
+}
+
+.agenda-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 3px 12px rgba(109, 82, 255, 0.28);
+}
+
+.agenda-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.5s ease;
+}
+
+.agenda-button:active::after {
+  width: 200%;
+  height: 200%;
+  opacity: 0;
 }
 
 .agenda-button:hover {
   transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, #8ca7ff, #b384ff);
 }
 
 .level-title {
@@ -119,10 +153,10 @@ html, body {
 /* PASOS */
 .student-info-steps {
   display: flex;
-  margin-top: 2rem;
+  margin-top: 0rem;
   flex-direction: column;
   gap: 1rem;
-  align-items: center;
+  align-items: left;
 }
 
 .step {
@@ -134,16 +168,17 @@ html, body {
   width: 32px;
   height: 32px;
   font-size: .9rem;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
-  color: white;
+  background: transparent;
+  color: #2563eb;
   border-radius: 50%;
+  border: 1px solid #2563eb;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .step-text {
-  margin-left: 0.5rem;
+  margin-left: 0.75rem;
   color: #4b5563;
   font-size: .9rem;
 }
@@ -184,15 +219,16 @@ html, body {
   }
 
   .greet-title {
-    font-size: 1.35rem;
+    font-size: 1.2rem;
   }
 
   .greet-subtitle {
-    font-size: .95rem;
+    font-size: .9rem;
   }
 
   .agenda-button {
     padding: 0.6rem 1.4rem;
+    margin-top: 2.5rem;
     font-size: 0.85rem;
     border-radius: 10px;
   }
@@ -210,7 +246,8 @@ html, body {
   }
 
   .student-info-steps {
-    gap: 0.6rem;
+    gap: 1rem;
+
   }
 }
 
@@ -218,7 +255,7 @@ html, body {
 
   .hero-background {
     border-radius: 18px;
-    margin: 2rem auto 0;
+    margin: 4rem auto 0;
     width: 90%;
   }
 
@@ -232,9 +269,15 @@ html, body {
   .greet-title,
   .greet-subtitle {
     text-align: left !important;
+    margin-left: .5rem;
   }
 
   .progress-block {
     width: 100%;
   }
+
+  .floating-help-button {
+    right: 12px;
+  }
+
 }

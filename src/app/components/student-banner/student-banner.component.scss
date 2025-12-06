@@ -17,7 +17,7 @@
   }
 
   strong {
-    color: #111; 
+    color: #111;
     font-weight: 600;
   }
 
@@ -31,7 +31,7 @@
 
   .banner-title {
     font-weight: 600;
-    font-size: .85rem;
+    font-size: 0.85rem;
     text-align: left;
   }
 
@@ -65,29 +65,49 @@
           text-decoration: underline;
         }
       }
+
       strong {
-        color: #111; 
+        color: #111;
         font-weight: 600;
       }
     }
   }
 
   .toggle-banner-btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    color: inherit;
-  }
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  position: absolute;
+  top: 6px;
+  right: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.6rem;
+  color: inherit;
+
+  opacity: 0.9;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.toggle-banner-btn:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.toggle-banner-btn .material-icons {
+  font-size: 1.6rem;
+}
 
   &.warning-banner {
     background-color: #ffd9d9e0;
     color: #8b0000;
 
     .material-icons {
-      color: #8b0000;
+      color: #d70f0f;
     }
   }
 
@@ -96,13 +116,13 @@
     color: #5d4037;
 
     .material-icons {
-        color: #ffca28;
+      color: #ffca28;
     }
 
     .toggle-banner-btn {
-        color: #8b0000; 
+      color: #8b0000;
     }
-    }
+  }
 
   &.minimized {
     padding: 0.5rem 1rem;
@@ -131,58 +151,113 @@
     }
   }
 
-@media screen and (max-width: 600px) {
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 0.8rem 1rem;
+  @media screen and (max-width: 600px) {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0.8rem 1rem;
 
-  .material-icons {
-    align-self: flex-start;
-    font-size: 1.3rem;
-  }
+    .material-icons {
+      align-self: flex-start;
+      font-size: 1.3rem;
+    }
 
-  .banner-body {
-    width: 100%;
-    gap: 0.5rem;
-  }
+    .banner-body {
+      width: 100%;
+      gap: 0.5rem;
+    }
 
-  .banner-title {
-    font-size: 0.75rem;
-  }
+    .banner-title {
+      font-size: 0.75rem;
+    }
 
-  .banner-text {
-    font-size: 0.7rem;
-    word-break: break-word;
-    white-space: pre-line;
-  }
+    .banner-text {
+      font-size: 0.7rem;
+      word-break: break-word;
+      white-space: pre-line;
+    }
 
-  .resource-list {
-    font-size: 0.7rem;
-    padding-left: 1.2rem;
+    .resource-list {
+      font-size: 0.7rem;
+      padding-left: 1.2rem;
 
-    li {
-      margin-bottom: 0.6rem;
+      li {
+        margin-bottom: 0.6rem;
 
-      .resource-note,
-      .resource-recommendation {
-        font-size: 0.7rem;
-        line-height: 1.3;
-      }
+        .resource-note,
+        .resource-recommendation {
+          font-size: 0.7rem;
+          line-height: 1.3;
+        }
 
-      a {
-        word-break: break-all;
-        font-size: 0.7rem;
+        a {
+          word-break: break-all;
+          font-size: 0.7rem;
+        }
       }
     }
-  }
 
-  .toggle-banner-btn {
-    align-self: flex-end;
-    font-size: 1rem;
+    .toggle-banner-btn {
+      align-self: flex-end;
+      font-size: 1rem;
+    }
   }
 }
+
+/* 🔵 BOTÓN FLOTANTE (Canva style) */
+.floating-restore-btn {
+  position: fixed;
+  right: 20px;
+
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+
+  font-size: 1.4rem;
+  z-index: 9999;
+
+  opacity: 0;
+  animation: bubbleFadeIn 0.35s ease forwards;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+.floating-restore-btn.info-restore {
+  background: linear-gradient(135deg, #4facfe, #00c6ff);
+}
+
+.floating-restore-btn.warning-restore {
+  background: linear-gradient(135deg, #ff9966, #ff5e62);
+}
+
+.floating-restore-btn:first-of-type {
+  bottom: 78px;
+}
+
+.floating-restore-btn:nth-of-type(2) {
+  bottom: 118px;
+}
+
+/* Animación burbuja */
+@keyframes bubbleFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animación original del banner */
 @keyframes slideInLeft {
   from {
     opacity: 0;
@@ -191,5 +266,14 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-restore-btn {
+    right: 14px;
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
   }
 }
