@@ -29,6 +29,6 @@ export class AssessmentAnnouncementComponent {
   }
 
   goToHelp() {
-    this.router.navigate(['/dashboard/stage-assessment-help']);
+    window.open('https://youtube.com/shorts/Hp2a3fii9MU?feature=share', '_blank');
   }
 }
