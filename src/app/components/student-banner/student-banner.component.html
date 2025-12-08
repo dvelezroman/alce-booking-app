@@ -1,17 +1,25 @@
+<!-- 🔵 BANNER SOLO CUANDO ESTÁ EXPANDIDO -->
 <div
+  *ngIf="isExpanded"
   class="student-banner"
   [class.warning-banner]="type === 'warning'"
   [class.info-banner]="type === 'info'"
-  [class.minimized]="!isExpanded"
-  (click)="toggle()"
 >
-  <span class="material-icons" [ngClass]="{ 'warning-icon': type === 'warning', 'info-icon': type === 'info' }">
+  <span
+    class="material-icons"
+    [ngClass]="{
+      'warning-icon': type === 'warning',
+      'info-icon': type === 'info'
+    }"
+  >
     {{ icon }}
   </span>
 
   <div class="banner-body">
     <div class="banner-title">
-      <ng-container *ngIf="isExpanded; else minimizedTitle">{{ title }}</ng-container>
+      <ng-container *ngIf="isExpanded; else minimizedTitle">
+        {{ title }}
+      </ng-container>
       <ng-template #minimizedTitle>{{ title }} &#33;</ng-template>
     </div>
 
@@ -40,9 +48,24 @@
     </div>
   </div>
 
-  <button class="toggle-banner-btn" (click)="toggle(); $event.stopPropagation()">
-    <span class="material-icons">
-      {{ isExpanded ? 'expand_less' : 'expand_more' }}
-    </span>
+  <!-- Botón que CIERRA el banner y deja solo la burbuja -->
+  <button
+    class="toggle-banner-btn"
+    (click)="toggle(); $event.stopPropagation()"
+  >
+    <span class="material-icons">expand_more</span>
   </button>
 </div>
+
+<!-- BOTÓN FLOTANTE: aparece solo cuando el banner está cerrado -->
+<button
+  class="floating-restore-btn"
+  *ngIf="!isExpanded"
+  (click)="toggle(); $event.stopPropagation()"
+  [ngClass]="{
+    'warning-restore': type === 'warning',
+    'info-restore': type === 'info'
+  }"
+>
+  <span class="material-icons">{{ icon }}</span>
+</button>

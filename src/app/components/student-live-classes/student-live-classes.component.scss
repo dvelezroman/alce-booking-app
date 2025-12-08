@@ -21,32 +21,52 @@
 .filter-row {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
+/* BOTONES */
 .filter-btn {
-  padding: 6px 16px;
-  border-radius: 10px;
-  font-size: 0.9rem;
+  padding: 8px 22px;
+  border-radius: 14px;
+  font-size: 0.92rem;
+  font-weight: 600;
   cursor: pointer;
-  font-weight: 500;
+  position: relative;
 
-  background: #eef1f5;
-  border: 1px solid #cfd6df;
-  color: #4a5568;
-  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(200, 207, 220, 0.7);
+  color: #4b5563;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+
+  transition: 
+    transform 0.2s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.2s ease;
 }
 
+/* Hover suave */
 .filter-btn:hover {
-  background: #e2e8f0;
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(165, 180, 200, 0.9);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
 .filter-btn.active {
-  background: #d3dae4;
-  border-color: #b8c2d0;
-  color: #2d3748;
-  font-weight: 600;
+  background: linear-gradient(135deg, #4e6aff, #b16bff);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 8px 24px rgba(103, 67, 255, 0.35);
+}
+
+/* Pulsación al tocar */
+.filter-btn:active {
+  transform: scale(0.96);
 }
 
 /* WRAPPER QUE HACE EL SCROLL */
@@ -222,7 +242,7 @@
 
 /* Estado disabled */
 .enter-btn:disabled {
-  background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+  background: linear-gradient(135deg, #f1f3f5, #dde7f6d0);
   color: #9ca3af;
   cursor: not-allowed;
   box-shadow: none;
@@ -238,5 +258,65 @@
   .reel-card {
     width: 175px;
     min-height: 175px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  /* Ajusta contenedor */
+  .live-classes-container h3,
+  .live-classes-title {
+    font-size: 1rem;
+    margin-bottom: 0.9rem;
+  }
+
+  /* Botones Hoy / Todas más chicos */
+  .filter-btn {
+    padding: 6px 16px;
+    font-size: 0.82rem;
+    border-radius: 12px;
+  }
+
+  /* Cards más compactas */
+  .reel-card {
+    width: 160px;
+    min-height: 158px;
+    padding: 12px 10px;
+    border-radius: 14px;
+    gap: 6px;
+  }
+
+  /* Fecha */
+  .reel-header .date {
+    font-size: 0.7rem;
+  }
+
+  /* Hora grande */
+  .primary-hour {
+    font-size: 0.92rem;
+  }
+
+  .secondary-hour {
+    font-size: 0.68rem;
+  }
+
+  .label-ecu {
+    font-size: 0.7rem;
+  }
+
+  /* Instructor info */
+  .reel-body .label {
+    font-size: 0.68rem;
+  }
+
+  .reel-body .instructor {
+    font-size: 0.78rem;
+  }
+
+  /* Botón Entrar */
+  .enter-btn {
+    padding: 8px 0;
+    font-size: 0.82rem;
+    border-radius: 999px;
   }
 }

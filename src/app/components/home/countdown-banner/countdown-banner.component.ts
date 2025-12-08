@@ -170,7 +170,7 @@ export class CountdownBannerComponent implements OnInit, OnDestroy {
   }
 
   goToHelp() {
-    this.router.navigate(['/dashboard/assessment-help']);
+    window.open('https://youtube.com/shorts/Hp2a3fii9MU?feature=share', '_blank');
   }
 
   ngOnDestroy() {
