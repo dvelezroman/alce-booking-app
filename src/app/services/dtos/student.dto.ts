@@ -16,6 +16,7 @@ export interface Student {
   name?: string;
   email?: string;
   stageId: number;
+  progressPercentage?:number;
   mode: Mode;
   userId: number;
   createdAt?: Date;

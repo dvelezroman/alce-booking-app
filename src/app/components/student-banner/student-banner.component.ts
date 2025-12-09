@@ -23,4 +23,10 @@ export class StudentBannerComponent {
     this.isExpanded = !this.isExpanded;
   }
 
+  closeBanner() {
+  if (this.isExpanded) {
+    this.toggle();
+  }
+}
+
 }

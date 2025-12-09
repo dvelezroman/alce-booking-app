@@ -100,4 +100,18 @@ export class MeetingTableComponent {
       this.evaluationRequested.emit(meeting.studentId);
     }
   }
+
+  getProgressClass(progress?: number): string {
+    if (progress == null) return "";
+
+    if (progress <= 25) return "level-red";
+    if (progress <= 50) return "level-orange";
+    if (progress <= 75) return "level-green-light";
+    
+    return "level-green-strong";
+  }
+
+  formatProgressValue(progress?: number): string {
+    return progress != null ? `${progress}%` : "0%";
+  }
 }
