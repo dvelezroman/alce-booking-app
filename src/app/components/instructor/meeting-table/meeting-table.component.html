@@ -2,22 +2,22 @@
   <table class="table-results is-fullwidth" *ngIf="meetings && meetings.length > 0">
     <thead>
       <tr>
-        <th>Stage</th>
-        <th>Categoría</th>
+        <th class="col-stage">Stage</th>
+        <th class="col-cate">Categoría</th>
         <th>Nombre</th>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <!-- <th>Contenido</th> -->
+        <th class="col-date">Fecha</th>
+        <th class="col-hour">Hora</th>
         <th>Comentario</th>
         <th>Observación</th>
-        <th>Evaluaciones</th>
-        <th>Abrió Enlace</th>
-        <th>Marcar Asistencia</th>
+        <th class="col-progress">Progreso</th>
+        <th class="col-eval">Evaluaciones</th>
+        <th class="col-open">Abrió Enlace</th>
+        <th class="col-assist">Asistencia</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let meeting of meetings">
-        <td data-label="Stage">{{ meeting.stage?.number || 'Stage no disponible' }}</td>
+        <td data-label="Stage" class="col-stage">{{ meeting.stage?.number || 'Stage no disponible' }}</td>
         <td data-label="Categoría">{{ meeting.category || 'Categoría no disponible' }}</td>
         <td data-label="Nombre" style="white-space: normal; vertical-align: top;">
           <span class="clickable is-clickable" (click)="onHistoryClick(meeting)">
@@ -27,13 +27,9 @@
             </span>
           </span>
         </td>
-        <td data-label="Fecha">{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
-        <td data-label="Hora">{{ meeting.localhour }}:00</td>
-        <!-- <td data-label="Contenido">
-          <button class="icon-button" (click)="showContent(meeting)">
-            <span class="material-icons">menu_book</span>
-          </button>
-        </td> -->
+        <td data-label="Fecha" class="col-date">{{ meeting.localdate | date: 'mediumDate':'UTC' }}</td>
+        <td data-label="Hora" class="col-hour">{{ meeting.localhour }}:00</td>
+
         <td data-label="Comentario">
             <span class="comment-text">
               {{ meeting.student?.user?.temporaryComment }}
@@ -63,15 +59,25 @@
             Refuerzo
           </span>
         </td>
-        <td data-label="Evaluaciones">
+
+        <td data-label="Progreso" class="col-progress">
+          <span
+            class="progress-pill"
+            [ngClass]="getProgressClass(meeting.student?.progressPercentage)"
+          >
+            {{ formatProgressValue(meeting.student?.progressPercentage) }}
+          </span>
+        </td>
+        
+        <td data-label="Evaluaciones" class="col-eval">
           <button class="icon-button" (click)="onEvaluationClick(meeting)">
             <span class="material-icons">assignment</span>
           </button>
         </td>
-        <td data-label="Abrió Enlace">
+        <td data-label="Abrió Enlace" class="col-open">
           {{ didOpenLink(meeting) }}
         </td>
-        <td data-label="Marcar Asistencia">
+        <td data-label="Marcar Asistencia" class="col-assist">
           <input 
             type="checkbox" 
             [checked]="meeting.present"
