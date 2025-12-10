@@ -54,11 +54,15 @@ export class StudentStageProgressComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (progressList) => {
+
           if (Array.isArray(progressList) && progressList.length > 0) {
-            this.progress = progressList[0];
+            const latest = [...progressList].sort((a, b) => b.stageId - a.stageId)[0];
+            this.progress = latest;
+
           } else {
             this.progress = null;
           }
+
           this.loading = false;
         },
         error: () => {

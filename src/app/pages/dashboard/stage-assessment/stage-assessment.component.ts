@@ -48,6 +48,8 @@ export class StageAssessmentComponent implements OnInit {
   // --- BUSCADOR ---
   searchTerm: string = "";
 
+  isRecalculating = false;
+
   @Input() show: boolean = false;
   modal: ModalDto = modalInitializer();
 
@@ -148,6 +150,30 @@ export class StageAssessmentComponent implements OnInit {
     //console.log(ids);
   }
 
+  private executeRecalculation() {
+    if (!this.selectedStageId) return;
+
+    this.isRecalculating = true;
+
+    this.stageProgressService.recalculateProgressForStage(this.selectedStageId).subscribe({
+      next: () => {
+        this.showNotification("Progreso re-calculado correctamente", false, true);
+
+        if (this.selectedStageId) {
+          this.fetchProgressForStage(this.selectedStageId);
+        }
+
+        this.isRecalculating = false;
+      },
+      error: () => {
+        this.showNotification("Error al re-calcular progreso", true);
+        this.isRecalculating = false;
+      }
+    });
+
+    this.modal.show = false;
+  }
+
   // ==== PAGINACIÓN ====
   updatePagedList() {
     const start = (this.page - 1) * this.limit;
@@ -178,6 +204,20 @@ export class StageAssessmentComponent implements OnInit {
   get endIndex(): number {
     const end = this.page * this.limit;
     return end > this.total ? this.total : end;
+  }
+
+  confirmRecalculateProgress() {
+    if (!this.selectedStageId) return;
+
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: "¿Deseas re-calcular el progreso de todos los estudiantes de este stage?",
+      isInfo: true,
+      showButtons: true,
+      close: () => (this.modal.show = false),
+      confirm: () => this.executeRecalculation()
+    };
   }
 
   private showNotification(message: string, isError = false, isSuccess = false) {
