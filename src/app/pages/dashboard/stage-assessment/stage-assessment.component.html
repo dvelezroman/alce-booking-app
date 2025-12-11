@@ -1,4 +1,4 @@
-<h2 class="title stage">Progresos por Stage</h2>
+<h2 class="title stage">Asignación de Evaluación</h2>
 
 <section class="stage-assessment-section">
 
@@ -14,7 +14,14 @@
       [disabled]="selectedStudentIds.length === 0"
       (click)="openCreateAssessmentModal()"
     >
-      + Agregar evaluación
+      Asignar evaluación
+    </button>
+    <button
+      class="refresh-btn"
+      (click)="confirmRecalculateProgress()"
+      [disabled]="isRecalculating"
+    >
+      Actualizar progreso
     </button>
   </div>
 
@@ -72,5 +79,7 @@
   [isError]="modal.isError"
   [isSuccess]="modal.isSuccess"
   [isInfo]="modal.isInfo"
-  (confirm)="modal.confirm && modal.confirm()"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
 ></app-modal>

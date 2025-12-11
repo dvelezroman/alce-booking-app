@@ -179,10 +179,17 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.stageProgressService.getProgressByStudent(this.studentId).subscribe({
       next: (progressList) => {
         if (Array.isArray(progressList) && progressList.length > 0) {
-          this.studentProgress = progressList[0]; 
+
+          // 🔥 Seleccionar el progreso correspondiente al último stage aprobado
+          const latest = [...progressList]
+            .sort((a, b) => b.stageId - a.stageId)[0];
+
+          this.studentProgress = latest;
+
         } else {
           this.studentProgress = null;
         }
+
         this.loadingProgress = false;
       },
       error: () => {

@@ -21,20 +21,24 @@
 }
 
 .top-actions {
+  width: 100%;
   display: flex;
-  justify-content: flex-end;
-  margin: 1rem 0 0;
+  justify-content: center;
+  margin: 1rem auto;
+  gap: 1rem;
 }
 
 .add-btn {
   background-color: #3273dc;
   color: white;
-  padding: 0.45rem 1rem;
-  font-size: 0.85rem;
-  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.82rem;
+  border-radius: 5px;
   border: none;
   cursor: pointer;
-  transition: background-color .2s ease;
+  font-weight: 500;
+  min-height: 32px;
+  transition: all 0.2s ease;
 
   &:hover {
     background-color: #275fad;
@@ -42,6 +46,30 @@
 
   &:disabled {
     background-color: #bfc9d9;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+.refresh-btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.82rem;
+  border-radius: 5px;
+  background: #eef2ff;
+  color: #374151;
+  font-weight: 500;
+  border: 1px solid #c7d2fe;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #e0e7ff;
+  }
+
+  &:disabled {
+    opacity: 0.6;
     cursor: not-allowed;
   }
 }
@@ -167,5 +195,19 @@
       margin: 0 6px;
       color: #9ca3af;
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .top-actions {
+    justify-content: center;
+    gap: .5rem;
+
+  }
+
+  .add-btn,
+  .refresh-btn {
+    flex: 1;
+    text-align: center;
   }
 }
