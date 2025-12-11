@@ -70,7 +70,7 @@ export class PendingAssessmentCardComponent implements OnInit, OnDestroy {
       return {
         ...a,
         timeFormatted: formatted,
-        isUrgent: diff <= 24 * 60 * 60 * 1000
+        isUrgent: diff <= 12 * 60 * 60 * 1000
       };
     });
   }

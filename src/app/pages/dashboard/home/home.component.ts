@@ -345,4 +345,11 @@ export class HomePrivateComponent implements OnInit {
   onAnnouncementClosed() {
     this.showAssessmentAnnouncement = false;
   }
+
+  get activeBlocks(): number {
+    let total = 0;
+    if (this.assessments.length > 0) total++;
+    if (this.hasLiveClasses) total++;
+    return total;
+  }
 }

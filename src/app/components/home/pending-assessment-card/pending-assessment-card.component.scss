@@ -1,6 +1,6 @@
 .assessment-list {
   margin-top: 1rem;
-  width: 90%;
+  width: 100%;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -23,11 +23,29 @@
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   gap: 0.75rem;
+  cursor: pointer;
   transition: box-shadow .2s ease;
 
   &:hover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   }
+}
+
+/*  Borde gradiente de urgencia */
+.assessment-card.urgent-border {
+  position: relative;
+  border: 2px solid transparent !important;
+  background: 
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(135deg, #ff8a00, #ffc300) border-box; 
+  box-shadow: 0 0 12px rgba(255, 159, 10, 0.35);
+  transition: all 0.25s ease;
+}
+
+/* Hover más intenso */
+.assessment-card.urgent-border:hover {
+  box-shadow: 0 0 18px rgba(255, 159, 10, 0.55);
+  transform: translateY(-2px);
 }
 
 /* ICONO */
@@ -108,7 +126,8 @@
 
   /* Countdown alineado a la izquierda */
   .duration {
-    text-align: left !important;
+    width: 100%;
+    text-align: right !important;
     min-width: unset;
     margin-top: 4px;
   }

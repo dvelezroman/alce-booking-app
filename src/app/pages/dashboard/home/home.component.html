@@ -48,47 +48,40 @@
 
   </div>
 
-  <div class="home-dual-block">
+  <div class="home-dual-block"
+     [class.single-block]="activeBlocks === 1">
 
-    <!-- Bloque 1: Assessments -->
-    <div class="block assessments-block">
-
-      <h3 class="section-title" *ngIf="assessments.length > 0">
-        Evaluaciones asignadas
-      </h3>
-
-      <div class="inner-box">
-
-        <!-- Si HAY evaluaciones -->
-        <app-pending-assessment-card
-          *ngIf="assessments.length > 0"
-          [assessments]="assessments">
-        </app-pending-assessment-card>
-
-        <!-- Si NO hay evaluaciones -->
-        <!-- <div class="no-assessments-msg" *ngIf="assessments.length === 0">
-          No tienes evaluaciones asignadas
-        </div> -->
-
-      </div>
-
-    </div>
     <!-- Bloque 2: Live Classes -->
-    <div class="block live-classes-block">
-      <h3 class="section-title" *ngIf="hasLiveClasses">
+    <div
+      class="block live-classes-block"
+      [class.hidden-block]="!hasLiveClasses">
+
+      <!-- <h3 class="section-title" *ngIf="hasLiveClasses">
         Clases agendadas
-      </h3>
+      </h3> -->
 
       <div class="live-box">
         <div class="live-classes-wrapper" *ngIf="isStudent && isLoggedIn">
           <app-student-live-classes
             (meetingsCount)="hasLiveClasses = $event > 0">
           </app-student-live-classes>
-
-          <!-- <div class="empty-classes" *ngIf="!hasLiveClasses">
-            No tienes clases agendadas
-          </div> -->
         </div>
+      </div>
+    </div>
+    
+    <!-- Bloque 1: Assessments -->
+    <div
+      class="block assessments-block"
+      [class.hidden-block]="assessments.length === 0">
+
+      <h3 class="section-title" *ngIf="assessments.length > 0">
+        Evaluaciones asignadas
+      </h3>
+
+      <div class="inner-box" *ngIf="assessments.length > 0">
+        <app-pending-assessment-card
+          [assessments]="assessments">
+        </app-pending-assessment-card>
       </div>
     </div>
 
