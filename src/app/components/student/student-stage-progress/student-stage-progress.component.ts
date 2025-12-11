@@ -95,7 +95,7 @@ export class StudentStageProgressComponent implements OnInit, OnDestroy {
   }
 
   get hasProgress(): boolean {
-    return !!this.progress && this.progressPercent > 0;
+    return this.progress !== null;
   }
 
   ngOnDestroy(): void {

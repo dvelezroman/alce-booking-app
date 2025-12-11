@@ -28,6 +28,8 @@ import { CountdownBannerComponent } from '../../../components/home/countdown-ban
 import { AssessmentAnnouncementComponent } from "../../../components/home/assessment-announcement/assessment-announcement.component";
 import { StudentLiveClassesComponent } from "../../../components/student-live-classes/student-live-classes.component";
 import { StudentStageProgressComponent } from "../../../components/student/student-stage-progress/student-stage-progress.component";
+import { PendingAssessmentCardComponent } from "../../../components/home/pending-assessment-card/pending-assessment-card.component";
+import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
 
 @Component({
   selector: 'app-home-private',
@@ -45,7 +47,8 @@ import { StudentStageProgressComponent } from "../../../components/student/stude
     CountdownBannerComponent,
     AssessmentAnnouncementComponent,
     StudentLiveClassesComponent,
-    StudentStageProgressComponent
+    StudentStageProgressComponent,
+    PendingAssessmentCardComponent
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -75,6 +78,8 @@ export class HomePrivateComponent implements OnInit {
   pendingAssessmentsCount: number = 0;
   showAssessmentAnnouncement: boolean = false;
 
+  assessments: StageAssessment[] = [];
+
   cuencaVideoUrl = "https://youtube.com/shorts/trxmLXdmBEQ?feature=share";
   generalVideoUrl = "https://youtube.com/shorts/Dgv94Lt-nck?feature=share";
   selectedVideoUrl: string | null = null;
@@ -90,6 +95,10 @@ export class HomePrivateComponent implements OnInit {
   ) {
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
     this.userData$ = this.store.select(selectUserData);
+  }
+
+  onAssessmentsLoaded(list: StageAssessment[]) {
+    this.assessments = list;
   }
 
   ngOnInit() {

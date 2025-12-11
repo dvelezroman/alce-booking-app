@@ -1,0 +1,45 @@
+<div class="assessment-list" *ngIf="assessments.length > 0">
+
+  <div 
+    class="assessment-card"
+    *ngFor="let a of assessments"
+    (click)="goToAssessmentPage(a.id)"
+  >
+
+    <!-- Icono -->
+    <div class="left-icon">
+      <img 
+        [src]="iconUrl"
+        alt="assessment"
+        (error)="iconUrl = fallbackIcon"
+      />
+    </div>
+
+    <!-- Información -->
+    <div class="info">
+      <div class="title">
+        {{ a.stageAssessmentResource?.description || 'Recurso sin título' }}
+      </div>
+
+      <div class="meta">
+        <span class="stage">
+          {{ a.stage?.description || a.stage?.number || 'Stage' }}
+        </span>
+
+        <span class="date">
+          Fecha límite: {{ a.dueDate | date:'dd MMM yyyy' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <div class="duration">
+      <span class="label">Tiempo restante</span>
+      <span class="value" [class.urgent]="a.isUrgent">
+        {{ a.timeFormatted }}
+      </span>
+    </div>
+
+  </div>
+
+</div>

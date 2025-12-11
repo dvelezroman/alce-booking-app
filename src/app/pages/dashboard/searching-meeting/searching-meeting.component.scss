@@ -32,99 +32,110 @@
     font-weight: bold;
   }
 
-  .block-search {
-    background-color:#ffffff;
-    padding: 1.3rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgb(203, 202, 202);
-    transition: all 0.3s ease;
-    width: 100%;
-    max-width: 550px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 8rem ;
-    margin-bottom: 1.5rem;
-  }
+ .block-search {
+  background: #ffffff;
+  padding: 1.75rem;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.04),
+    0 1px 3px rgba(0,0,0,0.03);
+  width: 100%;
+  max-width: 580px;
+  margin: 5rem auto 1.75rem;
+  transition: all .25s ease;
 
-  .label {
-    color: #6a6767;
-    font-weight: bold;
-    font-size: .8rem;
-    margin-left: 8px;
+  &:hover {
+    box-shadow:
+      0 6px 18px rgba(0,0,0,0.06),
+      0 2px 8px rgba(0,0,0,0.05);
   }
+}
 
-  .field {
-    margin-bottom: 0;
-  }
+/* Etiquetas */
+.label {
+  color: #374151;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
 
-  .input {
-    padding: 0 0.75rem;
-    font-size: 0.8rem;
-    background-color: #ffffff;
-    color: #333333;
-    height: 38px;
-    border: 1px solid rgb(213, 213, 213);
-    border-radius: 5px;
-  }
+/* Inputs estilo moderno */
+.input,
+.select select {
+  width: 100%;
+  height: 40px;
+  background: #fafafa;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0 0.75rem;
+  font-size: 0.85rem;
+  color: #111827;
+  transition: all .2s ease;
 
-  .input[type="date"] {
-    position: relative;
-    background-color: #ffffff;
+  &:focus {
+    background: #fff;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    outline: none;
   }
+}
 
-  .input[type="date"]::-webkit-calendar-picker-indicator {
-    position: absolute;
-    right: 15px;
-    opacity: 0;
-  }
+/* Reposicionar el ícono nativo del input date */
+.input[type="date"] {
+  position: relative;
+  padding-right: 2.2rem; 
+}
 
-  .date-from .control::after {
-    content: 'event';
-    font-family: 'Material Icons';
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.5;
-    pointer-events: none;
-    font-size: 1rem;
-    color: #565657;
-  }
+/* Ícono nativo colocado a la derecha */
+.input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 10px; 
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: 1 !important;
+}
 
-  .select select {
-    background: white;
-    color: #403f3f;
-    padding: 0 0.75rem;
-    border: 1px solid rgb(213, 213, 213);
-    border-radius: 5px;
-    font-size: 0.8rem;
-    height: 38px;
-  }
+/* Safari fix */
+.input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+}
 
-  .select.is-fullwidth {
-    background-color: transparent;
-  }
+/* Select contenedor */
+.select.is-fullwidth {
+  background: transparent;
+}
 
-  .columns.is-mobile .column .field .checkbox.is-centered {
-    width: auto;
-    display: inline-flex;
-    justify-content:left;
-    align-items: center;
-    text-align: left;
-    margin-top: 1rem;
-  }
+/* Ícono de fecha */
+.date-from .control {
+  position: relative;
+}
 
-  .columns.is-mobile .column .field .checkbox input[type="checkbox"] {
-    transform: scale(1);
-    margin-right: 0.6rem;
-    accent-color: #007bff;
-  }
+.date-from .control::after {
+  content: none;
+}
 
-  .checkbox {
-    color: rgb(70, 70, 70);
-    font-size: .75rem;
-  }
+/* Checkbox moderno */
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #374151;
+}
+
+.checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #3b82f6;
+}
+
+/* Espaciado de columnas */
+.columns.is-mobile .column {
+  padding-bottom: 0.5rem;
+}
 /* MENSAJE CUANDO NO HAY RESULTADO DE MEETING */
   .no-results-message {
     color: #6a6969;
@@ -443,14 +454,6 @@
 }
 
 @media (max-width: 768px) {
-
-  .title-container{
-    background: linear-gradient(45deg, #4a90e2,  #7743a8);
-  }
-
-  .title {
-    color: white;
-  }
 
   .block-search .columns {
     flex-direction: column;

@@ -106,42 +106,43 @@
       </div>
 
       <!-- 🔒 Contraseña -->
-      <div class="password-change">
-        <label for="password">Cambiar contraseña</label>
-        <div class="password-wrapper">
-          <input
-            id="password"
-            [type]="showPassword ? 'text' : 'password'"
-            class="password-input"
-            [(ngModel)]="newPassword"
-            placeholder="Introduce la nueva contraseña"
-          />
+     <div class="password-change">
+      <label for="password" class="password-title">Cambiar contraseña</label>
 
-          <button
-            *ngIf="newPassword.trim().length > 0"
-            class="btn-eye"
-            type="button"
-            (click)="togglePasswordVisibility()"
-          >
-            <i [ngClass]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
-          </button>
+      <div class="password-field">
+        <input
+          id="password"
+          [type]="showPassword ? 'text' : 'password'"
+          class="password-input-modern"
+          [(ngModel)]="newPassword"
+          placeholder="Nueva contraseña"
+        />
 
-          <button
-            *ngIf="newPassword.trim().length >= 6"
-            class="btn-change"
-            (click)="togglePasswordEdit()"
-          >
-            Cambiar
-          </button>
-        </div>
-
-        <p
-          *ngIf="newPassword.trim().length > 0 && newPassword.trim().length < 6"
-          class="password-error"
+        <button
+          *ngIf="newPassword.trim().length > 0"
+          class="password-icon-btn"
+          type="button"
+          (click)="togglePasswordVisibility()"
         >
-          La contraseña debe tener al menos 6 caracteres.
-        </p>
+          <i [ngClass]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+        </button>
       </div>
+
+      <button
+        *ngIf="newPassword.trim().length >= 6"
+        class="password-submit-btn"
+        (click)="togglePasswordEdit()"
+      >
+        Actualizar contraseña
+      </button>
+
+      <p
+        *ngIf="newPassword.trim().length > 0 && newPassword.trim().length < 6"
+        class="password-error"
+      >
+        La contraseña debe tener al menos 6 caracteres.
+      </p>
+    </div>
 
       <!-- 🎛 Botón para editar -->
       <div class="profile-actions">

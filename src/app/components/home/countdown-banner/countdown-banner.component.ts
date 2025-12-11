@@ -36,7 +36,9 @@ export class CountdownBannerComponent implements OnInit, OnDestroy {
   showBanner = false;
 
   @Output() pendingCount = new EventEmitter<number>();
+  @Output() hasCountdown = new EventEmitter<boolean>();
   @Output() showAnnouncement = new EventEmitter<boolean>();
+  @Output() assessmentsLoaded = new EventEmitter<StageAssessment[]>();
 
   private intervalSub!: Subscription;
 
@@ -56,56 +58,47 @@ export class CountdownBannerComponent implements OnInit, OnDestroy {
   }
 
   loadAssessments() {
-    this.stageAssessmentService.checkActiveByStudent(this.studentId).subscribe({
-      next: (res) => {
-        if (res.assessments?.length > 0) {
+  this.stageAssessmentService.checkActiveByStudent(this.studentId).subscribe({
+    next: (res) => {
 
-          const count = res.assessments.length;
+      const has = res.assessments?.length > 0;
+      this.hasCountdown.emit(has);
 
-          this.pendingCount.emit(count);
+      if (has) {
+        this.assessmentsLoaded.emit(res.assessments);
+        this.pendingCount.emit(res.assessments.length);
 
-          // ← Solo mostrar anuncio si NO ha sido mostrado antes
-          if (!localStorage.getItem('assessment_announced')) {
-            this.showAnnouncement.emit(true);
-          }
-
-          this.countdowns = res.assessments.map(a => ({
-            id: a.id,
-            description: a.stageAssessmentResource?.description ?? 'Recurso sin título',
-            dueDate: a.dueDate,
-            days: 0,
-            hours: '00',
-            minutes: '00',
-            seconds: '00',
-            isUrgent: false
-          }));
-
-          this.showBanner = true;
-          this.startCountdown();
-        } else {
-          // No hay evaluaciones activas
-          this.pendingCount.emit(0);
-          this.showBanner = false;
-
-          // Emitimos false SOLO si el anuncio está visible
-          // para evitar ocultarlo cuando ya fue descartado antes
-          if (localStorage.getItem('assessment_announced')) {
-            this.showAnnouncement.emit(false);
-          }
+        if (!localStorage.getItem('assessment_announced')) {
+          this.showAnnouncement.emit(true);
         }
-      },
-      error: () => {
+
+        this.countdowns = res.assessments.map(a => ({
+          id: a.id,
+          description: a.stageAssessmentResource?.description ?? 'Recurso sin título',
+          dueDate: a.dueDate,
+          days: 0,
+          hours: '00',
+          minutes: '00',
+          seconds: '00',
+          isUrgent: false
+        }));
+
+        this.showBanner = true;
+        this.startCountdown();
+      } 
+      else {
         this.pendingCount.emit(0);
+        this.showAnnouncement.emit(false);
         this.showBanner = false;
-
-        // Igual aquí solo apagamos si ya estaba marcado como cerrado
-        if (localStorage.getItem('assessment_announced')) {
-          this.showAnnouncement.emit(false);
-        }
-      },
-    });
-  }
-
+      }
+    },
+    error: () => {
+      this.hasCountdown.emit(false);
+      this.pendingCount.emit(0);
+      this.showBanner = false;
+    }
+  });
+}
   startCountdown() {
     this.updateAllCountdowns();
 
@@ -122,9 +115,10 @@ export class CountdownBannerComponent implements OnInit, OnDestroy {
     const now = Date.now();
 
     this.countdowns = this.countdowns.map(cd => {
-
       const [datePart] = cd.dueDate.split('T');
       const [year, month, day] = datePart.split('-').map(Number);
+
+      // FECHA CORRECTA A MEDIA NOCHE LOCAL
       const target = new Date(year, month - 1, day, 0, 0, 0).getTime();
 
       const diff = target - now;
@@ -137,9 +131,9 @@ export class CountdownBannerComponent implements OnInit, OnDestroy {
         };
       }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff / 3600000) % 24);
+      const minutes = Math.floor((diff / 60000) % 60);
       const seconds = Math.floor((diff / 1000) % 60);
 
       return {
@@ -167,6 +161,11 @@ export class CountdownBannerComponent implements OnInit, OnDestroy {
     }
 
     return `${c.hours}:${c.minutes}:${c.seconds}`;
+  }
+
+  closeBanner() {
+    this.showBanner = false;
+    this.hasCountdown.emit(false);
   }
 
   goToHelp() {
