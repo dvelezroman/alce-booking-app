@@ -25,19 +25,22 @@
       
     </div>
 
-    <p 
-      *ngIf="isStudent && isLoggedIn" 
+    <p
+      *ngIf="isStudent && isLoggedIn"
       class="level-title"
     >
-      Tu nivel actual
+      Tu nivel actual:
+      <span class="level-value">
+        {{ userData?.stage?.description || 'Sin asignar' }}
+      </span>
     </p>
 
     <!-- PROGRESO -->
-    <app-student-stage-progress 
+    <!-- <app-student-stage-progress 
       *ngIf="isStudent && isLoggedIn"
       class="progress-block"
       [currentStageId]="userData?.student?.stageId ?? null">
-    </app-student-stage-progress>
+    </app-student-stage-progress> -->
 
     <!-- Imagen solo si NO es estudiante -->
     <img 
