@@ -94,6 +94,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   resetCalendarSelectionTrigger = false;
 
   studentId: number | null = null;
+  currentStageId: number | null = null;
   studentProgress: StageProgressDto | null = null;
   loadingProgress = false;
 
@@ -138,6 +139,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
       this.userData = state;
       //console.log('USER DATA EN AGENDA:', this.userData);
+      if (state?.student?.stageId) {
+        this.currentStageId = state.student.stageId;
+      }
       if (state?.student?.id) {
         this.studentId = state.student.id;
         this.initializeMeetings();
@@ -175,28 +179,42 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     if (!this.studentId) return;
 
     this.loadingProgress = true;
+    this.studentProgress = null;
 
-    this.stageProgressService.getProgressByStudent(this.studentId).subscribe({
-      next: (progressList) => {
-        if (Array.isArray(progressList) && progressList.length > 0) {
-
-          // 🔥 Seleccionar el progreso correspondiente al último stage aprobado
-          const latest = [...progressList]
-            .sort((a, b) => b.stageId - a.stageId)[0];
-
-          this.studentProgress = latest;
-
-        } else {
+    this.stageProgressService.getProgressByStudent(this.studentId)
+      .subscribe({
+        next: (list) => this.handleProgressResponse(list),
+        error: () => {
           this.studentProgress = null;
+          this.loadingProgress = false;
         }
+      });
+  }
 
-        this.loadingProgress = false;
-      },
-      error: () => {
-        this.studentProgress = null;
-        this.loadingProgress = false;
-      }
-    });
+  private handleProgressResponse(progressList: StageProgressDto[]): void {
+
+    if (!Array.isArray(progressList) || progressList.length === 0) {
+      this.studentProgress = null;
+      this.loadingProgress = false;
+      return;
+    }
+
+    if (!this.currentStageId) {
+      this.studentProgress = null;
+      this.loadingProgress = false;
+      return;
+    }
+
+    const match = progressList.find(
+      p => Number(p.stageId) === Number(this.currentStageId)
+    );
+
+    this.studentProgress = match ?? {
+      stageId: this.currentStageId,
+      progress: "0"
+    } as any;
+
+    this.loadingProgress = false;
   }
 
   private updateEcuadorTime(): void {
