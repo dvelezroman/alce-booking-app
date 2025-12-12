@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
@@ -15,6 +15,9 @@ import { selectUserData } from '../../../store/user.selector';
   styleUrls: ['./student-stage-progress.component.scss'],
 })
 export class StudentStageProgressComponent implements OnInit, OnDestroy {
+
+  @Input() currentStageId: number | null = null;
+  
   private destroy$ = new Subject<void>();
 
   user: UserDto | null = null;
@@ -37,7 +40,7 @@ export class StudentStageProgressComponent implements OnInit, OnDestroy {
         this.user = user ?? null;
         const newStudentId = user?.student?.id ?? null;
 
-        // Si cambia el estudiante (o recién se carga), volvemos a pedir su progreso
+        // Si cambia el estudiante, se vuelve a pedir su progreso
         if (newStudentId && newStudentId !== this.studentId) {
           this.studentId = newStudentId;
           this.loadProgress(newStudentId);
@@ -53,18 +56,7 @@ export class StudentStageProgressComponent implements OnInit, OnDestroy {
     this.stageProgressService.getProgressByStudent(studentId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (progressList) => {
-
-          if (Array.isArray(progressList) && progressList.length > 0) {
-            const latest = [...progressList].sort((a, b) => b.stageId - a.stageId)[0];
-            this.progress = latest;
-
-          } else {
-            this.progress = null;
-          }
-
-          this.loading = false;
-        },
+        next: (list) => this.handleProgressResponse(list),
         error: () => {
           this.error = true;
           this.loading = false;
@@ -72,6 +64,35 @@ export class StudentStageProgressComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  private handleProgressResponse(progressList: StageProgressDto[]): void {
+    if (!Array.isArray(progressList) || progressList.length === 0) {
+      this.progress = null;
+      this.loading = false;
+      return;
+    }
+
+    if (!this.currentStageId) {
+      this.progress = null;
+      this.loading = false;
+      return;
+    }
+
+    // Buscar el progreso correspondiente al stage actual
+    const match = progressList.find(
+      p => Number(p.stageId) === Number(this.currentStageId)
+    );
+
+    // Si existe usarlo
+    this.progress = match ?? {
+      stageId: this.currentStageId,
+      progress: "0"
+    } as any;
+
+    this.loading = false;
+  }
+
+  
 
   /**
    * Devuelve el porcentaje de progreso en 0–100.
