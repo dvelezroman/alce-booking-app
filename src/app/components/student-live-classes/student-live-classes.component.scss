@@ -1,322 +1,274 @@
 /* CONTENEDOR PRINCIPAL */
 .live-classes-container {
-  margin-top: 10px;
-  padding: 0 16px;
+  margin-top: 15px;
+  padding: 0px;
   max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* Título */
-.live-classes-container h3,
-.live-classes-title {
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #374151;
-  margin: 0 0 1.2rem 0;
-  letter-spacing: -0.3px;
+/* FILA DE BOTONES */
+.header-row {
+  width: 90%;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  margin-bottom: 15px;
+  margin: auto;
+  padding: 0 4px;
 }
 
+/* Estilo del título de la sección */
+.live-classes-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3b3c3d; 
+  margin: 0;
+  padding: 0;
+}
+
+/* FILA DE BOTONES */
 .filter-row {
   display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 18px;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 /* BOTONES */
 .filter-btn {
-  padding: 8px 22px;
-  border-radius: 14px;
-  font-size: 0.92rem;
+  padding: 6px 18px;
+  border-radius: 12px;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
-  position: relative;
 
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(8px);
-  border: 1.5px solid rgba(200, 207, 220, 0.7);
+  border: 1.3px solid rgba(200, 207, 220, 0.7);
   color: #4b5563;
 
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
-
-  transition: 
-    transform 0.2s ease,
-    box-shadow 0.25s ease,
-    background 0.25s ease,
-    border-color 0.25s ease,
-    color 0.2s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
 }
 
-/* Hover suave */
 .filter-btn:hover {
   transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.85);
   border-color: rgba(165, 180, 200, 0.9);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.10);
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, #4e6aff, #b16bff);
+  background: linear-gradient(135deg, #323232, #303030);
   color: white;
   border-color: transparent;
-  box-shadow: 0 8px 24px rgba(103, 67, 255, 0.35);
+  box-shadow: 0 8px 20px rgba(103, 67, 255, 0.30);
 }
 
-/* Pulsación al tocar */
 .filter-btn:active {
   transform: scale(0.96);
 }
 
-/* WRAPPER QUE HACE EL SCROLL */
+/* SCROLL WRAPPER */
 .reels-wrapper {
   width: 100%;
+  margin: auto;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 10px 0;
+  padding: 8px 0;
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: #e5e7eb transparent;
+}
 
-  margin-left: auto;
-  margin-right: auto;
+/* Cuando solo existe UNA card de clase */
+.reels-outer-wrapper.single-card .reels-wrapper {
+  overflow-x: hidden;
+}
+
+.reels-outer-wrapper.single-card .reels-scroll {
+  justify-content: center; 
+  width: 100% !important;
+  display: flex;
 }
 
 /* CONTENEDOR DE LAS CARDS */
 .reels-scroll {
   display: flex;
   flex-wrap: nowrap;
-  gap: 14px;
-  padding: 10px 4px;
+  gap: 12px;
+  padding: 8px 0px;
   width: max-content;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-.reel-card.active-class {
-  border: 2px solid transparent;
-  background:
-    linear-gradient(#ffffff, #ffffff) padding-box,
-    linear-gradient(135deg, #6366f1, #3b82f6) border-box;
-  box-shadow:
-    0 0 25px rgba(99, 102, 241, 0.35),
-    0 0 0 1px rgba(99, 102, 241, 0.15);
-
-  transform: translateY(-2px);
-  transition: all 0.25s ease;
-}
-
-.reel-card.active-class:hover {
-  box-shadow:
-    0 0 32px rgba(99, 102, 241, 0.45),
-    0 0 0 1.5px rgba(99, 102, 241, 0.25);
-  transform: translateY(-4px);
-}
-
-/* CARD */
+/* CARD – SIN CAMBIAR COLOR */
 .reel-card {
   flex-shrink: 0;
-  width: 200px;
+  width: 185px;
+  min-height: 170px;
+
+  padding: 14px 12px;
+  border-radius: 16px;
   background-color: #fcfcfc;
-  min-height: 190px;
-  padding: 16px 14px;
-  border-radius: 18px;
+
   border: 1px solid rgba(148, 163, 184, 0.35);
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 
   position: relative;
   overflow: hidden;
 }
 
-/* Sutil highlight en borde superior */
-.reel-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    120deg,
-    rgba(59, 130, 246, 0.14),
-    rgba(129, 140, 248, 0.18),
-    transparent 60%
-  );
-  opacity: 0.9;
-  pointer-events: none;
-  mix-blend-mode: soft-light;
+/* ESTADO ACTIVO – SIN TOCAR COLOR */
+.reel-card.active-class {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(135deg, #6366f1, #3b82f6) border-box;
+
+  box-shadow:
+    0 0 22px rgba(99, 102, 241, 0.28),
+    0 0 0 1px rgba(99, 102, 241, 0.15);
 }
 
-/* CABECERA */
-.reel-header {
-  text-align: left;
-  margin-bottom: 4px;
-}
-
+/* Texto reducido */
 .reel-header .date {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
   color: #6b7280;
-  margin-bottom: 2px;
 }
 
-/* Hora principal */
 .primary-hour {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #111827;
 }
 
-/* Hora Ecuador */
 .secondary-hour {
   margin-top: 2px;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   color: #6b7280;
 }
 
 .label-ecu {
   font-weight: 600;
+  font-size: 0.74rem;
   color: #4b5563;
-  margin-right: 4px;
 }
 
 /* INSTRUCTOR */
 .reel-body {
   text-align: left;
-  margin-top: 8px;
-  padding-top: 8px;
+  margin-top: 6px;
+  padding-top: 6px;
   border-top: 1px solid rgba(226, 232, 240, 0.9);
 }
 
 .reel-body .label {
-  font-size: 0.75rem;
+  font-size: 0.70rem;
   font-weight: 600;
   color: #9ca3af;
-  margin-bottom: 2px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
 .reel-body .instructor {
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: #1f2937;
 }
 
-/* BOTÓN */
+/* BOTÓN – MISMO COLOR, SOLO REDUCIDO */
 .enter-btn {
-  margin-top: 10px;
+  margin-top: 8px;
   width: 100%;
-  border: none;
   border-radius: 999px;
+  padding: 7px 0;
 
-  padding: 9px 0;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   font-weight: 600;
 
   background: radial-gradient(circle at 0 0, #2563eb, #1d4ed8);
   color: #f9fafb;
 
   cursor: pointer;
-  transition:
-    transform 0.14s ease,
-    box-shadow 0.14s ease,
-    background 0.14s ease,
-    opacity 0.14s ease;
-  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.30);
+  transition: all 0.15s ease;
 }
 
-.enter-btn:not(:disabled):hover {
+.enter-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.45);
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.40);
 }
 
-.enter-btn:not(:disabled):active {
+.enter-btn:active {
   transform: translateY(0);
-  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
 }
 
-/* Estado disabled */
 .enter-btn:disabled {
-  background: linear-gradient(135deg, #f1f3f5, #dde7f6d0);
+  background: #eaecf0;
   color: #9ca3af;
-  cursor: not-allowed;
   box-shadow: none;
-  opacity: 0.95;
+  cursor: not-allowed;
 }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .live-classes-container {
-    padding: 0 10px;
-  }
-
   .reel-card {
-    width: 175px;
-    min-height: 175px;
+    width: 165px;
+    min-height: 155px;
+    padding: 12px 10px;
   }
 }
 
 @media (max-width: 480px) {
 
-  /* Ajusta contenedor */
-  .live-classes-container h3,
+  .header-row {
+    width: 100%;
+  }
+
   .live-classes-title {
-    font-size: 1rem;
-    margin-bottom: 0.9rem;
+    font-size: 1.2rem;
   }
 
-  /* Botones Hoy / Todas más chicos */
   .filter-btn {
-    padding: 6px 16px;
-    font-size: 0.82rem;
-    border-radius: 12px;
+    padding: 5px 14px;
+    font-size: 0.75rem;
   }
 
-  /* Cards más compactas */
   .reel-card {
-    width: 160px;
-    min-height: 158px;
-    padding: 12px 10px;
+    width: 150px;
+    min-height: 148px;
+    padding: 10px 9px;
     border-radius: 14px;
-    gap: 6px;
+    gap: 5px;
   }
 
-  /* Fecha */
   .reel-header .date {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
-  /* Hora grande */
   .primary-hour {
-    font-size: 0.92rem;
+    font-size: 0.85rem;
   }
 
   .secondary-hour {
-    font-size: 0.68rem;
+    font-size: 0.65rem;
   }
 
-  .label-ecu {
-    font-size: 0.7rem;
-  }
-
-  /* Instructor info */
   .reel-body .label {
-    font-size: 0.68rem;
+    font-size: 0.64rem;
   }
 
   .reel-body .instructor {
-    font-size: 0.78rem;
+    font-size: 0.72rem;
   }
 
-  /* Botón Entrar */
   .enter-btn {
-    padding: 8px 0;
-    font-size: 0.82rem;
-    border-radius: 999px;
+    padding: 6px 0;
+    font-size: 0.75rem;
   }
 }

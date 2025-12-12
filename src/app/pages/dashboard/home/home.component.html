@@ -1,8 +1,11 @@
 <div class="banner-wrapper">
+
   <app-countdown-banner
     (pendingCount)="pendingAssessmentsCount = $event"
-    (showAnnouncement)="showAssessmentAnnouncement = $event">
+    (showAnnouncement)="showAssessmentAnnouncement = $event"
+    (assessmentsLoaded)="onAssessmentsLoaded($event)">
   </app-countdown-banner>
+
 </div>
 
 <div class="hero-wrapper" *ngIf="!isInstructor">
@@ -45,32 +48,45 @@
 
   </div>
 
-  <section class="hero-content">
+  <div class="home-dual-block"
+     [class.single-block]="activeBlocks === 1">
 
-    <div class="live-classes-wrapper" *ngIf="isStudent && isLoggedIn">
-      <app-student-live-classes
-        (meetingsCount)="hasLiveClasses = $event > 0">
-      </app-student-live-classes>
+    <!-- Bloque 2: Live Classes -->
+    <div
+      class="block live-classes-block"
+      [class.hidden-block]="!hasLiveClasses">
+
+      <!-- <h3 class="section-title" *ngIf="hasLiveClasses">
+        Clases agendadas
+      </h3> -->
+
+      <div class="live-box">
+        <div class="live-classes-wrapper" *ngIf="isStudent && isLoggedIn">
+          <app-student-live-classes
+            (meetingsCount)="hasLiveClasses = $event > 0">
+          </app-student-live-classes>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bloque 1: Assessments -->
+    <div
+      class="block assessments-block"
+      [class.hidden-block]="assessments.length === 0">
+
+      <h3 class="section-title" *ngIf="assessments.length > 0">
+        Evaluaciones asignadas
+      </h3>
+
+      <div class="inner-box" *ngIf="assessments.length > 0">
+        <app-pending-assessment-card
+          [assessments]="assessments">
+        </app-pending-assessment-card>
+      </div>
     </div>
 
 
-    <!-- PASOS -->
-    <!-- <div class="student-info-steps" *ngIf="isLoggedIn && isStudent && !hasLiveClasses">
-      <div class="step">
-        <div class="step-number">1</div>
-        <p class="step-text">Agendar tus próximas clases</p>
-      </div>
-      <div class="step">
-        <div class="step-number">2</div>
-        <p class="step-text">Buscar tus clases por fecha</p>
-      </div>
-      <div class="step">
-        <div class="step-number">3</div>
-        <p class="step-text">Asistir a tus sesiones en línea</p>
-      </div>
-    </div> -->
-
-  </section>
+  </div>
 
   <a
     *ngIf="isStudent && isLoggedIn"
@@ -131,6 +147,7 @@
   [isSuccess]="modal.isSuccess"
   (close)="modal.close()">
 </app-modal>
+
 
 
 

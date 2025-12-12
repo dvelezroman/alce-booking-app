@@ -1,28 +1,29 @@
 <div class="live-classes-container" *ngIf="!loading && meetings.length > 0">
-  <h3 class="live-classes-title">
-    {{ filterMode === "today" ? "Clases del día" : "Todas las clases" }}
-  </h3>
+  <div class="header-row">
+    <h3 class="live-classes-title">
+      Clases Agendadas
+    </h3>
 
-  <!-- 🔵 Selector Hoy / Todas -->
-  <div class="filter-row">
-    <button
-      class="filter-btn"
-      [class.active]="filterMode === 'today'"
-      (click)="changeFilter('today')"
-    >
-      Hoy
-    </button>
+    <div class="filter-row">
+      <button
+        class="filter-btn"
+        [class.active]="filterMode === 'today'"
+        (click)="changeFilter('today')"
+      >
+        Hoy
+      </button>
 
-    <button
-      class="filter-btn"
-      [class.active]="filterMode === 'all'"
-      (click)="changeFilter('all')"
-    >
-      Todas
-    </button>
+      <button
+        class="filter-btn"
+        [class.active]="filterMode === 'all'"
+        (click)="changeFilter('all')"
+      >
+        Todas
+      </button>
+    </div>
   </div>
 
-  <div class="reels-outer-wrapper">
+  <div class="reels-outer-wrapper" [class.single-card]="meetings.length <= 2">
     <div class="reels-wrapper">
       <div class="reels-scroll">
         <div class="reel-card" *ngFor="let m of meetings" [class.active-class]="canEnter(m) && hasValidLink(m)">
