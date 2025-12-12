@@ -1,90 +1,108 @@
-.stage-progress-card {
+/* CARD BASE */
+.stage-progress-card.modern {
   width: 100%;
-  max-width: 420px;
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 14px 16px 14px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-  border: 1px solid #e5e7eb;
-  box-sizing: border-box;
+  max-width: 520px;
+  background: #ffffffca;
+  border-radius: 18px;
+  padding: 16px 18px 14px;
+  border: 2px dashed #e5e7eb;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
-/* Header */
-.stage-progress-header {
+/* LABELS SUPERIORES */
+.stage-progress-labels {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-.stage-progress-title {
-  display: flex;
-  flex-direction: column;
+.stage-left {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #111827;
 }
 
-.stage-label {
+.stage-right {
   font-size: 0.78rem;
   font-weight: 600;
   color: #9ca3af;
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
-.stage-name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #111827;
-  margin: 2px 0 0;
+.stage-right.stage-complete {
+  color: #ffffff;
+
+  background: linear-gradient(
+    135deg,
+    #4fd1c5,   // teal suave
+    #7c7cff,   // violeta calmado
+    #f9a8d4    // rosado pastel
+  );
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  box-shadow: 0 0 0 rgba(124, 124, 255, 0);
+
+  animation: canvaGlowSoft 2.6s ease-in-out infinite;
 }
 
-.stage-progress-percent {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #2563eb;
+@keyframes canvaGlowSoft {
+  0% {
+    box-shadow: 0 0 0 rgba(124, 124, 255, 0);
+  }
+
+  50% {
+    box-shadow:
+      0 0 6px rgba(124, 124, 255, 0.35),
+      0 0 12px rgba(249, 168, 212, 0.25);
+  }
+
+  100% {
+    box-shadow: 0 0 0 rgba(124, 124, 255, 0);
+  }
 }
 
-/* Barra */
+/* BARRA */
 .stage-progress-bar {
   width: 100%;
-  height: 8px;
+  height: 10px;
   border-radius: 999px;
   background: #e5e7eb;
   overflow: hidden;
-  margin: 4px 0 8px;
 }
 
 .stage-progress-fill {
   height: 100%;
-  width: 0;
   border-radius: 999px;
-  background: linear-gradient(90deg, #3b82f6, #a855f7);
-  transition: width 0.35s ease;
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  transition: width 0.4s ease;
 }
 
-/* Textito inferior */
-.stage-progress-helper {
-  font-size: 0.8rem;
-  color: #6b7280;
-  margin: 0;
+/* PORCENTAJE CENTRADO */
+.stage-progress-percent-center {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #374151;
 }
 
-/* Skeleton */
-.stage-progress-card.skeleton {
-  .skeleton-header {
-    width: 70%;
-    height: 18px;
+/* SKELETON */
+.stage-progress-card.modern.skeleton {
+  .skeleton-line {
+    width: 60%;
+    height: 14px;
     border-radius: 999px;
     background: linear-gradient(90deg, #e5e7eb, #f3f4f6, #e5e7eb);
     background-size: 200% 100%;
     animation: shimmer 1.4s infinite;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   .skeleton-bar {
     width: 100%;
-    height: 8px;
+    height: 10px;
     border-radius: 999px;
     background: linear-gradient(90deg, #e5e7eb, #f3f4f6, #e5e7eb);
     background-size: 200% 100%;
@@ -92,23 +110,18 @@
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* Responsive */
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .stage-progress-card {
+  .stage-progress-card.modern {
     max-width: 100%;
-    padding: 12px 12px 12px;
+    padding: 14px 14px 12px;
   }
 
-  .stage-progress-percent {
-    font-size: 1rem;
+  .stage-left {
+    font-size: 0.82rem;
+  }
+
+  .stage-progress-percent-center {
+    font-size: 0.82rem;
   }
 }

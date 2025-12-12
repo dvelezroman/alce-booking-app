@@ -1,0 +1,110 @@
+
+.desktop-classes-wrapper {
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 1.5rem;
+  padding-right: 6px;
+}
+
+/* Card horizontal */
+.desktop-class-card {
+  display: grid;
+  grid-template-columns: 160px 1fr auto;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px 16px;
+  background: #fcfcfc;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+
+  transition: all 0.2s ease;
+}
+
+.desktop-class-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+/* Estado activo */
+.desktop-class-card.active-class {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(135deg, #6366f1, #3b82f6) border-box;
+}
+
+/* ZONAS */
+.desktop-left .date {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.desktop-left .primary-hour {
+  font-size: .9rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.desktop-left .secondary-hour {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.desktop-center .label {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.desktop-center .instructor {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.desktop-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* BOTÓN ENTRAR – DESKTOP */
+.desktop-right .enter-btn {
+  min-width: 90px;
+  padding: 8px 16px;
+
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  background: linear-gradient(135deg, #4f46e5, #3b82f6);
+  color: #ffffff;
+
+  border: none;
+  cursor: pointer;
+
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.28);
+  transition: all 0.2s ease;
+}
+
+.desktop-right .enter-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.38);
+}
+
+.desktop-right .enter-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 5px 14px rgba(79, 70, 229, 0.25);
+}
+
+/* ESTADO DESHABILITADO – limpio */
+.desktop-right .enter-btn:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  box-shadow: none;
+  cursor: not-allowed;
+}
