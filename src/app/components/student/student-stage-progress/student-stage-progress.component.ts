@@ -17,7 +17,7 @@ import { selectUserData } from '../../../store/user.selector';
 export class StudentStageProgressComponent implements OnInit, OnDestroy {
 
   @Input() currentStageId: number | null = null;
-  
+
   private destroy$ = new Subject<void>();
 
   user: UserDto | null = null;
@@ -38,9 +38,9 @@ export class StudentStageProgressComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((user) => {
         this.user = user ?? null;
+
         const newStudentId = user?.student?.id ?? null;
 
-        // Si cambia el estudiante, se vuelve a pedir su progreso
         if (newStudentId && newStudentId !== this.studentId) {
           this.studentId = newStudentId;
           this.loadProgress(newStudentId);
@@ -72,40 +72,31 @@ export class StudentStageProgressComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!this.currentStageId) {
+    if (this.currentStageId === null) {
       this.progress = null;
       this.loading = false;
       return;
     }
 
-    // Buscar el progreso correspondiente al stage actual
+    // Tomar SOLO el progreso del stage actual del estudiante
     const match = progressList.find(
       p => Number(p.stageId) === Number(this.currentStageId)
     );
 
-    // Si existe usarlo
-    this.progress = match ?? {
-      stageId: this.currentStageId,
-      progress: "0"
-    } as any;
-
+    this.progress = match ?? null;
     this.loading = false;
   }
 
-  
-
   /**
-   * Devuelve el porcentaje de progreso en 0–100.
-   * Ajusta esta lógica a tu StageProgressDto real.
+   * Porcentaje de progreso (0–100)
    */
   get progressPercent(): number {
     if (!this.progress) return 0;
 
-    // 👉 Ajusta estos campos según tu modelo real:
-    // Ejemplo 1: si tu DTO ya trae un "percentage"
-    const raw = (this.progress as any).percentage 
-             ?? (this.progress as any).progress 
-             ?? 0;
+    const raw =
+      (this.progress as any).percentage ??
+      (this.progress as any).progress ??
+      0;
 
     let value = Number(raw) || 0;
 
@@ -117,6 +108,29 @@ export class StudentStageProgressComponent implements OnInit, OnDestroy {
 
   get hasProgress(): boolean {
     return this.progress !== null;
+  }
+
+  /* ===========================
+     🧠 STAGE LOGIC (0 → 19)
+     =========================== */
+
+  get currentStageLabel(): string {
+    if (this.currentStageId === null) return '—';
+    return `Stage ${this.currentStageId}`;
+  }
+
+  get nextStageLabel(): string {
+    if (this.currentStageId === null) return '—';
+
+    if (this.currentStageId >= 19) {
+      return 'Nivel máximo';
+    }
+
+    return `Stage ${this.currentStageId + 1}`;
+  }
+
+  get hasNextStage(): boolean {
+    return this.currentStageId !== null && this.currentStageId < 19;
   }
 
   ngOnDestroy(): void {

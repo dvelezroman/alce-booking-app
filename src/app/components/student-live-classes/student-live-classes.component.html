@@ -1,4 +1,4 @@
-<div class="live-classes-container" *ngIf="!loading && meetings.length > 0">
+<div class="live-classes-container mobile-only" *ngIf="!loading && meetings.length > 0">
   <div class="header-row">
     <h3 class="live-classes-title">
       Clases Agendadas
@@ -73,6 +73,76 @@
           </button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="live-classes-container desktop-only" *ngIf="!loading && meetings.length > 0">
+
+  <div class="header-row">
+    <h3 class="live-classes-title">
+      Clases Agendadas
+    </h3>
+
+    <div class="filter-row">
+      <button
+        class="filter-btn"
+        [class.active]="filterMode === 'today'"
+        (click)="changeFilter('today')"
+      >
+        Hoy
+      </button>
+
+      <button
+        class="filter-btn"
+        [class.active]="filterMode === 'all'"
+        (click)="changeFilter('all')"
+      >
+        Todas
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR VERTICAL -->
+  <div class="desktop-classes-wrapper">
+    <div
+      class="desktop-class-card"
+      *ngFor="let m of meetings"
+      [class.active-class]="canEnter(m) && hasValidLink(m)"
+    >
+
+      <!-- IZQUIERDA -->
+      <div class="desktop-left">
+        <p class="date">{{ formatDateTitle(m.date) }}</p>
+        <p class="primary-hour">{{ m.hour }}:00</p>
+
+        <ng-container *ngIf="m.localhour !== m.hour">
+          <p class="secondary-hour">
+            Hora Ecuador: {{ m.localhour }}:00
+          </p>
+        </ng-container>
+      </div>
+
+      <!-- CENTRO -->
+      <div class="desktop-center">
+        <p class="label">Instructor</p>
+        <p class="instructor">
+          {{ m.instructor?.user?.firstName ?? "No asignado" }}
+          {{ m.instructor?.user?.lastName ?? "" }}
+        </p>
+      </div>
+
+      <!-- DERECHA -->
+      <div class="desktop-right">
+        <button
+          class="enter-btn"
+          [disabled]="!canEnter(m) || !hasValidLink(m)"
+          (click)="enterClass(m)"
+        >
+          Entrar
+        </button>
+      </div>
+
     </div>
   </div>
 </div>
