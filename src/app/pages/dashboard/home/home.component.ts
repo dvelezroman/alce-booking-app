@@ -30,6 +30,7 @@ import { StudentLiveClassesComponent } from "../../../components/student-live-cl
 import { StudentStageProgressComponent } from "../../../components/student/student-stage-progress/student-stage-progress.component";
 import { PendingAssessmentCardComponent } from "../../../components/home/pending-assessment-card/pending-assessment-card.component";
 import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
+import { ImageBannerComponent } from "../../../components/home/image-banner/image-banner.component";
 
 @Component({
   selector: 'app-home-private',
@@ -47,8 +48,9 @@ import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
     CountdownBannerComponent,
     AssessmentAnnouncementComponent,
     StudentLiveClassesComponent,
-    StudentStageProgressComponent,
-    PendingAssessmentCardComponent
+    // StudentStageProgressComponent,
+    PendingAssessmentCardComponent,
+    ImageBannerComponent
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -70,7 +72,7 @@ export class HomePrivateComponent implements OnInit {
   showUserInfoForm: boolean = false;
 
   showBanner = true;
-
+  showImageBanner: boolean = true;
   showBannerCuenca: boolean = false;
   showBannerCuencaComm: boolean = false;
   isCuenca: boolean = false;
