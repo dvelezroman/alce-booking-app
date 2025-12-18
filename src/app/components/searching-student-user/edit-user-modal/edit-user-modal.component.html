@@ -21,21 +21,36 @@
             Suspender estudiante (días)
           </label>
 
-          <input
-            type="number"
-            id="suspensionDays"
-            formControlName="suspensionDays"
-            min="1"
-            placeholder="Ej: 7"
-          />
+          <!-- INPUT + BOTÓN -->
+          <div class="suspend-input-wrapper">
+            <input
+              type="number"
+              id="suspensionDays"
+              formControlName="suspensionDays"
+              min="1"
+              placeholder="Ej: 7"
+            />
 
-          <button
-            type="button"
-            class="button suspend-btn mt-2"
-            (click)="onSuspendStudent()"
+            <button
+              type="button"
+              class="suspend-btn inside"
+              (click)="onSuspendStudent()"
+            >
+              Suspender
+            </button>
+          </div>
+
+          <!-- INFO DE SUSPENSIÓN ACTUAL -->
+          <small
+            *ngIf="user?.student?.suspensionDays"
+            class="suspension-info"
           >
-            Suspender
-          </button>
+            Actualmente suspendido por
+            <strong>{{ user?.student?.suspensionDays }}</strong>
+            día{{ (user?.student?.suspensionDays || 0) > 1 ? 's' : '' }}
+            (hasta
+            {{ user?.student?.suspensionEndDate | date:'longDate' }})
+          </small>
         </div>
 
         <!-- DATOS BÁSICOS -->

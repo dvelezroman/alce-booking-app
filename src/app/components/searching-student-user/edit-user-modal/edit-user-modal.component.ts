@@ -109,6 +109,7 @@ export class EditUserModalComponent {
       tutorName: user.student?.tutorName || (user as any).tutorName || '',
       tutorEmail: user.student?.tutorEmail || (user as any).tutorEmail || '',
       tutorPhone: user.student?.tutorPhone || (user as any).tutorPhone || '',
+      suspensionDays: user.student?.suspensionDays ?? null,
     });
 
     if (user.birthday) this.checkIfMinor(user.birthday);

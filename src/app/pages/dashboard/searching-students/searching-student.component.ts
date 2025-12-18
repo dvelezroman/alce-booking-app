@@ -305,13 +305,32 @@ export class SearchingStudentComponent {
 
   // --- Suspender estudiante ---
   onSuspendStudent(days: number) {
+    if (!this.selectedUser) return;
+
+    this.modalConfig = {
+      show: true,
+      message: `¿Estás seguro de suspender al estudiante por ${days} día${days > 1 ? 's' : ''}?`,
+      isError: false,
+      isSuccess: false,
+      isInfo: true,
+      showButtons: true,
+      close: () => {
+        this.modalConfig.show = false;
+      },
+      confirm: () => {
+        this.modalConfig.show = false;
+        this.confirmSuspendStudent(days);
+      }
+    };
+  }
+
+  private confirmSuspendStudent(days: number) {
     if (!this.selectedUser?.student?.id) return;
 
     this.studentsService
       .suspendStudent(this.selectedUser.student.id, days)
       .subscribe({
         next: (updatedStudent) => {
-          // actualizar lista local
           const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
           if (index !== -1) {
             this.users[index] = {
@@ -323,14 +342,10 @@ export class SearchingStudentComponent {
             };
           }
 
-          this.showSuccessModal(
-            `Estudiante suspendido por ${days} días`
-          );
+          this.showSuccessModal(`Estudiante suspendido por ${days} día${days > 1 ? 's' : ''}`);
         },
         error: () => {
-          this.showErrorModal(
-            'No se pudo suspender al estudiante'
-          );
+          this.showErrorModal('No se pudo suspender al estudiante');
         },
       });
   }
