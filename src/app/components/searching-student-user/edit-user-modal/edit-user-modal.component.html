@@ -15,6 +15,29 @@
           <input type="checkbox" id="status" formControlName="status" />
         </div>
 
+        <!-- SUSPENSIÓN DE ESTUDIANTE -->
+        <div *ngIf="user?.role === UserRole.STUDENT" class="form-field-edit suspend-block">
+          <label for="suspensionDays">
+            Suspender estudiante (días)
+          </label>
+
+          <input
+            type="number"
+            id="suspensionDays"
+            formControlName="suspensionDays"
+            min="1"
+            placeholder="Ej: 7"
+          />
+
+          <button
+            type="button"
+            class="button suspend-btn mt-2"
+            (click)="onSuspendStudent()"
+          >
+            Suspender
+          </button>
+        </div>
+
         <!-- DATOS BÁSICOS -->
         <div class="form-field-edit">
           <label for="idNumber">Número de Identificación</label>

@@ -125,11 +125,18 @@
   [show]="showBannerCuencaComm">
 </app-student-cuenca-comm-banner>
 
+<app-student-suspension-modal
+  *ngIf="showSuspensionModal && suspensionInfo"
+  [suspensionInfo]="suspensionInfo"
+  (close)="showSuspensionModal = false">
+</app-student-suspension-modal>
+
+<!-- 
 <app-student-banner 
   *ngIf="isStudent && showBanner" 
   [videoUrl]="selectedVideoUrl"
   (close)="showBanner = false">
-</app-student-banner>
+</app-student-banner> -->
 
 <app-image-banner
   *ngIf="isStudent && showImageBanner"

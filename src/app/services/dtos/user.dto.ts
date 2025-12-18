@@ -41,6 +41,15 @@ export interface UserDto {
   updatedAt?: string;
   occupation?: string; 
   accessToken?: string;
+  suspensionInfo?: SuspensionInfo;
+}
+
+export interface SuspensionInfo {
+  isSuspended: boolean;
+  suspensionDays: number;
+  suspensionStartDate: string;
+  suspensionEndDate: string;
+  daysRemaining: number;
 }
 
 export interface LoginDto {

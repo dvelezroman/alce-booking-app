@@ -112,5 +112,35 @@ export class StudentsService implements OnInit{
 
     return this.http.get<Student[]>(`${this.apiUrl}`, { params });
   }
+
+  /**
+   * Suspende a un estudiante por un número específico de días
+   * POST /v0/students/{id}/suspend
+   */
+  suspendStudent(studentId: number, days: number): Observable<Student> {
+    return this.http.post<Student>(
+      `${this.apiUrl}/${studentId}/suspend`,
+      { suspensionDays: days }
+    ).pipe(
+      tap((updatedStudent) => {
+        if (typeof window !== 'undefined' && localStorage) {
+          const raw = localStorage.getItem('userData');
+          const current: UserDto | null = raw ? JSON.parse(raw) : null;
+
+          if (current?.student?.id === studentId) {
+            const merged: UserDto = {
+              ...current,
+              student: {
+                ...(current.student || {}),
+                ...updatedStudent,
+              },
+            };
+
+            localStorage.setItem('userData', JSON.stringify(merged));
+          }
+        }
+      })
+    );
+  }
 }
 

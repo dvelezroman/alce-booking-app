@@ -9,7 +9,7 @@ import {
   ModalDto,
   modalInitializer,
 } from '../../../components/modal/modal.dto';
-import { UserDto, UserRole } from '../../../services/dtos/user.dto';
+import { SuspensionInfo, UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { StudyContentService } from '../../../services/study-content.service';
 import { selectIsLoggedIn, selectUserData } from '../../../store/user.selector';
 import { UsersService } from '../../../services/users.service';
@@ -31,6 +31,7 @@ import { StudentStageProgressComponent } from "../../../components/student/stude
 import { PendingAssessmentCardComponent } from "../../../components/home/pending-assessment-card/pending-assessment-card.component";
 import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
 import { ImageBannerComponent } from "../../../components/home/image-banner/image-banner.component";
+import { StudentSuspensionModalComponent } from "../../../components/home/student-suspension-modal/student-suspension-modal.component";
 
 @Component({
   selector: 'app-home-private',
@@ -42,7 +43,7 @@ import { ImageBannerComponent } from "../../../components/home/image-banner/imag
     ModalComponent,
     UserInfoFormComponent,
     InstructorCalendarComponent,
-    StudentBannerComponent,
+    // StudentBannerComponent,
     StudentCuencaBannerComponent,
     StudentCuencaCommBannerComponent,
     CountdownBannerComponent,
@@ -50,7 +51,8 @@ import { ImageBannerComponent } from "../../../components/home/image-banner/imag
     StudentLiveClassesComponent,
     // StudentStageProgressComponent,
     PendingAssessmentCardComponent,
-    ImageBannerComponent
+    ImageBannerComponent,
+    StudentSuspensionModalComponent,
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -79,6 +81,9 @@ export class HomePrivateComponent implements OnInit {
 
   pendingAssessmentsCount: number = 0;
   showAssessmentAnnouncement: boolean = false;
+
+  showSuspensionModal = false;
+  suspensionInfo: SuspensionInfo | null = null;
 
   assessments: StageAssessment[] = [];
 
@@ -134,6 +139,14 @@ export class HomePrivateComponent implements OnInit {
       // mostrar anuncio si inicia sesión y no lo ha visto antes
     if (this.isStudent && this.isLoggedIn && this.shouldShowAnnouncement()) {
       this.showAssessmentAnnouncement = true;
+    }
+
+    if (
+      this.isStudent &&
+      user?.suspensionInfo?.isSuspended
+    ) {
+      this.suspensionInfo = user.suspensionInfo;
+      this.showSuspensionModal = true;
     }
     });
 

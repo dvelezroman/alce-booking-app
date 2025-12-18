@@ -1,0 +1,30 @@
+<div class="announcement-backdrop" *ngIf="suspensionInfo">
+  <div class="announcement-card animate-in">
+
+    <h2 class="title">
+      Cuenta suspendida
+    </h2>
+
+    <p class="subtitle">
+      Tu cuenta se encuentra suspendida temporalmente.
+      Por lo que no podrás agendar clases.
+    </p>
+
+    <p class="info-line">
+      <strong>Se reactivará el:</strong>
+      {{ suspensionInfo.suspensionEndDate | date:'longDate' }}
+    </p>
+
+    <p class="info-line">
+      <strong>Días restantes:</strong>
+      {{ suspensionInfo.daysRemaining }}
+    </p>
+
+    <div class="actions-row">
+      <button class="close-btn" (click)="close.emit()">
+        Entendido
+      </button>
+    </div>
+
+  </div>
+</div>
