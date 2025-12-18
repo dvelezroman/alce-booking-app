@@ -22,6 +22,7 @@ export class EditUserModalComponent {
 
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<any>();
+  @Output() suspend = new EventEmitter<number>();
 
   form!: FormGroup;
   isMinor = false;
@@ -64,10 +65,20 @@ export class EditUserModalComponent {
       updatedAt: [{ value: '', disabled: true }],
       startClassDate: [''],
       endClassDate: [''],
+      
     });
+
+    this.form.addControl('suspensionDays', this.fb.control(null, [Validators.min(1)]));
 
     // Detectar si es menor de edad
     this.form.get('birthday')?.valueChanges.subscribe((value) => this.checkIfMinor(value));
+  }
+
+  onSuspendStudent() {
+    const days = this.form.get('suspensionDays')?.value;
+    if (!days || days < 1) return;
+
+    this.suspend.emit(days);
   }
 
   /** Pasa los valores del usuario al formulario */
@@ -98,6 +109,7 @@ export class EditUserModalComponent {
       tutorName: user.student?.tutorName || (user as any).tutorName || '',
       tutorEmail: user.student?.tutorEmail || (user as any).tutorEmail || '',
       tutorPhone: user.student?.tutorPhone || (user as any).tutorPhone || '',
+      suspensionDays: user.student?.suspensionDays ?? null,
     });
 
     if (user.birthday) this.checkIfMinor(user.birthday);

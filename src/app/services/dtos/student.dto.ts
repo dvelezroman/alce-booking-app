@@ -31,6 +31,9 @@ export interface Student {
   tutorName?: string | null;
   tutorEmail?: string | null;
   tutorPhone?: string | null;
+  suspensionDays?: number;
+  suspensionStartDate?: string;
+  suspensionEndDate?: string;
 }
 
 export interface StudentStageHistory {

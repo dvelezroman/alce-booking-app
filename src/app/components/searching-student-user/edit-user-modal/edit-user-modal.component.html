@@ -15,6 +15,44 @@
           <input type="checkbox" id="status" formControlName="status" />
         </div>
 
+        <!-- SUSPENSIÓN DE ESTUDIANTE -->
+        <div *ngIf="user?.role === UserRole.STUDENT" class="form-field-edit suspend-block">
+          <label for="suspensionDays">
+            Suspender estudiante (días)
+          </label>
+
+          <!-- INPUT + BOTÓN -->
+          <div class="suspend-input-wrapper">
+            <input
+              type="number"
+              id="suspensionDays"
+              formControlName="suspensionDays"
+              min="1"
+              placeholder="Ej: 7"
+            />
+
+            <button
+              type="button"
+              class="suspend-btn inside"
+              (click)="onSuspendStudent()"
+            >
+              Suspender
+            </button>
+          </div>
+
+          <!-- INFO DE SUSPENSIÓN ACTUAL -->
+          <small
+            *ngIf="user?.student?.suspensionDays"
+            class="suspension-info"
+          >
+            Actualmente suspendido por
+            <strong>{{ user?.student?.suspensionDays }}</strong>
+            día{{ (user?.student?.suspensionDays || 0) > 1 ? 's' : '' }}
+            (hasta
+            {{ user?.student?.suspensionEndDate | date:'longDate' }})
+          </small>
+        </div>
+
         <!-- DATOS BÁSICOS -->
         <div class="form-field-edit">
           <label for="idNumber">Número de Identificación</label>

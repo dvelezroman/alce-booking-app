@@ -9,7 +9,7 @@ import {
   ModalDto,
   modalInitializer,
 } from '../../../components/modal/modal.dto';
-import { UserDto, UserRole } from '../../../services/dtos/user.dto';
+import { SuspensionInfo, UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { StudyContentService } from '../../../services/study-content.service';
 import { selectIsLoggedIn, selectUserData } from '../../../store/user.selector';
 import { UsersService } from '../../../services/users.service';
@@ -30,6 +30,8 @@ import { StudentLiveClassesComponent } from "../../../components/student-live-cl
 import { StudentStageProgressComponent } from "../../../components/student/student-stage-progress/student-stage-progress.component";
 import { PendingAssessmentCardComponent } from "../../../components/home/pending-assessment-card/pending-assessment-card.component";
 import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
+import { ImageBannerComponent } from "../../../components/home/image-banner/image-banner.component";
+import { StudentSuspensionModalComponent } from "../../../components/home/student-suspension-modal/student-suspension-modal.component";
 
 @Component({
   selector: 'app-home-private',
@@ -41,14 +43,16 @@ import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
     ModalComponent,
     UserInfoFormComponent,
     InstructorCalendarComponent,
-    StudentBannerComponent,
+    // StudentBannerComponent,
     StudentCuencaBannerComponent,
     StudentCuencaCommBannerComponent,
     CountdownBannerComponent,
     AssessmentAnnouncementComponent,
     StudentLiveClassesComponent,
-    StudentStageProgressComponent,
-    PendingAssessmentCardComponent
+    // StudentStageProgressComponent,
+    PendingAssessmentCardComponent,
+    ImageBannerComponent,
+    StudentSuspensionModalComponent,
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -70,13 +74,16 @@ export class HomePrivateComponent implements OnInit {
   showUserInfoForm: boolean = false;
 
   showBanner = true;
-
+  showImageBanner: boolean = true;
   showBannerCuenca: boolean = false;
   showBannerCuencaComm: boolean = false;
   isCuenca: boolean = false;
 
   pendingAssessmentsCount: number = 0;
   showAssessmentAnnouncement: boolean = false;
+
+  showSuspensionModal = false;
+  suspensionInfo: SuspensionInfo | null = null;
 
   assessments: StageAssessment[] = [];
 
@@ -132,6 +139,14 @@ export class HomePrivateComponent implements OnInit {
       // mostrar anuncio si inicia sesión y no lo ha visto antes
     if (this.isStudent && this.isLoggedIn && this.shouldShowAnnouncement()) {
       this.showAssessmentAnnouncement = true;
+    }
+
+    if (
+      this.isStudent &&
+      user?.suspensionInfo?.isSuspended
+    ) {
+      this.suspensionInfo = user.suspensionInfo;
+      this.showSuspensionModal = true;
     }
     });
 

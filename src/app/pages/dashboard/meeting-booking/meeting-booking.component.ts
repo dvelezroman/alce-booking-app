@@ -33,6 +33,7 @@ import { NotificationService } from '../../../services/notification.service';
 import { StageProgressDto, StageProgressList } from '../../../services/dtos/stage-progress.dto';
 import { StageProgressService } from '../../../services/stage-progress';
 import { StudentStageProgressComponent } from "../../../components/student/student-stage-progress/student-stage-progress.component";
+import { StudentSuspensionModalComponent } from "../../../components/home/student-suspension-modal/student-suspension-modal.component";
 
 
 @Component({
@@ -46,7 +47,7 @@ import { StudentStageProgressComponent } from "../../../components/student/stude
     MeetingCalendarComponent,
     MeetingTimeSlotsComponent,
     MeetingScheduleComponent,
-    StudentStageProgressComponent
+    StudentSuspensionModalComponent
 ],
   templateUrl: './meeting-booking.component.html',
   styleUrl: './meeting-booking.component.scss'
@@ -98,6 +99,9 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   studentId: number | null = null;
   currentStageId: number | null = null;
 
+  showSuspensionModal = false;
+  isSuspended = false;
+
   // hasUnreadNotifications: boolean = false;
 
   modalConfig: ModalDto = modalInitializer();
@@ -139,6 +143,13 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
       this.userData = state;
       //console.log('USER DATA EN AGENDA:', this.userData);
+
+      this.isSuspended = !!state?.suspensionInfo?.isSuspended;
+      if (this.isSuspended) {
+        this.showSuspensionModal = true;
+        return;
+      }
+      
       if (state?.student?.stageId) {
         this.currentStageId = state.student.stageId;
       }
@@ -173,6 +184,16 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       this.cdr.detectChanges();
     }, 300);
   }
+  
+  private blockIfSuspended(): boolean {
+    if (this.userData?.suspensionInfo?.isSuspended) {
+      this.isSuspended = true;
+      this.showSuspensionModal = true;
+      return true;
+    }
+    this.isSuspended = false;
+    return false;
+  }
 
   private updateEcuadorTime(): void {
     const nowInEcuador = DateTime.now().setZone('America/Guayaquil').setLocale('es');
@@ -205,6 +226,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   onDaySelected(event: { date: string; label: string; day: number }) {
+    if (this.userData?.suspensionInfo?.isSuspended) {
+      this.showSuspensionModal = true;
+      return;
+    }
   // Verificar en el backend si hay notificaciones sin leer
   this.notificationService.loadUnreadCount().subscribe({
     next: (count) => {

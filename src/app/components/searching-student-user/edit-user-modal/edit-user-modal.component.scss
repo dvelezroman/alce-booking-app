@@ -108,6 +108,69 @@
   color: #333;
 }
 
+/* BOTÓN SUSPENDER */
+.suspend-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.suspend-input-wrapper input {
+  padding-right: 95px;
+}
+
+.suspend-btn.inside {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+
+  height: 26px;
+  padding: 0 10px;
+  font-size: 0.7rem;
+  border-radius: 6px;
+
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #111827;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.suspend-btn.inside:hover {
+  transform: translateY(-50%) scale(1.03);
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35);
+}
+
+.suspend-btn.inside:active {
+  transform: translateY(-50%) scale(0.97);
+}
+
+.suspension-info strong {
+  display: inline-block;
+  margin: 0 4px;
+  padding: 1px 6px;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  color: #92400e;
+  background: #fef3c7;
+
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+.suspension-info {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #92400e; // amber-800
+}
+
 /* Checkbox estilo activado */
 .form-field-edit input[type="checkbox"] {
   accent-color: #3b82f6; 
@@ -206,4 +269,36 @@ select::-ms-expand {
 .form-field-edit select {
   color: #222;
   background-color: #fff;
+}
+
+@media (max-width: 480px) {
+
+  .edit-user-modal-body {
+    padding: 0.75rem 1rem;
+  }
+
+  .form-field-edit label {
+    font-size: 0.85rem;
+  }
+
+  .form-field-edit input,
+  .form-field-edit select {
+    font-size: 0.75rem;
+    height: 34px;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .suspension-info {
+    font-size: 0.75rem;
+  }
+
+  .suspension-info strong {
+    font-size: 0.7rem;
+  }
+
+  .suspend-btn.inside {
+    font-size: 0.65rem;
+    height: 24px;
+    padding: 0 8px;
+  }
 }

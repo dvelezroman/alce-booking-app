@@ -266,42 +266,89 @@ export class SearchingStudentComponent {
   }
 
   /** Envía la información del tutor al endpoint de student si aplica */
-private updateTutorInfoIfNeeded(payload: any): void {
-  if (
-    this.selectedUser?.role === 'STUDENT' &&
-    this.selectedUser?.student?.id &&
-    (payload.tutorName || payload.tutorEmail || payload.tutorPhone)
-  ) {
-    const tutorPayload = {
-      tutorName: payload.tutorName || null,
-      tutorEmail: payload.tutorEmail || null,
-      tutorPhone: payload.tutorPhone || null,
-    };
+  private updateTutorInfoIfNeeded(payload: any): void {
+    if (
+      this.selectedUser?.role === 'STUDENT' &&
+      this.selectedUser?.student?.id &&
+      (payload.tutorName || payload.tutorEmail || payload.tutorPhone)
+    ) {
+      const tutorPayload = {
+        tutorName: payload.tutorName || null,
+        tutorEmail: payload.tutorEmail || null,
+        tutorPhone: payload.tutorPhone || null,
+      };
 
-    this.studentsService.updateStudentById(this.selectedUser.student.id, tutorPayload).subscribe({
-      next: (updatedStudent) => {
-        // Actualizar también el store global (para sincronizar el estado)
-        this.store.dispatch(
-          updateStudentData({ student: { ...this.selectedUser!.student!, ...updatedStudent } })
-        );
+      this.studentsService.updateStudentById(this.selectedUser.student.id, tutorPayload).subscribe({
+        next: (updatedStudent) => {
+          // Actualizar también el store global (para sincronizar el estado)
+          this.store.dispatch(
+            updateStudentData({ student: { ...this.selectedUser!.student!, ...updatedStudent } })
+          );
 
-        // Actualizar la lista local visible en el admin sin esperar reload
-        const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
-        if (index !== -1) {
-          this.users[index] = {
-            ...this.users[index],
-            student: { ...this.users[index].student, ...updatedStudent },
-          };
-        }
+          // Actualizar la lista local visible en el admin sin esperar reload
+          const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
+          if (index !== -1) {
+            this.users[index] = {
+              ...this.users[index],
+              student: { ...this.users[index].student, ...updatedStudent },
+            };
+          }
 
-        this.showSuccessModal('Datos del representante actualizados con éxito.');
-      },
-      error: () => {
-        this.showErrorModal('Error al actualizar los datos del representante.');
-      },
-    });
+          this.showSuccessModal('Datos del representante actualizados con éxito.');
+        },
+        error: () => {
+          this.showErrorModal('Error al actualizar los datos del representante.');
+        },
+      });
+    }
   }
-}
+
+  // --- Suspender estudiante ---
+  onSuspendStudent(days: number) {
+    if (!this.selectedUser) return;
+
+    this.modalConfig = {
+      show: true,
+      message: `¿Estás seguro de suspender al estudiante por ${days} día${days > 1 ? 's' : ''}?`,
+      isError: false,
+      isSuccess: false,
+      isInfo: true,
+      showButtons: true,
+      close: () => {
+        this.modalConfig.show = false;
+      },
+      confirm: () => {
+        this.modalConfig.show = false;
+        this.confirmSuspendStudent(days);
+      }
+    };
+  }
+
+  private confirmSuspendStudent(days: number) {
+    if (!this.selectedUser?.student?.id) return;
+
+    this.studentsService
+      .suspendStudent(this.selectedUser.student.id, days)
+      .subscribe({
+        next: (updatedStudent) => {
+          const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
+          if (index !== -1) {
+            this.users[index] = {
+              ...this.users[index],
+              student: {
+                ...this.users[index].student,
+                ...updatedStudent,
+              },
+            };
+          }
+
+          this.showSuccessModal(`Estudiante suspendido por ${days} día${days > 1 ? 's' : ''}`);
+        },
+        error: () => {
+          this.showErrorModal('No se pudo suspender al estudiante');
+        },
+      });
+  }
 
   // --- MODAL: Password ---
   openEditPasswordModal(user: UserDto): void {
