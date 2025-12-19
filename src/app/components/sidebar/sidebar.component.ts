@@ -56,6 +56,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/dashboard/feature-flag', roles: [UserRole.ADMIN] },
   { icon: 'reporte', text: 'Instructores', route: '/dashboard/report-instructor', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Estudiante', route: '/dashboard/reports-detailed', roles: [UserRole.ADMIN] },
+  { icon: 'reportes', text: 'Licencias', route: '/dashboard/suspension-history', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Usuario', route: '/dashboard/report-user', roles: [UserRole.ADMIN] },
   { icon: 'excel', text: 'Inasistencias / info. de Usuarios', route: '/dashboard/report-excel', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Progreso', route: '/dashboard/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
@@ -198,7 +199,8 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
         this.findNavItemByRoute('/dashboard/report-instructor'),
         this.findNavItemByRoute('/dashboard/reports-detailed'),
         this.findNavItemByRoute('/dashboard/reports-progress'),
-        this.findNavItemByRoute('/dashboard/assessment-reports')
+        this.findNavItemByRoute('/dashboard/assessment-reports'),
+        this.findNavItemByRoute('/dashboard/suspension-history')
       ].filter(item => item.roles.includes(role))
     },
     {

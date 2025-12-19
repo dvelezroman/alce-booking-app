@@ -36,6 +36,26 @@ export interface Student {
   suspensionEndDate?: string;
 }
 
+export interface StudentSuspensionHistory {
+  id: number;
+  studentId: number;
+  userId: number;
+  suspensionDays: number;
+  suspensionStartDate: string;
+  suspensionEndDate: string;
+  reason?: string | null;
+  processedByUserId: number;
+  createdAt: string;
+  updatedAt?: string;
+  student?: Student;
+  user?: UserDto;
+}
+
+export interface SuspensionHistoryFilters {
+  studentId?: number;
+  stageId?: number;
+}
+
 export interface StudentStageHistory {
   id: number;
   stageId: number;

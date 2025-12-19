@@ -48,6 +48,7 @@ import { StageAssessmentComponent } from './stage-assessment/stage-assessment.co
 import { StageAssessmentResourcesComponent } from './stage-assessment-resources/stage-assessment-resources.component';
 import { StageAssessmentStudentComponent } from './stage-assessment-student/stage-assessment-student.component';
 import { StageAssessmentListComponent } from './stage-assessment-list/stage-assessment-list.component';
+import { SuspensionHistoryComponent } from './suspension-history/suspension-history.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -73,6 +74,7 @@ export const dashboardRoutes: Routes = [
   { path: 'create-instructors', component: RegisterInstructorAdminComponent },
   { path: 'reports-detailed', component: ReportsDetailedComponent },
   { path: 'reports-progress', component: ReportsProgressComponent },
+  { path: 'suspension-history', component: SuspensionHistoryComponent },
   { path: 'report-user', component: ReportUserComponent },
   { path: 'report-excel', component: ReportsExcelPageComponent },
   { path: 'broadcast-groups', component: BroadcastGroupsComponent },
