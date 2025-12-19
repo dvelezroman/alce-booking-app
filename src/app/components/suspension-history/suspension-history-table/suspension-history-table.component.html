@@ -1,0 +1,61 @@
+<div class="table-wrapper" *ngIf="data.length > 0">
+
+  <div class="table-scroll">
+    <table class="assessment-table">
+
+      <!-- HEADER FIJO -->
+      <thead>
+        <tr>
+          <th>Estudiante</th>
+          <th>Stage</th>
+          <th>Inicio licencia</th>
+          <th>Fin licencia</th>
+          <th>Días</th>
+        </tr>
+      </thead>
+
+      <!-- BODY -->
+      <tbody>
+        <tr *ngFor="let h of data">
+
+          <!-- Estudiante -->
+          <td class="col-resource">
+            <span class="truncate-text">
+              {{ h.student?.user?.firstName }} {{ h.student?.user?.lastName }}
+            </span>
+          </td>
+
+          <!-- Stage -->
+          <td>
+            {{ h.student?.stage?.description || '—' }}
+          </td>
+
+          <!-- Inicio -->
+          <td>
+            {{ h.suspensionStartDate | date:'dd/MM/yyyy' }}
+          </td>
+
+          <!-- Fin -->
+          <td>
+            {{ h.suspensionEndDate | date:'dd/MM/yyyy' }}
+          </td>
+
+          <!-- Días -->
+          <td>
+            <span class="badge badge-blue">
+              {{ h.suspensionDays }}
+            </span>
+          </td>
+
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+</div>
+
+<!-- EMPTY STATE -->
+<div class="empty-state" *ngIf="data.length === 0">
+  No existen licencias registradas.
+</div>

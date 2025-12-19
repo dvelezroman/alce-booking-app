@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, Subject, take, takeUntil, tap, withLatestFrom} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Store} from "@ngrx/store";
-import {Mode, RegisterStudentDto, RegisterStudentResponseDto, Student} from "./dtos/student.dto";
+import {Mode, RegisterStudentDto, RegisterStudentResponseDto, Student, StudentSuspensionHistory} from "./dtos/student.dto";
 import {setUserData} from "../store/user.action";
 import {UserDto} from "./dtos/user.dto";
 import {selectUserData} from "../store/user.selector";
@@ -140,6 +140,36 @@ export class StudentsService implements OnInit{
           }
         }
       })
+    );
+  }
+  
+  getSuspensionHistory(params?: {
+    studentId?: number;
+    stageId?: number;
+    limit?: number;
+    offset?: number;
+  }): Observable<StudentSuspensionHistory[]> {
+    let httpParams = new HttpParams();
+
+    if (params?.studentId !== undefined) {
+      httpParams = httpParams.set('studentId', params.studentId.toString());
+    }
+
+    if (params?.stageId !== undefined) {
+      httpParams = httpParams.set('stageId', params.stageId.toString());
+    }
+
+    if (params?.limit !== undefined) {
+      httpParams = httpParams.set('limit', params.limit.toString());
+    }
+
+    if (params?.offset !== undefined) {
+      httpParams = httpParams.set('offset', params.offset.toString());
+    }
+
+    return this.http.get<StudentSuspensionHistory[]>(
+      `${this.apiUrl}/suspension-history`,
+      { params: httpParams }
     );
   }
 }

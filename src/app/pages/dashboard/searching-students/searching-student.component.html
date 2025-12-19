@@ -120,6 +120,7 @@
             <th>Rol de Usuario</th>
             <th>Stage</th>
             <th>Activo</th>
+            <th>Licencia</th>
             <!-- <th>Usuario</th> -->
             <th>Contacto</th>
             <th>Editar</th>
@@ -133,6 +134,27 @@
             <td>{{ user.role | titlecase }}</td>
             <td>{{ user.student?.stage?.description || 'No Aplica' }}</td>
             <td>{{ user.status === UserStatus.ACTIVE ? '✓' : '❌' }}</td>
+            <td>
+              <ng-container *ngIf="user.role === UserRole.STUDENT; else noLicense">
+
+                <ng-container *ngIf="user.student?.suspensionStartDate && user.student?.suspensionEndDate; else noSuspension">
+                  <small class="license-dates">
+                    {{ user.student?.suspensionStartDate | date:'dd/MM/yyyy' }}
+                    →
+                    {{ user.student?.suspensionEndDate | date:'dd/MM/yyyy' }}
+                  </small>
+                </ng-container>
+
+                <ng-template #noSuspension>
+                  <span class="license-none">Sin licencia</span>
+                </ng-template>
+
+              </ng-container>
+
+              <ng-template #noLicense>
+                <span class="license-none">—</span>
+              </ng-template>
+            </td>
             <!-- <td>{{ user.email }}</td> -->
             <td>
               <button class="details-btn" (click)="openContactModal(user)">

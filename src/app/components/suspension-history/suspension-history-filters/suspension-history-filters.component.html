@@ -1,0 +1,42 @@
+
+<div class="filters-wrapper">
+
+  <!-- CARD -->
+  <div class="filters-card">
+
+    <!-- STAGE -->
+    <div class="filter-item">
+      <label class="filter-label">Stage</label>
+      <select class="filter-select" [(ngModel)]="selectedStageId">
+        <option [ngValue]="null">Todos</option>
+        <option *ngFor="let s of stages" [ngValue]="s.id">
+          {{ s.description }}
+        </option>
+      </select>
+    </div>
+
+    <!-- STUDENT -->
+    <div class="filter-item">
+      <label class="filter-label">Estudiante</label>
+
+      <app-user-selector
+        [role]="'student'"
+        [maxSelectable]="1"
+        [resetTrigger]="resetUsersTrigger"
+        (usersSelected)="onStudentSelected($event)">
+      </app-user-selector>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="filter-actions">
+      <button class="btn btn-primary" (click)="applyFilters()">
+        Aplicar
+      </button>
+      <button class="btn btn-ghost" (click)="clearFilters()">
+        Limpiar
+      </button>
+    </div>
+
+  </div>
+
+</div>
