@@ -82,12 +82,9 @@ export class FeatureFlagComponent implements OnInit {
   }
 
   private getFirstAndLastDayOfYear(): [string, string] {
-    const year = new Date().getFullYear();
+    const year = this.selectedYear || new Date().getFullYear();
 
-    const firstDay = `${year}-01-01`;
-    const lastDay = `${year}-12-31`;
-
-    return [firstDay, lastDay];
+    return [`${year}-01-01`, `${year}-12-31`];
   }
 
   private getAll() {
@@ -116,8 +113,11 @@ export class FeatureFlagComponent implements OnInit {
     this.selectedMonth = date.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.selectedYear = date.getFullYear();
     this.selectedDays = [];
-    this.generateCurrentMonthDays();
-    this.updateNavigationButtons();
+
+    this.getDisabledDates().subscribe(() => {
+      this.generateCurrentMonthDays();
+      this.updateNavigationButtons();
+    });
   }
 
   nextMonth() {
@@ -125,8 +125,11 @@ export class FeatureFlagComponent implements OnInit {
     this.selectedMonth = date.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
     this.selectedYear = date.getFullYear();
     this.selectedDays = [];
-    this.generateCurrentMonthDays();
-    this.updateNavigationButtons();
+
+    this.getDisabledDates().subscribe(() => {
+      this.generateCurrentMonthDays();
+      this.updateNavigationButtons();
+    });
   }
 
   getMonthIndex(monthName: string): number {

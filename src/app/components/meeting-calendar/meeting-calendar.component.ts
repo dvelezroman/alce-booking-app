@@ -18,6 +18,7 @@ export class MeetingCalendarComponent implements OnInit {
   @Input() resetSelectionTrigger: boolean = false;
 
   @Output() daySelected = new EventEmitter<{ date: string; label: string; day: number }>();
+  @Output() monthChanged = new EventEmitter<{ year: number; month: number }>();
 
   currentMonthDays: any[] = [];
   selectedMonth!: string;
@@ -94,6 +95,10 @@ export class MeetingCalendarComponent implements OnInit {
 
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
+    this.monthChanged.emit({
+      year: this.selectedYear,
+      month: this.getMonthIndex(this.selectedMonth) + 1
+    });
   }
 
   generateCurrentMonthDays(): void {
