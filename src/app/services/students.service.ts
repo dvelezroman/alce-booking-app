@@ -142,6 +142,36 @@ export class StudentsService implements OnInit{
       })
     );
   }
+
+  /**
+   * Cancela la suspensión activa de un estudiante
+   * DELETE /v0/students/{id}/suspension
+   */
+  removeStudentSuspension(studentId: number): Observable<Student> {
+    return this.http
+      .delete<Student>(`${this.apiUrl}/${studentId}/suspension`)
+      .pipe(
+        tap((updatedStudent) => {
+          // Actualizar snapshot local si el estudiante es el usuario logueado
+          if (typeof window !== 'undefined' && localStorage) {
+            const raw = localStorage.getItem('userData');
+            const current: UserDto | null = raw ? JSON.parse(raw) : null;
+
+            if (current?.student?.id === studentId) {
+              const merged: UserDto = {
+                ...current,
+                student: {
+                  ...(current.student || {}),
+                  ...updatedStudent,
+                },
+              };
+
+              localStorage.setItem('userData', JSON.stringify(merged));
+            }
+          }
+        })
+      );
+  }
   
   getSuspensionHistory(params?: {
     studentId?: number;
