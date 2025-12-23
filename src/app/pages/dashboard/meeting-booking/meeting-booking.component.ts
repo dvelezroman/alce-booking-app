@@ -638,10 +638,16 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   private getFirstAndLastDayOfYear(): [string, string] {
-    const year = new Date().getFullYear();
-    const firstDay = `${year}-01-01`;
-    const lastDay = `${year}-12-31`;
-    return [firstDay, lastDay];
+    const year = this.selectedYear || new Date().getFullYear();
+
+    return [`${year}-01-01`, `${year}-12-31`];
+  }
+
+  onMonthChanged(event: { year: number; month: number }) {
+    this.selectedYear = event.year;
+
+    this.getDisabledDates().subscribe();
+    this.getDisabledDatesAndHours().subscribe();
   }
 
 
