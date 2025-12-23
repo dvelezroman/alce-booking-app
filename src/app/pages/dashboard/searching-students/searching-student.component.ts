@@ -331,6 +331,17 @@ export class SearchingStudentComponent {
       .suspendStudent(this.selectedUser.student.id, days)
       .subscribe({
         next: (updatedStudent) => {
+
+          // Actualizar USUARIO SELECCIONADO (MODAL)
+          this.selectedUser = {
+            ...this.selectedUser!,
+            student: {
+              ...this.selectedUser!.student!,
+              ...updatedStudent,
+            },
+          };
+
+          // Actualizar LISTA (TABLA)
           const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
           if (index !== -1) {
             this.users[index] = {
@@ -342,10 +353,67 @@ export class SearchingStudentComponent {
             };
           }
 
-          this.showSuccessModal(`Estudiante suspendido por ${days} día${days > 1 ? 's' : ''}`);
+          this.showSuccessModal(
+            `Estudiante suspendido por ${days} día${days > 1 ? 's' : ''}`
+          );
         },
         error: () => {
           this.showErrorModal('No se pudo suspender al estudiante');
+        },
+      });
+  }
+
+  onRemoveSuspension(studentId: number) {
+    this.modalConfig = {
+      show: true,
+      message: '¿Estás seguro de cancelar la suspensión del estudiante?',
+      isError: false,
+      isSuccess: false,
+      isInfo: true,
+      showButtons: true,
+      close: () => {
+        this.modalConfig.show = false;
+      },
+      confirm: () => {
+        this.modalConfig.show = false;
+        this.confirmRemoveSuspension(studentId);
+      }
+    };
+  }
+
+  private confirmRemoveSuspension(studentId: number) {
+    if (!this.selectedUser?.student) return;
+
+    this.studentsService
+      .removeStudentSuspension(studentId)
+      .subscribe({
+        next: (updatedStudent) => {
+
+          // Actualizar selectedUser (MODAL)
+          this.selectedUser = {
+            ...this.selectedUser!,
+            student: {
+              ...this.selectedUser!.student!,
+              ...updatedStudent,
+            },
+          };
+
+          // Actualizar lista visible
+          const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
+          if (index !== -1) {
+            this.users[index] = {
+              ...this.users[index],
+              student: {
+                ...this.users[index].student,
+                ...updatedStudent,
+              },
+            };
+          }
+
+          this.showSuccessModal('Suspensión cancelada correctamente');
+        },
+        error: () => {
+          this.showErrorModal('No se pudo cancelar la suspensión');
         },
       });
   }

@@ -29,14 +29,26 @@
               formControlName="suspensionDays"
               min="1"
               placeholder="Ej: 7"
+              [disabled]="hasActiveSuspension"
             />
 
+            <!-- BOTÓN SUSPENDER -->
             <button
+              *ngIf="!hasActiveSuspension"
               type="button"
-              class="suspend-btn inside"
+              class="suspend-btn inside neutral"
               (click)="onSuspendStudent()"
             >
               Suspender
+            </button>
+
+            <button
+              *ngIf="hasActiveSuspension"
+              type="button"
+              class="suspend-btn inside danger"
+              (click)="onRemoveSuspension()"
+            >
+              Cancelar
             </button>
           </div>
 

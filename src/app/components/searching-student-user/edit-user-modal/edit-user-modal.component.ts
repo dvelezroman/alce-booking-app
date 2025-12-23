@@ -23,6 +23,7 @@ export class EditUserModalComponent {
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<any>();
   @Output() suspend = new EventEmitter<number>();
+  @Output() removeSuspension = new EventEmitter<number>();
 
   form!: FormGroup;
   isMinor = false;
@@ -135,6 +136,15 @@ export class EditUserModalComponent {
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) age--;
 
     this.isMinor = age < 18;
+  }
+
+  get hasActiveSuspension(): boolean {
+    return !!this.user?.student?.suspensionEndDate;
+  }
+
+  onRemoveSuspension() {
+    if (!this.user?.student?.id) return;
+    this.removeSuspension.emit(this.user.student.id);
   }
 
   /** Envía datos al backend */
