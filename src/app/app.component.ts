@@ -14,6 +14,7 @@ import { PwaInstallBannerComponent } from './components/pwa-install-banner/pwa-i
 import { PwaService } from './services/pwa.service';
 import { SwUpdate } from '@angular/service-worker';
 import   localeEs from '@angular/common/locales/es';
+import { SnowfallComponent } from "./shared/snowfall/snowfall.component";
 
 registerLocaleData(localeEs);
 
@@ -26,10 +27,8 @@ registerLocaleData(localeEs);
     ModalComponent,
     SpinnerComponent,
     OfflineIndicatorComponent,
-    // PwaInstallComponent,
-    // NotificationPermissionComponent,
-    // PwaInstallBannerComponent
-  ],
+    SnowfallComponent
+],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' }
   ],
