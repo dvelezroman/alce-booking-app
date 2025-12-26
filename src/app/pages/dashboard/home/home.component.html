@@ -1,160 +1,20 @@
-<div class="banner-wrapper">
+<app-student-dashboard
+  *ngIf="isStudent"
+  [userData]="(userData$ | async)"
+  [isLoggedIn]="(isLoggedIn$ | async) ?? false">
+</app-student-dashboard>
 
-  <app-countdown-banner
-    (pendingCount)="pendingAssessmentsCount = $event"
-    (showAnnouncement)="showAssessmentAnnouncement = $event"
-    (assessmentsLoaded)="onAssessmentsLoaded($event)">
-  </app-countdown-banner>
+<app-instructor-dashboard
+  *ngIf="isInstructor"
+  [userData]="(userData$ | async)"
+  [isLoggedIn]="(isLoggedIn$ | async) ?? false">
+</app-instructor-dashboard>
 
-</div>
-
-<div class="hero-wrapper" *ngIf="!isInstructor">
-  
-  <div class="hero-background">
-
-    <!-- SALUDO -->
-    <div *ngIf="isStudent && isLoggedIn" class="student-greeting">
-      <h1 class="greet-title">Hola, {{ userData?.firstName }}</h1>
-      <p class="greet-subtitle">Listo para tu próxima clase</p>
-
-      <button 
-        class="agenda-button agenda-under-greeting"
-        (click)="goToBooking()">
-        Agenda tus clases
-      </button>
-      
-    </div>
-
-    <p
-      *ngIf="isStudent && isLoggedIn"
-      class="level-title"
-    >
-      Tu nivel actual:
-      <span class="level-value">
-        {{ userData?.stage?.description || 'Sin asignar' }}
-      </span>
-    </p>
-
-    <!-- PROGRESO -->
-    <!-- <app-student-stage-progress 
-      *ngIf="isStudent && isLoggedIn"
-      class="progress-block"
-      [currentStageId]="userData?.student?.stageId ?? null">
-    </app-student-stage-progress> -->
-
-    <!-- Imagen solo si NO es estudiante -->
-    <img 
-      *ngIf="!isStudent"
-      src="/assets/fondo_isLoggin.png"
-      class="hero-image"
-      alt="header image"
-    />
-
-  </div>
-
-  <div class="home-dual-block"
-     [class.single-block]="activeBlocks === 1">
-
-    <!-- Bloque 2: Live Classes -->
-    <div
-      class="block live-classes-block"
-      [class.hidden-block]="!hasLiveClasses">
-
-      <!-- <h3 class="section-title" *ngIf="hasLiveClasses">
-        Clases agendadas
-      </h3> -->
-
-      <div class="live-box">
-        <div class="live-classes-wrapper" *ngIf="isStudent && isLoggedIn">
-          <app-student-live-classes
-            (meetingsCount)="hasLiveClasses = $event > 0">
-          </app-student-live-classes>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Bloque 1: Assessments -->
-    <div
-      class="block assessments-block"
-      [class.hidden-block]="assessments.length === 0">
-
-      <h3 class="section-title" *ngIf="assessments.length > 0">
-        Evaluaciones asignadas
-      </h3>
-
-      <div class="inner-box" *ngIf="assessments.length > 0">
-        <app-pending-assessment-card
-          [assessments]="assessments">
-        </app-pending-assessment-card>
-      </div>
-    </div>
-
-
-  </div>
-
-  <a
-    *ngIf="isStudent && isLoggedIn"
-    href="https://www.youtube.com/watch?v=P3990N0e8Pg"
-    target="_blank"
-    class="floating-help-button">
-    <span class="material-icons">help_outline</span>
-  </a>
-
-</div>
-
-<!-- <app-countdown-banner
-  (pendingCount)="pendingAssessmentsCount = $event"
-  (showAnnouncement)="showAssessmentAnnouncement = $event">
-</app-countdown-banner> -->
-
-<app-assessment-announcement
-  *ngIf="showAssessmentAnnouncement && pendingAssessmentsCount > 0"
-  [show]="showAssessmentAnnouncement"
-  [count]="pendingAssessmentsCount"
-  (closed)="onAnnouncementClosed()">
-</app-assessment-announcement>
-
-<app-student-cuenca-banner
-  *ngIf="showBannerCuenca"
-  [show]="showBannerCuenca"
-  (close)="showBannerCuenca = false">
-</app-student-cuenca-banner>
-
-<app-student-cuenca-comm-banner 
-  *ngIf="showBannerCuencaComm"
-  [show]="showBannerCuencaComm">
-</app-student-cuenca-comm-banner>
-
-<app-student-suspension-modal
-  *ngIf="showSuspensionModal && suspensionInfo"
-  [suspensionInfo]="suspensionInfo"
-  (close)="showSuspensionModal = false">
-</app-student-suspension-modal>
-
-<!-- 
-<app-student-banner 
-  *ngIf="isStudent && showBanner" 
-  [videoUrl]="selectedVideoUrl"
-  (close)="showBanner = false">
-</app-student-banner> -->
-
-<app-image-banner
-  *ngIf="isStudent && showImageBanner"
-  (close)="showImageBanner = false">
-</app-image-banner>
-
-<app-instructor-calendar
-  *ngIf="isInstructor && instructorId"
-  [instructorId]="instructorId">
-</app-instructor-calendar>
-
-<app-users-info-form
-  *ngIf="showUserInfoForm"
-  [isModalOpen]="true"
-  [userData]="userData"
-  (formSubmit)="handleUserInfoSubmit($event)"
-  (closeModal)="showUserInfoForm = false">
-</app-users-info-form>
+<app-admin-dashboard
+  *ngIf="isAdmin"
+  [userData]="(userData$ | async)"
+  [isLoggedIn]="(isLoggedIn$ | async) ?? false">
+</app-admin-dashboard>
 
 <app-modal
   [showModal]="modal.show"
@@ -163,7 +23,3 @@
   [isSuccess]="modal.isSuccess"
   (close)="modal.close()">
 </app-modal>
-
-
-
-

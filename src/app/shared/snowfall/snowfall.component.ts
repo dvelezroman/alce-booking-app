@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class SnowfallComponent implements OnInit {
-  flakes = Array.from({ length: 200 });
+  flakes = Array.from({ length: 150 });
 
   ngOnInit() {
     setTimeout(() => this.randomizeFlakes(), 0);

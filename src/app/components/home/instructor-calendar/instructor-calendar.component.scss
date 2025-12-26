@@ -23,7 +23,6 @@
 .main-calendar-title {
   text-align: center;
   margin-top: 1rem;
-  margin-bottom: 1rem;
   font-size: 1.6rem;
   font-weight: 700;
   color: #333;
@@ -317,7 +316,7 @@
 
 .no-meetings-message {
   @extend .shared-message-box;
-  margin-top: 2rem;
+  margin-top: 1rem;
   color: #666;
 }
 
@@ -404,6 +403,7 @@ button.is-small:hover .material-icons {
   .calendar-layout {
     flex-direction: column;
     gap: 2rem;
+    margin-top: 1rem;
   }
 
   .calendar-panel,
@@ -414,4 +414,45 @@ button.is-small:hover .material-icons {
   .pending-panel {
     max-height: none;
   }
+
+  .main-calendar-title,
+  .pending-title {
+    font-size: 1.3rem;
+  }
+}
+
+/* ========================= */
+/* TABLA RESPONSIVE (MÓVIL)  */
+/* ========================= */
+@media (max-width: 768px) {
+
+  .meeting-results {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+
+}
+
+/* ========================= */
+/* EMPTY STATE - SOLO MÓVIL  */
+/* ========================= */
+@media (max-width: 768px) {
+
+  .pending-panel {
+    padding-top: 0.3rem;
+  }
+
+  .pending-title {
+    margin-bottom: 0.4rem;
+  }
+
+  .empty-pending {
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0.5rem;
+    transform: translateY(-6px);
+  }
+
 }
