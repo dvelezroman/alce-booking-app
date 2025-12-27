@@ -262,11 +262,11 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
   }
 
   goToAssessments(): void {
-    this.router.navigate(['/dashboard/assessments']);
+    this.router.navigate(['/dashboard/stage-assessment-student']);
   }
 
   goToNotifications(): void {
-    this.router.navigate(['/dashboard/notifications']);
+    this.router.navigate(['/dashboard/notifications-inbox']);
   }
 
   goToProfile(): void {
