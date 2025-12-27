@@ -257,8 +257,20 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
     return !localStorage.getItem('assessment_announced');
   }
 
-  goToBooking() {
+   goToBooking(): void {
     this.router.navigate(['/dashboard/booking']);
+  }
+
+  goToAssessments(): void {
+    this.router.navigate(['/dashboard/assessments']);
+  }
+
+  goToNotifications(): void {
+    this.router.navigate(['/dashboard/notifications']);
+  }
+
+  goToProfile(): void {
+    this.router.navigate(['/dashboard/profile']);
   }
 
   showModal(isError: boolean, message: string) {

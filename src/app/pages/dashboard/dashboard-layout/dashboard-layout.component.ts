@@ -11,7 +11,7 @@ import { setInstructorLink } from "../../../store/user.action";
 import { ModalDto, modalInitializer } from "../../../components/modal/modal.dto";
 import { AssessmentPointsConfigService } from "../../../services/assessment-points-config.service";
 import { StudentBannerComponent } from "../../../components/student-banner/student-banner.component";
-import { GlobalNoticeBannerComponent } from "../../../components/global-notice-banner/global-notice-banner.component";
+import { GlobalNoticeBannerComponent } from "../../../components/home/global-notice-banner/global-notice-banner.component";
 import { NotificationService } from "../../../services/notification.service";
 import { UnreadBannerComponent } from "../../../components/banner/unread-banner/unread-banner.component";
 import { NotificationPermissionComponent } from "../../../components/notification-permission/notification-permission.component";

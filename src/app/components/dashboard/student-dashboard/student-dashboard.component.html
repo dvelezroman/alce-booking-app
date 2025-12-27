@@ -12,27 +12,49 @@
 
   <div class="hero-background">
     <div class="student-greeting">
-  <h1 class="greet-title">Hola, {{ userData?.firstName }}</h1>
+      <h1 class="greet-title">Hola, {{ userData?.firstName }}</h1>
 
-  <p class="greet-subtitle">
-    Listo para tu próxima clase
-  </p>
+      <p class="greet-subtitle">
+        Listo para tu próxima clase
+      </p>
 
-  <!-- STAGE ACTUAL -->
-  <p class="student-stage" *ngIf="userData?.stage">
-    Nivel actual:
-    <span class="stage-value">
-      {{ userData?.stage?.description || userData?.stage?.number }}
-    </span>
-  </p>
+      <!-- STAGE ACTUAL -->
+      <p class="student-stage" *ngIf="userData?.stage">
+        Nivel actual:
+        <span class="stage-value">
+          {{ userData?.stage?.description || userData?.stage?.number }}
+        </span>
+      </p>
 
-  <!-- BOTÓN -->
-  <button
-    class="agenda-button"
-    (click)="goToBooking()">
-    Agenda tus clases
-  </button>
-</div>
+      <!-- ATAJOS DEL DASHBOARD -->
+      <div class="dashboard-shortcuts">
+
+        <div class="shortcut-card" (click)="goToBooking()">
+          <div class="shortcut-image booking">
+            <span class="shortcut-title">Agendar clases</span>
+          </div>
+        </div>
+
+        <div class="shortcut-card" (click)="goToAssessments()">
+          <div class="shortcut-image assessments">
+            <span class="shortcut-title">Evaluaciones</span>
+          </div>
+        </div>
+
+        <div class="shortcut-card" (click)="goToNotifications()">
+          <div class="shortcut-image notifications">
+            <span class="shortcut-title">Notificaciones</span>
+          </div>
+        </div>
+
+        <div class="shortcut-card" (click)="goToProfile()">
+          <div class="shortcut-image profile">
+            <span class="shortcut-title">Mi perfil</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <!-- BLOQUES -->
