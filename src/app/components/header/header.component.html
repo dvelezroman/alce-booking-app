@@ -1,2 +1,34 @@
-<nav class="navbar is-spaced student-header" role="navigation" aria-label="main navigation">
+<nav
+  class="navbar is-spaced student-header"
+  role="navigation"
+  aria-label="main navigation"
+>
+
+  <!-- DERECHA -->
+  <div class="navbar-end header-right" *ngIf="isLoggedIn">
+
+    <!-- 🔵 INFO -->
+    <div
+      class="header-banner-icon info"
+      *ngIf="infoBanner.visible"
+      title="Mensaje informativo"
+      (click)="openInfoBanner()"
+    >
+      <span class="material-icons">info</span>
+      <!-- <span class="badge">{{ infoBanner?.count }}</span> -->
+    </div>
+
+    <!-- ⚠️ WARNING -->
+    <div
+      class="header-banner-icon warning"
+      *ngIf="warningBanner.visible"
+      title="Aviso importante"
+      (click)="openWarningBanner()"
+    >
+      <span class="material-icons">warning_amber</span>
+      <!-- <span class="badge">{{ warningBanner?.count }}</span> -->
+    </div>
+
+  </div>
+
 </nav>

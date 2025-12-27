@@ -9,6 +9,7 @@ import {Router} from "@angular/router";
 import {selectUserData} from "../store/user.selector";
 import { LinksService } from './links.service';
 import { PushNotificationService } from './push-notification.service';
+import { BannerStateService } from './banner-state.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +26,7 @@ export class UsersService implements OnInit{
     private linksService: LinksService,
     private router: Router,
     private pushNotificationService: PushNotificationService,
+    private bannerState: BannerStateService
   ) {
     this.userData$ = this.store.select(selectUserData);
   }
@@ -164,6 +166,7 @@ export class UsersService implements OnInit{
 
   logout(): void {
     if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+      this.bannerState.reset();
       localStorage.removeItem('accessToken');
       localStorage.removeItem('instructorLink');
       localStorage.removeItem('assessment_announced');
