@@ -61,10 +61,12 @@
   <div class="home-dual-block">
 
     <!-- LIVE CLASSES -->
-    <div class="block">
+    <div class="block" *ngIf="isLoggedIn && userData?.student?.id">
+
       <app-student-live-classes
         (meetingsCount)="hasLiveClasses = $event > 0">
       </app-student-live-classes>
+
     </div>
 
     <!-- ASSESSMENTS -->

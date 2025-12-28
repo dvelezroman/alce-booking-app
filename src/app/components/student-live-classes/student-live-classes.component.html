@@ -1,4 +1,7 @@
-<div class="live-classes-container mobile-only" *ngIf="!loading && meetings.length > 0">
+<!-- ================= MOBILE ================= -->
+<div class="live-classes-container mobile-only">
+
+  <!-- HEADER SIEMPRE VISIBLE -->
   <div class="header-row">
     <h3 class="live-classes-title">
       Clases Agendadas
@@ -23,47 +26,125 @@
     </div>
   </div>
 
-  <div class="reels-outer-wrapper" [class.single-card]="meetings.length <= 2">
-    <div class="reels-wrapper">
-      <div class="reels-scroll">
-        <div class="reel-card" *ngFor="let m of meetings" [class.active-class]="canEnter(m) && hasValidLink(m)">
-          <div class="reel-header">
+  <!-- LOADING (solo cards) -->
+  <div class="live-loading" *ngIf="loading">
+    <p class="loading-text">Cargando clases…</p>
+  </div>
 
-            <!-- Fecha principal -->
-            <p class="date">{{ formatDateTitle(m.date) }}</p>
+  <!-- CARDS -->
+  <div *ngIf="!loading && meetings.length > 0">
+    <div class="reels-outer-wrapper" [class.single-card]="meetings.length <= 2">
+      <div class="reels-wrapper">
+        <div class="reels-scroll">
+          <div
+            class="reel-card"
+            *ngFor="let m of meetings"
+            [class.active-class]="canEnter(m) && hasValidLink(m)"
+          >
+            <div class="reel-header">
+              <p class="date">{{ formatDateTitle(m.date) }}</p>
+              <p class="primary-hour">{{ m.hour }}:00</p>
 
-            <!-- Hora principal -->
-            <p class="primary-hour">
-                {{ m.hour }}:00
-            </p>
-
-            <!-- 🔵 Mostrar "Hora Ecuador" solo si difiere -->
-            <ng-container *ngIf="m.localhour !== m.hour">
+              <ng-container *ngIf="m.localhour !== m.hour">
                 <p class="secondary-hour">
-                <span class="label-ecu">Hora Ecuador:</span>
-
-                <!-- Si cambia la fecha -->
-                <ng-container *ngIf="m.localdate !== m.date">
-                    {{ m.localhour }}:00
-                </ng-container>
-
-                <!-- Si es la misma fecha -->
-                <ng-container *ngIf="m.localdate === m.date">
-                    {{ m.localhour }}:00
-                </ng-container>
+                  <span class="label-ecu">Hora Ecuador:</span>
+                  {{ m.localhour }}:00
                 </p>
-            </ng-container>
+              </ng-container>
+            </div>
 
+            <div class="reel-body">
+              <p class="label">Instructor:</p>
+              <p class="instructor">
+                {{ m.instructor?.user?.firstName ?? 'No asignado' }}
+                {{ m.instructor?.user?.lastName ?? '' }}
+              </p>
+            </div>
+
+            <button
+              class="enter-btn"
+              [disabled]="!canEnter(m) || !hasValidLink(m)"
+              (click)="enterClass(m)"
+            >
+              Entrar
+            </button>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-          <div class="reel-body">
-            <p class="label">Instructor:</p>
-            <p class="instructor">
-              {{ m.instructor?.user?.firstName ?? "No asignado" }}
-              {{ m.instructor?.user?.lastName ?? "" }}
+  <!-- MENSAJE CUANDO NO HAY CLASES -->
+  <div
+    class="live-classes-empty"
+    *ngIf="!loading && meetings.length === 0"
+  >
+    <p>No tienes clases para este filtro</p>
+  </div>
+
+</div>
+
+<!-- ================= DESKTOP ================= -->
+<div class="live-classes-container desktop-only">
+
+  <!-- HEADER SIEMPRE VISIBLE -->
+  <div class="header-row">
+    <h3 class="live-classes-title">
+      Clases Agendadas
+    </h3>
+
+    <div class="filter-row">
+      <button
+        class="filter-btn"
+        [class.active]="filterMode === 'today'"
+        (click)="changeFilter('today')"
+      >
+        Hoy
+      </button>
+
+      <button
+        class="filter-btn"
+        [class.active]="filterMode === 'all'"
+        (click)="changeFilter('all')"
+      >
+        Todas
+      </button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="live-loading" *ngIf="loading">
+    <p class="loading-text">Cargando clases…</p>
+  </div>
+
+  <!-- CARDS -->
+  <div *ngIf="!loading && meetings.length > 0">
+    <div class="desktop-classes-wrapper">
+      <div
+        class="desktop-class-card"
+        *ngFor="let m of meetings"
+        [class.active-class]="canEnter(m) && hasValidLink(m)"
+      >
+        <div class="desktop-left">
+          <p class="date">{{ formatDateTitle(m.date) }}</p>
+          <p class="primary-hour">{{ m.hour }}:00</p>
+
+          <ng-container *ngIf="m.localhour !== m.hour">
+            <p class="secondary-hour">
+              Hora Ecuador: {{ m.localhour }}:00
             </p>
-          </div>
+          </ng-container>
+        </div>
 
+        <div class="desktop-center">
+          <p class="label">Instructor</p>
+          <p class="instructor">
+            {{ m.instructor?.user?.firstName ?? 'No asignado' }}
+            {{ m.instructor?.user?.lastName ?? '' }}
+          </p>
+        </div>
+
+        <div class="desktop-right">
           <button
             class="enter-btn"
             [disabled]="!canEnter(m) || !hasValidLink(m)"
@@ -75,74 +156,13 @@
       </div>
     </div>
   </div>
-</div>
 
-<div class="live-classes-container desktop-only" *ngIf="!loading && meetings.length > 0">
-
-  <div class="header-row">
-    <h3 class="live-classes-title">
-      Clases Agendadas
-    </h3>
-
-    <div class="filter-row">
-      <button
-        class="filter-btn"
-        [class.active]="filterMode === 'today'"
-        (click)="changeFilter('today')"
-      >
-        Hoy
-      </button>
-
-      <button
-        class="filter-btn"
-        [class.active]="filterMode === 'all'"
-        (click)="changeFilter('all')"
-      >
-        Todas
-      </button>
-    </div>
+  <!-- MENSAJE VACÍO -->
+  <div
+    class="live-classes-empty"
+    *ngIf="!loading && meetings.length === 0"
+  >
+    <p>No tienes clases para este filtro</p>
   </div>
 
-  <!-- CONTENEDOR VERTICAL -->
-  <div class="desktop-classes-wrapper">
-    <div
-      class="desktop-class-card"
-      *ngFor="let m of meetings"
-      [class.active-class]="canEnter(m) && hasValidLink(m)"
-    >
-
-      <!-- IZQUIERDA -->
-      <div class="desktop-left">
-        <p class="date">{{ formatDateTitle(m.date) }}</p>
-        <p class="primary-hour">{{ m.hour }}:00</p>
-
-        <ng-container *ngIf="m.localhour !== m.hour">
-          <p class="secondary-hour">
-            Hora Ecuador: {{ m.localhour }}:00
-          </p>
-        </ng-container>
-      </div>
-
-      <!-- CENTRO -->
-      <div class="desktop-center">
-        <p class="label">Instructor</p>
-        <p class="instructor">
-          {{ m.instructor?.user?.firstName ?? "No asignado" }}
-          {{ m.instructor?.user?.lastName ?? "" }}
-        </p>
-      </div>
-
-      <!-- DERECHA -->
-      <div class="desktop-right">
-        <button
-          class="enter-btn"
-          [disabled]="!canEnter(m) || !hasValidLink(m)"
-          (click)="enterClass(m)"
-        >
-          Entrar
-        </button>
-      </div>
-
-    </div>
-  </div>
 </div>
