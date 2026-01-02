@@ -360,22 +360,28 @@ export class FeatureFlagComponent implements OnInit {
     return dayData ? dayData.hours : [];
   }
 
-isHourSelected(hour: number): boolean {
-  return this.selectedDays.length > 0 && this.selectedDays[0].hours.includes(hour);
-}
-
-toggleHourSelection(hour: number, isDisabled: boolean) {
-  if (this.selectedDays.length === 0) return;
-
-  const selectedDay = this.selectedDays[0];
-  const index = selectedDay.hours.indexOf(hour);
-
-  if (index > -1) {
-    selectedDay.hours.splice(index, 1);  
-  } else {
-    selectedDay.hours.push(hour);       
+  isHourSelected(hour: number): boolean {
+    return this.selectedDays.length > 0 && this.selectedDays[0].hours.includes(hour);
   }
-}
 
+  toggleHourSelection(hour: number, isDisabled: boolean) {
+    if (this.selectedDays.length === 0) return;
 
+    const selectedDay = this.selectedDays[0];
+    const index = selectedDay.hours.indexOf(hour);
+
+    if (index > -1) {
+      selectedDay.hours.splice(index, 1);  
+    } else {
+      selectedDay.hours.push(hour);       
+    }
+  }
+
+  hasDisabledSelectedDays(): boolean {
+    return this.selectedDays.some(day => day.isDisabled);
+  }
+
+  hasEnabledSelectedDays(): boolean {
+    return this.selectedDays.some(day => !day.isDisabled);
+  }
 }

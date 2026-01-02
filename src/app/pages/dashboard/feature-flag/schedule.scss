@@ -1,0 +1,376 @@
+.schedule-layout {
+  display: grid;
+  grid-template-columns: 450px 1fr;
+  gap: 1.5rem;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0rem auto;
+}
+
+@media (max-width: 900px) {
+  .schedule-layout {
+    grid-template-columns: 1fr;
+    gap: 0rem;
+  }
+
+  .calendar-container,
+  .time-selection {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .calendar-container {
+    margin: 1rem auto;
+    }
+}
+
+/* estilos del calendario */
+
+.calendar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto 1rem;
+  padding: .5rem 0rem;
+  background-color: #ffffff;
+  border: 1px solid #ededed;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 450px;
+}
+
+.date-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+  background: rgba(255, 255, 255, 0.731);
+  border-radius: 10px;
+}
+
+.calendar {
+  display: flex;
+  padding: 1.5rem 0rem;
+  background-color: #ffffff;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.calendar-title {
+  text-align: center;
+  margin-bottom: .5rem;
+  cursor: default;
+  // background-color: rgb(254, 208, 101);
+  padding: 0.7rem 2.5rem;
+  border-radius: 25px;
+}
+
+.title.is-4 {
+  font-size: .9rem;
+  color: rgb(62, 62, 62);
+}
+
+.month-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  background-color: transparent;
+  padding: 15px;
+}
+
+.month-label {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+}
+
+.month-selector button {
+  width: 40px;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  color: rgb(89, 87, 87);
+  padding: 0;
+  cursor: pointer;
+  position: absolute;
+  font-size: .75rem;
+  transform: translateY(-50%);
+}
+
+.prev-button {
+  top: 53%;
+  left: 11.5%;
+}
+
+.next-button {
+  top: 48%;
+  left: 75%;
+}
+
+.month-selector button.hidden {
+  visibility: hidden;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 0px;
+}
+
+.calendar-day-header {
+  padding: 0;
+  text-align: center;
+  font-size: .85rem;
+  font-weight: bold;
+  background-color: transparent;
+  color: #434445;
+}
+
+.calendar-grid {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 36px;
+  width: 100%;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 14px;
+  font-size: .8rem;
+  background-color: #ffffffb3;
+  border: 1px solid #ffff;
+  color: grey;
+  border-radius: 50%;
+  width: 0px;
+  height: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: auto;
+}
+
+.calendar-day.selectable {
+  background-color: #f9f9f9;
+  border: 1.5px solid #6eb3fc;
+  color: #333;
+  cursor: pointer;
+}
+
+.calendar-day.selectable:hover {
+  background-color: #6eb3fc;
+  color: white;
+}
+
+.calendar-day.unselectable {
+  background-color: #e1e1e1;
+  color: #929191;
+  cursor: not-allowed;
+}
+
+.calendar-day.selected {
+  border: 1.5px solid #007bff;
+}
+
+.calendar-day.empty {
+  background-color: transparent;
+  border: none;
+  cursor: none;
+  pointer-events: none;
+}
+
+.calendar-day.disabled {
+  background-color: #dd6348;
+  color: #ffffff;
+}
+.calendar-day.hours-disabled {
+  background-color: #d0d0d0;
+  color: #ffffff;
+}
+
+.button-block {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.button-block .button {
+  width: 150px;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+/* ===== ENABLE ===== */
+.enable-btn {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: 1px solid transparent;
+}
+
+.enable-btn:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+/* ===== DISABLE ===== */
+.disable-btn {
+  background-color: #ffffff;
+  color: #374151;
+  border: 1px solid #e5e7eb; 
+}
+
+.disable-btn:hover:not(:disabled) {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+/* ===== DISABLED STATE ===== */
+.button:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  border: 1px solid #e5e7eb;
+  cursor: not-allowed;
+}
+
+.calendar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem; 
+  margin: 1rem 0rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  color: #555;
+}
+
+.legend-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid #a0a0a0;
+}
+
+.legend-circle.enabled {
+  background-color: #f8f8f8;
+}
+
+.legend-circle.disabled {
+  background-color: #dd6348;
+}
+
+.legend-circle.hours-disabled {
+  background-color: #d0d0d0;
+}
+
+/* =========================
+   TIME PANEL DISABLED STATE
+========================= */
+
+.time-selection.disabled-panel {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(0.25);
+}
+
+.time-hint {
+  font-size: 0.7rem;
+  color: #6b7280;
+  margin-top: 0.35rem;
+  text-align: center;
+}
+
+.time-selection {
+  width: 100%;
+  max-width: 600px;
+  margin: 2rem auto;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.time-title {
+  width: 200px;
+  text-align: center;
+  margin: .5rem auto 1.5rem;
+  cursor: default;
+  // background-color: rgb(254, 208, 101);
+  padding: 0.7rem 2.5rem;
+  border-radius: 25px;
+}
+
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.time-slot {
+  padding: 6px 0;
+  font-size: 0.8rem;
+  text-align: center;
+  background-color: #fafafa; 
+  border: 1px solid #e5e7eb; 
+  border-radius: 8px;
+  color: #111827; 
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.time-slot:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+/* SELECCIONADO */
+.time-slot.selected {
+  background-color: #2563eb; 
+  border-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.time-slot.disabled {
+  background-color: #dd6348;
+  color: #f9f9f9; 
+  opacity: 0.7;
+}
+
+.time-slot.disabled.selected {
+  background-color:#dd6348;  
+  color: white;
+  opacity: 1;
+}
+
+.no-hours-message {
+  margin: 1rem;
+  text-align: center;
+  color: #484848;
+  font-style: italic;
+}
