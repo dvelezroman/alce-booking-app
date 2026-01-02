@@ -7,6 +7,7 @@ import { FeatureFlagDto } from "../../../services/dtos/feature-flag.dto";
 import { FeatureFlagService } from "../../../services/feature-flag.service";
 import { HandleDatesService } from "../../../services/handle-dates.service";
 import { SelectedDay, DisabledDays, DisabledDatesAndHours } from "../../../services/dtos/handle-date.dto";
+import { Mode, StudentClassification } from "../../../services/dtos/student.dto";
 
 @Component({
   selector: 'app-feature-flag',
@@ -31,6 +32,9 @@ export class FeatureFlagComponent implements OnInit {
   disabledDatesAndHours: DisabledDatesAndHours = {};
   timeSlots: { label: string; value: number; isDisabled?: boolean }[] = [];
 
+  selectedStudentClassification: StudentClassification | null = null;
+  selectedMode: Mode | null = null;
+
   constructor(
     private readonly ffService: FeatureFlagService,
     private readonly handleDatesService: HandleDatesService,
@@ -39,18 +43,15 @@ export class FeatureFlagComponent implements OnInit {
   ngOnInit() {
     this.getAll();
 
-    this.getDisabledDates().subscribe(() => {
-      this.generateCurrentMonthDays();
-    });
+    const today = new Date();
+    this.selectedMonth = today
+      .toLocaleString('es-ES', { month: 'long' })
+      .toUpperCase();
 
-    this.getDisabledDatesAndHours().subscribe(() => {
-      const today = new Date();
-      this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
-      this.selectedYear = today.getFullYear();
+    this.selectedYear = today.getFullYear();
 
-      this.generateCurrentMonthDays();
-      this.updateNavigationButtons();
-    });
+    this.refreshCalendar();
+    this.updateNavigationButtons();
   }
 
   private getDisabledDates(): Observable<DisabledDatesAndHours> {
@@ -106,6 +107,22 @@ export class FeatureFlagComponent implements OnInit {
       next: () => console.log('Feature flag toggled and list updated'),
       error: (err) => console.error('Subscription error:', err)
     });
+  }
+
+  refreshCalendar() {
+    const [from, to] = this.getFirstAndLastDayOfYear();
+
+    this.handleDatesService
+      .getNotAvailableDatesAndHours(
+        from,
+        to,
+        this.selectedStudentClassification,
+        this.selectedMode
+      )
+      .subscribe((data) => {
+        this.disabledDatesAndHours = data;
+        this.generateCurrentMonthDays();
+      });
   }
 
   prevMonth() {
@@ -220,7 +237,13 @@ export class FeatureFlagComponent implements OnInit {
 
       const datesAndHours = this.selectedDays.map((selectedDay) => ({
         date: `${this.selectedYear}-${(monthIndex + 1).toString().padStart(2, '0')}-${selectedDay.day.toString().padStart(2, '0')}`,
-        hours: selectedDay.hours,
+        hours: [],
+        ...(this.selectedStudentClassification && {
+          studentClassification: this.selectedStudentClassification
+        }),
+        ...(this.selectedMode && {
+          mode: this.selectedMode
+        })
       }));
 
       const uniqueDates = [...new Set(dates)];
@@ -258,8 +281,16 @@ export class FeatureFlagComponent implements OnInit {
       const hoursToDisable = this.selectedDays
         .filter(day => day.hours.length > 0)  
         .map(day => ({
-          date: `${this.selectedYear}-${(monthIndex + 1).toString().padStart(2, '0')}-${day.day.toString().padStart(2, '0')}`,
-          hours: day.hours
+          date: `${this.selectedYear}-${(monthIndex + 1)
+            .toString()
+            .padStart(2, '0')}-${day.day.toString().padStart(2, '0')}`,
+          hours: day.hours,
+          ...(this.selectedStudentClassification && {
+            studentClassification: this.selectedStudentClassification
+          }),
+          ...(this.selectedMode && {
+            mode: this.selectedMode
+          })
         }));
   
         if (!hoursToDisable.length) {
@@ -283,6 +314,10 @@ export class FeatureFlagComponent implements OnInit {
 
   isSunday(dayNumber: number): boolean {
     return new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), dayNumber).getDay() === 0;
+  }
+
+  get isDaySelectedForHours(): boolean {
+    return this.selectedDays.length === 1 && this.timeSlots.length > 0;
   }
 
   generateTimeSlots(startHour: number, endHour: number) {
