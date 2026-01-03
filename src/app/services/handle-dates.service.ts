@@ -57,4 +57,8 @@ export class HandleDatesService {
   enableDates(dates: string[]): Observable<void> {
     return this.http.request<void>('DELETE', `${this.apiUrl}/enable`, { body: { dates } });
   }
+
+  enableDatesHours(dates: DisabledDateAndHours[]): Observable<void> {
+    return this.http.request<void>('DELETE',`${this.apiUrl}/enable/hours`,{ body: { items: dates } } );
+  }
 }

@@ -109,8 +109,15 @@ export class FeatureFlagComponent implements OnInit {
     });
   }
 
+  private resetDayAndHoursSelection(): void {
+    this.selectedDays = [];
+    this.timeSlots = [];
+  }
+
   refreshCalendar() {
     const [from, to] = this.getFirstAndLastDayOfYear();
+
+    this.resetDayAndHoursSelection();
 
     this.handleDatesService
       .getNotAvailableDatesAndHours(
@@ -312,6 +319,47 @@ export class FeatureFlagComponent implements OnInit {
     } 
   }
 
+  enableHours() {
+  if (this.selectedDays.length === 0) return;
+
+  const monthMap: Record<string, number> = {
+    ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+    JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+  };
+
+  const monthIndex = monthMap[this.selectedMonth];
+  if (monthIndex === undefined) return;
+
+  const hoursToEnable = this.selectedDays
+    .filter(day => day.hours.length > 0)
+    .map(day => ({
+      date: `${this.selectedYear}-${(monthIndex + 1)
+        .toString()
+        .padStart(2, '0')}-${day.day.toString().padStart(2, '0')}`,
+      hours: day.hours,
+      ...(this.selectedStudentClassification && {
+        studentClassification: this.selectedStudentClassification
+      }),
+      ...(this.selectedMode && {
+        mode: this.selectedMode
+      })
+    }));
+
+  if (!hoursToEnable.length) return;
+
+  this.handleDatesService.enableDatesHours(hoursToEnable).subscribe({
+    next: () => {
+      this.getDisabledDatesAndHours().subscribe(() => {
+        const selectedDay = this.selectedDays[0];
+        this.recalculateTimeSlots(selectedDay);
+      });
+    },
+    error: (err) => {
+      console.error('Error al habilitar horas:', err);
+    }
+  });
+}
+
   isSunday(dayNumber: number): boolean {
     return new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), dayNumber).getDay() === 0;
   }
@@ -356,8 +404,10 @@ export class FeatureFlagComponent implements OnInit {
     const monthData = this.disabledDatesAndHours[monthIndex.toString()];
     if (!monthData) return [];
 
-    const dayData = monthData.find(d => d.day === day);
-    return dayData ? dayData.hours : [];
+    const dayEntries = monthData.filter(d => d.day === day);
+    const mergedHours = dayEntries.flatMap(d => d.hours);
+
+    return Array.from(new Set(mergedHours));
   }
 
   isHourSelected(hour: number): boolean {
@@ -383,5 +433,22 @@ export class FeatureFlagComponent implements OnInit {
 
   hasEnabledSelectedDays(): boolean {
     return this.selectedDays.some(day => !day.isDisabled);
+  }
+
+  private get selectedHours(): number[] {
+    return this.selectedDays?.[0]?.hours ?? [];
+  }
+
+  private isHourDisabled(hour: number): boolean {
+    const slot = this.timeSlots.find(t => t.value === hour);
+    return !!slot?.isDisabled;
+  }
+
+  get hasSelectedDisabledHours(): boolean {
+    return this.selectedHours.some(h => this.isHourDisabled(h));
+  }
+
+  get hasSelectedEnabledHours(): boolean {
+    return this.selectedHours.some(h => !this.isHourDisabled(h));
   }
 }

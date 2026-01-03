@@ -635,10 +635,37 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       .getNotAvailableDatesAndHours(from, to, studentClassification, mode)
       .pipe(
         tap(disabledData => {
-          //console.log('Disabled Dates & Hours Response', disabledData);
-          this.disabledDatesAndHours = disabledData;
+          this.disabledDatesAndHours = this.normalizeDisabledDatesAndHours(disabledData);
         })
       );
+  }
+
+  private normalizeDisabledDatesAndHours(
+    data: DisabledDatesAndHours
+  ): DisabledDatesAndHours {
+
+    const result: DisabledDatesAndHours = {};
+
+    Object.entries(data).forEach(([monthKey, entries]) => {
+      const map = new Map<number, Set<number>>();
+
+      entries.forEach(entry => {
+        if (!map.has(entry.day)) {
+          map.set(entry.day, new Set());
+        }
+
+        entry.hours.forEach(hour => {
+          map.get(entry.day)!.add(hour);
+        });
+      });
+
+      result[monthKey] = Array.from(map.entries()).map(([day, hoursSet]) => ({
+        day,
+        hours: Array.from(hoursSet)
+      }));
+    });
+
+    return result;
   }
 
   private removeDuplicateDays(disabledDays: Record<string, number[]>): Record<string, number[]> {

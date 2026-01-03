@@ -176,7 +176,7 @@
       [class.disabled-panel]="!isDaySelectedForHours"
     >
       <div class="time-title">
-        <h3 class="title is-4">Deshabilitar hora</h3>
+        <h3 class="title is-4">Gestión de horas</h3>
         <p class="time-hint" *ngIf="!isDaySelectedForHours">
           Selecciona un día del calendario
         </p>
@@ -188,19 +188,31 @@
           class="time-slot"
           [class.selected]="isHourSelected(time.value)"
           [class.disabled]="time.isDisabled || !isDaySelectedForHours"
-          (click)="isDaySelectedForHours && toggleHourSelection(time.value, time.isDisabled ?? false)"
+          (click)="
+            isDaySelectedForHours &&
+            toggleHourSelection(time.value, time.isDisabled ?? false)
+          "
         >
           {{ time.label }}
         </div>
       </div>
 
+      <!-- BOTONES -->
       <div class="button-block">
         <button
           class="button disable-btn"
-          [disabled]="!isDaySelectedForHours || selectedDays[0]?.hours?.length === 0"
+          [disabled]="!isDaySelectedForHours || !hasSelectedEnabledHours"
           (click)="blockHours()"
         >
-          Deshabilitar Hora(s)
+          Deshabilitar hora(s)
+        </button>
+
+        <button
+          class="button enable-btn"
+          [disabled]="!isDaySelectedForHours || !hasSelectedDisabledHours"
+          (click)="enableHours()"
+        >
+          Habilitar hora(s)
         </button>
       </div>
     </section>
