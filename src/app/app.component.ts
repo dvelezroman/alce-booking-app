@@ -27,7 +27,7 @@ registerLocaleData(localeEs);
     ModalComponent,
     SpinnerComponent,
     OfflineIndicatorComponent,
-    SnowfallComponent
+    // SnowfallComponent
 ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' }

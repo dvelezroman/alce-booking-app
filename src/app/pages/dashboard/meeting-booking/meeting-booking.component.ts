@@ -127,43 +127,46 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
-    this.ffService.getAll().subscribe(ffs => {
-      this.ffs = ffs;
-      const scheduleFlag = this.ffs.find(f => f.name === 'enable-schedule');
-      this.isScheduleEnabled = scheduleFlag?.status ?? true;
-    });
+  this.ffService.getAll().subscribe(ffs => {
+    this.ffs = ffs;
+    const scheduleFlag = this.ffs.find(f => f.name === 'enable-schedule');
+    this.isScheduleEnabled = scheduleFlag?.status ?? true;
+  });
 
-    this.getDisabledDates().subscribe();
-    this.getDisabledDatesAndHours().subscribe();
+  const nowInEcuador = DateTime.now()
+    .setZone('America/Guayaquil')
+    .setLocale('es');
 
-    const nowInEcuador = DateTime.now().setZone('America/Guayaquil').setLocale('es');
-    this.ecuadorTime = nowInEcuador.toFormat("HH:mm");
-    this.ecuadorDate = nowInEcuador.toFormat("EEEE, dd 'de' LLLL");
+  this.ecuadorTime = nowInEcuador.toFormat("HH:mm");
+  this.ecuadorDate = nowInEcuador.toFormat("EEEE, dd 'de' LLLL");
 
-    this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
+  this.userData$
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe(state => {
       this.userData = state;
-      //console.log('USER DATA EN AGENDA:', this.userData);
 
       this.isSuspended = !!state?.suspensionInfo?.isSuspended;
       if (this.isSuspended) {
         this.showSuspensionModal = true;
         return;
       }
-      
-      if (state?.student?.stageId) {
-        this.currentStageId = state.student.stageId;
-      }
-      if (state?.student?.id) {
+
+      if (state?.student) {
         this.studentId = state.student.id;
+        this.currentStageId = state.student.stageId;
+
+        this.getDisabledDates().subscribe();
+        this.getDisabledDatesAndHours().subscribe();
+
         this.initializeMeetings();
       }
     });
 
+  this.updateEcuadorTime();
+  this.ecuadorTimeInterval = setInterval(() => {
     this.updateEcuadorTime();
-      this.ecuadorTimeInterval = setInterval(() => {
-      this.updateEcuadorTime();
-      } , 60000);
-  }
+  }, 60000);
+}
 
   ngOnDestroy() {
     this.unsubscribe$.next();
@@ -606,25 +609,36 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   private getDisabledDates(): Observable<DisabledDays> {
-    const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
+    const [from, to] = this.getFirstAndLastDayOfYear();
 
-    return this.handleDatesService.getNotAvailableDates(firstDayOfYear, lastDayOfYear).pipe(
-      tap(disabledDays => {
-        this.disabledDates = this.removeDuplicateDays(disabledDays);
-        //console.log('Fechas deshabilitadas:', this.disabledDates);
-      })
-    );
+    const studentClassification = this.userData?.student?.studentClassification;
+    const mode = this.userData?.student?.mode;
+    //console.groupEnd();
+
+    return this.handleDatesService
+      .getNotAvailableDates(from, to, studentClassification, mode)
+      .pipe(
+        tap(disabledDays => {
+          //console.log('Disabled Days Response', disabledDays);
+          this.disabledDates = this.removeDuplicateDays(disabledDays);
+        })
+      );
   }
 
   private getDisabledDatesAndHours(): Observable<DisabledDatesAndHours> {
-    const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
+    const [from, to] = this.getFirstAndLastDayOfYear();
 
-    return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear).pipe(
-      tap(disabledData => {
-        this.disabledDatesAndHours = disabledData;
-        //console.log('Horas deshabilitadas:', this.disabledDatesAndHours);
-      })
-    );
+    const studentClassification = this.userData?.student?.studentClassification;
+    const mode = this.userData?.student?.mode;
+
+    return this.handleDatesService
+      .getNotAvailableDatesAndHours(from, to, studentClassification, mode)
+      .pipe(
+        tap(disabledData => {
+          //console.log('Disabled Dates & Hours Response', disabledData);
+          this.disabledDatesAndHours = disabledData;
+        })
+      );
   }
 
   private removeDuplicateDays(disabledDays: Record<string, number[]>): Record<string, number[]> {
