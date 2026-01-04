@@ -46,7 +46,7 @@ import { UserInfoFormComponent } from '../../../components/home/user-info-form/u
     PendingAssessmentCardComponent,
     StudentCuencaBannerComponent,
     // StudentCuencaCommBannerComponent,
-    ImageBannerComponent,
+    // ImageBannerComponent,
     StudentSuspensionModalComponent,
     UserInfoFormComponent,
   ],
@@ -197,9 +197,10 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
 
         // recalcular banners INMEDIATO (sin esperar a que llegue userData nuevo)
         const city = (data.city || '').toLowerCase().trim();
-        const showCityBanners = city === 'cuenca' || city === 'portoviejo';
-        this.showBannerCuenca = showCityBanners;
-        this.showBannerCuencaComm = showCityBanners;
+        const showCuencaBanner = city === 'cuenca';
+
+        this.showBannerCuenca = showCuencaBanner;
+        this.showBannerCuencaComm = showCuencaBanner;
 
         // tutor info si aplica
         const hasTutorData = !!(data.tutorName || data.tutorEmail || data.tutorPhone);
