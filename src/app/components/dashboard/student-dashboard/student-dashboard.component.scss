@@ -1,0 +1,314 @@
+/* Contenedor del banner */
+.banner-wrapper {
+  position: relative;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 12px auto 0;
+  z-index: 999;
+}
+
+.hero-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-background {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* SALUDO */
+.student-greeting {
+  width: 100%;
+  text-align: left;
+  padding-bottom: 25px;
+}
+
+/* TEXTO */
+.greet-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.greet-subtitle {
+  font-size: .95rem;
+  color: #4b5563;
+}
+
+.student-stage {
+  margin-top: 0.3rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.stage-value {
+  margin-left: 6px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* =========================
+   ATAJOS DASHBOARD
+   ========================= */
+
+.dashboard-shortcuts {
+  width: 100%;
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 2rem;
+  flex-wrap: nowrap;
+}
+
+/* CARD */
+.shortcut-card {
+  width: calc(25% - 1.2rem);
+  height: 150px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.shortcut-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+/* ZONA IMAGEN */
+.shortcut-image {
+  flex: 1;
+  background: #f3f4f6; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.shortcut-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.02),
+    rgba(0, 0, 0, 0.01),
+    rgba(0, 0, 0, 0.01),
+    rgba(0, 0, 0, 0)
+  );
+
+  z-index: 1;
+}
+
+/* TÍTULO */
+.shortcut-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding:0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #242424;
+  text-align: center;
+  z-index: 2;
+  background: transparent;
+}
+
+/* IMAGEN AGENDAR CLASES */
+.shortcut-image.booking {
+  background-image: url('/assets/agendar-clases.png');
+  background-size: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* IMAGEN EVALUACIONES */
+.shortcut-image.assessments {
+  background-image: url('/assets/evaluaciones.png');
+  background-size: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* IMAGEN NOTIFICACIONES */
+.shortcut-image.notifications {
+  background-image: url('/assets/notificaciones.png');
+  background-size: 90px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* IMAGEN PERFIL */
+.shortcut-image.profile {
+  background-image: url('/assets/perfil.png');
+  background-size: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* BLOQUES */
+.home-dual-block {
+  width: 90%;
+  margin: 1.5rem auto;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.home-dual-block.single-block {
+  justify-content: center;
+}
+
+/* SOLO bloque de evaluaciones */
+.home-dual-block .block:last-child {
+  padding-top: .9rem;
+}
+
+.block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TÍTULO DE EVALUACIONES */
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1.5rem; 
+  padding-left: 0.25rem;
+}
+
+.inner-box {
+  margin-top: 1rem;
+}
+
+
+@media (max-width: 1200px) {
+  .shortcut-card {
+    flex: 1 1 calc(33.333% - 1.2rem); 
+  }
+}
+
+/* =========================
+   📱 TABLET / SMALL LAPTOP
+   ========================= */
+@media (max-width: 920px) {
+
+  .shortcut-card {
+    flex: 1 1 calc(50% - 1.2rem);
+  }
+
+  .shortcut-title {
+    font-size: 0.85rem;
+  }
+
+  .home-dual-block {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .home-dual-block .block {
+    width: 100%;
+  }
+
+  /* Evaluaciones un poco más estilizado */
+  .home-dual-block .block:last-child {
+    width: 100%;
+    padding-top: 0.5rem;
+  }
+
+   .section-title {
+     width: 100%;
+     text-align: center;
+    font-size: 1.3rem;
+    }
+}
+
+/* =========================
+   📱 MOBILE
+   ========================= */
+@media (max-width: 768px) {
+
+  .hero-background {
+    width: 90%;
+    margin-top: 0rem;
+    align-items: center;
+  }
+
+  .student-greeting {
+    margin-top: 3rem;
+    text-align: center;
+  }
+
+  .greet-title {
+    font-size: 1.3rem;
+  }
+
+  .greet-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .dashboard-shortcuts {
+    flex-wrap: wrap;
+  }
+
+  .shortcut-card {
+    flex: 1 1 calc(50% - 1.2rem);
+    height: 120px;
+  }
+
+  /* IMAGEN AGENDAR CLASES */
+  .shortcut-image.booking {
+    background-size: 85px;
+  }
+
+  /* IMAGEN EVALUACIONES */
+  .shortcut-image.assessments {
+    background-size: 85px;
+  }
+
+  /* IMAGEN NOTIFICACIONES */
+  .shortcut-image.notifications {
+    background-size: 80px;
+  }
+
+  /* IMAGEN PERFIL */
+  .shortcut-image.profile {
+    background-size: 85px;
+  }
+
+  .shortcut-title {
+    font-size: 0.85rem;
+  }
+
+  .section-title {
+     width: 100%;
+     text-align: center;
+    font-size: 1.1rem;
+    }
+
+  .home-dual-block {
+    margin: 1.5rem auto;
+    gap: .5rem;
+  }
+
+  
+}

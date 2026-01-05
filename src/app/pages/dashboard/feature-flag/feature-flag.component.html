@@ -1,109 +1,222 @@
 <div class="container">
   <h2 class="title stage is-3">Lista de Configuraciones</h2>
 
-  <table class="table is-striped">
-    <thead>
-      <tr>
-        <th>Configuración</th>
-        <th>Habilitado</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let ff of ffs">
-        <td>{{ getFlagLabel(ff.name) }}</td>
-        <td data-label="Habilitar Feature Flag">
-          <input type="checkbox" [checked]="ff.status" (change)="toggle(ff)" />
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="settings-card">
+    <div class="settings-header">
+      <h3>Configuraciones del sistema</h3>
+      <p>Habilita o deshabilita funcionalidades globales</p>
+    </div>
+
+    <table class="table is-striped">
+      <thead>
+        <tr>
+          <th>Configuración</th>
+          <th>Habilitado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ff of ffs">
+          <td>{{ getFlagLabel(ff.name) }}</td>
+          <td data-label="Habilitar Feature Flag">
+            <input
+              type="checkbox"
+              [checked]="ff.status"
+              (change)="toggle(ff)"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="filters-card filters-wide">
+
+    <!-- HEADER -->
+    <div class="filters-header">
+      <h3>Ajustes de agendamiento</h3>
+      <p>Filtra por tipo de estudiante y modalidad</p>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="filters-row">
+      <div class="filter-item">
+        <label class="filter-label">Tipo de estudiante</label>
+        <select
+          class="filter-select"
+          [(ngModel)]="selectedStudentClassification"
+          (change)="refreshCalendar()"
+        >
+          <option [ngValue]="null">Todos</option>
+          <option value="KIDS">Kids</option>
+          <option value="TEENS">Teens</option>
+          <option value="ADULTS">Adults</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Modalidad</label>
+        <select
+          class="filter-select"
+          [(ngModel)]="selectedMode"
+          (change)="refreshCalendar()"
+        >
+          <option [ngValue]="null">Todas</option>
+          <option value="ONLINE">Online</option>
+          <option value="PRESENCIAL">Presencial</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="filters-divider"></div>
+
+    <!-- INSTRUCCIONES -->
+    <div class="filters-instructions">
+      <h4>Cómo funciona la deshabilitación</h4>
+
+      <ul>
+        <li>
+          <strong>Paso 1</strong>
+          <span>Selecciona el tipo de estudiante y/o modalidad (opcional)</span>
+        </li>
+
+        <li>
+          <strong>Paso 2</strong>
+          <span>El calendario se actualiza según los filtros activos</span>
+        </li>
+
+        <li>
+          <strong>Paso 3</strong>
+          <span>
+            Selecciona uno o más <b>días</b> en el calendario u <b>horas</b> desde el bloque de horarios
+          </span>
+        </li>
+
+        <li>
+          <strong>Paso 4</strong>
+          <span>Haz clic en <b>Deshabilitar</b> para aplicar la restricción</span>
+        </li>
+      </ul>
+       <p class="instructions-note">
+        ⚠️ La deshabilitación se aplicará únicamente a los filtros seleccionados.
+      </p>
+    </div>
+
+  </div>
 
    <!-- Calendar Selection -->
-  <section class="calendar-container">
-    <div class="date-selection">
-      <div class="calendar-title">
-        <h3 class="title is-4">Deshabilitar dia</h3>
-      </div>
-      <div class="calendar-legend">
-        <div class="legend-item">
-          <span class="legend-circle enabled"></span>
-          <span>Día habilitado</span>
+  <div class="schedule-layout">
+    <section class="calendar-container">
+      <div class="date-selection">
+        <div class="calendar-title">
+          <h3 class="title is-4">Deshabilitar dia</h3>
         </div>
-        <div class="legend-item">
-          <span class="legend-circle hours-disabled"></span>
-          <span>Horas deshabilitadas</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-circle disabled"></span>
-          <span>Día deshabilitado</span>
-        </div>
-      </div>
-      <div class="month-selector">
-        <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()" aria-label="Previous month">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
-        <button *ngIf="canGoForward" class="button is-small next-button" (click)="nextMonth()" aria-label="Next month">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-      <div class="calendar">
-        <div class="calendar-header">
-          <div class="calendar-day-header">D</div>
-          <div class="calendar-day-header">L</div>
-          <div class="calendar-day-header">M</div>
-          <div class="calendar-day-header">M</div>
-          <div class="calendar-day-header">J</div>
-          <div class="calendar-day-header">V</div>
-          <div class="calendar-day-header">S</div>
-        </div>
-        <div class="calendar-grid">
-          <div
-            *ngFor="let day of currentMonthDays"
-            class="calendar-day"
-            (click)="selectDay(day)"
-            [class.selected]="isDaySelected(day)"
-            [class.empty]="!day.day"
-            [class.disabled]="day.isDisabled"
-            [class.hours-disabled]="day.isHoursDisabled">
-            {{ day.day }}
+        <div class="calendar-legend">
+          <div class="legend-item">
+            <span class="legend-circle enabled"></span>
+            <span>Día habilitado</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-circle hours-disabled"></span>
+            <span>Horas deshabilitadas</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-circle disabled"></span>
+            <span>Día deshabilitado</span>
           </div>
         </div>
+        <div class="month-selector">
+          <button *ngIf="canGoBack" class="button is-small prev-button" (click)="prevMonth()" aria-label="Previous month">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <span class="month-label">{{ selectedMonth }} {{ selectedYear }}</span>
+          <button *ngIf="canGoForward" class="button is-small next-button" (click)="nextMonth()" aria-label="Next month">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        <div class="calendar">
+          <div class="calendar-header">
+            <div class="calendar-day-header">D</div>
+            <div class="calendar-day-header">L</div>
+            <div class="calendar-day-header">M</div>
+            <div class="calendar-day-header">M</div>
+            <div class="calendar-day-header">J</div>
+            <div class="calendar-day-header">V</div>
+            <div class="calendar-day-header">S</div>
+          </div>
+          <div class="calendar-grid">
+            <div
+              *ngFor="let day of currentMonthDays"
+              class="calendar-day"
+              (click)="selectDay(day)"
+              [class.selected]="isDaySelected(day)"
+              [class.empty]="!day.day"
+              [class.disabled]="day.isDisabled"
+              [class.hours-disabled]="day.isHoursDisabled">
+              {{ day.day }}
+            </div>
+          </div>
+        </div>
+        <div class="button-block">
+          <button class="button enable-btn" [disabled]="!hasDisabledSelectedDays()" (click)="blockDate('enable')">
+            Habilitar Día(s)
+          </button>
+          <button class="button disable-btn" [disabled]="!hasEnabledSelectedDays()" (click)="blockDate('disable')">
+            Deshabilitar Día(s)
+          </button>
+        </div>
+
       </div>
-      <div class="button-block">
-        <button class="button enable-btn" [disabled]="!selectedDays.length" (click)="blockDate('enable')">
-          Habilitar Día(s)
-        </button>
-        <button class="button disable-btn" [disabled]="!selectedDays.length" (click)="blockDate('disable')">
-          Deshabilitar Día(s)
-        </button>
+    </section>
+
+     <!-- HORAS -->
+
+    <section
+      class="time-selection"
+      [class.disabled-panel]="!isDaySelectedForHours"
+    >
+      <div class="time-title">
+        <h3 class="title is-4">Gestión de horas</h3>
+        <p class="time-hint" *ngIf="!isDaySelectedForHours">
+          Selecciona un día del calendario
+        </p>
       </div>
 
-    </div>
-  </section>
-
-  <section class="time-selection" *ngIf="selectedDays.length === 1 && timeSlots.length > 0">
-    <div class="time-title">
-      <h3 class="title is-4">Deshabilitar hora</h3>
-    </div>
-    <div class="time-grid">
-      <div *ngFor="let time of timeSlots"
-        class="time-slot"
-        [class.selected]="isHourSelected(time.value)"
-        [class.disabled]="time.isDisabled"
-        (click)="toggleHourSelection(time.value, time.isDisabled ?? false)">
+      <div class="time-grid">
+        <div
+          *ngFor="let time of timeSlots"
+          class="time-slot"
+          [class.selected]="isHourSelected(time.value)"
+          [class.disabled]="time.isDisabled || !isDaySelectedForHours"
+          (click)="
+            isDaySelectedForHours &&
+            toggleHourSelection(time.value, time.isDisabled ?? false)
+          "
+        >
           {{ time.label }}
+        </div>
       </div>
-    </div>
-    <div class="button-block">
-<!--      <button class="button enable-btn"-->
-<!--        [disabled]="selectedDays[0].hours.length === 0">Habilitar Hora(s)-->
-<!--      </button>-->
-      <button class="button disable-btn"
-        [disabled]="selectedDays[0].hours.length === 0" (click)="blockHours()">Deshabilitar Hora(s)
-      </button>
-    </div>
-  </section>
+
+      <!-- BOTONES -->
+      <div class="button-block">
+        <button
+          class="button disable-btn"
+          [disabled]="!isDaySelectedForHours || !hasSelectedEnabledHours"
+          (click)="blockHours()"
+        >
+          Deshabilitar hora(s)
+        </button>
+
+        <button
+          class="button enable-btn"
+          [disabled]="!isDaySelectedForHours || !hasSelectedDisabledHours"
+          (click)="enableHours()"
+        >
+          Habilitar hora(s)
+        </button>
+      </div>
+    </section>
+  </div>
 
   <p *ngIf="selectedDays.length === 1 && isSunday(selectedDays[0].day)" class="no-hours-message">
     No hay horas disponibles para este día.

@@ -31,15 +31,15 @@ export class StudentLiveClassesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.store.select(selectUserData).pipe(take(1)).subscribe(user => {
-      this.userData = user ?? null;
-      this.studentId = user?.student?.id ?? null;
+  this.store.select(selectUserData).subscribe(user => {
+    if (!user?.student?.id) return;
 
-      if (this.studentId) {
-        this.loadLiveClasses();
-      }
-    });
-  }
+    this.studentId = user.student.id;
+    this.userData = user;
+
+    this.loadLiveClasses('all');
+  });
+}
 
   // ================================
   // Cargar TODAS las clases agendadas (no solo en vivo)

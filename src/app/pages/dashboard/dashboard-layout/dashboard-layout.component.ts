@@ -11,13 +11,14 @@ import { setInstructorLink } from "../../../store/user.action";
 import { ModalDto, modalInitializer } from "../../../components/modal/modal.dto";
 import { AssessmentPointsConfigService } from "../../../services/assessment-points-config.service";
 import { StudentBannerComponent } from "../../../components/student-banner/student-banner.component";
-import { GlobalNoticeBannerComponent } from "../../../components/global-notice-banner/global-notice-banner.component";
+import { GlobalNoticeBannerComponent } from "../../../components/home/global-notice-banner/global-notice-banner.component";
 import { NotificationService } from "../../../services/notification.service";
 import { UnreadBannerComponent } from "../../../components/banner/unread-banner/unread-banner.component";
 import { NotificationPermissionComponent } from "../../../components/notification-permission/notification-permission.component";
 import { PwaInstallBannerComponent } from "../../../components/pwa-install-banner/pwa-install-banner.component";
 import { PwaInstallComponent } from "../../../components/pwa-install/pwa-install.component";
 import { PushNotificationService } from "../../../services/push-notification.service";
+import { HeaderComponent } from "../../../components/header/header.component";
 
 @Component({
   standalone: true,
@@ -32,8 +33,8 @@ import { PushNotificationService } from "../../../services/push-notification.ser
     NotificationPermissionComponent,
     PwaInstallComponent,
     PwaInstallBannerComponent,
-    // MaintenanceAnnouncementComponent,
-  ],
+    HeaderComponent
+],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
 })

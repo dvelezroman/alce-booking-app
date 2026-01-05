@@ -1,0 +1,132 @@
+<!-- COUNTDOWN / ASSESSMENTS -->
+<div class="banner-wrapper">
+  <app-countdown-banner
+    (pendingCount)="pendingAssessmentsCount = $event"
+    (showAnnouncement)="showAssessmentAnnouncement = $event"
+    (assessmentsLoaded)="onAssessmentsLoaded($event)">
+  </app-countdown-banner>
+</div>
+
+<!-- HERO / GREETING -->
+<div class="hero-wrapper">
+
+  <div class="hero-background">
+    <div class="student-greeting">
+      <h1 class="greet-title">Hola, {{ userData?.firstName }}</h1>
+
+      <p class="greet-subtitle">
+        Listo para tu próxima clase
+      </p>
+
+      <!-- STAGE ACTUAL -->
+      <p class="student-stage" *ngIf="userData?.stage">
+        Nivel actual:
+        <span class="stage-value">
+          {{ userData?.stage?.description || userData?.stage?.number }}
+        </span>
+      </p>
+
+      <!-- ATAJOS DEL DASHBOARD -->
+      <div class="dashboard-shortcuts">
+
+        <div class="shortcut-card" (click)="goToBooking()">
+          <div class="shortcut-image booking">
+            <span class="shortcut-title">Agendar clases</span>
+          </div>
+        </div>
+
+        <div class="shortcut-card" (click)="goToAssessments()">
+          <div class="shortcut-image assessments">
+            <span class="shortcut-title">Evaluaciones</span>
+          </div>
+        </div>
+
+        <div class="shortcut-card" (click)="goToNotifications()">
+          <div class="shortcut-image notifications">
+            <span class="shortcut-title">Notificaciones</span>
+          </div>
+        </div>
+
+        <div class="shortcut-card" (click)="goToProfile()">
+          <div class="shortcut-image profile">
+            <span class="shortcut-title">Mi perfil</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOQUES -->
+  <div class="home-dual-block">
+
+    <!-- LIVE CLASSES -->
+    <div class="block" *ngIf="isLoggedIn && userData?.student?.id">
+
+      <app-student-live-classes
+        (meetingsCount)="hasLiveClasses = $event > 0">
+      </app-student-live-classes>
+
+    </div>
+
+    <!-- ASSESSMENTS -->
+    <div class="block" *ngIf="assessments.length > 0">
+      <h3 class="section-title">Evaluaciones asignadas</h3>
+      <app-pending-assessment-card
+        [assessments]="assessments">
+      </app-pending-assessment-card>
+    </div>
+
+  </div>
+</div>
+
+<!-- ANNOUNCEMENT -->
+<app-assessment-announcement
+  *ngIf="showAssessmentAnnouncement && pendingAssessmentsCount > 0"
+  [show]="showAssessmentAnnouncement"
+  [count]="pendingAssessmentsCount"
+  (closed)="onAnnouncementClosed()">
+</app-assessment-announcement>
+
+<!-- CUENCA -->
+<app-student-cuenca-banner
+  *ngIf="showBannerCuenca"
+  [show]="showBannerCuenca"
+  (close)="showBannerCuenca = false">
+</app-student-cuenca-banner>
+
+<!-- <app-student-cuenca-comm-banner
+  *ngIf="showBannerCuencaComm"
+  [show]="showBannerCuencaComm">
+</app-student-cuenca-comm-banner> -->
+
+<!-- SUSPENSIÓN -->
+<app-student-suspension-modal
+  *ngIf="showSuspensionModal && suspensionInfo"
+  [suspensionInfo]="suspensionInfo"
+  (close)="showSuspensionModal = false">
+</app-student-suspension-modal>
+
+<!-- IMAGE -->
+<!-- <app-image-banner
+  *ngIf="showImageBanner"
+  (close)="showImageBanner = false">
+</app-image-banner> -->
+
+<!-- USER INFO FORM -->
+<app-users-info-form
+  *ngIf="showUserInfoForm"
+  [isModalOpen]="true"
+  [userData]="userData"
+  (formSubmit)="handleUserInfoSubmit($event)"
+  (closeModal)="showUserInfoForm = false">
+</app-users-info-form>
+
+<!-- MODAL -->
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  (close)="modal.close()">
+</app-modal>

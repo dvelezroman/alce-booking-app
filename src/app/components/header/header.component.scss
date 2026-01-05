@@ -1,10 +1,123 @@
 .student-header {
-  background-color: #f2f2f2;
-  margin: 0 auto;
-  padding: 1rem 1.5rem;
-  border-left: 4px solid #ffb347;
-  border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  max-width: 960px;
-  width: 90%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 65px;
+
+  background-color: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  padding: 0 1rem;
+  z-index: 998;
+}
+
+/* CLAVE */
+.header-right {
+  margin-left: auto !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 0.75rem !important;
+  width: auto !important;
+}
+
+/* =====================================================
+   HEADER – ICONOS DE BANNERS (MISMO LENGUAJE VISUAL)
+   ===================================================== */
+
+.header-banner-icon {
+  position: relative;
+  cursor: pointer;
+
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.header-banner-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+/* ICONO */
+.header-banner-icon .material-icons {
+  font-size: 22px;
+}
+
+/* BADGE */
+.header-banner-icon .badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+
+  background: #ef4444;
+  color: white;
+
+  font-size: 0.65rem;
+  font-weight: 700;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+
+  border-radius: 999px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+/* ===============================
+   VARIANTES – INFO / WARNING
+   =============================== */
+
+.header-banner-icon.info {
+  background-color: #fff8e1;
+}
+
+.header-banner-icon.info .material-icons {
+  color: #ffca28;
+}
+
+.header-banner-icon.warning {
+  background-color: #ffd9d9e0;
+}
+
+.header-banner-icon.warning .material-icons {
+  color: #d70f0f;
+}
+
+/* ===============================
+   MOBILE – un poco más compacto
+   =============================== */
+@media (max-width: 600px) {
+
+  .header-right {
+    gap: 0.5rem !important;
+
+  }
+  .header-banner-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-banner-icon .material-icons {
+    font-size: 18px;
+  }
 }

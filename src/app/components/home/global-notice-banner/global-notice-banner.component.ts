@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { UserDto, UserRole } from '../../services/dtos/user.dto';
-import { selectUserData } from '../../store/user.selector';
+import { UserDto, UserRole } from '../../../services/dtos/user.dto';
+import { selectUserData } from '../../../store/user.selector';
 import { CommonModule } from '@angular/common';
 
 @Component({

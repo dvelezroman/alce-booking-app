@@ -14,29 +14,35 @@ export class HandleDatesService {
     private http: HttpClient,
   ) {}
 
-  getNotAvailableDates(from: string, to: string): Observable<DisabledDays> {
-    let params = new HttpParams();
+  getNotAvailableDates(from: string, to: string, studentClassification?: string | null, mode?: string | null ): Observable<DisabledDays> {
+    let params = new HttpParams()
+    .set('from', from)
+    .set('to', to);
 
-    if (from) {
-      params = params.set('from', from);
+    if (studentClassification) {
+      params = params.set('studentClassification', studentClassification);
     }
 
-    if (to) {
-      params = params.set('to', to);
+    if (mode) {
+      params = params.set('mode', mode);
     }
+
     return this.http.get<DisabledDays>(`${this.apiUrl}`, { params });
   }
 
-  getNotAvailableDatesAndHours(from: string, to: string): Observable<DisabledDatesAndHours> {
-    let params = new HttpParams();
+  getNotAvailableDatesAndHours(from: string, to: string, studentClassification?: string | null, mode?: string | null): Observable<DisabledDatesAndHours> {
+    let params = new HttpParams()
+    .set('from', from)
+    .set('to', to);
 
-    if (from) {
-      params = params.set('from', from);
+    if (studentClassification) {
+      params = params.set('studentClassification', studentClassification);
     }
 
-    if (to) {
-      params = params.set('to', to);
+    if (mode) {
+      params = params.set('mode', mode);
     }
+
     return this.http.get<DisabledDatesAndHours>(`${this.apiUrl}/hours`, { params });
   }
 
@@ -50,5 +56,9 @@ export class HandleDatesService {
 
   enableDates(dates: string[]): Observable<void> {
     return this.http.request<void>('DELETE', `${this.apiUrl}/enable`, { body: { dates } });
+  }
+
+  enableDatesHours(dates: DisabledDateAndHours[]): Observable<void> {
+    return this.http.request<void>('DELETE',`${this.apiUrl}/enable/hours`,{ body: { items: dates } } );
   }
 }
