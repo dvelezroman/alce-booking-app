@@ -90,7 +90,7 @@ export class FeatureFlagComponent implements OnInit {
 
   private getAll() {
     this.ffService.getAll().subscribe(ffs => {
-      console.log(ffs)
+      //console.log(ffs)
       const orden = ['enable-login', 'enable-schedule'];
       this.ffs = ffs.sort((a, b) => orden.indexOf(a.name) - orden.indexOf(b.name));
     });
@@ -320,45 +320,45 @@ export class FeatureFlagComponent implements OnInit {
   }
 
   enableHours() {
-  if (this.selectedDays.length === 0) return;
+    if (this.selectedDays.length === 0) return;
 
-  const monthMap: Record<string, number> = {
-    ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-    JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
-  };
+    const monthMap: Record<string, number> = {
+      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+    };
 
-  const monthIndex = monthMap[this.selectedMonth];
-  if (monthIndex === undefined) return;
+    const monthIndex = monthMap[this.selectedMonth];
+    if (monthIndex === undefined) return;
 
-  const hoursToEnable = this.selectedDays
-    .filter(day => day.hours.length > 0)
-    .map(day => ({
-      date: `${this.selectedYear}-${(monthIndex + 1)
-        .toString()
-        .padStart(2, '0')}-${day.day.toString().padStart(2, '0')}`,
-      hours: day.hours,
-      ...(this.selectedStudentClassification && {
-        studentClassification: this.selectedStudentClassification
-      }),
-      ...(this.selectedMode && {
-        mode: this.selectedMode
-      })
-    }));
+    const hoursToEnable = this.selectedDays
+      .filter(day => day.hours.length > 0)
+      .map(day => ({
+        date: `${this.selectedYear}-${(monthIndex + 1)
+          .toString()
+          .padStart(2, '0')}-${day.day.toString().padStart(2, '0')}`,
+        hours: day.hours,
+        ...(this.selectedStudentClassification && {
+          studentClassification: this.selectedStudentClassification
+        }),
+        ...(this.selectedMode && {
+          mode: this.selectedMode
+        })
+      }));
 
-  if (!hoursToEnable.length) return;
+    if (!hoursToEnable.length) return;
 
-  this.handleDatesService.enableDatesHours(hoursToEnable).subscribe({
-    next: () => {
-      this.getDisabledDatesAndHours().subscribe(() => {
-        const selectedDay = this.selectedDays[0];
-        this.recalculateTimeSlots(selectedDay);
-      });
-    },
-    error: (err) => {
-      console.error('Error al habilitar horas:', err);
-    }
-  });
-}
+    this.handleDatesService.enableDatesHours(hoursToEnable).subscribe({
+      next: () => {
+        this.getDisabledDatesAndHours().subscribe(() => {
+          const selectedDay = this.selectedDays[0];
+          this.recalculateTimeSlots(selectedDay);
+        });
+      },
+      error: (err) => {
+        console.error('Error al habilitar horas:', err);
+      }
+    });
+  }
 
   isSunday(dayNumber: number): boolean {
     return new Date(this.selectedYear, this.getMonthIndex(this.selectedMonth), dayNumber).getDay() === 0;
