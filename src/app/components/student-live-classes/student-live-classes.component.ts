@@ -50,7 +50,7 @@ export class StudentLiveClassesComponent implements OnInit {
 
   const today = new Date();
   const toDate = new Date();
-  toDate.setDate(today.getDate() + 7);
+  toDate.setDate(today.getDate() + 15);
 
   const from = today.toISOString().split('T')[0];
   const to = toDate.toISOString().split('T')[0];
