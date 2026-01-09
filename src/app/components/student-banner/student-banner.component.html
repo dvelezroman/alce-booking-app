@@ -6,46 +6,39 @@
   [class.info-banner]="type === 'info'"
   (click)="closeBanner()"
 >
-  <!-- <span
-    class="material-icons"
-    [ngClass]="{
-      'warning-icon': type === 'warning',
-      'info-icon': type === 'info'
-    }"
-  >
-    {{ icon }}
-  </span> -->
+  
+  <div class="banner-scroll">
+    <div class="banner-body">
+      <div class="banner-title">
+        <ng-container *ngIf="isExpanded; else minimizedTitle">
+          {{ title }}
+        </ng-container>
+        <ng-template #minimizedTitle>{{ title }} &#33;</ng-template>
+      </div>
 
-  <div class="banner-body">
-    <div class="banner-title">
-      <ng-container *ngIf="isExpanded; else minimizedTitle">
-        {{ title }}
-      </ng-container>
-      <ng-template #minimizedTitle>{{ title }} &#33;</ng-template>
-    </div>
+      <div class="banner-text" *ngIf="isExpanded">
+        <p *ngIf="text">{{ text }}</p>
 
-    <div class="banner-text" *ngIf="isExpanded">
-      <p *ngIf="text">{{ text }}</p>
+        <ul *ngIf="(resources?.length ?? 0) > 0" class="resource-list">
+          <li *ngFor="let item of resources">
+            <div class="resource-title">
+              <strong>Recurso:</strong> {{ item.title }}
+            </div>
 
-      <ul *ngIf="(resources?.length ?? 0) > 0" class="resource-list">
-        <li *ngFor="let item of resources">
-          <div class="resource-title">
-            <strong>Recurso:</strong> {{ item.title }}
-          </div>
+            <div class="resource-note" *ngIf="item.note">
+              <strong>Nota:</strong>
+              <span [innerHTML]="item.note | safeNoteHtml"></span>
+            </div>
 
-          <div class="resource-note" *ngIf="item.note">
-            <strong>Nota:</strong>
-            <span [innerHTML]="item.note | safeNoteHtml"></span>
-          </div>
-
-          <div class="resource-recommendation" *ngIf="item.link">
-            <strong>Recomendación:</strong>
-            <a [href]="item.link" target="_blank" rel="noopener noreferrer">
-              {{ item.link }}
-            </a>
-          </div>
-        </li>
-      </ul>
+            <div class="resource-recommendation" *ngIf="item.link">
+              <strong>Recomendación:</strong>
+              <a [href]="item.link" target="_blank" rel="noopener noreferrer">
+                {{ item.link }}
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 

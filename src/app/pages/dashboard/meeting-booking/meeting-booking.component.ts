@@ -208,7 +208,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   initializeMeetings() {
     const currentDate = new Date();
     const toDate = new Date(currentDate);
-    toDate.setDate(currentDate.getDate() + 10); // Add 10 days
+    toDate.setDate(currentDate.getDate() + 15); // Add 10 days
     const formattedToDate = toDate.toISOString().split('T')[0];
     this.loadMeetings(this.getTodayDate(), formattedToDate, undefined, this.userData?.student?.id, MeetingStatusEnum.ACTIVE);
   }
