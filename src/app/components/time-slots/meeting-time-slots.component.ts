@@ -41,6 +41,7 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
     const { year, month, day } = this.selectedDayInfo!;
     const selectedDate = DateTime.fromObject({ year, month, day }, { zone: 'America/Guayaquil' });
     const nowInEcuador = DateTime.now().setZone('America/Guayaquil');
+    const minAllowedHour = this.getMinAllowedHour(nowInEcuador);
 
     const isSaturday = selectedDate.weekday === 6;
     const disabledHours = this.getDisabledHoursForDay(day, month - 1);
@@ -57,7 +58,7 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
       if (nowInEcuador.hour >= endHour) {
         this.timeSlots = [];
       } else {
-        const availableStartHour = Math.max(startHour, nowInEcuador.hour + 2);
+        const availableStartHour = Math.max(startHour, minAllowedHour);
         this.timeSlots = this.generateTimeSlots(availableStartHour, endHour, disabledHours);
       }
     } else {
@@ -88,5 +89,12 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
     if (!slot.isDisabled) {
       this.timeSlotSelected.emit(slot);
     }
+  }
+
+  private getMinAllowedHour(now: DateTime): number {
+    if (now.minute === 0) {
+      return now.hour + 2;
+    }
+    return now.hour + 3;
   }
 }
