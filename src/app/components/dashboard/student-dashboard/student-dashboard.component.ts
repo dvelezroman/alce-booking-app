@@ -46,7 +46,7 @@ import { UserInfoFormComponent } from '../../../components/home/user-info-form/u
     PendingAssessmentCardComponent,
     StudentCuencaBannerComponent,
     // StudentCuencaCommBannerComponent,
-    // ImageBannerComponent,
+    ImageBannerComponent,
     StudentSuspensionModalComponent,
     UserInfoFormComponent,
   ],
