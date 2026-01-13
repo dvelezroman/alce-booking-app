@@ -34,6 +34,7 @@ import { StageProgressDto, StageProgressList } from '../../../services/dtos/stag
 import { StageProgressService } from '../../../services/stage-progress';
 import { StudentStageProgressComponent } from "../../../components/student/student-stage-progress/student-stage-progress.component";
 import { StudentSuspensionModalComponent } from "../../../components/home/student-suspension-modal/student-suspension-modal.component";
+import { TimeService } from '../../../services/time.service';
 
 
 @Component({
@@ -94,6 +95,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   ecuadorTime: string = '';
   ecuadorDate: string = '';
   localdateSelected: string = '';
+  serverMinAllowedHour: number | null = null;
   resetCalendarSelectionTrigger = false;
 
   studentId: number | null = null;
@@ -111,6 +113,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   isSpinning = false;
 
+  private serverTimeInterval!: any;
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private store: Store,
@@ -120,57 +124,79 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     private handleDatesService: HandleDatesService,
     private notificationService: NotificationService,
     private router: Router,
-    private stageProgressService: StageProgressService      
+    private stageProgressService: StageProgressService ,
+    private timeService: TimeService
   ) {
     this.userData$ = this.store.select(selectUserData);
   }
 
   ngOnInit() {
 
-  this.ffService.getAll().subscribe(ffs => {
-    this.ffs = ffs;
-    const scheduleFlag = this.ffs.find(f => f.name === 'enable-schedule');
-    this.isScheduleEnabled = scheduleFlag?.status ?? true;
-  });
+    this.loadServerTime();
+    this.serverTimeInterval = setInterval(() => { this.loadServerTime() }, 60000);
 
-  const nowInEcuador = DateTime.now()
-    .setZone('America/Guayaquil')
-    .setLocale('es');
-
-  this.ecuadorTime = nowInEcuador.toFormat("HH:mm");
-  this.ecuadorDate = nowInEcuador.toFormat("EEEE, dd 'de' LLLL");
-
-  this.userData$
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe(state => {
-      this.userData = state;
-
-      this.isSuspended = !!state?.suspensionInfo?.isSuspended;
-      if (this.isSuspended) {
-        this.showSuspensionModal = true;
-        return;
-      }
-
-      if (state?.student) {
-        this.studentId = state.student.id;
-        this.currentStageId = state.student.stageId;
-
-        this.getDisabledDates().subscribe();
-        this.getDisabledDatesAndHours().subscribe();
-
-        this.initializeMeetings();
-      }
+    this.ffService.getAll().subscribe(ffs => {
+      this.ffs = ffs;
+      const scheduleFlag = this.ffs.find(f => f.name === 'enable-schedule');
+      this.isScheduleEnabled = scheduleFlag?.status ?? true;
     });
 
-  this.updateEcuadorTime();
-  this.ecuadorTimeInterval = setInterval(() => {
+    const nowInEcuador = DateTime.now()
+      .setZone('America/Guayaquil')
+      .setLocale('es');
+
+    this.ecuadorTime = nowInEcuador.toFormat("HH:mm");
+    this.ecuadorDate = nowInEcuador.toFormat("EEEE, dd 'de' LLLL");
+
+    this.userData$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(state => {
+        this.userData = state;
+
+        this.isSuspended = !!state?.suspensionInfo?.isSuspended;
+        if (this.isSuspended) {
+          this.showSuspensionModal = true;
+          return;
+        }
+
+        if (state?.student) {
+          this.studentId = state.student.id;
+          this.currentStageId = state.student.stageId;
+
+          this.getDisabledDates().subscribe();
+          this.getDisabledDatesAndHours().subscribe();
+
+          this.initializeMeetings();
+        }
+      });
+
     this.updateEcuadorTime();
-  }, 60000);
-}
+    this.ecuadorTimeInterval = setInterval(() => {
+      this.updateEcuadorTime();
+    }, 60000);
+  }
+
+  private loadServerTime(): void {
+    this.timeService.getCurrentEcuadorTime().subscribe({
+      next: (time) => {
+        this.serverMinAllowedHour =
+          time.minute === 0
+            ? time.hour + 2
+            : time.hour + 3;
+      },
+      error: (err) => {
+        console.error('Error obteniendo hora del servidor', err);
+        this.serverMinAllowedHour = null;
+      }
+    });
+  }
 
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    if (this.serverTimeInterval) {
+      clearInterval(this.serverTimeInterval);
+    }
   }
 
   ngAfterViewInit() {
