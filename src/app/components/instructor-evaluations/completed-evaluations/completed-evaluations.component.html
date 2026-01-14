@@ -1,1 +1,57 @@
-<p>completed-evaluations works!</p>
+<section class="completed-section">
+
+  <h3 class="section-title">
+    Evaluaciones realizadas
+    <span class="count">{{ evaluations.length }}</span>
+  </h3>
+
+  <!-- LOADING -->
+  <div class="loading" *ngIf="loading">
+    Cargando evaluaciones...
+  </div>
+
+  <!-- EMPTY -->
+  <div class="empty" *ngIf="!loading && evaluations.length === 0">
+    Aún no has evaluado a ningún instructor.
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards-grid" *ngIf="!loading && evaluations.length > 0">
+
+    <div
+      class="evaluation-card"
+      *ngFor="let evaluation of evaluations">
+
+      <!-- HEADER -->
+      <div class="card-header">
+        <span class="course-title">
+          {{ evaluation.instructor?.user?.firstName }}
+          {{ evaluation.instructor?.user?.lastName }}
+        </span>
+
+        <span class="badge completed">
+          Evaluada
+        </span>
+      </div>
+
+      <!-- INFO -->
+      <div class="card-info">
+        <p>
+          <strong>Calificación:</strong>
+          {{ evaluation.rating }}/10
+        </p>
+
+        <p *ngIf="evaluation.observation">
+          {{ evaluation.observation }}
+        </p>
+
+        <p class="date">
+          {{ evaluation.createdAt | date:'mediumDate' }}
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

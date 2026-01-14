@@ -1,1 +1,38 @@
-<p>instructor-evaluations works!</p>
+<h2 class="title stage">Evaluar Instructores</h2>
+
+<section class="instructor-evaluation-section">
+
+  <div class="horizontal-carousel-wrapper">
+
+    <app-pending-evaluations
+      [meetings]="pendingMeetings"
+      [loading]="loadingPending"
+      (evaluate)="onEvaluate($event)">
+    </app-pending-evaluations>
+
+    <!-- <app-completed-evaluations
+      [evaluations]="completedEvaluations"
+      [loading]="loadingCompleted">
+    </app-completed-evaluations> -->
+
+  </div>
+
+</section>
+
+<app-evaluate-instructor-modal
+  [show]="showEvaluationModal"
+  [meeting]="selectedMeeting"
+  (submitEvaluation)="onSubmitEvaluation($event)"
+  (close)="closeEvaluationModal()">
+</app-evaluate-instructor-modal>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()">
+</app-modal>

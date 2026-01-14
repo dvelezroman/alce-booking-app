@@ -51,6 +51,7 @@ import { StageAssessmentListComponent } from './stage-assessment-list/stage-asse
 import { SuspensionHistoryComponent } from './suspension-history/suspension-history.component';
 import { InstructorEvaluationsComponent } from './instructor-evaluations/instructor-evaluations.component';
 
+
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomePrivateComponent },

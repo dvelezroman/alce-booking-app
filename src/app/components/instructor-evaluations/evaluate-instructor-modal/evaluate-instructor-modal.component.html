@@ -1,1 +1,64 @@
-<p>evaluate-instructor-modal works!</p>
+<div class="modal-backdrop" *ngIf="show">
+  <div class="modal-container">
+
+    <!-- HEADER -->
+    <div class="modal-header">
+      <h3>Evaluar Clase</h3>
+      <p class="subtitle">
+        {{ meeting?.meetingTheme?.description || 'Clase' }} –
+        {{ meeting?.instructor?.user?.firstName }}
+        {{ meeting?.instructor?.user?.lastName }}
+      </p>
+    </div>
+
+    <!-- BODY -->
+    <div class="modal-body">
+
+      <!-- RATING -->
+      <div class="rating-section">
+        <label>Calificación (1-10)</label>
+
+        <div class="rating-grid"
+             (mouseleave)="onLeave()">
+
+          <div
+            class="rating-item"
+            *ngFor="let r of ratingOptions"
+            [class.active]="isActive(r)"
+            [class.selected]="isSelected(r)"
+            (mouseenter)="onHover(r)"
+            (mouseleave)="onLeave()"
+            (click)="selectRating(r)">
+            {{ r }}
+            </div>
+
+        </div>
+      </div>
+
+      <!-- OBSERVATION -->
+      <div class="observation-section">
+        <label>Observaciones (opcional)</label>
+        <textarea
+          rows="4"
+          placeholder="Comparte tu experiencia con esta clase..."
+          [(ngModel)]="observation">
+        </textarea>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="modal-footer">
+      <button class="submit-btn"
+              [disabled]="!selectedRating"
+              (click)="submit()">
+        Enviar Evaluación
+      </button>
+
+      <button class="cancel-btn" (click)="cancel()">
+        Cancelar
+      </button>
+    </div>
+
+  </div>
+</div>

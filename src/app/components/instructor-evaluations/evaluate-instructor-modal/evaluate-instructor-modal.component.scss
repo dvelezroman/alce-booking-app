@@ -1,0 +1,181 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-container {
+  width: 95%;
+  max-width: 760px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 50px rgba(0,0,0,.15);
+}
+
+/* ---------------- */
+/* HEADER */
+/* ---------------- */
+.modal-header {
+  margin-bottom: 1rem;
+
+  h3 {
+    font-size: 1.5rem;
+    color: rgb(76, 76, 76);
+    font-weight: 700;
+  }
+
+  .subtitle {
+    color: #666;
+    font-size: .95rem;
+  }
+}
+
+/* ---------------- */
+/* BODY */
+/* ---------------- */
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+/* ---------------- */
+/* RATING */
+/* ---------------- */
+.rating-section label {
+  font-weight: 600;
+  color: #666;
+  margin-bottom: .6rem;
+  display: block;
+}
+
+.rating-grid {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+
+.rating-item {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 600;
+  transition: .2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &.active {
+    background: #1d4ed8;
+    color: white;
+    box-shadow: 0 6px 16px rgba(29,78,216,.35);
+  }
+}
+
+/* ---------------- */
+/* OBSERVATION */
+/* ---------------- */
+.observation-section label {
+  font-weight: 600;
+  color: #666;
+  margin-bottom: .4rem;
+  display: block;
+}
+
+textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  padding: .75rem;
+  resize: none;
+  font-size: .9rem;
+}
+
+/* ---------------- */
+/* FOOTER */
+/* ---------------- */
+.modal-footer {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: .8rem;
+}
+
+.submit-btn {
+  flex: 1;
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  padding: .75rem;
+  border-radius: 12px;
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    background: #9bb0ec;
+    cursor: not-allowed;
+  }
+}
+
+.cancel-btn {
+  padding: .75rem 1.2rem;
+  border-radius: 12px;
+  color: rgb(37, 37, 37);
+  font-size: .85rem;
+  background: #ebeaea;
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .modal-container {
+    width: 92%;
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .modal-header h3 {
+    font-size: 1.15rem;
+  }
+
+  .modal-header .subtitle {
+    font-size: .8rem;
+  }
+
+  .rating-grid {
+    gap: .4rem;
+  }
+
+  .rating-item {
+    width: 30px;
+    height: 30px;
+    font-size: .75rem;
+    border-radius: 8px;
+  }
+
+  textarea {
+    font-size: .8rem;
+    padding: .55rem;
+  }
+
+  .submit-btn {
+    font-size: .8rem;
+    padding: .55rem;
+  }
+
+  .cancel-btn {
+    font-size: .8rem;
+    padding: .55rem .9rem;
+  }
+}
