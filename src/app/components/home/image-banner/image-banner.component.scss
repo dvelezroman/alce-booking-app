@@ -93,7 +93,7 @@
 /* Botón texto "Enviar información" */
 .whatsapp-float {
   position: absolute;
-  top: 25px;
+  top: 22px;
   left: 50%;
   transform: translateX(-50%);
 
@@ -110,14 +110,14 @@
   align-items: center;
   justify-content: center;
 
+  white-space: nowrap; /* 👈 clave */
+  width: auto;
+  max-width: 90%;
+
   box-shadow: 0 8px 22px rgba(37, 211, 102, 0.35);
   cursor: pointer;
 
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
-
+  transition: all 0.2s ease;
   z-index: 3;
 }
 
@@ -131,9 +131,15 @@
 /* Mobile */
 @media (max-width: 600px) {
   .whatsapp-float {
-    bottom: 9px;
+    top: unset;
+    bottom: 12px;
+
     font-size: 0.7rem;
-    padding: 5px 10px;
+    padding: 6px 12px;
+
+    border-radius: 999px;
+    max-width: 85%;
+    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
   }
 }
 
