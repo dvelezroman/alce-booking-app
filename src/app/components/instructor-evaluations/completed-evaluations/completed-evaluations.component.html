@@ -5,53 +5,51 @@
     <span class="count">{{ evaluations.length }}</span>
   </h3>
 
-  <!-- LOADING -->
-  <div class="loading" *ngIf="loading">
-    Cargando evaluaciones...
-  </div>
+  <div class="loading" *ngIf="loading">Cargando evaluaciones...</div>
 
-  <!-- EMPTY -->
   <div class="empty" *ngIf="!loading && evaluations.length === 0">
     Aún no has evaluado a ningún instructor.
   </div>
 
-  <!-- CARDS -->
-  <div class="cards-grid" *ngIf="!loading && evaluations.length > 0">
+  <div class="table-wrapper" *ngIf="!loading && evaluations.length > 0">
 
-    <div
-      class="evaluation-card"
-      *ngFor="let evaluation of evaluations">
+    <div class="table-scroll">
 
-      <!-- HEADER -->
-      <div class="card-header">
-        <span class="course-title">
-          {{ evaluation.instructor?.user?.firstName }}
-          {{ evaluation.instructor?.user?.lastName }}
-        </span>
+      <table class="evaluations-table">
+        <thead>
+          <tr>
+            <th class="col-instructor">Instructor</th>
+            <th class="col-rating">Calificación</th>
+            <th class="col-observation">Observación</th>
+            <th class="col-date">Fecha</th>
+          </tr>
+        </thead>
 
-        <span class="badge completed">
-          Evaluada
-        </span>
-      </div>
+        <tbody>
+          <tr *ngFor="let evaluation of evaluations">
+            <td class="col-instructor">
+              {{ evaluation.instructor?.user?.firstName }}
+              {{ evaluation.instructor?.user?.lastName }}
+            </td>
 
-      <!-- INFO -->
-      <div class="card-info">
-        <p>
-          <strong>Calificación:</strong>
-          {{ evaluation.rating }}/10
-        </p>
+            <td class="col-rating rating">
+              {{ evaluation.rating }}/10
+            </td>
 
-        <p *ngIf="evaluation.observation">
-          {{ evaluation.observation }}
-        </p>
+            <td class="col-observation">
+              <div class="observation-cell">
+                {{ evaluation.observation || '—' }}
+              </div>
+            </td>
 
-        <p class="date">
-          {{ evaluation.createdAt | date:'mediumDate' }}
-        </p>
-      </div>
+            <td class="col-date date">
+              {{ evaluation.createdAt | date:'mediumDate' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
     </div>
-
   </div>
 
 </section>
