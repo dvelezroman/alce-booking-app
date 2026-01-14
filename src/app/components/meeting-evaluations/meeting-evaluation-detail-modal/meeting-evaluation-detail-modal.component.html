@@ -1,0 +1,39 @@
+<div class="modal-backdrop" *ngIf="show">
+  <div class="modal-card">
+
+    <div class="modal-header">
+      <h3>Evaluación de la clase</h3>
+      <button class="close-btn" (click)="onClose()">✕</button>
+    </div>
+
+    <div class="modal-error" *ngIf="!evaluation && errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="modal-body" *ngIf="evaluation && !errorMessage">
+
+      <p><strong>Instructor:</strong>
+        {{ evaluation.instructor?.user?.firstName }}
+        {{ evaluation.instructor?.user?.lastName }}
+      </p>
+
+      <p><strong>Estudiante:</strong>
+        {{ evaluation.student?.user?.firstName }}
+        {{ evaluation.student?.user?.lastName }}
+      </p>
+
+      <p><strong>Calificación:</strong> {{ evaluation.rating }}/10</p>
+
+      <p><strong>Observación:</strong></p>
+      <div class="observation">
+        {{ evaluation.observation || 'Sin observación' }}
+      </div>
+
+      <p><strong>Fecha de evaluación:</strong>
+        {{ evaluation.createdAt | date:'medium' }}
+      </p>
+
+    </div>
+
+  </div>
+</div>

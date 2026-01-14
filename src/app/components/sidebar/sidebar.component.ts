@@ -75,6 +75,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'notifications', text: 'Grupos', route: '/dashboard/notifications-groups', roles: [UserRole.ADMIN] },
   { icon: 'notifications', text: 'Recibidas', route: '/dashboard/notifications-inbox', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT],  },
   { icon: 'notifications', text: 'Enviadas', route: '/dashboard/notifications-sent', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR],  },
+  { icon: 'test', text: 'Clases Evaluadas', route: '/dashboard/meeting-evaluations', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR],  },
   { icon: 'whatsapp', text: 'Enviar mensaje', route: '/dashboard/whatsapp', roles: [UserRole.ADMIN] , },
   { icon: 'whatsapp', text: 'Grupos', route: '/dashboard/whatsapp-groups', roles: [UserRole.ADMIN], },
   { icon: 'whatsapp', text: 'Ajustes de WhatsApp', route: '/dashboard/whatsapp-config', roles: [UserRole.ADMIN], },
@@ -151,6 +152,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
       items: [
         this.findNavItemByRoute('/dashboard/stage-assessment-student'),
         this.findNavItemByRoute('/dashboard/instructor-evaluations'),
+        this.findNavItemByRoute('/dashboard/meeting-evaluations'),
       ].filter(item => item.roles.includes(role))
     },
     {

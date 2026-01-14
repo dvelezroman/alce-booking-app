@@ -1,0 +1,206 @@
+/* ------------------------------ */
+/* BACKDROP */
+/* ------------------------------ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* ------------------------------ */
+/* MODAL CARD */
+/* ------------------------------ */
+.modal-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 14px;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalFadeIn 0.25s ease;
+}
+
+/* ------------------------------ */
+/* HEADER */
+/* ------------------------------ */
+.modal-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+  }
+
+  button {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #6b7280;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #111827;
+    }
+  }
+}
+
+/* ------------------------------ */
+/* BODY */
+/* ------------------------------ */
+.modal-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+    strong{
+      color: rgb(40, 40, 40);
+    }
+
+/* ------------------------------ */
+/* INFO ROWS */
+/* ------------------------------ */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+
+  span.label {
+    font-weight: 600;
+    color: #6b7280;
+    white-space: nowrap;
+  }
+
+  span.value {
+    color: #111827;
+    font-weight: 500;
+    text-align: right;
+    flex: 1;
+  }
+}
+
+/* ------------------------------ */
+/* RATING */
+/* ------------------------------ */
+.rating {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #047857;
+}
+
+/* ------------------------------ */
+/* OBSERVATION */
+/* ------------------------------ */
+.observation {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  color: #374151;
+  line-height: 1.4;
+}
+
+/* ------------------------------ */
+/* FOOTER */
+/* ------------------------------ */
+.modal-footer {
+  padding: 0.9rem 1.25rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-footer button {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 0.45rem 1.2rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #1d4ed8;
+  }
+}
+
+/* ------------------------------ */
+/* ERROR STATE */
+/* ------------------------------ */
+.modal-error {
+  margin: 1.5rem;
+  padding: 1.25rem 1rem;
+  border-radius: 12px;
+
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+
+  animation: fadeIn 0.25s ease;
+}
+
+/* Ícono opcional */
+.modal-error::before {
+  content: "⚠️";
+  font-size: 1rem;
+}
+
+/* ------------------------------ */
+/* ANIMATION */
+/* ------------------------------ */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ------------------------------ */
+/* MOBILE */
+/* ------------------------------ */
+@media (max-width: 480px) {
+  .modal-card {
+    max-width: 100%;
+    border-radius: 12px;
+  }
+
+  .modal-header h3 {
+    font-size: 0.95rem;
+  }
+}
