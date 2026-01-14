@@ -49,6 +49,7 @@ import { StageAssessmentResourcesComponent } from './stage-assessment-resources/
 import { StageAssessmentStudentComponent } from './stage-assessment-student/stage-assessment-student.component';
 import { StageAssessmentListComponent } from './stage-assessment-list/stage-assessment-list.component';
 import { SuspensionHistoryComponent } from './suspension-history/suspension-history.component';
+import { InstructorEvaluationsComponent } from './instructor-evaluations/instructor-evaluations.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -69,6 +70,7 @@ export const dashboardRoutes: Routes = [
   { path: 'attendance-student', component: AttendanceReportsComponent },
   { path: 'report-instructor', component: ReportInstructorComponent },
   { path: 'attendance-instructor', component: AttendanceInstructorComponent },
+  { path: 'instructor-evaluations', component: InstructorEvaluationsComponent },
   { path: 'feature-flag', component: FeatureFlagComponent },
   { path: 'create-students', component: RegisterStudentComponent },
   { path: 'create-instructors', component: RegisterInstructorAdminComponent },
