@@ -66,7 +66,14 @@ export class EvaluateInstructorModalComponent {
     });
   }
 
+  private resetForm(): void {
+    this.selectedRating = null;
+    this.hoveredRating = null;
+    this.observation = '';
+  }
+
   cancel(): void {
+    this.resetForm();
     this.close.emit();
   }
 }
