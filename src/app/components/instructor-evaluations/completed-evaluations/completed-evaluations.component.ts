@@ -11,5 +11,5 @@ import { InstructorEvaluation } from '../../../services/dtos/instructor-evaluati
 })
 export class CompletedEvaluationsComponent {
   @Input() evaluations: InstructorEvaluation[] = [];
-  @Input() loading = false;
+
 }
