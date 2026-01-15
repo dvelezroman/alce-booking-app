@@ -88,6 +88,12 @@
   (closed)="onAnnouncementClosed()">
 </app-assessment-announcement>
 
+<app-pending-class-evaluation-banner
+  *ngIf="pendingClassEvaluationsCount > 0"
+  [count]="pendingClassEvaluationsCount"
+  (goToEvaluate)="goToInstructorEvaluations()">
+</app-pending-class-evaluation-banner>
+
 <!-- CUENCA -->
 <app-student-cuenca-banner
   *ngIf="showBannerCuenca"
