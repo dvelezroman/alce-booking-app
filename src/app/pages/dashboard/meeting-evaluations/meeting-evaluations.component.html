@@ -1,0 +1,43 @@
+<h2 class="title stage">Clases Evaluadas</h2>
+
+<section class="meeting-evaluations-section">
+
+  <!-- FILTERS -->
+  <div class="filters-wrapper">
+    <app-meeting-evaluations-filters
+      (filtersSubmitted)="onFiltersSubmitted($event)">
+    </app-meeting-evaluations-filters>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-wrapper">
+    <app-meeting-evaluations-table
+      [meetings]="meetings"
+      [searchAttempted]="searchAttempted"
+      [showInstructor]="showInstructorColumn"
+      [showStudent]="showStudentColumn"
+      (meetingSelected)="onMeetingSelected($event)">
+    </app-meeting-evaluations-table>
+  </div>
+
+</section>
+
+<!-- MODALES -->
+ 
+<app-meeting-evaluation-detail-modal
+  [evaluation]="selectedEvaluation"
+  [show]="showEvaluationModal"
+  [errorMessage]="evaluationErrorMessage"
+  (close)="closeEvaluationModal()">
+</app-meeting-evaluation-detail-modal>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()">
+</app-modal>

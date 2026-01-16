@@ -33,6 +33,8 @@ import { StudentCuencaCommBannerComponent } from '../../../components/home/stude
 import { ImageBannerComponent } from '../../../components/home/image-banner/image-banner.component';
 import { StudentSuspensionModalComponent } from '../../../components/home/student-suspension-modal/student-suspension-modal.component';
 import { UserInfoFormComponent } from '../../../components/home/user-info-form/user-info-form.component';
+import { InstructorEvaluationService } from '../../../services/instructor-evaluation.service';
+import { PendingClassEvaluationBannerComponent } from "../../home/pending-class-evaluation-banner/pending-class-evaluation-banner.component";
 
 @Component({
   selector: 'app-student-dashboard',
@@ -49,7 +51,8 @@ import { UserInfoFormComponent } from '../../../components/home/user-info-form/u
     ImageBannerComponent,
     StudentSuspensionModalComponent,
     UserInfoFormComponent,
-  ],
+    PendingClassEvaluationBannerComponent
+],
   templateUrl: './student-dashboard.component.html',
   styleUrl: './student-dashboard.component.scss',
 })
@@ -70,15 +73,19 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
 
   /* DATA */
   pendingAssessmentsCount = 0;
+  pendingClassEvaluationsCount = 0;
+  hasPendingClassEvaluations = false;
   assessments: StageAssessment[] = [];
   hasLiveClasses = false;
   suspensionInfo: SuspensionInfo | null = null;
+
 
   constructor(
     private router: Router,
     private store: Store,
     private usersService: UsersService,
     private studentsService: StudentsService,
+    private instructorEvaluationService: InstructorEvaluationService
   ) {}
 
   ngOnInit(): void {
@@ -100,6 +107,21 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
         this.showAssessmentAnnouncement = true;
       }
     }
+  }
+
+  private loadPendingClassEvaluations(): void {
+    this.instructorEvaluationService
+      .getPendingEvaluations(50, 0)
+      .subscribe({
+        next: (pending) => {
+          this.pendingClassEvaluationsCount = pending.length;
+          this.hasPendingClassEvaluations = pending.length > 0;
+        },
+        error: () => {
+          this.pendingClassEvaluationsCount = 0;
+          this.hasPendingClassEvaluations = false;
+        }
+      });
   }
 
   private applyUserState(): void {
@@ -129,6 +151,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
     if (this.isLoggedIn && this.shouldShowAnnouncement()) {
       this.showAssessmentAnnouncement = true;
     }
+
+    this.loadPendingClassEvaluations();
   }
 
   /* ============================
@@ -260,6 +284,10 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
 
    goToBooking(): void {
     this.router.navigate(['/dashboard/booking']);
+  }
+
+  goToInstructorEvaluations(): void {
+    this.router.navigate(['/dashboard/instructor-evaluations']);
   }
 
   goToAssessments(): void {

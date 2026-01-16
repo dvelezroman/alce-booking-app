@@ -1,1 +1,55 @@
-<p>pending-evaluations works!</p>
+<section class="pending-section">
+
+  <h3 class="section-title">
+    Pendientes de Evaluación
+    <span class="count">{{ meetings.length }}</span>
+  </h3>
+
+  <!-- LOADING -->
+  <p class="loading" *ngIf="loading">Cargando evaluaciones...</p>
+
+  <!-- EMPTY -->
+  <p class="empty" *ngIf="!loading && meetings.length === 0">
+    No tienes evaluaciones pendientes.
+  </p>
+
+  <!-- CARDS -->
+  <div class="cards-grid">
+    <div class="evaluation-card" *ngFor="let meeting of meetings">
+
+      <div class="card-header">
+        <h4 class="course-title">
+          {{ meeting.meetingTheme?.description || 'Clase' }}
+        </h4>
+
+        <span class="badge pending">Pendiente</span>
+      </div>
+
+      <div class="card-info">
+        <p>
+          <i class="fa-regular fa-user"></i>
+          {{ meeting.instructor.user.firstName }}
+          {{ meeting.instructor.user.lastName }}
+        </p>
+
+        <p>
+          <i class="fa-regular fa-calendar"></i>
+          {{ meeting.localdate | date:'d \'de\' MMMM \'de\' y' }}
+        </p>
+
+        <p>
+          <i class="fa-regular fa-clock"></i>
+          {{ meeting.hour }}:00 - {{ meeting.hour + 2 }}:00
+        </p>
+      </div>
+
+      <button
+        class="evaluate-btn"
+        (click)="onEvaluateClick(meeting)">
+        Evaluar Instructor
+      </button>
+
+    </div>
+  </div>
+
+</section>

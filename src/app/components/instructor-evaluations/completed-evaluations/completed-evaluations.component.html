@@ -1,1 +1,53 @@
-<p>completed-evaluations works!</p>
+<section class="completed-section">
+
+  <h3 class="section-title">
+    Evaluaciones realizadas
+    <span class="count">{{ evaluations.length }}</span>
+  </h3>
+
+  <div class="empty" *ngIf=" evaluations.length === 0">
+    Aún no has evaluado a ningún instructor.
+  </div>
+
+  <div class="table-wrapper" *ngIf=" evaluations.length > 0">
+
+    <div class="table-scroll">
+
+      <table class="evaluations-table">
+        <thead>
+          <tr>
+            <th class="col-instructor">Instructor</th>
+            <th class="col-rating">Calificación</th>
+            <th class="col-observation">Observación</th>
+            <th class="col-date">Fecha</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let evaluation of evaluations">
+            <td class="col-instructor">
+              {{ evaluation.instructor?.user?.firstName }}
+              {{ evaluation.instructor?.user?.lastName }}
+            </td>
+
+            <td class="col-rating rating">
+              {{ evaluation.rating }}/10
+            </td>
+
+            <td class="col-observation">
+              <div class="observation-cell">
+                {{ evaluation.observation || '—' }}
+              </div>
+            </td>
+
+            <td class="col-date date">
+              {{ evaluation.createdAt | date:'mediumDate' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</section>

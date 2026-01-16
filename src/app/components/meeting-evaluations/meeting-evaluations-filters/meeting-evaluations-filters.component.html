@@ -1,0 +1,90 @@
+<section class="filters-section">
+
+  <div class="filters-card">
+    <form>
+
+      <!-- INSTRUCTOR -->
+      <div class="field">
+        <label class="label">Instructor</label>
+        <div class="control">
+          <input
+            type="text"
+            class="input"
+            placeholder="Buscar instructor"
+            [(ngModel)]="instructorSearch"
+            (input)="onInstructorChange(instructorSearch)"
+            (blur)="hideInstructorDropdown()"
+            name="instructor"
+            autocomplete="off" 
+            />
+
+          <div *ngIf="showInstructorDropdown" class="dropdown">
+            <div *ngIf="filteredInstructors.length === 0" class="no-results">
+              No se encontraron instructores
+            </div>
+            <ul *ngIf="filteredInstructors.length > 0">
+              <li
+                *ngFor="let instructor of filteredInstructors"
+                (mousedown)="selectInstructor(instructor)">
+                {{ instructor.firstName }} {{ instructor.lastName }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUDENT -->
+      <div class="field">
+        <label class="label">Estudiante</label>
+        <div class="control">
+          <input
+            type="text"
+            class="input"
+            placeholder="Buscar estudiante"
+            [(ngModel)]="studentSearch"
+            (input)="onStudentChange(studentSearch)"
+            (blur)="hideStudentDropdown()"
+            name="student"
+            autocomplete="off" />
+
+          <div *ngIf="showStudentDropdown" class="dropdown">
+            <div *ngIf="filteredStudents.length === 0" class="no-results">
+              No se encontraron estudiantes
+            </div>
+            <ul *ngIf="filteredStudents.length > 0">
+              <li
+                *ngFor="let student of filteredStudents"
+                (mousedown)="selectStudent(student)">
+                {{ student.firstName }} {{ student.lastName }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- FECHA DESDE -->
+      <div class="field">
+        <label class="label">Desde</label>
+        <input type="date" class="input" [(ngModel)]="fromDate" name="from" />
+      </div>
+
+      <!-- FECHA HASTA -->
+      <div class="field">
+        <label class="label">Hasta</label>
+        <input type="date" class="input" [(ngModel)]="toDate" name="to" />
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="actions">
+        <button type="button" class="btn-primary" (click)="applyFilters()">
+          Buscar
+        </button>
+        <button type="button" class="btn-secondary" (click)="resetFilters()">
+          Limpiar
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</section>

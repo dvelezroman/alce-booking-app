@@ -1,0 +1,67 @@
+<section class="completed-section">
+
+  <h3 class="section-title" *ngIf="meetings.length" >
+    Clases encontradas
+    <span class="count">{{ meetings.length }}</span>
+  </h3>
+
+  <!-- EMPTY -->
+  <div class="empty"
+       *ngIf="searchAttempted && meetings.length === 0">
+       No se encontraron clases con los filtros aplicados.
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrapper"
+       *ngIf="!loading && meetings.length > 0">
+
+    <div class="table-scroll">
+      <table class="evaluations-table">
+
+        <!-- HEADER -->
+        <thead>
+          <tr>
+            <th *ngIf="showInstructor">Instructor</th>
+            <th *ngIf="showStudent">Estudiante</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+          </tr>
+        </thead>
+
+        <!-- BODY -->
+        <tbody>
+          <tr *ngFor="let m of meetings" 
+                class="clickable-row" 
+                (click)="selectMeeting(m)"
+                >
+
+            <!-- INSTRUCTOR -->
+            <td *ngIf="showInstructor">
+              {{ m.instructor?.user?.firstName }}
+              {{ m.instructor?.user?.lastName }}
+            </td>
+
+            <!-- STUDENT -->
+            <td *ngIf="showStudent">
+              {{ m.student?.user?.firstName }}
+              {{ m.student?.user?.lastName }}
+            </td>
+
+            <!-- DATE -->
+            <td>
+              {{ m.date | date:'mediumDate' }}
+            </td>
+
+            <!-- HOUR -->
+            <td>
+              {{ m.hour }}:00
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+
+</section>
