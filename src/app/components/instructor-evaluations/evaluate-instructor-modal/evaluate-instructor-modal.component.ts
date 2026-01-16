@@ -64,6 +64,8 @@ export class EvaluateInstructorModalComponent {
       rating: this.selectedRating,
       observation: this.observation?.trim() || undefined
     });
+
+    this.resetForm();
   }
 
   private resetForm(): void {
