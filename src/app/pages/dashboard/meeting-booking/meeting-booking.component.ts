@@ -182,7 +182,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         this.serverMinAllowedHour =
           time.minute === 0
             ? time.hour + 2
-            : time.hour + 3;
+            : time.hour + 2;
       },
       error: (err) => {
         console.error('Error obteniendo hora del servidor', err);
