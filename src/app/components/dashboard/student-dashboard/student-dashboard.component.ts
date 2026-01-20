@@ -48,7 +48,7 @@ import { PendingClassEvaluationBannerComponent } from "../../home/pending-class-
     PendingAssessmentCardComponent,
     StudentCuencaBannerComponent,
     // StudentCuencaCommBannerComponent,
-    ImageBannerComponent,
+    // ImageBannerComponent,
     StudentSuspensionModalComponent,
     UserInfoFormComponent,
     PendingClassEvaluationBannerComponent
