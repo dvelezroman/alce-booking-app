@@ -51,6 +51,7 @@ import { StageAssessmentListComponent } from './stage-assessment-list/stage-asse
 import { SuspensionHistoryComponent } from './suspension-history/suspension-history.component';
 import { InstructorEvaluationsComponent } from './instructor-evaluations/instructor-evaluations.component';
 import { MeetingEvaluationsComponent } from './meeting-evaluations/meeting-evaluations.component';
+import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluation-statistics.component';
 
 
 export const dashboardRoutes: Routes = [
@@ -67,6 +68,7 @@ export const dashboardRoutes: Routes = [
   { path: 'assessment-types', component: AssessmentTypesComponent },
   { path: 'meetings-student', component: MeetingsStudentComponent },
   { path: 'meeting-evaluations', component: MeetingEvaluationsComponent },
+  { path: 'evaluation-statistics', component: EvaluationStatisticsComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent },
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent },
   { path: 'searching-students', component: SearchingStudentComponent },
