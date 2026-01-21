@@ -1,16 +1,13 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime } from 'rxjs';
+
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
+import { EvaluationStatisticsFilterDto, FilterEvaluationsDto } from '../../../services/dtos/instructor-evaluation.dto';
 
-export interface MeetingEvaluationFilters {
-  instructorId?: number;
-  studentId?: number;
-  from?: string;
-  to?: string;
-}
+export type EvaluationFilterMode = 'evaluations' | 'statistics';
 
 @Component({
   selector: 'app-meeting-evaluations-filters',
@@ -21,7 +18,10 @@ export interface MeetingEvaluationFilters {
 })
 export class MeetingEvaluationsFiltersComponent implements OnInit {
 
-  @Output() filtersSubmitted = new EventEmitter<MeetingEvaluationFilters>();
+  // 🔹 MODO DEL FILTRO
+  @Input() mode: EvaluationFilterMode = 'evaluations';
+
+  @Output() filtersSubmitted = new EventEmitter<FilterEvaluationsDto | EvaluationStatisticsFilterDto>();
 
   // --------------------
   // INPUT MODELS
@@ -31,6 +31,10 @@ export class MeetingEvaluationsFiltersComponent implements OnInit {
 
   fromDate?: string;
   toDate?: string;
+
+  // SOLO STATISTICS
+  minAverageRating?: number;
+  ratingOptions = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 
   // --------------------
   // DROPDOWNS DATA
@@ -58,15 +62,7 @@ export class MeetingEvaluationsFiltersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const today = new Date();
-
-    // FECHA HASTA = HOY
-    this.toDate = today.toISOString().split('T')[0];
-
-    // FECHA DESDE = HOY - 7 DÍAS
-    const fromDate = new Date();
-    fromDate.setDate(today.getDate() - 7);
-    this.fromDate = fromDate.toISOString().split('T')[0];
+    this.setDefaultDates();
   }
 
   // --------------------
@@ -128,7 +124,7 @@ export class MeetingEvaluationsFiltersComponent implements OnInit {
   }
 
   // --------------------
-  // SELECT USERS (CLAVE)
+  // SELECT USERS
   // --------------------
   selectInstructor(user: UserDto) {
     this.selectedInstructor = user;
@@ -136,12 +132,8 @@ export class MeetingEvaluationsFiltersComponent implements OnInit {
     this.filteredInstructors = [];
     this.showInstructorDropdown = false;
 
-    // LIMPIAR ESTUDIANTE SI EXISTÍA
-    if (this.selectedStudent) {
-      this.selectedStudent = undefined;
-      this.studentSearch = '';
-      this.filteredStudents = [];
-      this.showStudentDropdown = false;
+    if (this.mode === 'evaluations') {
+      this.clearStudent();
     }
   }
 
@@ -151,13 +143,7 @@ export class MeetingEvaluationsFiltersComponent implements OnInit {
     this.filteredStudents = [];
     this.showStudentDropdown = false;
 
-    // LIMPIAR INSTRUCTOR SI EXISTÍA
-    if (this.selectedInstructor) {
-      this.selectedInstructor = undefined;
-      this.instructorSearch = '';
-      this.filteredInstructors = [];
-      this.showInstructorDropdown = false;
-    }
+    this.clearInstructor();
   }
 
   hideInstructorDropdown() {
@@ -172,36 +158,64 @@ export class MeetingEvaluationsFiltersComponent implements OnInit {
   // SUBMIT
   // --------------------
   applyFilters() {
-    const { from, to } = this.getDefaultDateRange();
 
-    this.filtersSubmitted.emit({
-      instructorId: this.selectedInstructor?.instructor?.id,
-      studentId: this.selectedStudent?.student?.id,
-      from: this.fromDate || from,
-      to: this.toDate || to
-    });
+    // -------- EVALUATIONS --------
+    if (this.mode === 'evaluations') {
+      const filters: FilterEvaluationsDto = {
+        instructorId: this.selectedInstructor?.instructor?.id,
+        studentId: this.selectedStudent?.student?.id,
+        from: this.fromDate,
+        to: this.toDate
+      };
+
+      this.filtersSubmitted.emit(filters);
+      return;
+    }
+
+    // -------- STATISTICS --------
+    if (this.mode === 'statistics') {
+      const filters: EvaluationStatisticsFilterDto = {
+        instructorId: this.selectedInstructor?.instructor?.id,
+        from: this.fromDate,
+        to: this.toDate,
+        minAverageRating: this.minAverageRating
+      };
+
+      this.filtersSubmitted.emit(filters);
+      return;
+    }
   }
 
   resetFilters() {
-    this.instructorSearch = '';
-    this.studentSearch = '';
+    this.clearInstructor();
+    this.clearStudent();
+    this.minAverageRating = undefined;
+    this.setDefaultDates();
+  }
+
+  // --------------------
+  // HELPERS
+  // --------------------
+  private clearInstructor() {
     this.selectedInstructor = undefined;
-    this.selectedStudent = undefined;
+    this.instructorSearch = '';
     this.filteredInstructors = [];
-    this.filteredStudents = [];
     this.showInstructorDropdown = false;
+  }
+
+  private clearStudent() {
+    this.selectedStudent = undefined;
+    this.studentSearch = '';
+    this.filteredStudents = [];
     this.showStudentDropdown = false;
   }
 
-  private getDefaultDateRange(): { from: string; to: string } {
+  private setDefaultDates() {
     const today = new Date();
-
-    const to = today.toISOString().split('T')[0];
+    this.toDate = today.toISOString().split('T')[0];
 
     const fromDate = new Date();
-    fromDate.setDate(today.getDate() - 7);
-    const from = fromDate.toISOString().split('T')[0];
-
-    return { from, to };
+    fromDate.setDate(today.getDate() - 20);
+    this.fromDate = fromDate.toISOString().split('T')[0];
   }
 }

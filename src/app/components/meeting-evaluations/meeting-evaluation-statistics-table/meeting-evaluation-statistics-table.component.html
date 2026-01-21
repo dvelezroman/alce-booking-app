@@ -1,0 +1,67 @@
+<section class="completed-section">
+
+  <!-- TITLE -->
+  <h3 class="section-title" *ngIf="instructors.length">
+    Instructores evaluados
+    <span class="count">{{ instructors.length }}</span>
+  </h3>
+
+  <!-- EMPTY -->
+  <div
+    class="empty"
+    *ngIf="searchAttempted && instructors.length === 0"
+  >
+    No se encontraron estadísticas con los filtros aplicados.
+  </div>
+
+  <!-- TABLE -->
+  <div
+    class="table-wrapper"
+    *ngIf="instructors.length > 0"
+  >
+    <div class="table-scroll">
+      <table class="evaluations-table">
+
+        <!-- HEADER -->
+        <thead>
+          <tr>
+            <th>Instructor</th>
+            <th class="center">Promedio</th>
+            <th class="center">Observaciones</th>
+            <th class="center">Total</th>
+          </tr>
+        </thead>
+
+        <!-- BODY -->
+        <tbody>
+          <tr *ngFor="let stat of instructors">
+
+            <!-- INSTRUCTOR -->
+            <td>
+              {{ stat.instructor?.user?.firstName }}
+              {{ stat.instructor?.user?.lastName }}
+            </td>
+
+            <!-- AVG -->
+            <td class="center rating">
+              {{ formatAverage(stat.averageRating) }}
+            </td>
+
+            <!-- OBS -->
+            <td class="center">
+              {{ stat.observationsCount }}
+            </td>
+
+            <!-- TOTAL -->
+            <td class="center">
+              {{ stat.totalEvaluations }}
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+
+</section>

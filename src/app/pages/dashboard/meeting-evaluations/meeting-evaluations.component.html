@@ -5,6 +5,7 @@
   <!-- FILTERS -->
   <div class="filters-wrapper">
     <app-meeting-evaluations-filters
+      mode="evaluations"
       (filtersSubmitted)="onFiltersSubmitted($event)">
     </app-meeting-evaluations-filters>
   </div>
@@ -12,11 +13,11 @@
   <!-- RESULTS -->
   <div class="results-wrapper">
     <app-meeting-evaluations-table
-      [meetings]="meetings"
+      [evaluations]="evaluations"
       [searchAttempted]="searchAttempted"
       [showInstructor]="showInstructorColumn"
       [showStudent]="showStudentColumn"
-      (meetingSelected)="onMeetingSelected($event)">
+      (evaluationSelected)="onEvaluationSelected($event)">
     </app-meeting-evaluations-table>
   </div>
 
@@ -27,7 +28,6 @@
 <app-meeting-evaluation-detail-modal
   [evaluation]="selectedEvaluation"
   [show]="showEvaluationModal"
-  [errorMessage]="evaluationErrorMessage"
   (close)="closeEvaluationModal()">
 </app-meeting-evaluation-detail-modal>
 

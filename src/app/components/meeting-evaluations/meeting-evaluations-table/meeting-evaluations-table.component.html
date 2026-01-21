@@ -1,20 +1,23 @@
 <section class="completed-section">
 
-  <h3 class="section-title" *ngIf="meetings.length" >
+  <h3 class="section-title" *ngIf="evaluations.length">
     Clases encontradas
-    <span class="count">{{ meetings.length }}</span>
+    <span class="count">{{ evaluations.length }}</span>
   </h3>
 
   <!-- EMPTY -->
-  <div class="empty"
-       *ngIf="searchAttempted && meetings.length === 0">
-       No se encontraron clases con los filtros aplicados.
+  <div
+    class="empty"
+    *ngIf="searchAttempted && evaluations.length === 0"
+  >
+    No se encontraron clases evaluadas con los filtros aplicados.
   </div>
 
   <!-- TABLE -->
-  <div class="table-wrapper"
-       *ngIf="!loading && meetings.length > 0">
-
+  <div
+    class="table-wrapper"
+    *ngIf="evaluations.length > 0"
+  >
     <div class="table-scroll">
       <table class="evaluations-table">
 
@@ -25,36 +28,43 @@
             <th *ngIf="showStudent">Estudiante</th>
             <th>Fecha</th>
             <th>Hora</th>
+            <th>Nota</th>
           </tr>
         </thead>
 
         <!-- BODY -->
         <tbody>
-          <tr *ngFor="let m of meetings" 
-                class="clickable-row" 
-                (click)="selectMeeting(m)"
-                >
+          <tr
+            *ngFor="let e of evaluations"
+            class="clickable-row"
+            (click)="selectEvaluation(e)"
+          >
 
             <!-- INSTRUCTOR -->
             <td *ngIf="showInstructor">
-              {{ m.instructor?.user?.firstName }}
-              {{ m.instructor?.user?.lastName }}
+              {{ e.instructor?.user?.firstName }}
+              {{ e.instructor?.user?.lastName }}
             </td>
 
             <!-- STUDENT -->
             <td *ngIf="showStudent">
-              {{ m.student?.user?.firstName }}
-              {{ m.student?.user?.lastName }}
+              {{ e.student?.user?.firstName }}
+              {{ e.student?.user?.lastName }}
             </td>
 
             <!-- DATE -->
             <td>
-              {{ m.date | date:'mediumDate' }}
+              {{ e.meeting?.date | date:'mediumDate' }}
             </td>
 
             <!-- HOUR -->
             <td>
-              {{ m.hour }}:00
+              {{ e.meeting?.hour }}:00
+            </td>
+
+            <!-- RATING -->
+            <td class="rating">
+              {{ e.rating }}/10
             </td>
 
           </tr>

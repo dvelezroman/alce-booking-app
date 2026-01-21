@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MeetingDTO } from '../../../services/dtos/booking.dto';
+import { InstructorEvaluation } from '../../../services/dtos/instructor-evaluation.dto';
 
 @Component({
   selector: 'app-meeting-evaluations-table',
@@ -11,20 +11,15 @@ import { MeetingDTO } from '../../../services/dtos/booking.dto';
 })
 export class MeetingEvaluationsTableComponent {
 
-  @Input() meetings: MeetingDTO[] = [];
-  @Input() loading = false;
+  @Input() evaluations: InstructorEvaluation[] = [];
   @Input() searchAttempted = false;
 
   @Input() showInstructor = true;
   @Input() showStudent = true;
 
-  @Output() meetingSelected = new EventEmitter<number>();
+  @Output() evaluationSelected = new EventEmitter<InstructorEvaluation>();
 
-  selectMeeting(meeting: MeetingDTO): void {
-    if (!meeting.id) {
-      return;
-    }
-
-    this.meetingSelected.emit(meeting.id);
+  selectEvaluation(evaluation: InstructorEvaluation): void {
+    this.evaluationSelected.emit(evaluation);
   }
 }

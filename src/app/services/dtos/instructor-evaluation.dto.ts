@@ -53,3 +53,58 @@ export interface PendingMeetingEvaluation {
     description: string;
   };
 }
+
+export interface FilterEvaluationsDto {
+  studentId?: number;
+  instructorId?: number;
+  from?: string;
+  to?: string;
+  limit?: number;
+  offset?: number;
+}
+
+// ----------------------------------------
+// FILTER DTO (STATISTICS)
+// ----------------------------------------
+export interface EvaluationStatisticsFilterDto {
+  instructorId?: number;
+  from?: string;
+  to?: string;
+  minAverageRating?: number;
+}
+
+// ----------------------------------------
+// RATING DISTRIBUTION
+// ----------------------------------------
+export interface RatingDistribution {
+  [rating: number]: number;
+}
+
+// ----------------------------------------
+// INSTRUCTOR STATISTICS
+// ----------------------------------------
+export interface InstructorEvaluationStatistics {
+  instructorId: number;
+
+  averageRating: number;
+  totalEvaluations: number;
+  observationsCount: number;
+
+  ratingDistribution: RatingDistribution;
+
+  recentEvaluations: InstructorEvaluation[];
+
+  instructor?: Instructor;
+}
+
+// ----------------------------------------
+// GLOBAL STATISTICS RESPONSE
+// ----------------------------------------
+export interface EvaluationStatisticsResponse {
+  instructors: InstructorEvaluationStatistics[];
+  overall: {
+    averageRating?: number;
+    totalEvaluations?: number;
+    observationsCount?: number;
+  };
+}

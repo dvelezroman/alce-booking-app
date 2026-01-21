@@ -1,17 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { BookingService } from '../../../services/booking.service';
 import { InstructorEvaluationService } from '../../../services/instructor-evaluation.service';
-
-import { InstructorEvaluation } from '../../../services/dtos/instructor-evaluation.dto';
-import { FilterMeetingsDto, MeetingDTO } from '../../../services/dtos/booking.dto';
+import { FilterEvaluationsDto, InstructorEvaluation } from '../../../services/dtos/instructor-evaluation.dto';
 
 import { MeetingEvaluationsFiltersComponent } from '../../../components/meeting-evaluations/meeting-evaluations-filters/meeting-evaluations-filters.component';
 import { MeetingEvaluationsTableComponent } from '../../../components/meeting-evaluations/meeting-evaluations-table/meeting-evaluations-table.component';
 import { MeetingEvaluationDetailModalComponent } from '../../../components/meeting-evaluations/meeting-evaluation-detail-modal/meeting-evaluation-detail-modal.component';
+
+import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
-import { ModalComponent } from "../../../components/modal/modal.component";
 
 @Component({
   selector: 'app-meeting-evaluations',
@@ -22,20 +20,17 @@ import { ModalComponent } from "../../../components/modal/modal.component";
     MeetingEvaluationsTableComponent,
     MeetingEvaluationDetailModalComponent,
     ModalComponent
-],
+  ],
   templateUrl: './meeting-evaluations.component.html',
   styleUrl: './meeting-evaluations.component.scss'
 })
-export class MeetingEvaluationsComponent {
+export class MeetingEvaluationsComponent implements OnInit {
 
   // --------------------
   // DATA
   // --------------------
-  meetings: MeetingDTO[] = [];
+  evaluations: InstructorEvaluation[] = [];
   selectedEvaluation: InstructorEvaluation | null = null;
-
-  // ERROR
-  evaluationErrorMessage: string | null = null;
 
   // --------------------
   // UI STATE
@@ -44,30 +39,43 @@ export class MeetingEvaluationsComponent {
   showStudentColumn = true;
 
   searchAttempted = false;
-
   showEvaluationModal = false;
-
-  private scrollPosition = 0;
 
   modal: ModalDto = modalInitializer();
 
   constructor(
-    private bookingService: BookingService,
     private evaluationService: InstructorEvaluationService
   ) {}
 
+  ngOnInit(): void {
+    const { from, to } = this.getDefaultDateRange();
+
+    this.fetchEvaluations({
+      from,
+      to,
+      limit: 50,
+      offset: 0
+    });
+  }
+
+  private getDefaultDateRange(): { from: string; to: string } {
+    const today = new Date();
+
+    const to = today.toISOString().split('T')[0];
+
+    const fromDate = new Date();
+    fromDate.setDate(today.getDate() - 20);
+    const from = fromDate.toISOString().split('T')[0];
+
+    return { from, to };
+  }
   // ----------------------------------
   // FILTROS DESDE HIJO
   // ----------------------------------
-  onFiltersSubmitted(filters: {
-    instructorId?: number;
-    studentId?: number;
-    from?: string;
-    to?: string;
-  }): void {
+  onFiltersSubmitted(filters: FilterEvaluationsDto): void {
 
-    // 🚫 NO BUSCAR SI NO HAY INSTRUCTOR NI ESTUDIANTE
-     if (!filters.instructorId && !filters.studentId) {
+    // Validación obligatoria
+    if (!filters.instructorId && !filters.studentId) {
       this.showAutoCloseModal(
         {
           isInfo: true,
@@ -81,75 +89,37 @@ export class MeetingEvaluationsComponent {
     this.showInstructorColumn = !filters.instructorId;
     this.showStudentColumn = !filters.studentId;
 
-    const params: FilterMeetingsDto = {
-      instructorId: filters.instructorId?.toString(),
-      studentId: filters.studentId,
-      from: filters.from,
-      to: filters.to,
-      assigned: true
-    };
-
-    this.fetchMeetings(params);
+    this.fetchEvaluations(filters);
   }
 
   // ----------------------------------
-  // FETCH MEETINGS
+  // FETCH EVALUATIONS (NUEVO FLUJO)
   // ----------------------------------
-  private fetchMeetings(params: FilterMeetingsDto): void {
+  private fetchEvaluations(filters: FilterEvaluationsDto): void {
     this.searchAttempted = true;
-    this.meetings = [];
+    this.evaluations = [];
     this.selectedEvaluation = null;
 
-    this.bookingService.searchMeetings(params).subscribe({
-      next: (meetings) => {
-
-        this.meetings = meetings.sort((a, b) => {
-          const dateA = new Date(a.date).getTime();
-          const dateB = new Date(b.date).getTime();
-          return dateB - dateA; 
+    this.evaluationService.getEvaluations(filters).subscribe({
+      next: (evaluations) => {
+        this.evaluations = evaluations.sort((a, b) => {
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+          return dateB - dateA;
         });
-
       },
       error: () => {
+        this.evaluations = [];
       }
     });
   }
 
   // ----------------------------------
-  // CLICK EN MEETING (DESDE TABLA)
+  // CLICK EN FILA (YA NO HAY FETCH)
   // ----------------------------------
-  onMeetingSelected(meetingId: number): void {
-    this.scrollPosition = window.scrollY;
-    this.fetchEvaluationByMeeting(meetingId);
-  }
-
-  // ----------------------------------
-  // FETCH EVALUATION POR MEETING
-  // ----------------------------------
-  private fetchEvaluationByMeeting(meetingId: number): void {
-
-    this.selectedEvaluation = null;
-    this.evaluationErrorMessage = null;
-
-    this.evaluationService.getByMeeting(meetingId).subscribe({
-      next: (evaluation) => {
-        this.selectedEvaluation = evaluation;
-        this.showEvaluationModal = true;
-
-        setTimeout(() => {
-          window.scrollTo({ top: this.scrollPosition, behavior: 'auto' });
-        });
-      },
-      error: () => {
-        // CUANDO NO TIENE EVALUACIÓN
-        this.evaluationErrorMessage = 'Esta clase aún no ha sido evaluada.';
-        this.showEvaluationModal = true;
-
-        setTimeout(() => {
-          window.scrollTo({ top: this.scrollPosition, behavior: 'auto' });
-        });
-      }
-    });
+  onEvaluationSelected(evaluation: InstructorEvaluation): void {
+    this.selectedEvaluation = evaluation;
+    this.showEvaluationModal = true;
   }
 
   // ----------------------------------
@@ -160,6 +130,9 @@ export class MeetingEvaluationsComponent {
     this.selectedEvaluation = null;
   }
 
+  // ----------------------------------
+  // MODAL AUXILIAR
+  // ----------------------------------
   private showAutoCloseModal(
     config: Partial<ModalDto>,
     duration = 3000

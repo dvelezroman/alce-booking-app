@@ -1,0 +1,34 @@
+<h2 class="title stage">Estadísticas</h2>
+
+<section class="meeting-evaluations-section">
+
+  <!-- FILTERS -->
+  <div class="filters-wrapper">
+    <app-meeting-evaluations-filters
+      [mode]="'statistics'"
+      (filtersSubmitted)="onFiltersSubmitted($event)">
+    </app-meeting-evaluations-filters>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-wrapper">
+
+    <!-- TABLE -->
+    <app-meeting-evaluation-statistics-table
+      *ngIf="statistics && statistics.instructors.length"
+      [statistics]="statistics"
+      [searchAttempted]="searchAttempted">
+    </app-meeting-evaluation-statistics-table>
+
+  </div>
+
+</section>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  (close)="modal.close()">
+</app-modal>

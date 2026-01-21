@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { InstructorEvaluation, CreateInstructorEvaluationDto, PendingMeetingEvaluation } from './dtos/instructor-evaluation.dto';
+import { InstructorEvaluation, CreateInstructorEvaluationDto, PendingMeetingEvaluation, FilterEvaluationsDto, EvaluationStatisticsFilterDto, EvaluationStatisticsResponse } from './dtos/instructor-evaluation.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -55,5 +55,38 @@ export class InstructorEvaluationService {
       `${this.apiUrl}/evaluations/pending`,
       { params }
     );
+  }
+
+  // ----------------------------------------
+  //  GET evaluations con filtros (ADMIN)
+  // ----------------------------------------
+  getEvaluations( filters: FilterEvaluationsDto ): Observable<InstructorEvaluation[]> {
+
+    let params = new HttpParams();
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        params = params.set(key, value.toString());
+      }
+    });
+
+    return this.http.get<InstructorEvaluation[]>(`${environment.apiUrl}/evaluations`, { params }
+    );
+  }
+
+  // ----------------------------------------
+  // GET evaluation statistics
+  // ----------------------------------------
+  getEvaluationStatistics( filters: EvaluationStatisticsFilterDto ): Observable<EvaluationStatisticsResponse> {
+
+    let params = new HttpParams();
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        params = params.set(key, value.toString());
+      }
+    });
+
+    return this.http.get<EvaluationStatisticsResponse>(`${environment.apiUrl}/evaluations/statistics`, { params });
   }
 }
