@@ -74,12 +74,11 @@ export class MeetingEvaluationsComponent implements OnInit {
   // ----------------------------------
   onFiltersSubmitted(filters: FilterEvaluationsDto): void {
 
-    // Validación obligatoria
-    if (!filters.instructorId && !filters.studentId) {
+    if (!filters.from || !filters.to) {
       this.showAutoCloseModal(
         {
           isInfo: true,
-          message: 'Debes seleccionar un instructor o un estudiante'
+          message: 'Debes seleccionar un rango de fechas'
         },
         3000
       );
