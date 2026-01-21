@@ -82,12 +82,10 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
     const startHour = 8;
     const endHour = 20;
     const saturdayEndHour = 14;
-
     const effectiveStartHour =
       isToday && this.minAllowedHour !== null
         ? Math.max(startHour, this.minAllowedHour)
         : startHour;
-
     if (isSaturday) {
       if (effectiveStartHour >= saturdayEndHour) {
         this.timeSlots = [];
@@ -101,7 +99,7 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
       return;
     }
 
-    if (effectiveStartHour >= endHour) {
+    if (effectiveStartHour > endHour) {
       this.timeSlots = [];
       return;
     }

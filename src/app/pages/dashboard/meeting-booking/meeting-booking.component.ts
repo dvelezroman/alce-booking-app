@@ -179,10 +179,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   private loadServerTime(): void {
     this.timeService.getCurrentEcuadorTime().subscribe({
       next: (time) => {
-        this.serverMinAllowedHour =
-          time.minute === 0
-            ? time.hour + 2
-            : time.hour + 2;
+        this.serverMinAllowedHour = time.minute > 15 ? time.hour + 3 : time.hour + 2;
       },
       error: (err) => {
         console.error('Error obteniendo hora del servidor', err);
