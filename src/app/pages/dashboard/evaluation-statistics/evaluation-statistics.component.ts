@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { InstructorEvaluationService } from '../../../services/instructor-evaluation.service';
@@ -12,7 +12,8 @@ import { MeetingEvaluationsFiltersComponent } from
 
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
-import { MeetingEvaluationStatisticsTableComponent } from "../../../components/meeting-evaluations/meeting-evaluation-statistics-table/meeting-evaluation-statistics-table.component";
+import { MeetingEvaluationStatisticsTableComponent } from
+  '../../../components/meeting-evaluations/meeting-evaluation-statistics-table/meeting-evaluation-statistics-table.component';
 
 @Component({
   selector: 'app-evaluation-statistics',
@@ -22,11 +23,11 @@ import { MeetingEvaluationStatisticsTableComponent } from "../../../components/m
     MeetingEvaluationsFiltersComponent,
     ModalComponent,
     MeetingEvaluationStatisticsTableComponent
-],
+  ],
   templateUrl: './evaluation-statistics.component.html',
   styleUrl: './evaluation-statistics.component.scss'
 })
-export class EvaluationStatisticsComponent {
+export class EvaluationStatisticsComponent implements OnInit {
 
   // --------------------
   // DATA
@@ -44,6 +45,30 @@ export class EvaluationStatisticsComponent {
   constructor(
     private evaluationService: InstructorEvaluationService
   ) {}
+
+  // --------------------
+  // INIT → FETCH POR DEFECTO
+  // --------------------
+  ngOnInit(): void {
+    const { from, to } = this.getDefaultDateRange();
+
+    this.fetchStatistics({
+      from,
+      to
+    });
+  }
+
+  private getDefaultDateRange(): { from: string; to: string } {
+    const today = new Date();
+
+    const to = today.toISOString().split('T')[0];
+
+    const fromDate = new Date();
+    fromDate.setDate(today.getDate() - 20);
+    const from = fromDate.toISOString().split('T')[0];
+
+    return { from, to };
+  }
 
   // ----------------------------------
   // FILTROS DESDE HIJO
@@ -80,7 +105,6 @@ export class EvaluationStatisticsComponent {
             (a, b) => b.averageRating - a.averageRating
           )
         };
-
         this.loading = false;
       },
       error: () => {
