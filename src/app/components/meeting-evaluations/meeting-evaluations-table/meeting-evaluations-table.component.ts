@@ -22,4 +22,5 @@ export class MeetingEvaluationsTableComponent {
   selectEvaluation(evaluation: InstructorEvaluation): void {
     this.evaluationSelected.emit(evaluation);
   }
+  
 }

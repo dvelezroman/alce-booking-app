@@ -30,9 +30,24 @@
 /* -------------------- */
 .table-wrapper {
   border-radius: 12px;
-  overflow: hidden;
   background: #fff;
+  width: 750px;
+  overflow: hidden;
+  max-width: 100%;
+  margin: 0 auto;
   box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+/* ============================ */
+/* RESPONSIVE TABLE FIX */
+/* ============================ */
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.evaluations-table {
+  min-width: 550px;
 }
 
 /* -------------------- */
@@ -48,7 +63,7 @@
     color: #374151;
     font-size: .8rem;
     font-weight: 700;
-    text-align: left;
+    text-align: center;
     padding: .75rem;
     border-bottom: 1px solid #e5e7eb;
   }
@@ -75,6 +90,51 @@
     color: #777;
     width: 110px;
   }
+}
+
+/* -------------------- */
+/* ALIGN ESPECÍFICO POR COLUMNA */
+/* -------------------- */
+
+/* Instructor → LEFT */
+.evaluations-table th.col-instructor,
+.evaluations-table td.col-instructor {
+  text-align: left;
+}
+
+/* Rating / Observation / Date → WIDTH FIJO */
+.evaluations-table th.col-rating,
+.evaluations-table td.col-rating,
+.evaluations-table th.col-date,
+.evaluations-table td.col-date {
+  width: 120px;
+  max-width: 120px;
+  text-align: center;
+}
+
+.evaluations-table th.col-observation,
+.evaluations-table td.col-observation{
+  width: 160px;
+  max-width: 160px;
+  text-align: center;
+}
+
+/* Rating ya marcado visualmente */
+.evaluations-table .rating {
+  width: 100px;
+}
+
+/* Fecha */
+.evaluations-table .date {
+  width: 100px;
+}
+
+/* Observation cell truncada correctamente */
+.observation-cell {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* -------------------- */
@@ -136,6 +196,25 @@
       padding: .55rem;
     }
   }
+
+
+/* Rating / Observation / Date → WIDTH FIJO */
+.evaluations-table th.col-rating,
+.evaluations-table td.col-rating,
+.evaluations-table th.col-date,
+.evaluations-table td.col-date {
+  width: 100px;
+  max-width: 100px;
+  text-align: center;
+}
+
+.evaluations-table th.col-observation,
+.evaluations-table td.col-observation{
+  width: 140px;
+  max-width: 140px;
+  text-align: center;
+}
+
 
   .observation-cell {
     max-height: 50px;

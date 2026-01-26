@@ -102,8 +102,8 @@ export class MeetingEvaluationsComponent implements OnInit {
     this.evaluationService.getEvaluations(filters).subscribe({
       next: (evaluations) => {
         this.evaluations = evaluations.sort((a, b) => {
-          const dateA = new Date(a.createdAt).getTime();
-          const dateB = new Date(b.createdAt).getTime();
+           const dateA = new Date(a.meeting?.date ?? '').getTime();
+           const dateB = new Date(b.meeting?.date ?? '').getTime();
           return dateB - dateA;
         });
       },
