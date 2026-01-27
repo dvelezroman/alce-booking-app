@@ -17,10 +17,32 @@ export class MeetingEvaluationsTableComponent {
   @Input() showInstructor = true;
   @Input() showStudent = true;
 
+  @Input() updatingEvaluationId: number | null = null;
+
+  @Output() acceptanceToggled = new EventEmitter<{
+    id: number;
+    accepted: boolean;
+  }>();
+
   @Output() evaluationSelected = new EventEmitter<InstructorEvaluation>();
 
   selectEvaluation(evaluation: InstructorEvaluation): void {
     this.evaluationSelected.emit(evaluation);
   }
-  
+
+  isUpdating(id: number): boolean {
+    return this.updatingEvaluationId === id;
+  }
+
+  onToggleAccepted(
+    evaluation: InstructorEvaluation,
+    event: Event
+  ): void {
+    const checked = (event.target as HTMLInputElement).checked;
+
+    this.acceptanceToggled.emit({
+      id: evaluation.id,
+      accepted: checked
+    });
+  }
 }

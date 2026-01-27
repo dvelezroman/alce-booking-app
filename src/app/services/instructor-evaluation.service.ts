@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { InstructorEvaluation, CreateInstructorEvaluationDto, PendingMeetingEvaluation, FilterEvaluationsDto, EvaluationStatisticsFilterDto, EvaluationStatisticsResponse } from './dtos/instructor-evaluation.dto';
+import { InstructorEvaluation, CreateInstructorEvaluationDto, PendingMeetingEvaluation, FilterEvaluationsDto, EvaluationStatisticsFilterDto, EvaluationStatisticsResponse, UpdateEvaluationAcceptanceDto } from './dtos/instructor-evaluation.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -88,5 +88,16 @@ export class InstructorEvaluationService {
     });
 
     return this.http.get<EvaluationStatisticsResponse>(`${environment.apiUrl}/evaluations/statistics`, { params });
+  }
+
+  // ----------------------------------------
+  // PATCH evaluation acceptance (ADMIN)
+  // ----------------------------------------
+  updateEvaluationAcceptance( evaluationId: number, payload: UpdateEvaluationAcceptanceDto ): Observable<InstructorEvaluation> {
+
+    return this.http.patch<InstructorEvaluation>(
+      `${environment.apiUrl}/evaluations/${evaluationId}/acceptance`,
+      payload
+    );
   }
 }

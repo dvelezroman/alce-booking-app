@@ -9,11 +9,16 @@ export interface InstructorEvaluation {
   instructorId: number;
   rating: number;
   observation?: string;
+  accepted?: boolean;
   createdAt: string;
   updatedAt: string;
   meeting?: MeetingDTO;
   student?: Student;
   instructor?: Instructor;
+}
+
+export interface UpdateEvaluationAcceptanceDto {
+  accepted: boolean;
 }
 
 export interface CreateInstructorEvaluationDto {
@@ -59,6 +64,7 @@ export interface FilterEvaluationsDto {
   instructorId?: number;
   from?: string;
   to?: string;
+  accepted?: boolean;
   limit?: number;
   offset?: number;
 }

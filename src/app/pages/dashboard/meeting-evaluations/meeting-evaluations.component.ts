@@ -31,6 +31,7 @@ export class MeetingEvaluationsComponent implements OnInit {
   // --------------------
   evaluations: InstructorEvaluation[] = [];
   selectedEvaluation: InstructorEvaluation | null = null;
+  updatingEvaluationId: number | null = null;
 
   // --------------------
   // UI STATE
@@ -53,6 +54,7 @@ export class MeetingEvaluationsComponent implements OnInit {
     this.fetchEvaluations({
       from,
       to,
+      accepted: true,
       limit: 50,
       offset: 0
     });
@@ -88,7 +90,10 @@ export class MeetingEvaluationsComponent implements OnInit {
     this.showInstructorColumn = !filters.instructorId;
     this.showStudentColumn = !filters.studentId;
 
-    this.fetchEvaluations(filters);
+    this.fetchEvaluations({
+      ...filters,
+      accepted: true
+    });
   }
 
   // ----------------------------------
@@ -111,6 +116,35 @@ export class MeetingEvaluationsComponent implements OnInit {
         this.evaluations = [];
       }
     });
+  }
+
+  onAcceptanceToggled(event: { id: number; accepted: boolean }): void {
+    this.updatingEvaluationId = event.id;
+
+    this.evaluationService.updateEvaluationAcceptance(event.id, {accepted: event.accepted})
+      .subscribe({ next: (updatedEvaluation) => {
+
+          const index = this.evaluations.findIndex(
+            e => e.id === updatedEvaluation.id
+          );
+
+          if (index !== -1) {
+            this.evaluations[index] = updatedEvaluation;
+          }
+
+          this.updatingEvaluationId = null;
+        },
+        error: () => { this.showAutoCloseModal(
+            {
+              isError: true,
+              message: 'No se pudo actualizar la validación de la evaluación'
+            },
+            3000
+          );
+
+          this.updatingEvaluationId = null;
+        }
+      });
   }
 
   // ----------------------------------

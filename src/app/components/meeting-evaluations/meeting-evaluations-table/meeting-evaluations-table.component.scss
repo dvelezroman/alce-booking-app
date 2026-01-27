@@ -30,7 +30,7 @@
 /* -------------------- */
 .table-wrapper {
   border-radius: 12px;
-  overflow: hidden;
+  overflow-x: auto;
   background: #ffffff;
   box-shadow: 0 6px 18px rgba(0,0,0,.08);
 }
@@ -52,6 +52,7 @@
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  min-width: 550px;
 
   th {
     background: #f9fafb;
@@ -120,6 +121,74 @@
   width: 70px;
   max-width: 70px;
   text-align: center;
+}
+
+/* -------------------- */
+/* CHECKBOX (VALIDADA) */
+/* -------------------- */
+
+/* asegura centro real */
+.evaluations-table th.center,
+.evaluations-table td.center {
+  text-align: center;
+}
+
+/* columna checkbox (última) */
+.evaluations-table th:nth-child(6),
+.evaluations-table td:nth-child(6) {
+  width: 90px;
+  max-width: 90px;
+}
+
+/* checkbox custom simple */
+.evaluations-table td.center input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1.5px solid #d1d5db;
+  background: #ffffff;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  transition: all .15s ease;
+}
+
+/* hover */
+.evaluations-table td.center input[type="checkbox"]:hover {
+  border-color: #9ca3af;
+}
+
+/* focus */
+.evaluations-table td.center input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+  border-color: #2563eb;
+}
+
+/* checked */
+.evaluations-table td.center input[type="checkbox"]:checked {
+  background: #10b981;
+  border-color: #10b981;
+}
+
+/* check icon */
+.evaluations-table td.center input[type="checkbox"]:checked::after {
+  content: "";
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg);
+  margin-top: -1px;
+}
+
+/* disabled (si luego lo usas con isUpdating) */
+.evaluations-table td.center input[type="checkbox"]:disabled {
+  opacity: .55;
+  cursor: not-allowed;
 }
 
 /* -------------------- */

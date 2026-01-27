@@ -29,6 +29,7 @@
             <th>Fecha</th>
             <th>Hora</th>
             <th>Nota</th>
+            <th class="center">Validada</th>
           </tr>
         </thead>
 
@@ -65,6 +66,15 @@
             <!-- RATING -->
             <td class="rating">
               {{ e.rating }}/10
+            </td>
+
+            <!-- VALIDATION CHECK -->
+            <td class="center" (click)="$event.stopPropagation()">
+              <input
+                type="checkbox"
+                [checked]="e.accepted"
+                (change)="onToggleAccepted(e, $event)"
+              />
             </td>
 
           </tr>
