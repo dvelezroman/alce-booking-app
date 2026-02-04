@@ -1,38 +1,45 @@
-<div class="intro-backdrop" *ngIf="show">
-
+<div *ngIf="show" class="intro-backdrop">
   <div class="intro-modal">
 
-    <!-- VIDEO -->
-    <div class="video-wrapper">
+    <div class="video-wrapper" [class.playing]="hasStarted">
+
+    <!-- THUMBNAIL + PLAY -->
+    <div
+      *ngIf="!hasStarted"
+      class="video-overlay"
+      (click)="startVideo()"
+    >
+      <div class="play-btn">▶</div>
+      <span>Toca para reproducir</span>
+    </div>
+
+      <!-- IFRAME -->
       <iframe
+        *ngIf="hasStarted"
         [src]="videoSafeUrl"
+        frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
       </iframe>
+
     </div>
 
     <!-- ACTIONS -->
     <div class="actions">
-
       <a
         class="btn-whatsapp"
         [href]="'https://wa.me/593' + contactPhone"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Más información
+        target="_blank">
+        WhatsApp
       </a>
 
       <button
         class="btn-close"
         [disabled]="!canClose"
-        (click)="close()"
-      >
-        Entendido
+        (click)="close()">
+        {{ canClose ? 'Entendido' : 'Entendido (' + countdown + 's)' }}
       </button>
-
     </div>
 
   </div>
-
 </div>

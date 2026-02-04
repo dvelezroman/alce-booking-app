@@ -20,38 +20,57 @@ export class StudentIntroVideoComponent implements OnChanges {
   @Input() show = false;
   @Input() canClose = false;
 
-  /** cuando ya pasaron los 50s */
   @Output() completed = new EventEmitter<void>();
-
-  /** cuando el usuario cierra */
   @Output() closed = new EventEmitter<void>();
 
   readonly videoId = '3eTkf_PKA7g';
   readonly contactPhone = '0999060380';
 
-  videoSafeUrl: SafeResourceUrl;
+  videoSafeUrl!: SafeResourceUrl;
 
-  private timerStarted = false;
+  hasStarted = false;
+  countdown = 50;
+  private timer?: any;
 
-  constructor(private sanitizer: DomSanitizer) {
-    this.videoSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://www.youtube.com/embed/${this.videoId}?rel=0&modestbranding=1`
-    );
-  }
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnChanges(): void {
-    // SOLO si es primera vez
-    if (this.show && !this.canClose && !this.timerStarted) {
-      this.timerStarted = true;
-
-      setTimeout(() => {
-        this.completed.emit();
-      }, 50000); // 50 segundos
+    if (!this.show) {
+      this.reset();
     }
+  }
+
+  startVideo(): void {
+    if (this.hasStarted) return;
+
+    this.hasStarted = true;
+
+    this.videoSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      `https://www.youtube.com/embed/${this.videoId}?autoplay=1&rel=0&modestbranding=1`
+    );
+
+    this.startCountdown();
+  }
+
+  private startCountdown(): void {
+    this.timer = setInterval(() => {
+      this.countdown--;
+
+      if (this.countdown <= 0) {
+        clearInterval(this.timer);
+        this.completed.emit();
+      }
+    }, 1000);
   }
 
   close(): void {
     if (!this.canClose) return;
     this.closed.emit();
+  }
+
+  private reset(): void {
+    this.hasStarted = false;
+    this.countdown = 50;
+    clearInterval(this.timer);
   }
 }

@@ -1,4 +1,6 @@
-/* BACKDROP */
+/* =========================
+   BACKDROP
+========================= */
 .intro-backdrop {
   position: fixed;
   inset: 0;
@@ -9,7 +11,9 @@
   z-index: 9999;
 }
 
-/* MODAL */
+/* =========================
+   MODAL
+========================= */
 .intro-modal {
   width: 95%;
   max-width: 420px;
@@ -23,11 +27,21 @@
   flex-direction: column;
 }
 
-/* VIDEO → OCUPA CASI TODO */
+/* =========================
+   VIDEO
+========================= */
 .video-wrapper {
+  position: relative;
   flex: 1 1 auto;
   min-height: 70%;
-  background: #000;
+  background-image: url("https://img.youtube.com/vi/3eTkf_PKA7g/hqdefault.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+/* cuando empieza el video */
+.video-wrapper.playing {
+  background-image: none;
 }
 
 .video-wrapper iframe {
@@ -36,15 +50,60 @@
   border: none;
 }
 
-/* ACTIONS → COMPACTO */
+/* =========================
+   OVERLAY PLAY
+========================= */
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15); 
+  backdrop-filter: blur(1px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  cursor: pointer;
+}
+
+.video-overlay span {
+  font-size: .9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  letter-spacing: .2px;
+}
+
+.play-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 2.6rem;
+  color: #fff;
+
+  transition: transform .2s ease, background .2s ease;
+}
+
+.video-overlay:hover .play-btn {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* =========================
+   ACTIONS
+========================= */
 .actions {
   flex: 0 0 auto;
-  padding: .75rem .75rem;
+  padding: .6rem .75rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: .75rem;
+  gap: .6rem;
   background: #ffffff;
 }
 
@@ -54,7 +113,9 @@
   min-width: 150px;
 }
 
-/* WHATSAPP */
+/* =========================
+   WHATSAPP
+========================= */
 .btn-whatsapp {
   background: #25d366;
   color: #ffffff;
@@ -64,9 +125,17 @@
   font-weight: 700;
   font-size: .85rem;
   text-decoration: none;
+  transition: background .2s ease, transform .15s ease;
 }
 
-/* CLOSE */
+.btn-whatsapp:hover {
+  background: #20ba5a;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   CLOSE / ENTENDIDO
+========================= */
 .btn-close {
   background: #e5f0ff;
   color: #1d4ed8;
@@ -79,16 +148,16 @@
   transition: all .2s ease;
 }
 
-/* HOVER SOLO CUANDO ESTÁ ACTIVO */
+/* ACTIVO */
 .btn-close:not(:disabled):hover {
   background: #dbeafe;
   transform: translateY(-1px);
 }
 
-/* DESHABILITADO */
+/* DESHABILITADO (PERO LEGIBLE) */
 .btn-close:disabled {
-  background: #f1f5f9;
-  color: #94a3b8;
+  background: #f8fafc;
+  color: #64748b;
   border-color: #e2e8f0;
   opacity: 1;
   cursor: not-allowed;
