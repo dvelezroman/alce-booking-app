@@ -171,6 +171,7 @@ export class UsersService implements OnInit{
       localStorage.removeItem('instructorLink');
       localStorage.removeItem('assessment_announced');
       localStorage.removeItem('globalNoticeDismissed');
+      sessionStorage.removeItem('intro-video-shown-session');
       this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
       this.store.dispatch(setAdminStatus({ isAdmin: false }));
       this.store.dispatch(unsetUserData());

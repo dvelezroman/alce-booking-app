@@ -5,20 +5,36 @@ import { Injectable } from '@angular/core';
 })
 export class StudentIntroVideoService {
 
-  private readonly STORAGE_KEY = 'student-intro-video-seen';
-
-  /** ¿El estudiante ya vio el video? */
-  hasSeenVideo(): boolean {
-    return localStorage.getItem(this.STORAGE_KEY) === 'true';
+  private buildKey(userId: number): string {
+    return `student-intro-video-seen-${userId}`;
   }
 
-  /** Marca el video como visto */
-  markAsSeen(): void {
-    localStorage.setItem(this.STORAGE_KEY, 'true');
+  /** ¿Este usuario ya vio el video? */
+  hasSeenVideo(userId: number): boolean {
+    return this.getCookie(this.buildKey(userId)) === 'true';
   }
 
-  /** (opcional) reset para pruebas */
-  reset(): void {
-    localStorage.removeItem(this.STORAGE_KEY);
+  /** Marca el video como visto para ESTE usuario */
+  markAsSeen(userId: number): void {
+    // cookie sin expiración real (muy lejana)
+    document.cookie =
+      `${this.buildKey(userId)}=true;path=/;SameSite=Lax`;
+  }
+
+  /* ============================
+     COOKIE HELPERS
+     ============================ */
+
+  private getCookie(name: string): string | null {
+    const nameEQ = name + '=';
+    const cookies = document.cookie.split(';');
+
+    for (let c of cookies) {
+      c = c.trim();
+      if (c.startsWith(nameEQ)) {
+        return c.substring(nameEQ.length);
+      }
+    }
+    return null;
   }
 }

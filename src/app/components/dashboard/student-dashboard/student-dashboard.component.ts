@@ -100,13 +100,16 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 
-    if (this.isLoggedIn && !sessionStorage.getItem(this.INTRO_VIDEO_SESSION_KEY)) {
-      const hasSeenVideo = this.introVideoService.hasSeenVideo();
+    if (
+      this.isLoggedIn &&
+      this.userData?.id &&
+      !sessionStorage.getItem(this.INTRO_VIDEO_SESSION_KEY)
+    ) {
+      const hasSeenVideo =
+        this.introVideoService.hasSeenVideo(this.userData.id);
 
       this.showIntroVideo = true;
       this.canCloseIntroVideo = hasSeenVideo;
-
-      // sessionStorage.setItem(this.INTRO_VIDEO_SESSION_KEY, 'true');
     }
 
     if (this.isLoggedIn && this.shouldShowAnnouncement()) {
@@ -334,14 +337,16 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
   }
 
   onIntroVideoCompleted(): void {
-    this.introVideoService.markAsSeen();
-    this.canCloseIntroVideo = true;
+    if (!this.userData?.id) return;
 
-    sessionStorage.setItem(this.INTRO_VIDEO_SESSION_KEY, 'true');
+    this.introVideoService.markAsSeen(this.userData.id);
+
+    this.canCloseIntroVideo = true;
   }
 
   onIntroVideoClosed(): void {
     this.showIntroVideo = false;
+    sessionStorage.setItem(this.INTRO_VIDEO_SESSION_KEY, 'true');
   }
 
 }
