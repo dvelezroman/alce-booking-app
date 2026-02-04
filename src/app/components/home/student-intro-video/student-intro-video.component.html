@@ -1,0 +1,38 @@
+<div class="intro-backdrop" *ngIf="show">
+
+  <div class="intro-modal">
+
+    <!-- VIDEO -->
+    <div class="video-wrapper">
+      <iframe
+        [src]="videoSafeUrl"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+
+      <a
+        class="btn-whatsapp"
+        [href]="'https://wa.me/593' + contactPhone"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Más información
+      </a>
+
+      <button
+        class="btn-close"
+        [disabled]="!canClose"
+        (click)="close()"
+      >
+        Entendido
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

@@ -35,6 +35,8 @@ import { StudentSuspensionModalComponent } from '../../../components/home/studen
 import { UserInfoFormComponent } from '../../../components/home/user-info-form/user-info-form.component';
 import { InstructorEvaluationService } from '../../../services/instructor-evaluation.service';
 import { PendingClassEvaluationBannerComponent } from "../../home/pending-class-evaluation-banner/pending-class-evaluation-banner.component";
+import { StudentIntroVideoService } from '../../../services/student-intro-video.service';
+import { StudentIntroVideoComponent } from "../../home/student-intro-video/student-intro-video.component";
 
 @Component({
   selector: 'app-student-dashboard',
@@ -51,12 +53,15 @@ import { PendingClassEvaluationBannerComponent } from "../../home/pending-class-
     // ImageBannerComponent,
     StudentSuspensionModalComponent,
     UserInfoFormComponent,
-    PendingClassEvaluationBannerComponent
+    PendingClassEvaluationBannerComponent,
+    StudentIntroVideoComponent
 ],
   templateUrl: './student-dashboard.component.html',
   styleUrl: './student-dashboard.component.scss',
 })
 export class StudentDashboardComponent implements OnInit, OnChanges {
+
+  private readonly INTRO_VIDEO_SESSION_KEY = 'intro-video-shown-session';
 
   @Input() userData: UserDto | null = null;
   @Input() isLoggedIn = false;
@@ -79,17 +84,31 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
   hasLiveClasses = false;
   suspensionInfo: SuspensionInfo | null = null;
 
+  /* intro video */
+  showIntroVideo = false;
+  canCloseIntroVideo = false;
+
 
   constructor(
     private router: Router,
     private store: Store,
     private usersService: UsersService,
     private studentsService: StudentsService,
+    private introVideoService: StudentIntroVideoService,
     private instructorEvaluationService: InstructorEvaluationService
   ) {}
 
   ngOnInit(): void {
-    // El anuncio puede depender de login; igual lo reforzamos en ngOnChanges
+
+    if (this.isLoggedIn && !sessionStorage.getItem(this.INTRO_VIDEO_SESSION_KEY)) {
+      const hasSeenVideo = this.introVideoService.hasSeenVideo();
+
+      this.showIntroVideo = true;
+      this.canCloseIntroVideo = hasSeenVideo;
+
+      // sessionStorage.setItem(this.INTRO_VIDEO_SESSION_KEY, 'true');
+    }
+
     if (this.isLoggedIn && this.shouldShowAnnouncement()) {
       this.showAssessmentAnnouncement = true;
     }
@@ -313,4 +332,16 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
     };
     setTimeout(() => (this.modal.show = false), 2500);
   }
+
+  onIntroVideoCompleted(): void {
+    this.introVideoService.markAsSeen();
+    this.canCloseIntroVideo = true;
+
+    sessionStorage.setItem(this.INTRO_VIDEO_SESSION_KEY, 'true');
+  }
+
+  onIntroVideoClosed(): void {
+    this.showIntroVideo = false;
+  }
+
 }
