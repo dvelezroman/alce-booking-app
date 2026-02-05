@@ -101,6 +101,7 @@ export class StudentsService implements OnInit{
     mode?: string;
     stageId?: number;
     classification?: string;
+    city?: 'Cuenca' | 'Portoviejo';
   }): Observable<Student[]> {
     let params = new HttpParams();
 

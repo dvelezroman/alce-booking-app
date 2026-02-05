@@ -253,6 +253,7 @@ export class NotificationFormWrapperComponent implements OnInit {
     this.studentsService
       .findStudents({
         classification: this.selectedClassification,
+        city: this.selectedCity || undefined,
       })
       .subscribe({
         next: (students) => {
