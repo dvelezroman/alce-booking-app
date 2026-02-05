@@ -1,5 +1,5 @@
 import { UserDto } from './user.dto';
-import { Stage } from './student.dto';
+import { Stage, StudentClassification } from './student.dto';
 
 export interface Notification {
   id: number;
@@ -41,6 +41,8 @@ export interface CreateNotificationDto {
   to: number[];
   scope: 'INDIVIDUAL' | 'ALL_USERS' | 'ALL_STUDENTS' | 'ALL_INSTRUCTORS' | 'STAGE_STUDENTS';
   stageId?: number;
+  studentClassification?: StudentClassification;
+  city?: string;
   title: string;
   message: NotificationMessage
   notificationType: NotificationTypeEnum;

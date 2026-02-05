@@ -35,12 +35,22 @@
 
       <span
         class="badge-option"
+        [class.active]="activeOption === 'segment'"
+        *ngIf="userRole === UserRole.ADMIN"
+        (click)="selectNotificationOption('segment', $event)"
+      >
+        <i class="fas fa-filter"></i> Segmento
+      </span>
+      
+      <span
+        class="badge-option"
         [class.active]="activeOption === 'group'"
         *ngIf="userRole === UserRole.ADMIN"
         (click)="selectNotificationOption('group', $event)"
       >
         <i class="fas fa-users"></i> Grupo
       </span>
+
     </div>
 
     <!-- Versión Mobile -->
@@ -54,6 +64,7 @@
         <option *ngIf="userRole === UserRole.ADMIN" value="role">Rol</option>
         <option *ngIf="userRole === UserRole.ADMIN" value="stage">Stage</option>
         <option *ngIf="userRole === UserRole.ADMIN" value="group">Grupo</option>
+        <option *ngIf="userRole === UserRole.ADMIN" value="segment">Segmento</option>
       </select>
     </div>
   </div>

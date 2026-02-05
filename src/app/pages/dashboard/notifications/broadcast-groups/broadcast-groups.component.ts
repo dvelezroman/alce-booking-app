@@ -8,7 +8,7 @@ import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { Stage } from '../../../../services/dtos/student.dto';
 import { NotificationPanelComponent } from '../../../../components/notifications/notification-panel/notification-panel.component';
 import { StagesService } from '../../../../services/stages.service';
-import { CreateNotificationDto, NotificationGroupDto } from '../../../../services/dtos/notification.dto';
+import { CreateNotificationDto, CreateNotificationsBulkDto, NotificationGroupDto } from '../../../../services/dtos/notification.dto';
 import { NotificationService } from '../../../../services/notification.service';
 import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../../components/modal/modal.component';
@@ -33,7 +33,7 @@ import { NotificationFormWrapperComponent } from '../../../../components/notific
 export class BroadcastGroupsComponent implements OnInit {
   protected readonly UserRole = UserRole;
 
-  selectedAction: 'user' | 'stage' | 'group' | 'role' | '' = '';
+  selectedAction: 'user' | 'stage' | 'group' | 'role' | 'segment' | '' = '';
   selectedUser: any = null;
   selectedRole: 'student' | 'instructor' | 'admin' | null = null;
   stages: Stage[] = [];
@@ -112,17 +112,52 @@ export class BroadcastGroupsComponent implements OnInit {
     setTimeout(() => { this.resetChildren = false; }, 0);
   }
 
-  onSendOptionSelected(option: 'user' | 'stage' | 'group' | 'role') {
+  onSendOptionSelected(option: 'user' | 'stage' | 'group' | 'role' | 'segment') {
     this.selectedAction = option;
     if (option !== 'user')  this.selectedUser  = null;
     if (option !== 'stage') this.selectedStage = null;
     if (option !== 'role')  this.selectedRole  = null;
+    if (option !== 'group') this.groups = [];
     if (option === 'group') {
       this.loadGroups();
     }
   }
 
   handleNotificationSubmit(payload: CreateNotificationDto): void {
+
+    // =========================
+    // SEGMENT → BULK
+    // =========================
+    if (this.selectedAction === 'segment') {
+      const bulkPayload: CreateNotificationsBulkDto = {
+        notifications: [payload]
+      };
+
+      this.notificationService.createBulk(bulkPayload).subscribe({
+        next: () => {
+          this.showModal({
+            isSuccess: true,
+            title: 'Notificación enviada',
+            message: 'La notificación por segmento fue enviada con éxito.',
+          });
+          this.clearSelection();
+        },
+        error: (err) => {
+          console.error('Error al enviar notificación bulk:', err);
+          this.showModal({
+            isError: true,
+            title: 'Error al enviar',
+            message: 'Ocurrió un error al enviar la notificación por segmento.',
+          });
+        },
+      });
+
+      return;
+    }
+
+    // =========================
+    // NORMAL → CREATE
+    // =========================
     const ids = Array.isArray(payload.to)
       ? Array.from(new Set(payload.to.filter((x): x is number => typeof x === 'number')))
       : [];

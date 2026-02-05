@@ -4,7 +4,7 @@ import { UserRole } from '../../../services/dtos/user.dto';
 import { FormsModule } from '@angular/forms';
 
 export type PanelType = 'create' | 'groups' | 'notifications';
-export type SendOptionType = 'user' | 'stage' | 'group' | 'role';
+export type SendOptionType = 'user' | 'stage' | 'group' | 'role' | 'segment';
 export type NotificationsOptionType = 'sent';
 
 @Component({
@@ -50,6 +50,7 @@ export class NotificationPanelComponent {
       stage: 'stage',
       group: 'group',
       role: 'role',
+      segment: 'segment',
     };
 
     const normalized = map[String(option)] ?? 'user';

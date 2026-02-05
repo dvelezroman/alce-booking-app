@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { UserSelectorComponent } from '../user-selector/user-selector.component';
 import { StageSelectorComponent } from '../stage-selector/stage-selector.component';
 
-import { Stage } from '../../../services/dtos/student.dto';
+import { Stage, StudentClassification } from '../../../services/dtos/student.dto';
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
 import { selectUserData } from '../../../store/user.selector';
@@ -31,7 +31,7 @@ import {
   styleUrl: './notification-form-wrapper.component.scss',
 })
 export class NotificationFormWrapperComponent implements OnInit {
-  @Input() selectedType: 'user' | 'stage' | 'group' | 'role' = 'user';
+  @Input() selectedType: 'user' | 'stage' | 'group' | 'role' | 'segment' = 'user';
   @Input() stages: Stage[] = [];
   @Input() userRole: UserRole | null = null;
   @Input() groups: NotificationGroupDto[] = [];
@@ -64,6 +64,10 @@ export class NotificationFormWrapperComponent implements OnInit {
   selectedBroadcastRole: '' | 'student' | 'instructor' | 'admin' = '';
   roleUsers: UserDto[] = [];
   totalUsersByRole = 0;
+
+  //SEGMENT
+  selectedClassification?: StudentClassification;
+  selectedCity: '' | 'Cuenca' | 'Portoviejo' = '';
 
   // Prioridad
   priority = 1;
@@ -235,6 +239,7 @@ export class NotificationFormWrapperComponent implements OnInit {
       case 'stage': return 'Nueva notificación por stage';
       case 'group': return 'Nueva notificación por grupo';
       case 'role':  return 'Nueva notificación por rol';
+      case 'segment': return 'Nueva notificación por segmento';
       default:      return 'Nueva notificación';
     }
   }
@@ -245,6 +250,7 @@ export class NotificationFormWrapperComponent implements OnInit {
       case 'stage': return 'Selecciona una etapa y se notificará a todos los estudiantes dentro de ella.';
       case 'group': return 'Selecciona un grupo para enviar la notificación a sus integrantes.';
       case 'role':  return 'Elige un rol y se enviará a todos los usuarios con ese rol.';
+      case 'segment': return 'Envía notificaciones por clasificación (Kids, Teens, Adults) y ciudad.';
       default:      return 'Envía notificaciones a usuarios, grupos, por etapa o por rol.';
     }
   }
@@ -280,6 +286,14 @@ export class NotificationFormWrapperComponent implements OnInit {
         to = (this.users ?? []).map(u => u.id);
         scope = NotificationScopeEnum.STAGE_STUDENTS;
         if (!this.selectedStageId || to.length === 0) return;
+        break;
+      }
+
+      case 'segment': {
+        if (!this.selectedClassification) return;
+
+        to = [];
+        scope = NotificationScopeEnum.INDIVIDUAL;
         break;
       }
 
@@ -336,6 +350,7 @@ export class NotificationFormWrapperComponent implements OnInit {
     }
 
     // Flags de persistencia: controlan si la notificación se puede borrar
+    const isSegment = this.selectedType === 'segment';
     const isPersistent = this.noExpire;
     const isDeletable = !this.noExpire;
 
@@ -368,7 +383,12 @@ export class NotificationFormWrapperComponent implements OnInit {
         : undefined,
       temporalStageId: stageId,
       isPersistent,
-      isDeletable
+      isDeletable,
+
+      ...(isSegment && {
+        studentClassification: this.selectedClassification,
+        city: this.selectedCity || undefined
+      })
     };
 
     // Emite el evento hacia el componente padre para que lo envíe al backend
