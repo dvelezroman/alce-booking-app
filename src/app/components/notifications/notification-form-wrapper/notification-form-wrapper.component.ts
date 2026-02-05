@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { UserSelectorComponent } from '../user-selector/user-selector.component';
 import { StageSelectorComponent } from '../stage-selector/stage-selector.component';
 
-import { Stage, StudentClassification } from '../../../services/dtos/student.dto';
+import { Stage, Student, StudentClassification } from '../../../services/dtos/student.dto';
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
 import { selectUserData } from '../../../store/user.selector';
@@ -17,6 +17,7 @@ import {
   NotificationScopeEnum,
   NotificationTypeEnum
 } from '../../../services/dtos/notification.dto';
+import { StudentsService } from '../../../services/students.service';
 
 @Component({
   selector: 'app-notification-form-wrapper',
@@ -68,6 +69,9 @@ export class NotificationFormWrapperComponent implements OnInit {
   //SEGMENT
   selectedClassification?: StudentClassification;
   selectedCity: '' | 'Cuenca' | 'Portoviejo' = '';
+  segmentStudents: Student[] = [];
+  segmentUserIds: number[] = [];
+  loadingSegmentUsers = false;
 
   // Prioridad
   priority = 1;
@@ -89,6 +93,7 @@ export class NotificationFormWrapperComponent implements OnInit {
   constructor(
     private store: Store,
     private usersService: UsersService,
+    private studentsService: StudentsService,
   ) {}
 
   ngOnInit(): void {
@@ -233,6 +238,44 @@ export class NotificationFormWrapperComponent implements OnInit {
     this.selectedUsers = users;
   }
 
+  onSegmentChange(): void {
+    if (this.selectedType !== 'segment') return;
+
+    // Si no hay clasificación seleccionada → limpiar
+    if (!this.selectedClassification) {
+      this.segmentStudents = [];
+      this.segmentUserIds = [];
+      return;
+    }
+
+    this.loadingSegmentUsers = true;
+
+    this.studentsService
+      .findStudents({
+        classification: this.selectedClassification,
+      })
+      .subscribe({
+        next: (students) => {
+          this.segmentStudents = students || [];
+
+          // Mapear a IDs de usuario
+          this.segmentUserIds = this.segmentStudents
+            .map(s => s.userId)
+            .filter((id): id is number => typeof id === 'number');
+
+          // Eliminar duplicados
+          this.segmentUserIds = Array.from(new Set(this.segmentUserIds));
+
+          this.loadingSegmentUsers = false;
+        },
+        error: () => {
+          this.segmentStudents = [];
+          this.segmentUserIds = [];
+          this.loadingSegmentUsers = false;
+        },
+      });
+  }
+
   get titleText(): string {
     switch (this.selectedType) {
       case 'user':  return 'Nueva notificación a usuario(s)';
@@ -256,6 +299,7 @@ export class NotificationFormWrapperComponent implements OnInit {
   }
 
   get recipientsCount(): number {
+    if (this.selectedType === 'segment') return this.segmentUserIds.length;
     if (this.selectedType === 'group') return this.selectedGroupMembers || 0;
     if (this.selectedType === 'stage') return this.totalUsersInStage || 0;
     if (this.selectedType === 'role')  return this.totalUsersByRole || 0;
@@ -292,7 +336,7 @@ export class NotificationFormWrapperComponent implements OnInit {
       case 'segment': {
         if (!this.selectedClassification) return;
 
-        to = [];
+        to = this.segmentUserIds;
         scope = NotificationScopeEnum.INDIVIDUAL;
         break;
       }
@@ -357,7 +401,7 @@ export class NotificationFormWrapperComponent implements OnInit {
     // Construye el payload final con toda la información
     const payload: CreateNotificationDto = {
       from: this.userId!,
-      to,
+      to: this.segmentUserIds,
       scope,
       stageId,
       title: this.title,
