@@ -54,7 +54,16 @@ export class StageAssessmentResultsComponent implements OnChanges {
       return [];
     }
 
-    return item.assessments.filter(a => a.points < 80);
+    const failed = item.assessments.filter(a => a.points < 80);
+    const uniqueByType = new Map<string, StudentAssessment>();
+
+    failed.forEach(a => {
+      if (!uniqueByType.has(a.type)) {
+        uniqueByType.set(a.type, a);
+      }
+    });
+
+    return Array.from(uniqueByType.values());
   }
 
   /** Saber si el estudiante aprobó el stage */
@@ -63,8 +72,7 @@ export class StageAssessmentResultsComponent implements OnChanges {
 
     return item.assessments.every(a => a.points >= 80);
   }
-
-  /** Texto bonito para UI */
+  
   getPendingAssessmentLabel(item: StageProgressDto): string {
     const pending = this.getPendingAssessments(item);
 
