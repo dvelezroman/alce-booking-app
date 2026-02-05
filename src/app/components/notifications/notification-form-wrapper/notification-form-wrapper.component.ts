@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -31,7 +31,7 @@ import { StudentsService } from '../../../services/students.service';
   templateUrl: './notification-form-wrapper.component.html',
   styleUrl: './notification-form-wrapper.component.scss',
 })
-export class NotificationFormWrapperComponent implements OnInit {
+export class NotificationFormWrapperComponent implements OnInit, OnChanges {
   @Input() selectedType: 'user' | 'stage' | 'group' | 'role' | 'segment' = 'user';
   @Input() stages: Stage[] = [];
   @Input() userRole: UserRole | null = null;
@@ -111,6 +111,48 @@ export class NotificationFormWrapperComponent implements OnInit {
 
     const defaultExpire = new Date(now.getTime() + 24 * 60 * 60 * 1000);
     this.expiresAtLocal = this.toLocalInput(defaultExpire);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedType'] && !changes['selectedType'].firstChange) {
+      this.resetByTypeChange();
+    }
+  }
+
+  private resetByTypeChange(): void {
+    // ===== FORM =====
+    this.title = '';
+    this.message = '';
+    this.formRef?.resetForm();
+
+    // ===== USER =====
+    this.selectedUsers = [];
+    this.selectedUserRole = 'student';
+
+    // ===== STAGE =====
+    this.selectedStageId = null;
+    this.users = [];
+    this.totalUsersInStage = 0;
+
+    // ===== GROUP =====
+    this.selectedGroupId = null;
+    this.selectedGroupMembers = 0;
+
+    // ===== ROLE =====
+    this.selectedBroadcastRole = '';
+    this.roleUsers = [];
+    this.totalUsersByRole = 0;
+
+    // ===== SEGMENT =====
+    this.selectedClassification = undefined;
+    this.selectedCity = '';
+    this.segmentStudents = [];
+    this.segmentUserIds = [];
+    this.loadingSegmentUsers = false;
+
+    // ===== SCHEDULE =====
+    this.noExpire = false;
+    this.datesInvalid = false;
   }
 
   private toLocalInput(d: Date): string {
@@ -402,7 +444,7 @@ export class NotificationFormWrapperComponent implements OnInit {
     // Construye el payload final con toda la información
     const payload: CreateNotificationDto = {
       from: this.userId!,
-      to: this.segmentUserIds,
+      to,
       scope,
       stageId,
       title: this.title,

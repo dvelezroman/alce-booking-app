@@ -1,3 +1,4 @@
+import { StudentAssessment } from "./stage-assessment.dto";
 import { Student, Stage } from "./student.dto";
 
 /**
@@ -12,6 +13,7 @@ export interface StageProgressDto {
   updatedAt: string;
   student: Student;
   stage: Stage;
+  assessments?: StudentAssessment[];
 }
 
 /**

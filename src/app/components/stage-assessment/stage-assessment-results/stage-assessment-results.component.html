@@ -12,6 +12,22 @@
       {{ item.student.user?.firstName }} {{ item.student.user?.lastName }}
     </div>
 
+    <!-- Pendientes -->
+    <div class="pending">
+      <ng-container *ngIf="getPendingAssessments(item).length > 0; else okTpl">
+        <span
+          class="badge"
+          *ngFor="let a of getPendingAssessments(item)"
+        >
+          {{ a.assessmentType?.name || a.type }}
+        </span>
+      </ng-container>
+
+      <ng-template #okTpl>
+        <span class="badge success">OK</span>
+      </ng-template>
+    </div>
+
     <!-- Barra -->
     <div class="progress-bar">
       <div

@@ -30,6 +30,31 @@ export interface StageAssessment {
   updatedAt?: string;
 }
 
+export interface StudentAssessment {
+  id: number;
+  studentId: number;
+  stageId: number;
+  type: 'Grammar' | 'Speaking' | string;
+  points: number;
+  assessmentTypeId: number;
+  assessmentType?: {
+    id: number;
+    name: string;
+    description?: string | null;
+  };
+  
+  assessmentResourceIds?: number[];
+  note?: string;
+  instructorId?: number;
+  instructor?: {
+    id: number;
+    userId: number;
+  };
+
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface StageAssessmentStudent {
   studentId: number;
   userId: number;
