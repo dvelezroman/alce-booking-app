@@ -17,6 +17,7 @@ export class StageAssessmentResultsComponent implements OnChanges {
   @Input() resetSelection: boolean = false;
 
   @Output() selectionChange = new EventEmitter<number[]>();
+  
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['resetSelection'] && this.resetSelection) {
@@ -48,23 +49,58 @@ export class StageAssessmentResultsComponent implements OnChanges {
     return this.selectedIds.includes(id);
   }
 
-  /** Devuelve evaluaciones NO aprobadas (<80) */
+  /** Devuelve evaluaciones NO aprobadas (<80) o no existentes */
   getPendingAssessments(item: StageProgressDto): StudentAssessment[] {
-    if (!item.assessments || item.assessments.length === 0) {
-      return [];
+    const REQUIRED_TYPES = ['Grammar', 'Speaking'];
+    const assessments = item.assessments ?? [];
+
+    // Si no tiene ninguna evaluación → ambas pendientes
+    if (assessments.length === 0) {
+      return REQUIRED_TYPES.map(type => ({
+        type,
+        points: 0,
+      } as StudentAssessment));
     }
 
-    const failed = item.assessments.filter(a => a.points < 80);
-    const uniqueByType = new Map<string, StudentAssessment>();
+    const result: StudentAssessment[] = [];
 
-    failed.forEach(a => {
-      if (!uniqueByType.has(a.type)) {
-        uniqueByType.set(a.type, a);
+    REQUIRED_TYPES.forEach(type => {
+      const assessmentsOfType = assessments.filter(a => a.type === type);
+
+      if (assessmentsOfType.length === 0) {
+        // No existe ese tipo → pendiente
+        result.push({ type, points: 0 } as StudentAssessment);
+        return;
+      }
+
+      const hasApproved = assessmentsOfType.some(a => a.points >= 80);
+
+      if (!hasApproved) {
+        // Existe pero ninguna aprobó
+        result.push(assessmentsOfType[0]);
       }
     });
 
-    return Array.from(uniqueByType.values());
+    return result;
   }
+
+  /** Devuelve el estado de un tipo de evaluación */
+    getAssessmentStatus(
+      item: StageProgressDto,
+      type: string
+    ): 'approved' | 'pending' {
+      const assessments = item.assessments ?? [];
+
+      const ofType = assessments.filter(a => a.type === type);
+
+      if (ofType.length === 0) {
+        return 'pending';
+      }
+
+      return ofType.some(a => a.points >= 80)
+        ? 'approved'
+        : 'pending';
+    }
 
   /** Saber si el estudiante aprobó el stage */
   hasApprovedAll(item: StageProgressDto): boolean {

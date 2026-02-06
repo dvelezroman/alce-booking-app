@@ -13,19 +13,27 @@
     </div>
 
     <!-- Pendientes -->
+    <!-- Evaluaciones -->
     <div class="pending">
-      <ng-container *ngIf="getPendingAssessments(item).length > 0; else okTpl">
-        <span
-          class="badge"
-          *ngFor="let a of getPendingAssessments(item)"
-        >
-          {{ a.assessmentType?.name || a.type }}
-        </span>
-      </ng-container>
 
-      <ng-template #okTpl>
-        <span class="badge success">OK</span>
-      </ng-template>
+      <!-- Grammar -->
+      <span
+        class="badge"
+        [class.success]="getAssessmentStatus(item, 'Grammar') === 'approved'"
+        [class.danger]="getAssessmentStatus(item, 'Grammar') === 'pending'"
+      >
+        Grammar
+      </span>
+
+      <!-- Speaking -->
+      <span
+        class="badge"
+        [class.success]="getAssessmentStatus(item, 'Speaking') === 'approved'"
+        [class.danger]="getAssessmentStatus(item, 'Speaking') === 'pending'"
+      >
+        Speaking
+      </span>
+
     </div>
 
     <!-- Barra -->
