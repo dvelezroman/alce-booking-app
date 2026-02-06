@@ -1,15 +1,17 @@
 .notif-detail-root {
-  --bg-page: #f8f9fa;
+  --bg-page: #fff;
   --bg-card: #ffffff;
-  --bg-soft: #fdfdfd;
+  --bg-soft: #ffffff;
   --border: #e5e7eb;
   --muted: #667085;
   --text: #0f172a;
 
-  background: var(--bg-page);
+
   color: var(--text);
-  width: 100%;
+  width: 90%;
+  margin: auto;
   min-height: 100vh;
+  padding-top: 7rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,107 +19,28 @@
   /* Contenedor principal */
   .container {
     width: 100%;
-    max-width: 960px;
-    padding: 16px;
+    max-width: 760px;
+    padding: 14px;
     box-sizing: border-box;
   }
 
-  /* Top bar */
-  .topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 0 16px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-page);
-  position: sticky;
-  top: 0;
-  z-index: 5;
 
-  /* Contenedor izquierdo: botón volver */
-  .btn.back {
-  font-size: 22px;
-  line-height: 1;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  color: var(--text);
-
-  cursor: pointer;
-  transition: background 0.2s ease;
-
-  &:hover {
-    background: var(--bg-soft);
-    border-radius: 8px;
-  }
-}
-
-  /* Contenedor derecho: badge + acciones */
-  .right {
-    display: flex;
-    align-items: center;
-    gap: 16px; /* Espacio entre badge y botones */
+  /* Ajuste del contenido para que no quede debajo */
+  .notif-detail-root .layout.single {
+    margin-top: 4rem;
   }
 
-  // .badge.status {
-  //   font-size: 12px;
-  //   padding: 4px 8px;
-  //   border-radius: 999px;
-  //   border: 1px solid var(--border);
-  //   background: #f6f7fb;
-  //   text-transform: uppercase;
-  //   letter-spacing: 0.02em;
+  /* Mobile */
+  @media (max-width: 640px) {
+    .notif-page-title {
+      font-size: 1.25rem;
+      line-height: 3.75rem;
+    }
 
-  //   &[data-status="SENT"] {
-  //     background: #ecfeff;
-  //     border-color: #a5f3fc;
-  //   }
-  //   &[data-status="DELIVERED"] {
-  //     background: #ecfffb;
-  //     border-color: #99f6e4;
-  //   }
-  //   &[data-status="READ"] {
-  //     background: #f0fdf4;
-  //     border-color: #86efac;
-  //   }
-  //   &[data-status="FAILED"] {
-  //     background: #fef2f2;
-  //     border-color: #fecaca;
-  //   }
-  //   &[data-status="PENDING"] {
-  //     background: #fff7ed;
-  //     border-color: #fed7aa;
-  //   }
-  // }
-
-  .actions {
-    display: flex;
-    gap: 8px;
-
-    .icon-btn {
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      border-radius: 8px;
-      padding: 6px 8px;
-      cursor: pointer;
-      transition: background 0.2s ease, transform 0.05s ease;
-
-      &:hover {
-        background: var(--bg-soft);
-      }
-
-      &:active {
-        transform: scale(0.97);
-      }
+    .notif-detail-root .layout.single {
+      margin-top: 4rem;
     }
   }
-}
 
   /* Bloque del asunto */
   .subject-block {
@@ -193,6 +116,13 @@
     padding: 20px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 
+    @media (max-width: 640px) {
+      padding: 0px;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
     .from-row {
       display: grid;
       grid-template-columns: 48px 1fr;
@@ -203,7 +133,7 @@
         width: 48px;
         height: 48px;
         border-radius: 50%;
-        background: #e5e7eb;
+        background: #f1f2f3;
         display: grid;
         place-items: center;
         font-weight: 700;
@@ -239,7 +169,44 @@
           font-size: 14px;
         }
       }
+
+        @media (max-width: 640px) {
+          grid-template-columns: 40px 1fr;
+          gap: 10px;
+
+          .avatar {
+            width: 40px;
+            height: 40px;
+            font-size: 13px;
+          }
+
+          .from-meta {
+            .from-line {
+              gap: 6px;
+
+              .name {
+                font-size: 12px;
+              }
+
+              .email,
+              .time,
+              .dot {
+                font-size: 10px;
+              }
+            }
+
+            .to-line {
+              font-size: 10.5px;
+            }
+
+            .title-line {
+              font-size: 12px;
+            }
+          }
+        }
     }
+
+
 
     /* Detalles desplegables */
     .meta-disclosure {
@@ -298,8 +265,7 @@
     /* Cuerpo del mensaje */
     .content {
       margin-top: 10px;
-      padding: 18px;
-      border: 1px solid var(--border);
+      padding: 10px;
       border-radius: 12px;
       background: var(--bg-soft);
 
@@ -344,10 +310,6 @@
 
 /* === Ajustes para fondo claro y ancho del contenedor === */
 
-.notif-detail-root {
-  background: #f8f9fa;
-  min-height: 100vh;
-}
 
 /* 2) El contenedor principal (layout) */
 .notif-detail-root .layout.single {
@@ -358,11 +320,38 @@
 
 /* 3) El card del mensaje */
 .notif-detail-root .message-col {
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: 1000px;
   @media (max-width: 640px) {
     width: 100%;
+  }
+}
+
+/* ===== Botón volver dentro de la card ===== */
+.back-row {
+  margin-bottom: 12px;
+}
+
+.btn.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 13px;
+  font-weight: 500;
+  color: #2563eb;
+
+  background: none;
+  border: none;
+  padding: 4px 6px;
+
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: #eff6ff;
   }
 }
 
@@ -373,6 +362,8 @@
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  max-height: 400px;
+  overflow-y: auto;
 
   .recipients-header {
     display: flex;
@@ -418,5 +409,68 @@
     font-size: 10px;
     color: #166534;
     margin-right: 4px;
+  }
+}
+
+/* ===== Botón Para (tipo email) ===== */
+.toggle-recipients {
+  margin-top: 4px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #2563eb;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  /* Chevron */
+  &::after {
+    content: "▾";
+    font-size: 12px;
+    transition: transform 0.2s ease;
+  }
+}
+
+/* Chevron gira cuando está abierto */
+.toggle-recipients.open::after {
+  transform: rotate(180deg);
+}
+
+::ng-deep .recipients-card .audience strong {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+::ng-deep .recipients-card .audience strong::after {
+  content: " (Tú)";
+  font-weight: 500;
+  font-size: 11px;
+  color: #2563eb;
+}
+
+/* =========================
+   RECIPIENTS CARD - MOBILE FULL WIDTH REAL
+========================= */
+@media (max-width: 640px) {
+  .recipients-card {
+    position: relative;
+    left: 32%;
+    transform: translateX(-50%);
+
+    width: 85vw;
+    max-width: 85vw;
+
+    margin-left: 0;
+    margin-right: 0;
+
+    border-radius: 0;
   }
 }

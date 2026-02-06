@@ -1,15 +1,18 @@
-/** Sección general — fondo limpio y espaciamiento moderno */
+/* =========================
+   SECCIÓN GENERAL
+========================= */
 .section {
-  background-color: #fafafa;
   min-height: 100vh;
-  padding: 100px 0rem 4rem;
+  padding: 100px 0 4rem;
   display: flex;
   justify-content: center;
 }
 
-/** Contenido */
+/* =========================
+   CONTENIDO
+========================= */
 .content {
-  width: 90%;
+  width: 100%;
   max-width: 1000px;
   margin: 0 auto;
   display: flex;
@@ -17,22 +20,24 @@
   gap: 1.75rem;
 }
 
-/** Título estilo dashboard SaaS */
+/* =========================
+   HEADER FIJO
+========================= */
 .reports-progress-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #fafafa;
-  color: #333;
-  z-index: 10;
+  background-color: #fff;
+  color: #111827;
+  z-index: 20;
   text-align: center;
 }
 
 .reports-progress-title {
   font-size: 1.5rem;
-  line-height: 75px;
-  font-weight: bold;
+  line-height: 72px;
+  font-weight: 600;
 
   @media (max-width: 640px) {
     font-size: 1.2rem;
@@ -40,75 +45,72 @@
   }
 }
 
-/** Card tipo Vercel/Stripe */
+/* =========================
+   CARD PERFIL
+========================= */
 .profile-card {
-  background: white;
-  border-radius: 14px;
-  border: 1px solid #e5e7eb;
-  padding: 2rem;
-  box-shadow:
-      0 2px 6px rgba(0,0,0,0.03),
-      0 1px 3px rgba(0,0,0,0.02);
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  transition: box-shadow .2s ease;
+  background: #ffffff;
+  border-radius: 16px;
 
-  &:hover {
-    box-shadow:
-      0 6px 20px rgba(0,0,0,0.06),
-      0 4px 12px rgba(0,0,0,0.04);
-  }
-    @media (max-width: 768px) {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "header header"
+    "personal academic"
+    "representative password"
+    "actions actions";
+  gap: 1.5rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "personal"
+      "academic"
+      "representative"
+      "password"
+      "actions";
     padding: 1.5rem;
-    border-radius: 10px;
   }
 
   @media (max-width: 480px) {
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: 12px;
   }
 }
 
-/** Cabecera de usuario */
+/* =========================
+   HEADER USUARIO
+========================= */
 .profile-header {
+  grid-area: header;
   display: flex;
-  gap: 1.5rem;
   align-items: center;
+  gap: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #f1f1f1;
-
-  @media (max-width: 480px) {
-    gap: 0.9rem;
-  }
+  border-bottom: 1px solid #f1f5f9;
 }
 
-/** Avatar moderno */
+/* Avatar */
 .profile-header .avatar {
   width: 64px;
   height: 64px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  border-radius: 50px;
+  background: linear-gradient(135deg, #f2f3f5, #edf0fa);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.4rem;
   font-weight: 600;
-  color: white;
+  color: gray;
   box-shadow:
-    inset 0 0 8px rgba(255,255,255,0.15),
-    0 2px 6px rgba(0,0,0,0.1);
-
-    @media (max-width: 768px) {
-    width: 54px;
-    height: 54px;
-    font-size: 1.2rem;
-  }
+    inset 0 0 6px rgba(255,255,255,0.15),
+    0 2px 6px rgba(0,0,0,0.12);
 
   @media (max-width: 480px) {
-    width: 44px;
-    height: 44px;
-    font-size: 1rem;
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
   }
 }
 
@@ -116,190 +118,161 @@
   margin: 0;
   font-size: 1.35rem;
   font-weight: 600;
-  color: #111;
-
-  @media (max-width: 768px) {
-    font-size: 1.15rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1rem;
-  }
+  color: #0f172a;
 }
 
 .user-info .role {
   font-size: 0.9rem;
   color: #2563eb;
-
-  @media (max-width: 480px) {
-    font-size: 0.8rem;
-  }
 }
 
 .user-info .email {
   font-size: 0.85rem;
   color: #6b7280;
-
-  @media (max-width: 480px) {
-    font-size: 0.8rem;
-  }
 }
 
-/** Bloques de información */
-.profile-details,
-.representative-block {
-  background: #fafafa;
-  border: 1px solid #ececec;
-  padding: 1.25rem 1.5rem;
+/* =========================
+   BLOQUES
+========================= */
+.profile-details {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: .75rem;
-
-  @media (max-width: 768px) {
-    padding: 1rem 1.2rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 0.9rem 1rem;
-  }
+  padding: 1.25rem 1.5rem;
 }
 
-.block-header {
-  margin-bottom: .5rem;
+.personal-block { grid-area: personal; }
+.institution-block { grid-area: academic; }
+
+.representative-block {
+  grid-area: representative;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
 }
 
+.password-change {
+  grid-area: password;
+}
+
+/* =========================
+   HEADERS DE BLOQUE
+========================= */
 .block-header h3 {
-  margin: 0;
-  font-size: 1rem;
+  margin: 0 0 .75rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: #0f172a;
-
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-  }
 }
 
-/** Texto de datos */
+/* =========================
+   TEXTO
+========================= */
 .block-content p {
-  margin: .15rem 0;
-  font-size: 0.9rem;
+  margin: .2rem 0;
+  font-size: 0.88rem;
   color: #374151;
-
-  @media (max-width: 480px) {
-    font-size: 0.8rem;
-  }
 }
 
 .block-content strong {
-  color: #111;
-  font-weight: 600;
-}
-
-/** Cambio de contraseña */
-/* Título pequeño, elegante */
-.password-title {
-  font-size: 0.95rem;
   font-weight: 600;
   color: #111827;
-  margin-bottom: 0.4rem;
 }
 
-/* Wrapper minimalista */
+/* =========================
+   PASSWORD
+========================= */
+.password-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
 .password-field {
   position: relative;
-  width: 100%;
 }
 
-/* Input moderno estilo Vercel */
 .password-input-modern {
   width: 100%;
   padding: 0.65rem 1rem;
   padding-right: 2.5rem;
   border-radius: 10px;
-  font-size: 0.9rem;
   border: 1px solid #e5e7eb;
-  background: #fafafa;
-  transition: all 0.2s ease;
-  color: #111827;
+  background: #fdfdfd;
+  font-size: 0.85rem;
 
   &:focus {
     outline: none;
-    background: white;
+    background: #fff;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
   }
 }
 
-/* Botón ícono */
 .password-icon-btn {
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  background: transparent;
+  background: none;
   border: none;
   cursor: pointer;
-  font-size: 1rem;
   color: #6b7280;
-  transition: color .2s ease;
-
-  &:hover {
-    color: #3b82f6;
-  }
 }
 
-/* Botón principal */
 .password-submit-btn {
-  margin-top: 0.75rem;
-  width: fit-content;
+  margin-top: .75rem;
   background: #3b82f6;
-  color: white;
-  padding: 0.55rem 1.4rem;
+  color: #fff;
+  padding: .55rem 1.25rem;
   border-radius: 8px;
   border: none;
   font-size: 0.85rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s ease;
 
   &:hover {
     background: #1d4ed8;
   }
 }
 
-/* Error minimalista */
 .password-error {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #dc2626;
-  margin-top: 0.4rem;
+  margin-top: .25rem;
 }
 
-/** Botón Editar */
+/* =========================
+   ACCIONES
+========================= */
 .profile-actions {
+  grid-area: actions;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
 }
 
 .edit-btn {
   background: #3b82f6;
   color: white;
-  padding: .6rem 1.5rem;
+  padding: .6rem 1.75rem;
+  border-radius: 10px;
+  border: none;
   font-size: .85rem;
   font-weight: 500;
-  border-radius: 8px;
-  margin: auto;
-  border: none;
   cursor: pointer;
-  transition: background .2s ease;
+  transition: background .2s ease, box-shadow .2s ease;
 
   &:hover {
     background: #1d4ed8;
   }
 
+  &:active {
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,0.2);
+  }
+
   @media (max-width: 480px) {
-    padding: 0.45rem 1rem;
-    font-size: 0.75rem;
-    width: 50%;
+    width: 100%;
   }
 }

@@ -1,25 +1,19 @@
 <section class="notif-detail-root">
-  <!-- Top bar / actions -->
-  <header class="topbar">
-    <div class="left">
-      <a class="btn back" (click)="goBack()" aria-label="Volver">
-        ←
-      </a>
-    </div>
-
-    <div class="right">
-      <div class="actions">
-        <button class="icon-btn" title="Eliminar" *ngIf="isAdmin"
-        (click)="onDeleteClick()"
-        [disabled]="deleting">🗑️</button>
-        <button class="icon-btn" title="Más">⋮</button>
-      </div>
-    </div>
-  </header>
 
   <!-- Main column only -->
   <div class="layout single">
     <article class="message-col">
+
+      <div class="back-row">
+        <button
+          type="button"
+          class="btn back"
+          (click)="goBack()"
+          aria-label="Volver"
+        >
+          ← Volver
+        </button>
+      </div>
       <!-- From block -->
       <div class="from-row">
         <div class="avatar">
@@ -48,8 +42,27 @@
             </span>
             </div>
 
-            <div class="to-line">
-              Para: <span class="audience">{{ audienceLine }}</span>
+            <!-- BOTÓN -->
+            <button
+              type="button"
+              class="toggle-recipients"
+              (click)="toggleRecipients()"
+            >
+              Para
+            </button>
+
+            <!-- BLOQUE OCULTO / EXPANDIBLE -->
+            <div
+              class="recipients-card"
+              *ngIf="showAllRecipients"
+            >
+              <div class="to-line">
+                Para:
+                <span
+                  class="audience"
+                  [innerHTML]="audienceLine | safeNoteHtml"
+                ></span>
+              </div>
             </div>
 
             <!-- Nuevo bloque: título del mensaje -->

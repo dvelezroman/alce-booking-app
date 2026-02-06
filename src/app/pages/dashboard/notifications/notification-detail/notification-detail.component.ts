@@ -33,6 +33,9 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   modal: ModalDto = modalInitializer();
   deleting = false;
 
+  showAllRecipients = false;
+  currentUserId?: number;
+
   showRecipients = false;
   private origin: 'inbox' | 'sent' | 'status' | 'unknown' = 'unknown';
 
@@ -125,20 +128,42 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     const n = this.notification;
     if (!n) return '';
 
+    // Caso: hay destinatarios explícitos
     if (Array.isArray(n.to) && n.to.length > 0) {
+
+      // === INDIVIDUAL ===
       if (n.scope === 'INDIVIDUAL') {
+
+        // Un solo destinatario
         if (n.to.length === 1) {
           const u = n.to[0] as UserDto;
-          return [u.firstName, u.lastName].filter(Boolean).join(' ').trim() || u.email || `ID: ${u.id}`;
+          return (
+            [u.firstName, u.lastName].filter(Boolean).join(' ').trim() ||
+            u.email ||
+            `ID: ${u.id}`
+          );
         }
+
+        // Varios destinatarios → resaltar usuario actual
         return (n.to as UserDto[])
-          .map(u => [u.firstName, u.lastName].filter(Boolean).join(' ').trim() || u.email || `ID: ${u.id}`)
+          .map(u => {
+            const name =
+              [u.firstName, u.lastName].filter(Boolean).join(' ').trim() ||
+              u.email ||
+              `ID: ${u.id}`;
+
+            return u.id === this.currentUserId
+              ? `<strong>${name}</strong>`
+              : name;
+          })
           .join(', ');
       }
 
+      // === GRUPAL ===
       return this.scopeLabel(n.scope);
     }
 
+    // Fallbacks
     if (n.stage?.description) return n.stage.description;
     if (n.stage?.number) return String(n.stage.number);
 
@@ -146,7 +171,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   }
 
   private applyUser(user: UserDto) {
-    this.userRole = user.role ?? null;
+    this.currentUserId = user.id;
     const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
     this.toDisplayName = fullName || user.email || '';
 
@@ -229,6 +254,10 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
         });
       },
     });
+  }
+
+  toggleRecipients(): void {
+    this.showAllRecipients = !this.showAllRecipients;
   }
 
   private showModalMessage({
