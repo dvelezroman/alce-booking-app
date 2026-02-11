@@ -343,7 +343,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   startUrgentReminder(): void {
     if (this.urgentReminderInterval) return;
 
-    const FIVE_MINUTES = 1 * 60 * 1000;
+    const FIVE_MINUTES = 5 * 60 * 1000;
 
     this.urgentReminderInterval = setInterval(() => {
       if (this.hasUrgentAssessment) {

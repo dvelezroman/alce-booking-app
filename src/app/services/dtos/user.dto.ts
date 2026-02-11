@@ -12,6 +12,7 @@ export enum UserStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
   HOLD = 'HOLD',
+  BLOCK = 'BLOCK',
 }
 
 export interface UserDto {

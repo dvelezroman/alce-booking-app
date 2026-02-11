@@ -103,6 +103,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   showSuspensionModal = false;
   isSuspended = false;
+  isBlocked = false;
 
   // hasUnreadNotifications: boolean = false;
 
@@ -152,6 +153,8 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(state => {
         this.userData = state;
+
+        this.isBlocked = state?.status === 'BLOCK';
 
         this.isSuspended = !!state?.suspensionInfo?.isSuspended;
         if (this.isSuspended) {
@@ -251,7 +254,23 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return 'Usuario sin nombres';
   }
 
+  private showBlockedMessage(): void {
+    this.showModalMessage(
+      "Tu cuenta está bloqueada por evaluaciones pendientes expiradas. Para su activación, comunícate con administración.",
+      true,
+      false,
+      false,
+      6000
+    );
+  }
+
   onDaySelected(event: { date: string; label: string; day: number }) {
+
+    if (this.isBlocked) {
+      this.showBlockedMessage();
+      return;
+    }
+
     if (this.userData?.suspensionInfo?.isSuspended) {
       this.showSuspensionModal = true;
       return;
@@ -499,7 +518,13 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return;
   }
 
-  showModalMessage(message: string, isError: boolean = true, isInfo: boolean = false, isSuccess: boolean = false) {
+  showModalMessage(
+    message: string,
+    isError: boolean = true,
+    isInfo: boolean = false,
+    isSuccess: boolean = false,
+    duration: number = 3000
+  ) {
     this.modalConfig = {
       show: true,
       message,
@@ -510,9 +535,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         this.modalConfig.show = false;
       }
     };
-      setTimeout(() => {
+
+    setTimeout(() => {
       this.modalConfig.close();
-    }, 3000);
+    }, duration);
   }
 
   openDeleteModal(meeting: MeetingDTO): void {
