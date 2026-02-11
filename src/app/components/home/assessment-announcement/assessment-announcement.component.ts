@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./assessment-announcement.component.scss'],
 })
 export class AssessmentAnnouncementComponent {
-  
+
   @Input() show = false;
   @Input() count: number = 0;
 
@@ -25,6 +25,7 @@ export class AssessmentAnnouncementComponent {
   }
 
   closeOnly() {
+    localStorage.setItem('assessment_announced', 'true');
     this.closed.emit();
   }
 

@@ -5,6 +5,7 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
+  OnDestroy,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -59,9 +60,10 @@ import { StudentIntroVideoComponent } from "../../home/student-intro-video/stude
   templateUrl: './student-dashboard.component.html',
   styleUrl: './student-dashboard.component.scss',
 })
-export class StudentDashboardComponent implements OnInit, OnChanges {
+export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   private readonly INTRO_VIDEO_SESSION_KEY = 'intro-video-shown-session';
+  private readonly URGENT_MODAL_KEY = 'urgent_assessment_last_shown';
 
   @Input() userData: UserDto | null = null;
   @Input() isLoggedIn = false;
@@ -87,6 +89,9 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
   /* intro video */
   showIntroVideo = false;
   canCloseIntroVideo = false;
+
+  private urgentReminderInterval: any = null;
+  hasUrgentAssessment = false;
 
 
   constructor(
@@ -129,6 +134,10 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
         this.showAssessmentAnnouncement = true;
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.clearUrgentReminder();
   }
 
   private loadPendingClassEvaluations(): void {
@@ -278,14 +287,79 @@ export class StudentDashboardComponent implements OnInit, OnChanges {
 
   /* ============================
      ASSESSMENTS
-     (MISMO NOMBRE)
      ============================ */
   onAssessmentsLoaded(list: StageAssessment[]) {
     this.assessments = list;
+    this.hasUrgentAssessment = this.checkUrgentAssessment(list);
+
+    const FIVE_MINUTES = 5 * 60 * 1000;
+
+    if (this.hasUrgentAssessment) {
+      const lastShown = localStorage.getItem(this.URGENT_MODAL_KEY);
+
+      if (!lastShown) {
+        this.showAssessmentAnnouncement = true;
+        localStorage.setItem(this.URGENT_MODAL_KEY, Date.now().toString());
+      } else {
+        const diff = Date.now() - Number(lastShown);
+
+        if (diff >= FIVE_MINUTES) {
+          this.showAssessmentAnnouncement = true;
+          localStorage.setItem(this.URGENT_MODAL_KEY, Date.now().toString());
+        }
+      }
+
+      this.startUrgentReminder();
+
+    } else {
+      this.clearUrgentReminder();
+      localStorage.removeItem(this.URGENT_MODAL_KEY);
+    }
+  }
+
+  private checkUrgentAssessment(list: StageAssessment[]): boolean {
+    const now = Date.now();
+    const LIMIT = 24 * 60 * 60 * 1000; 
+
+    return list.some(a => {
+      if (!a.dueDate) return false;
+      if (a.finished && a.finished.length > 0) return false;
+
+      const due = new Date(a.dueDate.replace('Z', '')).getTime();
+      const diff = due - now;
+
+      return diff > 0 && diff <= LIMIT;
+    });
   }
 
   onAnnouncementClosed() {
     this.showAssessmentAnnouncement = false;
+
+    if (this.hasUrgentAssessment) {
+      this.startUrgentReminder();
+    }
+  }
+
+  startUrgentReminder(): void {
+    if (this.urgentReminderInterval) return;
+
+    const FIVE_MINUTES = 1 * 60 * 1000;
+
+    this.urgentReminderInterval = setInterval(() => {
+      if (this.hasUrgentAssessment) {
+        this.showAssessmentAnnouncement = true;
+        localStorage.setItem(this.URGENT_MODAL_KEY, Date.now().toString());
+      } else {
+        this.clearUrgentReminder();
+      }
+    }, FIVE_MINUTES);
+  }
+
+  private clearUrgentReminder(): void {
+    if (this.urgentReminderInterval) {
+      clearInterval(this.urgentReminderInterval);
+      this.urgentReminderInterval = null;
+    }
   }
 
   /* ============================

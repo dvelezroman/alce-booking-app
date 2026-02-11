@@ -1,9 +1,6 @@
 <div class="countdown-banner" *ngIf="showBanner">
 
-  <!-- Botón para cerrar -->
-  <button class="close-btn" (click)="closeBanner()">
-    ✕
-  </button>
+  <button class="close-btn" (click)="closeBanner()">✕</button>
 
   <div class="title-row">
     <h3 class="title">Evaluaciones pendientes</h3>
@@ -14,15 +11,17 @@
     </div>
   </div>
 
-  <div class="countdown-item" *ngFor="let c of countdowns">
-    <div class="row">
-      <span class="resource-name link" (click)="goToAssessmentPage()">
-        {{ c.description }}
-      </span>
+  <div class="countdown-list">
+    <div class="countdown-item" *ngFor="let c of countdowns">
+      <div class="row">
+        <span class="resource-name link" (click)="goToAssessmentPage()">
+          {{ c.description }}
+        </span>
 
-      <span class="time-block" [class.urgent]="c.isUrgent">
-        {{ formatTime(c) }}
-      </span>
+        <span class="time-block" [class.urgent]="c.isUrgent">
+          {{ formatTime(c) }}
+        </span>
+      </div>
     </div>
   </div>
 
