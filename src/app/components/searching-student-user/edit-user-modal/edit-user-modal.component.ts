@@ -96,7 +96,7 @@ export class EditUserModalComponent {
       role: user.role,
       occupation: user.occupation,
       birthday: user.birthday ? this.formatLocalDate(user.birthday) : '',
-      status: user.status === UserStatus.ACTIVE,
+      status: user.status === UserStatus.ACTIVE || user.status === UserStatus.BLOCK,
       comment: user.comment,
       temporaryComment: user.temporaryComment,
       stageId: user.student?.stage?.id || '',

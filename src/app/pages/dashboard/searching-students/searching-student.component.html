@@ -120,6 +120,7 @@
             <th>Rol de Usuario</th>
             <th>Stage</th>
             <th>Activo</th>
+            <th>Agenda</th>
             <th>Licencia</th>
             <!-- <th>Usuario</th> -->
             <th>Contacto</th>
@@ -133,7 +134,8 @@
             <td>{{ user.lastName | titlecase }}</td>
             <td>{{ user.role | titlecase }}</td>
             <td>{{ user.student?.stage?.description || 'No Aplica' }}</td>
-            <td>{{ user.status === UserStatus.ACTIVE ? '✓' : '❌' }}</td>
+            <td>{{ user.status === UserStatus.ACTIVE || user.status === UserStatus.BLOCK ? '✓' : '❌'}}</td>
+            <td>{{ user.status === UserStatus.BLOCK ? '❌' : '✓' }}</td>
             <td>
               <ng-container *ngIf="user.role === UserRole.STUDENT; else noLicense">
 
