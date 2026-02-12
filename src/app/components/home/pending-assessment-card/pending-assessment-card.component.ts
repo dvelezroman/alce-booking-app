@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
@@ -19,6 +19,8 @@ export type StageAssessmentWithCountdown = StageAssessment & {
 export class PendingAssessmentCardComponent implements OnInit, OnDestroy {
 
   @Input() assessments: StageAssessmentWithCountdown[] = [];
+
+  @Output() goToAssessment = new EventEmitter<number>();
 
   private intervalSub!: Subscription;
   
@@ -79,7 +81,5 @@ export class PendingAssessmentCardComponent implements OnInit, OnDestroy {
     return n < 10 ? '0' + n : n.toString();
   }
 
-  goToAssessmentPage(id: number) {
-    this.router.navigate(['/dashboard/stage-assessment-student']);
-  }
+  goToAssessmentPage(id: number) { this.goToAssessment.emit(id) }
 }

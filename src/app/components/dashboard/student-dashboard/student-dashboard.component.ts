@@ -392,7 +392,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     return !localStorage.getItem('assessment_announced');
   }
 
-   goToBooking(): void {
+  goToBooking(): void {
     this.router.navigate(['/dashboard/booking']);
   }
 
@@ -400,8 +400,11 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     this.router.navigate(['/dashboard/instructor-evaluations']);
   }
 
-  goToAssessments(): void {
-    this.router.navigate(['/dashboard/stage-assessment-student']);
+  goToAssessments(assessmentId?: number): void {
+    this.router.navigate(
+      ['/dashboard/stage-assessment-student'],
+      assessmentId ? { queryParams: { highlight: assessmentId } } : undefined
+    );
   }
 
   goToNotifications(): void {

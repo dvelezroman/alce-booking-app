@@ -10,6 +10,7 @@ import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto'
 
 import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
 import { StageAssessmentCardComponent } from '../../../components/stage-assessment/stage-assessment-card/stage-assessment-card.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-stage-assessment-student',
@@ -30,14 +31,25 @@ export class StageAssessmentStudentComponent implements OnInit {
 
   assessments: StageAssessment[] = [];
 
+  highlightId: number | null = null;
+
   modal: ModalDto = modalInitializer();
 
   constructor(
     private store: Store,
+    private router: Router,
+    private route: ActivatedRoute,
     private stageAssessmentService: StageAssessmentService,
   ) {}
 
   ngOnInit(): void {
+
+    this.route.queryParams.subscribe(params => {
+      this.highlightId = params['highlight']
+        ? +params['highlight']
+        : null;
+    });
+
     this.store.select(selectUserData)
       .pipe(
         filter((u): u is UserDto => !!u),
@@ -82,6 +94,18 @@ export class StageAssessmentStudentComponent implements OnInit {
       error: () => {
         this.showNotification("Error al marcar como completado.", true);
       }
+    });
+  }
+
+  clearHighlight(): void {
+    if (!this.highlightId) return;
+
+    this.highlightId = null;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { highlight: null },
+      queryParamsHandling: 'merge'
     });
   }
 

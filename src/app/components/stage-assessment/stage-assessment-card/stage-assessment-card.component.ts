@@ -12,6 +12,7 @@ import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
 export class StageAssessmentCardComponent {
 
   @Input() assessment!: StageAssessment;
+  @Input() highlighted: boolean = false;
 
   @Output() openAndFinish = new EventEmitter<number>();
 

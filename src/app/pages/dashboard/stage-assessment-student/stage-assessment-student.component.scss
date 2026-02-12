@@ -26,19 +26,67 @@
 /* ------------------------------ */
 
 .page-wrapper {
-
   min-height: 100vh;
   padding: 90px 1rem 2rem;
+  margin-top: 2rem;
 }
 
 /* ------------------------------ */
-/* CONTENEDOR PRINCIPAL           */
+/* NUEVO LAYOUT LATERAL           */
+/* ------------------------------ */
+
+.assessment-layout {
+  display: flex;
+  gap: 0rem;
+  align-items: flex-start;
+  justify-content: center;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto; 
+}
+
+/* ------------------------------ */
+/* CONTENEDOR PRINCIPAL IZQUIERDA */
 /* ------------------------------ */
 
 .stage-assessment-student-section {
-  max-width: 560px;
+  width: 100%;
+  max-width: 600px;
   margin: 0 auto;
+  flex: 2;
 }
+
+/* ------------------------------ */
+/* NOTA DERECHA                   */
+/* ------------------------------ */
+
+.assessment-note {
+  flex: 1;
+  max-width: 350px;
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  border-radius: 14px;
+  padding: 1.2rem;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+
+  h4 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #c2410c;
+  }
+
+  p {
+    font-size: 0.85rem;
+    color: #7c2d12;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+/* ------------------------------ */
+/* EMPTY STATE                    */
+/* ------------------------------ */
 
 .empty-state {
   text-align: center;
@@ -56,12 +104,16 @@
 }
 
 .empty-state p {
-    font-size: 0.9rem;
-  }
+  font-size: 0.9rem;
+}
+
+/* ------------------------------ */
+/* TEXTO PENDIENTES               */
+/* ------------------------------ */
 
 .pending-count {
-  margin: 0.5rem 0 1rem;
-  font-size: 0.95rem;
+  margin: 0rem 0 1rem;
+  font-size: 1rem;
   color: #383838;
   font-weight: 500;
 
@@ -70,38 +122,71 @@
   }
 }
 
+/* ------------------------------ */
+/* CARDS WRAPPER                  */
+/* ------------------------------ */
+
 .cards-wrapper {
   max-height: 650px;
   overflow-y: auto;
-  padding: 0px;
-  margin-top: 1rem;
+  padding: 10px;
+  margin-top: 0rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   scrollbar-width: thin;
   scrollbar-color: #2563eb #e5e7eb;
+}
+
+.cards-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cards-wrapper::-webkit-scrollbar-track {
+  background: #e5e7eb;
+  border-radius: 10px;
+}
+
+.cards-wrapper::-webkit-scrollbar-thumb {
+  background: #2563eb;
+  border-radius: 10px;
+}
+
+/* ------------------------------ */
+/* RESPONSIVE                     */
+/* ------------------------------ */
+
+@media (max-width: 900px) {
+
+  .assessment-layout {
+    flex-direction: column;
+    align-items: center;
   }
 
-  .cards-wrapper::-webkit-scrollbar {
-    width: 6px;
-    }
-  .cards-wrapper::-webkit-scrollbar-track {
-    background: #e5e7eb;
-    border-radius: 10px;
-    }
-  .cards-wrapper::-webkit-scrollbar-thumb {
-    background: #2563eb;
-    border-radius: 10px;
-    }
+  .assessment-note {
+    order: -1;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .stage-assessment-student-section {
+    width: 100%;
+  }
+}
 
 @media (max-width: 600px) {
+
   .title.stage {
     font-size: 1.3rem;
   }
 
+  .page-wrapper{
+    margin-top: 0rem;
+  }
+
   .pending-count {
     margin: 0.5rem 0 1rem;
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
 
   .empty-state {
@@ -110,7 +195,7 @@
   }
 
   .empty-img {
-    width: 90px;
+    width: 60px;
     opacity: 0.85;
   }
 
@@ -122,4 +207,5 @@
     max-height: 450px;
     padding-right: 4px;
   }
+
 }
