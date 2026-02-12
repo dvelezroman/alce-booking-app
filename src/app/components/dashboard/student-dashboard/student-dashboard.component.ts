@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 
-import { UserDto, UserRole, SuspensionInfo } from '../../../services/dtos/user.dto';
+import { UserDto, UserRole, UserStatus, SuspensionInfo } from '../../../services/dtos/user.dto';
 import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
 
 import { UsersService } from '../../../services/users.service';
@@ -195,6 +195,10 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   get studentStage(): string {
     return this.userData?.stage?.description || 'Sin asignar';
+  }
+
+  get isAgendaBlocked(): boolean {
+    return this.userData?.status === UserStatus.BLOCK;
   }
 
   /* ============================
@@ -422,5 +426,6 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     this.showIntroVideo = false;
     sessionStorage.setItem(this.INTRO_VIDEO_SESSION_KEY, 'true');
   }
+  
 
 }

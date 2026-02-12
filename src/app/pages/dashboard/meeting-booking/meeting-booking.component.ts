@@ -256,7 +256,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   private showBlockedMessage(): void {
     this.showModalMessage(
-      "Tu cuenta está bloqueada por evaluaciones pendientes expiradas. Para su activación, comunícate con administración.",
+      "No puedes agendar clases porque tienes Assessments expiradas. Para su activación, comunícate con administración.",
       true,
       false,
       false,

@@ -29,9 +29,24 @@
       <!-- ATAJOS DEL DASHBOARD -->
       <div class="dashboard-shortcuts">
 
-        <div class="shortcut-card" (click)="goToBooking()">
+        <div 
+          class="shortcut-card"
+          [class.disabled]="isAgendaBlocked"
+          (click)="!isAgendaBlocked && goToBooking()"
+        >
           <div class="shortcut-image booking">
-            <span class="shortcut-title">Agendar clases</span>
+
+            <span class="shortcut-title">
+              Agendar clases
+            </span>
+
+            <span 
+              *ngIf="isAgendaBlocked"
+              class="blocked-text"
+            >
+              No puedes agendar por Assessments expiradas
+            </span>
+
           </div>
         </div>
 

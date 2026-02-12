@@ -90,6 +90,39 @@
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
 }
 
+.shortcut-card.disabled {
+  pointer-events: none;
+  filter: grayscale(40%);
+  border: 2px solid #b91c1c;
+}
+
+.shortcut-card.disabled .shortcut-image::after {
+  background: rgba(254, 248, 248, 0.881);
+}
+
+.blocked-text {
+  position: absolute;
+  bottom: 58px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #b91c1c;
+  padding: 0 10px;
+  z-index: 3;
+}
+@media (max-width: 768px) {
+
+  .blocked-text {
+    bottom: 50px;
+    font-size: 0.8rem;
+    padding: 0 8px;
+    line-height: 1.2;
+  }
+
+}
+
 /* ZONA IMAGEN */
 .shortcut-image {
   flex: 1;
@@ -312,3 +345,4 @@
 
   
 }
+
