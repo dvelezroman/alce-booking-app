@@ -7,6 +7,7 @@ import { ModalComponent } from '../../../components/modal/modal.component';
 import { CompletedEvaluationsComponent } from "../../../components/instructor-evaluations/completed-evaluations/completed-evaluations.component";
 import { PendingEvaluationsComponent } from "../../../components/instructor-evaluations/pending-evaluations/pending-evaluations.component";
 import { EvaluateInstructorModalComponent } from "../../../components/instructor-evaluations/evaluate-instructor-modal/evaluate-instructor-modal.component";
+import { UsersService } from '../../../services/users.service';
 
 @Component({
   selector: 'app-instructor-evaluations',
@@ -35,7 +36,8 @@ export class InstructorEvaluationsComponent implements OnInit {
   modal: ModalDto = modalInitializer();
 
   constructor(
-    private instructorEvaluationService: InstructorEvaluationService
+    private instructorEvaluationService: InstructorEvaluationService,
+    private usersService: UsersService
   ) {}
 
   ngOnInit(): void {
@@ -117,6 +119,8 @@ export class InstructorEvaluationsComponent implements OnInit {
 
           this.loadPendingEvaluations();
           this.loadCompletedEvaluations();
+          
+          this.usersService.refreshLogin().subscribe();
 
           this.showAutoCloseModal(
             {

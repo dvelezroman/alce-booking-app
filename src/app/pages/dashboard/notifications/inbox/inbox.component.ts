@@ -8,6 +8,7 @@ import { Observable, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserData } from '../../../../store/user.selector';
 import { UserDto } from '../../../../services/dtos/user.dto';
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'app-inbox',
@@ -35,6 +36,7 @@ export class InboxComponent implements OnInit {
     private notificationService: NotificationService,
     private router: Router,
     private store: Store,
+    private usersService: UsersService
   ) {}
 
   ngOnInit(): void {
@@ -116,7 +118,12 @@ export class InboxComponent implements OnInit {
     if (n.isRead) { go(); return; }
 
     this.notificationService.markSingleAsRead(n.id).subscribe({
-      next: () => go(),
+      next: () => {
+        this.usersService.refreshLogin().subscribe({
+          next: () => go(),
+          error: () => go()
+        });
+      },
       error: () => go(),
     });
   }

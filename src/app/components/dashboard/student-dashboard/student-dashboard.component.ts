@@ -201,6 +201,16 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     return this.userData?.status === UserStatus.BLOCK;
   }
 
+  get agendaBlockMessage(): string {
+    const reason = this.userData?.schedulingBlockReason;
+
+    if (reason && reason.trim().length > 0) {
+      return reason;
+    }
+
+    return 'No puedes agendar por evaluaciones expiradas';
+  }
+
   /* ============================
      USER INFO FORM
      (MISMO NOMBRE)

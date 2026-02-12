@@ -43,6 +43,7 @@ export interface UserDto {
   occupation?: string; 
   accessToken?: string;
   suspensionInfo?: SuspensionInfo;
+  schedulingBlockReason?: string | null;
 }
 
 export interface SuspensionInfo {
