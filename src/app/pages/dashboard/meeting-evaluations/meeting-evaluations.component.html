@@ -12,6 +12,32 @@
 
   <!-- RESULTS -->
   <div class="results-wrapper">
+
+    <!-- SORT BAR -->
+    <div class="sort-bar">
+      <button
+        class="sort-btn"
+        [class.active]="sortBy === 'createdAt'"
+        (click)="changeSort('createdAt')"
+      >
+        Fecha
+        <span *ngIf="sortBy === 'createdAt'">
+          {{ sortOrder === 'asc' ? '↑' : '↓' }}
+        </span>
+      </button>
+
+      <button
+        class="sort-btn"
+        [class.active]="sortBy === 'rating'"
+        (click)="changeSort('rating')"
+      >
+        Rating
+        <span *ngIf="sortBy === 'rating'">
+          {{ sortOrder === 'asc' ? '↑' : '↓' }}
+        </span>
+      </button>
+    </div>
+
     <app-meeting-evaluations-table
       [evaluations]="evaluations"
       [searchAttempted]="searchAttempted"
@@ -20,6 +46,7 @@
       (evaluationSelected)="onEvaluationSelected($event)"
       (acceptanceToggled)="onAcceptanceToggled($event)">
     </app-meeting-evaluations-table>
+
   </div>
 
 </section>

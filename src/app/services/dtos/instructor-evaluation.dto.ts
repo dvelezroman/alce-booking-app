@@ -67,6 +67,8 @@ export interface FilterEvaluationsDto {
   accepted?: boolean;
   limit?: number;
   offset?: number;
+  sortBy?: 'rating' | 'createdAt';
+  sortOrder?: 'asc' | 'desc';
 }
 
 // ----------------------------------------

@@ -26,16 +26,10 @@ import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto'
 })
 export class MeetingEvaluationsComponent implements OnInit {
 
-  // --------------------
-  // DATA
-  // --------------------
   evaluations: InstructorEvaluation[] = [];
   selectedEvaluation: InstructorEvaluation | null = null;
   updatingEvaluationId: number | null = null;
 
-  // --------------------
-  // UI STATE
-  // --------------------
   showInstructorColumn = true;
   showStudentColumn = true;
 
@@ -44,6 +38,12 @@ export class MeetingEvaluationsComponent implements OnInit {
 
   modal: ModalDto = modalInitializer();
 
+  // SORT
+  sortBy: 'rating' | 'createdAt' = 'createdAt';
+  sortOrder: 'asc' | 'desc' = 'desc';
+
+  private lastFilters?: FilterEvaluationsDto;
+
   constructor(
     private evaluationService: InstructorEvaluationService
   ) {}
@@ -51,18 +51,22 @@ export class MeetingEvaluationsComponent implements OnInit {
   ngOnInit(): void {
     const { from, to } = this.getDefaultDateRange();
 
-    this.fetchEvaluations({
+    const initialFilters: FilterEvaluationsDto = {
       from,
       to,
       accepted: true,
-      limit: 50,
-      offset: 0
-    });
+      limit: 100,
+      offset: 0,
+      sortBy: this.sortBy,
+      sortOrder: this.sortOrder
+    };
+
+    this.lastFilters = initialFilters;
+    this.fetchEvaluations(initialFilters);
   }
 
   private getDefaultDateRange(): { from: string; to: string } {
     const today = new Date();
-
     const to = today.toISOString().split('T')[0];
 
     const fromDate = new Date();
@@ -71,17 +75,15 @@ export class MeetingEvaluationsComponent implements OnInit {
 
     return { from, to };
   }
-  // ----------------------------------
+
+  // ===========================
   // FILTROS DESDE HIJO
-  // ----------------------------------
+  // ===========================
   onFiltersSubmitted(filters: FilterEvaluationsDto): void {
 
     if (!filters.from || !filters.to) {
       this.showAutoCloseModal(
-        {
-          isInfo: true,
-          message: 'Debes seleccionar un rango de fechas'
-        },
+        { isInfo: true, message: 'Debes seleccionar un rango de fechas' },
         3000
       );
       return;
@@ -90,15 +92,43 @@ export class MeetingEvaluationsComponent implements OnInit {
     this.showInstructorColumn = !filters.instructorId;
     this.showStudentColumn = !filters.studentId;
 
-    this.fetchEvaluations({
+    this.lastFilters = {
       ...filters,
-      accepted: true
-    });
+      accepted: true,
+      sortBy: this.sortBy,
+      sortOrder: this.sortOrder
+    };
+
+    this.fetchEvaluations(this.lastFilters);
   }
 
-  // ----------------------------------
-  // FETCH EVALUATIONS (NUEVO FLUJO)
-  // ----------------------------------
+  // ===========================
+  // SORT BUTTONS
+  // ===========================
+  changeSort(field: 'rating' | 'createdAt'): void {
+
+    if (this.sortBy === field) {
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = field;
+      this.sortOrder = 'desc';
+    }
+
+    if (!this.lastFilters) return;
+
+    const updatedFilters: FilterEvaluationsDto = {
+      ...this.lastFilters,
+      sortBy: this.sortBy,
+      sortOrder: this.sortOrder
+    };
+
+    this.lastFilters = updatedFilters;
+    this.fetchEvaluations(updatedFilters);
+  }
+
+  // ===========================
+  // FETCH
+  // ===========================
   private fetchEvaluations(filters: FilterEvaluationsDto): void {
     this.searchAttempted = true;
     this.evaluations = [];
@@ -106,11 +136,7 @@ export class MeetingEvaluationsComponent implements OnInit {
 
     this.evaluationService.getEvaluations(filters).subscribe({
       next: (evaluations) => {
-        this.evaluations = evaluations.sort((a, b) => {
-           const dateA = new Date(a.meeting?.date ?? '').getTime();
-           const dateB = new Date(b.meeting?.date ?? '').getTime();
-          return dateB - dateA;
-        });
+        this.evaluations = evaluations;
       },
       error: () => {
         this.evaluations = [];
@@ -118,11 +144,15 @@ export class MeetingEvaluationsComponent implements OnInit {
     });
   }
 
+  // ===========================
+  // ACCEPTANCE
+  // ===========================
   onAcceptanceToggled(event: { id: number; accepted: boolean }): void {
     this.updatingEvaluationId = event.id;
 
     this.evaluationService.updateEvaluationAcceptance(event.id, {accepted: event.accepted})
-      .subscribe({ next: (updatedEvaluation) => {
+      .subscribe({
+        next: (updatedEvaluation) => {
 
           const index = this.evaluations.findIndex(
             e => e.id === updatedEvaluation.id
@@ -134,7 +164,8 @@ export class MeetingEvaluationsComponent implements OnInit {
 
           this.updatingEvaluationId = null;
         },
-        error: () => { this.showAutoCloseModal(
+        error: () => {
+          this.showAutoCloseModal(
             {
               isError: true,
               message: 'No se pudo actualizar la validación de la evaluación'
@@ -147,25 +178,19 @@ export class MeetingEvaluationsComponent implements OnInit {
       });
   }
 
-  // ----------------------------------
-  // CLICK EN FILA (YA NO HAY FETCH)
-  // ----------------------------------
+  // ===========================
+  // MODAL
+  // ===========================
   onEvaluationSelected(evaluation: InstructorEvaluation): void {
     this.selectedEvaluation = evaluation;
     this.showEvaluationModal = true;
   }
 
-  // ----------------------------------
-  // CLOSE MODAL
-  // ----------------------------------
   closeEvaluationModal(): void {
     this.showEvaluationModal = false;
     this.selectedEvaluation = null;
   }
 
-  // ----------------------------------
-  // MODAL AUXILIAR
-  // ----------------------------------
   private showAutoCloseModal(
     config: Partial<ModalDto>,
     duration = 3000

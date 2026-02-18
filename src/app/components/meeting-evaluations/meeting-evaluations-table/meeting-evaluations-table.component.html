@@ -3,6 +3,12 @@
   <h3 class="section-title" *ngIf="evaluations.length">
     Clases encontradas
     <span class="count">{{ evaluations.length }}</span>
+
+    <!-- LEYENDA -->
+    <span class="legend">
+      <span class="legend-dot"></span>
+      Con observación
+    </span>
   </h3>
 
   <!-- EMPTY -->
@@ -38,6 +44,7 @@
           <tr
             *ngFor="let e of evaluations"
             class="clickable-row"
+            [class.has-observation]="e.observation"
             (click)="selectEvaluation(e)"
           >
 
