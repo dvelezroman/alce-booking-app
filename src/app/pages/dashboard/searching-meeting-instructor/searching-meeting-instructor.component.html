@@ -24,10 +24,36 @@
     <div *ngIf="meetings.length > 0" class="content-selection-wrapper">
       <!-- Formulario de Selección -->
       <div class="content-selector-card">
-        <h2 class="titles has-text-weight-bold">Contenido para la Clase</h2>
+        <h2 class="titles has-text-weight-bold">
+          Contenido para la Clase
+        </h2>
+
+        <!-- PASOS PEQUEÑOS -->
+        <div class="mini-steps">
+          <div class="mini-step" [class.active]="stepState.stageSelected">
+            <div class="dot">1</div>
+            <span>Stage</span>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="mini-step" [class.active]="stepState.topicsSelected">
+            <div class="dot">2</div>
+            <span>Temas</span>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="mini-step" [class.active]="stepState.confirmed">
+            <div class="dot">3</div>
+            <span>Confirmar</span>
+          </div>
+        </div>
+
         <app-content-selector
           [stages]="filteredStages"
-          (contentIdsSelected)="onContentIdsSelected($event)">
+          (contentIdsSelected)="onContentIdsSelected($event)"
+          (stepStateChanged)="onStepStateChanged($event)">
         </app-content-selector>
       </div>
 
@@ -58,12 +84,17 @@
         (commentViewRequested)="onCommentViewRequested($event)"
         (studentContentHistoryRequested)="loadStudentContentHistory($event)"
         (assistanceCheckboxClicked)="onAssistanceCheckboxClick($event.event, $event.meeting)"
-        (evaluationRequested)="onEvaluationRequested($event)"
-        (noteSaved)="onNoteSaved($event)">
+        (evaluationRequested)="onEvaluationRequested($event)">
     </app-meeting-table>
     </div>
   </div>
 </section>
+
+<app-assistance-note-modal
+  [show]="showAssistanceNoteModal"
+  (save)="onAssistanceNoteSaved($event)"
+  (cancel)="handleAssistanceNoteCancel()">
+</app-assistance-note-modal>
 
 <app-student-content-history-modal
   *ngIf="isStudentContentHistoryModalVisible"

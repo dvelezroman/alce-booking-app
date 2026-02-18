@@ -12,9 +12,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class MeetingTableComponent {
 
-  editingMeetingId: number | null = null;
-  tempNote: string = '';
-
   @Input() meetings: MeetingDTO[] = [];
   @Input() isToday!: (date: Date | string) => boolean;
   @Input() formatStudyContent!: (meeting: MeetingDTO) => string;
@@ -26,7 +23,6 @@ export class MeetingTableComponent {
   @Output() studentContentHistoryRequested = new EventEmitter<MeetingDTO>();
   @Output() assistanceCheckboxClicked = new EventEmitter<{ event: Event; meeting: MeetingDTO }>();
   @Output() evaluationRequested = new EventEmitter<number>();
-  @Output() noteSaved = new EventEmitter<{ meetingId: number; note: string }>();
 
   onHistoryClick(meeting: MeetingDTO) {
     this.studentContentHistoryRequested.emit(meeting);
@@ -119,23 +115,4 @@ export class MeetingTableComponent {
     return progress != null ? `${progress}%` : "0%";
   }
 
-  enableEdit(meeting: MeetingDTO) {
-    if (!meeting.id) return; 
-
-    this.editingMeetingId = meeting.id;
-    this.tempNote = meeting.instructorNote || '';
-  }
-
-  saveNote(meeting: MeetingDTO) {
-    if (!meeting.id) return;
-
-    const cleanedNote = this.tempNote?.trim() || '';
-
-    this.noteSaved.emit({
-      meetingId: meeting.id,
-      note: cleanedNote
-    });
-
-    this.editingMeetingId = null;
-  }
 }

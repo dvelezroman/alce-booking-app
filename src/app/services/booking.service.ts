@@ -92,8 +92,14 @@ export class BookingService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  updateAssistance(id: number, present: boolean, studyContentIds: number[]): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/assistance/${id}`, { present, studyContentIds });
+  updateAssistance( id: number, present: boolean, studyContentIds: number[], studentBehaviorComment?: string ): Observable<any> {
+    const body: any = { present, studyContentIds };
+
+    if (studentBehaviorComment) {
+      body.studentBehaviorComment = studentBehaviorComment;
+    }
+
+    return this.http.patch(`${this.apiUrl}/assistance/${id}`, body);
   }
 
   clickAssistanceByStudent(meetingId: number): Observable<any> {

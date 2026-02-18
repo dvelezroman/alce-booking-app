@@ -81,39 +81,14 @@
         </td>
 
         <td data-label="Nota" class="col-note">
+          <span *ngIf="meeting.studentBehaviorComment; else noBehaviorNote"
+                class="note-text">
+            {{ meeting.studentBehaviorComment }}
+          </span>
 
-          <!-- MODO EDICIÓN -->
-          <div *ngIf="editingMeetingId === meeting.id; else displayMode">
-            <textarea
-              [(ngModel)]="tempNote"
-              rows="2"
-              class="note-textarea"
-            ></textarea>
-
-            <button 
-              class="save-btn"
-              type="button"
-              (click)="saveNote(meeting)">
-              Guardar
-            </button>
-          </div>
-
-          <!-- MODO DISPLAY -->
-          <ng-template #displayMode>
-            <div *ngIf="meeting.instructorNote; else noNote"
-                class="note-text"
-                (click)="enableEdit(meeting)">
-              {{ meeting.instructorNote }}
-            </div>
-
-            <ng-template #noNote>
-              <button class="note-button"
-                      (click)="enableEdit(meeting)">
-                <span class="material-icons">edit_note</span>
-              </button>
-            </ng-template>
+          <ng-template #noBehaviorNote>
+            <span class="text-muted">—</span>
           </ng-template>
-
         </td>
 
         <td data-label="Marcar Asistencia" class="col-assist">

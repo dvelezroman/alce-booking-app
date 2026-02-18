@@ -25,6 +25,7 @@ import { AssessmentService } from '../../../services/assessment.service';
 import { AssessementI } from '../../../services/dtos/assessment.dto';
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 import { EvaluationModalComponent } from '../../../components/instructor/evaluation-modal/evaluation-modal.component';
+import { AssistanceNoteModalComponent } from "../../../components/instructor/assistance-note-modal/assistance-note-modal.component";
 
 @Component({
   selector: 'app-searching-meeting-instructor',
@@ -39,8 +40,9 @@ import { EvaluationModalComponent } from '../../../components/instructor/evaluat
     StudentContentHistoryModalComponent,
     MeetingTableComponent,
     MeetingFilterComponent,
-    EvaluationModalComponent
-  ],
+    EvaluationModalComponent,
+    AssistanceNoteModalComponent
+],
   templateUrl: './searching-meeting-instructor.component.html',
   styleUrl: './searching-meeting-instructor.component.scss'
 })
@@ -75,6 +77,12 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   modal: ModalDto = modalInitializer();
   highlightStageId: number | null = null;
   confirmationModal: ModalDto = modalInitializer();
+
+  showAssistanceNoteModal = false;
+  selectedMeetingForAssistance?: MeetingDTO;
+
+  stepState = { stageSelected: false, topicsSelected: false, confirmed: false };
+  onStepStateChanged(state: any) { this.stepState = state }
 
   filter: FilterMeetingsDto = {
     from: '',
@@ -232,7 +240,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       return;
     }
 
-      this.toggleSelection(meeting);
+    this.askForAssistanceNote(meeting);
     }
 
   toggleSelection(meeting: MeetingDTO) {
@@ -254,6 +262,56 @@ export class SearchingMeetingInstructorComponent implements OnInit {
         }
       });
     }
+  }
+
+  private askForAssistanceNote(meeting: MeetingDTO): void {
+    this.confirmationModal = {
+      ...modalInitializer(),
+      show: true,
+      isInfo: true,
+      message: '¿Desea agregar una nota sobre el comportamiento del estudiante?',
+      showButtons: true,
+      confirm: () => {
+        // SÍ quiere agregar nota
+        this.selectedMeetingForAssistance = meeting;
+        this.showAssistanceNoteModal = true;
+        this.closeConfirmationModal();
+      },
+      close: () => {
+        // NO quiere agregar nota
+        this.toggleSelection(meeting);
+        this.closeConfirmationModal();
+      },
+    };
+  }
+
+  handleAssistanceNoteCancel(): void {
+    this.showAssistanceNoteModal = false;
+    this.selectedMeetingForAssistance = undefined;
+  }
+
+  onAssistanceNoteSaved(note: string): void {
+    if (!this.selectedMeetingForAssistance) return;
+
+    const meeting = this.selectedMeetingForAssistance;
+
+    this.bookingService.updateAssistance(
+      meeting.id!,
+      true,
+      this.studyContentIds,
+      note || undefined
+    ).subscribe({
+      next: () => {
+        this.fetchMeetings(this.filter);
+        this.showAssistanceNoteModal = false;
+        this.selectedMeetingForAssistance = undefined;
+      },
+      error: () => {
+        this.showModal(this.createModalParams(true, 'Error al actualizar asistencia'));
+        this.showAssistanceNoteModal = false;
+        this.selectedMeetingForAssistance = undefined;
+      }
+    });
   }
 
   hasMeetingPassed(localdate: string | Date, hour: number): boolean {

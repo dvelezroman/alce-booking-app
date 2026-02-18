@@ -1,0 +1,28 @@
+<div *ngIf="show" class="modal-overlay">
+  <div class="modal-box">
+
+    <h3 class="modal-title">
+      Agregar nota de comportamiento <span>(Opcional)</span>
+    </h3>
+
+    <textarea
+      [(ngModel)]="note"
+      placeholder="Ej: El estudiante participó activamente..."
+      rows="4">
+    </textarea>
+
+    <div class="actions">
+      <button class="btn-cancel" (click)="onCancel()">
+        Cancelar
+      </button>
+
+      <button 
+        class="btn-save" 
+        [disabled]="!note.trim()"
+        (click)="onSave()">
+        Guardar
+      </button>
+    </div>
+
+  </div>
+</div>
