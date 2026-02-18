@@ -39,6 +39,7 @@ export interface MeetingDTO {
   assessments?: AssessementI[];
   hasReinforcement?: boolean;
   user?: UserDto;
+  instructorNote?: string;   
 }
 
 export interface AssignedByDTO {

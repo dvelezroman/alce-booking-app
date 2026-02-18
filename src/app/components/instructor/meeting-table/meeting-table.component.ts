@@ -1,15 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MeetingDTO } from '../../../services/dtos/booking.dto';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-meeting-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './meeting-table.component.html',
   styleUrls: ['./meeting-table.component.scss']
 })
 export class MeetingTableComponent {
+
+  editingMeetingId: number | null = null;
+  tempNote: string = '';
+
   @Input() meetings: MeetingDTO[] = [];
   @Input() isToday!: (date: Date | string) => boolean;
   @Input() formatStudyContent!: (meeting: MeetingDTO) => string;
@@ -17,12 +22,11 @@ export class MeetingTableComponent {
   
   @Output() contentViewRequested = new EventEmitter<{ content: string; title: string }>();
   @Output() temporaryCommentRequested = new EventEmitter<{ meeting: MeetingDTO; title: string }>();
-
   @Output() commentViewRequested = new EventEmitter<{ note: string; title: string; meeting: MeetingDTO }>();
   @Output() studentContentHistoryRequested = new EventEmitter<MeetingDTO>();
   @Output() assistanceCheckboxClicked = new EventEmitter<{ event: Event; meeting: MeetingDTO }>();
-  
   @Output() evaluationRequested = new EventEmitter<number>();
+  @Output() noteSaved = new EventEmitter<{ meetingId: number; note: string }>();
 
   onHistoryClick(meeting: MeetingDTO) {
     this.studentContentHistoryRequested.emit(meeting);
@@ -113,5 +117,25 @@ export class MeetingTableComponent {
 
   formatProgressValue(progress?: number): string {
     return progress != null ? `${progress}%` : "0%";
+  }
+
+  enableEdit(meeting: MeetingDTO) {
+    if (!meeting.id) return; 
+
+    this.editingMeetingId = meeting.id;
+    this.tempNote = meeting.instructorNote || '';
+  }
+
+  saveNote(meeting: MeetingDTO) {
+    if (!meeting.id) return;
+
+    const cleanedNote = this.tempNote?.trim() || '';
+
+    this.noteSaved.emit({
+      meetingId: meeting.id,
+      note: cleanedNote
+    });
+
+    this.editingMeetingId = null;
   }
 }

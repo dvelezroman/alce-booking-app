@@ -70,8 +70,29 @@ export class StageAssessmentComponent implements OnInit {
     this.fetchProgressForStage(stageId);
 
     this.stageAssessmentResourcesService.getAll({ stageId }).subscribe({
-      next: (data) => this.resourcesList = data,
+       next: (data) => {
+        this.resourcesList = data;
+        this.fetchProgressForStage(stageId);
+      },
       error: (err) => console.error("Error obteniendo recursos:", err)
+    });
+  }
+
+   private attachStageEntryDate() {
+    if (!this.resourcesList || this.resourcesList.length === 0) return;
+
+    // Unir todos los students de todos los resources
+    const allStudentsFromResources = this.resourcesList.flatMap(r => r.students || []);
+
+    this.stageProgressList = this.stageProgressList.map(progress => {
+      const match = allStudentsFromResources.find(
+        s => s.studentId === progress.studentId
+      );
+
+      return {
+        ...progress,
+        stageEntryDate: match?.stageEntryDate
+      };
     });
   }
 
@@ -80,6 +101,8 @@ export class StageAssessmentComponent implements OnInit {
     this.stageProgressService.getProgressForStage(stageId).subscribe({
       next: (data) => {
         this.stageProgressList = data || [];
+
+        this.attachStageEntryDate();
 
         // inicializar el filtrado con toda la data
         this.filteredList = [...this.stageProgressList];

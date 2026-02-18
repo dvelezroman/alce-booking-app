@@ -546,6 +546,17 @@ export class SearchingMeetingInstructorComponent implements OnInit {
       : '<span style="color: #777;">No hay recursos asociados.</span>';
   }
 
+  onNoteSaved(event: { meetingId: number; note: string }) {
+    this.bookingService.updateInstructorNote(event.meetingId, event.note);
+    const meeting = this.meetings.find(m => m.id === event.meetingId);
+
+    if (meeting) {
+      meeting.instructorNote = event.note || undefined;
+    }
+
+    this.showModal(this.createModalParams(false, 'Nota guardada correctamente.'));
+  }
+
   private showNoteModal(title: string, message: SafeHtml): void {
     this.modal = {
       ...modalInitializer(),

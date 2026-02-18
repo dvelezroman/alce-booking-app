@@ -12,6 +12,7 @@
         <th class="col-progress">Progreso</th>
         <th class="col-eval">Evaluaciones</th>
         <th class="col-open">Abrió Enlace</th>
+        <th class="col-note">Nota</th>
         <th class="col-assist">Asistencia</th>
       </tr>
     </thead>
@@ -74,9 +75,47 @@
             <span class="material-icons">assignment</span>
           </button>
         </td>
+
         <td data-label="Abrió Enlace" class="col-open">
           {{ didOpenLink(meeting) }}
         </td>
+
+        <td data-label="Nota" class="col-note">
+
+          <!-- MODO EDICIÓN -->
+          <div *ngIf="editingMeetingId === meeting.id; else displayMode">
+            <textarea
+              [(ngModel)]="tempNote"
+              rows="2"
+              class="note-textarea"
+            ></textarea>
+
+            <button 
+              class="save-btn"
+              type="button"
+              (click)="saveNote(meeting)">
+              Guardar
+            </button>
+          </div>
+
+          <!-- MODO DISPLAY -->
+          <ng-template #displayMode>
+            <div *ngIf="meeting.instructorNote; else noNote"
+                class="note-text"
+                (click)="enableEdit(meeting)">
+              {{ meeting.instructorNote }}
+            </div>
+
+            <ng-template #noNote>
+              <button class="note-button"
+                      (click)="enableEdit(meeting)">
+                <span class="material-icons">edit_note</span>
+              </button>
+            </ng-template>
+          </ng-template>
+
+        </td>
+
         <td data-label="Marcar Asistencia" class="col-assist">
           <input 
             type="checkbox" 

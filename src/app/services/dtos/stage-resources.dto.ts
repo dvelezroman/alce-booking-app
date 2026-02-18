@@ -1,8 +1,18 @@
 import { Stage } from "./student.dto";
 
+export interface StageAssessmentResourceStudent {
+  studentId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  stageEntryDate: string;
+  lastPassedAssessmentDates?: Record<number, string>;
+}
+
 export interface StageAssessmentResource {
   id: number;
   stageId: number;
+  students?: StageAssessmentResourceStudent[];
   stage?: Stage;
   description: string;
   url: string;

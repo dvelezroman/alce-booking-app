@@ -1,7 +1,13 @@
 
     <div class="dropdown-toggle-container">
       <div class="dropdown-toggle" (click)="showForm = !showForm">
-        <span>Filtros de búsqueda</span>
+        <span *ngIf="showForm || !hasActiveFilters">
+          Filtros de búsqueda
+        </span>
+
+        <span *ngIf="!showForm && hasActiveFilters" class="filter-summary">
+          {{ activeFiltersSummary }}
+        </span>
         <span class="icon is-small">
           <i class="material-icons">{{ showForm ? 'expand_less' : 'expand_more' }}</i>
         </span>
@@ -40,7 +46,9 @@
                     <div class="select is-fullwidth">
                       <select [(ngModel)]="filter.stageId" name="stageId" (ngModelChange)="onChange()">
                         <option value="">Seleccionar stage</option>
-                        <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
+                        <option *ngFor="let stage of stages" [value]="stage.id">
+                          {{ stage.description }}
+                        </option>
                       </select>
                     </div>
                   </div>

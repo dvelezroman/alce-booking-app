@@ -126,5 +126,13 @@ export class BookingService {
 
     return this.http.get(`${this.apiUrl}/grouped-by-hour`, { params });
   }
+
+  updateInstructorNote(meetingId: number, note: string): void {
+    console.log('/meetings/' + meetingId + '/instructor-note');
+    console.log({
+      meetingId,
+      instructorNote: note
+    });
+  }
 }
 

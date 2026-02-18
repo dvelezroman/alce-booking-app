@@ -14,6 +14,7 @@ export interface StageProgressDto {
   student: Student;
   stage: Stage;
   assessments?: StudentAssessment[];
+  stageEntryDate?: string;
 }
 
 /**

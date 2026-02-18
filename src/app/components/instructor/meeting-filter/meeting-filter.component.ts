@@ -31,4 +31,40 @@ export class MeetingFilterComponent {
   toggleFormVisibility() {
     this.showForm = !this.showForm;
   }
+
+  get filteredStages(): Stage[] {
+    return this.stages.filter(stage => {
+      const n = (stage?.number || '').trim().toUpperCase();
+      return n === 'STG 0' || /^STG (?:[1-9]|1[0-9])$/.test(n);
+    });
+  }
+
+  get selectedStageLabel(): string | null {
+    if (!this.filter.stageId) return null;
+    const stageIdNumber = Number(this.filter.stageId);
+    const stage = this.stages.find(s => s.id == stageIdNumber);
+    return stage?.description || null;
+  }
+
+  get activeFiltersSummary(): string {
+    const parts: string[] = [];
+
+    if (this.filter.from) parts.push(`Desde: ${this.filter.from}`);
+    if (this.filter.to) parts.push(`Hasta: ${this.filter.to}`);
+    if (this.selectedStageLabel) parts.push(this.selectedStageLabel);
+    if (this.filter.hour) parts.push(`${this.filter.hour}:00`);
+    if (this.filter.category) parts.push(this.filter.category);
+
+    return parts.join(' • ');
+  }
+
+  get hasActiveFilters(): boolean {
+    return !!(
+      this.filter.from ||
+      this.filter.to ||
+      this.filter.stageId ||
+      this.filter.hour ||
+      this.filter.category
+    );
+  }
 }

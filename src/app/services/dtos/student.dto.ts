@@ -34,6 +34,7 @@ export interface Student {
   suspensionDays?: number;
   suspensionStartDate?: string;
   suspensionEndDate?: string;
+  stageEntryDate?: string;
 }
 
 export interface StudentSuspensionHistory {
