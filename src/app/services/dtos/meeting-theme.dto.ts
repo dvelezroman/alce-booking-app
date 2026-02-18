@@ -66,3 +66,25 @@ export interface MeetingDataI extends MeetingDTO {
 export type MonthKey = "ENERO" | "FEBRERO" | "MARZO" |
  "ABRIL" | "MAYO" | "JUNIO" | "JULIO" | "AGOSTO" |
  "SEPTIEMBRE" | "OCTUBRE" | "NOVIEMBRE" | "DICIEMBRE";
+ 
+
+export type StudentHistoryJobStatus =
+  | 'queued'
+  | 'processing'
+  | 'completed'
+  | 'failed';
+
+export interface GenerateStudentHistoryResponse {
+  jobId: string;
+  status: StudentHistoryJobStatus;
+  createdAt: string;
+}
+
+export interface StudentHistoryStatusResponse {
+  jobId: string;
+  status: StudentHistoryJobStatus;
+  s3Url?: string;
+  createdAt: string;
+  completedAt?: string;
+  expiresAt?: string;
+}

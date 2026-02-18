@@ -145,13 +145,50 @@
 
         <ul *ngIf="categoryStates[group.title]" class="group-list">
           <li *ngFor="let item of group.items">
-            <a
-              *ngIf="item.roles.includes(userData?.role || UserRole.STUDENT)"
-              [routerLink]="item.route"
-              (click)="closeSidebar($event)"
-            >
-              <span class="link-text">{{ item.text }}</span>
-            </a>
+
+            <!-- ITEM NORMAL -->
+            <ng-container *ngIf="isNavItem(item)">
+              <a
+                *ngIf="item.roles.includes(userData?.role || UserRole.STUDENT)"
+                [routerLink]="item.route"
+                (click)="closeSidebar($event)"
+              >
+                <span class="link-text">{{ item.text }}</span>
+              </a>
+            </ng-container>
+
+            <!-- SUBMENÚ -->
+            <ng-container *ngIf="isSubGroup(item)">
+              <div class="sub-menu-wrapper">
+
+                <!-- HEADER DEL SUBMENU -->
+                <div
+                  class="sub-category-header"
+                  (click)="toggleSubCategory(item.title)"
+                  [class.collapsed]="!subCategoryStates[item.title]"
+                >
+                  <span>{{ item.title }}</span>
+                  <i class="fas fa-chevron-down chevron-icon"></i>
+                </div>
+
+                <!-- LISTA -->
+                <ul
+                  *ngIf="subCategoryStates[item.title]"
+                  class="sub-list"
+                >
+                  <li *ngFor="let child of item.children">
+                    <a
+                      [routerLink]="child.route"
+                      routerLinkActive="active"
+                      (click)="closeSidebar($event)"
+                    >
+                      <span class="link-text">{{ child.text }}</span>
+                    </a>
+                  </li>
+                </ul>
+
+              </div>
+            </ng-container>
           </li>
         </ul>
 

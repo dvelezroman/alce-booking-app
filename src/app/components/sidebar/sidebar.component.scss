@@ -424,3 +424,81 @@
     animation: none !important;
   }
 }
+
+
+/* =============================
+   SUBMENU COLAPSABLE
+============================= */
+
+.sub-menu-wrapper {
+  width: 100%;
+}
+
+.sub-category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 19px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.sub-category-header:hover::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 5px;
+  right: 5px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  z-index: -1;
+}
+
+.sub-category-header .chevron-icon {
+  font-size: 0.7rem;
+  transition: transform 0.3s ease;
+}
+
+.sub-category-header:not(.collapsed) .chevron-icon {
+  transform: rotate(-180deg);
+}
+
+/* Sub list indent */
+.sub-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sub-list li a {
+  padding: 12px 35px;
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #ffffff;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.sub-list li a:hover::before,
+.sub-list li a.active::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  z-index: -1;
+}
+
+/* Ocultar cuando sidebar cerrado */
+.sidebar.closed .sub-menu-wrapper {
+  display: none;
+}

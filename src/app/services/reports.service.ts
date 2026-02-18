@@ -3,7 +3,7 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
-import {MeetingDataI, MeetingReportDetailed, StatisticalDataI} from "./dtos/meeting-theme.dto";
+import {GenerateStudentHistoryResponse, MeetingDataI, MeetingReportDetailed, StatisticalDataI, StudentHistoryStatusResponse} from "./dtos/meeting-theme.dto";
 import {UserRole, UsersResponse, UserStatus} from "./dtos/user.dto";
 import { InstructorsGroupedByDate } from "./dtos/instructor-attendance-grouped.dto";
 import { AbsentStudentsExcelFilterDto, UsersExcelFilterDto } from "./dtos/reports.dto";
@@ -244,5 +244,18 @@ export class ReportsService {
 
     const url = `${this.apiUrl}/students-without-meetings/excel`;
     return this.http.get(url, { params, responseType: 'blob' });
+  }
+
+  generateStudentHistoryReport(studentId: number): Observable<GenerateStudentHistoryResponse> {
+    return this.http.post<GenerateStudentHistoryResponse>(
+      `${this.apiUrl}/student-history/${studentId}/generate`,
+      {}
+    );
+  }
+
+  checkStudentHistoryReportStatus(jobId: string): Observable<StudentHistoryStatusResponse> {
+    return this.http.get<StudentHistoryStatusResponse>(
+      `${this.apiUrl}/student-history/${jobId}/status`
+    );
   }
 }

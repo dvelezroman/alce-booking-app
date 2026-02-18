@@ -52,6 +52,7 @@ import { SuspensionHistoryComponent } from './suspension-history/suspension-hist
 import { InstructorEvaluationsComponent } from './instructor-evaluations/instructor-evaluations.component';
 import { MeetingEvaluationsComponent } from './meeting-evaluations/meeting-evaluations.component';
 import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluation-statistics.component';
+import { StudentHistoryReportComponent } from './report-students/student-history-report/student-history-report.component';
 
 
 export const dashboardRoutes: Routes = [
@@ -80,6 +81,7 @@ export const dashboardRoutes: Routes = [
   { path: 'create-students', component: RegisterStudentComponent },
   { path: 'create-instructors', component: RegisterInstructorAdminComponent },
   { path: 'reports-detailed', component: ReportsDetailedComponent },
+  { path: 'student-history-report', component: StudentHistoryReportComponent },
   { path: 'reports-progress', component: ReportsProgressComponent },
   { path: 'suspension-history', component: SuspensionHistoryComponent },
   { path: 'report-user', component: ReportUserComponent },

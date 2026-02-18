@@ -9,6 +9,28 @@ import { Store } from '@ngrx/store';
 import { ModalDto, modalInitializer } from '../modal/modal.dto';
 import { ModalComponent } from '../modal/modal.component';
 
+type Role = UserRole;
+
+export interface SidebarNavItem {
+  icon: string;
+  text: string;
+  route: string;
+  roles: Role[];
+}
+
+export interface SidebarNavSubGroup {
+  title: string;
+  children: SidebarNavItem[];
+}
+
+export type SidebarNavEntry = SidebarNavItem | SidebarNavSubGroup;
+
+export interface SidebarNavGroup {
+  title: string;
+  icon: string;
+  items: SidebarNavEntry[];
+}
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -33,11 +55,12 @@ export class SidebarComponent implements OnInit {
   userData$: Observable<UserDto | null>;
   userData: UserDto | null = null;
   categoryStates: Record<string, boolean> = {};
+  subCategoryStates: Record<string, boolean> = {};
   currentRoute: string = '';
-  homeNavItem: { icon: string; text: string; route: string; roles: UserRole[] } | null = null;
-  profileNavItem: { icon: string; text: string; route: string; roles: UserRole[] } | null = null;
+  homeNavItem: SidebarNavItem | null = null;
+  profileNavItem: SidebarNavItem | null = null;
 
-navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
+navItems: SidebarNavItem[] = [
   { icon: 'home', text: 'Inicio', route: '/dashboard/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
   { icon: 'user', text: 'Perfil', route: '/dashboard/profile', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
   { icon: 'event', text: 'Mis Clases', route: '/dashboard/meetings-student', roles: [UserRole.STUDENT] },
@@ -57,6 +80,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/dashboard/feature-flag', roles: [UserRole.ADMIN] },
   { icon: 'reporte', text: 'Instructores', route: '/dashboard/report-instructor', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Estudiante', route: '/dashboard/reports-detailed', roles: [UserRole.ADMIN] },
+  { icon: 'reportes', text: 'Historial Completo', route: '/dashboard/student-history-report', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Licencias', route: '/dashboard/suspension-history', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Usuario', route: '/dashboard/report-user', roles: [UserRole.ADMIN] },
   { icon: 'excel', text: 'Inasistencias / info. de Usuarios', route: '/dashboard/report-excel', roles: [UserRole.ADMIN] },
@@ -89,11 +113,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
   { icon: 'send', text: 'Enviados', route: '/dashboard/sent-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
 ];
 
-  navGrouped: {
-    title: string;
-    icon: string;
-    items: { icon: string; text: string; route: string; roles: UserRole[] }[];
-  }[] = [];
+  navGrouped: SidebarNavGroup[] = [];
 
   constructor(
     private usersService: UsersService,
@@ -123,6 +143,14 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
         }
       }
     });
+   
+    for (const group of this.navGrouped) {
+      group.items.forEach(item => {
+        if (this.isSubGroup(item)) {
+          this.subCategoryStates[item.title] = false;
+        }
+      });
+    }
 
     const role = this.userData?.role || UserRole.STUDENT;
 
@@ -137,7 +165,7 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
     }
 
 
-      const grouped = [
+    const grouped: SidebarNavGroup[] = [
     {
       title: 'Agenda',
       icon: 'event',
@@ -204,11 +232,22 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
         this.findNavItemByRoute('/dashboard/report-user'),
         this.findNavItemByRoute('/dashboard/report-excel'),
         this.findNavItemByRoute('/dashboard/report-instructor'),
-        this.findNavItemByRoute('/dashboard/reports-detailed'),
+
+        {
+          title: 'Estudiante',
+          children: [
+            this.findNavItemByRoute('/dashboard/reports-detailed'),
+            this.findNavItemByRoute('/dashboard/student-history-report'),
+          ].filter(item => item.roles.includes(role)),
+        },
+
         this.findNavItemByRoute('/dashboard/reports-progress'),
         this.findNavItemByRoute('/dashboard/assessment-reports'),
-        this.findNavItemByRoute('/dashboard/suspension-history')
-      ].filter(item => item.roles.includes(role))
+        this.findNavItemByRoute('/dashboard/suspension-history'),
+      ].filter(entry => {
+        if (this.isSubGroup(entry)) return entry.children.length > 0;
+        return entry.roles.includes(role);
+      })
     },
     {
       title: 'Notificaciones',
@@ -260,14 +299,33 @@ navItems: { icon: string, text: string, route: string, roles: UserRole[] }[] = [
     }
   }
 
-  isCategoryActive(items: { icon: string; text: string; route: string; roles: UserRole[] }[]): boolean {
-    return items
-      .filter(item => item.route)
-      .some(item => this.currentRoute === item.route || this.currentRoute.startsWith(item.route + '/'));
+  toggleSubCategory(title: string) {
+    this.subCategoryStates[title] = !this.subCategoryStates[title];
+  }
+
+  isSubGroup(item: SidebarNavEntry): item is SidebarNavSubGroup {
+    return (item as SidebarNavSubGroup).children !== undefined;
+  }
+
+  isNavItem(item: SidebarNavEntry): item is SidebarNavItem {
+    return (item as SidebarNavItem).route !== undefined;
+  }
+
+  isCategoryActive(items: SidebarNavEntry[]): boolean {
+    const allRoutes = items.flatMap(item => {
+      if (this.isSubGroup(item)) {
+        return item.children.map(c => c.route);
+      }
+      return item.route ? [item.route] : [];
+    });
+
+    return allRoutes.some(route =>
+      this.currentRoute === route || this.currentRoute.startsWith(route + '/')
+    );
   }
 
 
-  findNavItemByRoute(route: string) {
+  findNavItemByRoute(route: string): SidebarNavItem {
     return this.navItems.find(item => item.route === route)!;
   }
 

@@ -1,0 +1,130 @@
+<section class="section">
+
+  <!-- TÍTULO FIJO ARRIBA -->
+  <div class="title-container">
+    <h1 class="title">Historial del Estudiante</h1>
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+
+      <p class="subtitle">
+        Genera un reporte PDF completo del historial académico.
+      </p>
+
+      <!-- ========================= -->
+      <!-- BUSCADOR -->
+      <!-- ========================= -->
+
+      <div class="form-group">
+        <label>Buscar estudiante</label>
+
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange($event)"
+          placeholder="Escribe nombre o apellido..."
+          class="input"
+          (focus)="showDropdown = true"
+        />
+
+        <!-- DROPDOWN -->
+        <div *ngIf="showDropdown && filteredUsers.length" class="dropdown">
+          <div
+            class="dropdown-item"
+            *ngFor="let user of filteredUsers"
+            (click)="selectUser(user)"
+          >
+            {{ user.firstName }} {{ user.lastName }}
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================= -->
+      <!-- ESTUDIANTE SELECCIONADO -->
+      <!-- ========================= -->
+
+      <div *ngIf="selectedStudent" class="selected-user">
+        <span class="selected-label">Seleccionado:</span>
+        <strong class="selected-name">
+          {{ selectedStudent.firstName }} {{ selectedStudent.lastName }}
+        </strong>
+      </div>
+
+      <!-- ========================= -->
+      <!-- BOTÓN GENERAR -->
+      <!-- ========================= -->
+
+      <button
+        class="primary-btn"
+        [disabled]="loading"
+        (click)="generateReport()"
+      >
+        <span *ngIf="!loading">Generar Reporte</span>
+        <span *ngIf="loading">Generando reporte...</span>
+      </button>
+
+      <!-- ========================= -->
+      <!-- ESTADO CARGANDO -->
+      <!-- ========================= -->
+
+      <div *ngIf="loading" class="status loading-status">
+        ⏳ Procesando solicitud...
+      </div>
+
+      <!-- ========================= -->
+      <!-- INFORMACIÓN DEL JOB -->
+      <!-- ========================= -->
+
+      <div *ngIf="jobId" class="job-box">
+
+        <div class="job-row">
+          <span class="label">Job ID</span>
+          <span class="value">{{ jobId }}</span>
+        </div>
+
+        <div class="job-row">
+          <span class="label">Estado</span>
+          <span 
+            class="badge"
+            [ngClass]="{
+              'badge-pending': status === 'queued' || status === 'processing',
+              'badge-success': status === 'completed',
+              'badge-failed': status === 'failed'
+            }"
+          >
+            {{ status }}
+          </span>
+        </div>
+
+      </div>
+
+      <!-- ========================= -->
+      <!-- BOTÓN DESCARGAR -->
+      <!-- ========================= -->
+
+      <button
+        *ngIf="jobId"
+        class="download-btn"
+        [disabled]="loading"
+        (click)="downloadReport()"
+      >
+        Descargar Reporte PDF
+      </button>
+
+      <!-- ========================= -->
+      <!-- ERROR -->
+      <!-- ========================= -->
+
+      <div *ngIf="error" class="error">
+        {{ error }}
+      </div>
+
+      <!-- <div *ngIf="serverError" class="error small-error">
+        {{ serverError }}
+      </div> -->
+
+    </div>
+  </div>
+</section>
