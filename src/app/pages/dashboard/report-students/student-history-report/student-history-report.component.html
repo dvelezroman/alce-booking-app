@@ -66,11 +66,27 @@
       </button>
 
       <!-- ========================= -->
-      <!-- ESTADO CARGANDO -->
+      <!-- ESTADO -->
       <!-- ========================= -->
 
       <div *ngIf="loading" class="status loading-status">
-        ⏳ Procesando solicitud...
+        ⏳ Generando reporte...
+      </div>
+
+      <!-- ========================= -->
+      <!-- PROGRESS BAR -->
+      <!-- ========================= -->
+
+      <div *ngIf="jobId" class="progress-container">
+        <div class="progress-bar">
+          <div
+            class="progress-fill"
+            [style.width.%]="progress"
+          ></div>
+        </div>
+        <div class="progress-text">
+          {{ progress }}%
+        </div>
       </div>
 
       <!-- ========================= -->
@@ -78,11 +94,6 @@
       <!-- ========================= -->
 
       <div *ngIf="jobId" class="job-box">
-
-        <div class="job-row">
-          <span class="label">Job ID</span>
-          <span class="value">{{ jobId }}</span>
-        </div>
 
         <div class="job-row">
           <span class="label">Estado</span>
@@ -105,9 +116,8 @@
       <!-- ========================= -->
 
       <button
-        *ngIf="jobId"
+        *ngIf="reportReady"
         class="download-btn"
-        [disabled]="loading"
         (click)="downloadReport()"
       >
         Descargar Reporte PDF
@@ -120,10 +130,6 @@
       <div *ngIf="error" class="error">
         {{ error }}
       </div>
-
-      <!-- <div *ngIf="serverError" class="error small-error">
-        {{ serverError }}
-      </div> -->
 
     </div>
   </div>

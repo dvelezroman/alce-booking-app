@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, Subject, interval, Subscription, switchMap, takeWhile, expand, EMPTY, timer } from 'rxjs';
 import { UserDto } from '../../../../services/dtos/user.dto';
 import { UsersService } from '../../../../services/users.service';
 import { ReportsService } from '../../../../services/reports.service';
@@ -15,7 +15,7 @@ type JobStatus = 'queued' | 'processing' | 'completed' | 'failed';
   templateUrl: './student-history-report.component.html',
   styleUrl: './student-history-report.component.scss'
 })
-export class StudentHistoryReportComponent {
+export class StudentHistoryReportComponent implements OnDestroy {
 
   // ======================
   // SEARCH
@@ -39,6 +39,13 @@ export class StudentHistoryReportComponent {
   jobId?: string;
   status?: JobStatus;
 
+  reportReady = false;
+  downloadUrl?: string;
+
+  progress = 0;
+
+  private pollingSub?: Subscription;
+
   constructor(
     private usersService: UsersService,
     private reportsService: ReportsService
@@ -49,7 +56,7 @@ export class StudentHistoryReportComponent {
   }
 
   // ======================
-  // SEARCH LOGIC
+  // SEARCH
   // ======================
 
   onSearchChange(term: string): void {
@@ -90,7 +97,7 @@ export class StudentHistoryReportComponent {
   }
 
   // ======================
-  // GENERATE
+  // GENERATE REPORT
   // ======================
 
   generateReport(): void {
@@ -100,7 +107,9 @@ export class StudentHistoryReportComponent {
     }
 
     this.resetState();
+
     this.loading = true;
+    this.progress = 10;
 
     const studentId = this.selectedStudent.student.id;
 
@@ -108,7 +117,7 @@ export class StudentHistoryReportComponent {
       next: (res) => {
         this.jobId = res.jobId;
         this.status = res.status;
-        this.loading = false;
+        this.startPolling();
       },
       error: () => {
         this.loading = false;
@@ -118,38 +127,61 @@ export class StudentHistoryReportComponent {
   }
 
   // ======================
-  // DOWNLOAD
+  // POLLING AUTOMÁTICO
   // ======================
 
-  downloadReport(): void {
+  private startPolling(): void {
     if (!this.jobId) return;
 
-    this.loading = true;
-    this.error = undefined;
-    this.serverError = undefined;
+    this.stopPolling();
 
-    this.reportsService
+    this.pollingSub = this.reportsService
       .checkStudentHistoryReportStatus(this.jobId)
+      .pipe(
+        expand((res: any) => {
+
+          // Si terminó o falló, no seguimos expandiendo
+          if (res.status === 'completed' || res.status === 'failed') {
+            return EMPTY;
+          }
+
+          // Esperamos 3 segundos después de recibir respuesta
+          return timer(3000).pipe(
+            switchMap(() =>
+              this.reportsService.checkStudentHistoryReportStatus(this.jobId!)
+            )
+          );
+        }),
+
+        // hasta que completed o failed
+        takeWhile(
+          (res: any) =>
+            res.status !== 'completed' && res.status !== 'failed',
+          true // importante: incluye la última emisión
+        )
+      )
       .subscribe({
         next: (res: any) => {
+
           this.status = res.status;
 
+          // progreso falso
+          if (this.progress < 90 && res.status !== 'completed') {
+            this.progress += 10;
+          }
+
           if (res.status === 'completed') {
+            this.progress = 100;
             this.loading = false;
-            window.open(res.s3Url, '_blank');
-            return;
+            this.reportReady = true;
+            this.downloadUrl = res.s3Url;
           }
 
           if (res.status === 'failed') {
             this.loading = false;
             this.serverError = res.errorMessage;
-            this.error = 'reporte fallido.';
-            return;
+            this.error = 'No se pudo generar el reporte.';
           }
-
-          // queued o processing
-          this.loading = false;
-          this.error = 'El reporte aún no está listo. Intenta nuevamente.';
         },
         error: () => {
           this.loading = false;
@@ -158,14 +190,39 @@ export class StudentHistoryReportComponent {
       });
   }
 
+  private stopPolling(): void {
+    if (this.pollingSub) {
+      this.pollingSub.unsubscribe();
+      this.pollingSub = undefined;
+    }
+  }
+
+  // ======================
+  // DOWNLOAD (SOLO CLICK)
+  // ======================
+
+  downloadReport(): void {
+    if (!this.downloadUrl) return;
+    window.open(this.downloadUrl, '_blank');
+  }
+
   // ======================
   // RESET
   // ======================
 
   private resetState(): void {
+    this.stopPolling();
     this.error = undefined;
     this.serverError = undefined;
     this.jobId = undefined;
     this.status = undefined;
+    this.reportReady = false;
+    this.downloadUrl = undefined;
+    this.progress = 0;
+  }
+
+  // matar polling si se sale de la página
+  ngOnDestroy(): void {
+    this.stopPolling();
   }
 }
