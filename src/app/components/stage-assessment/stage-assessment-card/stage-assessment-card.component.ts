@@ -17,7 +17,14 @@ export class StageAssessmentCardComponent {
   @Output() openAndFinish = new EventEmitter<number>();
 
   handleOpenAndFinish() {
+
+    //bloqueo si está expirada
+    if (this.assessment.isPastDue) {
+      return;
+    }
+
     const url = this.assessment?.stageAssessmentResource?.url;
+
     if (url) {
       window.open(url, '_blank');
     }

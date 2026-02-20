@@ -23,6 +23,7 @@ export interface StageAssessment {
   dueDate: string;
   finished: number[];
   createdBy: number;
+  isPastDue?: boolean;
   stage?: any;
   creator?: any;
   stageAssessmentResource?: StageAssessmentResource;
@@ -66,5 +67,6 @@ export interface StageAssessmentStudent {
 export interface StudentAssessmentStatus {
   hasActive: boolean;
   count: number;
+  pastDueCount?: number;
   assessments: StageAssessment[];
 }

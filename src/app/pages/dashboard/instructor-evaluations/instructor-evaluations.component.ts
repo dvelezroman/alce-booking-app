@@ -127,7 +127,7 @@ export class InstructorEvaluationsComponent implements OnInit {
               isSuccess: true,
               message: 'Evaluación enviada correctamente'
             },
-            3000
+            1000
           );
         },
         error: () => {
@@ -136,7 +136,7 @@ export class InstructorEvaluationsComponent implements OnInit {
               isError: true,
               message: 'Error al enviar la evaluación'
             },
-            4000
+            2000
           );
         }
       });

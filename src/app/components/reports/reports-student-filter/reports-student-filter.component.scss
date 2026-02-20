@@ -6,16 +6,27 @@
   box-sizing: border-box;
   padding: 1rem;
   font-size: 0.8rem;
+  background: #ffffff;
 }
+
+/* ============================== */
+/* CARD CONTAINER */
+/* ============================== */
 
 .form-container {
   width: 100%;
   max-width: 380px;
   padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
 }
+
+/* ============================== */
+/* INPUT + DROPDOWN */
+/* ============================== */
 
 .input-dropdown-wrapper {
   position: relative;
@@ -24,74 +35,118 @@
   input[type="text"] {
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
     margin-bottom: 0;
     box-sizing: border-box;
+    background: #ffffff;
+    transition: all 0.18s ease;
+  }
+
+  input[type="text"]:focus {
+    outline: none;
+    border-color: #28336f;
+    box-shadow: 0 0 0 3px rgba(40, 51, 111, 0.12);
   }
 
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
     max-height: 350px;
     overflow-y: auto;
     position: absolute;
     width: 100%;
     z-index: 20;
-    top: 100%; 
+    top: 100%;
     left: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
   }
 
   li {
     padding: 0.5rem;
-    color: #1a1a1a;
+    color: #0f172a;
     cursor: pointer;
+    transition: background 0.15s ease;
   }
 
   li:hover {
-    background-color: #f0f0f0;
+    background-color: #f8fafc;
   }
 }
+
+/* ============================== */
+/* LABELS */
+/* ============================== */
 
 .form-container label {
   display: block;
   font-size: 0.8rem;
   margin-bottom: 0.3rem;
-  color: #333;
+  color: #64748b;
 }
+
+/* ============================== */
+/* DATE INPUT */
+/* ============================== */
 
 .form-container input[type="date"] {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
   margin-bottom: 1rem;
   box-sizing: border-box;
+  background: #ffffff;
+  transition: all 0.18s ease;
 }
+
+.form-container input[type="date"]:focus {
+  outline: none;
+  border-color: #28336f;
+  box-shadow: 0 0 0 3px rgba(40, 51, 111, 0.12);
+}
+
+/* ============================== */
+/* SELECT */
+/* ============================== */
 
 .form-container select {
   width: 100%;
   padding: 0.5rem;
   height: 35px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
   margin-bottom: 1rem;
   box-sizing: border-box;
   font-size: 0.8rem;
-  background-color: #fff;
-  color: #333;
+  background-color: #ffffff;
+  color: #0f172a;
+  transition: all 0.18s ease;
 }
 
+.form-container select:focus {
+  outline: none;
+  border-color: #28336f;
+  box-shadow: 0 0 0 3px rgba(40, 51, 111, 0.12);
+}
+
+/* ============================== */
+/* ERROR */
+/* ============================== */
+
 .error {
-  color: red;
+  color: #dc2626;
   font-size: 0.7rem;
   margin-top: -1rem;
 }
+
+/* ============================== */
+/* BUTTON BLOCK */
+/* ============================== */
 
 .button-block {
   display: flex;
@@ -102,36 +157,51 @@
   button {
     flex: 1;
     padding: 0.5rem;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
+    transition: all 0.18s ease;
+    border: none;
   }
 
   .button-primary {
-    background-color: #4a90e2;
-    color: #fff;
-    border: none;
+    background-color: #28336f;
+    color: #ffffff;
+    box-shadow: 0 6px 18px rgba(40, 51, 111, 0.18);
+
+    &:hover {
+      background-color: #202a5a;
+      box-shadow: 0 8px 24px rgba(40, 51, 111, 0.25);
+    }
 
     &:disabled {
-      background-color: #a0c4e4;
+      background-color: #cbd5e1;
+      box-shadow: none;
     }
   }
 
   .button-secondary {
-    background-color: #e0e0e0;
-    color: #333;
-    border: none;
+    background-color: #f8fafc;
+    color: #0f172a;
+    border: 1px solid #e5e7eb;
+
+    &:hover {
+      background-color: #f1f5f9;
+    }
 
     &:disabled {
-      background-color: #f5f5f5; 
-      color: #999;
+      background-color: #f9fafb;
+      color: #94a3b8;
     }
   }
 }
+
+/* ============================== */
+/* REPORT ACTIONS */
+/* ============================== */
 
 .report-actions {
   display: flex;
@@ -142,41 +212,25 @@
   button {
     min-width: 120px;
     padding: 0.6rem 1.2rem;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
-    border: none;
+    transition: all 0.18s ease;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #0f172a;
   }
 
-  .global-primary {
-    background-color: #e0e0e0;
-    color: #333;
-
-    &:hover {
-      background-color: #c0c0c0;
-    }
-
-    &:disabled {
-      background-color: #f5f5f5;
-      color: #999;
-    }
+  button:hover {
+    background-color: #f8fafc;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   }
 
-  .global-secondary {
-    background-color: #e0e0e0;
-    color: #333;
-
-    &:hover {
-      background-color: #c0c0c0;
-    }
-
-    &:disabled {
-      background-color: #f5f5f5;
-      color: #999;
-    }
+  button:disabled {
+    background-color: #f9fafb;
+    color: #94a3b8;
   }
 }

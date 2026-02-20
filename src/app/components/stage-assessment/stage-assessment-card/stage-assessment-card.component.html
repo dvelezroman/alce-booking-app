@@ -1,13 +1,20 @@
-<div class="assessment-card" [class.selected-card]="highlighted">
+<div class="assessment-card"
+     [class.selected-card]="highlighted"
+     [class.expired-card]="assessment.isPastDue">
 
   <div class="header-row">
     <h3 class="title">
       {{ assessment.stageAssessmentResource?.description || 'Recurso sin título' }}
     </h3>
 
-    <!-- Estado visual -->
-    <span class="status pending">
-      Pendiente
+    <!-- Estado visual dinámico -->
+    <span
+      class="status"
+      [ngClass]="{
+        'pending': !assessment.isPastDue,
+        'expired': assessment.isPastDue
+      }">
+      {{ assessment.isPastDue ? 'Expirada' : 'Pendiente' }}
     </span>
   </div>
 
@@ -21,12 +28,14 @@
       <strong>Stage:</strong>
       {{ assessment.stage?.description || 'Sin etapa' }}
     </p>
-
   </div>
 
   <div class="actions">
-    <button class="btn-open" (click)="handleOpenAndFinish()">
-      Ir a la evaluación
+    <button
+      class="btn-open"
+      [disabled]="assessment.isPastDue"
+      (click)="handleOpenAndFinish()">
+      {{ assessment.isPastDue ? 'Evaluación expirada' : 'Ir a la evaluación' }}
     </button>
   </div>
 

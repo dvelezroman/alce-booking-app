@@ -29,7 +29,13 @@ export class StageAssessmentStudentComponent implements OnInit {
   hasActiveAssessments: boolean = false;
   loading: boolean = true;
 
+  filterType: 'active' | 'expired' | 'all' = 'all';
+
+  allAssessments: StageAssessment[] = [];
   assessments: StageAssessment[] = [];
+
+  activeCount: number = 0;
+  expiredCount: number = 0;
 
   highlightId: number | null = null;
 
@@ -70,20 +76,50 @@ export class StageAssessmentStudentComponent implements OnInit {
   /** cargar los assessments del backend */
   private loadAssessments() {
     this.loading = true;
-    this.stageAssessmentService.checkActiveByStudent(this.studentId!).subscribe({
-      next: (res) => {
-        this.hasActiveAssessments = res.hasActive;
-        this.assessments = res.assessments ?? [];
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-        this.showNotification("Error al obtener tus evaluaciones.", true);
-      }
-    });
+
+    this.stageAssessmentService
+      .checkActiveByStudent(this.studentId!, true) 
+      .subscribe({
+        next: (res) => {
+
+          this.hasActiveAssessments = res.hasActive;
+
+          this.allAssessments = res.assessments ?? [];
+
+          this.applyFilter();
+
+          this.activeCount = this.allAssessments.filter(a => !a.isPastDue).length;
+          this.expiredCount = this.allAssessments.filter(a => a.isPastDue).length;
+
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+          this.showNotification("Error al obtener tus evaluaciones.", true);
+        }
+      });
   }
 
- /** parámetros que recibe del hijo */
+  applyFilter() {
+
+    switch (this.filterType) {
+
+      case 'active':
+        this.assessments =
+          this.allAssessments.filter(a => !a.isPastDue);
+        break;
+
+      case 'expired':
+        this.assessments =
+          this.allAssessments.filter(a => a.isPastDue);
+        break;
+
+      case 'all':
+        this.assessments = [...this.allAssessments];
+        break;
+    }
+  }
+
   onOpenAndFinish(assessmentId: number) {
     if (!this.studentId) return;
 

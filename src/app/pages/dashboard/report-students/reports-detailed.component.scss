@@ -1,106 +1,132 @@
 .section {
+  min-height: 100vh;
+  padding: 0rem;
+  background: #ffffff;
+}
 
-    min-height: 100vh;
-    padding: 0rem;
-  }
-  
-  .container {
-    width: 100%;
-    margin: 0 auto;
-    background-color: transparent;
-    padding: .5rem;
-    padding-top: 6rem;
-    border-radius: 8px;
-  }
+.container {
+  width: 100%;
+  margin: 0 auto;
+  background-color: transparent;
+  padding: .5rem;
+  padding-top: 6rem;
+  border-radius: 8px;
+}
 
-   .title-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    color: rgb(53, 53, 53);
-    width: 100%;
+/* ============================== */
+/* HEADER TIPO VERCEL */
+/* ============================== */
 
-    z-index: 10;
-    text-align: center;
-    font-family: 'Poppins', sans-serif;
-    padding: 1.35rem 0;
-  }
-  
+.title-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  padding: 1.35rem 0;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.title {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  color: #0f172a;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+}
+
+/* ============================== */
+/* NO RESULTS */
+/* ============================== */
+
+.no-results {
+  margin: 2rem auto;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* ============================== */
+/* BUTTON BLOCK */
+/* ============================== */
+
+.button-block-reports {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+/* ============================== */
+/* BOTÓN PRIMARIO MINIMAL */
+/* ============================== */
+
+.custom-button {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.8rem;
+  color: #28336f;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.custom-button:hover {
+  background-color: #f8fafc;
+  border-color: #d1d5db;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.custom-button.active {
+  background-color: #28336f;
+  color: #ffffff;
+  border-color: #28336f;
+  box-shadow: 0 6px 18px rgba(40, 51, 111, 0.18);
+}
+
+.custom-button:disabled {
+  background-color: #f9fafb;
+  color: #94a3b8;
+  border: 1px solid #e5e7eb;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+/* ============================== */
+/* BOTÓN DESCARGAR */
+/* ============================== */
+
+.download-button {
+  background-color: #28336f;
+  color: #ffffff;
+  border: none;
+  padding: 0.55rem 1.5rem;
+  font-size: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 14px rgba(40, 51, 111, 0.18);
+}
+
+.download-button:hover {
+  background-color: #202a5a;
+  box-shadow: 0 6px 20px rgba(40, 51, 111, 0.28);
+}
+
+/* ============================== */
+/* RESPONSIVE */
+/* ============================== */
+
+@media (max-width: 768px) {
+
   .title {
     font-size: 1.5rem;
-    line-height: 1.3;
-    color: #282828;
-    font-weight: bold;
-  }
-
-  .no-results {
-    margin: 2rem auto;
-    text-align: center;
-    font-size: 0.8rem;
-    color: #555;
-  }
-
-  .button-block-reports {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 2rem;
-  }
-
-  .custom-button {
-    padding: 0.5rem 1.5rem;
-    font-size: 0.8rem;
-    color: #3273dc; 
-    background-color: transparent;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .custom-button:hover {
-    background-color: #3273dc33; 
-    border-color: none;
-    color: white;
-  }
-
-  .custom-button.active {
-    background-color: #3273dc; 
-    color: white;
-    border-color: #3273dc;
-  }
-
-  .custom-button:disabled {
-    background-color: #f0f0f0; 
-    color: #929292;
-    border: 1px solid #ccc;
-    cursor: not-allowed;
-    opacity: 0.6;
-    box-shadow: none;
-  }
-
-  .download-button {
-    background-color: #59a9f0;
-    color: white;
-    border: none;
-    padding: 0.55rem 1.5rem;
-    font-size: 0.75rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .download-button:hover {
-    background-color: #468fcb;
-  }
-
-  @media (max-width: 768px) {
-  .title-container {
-    background: linear-gradient(45deg, #4a90e2,  #7743a8);
-  }
-
-  .title {
-    color: white;
-     font-size: 1.2rem;
   }
 
   .button-block,
@@ -116,23 +142,24 @@
   }
 }
 
-  @media (max-width: 492px) {
+@media (max-width: 492px) {
 
-    .columns.is-mobile {
-      flex-direction: column; 
-    }
-  
-    .columns.is-mobile .column {
-      width: 100%; 
-    }
-
-    .custom-button,
-    .download-button {
-      width: 80%;
-      padding: 0.6rem 1rem; 
-      font-size: 0.9rem; 
-  }
+  .title {
+    font-size: 1.2rem;
   }
 
+  .columns.is-mobile {
+    flex-direction: column;
+  }
 
-  
+  .columns.is-mobile .column {
+    width: 100%;
+  }
+
+  .custom-button,
+  .download-button {
+    width: 80%;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}

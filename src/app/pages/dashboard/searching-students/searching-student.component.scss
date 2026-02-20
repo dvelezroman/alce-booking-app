@@ -1,6 +1,5 @@
 :host {
   display: block;
-  background-color: #f2f2f2;
   min-height: 100vh;
   padding-bottom: 6rem;
 }
@@ -14,7 +13,7 @@
     left: 0;
     color: rgb(53, 53, 53);
     width: 100%;
-    background-color: #f2f2f2;
+    background-color: #ffffff;
     z-index: 12;
     text-align: center;
     padding: 1rem 0;
@@ -58,7 +57,7 @@
 .switch-label {
   flex: 1;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
   color: #6b7280;
   padding: 0.5rem 1.2rem;
@@ -69,7 +68,7 @@
 
 /* Opción activa */
 .switch-label.bold-text {
-  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+  background: #28336f;
   color: white !important;
   font-weight: 600;
 }
@@ -83,7 +82,7 @@
 @media (max-width: 640px) {
   .form-switch-container.triple {
     width: 80%;
-    border-radius: 8px;
+    border-radius: 10px;
   }
 
   .switch-label {
@@ -123,7 +122,7 @@
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #d2d2d2;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: .8rem;
     background-color: #ffffff;
     color: #333;
@@ -142,7 +141,7 @@
     color: #4a4a4a;
     border: 1px solid #d2d2d2;
     background-color: #ffffff;
-    border-radius: 8px;
+    border-radius: 10px;
   }
 
   input::placeholder {
@@ -154,73 +153,111 @@
   .search-button {
     width: 100%;
     padding: 0.7rem;
-    background-color: #4490e2;
+    background-color: #28336f;
     color: #ffffff;
     border: none;
-    border-radius: 5px;
+    border-radius: 12px;
     font-size: .9rem;
     margin-top: 1rem;
     cursor: pointer;
   }
 
   .search-button:hover {
-    background-color: #367bbd;
+    background-color: #1a2a86;
   }
 
-  /* BLOQUE RESULTADOS */
+/* ======================================== */
+/* BLOQUE RESULTADOS */
+/* ======================================== */
+
 .results-container {
   margin-top: 1.5rem;
   width: 85%;
   margin: 20px auto;
 }
 
+/* ======================================== */
+/* CONTENEDOR TABLA (SCROLL SOLO Y) */
+/* ======================================== */
+
 .table-container {
   position: relative;
   width: 100%;
   margin: auto;
   overflow-x: auto;
+  overflow-y: auto;
+  max-height: 750px;
   margin-bottom: 1rem;
-  z-index: 10;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
 }
 
-  /* Estilos para la tabla */
+/* Scroll elegante */
+.table-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 20px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+/* ======================================== */
+/* TABLA */
+/* ======================================== */
+
 .table {
-  position: relative;
-  min-width: 1100px; 
+  min-width: 1100px;
   width: 100%;
-  margin: 20px auto;
   border-collapse: collapse;
-  margin-top: 0;
-  margin-bottom: 0;
-  border-radius: 5px;
-  overflow: hidden;
-  z-index: 10;
+  margin: 0;
 }
 
-.table th, .table td {
+/* HEADER FIJO */
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background-color: #ffffff;
+  padding: 0.6rem 0.5rem;
+  font-size: .8rem;
+  font-weight: 600;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+/* CELDAS */
+.table th,
+.table td {
   padding: 10px 8px;
   text-align: center;
   font-size: .8rem;
 }
 
-.table th {
-  border-bottom: none;
-  padding: 0.55rem;
-  color: #333;
-  background-color: #e5effa;
-}
-
 .table td {
   background-color: #ffffff;
-  color: #333;
-  border-bottom: .5px solid rgb(216, 216, 216);
+  color: #374151;
+  border-bottom: 1px solid #f1f1f151;
 }
-  @media (max-width: 490px) {
-    .table th,
-    .table td {
-      font-size: 0.75rem;
-    }
-  }
+
+/* Hover filas */
+.table tbody tr:hover {
+  background-color: #e8e8e8;
+}
+
+/* ======================================== */
+/* LICENSE BADGES */
+/* ======================================== */
 
 .license-dates {
   font-size: 0.75rem;
@@ -237,110 +274,88 @@
   color: #9ca3af;
 }
 
-.icon-actions-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  z-index: 20;
-}
+/* ======================================== */
+/* ICONOS ACTUALIZADOS */
+/* ======================================== */
 
 .edit-icon {
-  position: relative;
-  color: #479df9;
+  color: #28336f;
   cursor: pointer;
   font-size: 1rem;
   margin-right: 0px;
-  transition: color 0.3s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    color: #0056b3;
+    color: #1f2857;
+    transform: scale(1.1);
   }
-
 }
+
 .delete-icon {
-  position: relative;
   font-size: 1rem;
-  color: #b5b0af;
+  color: #706f6f;
   cursor: pointer;
   margin-left: .3rem;
-  transition: color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .delete-icon:hover {
-  color: #7b7978;
+  color: #4b4b4b;
+  transform: scale(1.1);
 }
 
 .password-icon {
-  position: relative;
   font-size: 1rem;
-  color: #9f58be;
+  color: #d4af37;
   cursor: pointer;
   margin-left: .3rem;
-  transition: color 0.3s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    color: #8329aa;
+    color: #b9962f;
+    transform: scale(1.1);
   }
 }
 
-/* Personalización del scrollbar */
-.table-container::-webkit-scrollbar {
-  width: 8px;
-}
+/* ======================================== */
+/* PAGINATION (AZUL CORPORATIVO) */
+/* ======================================== */
 
-.table-container::-webkit-scrollbar-track {
-  background: #f0f0f0;
-}
-
-.table-container::-webkit-scrollbar-thumb {
-  background-color: #d8d8d8;
-  border-radius: 20px;
-  border: 2px solid #f0f0f0;
-}
-
-.table-container::-webkit-scrollbar-thumb:hover {
-  background-color: #a2a3a6;
-}
-
-/* Pagination estilos*/
 .pagination {
   margin-top: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 15px;
-  max-width: 100%;
-  box-sizing: border-box;
-  background-color: #f2f2f2;
-  padding:20px 15px;
+  background-color: #ffffff;
 }
 
 .pagination button {
-  padding: 8px 16px;
+  padding: 8px 18px;
   font-size: .8rem;
-  background-color:rgb(167, 127, 242);
+  background-color: #28336f;
   color: white;
-  border: none;
-  border-radius: 5px;
+  border: 1px solid #28336f;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .pagination button:hover {
-  background-color: rgb(134, 86, 224);
+  background-color: #1f2857;
+  border-color: #1f2857;
 }
 
 .pagination button[disabled] {
-  background-color: rgb(238, 229, 255);
-  border: .5px solid rgb(215, 194, 255) ;
-  color: grey;
+  background-color: #cbd5e1;
+  border: 1px solid #cbd5e1;
+  color: #64748b;
   cursor: not-allowed;
 }
 
 .pagination span {
-  font-size: .9rem;
-  color: #333;
+  font-size: .85rem;
+  color: #374151;
 }
 
 .no-results-message {
@@ -355,191 +370,6 @@
   color: grey;
   font-size: 20px;
   margin-top: 20px;
-}
-
-/* Estilos específicos para el modal de editar usuario */
-.modal {
-  z-index: 1100;
-}
-
-/* Fondo del modal */
-.edit-user-modal-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.2);
-  z-index: 999;
-}
-
-/* Contenedor principal del modal */
-.edit-user-modal-card {
-  position: fixed;
-  top: 10%;
-  left: 50%;
-  transform: translate(-50%, 0);
-  width: 500px;
-  background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  z-index: 1000;
-}
-
-/* Cabecera del modal */
-.edit-user-modal-head {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  padding: 0.5rem 1rem;
-  // border-bottom: 1px solid #e0e0e0;
-}
-
-.edit-user-modal-title {
-  flex-grow: 1;
-  font-size: 1.2rem;
-  text-align: center;
-  color: #333;
-  font-weight: 600;
-  margin: 0;
-  margin-bottom: 1rem;
-}
-
-.edit-user-close {
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  font-size: 1.5rem;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  color: #7b7979;
-}
-
-.edit-user-close:hover {
-  color: #373737;
-}
-
-/* Cuerpo del modal con scroll */
-.edit-user-modal-body {
-  overflow-y: auto;
-  height: 60vh;
-  padding: 1rem 1.5rem;
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent; 
-
-   &::-webkit-scrollbar {
-    width: 8px;
-    background-color: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    border-radius: 4px;
-  }
-
-  &:hover::-webkit-scrollbar-thumb {
-    background-color: #9ca3af;
-  }
-
-   @media (max-width: 480px) {
-    padding: 0.5rem 0.85rem;
-  }
-}
-
-/* Campos del formulario */
-.form-field-edit {
-  margin-bottom: 1rem;
-}
-
-.form-field-edit label {
-  display: block;
-  margin-bottom: 0.2rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-left: 5px;
-  color: #333;
-}
-
-
-/* Checkbox estilo activado */
-.form-field-edit input[type="checkbox"] {
-  accent-color: #3b82f6; 
-  cursor: pointer;
-  border-radius: 12px;
-  transition: all 0.2s ease;
-}
-
-.form-field-edit input[type="checkbox"]:hover {
-  box-shadow: 0 0 4px rgba(59, 130, 246, 0.4);
-}
-
-.form-field-edit input[type="checkbox"]:checked {
-  background-color: #3b82f6;
-  border-color: #3b82f6;
-}
-
-.form-field-edit input,
-.form-field-edit select {
-  width: 100%;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.8rem;
-  height: 36px;
-  background-color: #ffffff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box;
-}
-
-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-select::-ms-expand {
-  display: none;
-}
-
-/* Pie del modal */
-.edit-user-modal-foot {
-  display: flex;
-  justify-content: center;
-  padding: 1.5rem 1rem;
-  // border-top: 1px solid #e0e0e0;
-}
-
-.edit-user-modal-foot .button {
-  padding: 0.5rem 1.5rem;
-  font-size: .9rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 0 0.5rem;
-  color: white;
-  transition: background-color 0.3s ease;
-}
-
-/* Botón azul (Actualizar) */
-.edit-user-modal-foot .button.is-success {
-  background-color: #007bff;
-}
-
-.edit-user-modal-foot .button.is-success:hover {
-  background-color: #0056b3;
-}
-
-/* Botón morado (Cancelar) */
-.edit-user-modal-foot .delete-cancel-button {
-  background-color: #d7d7d7;
-  color: rgb(42, 41, 41);
-}
-
-.edit-user-modal-foot .delete-cancel-button:hover {
-  background-color: #aaaaaa;
 }
 
 /* modal de password */
@@ -629,10 +459,17 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 @media (max-width: 768px){
- 
 
-  .edit-user-modal-card {
-    width:345px;
-    margin-top:1rem;
+ .switch-label {
+  font-size: 0.75rem;
+}
+
+ .form-wrapper {
+    padding: 1.5rem;
   }
+
+ .table-container {
+  max-height: 550px;
+  border: 1px solid #ffffff;
+}
 }

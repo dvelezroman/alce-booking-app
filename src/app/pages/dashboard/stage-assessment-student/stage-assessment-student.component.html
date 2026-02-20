@@ -16,36 +16,74 @@
     <!-- IZQUIERDA -->
     <section class="stage-assessment-student-section">
 
+      <!-- NOTA IMPORTANTE ARRIBA -->
+      <div class="assessment-note-top">
+        <h4>Importante</h4>
+        <p>
+          El incumplimiento en la realización del assessment dentro del plazo indicado
+          impedirá el agendamiento de nuevas clases.
+          <br><br>
+          Para la reactivación del servicio, deberá comunicarse con administración.
+        </p>
+      </div>
+
       <div *ngIf="!loading && !hasActiveAssessments" class="empty-state">
         <img src="assets/carpeta_vacia.png" alt="Sin evaluaciones" class="empty-img" />
         <p>No tienes evaluaciones asignadas.</p>
       </div>
 
-      <p *ngIf="!loading && hasActiveAssessments" class="pending-count">
-        Tienes <strong>{{ assessments.length }}</strong> evaluaciones pendientes.
+      <p *ngIf="!loading && assessments.length > 0" class="assessment-summary">
+
+        <span class="summary-label">
+          Evaluaciones:
+        </span>
+
+        <span class="summary-badge active-badge">
+          {{ activeCount }} Activa(s)
+        </span>
+
+        <span class="summary-badge expired-badge">
+          {{ expiredCount }} Expirada(s)
+        </span>
+
       </p>
 
-      <div *ngIf="!loading && hasActiveAssessments" class="cards-wrapper">
-        <app-stage-assessment-card
-          *ngFor="let a of assessments"
-          [assessment]="a"
-          [highlighted]="a.id === highlightId"
-          (openAndFinish)="onOpenAndFinish($event)">
-        </app-stage-assessment-card>
+      <div *ngIf="!loading && assessments.length > 0" class="cards-two-columns">
+
+        <!-- ACTIVAS -->
+        <div class="column-block">
+          <h4 class="block-title active-title">Activas</h4>
+
+          <div class="cards-scroll">
+            <ng-container *ngFor="let a of assessments">
+              <app-stage-assessment-card
+                *ngIf="!a.isPastDue"
+                [assessment]="a"
+                [highlighted]="a.id === highlightId"
+                (openAndFinish)="onOpenAndFinish($event)">
+              </app-stage-assessment-card>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- EXPIRADAS -->
+        <div class="column-block expired-column">
+          <h4 class="block-title expired-title">Expiradas</h4>
+
+          <div class="cards-scroll">
+            <ng-container *ngFor="let a of assessments">
+              <app-stage-assessment-card
+                *ngIf="a.isPastDue"
+                [assessment]="a"
+                [highlighted]="a.id === highlightId">
+              </app-stage-assessment-card>
+            </ng-container>
+          </div>
+        </div>
+
       </div>
 
     </section>
-
-    <!-- DERECHA -->
-    <div *ngIf="hasActiveAssessments" class="assessment-note">
-      <h4>Importante</h4>
-      <p>
-        El incumplimiento en la realización del assessment dentro del plazo indicado
-        impedirá el agendamiento de nuevas clases.
-        <br><br>
-        Para la reactivación del servicio, deberá comunicarse con administración.
-      </p>
-    </div>
 
   </div>
 

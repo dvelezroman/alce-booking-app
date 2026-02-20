@@ -73,9 +73,12 @@ export class StageAssessmentService {
   }
 
   /** Verificar si un estudiante tiene assessments activos */
-  checkActiveByStudent(studentId: number): Observable<StudentAssessmentStatus> {
+  checkActiveByStudent( studentId: number, includePastDue: boolean = false ): Observable<StudentAssessmentStatus> {
     return this.http.get<StudentAssessmentStatus>(
-      `${this.apiUrl}/student/${studentId}/active`
+      `${this.apiUrl}/student/${studentId}/active`,
+      {
+        params: { includePastDue }
+      }
     );
   }
 }

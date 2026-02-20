@@ -10,7 +10,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.25);
   z-index: 999;
 }
 
@@ -21,9 +21,12 @@
   left: 50%;
   transform: translate(-50%, 0);
   width: 500px;
-  background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.25),
+    0 8px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -39,14 +42,14 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.25rem;
 }
 
 .edit-user-modal-title {
   flex-grow: 1;
   font-size: 1.2rem;
   text-align: center;
-  color: #333;
+  color: #111827;
   font-weight: 600;
   margin: 0;
   margin-bottom: 1rem;
@@ -60,11 +63,12 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  color: #7b7979;
+  color: #706f6f;
+  transition: all 0.2s ease;
 }
 
 .edit-user-close:hover {
-  color: #373737;
+  color: #28336f;
 }
 
 /* Cuerpo del modal con scroll */
@@ -73,20 +77,15 @@
   height: 60vh;
   padding: 1rem 1.5rem;
   scrollbar-width: thin;
-  scrollbar-color: transparent transparent; 
+  scrollbar-color: #d1d5db transparent;
 
    &::-webkit-scrollbar {
-    width: 8px;
-    background-color: transparent;
+    width: 6px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    border-radius: 4px;
-  }
-
-  &:hover::-webkit-scrollbar-thumb {
-    background-color: #9ca3af;
+    background-color: #d1d5db;
+    border-radius: 10px;
   }
 
    @media (max-width: 480px) {
@@ -101,11 +100,11 @@
 
 .form-field-edit label {
   display: block;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.3rem;
   font-size: 0.85rem;
   font-weight: 600;
   margin-left: 5px;
-  color: #333;
+  color: #374151;
 }
 
 /* Checkbox Activar Usuario */
@@ -120,7 +119,7 @@
   text-align: left;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #333;
+  color: #374151;
 }
 
 .center-checkbox {
@@ -128,11 +127,11 @@
   width: 25px !important;
   height: 25px !important;
   cursor: pointer;
-  accent-color: #3b82f6;
+  accent-color: #28336f;
 }
 
 .center-checkbox:hover {
-  box-shadow: 0 0 6px rgba(59, 130, 246, 0.45);
+  box-shadow: 0 0 0 4px rgba(40, 51, 111, 0.15);
   border-radius: 4px;
 }
 
@@ -151,26 +150,21 @@
   top: 50%;
   right: 6px;
   transform: translateY(-50%);
-
   height: 26px;
   padding: 0 10px;
   font-size: 0.7rem;
-  border-radius: 6px;
-
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border-radius: 8px;
+  background: #d4af37;
   color: #111827;
   border: none;
   cursor: pointer;
-
   display: flex;
   align-items: center;
-
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .suspend-btn.inside:hover {
-  transform: translateY(-50%) scale(1.03);
-  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
 }
 
 .suspend-btn.inside:active {
@@ -181,13 +175,10 @@
   display: inline-block;
   margin: 0 4px;
   padding: 1px 6px;
-
   font-size: 0.75rem;
   font-weight: 700;
-
   color: #92400e;
   background: #fef3c7;
-
   border-radius: 6px;
   line-height: 1.4;
 }
@@ -196,7 +187,7 @@
   display: block;
   margin-top: 6px;
   font-size: 0.85rem;
-  color: #92400e; // amber-800
+  color: #92400e;
 }
 
 .suspend-btn.inside.neutral {
@@ -211,31 +202,35 @@
 
 /* Checkbox estilo activado */
 .form-field-edit input[type="checkbox"] {
-  accent-color: #3b82f6; 
+  accent-color: #28336f;
   cursor: pointer;
   border-radius: 12px;
   transition: all 0.2s ease;
 }
 
 .form-field-edit input[type="checkbox"]:hover {
-  box-shadow: 0 0 4px rgba(59, 130, 246, 0.4);
-}
-
-.form-field-edit input[type="checkbox"]:checked {
-  background-color: #3b82f6;
-  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(40, 51, 111, 0.15);
 }
 
 .form-field-edit input,
 .form-field-edit select {
   width: 100%;
-  padding: 0.3rem 0.7rem;
+  padding: 0.4rem 0.8rem;
   font-size: 0.8rem;
-  height: 36px;
-  background-color: #ffffff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  height: 38px;
+  background-color: #fafafa;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.form-field-edit input:focus,
+.form-field-edit select:focus {
+  background-color: #ffffff;
+  border-color: #28336f;
+  box-shadow: 0 0 0 4px rgba(40, 51, 111, 0.15);
+  outline: none;
 }
 
 select {
@@ -256,33 +251,34 @@ select::-ms-expand {
 }
 
 .edit-user-modal-foot .button {
-  padding: 0.5rem 1.5rem;
+  padding: 0.6rem 1.8rem;
   font-size: .9rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 12px;
   cursor: pointer;
   margin: 0 0.5rem;
   color: white;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-/* Botón azul (Actualizar) */
+/* Botón azul eléctrico */
 .edit-user-modal-foot .button.is-success {
-  background-color: #007bff;
+  background-color: #28336f;
 }
 
 .edit-user-modal-foot .button.is-success:hover {
-  background-color: #0056b3;
+  background-color: #1f2857;
+  box-shadow: 0 8px 20px rgba(40, 51, 111, 0.35);
 }
 
-/* Botón gris (Cancelar) */
+/* Botón gris Vercel */
 .edit-user-modal-foot .delete-cancel-button {
-  background: #e5e7eb;
+  background: #f3f4f6;
   color: #374151;
 }
 
 .edit-user-modal-foot .delete-cancel-button:hover {
-  background: #d1d5db;
+  background: #e5e7eb;
 }
 
 .form-field-edit input,
@@ -292,7 +288,6 @@ select::-ms-expand {
 }
 
 .form-field-edit input::placeholder,
-.form-field-edit select::placeholder,
 .form-field-edit textarea::placeholder {
   color: #555;
   opacity: 1;
@@ -301,7 +296,7 @@ select::-ms-expand {
 .form-field-edit input[readonly],
 .form-field-edit select[readonly] {
   color: #333;
-  background-color: #f9f9f9;
+  background-color: #f9fafb;
 }
 
 .form-field-edit select {
@@ -315,15 +310,10 @@ select::-ms-expand {
     padding: 0.75rem 1rem;
   }
 
-  .form-field-edit label {
-    font-size: 0.85rem;
-  }
-
   .form-field-edit input,
   .form-field-edit select {
     font-size: 0.75rem;
     height: 34px;
-    padding: 0.25rem 0.6rem;
   }
 
   .suspension-info {
@@ -337,6 +327,5 @@ select::-ms-expand {
   .suspend-btn.inside {
     font-size: 0.65rem;
     height: 24px;
-    padding: 0 8px;
   }
 }
