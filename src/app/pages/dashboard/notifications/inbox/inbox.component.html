@@ -32,9 +32,18 @@
       </div>
 
       <!-- Sin resultados -->
-      <div *ngIf="!loading && !errorMsg && notifications.length === 0" class="empty-state">
-        <img src="assets/carpeta_vacia.png" alt="Sin notificaciones" class="empty-img" />
-        <p>No hay notificaciones disponibles.</p>
+      <div
+        *ngIf="!loading && !errorMsg && notifications.length === 0"
+        class="empty-state"
+      >
+        <div class="empty-icon">
+          <span class="material-icons">notifications_none</span>
+        </div>
+
+        <p class="empty-title">Sin notificaciones</p>
+        <p class="empty-subtitle">
+          Cuando tengas novedades aparecerán aquí.
+        </p>
       </div>
 
       <!-- Tabla -->

@@ -37,6 +37,9 @@ export class StageAssessmentStudentComponent implements OnInit {
   activeCount: number = 0;
   expiredCount: number = 0;
 
+  hasPending: boolean = false;
+  hasExpired: boolean = false;
+
   highlightId: number | null = null;
 
   modal: ModalDto = modalInitializer();
@@ -78,18 +81,25 @@ export class StageAssessmentStudentComponent implements OnInit {
     this.loading = true;
 
     this.stageAssessmentService
-      .checkActiveByStudent(this.studentId!, true) 
+      .checkActiveByStudent(this.studentId!, true)
       .subscribe({
         next: (res) => {
 
-          this.hasActiveAssessments = res.hasActive;
+          const list = res.assessments ?? [];
 
-          this.allAssessments = res.assessments ?? [];
-
-          this.applyFilter();
+          this.allAssessments = list.sort(
+            (a, b) =>
+              new Date(b.dueDate).getTime() -
+              new Date(a.dueDate).getTime()
+          );
 
           this.activeCount = this.allAssessments.filter(a => !a.isPastDue).length;
           this.expiredCount = this.allAssessments.filter(a => a.isPastDue).length;
+
+          this.hasPending = this.activeCount > 0;
+          this.hasExpired = this.expiredCount > 0;
+
+          this.applyFilter();
 
           this.loading = false;
         },

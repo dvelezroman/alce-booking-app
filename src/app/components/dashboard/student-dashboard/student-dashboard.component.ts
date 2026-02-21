@@ -38,6 +38,8 @@ import { InstructorEvaluationService } from '../../../services/instructor-evalua
 import { PendingClassEvaluationBannerComponent } from "../../home/pending-class-evaluation-banner/pending-class-evaluation-banner.component";
 import { StudentIntroVideoService } from '../../../services/student-intro-video.service';
 import { StudentIntroVideoComponent } from "../../home/student-intro-video/student-intro-video.component";
+import { StudentBannerComponent } from "../../student-banner/student-banner.component";
+import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -55,7 +57,7 @@ import { StudentIntroVideoComponent } from "../../home/student-intro-video/stude
     StudentSuspensionModalComponent,
     UserInfoFormComponent,
     PendingClassEvaluationBannerComponent,
-    StudentIntroVideoComponent
+    StudentIntroVideoComponent,
 ],
   templateUrl: './student-dashboard.component.html',
   styleUrl: './student-dashboard.component.scss',
@@ -93,6 +95,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   private urgentReminderInterval: any = null;
   hasUrgentAssessment = false;
 
+  minHoursRequired: number | null = null;
+
 
   constructor(
     private router: Router,
@@ -100,7 +104,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     private usersService: UsersService,
     private studentsService: StudentsService,
     private introVideoService: StudentIntroVideoService,
-    private instructorEvaluationService: InstructorEvaluationService
+    private instructorEvaluationService: InstructorEvaluationService,
+    private configService: AssessmentPointsConfigService
   ) {}
 
   ngOnInit(): void {
@@ -120,6 +125,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     if (this.isLoggedIn && this.shouldShowAnnouncement()) {
       this.showAssessmentAnnouncement = true;
     }
+
+    this.loadMinHoursRequired();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -153,6 +160,17 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
           this.hasPendingClassEvaluations = false;
         }
       });
+  }
+
+  private loadMinHoursRequired(): void {
+    this.configService.getById().subscribe({
+      next: (config) => {
+        this.minHoursRequired = config.minHoursScheduled;
+      },
+      error: () => {
+        this.minHoursRequired = null;
+      }
+    });
   }
 
   private applyUserState(): void {
@@ -205,10 +223,24 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     const reason = this.userData?.schedulingBlockReason;
 
     if (reason && reason.trim().length > 0) {
+      const normalized = reason.toLowerCase();
+
+      if (normalized.includes('assessment')) {
+        return 'Tienes assessments expirados. Debes completarlos para poder agendar nuevas clases.';
+      }
+
+      if (
+        normalized.includes('evaluacion') ||
+        normalized.includes('evaluaciones') ||
+        normalized.includes('evaluation')
+      ) {
+        return 'Tienes clases pendientes por evaluar. Debes evaluarlas antes de poder agendar nuevas clases.';
+      }
+
       return reason;
     }
 
-    return 'No puedes agendar por evaluaciones expiradas';
+    return 'No puedes agendar nuevas clases hasta completar tus evaluaciones o assessments pendientes.';
   }
 
   /* ============================
@@ -339,7 +371,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
       if (!a.dueDate) return false;
       if (a.finished && a.finished.length > 0) return false;
 
-      const due = new Date(a.dueDate.replace('Z', '')).getTime();
+      const due = new Date(a.dueDate).getTime();
       const diff = due - now;
 
       return diff > 0 && diff <= LIMIT;
@@ -438,6 +470,18 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   onIntroVideoClosed(): void {
     this.showIntroVideo = false;
     sessionStorage.setItem(this.INTRO_VIDEO_SESSION_KEY, 'true');
+  }
+
+  get shouldShowAssessmentBanner(): boolean {
+    return (
+      this.isLoggedIn &&
+      this.userData?.role === UserRole.STUDENT &&
+      (this.userData?.assessmentResources?.length || 0) > 0
+    );
+  }
+
+  get hasStudentAlerts(): boolean {
+    return !!this.userData?.meetingsAlert || this.shouldShowAssessmentBanner;
   }
   
 

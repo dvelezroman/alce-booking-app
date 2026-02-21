@@ -9,45 +9,56 @@
   <p class="loading" *ngIf="loading">Cargando evaluaciones...</p>
 
   <!-- EMPTY -->
-  <p class="empty" *ngIf="!loading && meetings.length === 0">
-    No tienes evaluaciones pendientes.
-  </p>
+  <div class="empty-state" *ngIf="!loading && meetings.length === 0">
+    <span class="material-icons empty-icon">pending_actions</span>
+    <h4>No tienes evaluaciones pendientes</h4>
+    <p>
+      Cuando tengas clases por evaluar, aparecerán aquí.
+    </p>
+  </div>
 
-  <!-- CARDS -->
-  <div class="cards-grid">
-    <div class="evaluation-card" *ngFor="let meeting of meetings">
+  <!-- TABLE -->
+  <div class="table-wrapper" *ngIf="!loading && meetings.length > 0">
 
-      <div class="card-header">
-        <h4 class="course-title">
-          {{ meeting.meetingTheme?.description || 'Clase' }}
-        </h4>
+    <div class="table-scroll">
 
-        <span class="badge pending">Pendiente</span>
-      </div>
+      <table class="evaluations-table">
+        <thead>
+          <tr>
+            <th class="col-instructor">Instructor</th>
+            <th class="col-date">Fecha</th>
+            <th class="col-hour">Hora</th>
+            <th class="col-action">Acción</th>
+          </tr>
+        </thead>
 
-      <div class="card-info">
-        <p>
-          <i class="fa-regular fa-user"></i>
-          {{ meeting.instructor.user.firstName }}
-          {{ meeting.instructor.user.lastName }}
-        </p>
+        <tbody>
+          <tr *ngFor="let meeting of meetings">
 
-        <p>
-          <i class="fa-regular fa-calendar"></i>
-          {{ meeting.localdate | date:'d \'de\' MMMM \'de\' y' }}
-        </p>
+            <td class="col-instructor">
+              {{ meeting.instructor.user.firstName }}
+              {{ meeting.instructor.user.lastName }}
+            </td>
 
-        <p>
-          <i class="fa-regular fa-clock"></i>
-          {{ meeting.hour }}:00
-        </p>
-      </div>
+            <td class="col-date">
+              {{ meeting.localdate | date:'d MMM y' }}
+            </td>
 
-      <button
-        class="evaluate-btn"
-        (click)="onEvaluateClick(meeting)">
-        Evaluar Instructor
-      </button>
+            <td class="col-hour">
+              {{ meeting.hour }}:00
+            </td>
+
+            <td class="col-action">
+              <button
+                class="evaluate-btn"
+                (click)="onEvaluateClick(meeting)">
+                Evaluar
+              </button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
 
     </div>
   </div>

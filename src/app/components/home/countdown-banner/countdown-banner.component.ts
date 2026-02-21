@@ -58,48 +58,49 @@ export class CountdownBannerComponent implements OnInit, OnDestroy {
   }
 
   loadAssessments() {
-  this.stageAssessmentService.checkActiveByStudent(this.studentId).subscribe({
-    next: (res) => {
+    this.stageAssessmentService
+      .checkActiveByStudent(this.studentId, true)
+      .subscribe({
+        next: (res) => {
 
-      const has = res.assessments?.length > 0;
-      this.hasCountdown.emit(has);
+          const activeOnly = res.assessments?.filter(a => !a.isPastDue) ?? [];
 
-      if (has) {
-        this.assessmentsLoaded.emit(res.assessments);
-        this.pendingCount.emit(res.assessments.length);
+          const has = activeOnly.length > 0;
+          this.hasCountdown.emit(has);
 
-        if (!localStorage.getItem('assessment_announced')) {
-          this.showAnnouncement.emit(true);
+          if (has) {
+
+            this.assessmentsLoaded.emit(activeOnly);
+            this.pendingCount.emit(activeOnly.length);
+
+            this.countdowns = activeOnly.map(a => ({
+              id: a.id,
+              description: a.stageAssessmentResource?.description ?? 'Recurso sin título',
+              dueDate: a.dueDate,
+              days: 0,
+              hours: '00',
+              minutes: '00',
+              seconds: '00',
+              isUrgent: false
+            }));
+
+            this.showBanner = true;
+            this.startCountdown();
+          } 
+          else {
+            this.pendingCount.emit(0);
+            this.showBanner = false;
+          }
+        },
+        error: () => {
+          this.hasCountdown.emit(false);
+          this.pendingCount.emit(0);
+          this.showBanner = false;
         }
+      });
+  }
 
-        this.countdowns = res.assessments.map(a => ({
-          id: a.id,
-          description: a.stageAssessmentResource?.description ?? 'Recurso sin título',
-          dueDate: a.dueDate,
-          days: 0,
-          hours: '00',
-          minutes: '00',
-          seconds: '00',
-          isUrgent: false
-        }));
-
-        this.showBanner = true;
-        this.startCountdown();
-      } 
-      else {
-        this.pendingCount.emit(0);
-        this.showAnnouncement.emit(false);
-        this.showBanner = false;
-      }
-    },
-    error: () => {
-      this.hasCountdown.emit(false);
-      this.pendingCount.emit(0);
-      this.showBanner = false;
-    }
-  });
-}
-  startCountdown() {
+startCountdown() {
     this.updateAllCountdowns();
 
     this.intervalSub = interval(1000).subscribe(() => {

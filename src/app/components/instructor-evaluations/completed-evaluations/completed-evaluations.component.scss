@@ -1,100 +1,108 @@
+/* =======================================================
+   COMPLETED SECTION
+======================================================= */
+
 .completed-section {
   width: 100%;
-  margin-top: 2.5rem;
 }
 
 /* -------------------- */
 /* TITLE */
 /* -------------------- */
+
 .section-title {
   font-size: 1.2rem;
   font-weight: 700;
-  color: gray;
-  margin-bottom: 1rem;
+  color: #28336f;
+  margin-bottom: 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: .5rem;
 
   .count {
-    background: #ecfdf5;
-    color: #047857;
+    background: #eef2ff;
+    color: #28336f;
     padding: .15rem .6rem;
     border-radius: 999px;
     font-size: .85rem;
     font-weight: 600;
+    border: 1px solid #c7d2fe;
   }
 }
 
 /* -------------------- */
 /* TABLE WRAPPER */
 /* -------------------- */
+
 .table-wrapper {
-  border-radius: 12px;
-  background: #fff;
+  border-radius: 14px;
+  background: #ffffff;
   width: 750px;
   overflow: hidden;
   max-width: 100%;
   margin: 0 auto;
-  box-shadow: 0 6px 18px rgba(0,0,0,.08);
-}
-
-/* ============================ */
-/* RESPONSIVE TABLE FIX */
-/* ============================ */
-
-.table-wrapper {
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 24px rgba(40, 51, 111, 0.06);
   overflow-x: auto;
-}
-
-.evaluations-table {
-  min-width: 550px;
 }
 
 /* -------------------- */
 /* TABLE */
 /* -------------------- */
+
 .evaluations-table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  min-width: 550px;
 
   th {
-    background: #f9fafb;
-    color: #374151;
+    background: #ffffff !important;
+    color: #28336f;
     font-size: .8rem;
     font-weight: 700;
     text-align: center;
-    padding: .75rem;
+    padding: .8rem;
     border-bottom: 1px solid #e5e7eb;
   }
 
   td {
-    padding: .7rem;
+    padding: .75rem;
     font-size: .8rem;
-    color: #555;
-    border-bottom: 1px solid #f1f1f1;
+    color: #6b7280;
+    border-bottom: 1px solid #f1f5f9;
     vertical-align: middle;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
   }
 
+  tbody tr {
+    transition: background .2s ease;
+  }
+
+  tbody tr:hover {
+    background: #f8fafc;
+  }
+
+  /* Rating */
   .rating {
     font-weight: 700;
-    color: #047857;
+    color: #f59e0b;
     width: 90px;
   }
 
+  /* Date */
   .date {
-    font-size: .7rem;
-    color: #777;
+    font-size: .75rem;
+    color: #94a3b8;
     width: 110px;
   }
 }
 
 /* -------------------- */
-/* ALIGN ESPECÍFICO POR COLUMNA */
+/* ALIGN ESPECÍFICO */
 /* -------------------- */
 
 /* Instructor → LEFT */
@@ -103,7 +111,7 @@
   text-align: left;
 }
 
-/* Rating / Observation / Date → WIDTH FIJO */
+/* Rating / Date */
 .evaluations-table th.col-rating,
 .evaluations-table td.col-rating,
 .evaluations-table th.col-date,
@@ -113,34 +121,18 @@
   text-align: center;
 }
 
+/* Observation */
 .evaluations-table th.col-observation,
-.evaluations-table td.col-observation{
+.evaluations-table td.col-observation {
   width: 160px;
   max-width: 160px;
   text-align: center;
 }
 
-/* Rating ya marcado visualmente */
-.evaluations-table .rating {
-  width: 100px;
-}
-
-/* Fecha */
-.evaluations-table .date {
-  width: 100px;
-}
-
-/* Observation cell truncada correctamente */
-.observation-cell {
-  max-width: 100px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 /* -------------------- */
-/* SCROLL SOLO EN FILAS */
+/* HEADER FIJO */
 /* -------------------- */
+
 .table-scroll {
   max-height: 500px;
   overflow-y: auto;
@@ -148,17 +140,17 @@
   position: relative;
 }
 
-/* HEADER FIJO */
 .evaluations-table thead th {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: #f9fafb;
+  background: #eef2ff;
 }
 
 /* -------------------- */
 /* OBSERVATION CELL */
 /* -------------------- */
+
 .observation-cell {
   max-width: 320px;
   font-size: .75rem;
@@ -167,19 +159,69 @@
   text-overflow: ellipsis;
 }
 
-/* -------------------- */
-/* STATES */
-/* -------------------- */
-.loading,
-.empty {
+/* =======================================================
+   EMPTY STATE – ESTILO VERCEL
+======================================================= */
+
+.empty-state {
+  width: 100%;
+  padding: 3rem 1.5rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+
+  box-shadow: 0 8px 24px rgba(40, 51, 111, 0.04);
+
   text-align: center;
-  color: #666;
-  margin-top: 1rem;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.empty-icon {
+  font-size: 48px;
+  color: #28336f;
+  background: #eef2ff;
+  padding: 1rem;
+  border-radius: 50%;
+}
+
+.empty-state h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #28336f;
+  margin: 0;
+}
+
+.empty-state p {
+  font-size: .85rem;
+  color: #6b7280;
+  max-width: 360px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Animación sutil */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* -------------------- */
-/* MOBILE */
+/* RESPONSIVE */
 /* -------------------- */
+
 @media (max-width: 480px) {
 
   .section-title {
@@ -192,30 +234,27 @@
   }
 
   .evaluations-table {
-    th, td {
+
+    th,
+    td {
       font-size: .7rem;
       padding: .55rem;
     }
   }
 
+  .evaluations-table th.col-rating,
+  .evaluations-table td.col-rating,
+  .evaluations-table th.col-date,
+  .evaluations-table td.col-date {
+    width: 100px;
+    max-width: 100px;
+  }
 
-/* Rating / Observation / Date → WIDTH FIJO */
-.evaluations-table th.col-rating,
-.evaluations-table td.col-rating,
-.evaluations-table th.col-date,
-.evaluations-table td.col-date {
-  width: 100px;
-  max-width: 100px;
-  text-align: center;
-}
-
-.evaluations-table th.col-observation,
-.evaluations-table td.col-observation{
-  width: 140px;
-  max-width: 140px;
-  text-align: center;
-}
-
+  .evaluations-table th.col-observation,
+  .evaluations-table td.col-observation {
+    width: 140px;
+    max-width: 140px;
+  }
 
   .observation-cell {
     max-height: 50px;

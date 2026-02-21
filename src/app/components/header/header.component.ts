@@ -7,8 +7,7 @@ import { filter, Observable } from "rxjs";
 
 import {
   BannerStateService,
-  BannerState,
-  BannerType
+  BannerState
 } from '../../services/banner-state.service';
 
 @Component({
@@ -27,9 +26,10 @@ export class HeaderComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   isLoggedIn = false;
 
-  // 🔔 estados de banners
   infoBanner!: BannerState;
   warningBanner!: BannerState;
+
+  isDashboardHome = false;
 
   constructor(
     private router: Router,
@@ -45,13 +45,17 @@ export class HeaderComponent implements OnInit {
       this.isLoggedIn = state;
     });
 
+    // 🔥 DETECTAR HOME AL CARGAR
+    this.checkIfHome(this.router.url);
+
+    // 🔥 DETECTAR HOME AL NAVEGAR
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        this.currentPage = event.urlAfterRedirects.split('/').pop() || '';
+        this.checkIfHome(event.urlAfterRedirects);
       });
 
-    // 👇 Escuchamos cambios globales de banners
+    // 🔔 Escuchar estado global de banners
     this.bannerState.info$.subscribe(state => {
       this.infoBanner = state;
     });
@@ -61,9 +65,10 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  /* =====================================================
-     CLICK DESDE HEADER
-     ===================================================== */
+  private checkIfHome(url: string) {
+    const cleanUrl = (url || '').split('?')[0].split('#')[0];
+    this.isDashboardHome = cleanUrl === '/dashboard/home';
+  }
 
   openInfoBanner(): void {
     this.bannerState.open('info');

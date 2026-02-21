@@ -2,7 +2,7 @@
   width: fit-content;
   max-width: 100%;
   padding: 18px;
-  border-radius: 12px; 
+  border-radius: 12px;
 }
 
 .student-schedule {
@@ -12,9 +12,9 @@
 .schedule-title {
   display: flex;
   font-size: 1.2rem;
-  color: #515357;
+  color: #28336f;
   margin-bottom: 1rem;
-  font-weight: bold;
+  font-weight: 700;
   text-align: center;
 }
 
@@ -29,7 +29,7 @@
   flex-wrap: nowrap;
   gap: 10px;
   overflow-x: auto;
-  padding: 1rem; 
+  padding: 1rem;
   scroll-behavior: smooth;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -39,45 +39,41 @@
   display: none;
 }
 
-.schedule-list-wrapper::before,
-.schedule-list-wrapper::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  width: 15px;
-  height: 100%;
-  z-index: 5;
-  pointer-events: none;
-}
+/* =========================
+   ITEM CARD
+========================= */
 
 .schedule-item {
   position: relative;
-  min-width: 160px; 
-  max-width: 100%;  
-  border: .5px solid rgb(230, 229, 229);
-  background-color: #ffffff; 
+  min-width: 160px;
+  max-width: 100%;
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
   padding: 1rem;
   border-radius: 15px;
   display: flex;
   margin: auto;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
-  cursor:  pointer;
+  transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out, border-color 0.2s ease;
+  cursor: pointer;
 }
 
 .schedule-item:hover {
-  box-shadow: 4px 8px 12px rgba(0, 0, 0, 0.10);
   transform: translateY(-1.5px);
+  border-color: #28336f;
 }
+
+/* =========================
+   SCROLL BUTTON
+========================= */
 
 .scroll-button {
   position: absolute;
   top: 40%;
   transform: translateY(-50%);
   backdrop-filter: blur(1px);
-  color: rgb(43, 88, 172);
+  color: #28336f;
   border: none;
   cursor: pointer;
   padding: 0.5rem 1rem;
@@ -97,36 +93,40 @@
 }
 
 .scroll-button.hidden {
-  display: none; 
+  display: none;
 }
 
 .scroll-button:hover {
-  background-color: rgba(236, 234, 234, 0.879);
+  background-color: #eef2ff;
   animation-play-state: paused;
 }
 
 @keyframes pulseBackground {
   0% {
-    background-color: rgba(235, 235, 235, 0.219);
+    background-color: rgba(229, 231, 235, 0.3);
   }
   50% {
-    background-color: rgba(255, 255, 255, 0.58);
+    background-color: rgba(238, 242, 255, 0.6);
   }
   100% {
-    background-color: rgba(255, 255, 255, 0.211);
+    background-color: rgba(229, 231, 235, 0.3);
   }
 }
 
+/* =========================
+   TEXT
+========================= */
+
 .meeting-title {
   font-size: .75rem;
-  color: #474646;
-  font-weight: bold;
+  color: #28336f;
+  font-weight: 700;
   text-align: center;
   margin-bottom: .3rem;
 }
 
 .meeting-title strong {
-  color: #333333; 
+  color: #28336f;
 }
 
 .meeting-info-container {
@@ -137,13 +137,17 @@
 }
 
 .schedule-info strong {
-  color: #333333; 
+  color: #28336f;
 }
 
 .schedule-info {
-  color: #565656;
+  color: #6b7280;
   font-size: 0.75rem;
 }
+
+/* =========================
+   DELETE
+========================= */
 
 .schedule-delete {
   position: absolute;
@@ -158,19 +162,19 @@
   cursor: pointer;
   font-size: 1.2rem;
   padding: 0;
-  transition: all .6ms ease;
+  transition: all .2s ease;
 }
 
 .delete-button svg {
-  width: 24px; 
+  width: 24px;
   height: 24px;
-  fill: #d4a2af; 
+  fill: #d1d5db;
   transition: transform 0.3s ease, fill 0.3s ease;
 }
 
 .delete-button:hover svg {
-  transform: scale(1.05); 
-  fill: #c97474;
+  transform: scale(1.05);
+  fill: #b91c1c;
 }
 
 // ------------------------- //
@@ -195,29 +199,40 @@
 }
 
 .meetings-list-scroll:hover {
-  scrollbar-color: #e7e7e7 transparent;
+  scrollbar-color: #e5e7eb transparent;
 }
 
 .meetings-list-scroll::-webkit-scrollbar {
   width: 5px;
 }
+
 .meetings-list-scroll::-webkit-scrollbar-thumb {
   border-radius: 4px;
+  background-color: #e5e7eb;
 }
 
+/* =========================
+   CARD
+========================= */
+
 .meeting-card {
-  background-color: rgb(255, 255, 255);
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   padding: 0.7rem 0.9rem;
-  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease;
-  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0px 8px 18px rgba(40, 51, 111, 0.05);
   cursor: pointer;
 }
 
-.meeting-card:hover{
+.meeting-card:hover {
   transform: scale(1.02);
+  border-color: #28336f;
 }
+
+/* =========================
+   HEADER
+========================= */
 
 .meeting-card-header {
   display: flex;
@@ -226,33 +241,43 @@
 }
 
 .calendar-icon {
-  color: #a379d6;
+  color: #28336f;
   font-size: 1rem;
   margin-right: 0.5rem;
 }
 
 .meeting-date-title strong {
-  color: #333;
-  font-weight: 600;
+  color: #28336f;
+  font-weight: 700;
   font-size: .8rem;
 }
 
+/* =========================
+   DELETE BUTTON
+========================= */
+
 .delete-button {
-  color: #ecb7b7 !important;
-  font-size: 1rem;
+  color: #d1d5db !important;
+  font-size: 0.9rem;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .delete-button:hover {
-  color: #d74b4b !important;
+  color: #b91c1c !important;
+  transform: scale(1.1);
 }
+
+/* =========================
+   BODY
+========================= */
 
 .meeting-card-body p {
   margin: 0.3rem 0;
   font-size: 0.8rem;
+  color: #6b7280;
 }
 
 .meeting-card-body strong {
-  color: #444;
+  color: #28336f;
   font-weight: 600;
 }
-

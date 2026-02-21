@@ -1,13 +1,13 @@
 <div class="assessment-card"
      [class.selected-card]="highlighted"
-     [class.expired-card]="assessment.isPastDue">
+     [class.expired-card]="assessment.isPastDue"
+     [class.urgent-card]="isUrgent && !assessment.isPastDue">
 
   <div class="header-row">
     <h3 class="title">
       {{ assessment.stageAssessmentResource?.description || 'Recurso sin título' }}
     </h3>
 
-    <!-- Estado visual dinámico -->
     <span
       class="status"
       [ngClass]="{
@@ -30,13 +30,30 @@
     </p>
   </div>
 
-  <div class="actions">
-    <button
-      class="btn-open"
-      [disabled]="assessment.isPastDue"
-      (click)="handleOpenAndFinish()">
-      {{ assessment.isPastDue ? 'Evaluación expirada' : 'Ir a la evaluación' }}
-    </button>
+  <!-- NUEVA FILA COUNTDOWN + BOTÓN -->
+  <div class="bottom-row">
+
+    <div class="countdown-wrapper" *ngIf="!assessment.isPastDue">
+
+      <span class="countdown-label">
+        Tiempo restante:
+      </span>
+
+      <div class="countdown-badge" [class.urgent]="isUrgent">
+        {{ timeFormatted }}
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button
+        class="btn-open"
+        [disabled]="assessment.isPastDue"
+        (click)="handleOpenAndFinish()">
+        {{ assessment.isPastDue ? 'Evaluación expirada' : 'Abrir evaluación' }}
+      </button>
+    </div>
+
   </div>
 
 </div>

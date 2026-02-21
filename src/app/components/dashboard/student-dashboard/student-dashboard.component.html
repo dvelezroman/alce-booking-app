@@ -1,161 +1,245 @@
-<!-- COUNTDOWN / ASSESSMENTS -->
-<div class="banner-wrapper">
-  <app-countdown-banner
-    (pendingCount)="pendingAssessmentsCount = $event"
-    (showAnnouncement)="showAssessmentAnnouncement = $event"
-    (assessmentsLoaded)="onAssessmentsLoaded($event)">
-  </app-countdown-banner>
-</div>
+<div class="student-dashboard">
 
-<!-- HERO / GREETING -->
-<div class="hero-wrapper">
+  <!-- COUNTDOWN -->
+  <div class="banner-wrapper">
+    <app-countdown-banner
+      (pendingCount)="pendingAssessmentsCount = $event"
+      (showAnnouncement)="showAssessmentAnnouncement = $event"
+      (assessmentsLoaded)="onAssessmentsLoaded($event)">
+    </app-countdown-banner>
+  </div>
 
-  <div class="hero-background">
-    <div class="student-greeting">
-      <h1 class="greet-title">Hola, {{ userData?.firstName }}</h1>
+  <!-- MAIN GRID -->
+  <div class="dashboard-layout">
 
-      <p class="greet-subtitle">
-        Listo para tu próxima clase
-      </p>
+    <!-- IZQUIERDA (80%) -->
+    <div class="dashboard-main">
 
-      <!-- STAGE ACTUAL -->
-      <p class="student-stage" *ngIf="userData?.stage">
-        Nivel actual:
-        <span class="stage-value">
-          {{ userData?.stage?.description || userData?.stage?.number }}
-        </span>
-      </p>
+      <section class="student-hero">
+        <div class="hero-left">
+          <h1 class="greet-title">
+            Hola, {{ userData?.firstName }}
+          </h1>
 
-      <!-- ATAJOS DEL DASHBOARD -->
-      <div class="dashboard-shortcuts">
+          <p class="greet-subtitle">
+            Bienvenido al sistema académico
+          </p>
 
-        <div 
+          <p class="student-stage" *ngIf="userData?.stage">
+            Nivel actual:
+            <span class="stage-value">
+              {{ userData?.stage?.description || userData?.stage?.number }}
+            </span>
+          </p>
+        </div>
+      </section>
+
+      <!-- SHORTCUTS -->
+      <section class="shortcuts-grid">
+        <div
           class="shortcut-card"
           [class.disabled]="isAgendaBlocked"
           (click)="!isAgendaBlocked && goToBooking()"
         >
-          <div class="shortcut-image booking">
+          <span class="shortcut-title">
+            Agendar clases
+          </span>
 
-            <span class="shortcut-title">
-              Agendar clases
-            </span>
-
-            <span 
-              *ngIf="isAgendaBlocked"
-              class="blocked-text"
-            >
-              {{ agendaBlockMessage }}
-            </span>
-
-          </div>
+          <span *ngIf="isAgendaBlocked" class="blocked-text">
+            {{ agendaBlockMessage }}
+          </span>
         </div>
 
         <div class="shortcut-card" (click)="goToAssessments()">
-          <div class="shortcut-image assessments">
-            <span class="shortcut-title">Evaluaciones</span>
-          </div>
+          <span class="shortcut-title">Evaluaciones</span>
         </div>
 
         <div class="shortcut-card" (click)="goToNotifications()">
-          <div class="shortcut-image notifications">
-            <span class="shortcut-title">Notificaciones</span>
-          </div>
+          <span class="shortcut-title">Notificaciones</span>
         </div>
 
-        <div class="shortcut-card" (click)="goToProfile()">
-          <div class="shortcut-image profile">
-            <span class="shortcut-title">Mi perfil</span>
-          </div>
+        <div class="shortcut-card" (click)="goToInstructorEvaluations()">
+          <span class="shortcut-title">Clases evaluadas</span>
         </div>
+      </section>
+
+      <!-- CONTENT GRID -->
+      <section class="content-grid">
+
+        <div class="dashboard-card">
+          <app-student-live-classes></app-student-live-classes>
+        </div>
+
+        <div class="dashboard-card">
+          <h3 class="section-title">Evaluaciones</h3>
+
+          <ng-container *ngIf="assessments.length > 0; else noAssessments">
+            <app-pending-assessment-card
+              [assessments]="assessments"
+              (goToAssessment)="goToAssessments($event)">
+            </app-pending-assessment-card>
+          </ng-container>
+
+          <ng-template #noAssessments>
+            <div class="empty-assessment-card" (click)="goToAssessments()">
+              <h4>No tienes evaluaciones pendientes</h4>
+              <p>
+                Si tienes evaluaciones expiradas o deseas revisar tu historial,
+                haz clic aquí para ver más detalles.
+              </p>
+            </div>
+          </ng-template>
+
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- DERECHA (20%) -->
+    <aside class="dashboard-sidebar">
+
+      <div class="sidebar-panel">
+
+        <div class="sidebar-header">
+          <h3>Panel informativo</h3>
+        </div>
+
+        <section class="student-alerts">
+
+          <!-- ⚠️ AVISO IMPORTANTE -->
+          <ng-container *ngIf="userData?.meetingsAlert; else noWarning">
+            <div class="alert-card warning">
+              <div class="alert-content">
+                <h4>Aviso importante</h4>
+                <p>
+                  Has agendado menos horas esta semana.
+                  Se recomienda
+                  <strong class="min-hours-highlight">
+                    {{ minHoursRequired }}
+                  </strong> horas.
+                </p>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #noWarning>
+            <div class="alert-card empty">
+              <div class="alert-content">
+                <h4>Aviso importante</h4>
+                <p>No tienes avisos importantes actualmente.</p>
+              </div>
+            </div>
+          </ng-template>
+
+          <!-- 🔵 MENSAJE NUEVO -->
+          <ng-container *ngIf="shouldShowAssessmentBanner; else noInfo">
+            <div class="alert-card info">
+              <div class="alert-content">
+                <h4>Mensaje nuevo</h4>
+
+                <div class="alert-body-scroll">
+
+                  <div
+                    class="resource-item"
+                    *ngFor="let item of userData?.assessmentResources"
+                  >
+                    <div class="resource-title">
+                      {{ item.title }}
+                    </div>
+
+                    <div class="resource-note" *ngIf="item.note">
+                      <span [innerHTML]="item.note"></span>
+                    </div>
+
+                    <div class="resource-link" *ngIf="item.link">
+                      <a [href]="item.link" target="_blank">
+                        {{ item.link }}
+                      </a>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #noInfo>
+            <div class="alert-card empty">
+              <div class="alert-content">
+                <h4>Mensaje nuevo</h4>
+                <p>No tienes mensajes nuevos en este momento.</p>
+              </div>
+            </div>
+          </ng-template>
+
+        </section>
 
       </div>
-    </div>
-  </div>
 
-  <!-- BLOQUES -->
-  <div class="home-dual-block">
-
-    <!-- LIVE CLASSES -->
-    <div class="block" *ngIf="isLoggedIn && userData?.student?.id">
-
-      <app-student-live-classes
-        (meetingsCount)="hasLiveClasses = $event > 0">
-      </app-student-live-classes>
-
-    </div>
-
-    <!-- ASSESSMENTS -->
-    <div class="block" *ngIf="assessments.length > 0">
-      <h3 class="section-title">Evaluaciones asignadas</h3>
-      <app-pending-assessment-card
-        [assessments]="assessments"
-        (goToAssessment)="goToAssessments($event)">
-      </app-pending-assessment-card>
-    </div>
+    </aside>
 
   </div>
+
 </div>
 
-<app-student-intro-video
-  [show]="showIntroVideo"
-  [canClose]="canCloseIntroVideo"
-  (completed)="onIntroVideoCompleted()"
-  (closed)="onIntroVideoClosed()">
-</app-student-intro-video>
+  <app-student-intro-video
+    [show]="showIntroVideo"
+    [canClose]="canCloseIntroVideo"
+    (completed)="onIntroVideoCompleted()"
+    (closed)="onIntroVideoClosed()">
+  </app-student-intro-video>
 
-<!-- ANNOUNCEMENT -->
-<app-assessment-announcement
-  *ngIf="showAssessmentAnnouncement && pendingAssessmentsCount > 0"
-  [show]="showAssessmentAnnouncement"
-  [count]="pendingAssessmentsCount"
-  (closed)="onAnnouncementClosed()">
-</app-assessment-announcement>
+  <app-assessment-announcement
+    *ngIf="showAssessmentAnnouncement && pendingAssessmentsCount > 0"
+    [show]="showAssessmentAnnouncement"
+    [count]="pendingAssessmentsCount"
+    (closed)="onAnnouncementClosed()">
+  </app-assessment-announcement>
 
-<app-pending-class-evaluation-banner
-  *ngIf="pendingClassEvaluationsCount > 0"
-  [count]="pendingClassEvaluationsCount"
-  (goToEvaluate)="goToInstructorEvaluations()">
-</app-pending-class-evaluation-banner>
+  <app-pending-class-evaluation-banner
+    *ngIf="pendingClassEvaluationsCount > 0"
+    [count]="pendingClassEvaluationsCount"
+    (goToEvaluate)="goToInstructorEvaluations()">
+  </app-pending-class-evaluation-banner>
 
-<!-- CUENCA -->
-<app-student-cuenca-banner
-  *ngIf="showBannerCuenca"
-  [show]="showBannerCuenca"
-  (close)="showBannerCuenca = false">
-</app-student-cuenca-banner>
+  <app-student-cuenca-banner
+    *ngIf="showBannerCuenca"
+    [show]="showBannerCuenca"
+    (close)="showBannerCuenca = false">
+  </app-student-cuenca-banner>
 
-<!-- <app-student-cuenca-comm-banner
-  *ngIf="showBannerCuencaComm"
-  [show]="showBannerCuencaComm">
-</app-student-cuenca-comm-banner> -->
+  <!-- <app-student-cuenca-comm-banner
+    *ngIf="showBannerCuencaComm"
+    [show]="showBannerCuencaComm">
+  </app-student-cuenca-comm-banner> -->
 
-<!-- SUSPENSIÓN -->
-<app-student-suspension-modal
-  *ngIf="showSuspensionModal && suspensionInfo"
-  [suspensionInfo]="suspensionInfo"
-  (close)="showSuspensionModal = false">
-</app-student-suspension-modal>
+  <!-- IMAGE -->
+  <!-- <app-image-banner
+    *ngIf="showImageBanner"
+    (close)="showImageBanner = false">
+  </app-image-banner> -->
 
-<!-- IMAGE -->
-<!-- <app-image-banner
-  *ngIf="showImageBanner"
-  (close)="showImageBanner = false">
-</app-image-banner> -->
+  <app-student-suspension-modal
+    *ngIf="showSuspensionModal && suspensionInfo"
+    [suspensionInfo]="suspensionInfo"
+    (close)="showSuspensionModal = false">
+  </app-student-suspension-modal>
 
-<!-- USER INFO FORM -->
-<app-users-info-form
-  *ngIf="showUserInfoForm"
-  [isModalOpen]="true"
-  [userData]="userData"
-  (formSubmit)="handleUserInfoSubmit($event)"
-  (closeModal)="showUserInfoForm = false">
-</app-users-info-form>
+  <app-users-info-form
+    *ngIf="showUserInfoForm"
+    [isModalOpen]="true"
+    [userData]="userData"
+    (formSubmit)="handleUserInfoSubmit($event)"
+    (closeModal)="showUserInfoForm = false">
+  </app-users-info-form>
 
-<!-- MODAL -->
-<app-modal
-  [showModal]="modal.show"
-  [message]="modal.message"
-  [isError]="modal.isError"
-  [isSuccess]="modal.isSuccess"
-  (close)="modal.close()">
-</app-modal>
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    (close)="modal.close()">
+  </app-modal>
+

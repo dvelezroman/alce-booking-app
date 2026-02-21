@@ -1,39 +1,65 @@
-/* Botón flotante de ayuda */
 .floating-help-button {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 25px;
+  right: 25px;
 
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 55px;
+  height: 55px;
 
-  background: rgba(108, 99, 255, 0.75);
-  backdrop-filter: blur(6px);
-
-  color: #fff;
+  border-radius: 999px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, #d4af37, #b9911f);
+  color: #ffffff;
+
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.35);
+
   cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+
+  transition: width 0.45s ease, box-shadow 0.35s ease;
   z-index: 1200;
-
-  transition:
-    background 0.25s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
-/* 🔥 Hover: fondo sólido */
-.floating-help-button:hover {
-  background: #6c63ff;
-  transform: scale(1.1);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
-}
-
+/* ICONO */
 .floating-help-button .material-icons {
   font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* TEXTO OCULTO REAL */
+.help-text {
+  display: none;
+  margin-left: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.floating-help-button:hover {
+  width: 220px;
+  justify-content: flex-start;
+  padding-left: 18px;
+  box-shadow: 0 10px 26px rgba(212, 175, 55, 0.5);
+}
+
+.floating-help-button:hover .help-text {
+  display: inline;
+}
+
+@media (max-width: 768px) {
+
+  .floating-help-button {
+    width: 55px !important;
+    justify-content: center !important;
+    padding-left: 0 !important;
+  }
+
+  .help-text {
+    display: none !important;
+  }
+
 }

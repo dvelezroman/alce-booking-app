@@ -7,23 +7,22 @@
 
 .ecuador-time-display {
   margin-top: 0rem;
-  font-size: 0.85rem; 
-  color: #555; 
+  font-size: 0.85rem;
+  color: #28336f;
   text-align: center;
-  
 
   strong {
     display: block;
     margin-bottom: 0.2rem;
-    font-weight: 600;
-    font-size: 0.9rem; 
-    color: #333; 
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #28336f;
   }
 
   span {
     display: block;
-    font-weight: 400;
-    color: #666;
+    font-weight: 500;
+    color: #6b7280;
   }
 }
 
@@ -39,20 +38,14 @@
 }
 
 .shared-box-style {
-  border: 1px solid rgba(210, 210, 210, 0.5);
-  background-color: rgba(255, 255, 255, 0.925);
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
   border-radius: 15px;
-  color: #333333b9;
-  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.07);
+  color: #28336f;
+  box-shadow: 0px 8px 20px rgba(40, 51, 111, 0.06);
 }
 
-.calendar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* --- SELECTOR DE MES NUEVO --- */
+/* --- SELECTOR DE MES --- */
 .month-selector {
   width: 100%;
   display: flex;
@@ -65,36 +58,33 @@
 .month-label {
   font-weight: 700;
   font-size: 1.1rem;
-  color: #5c5c5d;
+  color: #28336f;
 }
 
-/* Contenedor de flechas */
 .month-buttons {
   display: flex;
   align-items: center;
   gap: 0.4rem;
 }
 
-/* Botones */
 .nav-btn {
   width: 36px;
   height: 36px;
   border-radius: 50%;
   background: #ffffff;
-  border: 1px solid #d1d5db;
+  border: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #4b5563;
+  color: #28336f;
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 0.8rem;
 }
 
-/* Hover solo activo */
 .nav-btn:not(.disabled):hover {
-  background: #f3f4f6;
-  border-color: #9ca3af;
+  background: #eef2ff;
+  border-color: #28336f;
   transform: translateY(-2px);
 }
 
@@ -102,16 +92,16 @@
   transform: translateY(0);
 }
 
-/* --- ESTADO DESACTIVADO --- */
 .nav-btn.disabled {
   opacity: 0.4;
   cursor: not-allowed;
   transform: none !important;
   border-color: #e5e7eb;
-  background: #fafafa;
+  background: #f9fafb;
   color: #9ca3af;
 }
 
+/* --- CALENDAR GRID --- */
 .calendar-header, .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -124,8 +114,9 @@
 .calendar-day-header {
   text-align: center;
   font-size: .9rem;
-  font-weight: bold;
+  font-weight: 700;
   background-color: transparent;
+  color: #6b7280;
 }
 
 .calendar-day {
@@ -138,28 +129,34 @@
   padding: 16px;
   font-size: .8rem;
   border-radius: 50%;
-  border: 1px solid #f0f0f06d;
+  border: 1px solid #e5e7eb;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.25s ease;
+  color: #28336f;
 }
 
 .calendar-day.selectable {
-  border: 1px solid #6eb3fcbc;
+  border: 1px solid #28336f;
 }
 
-.calendar-day.selectable:hover {
-  background-color: #6eb3fcbc;
+/* Hover solo en dispositivos que realmente tienen hover (desktop) */
+@media (hover: hover) {
+  .calendar-day.selectable:hover {
+    background-color: #eef2ff;
+    border-color: #28336f;
+  }
 }
 
 .calendar-day.selected {
-  background-color: #6eb3fcbc;
-  color: #fff;
-  font-weight: bold;
+  background-color: #28336f;
+  color: #ffffff;
+  font-weight: 700;
+  border-color: #28336f;
 }
 
 .calendar-day.unselectable {
-  background-color: #f0f0f06d;
-  color: #9f9f9f;
+  background-color: #f9fafb;
+  color: #9ca3af;
   cursor: not-allowed;
 }
 
@@ -172,19 +169,22 @@
 
 .calendar-day.danger, 
 .calendar-day.disabled {
-  background-color: #ffd3d2; 
+  background-color: #fef3c7;
+  color: #b45309;
+  border-color: #fef3c7;
 }
 
 .calendar-day.partial-disabled {
-  background-color: #e0e0e0;
-  color: #666;
+  background-color: #eef2ff;
+  color: #28336f;
 }
 
 .calendar-day.partial-disabled.selected{
-  background-color: #6eb3fcbc;
-  color: #fff;
+  background-color: #28336f;
+  color: #ffffff;
 }
 
+/* --- LEYENDA --- */
 .calendar-legend-container {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
@@ -203,7 +203,7 @@
       justify-content: center;
       gap: 0.2rem;
       font-size: 0.7rem;
-      color: #555;
+      color: #6b7280;
       text-align: center;
     }
 
@@ -215,15 +215,15 @@
 
     .legend-available {
       background-color: transparent;
-      border: 1px solid #6eafed;
+      border: 1px solid #28336f;
     }
 
     .legend-partial {
-      background-color: #dcdcdc;
+      background-color: #eef2ff;
     }
 
     .legend-disabled {
-      background-color: #ffd3d2;
+      background-color: #fef3c7;
     }
   }
 }

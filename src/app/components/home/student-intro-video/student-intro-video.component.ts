@@ -29,7 +29,7 @@ export class StudentIntroVideoComponent implements OnChanges {
   videoSafeUrl!: SafeResourceUrl;
 
   hasStarted = false;
-  countdown = 20;
+  countdown = 15;
   private timer?: any;
 
   constructor(private sanitizer: DomSanitizer) {}
@@ -70,7 +70,7 @@ export class StudentIntroVideoComponent implements OnChanges {
 
   private reset(): void {
     this.hasStarted = false;
-    this.countdown = 20;
+    this.countdown = 15;
     clearInterval(this.timer);
   }
 }

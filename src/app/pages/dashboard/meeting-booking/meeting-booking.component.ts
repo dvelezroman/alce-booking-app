@@ -417,7 +417,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         next: () => {
           this.showModalMessage("Se agendó su clase!", false, false, true);
           this.showSuccessModal = false;
-          this.hideModalAfterDelay(2000);
+          this.hideModalAfterDelay(1000);
           this.initializeMeetings();
         },
         error: (err) => {

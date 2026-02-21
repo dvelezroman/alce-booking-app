@@ -5,8 +5,12 @@
     <span class="count">{{ evaluations.length }}</span>
   </h3>
 
-  <div class="empty" *ngIf=" evaluations.length === 0">
-    Aún no has evaluado a ningún instructor.
+  <div class="empty-state" *ngIf="evaluations.length === 0">
+    <span class="material-icons empty-icon">rate_review</span>
+    <h4>No tienes evaluaciones aún</h4>
+    <p>
+      Cuando completes una evaluación de instructor, aparecerá aquí.
+    </p>
   </div>
 
   <div class="table-wrapper" *ngIf=" evaluations.length > 0">

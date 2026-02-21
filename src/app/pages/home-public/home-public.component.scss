@@ -1,119 +1,210 @@
 :host {
   display: block;
   min-height: 100vh;
-  background: #ddd6fe;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(40, 51, 111, 0.15),
+      transparent 55%
+    ),
+    linear-gradient(to bottom, #ffffff, #f8fafc);
   overflow-x: hidden;
-  box-sizing: border-box;
 }
 
-/* CONTENEDOR */
+/* =========================
+   HERO WRAPPER
+========================= */
+
 .hero-wrapper {
   min-height: 100vh;
-  width: 100%;
   display: flex;
-  flex-direction: column;
-  background: linear-gradient(
-      to bottom,
-      #f8fafc 0%,
-      #f1f5f9 45%,
-      #ede9fe 75%,
-      #ddd6fe 100%
-    );
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
 
 /* =========================
-   TOP (imagen + fondo azul)
-   ========================= */
-.hero-top {
+   BRAND
+========================= */
+
+.hero-brand {
+  font-size: 3rem;
+  letter-spacing: 2px;
+  font-weight: 600;
+  color: #28336f;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
   position: relative;
-  width: 100%;
-  flex: 1;
-  max-height: 75vh;
-  background-color: transparent;
-  background-image: url("/assets/fondo home1.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: auto 680px;
+  display: inline-block;
 }
 
-/* icono teléfono */
-.help-phone {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
-  text-decoration: none;
+/* Línea dorada elegante debajo del brand */
+.hero-brand::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 2px;
+  margin: 8px auto 0;
+  background: #d4af37;
+  border-radius: 2px;
+}
+
+/* =========================
+   CONTENIDO
+========================= */
+
+.hero-content {
+  max-width: 820px;
+  text-align: center;
+  animation: fadeUp 0.8s ease forwards;
+}
+
+/* =========================
+   TÍTULO
+========================= */
+
+.hero-title {
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1.1;
+  color: #28336f;
+  letter-spacing: -0.5px;
+}
+
+.hero-title span {
+  display: block;
+  color: #28336f;
+}
+
+/* Línea dorada elegante */
+.hero-title::after {
+  content: "";
+  display: block;
+  width: 90px;
+  height: 4px;
+  margin: 22px auto 0;
+  background: #d4af37;
+  border-radius: 3px;
+}
+
+/* =========================
+   SUBTÍTULO
+========================= */
+
+.hero-subtitle {
+  margin-top: 1.8rem;
+  font-size: 1.1rem;
+  color: #706f6f;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+.hero-actions {
+  margin-top: 2.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  padding: 0.9rem 2.4rem;
+  background: #28336f;
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(6px);
-}
-
-.help-phone .icon {
-  font-size: 18px;
-  line-height: 1;
-}
-
-/* =========================
-   BOTTOM (bloque botón)
-   ========================= */
-.hero-bottom {
-  width: 100%;
-
-  display: flex;
-  justify-content: center;
-  background: transparent;
-}
-
-.hero-button-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-/* BOTÓN */
-.login-button {
-  padding: 0.6rem 2.1rem;
-  font-size: 0.95rem;
-  color: white;
-  background-color: #3b82f6;
-  border: 1.5px solid #c7d2fe;
   border-radius: 14px;
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
 }
 
-.login-button:hover {
-  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.18);
-  transform: scale(1.02);
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(40, 51, 111, 0.35);
+}
+
+.btn-secondary {
+  padding: 0.9rem 2.4rem;
+  border: 1.5px solid #d4af37;
+  border-radius: 14px;
+  text-decoration: none;
+  color: #28336f;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  background: #d4af37;
+  color: #ffffff;
 }
 
 /* =========================
-   MÓVIL (NO SE TOCA LO DEMÁS)
-   ========================= */
+   ANIMACIÓN
+========================= */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   MOBILE OPTIMIZATION
+========================= */
+
 @media (max-width: 768px) {
 
   .hero-wrapper {
-    height: 100vh;
-  }
-
-  .hero-top {
-    flex: 0 0 70%;
-    max-height: none;
-    background-color: transparent;
-    background-size: cover;
-    background-position: center;
-  }
-
-  .hero-bottom {
-    flex: 0 0 33%;
-    background-color: transparent;
-    position: relative; 
-    z-index: 2; 
-    border-radius: 24px 24px 0 0;
-    margin-top: -35px;
+    padding: 1.5rem;
     align-items: center;
   }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero-brand {
+    font-size: 2rem;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .hero-title::after {
+    width: 60px;
+    height: 3px;
+    margin: 16px auto 0;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    margin-top: 1.2rem;
+    padding: 0 0.5rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 2rem;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+  }
+
 }

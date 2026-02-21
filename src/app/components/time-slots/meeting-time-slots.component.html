@@ -10,8 +10,15 @@
   </button> -->
 
   <div class="time-slots" #timeSlotList #timeSlotsRef>
-    <div *ngIf="timeSlots.length === 0">
-      <p>Horarios no disponibles</p>
+    <div *ngIf="timeSlots.length === 0" class="empty-slots-state">
+      <div class="empty-slots-icon">
+        <span class="material-icons">event_busy</span>
+      </div>
+
+      <p class="empty-slots-title">Sin horarios disponibles</p>
+      <p class="empty-slots-subtitle">
+        Intenta seleccionar otra fecha.
+      </p>
     </div>
 
     <div *ngFor="let time of timeSlots; let i = index"

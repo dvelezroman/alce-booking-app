@@ -1,216 +1,262 @@
+/* =========================
+   WRAPPER
+========================= */
 
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  background-color: #f2f2f2;
-}
-
-.login-container {
-  background: linear-gradient(
-      to bottom,
-      #f8fafc 0%,
-      #f1f5f9 45%,
-      #ede9fe 75%,
-      #ddd6fe 100%
-    );
-  background-size: cover;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.login-wrapper {
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(40, 51, 111, 0.18), transparent 60%),
+    linear-gradient(to bottom, #ffffff, #f8fafc);
+  padding: 2rem;
 }
 
-.box {
+/* =========================
+   CARD
+========================= */
+
+.login-card {
   width: 100%;
-  padding: 2.5rem 1.5rem .75rem 1.5rem; 
-  background: rgb(255, 255, 255);
-  max-width: 350px;
+  max-width: 380px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
   border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  animation: fadeUp 0.6s ease;
 }
 
-.box h1 {
+/* =========================
+   BRAND
+========================= */
+
+.login-brand {
   text-align: center;
-  margin-bottom: 1rem;
-  margin-top: 0;
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: rgb(82, 82, 82);
-  background: transparent;
-}
-
-.subtitle {
   font-size: 0.8rem;
-  color: #6b7280;
-  text-align: center;
+  letter-spacing: 3px;
+  font-weight: 700;
+  color: #28336f;
   margin-bottom: 1.5rem;
 }
+
+/* =========================
+   TITLES
+========================= */
+
+.login-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #28336f;
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #706f6f;
+  margin-bottom: 2rem;
+}
+
+/* =========================
+   INPUTS
+========================= */
 
 .field {
   margin-bottom: 1.5rem;
-  position: relative;
-  color: white;
 }
 
-.input-container {
-  display: inline-block;
-  padding: 1px;
-  border-radius: 15px;
-  background: linear-gradient(135deg, #acbadd, #d8bfd8);
-}
-
-.control.has-icons-right {
+.floating {
   position: relative;
 }
 
-.floating-label {
-  position: relative;
+.floating input {
   width: 100%;
+  padding: 0.9rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  transition: all 0.25s ease;
 }
 
-.floating-label input {
-  width: 100%;
-  padding: 0.55rem 12px;
-  padding-right: 36px;
-  font-size: .9rem;
-  height: 40px;
-  border: 1px solid rgba(141, 140, 140, 0.29);
-  border-radius: 5px;
-  background: rgb(254, 254, 254);
-  color: rgb(76, 76, 76);
-  transition: all 0.4s ease;
-}
-
-.floating-label input:focus {
-  border: none; 
+.floating input:focus {
   outline: none;
+  border-color: #28336f;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(40, 51, 111, 0.15);
 }
 
-.floating-label label {
+.floating label {
   position: absolute;
+  left: 14px;
   top: 50%;
-  left: 20px;
-  font-size: .8rem;
-  color: rgba(111, 110, 113, 0.791);
   transform: translateY(-50%);
-  transition: 0.3s ease all;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  transition: 0.2s ease;
   pointer-events: none;
 }
 
-.floating-label input:focus + label,
-.floating-label input:not(:placeholder-shown) + label {
-  top: -0.15rem;
-  left: 5px;
+.floating input:focus + label,
+.floating input:not(:placeholder-shown) + label {
+  top: -12px;
+  left: 10px;
+  background: transparent;
+  padding: 0 6px;
   font-size: 0.7rem;
-  color: rgb(94, 93, 93);
-  background: rgb(254, 254, 254);
-  padding: 0 4px;
-  z-index: 1;
+  color: #28336f;
 }
 
-.floating-label .icon.is-right {
-  position: absolute;
-  right: 14.5px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #6b7280;
-}
-
-.input.is-invalid {
-  border-color: #dc3545 !important;
-  transition: border-color 0.3s ease;
-}
-
-.error {
-  width: 100%;
-  color: rgb(218, 88, 68);
-  font-size: .75rem;
-  margin: 4px 0 0 10px;
-}
-
-/* ===== Enlace "Olvidaste tu contraseña" ===== */
-
-.forgot-password-container {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 4px;
-}
-
-.forgot-password-link {
-  font-size: 0.8rem;
-  color: #3b82f6;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.3s ease, text-decoration 0.3s ease;
-
-  &:hover {
-    color: #2563eb;
-    text-decoration: underline;
-  }
-
-  &:active {
-    color: #1e40af;
-  }
-}
-
-.field-button {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.button.is-primary {
-  background-color: #3b82f6; 
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: .9rem;
-  border-radius: 8px;
-  width: 100%;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.button.is-primary:hover {
-  background-color: #2563eb;
-}
-
-.input-field {
-  position: relative;
-}
+/* =========================
+   PASSWORD ICON
+========================= */
 
 .toggle-password {
   position: absolute;
-  right: 20px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  z-index: 2;
+  color: #6b7280;
+  font-size: 0.85rem;
 }
 
-.toggle-password i {
-  font-size: .85rem;
-  color: #6d7179;
+/* =========================
+   ERROR
+========================= */
+
+.error {
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin-top: 5px;
+  margin-left: 5px;
 }
 
-.field {
-  position: relative;
+/* =========================
+   FORGOT PASSWORD
+========================= */
+
+.forgot-password {
+  margin-top: 6px;
+  text-align: right;
 }
 
-@media (max-width: 768px) {
-  .box {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 1.5rem 1rem 0.5rem;
+.forgot-password a {
+  font-size: 0.75rem;
+  color: #28336f;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.btn-login {
+  width: 100%;
+  padding: 0.9rem;
+  background: #28336f;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(40, 51, 111, 0.35);
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
+/* =========================
+   MOBILE OPTIMIZED
+========================= */
 
+@media (max-width: 768px) {
+
+  .login-wrapper {
+    padding: 1.5rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 100%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+  }
+
+  /* Creamos efecto glass moderno */
+  .login-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    z-index: -1;
+  }
+
+  .login-brand {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .login-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .field {
+    margin-bottom: 1.3rem;
+  }
+
+  .floating input {
+    padding: 1rem 1rem;
+    font-size: 0.95rem;
+    border-radius: 14px;
+  }
+
+  .floating label {
+    font-size: 0.75rem;
+  }
+
+  .btn-login {
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 16px;
+  }
+
+}

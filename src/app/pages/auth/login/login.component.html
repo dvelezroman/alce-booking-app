@@ -1,44 +1,47 @@
-<div class="login-container">
-  <div class="box">
-    <h1 class="title">Iniciar Sesión</h1>
-    <p class="subtitle">Ingresa tus datos para continuar</p>
+<div class="login-wrapper">
+
+  <div class="login-card">
+
+    <div class="login-brand">
+      ALCE COLLEGE
+    </div>
+
+    <h1 class="login-title">Iniciar sesión</h1>
+    <p class="login-subtitle">
+      Acceso al sistema académico institucional
+    </p>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <!-- Campo Email -->
+
+      <!-- Email -->
       <div class="field">
-        <div class="floating-label">
+        <div class="floating">
           <input
-            class="input"
             type="text"
             formControlName="email"
             placeholder=" "
             [ngClass]="{ 'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched }">
           <label>Usuario o Email</label>
-          <span class="icon is-right">
-            <i class="fas fa-envelope"></i>
-          </span>
         </div>
+
         <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
           Ingrese un email válido
         </div>
       </div>
 
-      <!-- Campo Password -->
+      <!-- Password -->
       <div class="field">
-        <div class="floating-label">
+        <div class="floating">
           <input
             [type]="passwordVisible ? 'text' : 'password'"
-            class="input"
             formControlName="password"
             placeholder=" "
-            (input)="onPasswordInput()"
             [ngClass]="{ 'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched }">
+
           <label>Contraseña</label>
 
-          <!-- Icono dinámico -->
           <div class="toggle-password" (click)="togglePasswordVisibility()">
-            <i [ngClass]="loginForm.get('password')?.value ?
-                          (passwordVisible ? 'fa fa-eye' : 'fa fa-eye-slash') : 'fa fa-lock'"></i>
+            <i [ngClass]="passwordVisible ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
           </div>
         </div>
 
@@ -46,25 +49,23 @@
           Se requiere contraseña
         </div>
 
-        <!-- 🔹 Enlace Olvidaste tu contraseña -->
-        <div class="forgot-password-container">
-          <a [routerLink]="['/forgot-password']" class="forgot-password-link">
+        <div class="forgot-password">
+          <a [routerLink]="['/forgot-password']">
             ¿Olvidaste tu contraseña?
           </a>
         </div>
       </div>
 
-      <!-- Botón para iniciar sesión -->
-      <div class="field-button">
-        <div class="control">
-          <button class="button is-primary">Iniciar Sesión</button>
-        </div>
-      </div>
+      <button class="btn-login">
+        Iniciar sesión
+      </button>
+
     </form>
+
   </div>
+
 </div>
 
-<!-- Modal -->
 <app-modal
   [showModal]="modal.show"
   [message]="modal.message"

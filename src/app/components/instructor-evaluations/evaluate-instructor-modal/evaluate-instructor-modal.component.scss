@@ -1,43 +1,55 @@
+/* =======================================================
+   BACKDROP
+======================================================= */
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.4);
+  background: rgba(17, 24, 39, 0.45);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
 }
 
+/* =======================================================
+   CONTAINER
+======================================================= */
+
 .modal-container {
   width: 95%;
-  max-width: 760px;
-  background: #fff;
+  max-width: 580px;
+  background: #ffffff;
   border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 20px 50px rgba(0,0,0,.15);
+  padding: 1.8rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 60px rgba(40, 51, 111, 0.15);
 }
 
 /* ---------------- */
 /* HEADER */
 /* ---------------- */
+
 .modal-header {
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 
   h3 {
-    font-size: 1.5rem;
-    color: rgb(76, 76, 76);
+    font-size: 1.4rem;
+    color: #28336f;
     font-weight: 700;
   }
 
   .subtitle {
-    color: #666;
-    font-size: .95rem;
+    color: #6b7280;
+    font-size: .9rem;
   }
 }
 
 /* ---------------- */
 /* BODY */
 /* ---------------- */
+
 .modal-body {
   display: flex;
   flex-direction: column;
@@ -47,9 +59,10 @@
 /* ---------------- */
 /* RATING */
 /* ---------------- */
+
 .rating-section label {
   font-weight: 600;
-  color: #666;
+  color: #28336f;
   margin-bottom: .6rem;
   display: block;
 }
@@ -63,32 +76,38 @@
 .rating-item {
   width: 44px;
   height: 44px;
-  border-radius: 12px;
-  background: #f1f1f1;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
   font-weight: 600;
-  transition: .2s ease;
+  color: #28336f;
+  transition: all .2s ease;
 
   &:hover {
-    transform: translateY(-2px);
+    border-color: #28336f;
+    background: #eef2ff;
   }
 
   &.active {
-    background: #1d4ed8;
+    background: #28336f;
     color: white;
-    box-shadow: 0 6px 16px rgba(29,78,216,.35);
+    box-shadow: 0 6px 18px rgba(40, 51, 111, 0.25);
   }
 }
 
 /* ---------------- */
 /* OBSERVATION */
 /* ---------------- */
+
 .observation-section label {
   font-weight: 600;
-  color: #666;
+  color: #28336f;
   margin-bottom: .4rem;
   display: block;
 }
@@ -96,60 +115,86 @@
 textarea {
   width: 100%;
   border-radius: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #e5e7eb;
   padding: .75rem;
   resize: none;
   font-size: .9rem;
+  background: #ffffff;
+  color: #28336f;
+  transition: border .2s ease;
 }
 
 textarea:focus,
 textarea:focus-visible {
-  border-color: #a3c0eb;
-  box-shadow: none;
+  border-color: #28336f;
   outline: none;
 }
 
 /* ---------------- */
 /* FOOTER */
 /* ---------------- */
+
 .modal-footer {
-  margin-top: 1.5rem;
+  margin-top: 1.8rem;
   display: flex;
   gap: .8rem;
 }
 
+/* PRIMARY BUTTON – VERCEL STYLE */
+
 .submit-btn {
   flex: 1;
-  background: #1d4ed8;
-  color: white;
-  border: none;
+  background: #28336f;
+  color: #ffffff;
+  border: 1px solid #28336f;
   padding: .75rem;
-  border-radius: 12px;
+  border-radius: 10px;
   font-size: .85rem;
   font-weight: 600;
   cursor: pointer;
-
-  &:disabled {
-    background: #9bb0ec;
-    cursor: not-allowed;
-  }
+  transition: all .2s ease;
 }
+
+.submit-btn:hover:not(:disabled) {
+  background: #1f2655;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(40, 51, 111, 0.25);
+}
+
+.submit-btn:disabled {
+  background: #c7d2fe;
+  border-color: #c7d2fe;
+  cursor: not-allowed;
+}
+
+/* SECONDARY BUTTON – OUTLINE STYLE */
 
 .cancel-btn {
   padding: .75rem 1.2rem;
-  border-radius: 12px;
-  color: rgb(37, 37, 37);
+  border-radius: 10px;
   font-size: .85rem;
-  background: #ebeaea;
-  border: none;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  color: #28336f;
   cursor: pointer;
+  transition: all .2s ease;
 }
 
+.cancel-btn:hover {
+  background: #f8fafc;
+  border-color: #28336f;
+}
+
+/* ---------------- */
+/* RESPONSIVE */
+/* ---------------- */
+
 @media (max-width: 480px) {
+
   .modal-container {
     width: 92%;
-    padding: 1rem;
-    border-radius: 12px;
+    padding: 1.2rem;
+    border-radius: 14px;
   }
 
   .modal-header h3 {
@@ -165,24 +210,20 @@ textarea:focus-visible {
   }
 
   .rating-item {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     font-size: .75rem;
     border-radius: 8px;
   }
 
   textarea {
     font-size: .8rem;
-    padding: .55rem;
+    padding: .6rem;
   }
 
-  .submit-btn {
-    font-size: .8rem;
-    padding: .55rem;
-  }
-
+  .submit-btn,
   .cancel-btn {
     font-size: .8rem;
-    padding: .55rem .9rem;
+    padding: .6rem;
   }
 }

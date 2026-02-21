@@ -1,5 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
+
 import { AssessmentResourceI } from '../../services/dtos/assessment-resources.dto';
 import { SafeNoteHtmlPipe } from '../../pipes/safe-note-html.pipe';
 import { BannerStateService, BannerType } from '../../services/banner-state.service';
@@ -11,7 +14,7 @@ import { BannerStateService, BannerType } from '../../services/banner-state.serv
   templateUrl: './student-banner.component.html',
   styleUrls: ['./student-banner.component.scss'],
 })
-export class StudentBannerComponent implements OnInit {
+export class StudentBannerComponent implements OnInit, OnDestroy {
 
   @Input() type: BannerType = 'info';
   @Input() title: string = '';
@@ -20,42 +23,88 @@ export class StudentBannerComponent implements OnInit {
   @Input() resources: AssessmentResourceI[] = [];
 
   isExpanded = true;
+  isHidden = false;
 
-  constructor(private bannerState: BannerStateService) {}
+  private subs = new Subscription();
+
+  constructor(
+    private bannerState: BannerStateService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    // Al iniciar, el banner está ABIERTO
-    // => no debe haber icono en el header
-    this.bannerState.open(this.type);
 
-    // Escuchamos el estado global para abrir/cerrar desde el header
+    // Aplicar regla inicial
+    this.handleRouteChange(this.router.url);
+
+    // Escuchar cambios de ruta
+    this.subs.add(
+      this.router.events
+        .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+        .subscribe((e) => {
+          this.handleRouteChange(e.urlAfterRedirects);
+        })
+    );
+
+    // Escuchar estado global
     const stream =
       this.type === 'info'
         ? this.bannerState.info$
         : this.bannerState.warning$;
 
-    stream.subscribe(state => {
-      this.isExpanded = state.expanded;
-    });
+    this.subs.add(
+      stream.subscribe(state => {
+
+        if (this.isHidden) {
+          this.isExpanded = false;
+          return;
+        }
+
+        this.isExpanded = state.expanded;
+      })
+    );
   }
 
-  /* =====================================================
-     Toggle manual desde el banner
-     ===================================================== */
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
+  private handleRouteChange(url: string): void {
+    const cleanUrl = (url || '').split('?')[0].split('#')[0];
+
+    const isHome = cleanUrl === '/dashboard/home';
+
+    if (isHome) {
+      // 🔥 Ocultar completamente en home
+      this.isHidden = true;
+      this.isExpanded = false;
+
+      // 🔥 Resetear estado global
+      this.bannerState.close(this.type, 0);
+
+      return;
+    }
+
+    // Fuera de home
+    this.isHidden = false;
+
+    // Abrir normalmente
+    this.bannerState.open(this.type);
+  }
+
   toggle(): void {
+    if (this.isHidden) return;
+
     if (this.isExpanded) {
-      // Cerrar banner → mostrar icono en header
       this.bannerState.close(this.type, 1);
     } else {
-      // Abrir banner → ocultar icono
       this.bannerState.open(this.type);
     }
   }
 
-  /* =====================================================
-     Click en el banner (misma lógica que toggle)
-     ===================================================== */
   closeBanner(): void {
+    if (this.isHidden) return;
+
     if (this.isExpanded) {
       this.bannerState.close(this.type, 1);
     }

@@ -95,7 +95,7 @@ export class LoginComponent implements OnInit {
 
     setTimeout(() => {
       this.modal.close();
-    }, 2500);
+    }, 1200);
   }
 
   createModalParams(isError: boolean, message: string): ModalDto {

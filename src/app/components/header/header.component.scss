@@ -27,7 +27,7 @@
 }
 
 /* =====================================================
-   HEADER – ICONOS DE BANNERS (MISMO LENGUAJE VISUAL)
+   HEADER – ICONOS DE BANNERS (MISMO LAYOUT, SOLO ESTILO)
    ===================================================== */
 
 .header-banner-icon {
@@ -42,20 +42,22 @@
   align-items: center;
   justify-content: center;
 
-  background-color: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(40, 51, 111, 0.08);
 
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 
 .header-banner-icon:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  transform: scale(1.08);
+  box-shadow: 0 8px 20px rgba(40, 51, 111, 0.15);
 }
 
 /* ICONO */
 .header-banner-icon .material-icons {
   font-size: 22px;
+  transition: color 0.2s ease;
 }
 
 /* BADGE */
@@ -64,7 +66,7 @@
   top: -5px;
   right: -5px;
 
-  background: #ef4444;
+  background: #28336f;
   color: white;
 
   font-size: 0.65rem;
@@ -80,38 +82,55 @@
   align-items: center;
   justify-content: center;
 
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  border: 2px solid #ffffff;
 }
 
 /* ===============================
-   VARIANTES – INFO / WARNING
+   VARIANTES – INFO (AZUL)
    =============================== */
 
 .header-banner-icon.info {
-  background-color: #fff8e1;
+  background-color: #eef2ff;
+  border-color: #c7d2fe;
 }
 
 .header-banner-icon.info .material-icons {
-  color: #ffca28;
+  color: #28336f;
 }
 
-.header-banner-icon.warning {
-  background-color: #ffd9d9e0;
-}
-
-.header-banner-icon.warning .material-icons {
-  color: #d70f0f;
+.header-banner-icon.info:hover {
+  background-color: #e0e7ff;
+  border-color: #28336f;
 }
 
 /* ===============================
-   MOBILE – un poco más compacto
+   VARIANTES – WARNING (DORADO)
    =============================== */
+
+.header-banner-icon.warning {
+  background-color: #fffbeb;
+  border-color: #fde68a;
+}
+
+.header-banner-icon.warning .material-icons {
+  color: #f59e0b;
+}
+
+.header-banner-icon.warning:hover {
+  background-color: #fef3c7;
+  border-color: #f59e0b;
+}
+
+/* ===============================
+   MOBILE – mismo layout compacto
+   =============================== */
+
 @media (max-width: 600px) {
 
   .header-right {
     gap: 0.5rem !important;
-
   }
+
   .header-banner-icon {
     width: 32px;
     height: 32px;
