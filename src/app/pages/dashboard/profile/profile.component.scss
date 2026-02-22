@@ -1,278 +1,197 @@
-/* =========================
-   SECCIÓN GENERAL
-========================= */
 .section {
   min-height: 100vh;
-  padding: 100px 0 4rem;
+  padding: 120px 1rem 4rem;
   display: flex;
   justify-content: center;
+  background: #f9fafb;
 }
 
-/* =========================
-   CONTENIDO
-========================= */
 .content {
   width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
+  max-width: 1200px;
 }
 
 /* =========================
-   HEADER FIJO
+   HEADER SUPERIOR TIPO DASHBOARD
 ========================= */
-.reports-progress-header {
+
+.page-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #fff;
-  color: #111827;
-  z-index: 20;
-  text-align: center;
-}
+  height: 72px;
 
-.reports-progress-title {
-  font-size: 1.4rem;
-  line-height: 72px;
-  font-weight: bold;
-
-  @media (max-width: 640px) {
-    font-size: 1.2rem;
-    line-height: 60px;
-  }
-}
-
-/* =========================
-   CARD PERFIL
-========================= */
-.profile-card {
-  background: #ffffff;
-  border-radius: 16px;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas:
-    "header header"
-    "personal academic"
-    "representative password"
-    "actions actions";
-  gap: 1.5rem;
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "header"
-      "personal"
-      "academic"
-      "representative"
-      "password"
-      "actions";
-    padding: 1.5rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 1rem;
-    border-radius: 12px;
-  }
-}
-
-/* =========================
-   HEADER USUARIO
-========================= */
-.profile-header {
-  grid-area: header;
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-/* Avatar */
-.profile-header .avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50px;
-  background: linear-gradient(135deg, #f2f3f5, #edf0fa);
   display: flex;
   align-items: center;
   justify-content: center;
+
+  z-index: 50;
+}
+
+.page-header h1 {
   font-size: 1.4rem;
-  font-weight: 600;
-  color: gray;
-  box-shadow:
-    inset 0 0 6px rgba(255,255,255,0.15),
-    0 2px 6px rgba(0,0,0,0.12);
-
-  @media (max-width: 480px) {
-    width: 48px;
-    height: 48px;
-    font-size: 1.1rem;
-  }
-}
-
-.user-info h2 {
-  margin: 0;
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: #0f172a;
-}
-
-.user-info .role {
-  font-size: 0.9rem;
-  color: #2563eb;
-}
-
-.user-info .email {
-  font-size: 0.85rem;
-  color: #6b7280;
-}
-
-/* =========================
-   BLOQUES
-========================= */
-.profile-details {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-}
-
-.personal-block { grid-area: personal; }
-.institution-block { grid-area: academic; }
-
-.representative-block {
-  grid-area: representative;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-}
-
-.password-change {
-  grid-area: password;
-}
-
-/* =========================
-   HEADERS DE BLOQUE
-========================= */
-.block-header h3 {
-  margin: 0 0 .75rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #0f172a;
-}
-
-/* =========================
-   TEXTO
-========================= */
-.block-content p {
-  margin: .2rem 0;
-  font-size: 0.88rem;
-  color: #374151;
-}
-
-.block-content strong {
-  font-weight: 600;
+  font-weight: 700;
   color: #111827;
 }
 
-/* =========================
-   PASSWORD
-========================= */
-.password-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #0f172a;
+/* HEADER */
+.profile-top {
+  text-align: left;
+  margin-bottom: 3rem;
 }
 
-.password-field {
+.profile-top h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #28336f;
+}
+
+.role-pill {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(40, 51, 111, 0.08);
+  color: #28336f;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.email {
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* GRID SUPERIOR */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.profile-block {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1.5rem;
+}
+
+.profile-block h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 1rem;
   position: relative;
 }
 
-.password-input-modern {
-  width: 100%;
-  padding: 0.65rem 1rem;
-  padding-right: 2.5rem;
+.profile-block h3::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(135deg, #d4af37, #b9911f);
+}
+
+.info-list div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.info-list span {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.info-list strong {
+  color: #111827;
+  font-size: 0.9rem;
+}
+
+/* 🔥 PASSWORD FULL WIDTH */
+.password-row {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.password-row h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.password-inline {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.modern-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
-  background: #fdfdfd;
-  font-size: 0.85rem;
-
-  &:focus {
-    outline: none;
-    background: #fff;
-    border-color: #19256b;
-    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
-  }
 }
 
-.password-icon-btn {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
+.modern-input:focus {
+  outline: none;
+  border-color: #28336f;
+  box-shadow: 0 0 0 3px rgba(40, 51, 111, 0.15);
+}
+
+.modern-button {
+  background: linear-gradient(135deg, #28336f, #1f2a5a);
+  color: white;
+  padding: 0.65rem 1.4rem;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
-  color: #6b7280;
 }
 
-.password-submit-btn {
-  margin-top: .75rem;
-  background: #28336f;
-  color: #fff;
-  padding: .55rem 1.25rem;
-  border-radius: 8px;
-  border: none;
-  font-size: 0.85rem;
-  cursor: pointer;
-
-  &:hover {
-    background: #19256b;
-  }
-}
-
-.password-error {
+.input-error {
   font-size: 0.75rem;
   color: #dc2626;
-  margin-top: .25rem;
+  margin-top: 0.5rem;
+}
+
+/* FOOTER */
+.profile-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.edit-button {
+  background: #d4af37;
+  color: #111827;
+  padding: 0.8rem 2.5rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.35);
 }
 
 /* =========================
-   ACCIONES
+   RESPONSIVE MOBILE
 ========================= */
-.profile-actions {
-  grid-area: actions;
-  display: flex;
-  justify-content: center;
-  padding-top: 1rem;
-  border-top: 1px solid #f1f5f9;
-}
 
-.edit-btn {
-  background: #28336f;
-  color: white;
-  padding: .6rem 1.75rem;
-  border-radius: 10px;
-  border: none;
-  font-size: .85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background .2s ease, box-shadow .2s ease;
-
-  &:hover {
-    background: #19256b;
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
-  &:active {
-    box-shadow: inset 0 0 0 2px rgba(255,255,255,0.2);
+  .password-inline {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  @media (max-width: 480px) {
+  .modern-button {
     width: 100%;
   }
 }

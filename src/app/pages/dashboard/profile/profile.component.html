@@ -1,176 +1,134 @@
 <section class="section">
+  <div class="page-header">
+    <h1>Perfil de Usuario</h1>
+  </div>
+  
   <div class="content">
-    <h1 class="reports-progress-header reports-progress-title">
-      Perfil de Usuario
-    </h1>
+   
 
-    <div class="profile-card" *ngIf="userData$ | async as user">
-      <!-- 🧩 Cabecera -->
-      <div class="profile-header">
-        <div class="avatar">
-          {{ user.firstName?.[0] || '?' }}{{ user.lastName?.[0] || '' }}
-        </div>
-        <div class="user-info">
-          <h2>{{ user.firstName }} {{ user.lastName }}</h2>
-          <p class="role">{{ user.role }}</p>
-          <p class="email">{{ user.emailAddress || user.email }}</p>
-        </div>
+    <div class="profile-wrapper" *ngIf="userData$ | async as user">
+
+      <!-- HEADER -->
+      <div class="profile-top">
+        <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+        <span class="role-pill">{{ user.role }}</span>
+        <p class="email">{{ user.emailAddress || user.email }}</p>
       </div>
 
-       <!-- Datos Personales -->
-      <div class="profile-details personal-block">
-        <div class="block-header">
+      <!-- GRID PRINCIPAL -->
+      <div class="profile-grid">
+
+        <!-- DATOS PERSONALES -->
+        <div class="profile-block">
           <h3>Datos Personales</h3>
-        </div>
-
-        <div class="block-content">
-          <p><strong>Contacto:</strong> {{ user.contact || "No especificado" }}</p>
-          <p><strong>País:</strong> {{ user.country || "No especificado" }}</p>
-          <p><strong>Ciudad:</strong> {{ user.city || "No especificado" }}</p>
-          <p>
-            <strong>Cumpleaños:</strong>
-            {{ user?.birthday ? formatBirthday(user.birthday) : "No registrado" }}
-          </p>
-        </div>
-      </div>
-
-      <!-- Datos Académicos -->
-      <div class="profile-details institution-block">
-        <div class="block-header">
-          <h3>Datos Académicos</h3>
-        </div>
-
-        <div class="block-content">
-          <p *ngIf="user.occupation">
-            <strong>Ocupación:</strong> {{ user.occupation }}
-          </p>
-
-          <p *ngIf="user.role === 'STUDENT' && user.student?.stage">
-            <strong>Etapa:</strong>
-            {{ user.student?.stage?.number || user.student?.stage?.description }}
-          </p>
-
-          <p *ngIf="user.status"><strong>Estado:</strong> {{ user.status }}</p>
-          <!-- <p *ngIf="user.comment"><strong>Comentario:</strong> {{ user.comment }}</p> -->
-          <p *ngIf="user.dataCompleted !== undefined">
-            <strong>Datos completados:</strong>
-            {{ user.dataCompleted ? "Sí" : "No" }}
-          </p>
-
-          <div class="dates-column">
-            <p *ngIf="user.role === 'STUDENT' && user.student?.createdAt">
-              <strong>Creado:</strong>
-              {{ user.student?.createdAt | date: 'dd/MM/yyyy HH:mm' }}
-            </p>
-            <p *ngIf="user.role !== 'STUDENT' && user.createdAt">
-              <strong>Creado:</strong>
-              {{ user.createdAt | date: 'dd/MM/yyyy HH:mm' }}
-            </p>
-
-            <p *ngIf="user.role === 'STUDENT' && user.student?.updatedAt">
-              <strong>Actualizado:</strong>
-              {{ user.student?.updatedAt | date: 'dd/MM/yyyy HH:mm' }}
-            </p>
-            <p *ngIf="user.role !== 'STUDENT' && user.updatedAt">
-              <strong>Actualizado:</strong>
-              {{ user.updatedAt | date: 'dd/MM/yyyy HH:mm' }}
-            </p>
+          <div class="info-list">
+            <div><span>Contacto</span><strong>{{ user.contact || "No especificado" }}</strong></div>
+            <div><span>País</span><strong>{{ user.country || "No especificado" }}</strong></div>
+            <div><span>Ciudad</span><strong>{{ user.city || "No especificado" }}</strong></div>
+            <div>
+              <span>Cumpleaños</span>
+              <strong>{{ user?.birthday ? formatBirthday(user.birthday) : "No registrado" }}</strong>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!--  Bloque de datos del representante -->
-      <div
-        *ngIf="
-          user.role === 'STUDENT' &&
-          user.student &&
-          (user.student.tutorName || user.student.tutorEmail || user.student.tutorPhone)
-        "
-        class="representative-block"
-      >
-        <div class="block-header">
-          <h3>Información del Representante</h3>
+        <!-- DATOS ACADÉMICOS -->
+        <div class="profile-block">
+          <h3>Datos Académicos</h3>
+          <div class="info-list">
+            <div *ngIf="user.occupation">
+              <span>Ocupación</span><strong>{{ user.occupation }}</strong>
+            </div>
+            <div *ngIf="user.role === 'STUDENT' && user.student?.stage">
+              <span>Stage</span>
+              <strong>{{ user.student?.stage?.number || user.student?.stage?.description }}</strong>
+            </div>
+            <div *ngIf="user.status">
+              <span>Estado</span><strong>{{ user.status }}</strong>
+            </div>
+          </div>
         </div>
 
-        <div class="block-content">
-          <p *ngIf="user.student.tutorName">
-            <strong>Nombre:</strong> {{ user.student.tutorName }}
-          </p>
-          <p *ngIf="user.student.tutorEmail">
-            <strong>Email:</strong> {{ user.student.tutorEmail }}
-          </p>
-          <p *ngIf="user.student.tutorPhone">
-            <strong>Teléfono:</strong> {{ user.student.tutorPhone }}
-          </p>
-        </div>
-      </div>
-
-      <!-- 🔒 Contraseña -->
-     <div class="password-change">
-      <label for="password" class="password-title">Cambiar contraseña</label>
-
-      <div class="password-field">
-        <input
-          id="password"
-          [type]="showPassword ? 'text' : 'password'"
-          class="password-input-modern"
-          [(ngModel)]="newPassword"
-          placeholder="Nueva contraseña"
-        />
-
-        <button
-          *ngIf="newPassword.trim().length > 0"
-          class="password-icon-btn"
-          type="button"
-          (click)="togglePasswordVisibility()"
+        <!-- REPRESENTANTE -->
+        <div
+          *ngIf="
+            user.role === 'STUDENT' &&
+            user.student &&
+            (user.student.tutorName || user.student.tutorEmail || user.student.tutorPhone)
+          "
+          class="profile-block"
         >
-          <i [ngClass]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
-        </button>
+          <h3>Representante</h3>
+          <div class="info-list">
+            <div *ngIf="user.student.tutorName">
+              <span>Nombre</span><strong>{{ user.student.tutorName }}</strong>
+            </div>
+            <div *ngIf="user.student.tutorEmail">
+              <span>Email</span><strong>{{ user.student.tutorEmail }}</strong>
+            </div>
+            <div *ngIf="user.student.tutorPhone">
+              <span>Teléfono</span><strong>{{ user.student.tutorPhone }}</strong>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <button
-        *ngIf="newPassword.trim().length >= 6"
-        class="password-submit-btn"
-        (click)="togglePasswordEdit()"
-      >
-        Actualizar contraseña
-      </button>
+      <!-- 🔥 PASSWORD EN FILA COMPLETA -->
+      <div class="password-row">
+        <h3>Cambiar contraseña</h3>
 
-      <p
-        *ngIf="newPassword.trim().length > 0 && newPassword.trim().length < 6"
-        class="password-error"
-      >
-        La contraseña debe tener al menos 6 caracteres.
-      </p>
-    </div>
+        <div class="password-inline">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="newPassword"
+            placeholder="Nueva contraseña"
+            class="modern-input"
+          />
 
-      <!-- 🎛 Botón para editar -->
-      <div class="profile-actions">
-        <button class="edit-btn" (click)="openEditForm()">
+          <button
+            *ngIf="newPassword.trim().length >= 6"
+            class="modern-button"
+            (click)="togglePasswordEdit()"
+          >
+            Actualizar
+          </button>
+        </div>
+
+        <p
+          *ngIf="newPassword.trim().length > 0 && newPassword.trim().length < 6"
+          class="input-error"
+        >
+          Mínimo 6 caracteres.
+        </p>
+      </div>
+
+      <!-- BOTÓN FINAL -->
+      <div class="profile-footer">
+        <button class="edit-button" (click)="openEditForm()">
           {{ user.dataCompleted ? "Editar información" : "Completar información" }}
         </button>
       </div>
+
     </div>
-    <!-- Modal con formulario de edición -->
-        <app-users-info-form
-          *ngIf="showUserInfoForm"
-          [isModalOpen]="true"
-          [dataCompleted]="dataCompleted"
-          [userData]="user" 
-          (formSubmit)="handleUserInfoSubmit($event)"
-          (closeModal)="showUserInfoForm = false" >
-        </app-users-info-form>
-    
-        <!-- Modal de feedback -->
-        <app-modal
-          [showModal]="modal.show"
-          [message]="modal.message"
-          [isError]="modal.isError"
-          [isSuccess]="modal.isSuccess"
-          [title]="modal.title || ''"
-          (close)="modal.close()"
-        >
-        </app-modal>
+
+     <app-users-info-form
+      *ngIf="showUserInfoForm"
+      [isModalOpen]="true"
+      [dataCompleted]="dataCompleted"
+      [userData]="user"
+      (formSubmit)="handleUserInfoSubmit($event)"
+      (closeModal)="showUserInfoForm = false">
+    </app-users-info-form>
+
+    <!-- FEEDBACK MODAL -->
+    <app-modal
+      [showModal]="modal.show"
+      [message]="modal.message"
+      [isError]="modal.isError"
+      [isSuccess]="modal.isSuccess"
+      [title]="modal.title || ''"
+      (close)="modal.close()">
+    </app-modal>
   </div>
 </section>
-
