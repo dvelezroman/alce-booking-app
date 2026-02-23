@@ -63,6 +63,12 @@
         </div>
       </section>
 
+      <app-pending-class-evaluation-banner
+        *ngIf="pendingClassEvaluationsCount > 0"
+        [count]="pendingClassEvaluationsCount"
+        (goToEvaluate)="goToInstructorEvaluations()">
+      </app-pending-class-evaluation-banner>
+
       <!-- CONTENT GRID -->
       <section class="content-grid">
 
@@ -198,11 +204,7 @@
     (closed)="onAnnouncementClosed()">
   </app-assessment-announcement>
 
-  <app-pending-class-evaluation-banner
-    *ngIf="pendingClassEvaluationsCount > 0"
-    [count]="pendingClassEvaluationsCount"
-    (goToEvaluate)="goToInstructorEvaluations()">
-  </app-pending-class-evaluation-banner>
+  
 
   <app-student-cuenca-banner
     *ngIf="showBannerCuenca"
