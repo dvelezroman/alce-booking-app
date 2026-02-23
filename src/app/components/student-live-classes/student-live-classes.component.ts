@@ -196,7 +196,7 @@ export class StudentLiveClassesComponent implements OnInit {
     if (!meeting?.link?.trim()) return false;
 
     const LINK_ACTIVE_BEFORE = 5 * 60 * 1000;  // 5 min antes
-    const LINK_ACTIVE_AFTER = 30 * 60 * 1000;  // 30 min después
+    const LINK_ACTIVE_AFTER = 6 * 60 * 1000;  // 30 min después
 
     const localDateISO = new Date(meeting.localdate).toISOString().split('T')[0];
     const meetingStart = new Date(
