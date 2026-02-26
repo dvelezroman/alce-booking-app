@@ -47,7 +47,7 @@ export class ContentSelectorComponent {
   onStageChange() {
     if (!this.selectedStageId) {
       this.availableContents = [];
-      this.selectedContents = [];
+      // this.selectedContents = [];
       this.emitStepState(false);
       return;
     }
@@ -60,7 +60,7 @@ export class ContentSelectorComponent {
           name: `Unidad ${c.unit}: ${c.title}`
         }));
 
-      this.selectedContents = [];
+      // this.selectedContents = [];
       this.emitStepState(false);
     });
   }
@@ -79,6 +79,10 @@ export class ContentSelectorComponent {
 
     target.value = '';
     this.emitStepState(false);
+  }
+
+  isSelected(contentId: number): boolean {
+    return this.selectedContents.some(c => c.id === contentId);
   }
 
   // ================================

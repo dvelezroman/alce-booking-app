@@ -18,8 +18,11 @@
     <div class="control">
       <div class="select is-fullwidth">
         <select (change)="addContent($event)" required>
-          <option [ngValue]="null">Seleccionar...</option>
-          <option *ngFor="let content of availableContents" [value]="content.id">{{ content.name }}</option>
+          <option *ngFor="let content of availableContents"
+            [value]="content.id"
+            [disabled]="isSelected(content.id)">
+            {{ content.name }}
+          </option>
         </select>
       </div>
     </div>
