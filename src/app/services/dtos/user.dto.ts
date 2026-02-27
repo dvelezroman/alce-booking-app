@@ -31,6 +31,7 @@ export interface UserDto {
   register?: boolean;
   student?: Student;
   stage?: Stage;
+  currentStageProgress?: number | null; 
   instructor?: Instructor;
   comment?: string;
   status?: UserStatus;

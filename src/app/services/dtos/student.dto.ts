@@ -23,6 +23,7 @@ export interface Student {
   updatedAt?: Date;
   user?: UserDto;
   stage?: Stage;
+  currentStageProgress?: number;
   studentClassification?: StudentClassification;
   StudentAndStagesHistory?: StudentStageHistory[];
   startClassDate?: string | null;
