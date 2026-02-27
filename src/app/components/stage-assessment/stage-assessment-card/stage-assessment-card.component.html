@@ -1,8 +1,10 @@
 <div class="assessment-card"
      [class.selected-card]="highlighted"
-     [class.expired-card]="assessment.isPastDue"
-     [class.urgent-card]="isUrgent && !assessment.isPastDue">
+     [class.expired-card]="assessment.statusForStudent === 'agedOut'"
+     [class.completed-card]="assessment.statusForStudent === 'completed'"
+     [class.urgent-card]="isUrgent && assessment.statusForStudent === 'active'">
 
+  <!-- HEADER -->
   <div class="header-row">
     <h3 class="title">
       {{ assessment.stageAssessmentResource?.description || 'Recurso sin título' }}
@@ -11,13 +13,23 @@
     <span
       class="status"
       [ngClass]="{
-        'pending': !assessment.isPastDue,
-        'expired': assessment.isPastDue
+        'pending': assessment.statusForStudent === 'active',
+        'expired': assessment.statusForStudent === 'agedOut',
+        'completed': assessment.statusForStudent === 'completed'
       }">
-      {{ assessment.isPastDue ? 'Expirada' : 'Pendiente' }}
+
+      {{
+        assessment.statusForStudent === 'active'
+          ? 'Pendiente'
+          : assessment.statusForStudent === 'agedOut'
+          ? 'Expirada'
+          : 'Realizada'
+      }}
+
     </span>
   </div>
 
+  <!-- INFO -->
   <div class="info">
     <p>
       <strong>Fecha límite:</strong>
@@ -28,29 +40,50 @@
       <strong>Stage:</strong>
       {{ assessment.stage?.description || 'Sin etapa' }}
     </p>
+
+    <p *ngIf="assessment.stageAssessmentResource?.description">
+      <strong>Recurso:</strong>
+      {{ assessment.stageAssessmentResource?.description }}
+    </p>
   </div>
 
-  <!-- NUEVA FILA COUNTDOWN + BOTÓN -->
+  <!-- FILA INFERIOR -->
   <div class="bottom-row">
 
-    <div class="countdown-wrapper" *ngIf="!assessment.isPastDue">
+    <!-- COUNTDOWN SOLO SI ES ACTIVA -->
+    <div class="countdown-wrapper"
+         *ngIf="assessment.statusForStudent === 'active'">
 
       <span class="countdown-label">
         Tiempo restante:
       </span>
 
-      <div class="countdown-badge" [class.urgent]="isUrgent">
+      <div class="countdown-badge"
+           [class.urgent]="isUrgent">
         {{ timeFormatted }}
       </div>
 
     </div>
 
+    <!-- ACCIONES -->
     <div class="actions">
       <button
         class="btn-open"
-        [disabled]="assessment.isPastDue"
+        [ngClass]="{
+          'expired-btn': assessment.statusForStudent === 'agedOut',
+          'completed-btn': assessment.statusForStudent === 'completed'
+        }"
+        [disabled]="assessment.statusForStudent !== 'active'"
         (click)="handleOpenAndFinish()">
-        {{ assessment.isPastDue ? 'Evaluación expirada' : 'Abrir evaluación' }}
+
+        {{
+          assessment.statusForStudent === 'active'
+            ? 'Abrir evaluación'
+            : assessment.statusForStudent === 'agedOut'
+            ? 'Evaluación expirada'
+            : 'Evaluación completada'
+        }}
+
       </button>
     </div>
 

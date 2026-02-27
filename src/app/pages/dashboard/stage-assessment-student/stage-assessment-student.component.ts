@@ -26,13 +26,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class StageAssessmentStudentComponent implements OnInit {
 
   studentId: number | null = null;
-  hasActiveAssessments: boolean = false;
   loading: boolean = true;
 
-  filterType: 'active' | 'expired' | 'all' = 'all';
-
-  allAssessments: StageAssessment[] = [];
-  assessments: StageAssessment[] = [];
+  pendingAssessments: StageAssessment[] = [];
+  expiredAssessments: StageAssessment[] = [];
+  completedAssessments: StageAssessment[] = [];
 
   activeCount: number = 0;
   expiredCount: number = 0;
@@ -76,71 +74,60 @@ export class StageAssessmentStudentComponent implements OnInit {
       });
   }
 
-  /** cargar los assessments del backend */
   private loadAssessments() {
+    if (!this.studentId) return;
+
     this.loading = true;
 
     this.stageAssessmentService
-      .checkActiveByStudent(this.studentId!, true)
+      .getAll({ studentId: this.studentId })
       .subscribe({
-        next: (res) => {
+        next: (list) => {
 
-          const list = res.assessments ?? [];
-
-          this.allAssessments = list.sort(
+          const sorted = (list ?? []).sort(
             (a, b) =>
               new Date(b.dueDate).getTime() -
               new Date(a.dueDate).getTime()
           );
 
-          this.activeCount = this.allAssessments.filter(a => !a.isPastDue).length;
-          this.expiredCount = this.allAssessments.filter(a => a.isPastDue).length;
+          // Clasificación por statusForStudent
+          this.pendingAssessments =
+            sorted.filter(a => a.statusForStudent === 'active');
+
+          this.expiredAssessments =
+            sorted.filter(a => a.statusForStudent === 'agedOut');
+
+          this.completedAssessments =
+            sorted.filter(a => a.statusForStudent === 'completed');
+
+          this.activeCount = this.pendingAssessments.length;
+          this.expiredCount = this.expiredAssessments.length;
 
           this.hasPending = this.activeCount > 0;
           this.hasExpired = this.expiredCount > 0;
-
-          this.applyFilter();
 
           this.loading = false;
         },
         error: () => {
           this.loading = false;
-          this.showNotification("Error al obtener tus evaluaciones.", true);
+          this.showNotification("Error al obtener evaluaciones.", true);
         }
       });
-  }
-
-  applyFilter() {
-
-    switch (this.filterType) {
-
-      case 'active':
-        this.assessments =
-          this.allAssessments.filter(a => !a.isPastDue);
-        break;
-
-      case 'expired':
-        this.assessments =
-          this.allAssessments.filter(a => a.isPastDue);
-        break;
-
-      case 'all':
-        this.assessments = [...this.allAssessments];
-        break;
-    }
   }
 
   onOpenAndFinish(assessmentId: number) {
     if (!this.studentId) return;
 
-    this.stageAssessmentService.markFinished(assessmentId, this.studentId).subscribe({
-      next: () => {
-        this.loadAssessments();
-      },
-      error: () => {
-        this.showNotification("Error al marcar como completado.", true);
-      }
-    });
+    this.stageAssessmentService
+      .markFinished(assessmentId, this.studentId)
+      .subscribe({
+        next: () => {
+          this.loadAssessments();
+        },
+        error: () => {
+          this.showNotification("Error al marcar como completado.", true);
+        }
+      });
   }
 
   clearHighlight(): void {

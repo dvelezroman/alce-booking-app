@@ -27,6 +27,7 @@ export interface StageAssessment {
   stage?: any;
   creator?: any;
   stageAssessmentResource?: StageAssessmentResource;
+  statusForStudent?: 'active' | 'completed' | 'agedOut';
   createdAt?: string;
   updatedAt?: string;
 }

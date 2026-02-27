@@ -23,7 +23,7 @@ export class StageAssessmentCardComponent implements OnInit, OnDestroy {
   private intervalSub!: Subscription;
 
   ngOnInit() {
-    if (!this.assessment.isPastDue) {
+    if (this.assessment.statusForStudent === 'active') {
       this.updateCountdown();
       this.intervalSub = interval(1000).subscribe(() => {
         this.updateCountdown();

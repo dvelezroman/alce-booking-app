@@ -15,6 +15,7 @@
 
 /* 🔒 EXPIRADA */
 .expired-card {
+  background: #fef3f3;
   opacity: 0.85;
   border-color: #e5e7eb !important;
 
@@ -27,7 +28,7 @@
 /* URGENTE (<24h) */
 .urgent-card {
   border: 1px solid #fecaca !important;
-  background: #fffafa;
+  background: #ffffff;
   box-shadow: 0 6px 18px rgba(220, 38, 38, 0.08);
 }
 
@@ -64,8 +65,14 @@
   }
 
   &.expired {
-    background: #f3f4f6;
-    color: #6b7280;
+    background: rgba(212, 175, 55, 0.15);
+    color: #b88900;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+  }
+
+  &.completed {
+    background: #ecfdf5;
+    color: #059669;
   }
 }
 
@@ -136,7 +143,7 @@
 }
 
 .btn-open {
-  background: #2563EB;
+  background: #28336f;
   color: white;
   padding: .45rem .95rem;
   border-radius: 10px;
@@ -145,20 +152,40 @@
   border: none;
   cursor: pointer;
   transition: all .2s ease;
+}
 
-  &:hover:not(:disabled) {
-    background: #1D4ED8;
-  }
+/* ========================== */
+/* BOTÓN EXPIRADO             */
+/* ========================== */
 
-  &:active:not(:disabled) {
-    transform: scale(.98);
-  }
+.btn-open.expired-btn {
+  background: rgba(212, 175, 55, 0.15);
+  color: #b88900;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  box-shadow: none;
+}
 
-  &:disabled {
-    background: #e5e7eb;
-    color: #9ca3af;
-    cursor: not-allowed;
-  }
+.btn-open.expired-btn:disabled {
+  background: rgba(212, 175, 55, 0.15);
+  color: #b88900;
+  cursor: not-allowed;
+}
+
+/* ========================== */
+/* BOTÓN COMPLETADO           */
+/* ========================== */
+
+.btn-open.completed-btn {
+  background: rgba(5, 150, 105, 0.12);
+  color: #059669;
+  border: 1px solid rgba(5, 150, 105, 0.35);
+  box-shadow: none;
+}
+
+.btn-open.completed-btn:disabled {
+  background: rgba(5, 150, 105, 0.12);
+  color: #059669;
+  cursor: not-allowed;
 }
 
 /* HIGHLIGHT */
