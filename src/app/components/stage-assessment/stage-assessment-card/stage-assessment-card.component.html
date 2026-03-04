@@ -33,7 +33,11 @@
   <div class="info">
     <p>
       <strong>Fecha límite:</strong>
-      {{ assessment.dueDate | date:'fullDate' }}
+      {{ assessment.dueDate | date:'fullDate':'UTC' }}
+    </p>
+    <p *ngIf="assessment.statusForStudent === 'completed' && assessment.updatedAt">
+      <strong>Realizado el:</strong>
+      {{ assessment.updatedAt | date:'medium' }}
     </p>
 
     <p *ngIf="assessment.stage">
