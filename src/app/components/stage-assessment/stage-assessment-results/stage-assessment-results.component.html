@@ -11,23 +11,50 @@
     <div class="student-name">
       {{ item.student.user?.firstName }} {{ item.student.user?.lastName }}
     </div>
-    <div class="stage-entry-date" *ngIf="item.stageEntryDate">
 
-      {{ item.stageEntryDate | date:'mediumDate' }}
+    <!-- Fecha subida de stage -->
+    <div class="stage-entry-date">
+      <ng-container *ngIf="item.stageEntryDate">
+        <i class="fa-solid fa-arrow-up"></i>
+        {{ item.stageEntryDate | date:'mediumDate':'UTC' }}
+      </ng-container>
     </div>
 
-    <!-- Pendientes -->
     <!-- Evaluaciones -->
     <div class="pending">
 
       <!-- Grammar -->
-      <span
-        class="badge"
-        [class.success]="getAssessmentStatus(item, 'Grammar') === 'approved'"
-        [class.danger]="getAssessmentStatus(item, 'Grammar') === 'pending'"
+      <div class="assessment-block">
+
+      <div class="assessment-hover">
+
+        <span
+          class="badge"
+          [class.success]="getAssessmentStatus(item, 'Grammar') === 'approved'"
+          [class.danger]="getAssessmentStatus(item, 'Grammar') === 'pending'"
+        >
+          Grammar
+        </span>
+
+        <!-- Tooltip -->
+        <div
+          class="assessment-tooltip"
+          *ngIf="latestAssessmentMap.get(item.studentId) as last"
+        >
+          {{ last.createdAt | date:'medium':'UTC' }}
+        </div>
+
+      </div>
+
+      <!-- Fecha corta -->
+      <div
+        class="assessment-assigned-date"
+        *ngIf="latestAssessmentMap.get(item.studentId) as last"
       >
-        Grammar
-      </span>
+        {{ last.createdAt | date:'mediumDate':'UTC' }}
+      </div>
+
+    </div>
 
       <!-- Speaking -->
       <span

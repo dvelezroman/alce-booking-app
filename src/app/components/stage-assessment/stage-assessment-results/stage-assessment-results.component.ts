@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StageProgressByStage, StageProgressDto } from '../../../services/dtos/stage-progress.dto';
-import { StudentAssessment } from '../../../services/dtos/stage-assessment.dto';
+import { StudentAssessment, StageAssessment } from '../../../services/dtos/stage-assessment.dto';
 
 @Component({
   selector: 'app-stage-assessment-results',
@@ -17,13 +17,44 @@ export class StageAssessmentResultsComponent implements OnChanges {
   @Input() resetSelection: boolean = false;
 
   @Output() selectionChange = new EventEmitter<number[]>();
-  
+
+  /** 🔹 Guarda el assessment más reciente por estudiante */
+  latestAssessmentMap = new Map<number, StageAssessment>();
+
 
   ngOnChanges(changes: SimpleChanges) {
+
+    if (changes['progressList']) {
+      this.computeLatestAssessments();
+    }
+
     if (changes['resetSelection'] && this.resetSelection) {
-      this.selectedIds = []; 
+      this.selectedIds = [];
       this.selectionChange.emit([]);
     }
+  }
+
+  /** 🔹 Calcula el assessment más reciente UNA sola vez */
+  computeLatestAssessments() {
+
+    this.latestAssessmentMap.clear();
+
+    this.progressList.forEach(item => {
+
+      if (!item.activeAssessments?.length) return;
+
+      const latest = item.activeAssessments.reduce((latest, current) => {
+
+        const latestTime = new Date(latest.createdAt ?? '').getTime();
+        const currentTime = new Date(current.createdAt ?? '').getTime();
+
+        return currentTime > latestTime ? current : latest;
+
+      });
+
+      this.latestAssessmentMap.set(item.studentId, latest);
+
+    });
   }
 
   getColor(progress: number): string {
@@ -31,7 +62,6 @@ export class StageAssessmentResultsComponent implements OnChanges {
     return `hsl(${hue}, 75%, 65%)`;
   }
 
-  /** Seleccionar o deseleccionar */
   toggleSelection(item: StageProgressDto): void {
     const id = item.studentId;
 
@@ -44,17 +74,15 @@ export class StageAssessmentResultsComponent implements OnChanges {
     this.selectionChange.emit(this.selectedIds);
   }
 
-  /** Saber si está seleccionado */
   isSelected(id: number): boolean {
     return this.selectedIds.includes(id);
   }
 
-  /** Devuelve evaluaciones NO aprobadas (<80) o no existentes */
   getPendingAssessments(item: StageProgressDto): StudentAssessment[] {
+
     const REQUIRED_TYPES = ['Grammar', 'Speaking'];
     const assessments = item.assessments ?? [];
 
-    // Si no tiene ninguna evaluación → ambas pendientes
     if (assessments.length === 0) {
       return REQUIRED_TYPES.map(type => ({
         type,
@@ -65,10 +93,10 @@ export class StageAssessmentResultsComponent implements OnChanges {
     const result: StudentAssessment[] = [];
 
     REQUIRED_TYPES.forEach(type => {
+
       const assessmentsOfType = assessments.filter(a => a.type === type);
 
       if (assessmentsOfType.length === 0) {
-        // No existe ese tipo → pendiente
         result.push({ type, points: 0 } as StudentAssessment);
         return;
       }
@@ -76,44 +104,45 @@ export class StageAssessmentResultsComponent implements OnChanges {
       const hasApproved = assessmentsOfType.some(a => a.points >= 80);
 
       if (!hasApproved) {
-        // Existe pero ninguna aprobó
         result.push(assessmentsOfType[0]);
       }
+
     });
 
     return result;
   }
 
-  /** Devuelve el estado de un tipo de evaluación */
-    getAssessmentStatus(
-      item: StageProgressDto,
-      type: string
-    ): 'approved' | 'pending' {
-      const assessments = item.assessments ?? [];
+  getAssessmentStatus(
+    item: StageProgressDto,
+    type: string
+  ): 'approved' | 'pending' {
 
-      const ofType = assessments.filter(a => a.type === type);
+    const assessments = item.assessments ?? [];
+    const ofType = assessments.filter(a => a.type === type);
 
-      if (ofType.length === 0) {
-        return 'pending';
-      }
+    if (ofType.length === 0) return 'pending';
 
-      return ofType.some(a => a.points >= 80)
-        ? 'approved'
-        : 'pending';
-    }
+    return ofType.some(a => a.points >= 80)
+      ? 'approved'
+      : 'pending';
+  }
 
-  /** Saber si el estudiante aprobó el stage */
   hasApprovedAll(item: StageProgressDto): boolean {
     if (!item.assessments || item.assessments.length === 0) return false;
-
     return item.assessments.every(a => a.points >= 80);
   }
-  
-  getPendingAssessmentLabel(item: StageProgressDto): string {
-    const pending = this.getPendingAssessments(item);
 
+  getPendingAssessmentLabel(item: StageProgressDto): string {
+
+    const pending = this.getPendingAssessments(item);
     if (pending.length === 0) return '';
 
     return pending.map(p => p.type).join(', ');
   }
+
+  /** 🔹 TrackBy para mejorar rendimiento */
+  trackByStudent(index: number, item: StageProgressDto) {
+    return item.studentId;
+  }
+
 }

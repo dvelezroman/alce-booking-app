@@ -1,4 +1,4 @@
-import { StudentAssessment } from "./stage-assessment.dto";
+import { StageAssessment, StudentAssessment } from "./stage-assessment.dto";
 import { Student, Stage } from "./student.dto";
 
 /**
@@ -15,6 +15,7 @@ export interface StageProgressDto {
   stage: Stage;
   assessments?: StudentAssessment[];
   stageEntryDate?: string;
+  activeAssessments?: StageAssessment[];
 }
 
 /**
