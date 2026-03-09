@@ -12,6 +12,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 
   .item {
+    position: relative;
     display: flex;
     align-items: center;
     gap: .75rem;
@@ -27,6 +28,17 @@
   .item.selected {
     background: #e0f2fe !important;
     box-shadow: 0 0 0 2px #0284c7 inset;
+  }
+
+  .item.disabled {
+    cursor: not-allowed;
+  }
+
+  .item.disabled > .student-name,
+  .item.disabled > .stage-entry-date,
+  .item.disabled > .pending,
+  .item.disabled > .progress-bar {
+    opacity: 0.6;
   }
 
   .student-name {
@@ -52,9 +64,8 @@
 
   /* === Pendientes === */
   .pending {
-    width: 20%;
+    width: 22%;
     display: flex;
-    flex-wrap: wrap;
     gap: 4px;
     align-items: flex-start;
   }
@@ -71,13 +82,14 @@
 
   .badge.success {
     background: #dcfce7;
+    padding: 2px 6px;
     color: #166534;
   }
 
   .assessment-block {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
   }
 
   .assessment-assigned-date {
@@ -103,23 +115,31 @@
 
   .assessment-tooltip {
     position: absolute;
-    top: -28px;
-    left: 0;
-    background: #111827;
-    color: white;
-    font-size: 10px;
-    padding: 4px 8px;
-    border-radius: 6px;
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: all .15s ease;
-    pointer-events: none;
+    right: 170px;
+    top: -70px;
+    background: #ffffff;
+    color: #111827;
+    font-size: 11px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    visibility: hidden;
+    z-index: 2000;
+    min-width: 210px;
   }
 
-  .assessment-hover:hover .assessment-tooltip {
-    opacity: 1;
-    transform: translateY(0);
+  .item:hover .assessment-tooltip {
+    visibility: visible;
+  }
+
+  .assessment-tooltip strong {
+    font-weight: 600;
+    color: #111827;
+  }
+
+  .assessment-tooltip div {
+    margin-bottom: 3px;
   }
 
   /* ---- Barra ---- */

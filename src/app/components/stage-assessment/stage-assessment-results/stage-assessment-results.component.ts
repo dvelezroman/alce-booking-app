@@ -62,7 +62,16 @@ export class StageAssessmentResultsComponent implements OnChanges {
     return `hsl(${hue}, 75%, 65%)`;
   }
 
+  hasActiveAssessment(item: StageProgressDto): boolean {
+    return !!item.activeAssessments?.length;
+  }
+
   toggleSelection(item: StageProgressDto): void {
+
+    if (this.hasActiveAssessment(item)) {
+      return;
+    }
+
     const id = item.studentId;
 
     if (this.selectedIds.includes(id)) {
@@ -143,6 +152,21 @@ export class StageAssessmentResultsComponent implements OnChanges {
   /** 🔹 TrackBy para mejorar rendimiento */
   trackByStudent(index: number, item: StageProgressDto) {
     return item.studentId;
+  }
+
+  getDueDisplayDate(dueDate?: string): Date | null {
+    if (!dueDate) return null;
+
+    const d = new Date(dueDate);
+
+    return new Date(
+      d.getUTCFullYear(),
+      d.getUTCMonth(),
+      d.getUTCDate() - 1,
+      23,
+      59,
+      0
+    );
   }
 
 }

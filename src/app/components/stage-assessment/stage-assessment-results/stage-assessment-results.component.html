@@ -2,9 +2,10 @@
 
   <div
     class="item"
-    *ngFor="let item of progressList"
+    *ngFor="let item of progressList; trackBy: trackByStudent"
     (click)="toggleSelection(item)"
     [class.selected]="isSelected(item.studentId)"
+    [class.disabled]="hasActiveAssessment(item)"
   >
 
     <!-- Nombre -->
@@ -26,8 +27,6 @@
       <!-- Grammar -->
       <div class="assessment-block">
 
-      <div class="assessment-hover">
-
         <span
           class="badge"
           [class.success]="getAssessmentStatus(item, 'Grammar') === 'approved'"
@@ -36,25 +35,7 @@
           Grammar
         </span>
 
-        <!-- Tooltip -->
-        <div
-          class="assessment-tooltip"
-          *ngIf="latestAssessmentMap.get(item.studentId) as last"
-        >
-          {{ last.createdAt | date:'medium':'UTC' }}
-        </div>
-
       </div>
-
-      <!-- Fecha corta -->
-      <div
-        class="assessment-assigned-date"
-        *ngIf="latestAssessmentMap.get(item.studentId) as last"
-      >
-        {{ last.createdAt | date:'mediumDate':'UTC' }}
-      </div>
-
-    </div>
 
       <!-- Speaking -->
       <span
@@ -75,6 +56,34 @@
         [style.background]="getColor(item.progress)"
       ></div>
       <span class="percent">{{ item.progress }}%</span>
+    </div>
+
+    <!-- Tooltip (aparece al hacer hover en toda la fila) -->
+    <div
+      class="assessment-tooltip"
+      *ngIf="latestAssessmentMap.get(item.studentId) as last"
+    >
+
+      <div *ngIf="last.stageAssessmentResource">
+        <strong>Assessment:</strong>
+        {{ last.stageAssessmentResource.description }}
+      </div>
+
+      <div>
+        <strong>Asignado:</strong>
+        {{ last.createdAt | date:'medium' }}
+      </div>
+
+      <div>
+        <strong>Vence:</strong>
+        {{ getDueDisplayDate(last.dueDate) | date:'medium' }}
+      </div>
+
+      <div *ngIf="last.creator">
+        <strong>Asignado por:</strong>
+        {{ last.creator.firstName }} {{ last.creator.lastName }}
+      </div>
+
     </div>
 
   </div>
