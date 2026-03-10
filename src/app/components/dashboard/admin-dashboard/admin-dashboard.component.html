@@ -1,25 +1,99 @@
-<div class="hero-wrapper">
+<div class="dashboard-layout">
 
-  <div class="hero-background">
+  <!-- LEFT CONTENT -->
+  <div class="dashboard-content">
 
-    <!-- SALUDO ADMIN -->
-    <div class="student-greeting">
-      <h1 class="greet-title">
-        Hola, {{ adminName }}
-      </h1>
+    <div class="dashboard-header">
 
-      <p class="greet-subtitle">
-        Panel de administración
-      </p>
+      <div class="welcome-block">
+        <h1 class="dashboard-title">
+          Bienvenido, {{ adminName }}
+        </h1>
+
+        <p class="dashboard-subtitle">
+          Aquí tienes un resumen rápido de la actividad del sistema.
+        </p>
+      </div>
+
     </div>
 
-    <!-- IMAGEN (ANTES SE MOSTRABA CUANDO !isStudent) -->
-    <img
-      src="/assets/fondo_isLoggin.png"
-      class="hero-image"
-      alt="Admin header image"
-    />
+    <!-- STATS -->
+    <div class="stats-grid">
 
+      <div class="stat-card" *ngFor="let stat of stats">
+
+        <div class="stat-icon">
+          <i class="fa-solid fa-{{ stat.icon }}"></i>
+        </div>
+
+        <div class="stat-info">
+          <span class="stat-label">
+            {{ stat.label }}
+          </span>
+
+          <div class="stat-value-row">
+            <span class="stat-value">
+              {{ stat.value }}
+            </span>
+
+            <span class="stat-trend">
+              {{ stat.trend }}
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- WIDGETS ADMIN -->
+    <div class="dashboard-widgets">
+
+      <app-dashboard-settings-widget></app-dashboard-settings-widget>
+
+      <!-- FILA DE WIDGETS -->
+      <div class="widgets-row">
+
+        <app-dashboard-notifications-widget></app-dashboard-notifications-widget>
+
+        <app-dashboard-whatsapp-widget></app-dashboard-whatsapp-widget>
+
+      </div>
+
+      <app-dashboard-emails-widget></app-dashboard-emails-widget>
+
+    </div>
   </div>
+
+
+  <!-- RIGHT PANEL -->
+    <aside class="dashboard-sidebar">
+
+      <div class="sidebar-header">
+        <h2>Resumen del sistema</h2>
+      </div>
+
+    <!-- MODULOS IMPORTANTES DEL MOCK -->
+    <div
+      class="sidebar-section"
+      *ngFor="let module of modules"
+      [hidden]="module.title !== 'Agenda'
+                && module.title !== 'Evaluaciones'
+                && module.title !== 'Notificaciones'"
+    >
+
+      <h3>{{ module.title }}</h3>
+
+      <div class="sidebar-row" *ngFor="let item of module.items">
+
+        <span>{{ item.label }}</span>
+
+        <strong>{{ item.value }}</strong>
+
+      </div>
+
+    </div>
+
+  </aside>
 
 </div>
