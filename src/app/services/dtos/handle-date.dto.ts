@@ -7,6 +7,7 @@ export interface DisabledDateAndHours {
   hours: number[];
   studentClassification?: StudentClassification;
   mode?: Mode;
+  city?: City;
 }
 
 export interface DisabledDatesAndHours extends Record<string, { day: number, hours: number[] }[]> {}
@@ -17,3 +18,5 @@ export interface SelectedDay {
   isHoursDisabled: boolean,
   hours: number[],
 }
+
+export type City = 'PORTOVIEJO' | 'CUENCA';

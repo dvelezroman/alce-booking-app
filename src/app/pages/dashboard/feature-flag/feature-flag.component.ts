@@ -6,7 +6,7 @@ import {catchError, EMPTY, Observable, switchMap, tap} from "rxjs";
 import { FeatureFlagDto } from "../../../services/dtos/feature-flag.dto";
 import { FeatureFlagService } from "../../../services/feature-flag.service";
 import { HandleDatesService } from "../../../services/handle-dates.service";
-import { SelectedDay, DisabledDays, DisabledDatesAndHours } from "../../../services/dtos/handle-date.dto";
+import { SelectedDay, DisabledDays, DisabledDatesAndHours, City } from "../../../services/dtos/handle-date.dto";
 import { Mode, StudentClassification } from "../../../services/dtos/student.dto";
 
 @Component({
@@ -34,6 +34,7 @@ export class FeatureFlagComponent implements OnInit {
 
   selectedStudentClassification: StudentClassification | null = null;
   selectedMode: Mode | null = null;
+  selectedCity: City | null = null;
 
   constructor(
     private readonly ffService: FeatureFlagService,
@@ -56,7 +57,8 @@ export class FeatureFlagComponent implements OnInit {
 
   private getDisabledDates(): Observable<DisabledDatesAndHours> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
-    return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear).pipe(
+    return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear, this.selectedStudentClassification, this.selectedMode, this.selectedCity)
+    .pipe(
       tap((disabledDatesAndHours) => {
         this.disabledDatesAndHours = disabledDatesAndHours
       })
@@ -74,7 +76,7 @@ export class FeatureFlagComponent implements OnInit {
   private getDisabledDatesAndHours(): Observable<DisabledDatesAndHours> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
 
-    return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear).pipe(
+    return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear, this.selectedStudentClassification, this.selectedMode, this.selectedCity).pipe(
       tap((disabledDatesAndHours) => {
         this.disabledDatesAndHours = disabledDatesAndHours;
         //console.log('fechas y horas deshabilitadas:', this.disabledDatesAndHours);
@@ -124,7 +126,8 @@ export class FeatureFlagComponent implements OnInit {
         from,
         to,
         this.selectedStudentClassification,
-        this.selectedMode
+        this.selectedMode,
+        this.selectedCity
       )
       .subscribe((data) => {
         this.disabledDatesAndHours = data;
@@ -250,6 +253,9 @@ export class FeatureFlagComponent implements OnInit {
         }),
         ...(this.selectedMode && {
           mode: this.selectedMode
+        }),
+        ...(this.selectedCity && {
+          city: this.selectedCity
         })
       }));
 
@@ -310,6 +316,7 @@ export class FeatureFlagComponent implements OnInit {
           this.getDisabledDatesAndHours().subscribe(() => {
             const selectedDay = this.selectedDays[0]; 
             this.recalculateTimeSlots(selectedDay);
+            this.generateCurrentMonthDays();
           });
         },
         error: (err) => {
@@ -352,6 +359,7 @@ export class FeatureFlagComponent implements OnInit {
         this.getDisabledDatesAndHours().subscribe(() => {
           const selectedDay = this.selectedDays[0];
           this.recalculateTimeSlots(selectedDay);
+          this.generateCurrentMonthDays();
         });
       },
       error: (err) => {

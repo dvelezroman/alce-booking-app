@@ -14,7 +14,7 @@ export class HandleDatesService {
     private http: HttpClient,
   ) {}
 
-  getNotAvailableDates(from: string, to: string, studentClassification?: string | null, mode?: string | null ): Observable<DisabledDays> {
+  getNotAvailableDates(from: string, to: string, studentClassification?: string | null, mode?: string | null, city?: string | null ): Observable<DisabledDays> {
     let params = new HttpParams()
     .set('from', from)
     .set('to', to);
@@ -25,12 +25,16 @@ export class HandleDatesService {
 
     if (mode) {
       params = params.set('mode', mode);
+    }
+
+    if (city) {
+      params = params.set('city', city);
     }
 
     return this.http.get<DisabledDays>(`${this.apiUrl}`, { params });
   }
 
-  getNotAvailableDatesAndHours(from: string, to: string, studentClassification?: string | null, mode?: string | null): Observable<DisabledDatesAndHours> {
+  getNotAvailableDatesAndHours(from: string, to: string, studentClassification?: string | null, mode?: string | null, city?: string | null): Observable<DisabledDatesAndHours> {
     let params = new HttpParams()
     .set('from', from)
     .set('to', to);
@@ -41,6 +45,10 @@ export class HandleDatesService {
 
     if (mode) {
       params = params.set('mode', mode);
+    }
+
+    if (city) {
+      params = params.set('city', city);
     }
 
     return this.http.get<DisabledDatesAndHours>(`${this.apiUrl}/hours`, { params });
