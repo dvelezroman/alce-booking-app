@@ -1,0 +1,63 @@
+<div class="settings-widget">
+
+  <div class="widget-header">
+
+    <h3>Configuración</h3>
+
+    <a routerLink="/dashboard/feature-flag" class="widget-link">
+      Administrar
+    </a>
+
+  </div>
+
+
+  <!-- FLAGS -->
+
+  <div class="settings-row">
+
+    <span>Login</span>
+
+    <strong
+      [class.enabled]="getFlagStatus('enable-login')"
+      [class.disabled]="!getFlagStatus('enable-login')"
+    >
+      {{ getFlagStatus('enable-login') ? 'Activo' : 'Deshabilitado' }}
+    </strong>
+
+  </div>
+
+  <div class="settings-row">
+
+    <span>Agendamiento</span>
+
+    <strong
+      [class.enabled]="getFlagStatus('enable-schedule')"
+      [class.disabled]="!getFlagStatus('enable-schedule')"
+    >
+      {{ getFlagStatus('enable-schedule') ? 'Activo' : 'Deshabilitado' }}
+    </strong>
+
+  </div>
+
+
+  <!-- DIVIDER -->
+
+  <div class="settings-divider"></div>
+
+
+  <!-- BLOQUEOS -->
+
+    <div class="settings-row month-row">
+    <span>Bloqueos {{ currentMonthLabel }}</span>
+    </div>
+
+    <div class="settings-row">
+    <span>Días bloqueados</span>
+    <strong class="number">{{ totalDisabledDays }}</strong>
+    </div>
+
+    <div class="settings-row">
+    <span>Horas bloqueadas</span>
+    <strong class="number">{{ totalDisabledHours }}</strong>
+    </div>
+</div>

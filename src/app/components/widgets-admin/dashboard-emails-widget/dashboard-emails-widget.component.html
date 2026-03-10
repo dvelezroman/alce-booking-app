@@ -1,0 +1,65 @@
+<div class="emails-widget">
+
+  <div class="widget-header">
+
+    <h3>Emails</h3>
+
+    <a routerLink="/dashboard/historial-email" class="widget-link">
+      Ver todos
+    </a>
+
+  </div>
+
+
+  <!-- LISTA -->
+
+  <div class="emails-list">
+
+    <div
+      class="email-item"
+      *ngFor="let e of emails"
+      [routerLink]="['/dashboard/email-detail']"
+      [state]="{ email: e, origin: 'dashboard' }"
+    >
+
+      <div class="email-dot"></div>
+
+      <span class="email-title">
+        {{ e.subject }}
+      </span>
+
+      <span class="email-time">
+        {{ e.createdAt | date:'shortTime' }}
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- TOTAL EMAILS -->
+
+  <div
+    class="emails-more"
+    *ngIf="totalEmails > emails.length"
+  >
+
+    {{ totalEmails - emails.length }} correos más...
+
+  </div>
+
+
+  <!-- EMPTY -->
+
+  <div
+    class="emails-empty"
+    *ngIf="emails.length === 0"
+  >
+
+    <i class="fa-regular fa-envelope-open"></i>
+
+    <p>Sin correos recientes</p>
+
+  </div>
+
+</div>

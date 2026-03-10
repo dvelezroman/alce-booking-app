@@ -1,0 +1,55 @@
+<div class="notifications-widget">
+
+  <div class="widget-header">
+
+    <h3>Notificaciones</h3>
+
+    <a [routerLink]="['/dashboard/notifications-inbox']" class="widget-link">
+      Ver todas
+    </a>
+
+  </div>
+
+
+  <!-- LISTA DE NOTIFICACIONES -->
+
+  <div class="notifications-list">
+
+    <div
+      class="notification-item"
+      *ngFor="let n of notifications"
+    >
+
+      <div class="notification-dot"></div>
+
+      <div class="notification-content">
+
+        <span class="notification-title">
+          {{ n.title }}
+        </span>
+
+        <span class="notification-time">
+          {{ n.createdAt | date:'shortTime' }}
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- EMPTY STATE -->
+
+  <div
+    class="notifications-empty"
+    *ngIf="notifications.length === 0"
+  >
+
+    <i class="fa-regular fa-bell-slash"></i>
+
+    <p>Sin notificaciones</p>
+
+  </div>
+
+</div>

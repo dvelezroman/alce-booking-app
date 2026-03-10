@@ -1,3 +1,4 @@
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -9,12 +10,24 @@ import {
 
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 
+/* IMPORTAMOS LOS MOCKS */
+import { ADMIN_STATS, ADMIN_MODULES } from './admin-dashboard.mock';
+import { DashboardNotificationsWidgetComponent } from "../../widgets-admin/dashboard-notifications-widget/dashboard-notifications-widget.component";
+import { DashboardEmailsWidgetComponent } from "../../widgets-admin/dashboard-emails-widget/dashboard-emails-widget.component";
+import { DashboardWhatsappWidgetComponent } from "../../widgets-admin/dashboard-whatsapp-widget/dashboard-whatsapp-widget.component";
+import { DashboardSettingsWidgetComponent } from "../../widgets-admin/dashboard-settings-widget/dashboard-settings-widget.component";
+
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
   imports: [
     CommonModule,
-  ],
+    RouterModule,
+    DashboardNotificationsWidgetComponent,
+    DashboardEmailsWidgetComponent,
+    DashboardWhatsappWidgetComponent,
+    DashboardSettingsWidgetComponent
+],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss',
 })
@@ -24,6 +37,10 @@ export class AdminDashboardComponent implements OnInit, OnChanges {
   @Input() isLoggedIn = false;
 
   adminName = '';
+
+  /* DATOS MOCK */
+  stats = ADMIN_STATS;
+  modules = ADMIN_MODULES;
 
   ngOnInit(): void {
     this.resolveAdmin();
@@ -41,4 +58,5 @@ export class AdminDashboardComponent implements OnInit, OnChanges {
 
     this.adminName = this.userData.firstName ?? 'Administrador';
   }
+
 }
