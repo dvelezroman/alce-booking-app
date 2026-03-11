@@ -468,6 +468,10 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onIntroVideoClosed(): void {
+    // Persist again on close (redundant but ensures we don't miss writes on mobile/PWA)
+    if (this.userData?.id) {
+      this.introVideoService.markAsSeen(this.userData.id);
+    }
     this.showIntroVideo = false;
     sessionStorage.setItem(this.INTRO_VIDEO_SESSION_KEY, 'true');
   }
