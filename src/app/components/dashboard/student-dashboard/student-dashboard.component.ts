@@ -40,6 +40,7 @@ import { StudentIntroVideoService } from '../../../services/student-intro-video.
 import { StudentIntroVideoComponent } from "../../home/student-intro-video/student-intro-video.component";
 import { StudentBannerComponent } from "../../student-banner/student-banner.component";
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
+import { AlceKidsAvisoComponent } from '../../home/alce-kids-aviso/alce-kids-aviso.component';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -58,6 +59,7 @@ import { AssessmentPointsConfigService } from '../../../services/assessment-poin
     UserInfoFormComponent,
     PendingClassEvaluationBannerComponent,
     StudentIntroVideoComponent,
+    AlceKidsAvisoComponent
 ],
   templateUrl: './student-dashboard.component.html',
   styleUrl: './student-dashboard.component.scss',
@@ -66,6 +68,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   private readonly INTRO_VIDEO_SESSION_KEY = 'intro-video-shown-session';
   private readonly URGENT_MODAL_KEY = 'urgent_assessment_last_shown';
+  private readonly PORTOVIEJO_NOTICE_SESSION_KEY = 'portoviejo-notice-session';
 
   @Input() userData: UserDto | null = null;
   @Input() isLoggedIn = false;
@@ -79,6 +82,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   showImageBanner = true;
   showAssessmentAnnouncement = false;
   showSuspensionModal = false;
+  showPortoviejoNotice = false;
 
   /* DATA */
   pendingAssessmentsCount = 0;
@@ -183,6 +187,15 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
     this.showBannerCuenca = showCityBanners;
     this.showBannerCuencaComm = showCityBanners;
+    
+    // ===== AVISO PORTOVIEJO =====
+    if (
+      city === 'portoviejo' &&
+      !sessionStorage.getItem(this.PORTOVIEJO_NOTICE_SESSION_KEY)
+    ) {
+      this.showPortoviejoNotice = true;
+      sessionStorage.setItem(this.PORTOVIEJO_NOTICE_SESSION_KEY, 'true');
+    }
 
     // ===== SUSPENSIÓN =====
     if (user.suspensionInfo?.isSuspended) {

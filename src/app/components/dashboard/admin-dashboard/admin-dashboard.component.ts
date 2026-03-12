@@ -24,8 +24,8 @@ import { DashboardSettingsWidgetComponent } from "../../widgets-admin/dashboard-
     CommonModule,
     RouterModule,
     DashboardNotificationsWidgetComponent,
-    DashboardEmailsWidgetComponent,
-    DashboardWhatsappWidgetComponent,
+    // DashboardEmailsWidgetComponent,
+    // DashboardWhatsappWidgetComponent,
     DashboardSettingsWidgetComponent
 ],
   templateUrl: './admin-dashboard.component.html',
