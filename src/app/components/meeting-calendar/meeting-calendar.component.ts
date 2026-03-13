@@ -12,10 +12,15 @@ import { DisabledDatesAndHours } from '../../services/dtos/handle-date.dto';
   styleUrl: './meeting-calendar.component.scss'
 })
 export class MeetingCalendarComponent implements OnInit {
+
   @Input() isScheduleEnabled: boolean = true;
-  @Input() disabledDates: Record<string, number[]> = {};
+  @Input() disabledDates: Record<string, any[]> = {};
   @Input() disabledDatesAndHours: DisabledDatesAndHours = {};
   @Input() resetSelectionTrigger: boolean = false;
+
+  @Input() userCity: string | null = null;
+  @Input() userMode: string | null = null;
+  @Input() userClassification: string | null = null;
 
   @Output() daySelected = new EventEmitter<{ date: string; label: string; day: number }>();
   @Output() monthChanged = new EventEmitter<{ year: number; month: number }>();
@@ -25,21 +30,34 @@ export class MeetingCalendarComponent implements OnInit {
   selectedYear!: number;
   selectedDay: number | null = null;
   selectedDayFormatted: string = '';
+
   calendarAnimationClass: string = '';
   canGoBack: boolean = false;
   canGoForward: boolean = true;
 
-  ecuadorDate: string = DateTime.now().setZone('America/Guayaquil').setLocale('es').toFormat("EEEE, dd 'de' LLLL");
+  ecuadorDate: string = DateTime
+    .now()
+    .setZone('America/Guayaquil')
+    .setLocale('es')
+    .toFormat("EEEE, dd 'de' LLLL");
 
   ngOnInit(): void {
     this.initializeCalendar();
   }
 
   ngOnChanges(changes: SimpleChanges) {
+
     if (changes['resetSelectionTrigger'] && changes['resetSelectionTrigger'].currentValue) {
       this.resetCalendarSelection();
     }
-    if (changes['disabledDates'] || changes['disabledDatesAndHours']) {
+
+    if (
+      changes['disabledDates'] ||
+      changes['disabledDatesAndHours'] ||
+      changes['userCity'] ||
+      changes['userMode'] ||
+      changes['userClassification']
+    ) {
       this.generateCurrentMonthDays();
     }
   }
@@ -50,8 +68,13 @@ export class MeetingCalendarComponent implements OnInit {
   }
 
   initializeCalendar(): void {
+
     const today = new Date();
-    this.selectedMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+
+    this.selectedMonth = today
+      .toLocaleString('es-ES', { month: 'long' })
+      .toUpperCase();
+
     this.selectedYear = today.getFullYear();
 
     this.generateCurrentMonthDays();
@@ -59,11 +82,21 @@ export class MeetingCalendarComponent implements OnInit {
   }
 
   updateNavigationButtons(): void {
+
     const today = new Date();
-    const currentMonth = today.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+
+    const currentMonth = today
+      .toLocaleString('es-ES', { month: 'long' })
+      .toUpperCase();
+
     const currentYear = today.getFullYear();
+
     const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    const nextMonth = nextMonthDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+
+    const nextMonth = nextMonthDate
+      .toLocaleString('es-ES', { month: 'long' })
+      .toUpperCase();
+
     const nextYear = nextMonthDate.getFullYear();
 
     this.canGoBack = !(this.selectedMonth === currentMonth && this.selectedYear === currentYear);
@@ -79,15 +112,22 @@ export class MeetingCalendarComponent implements OnInit {
   }
 
   private changeMonth(offset: number): void {
+
     const monthMap: Record<MonthKey, number> = {
       ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
       JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
+
     const currentMonthIndex = monthMap[this.selectedMonth as MonthKey];
+
     const currentDate = new Date(this.selectedYear, currentMonthIndex, 1);
+
     currentDate.setMonth(currentDate.getMonth() + offset);
 
-    this.selectedMonth = currentDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
+    this.selectedMonth = currentDate
+      .toLocaleString('es-ES', { month: 'long' })
+      .toUpperCase();
+
     this.selectedYear = currentDate.getFullYear();
 
     this.selectedDay = null;
@@ -95,6 +135,7 @@ export class MeetingCalendarComponent implements OnInit {
 
     this.generateCurrentMonthDays();
     this.updateNavigationButtons();
+
     this.monthChanged.emit({
       year: this.selectedYear,
       month: this.getMonthIndex(this.selectedMonth) + 1
@@ -102,31 +143,47 @@ export class MeetingCalendarComponent implements OnInit {
   }
 
   generateCurrentMonthDays(): void {
+
     const monthMap: Record<MonthKey, number> = {
       ENERO: 1, FEBRERO: 2, MARZO: 3, ABRIL: 4, MAYO: 5, JUNIO: 6,
       JULIO: 7, AGOSTO: 8, SEPTIEMBRE: 9, OCTUBRE: 10, NOVIEMBRE: 11, DICIEMBRE: 12
     };
 
     const monthIndex = monthMap[this.selectedMonth as MonthKey];
-    const startOfMonth = DateTime.fromObject({ year: this.selectedYear, month: monthIndex, day: 1 }, { zone: 'America/Guayaquil' });
+
+    const startOfMonth = DateTime.fromObject(
+      { year: this.selectedYear, month: monthIndex, day: 1 },
+      { zone: 'America/Guayaquil' }
+    );
+
     const daysInMonth = startOfMonth.daysInMonth;
 
     if (!daysInMonth) {
-      console.error('No se pudo obtener la cantidad de días del mes.');
       this.currentMonthDays = [];
       return;
     }
 
     const firstDayOfWeek = startOfMonth.weekday % 7;
-    this.currentMonthDays = Array.from({ length: firstDayOfWeek }, () => ({ day: '', isDisabled: false }));
+
+    this.currentMonthDays = Array.from(
+      { length: firstDayOfWeek },
+      () => ({ day: '', isDisabled: false })
+    );
 
     this.currentMonthDays = this.currentMonthDays.concat(
+
       Array.from({ length: daysInMonth }, (_, i) => {
+
         const date = startOfMonth.plus({ days: i });
+
         const isDisabled = this.isDayDisabled(date.day, monthIndex - 1);
 
         const dayData = this.disabledDatesAndHours[(monthIndex - 1).toString()]?.find(d => d.day === date.day);
-        const uniqueHours = dayData?.hours ? Array.from(new Set(dayData.hours)) : [];
+
+        const uniqueHours = dayData?.hours
+          ? Array.from(new Set(dayData.hours))
+          : [];
+
         const hasDisabledHours = uniqueHours.length > 0;
 
         return {
@@ -136,96 +193,125 @@ export class MeetingCalendarComponent implements OnInit {
           isDisabled,
           hasDisabledHours
         };
+
       })
     );
   }
 
   isDaySelectable(day: { day: number | null; isDisabled?: boolean }): boolean {
+
     if (!day.day || isNaN(day.day) || day.isDisabled) return false;
 
     const monthMap: Record<string, number> = {
-        ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-        JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
 
     if (!this.selectedMonth || !this.selectedYear || !(this.selectedMonth in monthMap)) {
-        return false;
+      return false;
     }
 
     const monthIndex = monthMap[this.selectedMonth];
 
     const selectedDate = DateTime.fromObject(
-        { year: this.selectedYear, month: monthIndex + 1, day: day.day },
-        { zone: 'America/Guayaquil' }
+      { year: this.selectedYear, month: monthIndex + 1, day: day.day },
+      { zone: 'America/Guayaquil' }
     ).startOf('day');
 
-    const today = DateTime.now().setZone('America/Guayaquil').startOf('day');
+    const today = DateTime.now()
+      .setZone('America/Guayaquil')
+      .startOf('day');
 
     const weekday = today.weekday;
+
     const weekStart = today.minus({ days: weekday - 1 });
     const weekEnd = weekStart.plus({ days: 5 });
+
     const nextWeekStart = weekStart.plus({ days: 7 });
     const nextWeekEnd = nextWeekStart.plus({ days: 5 });
 
     return (
-        selectedDate.weekday !== 7 &&
-        selectedDate >= today &&
-        (
+      selectedDate.weekday !== 7 &&
+      selectedDate >= today &&
+      (
         (selectedDate >= weekStart && selectedDate <= weekEnd) ||
         (selectedDate >= nextWeekStart && selectedDate <= nextWeekEnd)
-        )
+      )
     );
   }
 
   isDayDisabled(day: number, monthIndex: number): boolean {
-    const monthKey = monthIndex.toString();
-    const disabledDays = this.disabledDates[monthKey] || [];
 
-    const dayData = this.disabledDatesAndHours[monthKey]?.find(d => d.day === day);
-    const uniqueHours = dayData?.hours ? Array.from(new Set(dayData.hours)) : [];
+    if (!this.selectedYear) return false;
 
-    if (!this.selectedYear || isNaN(this.selectedYear)) {
-      return false;
-    }
+    const monthKey = String(monthIndex);
 
-    const date = DateTime.fromObject(
-      { year: this.selectedYear, month: monthIndex + 1, day },
-      { zone: 'America/Guayaquil' }
-    );
+    const rules = this.disabledDates?.[monthKey] ?? [];
 
-    const isSaturday = date.weekday === 6;
-    const totalHoursAvailable = isSaturday ? 7 : 13;
+    const normalize = (v: any) =>
+      v ? v.toString().trim().toUpperCase() : null;
 
-    const isAllHoursBlocked = uniqueHours.length >= totalHoursAvailable;
-    const isFullyDisabled = disabledDays.includes(day) && uniqueHours.length === 0;
+    const userCity = normalize(this.userCity);
+    const userMode = normalize(this.userMode);
+    const userClass = normalize(this.userClassification);
 
-    return isFullyDisabled || isAllHoursBlocked;
+    const match = rules.some((rule: any) => {
+
+      if (!rule) return false;
+
+      if (Number(rule.day) !== Number(day)) return false;
+
+      const cityOk =
+        rule.city === null ||
+        normalize(rule.city) === userCity;
+
+      const modeOk =
+        rule.mode === null ||
+        normalize(rule.mode) === userMode;
+
+      const classOk =
+        rule.studentClassification === null ||
+        normalize(rule.studentClassification) === userClass;
+
+      return cityOk && modeOk && classOk;
+    });
+
+    return match;
   }
 
   onDayClick(day: any): void {
+
     if (!day.day || day.isDisabled) return;
+
     if (!this.isScheduleEnabled) return;
 
-    const selectedDate = `${this.selectedYear}-${this.padNumber(this.getMonthIndex(this.selectedMonth) + 1)}-${this.padNumber(day.day)}`;
+    const selectedDate =
+      `${this.selectedYear}-${this.padNumber(this.getMonthIndex(this.selectedMonth) + 1)}-${this.padNumber(day.day)}`;
+
     this.selectedDay = day.day;
-    this.selectedDayFormatted = `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
+
+    this.selectedDayFormatted =
+      `${day.dayOfWeek}, ${this.selectedMonth} ${day.day}`;
 
     this.daySelected.emit({
-        date: selectedDate,
-        label: this.selectedDayFormatted,
-        day: day.day
-        });
+      date: selectedDate,
+      label: this.selectedDayFormatted,
+      day: day.day
+    });
   }
 
   private getMonthIndex(monthName: string): number {
+
     const monthMap: Record<MonthKey, number> = {
-    ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-    JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
+      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
+      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
     };
+
     return monthMap[monthName as MonthKey];
   }
 
   private padNumber(n: number): string {
     return n.toString().padStart(2, '0');
   }
+
 }

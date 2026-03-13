@@ -662,14 +662,15 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
     const studentClassification = this.userData?.student?.studentClassification;
     const mode = this.userData?.student?.mode;
+    const city = this.userData?.city;
     //console.groupEnd();
 
     return this.handleDatesService
-      .getNotAvailableDates(from, to, studentClassification, mode)
+      .getNotAvailableDates(from, to, studentClassification, mode, city)
       .pipe(
         tap(disabledDays => {
-          //console.log('Disabled Days Response', disabledDays);
-          this.disabledDates = this.removeDuplicateDays(disabledDays);
+          // console.log("BACKEND RAW:", disabledDays);
+          this.disabledDates = disabledDays;
         })
       );
   }
@@ -679,9 +680,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
     const studentClassification = this.userData?.student?.studentClassification;
     const mode = this.userData?.student?.mode;
+    const city = this.userData?.city;
 
     return this.handleDatesService
-      .getNotAvailableDatesAndHours(from, to, studentClassification, mode)
+      .getNotAvailableDatesAndHours(from, to, studentClassification, mode, city)
       .pipe(
         tap(disabledData => {
           this.disabledDatesAndHours = this.normalizeDisabledDatesAndHours(disabledData);
@@ -717,11 +719,21 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     return result;
   }
 
-  private removeDuplicateDays(disabledDays: Record<string, number[]>): Record<string, number[]> {
+  private removeDuplicateDays(data: any): Record<string, number[]> {
+
     const cleanedDisabledDays: Record<string, number[]> = {};
-    Object.keys(disabledDays).forEach(monthKey => {
-      const days = disabledDays[monthKey];
-      cleanedDisabledDays[monthKey] = Array.from(new Set(days));
+    Object.keys(data).forEach(monthKey => {
+      const entries = data[monthKey] || [];
+      const uniqueDays = new Set<number>();
+
+      entries.forEach((entry: any) => {
+        if (entry?.day !== undefined) {
+          uniqueDays.add(entry.day);
+        }
+      });
+
+      cleanedDisabledDays[monthKey] = Array.from(uniqueDays);
+
     });
 
     return cleanedDisabledDays;
