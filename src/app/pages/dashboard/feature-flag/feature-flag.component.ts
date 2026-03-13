@@ -312,7 +312,7 @@ export class FeatureFlagComponent implements OnInit {
       
       this.handleDatesService.disableDatesHours(hoursToDisable).subscribe({
         next: () => {
-          console.log('Horas deshabilitadas:', hoursToDisable);
+          //console.log('Horas deshabilitadas:', hoursToDisable);
           this.getDisabledDatesAndHours().subscribe(() => {
             const selectedDay = this.selectedDays[0]; 
             this.recalculateTimeSlots(selectedDay);

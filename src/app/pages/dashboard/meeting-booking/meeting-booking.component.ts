@@ -666,7 +666,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     //console.groupEnd();
 
     return this.handleDatesService
-      .getNotAvailableDates(from, to, studentClassification, mode, city)
+      .getNotAvailableDates(from, to )
       .pipe(
         tap(disabledDays => {
           // console.log("BACKEND RAW:", disabledDays);
@@ -683,7 +683,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const city = this.userData?.city;
 
     return this.handleDatesService
-      .getNotAvailableDatesAndHours(from, to, studentClassification, mode, city)
+      .getNotAvailableDatesAndHours(from, to)
       .pipe(
         tap(disabledData => {
           this.disabledDatesAndHours = this.normalizeDisabledDatesAndHours(disabledData);
@@ -692,32 +692,44 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   private normalizeDisabledDatesAndHours(
-    data: DisabledDatesAndHours
-  ): DisabledDatesAndHours {
+  data: DisabledDatesAndHours
+): DisabledDatesAndHours {
 
-    const result: DisabledDatesAndHours = {};
+  const result: DisabledDatesAndHours = {};
 
-    Object.entries(data).forEach(([monthKey, entries]) => {
-      const map = new Map<number, Set<number>>();
+  Object.entries(data).forEach(([monthKey, entries]) => {
 
-      entries.forEach(entry => {
-        if (!map.has(entry.day)) {
-          map.set(entry.day, new Set());
-        }
+    const merged: any[] = [];
 
-        entry.hours.forEach(hour => {
-          map.get(entry.day)!.add(hour);
+    entries.forEach((entry: any) => {
+
+      const existing = merged.find((item: any) =>
+        item.day === entry.day &&
+        item.city === entry.city &&
+        item.mode === entry.mode &&
+        item.studentClassification === entry.studentClassification
+      );
+
+      if (existing) {
+        const combinedHours = [...(existing.hours || []), ...(entry.hours || [])];
+        existing.hours = Array.from(new Set(combinedHours));
+      } else {
+        merged.push({
+          day: entry.day,
+          hours: Array.from(new Set(entry.hours || [])),
+          city: entry.city ?? null,
+          mode: entry.mode ?? null,
+          studentClassification: entry.studentClassification ?? null,
         });
-      });
+      }
 
-      result[monthKey] = Array.from(map.entries()).map(([day, hoursSet]) => ({
-        day,
-        hours: Array.from(hoursSet)
-      }));
     });
 
-    return result;
-  }
+    result[monthKey] = merged;
+  });
+
+  return result;
+}
 
   private removeDuplicateDays(data: any): Record<string, number[]> {
 

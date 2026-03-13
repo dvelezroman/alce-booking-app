@@ -246,7 +246,8 @@ export class MeetingCalendarComponent implements OnInit {
 
     const monthKey = String(monthIndex);
 
-    const rules = this.disabledDates?.[monthKey] ?? [];
+    const dayRules = this.disabledDates?.[monthKey] ?? [];
+    const hourRules = this.disabledDatesAndHours?.[monthKey] ?? [];
 
     const normalize = (v: any) =>
       v ? v.toString().trim().toUpperCase() : null;
@@ -255,10 +256,10 @@ export class MeetingCalendarComponent implements OnInit {
     const userMode = normalize(this.userMode);
     const userClass = normalize(this.userClassification);
 
-    const match = rules.some((rule: any) => {
+    // buscar reglas de día
+    const dayMatch = dayRules.some((rule: any) => {
 
       if (!rule) return false;
-
       if (Number(rule.day) !== Number(day)) return false;
 
       const cityOk =
@@ -274,9 +275,36 @@ export class MeetingCalendarComponent implements OnInit {
         normalize(rule.studentClassification) === userClass;
 
       return cityOk && modeOk && classOk;
+
     });
 
-    return match;
+    // buscar horas bloqueadas
+    const hourMatch = hourRules.some((rule: any) => {
+
+      if (!rule) return false;
+      if (Number(rule.day) !== Number(day)) return false;
+
+      const cityOk =
+        rule.city === null ||
+        normalize(rule.city) === userCity;
+
+      const modeOk =
+        rule.mode === null ||
+        normalize(rule.mode) === userMode;
+
+      const classOk =
+        rule.studentClassification === null ||
+        normalize(rule.studentClassification) === userClass;
+
+      return cityOk && modeOk && classOk && rule.hours?.length > 0;
+
+    });
+
+    if (hourMatch) {
+      return false; 
+    }
+
+    return dayMatch; 
   }
 
   onDayClick(day: any): void {
