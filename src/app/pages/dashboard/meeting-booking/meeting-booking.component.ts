@@ -421,18 +421,10 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
           this.initializeMeetings();
         },
         error: (err) => {
-          const backendMsg = err?.error?.message;
-
-          if (backendMsg?.includes("No se puede programar una clase")) {
-            this.showModalMessage(backendMsg);
-            this.showSuccessModal = false;
-            this.hideModalAfterDelay(5000);
-
-          } else {
-            this.showModalMessage("Ya tienes una meeting agendada en la fecha y hora seleccionada.");
-            this.showSuccessModal = false;
-            this.hideModalAfterDelay(3000);
-          }
+          const msg = this.extractBookingErrorMessage(err);
+          this.showModalMessage(msg);
+          this.showSuccessModal = false;
+          this.hideModalAfterDelay(msg.length > 80 ? 6000 : 4000);
         }
       });
     } else {
@@ -485,6 +477,22 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       mode: this.meetingType,
       category: this.userData.student.studentClassification,
     };
+  }
+
+  /**
+   * Extrae el mensaje de error del backend (400) para /meetings/book.
+   * Estructura esperada: { message: "error message", code: 400, error_id: "..." }
+   */
+  private extractBookingErrorMessage(err: any): string {
+    const body = err?.error;
+    if (!body) return 'No se pudo agendar la clase. Intenta de nuevo. Si el problema persiste, comunícate con administración.';
+    // Prioridad: message del servidor
+    if (typeof body.message === 'string' && body.message.trim()) return body.message.trim();
+    if (Array.isArray(body.message) && body.message.length > 0) {
+      return body.message.map((m: string) => m?.trim()).filter(Boolean).join('. ');
+    }
+    if (typeof body.error === 'string') return body.error;
+    return 'No se pudo agendar la clase. Intenta de nuevo. Si el problema persiste, comunícate con administración.';
   }
 
   hideModalAfterDelay(delay: number) {
