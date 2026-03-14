@@ -154,7 +154,7 @@
   border-color: #28336f;
 }
 
-.calendar-day.unselectable {
+.calendar-day.unselectable:not(.mode-online):not(.mode-presencial) {
   background-color: #f9fafb;
   color: #9ca3af;
   cursor: not-allowed;
@@ -184,6 +184,18 @@
   color: #ffffff;
 }
 
+.calendar-day.mode-online {
+  background-color: #e0f2fe;
+  border-color: #38bdf8;
+  color: #0369a1;
+}
+
+.calendar-day.mode-presencial {
+  background-color: #fff7ed;
+  border-color: #fb923c;
+  color: #9a3412;
+}
+
 /* --- LEYENDA --- */
 .calendar-legend-container {
   margin-top: 1.5rem;
@@ -193,38 +205,48 @@
 
   .calendar-legend {
     display: grid;
-    grid-auto-flow: column; 
-    grid-auto-columns: max-content; 
-    gap: .75rem;
+    grid-template-columns: repeat(2, max-content);
+    gap: .6rem 1.2rem;
+    align-items: center;
+  }
 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.2rem;
-      font-size: 0.7rem;
-      color: #6b7280;
-      text-align: center;
-    }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: 0.72rem;
+    color: #6b7280;
+    white-space: nowrap;
+  }
 
-    .legend-color {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-    }
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
 
-    .legend-available {
-      background-color: transparent;
-      border: 1px solid #28336f;
-    }
+  .legend-available {
+    background-color: transparent;
+    border: 1px solid #28336f;
+  }
 
-    .legend-partial {
-      background-color: #eef2ff;
-    }
+  .legend-partial {
+    background-color: #eef2ff;
+  }
 
-    .legend-disabled {
-      background-color: #fef3c7;
-    }
+  .legend-disabled {
+    background-color: #fef3c7;
+  }
+
+  .legend-online {
+    background: #e0f2fe;
+    border: 1px solid #38bdf8;
+  }
+
+  .legend-presencial {
+    background: #fff7ed;
+    border: 1px solid #fb923c;
   }
 }
 

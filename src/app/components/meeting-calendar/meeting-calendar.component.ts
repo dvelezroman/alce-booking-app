@@ -178,7 +178,7 @@ export class MeetingCalendarComponent implements OnInit {
 
         const isDisabled = this.isDayDisabled(date.day, monthIndex - 1);
         
-        const modeRestricted = this.hasModeRestriction(date.day, monthIndex - 1);
+        const restrictedMode = this.getRestrictedMode(date.day, monthIndex - 1);
 
         const dayData = this.disabledDatesAndHours[(monthIndex - 1).toString()]?.find(d => d.day === date.day);
 
@@ -194,11 +194,42 @@ export class MeetingCalendarComponent implements OnInit {
           date: date.toFormat('yyyy-MM-dd'),
           isDisabled,
           hasDisabledHours,
-          modeRestricted
+          restrictedMode
         };
 
       })
     );
+  }
+
+  getRestrictedMode(day: number, monthIndex: number): string | null {
+
+    const monthKey = String(monthIndex);
+    const rules = this.disabledDates?.[monthKey] ?? [];
+
+    const normalize = (v: any) =>
+      v ? v.toString().trim().toUpperCase() : null;
+
+    const userCity = normalize(this.userCity);
+    const userClass = normalize(this.userClassification);
+
+    const rule = rules.find((r:any) => {
+
+      if (!r) return false;
+      if (Number(r.day) !== Number(day)) return false;
+
+      const cityOk =
+        r.city === null ||
+        normalize(r.city) === userCity;
+
+      const classOk =
+        r.studentClassification === null ||
+        normalize(r.studentClassification) === userClass;
+
+      return cityOk && classOk && r.mode !== null;
+
+    });
+
+    return rule?.mode ?? null;
   }
 
   isDaySelectable(day: { day: number | null; isDisabled?: boolean }): boolean {

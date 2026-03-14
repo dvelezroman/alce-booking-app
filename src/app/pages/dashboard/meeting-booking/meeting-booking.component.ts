@@ -752,7 +752,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     const userCity = normalize(this.userData?.city);
     const userClass = normalize(this.userData?.student?.studentClassification);
 
-    const rule = rules.find((r: any) => {
+    const rulesForDay = rules.filter((r: any) => {
 
       if (!r) return false;
       if (Number(r.day) !== Number(this.selectedDay)) return false;
@@ -766,16 +766,28 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
         normalize(r.studentClassification) === userClass;
 
       return cityOk && classOk;
+
     });
 
-    if (rule.mode === null) return false;
+    if (rulesForDay.length === 0) return true;
 
-    // si coincide → está bloqueado
-    if (normalize(rule.mode) === normalize(mode)) {
-      return false;
+    // 🔹 primero revisar reglas específicas
+    const specificRules = rulesForDay.filter(r => r.studentClassification !== null);
+
+    const applicableRules = specificRules.length > 0 ? specificRules : rulesForDay;
+
+    for (const rule of applicableRules) {
+
+      if (rule.mode === null) {
+        return true; // no restringe modo
+      }
+
+      if (normalize(rule.mode) === normalize(mode)) {
+        return false; // bloquea ese modo
+      }
+
     }
 
-    // si no coincide → permitido
     return true;
   }
 
