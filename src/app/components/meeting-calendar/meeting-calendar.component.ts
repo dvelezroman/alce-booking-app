@@ -177,6 +177,8 @@ export class MeetingCalendarComponent implements OnInit {
         const date = startOfMonth.plus({ days: i });
 
         const isDisabled = this.isDayDisabled(date.day, monthIndex - 1);
+        
+        const modeRestricted = this.hasModeRestriction(date.day, monthIndex - 1);
 
         const dayData = this.disabledDatesAndHours[(monthIndex - 1).toString()]?.find(d => d.day === date.day);
 
@@ -191,7 +193,8 @@ export class MeetingCalendarComponent implements OnInit {
           dayOfWeek: date.setLocale('es').toFormat('cccc').toUpperCase(),
           date: date.toFormat('yyyy-MM-dd'),
           isDisabled,
-          hasDisabledHours
+          hasDisabledHours,
+          modeRestricted
         };
 
       })
@@ -256,8 +259,8 @@ export class MeetingCalendarComponent implements OnInit {
     const userMode = normalize(this.userMode);
     const userClass = normalize(this.userClassification);
 
-    // buscar reglas de día
-    const dayMatch = dayRules.some((rule: any) => {
+    // reglas de día que coinciden
+    const matchingDayRules = dayRules.filter((rule: any) => {
 
       if (!rule) return false;
       if (Number(rule.day) !== Number(day)) return false;
@@ -266,19 +269,15 @@ export class MeetingCalendarComponent implements OnInit {
         rule.city === null ||
         normalize(rule.city) === userCity;
 
-      const modeOk =
-        rule.mode === null ||
-        normalize(rule.mode) === userMode;
-
       const classOk =
         rule.studentClassification === null ||
         normalize(rule.studentClassification) === userClass;
 
-      return cityOk && modeOk && classOk;
+      return cityOk && classOk;
 
     });
 
-    // buscar horas bloqueadas
+    // reglas de horas
     const hourMatch = hourRules.some((rule: any) => {
 
       if (!rule) return false;
@@ -288,23 +287,61 @@ export class MeetingCalendarComponent implements OnInit {
         rule.city === null ||
         normalize(rule.city) === userCity;
 
-      const modeOk =
-        rule.mode === null ||
-        normalize(rule.mode) === userMode;
+      const classOk =
+        rule.studentClassification === null ||
+        normalize(rule.studentClassification) === userClass;
+
+      return cityOk && classOk && rule.hours?.length > 0;
+
+    });
+
+    // si tiene horas bloqueadas → NO bloquear día completo
+    if (hourMatch) {
+      return false;
+    }
+
+    if (matchingDayRules.length === 0) {
+      return false;
+    }
+
+    // si alguna regla tiene mode definido → permitir seleccionar
+    const hasModeRule = matchingDayRules.some(rule => rule.mode !== null);
+
+    if (hasModeRule) {
+      return false;
+    }
+
+    // si no tiene mode → bloquear día completo
+    return true;
+  }
+
+  hasModeRestriction(day: number, monthIndex: number): boolean {
+
+    const monthKey = String(monthIndex);
+
+    const dayRules = this.disabledDates?.[monthKey] ?? [];
+
+    const normalize = (v: any) =>
+      v ? v.toString().trim().toUpperCase() : null;
+
+    const userCity = normalize(this.userCity);
+    const userClass = normalize(this.userClassification);
+
+    return dayRules.some((rule: any) => {
+
+      if (!rule) return false;
+      if (Number(rule.day) !== Number(day)) return false;
+
+      const cityOk =
+        rule.city === null ||
+        normalize(rule.city) === userCity;
 
       const classOk =
         rule.studentClassification === null ||
         normalize(rule.studentClassification) === userClass;
 
-      return cityOk && modeOk && classOk && rule.hours?.length > 0;
-
+      return cityOk && classOk && rule.mode !== null;
     });
-
-    if (hourMatch) {
-      return false; 
-    }
-
-    return dayMatch; 
   }
 
   onDayClick(day: any): void {

@@ -49,7 +49,7 @@
         [class.selected]="selectedDay === day.day"
         [class.selectable]="isDaySelectable(day)"
         [class.unselectable]="!isDaySelectable(day)"
-        [class.disabled]="day.isDisabled"
+        [class.disabled]="day.isDisabled || day.modeRestricted"
         [class.partial-disabled]="!day.isDisabled && day.hasDisabledHours"
         [class.empty]="!day.day"
         [class.danger]="day.dayOfWeek === 'DOMINGO'"

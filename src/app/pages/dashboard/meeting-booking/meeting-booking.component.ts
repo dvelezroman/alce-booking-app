@@ -88,7 +88,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   linkStatus: string = 'not-clickable';
   ffs: FeatureFlagDto[] = [];
   isScheduleEnabled: boolean = true;
-  disabledDates: Record<string, number[]> = {};
+  disabledDates: Record<string, any[]> = {};
   disabledDatesAndHours: DisabledDatesAndHours = {};
   calendarAnimationClass: string = '';
   ecuadorTimeInterval!: any;
@@ -700,64 +700,124 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   private normalizeDisabledDatesAndHours(
-  data: DisabledDatesAndHours
-): DisabledDatesAndHours {
+    data: DisabledDatesAndHours
+  ): DisabledDatesAndHours {
 
-  const result: DisabledDatesAndHours = {};
+    const result: DisabledDatesAndHours = {};
 
-  Object.entries(data).forEach(([monthKey, entries]) => {
+    Object.entries(data).forEach(([monthKey, entries]) => {
 
-    const merged: any[] = [];
-
-    entries.forEach((entry: any) => {
-
-      const existing = merged.find((item: any) =>
-        item.day === entry.day &&
-        item.city === entry.city &&
-        item.mode === entry.mode &&
-        item.studentClassification === entry.studentClassification
-      );
-
-      if (existing) {
-        const combinedHours = [...(existing.hours || []), ...(entry.hours || [])];
-        existing.hours = Array.from(new Set(combinedHours));
-      } else {
-        merged.push({
-          day: entry.day,
-          hours: Array.from(new Set(entry.hours || [])),
-          city: entry.city ?? null,
-          mode: entry.mode ?? null,
-          studentClassification: entry.studentClassification ?? null,
-        });
-      }
-
-    });
-
-    result[monthKey] = merged;
-  });
-
-  return result;
-}
-
-  private removeDuplicateDays(data: any): Record<string, number[]> {
-
-    const cleanedDisabledDays: Record<string, number[]> = {};
-    Object.keys(data).forEach(monthKey => {
-      const entries = data[monthKey] || [];
-      const uniqueDays = new Set<number>();
+      const merged: any[] = [];
 
       entries.forEach((entry: any) => {
-        if (entry?.day !== undefined) {
-          uniqueDays.add(entry.day);
+
+        const existing = merged.find((item: any) =>
+          item.day === entry.day &&
+          item.city === entry.city &&
+          item.mode === entry.mode &&
+          item.studentClassification === entry.studentClassification
+        );
+
+        if (existing) {
+          const combinedHours = [...(existing.hours || []), ...(entry.hours || [])];
+          existing.hours = Array.from(new Set(combinedHours));
+        } else {
+          merged.push({
+            day: entry.day,
+            hours: Array.from(new Set(entry.hours || [])),
+            city: entry.city ?? null,
+            mode: entry.mode ?? null,
+            studentClassification: entry.studentClassification ?? null,
+          });
         }
+
       });
 
-      cleanedDisabledDays[monthKey] = Array.from(uniqueDays);
-
+      result[monthKey] = merged;
     });
 
-    return cleanedDisabledDays;
+    return result;
   }
+
+  isModeAllowedForSelectedDay(mode: Mode): boolean {
+
+    const monthIndex = this.monthNumber - 1;
+    const monthKey = String(monthIndex);
+
+    const rules = this.disabledDates?.[monthKey] ?? [];
+
+    const normalize = (v: any) =>
+      v ? v.toString().trim().toUpperCase() : null;
+
+    const userCity = normalize(this.userData?.city);
+    const userClass = normalize(this.userData?.student?.studentClassification);
+
+    const rule = rules.find((r: any) => {
+
+      if (!r) return false;
+      if (Number(r.day) !== Number(this.selectedDay)) return false;
+
+      const cityOk =
+        r.city === null ||
+        normalize(r.city) === userCity;
+
+      const classOk =
+        r.studentClassification === null ||
+        normalize(r.studentClassification) === userClass;
+
+      return cityOk && classOk;
+    });
+
+    if (rule.mode === null) return false;
+
+    // si coincide → está bloqueado
+    if (normalize(rule.mode) === normalize(mode)) {
+      return false;
+    }
+
+    // si no coincide → permitido
+    return true;
+  }
+
+  setMeetingMode(mode: Mode) {
+
+    if (!this.selectedDay) {
+      this.showModalMessage("Primero selecciona un día.");
+      return;
+    }
+
+    if (!this.isModeAllowedForSelectedDay(mode)) {
+
+      this.showModalMessage(
+        "Este modo no está disponible para la fecha seleccionada.",
+        true
+      );
+
+      return;
+    }
+
+    this.meetingType = mode;
+  }
+
+  // private removeDuplicateDays(data: any): Record<string, number[]> {
+
+  //   const cleanedDisabledDays: Record<string, number[]> = {};
+  //   Object.keys(data).forEach(monthKey => {
+  //     const entries = data[monthKey] || [];
+  //     const uniqueDays = new Set<number>();
+
+  //     entries.forEach((entry: any) => {
+  //       if (entry?.day !== undefined) {
+  //         uniqueDays.add(entry.day);
+  //       }
+  //     });
+
+  //     cleanedDisabledDays[monthKey] = Array.from(uniqueDays);
+
+  //   });
+
+  //   return cleanedDisabledDays;
+  // }
 
   private getFirstAndLastDayOfYear(): [string, string] {
     const year = this.selectedYear || new Date().getFullYear();

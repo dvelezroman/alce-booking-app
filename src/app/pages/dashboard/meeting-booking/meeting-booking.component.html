@@ -274,14 +274,31 @@
     <p class="radio-question">Elige modo de la clase:</p>
 
     <div class="radio-options">
+
       <label class="custom-radio">
-        <input type="radio" name="meetingType" [(ngModel)]="meetingType" [value]="mode.ONLINE" checked>
+        <input
+          type="radio"
+          name="meetingType"
+          [value]="mode.ONLINE"
+          [(ngModel)]="meetingType"
+          (change)="setMeetingMode(mode.ONLINE)"
+          [disabled]="!isModeAllowedForSelectedDay(mode.ONLINE)"
+        >
         <span class="radio-label">Online</span>
       </label>
+
       <label class="custom-radio">
-        <input type="radio" name="meetingType" [(ngModel)]="meetingType" [value]="mode.PRESENCIAL">
+        <input
+          type="radio"
+          name="meetingType"
+          [value]="mode.PRESENCIAL"
+          [(ngModel)]="meetingType"
+          (change)="setMeetingMode(mode.PRESENCIAL)"
+          [disabled]="!isModeAllowedForSelectedDay(mode.PRESENCIAL)"
+        >
         <span class="radio-label">Presencial</span>
       </label>
+
     </div>
 
     <div class="modal-buttons">
