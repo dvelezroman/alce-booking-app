@@ -155,7 +155,8 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
       const cityMatch =
         ruleCity === null || ruleCity === userCity;
 
-      return classMatch && cityMatch;
+      // 🔴 SOLO bloquear horas globales
+      return classMatch && cityMatch && rule.mode === null;
 
     });
 

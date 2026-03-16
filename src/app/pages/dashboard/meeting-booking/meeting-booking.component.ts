@@ -65,6 +65,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   isDesktop = false;
 
   meetingType: Mode = Mode.ONLINE;
+  modalMeetingType: Mode | null = null;
   mode = Mode;
   selectedDate: string = '';
   selectedTimeSlot: { label: string; value: number; isDisabled: boolean; localhour: string } = {
@@ -369,6 +370,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
     if (this.selectedDay) {
       this.selectedTimeSlot = time;
+      this.meetingType = undefined as any;
 
       const [year, month, day] = this.selectedDate.split('-').map(Number);
 
@@ -401,15 +403,30 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 }
 
   cancelSelection() {
+
     this.showSuccessModal = false;
-    this.selectedTimeSlot = { label: "8:00", value: 8, isDisabled: false , localhour: convertEcuadorHourToLocal(8) + ':00' };
+    this.modalMeetingType = null;
+
+    this.selectedTimeSlot = {
+      label: "8:00",
+      value: 8,
+      isDisabled: false,
+      localhour: convertEcuadorHourToLocal(8) + ':00'
+    };
+
     this.localdateSelected = '';
-     this.triggerCalendarReset();
+
+    this.triggerCalendarReset();
   }
 
 
   bookMeeting() {
     //console.log("isMeetingDataValid:", this.isMeetingDataValid());
+
+    if (!this.meetingType) {
+      this.showModalMessage("Debes seleccionar el tipo de clase: Online o Presencial.");
+      return;
+    }
 
     if (this.isMeetingDataValid()) {
       const bookingData: CreateMeetingDto = this.createBookingData();
@@ -808,7 +825,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.meetingType = mode;
+    this.modalMeetingType = mode;
   }
 
   // private removeDuplicateDays(data: any): Record<string, number[]> {
