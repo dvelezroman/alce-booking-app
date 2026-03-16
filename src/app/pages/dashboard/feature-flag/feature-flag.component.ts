@@ -75,6 +75,7 @@ export class FeatureFlagComponent implements OnInit {
 
   private getDisabledDatesAndHours(): Observable<DisabledDatesAndHours> {
     const [firstDayOfYear, lastDayOfYear] = this.getFirstAndLastDayOfYear();
+    console.log("CITY ENVIADA:", this.selectedCity);
 
     return this.handleDatesService.getNotAvailableDatesAndHours(firstDayOfYear, lastDayOfYear, this.selectedStudentClassification, this.selectedMode, this.selectedCity).pipe(
       tap((disabledDatesAndHours) => {
@@ -292,7 +293,7 @@ export class FeatureFlagComponent implements OnInit {
   
       // Generar el payload para enviar las horas seleccionadas
       const hoursToDisable = this.selectedDays
-        .filter(day => day.hours.length > 0)  
+        .filter(day => day.hours.length > 0)
         .map(day => ({
           date: `${this.selectedYear}-${(monthIndex + 1)
             .toString()
@@ -303,6 +304,9 @@ export class FeatureFlagComponent implements OnInit {
           }),
           ...(this.selectedMode && {
             mode: this.selectedMode
+          }),
+          ...(this.selectedCity && {
+            city: this.selectedCity
           })
         }));
   
@@ -349,6 +353,9 @@ export class FeatureFlagComponent implements OnInit {
         }),
         ...(this.selectedMode && {
           mode: this.selectedMode
+        }),
+        ...(this.selectedCity && {
+          city: this.selectedCity
         })
       }));
 

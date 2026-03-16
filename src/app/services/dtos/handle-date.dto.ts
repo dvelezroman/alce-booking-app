@@ -19,4 +19,4 @@ export interface SelectedDay {
   hours: number[],
 }
 
-export type City = 'PORTOVIEJO' | 'CUENCA';
+export type City = 'Portoviejo' | 'Cuenca';
