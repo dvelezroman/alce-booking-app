@@ -10,7 +10,13 @@ export interface DisabledDateAndHours {
   city?: City;
 }
 
-export interface DisabledDatesAndHours extends Record<string, { day: number, hours: number[] }[]> {}
+export interface DisabledDatesAndHours extends Record<string, {
+  day: number;
+  hours: number[];
+  studentClassification?: StudentClassification;
+  mode?: Mode;
+  city?: City;
+}[]> {}
 
 export interface SelectedDay {
   day: number,

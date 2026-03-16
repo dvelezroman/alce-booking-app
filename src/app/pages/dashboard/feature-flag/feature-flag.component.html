@@ -195,6 +195,7 @@
         </p>
       </div>
 
+      <!-- HORAS -->
       <div class="time-grid">
         <div
           *ngFor="let time of timeSlots"
@@ -228,6 +229,40 @@
           Habilitar hora(s)
         </button>
       </div>
+
+      <!-- BLOQUE DE RESTRICCIONES -->
+      <div class="restrictions-panel" *ngIf="selectedDaysRestrictions.length > 0">
+
+        <div class="restrictions-header">
+          <h4>Restricciones activas</h4>
+          <p>Configuración registrada para los días seleccionados</p>
+        </div>
+
+        <div
+          class="restriction-day-card"
+          *ngFor="let restrictionDay of selectedDaysRestrictions"
+        >
+          <div class="restriction-day-title">
+            Día {{ restrictionDay.day }} de {{ restrictionDay.month }}
+          </div>
+
+          <div
+            class="restriction-entry"
+            *ngFor="let entry of restrictionDay.entries"
+          >
+            <div class="restriction-badge">
+              {{ formatRestrictionLabel(entry.studentClassification, entry.mode, entry.city) }}
+            </div>
+
+            <div class="restriction-hours">
+              <strong>Bloqueo:</strong>
+              <span>{{ formatHours(entry.hours) }}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </section>
   </div>
 

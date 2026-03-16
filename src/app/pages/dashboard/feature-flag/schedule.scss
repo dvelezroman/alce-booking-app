@@ -17,7 +17,7 @@
   .calendar-container,
   .time-selection {
     max-width: 100%;
-    margin: 0 auto;
+   
   }
 
   .calendar-container {
@@ -31,10 +31,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 2rem auto 1rem;
   padding: .5rem 0rem;
+  margin: 1rem auto 1rem;
   background-color: #ffffff;
-  border: 1px solid #ededed;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 14px;
   width: 100%;
   max-width: 450px;
@@ -250,19 +251,26 @@
 }
 
 .calendar-legend {
-  display: flex;
-  justify-content: center;
-  gap: 2rem; 
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: .6rem 1.5rem;
+  justify-content: start;
+  align-items: center;
   margin: 1rem 0rem;
+  width: 100%;
+  max-width: 300px;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.7rem;
+  justify-content: flex-start;
+  gap: .55rem;
+  font-size: .7rem;
   color: #555;
+  white-space: nowrap;
 }
+
 
 .legend-circle {
   width: 12px;
@@ -288,9 +296,15 @@
 ========================= */
 
 .time-selection.disabled-panel {
-  opacity: 0.45;
-  pointer-events: none;
-  filter: grayscale(0.25);
+
+  .time-title,
+  .time-grid,
+  .button-block {
+    opacity: 0.45;
+    pointer-events: none;
+    filter: grayscale(0.25);
+  }
+
 }
 
 .time-hint {
@@ -303,7 +317,7 @@
 .time-selection {
   width: 100%;
   max-width: 600px;
-  margin: 2rem auto;
+  margin: 1rem auto;
   background-color: #ffffff;
   border: 1px solid #ddd;
   padding: 1.5rem;
@@ -373,4 +387,80 @@
   text-align: center;
   color: #484848;
   font-style: italic;
+}
+
+/* =========================
+   RESTRICTIONS PANEL
+========================= */
+
+.restrictions-panel {
+  margin-top: 1.5rem;
+  padding: 1.1rem 1.2rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.04),
+    0 6px 18px rgba(0,0,0,0.06);
+
+  text-align: left;
+}
+
+.restrictions-header {
+  margin-bottom: 0.9rem;
+}
+
+.restrictions-header h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.15rem;
+}
+
+.restrictions-header p {
+  font-size: 0.72rem;
+  color: #6b7280;
+}
+
+.restriction-day-card {
+  padding: 0.8rem 0;
+  border-top: 1px solid #f1f5f9;
+}
+
+.restriction-day-card:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.restriction-day-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.45rem;
+}
+
+.restriction-entry {
+  padding: 0.55rem 0.65rem;
+  background: #f9fafb;
+  border: 1px solid #eef2f7;
+  border-radius: 10px;
+  margin-bottom: 0.45rem;
+}
+
+.restriction-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #2563eb;
+  margin-bottom: 0.15rem;
+}
+
+.restriction-hours {
+  font-size: 0.74rem;
+  color: #4b5563;
+}
+
+.restriction-hours strong {
+  color: #111827;
+  margin-right: 0.2rem;
 }

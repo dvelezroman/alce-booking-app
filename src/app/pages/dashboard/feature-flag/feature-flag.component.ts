@@ -9,6 +9,17 @@ import { HandleDatesService } from "../../../services/handle-dates.service";
 import { SelectedDay, DisabledDays, DisabledDatesAndHours, City } from "../../../services/dtos/handle-date.dto";
 import { Mode, StudentClassification } from "../../../services/dtos/student.dto";
 
+interface DayRestrictionInfo {
+  day: number;
+  month: string;
+  entries: {
+    hours: number[];
+    studentClassification: string | null;
+    mode: string | null;
+    city: string | null;
+  }[];
+}
+
 @Component({
   selector: 'app-feature-flag',
   standalone: true,
@@ -35,6 +46,8 @@ export class FeatureFlagComponent implements OnInit {
   selectedStudentClassification: StudentClassification | null = null;
   selectedMode: Mode | null = null;
   selectedCity: City | null = null;
+
+  selectedDaysRestrictions: DayRestrictionInfo[] = [];
 
   constructor(
     private readonly ffService: FeatureFlagService,
@@ -115,6 +128,7 @@ export class FeatureFlagComponent implements OnInit {
   private resetDayAndHoursSelection(): void {
     this.selectedDays = [];
     this.timeSlots = [];
+    this.selectedDaysRestrictions = [];
   }
 
   refreshCalendar() {
@@ -224,6 +238,8 @@ export class FeatureFlagComponent implements OnInit {
     } else {
       this.timeSlots = [];
     }
+
+    this.updateSelectedDaysRestrictions();
   }
 
   isDaySelected(day: any): boolean {
@@ -423,6 +439,57 @@ export class FeatureFlagComponent implements OnInit {
     const mergedHours = dayEntries.flatMap(d => d.hours);
 
     return Array.from(new Set(mergedHours));
+  }
+
+  private updateSelectedDaysRestrictions(): void {
+
+    const monthIndex = this.getMonthIndex(this.selectedMonth);
+    const monthData = this.disabledDatesAndHours[monthIndex.toString()] ?? [];
+
+    this.selectedDaysRestrictions = this.selectedDays
+      .filter(day => !!day.day)
+      .map(selectedDay => {
+
+        const entriesForDay = monthData
+          .filter(entry => entry.day === selectedDay.day)
+          .map(entry => ({
+            hours: entry.hours ?? [],
+            studentClassification: entry.studentClassification ?? null,
+            mode: entry.mode ?? null,
+            city: entry.city ?? null
+          }));
+
+        return {
+          day: selectedDay.day,
+          month: this.selectedMonth,
+          entries: entriesForDay
+        };
+
+      })
+      .filter(item => item.entries.length > 0);
+  }
+
+  formatHours(hours: number[]): string {
+    if (!hours || hours.length === 0) {
+      return 'Día completo deshabilitado';
+    }
+
+    const sorted = [...hours].sort((a, b) => a - b);
+
+    return sorted.map(h => `${h}:00`).join(', ');
+  }
+
+  formatRestrictionLabel(
+    studentClassification: string | null,
+    mode: string | null,
+    city: string | null
+  ): string {
+
+    const student = studentClassification ?? 'TODOS';
+    const meetingMode = mode ?? 'TODAS MODALIDADES';
+    const location = city ?? 'TODAS CIUDADES';
+
+    return `${student} · ${meetingMode} · ${location}`;
   }
 
   isHourSelected(hour: number): boolean {
