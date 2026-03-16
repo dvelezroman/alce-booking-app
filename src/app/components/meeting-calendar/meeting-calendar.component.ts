@@ -177,16 +177,12 @@ export class MeetingCalendarComponent implements OnInit {
         const date = startOfMonth.plus({ days: i });
 
         const isDisabled = this.isDayDisabled(date.day, monthIndex - 1);
-        
+
         const restrictedMode = this.getRestrictedMode(date.day, monthIndex - 1);
 
-        const dayData = this.disabledDatesAndHours[(monthIndex - 1).toString()]?.find(d => d.day === date.day);
+        const hoursForUser = this.getDisabledHoursForUser(date.day, monthIndex - 1);
 
-        const uniqueHours = dayData?.hours
-          ? Array.from(new Set(dayData.hours))
-          : [];
-
-        const hasDisabledHours = uniqueHours.length > 0;
+        const hasDisabledHours = hoursForUser.length > 0;
 
         return {
           day: date.day,
@@ -199,6 +195,38 @@ export class MeetingCalendarComponent implements OnInit {
 
       })
     );
+  }
+
+  private getDisabledHoursForUser(day: number, monthIndex: number): number[] {
+
+    const monthData = this.disabledDatesAndHours[monthIndex.toString()] ?? [];
+
+    const normalize = (v: any) =>
+      v ? v.toString().trim().toUpperCase() : null;
+
+    const userClass = normalize(this.userClassification);
+    const userCity = normalize(this.userCity);
+
+    const applicableRules = monthData.filter((rule: any) => {
+
+      if (Number(rule.day) !== Number(day)) return false;
+
+      const ruleClass = normalize(rule.studentClassification);
+      const ruleCity = normalize(rule.city);
+
+      const classMatch =
+        ruleClass === null || ruleClass === userClass;
+
+      const cityMatch =
+        ruleCity === null || ruleCity === userCity;
+
+      return classMatch && cityMatch;
+
+    });
+
+    const hours = applicableRules.flatMap(rule => rule.hours ?? []);
+
+    return Array.from(new Set(hours));
   }
 
   getRestrictedMode(day: number, monthIndex: number): string | null {

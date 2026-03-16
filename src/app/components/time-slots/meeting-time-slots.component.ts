@@ -25,6 +25,9 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
   @Input() disabledDatesAndHours: DisabledDatesAndHours = {};
   @Input() ecuadorTime: string = '';          // 👈 SE MANTIENE
   @Input() minAllowedHour: number | null = null; // 👈 VIENE DEL PADRE
+  @Input() userCity: string | null = null;
+  @Input() userMode: string | null = null;
+  @Input() userClassification: string | null = null;
 
   @Output() timeSlotSelected = new EventEmitter<{
     label: string;
@@ -130,9 +133,35 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
   }
 
   private getDisabledHoursForDay(day: number, monthIndex: number): number[] {
-    const monthData = this.disabledDatesAndHours[monthIndex.toString()];
-    const dayData = monthData?.find(d => d.day === day);
-    return dayData ? dayData.hours : [];
+
+    const monthData = this.disabledDatesAndHours[monthIndex.toString()] ?? [];
+
+    const normalize = (v: any) =>
+      v ? v.toString().trim().toUpperCase() : null;
+
+    const userClass = normalize(this.userClassification);
+    const userCity = normalize(this.userCity);
+
+    const applicableRules = monthData.filter((rule: any) => {
+
+      if (Number(rule.day) !== Number(day)) return false;
+
+      const ruleClass = normalize(rule.studentClassification);
+      const ruleCity = normalize(rule.city);
+
+      const classMatch =
+        ruleClass === null || ruleClass === userClass;
+
+      const cityMatch =
+        ruleCity === null || ruleCity === userCity;
+
+      return classMatch && cityMatch;
+
+    });
+
+    const hours = applicableRules.flatMap(rule => rule.hours ?? []);
+
+    return Array.from(new Set(hours));
   }
 
   onTimeSlotClick(slot: {
