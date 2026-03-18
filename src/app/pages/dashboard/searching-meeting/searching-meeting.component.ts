@@ -10,6 +10,7 @@ import { Instructor } from '../../../services/dtos/instructor.dto';
 import { Stage } from '../../../services/dtos/student.dto';
 import { InstructorsService } from '../../../services/instructors.service';
 import { StagesService } from '../../../services/stages.service';
+import { UserStatus } from '../../../services/dtos/user.dto';
 
 @Component({
   selector: 'app-searching-students-meeting',
@@ -65,8 +66,16 @@ export class SearchingMeetingComponent implements OnInit {
       this.stages = response;
     })
     this.instructorsService.getAll().subscribe(response  => {
-      this.instructorList = response;
-    })
+
+      this.instructorList = response
+        .filter(instructor => instructor.user?.status === UserStatus.ACTIVE)
+        .sort((a, b) => {
+          const nameA = `${a.user?.firstName || ''} ${a.user?.lastName || ''}`.toLowerCase();
+          const nameB = `${b.user?.firstName || ''} ${b.user?.lastName || ''}`.toLowerCase();
+          return nameA.localeCompare(nameB);
+        });
+
+    });
   }
 
   get totalSelectedMeetings(): number {
