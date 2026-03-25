@@ -297,7 +297,13 @@
           [value]="mode.PRESENCIAL"
           [(ngModel)]="meetingType"
           (change)="setMeetingMode(mode.PRESENCIAL)"
-          [disabled]="!isModeAllowedForSelectedDay(mode.PRESENCIAL)"
+          [disabled]="
+            !isModeAllowedForSelectedDay(mode.PRESENCIAL) ||
+            (
+              userData?.student?.studentClassification === 'KIDS' &&
+              selectedTimeSlot.value === 20
+            )
+          "
         >
         <span class="radio-label">Presencial</span>
       </label>
