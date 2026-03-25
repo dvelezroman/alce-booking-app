@@ -113,6 +113,17 @@
 
         <section class="student-alerts">
 
+          <ng-container *ngIf="isKidsRestrictionActive">
+            <div class="alert-card info">
+              <div class="alert-content">
+                <h4>Información importante</h4>
+                <p>
+                  Para estudiantes KIDS, la modalidad presencial no está disponible a las 20:00.
+                </p>
+              </div>
+            </div>
+          </ng-container>
+
           <!-- ⚠️ AVISO IMPORTANTE -->
           <ng-container *ngIf="userData?.meetingsAlert; else noWarning">
             <div class="alert-card warning">

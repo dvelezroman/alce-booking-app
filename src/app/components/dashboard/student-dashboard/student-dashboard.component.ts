@@ -256,6 +256,12 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     return 'No puedes agendar nuevas clases hasta completar tus evaluaciones o assessments pendientes.';
   }
 
+  get isKidsRestrictionActive(): boolean {
+    return (
+      this.userData?.student?.studentClassification === 'KIDS'
+    );
+  }
+
   /* ============================
      USER INFO FORM
      (MISMO NOMBRE)
