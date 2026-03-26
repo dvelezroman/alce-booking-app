@@ -78,6 +78,7 @@ navItems: SidebarNavItem[] = [
   { icon: 'video_call', text: 'Agenda', route: '/dashboard/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] },
   { icon: 'history', text: 'Eventos', route: '/dashboard/processed-events', roles: [UserRole.ADMIN] },
   { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/dashboard/feature-flag', roles: [UserRole.ADMIN] },
+  { icon: 'config', text: 'Anuncios', route: '/dashboard/announcements', roles: [UserRole.ADMIN] },
   { icon: 'reporte', text: 'Instructores', route: '/dashboard/report-instructor', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Estudiante', route: '/dashboard/reports-detailed', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Historial Completo', route: '/dashboard/student-history-report', roles: [UserRole.ADMIN] },
@@ -288,6 +289,7 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/feature-flag'),
         this.findNavItemByRoute('/dashboard/assessment-config'),
         this.findNavItemByRoute('/dashboard/whatsapp-config'),
+        this.findNavItemByRoute('/dashboard/announcements'),
       ].filter(item => item.roles.includes(role))
     }
   ];

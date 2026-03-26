@@ -1,0 +1,60 @@
+<div class="actions-builder">
+
+  <!-- HEADER SOLO BOTÓN -->
+  <div class="actions-builder__header">
+    <button class="actions-builder__add-btn" (click)="onAdd()">
+      ➕ Agregar botón
+    </button>
+  </div>
+
+  <!-- LIST -->
+  <div *ngIf="actions.length > 0" class="actions-builder__list">
+
+    <div
+      *ngFor="let action of actions"
+      class="actions-builder__item box"
+    >
+
+      <!-- TYPE -->
+      <div class="select">
+        <select
+          [value]="action.type"
+          (change)="onUpdate(action.id, { type: $any($event.target).value })"
+        >
+          <option value="interest">Interés</option>
+          <option value="lead">Formulario</option>
+          <option value="link">Enlace</option>
+          <option value="close">Cerrar</option>
+        </select>
+      </div>
+
+      <!-- LABEL -->
+      <input
+        class="input actions-builder__input"
+        placeholder="Texto del botón"
+        [value]="action.label"
+        (input)="onUpdate(action.id, { label: $any($event.target).value })"
+      />
+
+      <!-- URL -->
+      <input
+        *ngIf="action.type === 'link'"
+        class="input actions-builder__input"
+        placeholder="https://..."
+        [value]="action.url || ''"
+        (input)="onUpdate(action.id, { url: $any($event.target).value })"
+      />
+
+      <!-- REMOVE -->
+      <button
+        class="button is-light has-text-danger"
+        (click)="onRemove(action.id)"
+      >
+        ✕
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

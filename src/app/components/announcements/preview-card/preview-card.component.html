@@ -1,0 +1,72 @@
+<div class="preview-card card">
+
+  <!-- IMAGE -->
+  <div *ngIf="image; else noImage" class="preview-card__media">
+    <img
+      [src]="image"
+      [alt]="title"
+      class="preview-card__image"
+    />
+  </div>
+
+  <!-- FALLBACK -->
+  <ng-template #noImage>
+    <div class="preview-card__fallback">
+      <h3 class="preview-card__fallback-title">
+        {{ title }}
+      </h3>
+    </div>
+  </ng-template>
+
+  <!-- CONTENT -->
+  <div class="preview-card__content">
+
+    <!-- TITLE -->
+    <h3 *ngIf="image" class="preview-card__title">
+      {{ title }}
+    </h3>
+
+    <!-- BADGES -->
+    <div class="preview-card__badges">
+
+      <span class="tag is-light preview-card__tag">
+        {{ type }}
+      </span>
+
+      <span *ngIf="role" class="tag is-light preview-card__tag">
+        {{ role }}
+      </span>
+
+      <span *ngIf="studentClassification" class="tag is-light preview-card__tag">
+        {{ studentClassification }}
+      </span>
+
+      <span *ngIf="city" class="tag is-light preview-card__tag">
+        {{ city }}
+      </span>
+
+      <span
+        class="tag preview-card__status"
+        [ngClass]="isActive ? 'is-success' : 'is-light'"
+      >
+        {{ isActive ? 'Active' : 'Inactive' }}
+      </span>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div *ngIf="actions.length > 0" class="preview-card__actions">
+      <button
+        *ngFor="let action of actions"
+        class="button preview-card__button"
+        [ngClass]="[
+          action.type,
+          action.type === 'close' ? 'is-light' : 'is-primary'
+        ]"
+      >
+        {{ getActionLabel(action) }}
+      </button>
+    </div>
+
+  </div>
+</div>

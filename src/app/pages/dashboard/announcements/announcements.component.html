@@ -1,0 +1,107 @@
+<div class="container">
+
+  <!-- HEADER -->
+  <h2 class="announcements-title">
+    Anuncios
+  </h2>
+
+  <!-- CREATE CARD -->
+  <div class="settings-card announcements-card">
+
+    <div class="settings-header">
+      <h3>Crear anuncio</h3>
+      <p>Configura y previsualiza tu anuncio</p>
+    </div>
+
+    <!-- GRID -->
+    <div class="form-grid">
+
+      <app-image-upload
+        [image]="formImage"
+        (imageChange)="formImage = $event"
+      />
+
+      <app-announcement-form
+        [title]="formTitle"
+        [type]="formType"
+        [role]="formRole"
+        [classification]="formClassification"
+        [city]="formCity"
+        [isActive]="formIsActive"
+
+        (titleChange)="formTitle = $event"
+        (typeChange)="formType = $event"
+        (roleChange)="formRole = $event"
+        (classificationChange)="formClassification = $event"
+        (cityChange)="formCity = $event"
+        (isActiveChange)="formIsActive = $event"
+      />
+
+    </div>
+
+    <!-- ACTIONS + PREVIEW COMBINADO -->
+    <div class="actions-preview-card">
+
+      <!-- LEFT: ACTIONS -->
+      <div class="actions-preview-card__left">
+
+        <h4 class="preview-title">Botones de Acción</h4>
+
+        <app-actions-builder
+          [actions]="formActions"
+          (add)="addAction()"
+          (update)="updateAction($event)"
+          (remove)="removeAction($event)"
+        />
+      </div>
+
+      <!-- RIGHT: PREVIEW -->
+      <div class="actions-preview-card__right">
+
+        <h4 class="preview-title">Vista Previa</h4>
+
+        <div class="preview-wrapper">
+          <app-preview-card
+            [title]="formTitle || 'Untitled Announcement'"
+            [type]="formType"
+            [image]="formImage"
+            [role]="formRole"
+            [studentClassification]="formClassification"
+            [city]="formCity"
+            [isActive]="formIsActive"
+            [actions]="formActions"
+          />
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- BUTTON -->
+    <div class="button-row">
+      <button class="button is-primary">
+        Crear Anuncio
+      </button>
+    </div>
+
+  </div>
+
+  <!-- LIST -->
+  <div class="announcements-list-card">
+
+    <!-- HEADER LIST -->
+    <div class="announcements-list-header">
+      <h3>Lista de Anuncios</h3>
+      <p>Anuncios creados recientemente</p>
+    </div>
+
+    <app-announcements-list
+      [announcements]="announcements"
+      [filterTab]="filterTab"
+      (filterChange)="filterTab = $event"
+      (toggle)="toggleAnnouncement($event)"
+      (delete)="deleteAnnouncement($event)"
+    />
+  </div>
+
+</div>

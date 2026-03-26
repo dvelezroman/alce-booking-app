@@ -1,0 +1,160 @@
+.form-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.75rem;
+}
+
+.announcement-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .field {
+    margin-bottom: 0;
+  }
+
+  .label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+}
+
+/* =========================
+   INPUT
+========================= */
+
+.announcement-input {
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+
+  font-size: 0.8rem;
+  color: #111827;
+
+  transition: all 0.15s ease;
+
+  &::placeholder {
+    color: #9ca3af;
+    opacity: 1;
+  }
+
+  &:hover {
+    border-color: #d1d5db;
+  }
+
+  &:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+  }
+}
+
+/* =========================
+   SELECT
+========================= */
+
+.announcement-select select {
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+
+  font-size: 0.8rem;
+  color: #111827;
+
+  padding: 0 0.5rem;
+
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: #d1d5db;
+  }
+
+  &:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+  }
+}
+
+/* =========================
+   FILTERS GRID
+========================= */
+
+.announcement-form__filters {
+  margin-top: 0.25rem;
+}
+
+/* =========================
+   ACTIVE SWITCH
+========================= */
+
+.announcement-form__active {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 0.4rem;
+
+  .label {
+    margin-bottom: 0;
+  }
+}
+
+/* =========================
+   SWITCH
+========================= */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #e5e7eb;
+  border-radius: 999px;
+  transition: 0.2s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  top: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.switch input:checked + .slider {
+  background-color: #2563eb;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(18px);
+}
+
+/* =========================
+   STATUS TEXT
+========================= */
+
+.status-text {
+  font-size: 0.75rem;
+  color: #374151;
+}

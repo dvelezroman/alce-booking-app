@@ -53,6 +53,8 @@ import { InstructorEvaluationsComponent } from './instructor-evaluations/instruc
 import { MeetingEvaluationsComponent } from './meeting-evaluations/meeting-evaluations.component';
 import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluation-statistics.component';
 import { StudentHistoryReportComponent } from './report-students/student-history-report/student-history-report.component';
+import { AnnouncementCardComponent } from '../../components/announcements/announcement-card/announcement-card.component';
+import { AnnouncementsComponent } from './announcements/announcements.component';
 
 
 export const dashboardRoutes: Routes = [
@@ -78,6 +80,7 @@ export const dashboardRoutes: Routes = [
   { path: 'attendance-instructor', component: AttendanceInstructorComponent },
   { path: 'instructor-evaluations', component: InstructorEvaluationsComponent },
   { path: 'feature-flag', component: FeatureFlagComponent },
+  { path: 'announcements', component: AnnouncementsComponent },
   { path: 'create-students', component: RegisterStudentComponent },
   { path: 'create-instructors', component: RegisterInstructorAdminComponent },
   { path: 'reports-detailed', component: ReportsDetailedComponent },

@@ -1,0 +1,103 @@
+<div class="announcement-form">
+
+  <!-- 🔥 TITLE FORM -->
+  <h4 class="form-title">Configuración del Anuncio</h4>
+
+  <!-- TITLE -->
+  <div class="field">
+    <label class="label">Title (optional)</label>
+    <div class="control">
+      <input
+        class="input announcement-input"
+        type="text"
+        placeholder="Enter announcement title"
+        [value]="title"
+        (input)="titleChange.emit($any($event.target).value)"
+      />
+    </div>
+  </div>
+
+  <!-- TYPE -->
+  <div class="field">
+    <label class="label">Type</label>
+    <div class="control">
+      <div class="select is-fullwidth announcement-select">
+        <select
+          [value]="type"
+          (change)="typeChange.emit($any($event.target).value)"
+        >
+          <option value="promotion">Promotion</option>
+          <option value="relocation">Relocation</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="announcement-form__filters columns is-multiline">
+
+    <div class="column is-4">
+      <label class="label">Target Role</label>
+      <div class="select is-fullwidth announcement-select">
+        <select
+          [value]="role ?? ''"
+          (change)="roleChange.emit($any($event.target).value || null)"
+        >
+          <option value="">All</option>
+          <option value="STUDENT">Student</option>
+          <option value="INSTRUCTOR">Instructor</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="column is-4">
+      <label class="label">Classification</label>
+      <div class="select is-fullwidth announcement-select">
+        <select
+          [value]="classification ?? ''"
+          (change)="classificationChange.emit($any($event.target).value || null)"
+        >
+          <option value="">All</option>
+          <option value="KIDS">Kids</option>
+          <option value="TEENS">Teens</option>
+          <option value="ADULTS">Adults</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="column is-4">
+      <label class="label">City</label>
+      <div class="select is-fullwidth announcement-select">
+        <select
+          [value]="city ?? ''"
+          (change)="cityChange.emit($any($event.target).value || null)"
+        >
+          <option value="">All</option>
+          <option value="Portoviejo">Portoviejo</option>
+          <option value="Cuenca">Cuenca</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ACTIVE -->
+  <div class="announcement-form__active">
+    <label class="label">Active</label>
+
+    <label class="switch">
+      <input
+        type="checkbox"
+        [checked]="isActive"
+        (change)="isActiveChange.emit($any($event.target).checked)"
+      />
+      <span class="slider"></span>
+    </label>
+
+    <span class="status-text">
+      {{ isActive ? 'Active' : 'Inactive' }}
+    </span>
+  </div>
+
+</div>

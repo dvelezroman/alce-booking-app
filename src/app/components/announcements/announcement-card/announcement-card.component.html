@@ -1,0 +1,88 @@
+<div *ngIf="announcement as a" class="announcement-card card">
+
+  <!-- IMAGE -->
+  <div class="announcement-card__media">
+
+    <img
+      *ngIf="a.imageUrl; else noImage"
+      [src]="a.imageUrl"
+      [alt]="a.title"
+      class="announcement-card__image"
+    />
+
+    <ng-template #noImage>
+      <div class="announcement-card__fallback">
+        <h3>
+          {{ a.title || 'Untitled' }}
+        </h3>
+      </div>
+    </ng-template>
+
+    <!-- STATUS -->
+    <div class="announcement-card__status">
+      <span
+        class="tag"
+        [ngClass]="a.isActive ? 'is-success' : 'is-light'"
+      >
+        {{ a.isActive ? 'Active' : 'Inactive' }}
+      </span>
+    </div>
+
+  </div>
+
+  <!-- CONTENT -->
+  <div class="card-content">
+
+    <!-- TITLE -->
+    <h3 *ngIf="a.imageUrl" class="announcement-card__title">
+      {{ a.title }}
+    </h3>
+
+    <!-- BADGES -->
+    <div class="announcement-card__badges">
+      <span class="tag is-light">{{ a.type }}</span>
+
+      <span *ngIf="a.targetRole" class="tag is-light">
+        {{ a.targetRole }}
+      </span>
+
+      <span *ngIf="a.targetStudentType" class="tag is-light">
+        {{ a.targetStudentType }}
+      </span>
+
+      <span *ngIf="a.city" class="tag is-light">
+        {{ a.city }}
+      </span>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="announcement-card__actions">
+
+      <div class="announcement-card__toggle">
+        <label class="checkbox">
+          <input
+            type="checkbox"
+            [checked]="a.isActive"
+            (change)="onToggle()"
+          />
+          <span>
+            {{ a.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </label>
+      </div>
+
+      <div class="buttons are-small announcement-card__buttons">
+        <button class="button announcement-card__edit-btn">✏️</button>
+
+        <button
+          class="button announcement-card__delete-btn"
+          (click)="onDelete()"
+        >
+          🗑️
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>

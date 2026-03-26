@@ -1,0 +1,65 @@
+<div class="announcements-list">
+
+  <!-- HEADER -->
+  <div class="announcements-list__header">
+
+    <h2 class="announcements-list__title">
+      Anuncios Creados
+    </h2>
+
+    <!-- FILTER -->
+    <div class="announcements-list__tabs">
+
+      <button
+        class="announcements-list__tab"
+        [class.active]="filterTab === 'all'"
+        (click)="setFilter('all')"
+      >
+        All
+      </button>
+
+      <button
+        class="announcements-list__tab"
+        [class.active]="filterTab === 'active'"
+        (click)="setFilter('active')"
+      >
+        Active
+      </button>
+
+      <button
+        class="announcements-list__tab"
+        [class.active]="filterTab === 'inactive'"
+        (click)="setFilter('inactive')"
+      >
+        Inactive
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- GRID -->
+  <div class="announcements-list__grid">
+
+    <div
+      class="announcements-list__item"
+      *ngFor="let announcement of filteredAnnouncements"
+    >
+      <app-announcement-card
+        [announcement]="announcement"
+        (toggle)="onToggle(announcement.id)"
+        (delete)="onDelete(announcement.id)"
+      />
+    </div>
+
+  </div>
+
+  <!-- EMPTY -->
+  <div
+    *ngIf="filteredAnnouncements.length === 0"
+    class="announcements-list__empty"
+  >
+    <p>No announcements found</p>
+  </div>
+
+</div>

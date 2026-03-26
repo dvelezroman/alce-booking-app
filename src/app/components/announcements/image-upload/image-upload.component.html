@@ -1,0 +1,57 @@
+<div class="image-upload field">
+
+  <h4 class="form-title">Imagen del Anuncio</h4>
+
+  <div
+    class="image-upload__dropzone"
+    (click)="triggerInput(fileInput)"
+  >
+
+    <!-- IMAGE -->
+    <ng-container *ngIf="image; else emptyState">
+      <img
+        [src]="image"
+        alt="Preview"
+        class="image-upload__image"
+      />
+
+      <!-- REMOVE -->
+      <button
+        type="button"
+        class="image-upload__remove"
+        (click)="removeImage($event)"
+      >
+        ✕
+      </button>
+    </ng-container>
+
+    <!-- EMPTY -->
+    <ng-template #emptyState>
+      <div class="image-upload__empty">
+
+        <div class="image-upload__icon">
+          ⬆️
+        </div>
+
+        <p class="image-upload__text">
+          Drag and drop or click to upload
+        </p>
+
+        <p class="image-upload__subtext">
+          Upload image or create text-only announcement
+        </p>
+
+      </div>
+    </ng-template>
+
+    <!-- INPUT -->
+    <input
+      #fileInput
+      type="file"
+      accept="image/*"
+      class="image-upload__input"
+      (change)="handleImageUpload($event)"
+    />
+
+  </div>
+</div>
