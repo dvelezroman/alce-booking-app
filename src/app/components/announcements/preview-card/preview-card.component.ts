@@ -31,12 +31,21 @@ export class PreviewCardComponent {
     if (action.label) return action.label;
 
     const labels: Record<ActionType, string> = {
-      interest: 'Interest',
-      lead: 'Lead Form',
-      link: 'External Link',
-      close: 'Close',
+      interest: 'Interesado',
+      lead: 'Formulario',
+      link: 'Enlace',
+      close: 'Cerrar',
     };
 
     return labels[action.type];
+  }
+
+  getTypeLabel(): string {
+    const map: Record<string, string> = {
+      promotion: 'Promoción',
+      relocation: 'Reubicación',
+    };
+
+    return map[this.type] || this.type;
   }
 }
