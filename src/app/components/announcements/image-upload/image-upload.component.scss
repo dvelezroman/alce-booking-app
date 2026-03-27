@@ -11,7 +11,9 @@
   }
 }
 
-/* DROPZONE */
+/* =========================
+   DROPZONE
+========================= */
 .image-upload__dropzone {
   position: relative;
   width: 100%;
@@ -36,7 +38,9 @@
   }
 }
 
-/* IMAGE */
+/* =========================
+   IMAGE
+========================= */
 .image-upload__image {
   width: 100%;
   height: 100%;
@@ -44,7 +48,9 @@
   border-radius: 14px;
 }
 
-/* REMOVE BUTTON */
+/* =========================
+   REMOVE BUTTON
+========================= */
 .image-upload__remove {
   position: absolute;
   top: 10px;
@@ -76,7 +82,144 @@
   }
 }
 
-/* EMPTY STATE */
+/* =========================
+   STATUS
+========================= */
+.image-upload__status {
+  position: absolute;
+  bottom: 45px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
+
+.image-upload__status p {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* colores */
+.uploading-text {
+  color: #2563eb;
+}
+
+.success-text {
+  color: #16a34a;
+}
+
+.error-text {
+  color: #dc2626;
+}
+
+/* =========================
+   STATUS + ACTIONS OVERLAY
+========================= */
+.image-upload__status,
+.image-upload__actions {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 10px;
+  backdrop-filter: blur(6px);
+  background: rgba(119, 117, 117, 0.273);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+/* separación vertical */
+.image-upload__status {
+  bottom: 60px;
+  pointer-events: none;
+}
+
+.image-upload__actions {
+  bottom: 10px;
+}
+
+/* =========================
+   TEXTO STATUS
+========================= */
+.image-upload__status p {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* 🟡 pendiente */
+.pending-text {
+  color: #ffffff;
+}
+
+/* 🔵 uploading */
+.uploading-text {
+  color: #ffffff;
+}
+
+/* 🟢 success */
+.success-text {
+  color: #ffffff;
+}
+
+/* 🔴 error */
+.error-text {
+  color: #ff4d4f;
+}
+
+/* =========================
+   BOTÓN
+========================= */
+.upload-btn {
+  background: #f4de4e;
+  color: #2b2a2a;
+
+  border: none;
+  border-radius: 8px;
+
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #ddc62c;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.upload-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  background: #e5e7eb;
+  color: #6b7280;
+}
+
+.upload-btn:disabled:hover {
+  background: #e5e7eb;
+  transform: none;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
 .image-upload__empty {
   text-align: center;
   padding: 1rem;
@@ -112,7 +255,9 @@
   color: #6b7280;
 }
 
-/* INPUT HIDDEN */
+/* =========================
+   INPUT HIDDEN
+========================= */
 .image-upload__input {
   display: none;
 }

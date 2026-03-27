@@ -9,6 +9,7 @@
 
     <!-- IMAGE -->
     <ng-container *ngIf="image; else emptyState">
+
       <img
         [src]="image"
         alt="Preview"
@@ -23,18 +24,61 @@
       >
         ✕
       </button>
+
+      <!-- ESTADOS -->
+      <div class="image-upload__status">
+
+        <!-- pendiente -->
+        <p
+          *ngIf="file && !uploaded && !uploading && !error"
+          class="pending-text"
+        >
+          Imagen pendiente de subir
+        </p>
+
+        <!-- uploading -->
+        <p *ngIf="uploading" class="uploading-text">
+          ⬆️ Subiendo...
+        </p>
+
+        <!-- success -->
+        <p *ngIf="uploaded" class="success-text">
+          ✅ Imagen subida correctamente
+        </p>
+
+        <!-- error -->
+        <p *ngIf="error" class="error-text">
+          ❌ {{ error }}
+        </p>
+
+      </div>
+
+      <!-- BOTÓN -->
+      <div
+        *ngIf="file && !uploaded && !uploading"
+        class="image-upload__actions"
+        (click)="$event.stopPropagation()"
+      >
+        <button
+          type="button"
+          class="upload-btn"
+          (click)="uploadToS3()"
+          [disabled]="!!error || uploading"
+        >
+          Subir imagen
+        </button>
+      </div>
+
     </ng-container>
 
     <!-- EMPTY -->
     <ng-template #emptyState>
       <div class="image-upload__empty">
 
-        <div class="image-upload__icon">
-          ⬆️
-        </div>
+        <div class="image-upload__icon">⬆️</div>
 
         <p class="image-upload__text">
-          “Arrastra y suelta o haz clic para subir
+          Arrastra y suelta o haz clic para subir
         </p>
 
         <p class="image-upload__subtext">
