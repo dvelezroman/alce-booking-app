@@ -23,10 +23,12 @@
     <div class="control">
       <div class="select is-fullwidth announcement-select">
         <select
-          [value]="type"
-          (change)="typeChange.emit($any($event.target).value)"
+          [value]="type ?? ''"
+          (change)="typeChange.emit($any($event.target).value || null)"
         >
+          <option value="">Seleccionar tipo</option>
           <option value="promotion">Promoción</option>
+          <option value="notice">Aviso</option>
           <option value="relocation">Reubicación</option>
         </select>
       </div>

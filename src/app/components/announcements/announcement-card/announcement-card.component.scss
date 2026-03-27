@@ -22,7 +22,7 @@
   &__image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   &__fallback {
@@ -30,7 +30,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
+    padding: .5rem;
     background: #f9fafb;
 
     h3 {
@@ -70,13 +70,13 @@
      CONTENT
   ========================= */
   .card-content {
-    padding: 1rem;
+    padding: .5rem;
   }
 
   &__title {
     margin-bottom: 0.5rem;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     color: #111827;
   }
 
@@ -90,7 +90,7 @@
     margin-bottom: 0.75rem;
 
     .tag {
-      font-size: 0.65rem;
+      font-size: 0.60rem;
       border-radius: 999px;
       padding: 0.2rem 0.5rem;
       background: #f3f4f6;
@@ -106,22 +106,30 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    padding-top: 0.75rem;
-    border-top: 1px solid #f0f0f0;
+    padding-top: 0.5rem;
   }
 
   /* TOGGLE */
   &__toggle {
     display: flex;
     align-items: center;
-    gap: 6px;
 
-    font-size: 0.8rem;
-    color: #374151;
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+    }
 
-    input {
-      cursor: pointer;
+    input[type="checkbox"] {
+      margin: 0;
+      transform: translateY(0);
+    }
+
+    span {
+      line-height: 1;
+      font-size: 0.75rem;
+      color: rgb(66, 66, 66);
     }
   }
 
@@ -142,10 +150,11 @@
     justify-content: center;
 
     border-radius: 8px;
-    border: 1px solid #e5e7eb;
-
-    background: #f9fafb;
+    border: none;
+    box-shadow:none;
+    background: #ffffff;
     color: #374151;
+    
 
     transition: all 0.2s ease;
 
@@ -163,15 +172,35 @@
     justify-content: center;
 
     border-radius: 8px;
-    border: 1px solid #fee2e2;
-
-    background: #fff1f2;
-    color: #dc2626;
-
+    border: none;
+    background: #ffffff;
+    color: #6b6363;
+    box-shadow: none;
     transition: all 0.2s ease;
 
     &:hover {
       background: #fee2e2;
     }
   }
+
+  /* =========================
+      ICONOS (FONT AWESOME)
+    ========================= */
+
+    .announcement-card {
+
+      &__edit-btn,
+      &__delete-btn {
+
+        i {
+          font-size: 13px;
+          line-height: 1;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+
+    }
 }

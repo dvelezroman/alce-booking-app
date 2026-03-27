@@ -63,7 +63,7 @@
         <div class="preview-wrapper">
           <app-preview-card
             [title]="formTitle || 'Untitled Announcement'"
-            [type]="formType"
+            [type]="formType || ''"
             [image]="formImage"
             [role]="formRole"
             [studentClassification]="formClassification"
@@ -79,7 +79,7 @@
 
     <!-- BUTTON -->
     <div class="button-row">
-      <button class="button is-primary">
+      <button class="button is-primary" (click)="submitAnnouncement()">
         Crear Anuncio
       </button>
     </div>
@@ -105,3 +105,14 @@
   </div>
 
 </div>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [title]="modal.title || ''"
+  [showButtons]="modal.showButtons || false"
+  (close)="modal.close()"
+></app-modal>

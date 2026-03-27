@@ -43,9 +43,19 @@ export class PreviewCardComponent {
   getTypeLabel(): string {
     const map: Record<string, string> = {
       promotion: 'Promoción',
-      relocation: 'Reubicación',
+      relocation: 'Re-ubicación',
     };
 
     return map[this.type] || this.type;
+  }
+
+  getRoleLabel(): string {
+    const map: Record<string, string> = {
+      STUDENT: 'Estudiante',
+      INSTRUCTOR: 'Instructor',
+      ADMIN: 'Administrador',
+    };
+
+    return map[this.role ?? ''] || '';
   }
 }

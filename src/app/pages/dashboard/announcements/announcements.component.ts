@@ -10,6 +10,8 @@ import { AnnouncementsListComponent } from '../../../components/announcements/an
 import { Announcement } from '../../../services/dtos/announcement.dto';
 import { StudentClassification } from '../../../services/dtos/student.dto';
 import { UserRole } from '../../../services/dtos/user.dto';
+import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
+import { ModalComponent } from '../../../components/modal/modal.component';
 
 @Component({
   selector: 'app-announcements',
@@ -20,7 +22,8 @@ import { UserRole } from '../../../services/dtos/user.dto';
     AnnouncementFormComponent,
     ActionsBuilderComponent,
     PreviewCardComponent,
-    AnnouncementsListComponent
+    AnnouncementsListComponent,
+    ModalComponent
   ],
   templateUrl: './announcements.component.html',
   styleUrl: './announcements.component.scss'
@@ -47,12 +50,15 @@ export class AnnouncementsComponent {
   // ================= FORM =================
   formImage?: string;
   formTitle: string = '';
-  formType: 'promotion' | 'relocation' = 'promotion';
+  formType: 'promotion' | 'notice' | 'relocation' | null = null;
   formRole: UserRole | null = null;
   formClassification: StudentClassification | null = null;
   formCity: 'Portoviejo' | 'Cuenca' | null = null;
   formIsActive: boolean = true;
   formActions: ActionButton[] = [];
+  
+  modal: ModalDto = modalInitializer();
+  private readonly MODAL_DURATION = 1500;
 
   // ================= ACTIONS =================
   addAction() {
@@ -85,8 +91,32 @@ export class AnnouncementsComponent {
   }
 
   // ================= CREATE =================
-  createAnnouncement() {
-    const newAnnouncement: Announcement = {
+  createAnnouncement(payload: Announcement) {
+    this.announcements = [payload, ...this.announcements];
+
+    // RESET
+    this.formImage = undefined;
+    this.formTitle = '';
+    this.formType = 'notice';
+    this.formRole = null;
+    this.formClassification = null;
+    this.formCity = null;
+    this.formIsActive = true;
+    this.formActions = [];
+  }
+
+  submitAnnouncement() {
+
+     if (!this.formTitle?.trim()) {
+        this.showError('Debes ingresar un título', 1500);
+        return;
+      }
+
+      if (!this.formType) {
+        this.showError('Debes seleccionar un tipo de anuncio', 1500);
+        return;
+      }
+    const payload: Announcement = {
       id: crypto.randomUUID(),
       title: this.formTitle || 'Untitled Announcement',
       type: this.formType,
@@ -102,16 +132,49 @@ export class AnnouncementsComponent {
       }))
     };
 
-    this.announcements = [newAnnouncement, ...this.announcements];
+    this.showSuccess('Anuncio creado', 1000);
 
-    // RESET
-    this.formImage = undefined;
-    this.formTitle = '';
-    this.formType = 'promotion';
-    this.formRole = null;
-    this.formClassification = null;
-    this.formCity = null;
-    this.formIsActive = true;
-    this.formActions = [];
+    console.log('Payload a enviar:', payload);
+      this.createAnnouncement(payload);
   }
+
+    showError(message: string, duration = this.MODAL_DURATION) {
+      this.modal = {
+        ...this.modal,
+        show: true,
+        message,
+        isError: true,
+        isSuccess: false,
+        isInfo: false,
+        title: 'Error',
+        showButtons: false,
+        close: () => {
+          this.modal.show = false;
+        }
+      };
+
+      setTimeout(() => {
+        this.modal = { ...this.modal, show: false };
+      }, duration);
+    }
+
+    showSuccess(message: string, duration = this.MODAL_DURATION) {
+      this.modal = {
+        ...this.modal,
+        show: true,
+        message,
+        isError: false,
+        isSuccess: true,
+        isInfo: false,
+        title: 'Éxito',
+        showButtons: false,
+        close: () => {
+          this.modal.show = false;
+        }
+      };
+
+      setTimeout(() => {
+        this.modal = { ...this.modal, show: false };
+      }, duration);
+    }
 }
