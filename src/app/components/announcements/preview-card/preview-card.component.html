@@ -1,12 +1,34 @@
 <div class="preview-card card">
 
-  <!-- IMAGE -->
-  <div *ngIf="image; else noImage" class="preview-card__media">
+  <!-- MEDIA -->
+  <div *ngIf="media; else noImage" class="preview-card__media">
+
+    <!-- IMAGE -->
     <img
-      [src]="image"
+      *ngIf="media && !isYoutube() && !isVideoFile()"
+      [src]="media"
       [alt]="title"
       class="preview-card__image"
     />
+
+    <!-- 🔴 YOUTUBE -->
+    <iframe
+      *ngIf="isYoutube()"
+      [src]="getYoutubeEmbedUrl()"
+      class="preview-card__image"
+      frameborder="0"
+      allowfullscreen
+    ></iframe>
+
+    <!-- 🔵 VIDEO NORMAL -->
+    <video
+      *ngIf="isVideoFile() && !isYoutube()"
+      [src]="media"
+      class="preview-card__image"
+      controls
+      playsinline
+    ></video>
+
   </div>
 
   <!-- FALLBACK -->
@@ -22,7 +44,7 @@
   <div class="preview-card__content">
 
     <!-- TITLE -->
-    <h3 *ngIf="image" class="preview-card__title">
+    <h3 *ngIf="media" class="preview-card__title">
       {{ title }}
     </h3>
 

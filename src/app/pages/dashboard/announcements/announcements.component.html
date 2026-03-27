@@ -16,11 +16,46 @@
     <!-- GRID -->
     <div class="form-grid">
 
-      <app-image-upload
-        [image]="formImage"
-        (imageChange)="formImage = $event"
-      />
+      <!-- MEDIA -->
+      <div class="media-section">
 
+        <h4 class="form-title">Anuncio</h4>
+
+        <!-- TOGGLE -->
+        <div class="media-type-toggle">
+
+          <button
+            type="button"
+            class="media-type-btn"
+            [class.active]="formMediaType === 'image'"
+            (click)="formMediaType = 'image'"
+          >
+            <i class="fas fa-image"></i>
+            Imagen
+          </button>
+
+          <button
+            type="button"
+            class="media-type-btn"
+            [class.active]="formMediaType === 'video'"
+            (click)="formMediaType = 'video'"
+          >
+            <i class="fas fa-video"></i>
+            Video
+          </button>
+
+        </div>
+
+        <!-- COMPONENTE -->
+        <app-media-upload
+          [media]="formMedia"
+          [type]="formMediaType"
+          (mediaChange)="formMedia = $event"
+        />
+
+      </div>
+
+      <!-- FORM -->
       <app-announcement-form
         [title]="formTitle"
         [type]="formType"
@@ -39,10 +74,10 @@
 
     </div>
 
-    <!-- ACTIONS + PREVIEW COMBINADO -->
+    <!-- ACTIONS + PREVIEW -->
     <div class="actions-preview-card">
 
-      <!-- LEFT: ACTIONS -->
+      <!-- LEFT -->
       <div class="actions-preview-card__left">
 
         <h4 class="preview-title">Botones de Acción</h4>
@@ -53,9 +88,10 @@
           (update)="updateAction($event)"
           (remove)="removeAction($event)"
         />
+
       </div>
 
-      <!-- RIGHT: PREVIEW -->
+      <!-- RIGHT -->
       <div class="actions-preview-card__right">
 
         <h4 class="preview-title">Vista Previa</h4>
@@ -64,7 +100,8 @@
           <app-preview-card
             [title]="formTitle || 'Untitled Announcement'"
             [type]="formType || ''"
-            [image]="formImage"
+            [media]="formMedia"
+            [mediaType]="formMediaType"
             [role]="formRole"
             [studentClassification]="formClassification"
             [city]="formCity"
@@ -89,7 +126,6 @@
   <!-- LIST -->
   <div class="announcements-list-card">
 
-    <!-- HEADER LIST -->
     <div class="announcements-list-header">
       <h3>Lista de Anuncios</h3>
       <p>Anuncios creados recientemente</p>
@@ -102,6 +138,7 @@
       (toggle)="toggleAnnouncement($event)"
       (delete)="deleteAnnouncement($event)"
     />
+
   </div>
 
 </div>

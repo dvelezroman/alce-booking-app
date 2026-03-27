@@ -7,14 +7,18 @@ export class UploadService {
 
   constructor(private http: HttpClient) {}
 
-  async uploadImage(file: File): Promise<string> {
+  async uploadMedia(file: File): Promise<string> {
 
     const formData = new FormData();
     formData.append('file', file);
 
+    // detectar tipo automáticamente
+    const isVideo = file.type.startsWith('video/');
+    const folder = isVideo ? 'videos' : 'images';
+
     const res: any = await firstValueFrom(
       this.http.post(
-        '/api/upload/image?subfolder=announcements',
+        `/api/upload/media?subfolder=announcements/${folder}`,
         formData
       )
     );

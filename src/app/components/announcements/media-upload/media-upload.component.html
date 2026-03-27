@@ -1,0 +1,156 @@
+<div class="media-upload">
+
+  <!-- TOGGLE -->
+  <div class="media-upload__switch">
+    <button
+      type="button"
+      class="media-upload__switch-btn"
+      [class.active]="!useUrl"
+      (click)="switchMode(false)"
+    >
+      Subir archivo
+    </button>
+
+    <button
+      type="button"
+      class="media-upload__switch-btn"
+      [class.active]="useUrl"
+      (click)="switchMode(true)"
+    >
+      Usar URL
+    </button>
+  </div>
+
+  <!-- INPUT URL -->
+  <div *ngIf="useUrl" class="media-upload__url">
+    <input
+      type="text"
+      [(ngModel)]="urlInput"
+      class="media-upload__url-input"
+      placeholder="Pega la URL del archivo"
+    />
+
+    <button
+      type="button"
+      class="media-upload__url-btn"
+      (click)="applyUrl()"
+    >
+      Aplicar
+    </button>
+  </div>
+
+  <!-- DROPZONE -->
+  <div
+    *ngIf="!useUrl"
+    class="media-upload__dropzone"
+    (click)="triggerInput(fileInput)"
+  >
+
+    <!-- PREVIEW -->
+    <ng-container *ngIf="media; else empty">
+
+      <!-- IMAGE -->
+      <img
+        *ngIf="type === 'image'"
+        [src]="media"
+        alt="Preview"
+        class="media-upload__preview"
+      />
+
+      <!-- VIDEO -->
+      <video
+        *ngIf="type === 'video'"
+        [src]="media"
+        controls
+        class="media-upload__preview"
+      ></video>
+
+      <!-- REMOVE -->
+      <button
+        type="button"
+        class="media-upload__remove"
+        (click)="remove($event)"
+      >
+        ✕
+      </button>
+
+      <!-- STATUS -->
+      <div class="media-upload__status">
+
+        <p
+          *ngIf="file && !uploaded && !uploading && !error"
+          class="pending-text"
+        >
+          Pendiente de subir
+        </p>
+
+        <p *ngIf="uploading" class="uploading-text">
+          ⬆ Subiendo...
+        </p>
+
+        <p *ngIf="uploaded" class="success-text">
+          Subido correctamente
+        </p>
+
+        <p *ngIf="error" class="error-text">
+          ❌ {{ error }}
+        </p>
+
+        <p *ngIf="fileSizeLabel" class="file-size-text">
+          {{ fileSizeLabel }}
+        </p>
+
+      </div>
+
+      <!-- BOTÓN -->
+      <div
+        *ngIf="file && !uploaded && !uploading"
+        class="media-upload__actions"
+        (click)="$event.stopPropagation()"
+      >
+        <button
+          type="button"
+          class="upload-btn"
+          (click)="uploadToS3()"
+          [disabled]="!!error || uploading"
+        >
+          Subir
+        </button>
+      </div>
+
+    </ng-container>
+
+    <!-- EMPTY -->
+    <ng-template #empty>
+      <div class="media-upload__empty">
+        <div class="media-upload__icon">
+          <i
+            class="media-upload__icon-fa"
+            [ngClass]="type === 'image' ? 'fas fa-image' : 'fas fa-video'"
+          ></i>
+        </div>
+
+        <p class="media-upload__text">
+          Arrastra y suelta o haz clic para subir
+        </p>
+
+        <p class="media-upload__subtext">
+          {{ type === 'image'
+            ? 'Sube una imagen o usa una URL'
+            : 'Sube un video o usa una URL' }}
+        </p>
+      </div>
+    </ng-template>
+
+    <!-- INPUT -->
+    <input
+      #fileInput
+      type="file"
+      [accept]="type === 'image' ? 'image/*' : 'video/*'"
+      class="media-upload__input"
+      (change)="handleFile($event)"
+    />
+
+  </div>
+
+</div>

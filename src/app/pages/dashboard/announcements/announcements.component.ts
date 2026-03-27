@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ImageUploadComponent } from '../../../components/announcements/image-upload/image-upload.component';
+import { MediaUploadComponent } from '../../../components/announcements/media-upload/media-upload.component';
 import { AnnouncementFormComponent } from '../../../components/announcements/announcement-form/announcement-form.component';
 import { ActionsBuilderComponent, ActionButton } from '../../../components/announcements/actions-builder/actions-builder.component';
 import { PreviewCardComponent } from '../../../components/announcements/preview-card/preview-card.component';
@@ -18,7 +18,7 @@ import { ModalComponent } from '../../../components/modal/modal.component';
   standalone: true,
   imports: [
     CommonModule,
-    ImageUploadComponent,
+    MediaUploadComponent,
     AnnouncementFormComponent,
     ActionsBuilderComponent,
     PreviewCardComponent,
@@ -32,23 +32,60 @@ export class AnnouncementsComponent {
 
   // ================= MOCK =================
   announcements: Announcement[] = [
-    {
-      id: '1',
-      title: 'Summer Promotion',
-      type: 'promotion',
-      imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600',
-      targetRole: UserRole.STUDENT,
-      targetStudentType: StudentClassification.TEENS,
-      city: 'Portoviejo',
-      isActive: true,
-      actions: []
-    }
-  ];
+  {
+    id: '1',
+    title: 'Summer Promotion',
+    type: 'promotion',
+    imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600',
+    targetRole: UserRole.STUDENT,
+    targetStudentType: StudentClassification.TEENS,
+    city: 'Portoviejo',
+    isActive: true,
+    actions: []
+  },
+  {
+    id: '2',
+    title: 'Nuevo horario disponible',
+    type: 'notice',
+    imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600',
+    targetRole: UserRole.STUDENT,
+    targetStudentType: StudentClassification.ADULTS,
+    city: 'Cuenca',
+    isActive: true,
+    actions: [
+      {
+        type: 'link',
+        label: 'Ver horarios',
+        url: 'https://alcecollege.com/horarios'
+      }
+    ]
+  },
+  {
+    id: '3',
+    title: 'Clases ahora en nueva sede',
+    type: 'relocation',
+    imageUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    targetRole: UserRole.STUDENT,
+    targetStudentType: StudentClassification.TEENS,
+    city: 'Portoviejo',
+    isActive: false,
+    actions: [
+      {
+        type: 'link',
+        label: 'Ver ubicación',
+        url: 'https://maps.google.com'
+      }
+    ]
+  }
+];
 
   filterTab: 'all' | 'active' | 'inactive' = 'all';
 
+  // ================= MEDIA =================
+  formMedia?: string;
+  formMediaType: 'image' | 'video' = 'image';
+
   // ================= FORM =================
-  formImage?: string;
   formTitle: string = '';
   formType: 'promotion' | 'notice' | 'relocation' | null = null;
   formRole: UserRole | null = null;
@@ -56,7 +93,7 @@ export class AnnouncementsComponent {
   formCity: 'Portoviejo' | 'Cuenca' | null = null;
   formIsActive: boolean = true;
   formActions: ActionButton[] = [];
-  
+
   modal: ModalDto = modalInitializer();
   private readonly MODAL_DURATION = 1500;
 
@@ -95,7 +132,8 @@ export class AnnouncementsComponent {
     this.announcements = [payload, ...this.announcements];
 
     // RESET
-    this.formImage = undefined;
+    this.formMedia = undefined;
+    this.formMediaType = 'image';
     this.formTitle = '';
     this.formType = 'notice';
     this.formRole = null;
@@ -107,20 +145,21 @@ export class AnnouncementsComponent {
 
   submitAnnouncement() {
 
-     if (!this.formTitle?.trim()) {
-        this.showError('Debes ingresar un título', 1500);
-        return;
-      }
+    if (!this.formTitle?.trim()) {
+      this.showError('Debes ingresar un título');
+      return;
+    }
 
-      if (!this.formType) {
-        this.showError('Debes seleccionar un tipo de anuncio', 1500);
-        return;
-      }
+    if (!this.formType) {
+      this.showError('Debes seleccionar un tipo de anuncio');
+      return;
+    }
+
     const payload: Announcement = {
       id: crypto.randomUUID(),
       title: this.formTitle || 'Untitled Announcement',
       type: this.formType,
-      imageUrl: this.formImage || '',
+      imageUrl: this.formMedia || '',
       targetRole: this.formRole,
       targetStudentType: this.formClassification,
       city: this.formCity,
@@ -132,49 +171,51 @@ export class AnnouncementsComponent {
       }))
     };
 
-    this.showSuccess('Anuncio creado', 1000);
+    this.showSuccess('Anuncio creado');
 
     console.log('Payload a enviar:', payload);
-      this.createAnnouncement(payload);
+
+    this.createAnnouncement(payload);
   }
 
-    showError(message: string, duration = this.MODAL_DURATION) {
-      this.modal = {
-        ...this.modal,
-        show: true,
-        message,
-        isError: true,
-        isSuccess: false,
-        isInfo: false,
-        title: 'Error',
-        showButtons: false,
-        close: () => {
-          this.modal.show = false;
-        }
-      };
+  // ================= MODAL =================
+  showError(message: string, duration = this.MODAL_DURATION) {
+    this.modal = {
+      ...this.modal,
+      show: true,
+      message,
+      isError: true,
+      isSuccess: false,
+      isInfo: false,
+      title: 'Error',
+      showButtons: false,
+      close: () => {
+        this.modal.show = false;
+      }
+    };
 
-      setTimeout(() => {
-        this.modal = { ...this.modal, show: false };
-      }, duration);
-    }
+    setTimeout(() => {
+      this.modal = { ...this.modal, show: false };
+    }, duration);
+  }
 
-    showSuccess(message: string, duration = this.MODAL_DURATION) {
-      this.modal = {
-        ...this.modal,
-        show: true,
-        message,
-        isError: false,
-        isSuccess: true,
-        isInfo: false,
-        title: 'Éxito',
-        showButtons: false,
-        close: () => {
-          this.modal.show = false;
-        }
-      };
+  showSuccess(message: string, duration = this.MODAL_DURATION) {
+    this.modal = {
+      ...this.modal,
+      show: true,
+      message,
+      isError: false,
+      isSuccess: true,
+      isInfo: false,
+      title: 'Éxito',
+      showButtons: false,
+      close: () => {
+        this.modal.show = false;
+      }
+    };
 
-      setTimeout(() => {
-        this.modal = { ...this.modal, show: false };
-      }, duration);
-    }
+    setTimeout(() => {
+      this.modal = { ...this.modal, show: false };
+    }, duration);
+  }
 }
