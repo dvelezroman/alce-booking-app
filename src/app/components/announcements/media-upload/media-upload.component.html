@@ -1,24 +1,61 @@
 <div class="media-upload">
 
-  <!-- TOGGLE -->
-  <div class="media-upload__switch">
-    <button
-      type="button"
-      class="media-upload__switch-btn"
-      [class.active]="!useUrl"
-      (click)="switchMode(false)"
-    >
-      Subir archivo
-    </button>
+  <!-- 🔥 ROW SUPERIOR -->
+  <div class="media-upload__switch-row">
 
-    <button
-      type="button"
-      class="media-upload__switch-btn"
-      [class.active]="useUrl"
-      (click)="switchMode(true)"
-    >
-      Usar URL
-    </button>
+    <!-- IZQUIERDA -->
+    <div class="media-upload__switch">
+      <button
+        type="button"
+        class="media-upload__switch-btn"
+        [class.active]="!useUrl"
+        (click)="switchMode(false)"
+      >
+        Subir archivo
+      </button>
+
+      <button
+        type="button"
+        class="media-upload__switch-btn"
+        [class.active]="useUrl"
+        (click)="switchMode(true)"
+      >
+        Usar URL
+      </button>
+    </div>
+
+    <!-- DERECHA -->
+    <div *ngIf="!useUrl" class="media-upload__aspect">
+
+      <button
+        type="button"
+        class="aspect-btn"
+        [class.active]="aspectRatio === 'horizontal'"
+        (click)="setAspect('horizontal')"
+      >
+        ▭
+      </button>
+
+      <button
+        type="button"
+        class="aspect-btn"
+        [class.active]="aspectRatio === 'vertical'"
+        (click)="setAspect('vertical')"
+      >
+        ▯
+      </button>
+
+      <button
+        type="button"
+        class="aspect-btn"
+        [class.active]="aspectRatio === 'square'"
+        (click)="setAspect('square')"
+      >
+        □
+      </button>
+
+    </div>
+
   </div>
 
   <!-- INPUT URL -->
@@ -43,6 +80,7 @@
   <div
     *ngIf="!useUrl"
     class="media-upload__dropzone"
+    [ngClass]="aspectRatio"
     (click)="triggerInput(fileInput)"
   >
 

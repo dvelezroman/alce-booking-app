@@ -14,6 +14,7 @@ export interface Announcement {
   endDate?: string | null
   actions: Action[]
   showMode?: 'always' | 'once_session'
+  aspectRatio?: 'horizontal' | 'vertical' | 'square' | 'auto'
 }
 
 export interface Action {

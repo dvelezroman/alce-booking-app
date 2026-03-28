@@ -84,6 +84,8 @@ export class AnnouncementsComponent {
 
   formShowMode: 'always' | 'once_session' = 'always';
 
+  formAspectRatio: 'horizontal' | 'vertical' | 'square' = 'horizontal';
+
   formActions: ActionButton[] = [
     {
       id: crypto.randomUUID(),
@@ -125,7 +127,7 @@ export class AnnouncementsComponent {
       newAction.url = '';
     }
 
-    this.formActions.push(newAction);
+    this.formActions = [...this.formActions, newAction];
   }
 
   updateAction(event: { id: string; updates: Partial<ActionButton> }) {
@@ -171,13 +173,15 @@ export class AnnouncementsComponent {
       startDate: this.toISODate(this.formStartDate),
       endDate: this.toISODate(this.formEndDate),
       showMode: this.formShowMode,
+      aspectRatio: this.formAspectRatio,
 
       actions: this.formActions.map(a => {
         if (a.type === 'close') {
           return {
             type: 'close',
             label: a.label,
-            color: a.color
+            color: a.color,
+            delaySeconds: a.delaySeconds
           };
         }
 
@@ -186,7 +190,8 @@ export class AnnouncementsComponent {
             type: 'whatsapp',
             label: a.label,
             url: this.buildWhatsappUrl(a.url),
-            color: a.color
+            color: a.color,
+            delaySeconds: a.delaySeconds
           };
         }
 
@@ -194,7 +199,8 @@ export class AnnouncementsComponent {
           type: 'action',
           label: a.label,
           url: a.url || '',
-          color: a.color
+          color: a.color,
+          delaySeconds: a.delaySeconds
         };
       })
     };

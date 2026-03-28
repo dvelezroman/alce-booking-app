@@ -15,9 +15,11 @@ type MediaType = 'image' | 'video';
 export class MediaUploadComponent {
 
   @Input() media?: string;
-  @Output() mediaChange = new EventEmitter<string | undefined>();
-
   @Input() type: MediaType = 'image';
+  @Input() aspectRatio: 'horizontal' | 'vertical' | 'square' = 'horizontal';
+
+  @Output() aspectRatioChange = new EventEmitter<'horizontal' | 'vertical' | 'square'>();
+  @Output() mediaChange = new EventEmitter<string | undefined>();
 
   file: File | null = null;
   uploading = false;
@@ -34,6 +36,11 @@ export class MediaUploadComponent {
   private readonly MAX_VIDEO_SIZE = 50 * 1024 * 1024;
 
   constructor(private uploadService: UploadService) {}
+
+  setAspect(value: 'horizontal' | 'vertical' | 'square') {
+    this.aspectRatio = value;
+    this.aspectRatioChange.emit(value);
+  }
 
   // =========================
   // CAMBIAR MODO (CLAVE)

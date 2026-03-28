@@ -34,6 +34,7 @@ export class PreviewCardComponent implements OnChanges {
 
   @Input() isActive!: boolean;
   @Input() actions: Action[] = [];
+  @Input() aspectRatio: 'horizontal' | 'vertical' | 'square' = 'horizontal';
 
   safeYoutubeUrl?: SafeResourceUrl;
   isYoutubeMedia = false;

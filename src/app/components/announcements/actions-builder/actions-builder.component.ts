@@ -77,7 +77,6 @@ export class ActionsBuilderComponent {
         updates.label = 'Cerrar';
         updates.url = undefined;
         updates.color = undefined;
-        updates.delaySeconds = undefined;
       }
 
       if (updates.type === 'action') {
