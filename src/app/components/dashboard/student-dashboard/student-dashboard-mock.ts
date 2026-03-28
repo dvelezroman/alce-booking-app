@@ -13,7 +13,7 @@ import { UserRole } from "../../../services/dtos/user.dto";
     isActive: true,
     startDate: '2026-03-01T05:00:00.000Z',
     endDate: '2026-04-30T05:00:00.000Z',
-    showMode: 'always',
+    showMode: 'once_session',
     actions: [
       {
         type: 'action',
@@ -37,7 +37,7 @@ import { UserRole } from "../../../services/dtos/user.dto";
     mediaUrl: 'https://images.unsplash.com/photo-1492724441997-5dc865305da7?q=80&w=1200&auto=format&fit=crop',
     targetRole: UserRole.STUDENT,
     targetStudentType: null,
-    city: 'Portoviejo',
+    city: 'Cuenca',
     isActive: true,
     startDate: '2026-03-01T05:00:00.000Z',
     endDate: '2026-04-30T05:00:00.000Z',

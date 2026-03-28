@@ -4,15 +4,19 @@
 
     <!-- ❌ CLOSE SOLO ARRIBA -->
     <button
-        class="announcement-modal__close"
-        (click)="close()"
-        [disabled]="closeAction?.delaySeconds && !delayMap[getActionIndex(closeAction)]"
+      class="announcement-modal__close"
+      (click)="close()"
+      [disabled]="closeAction?.delaySeconds && !delayMap[getActionIndex(closeAction)]"
+    >
+      <span 
+        *ngIf="closeAction?.delaySeconds && !delayMap[getActionIndex(closeAction)]"
+        class="close-delay"
       >
-        <span *ngIf="closeAction?.delaySeconds && !delayMap[getActionIndex(closeAction)]">
-          ({{ delaySecondsMap[getActionIndex(closeAction)] }}s)
-        </span>
-        ✕
-      </button>
+        {{ delaySecondsMap[getActionIndex(closeAction)] }}s
+      </span>
+
+      ✕
+    </button>
 
     <!-- 🎥 MEDIA -->
     <div class="announcement-modal__media">
@@ -30,6 +34,12 @@
           allow="autoplay"
           allowfullscreen
         ></iframe>
+
+        <!-- 🔒 BLOQUEADOR SOLO MIENTRAS HAY DELAY -->
+        <div
+          *ngIf="isVideoLocked()"
+          class="video-lock"
+        ></div>
 
         <!-- ▶️ PLAY ENCIMA -->
         <div

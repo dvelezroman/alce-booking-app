@@ -15,15 +15,10 @@ export const INSTRUCTOR_ANNOUNCEMENTS: Announcement[] = [
     endDate: '2026-04-30T05:00:00.000Z',
     showMode: 'once_session',
     actions: [
-      {
-        type: 'action',
-        label: 'Ver agenda',
-        url: '',
-        color: '#28336f'
-      },
+     
       {
         type: 'whatsapp',
-        label: 'Soporte',
+        label: 'Whatsapp',
         url: 'https://wa.me/593999001087'
       },
       {

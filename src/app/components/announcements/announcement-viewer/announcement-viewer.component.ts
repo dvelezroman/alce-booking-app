@@ -323,6 +323,16 @@ export class AnnouncementViewerComponent implements OnInit {
     });
   }
 
+  isVideoLocked(): boolean {
+    if (!this.hasVideoStarted) return false;
+
+    const actions = this.currentAnnouncement?.actions || [];
+
+    return actions.some((a, i) => 
+      a.delaySeconds && !this.delayMap[i]
+    );
+  }
+
   isDisabled(action: Action, index: number): boolean {
     if (!action.delaySeconds) return false;
     return !this.delayMap[index];
