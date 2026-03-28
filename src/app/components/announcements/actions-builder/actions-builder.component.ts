@@ -8,7 +8,8 @@ export interface ActionButton {
   type: ActionType;
   label: string;
   url?: string;
-  color?: string; // 🔥 NUEVO (HEX)
+  color?: string;
+  delaySeconds?: number;
 }
 
 @Component({
@@ -19,6 +20,8 @@ export interface ActionButton {
   styleUrl: './actions-builder.component.scss'
 })
 export class ActionsBuilderComponent {
+
+  delayOptions = [10, 20, 30, 40, 50, 60];
 
   @Input() actions: ActionButton[] = [];
 
@@ -74,6 +77,7 @@ export class ActionsBuilderComponent {
         updates.label = 'Cerrar';
         updates.url = undefined;
         updates.color = undefined;
+        updates.delaySeconds = undefined;
       }
 
       if (updates.type === 'action') {
@@ -82,11 +86,17 @@ export class ActionsBuilderComponent {
       }
     }
 
-    // 🎨 COLOR
+    // COLOR
     if ((updates as any).colorKey) {
       const key = (updates as any).colorKey;
       updates.color = this.colorMap[key];
       delete (updates as any).colorKey;
+    }
+
+    // DELAY
+    if (updates.delaySeconds !== undefined) {
+      const value = Number(updates.delaySeconds);
+      updates.delaySeconds = isNaN(value) ? 0 : Math.max(0, value);
     }
 
     this.update.emit({ id, updates });

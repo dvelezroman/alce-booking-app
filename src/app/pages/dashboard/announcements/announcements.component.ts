@@ -36,7 +36,7 @@ export class AnnouncementsComponent {
       id: '1',
       title: 'Summer Promotion',
       type: 'promotion',
-      imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600',
+      mediaUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600',
       targetRole: UserRole.STUDENT,
       targetStudentType: StudentClassification.TEENS,
       city: 'Portoviejo',
@@ -47,7 +47,7 @@ export class AnnouncementsComponent {
       id: '2',
       title: 'Nuevo horario disponible',
       type: 'notice',
-      imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600',
+      mediaUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600',
       targetRole: UserRole.STUDENT,
       targetStudentType: StudentClassification.ADULTS,
       city: 'Cuenca',
@@ -79,6 +79,8 @@ export class AnnouncementsComponent {
   formClassification: StudentClassification | null = null;
   formCity: 'Portoviejo' | 'Cuenca' | null = null;
   formIsActive: boolean = true;
+  formStartDate?: string;
+  formEndDate?: string;
 
   formActions: ActionButton[] = [
     {
@@ -134,6 +136,14 @@ export class AnnouncementsComponent {
     this.formActions = this.formActions.filter(a => a.id !== id);
   }
 
+  toISODate(date?: string): string | null {
+    if (!date) return null;
+
+    const iso = new Date(date + 'T00:00:00').toISOString();
+
+    return iso;
+  }
+
   // ================= CREATE =================
   submitAnnouncement() {
 
@@ -151,11 +161,13 @@ export class AnnouncementsComponent {
       id: crypto.randomUUID(),
       title: this.formTitle || 'Untitled Announcement',
       type: this.formType,
-      imageUrl: this.formMedia || '',
+      mediaUrl: this.formMedia || '',
       targetRole: this.formRole,
       targetStudentType: this.formClassification,
       city: this.formCity,
       isActive: this.formIsActive,
+      startDate: this.toISODate(this.formStartDate),
+      endDate: this.toISODate(this.formEndDate),
 
       actions: this.formActions.map(a => {
         if (a.type === 'close') {

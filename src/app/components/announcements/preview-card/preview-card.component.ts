@@ -1,4 +1,10 @@
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
@@ -14,8 +20,9 @@ type ActionType = Action['type'];
   imports: [CommonModule],
   templateUrl: './preview-card.component.html',
   styleUrl: './preview-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PreviewCardComponent {
+export class PreviewCardComponent implements OnChanges {
 
   @Input() title!: string;
   @Input() type!: string;
@@ -28,10 +35,29 @@ export class PreviewCardComponent {
   @Input() isActive!: boolean;
   @Input() actions: Action[] = [];
 
+  safeYoutubeUrl?: SafeResourceUrl;
+  isYoutubeMedia = false;
+
   constructor(private sanitizer: DomSanitizer) {}
 
+  // 🔥 SOLO CUANDO CAMBIA MEDIA
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['media'] && this.media) {
+
+      this.isYoutubeMedia =
+        this.media.includes('youtube.com') ||
+        this.media.includes('youtu.be');
+
+      if (this.isYoutubeMedia) {
+        this.safeYoutubeUrl = this.buildYoutubeUrl(this.media);
+      } else {
+        this.safeYoutubeUrl = undefined;
+      }
+    }
+  }
+
   // =========================
-  // 🔥 BOTONES (FIX IMPORTANTE)
+  // 🔥 BOTONES
   // =========================
   get actionButtons(): Action[] {
     return this.actions?.filter(a =>
@@ -44,86 +70,6 @@ export class PreviewCardComponent {
   }
 
   // =========================
-  // LABELS
-  // =========================
-  getActionLabel(action: Action): string {
-    if (action.label) return action.label;
-
-    const labels: Record<ActionType, string> = {
-      action: 'Acción',
-      whatsapp: 'WhatsApp',
-      close: 'Cerrar',
-    };
-
-    return labels[action.type];
-  }
-
-  // =========================
-  // TYPE
-  // =========================
-  getTypeLabel(): string {
-    if (!this.type) return '';
-
-    const map: Record<string, string> = {
-      promotion: 'Promoción',
-      notice: 'Aviso',
-      relocation: 'Re-ubicación',
-    };
-
-    return map[this.type] || '';
-  }
-
-  // =========================
-  // ROLE
-  // =========================
-  getRoleLabel(): string {
-    const map: Record<string, string> = {
-      STUDENT: 'Estudiante',
-      INSTRUCTOR: 'Instructor',
-      ADMIN: 'Administrador',
-    };
-
-    return map[this.role ?? ''] || '';
-  }
-
-  // =========================
-  // YOUTUBE
-  // =========================
-  isYoutube(): boolean {
-    if (!this.media) return false;
-    return this.media.includes('youtube.com') || this.media.includes('youtu.be');
-  }
-
-  getYoutubeEmbedUrl(): SafeResourceUrl {
-    if (!this.media) return '';
-
-    let videoId = '';
-
-    try {
-      const url = new URL(this.media);
-
-      if (url.hostname.includes('youtube.com')) {
-        videoId = url.searchParams.get('v') || '';
-      }
-
-      if (url.hostname.includes('youtu.be')) {
-        videoId = url.pathname.replace('/', '');
-      }
-
-    } catch (e) {
-      console.error('URL inválida', e);
-    }
-
-    if (!videoId) {
-      return this.sanitizer.bypassSecurityTrustResourceUrl('');
-    }
-
-    const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
-
-    return this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
-  }
-
-  // =========================
   // VIDEO FILE
   // =========================
   isVideoFile(): boolean {
@@ -131,13 +77,42 @@ export class PreviewCardComponent {
     return this.media.match(/\.(mp4|webm|ogg)$/i) !== null;
   }
 
+  // =========================
+  // BUILD YOUTUBE
+  // =========================
+  private buildYoutubeUrl(url: string): SafeResourceUrl {
+    let videoId = '';
+
+    try {
+      const u = new URL(url);
+
+      if (u.hostname.includes('youtube.com')) {
+        videoId = u.searchParams.get('v') || '';
+      }
+
+      if (u.hostname.includes('youtu.be')) {
+        videoId = u.pathname.replace('/', '');
+      }
+
+    } catch (e) {
+      return this.sanitizer.bypassSecurityTrustResourceUrl('');
+    }
+
+    const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0`;
+
+    return this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
+  }
+
+  // =========================
+  // BUTTON STYLE
+  // =========================
   getButtonStyle(action: Action) {
     const bg = action.color || (action.type === 'whatsapp' ? '#25D366' : '#28336f');
 
     return {
-      'background': bg,
-      'color': '#ffffff',
-      'border': 'none'
+      background: bg,
+      color: '#ffffff',
+      border: 'none'
     };
   }
 }

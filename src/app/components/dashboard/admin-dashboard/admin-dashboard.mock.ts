@@ -1,3 +1,6 @@
+import { Announcement } from "../../../services/dtos/announcement.dto";
+import { UserRole } from "../../../services/dtos/user.dto";
+
 export const ADMIN_STATS = [
   {
     label: "Total Estudiantes",
@@ -73,4 +76,38 @@ export const ADMIN_MODULES = [
     ]
   },
 
+  
+
 ]
+
+export const ADMIN_ANNOUNCEMENTS: Announcement[] = [
+  {
+    id: 'admin-1',
+    title: 'Panel administrativo actualizado',
+    type: 'promotion',
+    mediaUrl: 'https://www.youtube.com/watch?v=WrsCyL9Vw1k',
+    targetRole: UserRole.ADMIN,
+    targetStudentType: null,
+    city: 'Portoviejo',
+    isActive: true,
+    startDate: '2026-03-01T05:00:00.000Z',
+    endDate: '2026-04-30T05:00:00.000Z',
+    actions: [
+      {
+        type: 'action',
+        label: 'Ver panel',
+        url: '',
+        color: '#28336f'
+      },
+      {
+        type: 'whatsapp',
+        label: 'Soporte',
+        url: 'https://wa.me/593999001087'
+      },
+      {
+        type: 'close',
+        label: 'Cerrar'
+      }
+    ]
+  }
+];

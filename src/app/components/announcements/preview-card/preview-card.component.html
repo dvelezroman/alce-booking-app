@@ -1,6 +1,6 @@
 <div class="preview-card card">
 
-  <!-- MEDIA SIEMPRE VISIBLE 🔥 -->
+  <!-- MEDIA -->
   <div class="preview-card__media">
 
     <!-- STATUS -->
@@ -25,15 +25,15 @@
 
     <!-- IMAGE -->
     <img
-      *ngIf="media && !isYoutube() && !isVideoFile()"
+      *ngIf="media && !isYoutubeMedia && !isVideoFile()"
       [src]="media"
       class="preview-card__image"
     />
 
     <!-- YOUTUBE -->
     <iframe
-      *ngIf="media && isYoutube()"
-      [src]="getYoutubeEmbedUrl()"
+      *ngIf="media && isYoutubeMedia"
+      [src]="safeYoutubeUrl"
       class="preview-card__image"
       frameborder="0"
       allowfullscreen
@@ -41,7 +41,7 @@
 
     <!-- VIDEO -->
     <video
-      *ngIf="media && isVideoFile() && !isYoutube()"
+      *ngIf="media && isVideoFile() && !isYoutubeMedia"
       [src]="media"
       class="preview-card__image"
       controls

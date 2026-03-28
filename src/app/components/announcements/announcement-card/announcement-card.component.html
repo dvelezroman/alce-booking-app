@@ -1,22 +1,29 @@
 <div *ngIf="announcement as a" class="announcement-card card">
 
-  <!-- IMAGE -->
+  <!-- MEDIA -->
   <div class="announcement-card__media">
 
+    <!-- IMAGE -->
     <img
-      *ngIf="a.imageUrl; else noImage"
-      [src]="a.imageUrl"
+      *ngIf="a.mediaUrl && !isYoutubeMedia"
+      [src]="a.mediaUrl"
       [alt]="a.title"
       class="announcement-card__image"
     />
 
-    <ng-template #noImage>
-      <div class="announcement-card__fallback">
-        <h3>
-          {{ a.title || 'Untitled' }}
-        </h3>
-      </div>
-    </ng-template>
+    <!-- YOUTUBE -->
+    <iframe
+      *ngIf="a.mediaUrl && isYoutubeMedia"
+      [src]="safeYoutubeUrl"
+      class="announcement-card__image"
+      frameborder="0"
+      allowfullscreen
+    ></iframe>
+
+    <!-- FALLBACK -->
+    <div *ngIf="!a.mediaUrl" class="announcement-card__fallback">
+      <h3>{{ a.title || 'Untitled' }}</h3>
+    </div>
 
     <!-- STATUS -->
     <div class="announcement-card__status">
@@ -32,11 +39,6 @@
 
   <!-- CONTENT -->
   <div class="card-content">
-
-    <!-- TITLE -->
-    <!-- <h3 *ngIf="a.imageUrl" class="announcement-card__title">
-      {{ a.title }}
-    </h3> -->
 
     <!-- BADGES -->
     <div class="announcement-card__badges">
@@ -72,21 +74,16 @@
       </div>
 
       <div class="buttons are-small announcement-card__buttons">
-
-        <!-- <button class="button announcement-card__edit-btn">
-          <i class="fas fa-pen"></i>
-        </button> -->
-
         <button
           class="button announcement-card__delete-btn"
           (click)="onDelete()"
         >
           <i class="fas fa-trash"></i>
         </button>
-
       </div>
 
     </div>
 
   </div>
+
 </div>

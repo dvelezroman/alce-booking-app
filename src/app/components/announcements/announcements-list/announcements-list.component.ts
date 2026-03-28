@@ -42,4 +42,5 @@ export class AnnouncementsListComponent {
   onDelete(id: string) {
     this.delete.emit(id);
   }
+  
 }

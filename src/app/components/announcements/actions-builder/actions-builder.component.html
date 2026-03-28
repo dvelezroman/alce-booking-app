@@ -46,7 +46,7 @@
 
       <!-- LABEL -->
       <input
-        class="input actions-builder__input"
+        class="input actions-builder__input actions-builder__input--label"
         placeholder="Texto del botón"
         [value]="action.label"
         [disabled]="action.type === 'whatsapp' || action.type === 'close'"
@@ -56,7 +56,7 @@
       <!-- URL -->
       <input
         *ngIf="action.type === 'action' || action.type === 'whatsapp'"
-        class="input actions-builder__input"
+        class="input actions-builder__input actions-builder__input--url"
         [placeholder]="action.type === 'whatsapp'
           ? 'Número o link WhatsApp'
           : 'https://... (opcional)'"
@@ -64,14 +64,28 @@
         (input)="onUpdate(action.id, { url: $any($event.target).value })"
       />
 
-      <!--  COLOR SOLO PARA BOTÓN NORMAL -->
-      <div *ngIf="action.type === 'action'" class="select">
+      <!-- COLOR SOLO BOTÓN -->
+      <div *ngIf="action.type === 'action'" class="select select-color">
         <select
           (change)="onColorChange(action.id, $any($event.target).value)"
         >
           <option value="blue">Azul</option>
           <option value="gray">Gris</option>
           <option value="gold">Dorado</option>
+        </select>
+      </div>
+
+      <!-- DELAY -->
+      <div *ngIf="action.type !== 'close'" class="select select-delay">
+        <select
+          [value]="action.delaySeconds || ''"
+          (change)="onUpdate(action.id, { delaySeconds: $any($event.target).value })"
+        >
+          <option value="">Sin delay</option>
+
+          <option *ngFor="let d of delayOptions" [value]="d">
+            {{ d }} segundos
+          </option>
         </select>
       </div>
 

@@ -41,6 +41,16 @@ import { StudentIntroVideoComponent } from "../../home/student-intro-video/stude
 import { StudentBannerComponent } from "../../student-banner/student-banner.component";
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 import { AlceKidsAvisoComponent } from '../../home/alce-kids-aviso/alce-kids-aviso.component';
+import { AnnouncementViewerComponent } from '../../announcements/announcement-viewer/announcement-viewer.component';
+import { Announcement } from '../../../services/dtos/announcement.dto';
+import { StudentClassification } from '../../../services/dtos/student.dto';
+import { STUDENT_ANNOUNCEMENTS } from './student-dashboard-mock';
+
+type AnnouncementViewerUser = {
+  role?: UserRole;
+  classification?: StudentClassification | null;
+  city?: 'Portoviejo' | 'Cuenca' | null;
+};
 
 @Component({
   selector: 'app-student-dashboard',
@@ -59,7 +69,8 @@ import { AlceKidsAvisoComponent } from '../../home/alce-kids-aviso/alce-kids-avi
     UserInfoFormComponent,
     PendingClassEvaluationBannerComponent,
     StudentIntroVideoComponent,
-    AlceKidsAvisoComponent
+    AlceKidsAvisoComponent,
+    AnnouncementViewerComponent
 ],
   templateUrl: './student-dashboard.component.html',
   styleUrl: './student-dashboard.component.scss',
@@ -101,6 +112,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   minHoursRequired: number | null = null;
 
+  announcements: Announcement[] = STUDENT_ANNOUNCEMENTS;
+
 
   constructor(
     private router: Router,
@@ -131,6 +144,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.loadMinHoursRequired();
+    // this.loadAnnouncements();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -165,6 +179,14 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
         }
       });
   }
+
+  // loadAnnouncements() {
+  //   this.usersService.getAnnouncements().subscribe({
+  //     next: (data) => {
+  //       this.announcements = data;
+  //     }
+  //   });
+  // }
 
   private loadMinHoursRequired(): void {
     this.configService.getById().subscribe({
@@ -505,6 +527,21 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   get hasStudentAlerts(): boolean {
     return !!this.userData?.meetingsAlert || this.shouldShowAssessmentBanner;
+  }
+
+  get announcementUser(): AnnouncementViewerUser | null {
+    if (!this.userData) return null;
+
+    const city =
+      this.userData.city === 'Portoviejo' || this.userData.city === 'Cuenca'
+        ? this.userData.city
+        : null;
+
+    return {
+      role: this.userData.role,
+      classification: this.userData.student?.studentClassification ?? null,
+      city
+    };
   }
   
 
