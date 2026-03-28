@@ -13,17 +13,19 @@ import { UserRole } from "../../../services/dtos/user.dto";
     isActive: true,
     startDate: '2026-03-01T05:00:00.000Z',
     endDate: '2026-04-30T05:00:00.000Z',
-    showMode: 'once_session',
+    showMode: 'always',
     actions: [
       {
         type: 'action',
         label: 'Más información',
         url: '',
-        color: '#d4af37'
+        color: '#d4af37',
+        delaySeconds: 10
       },
       {
         type: 'close',
-        label: 'Cerrar'
+        label: 'Cerrar',
+        delaySeconds: 10
       }
     ]
   },
@@ -32,24 +34,25 @@ import { UserRole } from "../../../services/dtos/user.dto";
     id: '2',
     title: 'Panel administrativo actualizado',
     type: 'promotion',
-    mediaUrl: 'https://www.youtube.com/watch?v=WrsCyL9Vw1k',
+    mediaUrl: 'https://images.unsplash.com/photo-1492724441997-5dc865305da7?q=80&w=1200&auto=format&fit=crop',
     targetRole: UserRole.STUDENT,
     targetStudentType: null,
     city: 'Portoviejo',
     isActive: true,
     startDate: '2026-03-01T05:00:00.000Z',
     endDate: '2026-04-30T05:00:00.000Z',
-    showMode: 'once_session',
+    showMode: 'always',
     actions: [
-    
       {
         type: 'whatsapp',
         label: 'Soporte',
-        url: 'https://wa.me/593999001087'
+        url: 'https://wa.me/593999001087',
+        delaySeconds: 10
       },
       {
         type: 'close',
-        label: 'Cerrar'
+        label: 'Cerrar',
+        delaySeconds: 10
       }
     ]
   }

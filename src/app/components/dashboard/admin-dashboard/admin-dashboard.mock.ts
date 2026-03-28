@@ -85,7 +85,7 @@ export const ADMIN_ANNOUNCEMENTS: Announcement[] = [
     id: 'admin-1',
     title: 'Panel administrativo actualizado',
     type: 'promotion',
-    mediaUrl: 'https://www.youtube.com/watch?v=WrsCyL9Vw1k',
+    mediaUrl: 'https://www.youtube.com/watch?v=3eTkf_PKA7g',
     targetRole: UserRole.ADMIN,
     targetStudentType: null,
     city: 'Portoviejo',
@@ -94,20 +94,17 @@ export const ADMIN_ANNOUNCEMENTS: Announcement[] = [
     endDate: '2026-04-30T05:00:00.000Z',
     showMode: 'once_session',
     actions: [
-      {
-        type: 'action',
-        label: 'Ver panel',
-        url: '',
-        color: '#28336f'
-      },
+
       {
         type: 'whatsapp',
         label: 'Soporte',
-        url: 'https://wa.me/593999001087'
+        url: 'https://wa.me/593999001087',
+        delaySeconds: 10
       },
       {
         type: 'close',
-        label: 'Cerrar'
+        label: 'Cerrar',
+        delaySeconds: 10
       }
     ]
   }

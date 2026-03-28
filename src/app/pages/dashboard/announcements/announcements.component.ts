@@ -82,6 +82,8 @@ export class AnnouncementsComponent {
   formStartDate?: string;
   formEndDate?: string;
 
+  formShowMode: 'always' | 'once_session' = 'always';
+
   formActions: ActionButton[] = [
     {
       id: crypto.randomUUID(),
@@ -168,6 +170,7 @@ export class AnnouncementsComponent {
       isActive: this.formIsActive,
       startDate: this.toISODate(this.formStartDate),
       endDate: this.toISODate(this.formEndDate),
+      showMode: this.formShowMode,
 
       actions: this.formActions.map(a => {
         if (a.type === 'close') {
@@ -237,6 +240,7 @@ export class AnnouncementsComponent {
         label: 'Cerrar'
       }
     ];
+    this.formShowMode = 'always';
 
   }
 

@@ -3,9 +3,16 @@
   <div class="announcement-modal__content">
 
     <!-- ❌ CLOSE SOLO ARRIBA -->
-    <button class="announcement-modal__close" (click)="close()">
-      ✕
-    </button>
+    <button
+        class="announcement-modal__close"
+        (click)="close()"
+        [disabled]="closeAction?.delaySeconds && !delayMap[getActionIndex(closeAction)]"
+      >
+        <span *ngIf="closeAction?.delaySeconds && !delayMap[getActionIndex(closeAction)]">
+          ({{ delaySecondsMap[getActionIndex(closeAction)] }}s)
+        </span>
+        ✕
+      </button>
 
     <!-- 🎥 MEDIA -->
     <div class="announcement-modal__media">
@@ -15,28 +22,44 @@
         [src]="a.mediaUrl"
       />
 
-      <iframe
-        *ngIf="a.mediaUrl && isYoutubeMedia"
-        [src]="safeYoutubeUrl"
-        allowfullscreen
-      ></iframe>
+      <div *ngIf="a.mediaUrl && isYoutubeMedia" class="video-wrapper">
+
+        <!-- 🔥 IFRAME SIEMPRE VISIBLE -->
+        <iframe
+          [src]="safeYoutubeUrl"
+          allow="autoplay"
+          allowfullscreen
+        ></iframe>
+
+        <!-- ▶️ PLAY ENCIMA -->
+        <div
+          *ngIf="!hasVideoStarted"
+          class="video-overlay"
+          (click)="playVideo()"
+        ></div>
+
+      </div>
 
     </div>
 
     <!-- 🔘 ACTIONS (SIN CLOSE) -->
     <div *ngIf="a.actions.length" class="announcement-modal__actions">
 
-        <ng-container *ngFor="let action of a.actions; let i = index">
+        <ng-container *ngFor="let action of a.actions">
 
-            <button
+          <button
             *ngIf="action.type !== 'close'"
-            [disabled]="isDisabled(action, i)"
+            [disabled]="isDisabled(action, getActionIndex(action))"
             (click)="handleAction(action)"
             [style.background]="getButtonColor(action)"
             class="announcement-modal__btn"
-            >
+          >
+            <span *ngIf="action.delaySeconds && !delayMap[getActionIndex(action)]">
+              ({{ delaySecondsMap[getActionIndex(action)] }}s)
+            </span>
+
             {{ action.label }}
-            </button>
+          </button>
 
         </ng-container>
 

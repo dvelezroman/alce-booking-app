@@ -36,32 +36,45 @@ export class AnnouncementViewerComponent implements OnInit {
   showModal = false;
   delayMap: boolean[] = [];
 
-  // 🔥 YOUTUBE
+  // YOUTUBE
   isYoutubeMedia = false;
   safeYoutubeUrl?: SafeResourceUrl;
+
+  delaySecondsMap: number[] = [];
+  videoStarted = false;
+  hasVideoStarted = false;
 
   constructor(private sanitizer: DomSanitizer) {}
 
   // =========================
   // INIT
   // =========================
- ngOnInit(): void {
+  ngOnInit(): void {
 
-  console.log('USER 👉', this.user);
-  console.log('ANNOUNCEMENTS 👉', this.announcements);
+    this.filtered = this
+      .filterAnnouncementsForUser(this.announcements)
+      .sort((a, b) => {
+        const isAImage = !(a.mediaUrl.includes('youtube') || a.mediaUrl.includes('youtu.be'));
+        const isBImage = !(b.mediaUrl.includes('youtube') || b.mediaUrl.includes('youtu.be'));
 
-  this.filtered = this.filterAnnouncementsForUser(this.announcements);
+        // imágenes primero
+        if (isAImage && !isBImage) return -1;
+        if (!isAImage && isBImage) return 1;
 
-  console.log('FILTERED 👉', this.filtered);
+        return 0;
+      });
 
-  if (this.filtered.length > 0) {
-    this.currentIndex = 0;
-    this.showModal = true;
+    if (this.filtered.length > 0) {
+      this.currentIndex = 0;
+      this.showModal = true;
 
-    this.prepareMedia();
-    this.startDelays(this.currentAnnouncement?.actions || []);
+      this.prepareMedia();
+
+      if (!this.isYoutubeMedia) {
+        this.startDelays(this.currentAnnouncement?.actions || []);
+      }
+    }
   }
-}
 
   // =========================
   // CURRENT
@@ -70,8 +83,31 @@ export class AnnouncementViewerComponent implements OnInit {
     return this.filtered[this.currentIndex] || null;
   }
 
+  // 🔥 FILTRAMOS ACTIONS (CLAVE)
+  get visibleActions(): Action[] {
+    return this.currentAnnouncement?.actions.filter(a => a.type !== 'close') || [];
+  }
+
+  get closeAction(): Action | null {
+    return this.currentAnnouncement?.actions.find(a => a.type === 'close') || null;
+  }
+
+  getActionIndex(action: Action | null): number {
+    if (!action) return -1;
+    return this.currentAnnouncement?.actions.indexOf(action) ?? -1;
+  }
+
+  getCloseDelay(): number {
+    const action = this.closeAction;
+    const index = this.getActionIndex(action);
+
+    if (index === -1) return 0;
+
+    return this.delaySecondsMap[index] ?? 0;
+  }
+
   // =========================
-  // PREPARE MEDIA 🔥
+  // PREPARE MEDIA
   // =========================
   prepareMedia() {
     const media = this.currentAnnouncement?.mediaUrl;
@@ -93,9 +129,6 @@ export class AnnouncementViewerComponent implements OnInit {
     }
   }
 
-  // =========================
-  // BUILD YOUTUBE
-  // =========================
   private buildYoutubeUrl(url: string): SafeResourceUrl {
     let videoId = '';
 
@@ -133,12 +166,10 @@ export class AnnouncementViewerComponent implements OnInit {
       if (a.startDate && new Date(a.startDate) > now) return false;
       if (a.endDate && new Date(a.endDate) < now) return false;
 
-      // ROLE
       if (a.targetRole && this.user?.role && a.targetRole !== this.user.role) {
         return false;
       }
 
-      // CLASSIFICATION
       if (
         a.targetStudentType &&
         this.user?.classification &&
@@ -147,7 +178,6 @@ export class AnnouncementViewerComponent implements OnInit {
         return false;
       }
 
-      // CITY
       if (a.city && this.user?.city) {
         const userCity = this.user.city.toLowerCase();
         const targetCity = a.city.toLowerCase();
@@ -160,30 +190,89 @@ export class AnnouncementViewerComponent implements OnInit {
   }
 
   // =========================
-  // SIGUIENTE
+  // VIDEO EMPIEZA
+  // =========================
+  playVideo() {
+    if (this.videoStarted) return;
+
+    this.videoStarted = true;
+
+    const media = this.currentAnnouncement?.mediaUrl;
+
+    if (media && this.isYoutubeMedia) {
+      // extraemos ID y forzamos autoplay
+      let videoId = '';
+
+      try {
+        const u = new URL(media);
+
+        if (u.hostname.includes('youtube.com')) {
+          videoId = u.searchParams.get('v') || '';
+        }
+
+        if (u.hostname.includes('youtu.be')) {
+          videoId = u.pathname.replace('/', '');
+        }
+
+      } catch (e) {}
+
+      const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+
+      this.safeYoutubeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
+    }
+
+    this.onVideoPlay();
+  }
+
+    onVideoPlay() {
+    if (this.hasVideoStarted) return;
+
+    this.hasVideoStarted = true;
+
+    this.startDelays(this.currentAnnouncement?.actions || []);
+  }
+
+  // =========================
+  // NEXT
   // =========================
   next() {
     const current = this.currentAnnouncement;
 
-    // emitir el anuncio que se acaba de cerrar
     if (current) {
       this.closed.emit(current);
     }
 
     this.currentIndex++;
 
-    // si ya no hay más → cerrar modal
     if (this.currentIndex >= this.filtered.length) {
       this.showModal = false;
       return;
     }
 
-    // cargar siguiente
     this.prepareMedia();
-    this.startDelays(this.currentAnnouncement?.actions || []);
+    this.delayMap = [];
+    this.delaySecondsMap = [];
+    this.hasVideoStarted = false;
+    this.videoStarted = false;
+
+    // SI ES IMAGEN → delay inmediato
+    if (!this.isYoutubeMedia) {
+      this.startDelays(this.currentAnnouncement?.actions || []);
+    } else {
+      // SI ES VIDEO → botones empiezan deshabilitados
+      const actions = this.currentAnnouncement?.actions || [];
+
+      actions.forEach((a, index) => {
+        if (a.delaySeconds && a.delaySeconds > 0) {
+          this.delayMap[index] = false;
+          this.delaySecondsMap[index] = a.delaySeconds;
+        } else {
+          this.delayMap[index] = true;
+        }
+      });
+    }
   }
 
-  
   // =========================
   // ACTIONS
   // =========================
@@ -202,46 +291,50 @@ export class AnnouncementViewerComponent implements OnInit {
       window.open(action.url, '_blank');
     }
   }
-  
+
   // =========================
-  // DELAY 
+  // DELAY
   // =========================
   startDelays(actions: Action[]) {
-    
+
     this.delayMap = [];
-    
+    this.delaySecondsMap = [];
+
     actions.forEach((a, index) => {
-      
-      if (a.delaySeconds) {
-        
+
+      if (a.delaySeconds && a.delaySeconds > 0) {
+
         this.delayMap[index] = false;
-        
-        setTimeout(() => {
-          this.delayMap[index] = true;
-        }, a.delaySeconds * 1000);
-        
+        this.delaySecondsMap[index] = a.delaySeconds;
+
+        const interval = setInterval(() => {
+          this.delaySecondsMap[index]--;
+
+          if (this.delaySecondsMap[index] <= 0) {
+            this.delayMap[index] = true;
+            clearInterval(interval);
+          }
+        }, 1000);
+
       } else {
         this.delayMap[index] = true;
       }
-      
+
     });
   }
-  
-  // =========================
-  // DISABLED
-  // =========================
+
   isDisabled(action: Action, index: number): boolean {
     if (!action.delaySeconds) return false;
     return !this.delayMap[index];
   }
 
   // =========================
-  // CERRAR
+  // CLOSE
   // =========================
   close() {
     this.next();
   }
-  
+
   getButtonColor(action: Action): string {
     if (action.type === 'whatsapp') return '#25D366';
     return action.color || '#28336f';

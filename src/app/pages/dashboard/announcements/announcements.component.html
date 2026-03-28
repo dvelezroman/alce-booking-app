@@ -81,8 +81,16 @@
 
       <!-- DESCRIPCIÓN -->
       <p class="dates-description">
-        Define cuándo se mostrará este anuncio.  
-        Si no seleccionas fechas, el anuncio estará siempre visible.
+        Define <strong>cuándo</strong> se mostrará este anuncio y su 
+        <strong>frecuencia de visualización</strong>.<br />
+
+        Si no seleccionas fechas, el anuncio estará 
+        <span class="highlight">siempre visible</span>.<br />
+
+        Puedes elegir si se muestra 
+        <span class="tag tag-always">siempre</span> 
+        o 
+        <span class="tag tag-session">solo una vez por sesión</span>.
       </p>
 
       <div class="dates-row">
@@ -107,6 +115,27 @@
             [value]="formEndDate || ''"
             (change)="formEndDate = $any($event.target).value"
           />
+        </div>
+
+        <!-- SHOW MODE -->
+        <div class="dates-field">
+          <label class="dates-label">Frecuencia de visualización</label>
+
+          <!-- CONTENEDOR CONTROLADO -->
+          <div class="dates-control">
+            
+            <div class="dates-select-wrapper">
+              <select
+                class="dates-select"
+                [value]="formShowMode"
+                (change)="formShowMode = $any($event.target).value"
+              >
+                <option value="always">Siempre mostrar</option>
+                <option value="once_session">Solo una vez por sesión</option>
+              </select>
+            </div>
+
+          </div>
         </div>
 
       </div>
