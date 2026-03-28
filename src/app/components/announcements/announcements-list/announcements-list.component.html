@@ -45,11 +45,19 @@
       class="announcements-list__item"
       *ngFor="let announcement of filteredAnnouncements"
     >
+
+      <!-- 🔥 TITLE ARRIBA -->
+      <h4 class="announcements-list__item-title">
+        {{ announcement.title }}
+      </h4>
+
+      <!-- CARD -->
       <app-announcement-card
         [announcement]="announcement"
         (toggle)="onToggle(announcement.id)"
         (delete)="onDelete(announcement.id)"
       />
+
     </div>
 
   </div>
