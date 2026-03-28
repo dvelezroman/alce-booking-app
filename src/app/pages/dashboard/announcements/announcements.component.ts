@@ -98,13 +98,30 @@ export class AnnouncementsComponent {
   private readonly MODAL_DURATION = 1500;
 
   // ================= ACTIONS =================
-  addAction() {
-    this.formActions.push({
+  addAction(type: 'action' | 'close' | 'whatsapp') {
+
+    const newAction: ActionButton = {
       id: crypto.randomUUID(),
-      type: 'action',
-      label: '',
-      url: ''
-    });
+      type,
+      label: ''
+    };
+
+    if (type === 'whatsapp') {
+      newAction.label = 'WhatsApp';
+      newAction.color = '#25D366';
+    }
+
+    if (type === 'close') {
+      newAction.label = 'Cerrar';
+    }
+
+    if (type === 'action') {
+      newAction.label = '';
+      newAction.color = '#28336f';
+      newAction.url = '';
+    }
+
+    this.formActions.push(newAction);
   }
 
   updateAction(event: { id: string; updates: Partial<ActionButton> }) {
@@ -144,7 +161,8 @@ export class AnnouncementsComponent {
         if (a.type === 'close') {
           return {
             type: 'close',
-            label: a.label
+            label: a.label,
+            color: a.color
           };
         }
 
@@ -152,14 +170,16 @@ export class AnnouncementsComponent {
           return {
             type: 'whatsapp',
             label: a.label,
-            url: this.buildWhatsappUrl(a.url)
+            url: this.buildWhatsappUrl(a.url),
+            color: a.color
           };
         }
 
         return {
           type: 'action',
           label: a.label,
-          url: a.url || ''
+          url: a.url || '',
+          color: a.color
         };
       })
     };
@@ -214,7 +234,11 @@ export class AnnouncementsComponent {
       ...this.modal,
       show: true,
       message,
+
       isError: true,
+      isSuccess: false,
+      isInfo: false, 
+
       title: 'Error',
       showButtons: false,
       close: () => this.modal.show = false
@@ -228,7 +252,11 @@ export class AnnouncementsComponent {
       ...this.modal,
       show: true,
       message,
+
       isSuccess: true,
+      isError: false,
+      isInfo: false,
+
       title: 'Éxito',
       showButtons: false,
       close: () => this.modal.show = false

@@ -21,9 +21,26 @@
           [value]="action.type"
           (change)="onUpdate(action.id, { type: $any($event.target).value })"
         >
-          <option value="action">Botón</option>
-          <option value="whatsapp">WhatsApp</option>
-          <option value="close">Cerrar</option>
+          <option
+            value="action"
+            [disabled]="isTypeAlreadyUsed('action', action.id)"
+          >
+            Botón
+          </option>
+
+          <option
+            value="whatsapp"
+            [disabled]="isTypeAlreadyUsed('whatsapp', action.id)"
+          >
+            WhatsApp
+          </option>
+
+          <option
+            value="close"
+            [disabled]="isTypeAlreadyUsed('close', action.id)"
+          >
+            Cerrar
+          </option>
         </select>
       </div>
 
@@ -32,10 +49,11 @@
         class="input actions-builder__input"
         placeholder="Texto del botón"
         [value]="action.label"
+        [disabled]="action.type === 'whatsapp' || action.type === 'close'"
         (input)="onUpdate(action.id, { label: $any($event.target).value })"
       />
 
-      <!-- URL SOLO PARA BOTÓN NORMAL -->
+      <!-- URL -->
       <input
         *ngIf="action.type === 'action' || action.type === 'whatsapp'"
         class="input actions-builder__input"
@@ -45,6 +63,17 @@
         [value]="action.url || ''"
         (input)="onUpdate(action.id, { url: $any($event.target).value })"
       />
+
+      <!--  COLOR SOLO PARA BOTÓN NORMAL -->
+      <div *ngIf="action.type === 'action'" class="select">
+        <select
+          (change)="onColorChange(action.id, $any($event.target).value)"
+        >
+          <option value="blue">Azul</option>
+          <option value="gray">Gris</option>
+          <option value="gold">Dorado</option>
+        </select>
+      </div>
 
       <!-- REMOVE -->
       <button

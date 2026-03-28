@@ -55,9 +55,8 @@
     <button
       *ngFor="let action of actionButtons"
       class="button preview-card__button"
-      [ngClass]="action.type"
+      [ngStyle]="getButtonStyle(action)"
     >
-      <!-- 🔥 TEXTO INTELIGENTE -->
       {{
         action.type === 'whatsapp'
           ? 'WhatsApp'

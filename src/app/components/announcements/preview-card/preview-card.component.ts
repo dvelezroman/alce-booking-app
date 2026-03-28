@@ -130,4 +130,14 @@ export class PreviewCardComponent {
     if (!this.media) return false;
     return this.media.match(/\.(mp4|webm|ogg)$/i) !== null;
   }
+
+  getButtonStyle(action: Action) {
+    const bg = action.color || (action.type === 'whatsapp' ? '#25D366' : '#28336f');
+
+    return {
+      'background': bg,
+      'color': '#ffffff',
+      'border': 'none'
+    };
+  }
 }

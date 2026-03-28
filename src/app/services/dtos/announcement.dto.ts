@@ -17,4 +17,5 @@ export interface Action {
   type: 'action' | 'close' | 'whatsapp';
   label: string
   url?: string
+  color?: string;
 }
