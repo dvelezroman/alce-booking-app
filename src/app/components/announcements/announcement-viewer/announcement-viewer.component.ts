@@ -1,7 +1,9 @@
 import {
   Component,
+  EventEmitter,
   Input,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -26,6 +28,8 @@ export class AnnouncementViewerComponent implements OnInit {
     classification?: StudentClassification | null;
     city?: 'Portoviejo' | 'Cuenca' | null;
   };
+
+  @Output() closed = new EventEmitter<Announcement>();
 
   filtered: Announcement[] = [];
   currentIndex = 0;
@@ -159,67 +163,70 @@ export class AnnouncementViewerComponent implements OnInit {
   // SIGUIENTE
   // =========================
   next() {
+    const current = this.currentAnnouncement;
+
+    // emitir el anuncio que se acaba de cerrar
+    if (current) {
+      this.closed.emit(current);
+    }
+
     this.currentIndex++;
 
+    // si ya no hay más → cerrar modal
     if (this.currentIndex >= this.filtered.length) {
-      this.close();
+      this.showModal = false;
       return;
     }
 
+    // cargar siguiente
     this.prepareMedia();
     this.startDelays(this.currentAnnouncement?.actions || []);
   }
 
-  // =========================
-  // CERRAR
-  // =========================
-  close() {
-    this.showModal = false;
-  }
-
+  
   // =========================
   // ACTIONS
   // =========================
   handleAction(action: Action) {
-
+    
     if (action.type === 'close') {
       this.next();
       return;
     }
-
+    
     if (action.type === 'action' && action.url) {
       window.open(action.url, '_blank');
     }
-
+    
     if (action.type === 'whatsapp' && action.url) {
       window.open(action.url, '_blank');
     }
   }
-
+  
   // =========================
   // DELAY 
   // =========================
   startDelays(actions: Action[]) {
-
+    
     this.delayMap = [];
-
+    
     actions.forEach((a, index) => {
-
+      
       if (a.delaySeconds) {
-
+        
         this.delayMap[index] = false;
-
+        
         setTimeout(() => {
           this.delayMap[index] = true;
         }, a.delaySeconds * 1000);
-
+        
       } else {
         this.delayMap[index] = true;
       }
-
+      
     });
   }
-
+  
   // =========================
   // DISABLED
   // =========================
@@ -228,6 +235,13 @@ export class AnnouncementViewerComponent implements OnInit {
     return !this.delayMap[index];
   }
 
+  // =========================
+  // CERRAR
+  // =========================
+  close() {
+    this.next();
+  }
+  
   getButtonColor(action: Action): string {
     if (action.type === 'whatsapp') return '#25D366';
     return action.color || '#28336f';

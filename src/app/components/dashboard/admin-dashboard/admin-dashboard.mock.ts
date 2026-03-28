@@ -92,6 +92,7 @@ export const ADMIN_ANNOUNCEMENTS: Announcement[] = [
     isActive: true,
     startDate: '2026-03-01T05:00:00.000Z',
     endDate: '2026-04-30T05:00:00.000Z',
+    showMode: 'once_session',
     actions: [
       {
         type: 'action',

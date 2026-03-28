@@ -9,10 +9,11 @@ import { UserRole } from "../../../services/dtos/user.dto";
     mediaUrl: 'https://www.youtube.com/watch?v=IsmkAHWutEk',
     targetRole: UserRole.STUDENT,
     targetStudentType: null,
-    city: 'Cuenca',
+    city: 'Portoviejo',
     isActive: true,
     startDate: '2026-03-01T05:00:00.000Z',
     endDate: '2026-04-30T05:00:00.000Z',
+    showMode: 'once_session',
     actions: [
       {
         type: 'action',
@@ -38,6 +39,7 @@ import { UserRole } from "../../../services/dtos/user.dto";
     isActive: true,
     startDate: '2026-03-01T05:00:00.000Z',
     endDate: '2026-04-30T05:00:00.000Z',
+    showMode: 'once_session',
     actions: [
     
       {

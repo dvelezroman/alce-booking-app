@@ -172,6 +172,13 @@ export class UsersService implements OnInit{
       localStorage.removeItem('assessment_announced');
       localStorage.removeItem('globalNoticeDismissed');
       sessionStorage.removeItem('portoviejo-notice-session');
+
+      Object.keys(sessionStorage).forEach(key => {
+        if (key.startsWith('announcement_seen_')) {
+          sessionStorage.removeItem(key);
+        }
+      });
+
       // sessionStorage.removeItem('intro-video-shown-session');
       this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
       this.store.dispatch(setAdminStatus({ isAdmin: false }));

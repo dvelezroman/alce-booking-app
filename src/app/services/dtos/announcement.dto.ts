@@ -13,6 +13,7 @@ export interface Announcement {
   startDate?: string | null
   endDate?: string | null
   actions: Action[]
+  showMode?: 'always' | 'once_session'
 }
 
 export interface Action {

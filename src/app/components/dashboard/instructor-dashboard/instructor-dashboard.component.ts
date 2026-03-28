@@ -64,6 +64,10 @@ export class InstructorDashboardComponent implements OnInit, OnChanges {
     this.instructorId = this.userData.instructor.id;
   }
 
+  get visibleAnnouncements(): Announcement[] {
+    return this.filterByDisplayMode(this.announcements);
+  }
+
   // 🔥 USER PARA ANNOUNCEMENTS
   get announcementUser(): AnnouncementViewerUser | null {
     if (!this.userData) return null;
@@ -81,5 +85,37 @@ export class InstructorDashboardComponent implements OnInit, OnChanges {
       classification: null, // instructor no usa esto
       city
     };
+  }
+
+  filterByDisplayMode(list: Announcement[]): Announcement[] {
+    return list.filter(a => {
+
+      const key = `announcement_seen_${a.id}`;
+
+      // SIEMPRE
+      if (a.showMode === 'always' || !a.showMode) {
+        return true;
+      }
+
+      // UNA VEZ POR SESIÓN
+      if (a.showMode === 'once_session') {
+        return !sessionStorage.getItem(key);
+      }
+
+      return true;
+    });
+  }
+
+  markAsSeen(a: Announcement) {
+    const key = `announcement_seen_${a.id}`;
+
+    if (a.showMode === 'once_session') {
+      sessionStorage.setItem(key, 'true');
+    }
+
+  }
+
+  onCustomAnnouncementClosed(a: Announcement) {
+    this.markAsSeen(a);
   }
 }

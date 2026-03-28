@@ -64,6 +64,10 @@ export class AdminDashboardComponent implements OnInit, OnChanges {
     this.adminName = this.userData.firstName ?? 'Administrador';
   }
 
+  get visibleAnnouncements(): Announcement[] {
+    return this.filterByDisplayMode(this.announcements);
+  }
+
   get announcementUser() {
     if (!this.userData) return null;
 
@@ -80,6 +84,38 @@ export class AdminDashboardComponent implements OnInit, OnChanges {
       classification: null,
       city
     };
+  }
+
+  filterByDisplayMode(list: Announcement[]): Announcement[] {
+    return list.filter(a => {
+
+      const key = `announcement_seen_${a.id}`;
+
+      // SIEMPRE
+      if (a.showMode === 'always' || !a.showMode) {
+        return true;
+      }
+
+      // UNA VEZ POR SESIÓN
+      if (a.showMode === 'once_session') {
+        return !sessionStorage.getItem(key);
+      }
+
+      return true;
+    });
+  }
+
+  markAsSeen(a: Announcement) {
+    const key = `announcement_seen_${a.id}`;
+
+    if (a.showMode === 'once_session') {
+      sessionStorage.setItem(key, 'true');
+    }
+
+  }
+
+  onCustomAnnouncementClosed(a: Announcement) {
+    this.markAsSeen(a);
   }
 
 }
