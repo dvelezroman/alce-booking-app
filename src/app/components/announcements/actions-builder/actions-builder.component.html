@@ -1,6 +1,6 @@
 <div class="actions-builder">
 
-  <!-- HEADER SOLO BOTÓN -->
+  <!-- HEADER -->
   <div class="actions-builder__header">
     <button class="actions-builder__add-btn" (click)="onAdd()">
       ➕ Agregar botón
@@ -11,7 +11,7 @@
   <div *ngIf="actions.length > 0" class="actions-builder__list">
 
     <div
-      *ngFor="let action of actions"
+      *ngFor="let action of actions; trackBy: trackById"
       class="actions-builder__item box"
     >
 
@@ -21,9 +21,8 @@
           [value]="action.type"
           (change)="onUpdate(action.id, { type: $any($event.target).value })"
         >
-          <option value="interest">Interés</option>
-          <option value="lead">Formulario</option>
-          <option value="link">Enlace</option>
+          <option value="action">Botón</option>
+          <option value="whatsapp">WhatsApp</option>
           <option value="close">Cerrar</option>
         </select>
       </div>
@@ -36,11 +35,13 @@
         (input)="onUpdate(action.id, { label: $any($event.target).value })"
       />
 
-      <!-- URL -->
+      <!-- URL SOLO PARA BOTÓN NORMAL -->
       <input
-        *ngIf="action.type === 'link'"
+        *ngIf="action.type === 'action' || action.type === 'whatsapp'"
         class="input actions-builder__input"
-        placeholder="https://..."
+        [placeholder]="action.type === 'whatsapp'
+          ? 'Número o link WhatsApp'
+          : 'https://... (opcional)'"
         [value]="action.url || ''"
         (input)="onUpdate(action.id, { url: $any($event.target).value })"
       />

@@ -20,7 +20,6 @@ export class PreviewCardComponent {
   @Input() title!: string;
   @Input() type!: string;
   @Input() media?: string;
-  @Input() mediaType: 'image' | 'video' = 'image';
 
   @Input() role: UserRole | null = null;
   @Input() studentClassification: StudentClassification | null = null;
@@ -32,15 +31,27 @@ export class PreviewCardComponent {
   constructor(private sanitizer: DomSanitizer) {}
 
   // =========================
-  // ACTION LABEL
+  // 🔥 BOTONES (FIX IMPORTANTE)
+  // =========================
+  get actionButtons(): Action[] {
+    return this.actions?.filter(a =>
+      a.type === 'action' || a.type === 'whatsapp'
+    ) || [];
+  }
+
+  hasClose(): boolean {
+    return this.actions?.some(a => a.type === 'close');
+  }
+
+  // =========================
+  // LABELS
   // =========================
   getActionLabel(action: Action): string {
     if (action.label) return action.label;
 
     const labels: Record<ActionType, string> = {
-      interest: 'Interesado',
-      lead: 'Formulario',
-      link: 'Enlace',
+      action: 'Acción',
+      whatsapp: 'WhatsApp',
       close: 'Cerrar',
     };
 
@@ -48,7 +59,7 @@ export class PreviewCardComponent {
   }
 
   // =========================
-  // TYPE LABEL
+  // TYPE
   // =========================
   getTypeLabel(): string {
     if (!this.type) return '';
@@ -63,7 +74,7 @@ export class PreviewCardComponent {
   }
 
   // =========================
-  // ROLE LABEL
+  // ROLE
   // =========================
   getRoleLabel(): string {
     const map: Record<string, string> = {
@@ -76,15 +87,13 @@ export class PreviewCardComponent {
   }
 
   // =========================
-  // DETECTAR YOUTUBE
+  // YOUTUBE
   // =========================
   isYoutube(): boolean {
     if (!this.media) return false;
     return this.media.includes('youtube.com') || this.media.includes('youtu.be');
   }
 
-  // =========================
-  // EMBED YOUTUBE
   getYoutubeEmbedUrl(): SafeResourceUrl {
     if (!this.media) return '';
 
@@ -105,9 +114,7 @@ export class PreviewCardComponent {
       console.error('URL inválida', e);
     }
 
-    // 🔥 fallback si no hay id
     if (!videoId) {
-      console.warn('No se pudo obtener el videoId');
       return this.sanitizer.bypassSecurityTrustResourceUrl('');
     }
 
@@ -116,9 +123,11 @@ export class PreviewCardComponent {
     return this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
   }
 
+  // =========================
+  // VIDEO FILE
+  // =========================
   isVideoFile(): boolean {
     if (!this.media) return false;
-
     return this.media.match(/\.(mp4|webm|ogg)$/i) !== null;
   }
 }

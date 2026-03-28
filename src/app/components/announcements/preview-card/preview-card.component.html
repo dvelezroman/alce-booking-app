@@ -1,28 +1,47 @@
 <div class="preview-card card">
 
-  <!-- MEDIA -->
-  <div *ngIf="media; else noImage" class="preview-card__media">
+  <!-- MEDIA SIEMPRE VISIBLE 🔥 -->
+  <div class="preview-card__media">
+
+    <!-- STATUS -->
+    <div class="preview-card__status-top">
+      <span
+        class="tag preview-card__status"
+        [ngClass]="isActive ? 'is-success' : 'is-light'"
+      >
+        {{ isActive ? 'Active' : 'Inactive' }}
+      </span>
+    </div>
+
+    <!-- CLOSE -->
+    <button *ngIf="hasClose()" class="preview-card__close">
+      ✕
+    </button>
+
+    <!-- TITLE -->
+    <div class="preview-card__title-overlay">
+      {{ title || 'Untitled Announcement' }}
+    </div>
 
     <!-- IMAGE -->
     <img
       *ngIf="media && !isYoutube() && !isVideoFile()"
       [src]="media"
-      [alt]="title"
       class="preview-card__image"
     />
 
-    <!-- 🔴 YOUTUBE -->
+    <!-- YOUTUBE -->
     <iframe
-      *ngIf="isYoutube()"
+      *ngIf="media && isYoutube()"
       [src]="getYoutubeEmbedUrl()"
       class="preview-card__image"
       frameborder="0"
       allowfullscreen
     ></iframe>
 
-    <!-- 🔵 VIDEO NORMAL -->
+    <!-- VIDEO -->
     <video
-      *ngIf="isVideoFile() && !isYoutube()"
+      *ngIf="media && isVideoFile() && !isYoutube()"
       [src]="media"
       class="preview-card__image"
       controls
@@ -31,64 +50,20 @@
 
   </div>
 
-  <!-- FALLBACK -->
-  <ng-template #noImage>
-    <div class="preview-card__fallback">
-      <h3 class="preview-card__fallback-title">
-        {{ title }}
-      </h3>
-    </div>
-  </ng-template>
-
-  <!-- CONTENT -->
-  <div class="preview-card__content">
-
-    <!-- TITLE -->
-    <h3 *ngIf="media" class="preview-card__title">
-      {{ title }}
-    </h3>
-
-    <!-- BADGES -->
-    <div class="preview-card__badges">
-
-      <span *ngIf="type" class="tag is-light preview-card__tag">
-        {{ getTypeLabel() }}
-      </span>
-
-      <span *ngIf="role" class="tag is-light preview-card__tag">
-        {{ getRoleLabel() }}
-      </span>
-
-      <span *ngIf="studentClassification" class="tag is-light preview-card__tag">
-        {{ studentClassification }}
-      </span>
-
-      <span *ngIf="city" class="tag is-light preview-card__tag">
-        {{ city }}
-      </span>
-
-      <span
-        class="tag preview-card__status"
-        [ngClass]="isActive ? 'is-success' : 'is-light'"
-      >
-        {{ isActive ? 'Active' : 'Inactive' }}
-      </span>
-
-    </div>
-
-    <!-- ACTIONS -->
-    <div *ngIf="actions.length > 0" class="preview-card__actions">
-      <button
-        *ngFor="let action of actions"
-        class="button preview-card__button"
-        [ngClass]="[
-          action.type,
-          action.type === 'close' ? 'is-light' : 'is-primary'
-        ]"
-      >
-        {{ getActionLabel(action) }}
-      </button>
-    </div>
-
+  <!-- ACTIONS -->
+  <div *ngIf="actionButtons.length > 0" class="preview-card__actions">
+    <button
+      *ngFor="let action of actionButtons"
+      class="button preview-card__button"
+      [ngClass]="action.type"
+    >
+      <!-- 🔥 TEXTO INTELIGENTE -->
+      {{
+        action.type === 'whatsapp'
+          ? 'WhatsApp'
+          : (action.label || 'Acción')
+      }}
+    </button>
   </div>
+
 </div>

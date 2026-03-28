@@ -14,7 +14,7 @@ export interface Announcement {
 }
 
 export interface Action {
-  type: 'interest' | 'lead' | 'link' | 'close'
+  type: 'action' | 'close' | 'whatsapp';
   label: string
   url?: string
 }

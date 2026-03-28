@@ -32,52 +32,39 @@ export class AnnouncementsComponent {
 
   // ================= MOCK =================
   announcements: Announcement[] = [
-  {
-    id: '1',
-    title: 'Summer Promotion',
-    type: 'promotion',
-    imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600',
-    targetRole: UserRole.STUDENT,
-    targetStudentType: StudentClassification.TEENS,
-    city: 'Portoviejo',
-    isActive: true,
-    actions: []
-  },
-  {
-    id: '2',
-    title: 'Nuevo horario disponible',
-    type: 'notice',
-    imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600',
-    targetRole: UserRole.STUDENT,
-    targetStudentType: StudentClassification.ADULTS,
-    city: 'Cuenca',
-    isActive: true,
-    actions: [
-      {
-        type: 'link',
-        label: 'Ver horarios',
-        url: 'https://alcecollege.com/horarios'
-      }
-    ]
-  },
-  {
-    id: '3',
-    title: 'Clases ahora en nueva sede',
-    type: 'relocation',
-    imageUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    targetRole: UserRole.STUDENT,
-    targetStudentType: StudentClassification.TEENS,
-    city: 'Portoviejo',
-    isActive: false,
-    actions: [
-      {
-        type: 'link',
-        label: 'Ver ubicación',
-        url: 'https://maps.google.com'
-      }
-    ]
-  }
-];
+    {
+      id: '1',
+      title: 'Summer Promotion',
+      type: 'promotion',
+      imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600',
+      targetRole: UserRole.STUDENT,
+      targetStudentType: StudentClassification.TEENS,
+      city: 'Portoviejo',
+      isActive: true,
+      actions: []
+    },
+    {
+      id: '2',
+      title: 'Nuevo horario disponible',
+      type: 'notice',
+      imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600',
+      targetRole: UserRole.STUDENT,
+      targetStudentType: StudentClassification.ADULTS,
+      city: 'Cuenca',
+      isActive: true,
+      actions: [
+        {
+          type: 'action',
+          label: 'Ver horarios',
+          url: 'https://alcecollege.com/horarios'
+        },
+        {
+          type: 'close',
+          label: 'Cerrar'
+        }
+      ]
+    }
+  ];
 
   filterTab: 'all' | 'active' | 'inactive' = 'all';
 
@@ -92,7 +79,20 @@ export class AnnouncementsComponent {
   formClassification: StudentClassification | null = null;
   formCity: 'Portoviejo' | 'Cuenca' | null = null;
   formIsActive: boolean = true;
-  formActions: ActionButton[] = [];
+
+  formActions: ActionButton[] = [
+    {
+      id: crypto.randomUUID(),
+      type: 'action',
+      label: 'Más información',
+      url: ''
+    },
+    {
+      id: crypto.randomUUID(),
+      type: 'close',
+      label: 'Cerrar'
+    }
+  ];
 
   modal: ModalDto = modalInitializer();
   private readonly MODAL_DURATION = 1500;
@@ -101,8 +101,9 @@ export class AnnouncementsComponent {
   addAction() {
     this.formActions.push({
       id: crypto.randomUUID(),
-      type: 'interest',
-      label: ''
+      type: 'action',
+      label: '',
+      url: ''
     });
   }
 
@@ -116,33 +117,7 @@ export class AnnouncementsComponent {
     this.formActions = this.formActions.filter(a => a.id !== id);
   }
 
-  // ================= LIST =================
-  toggleAnnouncement(id: string) {
-    this.announcements = this.announcements.map(a =>
-      a.id === id ? { ...a, isActive: !a.isActive } : a
-    );
-  }
-
-  deleteAnnouncement(id: string) {
-    this.announcements = this.announcements.filter(a => a.id !== id);
-  }
-
   // ================= CREATE =================
-  createAnnouncement(payload: Announcement) {
-    this.announcements = [payload, ...this.announcements];
-
-    // RESET
-    this.formMedia = undefined;
-    this.formMediaType = 'image';
-    this.formTitle = '';
-    this.formType = 'notice';
-    this.formRole = null;
-    this.formClassification = null;
-    this.formCity = null;
-    this.formIsActive = true;
-    this.formActions = [];
-  }
-
   submitAnnouncement() {
 
     if (!this.formTitle?.trim()) {
@@ -164,18 +139,73 @@ export class AnnouncementsComponent {
       targetStudentType: this.formClassification,
       city: this.formCity,
       isActive: this.formIsActive,
-      actions: this.formActions.map(a => ({
-        type: a.type,
-        label: a.label,
-        url: a.url
-      }))
+
+      actions: this.formActions.map(a => {
+        if (a.type === 'close') {
+          return {
+            type: 'close',
+            label: a.label
+          };
+        }
+
+        if (a.type === 'whatsapp') {
+          return {
+            type: 'whatsapp',
+            label: a.label,
+            url: this.buildWhatsappUrl(a.url)
+          };
+        }
+
+        return {
+          type: 'action',
+          label: a.label,
+          url: a.url || ''
+        };
+      })
     };
 
+    console.log('Payload:', payload);
     this.showSuccess('Anuncio creado');
-
-    console.log('Payload a enviar:', payload);
-
     this.createAnnouncement(payload);
+  }
+
+  // ================= WHATSAPP =================
+  buildWhatsappUrl(value?: string): string {
+    if (!value) return '';
+
+    let phone = value.replace(/\D/g, '');
+
+    // Ecuador por defecto
+    if (!phone.startsWith('593')) {
+      if (phone.startsWith('0')) {
+        phone = '593' + phone.substring(1);
+      } else {
+        phone = '593' + phone;
+      }
+    }
+
+    return `https://wa.me/${phone}`;
+  }
+
+  createAnnouncement(payload: Announcement) {
+    this.announcements = [payload, ...this.announcements];
+
+    this.formMedia = undefined;
+    this.formTitle = '';
+    this.formActions = [
+      {
+        id: crypto.randomUUID(),
+        type: 'action',
+        label: 'Más información',
+        url: ''
+      },
+      {
+        id: crypto.randomUUID(),
+        type: 'close',
+        label: 'Cerrar'
+      }
+    ];
+
   }
 
   // ================= MODAL =================
@@ -185,18 +215,12 @@ export class AnnouncementsComponent {
       show: true,
       message,
       isError: true,
-      isSuccess: false,
-      isInfo: false,
       title: 'Error',
       showButtons: false,
-      close: () => {
-        this.modal.show = false;
-      }
+      close: () => this.modal.show = false
     };
 
-    setTimeout(() => {
-      this.modal = { ...this.modal, show: false };
-    }, duration);
+    setTimeout(() => this.modal.show = false, duration);
   }
 
   showSuccess(message: string, duration = this.MODAL_DURATION) {
@@ -204,18 +228,23 @@ export class AnnouncementsComponent {
       ...this.modal,
       show: true,
       message,
-      isError: false,
       isSuccess: true,
-      isInfo: false,
       title: 'Éxito',
       showButtons: false,
-      close: () => {
-        this.modal.show = false;
-      }
+      close: () => this.modal.show = false
     };
 
-    setTimeout(() => {
-      this.modal = { ...this.modal, show: false };
-    }, duration);
+    setTimeout(() => this.modal.show = false, duration);
+  }
+
+  // ================= LIST =================
+  toggleAnnouncement(id: string) {
+    this.announcements = this.announcements.map(a =>
+      a.id === id ? { ...a, isActive: !a.isActive } : a
+    );
+  }
+
+  deleteAnnouncement(id: string) {
+    this.announcements = this.announcements.filter(a => a.id !== id);
   }
 }
