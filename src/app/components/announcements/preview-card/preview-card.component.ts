@@ -41,7 +41,7 @@ export class PreviewCardComponent implements OnChanges {
 
   constructor(private sanitizer: DomSanitizer) {}
 
-  // 🔥 SOLO CUANDO CAMBIA MEDIA
+  // SOLO CUANDO CAMBIA MEDIA
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['media'] && this.media) {
 
@@ -58,7 +58,7 @@ export class PreviewCardComponent implements OnChanges {
   }
 
   // =========================
-  // 🔥 BOTONES
+  // BOTONES
   // =========================
   get actionButtons(): Action[] {
     return this.actions?.filter(a =>

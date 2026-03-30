@@ -83,6 +83,11 @@ export class AnnouncementViewerComponent implements OnInit {
     return this.filtered[this.currentIndex] || null;
   }
 
+  private getStorageKey(a: Announcement): string {
+    const userId = this.user?.role ? this.user.role : 'anon';
+    return `announcement_seen_${userId}_${a.id}`;
+  }
+
   // 🔥 FILTRAMOS ACTIONS (CLAVE)
   get visibleActions(): Action[] {
     return this.currentAnnouncement?.actions.filter(a => a.type !== 'close') || [];
@@ -181,8 +186,12 @@ export class AnnouncementViewerComponent implements OnInit {
       if (a.city && this.user?.city) {
         const userCity = this.user.city.toLowerCase();
         const targetCity = a.city.toLowerCase();
-
         if (userCity !== targetCity) return false;
+      }
+
+      if (a.showMode === 'once_user') {
+        const key = this.getStorageKey(a);
+        if (localStorage.getItem(key)) return false;
       }
 
       return true;
@@ -239,6 +248,13 @@ export class AnnouncementViewerComponent implements OnInit {
     const current = this.currentAnnouncement;
 
     if (current) {
+      
+      //...guardar si es once_user
+      if (current.showMode === 'once_user') {
+      const key = this.getStorageKey(current);
+      localStorage.setItem(key, 'true');
+    }
+
       this.closed.emit(current);
     }
 

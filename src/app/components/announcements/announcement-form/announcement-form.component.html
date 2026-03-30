@@ -57,6 +57,7 @@
       <label class="label">Clasificación</label>
       <div class="select is-fullwidth announcement-select">
         <select
+          [disabled]="disableFilters"
           [value]="classification ?? ''"
           (change)="classificationChange.emit($any($event.target).value || null)"
         >
@@ -72,6 +73,7 @@
       <label class="label">Ciudad</label>
       <div class="select is-fullwidth announcement-select">
         <select
+          [disabled]="disableFilters"
           [value]="city ?? ''"
           (change)="cityChange.emit($any($event.target).value || null)"
         >
@@ -97,7 +99,10 @@
       <span class="slider"></span>
     </label>
 
-    <span class="status-text">
+    <span
+      class="status-text"
+      [class.inactive-text]="!isActive"
+    >
       {{ isActive ? 'Active' : 'Inactive' }}
     </span>
   </div>

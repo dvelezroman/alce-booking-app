@@ -13,7 +13,7 @@ export interface Announcement {
   startDate?: string | null
   endDate?: string | null
   actions: Action[]
-  showMode?: 'always' | 'once_session'
+  showMode?: 'always' | 'once_session' | 'once_user'
   aspectRatio?: 'horizontal' | 'vertical' | 'square' | 'auto'
 }
 

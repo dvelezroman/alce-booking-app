@@ -51,7 +51,7 @@ export class AnnouncementsComponent implements OnInit {
   formStartDate?: string;
   formEndDate?: string;
 
-  formShowMode: 'always' | 'once_session' = 'always';
+  formShowMode: 'always' | 'once_session' | 'once_user' = 'always';
   formAspectRatio: 'horizontal' | 'vertical' | 'square' = 'horizontal';
 
   // ================= editar anuncio =================
@@ -277,6 +277,11 @@ export class AnnouncementsComponent implements OnInit {
       color: action.color,
       delaySeconds: action.delaySeconds
     }));
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 
   cancelEdit() {

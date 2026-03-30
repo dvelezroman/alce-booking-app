@@ -29,4 +29,8 @@ export class AnnouncementFormComponent {
   @Output() cityChange = new EventEmitter<'Portoviejo' | 'Cuenca' | null>();
   @Output() isActiveChange = new EventEmitter<boolean>();
 
+  get disableFilters(): boolean {
+    return this.role === 'ADMIN' || this.role === 'INSTRUCTOR';
+  }
+
 }
