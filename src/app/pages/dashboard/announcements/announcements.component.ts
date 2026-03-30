@@ -1,15 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { MediaUploadComponent } from '../../../components/announcements/media-upload/media-upload.component';
 import { AnnouncementFormComponent } from '../../../components/announcements/announcement-form/announcement-form.component';
 import { ActionsBuilderComponent, ActionButton } from '../../../components/announcements/actions-builder/actions-builder.component';
 import { PreviewCardComponent } from '../../../components/announcements/preview-card/preview-card.component';
 import { AnnouncementsListComponent } from '../../../components/announcements/announcements-list/announcements-list.component';
-
 import { Announcement } from '../../../services/dtos/announcement.dto';
 import { StudentClassification } from '../../../services/dtos/student.dto';
 import { UserRole } from '../../../services/dtos/user.dto';
+import { AnnouncementService } from '../../../services/announcement.service';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 
@@ -28,43 +27,12 @@ import { ModalComponent } from '../../../components/modal/modal.component';
   templateUrl: './announcements.component.html',
   styleUrl: './announcements.component.scss'
 })
-export class AnnouncementsComponent {
+export class AnnouncementsComponent implements OnInit {
 
-  // ================= MOCK =================
-  announcements: Announcement[] = [
-    {
-      id: '1',
-      title: 'Summer Promotion',
-      type: 'promotion',
-      mediaUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600',
-      targetRole: UserRole.STUDENT,
-      targetStudentType: StudentClassification.TEENS,
-      city: 'Portoviejo',
-      isActive: true,
-      actions: []
-    },
-    {
-      id: '2',
-      title: 'Nuevo horario disponible',
-      type: 'notice',
-      mediaUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600',
-      targetRole: UserRole.STUDENT,
-      targetStudentType: StudentClassification.ADULTS,
-      city: 'Cuenca',
-      isActive: true,
-      actions: [
-        {
-          type: 'action',
-          label: 'Ver horarios',
-          url: 'https://alcecollege.com/horarios'
-        },
-        {
-          type: 'close',
-          label: 'Cerrar'
-        }
-      ]
-    }
-  ];
+  constructor(private announcementService: AnnouncementService) {}
+
+  // ================= DATA =================
+  announcements: Announcement[] = [];
 
   filterTab: 'all' | 'active' | 'inactive' = 'all';
 
@@ -83,8 +51,10 @@ export class AnnouncementsComponent {
   formEndDate?: string;
 
   formShowMode: 'always' | 'once_session' = 'always';
-
   formAspectRatio: 'horizontal' | 'vertical' | 'square' = 'horizontal';
+
+  // ================= confirmación para eliminar anuncio =================
+  pendingDeleteId: string | null = null;
 
   formActions: ActionButton[] = [
     {
@@ -102,6 +72,22 @@ export class AnnouncementsComponent {
 
   modal: ModalDto = modalInitializer();
   private readonly MODAL_DURATION = 1500;
+
+  // ================= INIT =================
+  ngOnInit(): void {
+    this.loadAnnouncements();
+  }
+
+  loadAnnouncements() {
+    this.announcementService.getAllAnnouncements().subscribe({
+      next: (res) => {
+        this.announcements = res;
+      },
+      error: (err) => {
+        console.error('Error cargando anuncios', err);
+      }
+    });
+  }
 
   // ================= ACTIONS =================
   addAction(type: 'action' | 'close' | 'whatsapp') {
@@ -140,12 +126,26 @@ export class AnnouncementsComponent {
     this.formActions = this.formActions.filter(a => a.id !== id);
   }
 
+  // ================= HELPERS =================
   toISODate(date?: string): string | null {
     if (!date) return null;
+    return new Date(date + 'T00:00:00').toISOString();
+  }
 
-    const iso = new Date(date + 'T00:00:00').toISOString();
+  buildWhatsappUrl(value?: string): string {
+    if (!value) return '';
 
-    return iso;
+    let phone = value.replace(/\D/g, '');
+
+    if (!phone.startsWith('593')) {
+      if (phone.startsWith('0')) {
+        phone = '593' + phone.substring(1);
+      } else {
+        phone = '593' + phone;
+      }
+    }
+
+    return `https://wa.me/${phone}`;
   }
 
   // ================= CREATE =================
@@ -163,7 +163,7 @@ export class AnnouncementsComponent {
 
     const payload: Announcement = {
       id: crypto.randomUUID(),
-      title: this.formTitle || 'Untitled Announcement',
+      title: this.formTitle,
       type: this.formType,
       mediaUrl: this.formMedia || '',
       targetRole: this.formRole,
@@ -175,62 +175,29 @@ export class AnnouncementsComponent {
       showMode: this.formShowMode,
       aspectRatio: this.formAspectRatio,
 
-      actions: this.formActions.map(a => {
-        if (a.type === 'close') {
-          return {
-            type: 'close',
-            label: a.label,
-            color: a.color,
-            delaySeconds: a.delaySeconds
-          };
-        }
-
-        if (a.type === 'whatsapp') {
-          return {
-            type: 'whatsapp',
-            label: a.label,
-            url: this.buildWhatsappUrl(a.url),
-            color: a.color,
-            delaySeconds: a.delaySeconds
-          };
-        }
-
-        return {
-          type: 'action',
-          label: a.label,
-          url: a.url || '',
-          color: a.color,
-          delaySeconds: a.delaySeconds
-        };
-      })
+      actions: this.formActions.map(a => ({
+        type: a.type,
+        label: a.label,
+        url: a.type === 'whatsapp' ? this.buildWhatsappUrl(a.url) : a.url,
+        color: a.color,
+        delaySeconds: a.delaySeconds
+      }))
     };
 
-    console.log('Payload:', payload);
-    this.showSuccess('Anuncio creado');
-    this.createAnnouncement(payload);
-  }
-
-  // ================= WHATSAPP =================
-  buildWhatsappUrl(value?: string): string {
-    if (!value) return '';
-
-    let phone = value.replace(/\D/g, '');
-
-    // Ecuador por defecto
-    if (!phone.startsWith('593')) {
-      if (phone.startsWith('0')) {
-        phone = '593' + phone.substring(1);
-      } else {
-        phone = '593' + phone;
+    this.announcementService.createAnnouncement(payload).subscribe({
+      next: (res) => {
+        this.announcements = [res, ...this.announcements];
+        this.showSuccess('Anuncio creado');
+        this.resetForm();
+      },
+      error: (err) => {
+        console.error(err);
+        this.showError('Error al crear anuncio');
       }
-    }
-
-    return `https://wa.me/${phone}`;
+    });
   }
 
-  createAnnouncement(payload: Announcement) {
-    this.announcements = [payload, ...this.announcements];
-
+  resetForm() {
     this.formMedia = undefined;
     this.formTitle = '';
     this.formActions = [
@@ -247,7 +214,73 @@ export class AnnouncementsComponent {
       }
     ];
     this.formShowMode = 'always';
+  }
 
+  // ================= DELETE =================
+  confirmDelete(id: string) {
+
+    this.pendingDeleteId = id;
+
+    this.modal = {
+      ...this.modal,
+      show: true,
+      message: '¿Seguro que deseas eliminar este anuncio?',
+      isError: false,
+      isSuccess: false,
+      isInfo: true,
+
+      showButtons: true,
+
+      close: () => this.closeDeleteModal(),
+      confirm: () => this.executeDelete()
+    };
+  }
+
+  executeDelete() {
+    if (!this.pendingDeleteId) return;
+
+    this.announcementService.deleteAnnouncement(this.pendingDeleteId).subscribe({
+      next: () => {
+        this.announcements = this.announcements.filter(
+          a => a.id !== this.pendingDeleteId
+        );
+
+        this.showSuccess('Eliminado');
+        this.pendingDeleteId = null;
+      },
+      error: (err) => {
+        console.error(err);
+        this.showError('Error al eliminar');
+      }
+    });
+
+    this.closeDeleteModal();
+  }
+
+  closeDeleteModal() {
+    this.modal.show = false;
+    this.pendingDeleteId = null;
+  }
+
+  // ================= TOGGLE =================
+  toggleAnnouncement(id: string) {
+
+    const current = this.announcements.find(a => a.id === id);
+    if (!current) return;
+
+    this.announcementService.updateAnnouncement(id, {
+      isActive: !current.isActive
+    }).subscribe({
+      next: (updated) => {
+        this.announcements = this.announcements.map(a =>
+          a.id === id ? updated : a
+        );
+      },
+      error: (err) => {
+        console.error(err);
+        this.showError('Error al actualizar');
+      }
+    });
   }
 
   // ================= MODAL =================
@@ -256,11 +289,9 @@ export class AnnouncementsComponent {
       ...this.modal,
       show: true,
       message,
-
       isError: true,
       isSuccess: false,
-      isInfo: false, 
-
+      isInfo: false,
       title: 'Error',
       showButtons: false,
       close: () => this.modal.show = false
@@ -274,11 +305,9 @@ export class AnnouncementsComponent {
       ...this.modal,
       show: true,
       message,
-
       isSuccess: true,
       isError: false,
       isInfo: false,
-
       title: 'Éxito',
       showButtons: false,
       close: () => this.modal.show = false
@@ -287,14 +316,5 @@ export class AnnouncementsComponent {
     setTimeout(() => this.modal.show = false, duration);
   }
 
-  // ================= LIST =================
-  toggleAnnouncement(id: string) {
-    this.announcements = this.announcements.map(a =>
-      a.id === id ? { ...a, isActive: !a.isActive } : a
-    );
-  }
-
-  deleteAnnouncement(id: string) {
-    this.announcements = this.announcements.filter(a => a.id !== id);
-  }
+  
 }

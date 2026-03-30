@@ -2,113 +2,137 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.65);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   z-index: 9999;
 }
 
-/* 🔥 MODAL GRANDE */
 .announcement-modal__content {
   position: relative;
-
   width: 90%;
   max-width: 720px;
-
   background: none;
   border-radius: 8px;
-
   padding: 34px 24px 20px 24px;
-
 }
 
-/* CONTENEDOR RELATIVO */
+/* tamaños del contenedor según formato */
+.announcement-modal__content.vertical {
+  max-width: 340px;
+}
+
+.announcement-modal__content.square {
+  max-width: 420px;
+}
+
 .announcement-modal__close {
   position: absolute;
-  top: 0px;
-  right: 0px;
-
+  top: 0;
+  right: 0;
   width: 36px;
   height: 36px;
-
   border: none;
   border-radius: 50%;
-
   background: rgba(0,0,0,0.7);
   color: white;
-
   font-size: 16px;
-
   cursor: pointer;
-  z-index: 2;
-
-  position: absolute;
+  z-index: 10;
 }
 
-/* 🔥 BADGE DEL TIEMPO */
 .close-delay {
   position: absolute;
   top: -10px;
   right: -10px;
-
-  background: #28336f; /* tu azul */
+  background: #28336f;
   color: white;
-
   font-size: 10px;
   font-weight: 600;
-
   padding: 2px 6px;
   border-radius: 10px;
-
   pointer-events: none;
 }
 
-/* 🎥 MEDIA MÁS GRANDE */
 .announcement-modal__media {
   width: 100%;
-  height: 360px;
-
   border-radius: 16px;
   overflow: hidden;
-
   background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* VIDEO BIEN AJUSTADO */
+/* horizontal */
+.announcement-modal__media.horizontal {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+/* vertical */
+.announcement-modal__media.vertical {
+  width: 275px;
+  height: 485px;
+  margin: 0 auto;
+}
+
+/* square */
+.announcement-modal__media.square {
+  width: 320px;
+  height: 320px;
+  margin: 0 auto;
+}
+
+/* auto */
+.announcement-modal__media.auto {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
 .announcement-modal__media iframe,
-.announcement-modal__media img {
+.announcement-modal__media img,
+.announcement-modal__media video {
   width: 100%;
   height: 100%;
+  object-fit: cover;
   border: none;
 }
 
-/* =========================
-   🎥 VIDEO WRAPPER
-========================= */
 .video-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
-/* OVERLAY TRANSPARENTE */
+.video-wrapper.horizontal {
+  width: 100%;
+  height: 100%;
+}
+
+.video-wrapper.vertical {
+  width: 100%;
+  height: 100%;
+}
+
+.video-wrapper.square {
+  width: 100%;
+  height: 100%;
+}
+
 .video-overlay {
   position: absolute;
   inset: 0;
   background: transparent;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   cursor: pointer;
   z-index: 2;
 }
 
 .video-overlay:hover {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .video-lock {
@@ -119,35 +143,22 @@
   cursor: not-allowed;
 }
 
-/* 🔵 BOTÓN PLAY */
 .video-overlay::before {
   content: "▶";
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 70px;
   height: 70px;
-
   border-radius: 999px;
-
   background: #28336f;
   color: white;
-
   font-size: 28px;
   padding-left: 4px;
-
-  /* 🔥 glow sin tapar */
   box-shadow:
     0 10px 25px rgba(40, 51, 111, 0.4),
     0 0 30px rgba(40, 51, 111, 0.25);
-
   transition: all 0.25s ease;
-}
-
-.video-overlay:hover::before {
-  transform: scale(1.1);
 }
 
 .video-overlay:hover::before {
@@ -155,20 +166,10 @@
   box-shadow: 0 14px 30px rgba(40, 51, 111, 0.5);
 }
 
-/* IFRAME */
-.video-wrapper iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-/* 🔘 BOTONES PRO */
 .announcement-modal__actions {
   margin-top: 16px;
-
   display: flex;
   gap: 10px;
-
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -176,32 +177,24 @@
 .announcement-modal__actions button {
   flex: 1 1 auto;
   max-width: 200px;
-
   height: 44px;
-
   border: none;
   border-radius: 12px;
-
   color: #ffffff;
   font-size: 0.9rem;
   font-weight: 500;
-
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   transition: all 0.2s ease;
 }
 
-/* HOVER */
 .announcement-modal__actions button:hover {
   transform: translateY(-1px);
   opacity: 0.9;
 }
 
-/* DISABLED */
 .announcement-modal__actions button:disabled {
   opacity: 0.5;
   cursor: not-allowed;

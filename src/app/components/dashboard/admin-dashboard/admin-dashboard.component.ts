@@ -18,6 +18,7 @@ import { DashboardWhatsappWidgetComponent } from "../../widgets-admin/dashboard-
 import { DashboardSettingsWidgetComponent } from "../../widgets-admin/dashboard-settings-widget/dashboard-settings-widget.component";
 import { AnnouncementViewerComponent } from '../../announcements/announcement-viewer/announcement-viewer.component';
 import { Announcement } from '../../../services/dtos/announcement.dto';
+import { AnnouncementService } from '../../../services/announcement.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -29,7 +30,8 @@ import { Announcement } from '../../../services/dtos/announcement.dto';
     // DashboardEmailsWidgetComponent,
     // DashboardWhatsappWidgetComponent,
     DashboardSettingsWidgetComponent,
-    AnnouncementViewerComponent
+    AnnouncementViewerComponent,
+    
 ],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss',
@@ -45,7 +47,9 @@ export class AdminDashboardComponent implements OnInit, OnChanges {
   stats = ADMIN_STATS;
   modules = ADMIN_MODULES;
 
-  announcements: Announcement[] = ADMIN_ANNOUNCEMENTS;
+  announcements: Announcement[] = [];
+
+  constructor(private announcementService: AnnouncementService) {}
 
   ngOnInit(): void {
     this.resolveAdmin();
@@ -57,11 +61,24 @@ export class AdminDashboardComponent implements OnInit, OnChanges {
     }
   }
 
+  loadAnnouncements() {
+    this.announcementService.getAnnouncementsForMe().subscribe({
+      next: (data) => {
+        this.announcements = data;
+      },
+      error: (err) => {
+        console.error('Error cargando anuncios admin', err);
+      }
+    });
+  }
+
   private resolveAdmin(): void {
     if (!this.userData) return;
     if (this.userData.role !== UserRole.ADMIN) return;
 
     this.adminName = this.userData.firstName ?? 'Administrador';
+
+    this.loadAnnouncements();
   }
 
   get visibleAnnouncements(): Announcement[] {

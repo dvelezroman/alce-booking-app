@@ -9,14 +9,10 @@ import {
 
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { StudentClassification } from '../../../services/dtos/student.dto';
-
-import {
-  InstructorCalendarComponent
-} from '../../../components/home/instructor-calendar/instructor-calendar.component';
-
+import { InstructorCalendarComponent } from '../../../components/home/instructor-calendar/instructor-calendar.component';
 import { AnnouncementViewerComponent } from '../../announcements/announcement-viewer/announcement-viewer.component';
 import { Announcement } from '../../../services/dtos/announcement.dto';
-import { INSTRUCTOR_ANNOUNCEMENTS } from './instructor-dashboard-mock';
+import { AnnouncementService } from '../../../services/announcement.service';
 
 
 type AnnouncementViewerUser = {
@@ -43,8 +39,10 @@ export class InstructorDashboardComponent implements OnInit, OnChanges {
 
   instructorId: number | null = null;
 
-  // 🔥 ANUNCIOS
-  announcements: Announcement[] = INSTRUCTOR_ANNOUNCEMENTS;
+  // ANUNCIOS
+  announcements: Announcement[] = [];
+
+  constructor(private announcementService: AnnouncementService) {}
 
   ngOnInit(): void {
     this.resolveInstructor();
@@ -56,12 +54,25 @@ export class InstructorDashboardComponent implements OnInit, OnChanges {
     }
   }
 
+  loadAnnouncements() {
+    this.announcementService.getAnnouncementsForMe().subscribe({
+      next: (data) => {
+        this.announcements = data;
+      },
+      error: (err) => {
+        console.error('Error cargando anuncios instructor', err);
+      }
+    });
+  }
+
   private resolveInstructor(): void {
     if (!this.userData) return;
     if (this.userData.role !== UserRole.INSTRUCTOR) return;
     if (!this.userData.instructor) return;
 
     this.instructorId = this.userData.instructor.id;
+
+    this.loadAnnouncements();
   }
 
   get visibleAnnouncements(): Announcement[] {

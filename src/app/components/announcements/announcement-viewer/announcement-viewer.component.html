@@ -1,6 +1,6 @@
 <div *ngIf="showModal && currentAnnouncement as a" class="announcement-modal">
 
-  <div class="announcement-modal__content">
+  <div class="announcement-modal__content" [ngClass]="a.aspectRatio || 'horizontal'">
 
     <!-- ❌ CLOSE SOLO ARRIBA -->
     <button
@@ -14,66 +14,60 @@
       >
         {{ delaySecondsMap[getActionIndex(closeAction)] }}s
       </span>
-
       ✕
     </button>
 
     <!-- 🎥 MEDIA -->
-    <div class="announcement-modal__media">
-
+    <div
+      class="announcement-modal__media"
+      [ngClass]="a.aspectRatio || 'horizontal'"
+    >
       <img
         *ngIf="a.mediaUrl && !isYoutubeMedia"
         [src]="a.mediaUrl"
       />
 
-      <div *ngIf="a.mediaUrl && isYoutubeMedia" class="video-wrapper">
-
-        <!-- 🔥 IFRAME SIEMPRE VISIBLE -->
+      <div
+        *ngIf="a.mediaUrl && isYoutubeMedia"
+        class="video-wrapper"
+        [ngClass]="a.aspectRatio || 'horizontal'"
+      >
         <iframe
           [src]="safeYoutubeUrl"
           allow="autoplay"
           allowfullscreen
         ></iframe>
 
-        <!-- 🔒 BLOQUEADOR SOLO MIENTRAS HAY DELAY -->
         <div
           *ngIf="isVideoLocked()"
           class="video-lock"
         ></div>
 
-        <!-- ▶️ PLAY ENCIMA -->
         <div
           *ngIf="!hasVideoStarted"
           class="video-overlay"
           (click)="playVideo()"
         ></div>
-
       </div>
-
     </div>
 
     <!-- 🔘 ACTIONS (SIN CLOSE) -->
     <div *ngIf="a.actions.length" class="announcement-modal__actions">
-
-        <ng-container *ngFor="let action of a.actions">
-
-          <button
-            *ngIf="action.type !== 'close'"
-            [disabled]="isDisabled(action, getActionIndex(action))"
-            (click)="handleAction(action)"
-            [style.background]="getButtonColor(action)"
-            class="announcement-modal__btn"
-          >
-            <span *ngIf="action.delaySeconds && !delayMap[getActionIndex(action)]">
-              ({{ delaySecondsMap[getActionIndex(action)] }}s)
-            </span>
-
-            {{ action.label }}
-          </button>
-
-        </ng-container>
-
-        </div>
+      <ng-container *ngFor="let action of a.actions">
+        <button
+          *ngIf="action.type !== 'close'"
+          [disabled]="isDisabled(action, getActionIndex(action))"
+          (click)="handleAction(action)"
+          [style.background]="getButtonColor(action)"
+          class="announcement-modal__btn"
+        >
+          <span *ngIf="action.delaySeconds && !delayMap[getActionIndex(action)]">
+            ({{ delaySecondsMap[getActionIndex(action)] }}s)
+          </span>
+          {{ action.label }}
+        </button>
+      </ng-container>
+    </div>
 
   </div>
 

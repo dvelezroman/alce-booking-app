@@ -1,30 +1,14 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  Input,
-  OnInit,
-  OnChanges,
-  SimpleChanges,
-  OnDestroy,
-} from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
-
 import { UserDto, UserRole, UserStatus, SuspensionInfo } from '../../../services/dtos/user.dto';
 import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
-
 import { UsersService } from '../../../services/users.service';
 import { StudentsService } from '../../../services/students.service';
-
-import {
-  setDataCompleted,
-  updateStudentData,
-  updateUserData,
-} from '../../../store/user.action';
-
+import { setDataCompleted, updateStudentData, updateUserData } from '../../../store/user.action';
 import { CountdownBannerComponent } from '../../../components/home/countdown-banner/countdown-banner.component';
 import { AssessmentAnnouncementComponent } from '../../../components/home/assessment-announcement/assessment-announcement.component';
 import { StudentLiveClassesComponent } from '../../../components/student-live-classes/student-live-classes.component';
@@ -44,7 +28,7 @@ import { AlceKidsAvisoComponent } from '../../home/alce-kids-aviso/alce-kids-avi
 import { AnnouncementViewerComponent } from '../../announcements/announcement-viewer/announcement-viewer.component';
 import { Announcement } from '../../../services/dtos/announcement.dto';
 import { StudentClassification } from '../../../services/dtos/student.dto';
-import { STUDENT_ANNOUNCEMENTS } from './student-dashboard-mock';
+import { AnnouncementService } from '../../../services/announcement.service';
 
 type AnnouncementViewerUser = {
   role?: UserRole;
@@ -112,7 +96,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   minHoursRequired: number | null = null;
 
-  announcements: Announcement[] = STUDENT_ANNOUNCEMENTS;
+  announcements: Announcement[] = [];
 
 
   constructor(
@@ -122,7 +106,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     private studentsService: StudentsService,
     private introVideoService: StudentIntroVideoService,
     private instructorEvaluationService: InstructorEvaluationService,
-    private configService: AssessmentPointsConfigService
+    private configService: AssessmentPointsConfigService,
+    private announcementService: AnnouncementService
   ) {}
 
   ngOnInit(): void {
@@ -144,7 +129,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.loadMinHoursRequired();
-    // this.loadAnnouncements();
+    this.loadAnnouncements();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -180,13 +165,16 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  // loadAnnouncements() {
-  //   this.usersService.getAnnouncements().subscribe({
-  //     next: (data) => {
-  //       this.announcements = data;
-  //     }
-  //   });
-  // }
+  loadAnnouncements() {
+    this.announcementService.getAnnouncementsForMe().subscribe({
+      next: (data) => {
+        this.announcements = data;
+      },
+      error: (err) => {
+        console.error('Error cargando anuncios', err);
+      }
+    });
+  }
 
   private loadMinHoursRequired(): void {
     this.configService.getById().subscribe({
@@ -235,7 +223,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     if (this.isLoggedIn && this.shouldShowAnnouncement()) {
       this.showAssessmentAnnouncement = true;
     }
-
+    
+    this.loadAnnouncements();
     this.loadPendingClassEvaluations();
   }
 
