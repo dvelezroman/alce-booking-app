@@ -23,6 +23,7 @@ export class AnnouncementCardComponent implements OnChanges {
 
   @Input() announcement!: Announcement;
 
+  @Output() edit = new EventEmitter<void>();
   @Output() toggle = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
 
@@ -50,6 +51,10 @@ export class AnnouncementCardComponent implements OnChanges {
 
   onToggle() {
     this.toggle.emit();
+  }
+
+  onEdit() {
+    this.edit.emit();
   }
 
   onDelete() {

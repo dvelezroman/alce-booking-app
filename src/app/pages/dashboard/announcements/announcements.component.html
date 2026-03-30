@@ -9,8 +9,12 @@
   <div class="settings-card announcements-card">
 
     <div class="settings-header">
-      <h3>Crear anuncio</h3>
-      <p>Configura y previsualiza los anuncios</p>
+      <h3>{{ editingAnnouncement ? 'Editar anuncio' : 'Crear anuncio' }}</h3>
+      <p>
+        {{ editingAnnouncement
+          ? 'Modifica la configuración del anuncio seleccionado'
+          : 'Configura y previsualiza los anuncios' }}
+      </p>
     </div>
 
     <!-- GRID -->
@@ -50,6 +54,7 @@
         <app-media-upload
           [media]="formMedia"
           [type]="formMediaType"
+          [aspectRatio]="formAspectRatio"
           (mediaChange)="formMedia = $event"
           (aspectRatioChange)="formAspectRatio = $event"
         />
@@ -170,7 +175,7 @@
           <app-preview-card
             [title]="formTitle || 'Untitled Announcement'"
             [type]="formType || ''"
-            [media]="formMedia"
+            [media]="formMedia || originalMedia"
             [role]="formRole"
             [studentClassification]="formClassification"
             [city]="formCity"
@@ -186,8 +191,20 @@
 
     <!-- BUTTON -->
     <div class="button-row">
-      <button class="button is-primary" (click)="submitAnnouncement()">
-        Crear Anuncio
+      <button
+        class="button primary-btn"
+        (click)="editingAnnouncement ? updateAnnouncement() : submitAnnouncement()"
+      >
+        {{ editingAnnouncement ? 'Guardar cambios' : 'Crear Anuncio' }}
+      </button>
+
+      <button
+        *ngIf="editingAnnouncement"
+        type="button"
+        class="button cancel-btn"
+        (click)="cancelEdit()"
+      >
+        Cancelar
       </button>
     </div>
 
@@ -207,6 +224,7 @@
       (filterChange)="filterTab = $event"
       (toggle)="toggleAnnouncement($event)"
       (delete)="confirmDelete($event)"
+      (edit)="editAnnouncement($event)"
     />
 
   </div>
@@ -221,5 +239,6 @@
   [isInfo]="modal.isInfo"
   [title]="modal.title || ''"
   [showButtons]="modal.showButtons || false"
+  (confirmAction)="modal.confirm?.()"
   (close)="modal.close()"
 ></app-modal>

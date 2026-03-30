@@ -78,12 +78,12 @@
       <!-- DELAY -->
       <div class="select select-delay">
         <select
-          [value]="action.delaySeconds || ''"
-          (change)="onUpdate(action.id, { delaySeconds: $any($event.target).value })"
+          [ngModel]="action.delaySeconds ?? ''"
+          (ngModelChange)="onUpdate(action.id, { delaySeconds: $event })"
         >
           <option value="">Sin delay</option>
 
-          <option *ngFor="let d of delayOptions" [value]="d">
+          <option *ngFor="let d of delayOptions" [ngValue]="d">
             {{ d }} segundos
           </option>
         </select>

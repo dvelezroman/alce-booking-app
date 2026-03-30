@@ -38,6 +38,7 @@ export class AnnouncementsComponent implements OnInit {
 
   // ================= MEDIA =================
   formMedia?: string;
+  originalMedia?: string;
   formMediaType: 'image' | 'video' = 'image';
 
   // ================= FORM =================
@@ -52,6 +53,9 @@ export class AnnouncementsComponent implements OnInit {
 
   formShowMode: 'always' | 'once_session' = 'always';
   formAspectRatio: 'horizontal' | 'vertical' | 'square' = 'horizontal';
+
+  // ================= editar anuncio =================
+  editingAnnouncement: Announcement | null = null;
 
   // ================= confirmación para eliminar anuncio =================
   pendingDeleteId: string | null = null;
@@ -197,8 +201,123 @@ export class AnnouncementsComponent implements OnInit {
     });
   }
 
+
+  // ================= UPDATE =================
+  updateAnnouncement() {
+
+    if (!this.editingAnnouncement) return;
+
+    const id = this.editingAnnouncement.id;
+
+    const payload: any = {
+      title: this.formTitle,
+      type: this.formType,
+      targetRole: this.formRole,
+      targetStudentType: this.formClassification,
+      city: this.formCity,
+      isActive: this.formIsActive,
+      startDate: this.toISODate(this.formStartDate),
+      endDate: this.toISODate(this.formEndDate),
+      showMode: this.formShowMode,
+      aspectRatio: this.formAspectRatio,
+      actions: this.formActions.map(a => ({
+        type: a.type,
+        label: a.label,
+        url: a.url,
+        color: a.color,
+        delaySeconds: a.delaySeconds
+      }))
+    };
+
+    // SOLO SI CAMBIA MEDIA
+    if (this.formMedia) {
+      payload.mediaUrl = this.formMedia;
+    }
+
+    this.announcementService.updateAnnouncement(id, payload).subscribe({
+      next: (updated) => {
+
+        this.announcements = this.announcements.map(a =>
+          a.id === id ? updated : a
+        );
+
+        this.showSuccess('Actualizado');
+        this.cancelEdit();
+      },
+      error: () => this.showError('Error al actualizar')
+    });
+  }
+
+  editAnnouncement(a: Announcement) {
+
+    this.formMedia = undefined;
+    this.originalMedia = a.mediaUrl;
+    this.editingAnnouncement = a;
+
+    this.formTitle = a.title || '';
+    this.formType = a.type;
+
+    this.formRole = a.targetRole;
+    this.formClassification = a.targetStudentType || null;
+    this.formCity = a.city || null;
+
+    this.formIsActive = a.isActive;
+
+    this.formStartDate = a.startDate ? a.startDate.split('T')[0] : undefined;
+    this.formEndDate = a.endDate ? a.endDate.split('T')[0] : undefined;
+
+    this.formShowMode = a.showMode || 'always';
+    this.formAspectRatio = a.aspectRatio === 'vertical' || a.aspectRatio === 'square' ? a.aspectRatio : 'horizontal';
+
+    this.formActions = a.actions.map(action => ({
+      id: crypto.randomUUID(),
+      type: action.type,
+      label: action.label,
+      url: action.url,
+      color: action.color,
+      delaySeconds: action.delaySeconds
+    }));
+  }
+
+  cancelEdit() {
+    this.editingAnnouncement = null;
+
+    // limpiar formulario
+    this.formTitle = '';
+    this.formType = null;
+    this.formRole = null;
+    this.formClassification = null;
+    this.formCity = null;
+    this.formIsActive = true;
+
+    this.formStartDate = undefined;
+    this.formEndDate = undefined;
+
+    this.formShowMode = 'always';
+    this.formAspectRatio = 'horizontal';
+
+    this.formActions = [
+      {
+        id: crypto.randomUUID(),
+        type: 'action',
+        label: 'Más información',
+        url: ''
+      },
+      {
+        id: crypto.randomUUID(),
+        type: 'close',
+        label: 'Cerrar'
+      }
+    ];
+
+    this.formMedia = undefined;
+    this.originalMedia = undefined;
+  }
+  
+
   resetForm() {
     this.formMedia = undefined;
+    this.originalMedia = undefined;
     this.formTitle = '';
     this.formActions = [
       {
@@ -238,6 +357,8 @@ export class AnnouncementsComponent implements OnInit {
 
   executeDelete() {
     if (!this.pendingDeleteId) return;
+
+    const id = this.pendingDeleteId;
 
     this.announcementService.deleteAnnouncement(this.pendingDeleteId).subscribe({
       next: () => {

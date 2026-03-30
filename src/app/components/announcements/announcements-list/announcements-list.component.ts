@@ -18,6 +18,7 @@ export class AnnouncementsListComponent {
   @Output() filterChange = new EventEmitter<'all' | 'active' | 'inactive'>();
   @Output() toggle = new EventEmitter<string>();
   @Output() delete = new EventEmitter<string>();
+  @Output() edit = new EventEmitter<Announcement>();
 
   get filteredAnnouncements(): Announcement[] {
     if (this.filterTab === 'active') {
@@ -37,6 +38,10 @@ export class AnnouncementsListComponent {
 
   onToggle(id: string) {
     this.toggle.emit(id);
+  }
+
+  onEdit(a: Announcement) {
+    this.edit.emit(a);
   }
 
   onDelete(id: string) {

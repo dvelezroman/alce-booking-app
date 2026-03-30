@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 export type ActionType = 'action' | 'close' | 'whatsapp';
 
@@ -15,7 +16,7 @@ export interface ActionButton {
 @Component({
   selector: 'app-actions-builder',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './actions-builder.component.html',
   styleUrl: './actions-builder.component.scss'
 })
@@ -40,7 +41,7 @@ export class ActionsBuilderComponent {
   onAdd() {
 
     if (this.actions.length >= 3) {
-      this.error.emit('Máximo 3 botones permitidos');
+      this.error.emit('Máximo 3 botones');
       return;
     }
 
