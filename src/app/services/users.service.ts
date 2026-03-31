@@ -179,6 +179,13 @@ export class UsersService implements OnInit{
         }
       });
 
+      // limpiar session announcements
+      Object.keys(sessionStorage).forEach(key => {
+        if (key.startsWith('announcement_session_')) {
+          sessionStorage.removeItem(key);
+        }
+      });
+
       // sessionStorage.removeItem('intro-video-shown-session');
       this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
       this.store.dispatch(setAdminStatus({ isAdmin: false }));

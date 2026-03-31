@@ -70,6 +70,16 @@ export class AnnouncementViewerComponent implements OnInit {
 
       this.prepareMedia();
 
+      const current = this.currentAnnouncement;
+      const alreadySeen =
+        current?.showMode === 'once_user' &&
+        this.isAlreadySeen(current);
+
+      // si ya se vio el video → activar botones desde inicio
+      if (this.isYoutubeMedia && alreadySeen) {
+        this.startDelays(current?.actions || []);
+      }
+
       if (!this.isYoutubeMedia) {
         this.startDelays(this.currentAnnouncement?.actions || []);
       }
@@ -190,8 +200,11 @@ export class AnnouncementViewerComponent implements OnInit {
       }
 
       if (a.showMode === 'once_user') {
-        const key = this.getStorageKey(a);
-        if (localStorage.getItem(key)) return false;
+
+        const sessionKey = `announcement_session_${a.id}`;
+
+        // si ya lo vio en esta sesión → NO mostrar
+        if (sessionStorage.getItem(sessionKey)) return false;
       }
 
       return true;
@@ -242,18 +255,38 @@ export class AnnouncementViewerComponent implements OnInit {
   }
 
   // =========================
+  // HELPER: YA SE VIO ESTE ANNOUNCEMENT ?
+  // =========================
+  private isAlreadySeen(a: Announcement | null): boolean {
+    if (!a) return false;
+
+    const key = this.getStorageKey(a);
+    return !!localStorage.getItem(key);
+  }
+
+  private isSeenThisSession(a: Announcement): boolean {
+    const key = `announcement_session_${a.id}`;
+    return !!sessionStorage.getItem(key);
+  }
+
+  // =========================
   // NEXT
   // =========================
   next() {
     const current = this.currentAnnouncement;
 
     if (current) {
-      
-      //...guardar si es once_user
+
       if (current.showMode === 'once_user') {
-      const key = this.getStorageKey(current);
-      localStorage.setItem(key, 'true');
-    }
+
+        // persistente (ya lo vio alguna vez)
+        const key = this.getStorageKey(current);
+        localStorage.setItem(key, 'true');
+
+        // SOLO sesión (no repetir en esta sesión)
+        const sessionKey = `announcement_session_${current.id}`;
+        sessionStorage.setItem(sessionKey, 'true');
+      }
 
       this.closed.emit(current);
     }
@@ -271,20 +304,34 @@ export class AnnouncementViewerComponent implements OnInit {
     this.hasVideoStarted = false;
     this.videoStarted = false;
 
-    // SI ES IMAGEN → delay inmediato
+    const nextAnnouncement = this.currentAnnouncement;
+    const alreadySeen =
+      nextAnnouncement?.showMode === 'once_user' &&
+      this.isAlreadySeen(nextAnnouncement);
+
+    // SI ES IMAGEN
     if (!this.isYoutubeMedia) {
-      this.startDelays(this.currentAnnouncement?.actions || []);
+      this.startDelays(nextAnnouncement?.actions || []);
     } else {
-      // SI ES VIDEO → botones empiezan deshabilitados
-      const actions = this.currentAnnouncement?.actions || [];
+
+      const actions = nextAnnouncement?.actions || [];
 
       actions.forEach((a, index) => {
+
+        // SI YA SE VIO → TODO ACTIVO
+        if (alreadySeen) {
+          this.delayMap[index] = true;
+          return;
+        }
+
+        // comportamiento normal
         if (a.delaySeconds && a.delaySeconds > 0) {
           this.delayMap[index] = false;
           this.delaySecondsMap[index] = a.delaySeconds;
         } else {
           this.delayMap[index] = true;
         }
+
       });
     }
   }
@@ -316,8 +363,21 @@ export class AnnouncementViewerComponent implements OnInit {
     this.delayMap = [];
     this.delaySecondsMap = [];
 
+    const current = this.currentAnnouncement;
+
+    const alreadySeen =
+      current?.showMode === 'once_user' &&
+      this.isAlreadySeen(current);
+
     actions.forEach((a, index) => {
 
+      // SI YA SE VIO → IGNORAR DELAY
+      if (alreadySeen) {
+        this.delayMap[index] = true;
+        return;
+      }
+
+      // comportamiento normal
       if (a.delaySeconds && a.delaySeconds > 0) {
 
         this.delayMap[index] = false;

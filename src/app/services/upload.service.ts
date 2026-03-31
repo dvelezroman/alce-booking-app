@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UploadService {
@@ -12,14 +13,17 @@ export class UploadService {
     const formData = new FormData();
     formData.append('file', file);
 
-    // detectar tipo automáticamente
-    const isVideo = file.type.startsWith('video/');
-    const folder = isVideo ? 'videos' : 'images';
+    const token = localStorage.getItem('accessToken');
 
     const res: any = await firstValueFrom(
       this.http.post(
-        `/api/upload/media?subfolder=announcements/${folder}`,
-        formData
+        `${environment.apiUrl}/upload/image?subfolder=alce-announcements`,
+        formData,
+        {
+          headers: {
+            'x-access-token': token || ''
+          }
+        }
       )
     );
 

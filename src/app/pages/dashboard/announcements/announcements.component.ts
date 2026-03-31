@@ -223,7 +223,7 @@ export class AnnouncementsComponent implements OnInit {
       actions: this.formActions.map(a => ({
         type: a.type,
         label: a.label,
-        url: a.url,
+        url: a.type === 'whatsapp' ? this.buildWhatsappUrl(a.url) : a.url,
         color: a.color,
         delaySeconds: a.delaySeconds
       }))
