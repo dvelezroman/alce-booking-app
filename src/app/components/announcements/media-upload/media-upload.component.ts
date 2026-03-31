@@ -32,7 +32,7 @@ export class MediaUploadComponent {
 
   fileSizeLabel: string | null = null;
 
-  private readonly MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+  private readonly MAX_IMAGE_SIZE = 10 * 1024 * 1024;
   private readonly MAX_VIDEO_SIZE = 50 * 1024 * 1024;
 
   constructor(private announcementService: AnnouncementService) {}
@@ -89,7 +89,7 @@ export class MediaUploadComponent {
     if (file.size > maxSize) {
       this.error =
         this.type === 'image'
-          ? 'La imagen no debe superar los 5MB'
+          ? 'La imagen no debe superar los 10MB'
           : 'El video no debe superar los 50MB';
     } else {
       this.error = null;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -55,20 +55,11 @@ export class AnnouncementService {
     key: string;
     contentType: string;
   }> {
-
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', file, file.name);
 
-    return this.http.post<{
-      url: string;
-      key: string;
-      contentType: string;
-    }>(
-      `${environment.apiUrl}/announcements/upload-media`,
-      formData
-    );
+    return this.http.post<{ url: string; key: string; contentType: string }>( `${environment.apiUrl}/announcements/upload-media`, formData );
   }
-
 
   // =========================
   // 🔹 DELETE MEDIA (S3)

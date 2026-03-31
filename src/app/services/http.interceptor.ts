@@ -11,10 +11,12 @@ export const HttpInterceptor: HttpInterceptorFn = (req, next) => {
   // Show spinner before the request starts
   spinner.show();
 
+  const isFormData = req.body instanceof FormData;
+
   const authReq = req.clone({
     setHeaders: {
       Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' })
     }
   });
   // Pass the cloned request with the updated header to the next handler
