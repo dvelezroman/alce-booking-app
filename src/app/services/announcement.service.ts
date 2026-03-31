@@ -46,4 +46,37 @@ export class AnnouncementService {
   deleteAnnouncement(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  // =========================
+  // 🔹 UPLOAD MEDIA (S3)
+  // =========================
+  uploadMedia(file: File): Observable<{
+    url: string;
+    key: string;
+    contentType: string;
+  }> {
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<{
+      url: string;
+      key: string;
+      contentType: string;
+    }>(
+      `${environment.apiUrl}/announcements/upload-media`,
+      formData
+    );
+  }
+
+
+  // =========================
+  // 🔹 DELETE MEDIA (S3)
+  // =========================
+  deleteMedia(url: string): Observable<void> {
+    return this.http.post<void>(
+      `${environment.apiUrl}/announcements/delete-media`,
+      { url }
+    );
+  }
 }

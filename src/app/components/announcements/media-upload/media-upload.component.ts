@@ -1,7 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UploadService } from '../../../services/upload.service';
+import { AnnouncementService } from '../../../services/announcement.service';
 import { FormsModule } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 
 type MediaType = 'image' | 'video';
 
@@ -31,33 +32,22 @@ export class MediaUploadComponent {
 
   fileSizeLabel: string | null = null;
 
-  // LÍMITES
   private readonly MAX_IMAGE_SIZE = 5 * 1024 * 1024;
   private readonly MAX_VIDEO_SIZE = 50 * 1024 * 1024;
 
-  constructor(private uploadService: UploadService) {}
+  constructor(private announcementService: AnnouncementService) {}
 
   setAspect(value: 'horizontal' | 'vertical' | 'square') {
     this.aspectRatio = value;
     this.aspectRatioChange.emit(value);
   }
 
-  // =========================
-  // CAMBIAR MODO (CLAVE)
-  // =========================
   switchMode(useUrl: boolean) {
     this.useUrl = useUrl;
-
-    // limpiar TODO
     this.resetState();
-
-    // limpiar input URL
     this.urlInput = '';
   }
 
-  // =========================
-  // RESET GLOBAL
-  // =========================
   resetState() {
     this.media = undefined;
     this.file = null;
@@ -69,19 +59,14 @@ export class MediaUploadComponent {
     this.mediaChange.emit(undefined);
   }
 
-  // =========================
-  // SELECCIONAR ARCHIVO
-  // =========================
   handleFile(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
 
     if (!file) return;
 
-    // limpiar estado previo
     this.resetState();
 
-    // VALIDAR TIPO
     if (this.type === 'image' && !file.type.startsWith('image/')) {
       this.error = 'Debe seleccionar una imagen';
       return;
@@ -92,14 +77,10 @@ export class MediaUploadComponent {
       return;
     }
 
-    // PREVIEW SIEMPRE
     this.file = file;
     this.media = URL.createObjectURL(file);
-
-    // tamaño
     this.fileSizeLabel = this.formatFileSize(file.size);
 
-    // VALIDACIÓN
     const maxSize =
       this.type === 'image'
         ? this.MAX_IMAGE_SIZE
@@ -116,7 +97,7 @@ export class MediaUploadComponent {
   }
 
   // =========================
-  // SUBIR A S3
+  // 🔥 SUBIR (NUEVO)
   // =========================
   async uploadToS3() {
 
@@ -126,7 +107,11 @@ export class MediaUploadComponent {
     this.uploading = true;
 
     try {
-      const url = await this.uploadService.uploadMedia(this.file);
+      const res = await firstValueFrom(
+        this.announcementService.uploadMedia(this.file)
+      );
+
+      const url = res.url;
 
       this.media = url;
       this.mediaChange.emit(url);
@@ -141,9 +126,6 @@ export class MediaUploadComponent {
     }
   }
 
-  // =========================
-  // USAR URL
-  // =========================
   applyUrl() {
     if (!this.urlInput) return;
 
@@ -155,25 +137,16 @@ export class MediaUploadComponent {
     this.uploaded = true;
   }
 
-  // =========================
-  // ELIMINAR
-  // =========================
   remove(event: Event) {
     event.stopPropagation();
     this.resetState();
     this.urlInput = '';
   }
 
-  // =========================
-  // INPUT FILE
-  // =========================
   triggerInput(input: HTMLInputElement) {
     input.click();
   }
 
-  // =========================
-  // FORMATO TAMAÑO
-  // =========================
   formatFileSize(size: number): string {
     if (size >= 1024 * 1024) {
       return (size / 1024 / 1024).toFixed(2) + ' MB';

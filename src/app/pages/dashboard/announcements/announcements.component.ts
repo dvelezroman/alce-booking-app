@@ -11,6 +11,7 @@ import { UserRole } from '../../../services/dtos/user.dto';
 import { AnnouncementService } from '../../../services/announcement.service';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-announcements',
@@ -364,13 +365,21 @@ export class AnnouncementsComponent implements OnInit {
     if (!this.pendingDeleteId) return;
 
     const id = this.pendingDeleteId;
+    const announcement = this.announcements.find(a => a.id === id);
 
-    this.announcementService.deleteAnnouncement(this.pendingDeleteId).subscribe({
+    if (!announcement) return;
+
+    const isS3 = this.isS3Media(announcement.mediaUrl);
+
+    const delete$ = isS3
+      ? this.announcementService.deleteMedia(announcement.mediaUrl!).pipe(
+          switchMap(() => this.announcementService.deleteAnnouncement(id))
+        )
+      : this.announcementService.deleteAnnouncement(id);
+
+    delete$.subscribe({
       next: () => {
-        this.announcements = this.announcements.filter(
-          a => a.id !== this.pendingDeleteId
-        );
-
+        this.announcements = this.announcements.filter(a => a.id !== id);
         this.showSuccess('Eliminado');
         this.pendingDeleteId = null;
       },
@@ -381,6 +390,12 @@ export class AnnouncementsComponent implements OnInit {
     });
 
     this.closeDeleteModal();
+  }
+
+  private isS3Media(url?: string): boolean {
+    if (!url) return false;
+
+    return url.includes('amazonaws.com');
   }
 
   closeDeleteModal() {
