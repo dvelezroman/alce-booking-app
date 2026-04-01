@@ -1,0 +1,74 @@
+<div class="restrictions-panel">
+
+  <!-- HEADER -->
+  <div class="restrictions-header">
+    <div class="header-left">
+      <h4>Restricciones del mes</h4>
+      <p>Listado completo sin filtros</p>
+    </div>
+
+    <!-- NAV -->
+    <div class="month-nav">
+      <button
+        class="nav-btn"
+        (click)="prevMonth()"
+        [disabled]="!canGoBack"
+        >
+        <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <span class="month-label">{{ currentMonth }} {{ currentYear }}</span>
+
+        <button
+        class="nav-btn"
+        (click)="nextMonth()"
+        [disabled]="!canGoForward"
+        >
+        <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" *ngIf="restrictions.length === 0">
+    No hay restricciones registradas para este mes.
+  </div>
+
+  <!-- LISTADO -->
+  <div class="restrictions-list" *ngIf="restrictions.length > 0">
+
+    <div
+      class="restriction-day-card"
+      *ngFor="let restrictionDay of restrictions"
+    >
+      <div class="restriction-day-title">
+        Día {{ restrictionDay.day }} de {{ restrictionDay.month }}
+      </div>
+
+      <div
+        class="restriction-entry"
+        *ngFor="let entry of restrictionDay.entries"
+      >
+        <div class="restriction-entry-header">
+          <div class="restriction-badge">
+            {{ formatRestrictionLabel(entry.studentClassification, entry.mode, entry.city) }}
+          </div>
+
+          <button
+            class="delete-btn"
+            (click)="onDelete(restrictionDay.day, entry)"
+          >
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+
+        <div class="restriction-hours">
+          <strong>Bloqueo:</strong>
+          <span>{{ formatHours(entry.hours) }}</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

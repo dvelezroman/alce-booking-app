@@ -1,3 +1,19 @@
+/* ===== BLOQUE CALENDARIO + HORAS ===== */
+.schedule-section {
+  width: 90%;
+  margin: 1.5rem auto;
+
+  padding: 1.5rem 0;
+  border-radius: 16px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.04),
+    0 8px 24px rgba(0,0,0,0.06);
+}
+
 .schedule-layout {
   display: grid;
   grid-template-columns: 450px 1fr;
@@ -21,7 +37,7 @@
   }
 
   .calendar-container {
-    margin: 1rem auto;
+    margin: 0rem auto;
     }
 }
 
@@ -33,12 +49,9 @@
   align-items: center;
   padding: .5rem 0rem;
   margin: 1rem auto 1rem;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 14px;
   width: 100%;
-  max-width: 450px;
+  max-width: 370px;
 }
 
 .date-selection {
@@ -46,14 +59,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 1rem;
+  margin: 0.5rem;
   background: rgba(255, 255, 255, 0.731);
   border-radius: 10px;
 }
 
 .calendar {
   display: flex;
-  padding: 1.5rem 0rem;
+  padding: 1rem 0rem;
   background-color: #ffffff;
   flex-direction: column;
   align-items: center;
@@ -65,7 +78,7 @@
   margin-bottom: .5rem;
   cursor: default;
   // background-color: rgb(254, 208, 101);
-  padding: 0.7rem 2.5rem;
+  padding: 0rem 2.5rem;
   border-radius: 25px;
 }
 
@@ -131,7 +144,7 @@
 .calendar-day-header {
   padding: 0;
   text-align: center;
-  font-size: .85rem;
+  font-size: .9rem;
   font-weight: bold;
   background-color: transparent;
   color: #434445;
@@ -148,7 +161,7 @@
 .calendar-day {
   text-align: center;
   padding: 14px;
-  font-size: .8rem;
+  font-size: .85rem;
   background-color: #ffffffb3;
   border: 1px solid #ffff;
   color: grey;
@@ -297,7 +310,6 @@
 
 .time-selection.disabled-panel {
 
-  .time-title,
   .time-grid,
   .button-block {
     opacity: 0.45;
@@ -318,11 +330,6 @@
   width: 100%;
   max-width: 600px;
   margin: 1rem auto;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .time-title {
@@ -368,6 +375,18 @@
   border-color: #2563eb;
   color: #ffffff;
   font-weight: 600;
+}
+
+.time-slot.inactive {
+  background: #f3f4f6; 
+  color: #9ca3af;
+  cursor: default;
+}
+
+.time-slot.disabled {
+  pointer-events: none; 
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .time-slot.disabled {
@@ -446,6 +465,52 @@
   border: 1px solid #eef2f7;
   border-radius: 10px;
   margin-bottom: 0.45rem;
+}
+
+.restriction-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* BOTÓN TRASH */
+.delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 8px;
+  border: none;
+
+  background: transparent;
+  color: #9ca3af;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.15);
+}
+
+/* CLICK */
+.delete-btn:active {
+  transform: scale(0.9);
+}
+
+/* ICONO */
+.delete-btn i {
+  font-size: 0.75rem;
+  transition: transform 0.15s ease;
+}
+
+.delete-btn:hover i {
+  transform: scale(1.1);
 }
 
 .restriction-badge {

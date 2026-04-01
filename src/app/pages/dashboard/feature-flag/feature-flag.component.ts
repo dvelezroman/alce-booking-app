@@ -8,6 +8,9 @@ import { FeatureFlagService } from "../../../services/feature-flag.service";
 import { HandleDatesService } from "../../../services/handle-dates.service";
 import { SelectedDay, DisabledDays, DisabledDatesAndHours, City } from "../../../services/dtos/handle-date.dto";
 import { Mode, StudentClassification } from "../../../services/dtos/student.dto";
+import { ModalDto, modalInitializer } from "../../../components/modal/modal.dto";
+import { ModalComponent } from "../../../components/modal/modal.component";
+import { RestrictionsMonthComponent } from "../../../components/scheduling-config/restrictions-month/restrictions-month.component";
 
 interface DayRestrictionInfo {
   day: number;
@@ -27,7 +30,9 @@ interface DayRestrictionInfo {
     CommonModule,
     RouterModule,
     FormsModule,
-  ],
+    ModalComponent,
+    RestrictionsMonthComponent
+],
   templateUrl: './feature-flag.component.html',
   styleUrl: './feature-flag.component.scss'
 })
@@ -43,11 +48,16 @@ export class FeatureFlagComponent implements OnInit {
   disabledDatesAndHours: DisabledDatesAndHours = {};
   timeSlots: { label: string; value: number; isDisabled?: boolean }[] = [];
 
+  readonly SELECT_PLACEHOLDER = '__SELECT__';
+
   selectedStudentClassification: StudentClassification | null = null;
   selectedMode: Mode | null = null;
   selectedCity: City | null = null;
 
   selectedDaysRestrictions: DayRestrictionInfo[] = [];
+
+  modal: ModalDto = modalInitializer();
+  pendingDelete: { day: number; entry: any } | null = null;
 
   constructor(
     private readonly ffService: FeatureFlagService,
@@ -63,6 +73,8 @@ export class FeatureFlagComponent implements OnInit {
       .toUpperCase();
 
     this.selectedYear = today.getFullYear();
+
+    this.timeSlots = this.generateTimeSlots(8, 20);
 
     this.refreshCalendar();
     this.updateNavigationButtons();
@@ -127,7 +139,7 @@ export class FeatureFlagComponent implements OnInit {
 
   private resetDayAndHoursSelection(): void {
     this.selectedDays = [];
-    this.timeSlots = [];
+    this.timeSlots = this.generateTimeSlots(8, 20);
     this.selectedDaysRestrictions = [];
   }
 
@@ -234,9 +246,11 @@ export class FeatureFlagComponent implements OnInit {
 
     if (this.selectedDays.length === 1) {
       const remainingDay = this.selectedDays[0];
-      this.isSunday(remainingDay.day) ? this.timeSlots = [] : this.recalculateTimeSlots(remainingDay);
+      this.isSunday(remainingDay.day)
+        ? this.timeSlots = this.generateTimeSlots(8, 20)
+        : this.recalculateTimeSlots(remainingDay);
     } else {
-      this.timeSlots = [];
+      this.timeSlots = this.generateTimeSlots(8, 20);
     }
 
     this.updateSelectedDaysRestrictions();
@@ -279,18 +293,13 @@ export class FeatureFlagComponent implements OnInit {
       const uniqueDates = [...new Set(dates)];
       if (action === 'disable') {
         this.handleDatesService.disableDatesHours(datesAndHours).subscribe(() => {
-          this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
+          this.getDisabledDatesAndHours().subscribe(() => {
+            this.generateCurrentMonthDays();
+            this.updateSelectedDaysRestrictions();
+          });
         });
-        // this.handleDatesService.disableDates(uniqueDates).subscribe(() => {
-        //   this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
-        // });
-      } else {
-        this.handleDatesService.enableDates(uniqueDates).subscribe(() => {
-          this.getDisabledDates().subscribe(() => this.generateCurrentMonthDays());
-        });
-      }
+      } 
 
-      this.selectedDays = [];
     }
   }
 
@@ -332,63 +341,21 @@ export class FeatureFlagComponent implements OnInit {
       
       this.handleDatesService.disableDatesHours(hoursToDisable).subscribe({
         next: () => {
-          //console.log('Horas deshabilitadas:', hoursToDisable);
-          this.getDisabledDatesAndHours().subscribe(() => {
-            const selectedDay = this.selectedDays[0]; 
+          this.afterRestrictionChange();
+
+          const selectedDay = this.selectedDays[0];
+
+          if (selectedDay) {
             this.recalculateTimeSlots(selectedDay);
-            this.generateCurrentMonthDays();
-          });
+          }
+
+          this.updateSelectedDaysRestrictions();
         },
         error: (err) => {
           console.error('Error al deshabilitar horas:', err);
         }
       });
     } 
-  }
-
-  enableHours() {
-    if (this.selectedDays.length === 0) return;
-
-    const monthMap: Record<string, number> = {
-      ENERO: 0, FEBRERO: 1, MARZO: 2, ABRIL: 3, MAYO: 4, JUNIO: 5,
-      JULIO: 6, AGOSTO: 7, SEPTIEMBRE: 8, OCTUBRE: 9, NOVIEMBRE: 10, DICIEMBRE: 11
-    };
-
-    const monthIndex = monthMap[this.selectedMonth];
-    if (monthIndex === undefined) return;
-
-    const hoursToEnable = this.selectedDays
-      .filter(day => day.hours.length > 0)
-      .map(day => ({
-        date: `${this.selectedYear}-${(monthIndex + 1)
-          .toString()
-          .padStart(2, '0')}-${day.day.toString().padStart(2, '0')}`,
-        hours: day.hours,
-        ...(this.selectedStudentClassification && {
-          studentClassification: this.selectedStudentClassification
-        }),
-        ...(this.selectedMode && {
-          mode: this.selectedMode
-        }),
-        ...(this.selectedCity && {
-          city: this.selectedCity
-        })
-      }));
-
-    if (!hoursToEnable.length) return;
-
-    this.handleDatesService.enableDatesHours(hoursToEnable).subscribe({
-      next: () => {
-        this.getDisabledDatesAndHours().subscribe(() => {
-          const selectedDay = this.selectedDays[0];
-          this.recalculateTimeSlots(selectedDay);
-          this.generateCurrentMonthDays();
-        });
-      },
-      error: (err) => {
-        console.error('Error al habilitar horas:', err);
-      }
-    });
   }
 
   isSunday(dayNumber: number): boolean {
@@ -439,6 +406,53 @@ export class FeatureFlagComponent implements OnInit {
     const mergedHours = dayEntries.flatMap(d => d.hours);
 
     return Array.from(new Set(mergedHours));
+  }
+
+  removeRestriction(day: number, entry: any) {
+    const monthIndex = this.getMonthIndex(this.selectedMonth);
+
+    if (monthIndex === -1) return;
+
+    const date = `${this.selectedYear}-${(monthIndex + 1)
+      .toString()
+      .padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+
+    const payload = {
+      date,
+      hours: entry.hours ?? [],
+      ...(entry.studentClassification && {
+        studentClassification: entry.studentClassification
+      }),
+      ...(entry.mode && {
+        mode: entry.mode
+      }),
+      ...(entry.city && {
+        city: entry.city
+      })
+    };
+
+    // Si es día completo
+    if (!entry.hours || entry.hours.length === 0) {
+      this.handleDatesService.enableDates([date]).subscribe(() => {
+        this.afterRestrictionChange();
+      });
+      return;
+    }
+
+    // Si son horas específicas
+    this.handleDatesService.enableDatesHours([payload]).subscribe(() => {
+      this.afterRestrictionChange();
+    });
+  }
+
+  private afterRestrictionChange() {
+    this.getDisabledDatesAndHours().subscribe(() => {
+      if (this.selectedDays.length === 1) {
+        this.recalculateTimeSlots(this.selectedDays[0]);
+      }
+      this.generateCurrentMonthDays();
+      this.updateSelectedDaysRestrictions();
+    });
   }
 
   private updateSelectedDaysRestrictions(): void {
@@ -532,5 +546,37 @@ export class FeatureFlagComponent implements OnInit {
 
   get hasSelectedEnabledHours(): boolean {
     return this.selectedHours.some(h => !this.isHourDisabled(h));
+  }
+
+  confirmActionModal(
+    message: string,
+    onConfirm: () => void,
+    title: string = 'Confirmación'
+  ) {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      isInfo: true,
+      showButtons: true,
+      title,
+      message,
+      close: () => this.closeModal(),
+      confirm: () => {
+        onConfirm();
+        this.closeModal();
+      }
+    };
+  }
+
+  closeModal() {
+    this.modal = modalInitializer();
+  }
+
+  openDeleteModal(day: number, entry: any) {
+    this.confirmActionModal(
+      `¿Eliminar esta restricción?`,
+      () => this.removeRestriction(day, entry),
+      'Eliminar restricción'
+    );
   }
 }
