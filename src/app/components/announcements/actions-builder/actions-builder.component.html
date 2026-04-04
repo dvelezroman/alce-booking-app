@@ -11,9 +11,13 @@
   <div *ngIf="actions.length > 0" class="actions-builder__list">
 
     <div
-      *ngFor="let action of actions; trackBy: trackById"
+      *ngFor="let action of actions; let i = index trackBy: trackById"
       class="actions-builder__item box"
     >
+
+    <div class="actions-builder__item-title">
+      Botón {{ i + 1 }}
+    </div>
 
       <!-- TYPE -->
       <div class="select">

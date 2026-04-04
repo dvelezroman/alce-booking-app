@@ -45,6 +45,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  margin-top: 0rem;
 }
 
 /* ASPECT SELECTOR */
@@ -90,52 +91,60 @@
 }
 
 /* =========================
-   URL MODE
+   URL MODE (MEJORADO PRO)
 ========================= */
 .media-upload__url {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-top: 1rem;
-  align-items: center;
+  align-items: stretch;
+  background: #f9fafb;
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
 }
 
+/* INPUT */
 .media-upload__url-input {
   flex: 1;
-  height: 40px;
+  height: 44px;
   border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  font-size: 0.85rem;
+  border: none;
+  background: transparent;
+  font-size: 0.9rem;
   color: #111827;
-  padding: 0 0.75rem;
+  padding: 0 12px;
   outline: none;
-  transition: all 0.2s ease;
-
-  &::placeholder {
-    color: #9ca3af;
-  }
-
-  &:focus {
-    border-color: #28336f;
-    box-shadow: 0 0 0 3px rgba(40, 51, 111, 0.12);
-  }
 }
 
+/* PLACEHOLDER */
+.media-upload__url-input::placeholder {
+  color: #9ca3af;
+}
+
+/* BOTÓN */
 .media-upload__url-btn {
-  height: 40px;
+  height: 44px;
   border: none;
   border-radius: 10px;
   background: #28336f;
   color: #ffffff;
   font-size: 0.8rem;
   font-weight: 600;
-  padding: 0 14px;
+  padding: 0 16px;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
+}
 
-  &:hover {
-    background: #1f2756;
-  }
+.media-upload__url-btn:hover {
+  background: #1f2756;
+}
+
+/* FOCUS bonito */
+.media-upload__url:focus-within {
+  border-color: #28336f;
+  box-shadow: 0 0 0 3px rgba(40, 51, 111, 0.12);
 }
 
 /* =========================
@@ -244,10 +253,10 @@
   pointer-events: none;
 
   display: flex;
-  flex-direction: column; /* 🔥 clave */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px; /* 🔥 separación entre texto y peso */
+  gap: 4px;
 }
 
 .media-upload__actions {
@@ -369,15 +378,19 @@
    RESPONSIVE
 ========================= */
 @media (max-width: 640px) {
-  .media-upload__url {
+
+  /* =========================
+     SWITCH ROW (ordenar mejor)
+  ========================= */
+  .media-upload__switch-row {
     flex-direction: column;
     align-items: stretch;
+    gap: 8px;
   }
 
-  .media-upload__url-btn {
-    width: 100%;
-  }
-
+  /* =========================
+     SWITCH (botones arriba)
+  ========================= */
   .media-upload__switch {
     width: 100%;
     justify-content: space-between;
@@ -386,5 +399,85 @@
   .media-upload__switch-btn {
     flex: 1;
     text-align: center;
+    font-size: 0.85rem;
+    padding: 8px 6px;
+  }
+
+  /* =========================
+     ASPECT (iconos mejor)
+  ========================= */
+  .media-upload__aspect {
+    width: 100%;
+    justify-content: space-between;
+    padding: 6px;
+  }
+
+  .aspect-btn {
+    flex: 1;
+    height: 42px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+
+  .aspect-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+  }
+
+  /* =========================
+     URL INPUT
+  ========================= */
+  .media-upload__url {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .media-upload__url-input {
+    height: 56px;
+    font-size: 0.85rem;
+    padding: 5px 12px;
+    border-radius: 12px;
+  }
+
+  .media-upload__url-btn {
+    width: 100%;
+    height: 40px;
+    font-size: 0.85rem;
+    border-radius: 12px;
+  }
+
+  /* =========================
+     DROPZONE (más usable)
+  ========================= */
+  .media-upload__dropzone {
+    border-radius: 16px;
+  }
+
+  .media-upload__dropzone.vertical {
+    max-width: 220px;
+    max-height: 360px;
+  }
+
+  .media-upload__dropzone.square {
+    max-width: 240px;
+    max-height: 240px;
+  }
+
+  /* =========================
+     EMPTY STATE
+  ========================= */
+  .media-upload__icon {
+    width: 42px;
+    height: 42px;
+    font-size: 16px;
+  }
+
+  .media-upload__text {
+    font-size: 0.8rem;
+  }
+
+  .media-upload__subtext {
+    font-size: 0.68rem;
   }
 }
