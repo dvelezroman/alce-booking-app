@@ -52,8 +52,8 @@ type AnnouncementViewerUser = {
     StudentSuspensionModalComponent,
     UserInfoFormComponent,
     PendingClassEvaluationBannerComponent,
-    StudentIntroVideoComponent,
-    AlceKidsAvisoComponent,
+    // StudentIntroVideoComponent,
+    // AlceKidsAvisoComponent,
     AnnouncementViewerComponent
 ],
   templateUrl: './student-dashboard.component.html',
