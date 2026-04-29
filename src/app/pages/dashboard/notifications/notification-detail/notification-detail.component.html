@@ -112,6 +112,67 @@
         </p>
       </div>
 
+      <section 
+        class="students-card card"
+        *ngIf="hasStudentRows"
+      >
+        <header class="students-header">
+          <h3 class="section-title">
+            Estudiantes(s) 
+            <span class="count">({{ studentRows.length }})</span>
+          </h3>
+        </header>
+
+        <div class="students-table-wrapper">
+          <table class="students-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Cédula</th>
+                <th>Ciudad</th>
+                <th>Modalidad</th>
+                <th>Stage</th>
+                <th>Inicio</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let row of studentRows">
+                <td>{{ row.index }}</td>
+
+                <td>
+                  {{ row.firstName }} {{ row.lastName }}
+                </td>
+
+                <td class="email">
+                  {{ row.email }}
+                </td>
+
+                <td>{{ row.idNumber }}</td>
+
+                <td>{{ row.city }}</td>
+
+                <td>
+                  <span class="badge">
+                    {{ row.mode }}
+                  </span>
+                </td>
+
+                <td>
+                  {{ row.stageLabel }}
+                </td>
+
+                <td>
+                  {{ row.startClassDate | date:'dd/MM/yyyy' }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <section
         class="recipients-card card"
         *ngIf="showRecipients && recipients.length"

@@ -33,7 +33,29 @@ export interface NotificationMessage {
   body: string;
   action?: string;
   meetingId?: number;
+  kind?: string;
+  rows?: NewStudentRow[];
+  summary?: NotificationSummary;
   [key: string]: any;
+}
+
+export interface NewStudentRow {
+  index: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  idNumber: string;
+  city: string;
+  mode: 'ONLINE' | 'PRESENCIAL';
+  stageId: number;
+  stageLabel: string;
+  startClassDate: string;
+  studentClassification: 'KIDS' | 'TEENS' | 'ADULTS';
+  tutorName: string;
+}
+
+export interface NotificationSummary {
+  count: number;
 }
 
 export interface CreateNotificationDto {

@@ -200,6 +200,16 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return [];
   }
 
+  /** Lista de nuevos estudiantes para agregar. */
+  get studentRows() {
+    return this.notification?.message?.rows ?? [];
+  }
+
+  get hasStudentRows(): boolean {
+    return this.studentRows.length > 0;
+  }
+
+
   /** True si el uid está en readBy (lo leyó). */
   isReadBy(uid: number): boolean {
     return !!this.notification?.readBy?.includes(uid);
