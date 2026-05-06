@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { Notification } from '../../../../services/dtos/notification.dto';
+import { Notification, NewStudentRow } from '../../../../services/dtos/notification.dto';
 import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { selectUserData } from '../../../../store/user.selector';
 import { UsersService } from '../../../../services/users.service';
@@ -14,10 +14,16 @@ import { ModalDto, modalInitializer } from '../../../../components/modal/modal.d
 import { NotificationService } from '../../../../services/notification.service';
 import { SafeNoteHtmlPipe } from "../../../../pipes/safe-note-html.pipe";
 
+import { StudentEditModalComponent } from '../../../../components/notifications/student-edit-modal/student-edit-modal.component';
+import { Stage } from '../../../../services/dtos/student.dto';
+import { StagesService } from '../../../../services/stages.service';
+import { Instructor } from '../../../../services/dtos/instructor.dto';
+import { InstructorsService } from '../../../../services/instructors.service';
+
 @Component({
   selector: 'app-notification-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, ModalComponent, SafeNoteHtmlPipe],
+  imports: [CommonModule, RouterModule, ModalComponent, SafeNoteHtmlPipe, StudentEditModalComponent,],
   templateUrl: './notification-detail.component.html',
   styleUrls: ['./notification-detail.component.scss'],
 })
@@ -28,7 +34,15 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   userRole: UserRole | null = null;
   protected readonly UserRole = UserRole;
 
+  stages: Stage[] = [];
+  instructors: UserDto[] = [];
+
   private destroy$ = new Subject<void>();
+
+  studentToEdit: NewStudentRow | null = null;
+  showStudentEditModal = false;
+  openStudentMenuIndex: number | null = null;
+  studentMenuPosition = { top: 0, left: 0 };
 
   modal: ModalDto = modalInitializer();
   deleting = false;
@@ -75,10 +89,18 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     private location: Location,
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
+    private stagesService: StagesService,
     private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
+
+    this.stagesService.getAll().subscribe((stages) => {
+      this.stages = this.filterAndSortStages(stages);
+    });
+
+    this.loadInstructors();
+
     const st = history.state as { notification?: Notification; origin?: 'inbox' | 'sent' | 'status' };
     if (st?.notification) {
       this.notification = st.notification;
@@ -110,6 +132,48 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
             });
           }
         }
+      });
+  }
+
+  private loadInstructors(): void {
+    this.usersService
+      .searchUsers(
+        undefined,
+        100,
+        undefined,
+        undefined,
+        undefined,
+        'ACTIVE',
+        UserRole.INSTRUCTOR
+      )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: ({ users }) => {
+          this.instructors = (users ?? []).filter(
+            (user) => user.status === 'ACTIVE'
+          );
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          console.error('Error cargando instructores:', error);
+          this.instructors = [];
+        },
+      });
+  }
+
+  private filterAndSortStages(stages: Stage[]): Stage[] {
+    return stages
+      .filter(stage => {
+        const desc = stage.description.toUpperCase();
+        return !desc.startsWith('K-STG') && desc !== 'STAGE 1.0';
+      })
+      .sort((a, b) => {
+        const getNumber = (desc: string) => {
+          const match = desc.match(/\d+(\.\d+)?/);
+          return match ? parseFloat(match[0]) : 0;
+        };
+
+        return getNumber(a.description) - getNumber(b.description);
       });
   }
 
@@ -266,8 +330,27 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleRecipients(): void {
-    this.showAllRecipients = !this.showAllRecipients;
+  toggleRecipients(): void { this.showAllRecipients = !this.showAllRecipients }
+    toggleStudentMenu(index: number): void {
+    this.openStudentMenuIndex =
+    this.openStudentMenuIndex === index ? null : index;
+  }
+
+  openStudentEditModal(row: NewStudentRow): void {
+    this.studentToEdit = { ...row };
+    this.showStudentEditModal = true;
+    this.openStudentMenuIndex = null;
+  }
+
+  closeStudentEditModal(): void {
+    this.showStudentEditModal = false;
+    this.studentToEdit = null;
+  }
+
+  onSaveStudentEdit(updatedStudent: NewStudentRow): void {
+    console.log('Estudiante actualizado:', updatedStudent);
+    this.showStudentEditModal = false;
+    this.studentToEdit = null;
   }
 
   private showModalMessage({

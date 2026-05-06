@@ -135,6 +135,7 @@
                 <th>Modalidad</th>
                 <th>Stage</th>
                 <th>Inicio</th>
+                <th>Acciones</th>
               </tr>
             </thead>
 
@@ -167,6 +168,19 @@
                 <td>
                   {{ row.startClassDate | date:'dd/MM/yyyy' }}
                 </td>
+
+                <td class="actions-cell">
+                  <button
+                    type="button"
+                    class="student-edit-button"
+                    (click)="openStudentEditModal(row)"
+                    aria-label="Editar estudiante"
+                    title="Editar estudiante"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </td>
+
               </tr>
             </tbody>
           </table>
@@ -206,6 +220,15 @@
     </article>
   </div>
 </section>
+
+<app-student-edit-modal
+  [show]="showStudentEditModal"
+  [student]="studentToEdit"
+  [stages]="stages"
+  [instructors]="instructors"
+  (close)="closeStudentEditModal()"
+  (save)="onSaveStudentEdit($event)"
+></app-student-edit-modal>
 
 <app-modal
   [showModal]="modal.show"

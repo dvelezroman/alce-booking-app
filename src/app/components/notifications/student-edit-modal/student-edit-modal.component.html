@@ -1,0 +1,106 @@
+<div class="modal-backdrop" *ngIf="show">
+  <div class="student-modal">
+    <header class="modal-header">
+      <div>
+        <p class="eyebrow">Editar estudiante</p>
+        <h2>Actualizar datos</h2>
+      </div>
+
+      <button
+        type="button"
+        class="close-button"
+        (click)="onClose()"
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="modal-form">
+      <div class="form-grid">
+        <div class="field">
+          <label>Nombre</label>
+          <input type="text" formControlName="firstName" />
+        </div>
+
+        <div class="field">
+          <label>Apellido</label>
+          <input type="text" formControlName="lastName" />
+        </div>
+
+        <div class="field span-2">
+          <label>Email</label>
+          <input type="email" formControlName="email" />
+        </div>
+
+        <div class="field">
+          <label>Cédula</label>
+          <input type="text" formControlName="idNumber" />
+        </div>
+
+        <div class="field">
+          <label>Ciudad</label>
+          <input type="text" formControlName="city" />
+        </div>
+
+        <div class="field">
+          <label>Modalidad</label>
+          <select formControlName="mode">
+            <option value="PRESENCIAL">PRESENCIAL</option>
+            <option value="ONLINE">ONLINE</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Clasificación</label>
+          <select formControlName="studentClassification">
+            <option value="ADULTS">ADULTS</option>
+            <option value="TEENS">TEENS</option>
+            <option value="KIDS">KIDS</option>
+          </select>
+        </div>
+
+        <div class="field span-2">
+          <label>Stage</label>
+
+          <select formControlName="stageId" (change)="onStageChange($event)">
+            <option value="">Selecciona un stage</option>
+
+            <option *ngFor="let stage of stages" [value]="stage.id">
+              STG {{ stage.number }} —
+              {{ stage.description || "Stage " + stage.number }}
+            </option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Fecha de inicio</label>
+          <input type="date" formControlName="startClassDate" />
+        </div>
+
+        <div class="field">
+          <label>Tutor</label>
+
+          <select formControlName="tutorName">
+            <option value="" disabled>Selecciona un instructor</option>
+
+            <option
+              *ngFor="let instructor of instructors"
+              [value]="getInstructorName(instructor)"
+            >
+              {{ getInstructorName(instructor) }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn secondary" (click)="onClose()">
+          Cancelar
+        </button>
+
+        <button type="submit" class="btn primary">Guardar cambios</button>
+      </div>
+    </form>
+  </div>
+</div>
