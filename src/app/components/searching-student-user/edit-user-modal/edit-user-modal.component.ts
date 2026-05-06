@@ -50,6 +50,8 @@ export class EditUserModalComponent {
       email: [''],
       emailAddress: [''],
       contact: [''],
+      country: [''],
+      city: [''],
       birthday: [''],
       tutorName: [''],
       tutorEmail: [''],
@@ -155,6 +157,8 @@ export class EditUserModalComponent {
     updated.status = updated.status ? UserStatus.ACTIVE : UserStatus.INACTIVE;
 
     if (!updated.linkId) delete updated.linkId;
+
+    // console.log('Payload enviado desde edit-user-modal:', updated);
 
     this.save.emit(updated);
   }
