@@ -78,19 +78,15 @@
           <input type="date" formControlName="startClassDate" />
         </div>
 
-        <div class="field">
-          <label>Tutor</label>
+        <div class="field" *ngIf="shouldShowTutorField">
+          <label for="tutorName">Representante del estudiante</label>
 
-          <select formControlName="tutorName">
-            <option value="" disabled>Selecciona un instructor</option>
-
-            <option
-              *ngFor="let instructor of instructors"
-              [value]="getInstructorName(instructor)"
-            >
-              {{ getInstructorName(instructor) }}
-            </option>
-          </select>
+          <input
+            type="text"
+            id="tutorName"
+            formControlName="tutorName"
+            placeholder="Nombre del representante"
+          />
         </div>
       </div>
 

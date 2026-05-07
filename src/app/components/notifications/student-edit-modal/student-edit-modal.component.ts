@@ -17,12 +17,11 @@ import { UserDto } from '../../../services/dtos/user.dto';
 export class StudentEditModalComponent implements OnChanges{
   @Input() show = false;
   @Input() student: NewStudentRow | null = null;
+  @Input() stages: Stage[] = [];
 
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<NewStudentRow>();
 
-  @Input() stages: Stage[] = [];
-  @Input() instructors: UserDto[] = [];
 
   form: FormGroup;
 
@@ -41,6 +40,14 @@ export class StudentEditModalComponent implements OnChanges{
       studentClassification: ['', Validators.required],
       tutorName: [''],
     });
+
+    this.form
+      .get('studentClassification')
+      ?.valueChanges.subscribe((classification) => {
+        if (classification === 'ADULTS') {
+          this.form.patchValue({ tutorName: '' }, { emitEvent: false });
+        }
+      });
   }
 
 
@@ -62,12 +69,9 @@ export class StudentEditModalComponent implements OnChanges{
     }
   }
 
-  getInstructorName(instructor: UserDto): string {
-    return (
-      [instructor.firstName, instructor.lastName].filter(Boolean).join(' ').trim() ||
-      instructor.email ||
-      `Instructor ${instructor.id}`
-    );
+  get shouldShowTutorField(): boolean {
+    const classification = this.form.get('studentClassification')?.value;
+    return classification === 'KIDS' || classification === 'TEENS';
   }
 
   onStageChange(event: Event): void {
@@ -95,10 +99,12 @@ export class StudentEditModalComponent implements OnChanges{
     }
 
     const value = this.form.value;
+    const isAdult = value.studentClassification === 'ADULTS';
 
     this.save.emit({
       ...this.student,
       ...value,
+      tutorName: isAdult ? '' : value.tutorName,
       startClassDate: new Date(value.startClassDate).toISOString(),
     });
   }

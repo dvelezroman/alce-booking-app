@@ -35,7 +35,6 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   protected readonly UserRole = UserRole;
 
   stages: Stage[] = [];
-  instructors: UserDto[] = [];
 
   private destroy$ = new Subject<void>();
 
@@ -99,8 +98,6 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       this.stages = this.filterAndSortStages(stages);
     });
 
-    this.loadInstructors();
-
     const st = history.state as { notification?: Notification; origin?: 'inbox' | 'sent' | 'status' };
     if (st?.notification) {
       this.notification = st.notification;
@@ -132,32 +129,6 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
             });
           }
         }
-      });
-  }
-
-  private loadInstructors(): void {
-    this.usersService
-      .searchUsers(
-        undefined,
-        100,
-        undefined,
-        undefined,
-        undefined,
-        'ACTIVE',
-        UserRole.INSTRUCTOR
-      )
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: ({ users }) => {
-          this.instructors = (users ?? []).filter(
-            (user) => user.status === 'ACTIVE'
-          );
-          this.cdr.markForCheck();
-        },
-        error: (error) => {
-          console.error('Error cargando instructores:', error);
-          this.instructors = [];
-        },
       });
   }
 
