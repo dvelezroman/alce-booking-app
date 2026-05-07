@@ -3,7 +3,7 @@
     <header class="modal-header">
       <div>
         <p class="eyebrow">Editar estudiante</p>
-        <h2>Actualizar datos</h2>
+        <h2>Revisar datos antes de crear</h2>
       </div>
 
       <button
@@ -17,85 +17,366 @@
     </header>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="modal-form">
-      <div class="form-grid">
-        <div class="field">
-          <label>Nombre</label>
-          <input type="text" formControlName="firstName" />
+      <!-- BLOQUE: ACCESO -->
+      <section class="form-section">
+        <div class="section-header">
+          <p class="section-eyebrow">Acceso</p>
+          <h3>Datos de usuario</h3>
         </div>
 
-        <div class="field">
-          <label>Apellido</label>
-          <input type="text" formControlName="lastName" />
+        <div class="form-grid">
+          <div class="field">
+            <label for="email">Usuario / email de acceso</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              placeholder="estudiante@example.com"
+            />
+
+            <small
+              class="field-error"
+              *ngIf="form.get('email')?.hasError('required') && form.get('email')?.touched"
+            >
+              El email de acceso es obligatorio.
+            </small>
+
+            <small
+              class="field-error"
+              *ngIf="form.get('email')?.hasError('email') && form.get('email')?.touched"
+            >
+              Ingresa un email válido.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="password">Contraseña</label>
+            <input
+              type="text"
+              id="password"
+              formControlName="password"
+              placeholder="Mínimo 6 caracteres"
+            />
+
+            <small
+              class="field-error"
+              *ngIf="form.get('password')?.hasError('required') && form.get('password')?.touched"
+            >
+              La contraseña es obligatoria.
+            </small>
+
+            <small
+              class="field-error"
+              *ngIf="form.get('password')?.hasError('minlength') && form.get('password')?.touched"
+            >
+              La contraseña debe tener mínimo 6 caracteres.
+            </small>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOQUE: DATOS PERSONALES -->
+      <section class="form-section">
+        <div class="section-header">
+          <p class="section-eyebrow">Estudiante</p>
+          <h3>Datos personales</h3>
         </div>
 
-        <div class="field span-2">
-          <label>Email</label>
-          <input type="email" formControlName="email" />
+        <div class="form-grid">
+          <div class="field">
+            <label for="firstName">Nombre</label>
+            <input type="text" id="firstName" formControlName="firstName" />
+
+            <small
+              class="field-error"
+              *ngIf="form.get('firstName')?.hasError('required') && form.get('firstName')?.touched"
+            >
+              El nombre es obligatorio.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="lastName">Apellido</label>
+            <input type="text" id="lastName" formControlName="lastName" />
+
+            <small
+              class="field-error"
+              *ngIf="form.get('lastName')?.hasError('required') && form.get('lastName')?.touched"
+            >
+              El apellido es obligatorio.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="idNumber">Cédula / identificación</label>
+            <input type="text" id="idNumber" formControlName="idNumber" />
+          </div>
+
+          <div class="field">
+            <label for="birthday">Fecha de nacimiento</label>
+            <input type="date" id="birthday" formControlName="birthday" />
+
+            <small
+              class="field-error"
+              *ngIf="form.get('birthday')?.hasError('required') && form.get('birthday')?.touched"
+            >
+              La fecha de nacimiento es obligatoria para estudiantes KIDS.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="studentClassification">Clasificación</label>
+            <select id="studentClassification" formControlName="studentClassification">
+              <option value="">Selecciona una clasificación</option>
+              <option value="ADULTS">ADULTS</option>
+              <option value="TEENS">TEENS</option>
+              <option value="KIDS">KIDS</option>
+            </select>
+
+            <small
+              class="field-error"
+              *ngIf="form.get('studentClassification')?.hasError('required') && form.get('studentClassification')?.touched"
+            >
+              La clasificación es obligatoria.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="occupation">Ocupación</label>
+            <input
+              type="text"
+              id="occupation"
+              formControlName="occupation"
+              placeholder="Estudiante"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOQUE: CONTACTO -->
+      <section class="form-section">
+        <div class="section-header">
+          <p class="section-eyebrow">Contacto</p>
+          <h3>Información de contacto</h3>
         </div>
 
-        <div class="field">
-          <label>Cédula</label>
-          <input type="text" formControlName="idNumber" />
+        <div class="form-grid">
+          <div class="field">
+            <label for="emailAddress">Correo del estudiante</label>
+            <input
+              type="email"
+              id="emailAddress"
+              formControlName="emailAddress"
+              placeholder="correo@ejemplo.com"
+            />
+
+            <small
+              class="field-error"
+              *ngIf="form.get('emailAddress')?.hasError('email') && form.get('emailAddress')?.touched"
+            >
+              Ingresa un correo válido.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="contact">Teléfono</label>
+            <input
+              type="tel"
+              id="contact"
+              formControlName="contact"
+              placeholder="+593..."
+            />
+          </div>
+
+          <div class="field">
+            <label for="country">País</label>
+            <input
+              type="text"
+              id="country"
+              formControlName="country"
+              placeholder="Ecuador"
+            />
+          </div>
+
+          <div class="field">
+            <label for="city">Ciudad</label>
+            <input
+              type="text"
+              id="city"
+              formControlName="city"
+              placeholder="Portoviejo"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOQUE: INFORMACIÓN ACADÉMICA -->
+      <section class="form-section">
+        <div class="section-header">
+          <p class="section-eyebrow">Programa</p>
+          <h3>Información académica</h3>
         </div>
 
-        <div class="field">
-          <label>Ciudad</label>
-          <input type="text" formControlName="city" />
+        <div class="form-grid">
+          <div class="field">
+            <label for="mode">Modalidad</label>
+            <select id="mode" formControlName="mode">
+              <option value="">Selecciona una modalidad</option>
+              <option value="PRESENCIAL">PRESENCIAL</option>
+              <option value="ONLINE">ONLINE</option>
+              <option value="SEMIPRESENCIAL">SEMIPRESENCIAL</option>
+            </select>
+
+            <small
+              class="field-error"
+              *ngIf="form.get('mode')?.hasError('required') && form.get('mode')?.touched"
+            >
+              La modalidad es obligatoria.
+            </small>
+          </div>
+
+          <div class="field span-2">
+            <label for="stageId">Stage</label>
+            <select
+              id="stageId"
+              formControlName="stageId"
+              (change)="onStageChange($event)"
+            >
+              <option value="">Selecciona un stage</option>
+
+              <option *ngFor="let stage of stages" [value]="stage.id">
+                STG {{ stage.number }} —
+                {{ stage.description || "Stage " + stage.number }}
+              </option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="startClassDate">Fecha de inicio</label>
+            <input
+              type="date"
+              id="startClassDate"
+              formControlName="startClassDate"
+            />
+          </div>
+
+          <div class="field">
+            <label for="endClassDate">Fecha de finalización</label>
+            <input
+              type="date"
+              id="endClassDate"
+              formControlName="endClassDate"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOQUE: REPRESENTANTE -->
+      <section class="form-section" *ngIf="shouldShowTutorField">
+        <div class="section-header">
+          <p class="section-eyebrow">Representante</p>
+          <h3>Datos del representante</h3>
         </div>
 
-        <div class="field">
-          <label>Modalidad</label>
-          <select formControlName="mode">
-            <option value="PRESENCIAL">PRESENCIAL</option>
-            <option value="ONLINE">ONLINE</option>
-          </select>
+        <div class="form-grid">
+          <div class="field">
+            <label for="tutorName">Nombre del representante</label>
+            <input
+              type="text"
+              id="tutorName"
+              formControlName="tutorName"
+              placeholder="Nombre completo"
+            />
+
+            <small
+              class="field-error"
+              *ngIf="form.get('tutorName')?.hasError('required') && form.get('tutorName')?.touched"
+            >
+              El nombre del representante es obligatorio.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="tutorEmail">Correo del representante</label>
+            <input
+              type="email"
+              id="tutorEmail"
+              formControlName="tutorEmail"
+              placeholder="representante@ejemplo.com"
+            />
+
+            <small
+              class="field-error"
+              *ngIf="form.get('tutorEmail')?.hasError('required') && form.get('tutorEmail')?.touched"
+            >
+              El correo del representante es obligatorio.
+            </small>
+
+            <small
+              class="field-error"
+              *ngIf="form.get('tutorEmail')?.hasError('email') && form.get('tutorEmail')?.touched"
+            >
+              Ingresa un correo válido.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="tutorPhone">Teléfono del representante</label>
+            <input
+              type="tel"
+              id="tutorPhone"
+              formControlName="tutorPhone"
+              placeholder="+593..."
+            />
+
+            <small
+              class="field-error"
+              *ngIf="form.get('tutorPhone')?.hasError('required') && form.get('tutorPhone')?.touched"
+            >
+              El teléfono del representante es obligatorio.
+            </small>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOQUE: CONTRATO -->
+      <section class="form-section">
+        <div class="section-header">
+          <p class="section-eyebrow">Contrato</p>
+          <h3>Datos adicionales</h3>
         </div>
 
-        <div class="field">
-          <label>Clasificación</label>
-          <select formControlName="studentClassification">
-            <option value="ADULTS">ADULTS</option>
-            <option value="TEENS">TEENS</option>
-            <option value="KIDS">KIDS</option>
-          </select>
+        <div class="form-grid">
+          <div class="field">
+            <label for="contractNumber">Número de contrato</label>
+            <input
+              type="text"
+              id="contractNumber"
+              formControlName="contractNumber"
+              placeholder="CTR-2026-001"
+            />
+          </div>
+
+          <div class="field">
+            <label for="maxSchedulingStage">Máximo stage agendable</label>
+            <input
+              type="number"
+              id="maxSchedulingStage"
+              formControlName="maxSchedulingStage"
+              placeholder="15"
+            />
+          </div>
         </div>
-
-        <div class="field span-2">
-          <label>Stage</label>
-
-          <select formControlName="stageId" (change)="onStageChange($event)">
-            <option value="">Selecciona un stage</option>
-
-            <option *ngFor="let stage of stages" [value]="stage.id">
-              STG {{ stage.number }} —
-              {{ stage.description || "Stage " + stage.number }}
-            </option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Fecha de inicio</label>
-          <input type="date" formControlName="startClassDate" />
-        </div>
-
-        <div class="field" *ngIf="shouldShowTutorField">
-          <label for="tutorName">Representante del estudiante</label>
-
-          <input
-            type="text"
-            id="tutorName"
-            formControlName="tutorName"
-            placeholder="Nombre del representante"
-          />
-        </div>
-      </div>
+      </section>
 
       <div class="form-actions">
         <button type="button" class="btn secondary" (click)="onClose()">
           Cancelar
         </button>
 
-        <button type="submit" class="btn primary">Guardar cambios</button>
+        <button type="submit" class="btn primary">
+          Crear Estudiante
+        </button>
       </div>
     </form>
   </div>

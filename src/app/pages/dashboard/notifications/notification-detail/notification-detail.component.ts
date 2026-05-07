@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { Notification, NewStudentRow } from '../../../../services/dtos/notification.dto';
+import { Notification, NewStudentRow, CreateStudentWithUserDto } from '../../../../services/dtos/notification.dto';
 import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { selectUserData } from '../../../../store/user.selector';
 import { UsersService } from '../../../../services/users.service';
@@ -15,10 +15,9 @@ import { NotificationService } from '../../../../services/notification.service';
 import { SafeNoteHtmlPipe } from "../../../../pipes/safe-note-html.pipe";
 
 import { StudentEditModalComponent } from '../../../../components/notifications/student-edit-modal/student-edit-modal.component';
-import { Stage } from '../../../../services/dtos/student.dto';
+import { Stage,  } from '../../../../services/dtos/student.dto';
 import { StagesService } from '../../../../services/stages.service';
-import { Instructor } from '../../../../services/dtos/instructor.dto';
-import { InstructorsService } from '../../../../services/instructors.service';
+import { StudentsService } from '../../../../services/students.service';
 
 @Component({
   selector: 'app-notification-detail',
@@ -89,6 +88,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private usersService: UsersService,
     private stagesService: StagesService,
+    private studentsService: StudentsService,
     private notificationService: NotificationService
   ) {}
 
@@ -244,7 +244,6 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.studentRows.length > 0;
   }
 
-
   /** True si el uid está en readBy (lo leyó). */
   isReadBy(uid: number): boolean {
     return !!this.notification?.readBy?.includes(uid);
@@ -318,10 +317,62 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.studentToEdit = null;
   }
 
-  onSaveStudentEdit(updatedStudent: NewStudentRow): void {
-    console.log('Estudiante actualizado:', updatedStudent);
-    this.showStudentEditModal = false;
-    this.studentToEdit = null;
+  onRequestCreateStudent(student: CreateStudentWithUserDto): void {
+    //console.log('Datos recibidos desde el modal para crear:', student);
+
+    const fullName = [student.firstName, student.lastName]
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      title: 'Crear estudiante',
+      message: `¿Deseas crear al estudiante ${fullName || student.email}?`,
+      isInfo: true,
+      isError: false,
+      isSuccess: false,
+      showButtons: true,
+      close: () => {
+        this.modal.show = false;
+        this.modal = modalInitializer();
+      },
+      confirm: () => {
+        this.modal.show = false;
+        this.confirmCreateStudent(student);
+      },
+    };
+  }
+
+  private confirmCreateStudent(student: CreateStudentWithUserDto): void {
+
+    this.studentsService.registerStudentWithUser(student).subscribe({
+      next: (createdStudent) => {
+        //console.log('Estudiante creado correctamente:', createdStudent);
+
+        this.showStudentEditModal = false;
+        this.studentToEdit = null;
+
+        this.showModalMessage({
+          title: 'Estudiante creado',
+          message: 'El estudiante fue creado correctamente.',
+          isSuccess: true,
+        });
+      },
+      error: (error) => {
+        console.error('Error al crear estudiante:', error);
+
+        this.showModalMessage({
+          title: 'Error al crear estudiante',
+          message:
+            error?.error?.message ||
+            error?.message ||
+            'No se pudo crear el estudiante. Intenta nuevamente.',
+          isError: true,
+        });
+      },
+    });
   }
 
   private showModalMessage({

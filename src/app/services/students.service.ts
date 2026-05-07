@@ -7,6 +7,7 @@ import {Mode, RegisterStudentDto, RegisterStudentResponseDto, Student, StudentSu
 import {setUserData} from "../store/user.action";
 import {UserDto} from "./dtos/user.dto";
 import {selectUserData} from "../store/user.selector";
+import { CreateStudentWithUserDto } from './dtos/notification.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +27,7 @@ export class StudentsService implements OnInit{
 
   ngOnInit(): void {
     this.userData$.pipe(takeUntil(this.unsubscribe$)).subscribe(state => {
-      console.log(state);
+      //console.log(state);
       this.userData = state;
     });
   }
@@ -47,6 +48,17 @@ export class StudentsService implements OnInit{
           } as UserDto
         }));
       })
+    );
+  }
+
+  /**
+   * Registra un estudiante nuevo junto con su usuario.
+   * POST /students/register-with-user
+   */
+  registerStudentWithUser( payload: CreateStudentWithUserDto ): Observable<Student> {
+    return this.http.post<Student>(
+      `${this.apiUrl}/register-with-user`,
+      payload
     );
   }
 

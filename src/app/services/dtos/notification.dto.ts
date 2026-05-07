@@ -41,17 +41,89 @@ export interface NotificationMessage {
 
 export interface NewStudentRow {
   index: number;
+
+  // Usuario / acceso
+  email: string;
+  password?: string;
+
+  // Datos personales
   firstName: string;
   lastName: string;
-  email: string;
-  idNumber: string;
-  city: string;
-  mode: 'ONLINE' | 'PRESENCIAL';
-  stageId: number;
-  stageLabel: string;
-  startClassDate: string;
+  idNumber?: string;
+  birthday?: string;
+
+  // Contacto
+  emailAddress?: string;
+  contact?: string;
+  country?: string;
+  city?: string;
+
+  // Información general
+  occupation?: string;
+  mode: 'ONLINE' | 'PRESENCIAL' | 'SEMIPRESENCIAL';
+
+  // Información académica
+  stageId?: number;
+  stageLabel?: string;
   studentClassification: 'KIDS' | 'TEENS' | 'ADULTS';
-  tutorName: string;
+  startClassDate?: string;
+  endClassDate?: string;
+
+  // Representante
+  tutorName?: string;
+  tutorEmail?: string;
+  tutorPhone?: string;
+
+  // Contrato / límites
+  contractNumber?: string;
+  maxSchedulingStage?: number;
+
+  // Campos opcionales de programa, si los siguen usando en notificación/listado
+  contractProgramType?: string;
+  contractProgramLabel?: string;
+  studyProgramName?: string;
+  studyProgramCode?: string;
+  studyProgramDurationMonths?: number;
+  studyProgramDurationLabel?: string;
+  studyProgramComment?: string;
+}
+
+export interface CreateStudentWithUserDto {
+  email: string;
+  password: string;
+
+  firstName: string;
+  lastName: string;
+  idNumber?: string;
+  birthday?: string;
+
+  emailAddress?: string;
+  contact?: string;
+  country?: string;
+  city?: string;
+  occupation?: string;
+
+  mode: 'ONLINE' | 'PRESENCIAL' | 'SEMIPRESENCIAL';
+  stageId?: number;
+  studentClassification: 'KIDS' | 'TEENS' | 'ADULTS';
+
+  startClassDate?: string;
+  endClassDate?: string;
+
+  tutorName?: string;
+  tutorEmail?: string;
+  tutorPhone?: string;
+
+  contractNumber?: string;
+  maxSchedulingStage?: number;
+
+  contractProgramType?: string;
+  contractProgramLabel?: string;
+  studyProgramName?: string;
+  studyProgramCode?: string;
+  studyProgramDurationMonths?: number;
+  studyProgramDurationLabel?: string;
+  studyProgramComment?: string;
 }
 
 export interface NotificationSummary {
