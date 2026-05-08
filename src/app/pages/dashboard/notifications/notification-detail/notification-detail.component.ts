@@ -244,6 +244,15 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.studentRows.length > 0;
   }
 
+  /**  nuevos estudiantes para demo class. */
+  get isDemoClassNotification(): boolean {
+    return this.notification?.message?.kind === 'demo-class';
+  }
+
+  get demoLead() {
+    return this.notification?.message?.lead ?? null;
+  }
+
   /** True si el uid está en readBy (lo leyó). */
   isReadBy(uid: number): boolean {
     return !!this.notification?.readBy?.includes(uid);

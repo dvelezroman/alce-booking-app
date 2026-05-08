@@ -1,9 +1,7 @@
 <section class="notif-detail-root">
-
   <!-- Main column only -->
   <div class="layout single">
     <article class="message-col">
-
       <div class="back-row">
         <button
           type="button"
@@ -17,58 +15,62 @@
       <!-- From block -->
       <div class="from-row">
         <div class="avatar">
-            <span>
+          <span>
             {{
-                (notification?.fromUser?.firstName ||
+              notification?.fromUser?.firstName ||
                 notification?.fromUser?.lastName ||
                 notification?.fromUser?.email ||
-                'N') | slice: 0:1
+                "N" | slice: 0 : 1
             }}
-            {{ (notification?.fromUser?.lastName || '') | slice: 0:1 }}
-            </span>
+            {{ notification?.fromUser?.lastName || "" | slice: 0 : 1 }}
+          </span>
         </div>
 
         <div class="from-meta">
-            <div class="from-line">
+          <div class="from-line">
             <strong class="name">
-                {{ notification?.fromUser?.firstName }} {{ notification?.fromUser?.lastName }}
+              {{ notification?.fromUser?.firstName }}
+              {{ notification?.fromUser?.lastName }}
             </strong>
-            <span class="email" *ngIf="!notification?.fromUser?.firstName && !notification?.fromUser?.lastName">
-                {{ notification?.fromUser?.email }}
+            <span
+              class="email"
+              *ngIf="
+                !notification?.fromUser?.firstName &&
+                !notification?.fromUser?.lastName
+              "
+            >
+              {{ notification?.fromUser?.email }}
             </span>
             <span class="dot">·</span>
             <span class="time">
-                {{ notification?.createdAt | date: 'EEE d MMM y, HH:mm' }}
+              {{ notification?.createdAt | date: "EEE d MMM y, HH:mm" }}
             </span>
+          </div>
+
+          <!-- BOTÓN -->
+          <button
+            type="button"
+            class="toggle-recipients"
+            (click)="toggleRecipients()"
+          >
+            Para
+          </button>
+
+          <!-- BLOQUE OCULTO / EXPANDIBLE -->
+          <div class="recipients-card" *ngIf="showAllRecipients">
+            <div class="to-line">
+              Para:
+              <span
+                class="audience"
+                [innerHTML]="audienceLine | safeNoteHtml"
+              ></span>
             </div>
+          </div>
 
-            <!-- BOTÓN -->
-            <button
-              type="button"
-              class="toggle-recipients"
-              (click)="toggleRecipients()"
-            >
-              Para
-            </button>
-
-            <!-- BLOQUE OCULTO / EXPANDIBLE -->
-            <div
-              class="recipients-card"
-              *ngIf="showAllRecipients"
-            >
-              <div class="to-line">
-                Para:
-                <span
-                  class="audience"
-                  [innerHTML]="audienceLine | safeNoteHtml"
-                ></span>
-              </div>
-            </div>
-
-            <!-- Nuevo bloque: título del mensaje -->
-            <div class="title-line" *ngIf="notification?.title">
+          <!-- Nuevo bloque: título del mensaje -->
+          <div class="title-line" *ngIf="notification?.title">
             {{ notification?.title }}
-            </div>
+          </div>
         </div>
       </div>
 
@@ -81,17 +83,39 @@
 
         <div class="card details-card">
           <dl class="meta-list">
-            <div class="row"><dt>Estado</dt><dd>{{ estadoLabel }}</dd></div>
+            <div class="row">
+              <dt>Estado</dt>
+              <dd>{{ estadoLabel }}</dd>
+            </div>
             <!-- <div class="row"><dt>Creada</dt><dd>{{ notification?.createdAt | date: 'short' }}</dd></div> -->
-            <div class="row" *ngIf="notification?.sentAt"><dt>Enviada</dt><dd>{{ notification?.sentAt | date: 'short' }}</dd></div>
+            <div class="row" *ngIf="notification?.sentAt">
+              <dt>Enviada</dt>
+              <dd>{{ notification?.sentAt | date: "short" }}</dd>
+            </div>
             <!-- <div class="row" *ngIf="notification?.deliveredAt"><dt>Entregada</dt><dd>{{ notification?.deliveredAt | date: 'short' }}</dd></div> -->
             <!-- <div class="row" *ngIf="notification?.updatedAt"><dt>Actualizada</dt><dd>{{ notification?.updatedAt | date: 'short' }}</dd></div> -->
-            <div class="row" *ngIf="notification?.expiresAt"><dt>Expira</dt><dd>{{ notification?.expiresAt | date: 'short' }}</dd></div>
-            <div class="row"><dt>Tipo</dt><dd>{{ tipoLabel }}</dd></div>
-            <div class="row" *ngIf="notification?.priority !== null && notification?.priority !== undefined">
-                <dt>Prioridad</dt><dd>{{ prioridadLabel }}</dd>
+            <div class="row" *ngIf="notification?.expiresAt">
+              <dt>Expira</dt>
+              <dd>{{ notification?.expiresAt | date: "short" }}</dd>
             </div>
-            <div class="row"><dt>Ámbito</dt><dd>{{ notification?.scope }}</dd></div>
+            <div class="row">
+              <dt>Tipo</dt>
+              <dd>{{ tipoLabel }}</dd>
+            </div>
+            <div
+              class="row"
+              *ngIf="
+                notification?.priority !== null &&
+                notification?.priority !== undefined
+              "
+            >
+              <dt>Prioridad</dt>
+              <dd>{{ prioridadLabel }}</dd>
+            </div>
+            <div class="row">
+              <dt>Ámbito</dt>
+              <dd>{{ notification?.scope }}</dd>
+            </div>
             <!-- <div class="row" *ngIf="notification?.message?.action">
               <dt>Acción</dt><dd>{{ notification?.message?.action }}</dd>
             </div> -->
@@ -105,20 +129,67 @@
 
       <!-- Content -->
       <div class="content">
-        <p 
-          class="body-text" 
-          *ngIf="notification?.message?.body as body" 
-          [innerHTML]="body | safeNoteHtml">
-        </p>
+        <p
+          class="body-text"
+          *ngIf="notification?.message?.body as body"
+          [innerHTML]="body | safeNoteHtml"
+        ></p>
       </div>
 
-      <section 
-        class="students-card card"
-        *ngIf="hasStudentRows"
+      <!-- DEMO CLASS / CLASES DE PRUEBA -->
+
+      <section
+        class="demo-class-card"
+        *ngIf="isDemoClassNotification && demoLead"
       >
+        <header class="demo-class-header">
+          <div>
+            <p class="eyebrow">Tipo de solicitud</p>
+            <h3>Solicitud de clases de prueba</h3>
+          </div>
+
+          <span class="demo-badge">
+            {{ notification?.message?.kind }}
+          </span>
+        </header>
+
+        <div class="demo-class-grid">
+          <div class="demo-field">
+            <span>Solicitante</span>
+            <strong>{{ demoLead.firstName }} {{ demoLead.lastName }}</strong>
+          </div>
+
+          <div class="demo-field">
+            <span>Email</span>
+            <strong>{{ demoLead.email }}</strong>
+          </div>
+
+          <div class="demo-field">
+            <span>Cédula</span>
+            <strong>{{ demoLead.idNumber }}</strong>
+          </div>
+
+          <div class="demo-field">
+            <span>Teléfono</span>
+            <strong>{{ demoLead.contactPhone }}</strong>
+          </div>
+
+          <div class="demo-field">
+            <span>Stage</span>
+            <strong>{{ demoLead.stageLabel }}</strong>
+          </div>
+
+          <div class="demo-field">
+            <span>Horas de cortesía</span>
+            <strong>{{ demoLead.courtesyClassHours }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="students-card card" *ngIf="hasStudentRows">
         <header class="students-header">
           <h3 class="section-title">
-            Estudiantes(s) 
+            Estudiantes(s)
             <span class="count">({{ studentRows.length }})</span>
           </h3>
         </header>
@@ -143,9 +214,7 @@
               <tr *ngFor="let row of studentRows">
                 <td>{{ row.index }}</td>
 
-                <td>
-                  {{ row.firstName }} {{ row.lastName }}
-                </td>
+                <td>{{ row.firstName }} {{ row.lastName }}</td>
 
                 <td class="email">
                   {{ row.email }}
@@ -166,7 +235,7 @@
                 </td>
 
                 <td>
-                  {{ row.startClassDate | date:'dd/MM/yyyy' }}
+                  {{ row.startClassDate | date: "dd/MM/yyyy" }}
                 </td>
 
                 <td class="actions-cell">
@@ -180,7 +249,6 @@
                     <i class="fas fa-edit"></i>
                   </button>
                 </td>
-
               </tr>
             </tbody>
           </table>
@@ -202,7 +270,7 @@
             class="chip"
             *ngFor="let user of recipients; trackBy: trackByUid"
             [class.read]="isReadBy(user.id)"
-            >
+          >
             <span class="whatsapp-checks" *ngIf="isReadBy(user.id)">✔</span>
             {{ user.firstName }} {{ user.lastName }}
             <span *ngIf="user.email">({{ user.email }})</span>
@@ -215,7 +283,7 @@
         Esta notificación tiene fecha de caducidad.
       </div>
       <div class="alert danger" *ngIf="notification?.status === 'FAILED'">
-        {{ notification?.errorMessage || 'No se pudo entregar.' }}
+        {{ notification?.errorMessage || "No se pudo entregar." }}
       </div>
     </article>
   </div>

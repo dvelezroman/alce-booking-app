@@ -33,10 +33,34 @@ export interface NotificationMessage {
   body: string;
   action?: string;
   meetingId?: number;
-  kind?: string;
+  kind?: 'demo-class' | 'S2S_NEW_STUDENTS_TO_CREATE' | string;
+  lead?: DemoClassLead;
   rows?: NewStudentRow[];
-  summary?: NotificationSummary;
+  summary?: NotificationSummary | DemoClassSummary;
   [key: string]: any;
+}
+
+export interface DemoClassLead {
+  firstName: string;
+  lastName: string;
+  email: string;
+  idNumber: string;
+  contactPhone: string;
+  courtesyClassHours: number;
+  stageId: number;
+  stageNumber: string;
+  stageLabel: string;
+  stageDescription: string;
+}
+
+export interface DemoClassSummary {
+  stageId: number;
+  leadName: string;
+  courtesyClassHours: number;
+}
+
+export interface NotificationSummary {
+  count: number;
 }
 
 export interface NewStudentRow {
@@ -124,10 +148,6 @@ export interface CreateStudentWithUserDto {
   studyProgramDurationMonths?: number;
   studyProgramDurationLabel?: string;
   studyProgramComment?: string;
-}
-
-export interface NotificationSummary {
-  count: number;
 }
 
 export interface CreateNotificationDto {
