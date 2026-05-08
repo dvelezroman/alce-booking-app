@@ -253,6 +253,14 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.notification?.message?.lead ?? null;
   }
 
+  get formattedBody(): string {
+    const body = this.notification?.message?.body ?? '';
+
+    return body
+      .replace(/\.\s+/g, '.<br>')
+      .trim();
+  }
+
   /** True si el uid está en readBy (lo leyó). */
   isReadBy(uid: number): boolean {
     return !!this.notification?.readBy?.includes(uid);
