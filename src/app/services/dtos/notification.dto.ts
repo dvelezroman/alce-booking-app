@@ -51,6 +51,10 @@ export interface DemoClassLead {
   stageNumber: string;
   stageLabel: string;
   stageDescription: string;
+  requestingAdvisorName: string;
+  requestingAdvisorEmail: string;
+  requestingAdvisorPhone: string;
+  requestingAdvisorSedeLabel: string;
 }
 
 export interface DemoClassSummary {

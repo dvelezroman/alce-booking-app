@@ -137,7 +137,6 @@
       </div>
 
       <!-- DEMO CLASS / CLASES DE PRUEBA -->
-
       <section
         class="demo-class-card"
         *ngIf="isDemoClassNotification && demoLead"
@@ -153,35 +152,81 @@
           </span>
         </header>
 
-        <div class="demo-class-grid">
-          <div class="demo-field">
-            <span>Solicitante</span>
-            <strong>{{ demoLead.firstName }} {{ demoLead.lastName }}</strong>
-          </div>
+        <div class="demo-block">
+          <h4>Datos del solicitante</h4>
 
-          <div class="demo-field">
-            <span>Email</span>
-            <strong>{{ demoLead.email }}</strong>
-          </div>
+          <div class="demo-class-grid">
+            <div class="demo-field">
+              <span>Solicitante</span>
+              <strong>{{ demoLead.firstName }} {{ demoLead.lastName }}</strong>
+            </div>
 
-          <div class="demo-field">
-            <span>Cédula</span>
-            <strong>{{ demoLead.idNumber }}</strong>
-          </div>
+            <div class="demo-field">
+              <span>Email</span>
+              <strong>{{ demoLead.email }}</strong>
+            </div>
 
-          <div class="demo-field">
-            <span>Teléfono</span>
-            <strong>{{ demoLead.contactPhone }}</strong>
-          </div>
+            <div class="demo-field">
+              <span>Cédula</span>
+              <strong>{{ demoLead.idNumber }}</strong>
+            </div>
 
-          <div class="demo-field">
-            <span>Stage</span>
-            <strong>{{ demoLead.stageLabel }}</strong>
+            <div class="demo-field">
+              <span>Teléfono</span>
+              <strong>{{ demoLead.contactPhone }}</strong>
+            </div>
           </div>
+        </div>
 
-          <div class="demo-field">
-            <span>Horas de cortesía</span>
-            <strong>{{ demoLead.courtesyClassHours }}</strong>
+        <div class="demo-block">
+          <h4>Datos de la clase</h4>
+
+          <div class="demo-class-grid">
+            <div class="demo-field">
+              <span>Stage</span>
+              <strong>{{ demoLead.stageLabel }}</strong>
+            </div>
+
+            <!-- <div class="demo-field">
+              <span>Número de stage</span>
+              <strong>{{ demoLead.stageNumber }}</strong>
+            </div> -->
+
+            <div class="demo-field">
+              <span>Descripción</span>
+              <strong>{{ demoLead.stageDescription }}</strong>
+            </div>
+
+            <div class="demo-field">
+              <span>Horas de cortesía</span>
+              <strong>{{ demoLead.courtesyClassHours }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-block">
+          <h4>Asesor solicitante</h4>
+
+          <div class="demo-class-grid">
+            <div class="demo-field">
+              <span>Asesor</span>
+              <strong>{{ demoLead.requestingAdvisorName }}</strong>
+            </div>
+
+            <div class="demo-field">
+              <span>Email del asesor</span>
+              <strong>{{ demoLead.requestingAdvisorEmail }}</strong>
+            </div>
+
+            <div class="demo-field">
+              <span>Teléfono del asesor</span>
+              <strong>{{ demoLead.requestingAdvisorPhone }}</strong>
+            </div>
+
+            <div *ngIf="demoLead.requestingAdvisorSedeLabel" class="demo-field">
+              <span>Sede</span>
+              <strong>{{ demoLead.requestingAdvisorSedeLabel }}</strong>
+            </div>
           </div>
         </div>
       </section>
