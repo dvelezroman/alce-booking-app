@@ -272,16 +272,16 @@ navItems: SidebarNavItem[] = [
       ].filter(item => item.roles.includes(role))
     },
    
-    {
-      title: 'WhatsApp',
-      icon: 'whatsapp',
-      items: [
-        this.findNavItemByRoute('/dashboard/whatsapp'),
-        this.findNavItemByRoute('/dashboard/whatsapp-groups'),
-        this.findNavItemByRoute('/dashboard/whatsapp-sent-messages'),
-        // this.findNavItemByRoute('/dashboard/whatsapp-received-messages'),
-      ].filter(item => item.roles.includes(role))
-    },
+    // {
+    //   title: 'WhatsApp',
+    //   icon: 'whatsapp',
+    //   items: [
+    //     this.findNavItemByRoute('/dashboard/whatsapp'),
+    //     this.findNavItemByRoute('/dashboard/whatsapp-groups'),
+    //     this.findNavItemByRoute('/dashboard/whatsapp-sent-messages'),
+    //     // this.findNavItemByRoute('/dashboard/whatsapp-received-messages'),
+    //   ].filter(item => item.roles.includes(role))
+    // },
     {
       title: 'Configuración',
       icon: 'config',
