@@ -28,6 +28,7 @@ import { UserDto } from '../../../services/dtos/user.dto';
 import { FeatureFlagService } from '../../../services/feature-flag.service';
 import { HandleDatesService } from '../../../services/handle-dates.service';
 import { convertEcuadorHourToLocal, getTimezoneOffsetHours, convertEcuadorDateToLocal } from '../../../shared/utils/dates.util';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error-message.util';
 import { selectUserData } from '../../../store/user.selector';
 import { NotificationService } from '../../../services/notification.service';
 import { StageProgressDto, StageProgressList } from '../../../services/dtos/stage-progress.dto';
@@ -438,10 +439,13 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
           this.initializeMeetings();
         },
         error: (err) => {
-          const msg = this.extractBookingErrorMessage(err);
+          const msg = getHttpErrorMessage(
+            err,
+            'No se pudo agendar la clase. Intenta nuevamente.'
+          );
           this.showModalMessage(msg);
           this.showSuccessModal = false;
-          this.hideModalAfterDelay(msg.length > 80 ? 6000 : 4000);
+          this.hideModalAfterDelay(msg.length > 80 ? 6000 : 5000);
         }
       });
     } else {
@@ -494,22 +498,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       mode: this.meetingType,
       category: this.userData.student.studentClassification,
     };
-  }
-
-  /**
-   * Extrae el mensaje de error del backend (400) para /meetings/book.
-   * Estructura esperada: { message: "error message", code: 400, error_id: "..." }
-   */
-  private extractBookingErrorMessage(err: any): string {
-    const body = err?.error;
-    if (!body) return 'No se pudo agendar la clase. Intenta de nuevo. Si el problema persiste, comunícate con administración.';
-    // Prioridad: message del servidor
-    if (typeof body.message === 'string' && body.message.trim()) return body.message.trim();
-    if (Array.isArray(body.message) && body.message.length > 0) {
-      return body.message.map((m: string) => m?.trim()).filter(Boolean).join('. ');
-    }
-    if (typeof body.error === 'string') return body.error;
-    return 'No se pudo agendar la clase. Intenta de nuevo. Si el problema persiste, comunícate con administración.';
   }
 
   hideModalAfterDelay(delay: number) {

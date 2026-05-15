@@ -24,6 +24,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AssessmentService } from '../../../services/assessment.service';
 import { AssessementI } from '../../../services/dtos/assessment.dto';
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error-message.util';
 import { EvaluationModalComponent } from '../../../components/instructor/evaluation-modal/evaluation-modal.component';
 import { AssistanceNoteModalComponent } from "../../../components/instructor/assistance-note-modal/assistance-note-modal.component";
 
@@ -352,7 +353,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
         this.fetchMeetings(this.filter);
       },
       error: (error) => {
-        const msg = error?.error?.message || 'No se pudo crear la clase';
+        const msg = getHttpErrorMessage(error, 'No se pudo crear la clase');
         this.showModal(this.createModalParams(true, msg));
         this.showCreateModal = false;
       }
