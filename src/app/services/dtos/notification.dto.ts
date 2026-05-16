@@ -33,10 +33,10 @@ export interface NotificationMessage {
   body: string;
   action?: string;
   meetingId?: number;
-  kind?: 'demo-class' | 'S2S_NEW_STUDENTS_TO_CREATE' | string;
+  kind?: 'demo-class' | 'S2S_NEW_STUDENTS_TO_CREATE' | 'lead-scheduling-assigned' | string;
   lead?: DemoClassLead;
   rows?: NewStudentRow[];
-  summary?: NotificationSummary | DemoClassSummary;
+  summary?: NotificationSummary | DemoClassSummary | LeadSchedulingAssignedSummary;
   [key: string]: any;
 }
 
@@ -65,6 +65,15 @@ export interface DemoClassSummary {
 
 export interface NotificationSummary {
   count: number;
+}
+
+/** Resumen opcional en `message.summary` para notificaciones `lead-scheduling-assigned`. */
+export interface LeadSchedulingAssignedSummary {
+  leadSchedulingRequestId?: number;
+  leadName?: string;
+  scheduledDate?: string;
+  scheduledHour?: number;
+  status?: string;
 }
 
 export interface NewStudentRow {

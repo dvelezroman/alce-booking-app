@@ -5,7 +5,12 @@ import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { Notification, NewStudentRow, CreateStudentWithUserDto } from '../../../../services/dtos/notification.dto';
+import {
+  Notification,
+  NewStudentRow,
+  CreateStudentWithUserDto,
+  LeadSchedulingAssignedSummary,
+} from '../../../../services/dtos/notification.dto';
 import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { selectUserData } from '../../../../store/user.selector';
 import { UsersService } from '../../../../services/users.service';
@@ -207,6 +212,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   private applyUser(user: UserDto) {
     this.currentUserId = user.id;
+    this.userRole = user.role ?? null;
     const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
     this.toDisplayName = fullName || user.email || '';
 
@@ -247,6 +253,114 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   /**  nuevos estudiantes para demo class. */
   get isDemoClassNotification(): boolean {
     return this.notification?.message?.kind === 'demo-class';
+  }
+
+  get isLeadSchedulingAssignedNotification(): boolean {
+    return this.notification?.message?.kind === 'lead-scheduling-assigned';
+  }
+
+  private static readonly leadSchedulingStatusEs: Record<string, string> = {
+    PENDING: 'Pendiente de agendar',
+    SCHEDULED: 'Agendada',
+    CANCELLED: 'Cancelada',
+    COMPLETED: 'Completada',
+  };
+
+  private parseLeadSchedulingBody(body: string): {
+    leadName: string | null;
+    requestId: number | null;
+    scheduledDate: string | null;
+    scheduledHour: number | null;
+    status: string | null;
+  } {
+    const leadMatch = body.match(/\(([^)]+)\)\s*[\.\n]/);
+    const solicitudMatch = body.match(/Solicitud\s*#(\d+)/i);
+    const fechaMatch = body.match(/Fecha:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})/i);
+    const horaMatch = body.match(/hora:\s*(\d{1,2})/i);
+    const estadoMatch = body.match(/Estado:\s*([A-Za-z_]+)/i);
+
+    const reqParsed = solicitudMatch?.[1] != null ? parseInt(solicitudMatch[1], 10) : null;
+    const hourParsed = horaMatch?.[1] != null ? parseInt(horaMatch[1], 10) : null;
+
+    return {
+      leadName: leadMatch?.[1]?.trim() ?? null,
+      requestId: reqParsed != null && Number.isFinite(reqParsed) ? reqParsed : null,
+      scheduledDate: fechaMatch?.[1]?.trim() ?? null,
+      scheduledHour: hourParsed != null && Number.isFinite(hourParsed) ? hourParsed : null,
+      status: estadoMatch?.[1]?.trim().toUpperCase() ?? null,
+    };
+  }
+
+  get leadSchedulingAssignedSummary(): LeadSchedulingAssignedSummary {
+    const raw = this.notification?.message?.summary as LeadSchedulingAssignedSummary | undefined;
+    const body = this.notification?.message?.body ?? '';
+    const parsed = this.parseLeadSchedulingBody(body);
+    return {
+      leadSchedulingRequestId:
+        typeof raw?.leadSchedulingRequestId === 'number' && Number.isFinite(raw.leadSchedulingRequestId)
+          ? raw.leadSchedulingRequestId
+          : parsed.requestId ?? undefined,
+      leadName: raw?.leadName ?? parsed.leadName ?? undefined,
+      scheduledDate: raw?.scheduledDate ?? parsed.scheduledDate ?? undefined,
+      scheduledHour:
+        typeof raw?.scheduledHour === 'number' && Number.isFinite(raw.scheduledHour)
+          ? raw.scheduledHour
+          : parsed.scheduledHour ?? undefined,
+      status: (raw?.status ?? parsed.status ?? undefined)?.toUpperCase(),
+    };
+  }
+
+  get leadSchedulingAssignedId(): number | null {
+    const id = this.leadSchedulingAssignedSummary.leadSchedulingRequestId;
+    return typeof id === 'number' && Number.isFinite(id) ? id : null;
+  }
+
+  leadSchedulingStatusLabel(status?: string): string {
+    if (!status) return '—';
+    return NotificationDetailComponent.leadSchedulingStatusEs[status] ?? status;
+  }
+
+  formatLeadSchedulingDate(iso: string): string {
+    const d = new Date(iso + 'T12:00:00');
+    if (Number.isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString('es', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  }
+
+  formatLeadSchedulingHour(h: number): string {
+    const hh = Math.max(0, Math.min(23, Math.floor(h)));
+    return `${String(hh).padStart(2, '0')}:00`;
+  }
+
+  /** No mostrar el cuerpo técnico del backend; la tarjeta sustituye la información. */
+  get showLeadSchedulingRawBody(): boolean {
+    if (!this.isLeadSchedulingAssignedNotification) return true;
+    if (this.userRole !== UserRole.INSTRUCTOR) return true;
+    return !this.notification?.message?.body;
+  }
+
+  get leadSchedulingShowGenericNextStep(): boolean {
+    const s = this.leadSchedulingAssignedSummary.status;
+    if (!s) return true;
+    return !['PENDING', 'SCHEDULED', 'CANCELLED', 'COMPLETED'].includes(s);
+  }
+
+  goToAssignedLeadScheduling(): void {
+    const id = this.leadSchedulingAssignedId;
+    if (id != null) {
+      void this.router.navigate([
+        '/dashboard/instructor/lead-scheduling-requests',
+        id,
+      ]);
+    } else {
+      void this.router.navigate([
+        '/dashboard/instructor/lead-scheduling-requests',
+      ]);
+    }
   }
 
   get demoLead() {

@@ -74,6 +74,93 @@
         </div>
       </div>
 
+      <!-- Lead scheduling (instructor): vista clara; el cuerpo técnico se oculta -->
+      <section
+        class="lead-scheduling-card"
+        *ngIf="isLeadSchedulingAssignedNotification && userRole === UserRole.INSTRUCTOR"
+      >
+        <header class="lead-scheduling-card__header">
+          <div>
+            <p class="lead-scheduling-card__eyebrow">Cortesía / examen de ubicación</p>
+            <h3 class="lead-scheduling-card__title">Te asignaron una solicitud</h3>
+            <p class="lead-scheduling-card__subtitle">
+              Un administrador te asignó una clase de cortesía o demo con este lead. Revisa el detalle para contacto y notas.
+            </p>
+          </div>
+          <span
+            class="lead-scheduling-card__status"
+            *ngIf="leadSchedulingAssignedSummary.status as st"
+            [attr.data-status]="st"
+          >
+            {{ leadSchedulingStatusLabel(st) }}
+          </span>
+        </header>
+
+        <div class="lead-scheduling-card__grid">
+          <div class="lead-scheduling-field" *ngIf="leadSchedulingAssignedSummary.leadName">
+            <span class="lead-scheduling-field__label">Lead</span>
+            <strong class="lead-scheduling-field__value">{{
+              leadSchedulingAssignedSummary.leadName
+            }}</strong>
+          </div>
+
+          <div class="lead-scheduling-field" *ngIf="leadSchedulingAssignedId != null">
+            <span class="lead-scheduling-field__label">N.º solicitud</span>
+            <strong class="lead-scheduling-field__value">#{{ leadSchedulingAssignedId }}</strong>
+          </div>
+
+          <div class="lead-scheduling-field" *ngIf="leadSchedulingAssignedSummary.scheduledDate">
+            <span class="lead-scheduling-field__label">Fecha de la sesión</span>
+            <strong class="lead-scheduling-field__value">{{
+              formatLeadSchedulingDate(leadSchedulingAssignedSummary.scheduledDate)
+            }}</strong>
+          </div>
+
+          <div
+            class="lead-scheduling-field"
+            *ngIf="leadSchedulingAssignedSummary.scheduledHour != null"
+          >
+            <span class="lead-scheduling-field__label">Hora (24 h)</span>
+            <strong class="lead-scheduling-field__value">{{
+              formatLeadSchedulingHour(leadSchedulingAssignedSummary.scheduledHour)
+            }}</strong>
+          </div>
+        </div>
+
+        <div class="lead-scheduling-card__next">
+          <p class="lead-scheduling-card__next-title">Próximos pasos</p>
+          <ol class="lead-scheduling-card__steps">
+            <li>Abre el detalle de la solicitud para ver datos del lead y la ubicación o modalidad.</li>
+            <li *ngIf="leadSchedulingAssignedSummary.status === 'PENDING'">
+              Cuando un administrador confirme fecha y hora, el estado pasará a
+              <strong>Agendada</strong> y podrás registrar asistencia e informe.
+            </li>
+            <li *ngIf="leadSchedulingAssignedSummary.status === 'SCHEDULED'">
+              El estado es <strong>Agendada</strong>: en el mismo detalle envía
+              <strong>asistencia e informe</strong>. Al guardarlo, la solicitud quedará
+              <strong>completada</strong>.
+            </li>
+            <li *ngIf="leadSchedulingAssignedSummary.status === 'CANCELLED'">
+              Esta solicitud figura como <strong>cancelada</strong>; no es necesario registrar sesión.
+            </li>
+            <li *ngIf="leadSchedulingAssignedSummary.status === 'COMPLETED'">
+              Esta solicitud ya está <strong>completada</strong>.
+            </li>
+            <li *ngIf="leadSchedulingShowGenericNextStep">
+              En el detalle verás el estado actual. Cuando esté
+              <strong>agendada</strong>, podrás enviar asistencia e informe desde la misma
+              pantalla.
+            </li>
+          </ol>
+        </div>
+
+        <div class="lead-scheduling-card__actions">
+          <button type="button" class="lead-scheduling-card__cta" (click)="goToAssignedLeadScheduling()">
+            Ir al detalle de la solicitud
+          </button>
+        </div>
+      </section>
+
       <!-- DETAILS -->
       <details class="meta-disclosure">
         <summary>
@@ -127,13 +214,9 @@
         </div>
       </details>
 
-      <!-- Content -->
-      <div class="content">
-        <p
-          class="body-text"
-          *ngIf="notification?.message?.body"
-          [innerHTML]="formattedBody | safeNoteHtml"
-        ></p>
+      <!-- Content (el cuerpo técnico de lead-scheduling se oculta para instructores; ver tarjeta arriba) -->
+      <div class="content" *ngIf="notification?.message?.body && showLeadSchedulingRawBody">
+        <p class="body-text" [innerHTML]="formattedBody | safeNoteHtml"></p>
       </div>
 
       <!-- DEMO CLASS / CLASES DE PRUEBA -->

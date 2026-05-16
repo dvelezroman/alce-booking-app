@@ -1,0 +1,182 @@
+<section class="lead-detail" *ngIf="!loading && !error && row">
+  <div class="lead-detail__toolbar">
+    <button type="button" class="btn-back" (click)="goList()">
+      <span class="btn-back__chev" aria-hidden="true">←</span>
+      Volver al listado
+    </button>
+  </div>
+
+  <header class="lead-detail__hero">
+    <div class="lead-detail__hero-inner">
+      <p class="lead-detail__eyebrow">Cortesía / examen de ubicación</p>
+      <h1 class="lead-detail__title">Solicitud #{{ row.id }}</h1>
+      <p class="lead-detail__subtitle">
+        {{ row.firstName }} {{ row.lastName }}
+      </p>
+      <div class="lead-detail__chips">
+        <span class="chip chip--kind">{{ kindText(row.kind) }}</span>
+        <span
+          class="chip chip--status"
+          [attr.data-status]="row.status"
+          >{{ statusText(row.status) }}</span
+        >
+      </div>
+    </div>
+  </header>
+
+  <div class="lead-detail__grid">
+    <article class="panel">
+      <h2 class="panel__heading">Datos del lead</h2>
+      <div class="field-grid">
+        <div class="field">
+          <span class="field__label">Nombre</span>
+          <span class="field__value">{{ row.firstName }} {{ row.lastName }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Email</span>
+          <span class="field__value field__value--wrap">{{ row.email }}</span>
+        </div>
+        <div class="field">
+          <span class="field__label">Teléfono</span>
+          <span class="field__value">{{ row.contactPhone || '—' }}</span>
+        </div>
+        <div class="field" *ngIf="row.idNumber">
+          <span class="field__label">Identificación</span>
+          <span class="field__value">{{ row.idNumber }}</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <h2 class="panel__heading">Agenda y contexto</h2>
+      <div class="field-grid">
+        <div class="field field--span">
+          <span class="field__label">Fecha y hora</span>
+          <span class="field__value">{{ slotText(row) }}</span>
+        </div>
+        <div class="field field--span" *ngIf="row.stage">
+          <span class="field__label">Etapa</span>
+          <span class="field__value"
+            >{{ row.stage.number }} — {{ row.stage.description || '—' }}</span
+          >
+        </div>
+        <div class="field" *ngIf="row.courtesyClassHours != null">
+          <span class="field__label">Horas cortesía</span>
+          <span class="field__value">{{ row.courtesyClassHours }}</span>
+        </div>
+        <div class="field field--span" *ngIf="row.requestNotes">
+          <span class="field__label">Notas de la solicitud</span>
+          <span class="field__value field__value--multiline">{{ row.requestNotes }}</span>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <article
+    class="panel panel--wide"
+    *ngIf="
+      row.requestingAdvisorName ||
+      row.requestingAdvisorEmail ||
+      row.requestingAdvisorPhone
+    "
+  >
+    <h2 class="panel__heading">Asesor que solicitó</h2>
+    <div class="field-grid field-grid--3">
+      <div class="field" *ngIf="row.requestingAdvisorName">
+        <span class="field__label">Nombre</span>
+        <span class="field__value">{{ row.requestingAdvisorName }}</span>
+      </div>
+      <div class="field" *ngIf="row.requestingAdvisorEmail">
+        <span class="field__label">Email</span>
+        <span class="field__value field__value--wrap">{{ row.requestingAdvisorEmail }}</span>
+      </div>
+      <div class="field" *ngIf="row.requestingAdvisorPhone">
+        <span class="field__label">Teléfono</span>
+        <span class="field__value">{{ row.requestingAdvisorPhone }}</span>
+      </div>
+      <div class="field field--span" *ngIf="row.requestingAdvisorOfficeLabel">
+        <span class="field__label">Sede / oficina</span>
+        <span class="field__value">{{ row.requestingAdvisorOfficeLabel }}</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="panel panel--wide panel--muted" *ngIf="row.status === 'COMPLETED'">
+    <h2 class="panel__heading">Informe registrado</h2>
+    <div class="field-grid">
+      <div class="field">
+        <span class="field__label">Asistencia</span>
+        <span class="field__value">{{
+          row.attendancePresent ? 'Presente' : 'No asistió'
+        }}</span>
+      </div>
+      <div class="field field--span" *ngIf="row.instructorReportNotes">
+        <span class="field__label">Notas del informe</span>
+        <span class="field__value field__value--multiline pre">{{
+          row.instructorReportNotes
+        }}</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="panel panel--wide panel--emphasis" *ngIf="canSubmitReport">
+    <h2 class="panel__heading">Registrar asistencia e informe</h2>
+    <p class="panel__hint">
+      Solo cuando el estado es <strong>Agendada</strong>. Al enviar el informe, la solicitud
+      pasará a <strong>Completada</strong>.
+    </p>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="report-form">
+      <label class="report-form__check">
+        <input type="checkbox" formControlName="attendancePresent" />
+        <span>El lead asistió a la sesión</span>
+      </label>
+
+      <label class="report-form__field">
+        <span class="report-form__label">Informe de la clase (mín. 3 caracteres)</span>
+        <textarea
+          formControlName="instructorReportNotes"
+          rows="6"
+          placeholder="Describe la sesión, participación del lead, nivel observado y recomendaciones…"
+        ></textarea>
+      </label>
+
+      <div class="report-form__actions">
+        <button type="submit" class="btn-primary" [disabled]="submitting || form.invalid">
+          {{ submitting ? 'Enviando…' : 'Enviar informe' }}
+        </button>
+      </div>
+    </form>
+  </article>
+
+  <div class="callout callout--pending" *ngIf="row.status === 'PENDING'">
+    <p class="callout__title">Pendiente de agendar</p>
+    <p class="callout__text">
+      Un <strong>administrador</strong> debe confirmar fecha y hora en el panel de administración.
+      Cuando la solicitud pase a <strong>Agendada</strong>, podrás registrar aquí la asistencia y el
+      informe de la sesión.
+    </p>
+  </div>
+
+  <div class="callout callout--cancelled" *ngIf="row.status === 'CANCELLED'">
+    <p class="callout__title">Solicitud cancelada</p>
+    <p class="callout__text">No es necesario registrar sesión ni informe para esta solicitud.</p>
+  </div>
+</section>
+
+<div *ngIf="loading" class="lead-detail lead-detail--solo-state">
+  <div class="lead-detail__state">Cargando…</div>
+</div>
+<div *ngIf="error" class="lead-detail lead-detail--solo-state" role="alert">
+  <div class="lead-detail__error">{{ error }}</div>
+</div>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>

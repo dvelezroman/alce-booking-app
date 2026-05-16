@@ -55,6 +55,12 @@ import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluatio
 import { StudentHistoryReportComponent } from './report-students/student-history-report/student-history-report.component';
 import { AnnouncementCardComponent } from '../../components/announcements/announcement-card/announcement-card.component';
 import { AnnouncementsComponent } from './announcements/announcements.component';
+import { adminOnlyGuard } from '../auth/admin-role.guard';
+import { instructorOnlyGuard } from '../auth/instructor-role.guard';
+import { AdminLeadSchedulingDetailComponent } from './admin/lead-scheduling-requests/admin-lead-scheduling-detail.component';
+import { AdminLeadSchedulingListComponent } from './admin/lead-scheduling-requests/admin-lead-scheduling-list.component';
+import { InstructorLeadSchedulingDetailComponent } from './instructor/lead-scheduling-requests/instructor-lead-scheduling-detail.component';
+import { InstructorLeadSchedulingListComponent } from './instructor/lead-scheduling-requests/instructor-lead-scheduling-list.component';
 
 
 export const dashboardRoutes: Routes = [
@@ -74,6 +80,34 @@ export const dashboardRoutes: Routes = [
   { path: 'evaluation-statistics', component: EvaluationStatisticsComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent },
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent },
+  {
+    path: 'admin',
+    canActivate: [adminOnlyGuard],
+    children: [
+      {
+        path: 'lead-scheduling-requests',
+        component: AdminLeadSchedulingListComponent,
+      },
+      {
+        path: 'lead-scheduling-requests/:id',
+        component: AdminLeadSchedulingDetailComponent,
+      },
+    ],
+  },
+  {
+    path: 'instructor',
+    canActivate: [instructorOnlyGuard],
+    children: [
+      {
+        path: 'lead-scheduling-requests',
+        component: InstructorLeadSchedulingListComponent,
+      },
+      {
+        path: 'lead-scheduling-requests/:id',
+        component: InstructorLeadSchedulingDetailComponent,
+      },
+    ],
+  },
   { path: 'searching-students', component: SearchingStudentComponent },
   { path: 'attendance-student', component: AttendanceReportsComponent },
   { path: 'report-instructor', component: ReportInstructorComponent },

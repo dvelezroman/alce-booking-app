@@ -1,0 +1,151 @@
+<section class="admin-detail" *ngIf="!loading && !error && row as r">
+  <header class="admin-detail__header">
+    <button type="button" class="back" (click)="goList()">← Volver al listado</button>
+    <h1>Solicitud #{{ r.id }}</h1>
+    <p class="admin-detail__meta">
+      <span class="badge" [attr.data-status]="r.status">{{ statusText(r.status) }}</span>
+      · {{ kindText(r.kind) }}
+    </p>
+  </header>
+
+  <div class="admin-detail__grid">
+    <article class="card">
+      <h2>Lead</h2>
+      <dl class="kv">
+        <dt>Nombre</dt>
+        <dd>{{ r.firstName }} {{ r.lastName }}</dd>
+        <dt>Email</dt>
+        <dd>{{ r.email }}</dd>
+        <dt>Teléfono</dt>
+        <dd>{{ r.contactPhone }}</dd>
+        <dt>Documento</dt>
+        <dd>{{ r.idNumber || '—' }}</dd>
+        <dt>Notas de la solicitud</dt>
+        <dd class="pre">{{ r.requestNotes || '—' }}</dd>
+      </dl>
+    </article>
+
+    <article class="card">
+      <h2>Asesor / referencia</h2>
+      <dl class="kv">
+        <dt>Asesor</dt>
+        <dd>{{ r.requestingAdvisorName || '—' }}</dd>
+        <dt>Email asesor</dt>
+        <dd>{{ r.requestingAdvisorEmail || '—' }}</dd>
+        <dt>Ref. externa</dt>
+        <dd>{{ r.externalReferenceId || '—' }}</dd>
+      </dl>
+    </article>
+  </div>
+
+  <article class="card card--wide" *ngIf="isCompleted">
+    <p class="hint">
+      Esta solicitud está <strong>COMPLETED</strong> (informe del instructor). No puede marcarse completada desde aquí.
+      Si cambia <strong>instructor</strong>, <strong>fecha</strong> u <strong>hora</strong>, el sistema puede reabrir el flujo según política del API.
+    </p>
+  </article>
+
+  <form class="card card--wide" [formGroup]="form" (ngSubmit)="save()">
+    <h2>Asignación y agenda</h2>
+
+    <label class="field">
+      <span>Instructor</span>
+      <select formControlName="instructorId">
+        <option [ngValue]="''">Sin asignar</option>
+        <option *ngFor="let ins of instructors" [ngValue]="ins.id">
+          {{ instructorOptionLabel(ins) }}
+        </option>
+      </select>
+      <small class="field__help">Actual en servidor: {{ instructorLabelFromRow(r) }}</small>
+    </label>
+
+    <div class="row2">
+      <label class="field">
+        <span>Fecha (YYYY-MM-DD)</span>
+        <input type="date" formControlName="scheduledDate" />
+      </label>
+      <label class="field">
+        <span>Hora (0–23)</span>
+        <select formControlName="scheduledHour">
+          <option [ngValue]="''">—</option>
+          <option *ngFor="let h of hourOptions" [ngValue]="h">{{ h }}:00</option>
+        </select>
+      </label>
+    </div>
+    <p class="hint">Franja en servidor ahora: <strong>{{ slotText(r) }}</strong></p>
+
+    <label class="field">
+      <span>Cambiar estado</span>
+      <select formControlName="statusAction">
+        <option value="keep">Sin cambio de estado</option>
+        <option value="PENDING">Pendiente</option>
+        <option value="SCHEDULED">Agendada</option>
+        <option value="CANCELLED">Cancelada</option>
+      </select>
+      <small class="field__help"
+        >No use “Agendada” para forzar si faltan datos: el API también deriva estado al completar instructor + fecha + hora.</small
+      >
+    </label>
+
+    <label class="field">
+      <span>Notas internas (admin)</span>
+      <textarea rows="4" formControlName="adminNotes" placeholder="Visibles en operación; no son el informe del instructor."></textarea>
+    </label>
+
+    <div class="actions">
+      <button type="submit" class="btn primary" [disabled]="saving">
+        {{ saving ? 'Guardando…' : 'Guardar cambios' }}
+      </button>
+      <button
+        type="button"
+        class="btn secondary"
+        [disabled]="saving"
+        (click)="discardEdits()"
+      >
+        Cancelar edición
+      </button>
+      <button
+        type="button"
+        class="btn danger"
+        [disabled]="saving || isCancelled"
+        (click)="confirmCancel()"
+      >
+        Cancelar solicitud
+      </button>
+    </div>
+  </form>
+
+  <article class="card card--wide" *ngIf="r.status === 'COMPLETED' || r.instructorReportSubmittedAt">
+    <h2>Informe del instructor</h2>
+    <dl class="kv">
+      <dt>Asistencia</dt>
+      <dd>
+        {{
+          r.attendancePresent === true
+            ? 'Presente'
+            : r.attendancePresent === false
+              ? 'Ausente'
+              : '—'
+        }}
+      </dd>
+      <dt>Notas del informe</dt>
+      <dd class="pre">{{ r.instructorReportNotes || '—' }}</dd>
+      <dt>Enviado</dt>
+      <dd>{{ r.instructorReportSubmittedAt || '—' }}</dd>
+    </dl>
+  </article>
+</section>
+
+<div *ngIf="loading" class="state">Cargando…</div>
+<div *ngIf="error" class="state state--error" role="alert">{{ error }}</div>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>
