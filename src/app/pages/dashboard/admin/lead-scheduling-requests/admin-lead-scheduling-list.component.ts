@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { LeadSchedulingRequestService } from '../../../../services/lead-scheduling-request.service';
 import {
   LeadSchedulingRequestKind,
@@ -43,10 +43,23 @@ export class AdminLeadSchedulingListComponent implements OnInit {
     COMPLETED: 'Completada',
   };
 
-  constructor(private readonly leadScheduling: LeadSchedulingRequestService) {}
+  constructor(
+    private readonly leadScheduling: LeadSchedulingRequestService,
+    private readonly route: ActivatedRoute,
+  ) {}
 
   ngOnInit(): void {
-    this.load();
+    this.route.queryParamMap.subscribe((params) => {
+      this.applyKindFromRoute(params.get('kind'));
+      this.pageIndex = 0;
+      this.load();
+    });
+  }
+
+  private applyKindFromRoute(kind: string | null): void {
+    if (kind === 'PLACEMENT_EXAM' || kind === 'DEMO_CLASS') {
+      this.filterKind = kind;
+    }
   }
 
   get offset(): number {

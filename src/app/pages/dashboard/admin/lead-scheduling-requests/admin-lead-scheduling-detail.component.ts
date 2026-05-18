@@ -155,13 +155,22 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     void this.router.navigate(['/dashboard/admin/lead-scheduling-requests']);
   }
 
-  /** Restaura el formulario a los datos actuales del servidor (sin guardar). */
+  /** Compara valores de selects que mezclan '' con id/hora numéricos. */
+  readonly compareIdOrEmpty = (
+    a: string | number | null | undefined,
+    b: string | number | null | undefined,
+  ): boolean => {
+    const empty = (v: string | number | null | undefined) =>
+      v === '' || v === null || v === undefined;
+    if (empty(a) && empty(b)) return true;
+    if (empty(a) || empty(b)) return false;
+    return Number(a) === Number(b);
+  };
+
+  /** Abandona la edición y vuelve al listado sin guardar. */
   discardEdits(): void {
-    if (!this.row || this.saving) return;
-    this.error = null;
-    this.patchFormFromRow(this.row);
-    this.form.markAsPristine();
-    this.form.markAsUntouched();
+    if (this.saving) return;
+    this.goList();
   }
 
   save(): void {
@@ -241,21 +250,25 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  private patchFormFromRow(row: LeadSchedulingRequestRow): void {
+  private formValueFromRow(row: LeadSchedulingRequestRow) {
     const dateOnly =
       row.scheduledDate && row.scheduledDate.length >= 10
         ? row.scheduledDate.slice(0, 10)
         : row.scheduledDate ?? '';
-    this.form.patchValue({
-      instructorId: row.instructorId != null ? row.instructorId : '',
+    return {
+      instructorId: row.instructorId != null ? Number(row.instructorId) : ('' as const),
       scheduledDate: dateOnly,
       scheduledHour:
         row.scheduledHour != null && row.scheduledHour !== undefined
-          ? row.scheduledHour
-          : '',
-      statusAction: 'keep',
+          ? Number(row.scheduledHour)
+          : ('' as const),
+      statusAction: 'keep' as StatusAction,
       adminNotes: row.adminNotes ?? '',
-    });
+    };
+  }
+
+  private patchFormFromRow(row: LeadSchedulingRequestRow): void {
+    this.form.reset(this.formValueFromRow(row));
   }
 
   private buildPatchBody(raw: Record<string, unknown>): UpdateLeadSchedulingAdminDto {

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { LeadSchedulingRequestService } from '../../../../services/lead-scheduling-request.service';
 import {
   LeadSchedulingRequestKind,
@@ -67,10 +67,23 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
     { value: 'PLACEMENT_EXAM', label: 'Examen de ubicación' },
   ];
 
-  constructor(private readonly leadScheduling: LeadSchedulingRequestService) {}
+  constructor(
+    private readonly leadScheduling: LeadSchedulingRequestService,
+    private readonly route: ActivatedRoute,
+  ) {}
 
   ngOnInit(): void {
-    this.load();
+    this.route.queryParamMap.subscribe((params) => {
+      this.applyKindFromRoute(params.get('kind'));
+      this.pageIndex = 0;
+      this.load();
+    });
+  }
+
+  private applyKindFromRoute(kind: string | null): void {
+    if (kind === 'PLACEMENT_EXAM' || kind === 'DEMO_CLASS') {
+      this.kindFilter = kind;
+    }
   }
 
   /** Descarga todas las filas disponibles para el filtro estado/tipo (en lotes), luego paginamos en cliente. */

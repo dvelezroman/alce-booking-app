@@ -10,6 +10,8 @@ import {
   NewStudentRow,
   CreateStudentWithUserDto,
   LeadSchedulingAssignedSummary,
+  LeadSchedulingNotificationRequestKind,
+  DemoClassLead,
 } from '../../../../services/dtos/notification.dto';
 import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { selectUserData } from '../../../../store/user.selector';
@@ -250,13 +252,56 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.studentRows.length > 0;
   }
 
-  /**  nuevos estudiantes para demo class. */
   get isDemoClassNotification(): boolean {
-    return this.notification?.message?.kind === 'demo-class';
+    if (this.isPlacementExamNotification) return false;
+    const kind = this.notification?.message?.kind;
+    return kind === 'demo-class' || kind === 'demo_class';
+  }
+
+  get isPlacementExamNotification(): boolean {
+    const kind = this.notification?.message?.kind;
+    if (kind === 'placement-exam' || kind === 'placement_exam') return true;
+    const title = (this.notification?.title ?? '').toLowerCase();
+    const body = (this.notification?.message?.body ?? '').toLowerCase();
+    return /examen de ubicaci[oó]n|placement\s*exam/.test(`${title} ${body}`);
+  }
+
+  /** Solicitud nueva con datos estructurados del lead (cortesía o ubicación). */
+  get isLeadRequestNotification(): boolean {
+    return (
+      (this.isDemoClassNotification || this.isPlacementExamNotification) && !!this.requestLead
+    );
+  }
+
+  get requestLead(): DemoClassLead | null {
+    return this.notification?.message?.lead ?? null;
   }
 
   get isLeadSchedulingAssignedNotification(): boolean {
     return this.notification?.message?.kind === 'lead-scheduling-assigned';
+  }
+
+  get leadSchedulingRequestKind(): LeadSchedulingNotificationRequestKind | null {
+    const raw = this.leadSchedulingAssignedSummary;
+    if (raw.requestKind === 'PLACEMENT_EXAM' || raw.requestKind === 'DEMO_CLASS') {
+      return raw.requestKind;
+    }
+    const body = this.notification?.message?.body ?? '';
+    if (/examen de ubicaci[oó]n|placement\s*exam|PLACEMENT_EXAM/i.test(body)) {
+      return 'PLACEMENT_EXAM';
+    }
+    if (/cortes[ií]a|clase de demo|demo\s*class|DEMO_CLASS/i.test(body)) {
+      return 'DEMO_CLASS';
+    }
+    return null;
+  }
+
+  get isPlacementSchedulingAssignment(): boolean {
+    return this.leadSchedulingRequestKind === 'PLACEMENT_EXAM';
+  }
+
+  get isDemoSchedulingAssignment(): boolean {
+    return this.leadSchedulingRequestKind === 'DEMO_CLASS';
   }
 
   private static readonly leadSchedulingStatusEs: Record<string, string> = {
@@ -272,6 +317,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     scheduledDate: string | null;
     scheduledHour: number | null;
     status: string | null;
+    requestKind: LeadSchedulingNotificationRequestKind | null;
   } {
     const leadMatch = body.match(/\(([^)]+)\)\s*[\.\n]/);
     const solicitudMatch = body.match(/Solicitud\s*#(\d+)/i);
@@ -282,12 +328,20 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     const reqParsed = solicitudMatch?.[1] != null ? parseInt(solicitudMatch[1], 10) : null;
     const hourParsed = horaMatch?.[1] != null ? parseInt(horaMatch[1], 10) : null;
 
+    let requestKind: LeadSchedulingNotificationRequestKind | null = null;
+    if (/examen de ubicaci[oó]n|placement\s*exam|PLACEMENT_EXAM/i.test(body)) {
+      requestKind = 'PLACEMENT_EXAM';
+    } else if (/cortes[ií]a|clase de demo|demo\s*class|DEMO_CLASS/i.test(body)) {
+      requestKind = 'DEMO_CLASS';
+    }
+
     return {
       leadName: leadMatch?.[1]?.trim() ?? null,
       requestId: reqParsed != null && Number.isFinite(reqParsed) ? reqParsed : null,
       scheduledDate: fechaMatch?.[1]?.trim() ?? null,
       scheduledHour: hourParsed != null && Number.isFinite(hourParsed) ? hourParsed : null,
       status: estadoMatch?.[1]?.trim().toUpperCase() ?? null,
+      requestKind,
     };
   }
 
@@ -307,6 +361,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
           ? raw.scheduledHour
           : parsed.scheduledHour ?? undefined,
       status: (raw?.status ?? parsed.status ?? undefined)?.toUpperCase(),
+      requestKind: raw?.requestKind ?? parsed.requestKind ?? undefined,
     };
   }
 
@@ -336,17 +391,42 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return `${String(hh).padStart(2, '0')}:00`;
   }
 
-  /** No mostrar el cuerpo técnico del backend; la tarjeta sustituye la información. */
-  get showLeadSchedulingRawBody(): boolean {
-    if (!this.isLeadSchedulingAssignedNotification) return true;
-    if (this.userRole !== UserRole.INSTRUCTOR) return true;
-    return !this.notification?.message?.body;
+  /** Oculta el cuerpo técnico cuando la tarjeta estructurada ya muestra la información. */
+  get showNotificationRawBody(): boolean {
+    if (!this.notification?.message?.body) return false;
+    if (this.isLeadRequestNotification && this.requestLead) return false;
+    if (this.isLeadSchedulingAssignedNotification && this.userRole === UserRole.INSTRUCTOR) {
+      return false;
+    }
+    return true;
   }
 
   get leadSchedulingShowGenericNextStep(): boolean {
     const s = this.leadSchedulingAssignedSummary.status;
     if (!s) return true;
     return !['PENDING', 'SCHEDULED', 'CANCELLED', 'COMPLETED'].includes(s);
+  }
+
+  get showPlacementExamListLink(): boolean {
+    if (!this.isPlacementExamNotification && !this.isPlacementSchedulingAssignment) {
+      return false;
+    }
+    return this.userRole === UserRole.INSTRUCTOR || this.userRole === UserRole.ADMIN;
+  }
+
+  goToPlacementExamList(): void {
+    const queryParams = { kind: 'PLACEMENT_EXAM' as const };
+    if (this.userRole === UserRole.INSTRUCTOR) {
+      void this.router.navigate(['/dashboard/instructor/lead-scheduling-requests'], {
+        queryParams,
+      });
+      return;
+    }
+    if (this.userRole === UserRole.ADMIN) {
+      void this.router.navigate(['/dashboard/admin/lead-scheduling-requests'], {
+        queryParams,
+      });
+    }
   }
 
   goToAssignedLeadScheduling(): void {
@@ -356,15 +436,11 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
         '/dashboard/instructor/lead-scheduling-requests',
         id,
       ]);
+    } else if (this.isPlacementSchedulingAssignment) {
+      this.goToPlacementExamList();
     } else {
-      void this.router.navigate([
-        '/dashboard/instructor/lead-scheduling-requests',
-      ]);
+      void this.router.navigate(['/dashboard/instructor/lead-scheduling-requests']);
     }
-  }
-
-  get demoLead() {
-    return this.notification?.message?.lead ?? null;
   }
 
   get formattedBody(): string {

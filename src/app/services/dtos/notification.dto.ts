@@ -33,7 +33,12 @@ export interface NotificationMessage {
   body: string;
   action?: string;
   meetingId?: number;
-  kind?: 'demo-class' | 'S2S_NEW_STUDENTS_TO_CREATE' | 'lead-scheduling-assigned' | string;
+  kind?:
+    | 'demo-class'
+    | 'placement-exam'
+    | 'S2S_NEW_STUDENTS_TO_CREATE'
+    | 'lead-scheduling-assigned'
+    | string;
   lead?: DemoClassLead;
   rows?: NewStudentRow[];
   summary?: NotificationSummary | DemoClassSummary | LeadSchedulingAssignedSummary;
@@ -67,6 +72,8 @@ export interface NotificationSummary {
   count: number;
 }
 
+export type LeadSchedulingNotificationRequestKind = 'DEMO_CLASS' | 'PLACEMENT_EXAM';
+
 /** Resumen opcional en `message.summary` para notificaciones `lead-scheduling-assigned`. */
 export interface LeadSchedulingAssignedSummary {
   leadSchedulingRequestId?: number;
@@ -74,6 +81,8 @@ export interface LeadSchedulingAssignedSummary {
   scheduledDate?: string;
   scheduledHour?: number;
   status?: string;
+  /** Tipo de solicitud: cortesía/demo o examen de ubicación. */
+  requestKind?: LeadSchedulingNotificationRequestKind;
 }
 
 export interface NewStudentRow {

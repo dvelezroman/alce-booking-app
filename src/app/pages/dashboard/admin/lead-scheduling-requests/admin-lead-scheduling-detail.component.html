@@ -50,7 +50,7 @@
 
     <label class="field">
       <span>Instructor</span>
-      <select formControlName="instructorId">
+      <select formControlName="instructorId" [compareWith]="compareIdOrEmpty">
         <option [ngValue]="''">Sin asignar</option>
         <option *ngFor="let ins of instructors" [ngValue]="ins.id">
           {{ instructorOptionLabel(ins) }}
@@ -66,7 +66,7 @@
       </label>
       <label class="field">
         <span>Hora (0–23)</span>
-        <select formControlName="scheduledHour">
+        <select formControlName="scheduledHour" [compareWith]="compareIdOrEmpty">
           <option [ngValue]="''">—</option>
           <option *ngFor="let h of hourOptions" [ngValue]="h">{{ h }}:00</option>
         </select>
