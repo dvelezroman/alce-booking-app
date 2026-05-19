@@ -50,7 +50,6 @@ The Alce College Booking Application is a comprehensive Progressive Web App (PWA
 ### 6. **Communication & Notifications**
 - **Push Notifications**: Real-time alerts for class reminders and updates
 - **Email System**: Comprehensive email management with templates
-- **WhatsApp Integration**: Direct messaging capabilities
 - **Notification Groups**: Targeted communication to specific user groups
 - **Broadcast Messages**: Send announcements to all users or specific roles
 - **Notification History**: Track sent and received communications

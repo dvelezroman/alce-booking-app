@@ -14,7 +14,6 @@ import { UserDto, UserRole } from '../../../services/dtos/user.dto';
 import { ADMIN_STATS, ADMIN_MODULES, ADMIN_ANNOUNCEMENTS } from './admin-dashboard.mock';
 import { DashboardNotificationsWidgetComponent } from "../../widgets-admin/dashboard-notifications-widget/dashboard-notifications-widget.component";
 import { DashboardEmailsWidgetComponent } from "../../widgets-admin/dashboard-emails-widget/dashboard-emails-widget.component";
-import { DashboardWhatsappWidgetComponent } from "../../widgets-admin/dashboard-whatsapp-widget/dashboard-whatsapp-widget.component";
 import { DashboardSettingsWidgetComponent } from "../../widgets-admin/dashboard-settings-widget/dashboard-settings-widget.component";
 import { AnnouncementViewerComponent } from '../../announcements/announcement-viewer/announcement-viewer.component';
 import { Announcement } from '../../../services/dtos/announcement.dto';
@@ -28,7 +27,6 @@ import { AnnouncementService } from '../../../services/announcement.service';
     RouterModule,
     DashboardNotificationsWidgetComponent,
     // DashboardEmailsWidgetComponent,
-    // DashboardWhatsappWidgetComponent,
     DashboardSettingsWidgetComponent,
     AnnouncementViewerComponent,
     

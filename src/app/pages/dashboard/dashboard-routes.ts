@@ -31,18 +31,12 @@ import { GroupsComponent } from './notifications/groups/groups.component';
 import { InboxComponent } from './notifications/inbox/inbox.component';
 import { NotificationDetailComponent } from './notifications/notification-detail/notification-detail.component';
 import { NotificationsSentComponent } from './notifications/notifications-sent/notifications-sent.component';
-import { BroadcastComponent } from './whatsapp/broadcast.component';
-import { WhatsAppGroupsComponent } from './whatsapp-groups/whatsapp-groups.component';
-import { WhatsappConfigComponent } from './whatsapp-config/whatsapp-config.component';
-import { WhatsappSentMessagesComponent } from './whatsapp-sent-messages/whatsapp-sent-messages.component';
-import { WhatsappReceivedMessagesComponent } from './whatsapp-received-messages/whatsapp-received-messages.component';
 import { SendEmailsComponent } from './emails/send-emails/send-emails.component';
 import { HistorialEmailComponent } from './emails/historial-email/historial-email.component';
 import { InboxEmailComponent } from './emails/inbox-email/inbox-email.component';
 import { SentEmailComponent } from './emails/sent-email/sent-email.component';
 import { EmailDetailComponent } from './emails/email-detail/email-detail.component';
 import { ProfileComponent } from './profile/profile.component';
-import { WhatsAppMessageDetailComponent } from './whatsapp-message-detail/whatsapp-message-detail.component';
 import { ReportsExcelPageComponent } from './reports-excel-page/reports-excel-page.component';
 import { StageAssessmentComponent } from './stage-assessment/stage-assessment.component';
 import { StageAssessmentResourcesComponent } from './stage-assessment-resources/stage-assessment-resources.component';
@@ -136,12 +130,6 @@ export const dashboardRoutes: Routes = [
   { path: 'notifications-inbox', component: InboxComponent },
   { path: 'notifications-detail', component: NotificationDetailComponent },
   { path: 'notifications-sent', component: NotificationsSentComponent },
-  { path: 'whatsapp', component: BroadcastComponent },
-  { path: 'whatsapp-groups', component: WhatsAppGroupsComponent },
-  { path: 'whatsapp-config', component: WhatsappConfigComponent },
-  { path: 'whatsapp-sent-messages', component: WhatsappSentMessagesComponent },
-  { path: 'whatsapp-message-detail', component: WhatsAppMessageDetailComponent },
-  // { path: 'whatsapp-received-messages', component: WhatsappReceivedMessagesComponent },
   { path: 'send-emails', component: SendEmailsComponent },
   { path: 'sent-email', component: SentEmailComponent },
   { path: 'inbox-email', component: InboxEmailComponent },

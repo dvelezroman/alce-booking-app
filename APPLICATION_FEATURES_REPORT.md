@@ -112,13 +112,6 @@ The application supports three main types of users, each with specific permissio
 - **User Targeting**: Send emails to specific user groups or individuals
 - **Delivery Tracking**: Monitor email delivery and engagement
 
-#### **WhatsApp Integration**
-- **Direct Messaging**: Send messages through WhatsApp
-- **Group Management**: Organize users into WhatsApp groups
-- **Message Broadcasting**: Send messages to multiple contacts
-- **Message History**: Track all WhatsApp communications
-- **Automated Responses**: Set up automatic replies for common queries
-
 #### **Internal Notification System**
 - **In-App Messages**: Direct communication within the application
 - **Notification Groups**: Organize users for targeted messaging

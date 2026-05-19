@@ -65,19 +65,7 @@ export const ADMIN_MODULES = [
         { label: "Esta semana", value: "324" },
         { label: "Total enviados", value: "1248" }
     ]
-  },
-  {
-    title: "WhatsApp",
-    // route: "/dashboard/whatsapp",
-    items: [
-        { label: "Mensajes enviados hoy", value: "142" },
-        { label: "Grupos activos", value: "8" },
-        { label: "Total enviados", value: "2480" }
-    ]
-  },
-
-  
-
+  }
 ]
 
 export const ADMIN_ANNOUNCEMENTS: Announcement[] = [
