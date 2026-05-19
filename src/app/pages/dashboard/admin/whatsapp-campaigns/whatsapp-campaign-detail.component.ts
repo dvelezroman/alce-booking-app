@@ -5,10 +5,12 @@ import { Subject, finalize, switchMap, takeUntil } from 'rxjs';
 import {
   WhatsappCampaignDetail,
   WhatsappCampaignOverallStatus,
+  WhatsappJobOutcome,
   WhatsappJobResultItem,
   WhatsappJobStatus,
   WhatsappJobStatusResponse,
 } from '../../../../services/dtos/whatsapp-notificador.dto';
+import { getJobOutcome } from '../../../../shared/utils/whatsapp-job.util';
 import { WhatsAppNotificadorService } from '../../../../services/whatsapp-notificador.service';
 import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message.util';
 import { formatToEcuadorTime } from '../../../../shared/utils/dates.util';
@@ -101,6 +103,24 @@ export class WhatsappCampaignDetailComponent implements OnInit, OnDestroy {
     if (status === 'COMPLETED') return 'wa-badge--ok';
     if (status === 'FAILED') return 'wa-badge--bad';
     if (status === 'PARTIAL') return 'wa-badge--warn';
+    return 'wa-badge--muted';
+  }
+
+  expandedJobOutcomeLabel(job: WhatsappJobStatusResponse): string {
+    const labels: Record<WhatsappJobOutcome, string> = {
+      pending: 'En proceso',
+      success: 'Completado',
+      partial: 'Parcial',
+      failed: 'Fallido',
+    };
+    return labels[getJobOutcome(job)];
+  }
+
+  expandedJobBadgeClass(job: WhatsappJobStatusResponse): string {
+    const outcome = getJobOutcome(job);
+    if (outcome === 'success') return 'wa-badge--ok';
+    if (outcome === 'failed') return 'wa-badge--bad';
+    if (outcome === 'partial') return 'wa-badge--warn';
     return 'wa-badge--muted';
   }
 

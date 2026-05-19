@@ -199,9 +199,11 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
           showButtons: true,
           close: () => {
             this.modal.show = false;
+            this.goList();
           },
           confirm: () => {
             this.modal.show = false;
+            this.goList();
           },
         };
       },

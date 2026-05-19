@@ -28,9 +28,14 @@ export interface SendWhatsappRequest {
   contentMessage: string;
 }
 
+export type WhatsappJobOutcome = 'pending' | 'success' | 'partial' | 'failed';
+
 export interface EnqueueWhatsappResponse {
   jobId: string;
-  status: 'queued';
+  status: WhatsappJobStatus;
+  completed: boolean;
+  success: boolean;
+  outcome: WhatsappJobOutcome;
   batchId: string;
   totalCount: number;
   templateId: string;
@@ -43,6 +48,8 @@ export interface WhatsappJobResultItem {
   phone: string;
   status: WhatsappJobResultStatus;
   httpStatus?: number;
+  /** true si el proveedor aceptó el envío (2xx o status sent) */
+  httpOk?: boolean;
   notificadorId?: string | null;
   error?: string;
 }
@@ -58,6 +65,7 @@ export interface WhatsappJobStatusResponse {
   status: WhatsappJobStatus;
   completed: boolean;
   success: boolean;
+  outcome: WhatsappJobOutcome;
   totalCount: number;
   sentCount: number;
   failedCount: number;

@@ -389,11 +389,11 @@
     >
       <span
         class="wa-badge wa-badge--lg"
-        [class.wa-badge--ok]="currentJob!.success"
-        [class.wa-badge--warn]="currentJob!.status === 'PARTIAL'"
-        [class.wa-badge--bad]="!currentJob!.success"
+        [class.wa-badge--ok]="currentJobOutcome === 'success'"
+        [class.wa-badge--warn]="currentJobOutcome === 'partial'"
+        [class.wa-badge--bad]="currentJobOutcome === 'failed'"
       >
-        {{ statusLabel[currentJob!.status] }}
+        {{ outcomeLabel[currentJobOutcome!] }}
       </span>
       <span class="wa-panel__counts">
         {{ aggregatedSentCount }} enviados · {{ aggregatedFailedCount }} fallidos
