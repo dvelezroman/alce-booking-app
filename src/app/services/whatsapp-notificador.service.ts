@@ -16,6 +16,8 @@ import {
   EnqueueWhatsappResponse,
   SendWhatsappRequest,
   ValidatePhonesResponse,
+  WhatsappCampaignDetail,
+  WhatsappCampaignListResponse,
   WhatsappGateStatusResponse,
   WhatsappJobStatusResponse,
 } from './dtos/whatsapp-notificador.dto';
@@ -47,6 +49,25 @@ export class WhatsAppNotificadorService {
     return this.http.get<WhatsappJobStatusResponse>(
       `${this.base}/jobs/${jobId}`,
       skipSpinnerContext(),
+    );
+  }
+
+  listCampaigns(
+    page = 1,
+    limit = 20,
+  ): Observable<WhatsappCampaignListResponse> {
+    let params = new HttpParams()
+      .set('page', String(page))
+      .set('limit', String(limit));
+    return this.http.get<WhatsappCampaignListResponse>(
+      `${this.base}/campaigns`,
+      { params },
+    );
+  }
+
+  getCampaign(batchId: string): Observable<WhatsappCampaignDetail> {
+    return this.http.get<WhatsappCampaignDetail>(
+      `${this.base}/campaigns/${encodeURIComponent(batchId)}`,
     );
   }
 

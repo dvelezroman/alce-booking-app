@@ -47,6 +47,11 @@ export interface WhatsappJobResultItem {
   error?: string;
 }
 
+/** Fila de resultado en UI (envío secuencial multi-destinatario). */
+export interface WhatsappSendDisplayResult extends WhatsappJobResultItem {
+  recipientName?: string;
+}
+
 export interface WhatsappJobStatusResponse {
   jobId: string;
   batchId?: string;
@@ -64,6 +69,51 @@ export interface WhatsappJobStatusResponse {
   startedAt?: string;
   completedAt?: string;
   createdAt: string;
+}
+
+export type WhatsappCampaignOverallStatus =
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'PARTIAL'
+  | 'FAILED';
+
+export interface WhatsappCampaignSummary {
+  batchId: string;
+  jobCount: number;
+  totalRecipients: number;
+  totalSent: number;
+  totalFailed: number;
+  sentInBatch: number;
+  remainingInBatch: number;
+  overallStatus: WhatsappCampaignOverallStatus;
+  startedAt: string;
+  lastActivityAt: string;
+  createdByName?: string;
+  messagePreview?: string;
+}
+
+export interface WhatsappCampaignListResponse {
+  items: WhatsappCampaignSummary[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface WhatsappCampaignJobSummary {
+  jobId: string;
+  status: WhatsappJobStatus;
+  contact: string;
+  totalCount: number;
+  sentCount: number;
+  failedCount: number;
+  createdAt: string;
+  completedAt?: string;
+  errorMessage?: string;
+  contentPreview?: string;
+}
+
+export interface WhatsappCampaignDetail extends WhatsappCampaignSummary {
+  jobs: WhatsappCampaignJobSummary[];
 }
 
 export interface WhatsappGateStatusResponse {

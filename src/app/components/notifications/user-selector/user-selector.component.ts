@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime } from 'rxjs';
 import { UserDto } from '../../../services/dtos/user.dto';
 import { UsersService } from '../../../services/users.service';
+import { normalizeWhatsappPhone } from '../../../shared/utils/whatsapp-phone.util';
 
 @Component({
   selector: 'app-user-selector',
@@ -27,7 +28,13 @@ export class UserSelectorComponent implements OnChanges {
   @Input() stageId: number | undefined;
   @Input() reset = false;
   @Input() maxSelectable: number | null = null;
-  @Input() resetTrigger = 0; 
+  @Input() resetTrigger = 0;
+  /** Si true, solo permite seleccionar usuarios con teléfono en `contact`. */
+  @Input() requireValidPhone = false;
+  /** `modern`: tarjetas, chips y búsqueda estilizada (p. ej. WhatsApp). */
+  @Input() theme: 'legacy' | 'modern' = 'legacy';
+  /** Precarga estudiantes al enfocar el buscador (útil sin filtro de stage). */
+  @Input() preloadStudentsOnFocus = false;
 
   @Output() usersSelected = new EventEmitter<UserDto[]>();
 
@@ -89,6 +96,7 @@ export class UserSelectorComponent implements OnChanges {
     const shouldFetch =
       term.trim().length >= 2 ||
       (this.role === 'student' && !!this.stageId) ||
+      (this.role === 'student' && this.preloadStudentsOnFocus) ||
       this.role === 'instructor' ||
       this.role === 'admin';
 
@@ -136,6 +144,9 @@ export class UserSelectorComponent implements OnChanges {
     if (exists) {
       this.selectedUsers = this.selectedUsers.filter((u) => u.id !== user.id);
     } else {
+      if (this.requireValidPhone && !normalizeWhatsappPhone(user.contact)) {
+        return;
+      }
       if (this.maxSelectable === 1) {
         this.selectedUsers = [user];
       } else if (!this.maxSelectable || this.selectedUsers.length < this.maxSelectable) {
@@ -144,6 +155,21 @@ export class UserSelectorComponent implements OnChanges {
     }
 
     this.usersSelected.emit(this.selectedUsers);
+  }
+
+  formatUserPhone(user: UserDto): string {
+    const normalized = normalizeWhatsappPhone(user.contact);
+    if (normalized) {
+      return normalized;
+    }
+    if (user.contact?.trim()) {
+      return `${user.contact} (inválido)`;
+    }
+    return 'Sin teléfono';
+  }
+
+  hasValidPhone(user: UserDto): boolean {
+    return Boolean(normalizeWhatsappPhone(user.contact));
   }
 
   isSelected(user: UserDto): boolean {
@@ -158,9 +184,50 @@ export class UserSelectorComponent implements OnChanges {
     this.isDropdownOpen = false;
   }
 
+  get roleLabel(): string {
+    switch (this.role) {
+      case 'student':
+        return 'Estudiantes';
+      case 'instructor':
+        return 'Instructores';
+      case 'admin':
+        return 'Administradores';
+      default:
+        return 'Usuarios';
+    }
+  }
+
+  get searchPlaceholder(): string {
+    if (this.theme === 'modern') {
+      return 'Buscar por nombre o apellido…';
+    }
+    return 'Buscar usuario por nombre';
+  }
+
+  get searchHint(): string | null {
+    if (this.theme !== 'modern') {
+      return null;
+    }
+    if (this.role === 'student' && !this.preloadStudentsOnFocus && !this.stageId) {
+      return 'Escribe al menos 2 caracteres para ver resultados.';
+    }
+    if (this.requireValidPhone) {
+      return 'Solo se pueden seleccionar perfiles con teléfono válido.';
+    }
+    return null;
+  }
+
+  getInitials(user: UserDto): string {
+    const first = user.firstName?.trim()?.[0] ?? '';
+    const last = user.lastName?.trim()?.[0] ?? '';
+    const initials = `${first}${last}`.toUpperCase();
+    return initials || '?';
+  }
+
   onInputFocus(): void {
     const shouldPreload =
       (this.role === 'student' && this.stageId) ||
+      (this.role === 'student' && this.preloadStudentsOnFocus) ||
       this.role === 'instructor' ||
       this.role === 'admin';
 

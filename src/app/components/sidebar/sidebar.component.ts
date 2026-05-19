@@ -104,7 +104,8 @@ navItems: SidebarNavItem[] = [
   { icon: 'notifications', text: 'Grupos', route: '/dashboard/notifications-groups', roles: [UserRole.ADMIN] },
   { icon: 'notifications', text: 'Recibidas', route: '/dashboard/notifications-inbox', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT],  },
   { icon: 'notifications', text: 'Enviadas', route: '/dashboard/notifications-sent', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR],  },
-  { icon: 'whatsapp', text: 'WhatsApp', route: '/dashboard/admin/whatsapp-notificador', roles: [UserRole.ADMIN] },
+  { icon: 'whatsapp', text: 'Enviar WhatsApp', route: '/dashboard/admin/whatsapp-notificador', roles: [UserRole.ADMIN] },
+  { icon: 'whatsapp', text: 'Campañas WhatsApp', route: '/dashboard/admin/whatsapp-campaigns', roles: [UserRole.ADMIN] },
   { icon: 'email', text: 'Enviar Email', route: '/dashboard/send-emails', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'inbox', text: 'Inbox Emails', route: '/dashboard/inbox-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'history', text: 'Historial Emails', route: '/dashboard/historial-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
@@ -265,6 +266,7 @@ navItems: SidebarNavItem[] = [
       icon: 'whatsapp',
       items: [
         this.findNavItemByRoute('/dashboard/admin/whatsapp-notificador'),
+        this.findNavItemByRoute('/dashboard/admin/whatsapp-campaigns'),
       ].filter(item => item.roles.includes(role))
     },
     {

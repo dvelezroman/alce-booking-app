@@ -56,6 +56,8 @@ import { AdminLeadSchedulingListComponent } from './admin/lead-scheduling-reques
 import { InstructorLeadSchedulingDetailComponent } from './instructor/lead-scheduling-requests/instructor-lead-scheduling-detail.component';
 import { InstructorLeadSchedulingListComponent } from './instructor/lead-scheduling-requests/instructor-lead-scheduling-list.component';
 import { WhatsappNotificadorComponent } from './admin/whatsapp-notificador/whatsapp-notificador.component';
+import { WhatsappCampaignHistoryComponent } from './admin/whatsapp-campaigns/whatsapp-campaign-history.component';
+import { WhatsappCampaignDetailComponent } from './admin/whatsapp-campaigns/whatsapp-campaign-detail.component';
 
 
 export const dashboardRoutes: Routes = [
@@ -90,6 +92,14 @@ export const dashboardRoutes: Routes = [
       {
         path: 'whatsapp-notificador',
         component: WhatsappNotificadorComponent,
+      },
+      {
+        path: 'whatsapp-campaigns',
+        component: WhatsappCampaignHistoryComponent,
+      },
+      {
+        path: 'whatsapp-campaigns/:batchId',
+        component: WhatsappCampaignDetailComponent,
       },
     ],
   },

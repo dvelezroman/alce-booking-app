@@ -1,0 +1,107 @@
+<section class="wa-campaigns">
+  <header class="wa-campaigns__hero">
+    <div class="wa-campaigns__hero-icon" aria-hidden="true">
+      <i class="fas fa-clock-rotate-left"></i>
+    </div>
+    <div class="wa-campaigns__hero-text">
+      <h1>Historial de campañas WhatsApp</h1>
+      <p>
+        Cada campaña agrupa hasta 10 envíos bajo un mismo identificador. Aquí puedes revisar
+        lotes anteriores y abrir el detalle de cada uno.
+      </p>
+    </div>
+    <a
+      routerLink="/dashboard/admin/whatsapp-notificador"
+      class="wa-btn wa-btn--whatsapp"
+    >
+      <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+      Nuevo envío
+    </a>
+  </header>
+
+  <div class="wa-campaigns__toolbar">
+    <label>
+      Por página
+      <select [(ngModel)]="limit" (ngModelChange)="onLimitChange()">
+        <option *ngFor="let n of limitOptions" [ngValue]="n">{{ n }}</option>
+      </select>
+    </label>
+    <button type="button" class="wa-btn wa-btn--soft" (click)="load()" [disabled]="loading">
+      <i class="fas fa-sync" [class.fa-spin]="loading" aria-hidden="true"></i>
+      Actualizar
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="wa-campaigns__state">Cargando campañas…</div>
+  <div *ngIf="error" class="wa-campaigns__error" role="alert">{{ error }}</div>
+
+  <p *ngIf="!loading && !error && total === 0" class="wa-campaigns__state">
+    Aún no hay campañas registradas. Los envíos desde el formulario de WhatsApp aparecerán aquí.
+  </p>
+
+  <ng-container *ngIf="!loading && !error && total > 0">
+    <div class="wa-campaigns__pager">
+      <span>Página {{ page }} de {{ totalPages }} · {{ total }} campañas</span>
+      <div>
+        <button type="button" class="wa-btn wa-btn--ghost wa-btn--sm" [disabled]="!canPrev" (click)="prevPage()">
+          Anterior
+        </button>
+        <button type="button" class="wa-btn wa-btn--ghost wa-btn--sm" [disabled]="!canNext" (click)="nextPage()">
+          Siguiente
+        </button>
+      </div>
+    </div>
+
+    <div class="wa-campaigns__list">
+      <article
+        *ngFor="let c of items; trackBy: trackByBatchId"
+        class="wa-campaign-card"
+        [routerLink]="['/dashboard/admin/whatsapp-campaigns', c.batchId]"
+      >
+        <header class="wa-campaign-card__head">
+          <span class="wa-campaign-badge" [ngClass]="statusClass(c.overallStatus)">
+            {{ statusLabel[c.overallStatus] }}
+          </span>
+          <time [attr.datetime]="c.lastActivityAt">{{ formatDate(c.lastActivityAt) }}</time>
+        </header>
+
+        <p *ngIf="c.messagePreview" class="wa-campaign-card__preview">
+          {{ c.messagePreview }}
+        </p>
+
+        <dl class="wa-campaign-card__stats">
+          <div>
+            <dt>Envíos</dt>
+            <dd>{{ c.jobCount }}</dd>
+          </div>
+          <div>
+            <dt>Enviados OK</dt>
+            <dd>{{ c.totalSent }}</dd>
+          </div>
+          <div>
+            <dt>Fallidos</dt>
+            <dd [class.wa-campaign-card__fail]="c.totalFailed > 0">{{ c.totalFailed }}</dd>
+          </div>
+          <div>
+            <dt>Lote</dt>
+            <dd>{{ c.sentInBatch }}/10</dd>
+          </div>
+        </dl>
+
+        <footer class="wa-campaign-card__foot">
+          <span *ngIf="c.createdByName">
+            <i class="fas fa-user" aria-hidden="true"></i>
+            {{ c.createdByName }}
+          </span>
+          <span class="wa-campaign-card__id" [title]="c.batchId">
+            ID {{ c.batchId | slice:0:8 }}…
+          </span>
+          <span class="wa-campaign-card__link">
+            Ver detalle
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+          </span>
+        </footer>
+      </article>
+    </div>
+  </ng-container>
+</section>

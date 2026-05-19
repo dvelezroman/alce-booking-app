@@ -1,56 +1,135 @@
-<section class="section">
+<section class="section" [class.user-selector--modern]="theme === 'modern'">
   <div class="report-table-wrapper">
     <div class="user-selector-container" #containerRef>
       <div class="field relative-container">
-        <label class="label">
-          Buscar
-          {{
-            role === 'student'
-              ? 'Estudiantes'
-              : role === 'instructor'
-                ? 'Instructores'
-                : role === 'admin'
-                  ? 'Administradores'
-                  : 'Usuarios'
-          }}
+        <!-- Encabezado (solo tema modern) -->
+        <div *ngIf="theme === 'modern'" class="user-selector__header">
+          <div class="user-selector__header-text">
+            <span class="user-selector__title">
+              <i class="fas fa-user-graduate" aria-hidden="true"></i>
+              {{ roleLabel }}
+            </span>
+            <span class="user-selector__subtitle" *ngIf="maxSelectable">
+              Puedes elegir hasta {{ maxSelectable }} contactos
+            </span>
+          </div>
+          <span
+            *ngIf="maxSelectable"
+            class="user-selector__counter"
+            [class.user-selector__counter--full]="selectedUsers.length >= maxSelectable"
+          >
+            {{ selectedUsers.length }} / {{ maxSelectable }}
+          </span>
+        </div>
+
+        <label *ngIf="theme !== 'modern'" class="label">
+          Buscar {{ roleLabel }}
         </label>
 
-        <div class="control has-icons-left">
+        <div
+          class="control has-icons-left"
+          [class.user-selector__search]="theme === 'modern'"
+        >
           <input
             class="input"
             type="text"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearchChange($event)"
             (focus)="onInputFocus()"
-            placeholder="Buscar usuario por nombre"
+            [placeholder]="searchPlaceholder"
+            [attr.aria-label]="'Buscar ' + roleLabel"
           />
-          <span class="icon is-left">
+          <span class="icon is-left" aria-hidden="true">
             <i class="fas fa-search"></i>
           </span>
         </div>
 
-        <!-- Dropdown de usuarios -->
-        <div class="dropdown-list" *ngIf="isDropdownOpen && allUsers.length > 0">
+        <p *ngIf="theme === 'modern' && searchHint" class="user-selector__search-hint">
+          {{ searchHint }}
+        </p>
+
+        <!-- Dropdown -->
+        <div
+          class="dropdown-list"
+          *ngIf="isDropdownOpen"
+          [class.dropdown-list--empty]="allUsers.length === 0"
+        >
+          <p *ngIf="allUsers.length === 0" class="dropdown-empty">
+            <i class="fas fa-info-circle" aria-hidden="true"></i>
+            Escribe al menos 2 letras o espera los resultados…
+          </p>
+
           <div
-            class="dropdown-item"
             *ngFor="let user of allUsers"
+            class="dropdown-item"
             (click)="toggleUserSelection(user)"
             [class.selected]="isSelected(user)"
+            [class.dropdown-item--disabled]="requireValidPhone && !hasValidPhone(user)"
+            role="option"
+            [attr.aria-selected]="isSelected(user)"
           >
+            <span
+              *ngIf="theme === 'modern'"
+              class="user-avatar"
+              aria-hidden="true"
+            >
+              {{ getInitials(user) }}
+            </span>
+
             <input
               type="checkbox"
               [checked]="isSelected(user)"
+              [disabled]="requireValidPhone && !hasValidPhone(user)"
               (click)="$event.stopPropagation()"
               (change)="toggleUserSelection(user)"
+              [attr.aria-label]="'Seleccionar ' + user.firstName"
             />
-            {{ user.firstName }} {{ user.lastName }}
+
+            <div class="dropdown-item__text">
+              <span class="user-line-name">{{ user.firstName }} {{ user.lastName }}</span>
+              <span
+                *ngIf="theme === 'modern' || requireValidPhone"
+                class="user-line-phone"
+                [class.user-line-phone--invalid]="requireValidPhone && !hasValidPhone(user)"
+              >
+                <i
+                  *ngIf="theme === 'modern' && hasValidPhone(user)"
+                  class="fab fa-whatsapp user-line-phone__icon"
+                  aria-hidden="true"
+                ></i>
+                {{ formatUserPhone(user) }}
+              </span>
+            </div>
+
+            <span
+              *ngIf="theme === 'modern' && isSelected(user)"
+              class="dropdown-item__check"
+              aria-hidden="true"
+            >
+              <i class="fas fa-check"></i>
+            </span>
           </div>
         </div>
 
-        <!-- Usuarios seleccionados -->
-        <div class="selected-users" *ngIf="selectedUsers.length > 0">
-          <strong class="selected-label">Seleccionados:</strong>
-          <ul>
+        <!-- Seleccionados -->
+        <div
+          class="selected-users"
+          *ngIf="selectedUsers.length > 0"
+          [class.selected-users--chips]="theme === 'modern'"
+        >
+          <div class="selected-users__head">
+            <strong class="selected-label">Seleccionados</strong>
+            <button
+              *ngIf="theme === 'modern'"
+              type="button"
+              class="selected-clear"
+              (click)="clearSelection()"
+            >
+              Quitar todos
+            </button>
+          </div>
+
+          <ul *ngIf="theme !== 'modern'">
             <li *ngFor="let user of selectedUsers" class="selected-user-item">
               <span class="user-name">
                 {{ user.firstName }} {{ user.lastName }}
@@ -65,7 +144,34 @@
               </button>
             </li>
           </ul>
+
+          <div *ngIf="theme === 'modern'" class="selected-chips">
+            <div *ngFor="let user of selectedUsers" class="selected-chip">
+              <span class="selected-chip__avatar">{{ getInitials(user) }}</span>
+              <div class="selected-chip__body">
+                <span class="selected-chip__name">
+                  {{ user.firstName }} {{ user.lastName }}
+                </span>
+                <span class="selected-chip__phone">{{ formatUserPhone(user) }}</span>
+              </div>
+              <button
+                type="button"
+                class="selected-chip__remove"
+                (click)="removeUser(user)"
+                [attr.aria-label]="'Quitar ' + user.firstName"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
         </div>
+
+        <p
+          *ngIf="theme === 'modern' && selectedUsers.length === 0"
+          class="user-selector__empty-selection"
+        >
+          Aún no has seleccionado destinatarios.
+        </p>
       </div>
     </div>
   </div>
