@@ -3,7 +3,7 @@
     <button type="button" class="back" (click)="goList()">← Volver al listado</button>
     <h1>Solicitud #{{ r.id }}</h1>
     <p class="admin-detail__meta">
-      <span class="badge" [attr.data-status]="r.status">{{ statusText(r.status) }}</span>
+      <span class="badge badge--pill" [attr.data-status]="r.status">{{ statusText(r.status) }}</span>
       · {{ kindText(r.kind) }}
     </p>
   </header>
@@ -74,18 +74,14 @@
     </div>
     <p class="hint">Franja en servidor ahora: <strong>{{ slotText(r) }}</strong></p>
 
-    <label class="field">
-      <span>Cambiar estado</span>
-      <select formControlName="statusAction">
-        <option value="keep">Sin cambio de estado</option>
-        <option value="PENDING">Pendiente</option>
-        <option value="SCHEDULED">Agendada</option>
-        <option value="CANCELLED">Cancelada</option>
-      </select>
+    <div class="status-readonly">
+      <span class="status-readonly__label">Estado actual</span>
+      <span class="badge badge--pill" [attr.data-status]="r.status">{{ statusText(r.status) }}</span>
       <small class="field__help"
-        >No use “Agendada” para forzar si faltan datos: el API también deriva estado al completar instructor + fecha + hora.</small
+        >El estado lo actualiza el API al asignar instructor, fecha y hora. Para anular la solicitud use
+        <strong>Cancelar solicitud</strong>.</small
       >
-    </label>
+    </div>
 
     <label class="field">
       <span>Notas internas (admin)</span>

@@ -22,8 +22,6 @@ import {
 } from '../../../../services/dtos/lead-scheduling-request.dto';
 import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message.util';
 
-type StatusAction = 'keep' | 'PENDING' | 'SCHEDULED' | 'CANCELLED';
-
 @Component({
   selector: 'app-admin-lead-scheduling-detail',
   standalone: true,
@@ -59,7 +57,6 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     instructorId: ['' as string | number],
     scheduledDate: [''],
     scheduledHour: ['' as string | number],
-    statusAction: this.fb.nonNullable.control<StatusAction>('keep'),
     adminNotes: ['', [Validators.maxLength(8000)]],
   });
 
@@ -222,7 +219,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
       show: true,
       title: 'Cancelar solicitud',
       message:
-        'Se marcará la solicitud como <strong>CANCELLED</strong>. No hay borrado físico en el servidor.',
+        'Se marcará la solicitud como <strong>cancelada</strong>. No se elimina del sistema; solo cambia el estado.',
       isError: false,
       isSuccess: false,
       isInfo: true,
@@ -267,7 +264,6 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
         row.scheduledHour != null && row.scheduledHour !== undefined
           ? Number(row.scheduledHour)
           : ('' as const),
-      statusAction: 'keep' as StatusAction,
       adminNotes: row.adminNotes ?? '',
     };
   }
@@ -282,7 +278,6 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     const instructorId = raw['instructorId'];
     const scheduledDate = raw['scheduledDate'];
     const scheduledHour = raw['scheduledHour'];
-    const statusAction = raw['statusAction'] as StatusAction;
     const adminNotes = raw['adminNotes'];
 
     if (instructorId === '' || instructorId === null || instructorId === undefined) {
@@ -302,10 +297,6 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
 
     const notes = String(adminNotes ?? '').trim();
     body.adminNotes = notes === '' ? null : notes;
-
-    if (statusAction !== 'keep') {
-      body.status = statusAction;
-    }
 
     return body;
   }

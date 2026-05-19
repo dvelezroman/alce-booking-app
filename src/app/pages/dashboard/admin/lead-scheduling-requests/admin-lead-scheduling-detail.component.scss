@@ -27,21 +27,44 @@
   text-decoration: underline;
 }
 
-.badge[data-status='SCHEDULED'] {
-  color: #0369a1;
-  font-weight: 600;
+.badge {
+  &--pill {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  &[data-status='SCHEDULED'] {
+    color: #0369a1;
+    background: #e0f2fe;
+  }
+  &[data-status='PENDING'] {
+    color: #a16207;
+    background: #fef9c3;
+  }
+  &[data-status='COMPLETED'] {
+    color: #15803d;
+    background: #dcfce7;
+  }
+  &[data-status='CANCELLED'] {
+    color: #64748b;
+    background: #f1f5f9;
+  }
 }
-.badge[data-status='PENDING'] {
-  color: #a16207;
-  font-weight: 600;
-}
-.badge[data-status='COMPLETED'] {
-  color: #15803d;
-  font-weight: 600;
-}
-.badge[data-status='CANCELLED'] {
-  color: #64748b;
-  font-weight: 600;
+
+.status-readonly {
+  margin-bottom: 1rem;
+
+  &__label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #334155;
+    margin-bottom: 0.35rem;
+  }
 }
 
 .admin-detail__grid {
