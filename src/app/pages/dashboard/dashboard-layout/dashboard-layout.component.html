@@ -18,6 +18,14 @@
       [showDurationMs]="10000">
     </app-unread-banner>
 
+    <app-lead-scheduling-pending-banner
+      *ngIf="isLoggedIn && (userData?.role === UserRole.ADMIN || userData?.role === UserRole.INSTRUCTOR)"
+      [count]="(leadSchedulingPendingCount$ | async) ?? 0"
+      [role]="userData?.role ?? null"
+      [toastToken]="leadSchedulingToastToken"
+      [showDurationMs]="12000">
+    </app-lead-scheduling-pending-banner>
+
     <!-- <app-global-notice-banner *ngIf="isLoggedIn && userData?.role === UserRole.STUDENT" /> -->
 
     <div class="student-banners-container" *ngIf="isLoggedIn && userData?.role === UserRole.STUDENT">

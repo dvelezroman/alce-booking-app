@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { UserDto, UserRole } from '../../services/dtos/user.dto';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { LeadSchedulingPendingCountService } from '../../services/lead-scheduling-pending-count.service';
 import { selectIsAdmin, selectUserData } from '../../store/user.selector';
 import { Store } from '@ngrx/store';
 import { ModalDto, modalInitializer } from '../modal/modal.dto';
@@ -42,7 +43,7 @@ export interface SidebarNavGroup {
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   @Input() unreadCount: number | null = 0;
   @Input() isSidebarClosed = false;
   @Output() toggleSidebarEvent = new EventEmitter<unknown>();
@@ -59,6 +60,9 @@ export class SidebarComponent implements OnInit {
   currentRoute: string = '';
   homeNavItem: SidebarNavItem | null = null;
   profileNavItem: SidebarNavItem | null = null;
+  adminLeadPendingCount = 0;
+  instructorLeadPendingCount = 0;
+  private readonly subs = new Subscription();
 
 navItems: SidebarNavItem[] = [
   { icon: 'home', text: 'Inicio', route: '/dashboard/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
@@ -118,6 +122,7 @@ navItems: SidebarNavItem[] = [
     private usersService: UsersService,
     private router: Router,
     private store: Store,
+    private leadSchedulingPending: LeadSchedulingPendingCountService,
   ) {
     this.userData$ = this.store.select(selectUserData);
     this.isAdmin$ = this.store.select(selectIsAdmin);
@@ -127,6 +132,17 @@ navItems: SidebarNavItem[] = [
     this.userData$.subscribe(state => {
       this.userData = state;
     });
+
+    this.subs.add(
+      this.leadSchedulingPending.adminPending$.subscribe(
+        (count) => (this.adminLeadPendingCount = count),
+      ),
+    );
+    this.subs.add(
+      this.leadSchedulingPending.instructorPending$.subscribe(
+        (count) => (this.instructorLeadPendingCount = count),
+      ),
+    );
 
     this.isAdmin$.subscribe(state => {
       this.isAdmin = state;
@@ -296,6 +312,24 @@ navItems: SidebarNavItem[] = [
       for (const group of this.navGrouped) {
         this.categoryStates[group.title] = false;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
+  leadPendingCountForRoute(route: string): number {
+    if (route === '/dashboard/admin/lead-scheduling-requests') {
+      return this.adminLeadPendingCount;
+    }
+    if (route === '/dashboard/instructor/lead-scheduling-requests') {
+      return this.instructorLeadPendingCount;
+    }
+    return 0;
+  }
+
+  showLeadPendingBadge(route: string): boolean {
+    return this.leadPendingCountForRoute(route) > 0;
   }
 
   toggleSubCategory(title: string) {

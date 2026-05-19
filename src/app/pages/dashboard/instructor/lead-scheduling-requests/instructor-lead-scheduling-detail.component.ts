@@ -10,6 +10,8 @@ import { Subject, EMPTY, switchMap, takeUntil } from 'rxjs';
 import { ModalComponent } from '../../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
 import { LeadSchedulingRequestService } from '../../../../services/lead-scheduling-request.service';
+import { LeadSchedulingPendingCountService } from '../../../../services/lead-scheduling-pending-count.service';
+import { UserRole } from '../../../../services/dtos/user.dto';
 import {
   LeadSchedulingRequestKind,
   LeadSchedulingRequestRow,
@@ -64,6 +66,7 @@ export class InstructorLeadSchedulingDetailComponent implements OnInit, OnDestro
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly leadScheduling: LeadSchedulingRequestService,
+    private readonly leadSchedulingPending: LeadSchedulingPendingCountService,
   ) {}
 
   ngOnInit(): void {
@@ -165,6 +168,7 @@ export class InstructorLeadSchedulingDetailComponent implements OnInit, OnDestro
       .subscribe({
         next: () => {
           this.submitting = false;
+          this.leadSchedulingPending.refresh(UserRole.INSTRUCTOR).subscribe();
           this.modal = {
             ...modalInitializer(),
             show: true,

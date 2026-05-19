@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { LeadSchedulingRequestService } from '../../../../services/lead-scheduling-request.service';
+import { LeadSchedulingPendingCountService } from '../../../../services/lead-scheduling-pending-count.service';
+import { UserRole } from '../../../../services/dtos/user.dto';
 import {
   LeadSchedulingRequestKind,
   LeadSchedulingRequestRow,
@@ -46,6 +48,7 @@ export class AdminLeadSchedulingListComponent implements OnInit {
   constructor(
     private readonly leadScheduling: LeadSchedulingRequestService,
     private readonly route: ActivatedRoute,
+    private readonly leadSchedulingPending: LeadSchedulingPendingCountService,
   ) {}
 
   ngOnInit(): void {
@@ -127,6 +130,7 @@ export class AdminLeadSchedulingListComponent implements OnInit {
             return;
           }
           this.loading = false;
+          this.leadSchedulingPending.refresh(UserRole.ADMIN).subscribe();
         },
         error: (err) => {
           this.loading = false;

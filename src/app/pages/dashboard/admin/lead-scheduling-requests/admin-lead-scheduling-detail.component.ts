@@ -12,6 +12,8 @@ import { ModalDto, modalInitializer } from '../../../../components/modal/modal.d
 import { InstructorsService } from '../../../../services/instructors.service';
 import { Instructor } from '../../../../services/dtos/instructor.dto';
 import { LeadSchedulingRequestService } from '../../../../services/lead-scheduling-request.service';
+import { LeadSchedulingPendingCountService } from '../../../../services/lead-scheduling-pending-count.service';
+import { UserRole } from '../../../../services/dtos/user.dto';
 import {
   LeadSchedulingRequestKind,
   LeadSchedulingRequestRow,
@@ -68,6 +70,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly leadScheduling: LeadSchedulingRequestService,
     private readonly instructorsService: InstructorsService,
+    private readonly leadSchedulingPending: LeadSchedulingPendingCountService,
   ) {}
 
   ngOnInit(): void {
@@ -187,6 +190,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
         this.saving = false;
         this.row = updated;
         this.patchFormFromRow(updated);
+        this.leadSchedulingPending.refresh(UserRole.ADMIN).subscribe();
         this.modal = {
           ...modalInitializer(),
           show: true,
@@ -242,6 +246,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
         this.saving = false;
         this.row = updated;
         this.patchFormFromRow(updated);
+        this.leadSchedulingPending.refresh(UserRole.ADMIN).subscribe();
       },
       error: (err) => {
         this.saving = false;
