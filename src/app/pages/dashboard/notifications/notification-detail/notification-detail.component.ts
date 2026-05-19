@@ -281,6 +281,19 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.notification?.message?.kind === 'lead-scheduling-assigned';
   }
 
+  get isLeadSchedulingCancelledNotification(): boolean {
+    return this.notification?.message?.kind === 'lead-scheduling-cancelled';
+  }
+
+  /** Tarjeta estructurada para instructores (asignación o cancelación). */
+  get isLeadSchedulingInstructorCard(): boolean {
+    return (
+      (this.isLeadSchedulingAssignedNotification ||
+        this.isLeadSchedulingCancelledNotification) &&
+      this.userRole === UserRole.INSTRUCTOR
+    );
+  }
+
   get leadSchedulingRequestKind(): LeadSchedulingNotificationRequestKind | null {
     const raw = this.leadSchedulingAssignedSummary;
     if (raw.requestKind === 'PLACEMENT_EXAM' || raw.requestKind === 'DEMO_CLASS') {
@@ -395,7 +408,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   get showNotificationRawBody(): boolean {
     if (!this.notification?.message?.body) return false;
     if (this.isLeadRequestNotification && this.requestLead) return false;
-    if (this.isLeadSchedulingAssignedNotification && this.userRole === UserRole.INSTRUCTOR) {
+    if (this.isLeadSchedulingInstructorCard) {
       return false;
     }
     return true;

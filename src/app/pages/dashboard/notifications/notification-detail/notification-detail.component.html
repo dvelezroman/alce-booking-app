@@ -79,7 +79,7 @@
         class="lead-scheduling-card"
         [class.lead-scheduling-card--placement]="isPlacementSchedulingAssignment"
         [class.lead-scheduling-card--demo]="isDemoSchedulingAssignment"
-        *ngIf="isLeadSchedulingAssignedNotification && userRole === UserRole.INSTRUCTOR"
+        *ngIf="isLeadSchedulingInstructorCard"
       >
         <header class="lead-scheduling-card__header">
           <div>
@@ -91,24 +91,46 @@
               >
             </p>
             <h3 class="lead-scheduling-card__title">
-              <ng-container *ngIf="isPlacementSchedulingAssignment"
-                >Te asignaron un examen de ubicación</ng-container
-              >
-              <ng-container *ngIf="isDemoSchedulingAssignment"
-                >Te asignaron una clase de cortesía</ng-container
-              >
-              <ng-container *ngIf="!isPlacementSchedulingAssignment && !isDemoSchedulingAssignment"
-                >Te asignaron una solicitud</ng-container
-              >
+              <ng-container *ngIf="isLeadSchedulingCancelledNotification">
+                <ng-container *ngIf="isPlacementSchedulingAssignment"
+                  >Se canceló un examen de ubicación</ng-container
+                >
+                <ng-container *ngIf="isDemoSchedulingAssignment"
+                  >Se canceló una clase de cortesía</ng-container
+                >
+                <ng-container *ngIf="!isPlacementSchedulingAssignment && !isDemoSchedulingAssignment"
+                  >Se canceló una solicitud</ng-container
+                >
+              </ng-container>
+              <ng-container *ngIf="!isLeadSchedulingCancelledNotification">
+                <ng-container *ngIf="isPlacementSchedulingAssignment"
+                  >Te asignaron un examen de ubicación</ng-container
+                >
+                <ng-container *ngIf="isDemoSchedulingAssignment"
+                  >Te asignaron una clase de cortesía</ng-container
+                >
+                <ng-container *ngIf="!isPlacementSchedulingAssignment && !isDemoSchedulingAssignment"
+                  >Te asignaron una solicitud</ng-container
+                >
+              </ng-container>
             </h3>
             <p class="lead-scheduling-card__subtitle">
-              <ng-container *ngIf="isPlacementSchedulingAssignment">
+              <ng-container *ngIf="isLeadSchedulingCancelledNotification">
+                Un administrador canceló esta solicitud que tenías asignada. Ya no debes impartir la sesión ni enviar informe.
+              </ng-container>
+              <ng-container *ngIf="!isLeadSchedulingCancelledNotification && isPlacementSchedulingAssignment">
                 Un administrador te asignó la evaluación de nivel con este lead. Revisa el detalle para datos de contacto, etapa y notas.
               </ng-container>
-              <ng-container *ngIf="isDemoSchedulingAssignment">
+              <ng-container *ngIf="!isLeadSchedulingCancelledNotification && isDemoSchedulingAssignment">
                 Un administrador te asignó una clase de cortesía o demo con este lead. Revisa el detalle para contacto y notas.
               </ng-container>
-              <ng-container *ngIf="!isPlacementSchedulingAssignment && !isDemoSchedulingAssignment">
+              <ng-container
+                *ngIf="
+                  !isLeadSchedulingCancelledNotification &&
+                  !isPlacementSchedulingAssignment &&
+                  !isDemoSchedulingAssignment
+                "
+              >
                 Un administrador te asignó una solicitud de cortesía o examen de ubicación. Revisa el detalle para ver los datos del lead.
               </ng-container>
             </p>
@@ -153,7 +175,7 @@
           </div>
         </div>
 
-        <div class="lead-scheduling-card__next">
+        <div class="lead-scheduling-card__next" *ngIf="!isLeadSchedulingCancelledNotification">
           <p class="lead-scheduling-card__next-title">Próximos pasos</p>
           <ol class="lead-scheduling-card__steps">
             <li>
