@@ -96,6 +96,11 @@
           Usa <strong>Nueva campaña</strong> para limpiar destinatarios y mensaje y empezar otro
           lote (genera un nuevo identificador de campaña).
         </li>
+        <li>
+          <i class="fas fa-ban" aria-hidden="true"></i>
+          Si un envío falla, <strong>no se reintenta solo</strong>: revisa el error y pulsa Enviar
+          de nuevo solo si quieres reintentar.
+        </li>
       </ul>
     </div>
   </aside>
@@ -305,6 +310,11 @@
         <p class="wa-action-hint" *ngIf="!validation?.allValid && selectedRecipients.length">
           <i class="fas fa-info-circle" aria-hidden="true"></i>
           Debes validar los números antes de enviar.
+        </p>
+
+        <p class="wa-action-hint wa-action-hint--warn" *ngIf="error && !sending">
+          <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+          {{ error }}
         </p>
       </div>
     </article>

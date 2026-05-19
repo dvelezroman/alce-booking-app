@@ -82,6 +82,10 @@ export class WhatsAppNotificadorService {
     });
   }
 
+  /**
+   * Polls `GET /jobs/:jobId` every `intervalMs` until `completed === true`.
+   * Emits each intermediate state and completes with the final job payload.
+   */
   pollJobUntilComplete(
     jobId: string,
     options?: PollJobOptions,
@@ -91,7 +95,7 @@ export class WhatsAppNotificadorService {
 
     return timer(0, intervalMs).pipe(
       switchMap(() => this.getJob(jobId)),
-      takeWhile((job) => !job.completed, true),
+      takeWhile((job) => job.completed !== true, true),
       timeout(timeoutMs),
       catchError((err) => {
         if (err instanceof TimeoutError) {

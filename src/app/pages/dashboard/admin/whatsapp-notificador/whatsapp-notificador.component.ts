@@ -2,7 +2,16 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Subject, concatMap, finalize, from, takeUntil, tap } from 'rxjs';
+import {
+  Subject,
+  concatMap,
+  finalize,
+  from,
+  of,
+  takeUntil,
+  tap,
+  throwError,
+} from 'rxjs';
 import { ModalComponent } from '../../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
 import { UserSelectorComponent } from '../../../../components/notifications/user-selector/user-selector.component';
@@ -27,6 +36,14 @@ import {
 } from '../../../../shared/utils/whatsapp-phone.util';
 
 const MAX_PHONES_PER_SEND = 10;
+
+/** Job terminó en FAILED o PARTIAL; no debe encadenarse otro POST /send automático. */
+class WhatsappJobOutcomeError extends Error {
+  constructor(readonly job: WhatsappJobStatusResponse) {
+    super(job.errorMessage ?? 'El envío no se completó correctamente.');
+    this.name = 'WhatsappJobOutcomeError';
+  }
+}
 
 @Component({
   selector: 'app-whatsapp-notificador',
@@ -208,6 +225,8 @@ export class WhatsappNotificadorComponent implements OnInit, OnDestroy {
     this.selectedRecipients = users.map(mapStudentToRecipient);
     this.validation = null;
     this.error = null;
+    this.sendResults = [];
+    this.currentJob = null;
 
     if (users.length === 1) {
       this.contact = getStudentDisplayContact(users[0]);
@@ -218,6 +237,7 @@ export class WhatsappNotificadorComponent implements OnInit, OnDestroy {
 
   onContentMessageChange(): void {
     this.validation = null;
+    this.error = null;
   }
 
   onTemplateSelect(templateId: number | null): void {
@@ -385,6 +405,7 @@ export class WhatsappNotificadorComponent implements OnInit, OnDestroy {
     }
 
     const recipients = this.validRecipients;
+    const contentMessage = this.contentMessage.trim();
     this.sending = true;
     this.error = null;
     this.currentJob = null;
@@ -406,7 +427,7 @@ export class WhatsappNotificadorComponent implements OnInit, OnDestroy {
               batchId: this.batchId,
               phones: [recipient.phone!],
               contact,
-              contentMessage: this.contentMessage.trim(),
+              contentMessage,
             })
             .pipe(
               tap((enqueued) => {
@@ -415,10 +436,18 @@ export class WhatsappNotificadorComponent implements OnInit, OnDestroy {
               concatMap((enqueued) =>
                 this.notificador.pollJobUntilComplete(enqueued.jobId),
               ),
-              tap((job) => {
+              concatMap((job) => {
                 this.appendSendResult(recipient, job);
                 this.sendProgressIndex = this.sendResults.length;
                 this.currentJob = this.buildAggregatedJobView(recipients.length);
+
+                if (
+                  job.completed &&
+                  (job.status === 'FAILED' || job.status === 'PARTIAL')
+                ) {
+                  return throwError(() => new WhatsappJobOutcomeError(job));
+                }
+                return of(job);
               }),
             );
         }),
@@ -431,6 +460,19 @@ export class WhatsappNotificadorComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         error: (err) => {
+          if (err instanceof WhatsappJobOutcomeError) {
+            this.currentJob = err.job;
+            this.error = this.formatJobOutcomeError(err.job);
+            this.refreshGateStatus();
+            const failed = this.sendResults.filter((r) => r.status === 'failed');
+            const sent = this.sendResults.filter((r) => r.status === 'sent');
+            if (failed.length > 0) {
+              this.showModal(this.buildFailureModalMessage(sent.length, failed), true);
+            } else {
+              this.showModal(this.error, true);
+            }
+            return;
+          }
           this.error = this.formatSendError(err);
           this.showModal(this.error, true);
         },
@@ -514,7 +556,7 @@ export class WhatsappNotificadorComponent implements OnInit, OnDestroy {
     const labels: Record<string, string> = {
       sent: 'Enviado',
       failed: 'No enviado',
-      skipped: 'Omitido',
+      skipped: 'Omitido (job detenido)',
     };
     return labels[status] ?? status;
   }
@@ -522,6 +564,9 @@ export class WhatsappNotificadorComponent implements OnInit, OnDestroy {
   getResultDetail(row: WhatsappSendDisplayResult): string {
     if (row.status === 'failed') {
       return row.error?.trim() || 'No se pudo enviar (sin detalle del proveedor)';
+    }
+    if (row.status === 'skipped') {
+      return row.error?.trim() || 'No se intentó enviar porque el job anterior falló';
     }
     if (row.status === 'sent' && row.notificadorId) {
       return `Confirmado · ID ${row.notificadorId}`;
@@ -540,19 +585,23 @@ export class WhatsappNotificadorComponent implements OnInit, OnDestroy {
     recipient: StudentRecipient,
     job: WhatsappJobStatusResponse,
   ): void {
-    const row = job.results?.[0];
-    this.sendResults.push({
-      recipientName: recipient.contactName,
-      phone: row?.phone ?? recipient.phone ?? '—',
-      status: row?.status ?? (job.success ? 'sent' : 'failed'),
-      httpStatus: row?.httpStatus,
-      notificadorId: row?.notificadorId,
-      error:
-        row?.error ??
-        (job.success
-          ? undefined
-          : job.errorMessage ?? 'El mensaje no pudo enviarse'),
-    });
+    const rows = job.results?.length ? job.results : [undefined];
+    for (const row of rows) {
+      this.sendResults.push({
+        recipientName: recipient.contactName,
+        phone: row?.phone ?? recipient.phone ?? '—',
+        status: row?.status ?? (job.success ? 'sent' : 'failed'),
+        httpStatus: row?.httpStatus,
+        notificadorId: row?.notificadorId,
+        error:
+          row?.error ??
+          (row?.status === 'skipped'
+            ? 'Omitido tras un fallo en el mismo envío'
+            : job.success
+              ? undefined
+              : job.errorMessage ?? 'El mensaje no pudo enviarse'),
+      });
+    }
   }
 
   private buildAggregatedJobView(totalRecipients: number): WhatsappJobStatusResponse {
@@ -610,6 +659,24 @@ export class WhatsappNotificadorComponent implements OnInit, OnDestroy {
       })
       .join('<br>');
     return `${header}<br>${lines}`;
+  }
+
+  private formatJobOutcomeError(job: WhatsappJobStatusResponse): string {
+    const statusText = this.statusLabel[job.status];
+    const base =
+      job.errorMessage?.trim() ||
+      (job.status === 'FAILED'
+        ? 'Ningún mensaje se envió.'
+        : 'Algunos mensajes no se enviaron.');
+    const failedRows =
+      job.results?.filter((r) => r.status === 'failed') ?? [];
+    if (failedRows.length === 0) {
+      return `${statusText}: ${base} No se reintentará automáticamente; modifica el mensaje o pulsa Enviar de nuevo si deseas reintentar.`;
+    }
+    const details = failedRows
+      .map((r) => `${r.phone}: ${r.error?.trim() || 'sin detalle'}`)
+      .join(' · ');
+    return `${statusText}: ${base} (${details}) No se reintentará automáticamente; modifica el mensaje o pulsa Enviar de nuevo si deseas reintentar.`;
   }
 
   private formatSendError(err: unknown): string {
