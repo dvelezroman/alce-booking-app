@@ -55,6 +55,7 @@ import { AdminLeadSchedulingDetailComponent } from './admin/lead-scheduling-requ
 import { AdminLeadSchedulingListComponent } from './admin/lead-scheduling-requests/admin-lead-scheduling-list.component';
 import { InstructorLeadSchedulingDetailComponent } from './instructor/lead-scheduling-requests/instructor-lead-scheduling-detail.component';
 import { InstructorLeadSchedulingListComponent } from './instructor/lead-scheduling-requests/instructor-lead-scheduling-list.component';
+import { WhatsappNotificadorComponent } from './admin/whatsapp-notificador/whatsapp-notificador.component';
 
 
 export const dashboardRoutes: Routes = [
@@ -85,6 +86,10 @@ export const dashboardRoutes: Routes = [
       {
         path: 'lead-scheduling-requests/:id',
         component: AdminLeadSchedulingDetailComponent,
+      },
+      {
+        path: 'whatsapp-notificador',
+        component: WhatsappNotificadorComponent,
       },
     ],
   },

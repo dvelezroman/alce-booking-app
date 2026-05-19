@@ -1,0 +1,197 @@
+<section class="wa-notificador">
+  <header class="wa-notificador__header">
+    <h1>
+      <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+      WhatsApp
+    </h1>
+    <p class="wa-notificador__sub">
+      Envío por plantilla (contacto y mensaje). Máximo {{ maxPhonesPerSend }} números por envío
+      y hasta 10 mensajes exitosos por campaña.
+    </p>
+  </header>
+
+  <div class="wa-notificador__banners">
+    <div
+      *ngIf="gateStatus && gateStatus.remainingInBatch != null"
+      class="wa-notificador__banner wa-notificador__banner--info"
+    >
+      Campaña: {{ gateStatus.sentInBatch ?? 0 }} enviados,
+      {{ gateStatus.remainingInBatch }} restantes (máx. 10).
+    </div>
+
+    <div
+      *ngIf="cooldownLabel"
+      class="wa-notificador__banner wa-notificador__banner--warn"
+      role="status"
+    >
+      Cooldown del servidor: podrás enviar de nuevo en aprox. {{ cooldownLabel }}.
+      El envío puede encolarse igualmente; el sistema esperará automáticamente.
+    </div>
+  </div>
+
+  <div *ngIf="loadingStatus" class="wa-notificador__hint">Actualizando estado…</div>
+  <div *ngIf="error" class="wa-notificador__error" role="alert">{{ error }}</div>
+
+  <form class="wa-notificador__form" (ngSubmit)="$event.preventDefault()">
+    <label class="wa-notificador__field">
+      <span>Nombre de contacto (variable plantilla)</span>
+      <input
+        type="text"
+        [(ngModel)]="contact"
+        name="contact"
+        placeholder="Ej. María Pérez"
+        autocomplete="name"
+      />
+    </label>
+
+    <label class="wa-notificador__field">
+      <span>Mensaje (variable plantilla)</span>
+      <textarea
+        [(ngModel)]="contentMessage"
+        name="contentMessage"
+        rows="4"
+        placeholder="Ej. Tu clase está confirmada para el martes 10:00."
+      ></textarea>
+    </label>
+
+    <label class="wa-notificador__field">
+      <span>Teléfonos (uno por línea, coma o punto y coma)</span>
+      <textarea
+        [(ngModel)]="phonesRaw"
+        name="phonesRaw"
+        rows="6"
+        placeholder="+593991234567&#10;0991234567"
+        (ngModelChange)="onPhonesChange()"
+      ></textarea>
+      <span class="wa-notificador__hint">
+        {{ parsedPhones.length }} número(s)
+        <ng-container *ngIf="phonesOverLimit"> — máximo {{ maxPhonesPerSend }} por envío</ng-container>
+      </span>
+    </label>
+
+    <div class="wa-notificador__actions">
+      <button
+        type="button"
+        class="btn btn--secondary"
+        [disabled]="!canValidate"
+        (click)="onValidate()"
+      >
+        {{ validating ? 'Validando…' : 'Validar teléfonos' }}
+      </button>
+      <button
+        type="button"
+        class="btn btn--primary"
+        [disabled]="!canSend"
+        (click)="onSend()"
+      >
+        {{ sending ? 'Enviando…' : 'Enviar' }}
+      </button>
+      <button
+        type="button"
+        class="btn btn--ghost"
+        [disabled]="jobInProgress"
+        (click)="onNewCampaign()"
+      >
+        Nueva campaña
+      </button>
+    </div>
+  </form>
+
+  <section *ngIf="validation" class="wa-notificador__panel">
+    <h2>Validación</h2>
+    <p
+      class="wa-notificador__validation-summary"
+      [class.ok]="validation.allValid"
+      [class.bad]="!validation.allValid"
+    >
+      {{ validation.allValid ? 'Todos los números son válidos.' : 'Hay números inválidos.' }}
+    </p>
+    <table class="wa-notificador__table">
+      <thead>
+        <tr>
+          <th>Entrada</th>
+          <th>Estado</th>
+          <th>Detalle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of validation.results; trackBy: trackByPhone">
+          <td>{{ row.phone }}</td>
+          <td>
+            <span class="badge" [class.badge--ok]="row.valid" [class.badge--bad]="!row.valid">
+              {{ row.valid ? 'Válido' : 'Inválido' }}
+            </span>
+          </td>
+          <td>{{ row.valid ? row.normalizedDisplay : row.reason }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section *ngIf="jobInProgress || (currentJob && currentJob.completed)" class="wa-notificador__panel">
+    <h2>Estado del envío</h2>
+    <p *ngIf="lastEnqueue">
+      Plantilla {{ lastEnqueue.templateId }} · Job {{ lastEnqueue.jobId }}
+    </p>
+
+    <div *ngIf="jobInProgress" class="wa-notificador__progress">
+      <div class="wa-notificador__progress-track">
+        <div class="wa-notificador__progress-bar" [style.width.%]="progressPercent"></div>
+      </div>
+      <span>
+        Enviando {{ currentJob?.sentCount ?? 0 }} de {{ currentJob?.totalCount ?? 0 }}…
+        ({{ statusLabel[currentJob!.status] }})
+      </span>
+    </div>
+
+    <div *ngIf="currentJob?.completed" class="wa-notificador__result-header">
+      <span
+        class="badge badge--status"
+        [class.badge--ok]="currentJob!.success"
+        [class.badge--warn]="currentJob!.status === 'PARTIAL'"
+        [class.badge--bad]="!currentJob!.success"
+      >
+        {{ statusLabel[currentJob!.status] }}
+      </span>
+      <span>
+        {{ currentJob!.sentCount }} enviados · {{ currentJob!.failedCount }} fallidos
+      </span>
+      <p *ngIf="currentJob!.errorMessage" class="wa-notificador__error-inline">
+        {{ currentJob!.errorMessage }}
+      </p>
+    </div>
+
+    <table *ngIf="currentJob?.results?.length" class="wa-notificador__table">
+      <thead>
+        <tr>
+          <th>Teléfono</th>
+          <th>Estado</th>
+          <th>Detalle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of currentJob!.results!; trackBy: trackByResultPhone">
+          <td>{{ row.phone }}</td>
+          <td>
+            <span
+              class="badge"
+              [class.badge--ok]="row.status === 'sent'"
+              [class.badge--bad]="row.status === 'failed'"
+            >
+              {{ row.status }}
+            </span>
+          </td>
+          <td>{{ row.error || row.notificadorId || '—' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</section>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  (close)="modal.close()"
+/>
