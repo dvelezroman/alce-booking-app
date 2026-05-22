@@ -21,6 +21,12 @@ import {
   UpdateLeadSchedulingAdminDto,
 } from '../../../../services/dtos/lead-scheduling-request.dto';
 import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message.util';
+import {
+  isPlacementTestExam,
+  isSpeakingPlacementExam,
+  leadSchedulingKindLabel,
+  leadSchedulingScheduleSummary,
+} from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
   selector: 'app-admin-lead-scheduling-detail',
@@ -57,6 +63,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     instructorId: ['' as string | number],
     scheduledDate: [''],
     scheduledHour: ['' as string | number],
+    examLink: ['', [Validators.maxLength(2048)]],
     adminNotes: ['', [Validators.maxLength(8000)]],
   });
 
@@ -120,8 +127,46 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     return this.row?.status === 'CANCELLED';
   }
 
+  get isPlacementTest(): boolean {
+    return (
+      this.row != null &&
+      isPlacementTestExam(this.row.kind, this.row.placementExamType)
+    );
+  }
+
+  get isSpeakingPlacement(): boolean {
+    return (
+      this.row != null &&
+      isSpeakingPlacementExam(this.row.kind, this.row.placementExamType)
+    );
+  }
+
+  get isDemoClass(): boolean {
+    return this.row?.kind === 'DEMO_CLASS';
+  }
+
+  get requiresScheduleTriple(): boolean {
+    return this.isDemoClass || this.isSpeakingPlacement;
+  }
+
+  get typeDetailLabel(): string {
+    return this.row ? leadSchedulingKindLabel(this.row) : '';
+  }
+
+  get schedulingHint(): string {
+    if (this.isPlacementTest) {
+      return 'Para agendar: asigna instructor y enlace del examen (URL). El estudiante recibirá el enlace por correo al quedar en estado Agendada.';
+    }
+    if (this.isSpeakingPlacement) {
+      return 'Para agendar: asigna instructor. La fecha y hora suelen venir del asesor; complétalas si faltan. Se notifica al asesor, al estudiante y al instructor.';
+    }
+    return 'Para agendar: instructor, fecha y hora. Se notifica al asesor y al instructor.';
+  }
+
   kindText(k: LeadSchedulingRequestKind): string {
-    return this.kindLabel[k] ?? k;
+    return this.row && k === this.row.kind
+      ? leadSchedulingKindLabel(this.row)
+      : (this.kindLabel[k] ?? k);
   }
 
   statusText(s: LeadSchedulingRequestStatus): string {
@@ -129,12 +174,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
   }
 
   slotText(row: LeadSchedulingRequestRow): string {
-    const d = row.scheduledDate;
-    const h = row.scheduledHour;
-    if (!d && h == null) return '—';
-    const datePart = d ? new Date(d + 'T12:00:00').toLocaleDateString() : '—';
-    const hourPart = h != null ? `${h}:00` : '—';
-    return `${datePart} · ${hourPart}`;
+    return leadSchedulingScheduleSummary(row);
   }
 
   instructorLabelFromRow(row: LeadSchedulingRequestRow): string {
@@ -179,6 +219,11 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
       return;
     }
     const raw = this.form.getRawValue();
+    const examLinkErr = this.validateExamLinkForSave(raw);
+    if (examLinkErr) {
+      this.error = examLinkErr;
+      return;
+    }
     const body = this.buildPatchBody(raw);
     this.saving = true;
     this.error = null;
@@ -266,6 +311,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
         row.scheduledHour != null && row.scheduledHour !== undefined
           ? Number(row.scheduledHour)
           : ('' as const),
+      examLink: row.examLink ?? '',
       adminNotes: row.adminNotes ?? '',
     };
   }
@@ -274,12 +320,28 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     this.form.reset(this.formValueFromRow(row));
   }
 
+  private validateExamLinkForSave(raw: Record<string, unknown>): string | null {
+    if (!this.isPlacementTest) return null;
+    const link = String(raw['examLink'] ?? '').trim();
+    if (!link) return null;
+    try {
+      const u = new URL(link);
+      if (u.protocol !== 'http:' && u.protocol !== 'https:') {
+        return 'El enlace del examen debe comenzar con http:// o https://';
+      }
+    } catch {
+      return 'El enlace del examen no es una URL válida.';
+    }
+    return null;
+  }
+
   private buildPatchBody(raw: Record<string, unknown>): UpdateLeadSchedulingAdminDto {
     const body: UpdateLeadSchedulingAdminDto = {};
 
     const instructorId = raw['instructorId'];
     const scheduledDate = raw['scheduledDate'];
     const scheduledHour = raw['scheduledHour'];
+    const examLink = raw['examLink'];
     const adminNotes = raw['adminNotes'];
 
     if (instructorId === '' || instructorId === null || instructorId === undefined) {
@@ -288,13 +350,20 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
       body.instructorId = Number(instructorId);
     }
 
-    const dateStr = String(scheduledDate ?? '').trim();
-    body.scheduledDate = dateStr === '' ? null : dateStr;
+    if (this.requiresScheduleTriple) {
+      const dateStr = String(scheduledDate ?? '').trim();
+      body.scheduledDate = dateStr === '' ? null : dateStr;
 
-    if (scheduledHour === '' || scheduledHour === null || scheduledHour === undefined) {
-      body.scheduledHour = null;
-    } else {
-      body.scheduledHour = Number(scheduledHour);
+      if (scheduledHour === '' || scheduledHour === null || scheduledHour === undefined) {
+        body.scheduledHour = null;
+      } else {
+        body.scheduledHour = Number(scheduledHour);
+      }
+    }
+
+    if (this.isPlacementTest) {
+      const link = String(examLink ?? '').trim();
+      body.examLink = link === '' ? null : link;
     }
 
     const notes = String(adminNotes ?? '').trim();

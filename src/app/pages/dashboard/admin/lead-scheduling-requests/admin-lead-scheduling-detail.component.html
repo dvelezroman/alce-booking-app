@@ -4,7 +4,7 @@
     <h1>Solicitud #{{ r.id }}</h1>
     <p class="admin-detail__meta">
       <span class="badge badge--pill" [attr.data-status]="r.status">{{ statusText(r.status) }}</span>
-      · {{ kindText(r.kind) }}
+      · {{ typeDetailLabel }}
     </p>
   </header>
 
@@ -47,6 +47,7 @@
 
   <form class="card card--wide" [formGroup]="form" (ngSubmit)="save()">
     <h2>Asignación y agenda</h2>
+    <p class="hint">{{ schedulingHint }}</p>
 
     <label class="field">
       <span>Instructor</span>
@@ -59,26 +60,50 @@
       <small class="field__help">Actual en servidor: {{ instructorLabelFromRow(r) }}</small>
     </label>
 
-    <div class="row2">
-      <label class="field">
-        <span>Fecha (YYYY-MM-DD)</span>
-        <input type="date" formControlName="scheduledDate" />
-      </label>
-      <label class="field">
-        <span>Hora (0–23)</span>
-        <select formControlName="scheduledHour" [compareWith]="compareIdOrEmpty">
-          <option [ngValue]="''">—</option>
-          <option *ngFor="let h of hourOptions" [ngValue]="h">{{ h }}:00</option>
-        </select>
-      </label>
-    </div>
-    <p class="hint">Franja en servidor ahora: <strong>{{ slotText(r) }}</strong></p>
+    <label class="field" *ngIf="isPlacementTest">
+      <span>Enlace del examen (URL)</span>
+      <input
+        type="url"
+        formControlName="examLink"
+        placeholder="https://…"
+        autocomplete="off"
+      />
+      <small class="field__help">
+        Obligatorio junto con el instructor para pasar a <strong>Agendada</strong>. Al guardar, el API
+        notifica por correo al estudiante y al asesor.
+      </small>
+      <p class="hint" *ngIf="r.examLink">
+        Enlace actual:
+        <a [href]="r.examLink" target="_blank" rel="noopener noreferrer">{{ r.examLink }}</a>
+      </p>
+    </label>
+
+    <ng-container *ngIf="requiresScheduleTriple">
+      <div class="row2">
+        <label class="field">
+          <span>Fecha (YYYY-MM-DD)</span>
+          <input type="date" formControlName="scheduledDate" />
+        </label>
+        <label class="field">
+          <span>Hora (0–23)</span>
+          <select formControlName="scheduledHour" [compareWith]="compareIdOrEmpty">
+            <option [ngValue]="''">—</option>
+            <option *ngFor="let h of hourOptions" [ngValue]="h">{{ h }}:00</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint" *ngIf="isSpeakingPlacement">
+        La fecha y hora suelen venir en la solicitud del asesor; ajústalas solo si hace falta.
+      </p>
+    </ng-container>
+
+    <p class="hint">Agendamiento en servidor: <strong>{{ slotText(r) }}</strong></p>
 
     <div class="status-readonly">
       <span class="status-readonly__label">Estado actual</span>
       <span class="badge badge--pill" [attr.data-status]="r.status">{{ statusText(r.status) }}</span>
       <small class="field__help"
-        >El estado lo actualiza el API al asignar instructor, fecha y hora. Para anular la solicitud use
+        >El estado lo actualiza el API al completar la asignación según el tipo. Para anular use
         <strong>Cancelar solicitud</strong>.</small
       >
     </div>
@@ -116,13 +141,14 @@
     <dl class="kv">
       <dt>Asistencia</dt>
       <dd>
-        {{
+        <ng-container *ngIf="isPlacementTest">No aplica (placement test)</ng-container>
+        <ng-container *ngIf="!isPlacementTest">{{
           r.attendancePresent === true
             ? 'Presente'
             : r.attendancePresent === false
               ? 'Ausente'
               : '—'
-        }}
+        }}</ng-container>
       </dd>
       <dt>Notas del informe</dt>
       <dd class="pre">{{ r.instructorReportNotes || '—' }}</dd>

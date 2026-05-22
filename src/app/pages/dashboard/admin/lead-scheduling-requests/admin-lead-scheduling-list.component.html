@@ -2,8 +2,8 @@
   <header class="admin-lead__header">
     <h1>Solicitudes demo / examen de ubicación</h1>
     <p class="admin-lead__sub">
-      Gestión administrativa: asignar instructor, fecha, hora y notas internas. El estado se muestra en el detalle y lo
-      deriva el API; para anular use <strong>Cancelar solicitud</strong> (no hay borrado físico en API).
+      Gestión administrativa: asignar instructor; para placement test el enlace del examen; para speaking/demo fecha y hora.
+      El estado lo deriva el API; para anular use <strong>Cancelar solicitud</strong>.
     </p>
   </header>
 
@@ -68,14 +68,14 @@
             <th>Estado</th>
             <th>Lead</th>
             <th>Instructor</th>
-            <th>Fecha / hora</th>
+            <th>Agenda / enlace</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let row of items">
             <td>{{ row.id }}</td>
-            <td>{{ kindText(row.kind) }}</td>
+            <td>{{ kindText(row) }}</td>
             <td>
               <span class="badge" [attr.data-status]="row.status">{{
                 statusText(row.status)

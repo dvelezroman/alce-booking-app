@@ -18,6 +18,11 @@ import {
   LeadSchedulingRequestStatus,
 } from '../../../../services/dtos/lead-scheduling-request.dto';
 import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message.util';
+import {
+  isPlacementTestExam,
+  isSpeakingPlacementExam,
+  leadSchedulingKindLabel,
+} from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
   selector: 'app-instructor-lead-scheduling-detail',
@@ -111,8 +116,29 @@ export class InstructorLeadSchedulingDetailComponent implements OnInit, OnDestro
     return this.row?.status === 'SCHEDULED';
   }
 
+  get isPlacementTest(): boolean {
+    return (
+      this.row != null &&
+      isPlacementTestExam(this.row.kind, this.row.placementExamType)
+    );
+  }
+
+  get requiresAttendance(): boolean {
+    return (
+      this.row != null &&
+      (this.row.kind === 'DEMO_CLASS' ||
+        isSpeakingPlacementExam(this.row.kind, this.row.placementExamType))
+    );
+  }
+
+  get typeDetailLabel(): string {
+    return this.row ? leadSchedulingKindLabel(this.row) : '';
+  }
+
   kindText(k: LeadSchedulingRequestKind): string {
-    return this.kindLabel[k] ?? k;
+    return this.row && k === this.row.kind
+      ? leadSchedulingKindLabel(this.row)
+      : (this.kindLabel[k] ?? k);
   }
 
   statusText(s: LeadSchedulingRequestStatus): string {
@@ -120,6 +146,10 @@ export class InstructorLeadSchedulingDetailComponent implements OnInit, OnDestro
   }
 
   slotText(row: LeadSchedulingRequestRow): string {
+    if (isPlacementTestExam(row.kind, row.placementExamType)) {
+      const link = row.examLink?.trim();
+      return link ? `Enlace del examen asignado al lead` : 'Sin enlace de examen aún';
+    }
     const d = row.scheduledDate;
     const h = row.scheduledHour;
     if (!d && h == null) return 'Sin fecha u hora definidas aún';
@@ -159,12 +189,17 @@ export class InstructorLeadSchedulingDetailComponent implements OnInit, OnDestro
       return;
     }
     const raw = this.form.getRawValue();
+    const body: {
+      instructorReportNotes: string;
+      attendancePresent?: boolean;
+    } = {
+      instructorReportNotes: String(raw.instructorReportNotes).trim(),
+    };
+    if (this.requiresAttendance) {
+      body.attendancePresent = !!raw.attendancePresent;
+    }
     this.submitting = true;
-    this.leadScheduling
-      .submitInstructorReport(this.row.id, {
-        attendancePresent: !!raw.attendancePresent,
-        instructorReportNotes: String(raw.instructorReportNotes).trim(),
-      })
+    this.leadScheduling.submitInstructorReport(this.row.id, body)
       .subscribe({
         next: () => {
           this.submitting = false;

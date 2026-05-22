@@ -11,6 +11,10 @@ import {
   LeadSchedulingRequestStatus,
 } from '../../../../services/dtos/lead-scheduling-request.dto';
 import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message.util';
+import {
+  leadSchedulingKindLabel,
+  leadSchedulingScheduleSummary,
+} from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
   selector: 'app-instructor-lead-scheduling-list',
@@ -271,8 +275,8 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
     this.load();
   }
 
-  kindText(k: LeadSchedulingRequestKind): string {
-    return this.kindLabel[k] ?? k;
+  kindText(row: LeadSchedulingRequestRow): string {
+    return leadSchedulingKindLabel(row);
   }
 
   statusText(s: LeadSchedulingRequestStatus): string {
@@ -280,12 +284,7 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
   }
 
   slotText(row: LeadSchedulingRequestRow): string {
-    const d = row.scheduledDate;
-    const h = row.scheduledHour;
-    if (!d && h == null) return '—';
-    const datePart = d ? new Date(this.normalizeDateForParse(d)).toLocaleDateString('es') : '—';
-    const hourPart = h != null ? `${String(Math.floor(h)).padStart(2, '0')}:00` : '—';
-    return `${datePart} · ${hourPart}`;
+    return leadSchedulingScheduleSummary(row);
   }
 
   private scheduledYyyyMmDd(row: LeadSchedulingRequestRow): string {

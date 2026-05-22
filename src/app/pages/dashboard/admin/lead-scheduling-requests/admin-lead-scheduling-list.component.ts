@@ -11,6 +11,10 @@ import {
   LeadSchedulingRequestStatus,
 } from '../../../../services/dtos/lead-scheduling-request.dto';
 import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message.util';
+import {
+  leadSchedulingKindLabel,
+  leadSchedulingScheduleSummary,
+} from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
   selector: 'app-admin-lead-scheduling-list',
@@ -142,8 +146,8 @@ export class AdminLeadSchedulingListComponent implements OnInit {
       });
   }
 
-  kindText(k: LeadSchedulingRequestKind): string {
-    return this.kindLabel[k] ?? k;
+  kindText(row: LeadSchedulingRequestRow): string {
+    return leadSchedulingKindLabel(row);
   }
 
   statusText(s: LeadSchedulingRequestStatus): string {
@@ -151,12 +155,7 @@ export class AdminLeadSchedulingListComponent implements OnInit {
   }
 
   slotText(row: LeadSchedulingRequestRow): string {
-    const d = row.scheduledDate;
-    const h = row.scheduledHour;
-    if (!d && h == null) return '—';
-    const datePart = d ? new Date(d).toLocaleDateString() : '—';
-    const hourPart = h != null ? `${h}:00` : '—';
-    return `${datePart} · ${hourPart}`;
+    return leadSchedulingScheduleSummary(row);
   }
 
   instructorLabel(row: LeadSchedulingRequestRow): string {

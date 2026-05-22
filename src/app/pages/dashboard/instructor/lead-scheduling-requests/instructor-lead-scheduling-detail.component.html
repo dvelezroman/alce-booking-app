@@ -8,13 +8,13 @@
 
   <header class="lead-detail__hero">
     <div class="lead-detail__hero-inner">
-      <p class="lead-detail__eyebrow">Cortesía / examen de ubicación</p>
+      <p class="lead-detail__eyebrow">{{ typeDetailLabel }}</p>
       <h1 class="lead-detail__title">Solicitud #{{ row.id }}</h1>
       <p class="lead-detail__subtitle">
         {{ row.firstName }} {{ row.lastName }}
       </p>
       <div class="lead-detail__chips">
-        <span class="chip chip--kind">{{ kindText(row.kind) }}</span>
+        <span class="chip chip--kind">{{ typeDetailLabel }}</span>
         <span
           class="chip chip--status"
           [attr.data-status]="row.status"
@@ -50,8 +50,14 @@
     <article class="panel">
       <h2 class="panel__heading">Agenda y contexto</h2>
       <div class="field-grid">
+        <div class="field field--span" *ngIf="isPlacementTest && row.examLink">
+          <span class="field__label">Enlace del examen (lead)</span>
+          <span class="field__value field__value--wrap">
+            <a [href]="row.examLink" target="_blank" rel="noopener noreferrer">{{ row.examLink }}</a>
+          </span>
+        </div>
         <div class="field field--span">
-          <span class="field__label">Fecha y hora</span>
+          <span class="field__label">{{ isPlacementTest ? 'Estado del examen' : 'Fecha y hora' }}</span>
           <span class="field__value">{{ slotText(row) }}</span>
         </div>
         <div class="field field--span" *ngIf="row.stage">
@@ -104,7 +110,7 @@
   <article class="panel panel--wide panel--muted" *ngIf="row.status === 'COMPLETED'">
     <h2 class="panel__heading">Informe registrado</h2>
     <div class="field-grid">
-      <div class="field">
+      <div class="field" *ngIf="!isPlacementTest">
         <span class="field__label">Asistencia</span>
         <span class="field__value">{{
           row.attendancePresent ? 'Presente' : 'No asistió'
@@ -120,23 +126,32 @@
   </article>
 
   <article class="panel panel--wide panel--emphasis" *ngIf="canSubmitReport">
-    <h2 class="panel__heading">Registrar asistencia e informe</h2>
+    <h2 class="panel__heading">
+      {{ isPlacementTest ? 'Enviar informe de resultado' : 'Registrar asistencia e informe' }}
+    </h2>
     <p class="panel__hint">
-      Solo cuando el estado es <strong>Agendada</strong>. Al enviar el informe, la solicitud
-      pasará a <strong>Completada</strong>.
+      Solo cuando el estado es <strong>Agendada</strong>. Al enviar, la solicitud pasa a
+      <strong>Completada</strong> y el API notifica al asesor (correo con el informe completo y
+      WhatsApp).
     </p>
     <form [formGroup]="form" (ngSubmit)="submit()" class="report-form">
-      <label class="report-form__check">
+      <label class="report-form__check" *ngIf="requiresAttendance">
         <input type="checkbox" formControlName="attendancePresent" />
         <span>El lead asistió a la sesión</span>
       </label>
 
       <label class="report-form__field">
-        <span class="report-form__label">Informe de la clase (mín. 3 caracteres)</span>
+        <span class="report-form__label">{{
+          isPlacementTest ? 'Informe de resultado (mín. 3 caracteres)' : 'Informe de la sesión (mín. 3 caracteres)'
+        }}</span>
         <textarea
           formControlName="instructorReportNotes"
           rows="6"
-          placeholder="Describe la sesión, participación del lead, nivel observado y recomendaciones…"
+          [attr.placeholder]="
+            isPlacementTest
+              ? 'Resultado del placement test, nivel sugerido, observaciones…'
+              : 'Describe la sesión, participación del lead, nivel observado y recomendaciones…'
+          "
         ></textarea>
       </label>
 
@@ -150,10 +165,13 @@
 
   <div class="callout callout--pending" *ngIf="row.status === 'PENDING'">
     <p class="callout__title">Pendiente de agendar</p>
-    <p class="callout__text">
-      Un <strong>administrador</strong> debe confirmar fecha y hora en el panel de administración.
-      Cuando la solicitud pase a <strong>Agendada</strong>, podrás registrar aquí la asistencia y el
-      informe de la sesión.
+    <p class="callout__text" *ngIf="isPlacementTest">
+      Un <strong>administrador</strong> debe asignarte y registrar el <strong>enlace del examen</strong>.
+      Cuando quede <strong>Agendada</strong>, podrás enviar aquí el informe de resultado.
+    </p>
+    <p class="callout__text" *ngIf="!isPlacementTest">
+      Un <strong>administrador</strong> debe confirmar la asignación (y fecha/hora si aplica).
+      Cuando la solicitud pase a <strong>Agendada</strong>, podrás registrar asistencia e informe.
     </p>
   </div>
 

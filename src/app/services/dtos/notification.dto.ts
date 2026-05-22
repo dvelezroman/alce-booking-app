@@ -84,6 +84,8 @@ export interface LeadSchedulingAssignedSummary {
   status?: string;
   /** Tipo de solicitud: cortesía/demo o examen de ubicación. */
   requestKind?: LeadSchedulingNotificationRequestKind;
+  placementExamType?: 'PLACEMENT_TEST' | 'SPEAKING_TEST' | null;
+  examLink?: string | null;
 }
 
 export interface NewStudentRow {

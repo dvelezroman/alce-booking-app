@@ -73,25 +73,42 @@
   }
 }
 
-.input {
+.stage-select {
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px 2.75rem 12px 14px;
   border-radius: 13px;
-  border: 1px solid #e2e8f0;
-  background: #f8fafc;
-  color: #0f172a;
-  font-size: 12px;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M2.5 4.5 6 8l3.5-3.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  color: #1e293b;
+  -webkit-text-fill-color: #1e293b;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
   outline: none;
-  transition: all 0.2s ease;
-}
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
-.input:focus {
-  background: #ffffff;
-  box-shadow: 0 0 0 1px rgba(132, 131, 133, 0.185);
-}
+  &:focus {
+    border-color: #94a3b8;
+    box-shadow: 0 0 0 3px rgba(40, 51, 111, 0.12);
+  }
 
-select.input {
-  appearance: auto;
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    background-color: #f1f5f9;
+  }
+
+  option {
+    color: #1e293b;
+    background-color: #ffffff;
+  }
 }
 
 .primary-btn {

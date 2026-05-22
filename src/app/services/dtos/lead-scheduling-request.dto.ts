@@ -1,5 +1,7 @@
 export type LeadSchedulingRequestKind = 'DEMO_CLASS' | 'PLACEMENT_EXAM';
 
+export type PlacementExamType = 'PLACEMENT_TEST' | 'SPEAKING_TEST';
+
 export type LeadSchedulingRequestStatus =
   | 'PENDING'
   | 'SCHEDULED'
@@ -35,6 +37,8 @@ export interface LeadSchedulingAssignedByRef {
 export interface LeadSchedulingRequestRow {
   id: number;
   kind: LeadSchedulingRequestKind;
+  /** Present when kind is PLACEMENT_EXAM; null on legacy rows (speaking flow). */
+  placementExamType?: PlacementExamType | null;
   status: LeadSchedulingRequestStatus;
   externalReferenceId?: string | null;
   firstName: string;
@@ -55,6 +59,8 @@ export interface LeadSchedulingRequestRow {
   assignedBy?: LeadSchedulingAssignedByRef | null;
   scheduledDate?: string | null;
   scheduledHour?: number | null;
+  /** Placement test exam URL (admin PATCH). */
+  examLink?: string | null;
   adminNotes?: string | null;
   attendancePresent?: boolean | null;
   instructorReportNotes?: string | null;
@@ -73,7 +79,8 @@ export interface LeadSchedulingListResponse {
 }
 
 export interface SubmitLeadSchedulingInstructorReportDto {
-  attendancePresent: boolean;
+  /** Required for demo class and speaking; omit for placement test. */
+  attendancePresent?: boolean;
   instructorReportNotes: string;
 }
 
@@ -82,6 +89,7 @@ export interface UpdateLeadSchedulingAdminDto {
   instructorId?: number | null;
   scheduledDate?: string | null;
   scheduledHour?: number | null;
+  examLink?: string | null;
   status?: LeadSchedulingRequestStatus;
   adminNotes?: string | null;
 }
