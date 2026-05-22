@@ -285,6 +285,18 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.notification?.message?.kind === 'lead-scheduling-cancelled';
   }
 
+  get isActiveStudentsReportNotification(): boolean {
+    const kind = this.notification?.message?.kind;
+    const metaKind = (this.notification?.metadata as { kind?: string } | null)?.kind;
+    return kind === 'active_students_report' || metaKind === 'active_students_report';
+  }
+
+  get activeStudentsReportJobId(): string | null {
+    const meta = this.notification?.metadata as { jobId?: string } | null;
+    const summary = this.notification?.message?.summary as { jobId?: string } | undefined;
+    return meta?.jobId ?? summary?.jobId ?? null;
+  }
+
   /** Tarjeta estructurada para instructores (asignación o cancelación). */
   get isLeadSchedulingInstructorCard(): boolean {
     return (
@@ -425,6 +437,13 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       return false;
     }
     return this.userRole === UserRole.INSTRUCTOR || this.userRole === UserRole.ADMIN;
+  }
+
+  goToActiveStudentsReport(): void {
+    const jobId = this.activeStudentsReportJobId;
+    void this.router.navigate(['/dashboard/active-students-report'], {
+      queryParams: jobId ? { jobId } : {},
+    });
   }
 
   goToPlacementExamList(): void {

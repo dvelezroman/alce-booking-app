@@ -21,3 +21,27 @@ export interface AbsentStudentsExcelFilterDto {
   to: string;
   stageId?: number;
 }
+
+/** Filtros para POST /reports/active-students/jobs */
+export interface ActiveStudentsReportFiltersDto {
+  stageId?: number;
+  noClasses?: boolean;
+}
+
+export interface ActiveStudentsReportJobCreatedDto {
+  jobId: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface ActiveStudentsReportJobStatusDto {
+  jobId: string;
+  status: string;
+  fileName?: string;
+  rowCount?: number;
+  errorMessage?: string;
+  createdAt: string;
+  startedAt?: string;
+  completedAt?: string;
+  expiresAt?: string;
+}

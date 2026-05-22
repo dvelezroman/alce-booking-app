@@ -279,6 +279,30 @@
         <p class="body-text" [innerHTML]="formattedBody | safeNoteHtml"></p>
       </div>
 
+      <section
+        class="request-lead-card"
+        *ngIf="isActiveStudentsReportNotification"
+      >
+        <header class="request-lead-card__header">
+          <div>
+            <p class="request-lead-card__eyebrow">Reporte Excel</p>
+            <h3 class="request-lead-card__title">Estudiantes activos</h3>
+            <p class="request-lead-card__subtitle">
+              Tu exportación está lista. Abre el reporte para descargar el archivo (se elimina del servidor tras la descarga).
+            </p>
+          </div>
+        </header>
+        <div class="request-lead-card__actions">
+          <button
+            type="button"
+            class="request-lead-card__cta"
+            (click)="goToActiveStudentsReport()"
+          >
+            Ir al reporte y descargar
+          </button>
+        </div>
+      </section>
+
       <!-- Solicitud nueva: cortesía/demo o examen de ubicación -->
       <section
         class="request-lead-card"

@@ -47,6 +47,7 @@ import { InstructorEvaluationsComponent } from './instructor-evaluations/instruc
 import { MeetingEvaluationsComponent } from './meeting-evaluations/meeting-evaluations.component';
 import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluation-statistics.component';
 import { StudentHistoryReportComponent } from './report-students/student-history-report/student-history-report.component';
+import { ActiveStudentsReportComponent } from './report-students/active-students-report/active-students-report.component';
 import { AnnouncementCardComponent } from '../../components/announcements/announcement-card/announcement-card.component';
 import { AnnouncementsComponent } from './announcements/announcements.component';
 import { adminOnlyGuard } from '../auth/admin-role.guard';
@@ -128,6 +129,7 @@ export const dashboardRoutes: Routes = [
   { path: 'create-instructors', component: RegisterInstructorAdminComponent },
   { path: 'reports-detailed', component: ReportsDetailedComponent },
   { path: 'student-history-report', component: StudentHistoryReportComponent },
+  { path: 'active-students-report', component: ActiveStudentsReportComponent },
   { path: 'reports-progress', component: ReportsProgressComponent },
   { path: 'suspension-history', component: SuspensionHistoryComponent },
   { path: 'report-user', component: ReportUserComponent },
