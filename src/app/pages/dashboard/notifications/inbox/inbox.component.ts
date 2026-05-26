@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { selectUserData } from '../../../../store/user.selector';
 import { UserDto } from '../../../../services/dtos/user.dto';
 import { UsersService } from '../../../../services/users.service';
+import { sanitizeNotificationBody } from '../../../../shared/utils/notification-message.util';
 
 @Component({
   selector: 'app-inbox',
@@ -104,6 +105,10 @@ export class InboxComponent implements OnInit {
 
   trackById(index: number, n: Notification): number {
     return n.id;
+  }
+
+  notificationBodySnippet(body: string): string {
+    return sanitizeNotificationBody(body);
   }
 
   onRowClick(n: Notification) {

@@ -25,6 +25,7 @@ import { StudentEditModalComponent } from '../../../../components/notifications/
 import { Stage,  } from '../../../../services/dtos/student.dto';
 import { StagesService } from '../../../../services/stages.service';
 import { StudentsService } from '../../../../services/students.service';
+import { sanitizeNotificationBody } from '../../../../shared/utils/notification-message.util';
 
 @Component({
   selector: 'app-notification-detail',
@@ -419,6 +420,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   /** Oculta el cuerpo técnico cuando la tarjeta estructurada ya muestra la información. */
   get showNotificationRawBody(): boolean {
     if (!this.notification?.message?.body) return false;
+    if (this.isActiveStudentsReportNotification) return false;
     if (this.isLeadRequestNotification && this.requestLead) return false;
     if (this.isLeadSchedulingInstructorCard) {
       return false;
@@ -476,7 +478,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   }
 
   get formattedBody(): string {
-    const body = this.notification?.message?.body ?? '';
+    const body = sanitizeNotificationBody(this.notification?.message?.body ?? '');
 
     return body
       .replace(/\.\s+/g, '.<br>')
