@@ -50,17 +50,25 @@ export interface DemoClassLead {
   firstName: string;
   lastName: string;
   email: string;
-  idNumber: string;
+  idNumber?: string | null;
   contactPhone: string;
-  courtesyClassHours: number;
-  stageId: number;
-  stageNumber: string;
-  stageLabel: string;
-  stageDescription: string;
-  requestingAdvisorName: string;
-  requestingAdvisorEmail: string;
-  requestingAdvisorPhone: string;
-  requestingAdvisorSedeLabel: string;
+  courtesyClassHours?: number | null;
+  stageId?: number | null;
+  stageNumber?: string | null;
+  stageLabel?: string | null;
+  stageDescription?: string | null;
+  requestingAdvisorName?: string | null;
+  requestingAdvisorEmail?: string | null;
+  requestingAdvisorPhone?: string | null;
+  requestingAdvisorSedeLabel?: string | null;
+  /** Placement exam S2S (`message.lead`). */
+  leadSchedulingRequestId?: number;
+  externalReferenceId?: string | null;
+  placementExamType?: 'PLACEMENT_TEST' | 'SPEAKING_TEST' | null;
+  placementExamTypeLabel?: string | null;
+  requestNotes?: string | null;
+  scheduledDate?: string | null;
+  scheduledHour?: number | null;
 }
 
 export interface DemoClassSummary {

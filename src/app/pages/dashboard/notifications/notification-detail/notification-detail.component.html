@@ -84,7 +84,13 @@
         <header class="lead-scheduling-card__header">
           <div>
             <p class="lead-scheduling-card__eyebrow">
-              <ng-container *ngIf="isPlacementSchedulingAssignment">Examen de ubicación</ng-container>
+              <ng-container *ngIf="isPlacementSchedulingAssignment && assignedIsPlacementTest"
+                >Placement test</ng-container
+              >
+              <ng-container
+                *ngIf="isPlacementSchedulingAssignment && !assignedIsPlacementTest"
+                >Test de speaking</ng-container
+              >
               <ng-container *ngIf="isDemoSchedulingAssignment">Clase de cortesía / demo</ng-container>
               <ng-container *ngIf="!isPlacementSchedulingAssignment && !isDemoSchedulingAssignment"
                 >Cortesía / examen de ubicación</ng-container
@@ -118,8 +124,23 @@
               <ng-container *ngIf="isLeadSchedulingCancelledNotification">
                 Un administrador canceló esta solicitud que tenías asignada. Ya no debes impartir la sesión ni enviar informe.
               </ng-container>
-              <ng-container *ngIf="!isLeadSchedulingCancelledNotification && isPlacementSchedulingAssignment">
-                Un administrador te asignó la evaluación de nivel con este lead. Revisa el detalle para datos de contacto, etapa y notas.
+              <ng-container
+                *ngIf="
+                  !isLeadSchedulingCancelledNotification &&
+                  isPlacementSchedulingAssignment &&
+                  assignedIsPlacementTest
+                "
+              >
+                Un administrador te asignó este placement test. El lead recibe el enlace del examen por correo; envía el informe de resultado cuando esté agendada.
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  !isLeadSchedulingCancelledNotification &&
+                  isPlacementSchedulingAssignment &&
+                  !assignedIsPlacementTest
+                "
+              >
+                Un administrador te asignó la sesión de speaking con este lead. Revisa fecha, hora y datos de contacto en el detalle.
               </ng-container>
               <ng-container *ngIf="!isLeadSchedulingCancelledNotification && isDemoSchedulingAssignment">
                 Un administrador te asignó una clase de cortesía o demo con este lead. Revisa el detalle para contacto y notas.
@@ -173,6 +194,21 @@
               formatLeadSchedulingHour(leadSchedulingAssignedSummary.scheduledHour)
             }}</strong>
           </div>
+
+          <div
+            class="lead-scheduling-field lead-scheduling-field--span"
+            *ngIf="assignedIsPlacementTest && leadSchedulingAssignedSummary.examLink"
+          >
+            <span class="lead-scheduling-field__label">Enlace del examen</span>
+            <strong class="lead-scheduling-field__value lead-scheduling-field__value--wrap">
+              <a
+                [href]="leadSchedulingAssignedSummary.examLink"
+                target="_blank"
+                rel="noopener noreferrer"
+                >{{ leadSchedulingAssignedSummary.examLink }}</a
+              >
+            </strong>
+          </div>
         </div>
 
         <div class="lead-scheduling-card__next" *ngIf="!isLeadSchedulingCancelledNotification">
@@ -183,11 +219,46 @@
               <ng-container *ngIf="isPlacementSchedulingAssignment"> y el nivel o etapa a evaluar</ng-container>
               <ng-container *ngIf="!isPlacementSchedulingAssignment"> y la modalidad de la sesión</ng-container>.
             </li>
-            <li *ngIf="leadSchedulingAssignedSummary.status === 'PENDING'">
+            <li
+              *ngIf="
+                leadSchedulingAssignedSummary.status === 'PENDING' &&
+                assignedIsPlacementTest
+              "
+            >
+              Cuando el administrador registre el <strong>enlace del examen</strong>, el estado pasará a
+              <strong>Agendada</strong> y podrás enviar el informe de resultado.
+            </li>
+            <li
+              *ngIf="
+                leadSchedulingAssignedSummary.status === 'PENDING' &&
+                !assignedIsPlacementTest &&
+                isPlacementSchedulingAssignment
+              "
+            >
               Cuando un administrador confirme fecha y hora, el estado pasará a
               <strong>Agendada</strong> y podrás registrar asistencia e informe.
             </li>
-            <li *ngIf="leadSchedulingAssignedSummary.status === 'SCHEDULED'">
+            <li
+              *ngIf="
+                leadSchedulingAssignedSummary.status === 'PENDING' && isDemoSchedulingAssignment
+              "
+            >
+              Cuando un administrador confirme fecha y hora, el estado pasará a
+              <strong>Agendada</strong> y podrás registrar asistencia e informe.
+            </li>
+            <li
+              *ngIf="
+                leadSchedulingAssignedSummary.status === 'SCHEDULED' && assignedIsPlacementTest
+              "
+            >
+              El estado es <strong>Agendada</strong>: en el detalle envía el
+              <strong>informe de resultado</strong> (sin asistencia).
+            </li>
+            <li
+              *ngIf="
+                leadSchedulingAssignedSummary.status === 'SCHEDULED' && !assignedIsPlacementTest
+              "
+            >
               El estado es <strong>Agendada</strong>: en el mismo detalle envía
               <strong>asistencia e informe</strong>. Al guardarlo, la solicitud quedará
               <strong>completada</strong>.
@@ -313,11 +384,27 @@
         <header class="request-lead-card__header">
           <div>
             <p class="request-lead-card__eyebrow">
-              <ng-container *ngIf="isPlacementExamNotification">Examen de ubicación</ng-container>
+              <ng-container *ngIf="isPlacementExamNotification && placementExamSubtypeLabel">{{
+                placementExamSubtypeLabel
+              }}</ng-container>
+              <ng-container *ngIf="isPlacementExamNotification && !placementExamSubtypeLabel"
+                >Examen de ubicación</ng-container
+              >
               <ng-container *ngIf="isDemoClassNotification">Clase de cortesía / demo</ng-container>
             </p>
             <h3 class="request-lead-card__title">
-              <ng-container *ngIf="isPlacementExamNotification"
+              <ng-container *ngIf="isPlacementTestRequestNotification"
+                >Nueva solicitud de placement test</ng-container
+              >
+              <ng-container *ngIf="isSpeakingPlacementRequestNotification"
+                >Nueva solicitud de test de speaking</ng-container
+              >
+              <ng-container
+                *ngIf="
+                  isPlacementExamNotification &&
+                  !isPlacementTestRequestNotification &&
+                  !isSpeakingPlacementRequestNotification
+                "
                 >Nueva solicitud de examen de ubicación</ng-container
               >
               <ng-container *ngIf="isDemoClassNotification"
@@ -325,8 +412,20 @@
               >
             </h3>
             <p class="request-lead-card__subtitle">
-              <ng-container *ngIf="isPlacementExamNotification">
-                Un asesor registró un lead para evaluar su nivel. Revisa los datos y coordina la sesión de ubicación.
+              <ng-container *ngIf="isPlacementTestRequestNotification">
+                Asigna instructor y enlace del examen para agendar. El lead recibirá el enlace por correo.
+              </ng-container>
+              <ng-container *ngIf="isSpeakingPlacementRequestNotification">
+                Un asesor registró un lead para speaking. Revisa la franja solicitada y asigna instructor.
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  isPlacementExamNotification &&
+                  !isPlacementTestRequestNotification &&
+                  !isSpeakingPlacementRequestNotification
+                "
+              >
+                Un asesor registró un lead para evaluar su nivel. Revisa los datos y coordina la sesión.
               </ng-container>
               <ng-container *ngIf="isDemoClassNotification">
                 Un asesor registró un lead para una clase de prueba o cortesía. Revisa los datos y coordina la sesión.
@@ -367,6 +466,38 @@
             <ng-container *ngIf="isDemoClassNotification">Datos de la clase</ng-container>
           </h4>
           <div class="request-lead-card__grid">
+            <div class="request-lead-field" *ngIf="placementExamSubtypeLabel">
+              <span class="request-lead-field__label">Tipo de examen</span>
+              <strong class="request-lead-field__value">{{ placementExamSubtypeLabel }}</strong>
+            </div>
+            <div class="request-lead-field" *ngIf="requestLead.leadSchedulingRequestId">
+              <span class="request-lead-field__label">N.º solicitud</span>
+              <strong class="request-lead-field__value">#{{ requestLead.leadSchedulingRequestId }}</strong>
+            </div>
+            <div
+              class="request-lead-field request-lead-field--span"
+              *ngIf="isSpeakingPlacementRequestNotification && requestLead.scheduledDate"
+            >
+              <span class="request-lead-field__label">Fecha solicitada</span>
+              <strong class="request-lead-field__value">{{
+                formatLeadSchedulingDate(requestLead.scheduledDate)
+              }}</strong>
+            </div>
+            <div
+              class="request-lead-field"
+              *ngIf="
+                isSpeakingPlacementRequestNotification && requestLead.scheduledHour != null
+              "
+            >
+              <span class="request-lead-field__label">Hora solicitada (24 h)</span>
+              <strong class="request-lead-field__value">{{
+                formatLeadSchedulingHour(requestLead.scheduledHour)
+              }}</strong>
+            </div>
+            <div class="request-lead-field request-lead-field--span" *ngIf="requestLead.requestNotes">
+              <span class="request-lead-field__label">Notas del solicitante</span>
+              <strong class="request-lead-field__value">{{ requestLead.requestNotes }}</strong>
+            </div>
             <div class="request-lead-field" *ngIf="requestLead.stageLabel">
               <span class="request-lead-field__label">Etapa</span>
               <strong class="request-lead-field__value">{{ requestLead.stageLabel }}</strong>

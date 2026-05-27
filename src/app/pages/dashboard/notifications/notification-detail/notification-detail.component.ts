@@ -26,6 +26,7 @@ import { Stage,  } from '../../../../services/dtos/student.dto';
 import { StagesService } from '../../../../services/stages.service';
 import { StudentsService } from '../../../../services/students.service';
 import { sanitizeNotificationBody } from '../../../../shared/utils/notification-message.util';
+import { isPlacementTestExam } from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
   selector: 'app-notification-detail',
@@ -278,6 +279,42 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.notification?.message?.lead ?? null;
   }
 
+  get placementExamSubtypeLabel(): string | null {
+    if (!this.isPlacementExamNotification || !this.requestLead) return null;
+    const lead = this.requestLead;
+    const label = lead.placementExamTypeLabel?.trim();
+    if (label) return label;
+    if (lead.placementExamType === 'PLACEMENT_TEST') return 'Placement test';
+    if (lead.placementExamType === 'SPEAKING_TEST') return 'Test de speaking';
+    return null;
+  }
+
+  get isPlacementTestRequestNotification(): boolean {
+    const lead = this.requestLead;
+    return (
+      !!lead &&
+      this.isPlacementExamNotification &&
+      lead.placementExamType === 'PLACEMENT_TEST'
+    );
+  }
+
+  get isSpeakingPlacementRequestNotification(): boolean {
+    const lead = this.requestLead;
+    return (
+      !!lead &&
+      this.isPlacementExamNotification &&
+      lead.placementExamType !== 'PLACEMENT_TEST'
+    );
+  }
+
+  get assignedIsPlacementTest(): boolean {
+    if (!this.isPlacementSchedulingAssignment) return false;
+    return isPlacementTestExam(
+      'PLACEMENT_EXAM',
+      this.leadSchedulingAssignedSummary.placementExamType,
+    );
+  }
+
   get isLeadSchedulingAssignedNotification(): boolean {
     return this.notification?.message?.kind === 'lead-scheduling-assigned';
   }
@@ -388,6 +425,8 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
           : parsed.scheduledHour ?? undefined,
       status: (raw?.status ?? parsed.status ?? undefined)?.toUpperCase(),
       requestKind: raw?.requestKind ?? parsed.requestKind ?? undefined,
+      placementExamType: raw?.placementExamType,
+      examLink: raw?.examLink ?? undefined,
     };
   }
 
