@@ -26,7 +26,7 @@
 }
 
 .announcement-modal__content.square {
-  max-width: 420px;
+  max-width: 620px;
 }
 
 .announcement-modal__close {
@@ -82,8 +82,10 @@
 
 /* square */
 .announcement-modal__media.square {
-  width: 320px;
-  height: 320px;
+  width: 600px;
+  height: 600px;
+  max-width: 90vw;
+  max-height: 80vh;
   margin: 0 auto;
 }
 
@@ -209,47 +211,64 @@
   opacity: 0.7;
 }
 
-@media (min-width: 768px) {
+// @media (min-width: 768px) {
 
-  /* contenedor más ancho para vertical */
-  .announcement-modal__content.vertical {
-    max-width: 350px;
-  }
+//   /* contenedor más ancho para vertical */
+//   .announcement-modal__content.vertical {
+//     max-width: 350px;
+//   }
 
-  /* media vertical más grande */
-  .announcement-modal__media.vertical {
-    width: 260px;
-    height: 480px;
-  }
+//   /* media vertical más grande */
+//   .announcement-modal__media.vertical {
+//     width: 260px;
+//     height: 480px;
+//   }
 
-   .announcement-modal__content.square {
-    max-width: 480px;
-  }
+//    .announcement-modal__content.square {
+//     max-width: 620px;
+//   }
 
-  .announcement-modal__media.square {
-    width: 380px;
-    height: 380px;
-    margin: 0 auto;
-  }
+//   .announcement-modal__media.square {
+//     width: 600px;
+//     height: 600px;
+//     max-width: 90vw;
+//     max-height: 80vh;
+//     margin: 0 auto;
+//   }
 
-}
+// }
 
 
 /* =========================
    MOBILE
 ========================= */
 @media (max-width: 767px) {
-
-  .announcement-modal__media.square {
-    width: 270px;
-    height: 270px;
+  .announcement-modal {
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
   }
 
-   .announcement-modal__media.horizontal {
-    width: 280px;
-    max-width: 300px;
-    aspect-ratio: 16 / 9;
+  .announcement-modal__content.square {
+    width: 100%;
+    max-width: 100%;
+    padding: 44px 0 20px;
+  }
+
+  .announcement-modal__content.square {
+      max-width: 400px;
+    }
+
+  .announcement-modal__media.square {
+    width: min(390px, 96vw);
+    height: min(390px, 96vw);
     margin: 0 auto;
   }
 
+  .announcement-modal__media.horizontal {
+    width: min(340px, 92vw);
+    max-width: 340px;
+    aspect-ratio: 16 / 9;
+    margin: 0 auto;
+  }
 }
