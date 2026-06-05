@@ -75,6 +75,8 @@ export interface DemoClassSummary {
   stageId: number;
   leadName: string;
   courtesyClassHours: number;
+  requestNotes?: string;
+  leadSchedulingRequestId?: number;
 }
 
 export interface NotificationSummary {
@@ -90,6 +92,8 @@ export interface LeadSchedulingAssignedSummary {
   scheduledDate?: string;
   scheduledHour?: number;
   status?: string;
+  /** Notas del requerimiento (S2S / solicitud original). */
+  requestNotes?: string;
   /** Tipo de solicitud: cortesía/demo o examen de ubicación. */
   requestKind?: LeadSchedulingNotificationRequestKind;
   placementExamType?: 'PLACEMENT_TEST' | 'SPEAKING_TEST' | null;

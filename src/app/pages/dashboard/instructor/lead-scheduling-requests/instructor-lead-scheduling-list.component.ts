@@ -14,6 +14,7 @@ import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message
 import {
   leadSchedulingKindLabel,
   leadSchedulingScheduleSummary,
+  requestNotesPreview,
 } from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
@@ -285,6 +286,10 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
 
   slotText(row: LeadSchedulingRequestRow): string {
     return leadSchedulingScheduleSummary(row);
+  }
+
+  notesPreview(row: LeadSchedulingRequestRow): string | null {
+    return requestNotesPreview(row.requestNotes, 56);
   }
 
   private scheduledYyyyMmDd(row: LeadSchedulingRequestRow): string {

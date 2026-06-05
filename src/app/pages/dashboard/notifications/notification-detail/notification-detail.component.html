@@ -209,6 +209,16 @@
               >
             </strong>
           </div>
+
+          <div
+            class="lead-scheduling-field lead-scheduling-field--span"
+            *ngIf="leadSchedulingAssignedSummary.requestNotes"
+          >
+            <span class="lead-scheduling-field__label">Notas del requerimiento</span>
+            <strong class="lead-scheduling-field__value lead-scheduling-field__value--multiline">{{
+              leadSchedulingAssignedSummary.requestNotes
+            }}</strong>
+          </div>
         </div>
 
         <div class="lead-scheduling-card__next" *ngIf="!isLeadSchedulingCancelledNotification">
@@ -476,7 +486,10 @@
             </div>
             <div
               class="request-lead-field request-lead-field--span"
-              *ngIf="isSpeakingPlacementRequestNotification && requestLead.scheduledDate"
+              *ngIf="
+                (isSpeakingPlacementRequestNotification || isDemoClassNotification) &&
+                requestLead.scheduledDate
+              "
             >
               <span class="request-lead-field__label">Fecha solicitada</span>
               <strong class="request-lead-field__value">{{
@@ -486,7 +499,8 @@
             <div
               class="request-lead-field"
               *ngIf="
-                isSpeakingPlacementRequestNotification && requestLead.scheduledHour != null
+                (isSpeakingPlacementRequestNotification || isDemoClassNotification) &&
+                requestLead.scheduledHour != null
               "
             >
               <span class="request-lead-field__label">Hora solicitada (24 h)</span>
@@ -496,7 +510,9 @@
             </div>
             <div class="request-lead-field request-lead-field--span" *ngIf="requestLead.requestNotes">
               <span class="request-lead-field__label">Notas del solicitante</span>
-              <strong class="request-lead-field__value">{{ requestLead.requestNotes }}</strong>
+              <strong class="request-lead-field__value request-lead-field__value--multiline">{{
+                requestLead.requestNotes
+              }}</strong>
             </div>
             <div class="request-lead-field" *ngIf="requestLead.stageLabel">
               <span class="request-lead-field__label">Etapa</span>
@@ -547,8 +563,24 @@
           </div>
         </div>
 
-        <div class="request-lead-card__actions" *ngIf="showPlacementExamListLink">
-          <button type="button" class="request-lead-card__cta" (click)="goToPlacementExamList()">
+        <div
+          class="request-lead-card__actions"
+          *ngIf="showPlacementExamListLink || showLeadRequestAdminAction"
+        >
+          <button
+            type="button"
+            class="request-lead-card__cta"
+            *ngIf="showLeadRequestAdminAction"
+            (click)="goToLeadRequestAdminDetail()"
+          >
+            Gestionar solicitud
+          </button>
+          <button
+            type="button"
+            class="request-lead-card__cta request-lead-card__cta--secondary"
+            *ngIf="showPlacementExamListLink"
+            (click)="goToPlacementExamList()"
+          >
             Ver listado de exámenes de ubicación
           </button>
         </div>

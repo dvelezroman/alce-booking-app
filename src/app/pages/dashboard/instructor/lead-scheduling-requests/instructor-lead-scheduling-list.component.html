@@ -144,7 +144,15 @@
                 statusText(row.status)
               }}</span>
             </td>
-            <td>{{ row.firstName }} {{ row.lastName }}</td>
+            <td class="lead-cell">
+              <span class="lead-cell__name">{{ row.firstName }} {{ row.lastName }}</span>
+              <span
+                *ngIf="notesPreview(row) as notes"
+                class="lead-cell__notes"
+                [title]="row.requestNotes ?? ''"
+                >{{ notes }}</span
+              >
+            </td>
             <td>{{ slotText(row) }}</td>
             <td>
               <a

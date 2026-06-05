@@ -12,6 +12,7 @@ import {
   LeadSchedulingAssignedSummary,
   LeadSchedulingNotificationRequestKind,
   DemoClassLead,
+  DemoClassSummary,
 } from '../../../../services/dtos/notification.dto';
 import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 import { selectUserData } from '../../../../store/user.selector';
@@ -424,10 +425,33 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
           ? raw.scheduledHour
           : parsed.scheduledHour ?? undefined,
       status: (raw?.status ?? parsed.status ?? undefined)?.toUpperCase(),
+      requestNotes: raw?.requestNotes?.trim() || undefined,
       requestKind: raw?.requestKind ?? parsed.requestKind ?? undefined,
       placementExamType: raw?.placementExamType,
       examLink: raw?.examLink ?? undefined,
     };
+  }
+
+  get leadRequestSchedulingId(): number | null {
+    const fromLead = this.requestLead?.leadSchedulingRequestId;
+    if (typeof fromLead === 'number' && Number.isFinite(fromLead)) {
+      return fromLead;
+    }
+    const fromSummary = (
+      this.notification?.message?.summary as DemoClassSummary | undefined
+    )?.leadSchedulingRequestId;
+    if (typeof fromSummary === 'number' && Number.isFinite(fromSummary)) {
+      return fromSummary;
+    }
+    return null;
+  }
+
+  get showLeadRequestAdminAction(): boolean {
+    return (
+      this.userRole === UserRole.ADMIN &&
+      this.isLeadRequestNotification &&
+      this.leadRequestSchedulingId != null
+    );
   }
 
   get leadSchedulingAssignedId(): number | null {
@@ -500,6 +524,12 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
         queryParams,
       });
     }
+  }
+
+  goToLeadRequestAdminDetail(): void {
+    const id = this.leadRequestSchedulingId;
+    if (id == null) return;
+    void this.router.navigate(['/dashboard/admin/lead-scheduling-requests', id]);
   }
 
   goToAssignedLeadScheduling(): void {

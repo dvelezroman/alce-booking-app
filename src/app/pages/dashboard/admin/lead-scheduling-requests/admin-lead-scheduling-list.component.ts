@@ -14,6 +14,7 @@ import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message
 import {
   leadSchedulingKindLabel,
   leadSchedulingScheduleSummary,
+  requestNotesPreview,
 } from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
@@ -163,5 +164,9 @@ export class AdminLeadSchedulingListComponent implements OnInit {
     if (!u) return '—';
     const name = `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim();
     return name || u.email || `ID ${row.instructorId}`;
+  }
+
+  notesPreview(row: LeadSchedulingRequestRow): string | null {
+    return requestNotesPreview(row.requestNotes);
   }
 }

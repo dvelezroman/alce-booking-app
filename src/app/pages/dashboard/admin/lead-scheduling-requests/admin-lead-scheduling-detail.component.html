@@ -20,9 +20,27 @@
         <dd>{{ r.contactPhone }}</dd>
         <dt>Documento</dt>
         <dd>{{ r.idNumber || '—' }}</dd>
-        <dt>Notas de la solicitud</dt>
-        <dd class="pre">{{ r.requestNotes || '—' }}</dd>
+        <ng-container *ngIf="isDemoClass">
+          <dt>Horas de cortesía</dt>
+          <dd>{{ r.courtesyClassHours ?? '—' }}</dd>
+          <dt>Etapa</dt>
+          <dd>
+            <ng-container *ngIf="r.stage as st"
+              >{{ st.number }} — {{ st.description || '—' }}</ng-container
+            >
+            <ng-container *ngIf="!r.stage">—</ng-container>
+          </dd>
+          <dt>Fecha/hora solicitadas</dt>
+          <dd>{{ slotText(r) }}</dd>
+        </ng-container>
       </dl>
+      <div class="request-notes" *ngIf="r.requestNotes?.trim() as notes">
+        <h3 class="request-notes__title">Notas del requerimiento</h3>
+        <p class="request-notes__body pre">{{ notes }}</p>
+      </div>
+      <p class="hint request-notes--empty" *ngIf="!r.requestNotes?.trim()">
+        Sin notas adicionales del asesor o sistema externo.
+      </p>
     </article>
 
     <article class="card">

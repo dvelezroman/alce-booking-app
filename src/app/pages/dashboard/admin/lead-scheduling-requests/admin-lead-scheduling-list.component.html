@@ -67,6 +67,7 @@
             <th>Tipo</th>
             <th>Estado</th>
             <th>Lead</th>
+            <th>Notas</th>
             <th>Instructor</th>
             <th>Agenda / enlace</th>
             <th></th>
@@ -82,6 +83,15 @@
               }}</span>
             </td>
             <td>{{ row.firstName }} {{ row.lastName }}</td>
+            <td class="notes-cell">
+              <span
+                *ngIf="notesPreview(row) as notes"
+                class="notes-cell__text"
+                [title]="row.requestNotes ?? ''"
+                >{{ notes }}</span
+              >
+              <span *ngIf="!notesPreview(row)" class="notes-cell__empty">—</span>
+            </td>
             <td>{{ instructorLabel(row) }}</td>
             <td>{{ slotText(row) }}</td>
             <td>

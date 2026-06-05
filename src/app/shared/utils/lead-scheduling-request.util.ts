@@ -67,6 +67,17 @@ export function isSchedulingComplete(row: {
   );
 }
 
+/** Vista previa de notas en tablas (listados admin / instructor). */
+export function requestNotesPreview(
+  notes: string | null | undefined,
+  maxLen = 72,
+): string | null {
+  const t = notes?.trim();
+  if (!t) return null;
+  if (t.length <= maxLen) return t;
+  return `${t.slice(0, maxLen - 1)}…`;
+}
+
 export function leadSchedulingScheduleSummary(
   row: LeadSchedulingRequestRow,
 ): string {
