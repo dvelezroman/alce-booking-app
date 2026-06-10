@@ -1,7 +1,8 @@
 .wa-campaign-detail {
-  max-width: 920px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 1.25rem 1.5rem 2.5rem;
+  margin-top: 2.75rem;
 }
 
 .wa-campaign-detail__nav {
@@ -36,6 +37,9 @@
 }
 
 .wa-campaign-detail__hero {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
   padding: 1.25rem;
   margin-bottom: 1.5rem;
   background: #fff;
@@ -44,9 +48,30 @@
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
 
   h1 {
-    margin: 0.5rem 0 0.35rem;
-    font-size: 1.25rem;
+    margin: 0.45rem 0 0.35rem;
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #0f172a;
+    letter-spacing: -0.02em;
   }
+}
+
+.wa-campaign-detail__hero-icon {
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 12px;
+  background: #28336f;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  box-shadow: 0 4px 12px rgba(40, 51, 111, 0.18);
+}
+
+.wa-campaign-detail__hero-content {
+  min-width: 0;
 }
 
 .wa-campaign-detail__hero-top {
@@ -54,7 +79,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.55rem;
 
   time {
     font-size: 0.8rem;
@@ -63,10 +88,16 @@
 }
 
 .wa-campaign-detail__preview {
-  margin: 0 0 1rem;
+  margin: 0;
+  max-width: 46rem;
   font-size: 0.95rem;
   color: #334155;
-  line-height: 1.45;
+  line-height: 1.5;
+}
+
+.wa-campaign-detail__summary,
+.wa-campaign-detail__actions {
+  grid-column: 1 / -1;
 }
 
 .wa-campaign-detail__summary {
@@ -150,6 +181,28 @@
   font-size: 0.78rem;
   color: #64748b;
   margin-top: 0.2rem;
+}
+
+.wa-table__contact {
+  min-width: 180px;
+}
+
+.wa-table__contact-name {
+  display: block;
+  color: #0f172a;
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.wa-table__sub {
+  display: block;
+  max-width: 22rem;
+  font-size: 0.78rem;
+  color: #475569;
+  margin-top: 0.25rem;
+  line-height: 1.4;
 }
 
 .wa-table__error-inline {
@@ -286,3 +339,32 @@
     font-size: 0.82rem;
   }
 }
+
+@media (max-width: 640px) {
+  .wa-campaign-detail__hero {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+  }
+
+  .wa-campaign-detail__hero-content {
+    display: contents;
+  }
+
+  .wa-campaign-detail__hero-top {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .wa-campaign-detail__hero-content h1,
+  .wa-campaign-detail__preview {
+    grid-column: 1 / -1;
+    text-align: left;
+    margin-left: 0;
+  }
+
+  .wa-campaign-detail__preview {
+    max-width: 100%;
+  }
+}
+
+

@@ -11,18 +11,26 @@
 
   <ng-container *ngIf="campaign && !loading">
     <header class="wa-campaign-detail__hero">
-      <div class="wa-campaign-detail__hero-top">
-        <span class="wa-campaign-badge" [ngClass]="statusClass(campaign.overallStatus)">
-          {{ statusLabel[campaign.overallStatus] }}
-        </span>
-        <time [attr.datetime]="campaign.lastActivityAt">
-          Última actividad: {{ formatDate(campaign.lastActivityAt) }}
-        </time>
+      <div class="wa-campaign-detail__hero-icon" aria-hidden="true">
+        <i class="fas fa-chart-line"></i>
       </div>
-      <h1>Detalle de campaña</h1>
-      <p *ngIf="campaign.messagePreview" class="wa-campaign-detail__preview">
-        {{ campaign.messagePreview }}
-      </p>
+
+      <div class="wa-campaign-detail__hero-content">
+        <div class="wa-campaign-detail__hero-top">
+          <span class="wa-campaign-badge" [ngClass]="statusClass(campaign.overallStatus)">
+            {{ statusLabel[campaign.overallStatus] }}
+          </span>
+          <time [attr.datetime]="campaign.lastActivityAt">
+            Última actividad: {{ formatDate(campaign.lastActivityAt) }}
+          </time>
+        </div>
+
+        <h1>Detalle de campaña</h1>
+
+        <p *ngIf="campaign.messagePreview" class="wa-campaign-detail__preview">
+          {{ campaign.messagePreview }}
+        </p>
+      </div>
 
       <dl class="wa-campaign-detail__summary">
         <div>
@@ -88,9 +96,11 @@
           <tbody>
             <ng-container *ngFor="let job of campaign.jobs; trackBy: trackByJobId">
               <tr>
-                <td>
-                  <strong>{{ job.contact }}</strong>
-                  <span *ngIf="job.contentPreview" class="wa-table__sub">{{ job.contentPreview }}</span>
+                <td class="wa-table__contact">
+                  <strong class="wa-table__contact-name">{{ job.contact }}</strong>
+                  <span *ngIf="job.contentPreview" class="wa-table__sub">
+                    {{ job.contentPreview }}
+                  </span>
                 </td>
                 <td>
                   <span class="wa-badge" [ngClass]="jobBadgeClass(job.status)">
