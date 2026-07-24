@@ -11,7 +11,8 @@
 
 .time-step-header {
   min-height: 6.5rem;
-
+  justify-content: space-between;
+  gap: 1rem;
   display: flex;
   align-items: flex-start;
 
@@ -21,6 +22,27 @@
     1.25rem;
 
   border-bottom: 1px solid #eef0f4;
+}
+
+.time-step-toggle {
+  display: none;
+  appearance: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  color: #5144d9;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+
+  .material-icons {
+    font-size: 1.5rem;
+    transition:
+      transform 180ms ease;
+  }
 }
 
 .time-step-heading {
@@ -143,13 +165,21 @@
 
 @media (max-width: 480px) {
   .time-step-header {
+    align-items: center;
+
+    min-height: 5.25rem;
     padding:
       1rem
       1rem
       0.9rem;
+
+    border-bottom: 0;
+
+    cursor: default;
   }
 
   .time-step-heading {
+    align-items: flex-start;
     gap: 0.7rem;
   }
 
@@ -166,14 +196,35 @@
 
   .time-step-description {
     margin-top: 0.35rem;
-
     font-size: 0.74rem;
   }
 
+  .time-step-toggle {
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  .time-step-header--expanded {
+    border-bottom: 1px solid #eef0f4;
+
+    .time-step-toggle {
+      .material-icons {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
   .time-step-content {
+    max-height: 400px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding:
       1rem
       1rem
       1.15rem;
+  }
+
+  .time-step-content--collapsed {
+    display: none;
   }
 }

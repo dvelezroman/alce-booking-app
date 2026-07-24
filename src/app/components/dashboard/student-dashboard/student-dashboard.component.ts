@@ -459,7 +459,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   goToBooking(): void {
-    this.router.navigate(['/dashboard/booking']);
+    this.router.navigate(['/dashboard/booking-v2']);
   }
 
   goToInstructorEvaluations(): void {

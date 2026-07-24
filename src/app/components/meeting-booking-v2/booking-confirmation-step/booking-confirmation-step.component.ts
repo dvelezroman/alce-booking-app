@@ -2,7 +2,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -22,7 +24,8 @@ import { Mode } from '../../../services/dtos/student.dto';
   templateUrl: './booking-confirmation-step.component.html',
   styleUrl: './booking-confirmation-step.component.scss',
 })
-export class BookingConfirmationStepComponent {
+export class BookingConfirmationStepComponent implements OnChanges {
+
   @Input() dateLabel = '';
   @Input() selectedTimeSlot: BookingTimeSlot | null = null;
   @Input() selectedMode: Mode | null = null;
@@ -40,6 +43,26 @@ export class BookingConfirmationStepComponent {
 
   @Output() clearSelection =
     new EventEmitter<void>();
+
+  isConfirmationExpanded = false
+
+  ngOnChanges( changes: SimpleChanges ): void {
+    const dateChanged = changes['dateLabel'];
+    const timeChanged = changes['selectedTimeSlot'];
+
+    if (
+      (dateChanged || timeChanged) &&
+      this.dateLabel &&
+      this.selectedTimeSlot
+    ) {
+      this.isConfirmationExpanded = true;
+    }
+  }
+
+  toggleConfirmation(): void {
+    this.isConfirmationExpanded =
+      !this.isConfirmationExpanded
+  }
 
   get timeLabel(): string {
     return (

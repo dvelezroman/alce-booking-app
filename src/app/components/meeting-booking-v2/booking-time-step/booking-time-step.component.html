@@ -2,7 +2,12 @@
   class="booking-time-step"
   aria-labelledby="booking-time-step-title"
 >
-  <header class="time-step-header">
+  <header
+    class="time-step-header"
+    [class.time-step-header--expanded]="
+      isTimeStepExpanded
+    "
+  >
     <div class="time-step-heading">
       <div
         class="time-step-number"
@@ -25,7 +30,7 @@
         >
           Horarios disponibles para
           <strong>
-            {{ selectedDateLabel }}
+            {{ selectedDateTimeLabel }}
           </strong>
         </p>
 
@@ -37,12 +42,32 @@
         </ng-template>
       </div>
     </div>
+
+    <button
+      type="button"
+      class="time-step-toggle"
+      (click)="toggleTimeStep()"
+      [attr.aria-expanded]="isTimeStepExpanded"
+      aria-controls="booking-time-step-content"
+      aria-label="Mostrar u ocultar horarios"
+    >
+      <span
+        class="material-icons"
+        aria-hidden="true"
+      >
+        expand_more
+      </span>
+    </button>
   </header>
 
   <div
+    id="booking-time-step-content"
     class="time-step-content"
     [class.time-step-content-disabled]="
       !selectedDayInfo
+    "
+    [class.time-step-content--collapsed]="
+      !isTimeStepExpanded
     "
   >
     <app-booking-time-list

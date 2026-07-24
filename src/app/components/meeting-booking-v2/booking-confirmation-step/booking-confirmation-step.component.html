@@ -2,7 +2,12 @@
   class="booking-confirmation-step"
   aria-labelledby="booking-confirmation-title"
 >
-  <header class="confirmation-header">
+  <header
+    class="confirmation-header"
+    [class.confirmation-header--expanded]="
+      isConfirmationExpanded
+    "
+  >
     <div class="confirmation-heading">
       <span
         class="confirmation-step-number"
@@ -24,9 +29,31 @@
         </p>
       </div>
     </div>
+
+    <button
+      type="button"
+      class="confirmation-toggle"
+      (click)="toggleConfirmation()"
+      [attr.aria-expanded]="isConfirmationExpanded"
+      aria-controls="booking-confirmation-content"
+      aria-label="Mostrar u ocultar confirmación"
+    >
+      <span
+        class="material-icons"
+        aria-hidden="true"
+      >
+        expand_more
+      </span>
+    </button>
   </header>
 
-  <div class="confirmation-content">
+  <div 
+    id="booking-confirmation-content"
+    class="confirmation-content"
+    [class.confirmation-content--collapsed]="
+      !isConfirmationExpanded
+    "
+  >
     <app-booking-mode-selector
       [selectedMode]="selectedMode"
       [onlineDisabled]="onlineDisabled"

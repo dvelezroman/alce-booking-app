@@ -10,7 +10,6 @@
   align-items: center;
   min-height: 98px;
   padding: 13px 16px 13px 13px;
-
   overflow: visible;
 
   background: #ffffff;
@@ -22,6 +21,7 @@
     0 2px 6px rgba(28, 39, 76, 0.02);
 
   transition:
+    background-color 180ms ease,
     border-color 180ms ease,
     box-shadow 180ms ease,
     transform 180ms ease,
@@ -35,8 +35,8 @@
   }
 
   &.meeting-card-past {
-    background: #f4f5f6;
-    border-color: #e2e8f0;
+    background: #fafbfc;
+    border-color: #e7ebf2;
   }
 }
 
@@ -264,6 +264,14 @@
 .meeting-mode-badge-presential {
   color: #339442;
   background: #eaf7eb;
+}
+
+.meeting-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  min-width: 0;
 }
 
 .meeting-actions {
@@ -577,17 +585,24 @@
 
 @media screen and (max-width: 650px) {
   .meeting-card {
-    grid-template-columns: 50px minmax(0, 1fr);
+    grid-template-columns:
+      50px
+      minmax(0, 1fr)
+      auto;
+
     align-items: start;
-    gap: 13px;
+    column-gap: 13px;
+    row-gap: 16px;
 
     min-height: auto;
     padding: 14px;
-
     border-radius: 13px;
   }
 
   .meeting-mode-icon {
+    grid-column: 1;
+    grid-row: 1;
+
     width: 48px;
     height: 48px;
 
@@ -598,6 +613,9 @@
   }
 
   .meeting-date {
+    grid-column: 2;
+    grid-row: 1;
+
     align-items: flex-start;
     padding: 0;
     text-align: left;
@@ -618,9 +636,13 @@
 
   .meeting-information {
     grid-column: 1 / -1;
+    grid-row: 2;
+
     flex-direction: column;
     align-items: flex-start;
     gap: 11px;
+
+    width: 100%;
     padding: 2px 0 0;
   }
 
@@ -639,18 +661,43 @@
     font-size: 10px;
   }
 
-  .meeting-mode-badge {
-    min-width: auto;
+  .meeting-actions {
+    display: contents;
   }
 
-  .meeting-actions {
-    grid-column: 1 / -1;
-    align-items: center;
-    margin-top: 2px;
+  .meeting-badges {
+    grid-column: 3;
+    grid-row: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 7px;
+
+    min-width: 0;
+  }
+
+  .meeting-status,
+  .meeting-mode-badge {
+    min-width: 82px;
+    min-height: 25px;
+    padding: 5px 11px;
+    white-space: nowrap;
   }
 
   .meeting-action-buttons {
-    margin-left: auto;
+    grid-column: 1 / -1;
+    grid-row: 3;
+
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .details-button {
+    flex: 1;
   }
 }
 

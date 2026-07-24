@@ -324,4 +324,6 @@ export class BookingTimeListComponent
 
     return `${slot.label} / ${slot.localhour}`;
   }
+
+  
 }
