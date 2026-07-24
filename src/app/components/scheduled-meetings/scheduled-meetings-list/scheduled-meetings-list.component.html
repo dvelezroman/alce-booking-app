@@ -42,16 +42,28 @@
 
   <ng-template #meetingsContent>
     <ng-container *ngIf="meetings.length > 0; else emptyState">
-      <app-scheduled-meeting-card
+      <ng-container
         *ngFor="
-          let meeting of meetings;
+          let meeting of sortedMeetings;
+          let isFirst = first;
           trackBy: trackByMeetingId
         "
-        [meeting]="meeting"
-        (viewDetails)="onViewDetails($event)"
-        (openOptions)="onOpenOptions($event)"
-        (deleteMeeting)="onDeleteMeeting($event)"
-      ></app-scheduled-meeting-card>
+      >
+        <div
+          class="scheduled-meeting-item"
+          [class.scheduled-meeting-item-today]="
+            isFirst &&
+            isTodayUpcomingMeeting(meeting)
+          "
+        >
+          <app-scheduled-meeting-card
+            [meeting]="meeting"
+            (viewDetails)="onViewDetails($event)"
+            (openOptions)="onOpenOptions($event)"
+            (deleteMeeting)="onDeleteMeeting($event)"
+          ></app-scheduled-meeting-card>
+        </div>
+      </ng-container>
     </ng-container>
   </ng-template>
 

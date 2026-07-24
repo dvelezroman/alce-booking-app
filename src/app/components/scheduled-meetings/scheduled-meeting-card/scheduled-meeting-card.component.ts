@@ -144,8 +144,6 @@ export class ScheduledMeetingCardComponent {
       )
     }
 
-    
-
     const firstStudyContent =
       this.meeting?.studyContent?.[0] as {
         name?: string
@@ -408,8 +406,6 @@ export class ScheduledMeetingCardComponent {
     this.openOptions.emit(this.meeting)
   }
 
-  
-
   private formatEnumValue(
     value: string
   ): string {
@@ -460,5 +456,35 @@ export class ScheduledMeetingCardComponent {
       Date.now() - 5 * 60 * 60 * 1000
 
     return meetingDate.getTime() < now
+  }
+
+  get isTodayMeeting(): boolean {
+    const rawDate =
+      this.meeting?.localdate ??
+      this.meeting?.date
+
+    if (!rawDate) {
+      return false
+    }
+
+    const meetingDate = new Date(rawDate)
+
+    if (Number.isNaN(meetingDate.getTime())) {
+      return false
+    }
+
+    const now =
+      new Date(
+        Date.now() - 5 * 60 * 60 * 1000
+      )
+
+    return (
+      meetingDate.getUTCFullYear() ===
+        now.getUTCFullYear() &&
+      meetingDate.getUTCMonth() ===
+        now.getUTCMonth() &&
+      meetingDate.getUTCDate() ===
+        now.getUTCDate()
+    )
   }
 }

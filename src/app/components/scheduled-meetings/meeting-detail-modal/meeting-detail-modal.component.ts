@@ -201,6 +201,7 @@ export class MeetingDetailModalComponent
       this.linkStatus = 'not-available'
       return
     }
+    
 
     const meetingStart =
       this.getMeetingStartTimestamp(meeting)
@@ -217,8 +218,10 @@ export class MeetingDetailModalComponent
       6 * 60 * 1000
 
     const now = Date.now()
+
     const availableFrom =
       meetingStart - fiveMinutesBefore
+
     const availableUntil =
       meetingStart + sixMinutesAfter
 

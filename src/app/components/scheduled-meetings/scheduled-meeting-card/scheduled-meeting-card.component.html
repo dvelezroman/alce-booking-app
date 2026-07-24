@@ -62,9 +62,14 @@
       {{ weekday }}
     </span>
 
-    <strong class="meeting-day">
-      {{ day }}
-    </strong>
+    <span
+      class="meeting-date-day"
+      [class.meeting-date-day-today]="
+        isTodayMeeting
+      "
+    >
+      {{ isTodayMeeting ? 'HOY' : day }}
+    </span>
 
     <span class="meeting-month">
       {{ monthAndYear }}
