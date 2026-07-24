@@ -59,6 +59,10 @@ export class BookingCalendarComponent implements OnInit, OnChanges {
   canGoBack = false;
   canGoForward = true;
 
+  isLegendExpanded = false;
+
+  toggleLegend(): void { this.isLegendExpanded = !this.isLegendExpanded }
+
   ngOnInit(): void {
     this.initializeCalendar();
   }

@@ -95,44 +95,71 @@
   </div>
 </section>
 
-<div class="calendar-legend">
-  <div class="legend-item">
+<div class="calendar-legend-wrapper">
+
+  <button
+    type="button"
+    class="calendar-legend-toggle"
+    (click)="toggleLegend()"
+    [attr.aria-expanded]="isLegendExpanded"
+    aria-controls="calendar-legend-content"
+  >
+
+    <span>Ver referencias</span>
+
     <span
-      class="legend-color legend-available"
-    ></span>
+      class="material-icons"
+      aria-hidden="true"
+    >
+      expand_more
+    </span>
+  </button>
 
-    <span>Disponible</span>
-  </div>
+  <div
+    id="calendar-legend-content"
+    class="calendar-legend"
+    [class.calendar-legend--collapsed]="
+      !isLegendExpanded
+    "
+  >
+    <div class="legend-item">
+      <span
+        class="legend-color legend-available"
+      ></span>
 
-  <div class="legend-item">
-    <span
-      class="legend-color legend-partial"
-    ></span>
+      <span>Disponible</span>
+    </div>
 
-    <span>Horas no disponibles</span>
-  </div>
+    <div class="legend-item">
+      <span
+        class="legend-color legend-partial"
+      ></span>
 
-  <div class="legend-item">
-    <span
-      class="legend-color legend-disabled"
-    ></span>
+      <span>Horas no disponibles</span>
+    </div>
 
-    <span>Día no disponible</span>
-  </div>
+    <div class="legend-item">
+      <span
+        class="legend-color legend-disabled"
+      ></span>
 
-  <div class="legend-item">
-    <span
-      class="legend-color legend-online"
-    ></span>
+      <span>Día no disponible</span>
+    </div>
 
-    <span>Online no disponible</span>
-  </div>
+    <div class="legend-item">
+      <span
+        class="legend-color legend-online"
+      ></span>
 
-  <div class="legend-item">
-    <span
-      class="legend-color legend-presencial"
-    ></span>
+      <span>Online no disponible</span>
+    </div>
 
-    <span>Presencial no disponible</span>
+    <div class="legend-item">
+      <span
+        class="legend-color legend-presencial"
+      ></span>
+
+      <span>Presencial no disponible</span>
+    </div>
   </div>
 </div>
