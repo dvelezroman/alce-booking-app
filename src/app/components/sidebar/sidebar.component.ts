@@ -68,7 +68,8 @@ navItems: SidebarNavItem[] = [
   { icon: 'home', text: 'Inicio', route: '/dashboard/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
   { icon: 'user', text: 'Perfil', route: '/dashboard/profile', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
   { icon: 'event', text: 'Mis Clases', route: '/dashboard/meetings-student', roles: [UserRole.STUDENT] },
-  { icon: 'booking', text: 'Clases y Agendamientos', route: '/dashboard/booking', roles: [UserRole.STUDENT] },
+  { icon: 'booking', text: 'Agendamientos', route: '/dashboard/booking', roles: [UserRole.STUDENT] },
+  { icon: 'booking', text: 'Mis clases agendadas', route: '/dashboard/scheduled-meetings', roles: [UserRole.STUDENT] },
   { icon: 'test', text: 'Evaluar Clase', route: '/dashboard/instructor-evaluations', roles: [UserRole.STUDENT] },
   { icon: 'group', text: 'Agenda', route: '/dashboard/searching-meeting', roles: [UserRole.ADMIN] },
   { icon: 'school', text: 'Usuarios', route: '/dashboard/searching-students', roles: [UserRole.ADMIN] },
@@ -187,6 +188,7 @@ navItems: SidebarNavItem[] = [
       icon: 'event',
       items: [
         this.findNavItemByRoute('/dashboard/booking'),
+        this.findNavItemByRoute('/dashboard/scheduled-meetings'),
         this.findNavItemByRoute('/dashboard/searching-meeting'),
         this.findNavItemByRoute('/dashboard/searching-meeting-instructor'),
         this.findNavItemByRoute('/dashboard/instructor/lead-scheduling-requests'),

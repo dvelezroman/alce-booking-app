@@ -1,0 +1,72 @@
+<header class="scheduled-meetings-header">
+  <div class="header-layout">
+
+    <!-- Información principal -->
+    <div class="header-left">
+      <div class="header-copy">
+        <h1 class="header-title">
+          Mis clases agendadas
+        </h1>
+
+        <p class="header-description">
+          Consulta y gestiona todas tus clases programadas.
+        </p>
+      </div>
+    </div>
+
+    <!-- Usuario y acciones -->
+    <div class="header-right">
+      <div class="user-actions">
+
+        <!-- Información del estudiante -->
+        <div class="user-profile">
+          <div
+            class="user-avatar"
+            [attr.aria-label]="'Avatar de ' + userFullName"
+          >
+            {{ userInitials }}
+          </div>
+
+          <div class="user-information">
+            <p
+              class="user-name"
+              [title]="userFullName"
+            >
+              {{ userFullName }}
+            </p>
+
+            <p class="user-role">
+              {{ userRoleLabel }}
+            </p>
+          </div>
+
+          <span
+            class="profile-chevron"
+            aria-hidden="true"
+          >
+            <span class="material-icons">
+              keyboard_arrow_down
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Nueva clase -->
+      <button
+        type="button"
+        class="schedule-button"
+        (click)="navigateToMeetingBooking()"
+        >
+        <span
+            class="material-icons"
+            aria-hidden="true"
+        >
+            calendar_month
+        </span>
+
+        <span>Agendar nueva clase</span>
+        </button>
+    </div>
+
+  </div>
+</header>

@@ -59,6 +59,7 @@ import { InstructorLeadSchedulingListComponent } from './instructor/lead-schedul
 import { WhatsappNotificadorComponent } from './admin/whatsapp-notificador/whatsapp-notificador.component';
 import { WhatsappCampaignHistoryComponent } from './admin/whatsapp-campaigns/whatsapp-campaign-history.component';
 import { WhatsappCampaignDetailComponent } from './admin/whatsapp-campaigns/whatsapp-campaign-detail.component';
+import { ScheduledMeetingsComponent } from './scheduled-meetings/scheduled-meetings.component';
 
 
 export const dashboardRoutes: Routes = [
@@ -74,6 +75,7 @@ export const dashboardRoutes: Routes = [
   { path: 'stage-assessment-resources', component: StageAssessmentResourcesComponent },
   { path: 'assessment-types', component: AssessmentTypesComponent },
   { path: 'meetings-student', component: MeetingsStudentComponent },
+  { path: 'scheduled-meetings', component: ScheduledMeetingsComponent },
   { path: 'meeting-evaluations', component: MeetingEvaluationsComponent },
   { path: 'evaluation-statistics', component: EvaluationStatisticsComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent },

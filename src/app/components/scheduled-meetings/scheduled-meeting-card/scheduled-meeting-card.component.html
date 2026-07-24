@@ -1,0 +1,249 @@
+<article
+  class="meeting-card"
+  [ngClass]="cardClass"
+  [class.meeting-card--options-open]="isOptionsMenuOpen"
+>
+  <div
+    class="meeting-mode-icon"
+    [class.meeting-mode-icon-online]="isOnline"
+    [class.meeting-mode-icon-presential]="!isOnline"
+  >
+    <svg
+      *ngIf="isOnline; else presentialIcon"
+      width="29"
+      height="29"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4 5.5C4 4.672 4.672 4 5.5 4h13c.828 0 1.5.672 1.5 1.5v9c0 .828-.672 1.5-1.5 1.5h-13A1.5 1.5 0 0 1 4 14.5v-9Z"
+        stroke="currentColor"
+        stroke-width="1.8"
+      />
+
+      <path
+        d="M2.5 19.5h19M9 16v3.5M15 16v3.5"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      />
+    </svg>
+
+    <ng-template #presentialIcon>
+      <svg
+        width="29"
+        height="29"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M4 21V8.5L12 4l8 4.5V21M2 21h20"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M8 11h2v2H8v-2Zm6 0h2v2h-2v-2Zm-6 4h2v2H8v-2Zm6 0h2v2h-2v-2ZM10 21v-3h4v3"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </ng-template>
+  </div>
+
+  <div class="meeting-date">
+    <span class="meeting-weekday">
+      {{ weekday }}
+    </span>
+
+    <strong class="meeting-day">
+      {{ day }}
+    </strong>
+
+    <span class="meeting-month">
+      {{ monthAndYear }}
+    </span>
+  </div>
+
+  <div class="meeting-divider"></div>
+
+  <div class="meeting-information">
+    <div class="meeting-main-information">
+      <strong class="meeting-hour">
+        {{ formattedHour }}
+      </strong>
+
+      <div class="meeting-title-row">
+        <span
+          class="meeting-indicator"
+          [class.meeting-indicator-online]="isOnline"
+          [class.meeting-indicator-presential]="!isOnline"
+        ></span>
+
+        <h3
+          class="meeting-title"
+          [title]="meetingTitle"
+        >
+          {{ meetingTitle }}
+        </h3>
+      </div>
+
+      <div class="meeting-instructor">
+        <span
+          class="instructor-avatar"
+          aria-hidden="true"
+        >
+          {{ instructorInitials }}
+        </span>
+
+        <span class="instructor-label">
+          Instructor:
+        </span>
+
+        <span class="instructor-name">
+          {{ instructorName }}
+        </span>
+      </div>
+    </div>
+
+    <span
+      class="meeting-mode-badge"
+      [class.meeting-mode-badge-online]="isOnline"
+      [class.meeting-mode-badge-presential]="!isOnline"
+    >
+      {{ modeLabel }}
+    </span>
+  </div>
+
+  <div class="meeting-actions">
+    <span
+      class="meeting-status"
+      [ngClass]="statusClass"
+    >
+      {{ statusLabel }}
+    </span>
+
+    <div class="meeting-action-buttons">
+        <button
+            type="button"
+            class="details-button"
+            (click)="onViewDetails()"
+            [disabled]="!isUpcomingMeeting"
+            aria-label="Ver detalles de la clase"
+        >
+            <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+            >
+            <path
+                d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+            />
+
+            <circle
+                cx="12"
+                cy="12"
+                r="2.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+            />
+            </svg>
+
+            <span>Ver detalles</span>
+        </button>
+
+        <div class="options-wrapper">
+            <button
+            type="button"
+            class="options-button"
+            (click)="toggleOptionsMenu($event)"
+            aria-label="Abrir opciones de la clase"
+            aria-haspopup="menu"
+            [attr.aria-expanded]="isOptionsMenuOpen"
+            >
+            <svg
+                width="19"
+                height="19"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+            >
+                <circle cx="12" cy="5" r="1.5" />
+                <circle cx="12" cy="12" r="1.5" />
+                <circle cx="12" cy="19" r="1.5" />
+            </svg>
+            </button>
+
+            <div
+            *ngIf="isOptionsMenuOpen"
+            class="options-menu"
+            role="menu"
+            (click)="$event.stopPropagation()"
+            >
+            <button
+                type="button"
+                class="options-menu-item options-menu-item--delete"
+                role="menuitem"
+                [disabled]="!canDeleteMeeting"
+                (click)="onDeleteMeeting($event)"
+            >
+                <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+                >
+                <path
+                    d="M4 7h16"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                />
+
+                <path
+                    d="M10 11v6M14 11v6"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                />
+
+                <path
+                    d="M6.5 7l.8 12h9.4l.8-12"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linejoin="round"
+                />
+
+                <path
+                    d="M9 7V4.8h6V7"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linejoin="round"
+                />
+                </svg>
+
+                <span>Eliminar clase</span>
+            </button>
+
+            <p
+                *ngIf="!canDeleteMeeting"
+                class="options-menu-message"
+            >
+                No se puede eliminar esta clase.
+            </p>
+            </div>
+        </div>
+        </div>
+  </div>
+</article>
