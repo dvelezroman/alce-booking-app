@@ -1,0 +1,138 @@
+<section class="booking-calendar">
+  <header class="month-selector">
+    <h3 class="month-label">
+      {{ selectedMonth }} {{ selectedYear }}
+    </h3>
+
+    <div class="month-navigation">
+      <button
+        type="button"
+        class="navigation-button"
+        [disabled]="!canGoBack"
+        (click)="prevMonth()"
+        aria-label="Mostrar mes anterior"
+      >
+        <i
+          class="fas fa-chevron-left"
+          aria-hidden="true"
+        ></i>
+      </button>
+
+      <button
+        type="button"
+        class="navigation-button"
+        [disabled]="!canGoForward"
+        (click)="nextMonth()"
+        aria-label="Mostrar mes siguiente"
+      >
+        <i
+          class="fas fa-chevron-right"
+          aria-hidden="true"
+        ></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="calendar">
+    <div class="calendar-header">
+      <span class="calendar-weekday">D</span>
+      <span class="calendar-weekday">L</span>
+      <span class="calendar-weekday">M</span>
+      <span class="calendar-weekday">M</span>
+      <span class="calendar-weekday">J</span>
+      <span class="calendar-weekday">V</span>
+      <span class="calendar-weekday">S</span>
+    </div>
+
+    <div
+      class="calendar-grid"
+      [ngClass]="calendarAnimationClass"
+    >
+      <button
+        *ngFor="let day of currentMonthDays"
+        type="button"
+        class="calendar-day"
+        [class.selected]="selectedDay === day.day"
+        [class.selectable]="isDaySelectable(day)"
+        [class.unselectable]="!isDaySelectable(day)"
+        [class.disabled]="day.isDisabled"
+        [class.partial-disabled]="
+          !day.isDisabled &&
+          day.hasDisabledHours
+        "
+        [class.mode-online]="
+          !day.isDisabled &&
+          day.restrictedMode === 'ONLINE'
+        "
+        [class.mode-presencial]="
+          !day.isDisabled &&
+          day.restrictedMode === 'PRESENCIAL'
+        "
+        [class.empty]="!day.day"
+        [class.sunday]="
+          day.dayOfWeek === 'DOMINGO'
+        "
+        [disabled]="
+          !day.day ||
+          !isScheduleEnabled ||
+          !isDaySelectable(day)
+        "
+        (click)="onDayClick(day)"
+        [attr.aria-label]="
+          day.day
+            ? 'Seleccionar día ' + day.day
+            : null
+        "
+        [attr.aria-pressed]="
+          day.day
+            ? selectedDay === day.day
+            : null
+        "
+      >
+        {{ day.day }}
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="calendar-legend">
+  <div class="legend-item">
+    <span
+      class="legend-color legend-available"
+    ></span>
+
+    <span>Disponible</span>
+  </div>
+
+  <div class="legend-item">
+    <span
+      class="legend-color legend-partial"
+    ></span>
+
+    <span>Horas no disponibles</span>
+  </div>
+
+  <div class="legend-item">
+    <span
+      class="legend-color legend-disabled"
+    ></span>
+
+    <span>Día no disponible</span>
+  </div>
+
+  <div class="legend-item">
+    <span
+      class="legend-color legend-online"
+    ></span>
+
+    <span>Online no disponible</span>
+  </div>
+
+  <div class="legend-item">
+    <span
+      class="legend-color legend-presencial"
+    ></span>
+
+    <span>Presencial no disponible</span>
+  </div>
+</div>

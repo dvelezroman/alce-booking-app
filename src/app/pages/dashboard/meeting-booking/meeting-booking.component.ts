@@ -471,6 +471,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   isMeetingDataValid() {
     return this.selectedDate && this.selectedTimeSlot;
   }
+  
   createBookingData(): CreateMeetingDto {
     if (!this.userData?.student) {
       throw new Error('Student data is required to create booking data.');

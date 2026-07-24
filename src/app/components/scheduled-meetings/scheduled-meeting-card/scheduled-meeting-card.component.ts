@@ -425,4 +425,40 @@ export class ScheduledMeetingCardComponent {
         (letter) => letter.toUpperCase()
       )
   }
+
+  get isPastMeeting(): boolean {
+    const rawDate =
+      this.meeting?.localdate ??
+      this.meeting?.date
+
+    if (!rawDate) {
+      return false
+    }
+
+    const meetingDate = new Date(rawDate)
+
+    if (Number.isNaN(meetingDate.getTime())) {
+      return false
+    }
+
+    const rawHour =
+      this.meeting?.localhour ??
+      this.meeting?.hour
+
+    if (
+      rawHour !== null &&
+      rawHour !== undefined
+    ) {
+      const hour = Number(rawHour)
+
+      if (!Number.isNaN(hour)) {
+        meetingDate.setHours(hour, 0, 0, 0)
+      }
+    }
+
+    const now =
+      Date.now() - 5 * 60 * 60 * 1000
+
+    return meetingDate.getTime() < now
+  }
 }

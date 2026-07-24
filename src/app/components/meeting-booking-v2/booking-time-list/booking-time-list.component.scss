@@ -1,0 +1,318 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.booking-time-list {
+  width: 100%;
+}
+
+.ecuador-time {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+
+  margin-bottom: 1.5rem;
+  padding: 0.65rem 0.85rem;
+
+  border: 1px solid #e3e1ff;
+  border-radius: 0.75rem;
+
+  background: #f1efff;
+  color: #5b4ed3;
+
+  font-size: 0.74rem;
+  line-height: 1;
+
+  strong {
+    font-weight: 700;
+    color: rgb(26, 26, 26);
+  }
+
+  span {
+    color: #6b7280;
+    font-weight: 500;
+  }
+}
+
+.time-slots {
+  width: 100%;
+  max-height: 31rem;
+  gap: 0.65rem;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: auto;
+
+  padding:
+    0.1rem
+    0.2rem
+    0.1rem
+    0;
+
+  scrollbar-width: thin;
+  scrollbar-color: #d5d2ef transparent;
+}
+
+.time-slots::-webkit-scrollbar {
+  width: 0.35rem;
+}
+
+.time-slots::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.time-slots::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #d5d2ef;
+}
+
+.time-slot {
+  position: relative;
+
+  width: 100%;
+  min-height: 2.85rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.65rem 2.5rem;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 0.65rem;
+
+  background: #ffffff;
+  color: #111827;
+
+  font: inherit;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.02);
+
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+
+  &:hover:not(:disabled):not(.selected) {
+    border-color: #c8c2fa;
+    background: #faf9ff;
+
+    box-shadow:
+      0 5px 14px rgba(85, 70, 210, 0.08);
+
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(91, 78, 211, 0.2);
+    outline-offset: 2px;
+  }
+
+  &.selected {
+    border-color: transparent;
+
+    background:
+      linear-gradient(
+        135deg,
+        #5144d9 0%,
+        #6857df 100%
+      );
+
+    color: #ffffff;
+
+    box-shadow:
+      0 8px 18px rgba(81, 68, 217, 0.2);
+  }
+
+  &.disabled {
+    border-color: #eceff3;
+    background: #f8fafc;
+    color: #9ca3af;
+
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.time-slot-label {
+  overflow: hidden;
+
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.2;
+
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.time-slot.selected .time-slot-label {
+  font-weight: 600;
+}
+
+.time-slot-check {
+  position: absolute;
+  top: 50%;
+  right: 0.65rem;
+
+  width: 1.35rem;
+  height: 1.35rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+  color: #5b4ed3;
+
+  font-size: 0.58rem;
+
+  transform: translateY(-50%);
+}
+
+.time-empty-state {
+  width: 100%;
+  min-height: 15rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.5rem 1rem;
+
+  border: 1px dashed #d9dce4;
+  border-radius: 1rem;
+
+  background: #fafafa;
+
+  text-align: center;
+
+  h3 {
+    margin: 0.9rem 0 0;
+
+    color: #252846;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  p {
+    max-width: 17rem;
+
+    margin: 0.45rem 0 0;
+
+    color: #6b7280;
+
+    font-size: 0.78rem;
+    line-height: 1.55;
+  }
+}
+
+.time-empty-icon {
+  width: 3rem;
+  height: 3rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.85rem;
+
+  background: #efedff;
+  color: #5b4ed3;
+
+  .material-icons {
+    font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .ecuador-time {
+    margin-bottom: 1.25rem;
+
+    font-size: 0.7rem;
+  }
+
+  .time-slots {
+    max-height: 31rem;
+    gap: 0.7rem;
+  }
+
+  .time-slot {
+    min-height: 3.25rem;
+
+    padding-inline:
+      2.75rem;
+
+    border-radius: 0.7rem;
+  }
+
+  .time-slot-label {
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ecuador-time {
+    width: 100%;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 1rem;
+  }
+
+  .time-slots {
+    max-height: none;
+
+    overflow: visible;
+
+    padding-right: 0;
+  }
+
+  .time-slot {
+    min-height: 3.1rem;
+
+    padding:
+      0.7rem
+      2.5rem;
+
+    border-radius: 0.65rem;
+  }
+
+  .time-slot-label {
+    font-size: 0.84rem;
+  }
+
+  .time-slot-check {
+    right: 0.7rem;
+
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .time-empty-state {
+    min-height: 15rem;
+
+    padding:
+      1.5rem
+      1rem;
+  }
+}

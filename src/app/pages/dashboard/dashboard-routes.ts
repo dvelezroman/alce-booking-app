@@ -60,6 +60,7 @@ import { WhatsappNotificadorComponent } from './admin/whatsapp-notificador/whats
 import { WhatsappCampaignHistoryComponent } from './admin/whatsapp-campaigns/whatsapp-campaign-history.component';
 import { WhatsappCampaignDetailComponent } from './admin/whatsapp-campaigns/whatsapp-campaign-detail.component';
 import { ScheduledMeetingsComponent } from './scheduled-meetings/scheduled-meetings.component';
+import { MeetingBookingV2Component } from './meeting-booking-v2/meeting-booking-v2.component';
 
 
 export const dashboardRoutes: Routes = [
@@ -68,6 +69,7 @@ export const dashboardRoutes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'register-complete', component: RegisterCompleteComponent },
   { path: 'booking', component: MeetingBookingComponent },
+  { path: 'booking-v2', component: MeetingBookingV2Component },
   { path: 'stage', component: StageComponent },
   { path: 'link', component: LinksComponent },
   { path: 'content', component: ContentComponent },

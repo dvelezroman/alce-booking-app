@@ -1,0 +1,66 @@
+<section
+  class="booking-time-step"
+  aria-labelledby="booking-time-step-title"
+>
+  <header class="time-step-header">
+    <div class="time-step-heading">
+      <div
+        class="time-step-number"
+        aria-hidden="true"
+      >
+        2
+      </div>
+
+      <div class="time-step-copy">
+        <h2
+          id="booking-time-step-title"
+          class="time-step-title"
+        >
+          Seleccione una hora
+        </h2>
+
+        <p
+          *ngIf="selectedDayInfo; else noSelectedDate"
+          class="time-step-description"
+        >
+          Horarios disponibles para
+          <strong>
+            {{ selectedDateLabel }}
+          </strong>
+        </p>
+
+        <ng-template #noSelectedDate>
+          <p class="time-step-description">
+            Selecciona primero un día para consultar
+            los horarios disponibles.
+          </p>
+        </ng-template>
+      </div>
+    </div>
+  </header>
+
+  <div
+    class="time-step-content"
+    [class.time-step-content-disabled]="
+      !selectedDayInfo
+    "
+  >
+    <app-booking-time-list
+      [selectedDayInfo]="selectedDayInfo"
+      [disabledDatesAndHours]="
+        disabledDatesAndHours
+      "
+      [ecuadorTime]="ecuadorTime"
+      [minAllowedHour]="minAllowedHour"
+      [userCity]="userCity"
+      [userMode]="userMode"
+      [userClassification]="
+        userClassification
+      "
+      [selectedTimeSlot]="selectedTimeSlot"
+      (timeSlotSelected)="
+        handleTimeSlotSelected($event)
+      "
+    />
+  </div>
+</section>

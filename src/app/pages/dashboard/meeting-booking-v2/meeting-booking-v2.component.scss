@@ -1,0 +1,113 @@
+:host {
+  display: block;
+
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.meeting-booking-page {
+  width: 100%;
+  min-height: 100vh;
+
+  padding:
+    1.5rem
+    2rem
+    2.5rem
+    calc(76px + 2rem);
+
+  background: #f7f8fc;
+  box-sizing: border-box;
+}
+
+.meeting-booking-content {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.booking-flow-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 0.95fr)
+    minmax(260px, 0.8fr)
+    minmax(300px, 0.95fr);
+
+  align-items: stretch;
+  gap: 1.25rem;
+
+  margin-top: 1.5rem;
+}
+
+.booking-flow-column {
+  min-width: 0;
+  overflow: hidden;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 1.25rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+.booking-date-column,
+.booking-time-column,
+.booking-confirmation-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-flow-column app-booking-date-step,
+.booking-flow-column app-booking-time-step,
+.booking-flow-column app-booking-confirmation-step {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+app-booking-help-banner {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+@media screen and (max-width: 1100px) {
+  .booking-flow-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(280px, 0.8fr);
+  }
+
+  .booking-confirmation-column {
+    grid-column: 1 / -1;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .meeting-booking-page {
+    padding: 1rem;
+  }
+
+  .booking-flow-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .booking-confirmation-column {
+    grid-column: auto;
+  }
+
+  .booking-flow-column {
+    border-radius: 1rem;
+  }
+
+  app-booking-help-banner {
+    margin-top: 1rem;
+  }
+}

@@ -1,0 +1,89 @@
+<section class="booking-time-list">
+  <div
+    *ngIf="!selectedDayInfo"
+    class="time-empty-state"
+  >
+    <div class="time-empty-icon">
+      <span class="material-icons">
+        calendar_month
+      </span>
+    </div>
+
+    <h3>Selecciona primero un día</h3>
+
+    <p>
+      Los horarios disponibles aparecerán aquí
+      después de elegir una fecha.
+    </p>
+  </div>
+
+  <ng-container *ngIf="selectedDayInfo">
+    <div class="ecuador-time">
+      <strong>Hora actual en Ecuador:</strong>
+      <span>{{ ecuadorTime }}</span>
+    </div>
+
+    <div
+      *ngIf="timeSlots.length > 0; else noTimeSlots"
+      class="time-slots"
+    >
+      <button
+        *ngFor="let time of timeSlots"
+        type="button"
+        class="time-slot"
+        [class.selected]="isSelected(time)"
+        [class.disabled]="time.isDisabled"
+        [disabled]="time.isDisabled"
+        [attr.title]="
+          time.isDisabled
+            ? 'Horario no disponible'
+            : 'Seleccionar ' + getTimeLabel(time)
+        "
+        [attr.aria-label]="
+          time.isDisabled
+            ? 'Horario no disponible'
+            : 'Seleccionar horario ' + getTimeLabel(time)
+        "
+        [attr.aria-pressed]="isSelected(time)"
+        (click)="onTimeSlotClick(time)"
+      >
+        <span class="time-slot-label">
+          <ng-container
+            *ngIf="!time.isDisabled; else disabledLabel"
+          >
+            {{ getTimeLabel(time) }}
+          </ng-container>
+
+          <ng-template #disabledLabel>
+            Horario no disponible
+          </ng-template>
+        </span>
+
+        <span
+          *ngIf="isSelected(time)"
+          class="time-slot-check"
+          aria-hidden="true"
+        >
+          <i class="fas fa-check"></i>
+        </span>
+      </button>
+    </div>
+
+    <ng-template #noTimeSlots>
+      <div class="time-empty-state">
+        <div class="time-empty-icon">
+          <span class="material-icons">
+            event_busy
+          </span>
+        </div>
+
+        <h3>Sin horarios disponibles</h3>
+
+        <p>
+          No existen horas disponibles para esta fecha.
+          Intenta seleccionar otro día.
+        </p>
+      </div>
+    </ng-template>
+  </ng-container>
+</section>

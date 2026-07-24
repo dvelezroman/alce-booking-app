@@ -90,7 +90,7 @@ export class ScheduledMeetingsSummaryComponent {
   }
 
   get upcomingMeetings(): number {
-    const now = Date.now()
+    const now = Date.now() - 5 * 60 * 60 * 1000
 
     return this.meetings.filter((meeting) => {
       const meetingDate =

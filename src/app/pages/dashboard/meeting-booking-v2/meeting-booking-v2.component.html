@@ -1,0 +1,97 @@
+<div class="meeting-booking-page">
+  <div class="meeting-booking-content">
+    <app-meeting-booking-header />
+
+    <app-booking-steps
+      [currentStep]="currentStep"
+      [selectedDate]="selectedDate"
+    />
+
+    <div class="booking-flow-grid">
+      <section class="booking-flow-column booking-date-column">
+        <app-booking-date-step
+          [disabledDates]="disabledDates"
+          [disabledDatesAndHours]="disabledDatesAndHours"
+          [userCity]="userData?.city ?? null"
+          [userMode]="userData?.student?.mode ?? null"
+          [userClassification]="
+            userData?.student?.studentClassification ?? null
+          "
+          [isScheduleEnabled]="isScheduleEnabled"
+          [resetSelectionTrigger]="resetCalendarSelectionTrigger"
+          [selectedDate]="selectedDate"
+          [selectedDayFormatted]="selectedDayFormatted"
+          [isLoading]="isLoadingAvailability"
+          (monthChanged)="onMonthChanged($event)"
+          (daySelected)="onDaySelected($event)"
+        />
+      </section>
+
+      <section class="booking-flow-column booking-time-column">
+        <app-booking-time-step
+          [selectedDayInfo]="
+            selectedDay !== null
+              ? {
+                  year: selectedYear,
+                  month: monthNumber,
+                  day: selectedDay,
+                }
+              : null
+          "
+          [selectedDate]="selectedDate"
+          [selectedDayFormatted]="selectedDayFormatted"
+          [disabledDatesAndHours]="disabledDatesAndHours"
+          [ecuadorTime]="ecuadorTime"
+          [minAllowedHour]="serverMinAllowedHour"
+          [userCity]="userData?.city ?? null"
+          [userMode]="userData?.student?.mode ?? null"
+          [userClassification]="
+            userData?.student?.studentClassification ?? null
+          "
+          [selectedTimeSlot]="selectedTimeSlot"
+          (timeSlotSelected)="selectTimeSlot($event)"
+        />
+      </section>
+
+      <section class="booking-flow-column booking-confirmation-column">
+        <app-booking-confirmation-step
+          [dateLabel]="selectedDayFormatted"
+          [selectedTimeSlot]="selectedTimeSlot"
+          [selectedMode]="modalMeetingType"
+          [studentName]="studentName"
+          [stageName]="stageName"
+          [onlineDisabled]="isModeDisabledForCurrentSelection(mode.ONLINE)"
+          [presencialDisabled]="
+            isModeDisabledForCurrentSelection(mode.PRESENCIAL)
+          "
+          [isSubmitting]="isBooking"
+          (meetingModeSelected)="setMeetingMode($event)"
+          (confirmBooking)="bookMeeting()"
+          (clearSelection)="cancelSelection()"
+        />
+      </section>
+    </div>
+
+    <app-student-suspension-modal
+      *ngIf="showSuspensionModal && suspensionInfo"
+      [suspensionInfo]="suspensionInfo"
+      (close)="closeSuspensionModal()"
+    />
+
+    <app-booking-help-banner
+      (cancellationPolicies)="openCancellationPolicies()"
+    />
+  </div>
+</div>
+
+<app-modal
+  [showModal]="modalConfig.show"
+  [message]="modalConfig.message"
+  [isError]="modalConfig.isError"
+  [isSuccess]="modalConfig.isSuccess"
+  [isInfo]="modalConfig.isInfo"
+  [showButtons]="modalConfig.confirm !== undefined"
+  (confirmAction)="modalConfig.confirm && modalConfig.confirm()"
+  (close)="modalConfig.close()"
+>
+</app-modal>

@@ -1,0 +1,121 @@
+<section
+  class="booking-mode-selector"
+  aria-labelledby="booking-mode-title"
+>
+  <div class="mode-selector-header">
+    <div>
+      <h3
+        id="booking-mode-title"
+        class="mode-selector-title"
+      >
+        Modalidad de la clase
+      </h3>
+
+      <p class="mode-selector-description">
+        Selecciona cómo deseas recibir tu clase.
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="mode-options"
+    role="radiogroup"
+    aria-labelledby="booking-mode-title"
+  >
+    <button
+      type="button"
+      class="mode-option"
+      [class.mode-option-selected]="
+        isModeSelected(mode.ONLINE)
+      "
+      [class.mode-option-disabled]="
+        isModeDisabled(mode.ONLINE)
+      "
+      [disabled]="isModeDisabled(mode.ONLINE)"
+      [attr.aria-checked]="
+        isModeSelected(mode.ONLINE)
+      "
+      role="radio"
+      (click)="selectMode(mode.ONLINE)"
+    >
+      <span
+        class="mode-option-radio"
+        aria-hidden="true"
+      >
+        <span class="mode-option-radio-dot"></span>
+      </span>
+
+      <span class="mode-option-icon">
+        <i class="fas fa-headset"></i>
+      </span>
+
+      <span class="mode-option-content">
+        <span class="mode-option-title">
+          Online
+        </span>
+
+        <span class="mode-option-text">
+          Recibe tu clase mediante videollamada.
+        </span>
+      </span>
+
+      <span
+        *ngIf="isModeSelected(mode.ONLINE)"
+        class="mode-option-check"
+        aria-hidden="true"
+      >
+        <i class="fas fa-check"></i>
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="mode-option"
+      [class.mode-option-selected]="
+        isModeSelected(mode.PRESENCIAL)
+      "
+      [class.mode-option-disabled]="
+        isModeDisabled(mode.PRESENCIAL)
+      "
+      [disabled]="
+        isModeDisabled(mode.PRESENCIAL)
+      "
+      [attr.aria-checked]="
+        isModeSelected(mode.PRESENCIAL)
+      "
+      role="radio"
+      (click)="selectMode(mode.PRESENCIAL)"
+    >
+      <span
+        class="mode-option-radio"
+        aria-hidden="true"
+      >
+        <span class="mode-option-radio-dot"></span>
+      </span>
+
+      <span class="mode-option-icon">
+        <i class="fas fa-user-group"></i>
+      </span>
+
+      <span class="mode-option-content">
+        <span class="mode-option-title">
+          Presencial
+        </span>
+
+        <span class="mode-option-text">
+          Asiste físicamente al lugar asignado.
+        </span>
+      </span>
+
+      <span
+        *ngIf="
+          isModeSelected(mode.PRESENCIAL)
+        "
+        class="mode-option-check"
+        aria-hidden="true"
+      >
+        <i class="fas fa-check"></i>
+      </span>
+    </button>
+  </div>
+</section>

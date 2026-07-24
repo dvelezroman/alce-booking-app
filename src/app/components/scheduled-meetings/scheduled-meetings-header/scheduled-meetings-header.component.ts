@@ -57,7 +57,7 @@ export class ScheduledMeetingsHeaderComponent {
 
   navigateToMeetingBooking(): void {
     this.router.navigate([
-      '/dashboard/booking',
+      '/dashboard/booking-v2',
     ])
   }
 }

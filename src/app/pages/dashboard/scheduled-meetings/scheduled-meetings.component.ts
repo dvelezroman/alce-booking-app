@@ -57,7 +57,7 @@ export class ScheduledMeetingsComponent implements OnInit, OnDestroy {
   isDeletingMeeting = false
 
   currentPage = 1
-  itemsPerPage = 6
+  itemsPerPage = 4
 
   modalConfig: ModalDto = modalInitializer()
   meetingToDelete: MeetingDTO | null = null
@@ -259,15 +259,17 @@ export class ScheduledMeetingsComponent implements OnInit, OnDestroy {
       return true
     }
 
-    const meetingDate = new Date(
-      meeting.localdate || meeting.date
-    )
+    const meetingDate = meeting.localdate
+      ? new Date(meeting.localdate)
+      : new Date(meeting.date)
 
     if (Number.isNaN(meetingDate.getTime())) {
       return false
     }
 
-    const now = new Date()
+    const now = new Date(
+      Date.now() - 5 * 60 * 60 * 1000
+    )
 
     const startOfToday = new Date(
       now.getFullYear(),

@@ -1,0 +1,155 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.booking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  width: 100%;
+  padding: 32px 0 22px;
+}
+
+.booking-header__information {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 18px;
+}
+
+.booking-header__content {
+  min-width: 0;
+}
+
+.booking-header__title {
+  margin: 0;
+
+  color: #111827;
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.booking-header__description {
+  margin: 7px 0 0;
+
+  color: #667085;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.booking-header__scheduled-button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  min-height: 44px;
+  padding: 10px 18px;
+
+  color: #4f36c8;
+  background: #ffffff;
+  border: 1px solid #dde1e9;
+  border-radius: 9px;
+
+  box-shadow:
+    0 2px 5px rgba(15, 23, 42, 0.025);
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+
+  .material-icons {
+    font-size: 19px;
+  }
+
+  &:hover {
+    color: #4228b8;
+    background: #faf9ff;
+    border-color: #cfc6f3;
+
+    box-shadow:
+      0 5px 14px rgba(79, 54, 200, 0.08);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(91, 66, 214, 0.2);
+    outline-offset: 2px;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .booking-header {
+    align-items: flex-start;
+    gap: 14px;
+    padding-bottom: 18px;
+  }
+
+  .booking-header__information {
+    gap: 12px;
+  }
+
+  .booking-header__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+
+    .material-icons {
+      font-size: 22px;
+    }
+  }
+
+  .booking-header__title {
+    font-size: 22px;
+  }
+
+  .booking-header__description {
+    max-width: 260px;
+    margin-top: 5px;
+    font-size: 12px;
+  }
+
+  .booking-header__scheduled-button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 12px;
+
+    span:last-child {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .booking-header {
+    flex-wrap: wrap;
+  }
+
+  .booking-header__information {
+    width: calc(100% - 58px);
+  }
+
+  .booking-header__scheduled-button {
+    margin-left: auto;
+  }
+}
