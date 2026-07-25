@@ -201,7 +201,6 @@ export class MeetingDetailModalComponent
       this.linkStatus = 'not-available'
       return
     }
-    
 
     const meetingStart =
       this.getMeetingStartTimestamp(meeting)

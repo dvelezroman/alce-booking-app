@@ -1,0 +1,132 @@
+<section class="study-streak">
+
+  <!-- LOADING -->
+  <div
+    class="study-streak__loading"
+    *ngIf="isLoading; else streakContent"
+  >
+    <div class="streak-skeleton streak-skeleton--title"></div>
+    <div class="streak-skeleton streak-skeleton--number"></div>
+    <div class="streak-skeleton streak-skeleton--message"></div>
+
+    <div class="streak-days-skeleton">
+      <div
+        class="streak-day-skeleton"
+        *ngFor="let item of [1, 2, 3, 4, 5, 6, 7]"
+      >
+        <span></span>
+        <small></small>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO -->
+  <ng-template #streakContent>
+    <header class="study-streak__header">
+      <h3 class="study-streak__heading">
+        Tu racha de estudio
+
+        <span
+          class="study-streak__fire"
+          aria-hidden="true"
+        >
+          🔥
+        </span>
+      </h3>
+    </header>
+
+    <div class="study-streak__summary">
+      <strong class="study-streak__value">
+        {{ streakTitle }}
+      </strong>
+
+      <p class="study-streak__message">
+        {{ motivationalMessage }}
+      </p>
+    </div>
+
+    <div
+      class="study-streak__days"
+      aria-label="Actividad de los últimos siete días"
+    >
+      <div
+        class="streak-day"
+        *ngFor="
+          let day of streakDays;
+          trackBy: trackByDate
+        "
+        [class.streak-day--completed]="
+          day.isCompleted
+        "
+        [class.streak-day--today]="
+          day.isToday
+        "
+        [class.streak-day--today-completed]="
+          day.isToday && day.isCompleted
+        "
+      >
+        <div class="streak-day__status">
+
+          <!-- DÍA ACTUAL -->
+          <svg
+            *ngIf="day.isToday"
+            width="21"
+            height="21"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"
+              stroke="currentColor"
+              stroke-width="1.9"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <!-- DÍA COMPLETADO -->
+          <svg
+            *ngIf="!day.isToday && day.isCompleted"
+            width="21"
+            height="21"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6.5 12.5 3.4 3.4 7.6-8"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <!-- DÍA SIN ACTIVIDAD -->
+          <svg
+            *ngIf="!day.isToday && !day.isCompleted"
+            width="21"
+            height="21"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6.5 12.5 3.4 3.4 7.6-8"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </div>
+
+        <span class="streak-day__label">
+          {{ day.label }}
+        </span>
+      </div>
+    </div>
+  </ng-template>
+
+</section>

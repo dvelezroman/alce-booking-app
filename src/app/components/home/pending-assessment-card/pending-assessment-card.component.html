@@ -1,46 +1,320 @@
-<div class="assessment-list" *ngIf="assessments.length > 0">
+<section class="assessment-section">
 
-  <div 
-    class="assessment-card"
-    [class.urgent-border]="a.isUrgent"
-    *ngFor="let a of assessments"
-    (click)="goToAssessmentPage(a.id)"
-  >
+  <!-- HEADER -->
+  <header class="assessment-header">
+    <h3 class="assessment-header__title">
+      Clases por evaluar
+    </h3>
 
-    <!-- Icono -->
-    <div class="left-icon">
-      <img 
-        [src]="iconUrl"
-        alt="assessment"
-        (error)="iconUrl = fallbackIcon"
-      />
+    <button
+      type="button"
+      class="assessment-header__view-all"
+      (click)="goToAllAssessments()"
+    >
+      Ver todas
+    </button>
+  </header>
+
+  <!-- ================================
+       CON EVALUACIONES
+  ================================= -->
+  <ng-container *ngIf="hasAssessments; else emptyAssessments">
+
+    <div class="assessment-list">
+      <article
+        class="assessment-item"
+        *ngFor="
+          let assessment of visibleAssessments;
+          trackBy: trackByAssessmentId
+        "
+        [class.assessment-item--urgent]="
+          assessment.isUrgent
+        "
+      >
+        <!-- FECHA -->
+        <div class="assessment-date">
+          <span class="assessment-date__month">
+            {{
+              getMonthAbbreviation(
+                assessment.dueDate
+              )
+            }}
+          </span>
+
+          <strong class="assessment-date__day">
+            {{
+              getDayNumber(
+                assessment.dueDate
+              )
+            }}
+          </strong>
+        </div>
+
+        <!-- INFORMACIÓN -->
+        <div class="assessment-information">
+          <h4 class="assessment-information__title">
+            {{ getAssessmentTitle(assessment) }}
+          </h4>
+
+          <p class="assessment-information__stage">
+            {{ getAssessmentStage(assessment) }}
+          </p>
+
+          <div class="assessment-information__date">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+
+              <path
+                d="M12 7.5V12l3 2"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <span>
+              {{
+                getFormattedDueDate(
+                  assessment.dueDate
+                )
+              }}
+            </span>
+          </div>
+
+          <span
+            class="assessment-countdown"
+            [class.assessment-countdown--urgent]="
+              assessment.isUrgent
+            "
+            *ngIf="assessment.timeFormatted"
+          >
+            Tiempo restante:
+            {{ assessment.timeFormatted }}
+          </span>
+        </div>
+
+        <!-- ACCIÓN -->
+        <div class="assessment-action">
+          <button
+            type="button"
+            class="assessment-button"
+            (click)="
+              goToAssessmentPage(
+                assessment.id
+              )
+            "
+          >
+            Evaluar
+          </button>
+        </div>
+      </article>
     </div>
 
-    <!-- Información -->
-    <div class="info">
-      <div class="title">
-        {{ a.stageAssessmentResource?.description || 'Recurso sin título' }}
-      </div>
-
-      <div class="meta">
-        <span class="stage">
-          {{ a.stage?.description || a.stage?.number || 'Stage' }}
+    <!-- BANNER INFERIOR -->
+    <div class="assessment-banner">
+      <div class="assessment-banner__content">
+        <span
+          class="assessment-banner__icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="25"
+            height="25"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+          </svg>
         </span>
 
-        <span class="date">
-          Fecha límite: {{ a.dueDate | date:'dd MMM yyyy' }}
-        </span>
+        <div class="assessment-banner__text">
+          <h4 class="assessment-banner__title">
+            Tu opinión cuenta
+          </h4>
+
+          <p class="assessment-banner__description">
+            Evalúa tus clases y ayuda a mejorar.
+          </p>
+        </div>
       </div>
+
+      <button
+        type="button"
+        class="assessment-banner__button"
+        (click)="goToAllAssessments()"
+      >
+        Ir a evaluaciones
+      </button>
     </div>
 
-    <!-- Countdown -->
-    <div class="duration">
-      <span class="label">Tiempo restante</span>
-      <span class="value" [class.urgent]="a.isUrgent">
-        {{ a.timeFormatted }}
-      </span>
+  </ng-container>
+
+  <!-- ================================
+       SIN EVALUACIONES
+  ================================= -->
+  <ng-template #emptyAssessments>
+    <div class="assessment-empty">
+
+      <div
+        class="assessment-empty__illustration"
+        aria-hidden="true"
+      >
+        <svg
+          width="150"
+          height="150"
+          viewBox="0 0 150 150"
+          fill="none"
+        >
+          <!-- Decoraciones -->
+          <path
+            d="M18 55h10M23 50v10"
+            stroke="#20A267"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M125 45h12M131 39v12"
+            stroke="#F5B842"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M16 119h12M22 113v12"
+            stroke="#F5B842"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="28"
+            cy="87"
+            r="2.5"
+            fill="#D8D4FF"
+          />
+
+          <circle
+            cx="127"
+            cy="101"
+            r="2.5"
+            fill="#D8D4FF"
+          />
+
+          <!-- Portapapeles -->
+          <rect
+            x="45"
+            y="28"
+            width="62"
+            height="92"
+            rx="10"
+            fill="#AFA7F5"
+          />
+
+          <rect
+            x="53"
+            y="37"
+            width="47"
+            height="74"
+            rx="6"
+            fill="#FFFFFF"
+          />
+
+          <path
+            d="M66 29v-5.5A7.5 7.5 0 0 1 73.5 16h5A7.5 7.5 0 0 1 86 23.5V29"
+            stroke="#978DEE"
+            stroke-width="7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M64 57h25M64 70h20M64 83h15"
+            stroke="#E2DFFF"
+            stroke-width="5"
+            stroke-linecap="round"
+          />
+
+          <!-- Círculo verde -->
+          <circle
+            cx="101"
+            cy="87"
+            r="31"
+            fill="#18A761"
+          />
+
+          <circle
+            cx="101"
+            cy="87"
+            r="27"
+            fill="url(#checkCircle)"
+          />
+
+          <!-- Check -->
+          <path
+            d="m87 87 9 9 19-21"
+            stroke="#FFFFFF"
+            stroke-width="8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <defs>
+            <linearGradient
+              id="checkCircle"
+              x1="80"
+              y1="62"
+              x2="123"
+              y2="112"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stop-color="#22B86C" />
+
+              <stop
+                offset="1"
+                stop-color="#159855"
+              />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <h4 class="assessment-empty__title">
+        ¡Excelente!
+      </h4>
+
+      <p class="assessment-empty__description">
+        No tienes clases pendientes por evaluar.
+        Cuando termines una clase, podrás
+        evaluarla aquí.
+      </p>
+
+      <button
+        type="button"
+        class="assessment-empty__button"
+        (click)="goToAllAssessments()"
+      >
+        Ver mis clases
+      </button>
+
     </div>
+  </ng-template>
 
-  </div>
-
-</div>
+</section>

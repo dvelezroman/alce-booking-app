@@ -1,0 +1,433 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.study-streak {
+  width: 100%;
+  padding: 1.35rem;
+
+  overflow: hidden;
+
+  border: 1px solid #e4e6ee;
+  border-radius: 1.35rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(31, 42, 89, 0.035);
+}
+
+/* ================================
+   HEADER
+================================ */
+
+.study-streak__header {
+  margin-bottom: .8rem;
+}
+
+.study-streak__heading {
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  color: #111735;
+
+  font-size: .92rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.study-streak__fire {
+  display: inline-flex;
+
+  font-size: .9rem;
+  line-height: 1;
+}
+
+/* ================================
+   RESUMEN
+================================ */
+
+.study-streak__summary {
+  margin-bottom: 1.15rem;
+}
+
+.study-streak__value {
+  display: block;
+
+  color: #10142f;
+
+  font-size: clamp(
+    1.65rem,
+    3.2vw,
+    2rem
+  );
+  font-weight: 850;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.study-streak__message {
+  margin: .7rem 0 0;
+
+  color: #4f586e;
+
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* ================================
+   DÍAS
+================================ */
+
+.study-streak__days {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns:
+    repeat(7, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.streak-day {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.streak-day__status {
+  position: relative;
+
+  width: 2.35rem;
+  height: 2.35rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #dfe3ec;
+  border-radius: 50%;
+
+  background: #f8f9fb;
+  color: #111827;
+
+  box-shadow:
+    inset 0 0 0 3px #ffffff;
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.streak-day__status svg {
+  display: block;
+  width: 17px;
+  height: 17px;
+}
+
+.streak-day__label {
+  overflow: hidden;
+
+  color: #596176;
+
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ================================
+   COMPLETADO
+================================ */
+
+.streak-day--completed
+.streak-day__status {
+  border-color: #547be8;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4d8af3 0%,
+      #4c67e7 100%
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    inset 0 0 0 3px rgba(
+      255,
+      255,
+      255,
+      0.22
+    ),
+    0 6px 14px rgba(
+      75,
+      105,
+      226,
+      0.22
+    );
+}
+
+/* ================================
+   HOY
+================================ */
+
+.streak-day--today
+.streak-day__status {
+  border-color: #6943dc;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7650e7 0%,
+      #5733ca 100%
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    inset 0 0 0 3px rgba(
+      255,
+      255,
+      255,
+      0.18
+    ),
+    0 7px 16px rgba(
+      92,
+      54,
+      207,
+      0.25
+    );
+}
+
+.streak-day--today
+.streak-day__label {
+  color: #4630a8;
+  font-weight: 800;
+}
+
+.streak-day--today-completed
+.streak-day__status {
+  background:
+    linear-gradient(
+      135deg,
+      #714de4 0%,
+      #4d2bc2 100%
+    );
+}
+
+/* ================================
+   HOVER
+================================ */
+
+.streak-day:hover
+.streak-day__status {
+  transform: translateY(-2px);
+}
+
+/* ================================
+   LOADING
+================================ */
+
+.study-streak__loading {
+  width: 100%;
+}
+
+.streak-skeleton,
+.streak-day-skeleton span,
+.streak-day-skeleton small {
+  position: relative;
+
+  overflow: hidden;
+
+  background: #edf0f5;
+}
+
+.streak-skeleton::after,
+.streak-day-skeleton span::after,
+.streak-day-skeleton small::after {
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.72),
+      transparent
+    );
+
+  content: '';
+
+  transform: translateX(-100%);
+
+  animation:
+    streak-skeleton-loading
+    1.35s infinite;
+}
+
+.streak-skeleton--title {
+  width: 42%;
+  height: 0.8rem;
+
+  border-radius: 999px;
+}
+
+.streak-skeleton--number {
+  width: 25%;
+  height: 1.9rem;
+  margin-top: 1rem;
+
+  border-radius: 0.55rem;
+}
+
+.streak-skeleton--message {
+  width: 60%;
+  height: 0.65rem;
+  margin-top: .85rem;
+
+  border-radius: 999px;
+}
+
+.streak-days-skeleton {
+  margin-top: 1.3rem;
+
+  display: grid;
+  grid-template-columns:
+    repeat(7, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.streak-day-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.streak-day-skeleton span {
+  width: 2.35rem;
+  height: 2.35rem;
+
+  border-radius: 50%;
+}
+
+.streak-day-skeleton small {
+  width: 1.55rem;
+  height: 0.45rem;
+
+  border-radius: 999px;
+}
+
+@keyframes streak-skeleton-loading {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* ================================
+   SIDEBAR ANGOSTO
+================================ */
+
+@media (max-width: 1280px) {
+  .study-streak {
+    padding: 1.15rem;
+  }
+
+  .study-streak__days {
+    gap: 0.3rem;
+  }
+
+  .streak-day__status {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .streak-day__status svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .streak-day__label {
+    font-size: 0.59rem;
+  }
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 640px) {
+  .study-streak {
+    padding: 1rem;
+  }
+
+  .study-streak__header {
+    margin-bottom: 0.7rem;
+  }
+
+  .study-streak__heading {
+    font-size: 0.86rem;
+  }
+
+  .study-streak__value {
+    font-size: 1.65rem;
+  }
+
+  .study-streak__message {
+    margin-top: 0.6rem;
+
+    font-size: 0.72rem;
+  }
+
+  .study-streak__summary {
+    margin-bottom: 1rem;
+  }
+
+  .study-streak__days {
+    grid-template-columns:
+      repeat(7, minmax(2.7rem, 1fr));
+
+    gap: 0.3rem;
+  }
+
+  .streak-day__status {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .streak-day__status svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .streak-day__label {
+    font-size: 0.58rem;
+  }
+}
+/* ================================
+   MOVIMIENTO REDUCIDO
+================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .streak-day__status {
+    transition: none;
+  }
+
+  .streak-skeleton::after,
+  .streak-day-skeleton span::after,
+  .streak-day-skeleton small::after {
+    animation: none;
+  }
+}

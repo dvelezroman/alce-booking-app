@@ -9,57 +9,303 @@
     </app-countdown-banner>
   </div>
 
+  <section class="student-hero">
+    <div class="hero-content">
+      <div class="hero-left">
+        <h1 class="greet-title">
+          ¡Hola, {{ userData?.firstName }}! 👋
+        </h1>
+
+        <p class="greet-subtitle">
+          Sigue practicando y alcanza tus metas en inglés.
+        </p>
+      </div>
+
+      <div class="hero-date">
+        <i class="pi pi-calendar"></i>
+
+        <span>
+          {{ currentDate | date: "EEEE, d 'de' MMMM 'de' y" : undefined : 'es-EC' }}
+        </span>
+      </div>
+    </div>
+  </section>
+  
   <!-- MAIN GRID -->
   <div class="dashboard-layout">
 
     <!-- IZQUIERDA (80%) -->
     <div class="dashboard-main">
 
-      <section class="student-hero">
-        <div class="hero-left">
-          <h1 class="greet-title">
-            Hola, {{ userData?.firstName }}
-          </h1>
+      <app-student-progress-card
+        [meetings]="meetings"
+        [isLoading]="isLoadingMeetings">
+      </app-student-progress-card>
 
-          <p class="greet-subtitle">
-            Bienvenido al sistema académico
-          </p>
-
-          <p class="student-stage" *ngIf="userData?.stage">
-            Nivel actual:
-            <span class="stage-value">
-              {{ userData?.stage?.description || userData?.stage?.number }}
-            </span>
-          </p>
-        </div>
-      </section>
 
       <!-- SHORTCUTS -->
-      <section class="shortcuts-grid">
-        <div
-          class="shortcut-card"
-          [class.disabled]="isAgendaBlocked"
-          (click)="!isAgendaBlocked && goToBooking()"
-        >
-          <span class="shortcut-title">
-            Agendar clases
+      <section class="student-shortcuts">
+        <h2 class="student-shortcuts__title">
+          Accesos rápidos
+        </h2>
+
+        <div class="shortcuts-grid">
+
+          <div
+            class="shortcut-card shortcut-card--booking"
+            [class.disabled]="isAgendaBlocked"
+            (click)="!isAgendaBlocked && goToBooking()"
+          >
+            <span class="shortcut-icon shortcut-icon--booking">
+              <svg
+                width="29"
+                height="29"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <rect
+                  x="3"
+                  y="5"
+                  width="18"
+                  height="16"
+                  rx="2.5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                />
+
+                <path
+                  d="M7 3v4M17 3v4M3 9h18"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+
+                <path
+                  d="M8 13h3M13 13h3M8 17h3"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <span class="shortcut-content">
+              <span class="shortcut-title">
+                Agendar clases
+              </span>
+
+              <span
+                *ngIf="!isAgendaBlocked"
+                class="shortcut-description"
+              >
+                Reserva tu próxima clase de inglés
+              </span>
+
+              <span
+                *ngIf="isAgendaBlocked"
+                class="blocked-text"
+              >
+                {{ agendaBlockMessage }}
+              </span>
+            </span>
+
+            <span class="shortcut-arrow" aria-hidden="true">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
+
+          <div
+            class="shortcut-card shortcut-card--assessments"
+            (click)="goToAssessments()"
+          >
+           <span class="shortcut-icon shortcut-icon--assessments">
+            <svg
+              width="29"
+              height="29"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M9 4.5V3h6v1.5M8 9h8M8 13h5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="m14.5 16 1.4 1.4 2.6-3"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </span>
 
-          <span *ngIf="isAgendaBlocked" class="blocked-text">
-            {{ agendaBlockMessage }}
-          </span>
-        </div>
+            <span class="shortcut-content">
+              <span class="shortcut-title">
+                Evaluaciones
+              </span>
 
-        <div class="shortcut-card" (click)="goToAssessments()">
-          <span class="shortcut-title">Evaluaciones</span>
-        </div>
+              <span class="shortcut-description">
+                Revisa tus evaluaciones académicas
+              </span>
+            </span>
 
-        <div class="shortcut-card" (click)="goToNotifications()">
-          <span class="shortcut-title">Notificaciones</span>
-        </div>
+            <span class="shortcut-arrow" aria-hidden="true">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
 
-        <div class="shortcut-card" (click)="goToInstructorEvaluations()">
-          <span class="shortcut-title">Clases evaluadas</span>
+          <div
+            class="shortcut-card shortcut-card--notifications"
+            (click)="goToNotifications()"
+          >
+            <span class="shortcut-icon shortcut-icon--notifications">
+              <svg
+                width="29"
+                height="29"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M10 21h4"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <span class="shortcut-content">
+              <span class="shortcut-title">
+                Notificaciones
+              </span>
+
+              <span class="shortcut-description">
+                Revisa tus mensajes y avisos
+              </span>
+            </span>
+
+            <span class="shortcut-arrow" aria-hidden="true">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
+
+          <div
+            class="shortcut-card shortcut-card--evaluated"
+            (click)="goToInstructorEvaluations()"
+          >
+            <span class="shortcut-icon shortcut-icon--evaluated">
+              <svg
+                width="29"
+                height="29"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="m9.5 12.5 1.6 1.6 3.4-3.5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span class="shortcut-content">
+              <span class="shortcut-title">
+                Clases evaluadas
+              </span>
+
+              <span class="shortcut-description">
+                Evalúa las clases que ya tomaste
+              </span>
+            </span>
+
+            <span class="shortcut-arrow" aria-hidden="true">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
+
         </div>
       </section>
 
@@ -73,29 +319,19 @@
       <section class="content-grid">
 
         <div class="dashboard-card">
-          <app-student-live-classes></app-student-live-classes>
+          <app-student-live-classes
+            (scheduleClass)="goToBooking()"
+            (viewMeetingDetails)="onViewMeetingDetails($event)"
+          ></app-student-live-classes>
         </div>
 
         <div class="dashboard-card">
-          <h3 class="section-title">Evaluaciones</h3>
-
-          <ng-container *ngIf="assessments.length > 0; else noAssessments">
-            <app-pending-assessment-card
-              [assessments]="assessments"
-              (goToAssessment)="goToAssessments($event)">
-            </app-pending-assessment-card>
-          </ng-container>
-
-          <ng-template #noAssessments>
-            <div class="empty-assessment-card" (click)="goToAssessments()">
-              <h4>No tienes evaluaciones pendientes</h4>
-              <p>
-                Si tienes evaluaciones expiradas o deseas revisar tu historial,
-                haz clic aquí para ver más detalles.
-              </p>
-            </div>
-          </ng-template>
-
+          <app-pending-assessment-card
+            [assessments]="assessments"
+            (goToAssessment)="goToAssessments($event)"
+            (viewAll)="goToAssessments()"
+          >
+          </app-pending-assessment-card>
         </div>
 
       </section>
@@ -104,102 +340,33 @@
 
     <!-- DERECHA (20%) -->
     <aside class="dashboard-sidebar">
+      <app-student-important-notices
+        [userData]="userData"
+        [isKidsRestrictionActive]="isKidsRestrictionActive"
+        [minHoursRequired]="minHoursRequired"
+        [shouldShowAssessmentBanner]="shouldShowAssessmentBanner"
+        (viewAll)="goToNotifications()"
+      >
+      </app-student-important-notices>
 
-      <div class="sidebar-panel">
+      <!-- <app-student-daily-quote/> -->
 
-        <div class="sidebar-header">
-          <h3>Panel informativo</h3>
-        </div>
-
-        <section class="student-alerts">
-
-          <ng-container *ngIf="isKidsRestrictionActive">
-            <div class="alert-card info">
-              <div class="alert-content">
-                <h4>Información importante</h4>
-                <p>
-                  Para estudiantes KIDS, la modalidad presencial no está disponible a las 20:00.
-                </p>
-              </div>
-            </div>
-          </ng-container>
-
-          <!-- ⚠️ AVISO IMPORTANTE -->
-          <ng-container *ngIf="userData?.meetingsAlert; else noWarning">
-            <div class="alert-card warning">
-              <div class="alert-content">
-                <h4>Aviso importante</h4>
-                <p>
-                  Has agendado menos horas esta semana.
-                  Se recomienda
-                  <strong class="min-hours-highlight">
-                    {{ minHoursRequired }}
-                  </strong> horas.
-                </p>
-              </div>
-            </div>
-          </ng-container>
-
-          <ng-template #noWarning>
-            <div class="alert-card empty">
-              <div class="alert-content">
-                <h4>Aviso importante</h4>
-                <p>No tienes avisos importantes actualmente.</p>
-              </div>
-            </div>
-          </ng-template>
-
-          <!-- 🔵 MENSAJE NUEVO -->
-          <ng-container *ngIf="shouldShowAssessmentBanner; else noInfo">
-            <div class="alert-card info">
-              <div class="alert-content">
-                <h4>Mensaje nuevo</h4>
-
-                <div class="alert-body-scroll">
-
-                  <div
-                    class="resource-item"
-                    *ngFor="let item of userData?.assessmentResources"
-                  >
-                    <div class="resource-title">
-                      {{ item.title }}
-                    </div>
-
-                    <div class="resource-note" *ngIf="item.note">
-                      <span [innerHTML]="item.note"></span>
-                    </div>
-
-                    <div class="resource-link" *ngIf="item.link">
-                      <a [href]="item.link" target="_blank">
-                        Ver Video
-                      </a>
-                    </div>
-
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </ng-container>
-
-          <ng-template #noInfo>
-            <div class="alert-card empty">
-              <div class="alert-content">
-                <h4>Mensaje nuevo</h4>
-                <p>No tienes mensajes nuevos en este momento.</p>
-              </div>
-            </div>
-          </ng-template>
-
-        </section>
-
-      </div>
-
+      <app-student-study-streak
+        [meetings]="meetings"
+        [isLoading]="isLoadingMeetings"
+      >
+      </app-student-study-streak>
     </aside>
 
   </div>
 
 </div>
+
+  <app-meeting-detail-modal
+    [selectedMeeting]="selectedMeeting"
+    [isActive]="isMeetingDetailModalActive"
+    (modalClose)="onCloseMeetingDetailModal()"
+  ></app-meeting-detail-modal>
 
   <app-announcement-viewer
     *ngIf="announcementUser && visibleAnnouncements.length > 0"

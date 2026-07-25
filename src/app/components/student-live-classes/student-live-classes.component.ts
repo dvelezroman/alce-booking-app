@@ -1,96 +1,269 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+
 import { BookingService } from '../../services/booking.service';
-import { MeetingDTO, MeetingStatusEnum } from '../../services/dtos/booking.dto';
+import {
+  MeetingDTO,
+  MeetingStatusEnum,
+} from '../../services/dtos/booking.dto';
 import { UserDto } from '../../services/dtos/user.dto';
 import { selectUserData } from '../../store/user.selector';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-live-classes',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './student-live-classes.component.html',
-  styleUrls: ['./student-live-classes.component.scss']
+  styleUrls: ['./student-live-classes.component.scss'],
 })
-export class StudentLiveClassesComponent implements OnInit {
+export class StudentLiveClassesComponent implements OnInit, OnDestroy {
 
   userData: UserDto | null = null;
   studentId: number | null = null;
-  meetings: MeetingDTO[] = [];
-  loading: boolean = false;
 
-  filterMode: 'today' | 'all' = 'today';
+  meetings: MeetingDTO[] = [];
+  loading = false;
+
+  filterMode: 'today' | 'all' = 'all';
 
   @Output() meetingsCount = new EventEmitter<number>();
+  @Output() scheduleClass = new EventEmitter<void>();
+  @Output() viewMeetingDetails = new EventEmitter<MeetingDTO>();
+
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
-    private bookingService: BookingService,
-    private store: Store
+    private readonly bookingService: BookingService,
+    private readonly store: Store,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
-  this.store.select(selectUserData).subscribe(user => {
-    if (!user?.student?.id) return;
+    this.store
+      .select(selectUserData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user) => {
+        if (!user?.student?.id) {
+          this.studentId = null;
+          this.userData = user ?? null;
+          this.meetings = [];
+          this.meetingsCount.emit(0);
+          return;
+        }
 
-    this.studentId = user.student.id;
-    this.userData = user;
+        this.studentId = user.student.id;
+        this.userData = user;
 
-    this.loadLiveClasses('all');
-  });
-}
+        this.loadLiveClasses('all');
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   // ================================
-  // Cargar TODAS las clases agendadas (no solo en vivo)
+  // Reuniones visibles en el dashboard
+  // ================================
+  get visibleMeetings(): MeetingDTO[] {
+    return this.meetings.slice(0, 3);
+  }
+
+  get hasOneMeeting(): boolean {
+    return this.meetings.length === 1;
+  }
+
+  get hasMultipleMeetings(): boolean {
+    return this.meetings.length > 1;
+  }
+
+  // ================================
+  // Cargar TODAS las clases agendadas
   // ================================
   loadLiveClasses(filter: 'today' | 'all' = 'today'): void {
-  this.loading = true;
-  this.filterMode = filter;
-
-  const today = new Date();
-  const toDate = new Date();
-  toDate.setDate(today.getDate() + 15);
-
-  const from = today.toISOString().split('T')[0];
-  const to = toDate.toISOString().split('T')[0];
-
-  this.bookingService.searchMeetings({
-    from,
-    to,
-    hour: undefined,
-    assigned: undefined,
-    status: MeetingStatusEnum.ACTIVE,
-    studentId: this.studentId ?? undefined
-  }).subscribe({
-
-    next: (meetings: MeetingDTO[]) => {
-      this.meetings = this.applyFilter(meetings);
-      this.meetingsCount.emit(this.meetings.length);
-      this.loading = false;
-    },
-
-    error: (err) => {
-      console.error('Error cargando clases:', err);
-      this.loading = false;
+    if (!this.studentId) {
+      this.meetings = [];
+      this.meetingsCount.emit(0);
+      return;
     }
-  });
-}
 
-  changeFilter(mode: 'today' | 'all') {
+    this.loading = true;
+    this.filterMode = filter;
+
+    const today = new Date();
+    const toDate = new Date();
+
+    toDate.setDate(today.getDate() + 15);
+
+    const from = this.formatDateForRequest(today);
+    const to = this.formatDateForRequest(toDate);
+
+    this.bookingService
+      .searchMeetings({
+        from,
+        to,
+        hour: undefined,
+        assigned: undefined,
+        status: MeetingStatusEnum.ACTIVE,
+        studentId: this.studentId,
+      })
+      .subscribe({
+        next: (meetings: MeetingDTO[]) => {
+          this.meetings = this.applyFilter(meetings)
+            .slice()
+            .sort((firstMeeting, secondMeeting) => {
+              return (
+                this.getMeetingTimestamp(firstMeeting) -
+                this.getMeetingTimestamp(secondMeeting)
+              );
+            });
+
+          this.meetingsCount.emit(this.meetings.length);
+          this.loading = false;
+        },
+
+        error: (error) => {
+          console.error('Error cargando clases:', error);
+
+          this.meetings = [];
+          this.meetingsCount.emit(0);
+          this.loading = false;
+        },
+      });
+  }
+
+  changeFilter(mode: 'today' | 'all'): void {
     this.filterMode = mode;
     this.loadLiveClasses(this.filterMode);
   }
 
   applyFilter(meetings: MeetingDTO[]): MeetingDTO[] {
-    if (this.filterMode === 'all') return meetings;
+    if (this.filterMode === 'all') {
+      return meetings;
+    }
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = this.formatDateForRequest(new Date());
 
-    return meetings.filter(m => {
-      const d = new Date(m.date).toISOString().split('T')[0];
-      return d === today;
+    return meetings.filter((meeting) => {
+      const meetingDate = this.formatDateForRequest(
+        new Date(meeting.date)
+      );
+
+      return meetingDate === today;
     });
+  }
+
+  // ================================
+  // Acciones visuales nuevas
+  // ================================
+  showAllClasses(): void {
+    this.router.navigate([
+      '/dashboard/scheduled-meetings',
+    ]);
+  }
+
+  handleScheduleClass(): void {
+    this.scheduleClass.emit();
+  }
+
+  handleViewDetails(meeting: MeetingDTO): void {
+    this.viewMeetingDetails.emit(meeting);
+  }
+
+  // ================================
+  // Información visual de la clase
+  // ================================
+  getMeetingTitle(_meeting: MeetingDTO): string {
+    return 'Clase de inglés';
+  }
+
+  getInstructorName(meeting: MeetingDTO): string {
+    const firstName =
+      meeting.instructor?.user?.firstName?.trim() ?? '';
+
+    const lastName =
+      meeting.instructor?.user?.lastName?.trim() ?? '';
+
+    const fullName = `${firstName} ${lastName}`.trim();
+
+    return fullName || 'Instructor por asignar';
+  }
+
+  getMeetingModality( meeting: MeetingDTO ): 'Online' | 'Presencial' {
+    const mode = meeting.mode
+      ?.toString()
+      .trim()
+      .toUpperCase();
+
+    return mode === 'ONLINE'
+      ? 'Online'
+      : 'Presencial';
+  }
+
+  getMonthAbbreviation(date: unknown): string {
+    const parsedDate = new Date(date as string);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return '';
+    }
+
+    return parsedDate
+      .toLocaleDateString('es-ES', {
+        month: 'short',
+      })
+      .replace('.', '')
+      .toUpperCase();
+  }
+
+  getDayNumber(date: unknown): string {
+    const parsedDate = new Date(date as string);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return '';
+    }
+
+    return parsedDate
+      .toLocaleDateString('es-ES', {
+        day: '2-digit',
+      });
+  }
+
+  getFullMeetingDate(date: unknown): string {
+    const parsedDate = new Date(date as string);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return 'Fecha por confirmar';
+    }
+
+    const formattedDate = parsedDate.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
+
+    return this.capitalize(formattedDate);
+  }
+
+  getMeetingTime(meeting: MeetingDTO): string {
+    const startHour = Number(meeting.localhour ?? meeting.hour);
+
+    if (Number.isNaN(startHour)) {
+      return 'Horario por confirmar';
+    }
+
+    const endHour = startHour + 1;
+
+    return `${this.formatHour(startHour)} - ${this.formatHour(endHour)}`;
   }
 
   // ================================
@@ -98,10 +271,18 @@ export class StudentLiveClassesComponent implements OnInit {
   // ================================
   hasValidLink(meeting: MeetingDTO): boolean {
     const link = meeting.link?.trim();
-    if (!link) return false;
+
+    if (!link) {
+      return false;
+    }
 
     try {
-      new URL(link.startsWith('http') ? link : `https://${link}`);
+      new URL(
+        link.startsWith('http')
+          ? link
+          : `https://${link}`
+      );
+
       return true;
     } catch (_) {
       return false;
@@ -118,89 +299,135 @@ export class StudentLiveClassesComponent implements OnInit {
   }
 
   getFormattedLink(link: string | undefined): string {
-    if (!link || !this.isValidUrl(link)) {
+    if (!link) {
       return '';
     }
-    return link.startsWith('http') ? link : `https://${link}`;
+
+    const formattedLink = link.startsWith('http')
+      ? link
+      : `https://${link}`;
+
+    if (!this.isValidUrl(formattedLink)) {
+      return '';
+    }
+
+    return formattedLink;
   }
 
   // ================================
   // Registrar asistencia
   // ================================
   handleMeetingAssistanceClick(meetingId?: number): void {
-    if (!meetingId) return;
+    if (!meetingId) {
+      return;
+    }
 
-    this.bookingService.clickAssistanceByStudent(meetingId).subscribe({
-      next: () => {
-        console.log('Asistencia registrada');
-      },
-      error: () => {
-        console.log('Error al registrar la asistencia');
-      }
-    });
+    this.bookingService
+      .clickAssistanceByStudent(meetingId)
+      .subscribe({
+        next: () => {
+          console.log('Asistencia registrada');
+        },
+
+        error: () => {
+          console.log(
+            'Error al registrar la asistencia'
+          );
+        },
+      });
   }
 
   // ================================
   // Entrar a clase
   // ================================
   enterClass(meeting: MeetingDTO): void {
-    // No dejar entrar si NO está dentro del horario permitido
-    if (!this.canEnter(meeting)) return;
+    if (!this.canEnter(meeting)) {
+      return;
+    }
 
-    // No dejar entrar si el link está mal
-    if (!this.hasValidLink(meeting)) return;
+    if (!this.hasValidLink(meeting)) {
+      return;
+    }
 
-    // Registrar asistencia (mismo comportamiento que modal)
     if (meeting.id) {
       this.handleMeetingAssistanceClick(meeting.id);
     }
 
     const finalUrl = this.getFormattedLink(meeting.link);
+
     if (finalUrl) {
-      window.open(finalUrl, '_blank');
+      window.open(
+        finalUrl,
+        '_blank',
+        'noopener,noreferrer'
+      );
     }
   }
 
   // ================================
   // Fecha: HOY / MAÑANA / 5 diciembre
   // ================================
-  isToday(date: any): boolean {
+  isToday(date: unknown): boolean {
     const today = new Date();
-    const d = new Date(date);
-    return d.toDateString() === today.toDateString();
+    const parsedDate = new Date(date as string);
+
+    return (
+      parsedDate.toDateString() ===
+      today.toDateString()
+    );
   }
 
-  isTomorrow(date: any): boolean {
+  isTomorrow(date: unknown): boolean {
     const today = new Date();
+
     const tomorrow = new Date(
       today.getFullYear(),
       today.getMonth(),
       today.getDate() + 1
     );
-    const d = new Date(date);
-    return d.toDateString() === tomorrow.toDateString();
+
+    const parsedDate = new Date(date as string);
+
+    return (
+      parsedDate.toDateString() ===
+      tomorrow.toDateString()
+    );
   }
 
-  formatDateTitle(date: any): string {
-    if (this.isToday(date)) return 'Hoy';
-    if (this.isTomorrow(date)) return 'Mañana';
+  formatDateTitle(date: unknown): string {
+    if (this.isToday(date)) {
+      return 'Hoy';
+    }
 
-    // Formato: "5 diciembre"
-    return new Date(date).toLocaleDateString('es-ES', {
-      day: 'numeric',
-      month: 'long'
-    });
+    if (this.isTomorrow(date)) {
+      return 'Mañana';
+    }
+
+    return new Date(date as string)
+      .toLocaleDateString('es-ES', {
+        day: 'numeric',
+        month: 'long',
+      });
   }
 
   canEnter(meeting: MeetingDTO): boolean {
-    if (!meeting?.link?.trim()) return false;
+    if (!meeting?.link?.trim()) {
+      return false;
+    }
 
-    const LINK_ACTIVE_BEFORE = 5 * 60 * 1000;  // 5 min antes
-    const LINK_ACTIVE_AFTER = 6 * 60 * 1000;  // 30 min después
+    const LINK_ACTIVE_BEFORE = 5 * 60 * 1000;
+    const LINK_ACTIVE_AFTER = 6 * 60 * 1000;
 
-    const localDateISO = new Date(meeting.localdate).toISOString().split('T')[0];
+    const localDateISO = new Date(meeting.localdate)
+      .toISOString()
+      .split('T')[0];
+
+    const localHour = meeting.localhour
+      .toString()
+      .padStart(2, '0');
+
     const meetingStart = new Date(
-      `${localDateISO}T${meeting.localhour.toString().padStart(2, '0')}:00`
+      `${localDateISO}T${localHour}:00`
     ).getTime();
 
     const now = Date.now();
@@ -209,5 +436,76 @@ export class StudentLiveClassesComponent implements OnInit {
     const end = meetingStart + LINK_ACTIVE_AFTER;
 
     return now >= start && now <= end;
+  }
+
+  // ================================
+  // Helpers privados
+  // ================================
+  private getMeetingTimestamp(
+    meeting: MeetingDTO
+  ): number {
+    const dateValue =
+      meeting.localdate ?? meeting.date;
+
+    const parsedDate = new Date(dateValue);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return 0;
+    }
+
+    const meetingDate = this.formatDateForRequest(
+      parsedDate
+    );
+
+    const meetingHour = Number(
+      meeting.localhour ?? meeting.hour ?? 0
+    );
+
+    return new Date(
+      `${meetingDate}T${meetingHour
+        .toString()
+        .padStart(2, '0')}:00:00`
+    ).getTime();
+  }
+
+  private formatDateForRequest(date: Date): string {
+    const year = date.getFullYear();
+
+    const month = `${date.getMonth() + 1}`.padStart(
+      2,
+      '0'
+    );
+
+    const day = `${date.getDate()}`.padStart(
+      2,
+      '0'
+    );
+
+    return `${year}-${month}-${day}`;
+  }
+
+  private formatHour(hour: number): string {
+    const normalizedHour =
+      ((hour % 24) + 24) % 24;
+
+    const period =
+      normalizedHour >= 12 ? 'PM' : 'AM';
+
+    const twelveHour = normalizedHour % 12 || 12;
+
+    return `${twelveHour
+      .toString()
+      .padStart(2, '0')}:00 ${period}`;
+  }
+
+  private capitalize(value: string): string {
+    if (!value) {
+      return value;
+    }
+
+    return (
+      value.charAt(0).toUpperCase() +
+      value.slice(1)
+    );
   }
 }
