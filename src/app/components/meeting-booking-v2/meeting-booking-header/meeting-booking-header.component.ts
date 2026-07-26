@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+} from '@angular/core'
 import { Router } from '@angular/router'
 
 @Component({
@@ -14,6 +17,12 @@ export class MeetingBookingHeaderComponent {
   constructor(
     private readonly router: Router
   ) {}
+
+  navigateToDashboard(): void {
+    this.router.navigate([
+      '/dashboard',
+    ])
+  }
 
   navigateToScheduledMeetings(): void {
     this.router.navigate([

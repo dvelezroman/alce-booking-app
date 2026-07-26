@@ -1,361 +1,270 @@
-/* ------------------------------ */
-/* TÍTULO FIJO SUPERIOR           */
-/* ------------------------------ */
-
-.title {
-  position: fixed;
-  top: 0;
-  left: 0;
+:host {
+  display: block;
   width: 100%;
-  background-color: #fff;
-  color: #353535;
-  z-index: 10;
-  text-align: center;
-  margin: 0;
 }
 
-.title.stage {
-  font-size: 1.5rem;
-  line-height: 65px;
-  color: #282828;
-  font-weight: bold;
-}
-
-/* ------------------------------ */
-/* WRAPPER GENERAL DE LA PÁGINA   */
-/* ------------------------------ */
-
-.page-wrapper {
+.assessment-page {
+  width: calc(100% - 76px);
   min-height: 100vh;
-  padding: 90px 1rem 2rem;
-  margin-top: 1rem;
+  margin-left: 76px;
+  padding: 2rem 1.5rem 2rem;
+  overflow-x: hidden;
+
 }
 
-/* ------------------------------ */
-/* NUEVO LAYOUT LATERAL           */
-/* ------------------------------ */
+@media (max-width: 768px) {
 
-.assessment-layout {
+  .assessment-page {
+    width: 100%;
+    margin-left: 0;
+    padding: 1rem;
+  }
+}
+
+.assessment-page__container {
   width: 100%;
-}
-
-/* ------------------------------ */
-/* CONTENEDOR PRINCIPAL IZQUIERDA */
-/* ------------------------------ */
-
-.stage-assessment-student-section {
-  width: 100%;
-  max-width: 1200px;
+  max-width: 90rem;
   margin: 0 auto;
-  flex: 2;
 }
 
-/* ------------------------------ */
-/* NOTA IMPORTANTE ARRIBA         */
-/* ------------------------------ */
-
-.assessment-note-top {
-  width: 70%;
-  margin: 0 auto;
-  background: #fffbeb;
-  border: 1px solid #fcd34d;
-  border-radius: 14px;
-  padding: 1rem 1.2rem;
-  margin-top: 2rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-
-  h4 {
-    margin: 0 0 0.4rem;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #92400e;
-  }
-
-  p {
-    font-size: 0.85rem;
-    color: #78350f;
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  .note-secondline {
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
-}
-
-/* ============================== */
-/* RESUMEN DE EVALUACIONES        */
-/* ============================== */
-
-.assessment-summary {
-  margin: 0 0 1.2rem;
+.assessment-page__sections {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 0.95rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  margin-top: 1.5rem;
 }
 
-.summary-label {
-  font-weight: 600;
-  color: #706f6f;
-}
+.assessment-page__loading {
+  min-height: 18rem;
 
-/* Badges */
-
-.summary-badge {
-  padding: 0.35rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: .3px;
-}
-
-/* Activas azul eléctrico */
-.active-badge {
-  background: rgba(40, 51, 111, 0.1);
-  color: #28336f;
-}
-
-/* Expiradas dorado */
-.expired-badge {
-  background: rgba(212, 175, 55, 0.15);
-  color: #b88900;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .assessment-summary {
-    justify-content: center;
-    text-align: center;
-  }
-}
-
-/* =========================
-   EMPTY STATE
-========================= */
-
-.empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+
+  margin-top: 1.5rem;
+
+  border: 1px solid #e8eaf1;
+  border-radius: 1.25rem;
+
+  background: #ffffff;
+}
+
+.assessment-page__spinner {
+  width: 2.75rem;
+  height: 2.75rem;
+
+  border: 0.25rem solid #ece8ff;
+  border-top-color: #7758e8;
+  border-radius: 50%;
+
+  animation: assessment-spinner 0.8s linear infinite;
+}
+
+.assessment-page__loading-text {
+  margin: 0;
+
+  color: #69708a;
+
+  font-size: 0.925rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.assessment-page__empty {
+  min-height: 18rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  margin-top: 1.5rem;
+  padding: 2rem;
+
+  border: 1px solid #e8eaf1;
+  border-radius: 1.25rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(119, 88, 232, 0.04),
+      rgba(255, 255, 255, 0.95)
+    );
 
   text-align: center;
-  padding: 2rem 1rem;
-
-  border-radius: 16px;
-  background: #fafafa;
-  border: 1px dashed #e5e7eb;
 }
 
-.empty-icon {
-  font-size: 38px;
-  margin-bottom: 0.8rem;
+.assessment-page__empty-icon {
+  width: 4rem;
+  height: 4rem;
 
-  background: linear-gradient(135deg, #9ca3af, #6b7280);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-  opacity: 0.9;
+  border-radius: 1.125rem;
+
+  background: linear-gradient(
+    135deg,
+    #8d72ef,
+    #6947dc
+  );
+
+  color: #ffffff;
+
+  font-size: 1.45rem;
+
+  box-shadow:
+    0 0.75rem 1.5rem rgba(105, 71, 220, 0.2);
 }
 
-.empty-title {
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: #1f2937;
-  margin-bottom: 0.3rem;
+.assessment-page__empty-content {
+  max-width: 28rem;
 }
 
-.empty-subtitle {
-  font-size: 0.85rem;
-  color: #6b7280;
+.assessment-page__empty-title {
+  margin: 0 0 0.4rem;
+
+  color: #171c36;
+
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.3;
 }
 
+.assessment-page__empty-description {
+  margin: 0;
 
-/* ============================ */
-/* ALTURA MÁXIMA PARA CARDS     */
-/* ============================ */
+  color: #747b91;
 
-/* columna base */
-.column-block {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.6;
 }
 
-.cards-scroll {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  max-height: 450px;
-  overflow-y: auto;
-  padding-right: 6px;
-  padding-top: .5rem;
-}
-
-/* Scroll limpio */
-.cards-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.cards-scroll::-webkit-scrollbar-thumb {
-  background: #28336f24;
-  border-radius: 10px;
-}
-
-/* ------------------------------ */
-/* RESPONSIVE                     */
-/* ------------------------------ */
-
-@media (max-width: 900px) {
-
-  .assessment-layout {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .stage-assessment-student-section {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .cards-two-columns {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .column-block {
-    width: 100%;
-  }
-
-}
-
-@media (max-width: 600px) {
-
-  .title.stage {
-    font-size: 1.3rem;
-  }
-
-  .page-wrapper{
-    margin-top: 0rem;
-  }
-
-  .pending-count {
-    margin: 0.5rem 0 1rem;
-    font-size: 1rem;
-  }
-
-  .empty-state {
-    padding: 20px 10px;
-    gap: 0.5rem;
-  }
-
-  .empty-img {
-    width: 60px;
-    opacity: 0.85;
-  }
-
-  .empty-state p {
-    font-size: 0.85rem;
-  }
-
-  .cards-wrapper {
-    max-height: 450px;
-    padding-right: 4px;
-  }
-
-}
-
-
-/* ========================= */
-/* NUEVO LAYOUT PRINCIPAL    */
-/* ========================= */
-
-.cards-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-/* Pendientes ocupa todo */
-.block-full {
+app-assessment-header,
+app-assessment-summary,
+app-assessment-section,
+app-assessment-support {
+  display: block;
   width: 100%;
-  max-width: 880px;
-  margin: 0 auto;
 }
 
-/* Fila inferior */
-.bottom-row-two {
-  display: flex;
-  gap: 2rem;
-  margin-top: 2rem;
-  align-items: flex-start;
+app-assessment-summary {
+  margin-top: 1.5rem;
 }
 
-/* Cada bloque mitad */
-.bottom-row-two .column-block {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+app-assessment-support {
+  margin-top: 1.5rem;
 }
 
-/* Línea separadora visual opcional */
-.completed-column {
-  border-right: 1px solid #e5e7eb;
-  padding-right: 1.5rem;
-}
-
-.expired-column {
-  padding-left: 1.5rem;
-}
-
-/* ========================= */
-/* COLORES DE TÍTULOS        */
-/* ========================= */
-
-.block-title {
-  font-size: .85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: .5rem;
-  letter-spacing: .5px;
-}
-
-/* Pendientes */
-.active-title {
-  color: #28336f;
-}
-
-/* Realizadas */
-.completed-title {
-  color: #059669;
-}
-
-/* Expiradas */
-.expired-title {
-  color: #d4af37;
-}
-
-/* ========================= */
-/* RESPONSIVE 768px          */
-/* ========================= */
-
-@media (max-width: 768px) {
-  .bottom-row-two {
-    flex-direction: column;
+@keyframes assessment-spinner {
+  from {
+    transform: rotate(0deg);
   }
 
-  .completed-column {
-    border-right: none;
-    padding-right: 0;
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 75rem) {
+  .assessment-page {
+    padding: 1.25rem;
   }
 
-  .expired-column {
-    padding-left: 0;
+  .assessment-page__container {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 56.25rem) {
+  .assessment-page {
+    padding: 1rem;
+  }
+
+  .assessment-page__container {
+    padding: 1rem;
+
+    border-radius: 1.25rem;
+  }
+
+  .assessment-page__sections {
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+  }
+
+  app-assessment-summary,
+  app-assessment-support {
+    margin-top: 1.25rem;
+  }
+}
+
+@media (max-width: 40.625rem) {
+  .assessment-page {
+    padding: 0.75rem;
+
+    background: #f8f9fc;
+  }
+
+  .assessment-page__container {
+    padding: 0.75rem;
+
+    border-radius: 1rem;
+
+    box-shadow:
+      0 0.5rem 1.5rem rgba(32, 37, 64, 0.04);
+  }
+
+  .assessment-page__sections {
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  app-assessment-summary,
+  app-assessment-support {
+    margin-top: 1rem;
+  }
+
+  .assessment-page__loading,
+  .assessment-page__empty {
+    min-height: 15rem;
+    margin-top: 1rem;
+    padding: 1.5rem 1rem;
+
+    border-radius: 1rem;
+  }
+}
+
+@media (max-width: 30rem) {
+  .assessment-page {
+    padding: 0.5rem;
+  }
+
+  .assessment-page__container {
+    padding: 0.625rem;
+
+    border-radius: 0.875rem;
+  }
+
+  .assessment-page__empty-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+
+    border-radius: 1rem;
+
+    font-size: 1.25rem;
+  }
+
+  .assessment-page__empty-title {
+    font-size: 1.05rem;
+  }
+
+  .assessment-page__empty-description {
+    font-size: 0.85rem;
   }
 }

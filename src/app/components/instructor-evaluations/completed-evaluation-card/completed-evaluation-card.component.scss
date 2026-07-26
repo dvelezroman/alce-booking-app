@@ -1,0 +1,488 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.completed-evaluation-card {
+  --purple: #7652df;
+  --purple-dark: #5f39c8;
+  --purple-soft: #f3efff;
+  --green: #39a86b;
+  --green-soft: #edf9f2;
+  --yellow: #ffbf37;
+
+  width: 100%;
+  min-height: 7.7rem;
+
+  display: grid;
+  grid-template-columns:
+    7rem
+    minmax(0, 1fr);
+  align-items: center;
+  gap: 1.15rem;
+
+  padding: 0.9rem 1rem;
+
+  border: 1px solid #e6e6ee;
+  border-radius: 0.9rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0.4rem 1.1rem rgba(31, 28, 71, 0.025);
+
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.completed-evaluation-card:hover {
+  border-color: #dad5eb;
+
+  background: #fefeff;
+
+  box-shadow:
+    0 0.7rem 1.6rem rgba(40, 32, 92, 0.06);
+
+  transform: translateY(-1px);
+}
+
+/* =========================
+   STAGE
+========================= */
+
+.completed-evaluation-card__stage {
+  position: relative;
+
+  width: 7rem;
+  height: 5.9rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  overflow: visible;
+
+  border-radius: 0.65rem;
+
+  background:
+    radial-gradient(
+      circle at 15% 12%,
+      rgba(255, 255, 255, 0.35),
+      transparent 2.5rem
+    ),
+    linear-gradient(
+      145deg,
+      #8ca3ff 0%,
+      #6973e6 100%
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 0.55rem 1.1rem rgba(77, 84, 191, 0.16);
+}
+
+.completed-evaluation-card--excellent
+.completed-evaluation-card__stage {
+  background:
+    radial-gradient(
+      circle at 15% 12%,
+      rgba(255, 255, 255, 0.3),
+      transparent 2.5rem
+    ),
+    linear-gradient(
+      145deg,
+      #8ca3ff 0%,
+      #6973e6 100%
+    );
+}
+
+.completed-evaluation-card--good
+.completed-evaluation-card__stage,
+.completed-evaluation-card--default
+.completed-evaluation-card__stage {
+  background:
+    radial-gradient(
+      circle at 15% 12%,
+      rgba(255, 255, 255, 0.34),
+      transparent 2.5rem
+    ),
+    linear-gradient(
+      145deg,
+      #78dca4 0%,
+      #47bc7a 100%
+    );
+
+  box-shadow:
+    0 0.55rem 1.1rem rgba(55, 164, 103, 0.16);
+}
+
+.completed-evaluation-card__stage::before {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.17),
+      transparent 55%
+    );
+
+  pointer-events: none;
+}
+
+.completed-evaluation-card__stage-label,
+.completed-evaluation-card__stage-number {
+  position: relative;
+  z-index: 1;
+}
+
+.completed-evaluation-card__stage-label {
+  margin-bottom: 0.2rem;
+
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.completed-evaluation-card__stage-number {
+  font-size: 2.15rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.completed-evaluation-card__stage-status {
+  position: absolute;
+  right: -0.48rem;
+  bottom: -0.35rem;
+  z-index: 2;
+
+  width: 2.35rem;
+  height: 2.35rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0.22rem solid #ffffff;
+  border-radius: 50%;
+
+  background: #f7fbf9;
+  color: var(--green);
+
+  font-size: 0.78rem;
+
+  box-shadow:
+    0 0.35rem 0.8rem rgba(25, 88, 54, 0.12);
+}
+
+/* =========================
+   INFORMATION
+========================= */
+
+.completed-evaluation-card__information {
+  min-width: 0;
+}
+
+.completed-evaluation-card__title-row {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  margin-bottom: 0.35rem;
+}
+
+.completed-evaluation-card__title {
+  min-width: 0;
+  flex: 1;
+
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #18182e;
+
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.35;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.completed-evaluation-card__status-badge {
+  flex: 0 0 auto;
+}
+
+.completed-evaluation-card__stage-description {
+  margin: 0 0 0rem;
+
+  overflow: hidden;
+
+  color: #777b8f;
+
+  font-size: 0.74rem;
+  font-weight: 500;
+  line-height: 1.4;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.completed-evaluation-card__metadata {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 1.05rem;
+}
+
+.completed-evaluation-card__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+
+  margin: 0;
+
+  color: #62677a;
+
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.completed-evaluation-card__date i {
+  width: 1rem;
+
+  display: inline-flex;
+  justify-content: center;
+
+  color: #252842;
+
+  font-size: 0.78rem;
+}
+
+.completed-evaluation-card__date strong {
+  color: var(--green);
+
+  font-weight: 700;
+}
+
+.completed-evaluation-card__status-badge {
+  min-height: 1.55rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.25rem 0.72rem;
+
+  border: 1px solid #d9f0e3;
+  border-radius: 999px;
+
+  background: var(--green-soft);
+  color: #359560;
+
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* =========================
+   RATING
+========================= */
+
+.completed-evaluation-card__rating {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12rem;
+
+  margin: 0 0 0.45rem;
+
+  color: #55586d;
+
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.completed-evaluation-card__rating > i {
+  color: var(--yellow);
+
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+.completed-evaluation-card__rating > strong {
+  color: var(--purple);
+
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.completed-evaluation-card__rating > span {
+  color: #55586d;
+
+  font-size: 0.45rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 56.25rem) {
+  .completed-evaluation-card {
+    grid-template-columns:
+      6rem
+      minmax(0, 1fr)
+      auto;
+  }
+
+  .completed-evaluation-card__stage {
+    width: 6rem;
+    height: 5.4rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 40.625rem) {
+  .completed-evaluation-card {
+    grid-template-columns:
+      5.3rem
+      minmax(0, 1fr);
+    align-items: start;
+    gap: 0.85rem;
+
+    min-height: auto;
+
+    padding: 0.8rem;
+
+    border-radius: 0.8rem;
+  }
+
+  .completed-evaluation-card__stage {
+    width: 5.3rem;
+    height: 5rem;
+  }
+
+  .completed-evaluation-card__stage-label {
+    font-size: 0.62rem;
+  }
+
+  .completed-evaluation-card__stage-number {
+    font-size: 1.75rem;
+  }
+
+  .completed-evaluation-card__stage-status {
+    width: 1.9rem;
+    height: 1.9rem;
+
+    right: -0.3rem;
+    bottom: -0.25rem;
+
+    border-width: 0.18rem;
+
+    font-size: 0.65rem;
+  }
+
+  .completed-evaluation-card__title {
+    font-size: 0.82rem;
+  }
+
+  .completed-evaluation-card__stage-description {
+
+    font-size: 0.68rem;
+  }
+
+  .completed-evaluation-card__metadata {
+    align-items: flex-start;
+    gap: 0.45rem;
+  }
+
+  .completed-evaluation-card__date {
+    font-size: 0.65rem;
+  }
+
+  .completed-evaluation-card__status-badge {
+    min-height: 1.35rem;
+
+    padding: 0.2rem 0.55rem;
+
+    font-size: 0.6rem;
+  }
+
+ .completed-evaluation-card__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+
+    margin: 0;
+  }
+
+  .completed-evaluation-card__rating > i {
+    font-size: 0.68rem;
+  }
+
+  .completed-evaluation-card__rating > strong {
+    font-size: 0.75rem;
+  }
+
+  .completed-evaluation-card__rating > span {
+    margin: 0;
+
+    font-size: 0.5rem;
+  }
+
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+// @media (max-width: 30rem) {
+//   .completed-evaluation-card {
+//     grid-template-columns:
+//       4.7rem
+//       minmax(0, 1fr);
+
+//     gap: 0.75rem;
+//   }
+
+//   .completed-evaluation-card__stage {
+//     width: 4.7rem;
+//     height: 4.65rem;
+//   }
+
+//   .completed-evaluation-card__stage-number {
+//     font-size: 1.5rem;
+//   }
+
+//   .completed-evaluation-card__metadata {
+//     flex-direction: column;
+//     align-items: flex-start;
+//   }
+
+//   .completed-evaluation-card__date {
+//     flex-wrap: wrap;
+//   }
+
+// }

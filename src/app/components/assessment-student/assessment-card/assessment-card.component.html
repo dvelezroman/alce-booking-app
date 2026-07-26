@@ -1,0 +1,104 @@
+<article
+  class="assessment-card"
+  [class.assessment-card--active]="isActive"
+  [class.assessment-card--expired]="isExpired"
+  [class.assessment-card--completed]="isCompleted"
+  [class.assessment-card--highlighted]="highlighted"
+  [attr.aria-label]="assessmentTitle"
+  (animationend)="onAnimationEnd()"
+>
+  <div class="assessment-card__stage">
+    <span class="assessment-card__stage-label">
+      Stage
+    </span>
+
+    <strong class="assessment-card__stage-number">
+      {{ stageDisplayNumber }}
+    </strong>
+
+    <span
+      class="assessment-card__stage-status"
+      aria-hidden="true"
+    >
+      <i [class]="statusIcon"></i>
+    </span>
+  </div>
+
+  <div class="assessment-card__information">
+    <h3 class="assessment-card__title">
+      {{ assessmentTitle }}
+    </h3>
+
+    <p class="assessment-card__stage-description">
+      Etapa: {{ stageLabel }}
+    </p>
+
+    <div class="assessment-card__metadata">
+      <p
+        *ngIf="!isCompleted"
+        class="assessment-card__date"
+      >
+        <i
+          class="fa-regular fa-calendar"
+          aria-hidden="true"
+        ></i>
+
+        <span>Fecha límite:</span>
+
+        <strong>
+          {{ dueDateLabel }}
+        </strong>
+      </p>
+
+      <p
+        *ngIf="isCompleted"
+        class="assessment-card__date assessment-card__date--completed"
+      >
+        <i
+          class="fa-regular fa-calendar-check"
+          aria-hidden="true"
+        ></i>
+
+        <span>
+          {{ completedDateLabel }}
+        </span>
+      </p>
+
+      <span
+        *ngIf="!isCompleted"
+        class="assessment-card__time-status"
+      >
+        <i
+          [class]="
+            isExpired
+              ? 'fa-regular fa-clock'
+              : 'fa-solid fa-hourglass-half'
+          "
+          aria-hidden="true"
+        ></i>
+
+        {{ remainingTimeLabel }}
+      </span>
+    </div>
+  </div>
+
+  <div
+    *ngIf="isActive"
+    class="assessment-card__actions"
+  >
+    <button
+      type="button"
+      class="assessment-card__action-button"
+      (click)="onActionClick()"
+    >
+      <i
+        [class]="actionIcon"
+        aria-hidden="true"
+      ></i>
+
+      <span>
+        Realizar evaluación
+      </span>
+    </button>
+  </div>
+</article>

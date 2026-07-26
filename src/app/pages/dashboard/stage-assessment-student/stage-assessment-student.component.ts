@@ -1,16 +1,25 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { filter, take } from 'rxjs';
-import { UserDto } from '../../../services/dtos/user.dto';
-import { StageAssessmentService } from '../../../services/stage-assessment.service';
-import { selectUserData } from '../../../store/user.selector';
+
 import { ModalComponent } from '../../../components/modal/modal.component';
-import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
+import {
+  ModalDto,
+  modalInitializer,
+} from '../../../components/modal/modal.dto';
+
+import { AssessmentHeaderComponent } from '../../../components/assessment-student/assessment-header/assessment-header.component';
+import { AssessmentSummaryComponent } from '../../../components/assessment-student/assessment-summary/assessment-summary.component';
+import { AssessmentSectionComponent } from '../../../components/assessment-student/assessment-section/assessment-section.component';
+import { AssessmentSupportComponent } from '../../../components/assessment-student/assessment-support/assessment-support.component';
 
 import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
-import { StageAssessmentCardComponent } from '../../../components/stage-assessment/stage-assessment-card/stage-assessment-card.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { UserDto } from '../../../services/dtos/user.dto';
+import { StageAssessmentService } from '../../../services/stage-assessment.service';
+
+import { selectUserData } from '../../../store/user.selector';
 
 @Component({
   selector: 'app-stage-assessment-student',
@@ -18,55 +27,76 @@ import { ActivatedRoute, Router } from '@angular/router';
   imports: [
     CommonModule,
     ModalComponent,
-    StageAssessmentCardComponent,
+    AssessmentHeaderComponent,
+    AssessmentSummaryComponent,
+    AssessmentSectionComponent,
+    AssessmentSupportComponent,
   ],
   templateUrl: './stage-assessment-student.component.html',
-  styleUrls: ['./stage-assessment-student.component.scss']
+  styleUrls: ['./stage-assessment-student.component.scss'],
 })
 export class StageAssessmentStudentComponent implements OnInit {
-
   studentId: number | null = null;
-  loading: boolean = true;
+
+  loading = true;
 
   pendingAssessments: StageAssessment[] = [];
   expiredAssessments: StageAssessment[] = [];
   completedAssessments: StageAssessment[] = [];
 
-  activeCount: number = 0;
-  expiredCount: number = 0;
+  activeCount = 0;
+  expiredCount = 0;
+  completedCount = 0;
 
-  hasPending: boolean = false;
-  hasExpired: boolean = false;
+  hasPending = false;
+  hasExpired = false;
+  hasCompleted = false;
 
   highlightId: number | null = null;
 
   modal: ModalDto = modalInitializer();
 
   constructor(
-    private store: Store,
-    private router: Router,
-    private route: ActivatedRoute,
-    private stageAssessmentService: StageAssessmentService,
+    private readonly store: Store,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly stageAssessmentService: StageAssessmentService,
   ) {}
 
   ngOnInit(): void {
+    this.getHighlightAssessment();
+    this.getStudent();
+  }
 
-    this.route.queryParams.subscribe(params => {
-      this.highlightId = params['highlight']
-        ? +params['highlight']
-        : null;
+  private getHighlightAssessment(): void {
+    this.route.queryParams.subscribe((params) => {
+      const highlight = Number(params['highlight']);
+
+      this.highlightId =
+        Number.isFinite(highlight) && highlight > 0
+          ? highlight
+          : null;
     });
+  }
 
-    this.store.select(selectUserData)
+  private getStudent(): void {
+    this.store
+      .select(selectUserData)
       .pipe(
-        filter((u): u is UserDto => !!u),
-        take(1)
+        filter((user): user is UserDto => !!user),
+        take(1),
       )
-      .subscribe((u) => {
-        this.studentId = u.student?.id ?? null;
+      .subscribe((user) => {
+        this.studentId = user.student?.id ?? null;
 
         if (!this.studentId) {
-          this.showNotification("No se pudo obtener tu información.", true);
+          this.loading = false;
+
+          this.showNotification(
+            'No se pudo obtener tu información.',
+            true,
+          );
+
           return;
         }
 
@@ -74,75 +104,182 @@ export class StageAssessmentStudentComponent implements OnInit {
       });
   }
 
-  private loadAssessments() {
-    if (!this.studentId) return;
+  private loadAssessments(): void {
+    if (!this.studentId) {
+      return;
+    }
 
     this.loading = true;
 
     this.stageAssessmentService
-      .getAll({ studentId: this.studentId })
+      .getAll({
+        studentId: this.studentId,
+      })
       .subscribe({
         next: (list) => {
-
-          const sorted = (list ?? []).sort(
-            (a, b) =>
-              new Date(b.dueDate).getTime() -
-              new Date(a.dueDate).getTime()
+          const sortedAssessments = [...(list ?? [])].sort(
+            (firstAssessment, secondAssessment) =>
+              this.getDueDateTimestamp(secondAssessment) -
+              this.getDueDateTimestamp(firstAssessment),
           );
 
-          // Clasificación por statusForStudent
           this.pendingAssessments =
-            sorted.filter(a => a.statusForStudent === 'active');
+            sortedAssessments.filter(
+              (assessment) =>
+                assessment.statusForStudent === 'active',
+            );
 
           this.expiredAssessments =
-            sorted.filter(a => a.statusForStudent === 'agedOut');
+            sortedAssessments.filter(
+              (assessment) =>
+                assessment.statusForStudent === 'agedOut',
+            );
 
           this.completedAssessments =
-            sorted.filter(a => a.statusForStudent === 'completed');
+            sortedAssessments.filter(
+              (assessment) =>
+                assessment.statusForStudent === 'completed',
+            );
 
-          this.activeCount = this.pendingAssessments.length;
-          this.expiredCount = this.expiredAssessments.length;
-
-          this.hasPending = this.activeCount > 0;
-          this.hasExpired = this.expiredCount > 0;
+          this.updateAssessmentCounters();
 
           this.loading = false;
         },
         error: () => {
+          this.resetAssessments();
           this.loading = false;
-          this.showNotification("Error al obtener evaluaciones.", true);
-        }
+
+          this.showNotification(
+            'Error al obtener evaluaciones.',
+            true,
+          );
+        },
       });
   }
 
-  onOpenAndFinish(assessmentId: number) {
-    if (!this.studentId) return;
+  private updateAssessmentCounters(): void {
+    this.activeCount = this.pendingAssessments.length;
+    this.expiredCount = this.expiredAssessments.length;
+    this.completedCount = this.completedAssessments.length;
+
+    this.hasPending = this.activeCount > 0;
+    this.hasExpired = this.expiredCount > 0;
+    this.hasCompleted = this.completedCount > 0;
+  }
+
+  private resetAssessments(): void {
+    this.pendingAssessments = [];
+    this.expiredAssessments = [];
+    this.completedAssessments = [];
+
+    this.updateAssessmentCounters();
+  }
+
+  private getDueDateTimestamp(
+    assessment: StageAssessment,
+  ): number {
+    if (!assessment.dueDate) {
+      return 0;
+    }
+
+    const timestamp = new Date(
+      assessment.dueDate,
+    ).getTime();
+
+    return Number.isNaN(timestamp)
+      ? 0
+      : timestamp;
+  }
+
+  onOpenAssessment(assessment: StageAssessment): void {
+    this.onOpenAndFinish(assessment.id);
+  }
+
+  onViewAssessmentDetail(
+    assessment: StageAssessment,
+  ): void {
+    /*
+     * Aquí colocaremos la ruta real del detalle cuando
+     * conectemos el evento emitido por el componente hijo.
+     *
+     * Ejemplo:
+     *
+     * this.router.navigate([
+     *   '/dashboard/stage-assessment-student',
+     *   assessment.id,
+     * ]);
+     */
+
+    console.log(
+      'Ver detalle de evaluación:',
+      assessment,
+    );
+  }
+
+  onOpenAndFinish(assessmentId: number): void {
+    if (!this.studentId) {
+      return;
+    }
 
     this.stageAssessmentService
-      .markFinished(assessmentId, this.studentId)
+      .markFinished(
+        assessmentId,
+        this.studentId,
+      )
       .subscribe({
         next: () => {
+          this.clearHighlight();
           this.loadAssessments();
         },
         error: () => {
-          this.showNotification("Error al marcar como completado.", true);
-        }
+          this.showNotification(
+            'Error al marcar como completado.',
+            true,
+          );
+        },
       });
   }
 
+  onContactSupport(): void {
+    /*
+     * Aquí puedes abrir WhatsApp, correo o navegar
+     * hacia la página de soporte.
+     */
+
+    this.showNotification(
+      'Comunícate con tu instructor o con soporte académico.',
+    );
+  }
+
   clearHighlight(): void {
-    if (!this.highlightId) return;
+    if (!this.highlightId) {
+      return;
+    }
 
     this.highlightId = null;
 
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { highlight: null },
-      queryParamsHandling: 'merge'
+      queryParams: {
+        highlight: null,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
   }
 
-  private showNotification(message: string, isError = false, isSuccess = false) {
+  trackByAssessmentId(
+    index: number,
+    assessment: StageAssessment,
+  ): number {
+    return assessment.id;
+  }
+
+  private showNotification(
+    message: string,
+    isError = false,
+    isSuccess = false,
+  ): void {
     this.modal = {
       ...modalInitializer(),
       show: true,
@@ -150,10 +287,13 @@ export class StageAssessmentStudentComponent implements OnInit {
       isError,
       isSuccess,
       isInfo: !isError && !isSuccess,
-      close: () => (this.modal.show = false)
+      close: () => {
+        this.modal.show = false;
+      },
     };
 
-    setTimeout(() => (this.modal.show = false), 2500);
+    setTimeout(() => {
+      this.modal.show = false;
+    }, 2500);
   }
-
 }

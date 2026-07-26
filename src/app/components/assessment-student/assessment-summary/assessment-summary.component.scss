@@ -1,0 +1,260 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.assessment-summary {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.875rem;
+
+  padding: 1rem;
+
+  border: 1px solid #e5e7ef;
+  border-radius: 1.1rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0.4rem 1.25rem rgba(25, 31, 55, 0.025);
+}
+
+.assessment-summary__item {
+  --summary-color: #24c978;
+  --summary-color-dark: #12975a;
+  --summary-icon-background: #c9f3dc;
+  --summary-background-start: #f1fcf6;
+  --summary-background-end: #f8fdf9;
+
+  min-width: 0;
+  min-height: 6rem;
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 0.85rem 1rem;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(229, 232, 240, 0.55);
+  border-radius: 0.9rem;
+
+  background:
+    radial-gradient(
+      circle at 18% 28%,
+      rgba(255, 255, 255, 0.95),
+      transparent 6rem
+    ),
+    linear-gradient(
+      120deg,
+      var(--summary-background-start),
+      var(--summary-background-end)
+    );
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.assessment-summary__item:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 0.6rem 1.25rem rgba(36, 43, 72, 0.045);
+}
+
+.assessment-summary__item--active {
+  --summary-color: #28cd7b;
+  --summary-color-dark: #15975b;
+  --summary-icon-background: #c9f3dc;
+  --summary-background-start: #f0fbf5;
+  --summary-background-end: #fbfefc;
+}
+
+.assessment-summary__item--expired {
+  --summary-color: #f6a313;
+  --summary-color-dark: #d98600;
+  --summary-icon-background: #fff0c9;
+  --summary-background-start: #fffaf0;
+  --summary-background-end: #fffdf8;
+}
+
+.assessment-summary__item--completed {
+  --summary-color: #4289f5;
+  --summary-color-dark: #3273dc;
+  --summary-icon-background: #d8e7ff;
+  --summary-background-start: #f2f7ff;
+  --summary-background-end: #fbfdff;
+}
+
+.assessment-summary__icon {
+  width: 3.45rem;
+  height: 3.45rem;
+  flex: 0 0 3.45rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.85rem;
+
+  background: var(--summary-icon-background);
+  color: var(--summary-color);
+
+  font-size: 1.4rem;
+}
+
+.assessment-summary__item--active
+  .assessment-summary__icon {
+  background:
+    linear-gradient(
+      145deg,
+      #d8f8e7,
+      #bdeed3
+    );
+}
+
+.assessment-summary__item--expired
+  .assessment-summary__icon {
+  background:
+    linear-gradient(
+      145deg,
+      #fff5d9,
+      #ffe8ad
+    );
+}
+
+.assessment-summary__item--completed
+  .assessment-summary__icon {
+  background:
+    linear-gradient(
+      145deg,
+      #e3edff,
+      #c9dcff
+    );
+}
+
+.assessment-summary__content {
+  min-width: 0;
+}
+
+.assessment-summary__count {
+  display: block;
+
+  margin-bottom: 0.1rem;
+
+  color: #151a33;
+
+  font-size: 1.65rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.assessment-summary__title {
+  margin: 0 0 0.15rem;
+
+  color: #1c223c;
+
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.assessment-summary__description {
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #687086;
+
+  font-size: 0.74rem;
+  font-weight: 500;
+  line-height: 1.35;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 68rem) {
+  .assessment-summary {
+    gap: 0.75rem;
+    padding: 0.875rem;
+  }
+
+  .assessment-summary__item {
+    gap: 0.85rem;
+    padding: 0.8rem 0.85rem;
+  }
+
+  .assessment-summary__icon {
+    width: 3.15rem;
+    height: 3.15rem;
+    flex-basis: 3.15rem;
+
+    font-size: 1.25rem;
+  }
+
+  .assessment-summary__count {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 56.25rem) {
+  .assessment-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .assessment-summary__item {
+    min-height: 5.5rem;
+  }
+
+  .assessment-summary__description {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 40.625rem) {
+  .assessment-summary {
+    gap: 0.65rem;
+    padding: 0.65rem;
+
+    border-radius: 0.95rem;
+  }
+
+  .assessment-summary__item {
+    min-height: 5.2rem;
+
+    gap: 0.75rem;
+
+    padding: 0.75rem;
+
+    border-radius: 0.8rem;
+  }
+
+  .assessment-summary__icon {
+    width: 2.9rem;
+    height: 2.9rem;
+    flex-basis: 2.9rem;
+
+    border-radius: 0.75rem;
+
+    font-size: 1.15rem;
+  }
+
+  .assessment-summary__count {
+    font-size: 1.4rem;
+  }
+
+  .assessment-summary__title {
+    font-size: 0.84rem;
+  }
+
+  .assessment-summary__description {
+    font-size: 0.72rem;
+  }
+}
