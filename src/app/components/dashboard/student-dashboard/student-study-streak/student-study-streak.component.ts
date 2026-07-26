@@ -71,13 +71,24 @@ export class StudentStudyStreakComponent {
       return 0;
     }
 
-    const today = this.startOfDay(new Date());
-    const todayKey = this.formatDateKey(today);
+    const cursor = this.startOfDay(new Date());
 
-    const cursor = new Date(today);
-
-    if (!completedDates.has(todayKey)) {
+    /*
+    * Si hoy es domingo, empezamos desde el sábado.
+    * El domingo no suma ni corta la racha.
+    */
+    if (this.isSunday(cursor)) {
       cursor.setDate(cursor.getDate() - 1);
+    }
+
+    const cursorKey = this.formatDateKey(cursor);
+
+    /*
+    * Si hoy todavía no tiene actividad,
+    * revisamos el día de clase anterior.
+    */
+    if (!completedDates.has(cursorKey)) {
+      this.moveToPreviousClassDay(cursor);
     }
 
     let streak = 0;
@@ -88,7 +99,7 @@ export class StudentStudyStreakComponent {
       )
     ) {
       streak += 1;
-      cursor.setDate(cursor.getDate() - 1);
+      this.moveToPreviousClassDay(cursor);
     }
 
     return streak;
@@ -214,6 +225,18 @@ export class StudentStudyStreakComponent {
       date.getMonth(),
       date.getDate()
     );
+  }
+
+  private isSunday(date: Date): boolean {
+    return date.getDay() === 0;
+  }
+
+  private moveToPreviousClassDay(
+    date: Date
+  ): void {
+    do {
+      date.setDate(date.getDate() - 1);
+    } while (this.isSunday(date));
   }
 
   private formatDateKey(date: Date): string {

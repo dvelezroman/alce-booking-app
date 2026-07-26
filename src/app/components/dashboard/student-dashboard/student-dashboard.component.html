@@ -309,12 +309,6 @@
         </div>
       </section>
 
-      <app-pending-class-evaluation-banner
-        *ngIf="pendingClassEvaluationsCount > 0"
-        [count]="pendingClassEvaluationsCount"
-        (goToEvaluate)="goToInstructorEvaluations()">
-      </app-pending-class-evaluation-banner>
-
       <!-- CONTENT GRID -->
       <section class="content-grid">
 
@@ -375,41 +369,12 @@
     (closed)="onCustomAnnouncementClosed($event)"
   ></app-announcement-viewer>
 
-  <!-- <app-student-intro-video
-    [show]="showIntroVideo"
-    [canClose]="canCloseIntroVideo"
-    (completed)="onIntroVideoCompleted()"
-    (closed)="onIntroVideoClosed()">
-  </app-student-intro-video> -->
-
   <app-assessment-announcement
     *ngIf="showAssessmentAnnouncement && pendingAssessmentsCount > 0"
     [show]="showAssessmentAnnouncement"
     [count]="pendingAssessmentsCount"
     (closed)="onAnnouncementClosed()">
   </app-assessment-announcement>
-
-  <!-- <app-alce-kids-aviso
-    [show]="showPortoviejoNotice"
-    (closed)="showPortoviejoNotice = false">
-  </app-alce-kids-aviso> -->
-
-  <!-- <app-student-cuenca-banner
-    *ngIf="showBannerCuenca"
-    [show]="showBannerCuenca"
-    (close)="showBannerCuenca = false">
-  </app-student-cuenca-banner> -->
-
-  <!-- <app-student-cuenca-comm-banner
-    *ngIf="showBannerCuencaComm"
-    [show]="showBannerCuencaComm">
-  </app-student-cuenca-comm-banner> -->
-
-  <!-- IMAGE -->
-  <!-- <app-image-banner
-    *ngIf="showImageBanner"
-    (close)="showImageBanner = false">
-  </app-image-banner> -->
 
   <app-student-suspension-modal
     *ngIf="showSuspensionModal && suspensionInfo"
