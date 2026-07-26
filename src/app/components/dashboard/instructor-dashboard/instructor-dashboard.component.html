@@ -1,28 +1,99 @@
-
 <div class="instructor-dashboard-wrapper">
 
-  <!-- HEADER -->
-  <div class="instructor-header">
-    <h1 class="title">
-      Hola, {{ userData?.firstName }}
-    </h1>
-    <p class="subtitle">
-      Aquí puedes gestionar tus clases y ver tu agenda
-    </p>
-  </div>
+  <!-- HERO: OCUPA TODO EL ANCHO -->
+  <section class="instructor-hero">
+    <div class="hero-content">
 
-  <!-- CALENDARIO + TABLA -->
-  <div class="calendar-wrapper" *ngIf="instructorId">
-    <app-instructor-calendar
-      [instructorId]="instructorId">
-    </app-instructor-calendar>
+      <div class="hero-left">
+        <h1 class="greet-title">
+          ¡Buenos días, {{ userData?.firstName }}! 👋
+        </h1>
+
+        <p class="greet-subtitle">
+          Aquí tienes un resumen de tus clases y actividades de hoy.
+        </p>
+      </div>
+
+      <div class="hero-date">
+        <i
+          class="pi pi-calendar"
+          aria-hidden="true"
+        ></i>
+
+        <span>
+          {{
+            currentDate
+              | date:
+                "EEEE, d 'de' MMMM 'de' y"
+                : undefined
+                : "es-EC"
+          }}
+        </span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="dashboard-layout">
+
+    <!-- COLUMNA IZQUIERDA -->
+    <main class="dashboard-main">
+
+      <app-instructor-summary-card></app-instructor-summary-card>
+      <app-instructor-quick-actions></app-instructor-quick-actions>
+      <!-- SIGUIENTE FILA -->
+
+      <section class="instructor-content-grid">
+
+        <!-- BLOQUE IZQUIERDO -->
+
+        <app-instructor-upcoming-classes>
+        </app-instructor-upcoming-classes>
+
+       <!-- BLOQUE DERECHO -->
+
+        <app-instructor-day-summary>
+        </app-instructor-day-summary>
+      </section>
+
+      <!-- AQUÍ IRÁN DESPUÉS:
+           - Evaluaciones pendientes
+           - Progreso de estudiantes
+      -->
+
+      <app-instructor-weekly-overview>
+      </app-instructor-weekly-overview>
+
+      <!-- AQUÍ IRÁN DESPUÉS:
+           - Evaluaciones pendientes
+           - Progreso de estudiantes
+      -->
+
+    </main>
+
+  <!-- COLUMNA DERECHA -->
+    <aside class="dashboard-sidebar">
+
+      <app-instructor-important-notices>
+      </app-instructor-important-notices>
+
+      <app-instructor-recent-emails>
+      </app-instructor-recent-emails>
+
+      <app-instructor-monthly-performance>
+      </app-instructor-monthly-performance>
+
+    </aside>
+
   </div>
 
 </div>
 
-  <app-announcement-viewer
-    *ngIf="announcementUser && visibleAnnouncements.length > 0"
-    [announcements]="visibleAnnouncements"
-    [user]="announcementUser"
-    (closed)="onCustomAnnouncementClosed($event)"
-  ></app-announcement-viewer>
+<app-announcement-viewer
+  *ngIf="announcementUser && visibleAnnouncements.length > 0"
+  [announcements]="visibleAnnouncements"
+  [user]="announcementUser"
+  (closed)="onCustomAnnouncementClosed($event)"
+>
+</app-announcement-viewer>

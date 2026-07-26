@@ -1,0 +1,103 @@
+<section
+  class="monthly-performance-card"
+  aria-labelledby="monthly-performance-title"
+>
+  <h2
+    id="monthly-performance-title"
+    class="card-title"
+  >
+    Rendimiento mensual
+  </h2>
+
+  <div class="metrics-grid">
+    <article
+      *ngFor="
+        let metric of metrics;
+        trackBy: trackByMetricId
+      "
+      class="metric-card"
+      [class]="'metric-card metric-card--' + metric.tone"
+    >
+      <span
+        class="metric-icon"
+        [class]="'metric-icon metric-icon--' + metric.tone"
+        aria-hidden="true"
+      >
+        <ng-container [ngSwitch]="metric.icon">
+
+          <!-- LIBRO -->
+          <svg
+            *ngSwitchCase="'book'"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5a2.5 2.5 0 0 1 2.5 2.5v-16Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <!-- CHECK -->
+          <svg
+            *ngSwitchCase="'check'"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="m8 12 2.6 2.6L16.5 9"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <!-- ESTRELLA -->
+          <svg
+            *ngSwitchCase="'star'"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m12 3 2.7 5.46 6.03.88-4.36 4.25 1.03 6-5.4-2.84-5.4 2.84 1.03-6-4.36-4.25 6.03-.88L12 3Z"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </ng-container>
+      </span>
+
+      <strong class="metric-value">
+        {{ formatMetricValue(metric) }}
+      </strong>
+
+      <span class="metric-label">
+        {{ metric.label }}
+      </span>
+
+      <span class="metric-description">
+        {{ metric.description }}
+      </span>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,300 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.important-notices-card {
+  width: 100%;
+  overflow: hidden;
+
+  border: 1px solid rgba(40, 51, 111, 0.1);
+  border-radius: 1rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(28, 39, 94, 0.05);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.card-header {
+  min-height: 52px;
+  padding: 0.9rem 1rem 0.75rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.card-title {
+  margin: 0;
+
+  color: #101b49;
+
+  font-size: 0.84rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.view-all-button {
+  padding: 0;
+
+  flex-shrink: 0;
+
+  border: 0;
+  background: transparent;
+  color: #315edb;
+
+  font-family: inherit;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.3;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.view-all-button:hover {
+  color: #183fb2;
+  transform: translateX(1px);
+}
+
+.view-all-button:focus-visible {
+  outline: 2px solid rgba(49, 94, 219, 0.25);
+  outline-offset: 3px;
+  border-radius: 0.25rem;
+}
+
+/* =========================
+   LIST
+========================= */
+
+.notices-list {
+  padding: 0 1rem 0.35rem;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   ITEM
+========================= */
+
+.notice-item {
+  min-width: 0;
+  padding: 0.8rem 0;
+
+  display: grid;
+  grid-template-columns:
+    48px
+    minmax(0, 1fr);
+  align-items: start;
+  gap: 0.75rem;
+
+  border-bottom: 1px solid #edf0f7;
+
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.notice-item--last {
+  border-bottom: 0;
+}
+
+.notice-item:hover {
+  transform: translateX(2px);
+}
+
+.notice-item:focus-visible {
+  outline: 2px solid rgba(49, 94, 219, 0.2);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* =========================
+   ICON
+========================= */
+
+.notice-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.75rem;
+}
+
+.notice-icon svg {
+  width: 23px;
+  height: 23px;
+}
+
+.notice-icon--purple {
+  background:
+    linear-gradient(
+      145deg,
+      #f5f2ff 0%,
+      #ece7ff 100%
+    );
+
+  color: #6739d8;
+}
+
+.notice-icon--yellow {
+  background:
+    linear-gradient(
+      145deg,
+      #fffaf0 0%,
+      #fff3d8 100%
+    );
+
+  color: #f2a008;
+}
+
+.notice-icon--green {
+  background:
+    linear-gradient(
+      145deg,
+      #effcf8 0%,
+      #e1f8f0 100%
+    );
+
+  color: #0ba674;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.notice-content {
+  min-width: 0;
+}
+
+.notice-top {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.notice-tag {
+  padding: 0.17rem 0.38rem;
+
+  display: inline-flex;
+  align-items: center;
+
+  border-radius: 0.3rem;
+
+  font-size: 0.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.notice-tag--purple {
+  background: #f0ebff;
+  color: #6431cf;
+}
+
+.notice-tag--yellow {
+  background: #fff4da;
+  color: #c47a00;
+}
+
+.notice-tag--green {
+  background: #e5f8f1;
+  color: #087b59;
+}
+
+.notice-date {
+  flex-shrink: 0;
+
+  color: #747d97;
+
+  font-size: 0.5rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.notice-title {
+  margin: 0.36rem 0 0;
+
+  color: #101b49;
+
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.notice-description {
+  margin: 0.2rem 0 0;
+
+  color: #59637f;
+
+  font-size: 0.58rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 520px) {
+  .card-header {
+    padding:
+      0.8rem
+      0.8rem
+      0.65rem;
+  }
+
+  .notices-list {
+    padding:
+      0
+      0.8rem
+      0.3rem;
+  }
+
+  .notice-item {
+    grid-template-columns:
+      42px
+      minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  .notice-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .notice-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .notice-top {
+    align-items: flex-start;
+  }
+
+  .notice-description {
+    font-size: 0.6rem;
+  }
+}

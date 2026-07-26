@@ -1,0 +1,275 @@
+<section
+  class="day-summary-card"
+  aria-labelledby="day-summary-title"
+>
+  <header class="card-header">
+    <div class="header-content">
+      <h2
+        id="day-summary-title"
+        class="card-title"
+      >
+        Resumen del día
+      </h2>
+
+      <p class="card-subtitle">
+        Tu actividad programada para hoy
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="details-button"
+      (click)="onViewDetails()"
+    >
+      Ver detalles
+    </button>
+  </header>
+
+  <div class="card-content">
+
+    <!-- PROGRESO DEL DÍA -->
+    <section
+      class="daily-progress"
+      aria-label="Progreso de clases del día"
+    >
+      <div class="progress-heading">
+        <div>
+          <span class="progress-label">
+            Progreso de clases
+          </span>
+
+          <strong class="progress-value">
+            {{ completedClasses }}
+            de
+            {{ totalClasses }}
+          </strong>
+        </div>
+
+        <span class="progress-percentage">
+          {{ progressPercentage }}%
+        </span>
+      </div>
+
+      <div
+        class="progress-track"
+        role="progressbar"
+        [attr.aria-valuenow]="progressPercentage"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        <span
+          class="progress-bar"
+          [style.width.%]="progressPercentage"
+        ></span>
+      </div>
+    </section>
+
+    <!-- MÉTRICAS -->
+    <div class="summary-metrics">
+      <article
+        *ngFor="
+          let metric of metrics;
+          trackBy: trackByMetricId
+        "
+        class="summary-metric"
+      >
+        <span
+          class="metric-icon"
+          [class]="'metric-icon metric-icon--' + metric.tone"
+          aria-hidden="true"
+        >
+          <ng-container [ngSwitch]="metric.icon">
+
+            <!-- COMPLETADAS -->
+            <svg
+              *ngSwitchCase="'check'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+
+              <path
+                d="m8 12 2.6 2.6L16.5 9"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <!-- CALENDARIO -->
+            <svg
+              *ngSwitchCase="'calendar'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="16"
+                rx="2.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+
+              <path
+                d="M7 3v4M17 3v4M3 9h18"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            <!-- EVALUACIÓN -->
+            <svg
+              *ngSwitchCase="'evaluation'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M9 4V3h6v1M8 9h8M8 13h5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="m14 17 1.5 1.5L19 15"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <!-- RELOJ -->
+            <svg
+              *ngSwitchCase="'clock'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+
+              <path
+                d="M12 7v5l3 2"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </ng-container>
+        </span>
+
+        <div class="metric-content">
+          <strong class="metric-value">
+            {{ metric.value }}
+          </strong>
+
+          <span class="metric-label">
+            {{ metric.label }}
+          </span>
+        </div>
+      </article>
+    </div>
+
+    <!-- ACTIVIDAD -->
+    <section
+      class="activity-section"
+      aria-labelledby="day-activity-title"
+    >
+      <h3
+        id="day-activity-title"
+        class="section-title"
+      >
+        Actividad de hoy
+      </h3>
+
+      <div class="activity-list">
+        <article
+          *ngFor="
+            let activity of activities;
+            let last = last;
+            trackBy: trackByActivityId
+          "
+          class="activity-item"
+          [class.activity-item--last]="last"
+        >
+          <div class="activity-marker">
+            <span
+              class="status-dot"
+              [class.status-dot--completed]="
+                activity.status === 'completed'
+              "
+              [class.status-dot--pending]="
+                activity.status === 'pending'
+              "
+              [class.status-dot--upcoming]="
+                activity.status === 'upcoming'
+              "
+            ></span>
+
+            <span
+              *ngIf="!last"
+              class="activity-line"
+              aria-hidden="true"
+            ></span>
+          </div>
+
+          <div class="activity-content">
+            <div class="activity-main">
+              <span class="activity-time">
+                {{ activity.time }}
+              </span>
+
+              <h4 class="activity-title">
+                {{ activity.title }}
+              </h4>
+
+              <span class="activity-description">
+                {{ activity.description }}
+              </span>
+            </div>
+
+            <span
+              class="status-badge"
+              [class.status-badge--completed]="
+                activity.status === 'completed'
+              "
+              [class.status-badge--pending]="
+                activity.status === 'pending'
+              "
+              [class.status-badge--upcoming]="
+                activity.status === 'upcoming'
+              "
+            >
+              {{ getStatusLabel(activity.status) }}
+            </span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </div>
+</section>

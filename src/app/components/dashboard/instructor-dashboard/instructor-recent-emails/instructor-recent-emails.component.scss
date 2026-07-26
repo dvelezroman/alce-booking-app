@@ -1,0 +1,274 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.recent-emails-card {
+  width: 100%;
+  overflow: hidden;
+
+  border: 1px solid rgba(40, 51, 111, 0.1);
+  border-radius: 1rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(28, 39, 94, 0.05);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.card-header {
+  min-height: 52px;
+  padding: 0.9rem 1rem 0.75rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.card-title {
+  margin: 0;
+
+  color: #101b49;
+
+  font-size: 0.84rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.view-all-button {
+  padding: 0;
+  flex-shrink: 0;
+
+  border: 0;
+  background: transparent;
+  color: #315edb;
+
+  font-family: inherit;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.3;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.view-all-button:hover {
+  color: #183fb2;
+  transform: translateX(1px);
+}
+
+.view-all-button:focus-visible {
+  outline: 2px solid rgba(49, 94, 219, 0.25);
+  outline-offset: 3px;
+  border-radius: 0.25rem;
+}
+
+/* =========================
+   LIST
+========================= */
+
+.emails-list {
+  padding: 0 1rem 0.35rem;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   ITEM
+========================= */
+
+.email-item {
+  min-width: 0;
+  padding: 0.75rem 0;
+
+  display: grid;
+  grid-template-columns:
+    40px
+    minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+
+  border-bottom: 1px solid #edf0f7;
+
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.email-item--last {
+  border-bottom: 0;
+}
+
+.email-item:hover {
+  transform: translateX(2px);
+}
+
+.email-item:focus-visible {
+  outline: 2px solid rgba(49, 94, 219, 0.2);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* =========================
+   AVATAR
+========================= */
+
+.email-avatar {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  color: #ffffff;
+
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.email-avatar--purple {
+  background:
+    linear-gradient(
+      145deg,
+      #6941e6 0%,
+      #5330ca 100%
+    );
+}
+
+.email-avatar--green {
+  background:
+    linear-gradient(
+      145deg,
+      #31bf8e 0%,
+      #1ea871 100%
+    );
+}
+
+.email-avatar--yellow {
+  background:
+    linear-gradient(
+      145deg,
+      #ffc12f 0%,
+      #f2a910 100%
+    );
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.email-content {
+  min-width: 0;
+}
+
+.email-heading {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.email-sender {
+  min-width: 0;
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #101b49;
+
+  font-size: 0.66rem;
+  font-weight: 800;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.email-time {
+  flex-shrink: 0;
+
+  color: #747d97;
+
+  font-size: 0.5rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.email-subject {
+  margin: 0.18rem 0 0;
+
+  overflow: hidden;
+
+  color: #59637f;
+
+  font-size: 0.56rem;
+  font-weight: 500;
+  line-height: 1.4;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 520px) {
+  .card-header {
+    padding:
+      0.8rem
+      0.8rem
+      0.65rem;
+  }
+
+  .emails-list {
+    padding:
+      0
+      0.8rem
+      0.3rem;
+  }
+
+  .email-item {
+    grid-template-columns:
+      38px
+      minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .email-avatar {
+    width: 38px;
+    height: 38px;
+
+    font-size: 0.76rem;
+  }
+
+  .email-heading {
+    align-items: flex-start;
+  }
+
+  .email-subject {
+    white-space: normal;
+  }
+}

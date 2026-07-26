@@ -1,0 +1,65 @@
+<section
+  class="recent-emails-card"
+  aria-labelledby="recent-emails-title"
+>
+  <header class="card-header">
+    <h2
+      id="recent-emails-title"
+      class="card-title"
+    >
+      Emails recientes
+    </h2>
+
+    <button
+      type="button"
+      class="view-all-button"
+      (click)="onViewAll()"
+    >
+      Ver todos
+    </button>
+  </header>
+
+  <div class="emails-list">
+    <article
+      *ngFor="
+        let email of emails;
+        let last = last;
+        trackBy: trackByEmailId
+      "
+      class="email-item"
+      [class.email-item--last]="last"
+      tabindex="0"
+      role="button"
+      [attr.aria-label]="
+        email.sender + ': ' + email.subject
+      "
+      (click)="onEmailClick(email)"
+      (keydown.enter)="onEmailClick(email)"
+      (keydown.space)="onEmailClick(email)"
+    >
+      <span
+        class="email-avatar"
+        [class]="'email-avatar email-avatar--' + email.tone"
+        aria-hidden="true"
+      >
+        {{ email.initial }}
+      </span>
+
+      <div class="email-content">
+        <div class="email-heading">
+          <h3 class="email-sender">
+            {{ email.sender }}
+          </h3>
+
+          <span class="email-time">
+            {{ email.timeAgo }}
+          </span>
+        </div>
+
+        <p class="email-subject">
+          {{ email.subject }}
+        </p>
+      </div>
+    </article>
+  </div>
+</section>

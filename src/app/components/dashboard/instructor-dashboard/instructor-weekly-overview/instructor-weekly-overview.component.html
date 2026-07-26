@@ -1,0 +1,117 @@
+<section
+  class="weekly-overview-card"
+  aria-labelledby="weekly-overview-title"
+>
+  <h2
+    id="weekly-overview-title"
+    class="weekly-overview-title"
+  >
+    Vista semanal
+  </h2>
+
+  <div class="weekly-overview-content">
+
+    <div class="week-days">
+      <button
+        *ngFor="
+          let day of weekDays;
+          trackBy: trackByDayId
+        "
+        type="button"
+        class="day-card"
+        [class.day-card--active]="day.isCurrentDay"
+        [attr.aria-label]="
+          day.dayName +
+          ' ' +
+          day.dayNumber +
+          ', ' +
+          getClassesLabel(day.classesCount)
+        "
+        (click)="onDayClick(day)"
+      >
+        <span class="day-label">
+          {{ day.dayName }}
+          {{ day.dayNumber }}
+        </span>
+
+        <span
+          class="class-indicators"
+          [class.class-indicators--empty]="
+            day.classesCount === 0
+          "
+          aria-hidden="true"
+        >
+          <ng-container
+            *ngIf="day.classTones.length > 0; else emptyIndicator"
+          >
+            <span
+              *ngFor="
+                let tone of day.classTones;
+                trackBy: trackByToneIndex
+              "
+              class="class-dot"
+              [class]="'class-dot class-dot--' + tone"
+            ></span>
+          </ng-container>
+
+          <ng-template #emptyIndicator>
+            <span class="empty-mark">
+              −
+            </span>
+          </ng-template>
+        </span>
+
+        <span
+          class="classes-count"
+          [class.classes-count--active]="day.isCurrentDay"
+          [class.classes-count--empty]="
+            day.classesCount === 0
+          "
+        >
+          {{ getClassesLabel(day.classesCount) }}
+        </span>
+      </button>
+    </div>
+
+    <button
+      type="button"
+      class="calendar-button"
+      (click)="onOpenCalendar()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <rect
+          x="3"
+          y="5"
+          width="18"
+          height="16"
+          rx="2.5"
+          stroke="currentColor"
+          stroke-width="1.8"
+        />
+
+        <path
+          d="M7 3v4M17 3v4M3 9h18"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M8 13h3M13 13h3M8 17h3"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <span>
+        Ir al calendario
+      </span>
+    </button>
+
+  </div>
+</section>
