@@ -1,0 +1,307 @@
+<section
+  class="personal-info-card"
+  aria-labelledby="personal-info-title"
+>
+  <header class="personal-info-card__header">
+    <div class="personal-info-card__heading">
+      <span
+        class="personal-info-card__heading-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <circle
+            cx="9.5"
+            cy="7"
+            r="4"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+        </svg>
+      </span>
+
+      <h2
+        id="personal-info-title"
+        class="personal-info-card__title"
+      >
+        Información personal
+      </h2>
+    </div>
+
+    <button
+      type="button"
+      class="personal-info-card__edit"
+      aria-label="Editar información personal"
+      title="Editar información personal"
+      (click)="onEditProfile()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M12 20h9"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4L16.5 3.5Z"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+  </header>
+
+  <div class="personal-info-card__list">
+    <article
+      *ngFor="
+        let item of personalInfoItems;
+        trackBy: trackByLabel
+      "
+      class="personal-info-card__item"
+    >
+      <div class="personal-info-card__item-label">
+        <span
+          class="personal-info-card__item-icon"
+          aria-hidden="true"
+        >
+          <ng-container [ngSwitch]="item.icon">
+
+            <!-- USER -->
+            <svg
+              *ngSwitchCase="'user'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="8"
+                r="4"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M4 21a8 8 0 0 1 16 0"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            <!-- CALENDAR -->
+            <svg
+              *ngSwitchCase="'calendar'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="16"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 3v4M16 3v4M3 10h18"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            <!-- LOCATION -->
+            <svg
+              *ngSwitchCase="'location'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <circle
+                cx="12"
+                cy="10"
+                r="2.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+            </svg>
+
+            <!-- COUNTRY -->
+            <svg
+              *ngSwitchCase="'country'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M5 21V4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M5 5h11l-2 3 2 3H5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <!-- OCCUPATION -->
+            <svg
+              *ngSwitchCase="'occupation'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="7"
+                width="18"
+                height="13"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 12h18"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            <!-- PHONE -->
+            <svg
+              *ngSwitchCase="'phone'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M7.5 3.5 10 8 8.2 9.8a14.1 14.1 0 0 0 6 6L16 14l4.5 2.5-.8 3a2 2 0 0 1-2 1.5C9.6 20.5 3.5 14.4 3 6.3a2 2 0 0 1 1.5-2l3-.8Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <!-- EMAIL -->
+            <svg
+              *ngSwitchCase="'email'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m4 7 8 6 8-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <!-- COMMENT -->
+            <svg
+              *ngSwitchCase="'comment'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M8 10h.01M12 10h.01M16 10h.01"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            <!-- TEMPORARY COMMENT -->
+            <svg
+              *ngSwitchCase="'temporary-comment'"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M12 7v5l3 2"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </ng-container>
+        </span>
+
+        <span>
+          {{ item.label }}
+        </span>
+      </div>
+
+      <div
+        class="personal-info-card__item-value"
+        [class.personal-info-card__item-value--highlighted]="
+          item.isHighlighted
+        "
+        [class.personal-info-card__item-value--empty]="
+          item.value === '—' ||
+          item.value === 'No registrado'
+        "
+      >
+        {{ item.value }}
+      </div>
+    </article>
+  </div>
+</section>

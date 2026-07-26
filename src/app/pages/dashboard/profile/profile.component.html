@@ -1,118 +1,91 @@
-<section class="section">
-  <div class="page-header">
-    <h1>Perfil de Usuario</h1>
+<main class="student-profile">
+  <div
+    class="student-profile__container"
+    *ngIf="user as currentUser"
+  >
+    <!-- RESUMEN PRINCIPAL -->
+    <section class="student-profile__summary">
+      <app-profile-summary
+        [user]="currentUser"
+        (editProfile)="openEditForm()"
+      >
+      </app-profile-summary>
+    </section>
+
+    <!-- INFORMACIÓN RÁPIDA -->
+    <section class="student-profile__overview">
+      <app-profile-overview
+        [user]="currentUser"
+      >
+      </app-profile-overview>
+    </section>
+
+    <!-- CONTENIDO CENTRAL -->
+    <section class="student-profile__content">
+      <!-- COLUMNA IZQUIERDA -->
+      <div class="student-profile__main-column">
+        <app-profile-personal-info
+          [user]="currentUser"
+          (editProfile)="openEditForm()"
+        >
+        </app-profile-personal-info>
+      </div>
+
+      <!-- COLUMNA DERECHA -->
+      <aside class="student-profile__side-column">
+        <app-profile-scheduling-eligibility
+          [user]="currentUser"
+        >
+        </app-profile-scheduling-eligibility>
+
+        <app-profile-academic-status
+          [user]="currentUser"
+        >
+        </app-profile-academic-status>
+      </aside>
+    </section>
+
+    <!-- RECURSOS -->
+    <section class="student-profile__resources">
+      <app-profile-resources
+       [user]="currentUser"
+       [resources]="currentUser.assessmentResources ?? []"
+      >
+      </app-profile-resources>
+    </section>
+
+    <!-- NOTIFICACIONES -->
+    <section class="student-profile__notifications">
+      <app-profile-notification-settings
+        [meetingsAlert]="
+          currentUser.meetingsAlert ?? false
+        "
+      >
+      </app-profile-notification-settings>
+    </section>
   </div>
-  
-  <div class="content">
-   
 
-    <div class="profile-wrapper" *ngIf="userData$ | async as user">
-
-      <!-- HEADER -->
-      <div class="profile-top">
-        <h2>{{ user.firstName }} {{ user.lastName }}</h2>
-        <span class="role-pill">{{ user.role }}</span>
-        <p class="email">{{ user.emailAddress || user.email }}</p>
-      </div>
-
-      <!-- GRID PRINCIPAL -->
-      <div class="profile-grid">
-
-        <!-- DATOS PERSONALES -->
-        <div class="profile-block">
-          <h3>Datos Personales</h3>
-          <div class="info-list">
-            <div><span>Contacto</span><strong>{{ user.contact || "No especificado" }}</strong></div>
-            <div><span>País</span><strong>{{ user.country || "No especificado" }}</strong></div>
-            <div><span>Ciudad</span><strong>{{ user.city || "No especificado" }}</strong></div>
-            <div>
-              <span>Cumpleaños</span>
-              <strong>{{ user?.birthday ? formatBirthday(user.birthday) : "No registrado" }}</strong>
-            </div>
-          </div>
-        </div>
-
-        <!-- DATOS ACADÉMICOS -->
-        <div class="profile-block">
-          <h3>Datos Académicos</h3>
-          <div class="info-list">
-            <div *ngIf="user.occupation">
-              <span>Ocupación</span><strong>{{ user.occupation }}</strong>
-            </div>
-            <div *ngIf="user.role === 'STUDENT' && user.student?.stage">
-              <span>Stage</span>
-              <strong>{{ user.student?.stage?.number || user.student?.stage?.description }}</strong>
-            </div>
-            <div *ngIf="user.status">
-              <span>Estado</span><strong>{{ user.status }}</strong>
-            </div>
-          </div>
-        </div>
-
-        <!-- REPRESENTANTE -->
-        <div
-          *ngIf="
-            user.role === 'STUDENT' &&
-            user.student &&
-            (user.student.tutorName || user.student.tutorEmail || user.student.tutorPhone)
-          "
-          class="profile-block"
-        >
-          <h3>Representante</h3>
-          <div class="info-list">
-            <div *ngIf="user.student.tutorName">
-              <span>Nombre</span><strong>{{ user.student.tutorName }}</strong>
-            </div>
-            <div *ngIf="user.student.tutorEmail">
-              <span>Email</span><strong>{{ user.student.tutorEmail }}</strong>
-            </div>
-            <div *ngIf="user.student.tutorPhone">
-              <span>Teléfono</span><strong>{{ user.student.tutorPhone }}</strong>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- 🔥 PASSWORD EN FILA COMPLETA -->
-      <div class="password-row">
-        <h3>Cambiar contraseña</h3>
-
-        <div class="password-inline">
-          <input
-            [type]="showPassword ? 'text' : 'password'"
-            [(ngModel)]="newPassword"
-            placeholder="Nueva contraseña"
-            class="modern-input"
-          />
-
-          <button
-            *ngIf="newPassword.trim().length >= 6"
-            class="modern-button"
-            (click)="togglePasswordEdit()"
-          >
-            Actualizar
-          </button>
-        </div>
-
-        <p
-          *ngIf="newPassword.trim().length > 0 && newPassword.trim().length < 6"
-          class="input-error"
-        >
-          Mínimo 6 caracteres.
-        </p>
-      </div>
-
-      <!-- BOTÓN FINAL -->
-      <div class="profile-footer">
-        <button class="edit-button" (click)="openEditForm()">
-          {{ user.dataCompleted ? "Editar información" : "Completar información" }}
-        </button>
-      </div>
-
+  <!-- ESTADO SIN USUARIO -->
+  <div
+    class="student-profile__empty"
+    *ngIf="!user"
+  >
+    <div class="student-profile__empty-icon">
+      <i class="fa-regular fa-user"></i>
     </div>
 
-     <app-users-info-form
+    <h2>
+      No se pudo cargar el perfil
+    </h2>
+
+    <p>
+      La información del estudiante no está
+      disponible en este momento.
+    </p>
+  </div>
+
+  <!-- FORMULARIO EXISTENTE -->
+    <app-users-info-form
       *ngIf="showUserInfoForm"
       [isModalOpen]="true"
       [dataCompleted]="dataCompleted"
@@ -130,5 +103,4 @@
       [title]="modal.title || ''"
       (close)="modal.close()">
     </app-modal>
-  </div>
-</section>
+</main>
