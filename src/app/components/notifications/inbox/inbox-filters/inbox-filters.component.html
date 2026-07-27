@@ -1,11 +1,231 @@
-<div class="filters">
-  <label for="readDays">Ver últimos días:</label>
-  <input
-    id="readDays"
-    type="number"
-    min="1"
-    max="365"
-    [ngModel]="readDays"
-    (ngModelChange)="onChange($event)"
-  />
-</div>
+<section
+  class="inbox-filters"
+  aria-label="Filtros de notificaciones"
+>
+  <div class="inbox-filters__grid">
+
+    <div class="inbox-filters__search">
+      <i
+        class="fa-solid fa-magnifying-glass"
+        aria-hidden="true"
+      ></i>
+
+      <input
+        #searchInput
+        type="search"
+        class="inbox-filters__search-input"
+        placeholder="Buscar por título o contenido..."
+        aria-label="Buscar notificaciones"
+        autocomplete="off"
+        [disabled]="disabled"
+        [value]="localFilters.search"
+        (input)="onSearchChange(searchInput.value)"
+      />
+
+      <button
+        *ngIf="localFilters.search"
+        type="button"
+        class="inbox-filters__search-clear"
+        aria-label="Limpiar búsqueda"
+        [disabled]="disabled"
+        (click)="onSearchChange('')"
+      >
+        <i
+          class="fa-solid fa-xmark"
+          aria-hidden="true"
+        ></i>
+      </button>
+    </div>
+
+    <div class="inbox-filters__field">
+      <label
+        class="inbox-filters__label"
+        for="notification-read-state"
+      >
+        Estado
+      </label>
+
+      <div class="inbox-filters__select-wrapper">
+        <select
+          #readStateSelect
+          id="notification-read-state"
+          class="inbox-filters__control"
+          [disabled]="disabled"
+          [value]="localFilters.readState"
+          (change)="
+            onReadStateChange(
+              $any(readStateSelect.value)
+            )
+          "
+        >
+          <option
+            *ngFor="let option of readStateOptions"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+
+        <i
+          class="fa-solid fa-chevron-down"
+          aria-hidden="true"
+        ></i>
+      </div>
+    </div>
+
+    <div class="inbox-filters__field">
+      <label
+        class="inbox-filters__label"
+        for="notification-type"
+      >
+        Tipo
+      </label>
+
+      <div class="inbox-filters__select-wrapper">
+        <select
+          #typeSelect
+          id="notification-type"
+          class="inbox-filters__control"
+          [disabled]="disabled"
+          [value]="localFilters.type"
+          (change)="
+            onTypeChange(
+              $any(typeSelect.value)
+            )
+          "
+        >
+          <option
+            *ngFor="let option of notificationTypeOptions"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+
+        <i
+          class="fa-solid fa-chevron-down"
+          aria-hidden="true"
+        ></i>
+      </div>
+    </div>
+
+    <div class="inbox-filters__field">
+      <label
+        class="inbox-filters__label"
+        for="notification-read-days"
+      >
+        Periodo
+      </label>
+
+      <div class="inbox-filters__select-wrapper">
+        <select
+          #readDaysSelect
+          id="notification-read-days"
+          class="inbox-filters__control"
+          [disabled]="disabled"
+          [value]="readDays"
+          (change)="
+            onReadDaysChange(
+              readDaysSelect.value
+            )
+          "
+        >
+          <option
+            *ngFor="let option of readDaysOptions"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+
+        <i
+          class="fa-solid fa-chevron-down"
+          aria-hidden="true"
+        ></i>
+      </div>
+    </div>
+
+    <div class="inbox-filters__field">
+      <label
+        class="inbox-filters__label"
+        for="notification-from-date"
+      >
+        Desde
+      </label>
+
+      <input
+        #fromDateInput
+        id="notification-from-date"
+        type="date"
+        class="
+          inbox-filters__control
+          inbox-filters__control--date
+        "
+        [disabled]="disabled"
+        [max]="localFilters.toDate || todayDate"
+        [value]="localFilters.fromDate"
+        (change)="
+          onFromDateChange(
+            fromDateInput.value
+          )
+        "
+      />
+    </div>
+
+    <div class="inbox-filters__field">
+      <label
+        class="inbox-filters__label"
+        for="notification-to-date"
+      >
+        Hasta
+      </label>
+
+      <input
+        #toDateInput
+        id="notification-to-date"
+        type="date"
+        class="
+          inbox-filters__control
+          inbox-filters__control--date
+        "
+        [disabled]="disabled"
+        [min]="localFilters.fromDate"
+        [max]="todayDate"
+        [value]="localFilters.toDate"
+        (change)="
+          onToDateChange(
+            toDateInput.value
+          )
+        "
+      />
+    </div>
+
+    <button
+      type="button"
+      class="inbox-filters__clear-button"
+      [disabled]="
+        disabled ||
+        !hasActiveFilters
+      "
+      (click)="onClearFilters()"
+    >
+      <i
+        class="fa-solid fa-filter-circle-xmark"
+        aria-hidden="true"
+      ></i>
+
+      <span>
+        Limpiar filtros
+      </span>
+    </button>
+
+  </div>
+
+  <p
+    *ngIf="hasInvalidDateRange"
+    class="inbox-filters__error"
+    role="alert"
+  >
+    La fecha inicial no puede ser posterior a la fecha final.
+  </p>
+</section>

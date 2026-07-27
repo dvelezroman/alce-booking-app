@@ -1,0 +1,179 @@
+<article
+  class="notification-card"
+  [class.notification-card--unread]="isUnread"
+  [attr.data-type]="notificationType"
+  [attr.aria-label]="cardAriaLabel"
+>
+  <!-- INDICADOR IZQUIERDO -->
+  <span
+    class="notification-card__status-dot notification-card__status-dot--left"
+    [class.notification-card__status-dot--active]="isUnread"
+    aria-hidden="true"
+  ></span>
+
+  <!-- ICONO -->
+  <div
+    class="notification-card__icon"
+    [attr.data-type]="notificationType"
+    aria-hidden="true"
+  >
+    <ng-container [ngSwitch]="notificationType">
+
+      <!-- MEETING -->
+      <svg
+        *ngSwitchCase="'meeting'"
+        viewBox="0 0 24 24"
+      >
+        <path d="M4 11v2"></path>
+        <path d="M6 9.5v5"></path>
+        <path d="M8 9h4l6-3v12l-6-3H8a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2Z"></path>
+        <path d="m18 10 3-1.5v7L18 14"></path>
+        <path d="m10 15 1 5"></path>
+      </svg>
+
+      <!-- ASSESSMENT -->
+      <svg
+        *ngSwitchCase="'assessment'"
+        viewBox="0 0 24 24"
+      >
+        <path d="M5 4h12a2 2 0 0 1 2 2v8"></path>
+        <path d="M5 4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h6"></path>
+        <path d="M7 8h8"></path>
+        <path d="M7 11h5"></path>
+        <path d="M15 15h6v5h-3l-2 2v-2h-1Z"></path>
+      </svg>
+
+      <!-- ANNOUNCE -->
+      <svg
+        *ngSwitchCase="'announce'"
+        viewBox="0 0 24 24"
+      >
+        <path d="M4 11v2"></path>
+        <path d="M6 9h5l7-4v14l-7-4H6a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2Z"></path>
+        <path d="m9 15 1 5"></path>
+      </svg>
+
+      <!-- SYSTEM -->
+      <svg
+        *ngSwitchCase="'system'"
+        viewBox="0 0 24 24"
+      >
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M12 7v6"></path>
+        <path d="M12 17h.01"></path>
+      </svg>
+
+      <!-- ADVICE -->
+      <svg
+        *ngSwitchCase="'advice'"
+        viewBox="0 0 24 24"
+      >
+        <path d="M9 18h6"></path>
+        <path d="M10 22h4"></path>
+        <path d="M8.5 15.5A7 7 0 1 1 15.5 15.5c-.9.7-1.5 1.5-1.5 2.5h-4c0-1-.6-1.8-1.5-2.5Z"></path>
+      </svg>
+
+      <!-- COMMENTARY -->
+      <svg
+        *ngSwitchCase="'commentary'"
+        viewBox="0 0 24 24"
+      >
+        <path d="M21 15a3 3 0 0 1-3 3H9l-5 4v-4a3 3 0 0 1-2-3V6a3 3 0 0 1 3-3h13a3 3 0 0 1 3 3Z"></path>
+        <path d="M7 8h10"></path>
+        <path d="M7 12h7"></path>
+      </svg>
+
+      <!-- MANDATORY -->
+      <svg
+        *ngSwitchCase="'mandatory'"
+        viewBox="0 0 24 24"
+      >
+        <path d="M12 3 2.8 19a1.4 1.4 0 0 0 1.2 2h16a1.4 1.4 0 0 0 1.2-2Z"></path>
+        <path d="M12 9v5"></path>
+        <path d="M12 17h.01"></path>
+      </svg>
+
+      <!-- DEFAULT -->
+      <svg
+        *ngSwitchDefault
+        viewBox="0 0 24 24"
+      >
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+        <path d="M10 21h4"></path>
+      </svg>
+
+    </ng-container>
+  </div>
+
+  <!-- CONTENIDO -->
+  <div class="notification-card__content">
+
+    <h3 class="notification-card__title">
+      {{ title }}
+    </h3>
+
+    <p
+      *ngIf="description"
+      class="notification-card__description"
+    >
+      {{ description }}
+    </p>
+
+    <div class="notification-card__metadata">
+      <span class="notification-card__metadata-item">
+        De: {{ senderName }}
+      </span>
+
+      <span
+        class="notification-card__separator"
+        aria-hidden="true"
+      >
+        •
+      </span>
+
+      <span class="notification-card__metadata-item">
+        {{ notificationTypeLabel }}
+      </span>
+
+      <span
+        class="notification-card__separator"
+        aria-hidden="true"
+      >
+        •
+      </span>
+
+      <span
+        class="notification-card__priority"
+        [attr.data-priority]="priority"
+      >
+        {{ priorityLabel }}
+      </span>
+    </div>
+  </div>
+
+  <!-- INFORMACIÓN DERECHA -->
+  <div class="notification-card__aside">
+
+    <span
+      class="notification-card__type"
+      [attr.data-type]="notificationType"
+    >
+      {{ notificationTypeLabel }}
+    </span>
+
+    <time
+      *ngIf="createdAt"
+      class="notification-card__date"
+      [attr.datetime]="createdAt | date: 'yyyy-MM-ddTHH:mm:ss'"
+    >
+      {{ createdAt | date: 'd MMM, h:mm a' }}
+    </time>
+  </div>
+
+  <!-- INDICADOR DERECHO -->
+  <span
+    class="notification-card__status-dot notification-card__status-dot--right"
+    [class.notification-card__status-dot--active]="isUnread"
+    aria-hidden="true"
+  ></span>
+</article>

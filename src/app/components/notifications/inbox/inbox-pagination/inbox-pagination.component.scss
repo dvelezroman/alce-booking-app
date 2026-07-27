@@ -1,0 +1,412 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.inbox-pagination {
+  width: 100%;
+  min-height: 5rem;
+
+  display: grid;
+  grid-template-columns:
+    minmax(12rem, 1fr)
+    auto
+    minmax(10rem, 1fr);
+  align-items: center;
+  gap: 1rem;
+
+  padding: 0.85rem 1rem;
+
+  border: 1px solid #e2e7f0;
+  border-radius: 0.85rem;
+
+  background: #ffffff;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 0.15rem 0.5rem
+      rgba(20, 35, 80, 0.04);
+}
+
+/* ==========================
+   RESUMEN
+   ========================== */
+
+.inbox-pagination__summary {
+  min-width: 0;
+
+  color: #5f687e;
+
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ==========================
+   NAVEGACIÓN
+   ========================== */
+
+.inbox-pagination__navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.inbox-pagination__button {
+  width: 2.35rem;
+  height: 2.35rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid #dfe4ed;
+  border-radius: 0.5rem;
+
+  background: #ffffff;
+  color: #212844;
+
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.inbox-pagination__button:hover:not(:disabled) {
+  border-color: #bfcbea;
+
+  background: #f4f7ff;
+  color: #1768df;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 0.2rem 0.55rem
+      rgba(39, 91, 186, 0.08);
+}
+
+.inbox-pagination__button--active {
+  border-color: #1475ed;
+
+  background:
+    linear-gradient(
+      180deg,
+      #2384ff 0%,
+      #1169df 100%
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 0.25rem 0.65rem
+      rgba(20, 105, 223, 0.22);
+}
+
+.inbox-pagination__button--active:hover {
+  border-color: #1475ed;
+
+  background:
+    linear-gradient(
+      180deg,
+      #2384ff 0%,
+      #1169df 100%
+    );
+
+  color: #ffffff;
+}
+
+.inbox-pagination__button--arrow svg {
+  width: 1rem;
+  height: 1rem;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.inbox-pagination__button:disabled {
+  border-color: #e7eaf0;
+
+  background: #f8f9fb;
+  color: #b8bfcc;
+
+  cursor: not-allowed;
+
+  opacity: 0.75;
+}
+
+.inbox-pagination__ellipsis {
+  min-width: 1.65rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #6f788d;
+
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ==========================
+   SELECTOR
+   ========================== */
+
+.inbox-pagination__limit {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.inbox-pagination__select {
+  min-width: 8.8rem;
+  height: 2.5rem;
+
+  padding: 0 2.25rem 0 0.8rem;
+
+  border: 1px solid #dfe4ed;
+  border-radius: 0.55rem;
+
+  background-color: #ffffff;
+  color: #343b55;
+
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  outline: none;
+
+  appearance: none;
+
+  background-image:
+    linear-gradient(
+      45deg,
+      transparent 50%,
+      #6d7588 50%
+    ),
+    linear-gradient(
+      135deg,
+      #6d7588 50%,
+      transparent 50%
+    );
+  background-position:
+    calc(100% - 1rem) 50%,
+    calc(100% - 0.7rem) 50%;
+  background-size:
+    0.3rem 0.3rem,
+    0.3rem 0.3rem;
+  background-repeat: no-repeat;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.inbox-pagination__select:hover {
+  border-color: #c2cce0;
+
+  background-color: #fbfcff;
+}
+
+.inbox-pagination__select:focus {
+  border-color: #4e8fe9;
+
+  box-shadow:
+    0 0 0 0.18rem
+      rgba(47, 118, 224, 0.12);
+}
+
+/* ==========================
+   ACCESIBILIDAD
+   ========================== */
+
+.visually-hidden {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  overflow: hidden;
+
+  padding: 0;
+  margin: -1px;
+
+  border: 0;
+
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* ==========================
+   RESPONSIVE
+   ========================== */
+
+@media screen and (max-width: 900px) {
+  .inbox-pagination {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'summary limit'
+      'navigation navigation';
+
+    gap: 0.8rem;
+
+    min-height: auto;
+  }
+
+  .inbox-pagination__summary {
+    grid-area: summary;
+  }
+
+  .inbox-pagination__navigation {
+    grid-area: navigation;
+  }
+
+  .inbox-pagination__limit {
+    grid-area: limit;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  .inbox-pagination {
+    min-height: auto;
+
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'summary'
+      'navigation'
+      'limit';
+
+    gap: 0.6rem;
+
+    padding: 0.65rem;
+
+    border-radius: 0.75rem;
+  }
+
+  .inbox-pagination__summary {
+    grid-area: summary;
+
+    font-size: 0.7rem;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .inbox-pagination__navigation {
+    grid-area: navigation;
+
+    gap: 0.25rem;
+
+    flex-wrap: nowrap;
+  }
+
+  .inbox-pagination__button {
+    width: 1.9rem;
+    height: 1.9rem;
+
+    border-radius: 0.42rem;
+
+    font-size: 0.68rem;
+  }
+
+  .inbox-pagination__button--arrow svg {
+    width: 0.82rem;
+    height: 0.82rem;
+  }
+
+  .inbox-pagination__ellipsis {
+    min-width: 1rem;
+
+    font-size: 0.7rem;
+  }
+
+  .inbox-pagination__limit {
+    display: none;
+  }
+
+  .inbox-pagination__select {
+    width: 100%;
+    max-width: 9.5rem;
+    height: 2.1rem;
+
+    padding:
+      0
+      1.8rem
+      0
+      0.65rem;
+
+    border-radius: 0.48rem;
+
+    font-size: 0.68rem;
+
+    background-position:
+      calc(100% - 0.8rem) 50%,
+      calc(100% - 0.58rem) 50%;
+
+    background-size:
+      0.25rem 0.25rem,
+      0.25rem 0.25rem;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .inbox-pagination {
+    gap: 0.5rem;
+
+    padding: 0.55rem;
+  }
+
+  .inbox-pagination__summary {
+    font-size: 0.65rem;
+  }
+
+  .inbox-pagination__navigation {
+    gap: 0.2rem;
+  }
+
+  .inbox-pagination__button {
+    width: 1.75rem;
+    height: 1.75rem;
+
+    font-size: 0.63rem;
+  }
+
+  .inbox-pagination__button--arrow svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .inbox-pagination__ellipsis {
+    min-width: 0.8rem;
+
+    font-size: 0.65rem;
+  }
+
+  .inbox-pagination__select {
+    max-width: 8.8rem;
+    height: 2rem;
+
+    font-size: 0.64rem;
+  }
+}

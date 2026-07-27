@@ -1,0 +1,619 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.notification-card {
+  position: relative;
+
+  width: 100%;
+  min-height: 7.4rem;
+
+  display: grid;
+  grid-template-columns:
+    1.1rem
+    4.25rem
+    minmax(0, 1fr)
+    minmax(8rem, auto)
+    1.1rem;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 1.1rem 1rem;
+
+  border: 1px solid #e1e6ef;
+  border-radius: 0.9rem;
+
+  background: #ffffff;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 0.12rem 0.45rem
+      rgba(20, 35, 80, 0.035);
+
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.notification-card:hover {
+  border-color: #cfd9ea;
+
+  background: #fbfcff;
+
+  box-shadow:
+    0 0.35rem 1rem
+      rgba(26, 49, 95, 0.07);
+}
+
+.notification-card--unread {
+  border-color: #d8e2f2;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ffffff 0%,
+      #fbfdff 100%
+    );
+}
+
+/* ==========================
+   INDICADORES
+   ========================== */
+
+.notification-card__status-dot {
+  width: 0.62rem;
+  height: 0.62rem;
+
+  display: block;
+  flex-shrink: 0;
+
+  border: 1px solid #c5ccda;
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  box-sizing: border-box;
+}
+
+.notification-card__status-dot--left {
+  justify-self: center;
+
+  opacity: 0;
+}
+
+.notification-card__status-dot--right {
+  justify-self: center;
+}
+
+.notification-card__status-dot--active {
+  border-color: #1476ea;
+
+  background: #1476ea;
+
+  box-shadow:
+    0 0 0 0.18rem
+      rgba(20, 118, 234, 0.08);
+}
+
+.notification-card__status-dot--left.notification-card__status-dot--active {
+  opacity: 1;
+}
+
+/* ==========================
+   ICONO
+   ========================== */
+
+.notification-card__icon {
+  width: 4.1rem;
+  height: 4.1rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #edf4ff;
+
+  box-sizing: border-box;
+}
+
+.notification-card__icon svg {
+  width: 2rem;
+  height: 2rem;
+
+  fill: none;
+  stroke: #2675df;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Meeting */
+
+.notification-card__icon[data-type='meeting'] {
+  background:
+    linear-gradient(
+      145deg,
+      #eff5ff 0%,
+      #e5eeff 100%
+    );
+}
+
+.notification-card__icon[data-type='meeting'] svg {
+  stroke: #266fd1;
+}
+
+/* Assessment */
+
+.notification-card__icon[data-type='assessment'] {
+  background:
+    linear-gradient(
+      145deg,
+      #effaf4 0%,
+      #e1f4e9 100%
+    );
+}
+
+.notification-card__icon[data-type='assessment'] svg {
+  stroke: #33a35c;
+}
+
+/* Announce */
+
+.notification-card__icon[data-type='announce'] {
+  background:
+    linear-gradient(
+      145deg,
+      #f6f0ff 0%,
+      #ece4fb 100%
+    );
+}
+
+.notification-card__icon[data-type='announce'] svg {
+  stroke: #8a49d2;
+}
+
+/* System */
+
+.notification-card__icon[data-type='system'] {
+  background:
+    linear-gradient(
+      145deg,
+      #fff8e8 0%,
+      #fff0cf 100%
+    );
+}
+
+.notification-card__icon[data-type='system'] svg {
+  stroke: #f4a51c;
+}
+
+/* Advice */
+
+.notification-card__icon[data-type='advice'] {
+  background:
+    linear-gradient(
+      145deg,
+      #effbea 0%,
+      #e5f5dc 100%
+    );
+}
+
+.notification-card__icon[data-type='advice'] svg {
+  stroke: #66ae35;
+}
+
+/* Commentary */
+
+.notification-card__icon[data-type='commentary'] {
+  background:
+    linear-gradient(
+      145deg,
+      #fff5e9 0%,
+      #ffead2 100%
+    );
+}
+
+.notification-card__icon[data-type='commentary'] svg {
+  stroke: #ea9225;
+}
+
+/* Mandatory */
+
+.notification-card__icon[data-type='mandatory'] {
+  background:
+    linear-gradient(
+      145deg,
+      #fff0f0 0%,
+      #ffe3e3 100%
+    );
+}
+
+.notification-card__icon[data-type='mandatory'] svg {
+  stroke: #e65252;
+}
+
+/* ==========================
+   CONTENIDO
+   ========================== */
+
+.notification-card__content {
+  min-width: 0;
+}
+
+.notification-card__title {
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #171d43;
+
+  font-size: 0.98rem;
+  font-weight: 750;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notification-card--unread
+  .notification-card__title {
+  font-weight: 800;
+}
+
+.notification-card__description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+
+  margin: 0.35rem 0 0;
+
+  color: #6b738a;
+
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.notification-card__metadata {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+
+  margin-top: 0.8rem;
+
+  color: #747c91;
+
+  font-size: 0.76rem;
+  line-height: 1.3;
+}
+
+.notification-card__metadata-item {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notification-card__separator {
+  color: #9fa7b6;
+
+  font-size: 0.7rem;
+}
+
+.notification-card__priority {
+  font-weight: 500;
+}
+
+.notification-card__priority[data-priority='high'] {
+  color: #ef5b67;
+}
+
+.notification-card__priority[data-priority='medium'] {
+  color: #e9a82d;
+}
+
+.notification-card__priority[data-priority='low'] {
+  color: #3ea66d;
+}
+
+.notification-card__priority[data-priority='default'] {
+  color: #718096;
+}
+
+/* ==========================
+   ASIDE
+   ========================== */
+
+.notification-card__aside {
+  min-width: 8rem;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding: 0.15rem 0;
+
+  box-sizing: border-box;
+}
+
+.notification-card__type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 1.65rem;
+
+  padding: 0.22rem 0.7rem;
+
+  border: 1px solid #d5dce7;
+  border-radius: 0.55rem;
+
+  background: #f0f3f7;
+  color: #596278;
+
+  font-size: 0.67rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  box-sizing: border-box;
+}
+
+/* Meeting */
+
+.notification-card__type[data-type='meeting'] {
+  border-color: #f1bfc8;
+
+  background: #ffe9ed;
+  color: #cc4054;
+}
+
+/* Assessment */
+
+.notification-card__type[data-type='assessment'] {
+  border-color: #d8baf2;
+
+  background: #f2e8ff;
+  color: #7e3fc5;
+}
+
+/* Announce */
+
+.notification-card__type[data-type='announce'] {
+  border-color: #b9d5f5;
+
+  background: #e6f1ff;
+  color: #2a69bb;
+}
+
+/* System */
+
+.notification-card__type[data-type='system'] {
+  border-color: #d9dee7;
+
+  background: #eef1f5;
+  color: #566075;
+}
+
+/* Advice */
+
+.notification-card__type[data-type='advice'] {
+  border-color: #cce8bd;
+
+  background: #effbe8;
+  color: #5b9b34;
+}
+
+/* Commentary */
+
+.notification-card__type[data-type='commentary'] {
+  border-color: #f0d19c;
+
+  background: #fff4df;
+  color: #cf8420;
+}
+
+/* Mandatory */
+
+.notification-card__type[data-type='mandatory'] {
+  border-color: #f0babb;
+
+  background: #ffe8e8;
+  color: #cb4345;
+}
+
+.notification-card__date {
+  color: #737b91;
+
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ==========================
+   TABLET
+   ========================== */
+
+@media screen and (max-width: 950px) {
+  .notification-card {
+    grid-template-columns:
+      0.85rem
+      3.6rem
+      minmax(0, 1fr)
+      minmax(7.25rem, auto)
+      0.85rem;
+
+    gap: 0.8rem;
+
+    padding: 1rem 0.8rem;
+  }
+
+  .notification-card__icon {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .notification-card__icon svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .notification-card__title {
+    font-size: 0.92rem;
+  }
+
+  .notification-card__description {
+    font-size: 0.76rem;
+  }
+
+  .notification-card__metadata,
+  .notification-card__date {
+    font-size: 0.72rem;
+  }
+}
+
+/* ==========================
+   MOBILE
+   ========================== */
+
+@media screen and (max-width: 680px) {
+  .notification-card {
+    grid-template-columns:
+      0.45rem
+      2.6rem
+      minmax(0, 1fr)
+      minmax(5.8rem, auto)
+      0.45rem;
+
+    gap: 0.55rem;
+
+    padding: 0.75rem 0.6rem;
+
+    min-height: 5.4rem;
+  }
+
+  .notification-card__icon {
+    width: 2.55rem;
+    height: 2.55rem;
+  }
+
+  .notification-card__icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .notification-card__status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  .notification-card__title {
+    font-size: 0.82rem;
+  }
+
+  .notification-card__description {
+    margin-top: 0.2rem;
+
+    font-size: 0.68rem;
+  }
+
+  .notification-card__metadata {
+    margin-top: 0.4rem;
+
+    gap: 0.25rem;
+
+    font-size: 0.63rem;
+  }
+
+  .notification-card__separator {
+    font-size: 0.55rem;
+  }
+
+  .notification-card__aside {
+    min-width: 5.8rem;
+
+    gap: 0.5rem;
+  }
+
+  .notification-card__type {
+    min-height: 1.3rem;
+
+    padding: 0.12rem 0.45rem;
+
+    border-radius: 0.4rem;
+
+    font-size: 0.54rem;
+  }
+
+  .notification-card__date {
+    font-size: 0.62rem;
+  }
+}
+
+/* ==========================
+   MOBILE PEQUEÑO
+   ========================== */
+
+@media screen and (max-width: 420px) {
+  .notification-card {
+    grid-template-columns:
+      0.4rem
+      2.2rem
+      minmax(0, 1fr)
+      minmax(5rem, auto);
+
+    gap: 0.45rem;
+
+    padding: 0.65rem 0.5rem;
+  }
+
+  .notification-card__status-dot--right {
+    display: none;
+  }
+
+  .notification-card__icon {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .notification-card__icon svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .notification-card__title {
+    font-size: 0.76rem;
+  }
+
+  .notification-card__metadata {
+    font-size: 0.58rem;
+  }
+
+  .notification-card__type {
+    min-height: 1.15rem;
+
+    padding: 0.1rem 0.38rem;
+
+    font-size: 0.5rem;
+  }
+
+  .notification-card__date {
+    font-size: 0.56rem;
+  }
+}

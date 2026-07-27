@@ -1,0 +1,587 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.inbox-summary {
+  width: 100%;
+  padding: 0.9rem 1rem;
+
+  border: 1px solid #e2e6ef;
+  border-radius: 0.8rem;
+
+  background: #ffffff;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 0.12rem 0.4rem
+      rgba(20, 35, 80, 0.04);
+}
+
+/* ==========================
+   HEADER
+   ========================== */
+
+.inbox-summary__header {
+  padding-bottom: 0.75rem;
+
+  border-bottom: 1px solid #edf0f5;
+}
+
+.inbox-summary__title {
+  margin: 0;
+
+  color: #171c3f;
+
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.inbox-summary__highlight {
+  min-height: 4.4rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+
+  margin-top: 0.3rem;
+}
+
+.inbox-summary__unread {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.inbox-summary__unread-value {
+  flex-shrink: 0;
+
+  color: #0877f9;
+
+  font-size: 2.1rem;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.inbox-summary__unread-label {
+  color: #272d4b;
+
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.2;
+
+  white-space: nowrap;
+}
+
+/* ==========================
+   ILUSTRACIÓN
+   ========================== */
+
+.inbox-summary__illustration {
+  position: relative;
+
+  width: 3.65rem;
+  height: 3.75rem;
+
+  flex-shrink: 0;
+}
+
+/* ==========================
+   TAPA ABIERTA
+   ========================== */
+
+.inbox-summary__open-flap {
+  position: absolute;
+  z-index: 1;
+  right: 0.12rem;
+  bottom: 1.65rem;
+  left: 0.12rem;
+
+  height: 1.9rem;
+
+  display: block;
+
+  border-radius:
+    0.35rem
+    0.35rem
+    0
+    0;
+
+  background:
+    linear-gradient(
+      145deg,
+      #5a9cff 0%,
+      #1b6ce7 100%
+    );
+
+  clip-path:
+    polygon(
+      0 100%,
+      50% 0,
+      100% 100%
+    );
+}
+
+/* ==========================
+   HOJA
+   ========================== */
+
+.inbox-summary__paper {
+  position: absolute;
+  z-index: 2;
+  top: 0.25rem;
+  left: 50%;
+
+  width: 2.45rem;
+  height: 2.35rem;
+
+  border-radius:
+    0.3rem
+    0.3rem
+    0.12rem
+    0.12rem;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #dce6f4 100%
+    );
+
+  box-shadow:
+    0 0.12rem 0.25rem
+      rgba(39, 68, 124, 0.1);
+
+  transform: translateX(-50%);
+}
+
+/* Líneas decorativas de la hoja */
+
+.inbox-summary__paper::before,
+.inbox-summary__paper::after {
+  content: '';
+
+  position: absolute;
+  left: 0.45rem;
+
+  height: 0.12rem;
+
+  border-radius: 999px;
+
+  background: #bdcce2;
+}
+
+.inbox-summary__paper::before {
+  top: 0.65rem;
+
+  width: 1.5rem;
+}
+
+.inbox-summary__paper::after {
+  top: 1rem;
+
+  width: 1.15rem;
+}
+
+/* ==========================
+   CUERPO DEL SOBRE
+   ========================== */
+
+.inbox-summary__envelope {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 0.08rem;
+  left: 0;
+
+  height: 2.35rem;
+
+  overflow: hidden;
+
+  border-radius:
+    0.34rem
+    0.34rem
+    0.45rem
+    0.45rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #438cff 0%,
+      #1364e8 100%
+    );
+
+  box-shadow:
+    0 0.28rem 0.6rem
+      rgba(27, 103, 229, 0.18);
+}
+
+/* ==========================
+   TAPA CERRADA
+   ========================== */
+
+.inbox-summary__closed-flap {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  right: 0;
+  left: 0;
+
+  height: 78%;
+
+  display: block;
+
+  background:
+    linear-gradient(
+      145deg,
+      #5599ff 0%,
+      #1767df 100%
+    );
+
+  clip-path:
+    polygon(
+      0 0,
+      100% 0,
+      50% 88%
+    );
+}
+
+/* ==========================
+   PLIEGUES FRONTALES
+   ========================== */
+
+.inbox-summary__envelope-fold {
+  position: absolute;
+  z-index: 4;
+  bottom: 0;
+
+  display: block;
+}
+
+.inbox-summary__envelope-fold--left {
+  left: 0;
+
+  width: 58%;
+  height: 82%;
+
+  background: #317af4;
+
+  clip-path:
+    polygon(
+      0 0,
+      100% 100%,
+      0 100%
+    );
+}
+
+.inbox-summary__envelope-fold--right {
+  right: 0;
+
+  width: 58%;
+  height: 82%;
+
+  background: #1764dd;
+
+  clip-path:
+    polygon(
+      100% 0,
+      100% 100%,
+      0 100%
+    );
+}
+
+.inbox-summary__envelope-fold--bottom {
+  right: 0;
+  left: 0;
+
+  width: 100%;
+  height: 72%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2c7af8 0%,
+      #1765e7 100%
+    );
+
+  clip-path:
+    polygon(
+      0 100%,
+      50% 15%,
+      100% 100%
+    );
+}
+
+/* ==========================
+   ESTADO CERRADO
+   ========================== */
+
+.inbox-summary__illustration--closed
+  .inbox-summary__envelope-fold {
+  z-index: 3;
+}
+
+.inbox-summary__illustration--closed
+  .inbox-summary__closed-flap {
+  z-index: 4;
+}
+
+/* ==========================
+   BADGE
+   ========================== */
+
+.inbox-summary__badge {
+  position: absolute;
+  z-index: 8;
+  top: 0;
+  right: -0.1rem;
+
+  min-width: 1.6rem;
+  height: 1.6rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 0.25rem;
+
+  border: 0.13rem solid #ffffff;
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #1183ff 0%,
+      #0061db 100%
+    );
+
+  color: #ffffff;
+
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 0.15rem 0.4rem
+      rgba(0, 91, 216, 0.25);
+}
+
+/* ==========================
+   BADGE
+   ========================== */
+
+.inbox-summary__badge {
+  position: absolute;
+  z-index: 6;
+  top: 0;
+  right: -0.1rem;
+
+  min-width: 1.6rem;
+  height: 1.6rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 0.25rem;
+
+  border: 0.13rem solid #ffffff;
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #1183ff 0%,
+      #0061db 100%
+    );
+
+  color: #ffffff;
+
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 0.15rem 0.4rem
+      rgba(0, 91, 216, 0.25);
+}
+
+/* ==========================
+   LISTA
+   ========================== */
+
+.inbox-summary__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  padding-top: 0.4rem;
+}
+
+.inbox-summary__item {
+  min-height: 1.9rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+
+  padding: 0.18rem 0;
+
+  box-sizing: border-box;
+}
+
+.inbox-summary__item-main {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inbox-summary__dot {
+  width: 0.32rem;
+  height: 0.32rem;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #2878ef;
+}
+
+.inbox-summary__item[data-type='total']
+  .inbox-summary__dot {
+  background: #9869eb;
+}
+
+.inbox-summary__item[data-type='unread']
+  .inbox-summary__dot {
+  background: #9566e9;
+}
+
+.inbox-summary__item[data-type='read']
+  .inbox-summary__dot {
+  background: #5270e4;
+}
+
+.inbox-summary__item[data-type='today']
+  .inbox-summary__dot,
+.inbox-summary__item[data-type='week']
+  .inbox-summary__dot {
+  background: #2787ed;
+}
+
+.inbox-summary__item-label {
+  overflow: hidden;
+
+  color: #333951;
+
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.25;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inbox-summary__item-value {
+  min-width: 1.6rem;
+
+  flex-shrink: 0;
+
+  color: #272d4c;
+
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.15;
+  text-align: right;
+}
+
+/* ==========================
+   RESPONSIVE
+   ========================== */
+
+@media screen and (max-width: 1180px) {
+  .inbox-summary {
+    padding: 0.85rem;
+  }
+
+  .inbox-summary__highlight {
+    gap: 0.35rem;
+  }
+
+  .inbox-summary__unread {
+    gap: 0.35rem;
+  }
+
+  .inbox-summary__unread-value {
+    font-size: 1.9rem;
+  }
+
+  .inbox-summary__unread-label {
+    font-size: 0.72rem;
+  }
+
+  .inbox-summary__illustration {
+    width: 3.3rem;
+    height: 3.45rem;
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .inbox-summary__highlight {
+    justify-content: flex-start;
+  }
+
+  .inbox-summary__illustration {
+    margin-left: auto;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .inbox-summary {
+    padding: 0.8rem;
+
+    border-radius: 0.75rem;
+  }
+
+  .inbox-summary__title {
+    font-size: 0.86rem;
+  }
+
+  .inbox-summary__highlight {
+    min-height: 4rem;
+  }
+
+  .inbox-summary__unread-value {
+    font-size: 1.85rem;
+  }
+
+  .inbox-summary__unread-label {
+    font-size: 0.73rem;
+  }
+
+  .inbox-summary__illustration {
+    width: 3.15rem;
+    height: 3.3rem;
+  }
+
+  .inbox-summary__item {
+    min-height: 1.8rem;
+  }
+
+  .inbox-summary__item-label,
+  .inbox-summary__item-value {
+    font-size: 0.72rem;
+  }
+}

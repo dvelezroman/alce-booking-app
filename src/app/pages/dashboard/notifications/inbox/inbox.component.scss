@@ -1,400 +1,363 @@
-.inbox-root {
-  // background-color: #f2f2f2;
-  min-height: 100vh;
+:host {
+  display: block;
   width: 100%;
-  padding: 24px 16px;
+}
+
+.notifications-page {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  padding:
+    1.5rem
+    2rem
+    2.5rem
+    calc(76px + 1rem);
+
+  background:
+    linear-gradient(
+      180deg,
+      #f7f9fc 0%,
+      #f4f7fb 100%
+    );
+
+  box-sizing: border-box;
+}
+
+/* ==========================
+   CONTENIDO
+   ========================== */
+
+.notifications-page__content {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    20rem;
+
+  /*
+   * Hace que main y aside tengan
+   * la misma altura dentro de la fila.
+   */
+  align-items: stretch;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* ==========================
+   BOTÓN MOBILE
+   ========================== */
+
+.notifications-page__mobile-actions {
+  display: none;
+}
+
+.notifications-page__filter-button {
+  width: 100%;
+  min-height: 2.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid #dce3ee;
+  border-radius: 0.7rem;
+  background: #ffffff;
+  color: #27304f;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.notifications-page__filter-button:hover {
+  border-color: #bfd0ea;
+  background: #f8fbff;
+  color: #1768df;
+}
+
+.notifications-page__filter-button--active {
+  border-color: #9fc0ef;
+  background: #eef5ff;
+  color: #1768df;
+  box-shadow:
+    0 0 0 0.16rem
+      rgba(23, 104, 223, 0.08);
+}
+
+.notifications-page__filter-button > svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.notifications-page__filter-chevron {
+  margin-left: auto;
+  transition: transform 0.18s ease;
+}
+
+.notifications-page__filter-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* ==========================
+   CONTENEDOR DE FILTROS
+   ========================== */
+
+.notifications-page__filters {
+  width: 100%;
+  display: block;
+}
+
+/* ==========================
+   CONTENIDO PRINCIPAL
+   ========================== */
+
+.notifications-page__main {
+  min-width: 0;
+  min-height: 31rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+
+  padding: 0.85rem;
+
+  border: 1px solid #e2e7f0;
+  border-radius: 0.95rem;
+
+  background: #ffffff;
+
   box-sizing: border-box;
 
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  box-shadow:
+    0 0.15rem 0.55rem
+      rgba(20, 35, 80, 0.04);
 }
 
-.inbox-page {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 20px;
-  // background-color: #f2f2f2;
-  width: 90%;
-  max-width: 1100px;
-  margin: 0 auto;
-  border-radius: 12px;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    padding: 12px;
-    border-radius: 0;
-  }
-}
-
-/* ======= Nuevo título fijo ======= */
-.inbox-page-title {
-  position: fixed;
-  top: 0;
-  left: 0;
+/*
+ * El estado vacío ocupa toda la altura
+ * disponible dentro del main.
+ */
+.notifications-page__main
+  > app-inbox-empty {
   width: 100%;
-  background-color: #fff;
-  color: #111827;
-  z-index: 20;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 4rem; 
-  margin: 0;
-  padding: 0;
+  min-height: 0;
 
-  @media screen and (max-width: 492px) {
-    font-size: 1.3rem;
-    line-height: 4.5rem;
-  }
-}
-
-.inbox-page {
-  margin-top: 5rem;
-}
-
-.inbox-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e5e7eb;
-
-  .stats {
-    .unread {
-      font-size: 0.85rem;
-      color: #374151;
-
-      strong {
-        color: #252525;
-        font-weight: 600;
-      }
-    }
-  }
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-
-    .title-block {
-      .title {
-        text-align: center;
-      }
-      .subtitle {
-        text-align: center;
-      }
-    }
-
-    .stats {
-      margin-top: 8px;
-      .unread {
-        display: block;
-        text-align: center;
-        font-size: 0.8rem;
-      }
-    }
-  }
+  flex: 1;
 }
 
-.divider {
-  height: 1px;
-  background-color: #e5e7eb;
-  margin: 4px 0;
+/*
+ * El error también puede ocupar
+ * el espacio disponible.
+ */
+.notifications-page__main
+  > app-inbox-error {
+  width: 100%;
 }
 
-/* ===== Lista de notificaciones ===== */
-.notifications-list {
-  border-radius: 12px;
-  background-color: white;
-  padding: 0;
+/*
+ * La lista se mantiene en su altura natural
+ * y crece cuando llegan más notificaciones.
+ */
+.notifications-page__main
+  > app-notification-list {
+  width: 100%;
+  min-height: 0;
 
-  .placeholder {
-    text-align: center;
-    font-size: 0.85rem;
-    color: #9ca3af;
-    padding: 16px 0;
-
-    @media screen and (max-width: 492px) {
-    font-size: .75rem;
-  }
-  }
-}
-
-.empty-state {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 1rem;
-  text-align: center;
-  border-radius: 16px;
-  background: #fafafa;
-  border: 1px dashed #e5e7eb;
+  flex: 1;
 }
 
-.empty-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: #f3f4f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
+/* ==========================
+   ASIDE
+   ========================== */
 
-.empty-icon .material-icons {
-  font-size: 32px;
-  color: #9ca3af;
-}
-
-.empty-title {
-  font-weight: 600;
-  font-size: 1rem;
-  color: #374151;
-  margin-bottom: 0.25rem;
-}
-
-.empty-subtitle {
-  font-size: 0.85rem;
-  color: #9ca3af;
-}
-
-/* ===== Tabla ===== */
-.table-wrapper {
-  border-radius: 12px;
-  overflow-x: auto;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-}
-
-/*  De | Asunto | Fecha  */
-$table-cols: 240px 1fr 150px;
-$table-min-width: 500px; 
-
-.table-header,
-.table-row {
-  display: grid;
-  grid-template-columns: $table-cols;
-  min-width: $table-min-width;
-  padding: 8px 8px;
-  font-size: 12.5px;
-}
-
-/* Encabezado */
-.table-header {
-  font-size: 11px;
-  font-weight: 600;
-  color: #6b7280;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
-
-  .col-from, .col-title, .col-date {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-/* Filas */
-.table-row {
-  border-bottom: 1px solid #f3f4f6;
-  cursor: default;
-  transition: background-color 0.15s ease;
-
-  &:hover { background: #f9fafb; }
-
-  /* Notificaciones no leídas */
-  &.unread {
-    background: #fdfefe;
-
-    .col-title .title {
-      font-weight: 700;
-      color: #111827;
-    }
-
-    .col-from {
-      font-weight: 600;
-      color: #111827;
-    }
-  }
-
-  /* Notificaciones LEÍDAS */
-  &:not(.unread) {
-    .col-from {
-      color: #8a8e95;
-      font-weight: 500;
-    }
-  }
-
-  .col-from,
-  .col-title,
-  .col-date {
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Indicador de no leído (puntito azul) */
-  .col-from {
-    position: relative;
-    padding-left: 14px;
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 10%;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: transparent;
-      transform: translateY(-50%);
-    }
-  }
-
-  &.unread .col-from::before {
-    background: #2563eb; /* Solo aparece para no leídas */
-  }
-}
-
-/* Asunto: título + snippet en una sola fila */
-.col-title {
+.notifications-page__aside {
   min-width: 0;
 
-  .subject-row {
-    display: flex;
-    align-items: baseline; 
-    gap: 6px;
-    min-width: 0;
-  }
-
-  .title {
-    flex: 0 1 auto;
-    max-width: 55%;
-    font-size: 12px;
-    color: #1f2937;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .sep {
-    flex: 0 0 auto;
-    color: #9ca3af;
-    font-size: 11px;
-  }
-
-  .snippet-inline {
-    flex: 1 1 auto;
-    min-width: 0;
-    font-size: 11px;
-    color: #6b7280;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-/* Fecha */
-.col-date {
-  text-align: right;
-  font-size: 11px;
-  color: #6b7280;
-  white-space: nowrap;
-}
-
-/* (opcional) ajustar en pantallas medianas */
-@media (max-width: 900px) {
-  $table-cols: 200px 1fr 120px !global;
-  .table-header, .table-row {
-    grid-template-columns: $table-cols;
-  }
-}
-
-/* ===== Paginación ===== */
-.pagination {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 12px 0 16px;
+  flex-direction: column;
+  gap: 1rem;
 
-  .pg-btn {
-    min-width: 32px;
-    height: 32px;
-    border: 1px solid #e5e7eb;
-    background: #fff;
-    color: #374151;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 1;
-    transition: background .15s ease;
+  /*
+   * Ya no usamos sticky aquí porque puede
+   * impedir que la fila calcule visualmente
+   * la misma altura entre ambas columnas.
+   */
+  position: relative;
+}
 
-    &:hover:not(:disabled) { background: #f9fafb; }
-    &:disabled { opacity: .5; cursor: not-allowed; }
+/* ==========================
+   PAGINACIÓN
+   ========================== */
+
+.notifications-page__pagination {
+  width: 100%;
+
+  display: block;
+
+  margin-top: 1rem;
+}
+
+/* ==========================
+   RESPONSIVE
+   ========================== */
+
+@media screen and (max-width: 1180px) {
+  .notifications-page {
+    padding: 1rem;
   }
 
-  .pg-info {
-    font-size: 12px;
-    color: #6b7280;
+  .notifications-page__content {
+    grid-template-columns:
+      minmax(0, 1fr)
+      15rem;
 
-    .sep { margin: 0 6px; color: #9ca3af; }
+    gap: 0.85rem;
+  }
+
+  .notifications-page__main {
+    min-height: 29rem;
   }
 }
 
-@media (max-width: 768px) {
-  .empty-img {
-    max-width: 25%; 
-    width: 80px; 
+@media screen and (max-width: 950px) {
+  .notifications-page__content {
+    grid-template-columns: 1fr;
+
+    align-items: start;
   }
 
-  .empty-state p {
-    color: #6b7280;
-    font-size: 0.8rem;
-    font-weight: 500;
+  .notifications-page__main {
+    min-height: 24rem;
+  }
+
+  .notifications-page__aside {
+    display: grid;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 0.85rem;
+
+    order: -1;
+  }
+
+  .notifications-page__pagination {
+    margin-top: 0.85rem;
   }
 }
 
-/* =========================
-   TABLA RESPONSIVE - MÓVIL
-========================= */
-@media (max-width: 640px) {
+@media screen and (max-width: 700px) {
+  .notifications-page {
+    min-height: 100dvh;
 
-  .table-wrapper {
-    margin-left: -12px;
-    margin-right: -12px;
-    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+
+    padding: 0.75rem;
   }
 
-  /* Reducimos columnas */
-  .table-header,
-  .table-row {
-    grid-template-columns: 160px 1fr 90px;
-    font-size: 11px;
-    padding: 6px 6px;
+  .notifications-page__content {
+    grid-template-columns: 1fr;
+
+    flex: 1;
   }
 
-  /* De */
-  .col-from {
-    font-size: 11px;
-    padding-left: 12px;
+  .notifications-page__main {
+    min-height: 28rem;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* Asunto */
-  .col-title .title {
-    max-width: 100%;
-    font-size: 11px;
+  .notifications-page__main
+
+    > app-notification-list {
+    min-height: 23rem;
+    display: flex;
+    flex: 1;
   }
 
-  .col-title .snippet-inline {
-    font-size: 10px;
+  .notifications-page__aside {
+    display: none;
   }
 
-  /* Fecha */
-  .col-date {
-    font-size: 10px;
+  .notifications-page__pagination {
+    margin-top: 0.7rem;
+  }
+}
+
+/* ==========================
+   MOBILE
+   ========================== */
+
+@media screen and (max-width: 680px) {
+
+  .notifications-page__mobile-actions {
+    display: block;
+    margin-top: 0.7rem;
+  }
+
+  .notifications-page__filters {
+    display: none;
+    margin-top: 0.65rem;
+  }
+
+  .notifications-page__filters--open {
+    display: block;
+    animation: notifications-filters-open
+      0.2s ease;
+  }
+
+}
+
+@media screen and (max-width: 420px) {
+  .notifications-page {
+    padding: 0.55rem;
+  }
+
+  .notifications-page__content {
+    margin-top: 0.6rem;
+  }
+
+  .notifications-page__main {
+    min-height: 19rem;
+  }
+
+  .notifications-page__mobile-actions {
+    margin-top: 0.55rem;
+  }
+
+  .notifications-page__filter-button {
+    min-height: 2.35rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.6rem;
+    font-size: 0.72rem;
+  }
+
+  .notifications-page__filter-button > svg {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  .notifications-page__filters {
+    margin-top: 0.5rem;
+  }
+
+  .notifications-page__pagination {
+    margin-top: 0.6rem;
   }
 }
