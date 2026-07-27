@@ -1,41 +1,63 @@
 <main class="scheduled-meetings-page">
-  <div class="scheduled-meetings-content">
-    <app-scheduled-meetings-header
-      [userData]="userData"
-    ></app-scheduled-meetings-header>
 
-    <app-scheduled-meetings-summary
-    [meetings]="meetings"
-    ></app-scheduled-meetings-summary>
+  <!-- HEADER A TODO EL ANCHO -->
+  <app-scheduled-meetings-header
+    [userData]="userData"
+  ></app-scheduled-meetings-header>
 
-    <app-scheduled-meetings-filters
-    [searchTerm]="searchTerm"
-    [selectedDateFilter]="selectedDateFilter"
-    [selectedStatusFilter]="selectedStatusFilter"
-    [selectedView]="selectedView"
+  <!-- CONTENIDO DIVIDIDO -->
+  <div class="scheduled-meetings-layout">
 
-    (searchTermChange)="onSearchTermChange($event)"
-    (selectedDateFilterChange)="onDateFilterChange($event)"
-    (selectedStatusFilterChange)="onStatusFilterChange($event)"
-    (selectedViewChange)="onViewChange($event)"
-    ></app-scheduled-meetings-filters>
+    <!-- COLUMNA PRINCIPAL -->
+    <div class="scheduled-meetings-content">
 
-    <app-scheduled-meetings-list
-    [meetings]="paginatedMeetings"
-    [view]="selectedView"
-    [isLoading]="isLoadingMeetings"
-    (viewDetails)="onViewMeetingDetails($event)"
-    (openOptions)="onOpenMeetingOptions($event)"
-    (deleteMeeting)="openDeleteModal($event)"
-    ></app-scheduled-meetings-list>
+      <app-scheduled-meetings-summary
+        [meetings]="meetings"
+      ></app-scheduled-meetings-summary>
 
-   <app-scheduled-meetings-pagination
-    [currentPage]="currentPage"
-    [totalPages]="totalPages"
-    [totalItems]="filteredMeetings.length"
-    [itemsPerPage]="itemsPerPage"
-    (pageChange)="onPageChange($event)"
-    ></app-scheduled-meetings-pagination>
+      <app-scheduled-meetings-filters
+        [searchTerm]="searchTerm"
+        [selectedDateFilter]="selectedDateFilter"
+        [selectedStatusFilter]="selectedStatusFilter"
+        [selectedView]="selectedView"
+        (searchTermChange)="onSearchTermChange($event)"
+        (selectedDateFilterChange)="onDateFilterChange($event)"
+        (selectedStatusFilterChange)="onStatusFilterChange($event)"
+        (selectedViewChange)="onViewChange($event)"
+      ></app-scheduled-meetings-filters>
+
+      <app-scheduled-meetings-list
+        [meetings]="paginatedMeetings"
+        [view]="selectedView"
+        [isLoading]="isLoadingMeetings"
+        (viewDetails)="onViewMeetingDetails($event)"
+        (openOptions)="onOpenMeetingOptions($event)"
+        (deleteMeeting)="openDeleteModal($event)"
+      ></app-scheduled-meetings-list>
+
+      <app-scheduled-meetings-pagination
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        [totalItems]="filteredMeetings.length"
+        [itemsPerPage]="itemsPerPage"
+        (pageChange)="onPageChange($event)"
+      ></app-scheduled-meetings-pagination>
+
+    </div>
+
+    <!-- COLUMNA DERECHA -->
+    <aside class="scheduled-meetings-aside">
+
+      <app-student-important-notices
+        [userData]="userData"
+        [isKidsRestrictionActive]="isKidsRestrictionActive"
+        [minHoursRequired]="minHoursRequired"
+        [shouldShowAssessmentBanner]="shouldShowAssessmentBanner"
+        (viewAll)="goToNotifications()"
+      ></app-student-important-notices>
+
+    </aside>
+
   </div>
 
   <app-meeting-detail-modal
@@ -43,6 +65,7 @@
     [isActive]="isMeetingDetailModalActive"
     (modalClose)="onCloseMeetingDetailModal()"
   ></app-meeting-detail-modal>
+
 </main>
 
 <app-modal

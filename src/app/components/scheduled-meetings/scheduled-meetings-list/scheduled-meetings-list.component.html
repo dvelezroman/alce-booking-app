@@ -45,23 +45,18 @@
       <ng-container
         *ngFor="
           let meeting of sortedMeetings;
-          let isFirst = first;
           trackBy: trackByMeetingId
         "
       >
-        <div
-          class="scheduled-meeting-item"
-          [class.scheduled-meeting-item-today]="
-            isFirst &&
-            isTodayUpcomingMeeting(meeting)
-          "
-        >
+        <div class="scheduled-meeting-item">
+
           <app-scheduled-meeting-card
             [meeting]="meeting"
             (viewDetails)="onViewDetails($event)"
             (openOptions)="onOpenOptions($event)"
             (deleteMeeting)="onDeleteMeeting($event)"
           ></app-scheduled-meeting-card>
+
         </div>
       </ng-container>
     </ng-container>

@@ -106,32 +106,6 @@ export class ScheduledMeetingsListComponent {
     )
   }
 
-  isTodayUpcomingMeeting(
-    meeting: MeetingDTO
-  ): boolean {
-    const timestamp =
-      this.getMeetingTimestamp(meeting)
-
-    if (
-      !Number.isFinite(timestamp) ||
-      timestamp < Date.now()
-    ) {
-      return false
-    }
-
-    const meetingDate = new Date(timestamp)
-    const today = new Date()
-
-    return (
-      meetingDate.getFullYear() ===
-        today.getFullYear() &&
-      meetingDate.getMonth() ===
-        today.getMonth() &&
-      meetingDate.getDate() ===
-        today.getDate()
-    )
-  }
-
   private getMeetingTimestamp(
     meeting: MeetingDTO
     ): number {

@@ -127,7 +127,7 @@
 
 .notifications-page__main {
   min-width: 0;
-  min-height: 31rem;
+  min-height: 35rem;
 
   display: flex;
   flex-direction: column;
@@ -176,10 +176,13 @@
 .notifications-page__main
   > app-notification-list {
   width: 100%;
+  min-width: 0;
   min-height: 0;
 
   display: flex;
-  flex: 1;
+  flex: 1 1 auto;
+
+  overflow: hidden;
 }
 
 /* ==========================
@@ -207,10 +210,12 @@
 
 .notifications-page__pagination {
   width: 100%;
+  flex: 0 0 auto;
 
   display: block;
 
-  margin-top: 1rem;
+  margin-top: auto;
+  padding-top: 0.2rem;
 }
 
 /* ==========================
@@ -278,18 +283,18 @@
   }
 
   .notifications-page__main {
-    min-height: 28rem;
+    min-height: 30rem;
     display: flex;
     flex-direction: column;
   }
 
-  .notifications-page__main
+  // .notifications-page__main
 
-    > app-notification-list {
-    min-height: 23rem;
-    display: flex;
-    flex: 1;
-  }
+  //   > app-notification-list {
+  //   min-height: 75vh;
+  //   display: flex;
+  //   flex: 1;
+  // }
 
   .notifications-page__aside {
     display: none;
@@ -320,6 +325,14 @@
     display: block;
     animation: notifications-filters-open
       0.2s ease;
+  }
+
+   .notifications-page__main
+
+    > app-notification-list {
+    min-height: 64vh;
+    display: flex;
+    flex: 1;
   }
 
 }

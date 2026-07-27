@@ -345,23 +345,31 @@ app-assessment-card:not(:last-child) {
   }
 
   .assessment-section__content {
-    overflow: visible;
+    max-height: 500px;
 
-    border: 0;
-    border-radius: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
 
-    background: transparent;
-  }
-
-  app-assessment-card {
     border: 1px solid #e5e8ef;
     border-radius: 0.875rem;
 
     background: #ffffff;
   }
 
+  app-assessment-card {
+    width: 100%;
+    min-width: 0;
+
+    display: block;
+
+    border: 0;
+    border-radius: 0;
+
+    background: #ffffff;
+  }
+
   app-assessment-card:not(:last-child) {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0;
 
     border-bottom: 1px solid #e5e8ef;
   }

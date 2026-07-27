@@ -18,20 +18,138 @@
     1.5rem
     2rem
     2.5rem
-    calc(76px + 2rem);
+    calc(76px + 1rem);
 
   background-color: #f8fafc;
+
   box-sizing: border-box;
+}
+
+/* HEADER A TODO EL ANCHO */
+app-scheduled-meetings-header {
+  display: block;
+  width: 100%;
+
+  margin-bottom: 1.25rem;
+}
+
+/* GRID PRINCIPAL */
+.scheduled-meetings-layout {
+  width: 100%;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 4fr)
+    minmax(18rem, 1.5fr);
+  align-items: start;
+  gap: 1rem;
 }
 
 .scheduled-meetings-content {
   width: 100%;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* COLUMNA PRINCIPAL */
+.scheduled-meetings-content {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+}
+
+/* EL RESUMEN OCUPA TODO EL ANCHO DEL GRID */
+app-scheduled-meetings-summary {
+  display: block;
+
+  width: calc(
+    100% + 1.5rem + minmax(18rem, 1.35fr)
+  );
+}
+
+/* COMPONENTES DE LA COLUMNA IZQUIERDA */
+app-scheduled-meetings-filters,
+app-scheduled-meetings-list,
+app-scheduled-meetings-pagination {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* COLUMNA DERECHA */
+.scheduled-meetings-aside {
+  width: 100%;
+  min-width: 0;
+
+  position: sticky;
+  top: 1.5rem;
+
+  align-self: start;
+
+  margin: 0;
+  padding: 0;
+}
+
+app-student-important-notices {
+  display: block;
+
+  width: 100%;
   margin: 0;
 }
 
+/* TABLET GRANDE */
+@media screen and (max-width: 1280px) {
+  .scheduled-meetings-layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(17rem, 20rem);
+
+    gap: 1.25rem;
+  }
+
+  .scheduled-meetings-aside {
+    margin-top: 0;
+  }
+}
+
+/* TABLET */
+@media screen and (max-width: 1024px) {
+  .scheduled-meetings-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .scheduled-meetings-aside {
+    display: none;
+  }
+
+  app-scheduled-meetings-summary {
+    width: 100%;
+  }
+}
+
+/* MOBILE */
 @media screen and (max-width: 768px) {
   .scheduled-meetings-page {
     padding: 1rem;
+  }
+
+  .scheduled-meetings-layout {
+    grid-template-columns: 1fr;
+  }
+
+  app-scheduled-meetings-header {
+    margin-bottom: 1rem;
+  }
+
+  .scheduled-meetings-layout {
+    gap: 1rem;
+  }
+
+  .scheduled-meetings-content {
+    gap: 0.85rem;
   }
 }

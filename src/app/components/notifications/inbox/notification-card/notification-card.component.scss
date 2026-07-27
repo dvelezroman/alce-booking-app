@@ -12,15 +12,14 @@
 
   display: grid;
   grid-template-columns:
-    1.1rem
     4.25rem
     minmax(0, 1fr)
-    minmax(8rem, auto)
-    1.1rem;
+    minmax(8rem, auto);
+
   align-items: center;
   gap: 1rem;
 
-  padding: 1.1rem 1rem;
+  padding: 1.1rem 1.2rem;
 
   border: 1px solid #e1e6ef;
   border-radius: 0.9rem;
@@ -58,49 +57,6 @@
       #ffffff 0%,
       #fbfdff 100%
     );
-}
-
-/* ==========================
-   INDICADORES
-   ========================== */
-
-.notification-card__status-dot {
-  width: 0.62rem;
-  height: 0.62rem;
-
-  display: block;
-  flex-shrink: 0;
-
-  border: 1px solid #c5ccda;
-  border-radius: 50%;
-
-  background: #ffffff;
-
-  box-sizing: border-box;
-}
-
-.notification-card__status-dot--left {
-  justify-self: center;
-
-  opacity: 0;
-}
-
-.notification-card__status-dot--right {
-  justify-self: center;
-}
-
-.notification-card__status-dot--active {
-  border-color: #1476ea;
-
-  background: #1476ea;
-
-  box-shadow:
-    0 0 0 0.18rem
-      rgba(20, 118, 234, 0.08);
-}
-
-.notification-card__status-dot--left.notification-card__status-dot--active {
-  opacity: 1;
 }
 
 /* ==========================
@@ -248,22 +204,28 @@
 
 .notification-card__title {
   margin: 0;
-
   overflow: hidden;
-
   color: #171d43;
-
   font-size: 0.98rem;
-  font-weight: 750;
+  font-weight: 400;
   line-height: 1.3;
-
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition:
+    font-weight 0.18s ease,
+    color 0.18s ease;
 }
 
 .notification-card--unread
   .notification-card__title {
+  color: #11183f;
   font-weight: 800;
+}
+
+.notification-card--read
+  .notification-card__title {
+  font-weight: 400;
+
 }
 
 .notification-card__description {
@@ -453,15 +415,13 @@
 @media screen and (max-width: 950px) {
   .notification-card {
     grid-template-columns:
-      0.85rem
       3.6rem
       minmax(0, 1fr)
-      minmax(7.25rem, auto)
-      0.85rem;
+      minmax(7.25rem, auto);
 
     gap: 0.8rem;
 
-    padding: 1rem 0.8rem;
+    padding: 1rem;
   }
 
   .notification-card__icon {
@@ -495,17 +455,14 @@
 @media screen and (max-width: 680px) {
   .notification-card {
     grid-template-columns:
-      0.45rem
       2.6rem
       minmax(0, 1fr)
-      minmax(5.8rem, auto)
-      0.45rem;
+      minmax(5.8rem, auto);
 
     gap: 0.55rem;
 
-    padding: 0.75rem 0.6rem;
-
     min-height: 5.4rem;
+    padding: 0.75rem;
   }
 
   .notification-card__icon {
@@ -516,11 +473,6 @@
   .notification-card__icon svg {
     width: 1.25rem;
     height: 1.25rem;
-  }
-
-  .notification-card__status-dot {
-    width: 0.5rem;
-    height: 0.5rem;
   }
 
   .notification-card__title {
@@ -553,7 +505,6 @@
 
   .notification-card__type {
     min-height: 1.3rem;
-
     padding: 0.12rem 0.45rem;
 
     border-radius: 0.4rem;
@@ -573,18 +524,13 @@
 @media screen and (max-width: 420px) {
   .notification-card {
     grid-template-columns:
-      0.4rem
       2.2rem
       minmax(0, 1fr)
       minmax(5rem, auto);
 
     gap: 0.45rem;
 
-    padding: 0.65rem 0.5rem;
-  }
-
-  .notification-card__status-dot--right {
-    display: none;
+    padding: 0.65rem;
   }
 
   .notification-card__icon {
@@ -607,7 +553,6 @@
 
   .notification-card__type {
     min-height: 1.15rem;
-
     padding: 0.1rem 0.38rem;
 
     font-size: 0.5rem;

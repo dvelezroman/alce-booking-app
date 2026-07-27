@@ -12,13 +12,17 @@ import {
   MeetingDTO,
   MeetingStatusEnum,
 } from '../../../services/dtos/booking.dto'
-import { UserDto } from '../../../services/dtos/user.dto'
+import { UserDto, UserRole } from '../../../services/dtos/user.dto'
 import { selectUserData } from '../../../store/user.selector'
 import { ScheduledMeetingsListComponent } from '../../../components/scheduled-meetings/scheduled-meetings-list/scheduled-meetings-list.component'
 import { ScheduledMeetingsPaginationComponent } from '../../../components/scheduled-meetings/scheduled-meetings-pagination/scheduled-meetings-pagination.component'
 import { MeetingDetailModalComponent } from '../../../components/scheduled-meetings/meeting-detail-modal/meeting-detail-modal.component'
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto'
 import { ModalComponent } from '../../../components/modal/modal.component'
+import { StudentImportantNoticesComponent } from '../../../components/dashboard/student-dashboard/student-important-notices/student-important-notices.component'
+import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service'
+import { Router } from '@angular/router'
+
 
 @Component({
   selector: 'app-scheduled-meetings',
@@ -32,6 +36,7 @@ import { ModalComponent } from '../../../components/modal/modal.component'
     ScheduledMeetingsPaginationComponent,
     MeetingDetailModalComponent,
     ModalComponent,
+    StudentImportantNoticesComponent
 ],
   templateUrl: './scheduled-meetings.component.html',
   styleUrl: './scheduled-meetings.component.scss',
@@ -61,11 +66,14 @@ export class ScheduledMeetingsComponent implements OnInit, OnDestroy {
 
   modalConfig: ModalDto = modalInitializer()
   meetingToDelete: MeetingDTO | null = null
+  minHoursRequired: number | null = null
 
 
   constructor(
     private readonly store: Store,
-    private readonly bookingService: BookingService
+    private readonly bookingService: BookingService,
+    private readonly configService: AssessmentPointsConfigService,
+    private readonly router: Router
   ) {
     this.userData$ = this.store.select(selectUserData)
   }
@@ -85,6 +93,26 @@ export class ScheduledMeetingsComponent implements OnInit, OnDestroy {
         }
 
         this.loadMeetings(studentId)
+      })
+  }
+
+  private loadMinHoursRequired(): void {
+    this.configService
+      .getById()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (config) => {
+          this.minHoursRequired =
+            config.minHoursScheduled
+        },
+        error: (error) => {
+          console.error(
+            'Error obteniendo las horas mínimas recomendadas:',
+            error
+          )
+
+          this.minHoursRequired = null
+        },
       })
   }
 
@@ -434,6 +462,29 @@ export class ScheduledMeetingsComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.modalConfig.close()
     }, duration)
+  }
+
+  get isKidsRestrictionActive(): boolean {
+    return (
+      this.userData?.student
+        ?.studentClassification === 'KIDS'
+    )
+  }
+
+  get shouldShowAssessmentBanner(): boolean {
+    return (
+      this.userData?.role === UserRole.STUDENT &&
+      (
+        this.userData?.assessmentResources
+          ?.length ?? 0
+      ) > 0
+    )
+  }
+
+  goToNotifications(): void {
+    this.router.navigate([
+      '/dashboard/notifications-inbox',
+    ])
   }
 
   ngOnDestroy(): void {

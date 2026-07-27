@@ -29,7 +29,11 @@
       </svg>
 
       <span>
-        {{ showMobileFilters ? 'Ocultar filtros' : 'Filtrar' }}
+        {{
+          showMobileFilters
+            ? 'Ocultar filtros'
+            : 'Filtrar'
+        }}
       </span>
 
       <svg
@@ -63,9 +67,10 @@
     />
   </div>
 
+  <!-- CONTENIDO -->
   <div class="notifications-page__content">
 
-    <!-- CONTENIDO PRINCIPAL -->
+    <!-- COLUMNA IZQUIERDA -->
     <main class="notifications-page__main">
 
       <!--
@@ -96,6 +101,7 @@
         (action)="onClearFilters()"
       />
 
+      <!-- LISTA CON PAGINACIÓN INTERNA -->
       <app-notification-list
         *ngIf="
           !loading &&
@@ -104,11 +110,27 @@
         "
         [notifications]="filteredNotifications"
         (notificationSelected)="onRowClick($event)"
-      />
+      >
+        <app-inbox-pagination
+          notification-list-pagination
+          [currentPage]="page"
+          [totalPages]="totalPages"
+          [total]="total"
+          [limit]="limit"
+          [startIndex]="startIndex"
+          [endIndex]="endIndex"
+          [hasPreviousPage]="hasPreviousPage"
+          [hasNextPage]="hasNextPage"
+          (previousPage)="onPrev()"
+          (nextPage)="onNext()"
+          (pageChange)="onPageChange($event)"
+          (limitChange)="onLimitChange($event)"
+        />
+      </app-notification-list>
 
     </main>
 
-    <!-- RESUMEN LATERAL -->
+    <!-- COLUMNA DERECHA -->
     <aside
       class="notifications-page__aside"
       aria-label="Resumen de notificaciones"
@@ -127,26 +149,4 @@
     </aside>
 
   </div>
-
-  <!-- PAGINACIÓN -->
-  <app-inbox-pagination
-    *ngIf="
-      !loading &&
-      !errorMsg &&
-      hasFilteredNotifications
-    "
-    class="notifications-page__pagination"
-    [currentPage]="page"
-    [totalPages]="totalPages"
-    [total]="total"
-    [limit]="limit"
-    [startIndex]="startIndex"
-    [endIndex]="endIndex"
-    [hasPreviousPage]="hasPreviousPage"
-    [hasNextPage]="hasNextPage"
-    (previousPage)="onPrev()"
-    (nextPage)="onNext()"
-    (pageChange)="onPageChange($event)"
-    (limitChange)="onLimitChange($event)"
-  />
 </section>

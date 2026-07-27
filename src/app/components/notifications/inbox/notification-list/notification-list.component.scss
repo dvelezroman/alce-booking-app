@@ -1,19 +1,40 @@
 :host {
-  display: block;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  flex: 1;
 }
 
 .notification-list {
   width: 100%;
-  min-height: 22rem;
+  min-width: 0;
+  min-height: 26rem;
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  box-sizing: border-box;
+}
+
+/* ==========================
+   CONTENEDOR DE CARDS
+   ========================== */
+
+.notification-list__cards {
+  width: 100%;
+  min-width: 0;
 
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
-
-  box-sizing: border-box;
 }
+
+/* ==========================
+   CARD
+   ========================== */
 
 .notification-list__item {
   width: 100%;
@@ -45,38 +66,78 @@
 .notification-list__item:focus-visible {
   box-shadow:
     0 0 0 0.18rem
-      rgba(35, 101, 219, 0.18);
+    rgba(35, 101, 219, 0.18);
 }
 
-.notification-list__item app-notification-card {
-  display: block;
+.notification-list__item
+  app-notification-card {
   width: 100%;
+  display: block;
 }
 
 /* ==========================
-   RESPONSIVE
+   PAGINACIÓN
+   ========================== */
+
+.notification-list__footer {
+  width: 100%;
+
+  margin-top: auto;
+  padding-top: 0.85rem;
+
+  box-sizing: border-box;
+}
+
+.notification-list__footer:empty {
+  display: none;
+}
+
+.notification-list__footer
+  > app-inbox-pagination {
+  width: 100%;
+  display: block;
+}
+
+/* ==========================
+   TABLET
    ========================== */
 
 @media screen and (max-width: 768px) {
   .notification-list {
-    min-height: 22rem;
+    min-height: 23rem;
+  }
 
+  .notification-list__cards {
     gap: 0.55rem;
   }
 
   .notification-list__item {
     border-radius: 0.75rem;
   }
+
+  .notification-list__footer {
+    padding-top: 0.7rem;
+  }
 }
+
+/* ==========================
+   MOBILE
+   ========================== */
 
 @media screen and (max-width: 480px) {
   .notification-list {
-    min-height: 18rem;
+    min-height: 19rem;
+  }
 
+  .notification-list__cards {
     gap: 0.5rem;
   }
 
   .notification-list__item:hover {
     transform: none;
+  }
+
+  .notification-list__footer {
+    padding-top: 0.6rem;
   }
 }
