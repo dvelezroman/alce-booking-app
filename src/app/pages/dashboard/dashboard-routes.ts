@@ -61,6 +61,7 @@ import { WhatsappCampaignHistoryComponent } from './admin/whatsapp-campaigns/wha
 import { WhatsappCampaignDetailComponent } from './admin/whatsapp-campaigns/whatsapp-campaign-detail.component';
 import { ScheduledMeetingsComponent } from './scheduled-meetings/scheduled-meetings.component';
 import { MeetingBookingV2Component } from './meeting-booking-v2/meeting-booking-v2.component';
+import { NotificationDetailV2Component } from './notifications/notification-detail-v2/notification-detail-v2.component';
 
 
 export const dashboardRoutes: Routes = [
@@ -150,6 +151,7 @@ export const dashboardRoutes: Routes = [
   { path: 'notifications-groups', component: GroupsComponent },
   { path: 'notifications-inbox', component: InboxComponent },
   { path: 'notifications-detail', component: NotificationDetailComponent },
+  { path: 'notifications-detail-v2', component: NotificationDetailV2Component },
   { path: 'notifications-sent', component: NotificationsSentComponent },
   { path: 'send-emails', component: SendEmailsComponent },
   { path: 'sent-email', component: SentEmailComponent },

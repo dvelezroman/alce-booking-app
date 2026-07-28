@@ -277,7 +277,7 @@ export class InboxComponent implements OnInit {
 
     const goToDetail = (): void => {
       this.router.navigate(
-        ['/dashboard/notifications-detail'],
+        ['/dashboard/notifications-detail-v2'],
         {
           state: {
             notification,
