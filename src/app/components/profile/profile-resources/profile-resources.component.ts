@@ -28,8 +28,6 @@ export class ProfileResourcesComponent {
 
   @Input() resources: ProfileResource[] = [];
 
-  readonly visibleResourcesLimit = 2;
-
   get isStudent(): boolean {
     return (
       this.user?.role
@@ -76,11 +74,7 @@ export class ProfileResourcesComponent {
     if (!this.isStudent) {
       return [];
     }
-
-    return this.resources.slice(
-      0,
-      this.visibleResourcesLimit
-    );
+    return this.resources;
   }
 
   get hasResources(): boolean {
@@ -91,11 +85,7 @@ export class ProfileResourcesComponent {
   }
 
   get hasMoreResources(): boolean {
-    return (
-      this.isStudent &&
-      this.resources.length >
-        this.visibleResourcesLimit
-    );
+    return false;
   }
 
   getResourceDescription(

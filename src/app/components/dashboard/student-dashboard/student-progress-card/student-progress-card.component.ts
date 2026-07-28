@@ -15,7 +15,9 @@ export class StudentProgressCardComponent {
   @Input() isLoading = false;
 
   get totalClasses(): number {
-    return this.meetings.length;
+    return this.meetings.filter(
+      (meeting) => meeting.present === true
+    ).length;
   }
 
   get progressPercentage(): number {
@@ -100,36 +102,40 @@ export class StudentProgressCardComponent {
     return [
       ...new Set(
         this.meetings
-          .map((meeting) => this.getMeetingDate(meeting))
+          .filter((meeting) =>
+            this.hasStudentAttendance(meeting)
+          )
+          .map((meeting) =>
+            this.getAttendanceDate(meeting)
+          )
           .filter((date): date is Date => {
-            return date instanceof Date && !Number.isNaN(date.getTime());
+            return (
+              date instanceof Date &&
+              !Number.isNaN(date.getTime())
+            );
           })
           .map((date) => this.startOfDay(date))
-          .filter((date) => date.getTime() <= today.getTime())
+          .filter(
+            (date) =>
+              date.getTime() <= today.getTime()
+          )
           .map((date) => this.toDateKey(date))
       ),
     ].sort((a, b) => b.localeCompare(a));
   }
 
-  private getMeetingDate(meeting: MeetingDTO): Date | null {
-    /*
-     * Deja aquí el campo real de fecha que tenga MeetingDTO.
-     * Por ahora soporta varios nombres comunes.
-     */
-    const meetingData = meeting as MeetingDTO & {
-      date?: string | Date;
-      startDate?: string | Date;
-      scheduledAt?: string | Date;
-      startTime?: string | Date;
-      meetingDate?: string | Date;
-    };
+  private hasStudentAttendance(
+    meeting: MeetingDTO
+  ): boolean {
+    return meeting.present === true;
+  }
 
+  private getAttendanceDate(
+    meeting: MeetingDTO
+  ): Date | null {
     const rawDate =
-      meetingData.date ??
-      meetingData.startDate ??
-      meetingData.scheduledAt ??
-      meetingData.startTime ??
-      meetingData.meetingDate;
+      meeting.localdate ??
+      meeting.date;
 
     if (!rawDate) {
       return null;

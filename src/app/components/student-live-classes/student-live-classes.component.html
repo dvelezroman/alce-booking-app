@@ -54,11 +54,21 @@
         <!-- FECHA -->
         <div class="class-date">
           <span class="class-date__month">
-            {{ getMonthAbbreviation(meeting.date) }}
+            {{
+              isToday(meeting.localdate ?? meeting.date)
+                ? 'HOY'
+                : getMonthAbbreviation(
+                    meeting.localdate ?? meeting.date
+                  )
+            }}
           </span>
 
           <strong class="class-date__day">
-            {{ getDayNumber(meeting.date) }}
+            {{
+              getDayNumber(
+                meeting.localdate ?? meeting.date
+              )
+            }}
           </strong>
         </div>
 
