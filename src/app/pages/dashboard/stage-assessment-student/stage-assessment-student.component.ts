@@ -191,8 +191,10 @@ export class StageAssessmentStudentComponent implements OnInit {
       : timestamp;
   }
 
-  onOpenAssessment(assessment: StageAssessment): void {
-    this.onOpenAndFinish(assessment.id);
+  onOpenAssessment( assessment: StageAssessment ): void {
+    this.onOpenAndFinish(
+      assessment,
+    );
   }
 
   onViewAssessmentDetail(
@@ -216,14 +218,40 @@ export class StageAssessmentStudentComponent implements OnInit {
     );
   }
 
-  onOpenAndFinish(assessmentId: number): void {
+  onOpenAndFinish(
+    assessment: StageAssessment,
+  ): void {
     if (!this.studentId) {
       return;
     }
 
+    const assessmentUrl =
+      assessment.stageAssessmentResource
+        ?.url?.trim();
+
+    if (!assessmentUrl) {
+      this.showNotification(
+        'La evaluación no tiene un enlace asignado.',
+        true,
+      );
+
+      return;
+    }
+
+    const formattedUrl =
+      /^https?:\/\//i.test(assessmentUrl)
+        ? assessmentUrl
+        : `https://${assessmentUrl}`;
+
+    window.open(
+      formattedUrl,
+      '_blank',
+      'noopener,noreferrer',
+    );
+
     this.stageAssessmentService
       .markFinished(
-        assessmentId,
+        assessment.id,
         this.studentId,
       )
       .subscribe({
@@ -231,9 +259,14 @@ export class StageAssessmentStudentComponent implements OnInit {
           this.clearHighlight();
           this.loadAssessments();
         },
-        error: () => {
+        error: (error: unknown) => {
+          console.error(
+            'Error al marcar la evaluación:',
+            error,
+          );
+
           this.showNotification(
-            'Error al marcar como completado.',
+            'La evaluación se abrió, pero no se pudo marcar como completada.',
             true,
           );
         },
