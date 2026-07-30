@@ -79,11 +79,11 @@ export class ProfilePersonalInfoComponent {
         value: this.emailAddress,
         icon: 'email',
       },
-      {
-        label: 'Comentario',
-        value: this.comment,
-        icon: 'comment',
-      },
+      // {
+      //   label: 'Comentario',
+      //   value: this.comment,
+      //   icon: 'comment',
+      // },
       {
         label: 'Comentario temporal',
         value: this.temporaryComment,
