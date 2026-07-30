@@ -48,7 +48,6 @@ import { MeetingEvaluationsComponent } from './meeting-evaluations/meeting-evalu
 import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluation-statistics.component';
 import { StudentHistoryReportComponent } from './report-students/student-history-report/student-history-report.component';
 import { ActiveStudentsReportComponent } from './report-students/active-students-report/active-students-report.component';
-import { AnnouncementCardComponent } from '../../components/announcements/announcement-card/announcement-card.component';
 import { AnnouncementsComponent } from './announcements/announcements.component';
 import { adminOnlyGuard } from '../auth/admin-role.guard';
 import { instructorOnlyGuard } from '../auth/instructor-role.guard';
@@ -62,9 +61,9 @@ import { WhatsappCampaignDetailComponent } from './admin/whatsapp-campaigns/what
 import { ScheduledMeetingsComponent } from './scheduled-meetings/scheduled-meetings.component';
 import { MeetingBookingV2Component } from './meeting-booking-v2/meeting-booking-v2.component';
 import { NotificationDetailV2Component } from './notifications/notification-detail-v2/notification-detail-v2.component';
+import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.component';
 
-
-export const dashboardRoutes: Routes = [
+const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomePrivateComponent },
   { path: 'profile', component: ProfileComponent },
@@ -158,5 +157,12 @@ export const dashboardRoutes: Routes = [
   { path: 'inbox-email', component: InboxEmailComponent },
   { path: 'historial-email', component: HistorialEmailComponent },
   { path: 'email-detail', component: EmailDetailComponent },
-  
+];
+
+export const dashboardRoutes: Routes = [
+  {
+    path: '',
+    component: DashboardLayoutComponent,
+    children: dashboardChildren,
+  },
 ];
