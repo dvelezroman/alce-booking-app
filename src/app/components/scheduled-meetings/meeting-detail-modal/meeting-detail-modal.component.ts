@@ -185,60 +185,60 @@ export class MeetingDetailModalComponent
     }, oneMinute)
   }
 
-  private calculateLinkStatus(): void {
-    const meeting = this.selectedMeeting
+ private calculateLinkStatus(): void {
+  const meeting = this.selectedMeeting
 
-    if (!meeting) {
-      this.linkStatus = 'not-available'
-      return
-    }
-
-    const link = this.getFormattedLink(
-      meeting.link
-    )
-
-    if (!link) {
-      this.linkStatus = 'not-available'
-      return
-    }
-
-    const meetingStart =
-      this.getMeetingStartTimestamp(meeting)
-
-    if (meetingStart === null) {
-      this.linkStatus = 'not-available'
-      return
-    }
-
-    const fiveMinutesBefore =
-      5 * 60 * 1000
-
-    const sixMinutesAfter =
-      6 * 60 * 1000
-
-    const now = Date.now()
-
-    const availableFrom =
-      meetingStart - fiveMinutesBefore
-
-    const availableUntil =
-      meetingStart + sixMinutesAfter
-
-    if (now < availableFrom) {
-      this.linkStatus = 'not-clickable'
-      return
-    }
-
-    if (
-      now >= availableFrom &&
-      now <= availableUntil
-    ) {
-      this.linkStatus = 'clickable'
-      return
-    }
-
+  if (!meeting) {
     this.linkStatus = 'not-available'
+    return
   }
+
+  const link = this.getFormattedLink(
+    meeting.link
+  )
+
+  if (!link) {
+    this.linkStatus = 'not-available'
+    return
+  }
+
+  const meetingStart =
+    this.getMeetingStartTimestamp(meeting)
+
+  if (meetingStart === null) {
+    this.linkStatus = 'not-available'
+    return
+  }
+
+  const fiveMinutesBefore =
+    5 * 60 * 1000
+
+  const sixMinutesAfter =
+    6 * 60 * 1000
+
+  const now = Date.now()
+
+  const availableFrom =
+    meetingStart - fiveMinutesBefore
+
+  const availableUntil =
+    meetingStart + sixMinutesAfter
+
+  if (now < availableFrom) {
+    this.linkStatus = 'not-clickable'
+    return
+  }
+
+  if (
+    now >= availableFrom &&
+    now <= availableUntil
+  ) {
+    this.linkStatus = 'clickable'
+    return
+  }
+
+  this.linkStatus = 'not-available'
+}
 
   private getMeetingStartTimestamp(
     meeting: MeetingDTO
@@ -259,11 +259,18 @@ export class MeetingDetailModalComponent
       return null
     }
 
-    const meetingHour = Number(
+    const rawHour =
       meeting.localhour ??
-        meeting.hour ??
-        meetingDate.getUTCHours()
-    )
+      meeting.hour
+
+    if (
+      rawHour === null ||
+      rawHour === undefined
+    ) {
+      return meetingDate.getTime()
+    }
+
+    const meetingHour = Number(rawHour)
 
     if (
       Number.isNaN(meetingHour) ||
@@ -273,11 +280,7 @@ export class MeetingDetailModalComponent
       return null
     }
 
-    /*
-     * Se conserva la fecha recibida y se establece
-     * la hora de la reunión en UTC.
-     */
-    meetingDate.setUTCHours(
+    meetingDate.setHours(
       meetingHour,
       0,
       0,
