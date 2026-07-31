@@ -74,6 +74,8 @@
 .classes-list {
   display: flex;
   flex-direction: column;
+  max-height: 450px;
+  overflow-y: auto;
 }
 
 .scheduled-class {
@@ -223,6 +225,35 @@
 .class-modality--presential {
   background: #fff5df;
   color: #a26614;
+}
+
+.class-status {
+  min-height: 1.45rem;
+  padding: 0.2rem 0.5rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+.class-status--started {
+  color: #067647;
+  background: #ecfdf3;
+  border: 1px solid #a7f3d0;
+}
+
+.class-status--finished {
+  color: #b42318;
+  background: #fef3f2;
+  border: 1px solid #fecdca;
 }
 
 .class-information__date {
@@ -757,6 +788,19 @@
 
   .class-information__heading {
     gap: 0.45rem;
+  }
+
+  .class-modality,
+  .class-status {
+    min-height: 1.3rem;
+    padding: 0.18rem 0.42rem;
+
+    font-size: 0.58rem;
+  }
+
+  .class-status--started,
+  .class-status--finished {
+    white-space: nowrap;
   }
 
   .class-information__title {

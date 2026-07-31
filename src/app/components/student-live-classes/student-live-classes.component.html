@@ -118,7 +118,25 @@
 
               {{ getMeetingModality(meeting) }}
             </span>
+
+            <span
+              *ngIf="isPastMeeting(meeting) as status"
+              class="class-status"
+              [class.class-status--started]="
+                status === 'started'
+              "
+              [class.class-status--finished]="
+                status === 'finished'
+              "
+            >
+              {{
+                status === 'started'
+                  ? 'Iniciada'
+                  : 'Terminada'
+              }}
+            </span>
           </div>
+          
 
           <p class="class-information__date">
             {{ getFullMeetingDate(meeting.date) }}

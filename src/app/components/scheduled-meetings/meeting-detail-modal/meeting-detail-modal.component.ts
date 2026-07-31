@@ -244,8 +244,8 @@ export class MeetingDetailModalComponent
     meeting: MeetingDTO
   ): number | null {
     const rawDate =
-      meeting.localdate ??
-      meeting.date
+      meeting.date ??
+      meeting.localdate
 
     if (!rawDate) {
       return null
@@ -260,8 +260,8 @@ export class MeetingDetailModalComponent
     }
 
     const rawHour =
-      meeting.localhour ??
-      meeting.hour
+      meeting.hour ??
+      meeting.localhour
 
     if (
       rawHour === null ||

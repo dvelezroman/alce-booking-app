@@ -76,7 +76,7 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
   // Reuniones visibles en el dashboard
   // ================================
   get visibleMeetings(): MeetingDTO[] {
-    return this.meetings.slice(0, 3);
+    return this.meetings
   }
 
   get hasOneMeeting(): boolean {
@@ -121,12 +121,12 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
         next: (meetings: MeetingDTO[]) => {
           this.meetings = this.applyFilter(meetings)
             .slice()
-            .sort((firstMeeting, secondMeeting) => {
-              return (
-                this.getMeetingTimestamp(firstMeeting) -
-                this.getMeetingTimestamp(secondMeeting)
-              );
-            });
+            .sort((firstMeeting, secondMeeting) =>
+              this.compareMeetings(
+                firstMeeting,
+                secondMeeting
+              )
+            );
 
           this.meetingsCount.emit(this.meetings.length);
           this.loading = false;
@@ -140,6 +140,52 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
       });
+  }
+
+  private compareMeetings(
+    firstMeeting: MeetingDTO,
+    secondMeeting: MeetingDTO
+  ): number {
+    const firstTimestamp =
+      this.getMeetingTimestamp(firstMeeting);
+
+    const secondTimestamp =
+      this.getMeetingTimestamp(secondMeeting);
+
+    const firstIsFinished =
+      this.isPastMeeting(firstMeeting);
+
+    const secondIsFinished =
+      this.isPastMeeting(secondMeeting);
+
+    if (
+      firstIsFinished &&
+      !secondIsFinished
+    ) {
+      return 1;
+    }
+
+    if (
+      !firstIsFinished &&
+      secondIsFinished
+    ) {
+      return -1;
+    }
+
+    if (
+      !firstIsFinished &&
+      !secondIsFinished
+    ) {
+      return (
+        firstTimestamp -
+        secondTimestamp
+      );
+    }
+
+    return (
+      secondTimestamp -
+      firstTimestamp
+    );
   }
 
   changeFilter(mode: 'today' | 'all'): void {
@@ -183,6 +229,32 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
   // ================================
   // Información visual de la clase
   // ================================
+
+ isPastMeeting(
+    meeting: MeetingDTO
+  ): 'started' | 'finished' | null {
+    const meetingStart =
+      this.getMeetingTimestamp(meeting);
+
+    const meetingEnd =
+      meetingStart + 60 * 60 * 1000;
+
+    const now = Date.now();
+
+    if (
+      now >= meetingStart &&
+      now < meetingEnd
+    ) {
+      return 'started';
+    }
+
+    if (now >= meetingEnd) {
+      return 'finished';
+    }
+
+    return null;
+  }
+  
   getMeetingTitle(_meeting: MeetingDTO): string {
     return 'Clase de inglés';
   }
@@ -255,7 +327,7 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
   }
 
   getMeetingTime(meeting: MeetingDTO): string {
-    const startHour = Number(meeting.localhour ?? meeting.hour);
+    const startHour = Number(meeting.hour ?? meeting.localhour);
 
     if (Number.isNaN(startHour)) {
       return 'Horario por confirmar';
@@ -418,11 +490,11 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
     const LINK_ACTIVE_BEFORE = 5 * 60 * 1000;
     const LINK_ACTIVE_AFTER = 6 * 60 * 1000;
 
-    const localDateISO = new Date(meeting.localdate)
+    const localDateISO = new Date(meeting.date)
       .toISOString()
       .split('T')[0];
 
-    const localHour = meeting.localhour
+    const localHour = meeting.hour
       .toString()
       .padStart(2, '0');
 
@@ -445,7 +517,7 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
     meeting: MeetingDTO
   ): number {
     const dateValue =
-      meeting.localdate ?? meeting.date;
+      meeting.date ?? meeting.localdate;
 
     const parsedDate = new Date(dateValue);
 
@@ -458,7 +530,7 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
     );
 
     const meetingHour = Number(
-      meeting.localhour ?? meeting.hour ?? 0
+      meeting.hour ?? meeting.localhour ?? 0
     );
 
     return new Date(
