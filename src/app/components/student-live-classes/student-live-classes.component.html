@@ -207,6 +207,14 @@
           <button
             type="button"
             class="class-detail-button"
+            [disabled]="
+              isPastMeeting(meeting) === 'finished'
+            "
+            [attr.title]="
+              isPastMeeting(meeting) === 'finished'
+                ? 'Esta clase ya terminó'
+                : 'Ver detalles de la clase'
+            "
             (click)="handleViewDetails(meeting)"
           >
             Ver detalles

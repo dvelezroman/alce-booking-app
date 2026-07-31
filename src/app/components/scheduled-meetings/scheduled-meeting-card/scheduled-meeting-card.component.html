@@ -165,7 +165,10 @@
         type="button"
         class="details-button"
         (click)="onViewDetails()"
-        [disabled]="!isUpcomingMeeting"
+        [disabled]="
+          !isUpcomingMeeting ||
+          isPastMeeting
+        "
         aria-label="Ver detalles de la clase"
       >
         <svg

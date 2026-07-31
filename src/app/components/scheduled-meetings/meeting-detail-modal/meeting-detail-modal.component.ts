@@ -240,55 +240,59 @@ export class MeetingDetailModalComponent
   this.linkStatus = 'not-available'
 }
 
-  private getMeetingStartTimestamp(
-    meeting: MeetingDTO
-  ): number | null {
-    const rawDate =
-      meeting.date ??
-      meeting.localdate
+ private getMeetingStartTimestamp(
+  meeting: MeetingDTO
+): number | null {
+  const rawDate =
+    meeting.localdate ??
+    meeting.date;
 
-    if (!rawDate) {
-      return null
-    }
+  const rawHour =
+    meeting.localhour ??
+    meeting.hour;
 
-    const meetingDate = new Date(rawDate)
-
-    if (
-      Number.isNaN(meetingDate.getTime())
-    ) {
-      return null
-    }
-
-    const rawHour =
-      meeting.hour ??
-      meeting.localhour
-
-    if (
-      rawHour === null ||
-      rawHour === undefined
-    ) {
-      return meetingDate.getTime()
-    }
-
-    const meetingHour = Number(rawHour)
-
-    if (
-      Number.isNaN(meetingHour) ||
-      meetingHour < 0 ||
-      meetingHour > 23
-    ) {
-      return null
-    }
-
-    meetingDate.setHours(
-      meetingHour,
-      0,
-      0,
-      0
-    )
-
-    return meetingDate.getTime()
+  if (
+    !rawDate ||
+    rawHour === null ||
+    rawHour === undefined
+  ) {
+    return null;
   }
+
+  const datePart =
+    String(rawDate).slice(0, 10);
+
+  const [
+    year,
+    month,
+    day,
+  ] = datePart
+    .split('-')
+    .map(Number);
+
+  const hour = Number(rawHour);
+
+  if (
+    !year ||
+    !month ||
+    !day ||
+    Number.isNaN(hour) ||
+    hour < 0 ||
+    hour > 23
+  ) {
+    return null;
+  }
+
+  return Date.UTC(
+    year,
+    month - 1,
+    day,
+    hour + 5,
+    0,
+    0,
+    0
+  );
+}
 
   private hasHttpProtocol(
     link: string

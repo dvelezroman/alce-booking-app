@@ -222,7 +222,16 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
     this.scheduleClass.emit();
   }
 
-  handleViewDetails(meeting: MeetingDTO): void {
+  handleViewDetails(
+    meeting: MeetingDTO
+  ): void {
+    if (
+      this.isPastMeeting(meeting) ===
+      'finished'
+    ) {
+      return;
+    }
+
     this.viewMeetingDetails.emit(meeting);
   }
 
@@ -487,58 +496,133 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    const LINK_ACTIVE_BEFORE = 5 * 60 * 1000;
-    const LINK_ACTIVE_AFTER = 6 * 60 * 1000;
+    const LINK_ACTIVE_BEFORE =
+      5 * 60 * 1000;
 
-    const localDateISO = new Date(meeting.date)
-      .toISOString()
-      .split('T')[0];
+    const LINK_ACTIVE_AFTER =
+      6 * 60 * 1000;
 
-    const localHour = meeting.hour
-      .toString()
-      .padStart(2, '0');
+    const rawDate =
+      meeting.localdate ??
+      meeting.date;
 
-    const meetingStart = new Date(
-      `${localDateISO}T${localHour}:00`
-    ).getTime();
+    const rawHour =
+      meeting.localhour ??
+      meeting.hour;
+
+    if (
+      !rawDate ||
+      rawHour === null ||
+      rawHour === undefined
+    ) {
+      return false;
+    }
+
+    const datePart =
+      String(rawDate).slice(0, 10);
+
+    const [
+      year,
+      month,
+      day,
+    ] = datePart
+      .split('-')
+      .map(Number);
+
+    const hour = Number(rawHour);
+
+    if (
+      !year ||
+      !month ||
+      !day ||
+      Number.isNaN(hour) ||
+      hour < 0 ||
+      hour > 23
+    ) {
+      return false;
+    }
+
+    const meetingStart =
+      Date.UTC(
+        year,
+        month - 1,
+        day,
+        hour + 5,
+        0,
+        0,
+        0
+      );
 
     const now = Date.now();
 
-    const start = meetingStart - LINK_ACTIVE_BEFORE;
-    const end = meetingStart + LINK_ACTIVE_AFTER;
+    const availableFrom =
+      meetingStart -
+      LINK_ACTIVE_BEFORE;
 
-    return now >= start && now <= end;
+    const availableUntil =
+      meetingStart +
+      LINK_ACTIVE_AFTER;
+
+    return (
+      now >= availableFrom &&
+      now <= availableUntil
+    );
   }
 
   // ================================
   // Helpers privados
   // ================================
   private getMeetingTimestamp(
-    meeting: MeetingDTO
-  ): number {
-    const dateValue =
-      meeting.date ?? meeting.localdate;
+  meeting: MeetingDTO
+): number {
+  const rawDate =
+    meeting.localdate ??
+    meeting.date;
 
-    const parsedDate = new Date(dateValue);
+  const rawHour =
+    meeting.localhour ??
+    meeting.hour;
 
-    if (Number.isNaN(parsedDate.getTime())) {
-      return 0;
-    }
-
-    const meetingDate = this.formatDateForRequest(
-      parsedDate
-    );
-
-    const meetingHour = Number(
-      meeting.hour ?? meeting.localhour ?? 0
-    );
-
-    return new Date(
-      `${meetingDate}T${meetingHour
-        .toString()
-        .padStart(2, '0')}:00:00`
-    ).getTime();
+  if (
+    !rawDate ||
+    rawHour === null ||
+    rawHour === undefined
+  ) {
+    return 0;
   }
+
+  const datePart =
+    String(rawDate).slice(0, 10);
+
+  const [
+    year,
+    month,
+    day,
+  ] = datePart
+    .split('-')
+    .map(Number);
+
+  const hour = Number(rawHour);
+
+  if (
+    !year ||
+    !month ||
+    !day ||
+    Number.isNaN(hour)
+  ) {
+    return 0;
+  }
+
+  return Date.UTC(
+    year,
+    month - 1,
+    day,
+    hour + 5,
+    0,
+    0,
+    0
+  );
+}
 
   private formatDateForRequest(date: Date): string {
     const year = date.getFullYear();

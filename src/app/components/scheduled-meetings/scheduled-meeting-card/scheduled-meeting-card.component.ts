@@ -368,17 +368,14 @@ export class ScheduledMeetingCardComponent {
     return ''
   }
 
-  get meetingTimeStatus():
-    | 'started'
-    | 'finished'
-    | null {
+  private getMeetingTimestamp(): number | null {
     const rawDate =
-      this.meeting?.date ??
-      this.meeting?.localdate
+      this.meeting?.localdate ??
+      this.meeting?.date
 
     const rawHour =
-      this.meeting?.hour ??
-      this.meeting?.localhour
+      this.meeting?.localhour ??
+      this.meeting?.hour
 
     if (
       !rawDate ||
@@ -388,38 +385,60 @@ export class ScheduledMeetingCardComponent {
       return null
     }
 
-    const meetingDate = new Date(rawDate)
-    const meetingHour = Number(rawHour)
+    const datePart = String(rawDate)
+      .slice(0, 10)
+
+    const [
+      year,
+      month,
+      day,
+    ] = datePart
+      .split('-')
+      .map(Number)
+
+    const hour = Number(rawHour)
 
     if (
-      Number.isNaN(meetingDate.getTime()) ||
-      Number.isNaN(meetingHour) ||
-      meetingHour < 0 ||
-      meetingHour > 23
+      !year ||
+      !month ||
+      !day ||
+      Number.isNaN(hour) ||
+      hour < 0 ||
+      hour > 23
     ) {
       return null
     }
 
-    meetingDate.setHours(
-      meetingHour,
+    /*
+    * Ecuador continental utiliza UTC-5.
+    * Sumamos 5 horas para obtener el instante UTC.
+    */
+    return Date.UTC(
+      year,
+      month - 1,
+      day,
+      hour + 5,
       0,
       0,
       0
     )
+  }
 
-    const meetingHourEnd =
-      new Date(meetingDate)
+  get meetingTimeStatus():
+    | 'started'
+    | 'finished'
+    | null {
+    const start =
+      this.getMeetingTimestamp()
 
-    meetingHourEnd.setHours(
-      meetingHour + 1,
-      0,
-      0,
-      0
-    )
+    if (start === null) {
+      return null
+    }
+
+    const end =
+      start + 60 * 60 * 1000
 
     const now = Date.now()
-    const start = meetingDate.getTime()
-    const end = meetingHourEnd.getTime()
 
     if (
       now >= start &&
@@ -498,6 +517,10 @@ export class ScheduledMeetingCardComponent {
   }
 
   onViewDetails(): void {
+    if (this.isPastMeeting) {
+      return
+    }
+
     this.viewDetails.emit(this.meeting)
   }
 
@@ -522,64 +545,32 @@ export class ScheduledMeetingCardComponent {
   }
 
   get isPastMeeting(): boolean {
-    const rawDate =
-      this.meeting?.date ??
-      this.meeting?.localdate
-
-    if (!rawDate) {
-      return false
-    }
-
-    const meetingDate = new Date(rawDate)
-
-    if (Number.isNaN(meetingDate.getTime())) {
-      return false
-    }
-
-    const rawHour =
-      this.meeting?.hour ??
-      this.meeting?.localhour
-
-    if (
-      rawHour !== null &&
-      rawHour !== undefined
-    ) {
-      const hour = Number(rawHour)
-
-      if (!Number.isNaN(hour)) {
-        meetingDate.setHours(hour, 0, 0, 0)
-      }
-    }
-
-    const now = Date.now()
-
-    return meetingDate.getTime() < now
-  }
+  return (
+    this.meetingTimeStatus ===
+    'finished'
+  )
+}
 
   get isTodayMeeting(): boolean {
     const rawDate =
-      this.meeting?.date ??
-      this.meeting?.localdate
+      this.meeting?.localdate ??
+      this.meeting?.date
 
     if (!rawDate) {
       return false
     }
 
-    const meetingDate = new Date(rawDate)
+    const meetingDateKey =
+      String(rawDate).slice(0, 10)
 
-    if (Number.isNaN(meetingDate.getTime())) {
-      return false
-    }
+    const todayDateKey =
+      new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'America/Guayaquil',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(new Date())
 
-    const now = new Date()
-
-    return (
-      meetingDate.getUTCFullYear() ===
-        now.getUTCFullYear() &&
-      meetingDate.getUTCMonth() ===
-        now.getUTCMonth() &&
-      meetingDate.getUTCDate() ===
-        now.getUTCDate()
-    )
+    return meetingDateKey === todayDateKey
   }
 }

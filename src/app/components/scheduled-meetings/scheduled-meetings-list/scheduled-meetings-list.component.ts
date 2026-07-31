@@ -122,47 +122,53 @@ export class ScheduledMeetingsListComponent {
     meeting: MeetingDTO
   ): number {
     const rawDate =
-      meeting.date ??
-      meeting.localdate
-
-    if (!rawDate) {
-      return Number.MAX_SAFE_INTEGER
-    }
-
-    const meetingDate = new Date(rawDate)
-
-    if (
-      Number.isNaN(
-        meetingDate.getTime()
-      )
-    ) {
-      return Number.MAX_SAFE_INTEGER
-    }
+      meeting.localdate ??
+      meeting.date
 
     const rawHour =
-      meeting.hour ??
-      meeting.localhour
+      meeting.localhour ??
+      meeting.hour
 
     if (
-      rawHour !== null &&
-      rawHour !== undefined
+      !rawDate ||
+      rawHour === null ||
+      rawHour === undefined
     ) {
-      const hour = Number(rawHour)
-
-      if (
-        !Number.isNaN(hour) &&
-        hour >= 0 &&
-        hour <= 23
-      ) {
-        meetingDate.setHours(
-          hour,
-          0,
-          0,
-          0
-        )
-      }
+      return Number.MAX_SAFE_INTEGER
     }
 
-    return meetingDate.getTime()
+    const datePart =
+      String(rawDate).slice(0, 10)
+
+    const [
+      year,
+      month,
+      day,
+    ] = datePart
+      .split('-')
+      .map(Number)
+
+    const hour = Number(rawHour)
+
+    if (
+      !year ||
+      !month ||
+      !day ||
+      Number.isNaN(hour) ||
+      hour < 0 ||
+      hour > 23
+    ) {
+      return Number.MAX_SAFE_INTEGER
+    }
+
+    return Date.UTC(
+      year,
+      month - 1,
+      day,
+      hour + 5,
+      0,
+      0,
+      0
+    )
   }
 }
