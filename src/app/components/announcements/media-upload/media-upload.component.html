@@ -68,21 +68,39 @@
   </div>
 
   <!-- INPUT URL -->
-  <div *ngIf="useUrl" class="media-upload__url">
-    <input
-      type="text"
-      [(ngModel)]="urlInput"
-      class="media-upload__url-input"
-      placeholder="Pega la URL del archivo"
-    />
+  <div *ngIf="useUrl" class="media-upload__url-wrapper">
+    <div class="media-upload__url">
+      <input
+        type="text"
+        [(ngModel)]="urlInput"
+        class="media-upload__url-input"
+        placeholder="Pega la URL del archivo"
+        (input)="uploaded = false; error = null"
+      />
 
-    <button
-      type="button"
-      class="media-upload__url-btn"
-      (click)="applyUrl()"
+      <button
+        type="button"
+        class="media-upload__url-btn"
+        (click)="applyUrl()"
+      >
+        Aplicar
+      </button>
+    </div>
+
+    <p
+      *ngIf="uploaded && media"
+      class="media-upload__url-success"
     >
-      Aplicar
-    </button>
+      <i class="fas fa-check-circle"></i>
+      URL agregada correctamente
+    </p>
+
+    <p
+      *ngIf="error"
+      class="media-upload__url-error"
+    >
+      {{ error }}
+    </p>
   </div>
 
   <!-- DROPZONE -->

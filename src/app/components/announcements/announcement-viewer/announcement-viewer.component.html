@@ -1,40 +1,88 @@
-<div *ngIf="showModal && currentAnnouncement as a" class="announcement-modal">
-
-  <div class="announcement-modal__content" [ngClass]="a.aspectRatio || 'horizontal'">
-
-    <!-- ❌ CLOSE SOLO ARRIBA -->
+<div
+  *ngIf="
+    showModal &&
+    currentAnnouncement as a
+  "
+  class="announcement-modal"
+>
+  <div
+    class="announcement-modal__content"
+    [ngClass]="
+      a.aspectRatio || 'horizontal'
+    "
+  >
+    <!-- CLOSE -->
     <button
+      type="button"
       class="announcement-modal__close"
+      aria-label="Cerrar anuncio"
       (click)="close()"
-      [disabled]="closeAction?.delaySeconds && !delayMap[getActionIndex(closeAction)]"
+      [disabled]="
+        !!closeAction?.delaySeconds &&
+        !delayMap[
+          getActionIndex(closeAction)
+        ]
+      "
     >
-      <span 
-        *ngIf="closeAction?.delaySeconds && !delayMap[getActionIndex(closeAction)]"
+      <span
+        *ngIf="
+          closeAction?.delaySeconds &&
+          !delayMap[
+            getActionIndex(closeAction)
+          ]
+        "
         class="close-delay"
       >
-        {{ delaySecondsMap[getActionIndex(closeAction)] }}s
+        {{
+          delaySecondsMap[
+            getActionIndex(closeAction)
+          ]
+        }}s
       </span>
+
       ✕
     </button>
 
-    <!-- 🎥 MEDIA -->
+    <!-- MEDIA -->
     <div
       class="announcement-modal__media"
-      [ngClass]="a.aspectRatio || 'horizontal'"
+      [ngClass]="
+        a.aspectRatio || 'horizontal'
+      "
     >
+      <!-- IMAGEN -->
       <img
-        *ngIf="a.mediaUrl && !isYoutubeMedia"
+        *ngIf="
+          a.mediaUrl &&
+          isImageMedia
+        "
         [src]="a.mediaUrl"
+        [alt]="a.title || 'Anuncio'"
+        class="announcement-modal__media-element"
       />
 
+      <!-- YOUTUBE -->
       <div
-        *ngIf="a.mediaUrl && isYoutubeMedia"
+        *ngIf="
+          a.mediaUrl &&
+          isYoutubeMedia &&
+          safeEmbedUrl
+        "
         class="video-wrapper"
-        [ngClass]="a.aspectRatio || 'horizontal'"
+        [ngClass]="
+          a.aspectRatio || 'horizontal'
+        "
       >
         <iframe
-          [src]="safeYoutubeUrl"
-          allow="autoplay"
+          [src]="safeEmbedUrl"
+          title="Video de YouTube"
+          allow="
+            autoplay;
+            encrypted-media;
+            picture-in-picture;
+            fullscreen
+          "
+          referrerpolicy="strict-origin-when-cross-origin"
           allowfullscreen
         ></iframe>
 
@@ -43,32 +91,136 @@
           class="video-lock"
         ></div>
 
-        <div
+        <button
           *ngIf="!hasVideoStarted"
+          type="button"
           class="video-overlay"
-          (click)="playVideo()"
+          aria-label="Reproducir video"
+          (click)="playEmbeddedVideo()"
+        >
+          <span class="video-overlay__play">
+            ▶
+          </span>
+        </button>
+      </div>
+
+      <!-- GOOGLE DRIVE -->
+      <div
+        *ngIf="
+          a.mediaUrl &&
+          isGoogleDriveMedia &&
+          safeEmbedUrl
+        "
+        class="video-wrapper"
+        [ngClass]="
+          a.aspectRatio || 'horizontal'
+        "
+      >
+        <iframe
+          [src]="safeEmbedUrl"
+          title="Video de Google Drive"
+          allow="
+            autoplay;
+            encrypted-media;
+            picture-in-picture;
+            fullscreen
+          "
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
+
+      <!-- VIDEO DIRECTO -->
+      <div
+        *ngIf="
+          a.mediaUrl &&
+          isDirectVideoMedia
+        "
+        class="video-wrapper"
+        [ngClass]="
+          a.aspectRatio || 'horizontal'
+        "
+      >
+        <video
+          [src]="a.mediaUrl"
+          class="announcement-modal__media-element"
+          controls
+          playsinline
+          preload="metadata"
+          (play)="onVideoPlay()"
+          (error)="onVideoError()"
+        >
+          Tu navegador no permite
+          reproducir este video.
+        </video>
+
+        <div
+          *ngIf="isVideoLocked()"
+          class="video-lock"
         ></div>
+      </div>
+
+      <!-- SIN CONTENIDO -->
+      <div
+        *ngIf="
+          !a.mediaUrl ||
+          mediaType === 'none'
+        "
+        class="announcement-modal__fallback"
+      >
+        <h3>
+          {{ a.title || 'Anuncio' }}
+        </h3>
       </div>
     </div>
 
-    <!-- 🔘 ACTIONS (SIN CLOSE) -->
-    <div *ngIf="a.actions.length" class="announcement-modal__actions">
-      <ng-container *ngFor="let action of a.actions">
+    <!-- ACTIONS -->
+    <div
+      *ngIf="a.actions.length"
+      class="announcement-modal__actions"
+    >
+      <ng-container
+        *ngFor="
+          let action of a.actions
+        "
+      >
         <button
-          *ngIf="action.type !== 'close'"
-          [disabled]="isDisabled(action, getActionIndex(action))"
-          (click)="handleAction(action)"
-          [style.background]="getButtonColor(action)"
+          *ngIf="
+            action.type !== 'close'
+          "
+          type="button"
           class="announcement-modal__btn"
+          [disabled]="
+            isDisabled(
+              action,
+              getActionIndex(action)
+            )
+          "
+          [style.background]="
+            getButtonColor(action)
+          "
+          (click)="
+            handleAction(action)
+          "
         >
-          <span *ngIf="action.delaySeconds && !delayMap[getActionIndex(action)]">
-            ({{ delaySecondsMap[getActionIndex(action)] }}s)
+          <span
+            *ngIf="
+              action.delaySeconds &&
+              !delayMap[
+                getActionIndex(action)
+              ]
+            "
+          >
+            ({{
+              delaySecondsMap[
+                getActionIndex(action)
+              ]
+            }}s)
           </span>
+
           {{ action.label }}
         </button>
       </ng-container>
     </div>
-
   </div>
-
 </div>
