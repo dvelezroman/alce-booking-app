@@ -111,21 +111,14 @@
           isGoogleDriveMedia &&
           safeEmbedUrl
         "
-        class="video-wrapper"
-        [ngClass]="
-          a.aspectRatio || 'horizontal'
-        "
+        class="video-wrapper video-wrapper--drive"
+        [ngClass]="a.aspectRatio || 'horizontal'"
       >
         <iframe
           [src]="safeEmbedUrl"
+          class="drive-video-iframe"
           title="Video de Google Drive"
-          allow="
-            autoplay;
-            encrypted-media;
-            picture-in-picture;
-            fullscreen
-          "
-          referrerpolicy="strict-origin-when-cross-origin"
+          allow="autoplay; fullscreen"
           allowfullscreen
         ></iframe>
       </div>
