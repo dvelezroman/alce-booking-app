@@ -36,6 +36,8 @@ export interface NotificationMessage {
   kind?:
     | 'demo-class'
     | 'placement-exam'
+    | 'assessment-assigned'
+    | 'assessment-results-ready'
     | 'S2S_NEW_STUDENTS_TO_CREATE'
     | 'lead-scheduling-assigned'
     | 'lead-scheduling-cancelled'
@@ -43,6 +45,24 @@ export interface NotificationMessage {
   lead?: DemoClassLead;
   rows?: NewStudentRow[];
   summary?: NotificationSummary | DemoClassSummary | LeadSchedulingAssignedSummary;
+  /** Assessment assigned (S2S) — primary zero-input CTA */
+  directAccessUrl?: string;
+  /** Assessment results ready (S2S) — deep link to results page */
+  resultsUrl?: string;
+  sessionId?: string;
+  outcome?: 'PASSED' | 'FAILED';
+  points?: number;
+  studentStage?: number | null;
+  /** Shared classroom / QR landing */
+  shareUrl?: string;
+  studentAccessCode?: string;
+  assignmentId?: string;
+  templateId?: string;
+  templateTitle?: string;
+  expiresAt?: string | null;
+  maxAttempts?: number;
+  batchId?: string | null;
+  eventId?: string;
   [key: string]: any;
 }
 

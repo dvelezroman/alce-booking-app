@@ -1,68 +1,131 @@
-<div class="preview-card card" [ngClass]="aspectRatio">
-
+<div
+  class="preview-card card"
+  [ngClass]="aspectRatio"
+>
   <!-- MEDIA -->
-  <div class="preview-card__media" [ngClass]="aspectRatio">
-
+  <div
+    class="preview-card__media"
+    [ngClass]="aspectRatio"
+  >
     <!-- STATUS -->
     <div class="preview-card__status-top">
       <span
         class="tag preview-card__status"
-        [ngClass]="isActive ? 'is-success' : 'is-light'"
+        [ngClass]="
+          isActive
+            ? 'is-success'
+            : 'is-light'
+        "
       >
-        {{ isActive ? 'Active' : 'Inactive' }}
+        {{
+          isActive
+            ? 'Active'
+            : 'Inactive'
+        }}
       </span>
     </div>
 
     <!-- CLOSE -->
-    <button *ngIf="hasClose()" class="preview-card__close">
+    <button
+      *ngIf="hasClose()"
+      type="button"
+      class="preview-card__close"
+      aria-label="Cerrar anuncio"
+    >
       ✕
     </button>
 
-    <!-- TITLE -->
-    <!-- <div class="preview-card__title-overlay">
-      {{ title || 'Untitled Announcement' }}
-    </div> -->
-
     <!-- IMAGE -->
     <img
-      *ngIf="media && !isYoutubeMedia && !isVideoFile()"
+      *ngIf="
+        media &&
+        !isYoutubeMedia &&
+        !isGoogleDriveMedia &&
+        !isVideoFile()
+      "
       [src]="media"
       class="preview-card__image"
+      alt="Vista previa del anuncio"
     />
 
-    <!-- YOUTUBE -->
+    <!-- YOUTUBE O GOOGLE DRIVE -->
     <iframe
-      *ngIf="media && isYoutubeMedia"
-      [src]="safeYoutubeUrl"
+      *ngIf="
+        media &&
+        (
+          isYoutubeMedia ||
+          isGoogleDriveMedia
+        ) &&
+        safeEmbedUrl
+      "
+      [src]="safeEmbedUrl"
       class="preview-card__image"
+      title="Vista previa del contenido multimedia"
       frameborder="0"
+      allow="
+        autoplay;
+        encrypted-media;
+        picture-in-picture;
+        fullscreen
+      "
+      referrerpolicy="strict-origin-when-cross-origin"
       allowfullscreen
     ></iframe>
 
-    <!-- VIDEO -->
+    <!-- VIDEO DIRECTO -->
     <video
-      *ngIf="media && isVideoFile() && !isYoutubeMedia"
+      *ngIf="
+        media &&
+        isVideoFile() &&
+        !isYoutubeMedia &&
+        !isGoogleDriveMedia
+      "
       [src]="media"
       class="preview-card__image"
       controls
       playsinline
-    ></video>
+      preload="metadata"
+    >
+      Tu navegador no permite reproducir este video.
+    </video>
 
+    <!-- SIN MEDIA -->
+    <div
+      *ngIf="!media"
+      class="preview-card__empty"
+    >
+      <i class="fas fa-image"></i>
+
+      <p>
+        Agrega una imagen o video en la parte de arriba para
+        visualizar el anuncio.
+      </p>
+    </div>
   </div>
 
   <!-- ACTIONS -->
-  <div *ngIf="actionButtons.length > 0" class="preview-card__actions">
+  <div
+    *ngIf="actionButtons.length > 0"
+    class="preview-card__actions"
+  >
     <button
-      *ngFor="let action of actionButtons"
+      *ngFor="
+        let action of actionButtons
+      "
+      type="button"
       class="button preview-card__button"
-      [ngStyle]="getButtonStyle(action)"
+      [ngStyle]="
+        getButtonStyle(action)
+      "
     >
       {{
         action.type === 'whatsapp'
           ? 'WhatsApp'
-          : (action.label || 'Acción')
+          : (
+              action.label ||
+              'Acción'
+            )
       }}
     </button>
   </div>
-
 </div>

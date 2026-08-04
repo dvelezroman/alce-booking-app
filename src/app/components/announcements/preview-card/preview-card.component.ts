@@ -1,18 +1,19 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges,
   SimpleChanges,
-  ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import {
+  DomSanitizer,
+  SafeResourceUrl,
+} from '@angular/platform-browser';
 
 import { UserRole } from '../../../services/dtos/user.dto';
 import { StudentClassification } from '../../../services/dtos/student.dto';
 import { Action } from '../../../services/dtos/announcement.dto';
-
-type ActionType = Action['type'];
 
 @Component({
   selector: 'app-preview-card',
@@ -20,40 +21,76 @@ type ActionType = Action['type'];
   imports: [CommonModule],
   templateUrl: './preview-card.component.html',
   styleUrl: './preview-card.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection:
+    ChangeDetectionStrategy.OnPush,
 })
-export class PreviewCardComponent implements OnChanges {
-
+export class PreviewCardComponent
+  implements OnChanges
+{
   @Input() title!: string;
   @Input() type!: string;
   @Input() media?: string;
 
   @Input() role: UserRole | null = null;
-  @Input() studentClassification: StudentClassification | null = null;
-  @Input() city: 'Portoviejo' | 'Cuenca' | null = null;
+
+  @Input()
+  studentClassification:
+    | StudentClassification
+    | null = null;
+
+  @Input()
+  city: 'Portoviejo' | 'Cuenca' | null =
+    null;
 
   @Input() isActive!: boolean;
   @Input() actions: Action[] = [];
-  @Input() aspectRatio: 'horizontal' | 'vertical' | 'square' = 'horizontal';
 
-  safeYoutubeUrl?: SafeResourceUrl;
+  @Input()
+  aspectRatio:
+    | 'horizontal'
+    | 'vertical'
+    | 'square' = 'horizontal';
+
+  safeEmbedUrl?: SafeResourceUrl;
+
   isYoutubeMedia = false;
+  isGoogleDriveMedia = false;
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(
+    private sanitizer: DomSanitizer
+  ) {}
 
-  // SOLO CUANDO CAMBIA MEDIA
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['media'] && this.media) {
+  ngOnChanges(
+    changes: SimpleChanges
+  ): void {
+    if (!changes['media']) {
+      return;
+    }
 
-      this.isYoutubeMedia =
-        this.media.includes('youtube.com') ||
-        this.media.includes('youtu.be');
+    this.resetMediaState();
 
-      if (this.isYoutubeMedia) {
-        this.safeYoutubeUrl = this.buildYoutubeUrl(this.media);
-      } else {
-        this.safeYoutubeUrl = undefined;
-      }
+    const mediaUrl = this.media?.trim();
+
+    if (!mediaUrl) {
+      return;
+    }
+
+    this.isYoutubeMedia =
+      this.isYoutubeUrl(mediaUrl);
+
+    this.isGoogleDriveMedia =
+      this.isGoogleDriveUrl(mediaUrl);
+
+    if (this.isYoutubeMedia) {
+      this.safeEmbedUrl =
+        this.buildYoutubeUrl(mediaUrl);
+
+      return;
+    }
+
+    if (this.isGoogleDriveMedia) {
+      this.safeEmbedUrl =
+        this.buildGoogleDriveUrl(mediaUrl);
     }
   }
 
@@ -61,59 +98,240 @@ export class PreviewCardComponent implements OnChanges {
   // BOTONES
   // =========================
   get actionButtons(): Action[] {
-    return this.actions?.filter(a =>
-      a.type === 'action' || a.type === 'whatsapp'
-    ) || [];
+    return (
+      this.actions?.filter(
+        (action) =>
+          action.type === 'action' ||
+          action.type === 'whatsapp'
+      ) || []
+    );
   }
 
   hasClose(): boolean {
-    return this.actions?.some(a => a.type === 'close');
+    return (
+      this.actions?.some(
+        (action) =>
+          action.type === 'close'
+      ) || false
+    );
   }
 
   // =========================
-  // VIDEO FILE
+  // TIPO DE ARCHIVO
   // =========================
   isVideoFile(): boolean {
-    if (!this.media) return false;
-    return this.media.match(/\.(mp4|webm|ogg)$/i) !== null;
-  }
+    const mediaUrl = this.media?.trim();
 
-  // =========================
-  // BUILD YOUTUBE
-  // =========================
-  private buildYoutubeUrl(url: string): SafeResourceUrl {
-    let videoId = '';
-
-    try {
-      const u = new URL(url);
-
-      if (u.hostname.includes('youtube.com')) {
-        videoId = u.searchParams.get('v') || '';
-      }
-
-      if (u.hostname.includes('youtu.be')) {
-        videoId = u.pathname.replace('/', '');
-      }
-
-    } catch (e) {
-      return this.sanitizer.bypassSecurityTrustResourceUrl('');
+    if (!mediaUrl) {
+      return false;
     }
 
-    const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0`;
-
-    return this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
+    return /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(
+      mediaUrl
+    );
   }
 
   // =========================
-  // BUTTON STYLE
+  // YOUTUBE
   // =========================
-  getButtonStyle(action: Action) {
-    const bg = action.color || (action.type === 'whatsapp' ? '#25D366' : '#28336f');
+  private isYoutubeUrl(
+    url: string
+  ): boolean {
+    try {
+      const parsedUrl = new URL(url);
+      const hostname =
+        parsedUrl.hostname.toLowerCase();
+
+      return (
+        hostname === 'youtu.be' ||
+        hostname === 'www.youtu.be' ||
+        hostname === 'youtube.com' ||
+        hostname === 'www.youtube.com' ||
+        hostname ===
+          'm.youtube.com'
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  private buildYoutubeUrl(
+    url: string
+  ): SafeResourceUrl | undefined {
+    const videoId =
+      this.extractYoutubeVideoId(url);
+
+    if (!videoId) {
+      return undefined;
+    }
+
+    const embedUrl =
+      `https://www.youtube.com/embed/${videoId}?rel=0`;
+
+    return this.sanitizer
+      .bypassSecurityTrustResourceUrl(
+        embedUrl
+      );
+  }
+
+  private extractYoutubeVideoId(
+    url: string
+  ): string | null {
+    try {
+      const parsedUrl = new URL(url);
+      const hostname =
+        parsedUrl.hostname.toLowerCase();
+
+      if (
+        hostname === 'youtu.be' ||
+        hostname === 'www.youtu.be'
+      ) {
+        return (
+          parsedUrl.pathname
+            .split('/')
+            .filter(Boolean)[0] || null
+        );
+      }
+
+      const queryVideoId =
+        parsedUrl.searchParams.get('v');
+
+      if (queryVideoId) {
+        return queryVideoId;
+      }
+
+      const pathParts =
+        parsedUrl.pathname
+          .split('/')
+          .filter(Boolean);
+
+      const embedIndex =
+        pathParts.indexOf('embed');
+
+      if (
+        embedIndex >= 0 &&
+        pathParts[embedIndex + 1]
+      ) {
+        return pathParts[embedIndex + 1];
+      }
+
+      const shortsIndex =
+        pathParts.indexOf('shorts');
+
+      if (
+        shortsIndex >= 0 &&
+        pathParts[shortsIndex + 1]
+      ) {
+        return pathParts[shortsIndex + 1];
+      }
+
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  // =========================
+  // GOOGLE DRIVE
+  // =========================
+  private isGoogleDriveUrl(
+    url: string
+  ): boolean {
+    try {
+      const parsedUrl = new URL(url);
+      const hostname =
+        parsedUrl.hostname.toLowerCase();
+
+      return (
+        hostname === 'drive.google.com' ||
+        hostname.endsWith(
+          '.drive.google.com'
+        )
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  private buildGoogleDriveUrl(
+    url: string
+  ): SafeResourceUrl | undefined {
+    const fileId =
+      this.extractGoogleDriveFileId(url);
+
+    if (!fileId) {
+      return undefined;
+    }
+
+    const previewUrl =
+      `https://drive.google.com/file/d/${fileId}/preview`;
+
+    return this.sanitizer
+      .bypassSecurityTrustResourceUrl(
+        previewUrl
+      );
+  }
+
+  private extractGoogleDriveFileId(
+    url: string
+  ): string | null {
+    try {
+      const parsedUrl = new URL(url);
+
+      const idFromQuery =
+        parsedUrl.searchParams.get('id');
+
+      if (idFromQuery) {
+        return idFromQuery;
+      }
+
+      const filePathMatch =
+        parsedUrl.pathname.match(
+          /\/file\/d\/([^/]+)/
+        );
+
+      if (filePathMatch?.[1]) {
+        return filePathMatch[1];
+      }
+
+      const genericPathMatch =
+        parsedUrl.pathname.match(
+          /\/d\/([^/]+)/
+        );
+
+      return genericPathMatch?.[1] || null;
+    } catch {
+      return null;
+    }
+  }
+
+  // =========================
+  // ESTADO MEDIA
+  // =========================
+  private resetMediaState(): void {
+    this.safeEmbedUrl = undefined;
+    this.isYoutubeMedia = false;
+    this.isGoogleDriveMedia = false;
+  }
+
+  // =========================
+  // ESTILO DE BOTONES
+  // =========================
+  getButtonStyle(action: Action): {
+    background: string;
+    color: string;
+    border: string;
+  } {
+    const background =
+      action.color ||
+      (action.type === 'whatsapp'
+        ? '#25D366'
+        : '#28336f');
 
     return {
-      background: bg,
+      background,
       color: '#ffffff',
-      border: 'none'
+      border: 'none',
     };
   }
 }

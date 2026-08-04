@@ -42,7 +42,9 @@ export class AssessmentMultiTableComponent implements OnChanges {
       }
 
       const current = this.groupedAssessments[studentId][type];
-      if (!current || a.points > current.points) {
+      const currentPoints = current?.points ?? -1;
+      const nextPoints = a.points ?? -1;
+      if (!current || nextPoints > currentPoints) {
         this.groupedAssessments[studentId][type] = a;
       }
 
@@ -76,12 +78,20 @@ export class AssessmentMultiTableComponent implements OnChanges {
     return best ? [best] : [];
   }
 
-  isMaxReached(points: number): boolean {
-    return this.minPointsAssessment !== null && points >= this.minPointsAssessment;
+  isMaxReached(points: number | undefined): boolean {
+    return (
+      points != null &&
+      this.minPointsAssessment !== null &&
+      points >= this.minPointsAssessment
+    );
   }
 
-  isBelowMax(points: number): boolean {
-    return this.minPointsAssessment !== null && points < this.minPointsAssessment;
+  isBelowMax(points: number | undefined): boolean {
+    return (
+      points != null &&
+      this.minPointsAssessment !== null &&
+      points < this.minPointsAssessment
+    );
   }
 
   isStudentApproved(studentId: number): boolean {
@@ -92,7 +102,7 @@ export class AssessmentMultiTableComponent implements OnChanges {
 
     const approved = this.types.every(type => {
       const a = this.groupedAssessments[studentId]?.[type];
-      return !!a && a.points >= min;
+      return !!a && a.points != null && a.points >= min;
     });
     //console.log(`student ${studentId}`, approved);
     return approved;

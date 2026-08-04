@@ -126,15 +126,23 @@ export class MediaUploadComponent {
     }
   }
 
-  applyUrl() {
-    if (!this.urlInput) return;
+  applyUrl(): void {
+    const url = this.urlInput.trim();
+
+    if (!url) {
+      this.error = 'Debes ingresar una URL';
+      this.uploaded = false;
+      return;
+    }
 
     this.resetState();
 
-    this.media = this.urlInput;
-    this.mediaChange.emit(this.urlInput);
+    this.urlInput = url;
+    this.media = url;
+    this.mediaChange.emit(url);
 
     this.uploaded = true;
+    this.error = null;
   }
 
   remove(event: Event) {

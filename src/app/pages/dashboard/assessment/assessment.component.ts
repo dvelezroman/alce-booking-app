@@ -181,6 +181,7 @@ export class AssessmentComponent implements OnInit {
         groupedByType[a.type] = [];
       }
 
+      if (a.points == null) continue;
       groupedByType[a.type].push(a.points);
     }
 

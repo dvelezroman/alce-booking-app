@@ -12,7 +12,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class AssessmentTableComponent {
   @Input() assessments: AssessementI[] = [];
- @Input() minPointsAssessment: number | null = null;
+  @Input() minPointsAssessment: number | null = null;
+  /** When true (or when API already redacted points), show pass/fail only. */
+  @Input() showPassFailOnly = false;
 
   constructor(private sanitizer: DomSanitizer) {}
 
@@ -27,11 +29,28 @@ export class AssessmentTableComponent {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  isApproved(points: number): boolean {
-    return this.minPointsAssessment !== null && points >= this.minPointsAssessment;
+  get hideNumericScores(): boolean {
+    return (
+      this.showPassFailOnly ||
+      this.assessments.some((a) => a.passed !== undefined && a.points == null)
+    );
   }
 
-  isNotApproved(points: number): boolean {
-    return this.minPointsAssessment !== null && points < this.minPointsAssessment;
+  isApproved(a: AssessementI): boolean {
+    if (a.passed !== undefined) return a.passed;
+    if (a.points == null || this.minPointsAssessment === null) return false;
+    return a.points >= this.minPointsAssessment;
+  }
+
+  isNotApproved(a: AssessementI): boolean {
+    if (a.passed !== undefined) return !a.passed;
+    if (a.points == null || this.minPointsAssessment === null) return false;
+    return a.points < this.minPointsAssessment;
+  }
+
+  resultLabel(a: AssessementI): string {
+    if (this.isApproved(a)) return 'Aprobado';
+    if (this.isNotApproved(a)) return 'No aprobado';
+    return a.points != null ? String(a.points) : '—';
   }
 }

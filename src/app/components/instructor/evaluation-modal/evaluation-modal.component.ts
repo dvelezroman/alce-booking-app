@@ -65,12 +65,20 @@ export class EvaluationModalComponent implements OnChanges {
     return this.groupedAssessments[type]?.[stageId]?.length > 0;
   }
 
-  isMaxReached(points: number): boolean {
-    return this.minPointsAssessment !== null && points >= this.minPointsAssessment;
+  isMaxReached(points: number | undefined): boolean {
+    return (
+      points != null &&
+      this.minPointsAssessment !== null &&
+      points >= this.minPointsAssessment
+    );
   }
 
-  isBelowMax(points: number): boolean {
-    return this.minPointsAssessment !== null && points < this.minPointsAssessment;
+  isBelowMax(points: number | undefined): boolean {
+    return (
+      points != null &&
+      this.minPointsAssessment !== null &&
+      points < this.minPointsAssessment
+    );
   }
 
   closeModal(): void {

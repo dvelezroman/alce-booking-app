@@ -1,97 +1,222 @@
-<div *ngIf="announcement as a" class="announcement-card card">
-
-  <!-- MEDIA -->
+<div
+  *ngIf="announcement as a"
+  class="announcement-card"
+>
   <div class="announcement-card__media">
-
-    <!-- IMAGE -->
     <img
-      *ngIf="a.mediaUrl && !isYoutubeMedia"
-      [src]="a.mediaUrl"
-      [alt]="a.title"
-      class="announcement-card__image"
+      *ngIf="
+        announcement.mediaUrl &&
+        !isYoutubeMedia &&
+        !isGoogleDriveMedia &&
+        !isVideoFile()
+      "
+      [src]="announcement.mediaUrl"
+      [alt]="announcement.title || 'Imagen del anuncio'"
+      class="announcement-card__media-element"
     />
 
-    <!-- YOUTUBE -->
-    <iframe
-      *ngIf="a.mediaUrl && isYoutubeMedia"
-      [src]="safeYoutubeUrl"
-      class="announcement-card__image"
-      frameborder="0"
-      allowfullscreen
-    ></iframe>
-
-    <!-- FALLBACK -->
-    <div *ngIf="!a.mediaUrl" class="announcement-card__fallback">
-      <h3>{{ a.title || 'Untitled' }}</h3>
+    <div
+      *ngIf="
+        announcement.mediaUrl &&
+        isYoutubeMedia &&
+        safeEmbedUrl
+      "
+      class="announcement-card__video-preview"
+    >
+      <iframe
+        [src]="safeEmbedUrl"
+        class="announcement-card__iframe"
+        title="Video de YouTube"
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
     </div>
 
-    <!-- STATUS -->
-    <div class="announcement-card__status">
-      <span
-        class="tag"
-        [ngClass]="a.isActive ? 'is-success' : 'is-light'"
-      >
-        {{ a.isActive ? 'Active' : 'Inactive' }}
+    <button
+      *ngIf="
+        announcement.mediaUrl &&
+        isGoogleDriveMedia
+      "
+      type="button"
+      class="
+        announcement-card__video-preview
+        announcement-card__drive-preview
+      "
+      aria-label="Abrir video de Google Drive"
+      title="Abrir video en Google Drive"
+      (click)="openGoogleDriveVideo()"
+    >
+      <span class="announcement-card__drive-logo">
+        <i class="fab fa-google-drive"></i>
       </span>
+
+      <span class="announcement-card__drive-info">
+        <strong>Video de Google Drive</strong>
+        <small>Abrir reproductor</small>
+      </span>
+
+      <span class="announcement-card__drive-open">
+        <i class="fas fa-arrow-up-right-from-square"></i>
+      </span>
+    </button>
+
+    <div
+      *ngIf="
+        announcement.mediaUrl &&
+        isVideoFile() &&
+        !isYoutubeMedia &&
+        !isGoogleDriveMedia
+      "
+      class="announcement-card__video-preview"
+    >
+      <video
+        [src]="announcement.mediaUrl"
+        class="announcement-card__media-element"
+        controls
+        playsinline
+        preload="metadata"
+      >
+        Tu navegador no permite reproducir este video.
+      </video>
     </div>
 
+    <span
+      class="announcement-card__status"
+      [class.is-active]="announcement.isActive"
+      [class.is-inactive]="!announcement.isActive"
+    >
+      <span class="announcement-card__status-dot"></span>
+
+      {{ announcement.isActive ? 'Activo' : 'Inactivo' }}
+    </span>
   </div>
 
-  <!-- CONTENT -->
-  <div class="card-content">
+  <div class="announcement-card__body">
+    <div class="announcement-card__heading">
+      <div class="announcement-card__heading-content">
+        <h3
+          class="announcement-card__title"
+          [title]="a.title || 'Anuncio sin título'"
+        >
+          {{ a.title || 'Anuncio sin título' }}
+        </h3>
 
-    <!-- BADGES -->
+        <p class="announcement-card__type">
+          {{
+            a.type === 'promotion'
+              ? 'Promoción'
+              : a.type === 'relocation'
+                ? 'Cambio de ubicación'
+                : 'Notificación'
+          }}
+        </p>
+      </div>
+    </div>
+
     <div class="announcement-card__badges">
-      <span class="tag is-light">{{ a.type }}</span>
+      <span
+        *ngIf="a.targetRole"
+        class="announcement-card__badge"
+        [title]="a.targetRole"
+      >
+        <i class="fas fa-user-shield"></i>
 
-      <span *ngIf="a.targetRole" class="tag is-light">
-        {{ a.targetRole }}
+        <span class="announcement-card__badge-text">
+          {{ a.targetRole }}
+        </span>
       </span>
 
-      <span *ngIf="a.targetStudentType" class="tag is-light">
-        {{ a.targetStudentType }}
+      <span
+        *ngIf="a.targetStudentType"
+        class="announcement-card__badge"
+        [title]="a.targetStudentType"
+      >
+        <i class="fas fa-users"></i>
+
+        <span class="announcement-card__badge-text">
+          {{ a.targetStudentType }}
+        </span>
       </span>
 
-      <span *ngIf="a.city" class="tag is-light">
-        {{ a.city }}
+      <span
+        *ngIf="a.city"
+        class="announcement-card__badge"
+        [title]="a.city"
+      >
+        <i class="fas fa-location-dot"></i>
+
+        <span class="announcement-card__badge-text">
+          {{ a.city }}
+        </span>
+      </span>
+
+      <span
+        *ngIf="
+          !a.targetRole &&
+          !a.targetStudentType &&
+          !a.city
+        "
+        class="
+          announcement-card__badge
+          announcement-card__badge--general
+        "
+      >
+        <i class="fas fa-earth-americas"></i>
+
+        <span class="announcement-card__badge-text">
+          Público general
+        </span>
       </span>
     </div>
 
-    <!-- ACTIONS -->
-    <div class="announcement-card__actions">
+    <div class="announcement-card__footer">
+      <label class="announcement-card__toggle">
+        <input
+          type="checkbox"
+          [checked]="a.isActive"
+          (change)="onToggle()"
+        />
 
-      <div class="announcement-card__toggle">
-        <label class="checkbox">
-          <input
-            type="checkbox"
-            [checked]="a.isActive"
-            (change)="onToggle()"
-          />
-          <span [class.inactive-text]="!a.isActive">
-            {{ a.isActive ? 'Active' : 'Inactive' }}
-          </span>
-        </label>
-      </div>
+        <span class="announcement-card__toggle-control">
+          <span class="announcement-card__toggle-thumb"></span>
+        </span>
 
-      <div class="buttons are-small announcement-card__buttons">
+        <span
+          class="announcement-card__toggle-label"
+          [class.is-inactive]="!a.isActive"
+        >
+          {{ a.isActive ? 'Publicado' : 'Desactivado' }}
+        </span>
+      </label>
 
+      <div class="announcement-card__buttons">
         <button
-          class="button announcement-card__edit-btn"
+          type="button"
+          class="
+            announcement-card__action-button
+            announcement-card__action-button--edit
+          "
+          aria-label="Editar anuncio"
+          title="Editar anuncio"
           (click)="onEdit()"
         >
           <i class="fas fa-pen"></i>
         </button>
-        
+
         <button
-          class="button announcement-card__delete-btn"
+          type="button"
+          class="
+            announcement-card__action-button
+            announcement-card__action-button--delete
+          "
+          aria-label="Eliminar anuncio"
+          title="Eliminar anuncio"
           (click)="onDelete()"
         >
           <i class="fas fa-trash"></i>
         </button>
       </div>
-
     </div>
-
   </div>
-
 </div>
