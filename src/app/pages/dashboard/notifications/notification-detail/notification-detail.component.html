@@ -136,6 +136,103 @@
         ></p>
       </div>
 
+      <!-- ASSESSMENT ASSIGNED (S2S) -->
+      <section
+        class="demo-class-card assessment-assigned-card"
+        *ngIf="isAssessmentAssignedNotification && assessmentMessage as am"
+      >
+        <header class="demo-class-header">
+          <div>
+            <p class="eyebrow">Assessment asignado</p>
+            <h3>{{ am.templateTitle || notification?.title }}</h3>
+          </div>
+          <span class="demo-badge">{{ am.kind }}</span>
+        </header>
+
+        <div class="assessment-cta-row" *ngIf="am.directAccessUrl">
+          <button
+            type="button"
+            class="btn-assessment-primary"
+            (click)="openAssessmentDirectAccess()"
+          >
+            Abrir assessment
+          </button>
+          <p class="cta-hint">
+            Enlace directo: inicia sin escribir código.
+          </p>
+        </div>
+
+        <div class="demo-block">
+          <h4>Acceso</h4>
+          <div class="demo-class-grid">
+            <div class="demo-field" *ngIf="am.studentAccessCode">
+              <span>Código de acceso</span>
+              <strong class="access-code">{{ am.studentAccessCode }}</strong>
+              <button
+                type="button"
+                class="btn-linkish"
+                (click)="copyStudentAccessCode()"
+              >
+                Copiar código
+              </button>
+            </div>
+            <div class="demo-field" *ngIf="am.shareUrl">
+              <span>Enlace compartido (QR / aula)</span>
+              <strong class="url-break">{{ am.shareUrl }}</strong>
+              <button
+                type="button"
+                class="btn-linkish"
+                (click)="openAssessmentShareUrl()"
+              >
+                Abrir enlace compartido
+              </button>
+            </div>
+            <div class="demo-field" *ngIf="am.directAccessUrl">
+              <span>Enlace directo</span>
+              <strong class="url-break">{{ am.directAccessUrl }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-block">
+          <h4>Detalles</h4>
+          <div class="demo-class-grid">
+            <div class="demo-field" *ngIf="am.templateTitle">
+              <span>Plantilla</span>
+              <strong>{{ am.templateTitle }}</strong>
+            </div>
+            <div class="demo-field" *ngIf="am.templateId">
+              <span>Template ID</span>
+              <strong class="mono">{{ am.templateId }}</strong>
+            </div>
+            <div class="demo-field" *ngIf="am.assignmentId">
+              <span>Assignment ID</span>
+              <strong class="mono">{{ am.assignmentId }}</strong>
+            </div>
+            <div class="demo-field" *ngIf="am.eventId">
+              <span>Event ID</span>
+              <strong class="mono">{{ am.eventId }}</strong>
+            </div>
+            <div class="demo-field" *ngIf="am.batchId">
+              <span>Batch ID</span>
+              <strong class="mono">{{ am.batchId }}</strong>
+            </div>
+            <div class="demo-field" *ngIf="am.maxAttempts != null">
+              <span>Intentos máximos</span>
+              <strong>{{ am.maxAttempts }}</strong>
+            </div>
+            <div class="demo-field" *ngIf="am.expiresAt">
+              <span>Vence</span>
+              <strong>{{ am.expiresAt | date: "medium" }}</strong>
+            </div>
+            <div class="demo-field" *ngIf="am.expiresAt === null">
+              <span>Vence</span>
+              <strong>Sin vencimiento</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- DEMO CLASS / CLASES DE PRUEBA -->
       <section
         class="demo-class-card"

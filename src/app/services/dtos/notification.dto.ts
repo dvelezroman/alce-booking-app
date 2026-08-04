@@ -33,10 +33,26 @@ export interface NotificationMessage {
   body: string;
   action?: string;
   meetingId?: number;
-  kind?: 'demo-class' | 'S2S_NEW_STUDENTS_TO_CREATE' | string;
+  kind?:
+    | 'demo-class'
+    | 'assessment-assigned'
+    | 'S2S_NEW_STUDENTS_TO_CREATE'
+    | string;
   lead?: DemoClassLead;
   rows?: NewStudentRow[];
   summary?: NotificationSummary | DemoClassSummary;
+  /** Assessment assigned (S2S) — primary zero-input CTA */
+  directAccessUrl?: string;
+  /** Shared classroom / QR landing */
+  shareUrl?: string;
+  studentAccessCode?: string;
+  assignmentId?: string;
+  templateId?: string;
+  templateTitle?: string;
+  expiresAt?: string | null;
+  maxAttempts?: number;
+  batchId?: string | null;
+  eventId?: string;
   [key: string]: any;
 }
 

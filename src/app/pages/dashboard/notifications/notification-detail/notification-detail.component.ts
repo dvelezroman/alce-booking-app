@@ -100,7 +100,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
     const st = history.state as { notification?: Notification; origin?: 'inbox' | 'sent' | 'status' };
     if (st?.notification) {
-      this.notification = st.notification;
+      this.notification = this.normalizeNotification(st.notification);
       this.origin = st.origin ?? 'unknown';
 
       this.estadoLabel = this.statusEs[this.notification.status];
@@ -253,12 +253,69 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.notification?.message?.lead ?? null;
   }
 
+  get isAssessmentAssignedNotification(): boolean {
+    return this.notification?.message?.kind === 'assessment-assigned';
+  }
+
+  get assessmentMessage() {
+    return this.isAssessmentAssignedNotification
+      ? this.notification?.message ?? null
+      : null;
+  }
+
+  openAssessmentDirectAccess(): void {
+    const url = this.assessmentMessage?.directAccessUrl?.trim();
+    if (!url) return;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  openAssessmentShareUrl(): void {
+    const url = this.assessmentMessage?.shareUrl?.trim();
+    if (!url) return;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  async copyStudentAccessCode(): Promise<void> {
+    const code = this.assessmentMessage?.studentAccessCode?.trim();
+    if (!code) return;
+    try {
+      await navigator.clipboard.writeText(code);
+      this.showModalMessage({
+        title: 'Código copiado',
+        message: 'El código de acceso se copió al portapapeles.',
+        isSuccess: true,
+      });
+    } catch {
+      this.showModalMessage({
+        title: 'No se pudo copiar',
+        message: 'Copia el código manualmente.',
+        isError: true,
+      });
+    }
+  }
+
   get formattedBody(): string {
     const body = this.notification?.message?.body ?? '';
 
     return body
       .replace(/\.\s+/g, '.<br>')
       .trim();
+  }
+
+  /** Ensure `message` is an object if API/client double-encoded it as JSON string. */
+  private normalizeNotification(n: Notification): Notification {
+    const raw = n.message as unknown;
+    if (typeof raw === 'string') {
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          return { ...n, message: parsed };
+        }
+      } catch {
+        return { ...n, message: { body: raw } };
+      }
+    }
+    return n;
   }
 
   /** True si el uid está en readBy (lo leyó). */
