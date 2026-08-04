@@ -525,7 +525,9 @@ export class SearchingMeetingInstructorComponent implements OnInit {
   }
 
   private generateApprovedAssessments(assessments: AssessementI[], minPoints: number): string {
-    const approved = assessments.filter(a => a.points >= minPoints);
+    const approved = assessments.filter(
+      (a) => a.points != null && a.points >= minPoints,
+    );
     if (!approved.length) return '';
 
     const items = approved.map(a => {
@@ -547,7 +549,7 @@ export class SearchingMeetingInstructorComponent implements OnInit {
 
   private generateNotesSection(assessments: AssessementI[], minPoints: number): string {
     const notes = assessments
-      .filter(a => !!a.note && a.points < minPoints)
+      .filter((a) => !!a.note && a.points != null && a.points < minPoints)
       .map(a => {
         const date = a.createdAt ? new Date(a.createdAt).toLocaleDateString() : '';
         const instructor = a.instructor?.user?.firstName

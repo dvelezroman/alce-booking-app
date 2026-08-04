@@ -36,6 +36,7 @@ export interface NotificationMessage {
   kind?:
     | 'demo-class'
     | 'assessment-assigned'
+    | 'assessment-results-ready'
     | 'S2S_NEW_STUDENTS_TO_CREATE'
     | string;
   lead?: DemoClassLead;
@@ -43,6 +44,12 @@ export interface NotificationMessage {
   summary?: NotificationSummary | DemoClassSummary;
   /** Assessment assigned (S2S) — primary zero-input CTA */
   directAccessUrl?: string;
+  /** Assessment results ready (S2S) — deep link to results page */
+  resultsUrl?: string;
+  sessionId?: string;
+  outcome?: 'PASSED' | 'FAILED';
+  points?: number;
+  studentStage?: number | null;
   /** Shared classroom / QR landing */
   shareUrl?: string;
   studentAccessCode?: string;

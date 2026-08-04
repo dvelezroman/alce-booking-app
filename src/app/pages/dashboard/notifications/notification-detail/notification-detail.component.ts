@@ -257,10 +257,34 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.notification?.message?.kind === 'assessment-assigned';
   }
 
+  get isAssessmentResultsReadyNotification(): boolean {
+    return this.notification?.message?.kind === 'assessment-results-ready';
+  }
+
   get assessmentMessage() {
     return this.isAssessmentAssignedNotification
       ? this.notification?.message ?? null
       : null;
+  }
+
+  get assessmentResultsMessage() {
+    return this.isAssessmentResultsReadyNotification
+      ? this.notification?.message ?? null
+      : null;
+  }
+
+  get assessmentResultsOutcomeLabel(): string {
+    const outcome = this.assessmentResultsMessage?.outcome;
+    if (outcome === 'PASSED') return 'Aprobado';
+    if (outcome === 'FAILED') return 'No aprobado';
+    return '—';
+  }
+
+  get assessmentResultsPassed(): boolean | null {
+    const outcome = this.assessmentResultsMessage?.outcome;
+    if (outcome === 'PASSED') return true;
+    if (outcome === 'FAILED') return false;
+    return null;
   }
 
   /** True when message.expiresAt is set and already past. null/missing = not expired. */
@@ -275,6 +299,12 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   openAssessmentDirectAccess(): void {
     if (this.isAssessmentExpired) return;
     const url = this.assessmentMessage?.directAccessUrl?.trim();
+    if (!url) return;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  openAssessmentResults(): void {
+    const url = this.assessmentResultsMessage?.resultsUrl?.trim();
     if (!url) return;
     window.open(url, '_blank', 'noopener,noreferrer');
   }

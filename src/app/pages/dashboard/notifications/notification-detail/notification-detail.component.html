@@ -188,6 +188,53 @@
         </div>
       </section>
 
+      <!-- ASSESSMENT RESULTS READY (S2S) — outcome only, never numeric score -->
+      <section
+        class="demo-class-card assessment-assigned-card assessment-results-ready-card"
+        *ngIf="isAssessmentResultsReadyNotification && assessmentResultsMessage as rm"
+      >
+        <header class="demo-class-header">
+          <div>
+            <p class="eyebrow">Resultados listos</p>
+            <h3>{{ rm.templateTitle || notification?.title }}</h3>
+          </div>
+          <span
+            class="demo-badge"
+            [class.outcome-passed]="assessmentResultsPassed === true"
+            [class.outcome-failed]="assessmentResultsPassed === false"
+          >
+            {{ assessmentResultsOutcomeLabel }}
+          </span>
+        </header>
+
+        <div class="assessment-cta-row" *ngIf="rm.resultsUrl">
+          <button
+            type="button"
+            class="btn-assessment-primary"
+            (click)="openAssessmentResults()"
+          >
+            Ver resultado
+          </button>
+          <p class="cta-hint">
+            Solo se muestra si aprobaste o no — sin nota numérica.
+          </p>
+        </div>
+
+        <div class="demo-block">
+          <h4>Estado</h4>
+          <div class="demo-class-grid">
+            <div class="demo-field">
+              <span>Resultado</span>
+              <strong>{{ assessmentResultsOutcomeLabel }}</strong>
+            </div>
+            <div class="demo-field" *ngIf="rm.studentStage != null">
+              <span>Stage</span>
+              <strong>{{ rm.studentStage }}</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- DEMO CLASS / CLASES DE PRUEBA -->
       <section
         class="demo-class-card"
