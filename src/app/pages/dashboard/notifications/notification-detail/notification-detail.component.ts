@@ -263,35 +263,20 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       : null;
   }
 
+  /** True when message.expiresAt is set and already past. null/missing = not expired. */
+  get isAssessmentExpired(): boolean {
+    const raw = this.assessmentMessage?.expiresAt;
+    if (raw == null || raw === '') return false;
+    const ms = Date.parse(raw);
+    if (!Number.isFinite(ms)) return false;
+    return ms <= Date.now();
+  }
+
   openAssessmentDirectAccess(): void {
+    if (this.isAssessmentExpired) return;
     const url = this.assessmentMessage?.directAccessUrl?.trim();
     if (!url) return;
     window.open(url, '_blank', 'noopener,noreferrer');
-  }
-
-  openAssessmentShareUrl(): void {
-    const url = this.assessmentMessage?.shareUrl?.trim();
-    if (!url) return;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }
-
-  async copyStudentAccessCode(): Promise<void> {
-    const code = this.assessmentMessage?.studentAccessCode?.trim();
-    if (!code) return;
-    try {
-      await navigator.clipboard.writeText(code);
-      this.showModalMessage({
-        title: 'Código copiado',
-        message: 'El código de acceso se copió al portapapeles.',
-        isSuccess: true,
-      });
-    } catch {
-      this.showModalMessage({
-        title: 'No se pudo copiar',
-        message: 'Copia el código manualmente.',
-        isError: true,
-      });
-    }
   }
 
   get formattedBody(): string {
