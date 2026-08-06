@@ -1,0 +1,109 @@
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  (close)="modal.show = false"
+>
+</app-modal>
+
+<h2 class="title stage">Assessments plataforma</h2>
+
+<div class="page-wrapper">
+  <div class="assessment-layout">
+    <section class="stage-assessment-student-section">
+      <p *ngIf="!loading" class="assessment-summary">
+        <span class="summary-label">Evaluaciones:</span>
+
+        <span class="summary-badge active-badge">
+          {{ activeCount }} Pendiente(s)
+        </span>
+
+        <span class="summary-badge expired-badge">
+          {{ expiredCount }} Expirada(s)
+        </span>
+      </p>
+
+      <div *ngIf="loading" class="loading-state">Cargando assessments…</div>
+
+      <div *ngIf="!loading" class="cards-layout">
+        <div class="block-full">
+          <h4 class="block-title active-title">Pendientes</h4>
+
+          <div class="cards-scroll">
+            <ng-container *ngIf="hasPending">
+              <app-platform-assessment-card
+                *ngFor="let a of pendingAssessments"
+                [assessment]="a"
+              >
+              </app-platform-assessment-card>
+            </ng-container>
+
+            <div *ngIf="!hasPending" class="empty-state">
+              <span class="material-icons empty-icon">assignment_turned_in</span>
+              <p class="empty-title">Todo al día</p>
+              <p class="empty-subtitle">
+                No tienes assessments pendientes de la plataforma.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="assessment-note-top">
+          <h4>Importante</h4>
+          <p>
+            Abre el assessment desde el botón de acceso. El estado se actualiza
+            cuando la plataforma publica el resultado (aprobado o no aprobado).
+            <br />
+            <span class="note-secondline">
+              Los resultados aparecen aquí después de que cierre la revisión en
+              la plataforma de assessments.
+            </span>
+          </p>
+        </div>
+
+        <div class="bottom-row-two">
+          <div class="column-block completed-column">
+            <h4 class="block-title completed-title">Realizadas</h4>
+
+            <div class="cards-scroll">
+              <ng-container *ngIf="completedAssessments.length > 0">
+                <app-platform-assessment-card
+                  *ngFor="let a of completedAssessments"
+                  [assessment]="a"
+                >
+                </app-platform-assessment-card>
+              </ng-container>
+
+              <div
+                *ngIf="completedAssessments.length === 0"
+                class="empty-state"
+              >
+                <p class="empty-subtitle">No hay assessments realizados.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="column-block expired-column">
+            <h4 class="block-title expired-title">Expiradas</h4>
+
+            <div class="cards-scroll">
+              <ng-container *ngIf="hasExpired">
+                <app-platform-assessment-card
+                  *ngFor="let a of expiredAssessments"
+                  [assessment]="a"
+                >
+                </app-platform-assessment-card>
+              </ng-container>
+
+              <div *ngIf="!hasExpired" class="empty-state">
+                <p class="empty-subtitle">No hay assessments expirados.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

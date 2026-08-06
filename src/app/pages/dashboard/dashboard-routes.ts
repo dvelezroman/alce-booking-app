@@ -47,6 +47,7 @@ import { ReportsExcelPageComponent } from './reports-excel-page/reports-excel-pa
 import { StageAssessmentComponent } from './stage-assessment/stage-assessment.component';
 import { StageAssessmentResourcesComponent } from './stage-assessment-resources/stage-assessment-resources.component';
 import { StageAssessmentStudentComponent } from './stage-assessment-student/stage-assessment-student.component';
+import { PlatformAssessmentsStudentComponent } from './platform-assessments-student/platform-assessments-student.component';
 import { StageAssessmentListComponent } from './stage-assessment-list/stage-assessment-list.component';
 import { SuspensionHistoryComponent } from './suspension-history/suspension-history.component';
 import { InstructorEvaluationsComponent } from './instructor-evaluations/instructor-evaluations.component';
@@ -96,6 +97,7 @@ export const dashboardRoutes: Routes = [
   { path: 'stage-assessment', component: StageAssessmentComponent },
   { path: 'stage-assessment-list', component: StageAssessmentListComponent },
   { path: 'stage-assessment-student', component: StageAssessmentStudentComponent },
+  { path: 'platform-assessments', component: PlatformAssessmentsStudentComponent },
   { path: 'processed-events', component: ProcessedEventsComponent },
   { path: 'notifications-status', component: NotificationsStatusComponent },
   { path: 'notifications-groups', component: GroupsComponent },

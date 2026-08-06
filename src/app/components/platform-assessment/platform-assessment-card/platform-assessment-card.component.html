@@ -1,0 +1,62 @@
+<div
+  class="assessment-card"
+  [class.expired-card]="assessment.status === 'expired'"
+  [class.completed-card]="assessment.status === 'completed'"
+  [class.failed-card]="assessment.status === 'completed' && assessment.outcome === 'FAILED'"
+>
+  <div class="header-row">
+    <h3 class="title">{{ assessment.templateTitle }}</h3>
+
+    <span
+      class="status"
+      [ngClass]="{
+        pending: assessment.status === 'pending',
+        expired: assessment.status === 'expired',
+        completed: assessment.status === 'completed' && assessment.outcome !== 'FAILED',
+        failed: assessment.status === 'completed' && assessment.outcome === 'FAILED'
+      }"
+    >
+      {{ statusLabel }}
+    </span>
+  </div>
+
+  <div class="info">
+    <p *ngIf="assessment.expiresAt">
+      <strong>Fecha límite:</strong>
+      {{ assessment.expiresAt | date: 'fullDate' : 'UTC' }}
+    </p>
+    <p *ngIf="!assessment.expiresAt && assessment.status === 'pending'">
+      <strong>Fecha límite:</strong>
+      Sin vencimiento
+    </p>
+    <p *ngIf="assessment.status === 'completed' && assessment.completedAt">
+      <strong>Resultado el:</strong>
+      {{ assessment.completedAt | date: 'medium' }}
+    </p>
+    <p *ngIf="assessment.studentStage != null">
+      <strong>Stage:</strong>
+      Stage {{ assessment.studentStage }}
+    </p>
+    <p>
+      <strong>Recurso:</strong>
+      {{ assessment.templateTitle }}
+    </p>
+  </div>
+
+  <div class="bottom-row">
+    <div class="actions">
+      <button
+        class="btn-open"
+        [ngClass]="{
+          'expired-btn': assessment.status === 'expired',
+          'completed-btn': assessment.status === 'completed' && assessment.outcome !== 'FAILED',
+          'failed-btn': assessment.status === 'completed' && assessment.outcome === 'FAILED'
+        }"
+        [disabled]="!canAct"
+        (click)="onAction()"
+      >
+        {{ actionLabel }}
+      </button>
+    </div>
+  </div>
+</div>

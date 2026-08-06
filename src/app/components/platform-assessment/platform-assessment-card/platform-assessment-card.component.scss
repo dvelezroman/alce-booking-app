@@ -1,0 +1,142 @@
+.assessment-card {
+  background: #ffffff;
+  border: 1px solid rgba(37, 99, 235, 0.1);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba(37, 99, 235, 0.25);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.08);
+    transform: translateY(-2px);
+  }
+}
+
+.expired-card {
+  background: #fef3f3;
+  opacity: 0.85;
+  border-color: #e5e7eb !important;
+
+  &:hover {
+    transform: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  }
+}
+
+.completed-card {
+  border-color: rgba(5, 150, 105, 0.2);
+}
+
+.failed-card {
+  border-color: rgba(220, 38, 38, 0.2);
+  background: #fffafa;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1f2d75;
+}
+
+.status {
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &.pending {
+    background: #eff6ff;
+    color: #2563eb;
+  }
+
+  &.expired {
+    background: rgba(212, 175, 55, 0.15);
+    color: #b88900;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+  }
+
+  &.completed {
+    background: #ecfdf5;
+    color: #059669;
+  }
+
+  &.failed {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+}
+
+.info {
+  margin-top: 0.6rem;
+
+  p {
+    font-size: 0.82rem;
+    margin: 0.2rem 0;
+    color: #374151;
+
+    strong {
+      color: #111827;
+      font-weight: 600;
+    }
+  }
+}
+
+.bottom-row {
+  margin-top: 0.85rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-open {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #2563eb;
+  color: #fff;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.85;
+  }
+
+  &.expired-btn {
+    background: #f59e0b;
+    color: #fff;
+  }
+
+  &.completed-btn {
+    background: #059669;
+    color: #fff;
+
+    &:not(:disabled) {
+      cursor: pointer;
+      opacity: 1;
+    }
+  }
+
+  &.failed-btn {
+    background: #dc2626;
+    color: #fff;
+
+    &:not(:disabled) {
+      cursor: pointer;
+      opacity: 1;
+    }
+  }
+}
