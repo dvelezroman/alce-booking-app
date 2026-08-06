@@ -70,9 +70,18 @@
                 <span class="material-icons">delete</span>
               </button>
 
+              <button
+                class="edit-button"
+                (click)="editRequested.emit(a); $event.stopPropagation()"
+                title="Editar nota"
+              >
+                <span class="material-icons">edit</span>
+              </button>
+
               <div class="entry-date">
                 {{ a.createdAt | date: 'dd/MM/yy' }}
               </div>
+              <div *ngIf="a.note?.source === 's2s'" class="s2s-badge">S2S</div>
               <div>
                 Nota:
                 <span

@@ -47,13 +47,13 @@ export interface CreateAssessmentI {
 }
 
 export interface UpdateAssessmentI {
-  type: AssessmentType;
-  points: number;
+  type?: AssessmentType;
+  points?: number;
   note?: any;
-  studentId: number;
-  stageId: number;
-  instructorId: number;
-  assessmentTypeId: number;
+  studentId?: number;
+  stageId?: number;
+  instructorId?: number;
+  assessmentTypeId?: number;
 }
 
 export interface FilterAssessmentI {

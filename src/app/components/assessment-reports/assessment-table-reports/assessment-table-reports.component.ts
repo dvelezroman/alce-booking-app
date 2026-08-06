@@ -22,6 +22,7 @@ export class AssessmentTableReportsComponent implements OnChanges {
   
   @Output() evaluationClicked = new EventEmitter<AssessementI>();
   @Output() deleteRequested = new EventEmitter<AssessementI>();
+  @Output() editRequested = new EventEmitter<AssessementI>();
 
   types: string[] = [];
   groupedAssessments: Record<string, Record<number, AssessementI[]>> = {}; 
