@@ -73,7 +73,8 @@ export class StudentProgressCardComponent {
       return 'Completa más clases y actividades para seguir avanzando.';
     }
 
-    return 'Estás muy cerca de completar tu progreso actual.';
+    // return 'Estás muy cerca de completar tu progreso actual.';
+    return 'Cada clase completada fortalece tu aprendizaje.';
   }
 
   get streakMessage(): string {
