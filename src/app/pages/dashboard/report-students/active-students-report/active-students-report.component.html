@@ -1,0 +1,110 @@
+<section class="section">
+
+  <div class="title-container">
+    <h1 class="title">Estudiantes activos</h1>
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+
+      <p class="subtitle">
+        Genera un Excel con todos los estudiantes activos (incluye bloqueados para agendar).
+        Recibirás una notificación cuando esté listo.
+      </p>
+
+      <div class="form-group">
+        <label for="stageId">Etapa (opcional)</label>
+        <select
+          id="stageId"
+          class="stage-select"
+          [(ngModel)]="stageId"
+          [disabled]="loading"
+        >
+          <option [ngValue]="null">Todas las etapas</option>
+          <option *ngFor="let stage of stages" [ngValue]="stage.id">
+            Stage {{ stage.number }} — {{ stage.description }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group checkbox-row">
+        <label>
+          <input
+            type="checkbox"
+            [(ngModel)]="noClasses"
+            [disabled]="loading"
+          />
+          Solo estudiantes sin clases agendadas
+        </label>
+      </div>
+
+      <button
+        class="primary-btn"
+        [disabled]="loading"
+        (click)="generateReport()"
+      >
+        <span *ngIf="!loading">Generar reporte Excel</span>
+        <span *ngIf="loading">Generando reporte...</span>
+      </button>
+
+      <div *ngIf="loading" class="status loading-status">
+        Generando reporte...
+      </div>
+
+      <div *ngIf="jobId" class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="progress"></div>
+        </div>
+        <div class="progress-text">{{ progress }}%</div>
+      </div>
+
+      <div *ngIf="jobId" class="job-box">
+        <div class="job-row">
+          <span class="label">Estado</span>
+          <span
+            class="badge"
+            [ngClass]="{
+              'badge-pending': status === 'queued' || status === 'processing',
+              'badge-success': status === 'completed' || status === 'downloaded',
+              'badge-failed': status === 'failed'
+            }"
+          >
+            {{ status }}
+          </span>
+        </div>
+        <div class="job-row" *ngIf="rowCount != null">
+          <span class="label">Filas</span>
+          <span class="value">{{ rowCount }}</span>
+        </div>
+        <div class="job-row" *ngIf="fileName">
+          <span class="label">Archivo</span>
+          <span class="value">{{ fileName }}</span>
+        </div>
+      </div>
+
+      <button
+        *ngIf="reportReady"
+        class="download-btn"
+        [disabled]="downloading"
+        (click)="downloadReport()"
+      >
+        <span *ngIf="!downloading">Descargar Excel</span>
+        <span *ngIf="downloading">Descargando...</span>
+      </button>
+
+      <p *ngIf="status === 'downloaded'" class="hint">
+        El archivo fue descargado y eliminado del servidor. Puedes generar uno nuevo si lo necesitas.
+      </p>
+
+      <div *ngIf="serverError" class="error server-error">
+        {{ serverError }}
+      </div>
+
+      <div *ngIf="error" class="error">
+        {{ error }}
+      </div>
+
+    </div>
+  </div>
+</section>

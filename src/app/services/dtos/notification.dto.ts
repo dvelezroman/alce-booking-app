@@ -35,13 +35,16 @@ export interface NotificationMessage {
   meetingId?: number;
   kind?:
     | 'demo-class'
+    | 'placement-exam'
     | 'assessment-assigned'
     | 'assessment-results-ready'
     | 'S2S_NEW_STUDENTS_TO_CREATE'
+    | 'lead-scheduling-assigned'
+    | 'lead-scheduling-cancelled'
     | string;
   lead?: DemoClassLead;
   rows?: NewStudentRow[];
-  summary?: NotificationSummary | DemoClassSummary;
+  summary?: NotificationSummary | DemoClassSummary | LeadSchedulingAssignedSummary;
   /** Assessment assigned (S2S) — primary zero-input CTA */
   directAccessUrl?: string;
   /** Assessment results ready (S2S) — deep link to results page */
@@ -67,27 +70,54 @@ export interface DemoClassLead {
   firstName: string;
   lastName: string;
   email: string;
-  idNumber: string;
+  idNumber?: string | null;
   contactPhone: string;
-  courtesyClassHours: number;
-  stageId: number;
-  stageNumber: string;
-  stageLabel: string;
-  stageDescription: string;
-  requestingAdvisorName: string;
-  requestingAdvisorEmail: string;
-  requestingAdvisorPhone: string;
-  requestingAdvisorSedeLabel: string;
+  courtesyClassHours?: number | null;
+  stageId?: number | null;
+  stageNumber?: string | null;
+  stageLabel?: string | null;
+  stageDescription?: string | null;
+  requestingAdvisorName?: string | null;
+  requestingAdvisorEmail?: string | null;
+  requestingAdvisorPhone?: string | null;
+  requestingAdvisorSedeLabel?: string | null;
+  /** Placement exam S2S (`message.lead`). */
+  leadSchedulingRequestId?: number;
+  externalReferenceId?: string | null;
+  placementExamType?: 'PLACEMENT_TEST' | 'SPEAKING_TEST' | null;
+  placementExamTypeLabel?: string | null;
+  requestNotes?: string | null;
+  scheduledDate?: string | null;
+  scheduledHour?: number | null;
 }
 
 export interface DemoClassSummary {
   stageId: number;
   leadName: string;
   courtesyClassHours: number;
+  requestNotes?: string;
+  leadSchedulingRequestId?: number;
 }
 
 export interface NotificationSummary {
   count: number;
+}
+
+export type LeadSchedulingNotificationRequestKind = 'DEMO_CLASS' | 'PLACEMENT_EXAM';
+
+/** Resumen opcional en `message.summary` para notificaciones `lead-scheduling-assigned`. */
+export interface LeadSchedulingAssignedSummary {
+  leadSchedulingRequestId?: number;
+  leadName?: string;
+  scheduledDate?: string;
+  scheduledHour?: number;
+  status?: string;
+  /** Notas del requerimiento (S2S / solicitud original). */
+  requestNotes?: string;
+  /** Tipo de solicitud: cortesía/demo o examen de ubicación. */
+  requestKind?: LeadSchedulingNotificationRequestKind;
+  placementExamType?: 'PLACEMENT_TEST' | 'SPEAKING_TEST' | null;
+  examLink?: string | null;
 }
 
 export interface NewStudentRow {

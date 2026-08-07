@@ -1,117 +1,152 @@
-<section class="inbox-root">
-  <div class="inbox-page">
-    <!-- Header -->
-    <h1 class="inbox-page-title">
-      Notificaciones
-    </h1>
+<section
+  class="notifications-page"
+  aria-labelledby="notifications-page-title"
+>
+  <app-inbox-header
+    id="notifications-page-title"
+    [unreadCount]="(unreadCount$ | async) ?? 0"
+  />
 
-    <!-- Header (solo stats ahora) -->
-    <header class="inbox-header">
-      <div class="stats">
-        <span class="unread">
-          No leídas: <strong>{{ unreadCount$ | async }}</strong>
-        </span>
-      </div>
-    </header>
-
-    <!-- Filtros -->
-    <app-inbox-filters
-      [readDays]="readDays"
-      (readDaysChange)="onReadDaysChange($event)">
-    </app-inbox-filters>
-
-    <!-- Separador -->
-    <div class="divider"></div>
-
-    <!-- Lista de notificaciones -->
-    <section class="notifications-list">
-
-      <!-- Error -->
-      <div *ngIf="!loading && errorMsg" class="error">
-        {{ errorMsg }}
-      </div>
-
-      <!-- Sin resultados -->
-      <div
-        *ngIf="!loading && !errorMsg && notifications.length === 0"
-        class="empty-state"
+  <!-- ACCIONES MOBILE -->
+  <div class="notifications-page__mobile-actions">
+    <button
+      type="button"
+      class="notifications-page__filter-button"
+      [class.notifications-page__filter-button--active]="
+        showMobileFilters
+      "
+      [attr.aria-expanded]="showMobileFilters"
+      aria-controls="notifications-filters"
+      (click)="toggleMobileFilters()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
       >
-        <div class="empty-icon">
-          <span class="material-icons">notifications_none</span>
-        </div>
+        <path d="M4 5h16"></path>
+        <path d="M7 12h10"></path>
+        <path d="M10 19h4"></path>
+      </svg>
 
-        <p class="empty-title">Sin notificaciones</p>
-        <p class="empty-subtitle">
-          Cuando tengas novedades aparecerán aquí.
-        </p>
-      </div>
+      <span>
+        {{
+          showMobileFilters
+            ? 'Ocultar filtros'
+            : 'Filtrar'
+        }}
+      </span>
 
-      <!-- Tabla -->
-      <div *ngIf="!loading && notifications.length > 0" class="table-wrapper">
-        <div class="table-header">
-          <div class="col-from">De</div>
-          <div class="col-title">Asunto</div>
-          <div class="col-date">Fecha</div>
-        </div>
+      <svg
+        class="notifications-page__filter-chevron"
+        [class.notifications-page__filter-chevron--open]="
+          showMobileFilters
+        "
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path d="m6 9 6 6 6-6"></path>
+      </svg>
+    </button>
+  </div>
 
-        <div
-          class="table-row"
-          *ngFor="let n of notifications; trackBy: trackById"
-          [class.unread]="!n.isRead"
-          (click)="onRowClick(n)"
-          role="button"
-          tabindex="0"
-        >
-          <!-- De -->
-          <div class="col-from">
-            {{ n.fromUser.firstName || '' }} {{ n.fromUser.lastName || '' }}
-            <span *ngIf="!n.fromUser.firstName && !n.fromUser.lastName">
-              {{ n.fromUser.email || '—' }}
-            </span>
-          </div>
+  <!-- FILTROS -->
+  <div
+    id="notifications-filters"
+    class="notifications-page__filters"
+    [class.notifications-page__filters--open]="
+      showMobileFilters
+    "
+  >
+    <app-inbox-filters
+      [filters]="filters"
+      [readDays]="readDays"
+      [disabled]="loading"
+      (filtersChange)="onFiltersChange($event)"
+      (readDaysChange)="onReadDaysChange($event)"
+      (clearFilters)="onClearFilters()"
+    />
+  </div>
 
-          <!-- Asunto (título + snippet en una sola fila) -->
-          <div class="col-title">
-            <div class="subject-row">
-              <span class="title" [title]="n.title">{{ n.title }}</span>
-              <span class="sep">—</span>
-              <span class="snippet-inline" *ngIf="n.message.body as body">
-                {{ body }}
-              </span>
-            </div>
-          </div>
+  <!-- CONTENIDO -->
+  <div class="notifications-page__content">
 
-          <!-- Fecha -->
-          <div class="col-date">
-            {{ n.createdAt | date: 'short' }}
-          </div>
-        </div>
-      </div>
+    <!-- COLUMNA IZQUIERDA -->
+    <main class="notifications-page__main">
 
-      <!-- Paginación -->
-      <div class="pagination" *ngIf="total > 0">
-        <button
-          class="pg-btn"
-          (click)="onPrev()"
-          [disabled]="page === 1"
-          aria-label="Página anterior">
-          ‹
-        </button>
+      <!--
+      <app-inbox-loading
+        *ngIf="loading"
+      />
+      -->
 
-        <span class="pg-info">
-          Página {{ page }}
-          <span class="sep">·</span>
-          Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }}
-        </span>
+      <app-inbox-error
+        *ngIf="!loading && errorMsg"
+        [message]="errorMsg"
+        (retry)="onRetry()"
+      />
 
-        <button
-          class="pg-btn"
-          (click)="onNext()"
-          [disabled]="page * limit >= total"
-          aria-label="Página siguiente">
-          ›
-        </button>
-      </div>
-    </section>
+      <app-inbox-empty
+        *ngIf="showEmptyState"
+        title="Tu bandeja está vacía"
+        description="Cuando recibas avisos, recordatorios o actualizaciones, aparecerán aquí."
+        illustration="empty-inbox"
+      />
+
+      <app-inbox-empty
+        *ngIf="showNoResultsState"
+        title="No encontramos notificaciones"
+        description="Prueba cambiando o limpiando los filtros aplicados."
+        illustration="no-results"
+        actionLabel="Limpiar filtros"
+        (action)="onClearFilters()"
+      />
+
+      <!-- LISTA CON PAGINACIÓN INTERNA -->
+      <app-notification-list
+        *ngIf="
+          !loading &&
+          !errorMsg &&
+          hasFilteredNotifications
+        "
+        [notifications]="filteredNotifications"
+        (notificationSelected)="onRowClick($event)"
+      >
+        <app-inbox-pagination
+          notification-list-pagination
+          [currentPage]="page"
+          [totalPages]="totalPages"
+          [total]="total"
+          [limit]="limit"
+          [startIndex]="startIndex"
+          [endIndex]="endIndex"
+          [hasPreviousPage]="hasPreviousPage"
+          [hasNextPage]="hasNextPage"
+          (previousPage)="onPrev()"
+          (nextPage)="onNext()"
+          (pageChange)="onPageChange($event)"
+          (limitChange)="onLimitChange($event)"
+        />
+      </app-notification-list>
+
+    </main>
+
+    <!-- COLUMNA DERECHA -->
+    <aside
+      class="notifications-page__aside"
+      aria-label="Resumen de notificaciones"
+    >
+      <app-inbox-summary
+        [total]="total"
+        [unreadCount]="unreadNotificationsCount"
+        [readCount]="readNotificationsCount"
+        [todayCount]="todayNotificationsCount"
+        [weekCount]="weekNotificationsCount"
+      />
+
+      <app-notification-types-summary
+        [items]="notificationTypeSummary"
+      />
+    </aside>
+
   </div>
 </section>

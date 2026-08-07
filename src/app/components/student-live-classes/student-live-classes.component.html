@@ -1,195 +1,512 @@
-<!-- ================= MOBILE ================= -->
-<div class="live-classes-container mobile-only">
+<section class="scheduled-classes">
 
-  <!-- HEADER SIEMPRE VISIBLE -->
-  <div class="header-row">
-    <h3 class="live-classes-title">
-      Clases Agendadas
+  <!-- HEADER -->
+  <header class="scheduled-classes__header">
+    <h3 class="scheduled-classes__title">
+      Próximas clases agendadas
     </h3>
 
-    <div class="filter-row">
-      <button
-        class="filter-btn"
-        [class.active]="filterMode === 'today'"
-        (click)="changeFilter('today')"
-      >
-        Hoy
-      </button>
-
-      <button
-        class="filter-btn"
-        [class.active]="filterMode === 'all'"
-        (click)="changeFilter('all')"
-      >
-        Todas
-      </button>
-    </div>
-  </div>
-
-  <!-- LOADING (solo cards) -->
-  <div class="live-loading" *ngIf="loading">
-    <p class="loading-text">Cargando clases…</p>
-  </div>
-
-  <!-- CARDS -->
-  <div *ngIf="!loading && meetings.length > 0">
-    <div class="reels-outer-wrapper" [class.single-card]="meetings.length <= 2">
-      <div class="reels-wrapper">
-        <div class="reels-scroll">
-          <div
-            class="reel-card"
-            *ngFor="let m of meetings"
-            [class.active-class]="canEnter(m) && hasValidLink(m)"
-          >
-            <div class="reel-header">
-              <p class="date">{{ formatDateTitle(m.date) }}</p>
-              <p class="primary-hour">{{ m.hour }}:00</p>
-
-              <ng-container *ngIf="m.localhour !== m.hour">
-                <p class="secondary-hour">
-                  <span class="label-ecu">Hora Ecuador:</span>
-                  {{ m.localhour }}:00
-                </p>
-              </ng-container>
-            </div>
-
-            <div class="reel-body">
-              <p class="label">Instructor:</p>
-              <p class="instructor">
-                {{ m.instructor?.user?.firstName ?? 'No asignado' }}
-                {{ m.instructor?.user?.lastName ?? '' }}
-              </p>
-            </div>
-
-            <button
-              class="enter-btn"
-              [disabled]="!canEnter(m) || !hasValidLink(m)"
-              (click)="enterClass(m)"
-            >
-              Entrar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MENSAJE CUANDO NO HAY CLASES -->
-  <div
-    class="live-classes-empty"
-    *ngIf="!loading && meetings.length === 0"
-  >
-    <p>No tienes clases para este filtro</p>
-  </div>
-
-</div>
-
-<!-- ================= DESKTOP ================= -->
-<div class="live-classes-container desktop-only">
-
-  <!-- HEADER SIEMPRE VISIBLE -->
-  <div class="header-row">
-    <h3 class="live-classes-title">
-      Clases Agendadas
-    </h3>
-
-    <div class="filter-row">
-      <button
-        class="filter-btn"
-        [class.active]="filterMode === 'today'"
-        (click)="changeFilter('today')"
-      >
-        Hoy
-      </button>
-
-      <button
-        class="filter-btn"
-        [class.active]="filterMode === 'all'"
-        (click)="changeFilter('all')"
-      >
-        Todas
-      </button>
-    </div>
-  </div>
+    <button
+      type="button"
+      class="scheduled-classes__view-all"
+      *ngIf="meetings.length > 0"
+      (click)="showAllClasses()"
+    >
+      Ver todas
+    </button>
+  </header>
 
   <!-- LOADING -->
-  <div class="live-loading" *ngIf="loading">
-    <p class="loading-text">Cargando clases…</p>
+  <div
+    class="classes-loading"
+    *ngIf="loading"
+  >
+    <article
+      class="class-skeleton"
+      *ngFor="let item of [1, 2, 3]"
+    >
+      <div class="skeleton-date"></div>
+
+      <div class="skeleton-information">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <div class="skeleton-button"></div>
+    </article>
   </div>
 
-  <!-- CARDS -->
-  <div *ngIf="!loading && meetings.length > 0">
-    <div class="desktop-classes-wrapper">
-      <div
-        class="desktop-class-card"
-        *ngFor="let m of meetings"
-        [class.active-class]="canEnter(m) && hasValidLink(m)"
+  <!-- CLASES -->
+  <ng-container
+    *ngIf="!loading && meetings.length > 0"
+  >
+    <div class="classes-list">
+
+      <article
+        class="scheduled-class"
+        *ngFor="let meeting of visibleMeetings"
+        [class.scheduled-class--active]="
+          canEnter(meeting) &&
+          hasValidLink(meeting)
+        "
       >
-        <div class="desktop-left">
-          <p class="date">{{ formatDateTitle(m.date) }}</p>
-          <p class="primary-hour">{{ m.hour }}:00</p>
+        <!-- FECHA -->
+       <div class="class-date">
+          <span class="class-date__month">
+            {{
+              isToday(meeting.localdate)
+                ? 'HOY'
+                : getMonthAbbreviation(
+                    meeting.localdate
+                  )
+            }}
+          </span>
 
-          <ng-container *ngIf="m.localhour !== m.hour">
-            <p class="secondary-hour">
-              Hora Ecuador: {{ m.localhour }}:00
-            </p>
-          </ng-container>
+          <strong class="class-date__day">
+            {{
+              getDayNumber(
+                meeting.localdate
+              )
+            }}
+          </strong>
         </div>
 
-        <div class="desktop-center">
-          <p class="label">Instructor</p>
-          <p class="instructor">
-            {{ m.instructor?.user?.firstName ?? 'No asignado' }}
-            {{ m.instructor?.user?.lastName ?? '' }}
+        <!-- INFORMACIÓN -->
+        <div class="class-information">
+          <div class="class-information__heading">
+            <h4 class="class-information__title">
+              {{ getMeetingTitle(meeting) }}
+            </h4>
+
+            <span
+              class="class-modality"
+              [class.class-modality--online]="
+                getMeetingModality(meeting) === 'Online'
+              "
+              [class.class-modality--presential]="
+                getMeetingModality(meeting) === 'Presencial'
+              "
+            >
+              <svg
+                *ngIf="
+                  getMeetingModality(meeting) ===
+                  'Presencial'
+                "
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 21s6-5.1 6-11a6 6 0 1 0-12 0c0 5.9 6 11 6 11Z"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <circle
+                  cx="12"
+                  cy="10"
+                  r="2"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                />
+              </svg>
+
+              {{ getMeetingModality(meeting) }}
+            </span>
+
+            <span
+              *ngIf="isPastMeeting(meeting) as status"
+              class="class-status"
+              [class.class-status--started]="
+                status === 'started'
+              "
+              [class.class-status--finished]="
+                status === 'finished'
+              "
+            >
+              {{
+                status === 'started'
+                  ? 'Iniciada'
+                  : 'Terminada'
+              }}
+            </span>
+          </div>
+          
+
+          <p class="class-information__date">
+            {{ getFullMeetingDate(meeting.date) }}
           </p>
+
+          <div class="class-metadata">
+
+            <span class="class-metadata__item">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="8.5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                />
+
+                <path
+                  d="M12 7.5V12l3 2"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              {{ getMeetingTime(meeting) }}
+            </span>
+
+            <span class="class-metadata__item">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="12"
+                  cy="8"
+                  r="3.2"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                />
+
+                <path
+                  d="M5.5 20c.5-4 2.7-6 6.5-6s6 2 6.5 6"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+
+              {{ getInstructorName(meeting) }}
+            </span>
+
+          </div>
         </div>
 
-        <div class="desktop-right">
+        <!-- ACCIONES -->
+        <div class="class-actions">
           <button
-            class="enter-btn"
-            [disabled]="!canEnter(m) || !hasValidLink(m)"
-            (click)="enterClass(m)"
+            type="button"
+            class="class-detail-button"
+            [disabled]="
+              isPastMeeting(meeting) === 'finished'
+            "
+            [attr.title]="
+              isPastMeeting(meeting) === 'finished'
+                ? 'Esta clase ya terminó'
+                : 'Ver detalles de la clase'
+            "
+            (click)="handleViewDetails(meeting)"
+          >
+            Ver detalles
+          </button>
+
+          <button
+            type="button"
+            class="class-enter-button"
+            *ngIf="
+              canEnter(meeting) &&
+              hasValidLink(meeting)
+            "
+            (click)="enterClass(meeting)"
           >
             Entrar
           </button>
         </div>
-      </div>
-    </div>
-  </div>
+      </article>
 
-  <!-- MENSAJE VACÍO -->
-  <div
-  class="live-classes-empty"
-  *ngIf="!loading && meetings.length === 0"
->
-  <div class="empty-state">
-    <div class="empty-icon">
-      <!-- icono calendario simple -->
-      <svg
-        viewBox="0 0 24 24"
-        width="22"
-        height="22"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+    </div>
+
+    <!-- UNA SOLA CLASE -->
+    <div
+      class="single-class-message"
+      *ngIf="hasOneMeeting"
+    >
+      <div
+        class="single-class-message__illustration"
+        aria-hidden="true"
       >
-        <rect x="3" y="4" width="18" height="18" rx="2"></rect>
-        <line x1="16" y1="2" x2="16" y2="6"></line>
-        <line x1="8" y1="2" x2="8" y2="6"></line>
-        <line x1="3" y1="10" x2="21" y2="10"></line>
+        <svg
+          width="124"
+          height="124"
+          viewBox="0 0 124 124"
+          fill="none"
+        >
+          <rect
+            x="23"
+            y="29"
+            width="78"
+            height="75"
+            rx="15"
+            fill="url(#calendarBackground)"
+          />
+
+          <path
+            d="M23 48h78"
+            stroke="#6D5CE8"
+            stroke-width="5"
+          />
+
+          <rect
+            x="38"
+            y="18"
+            width="12"
+            height="25"
+            rx="6"
+            fill="#7C6CF2"
+          />
+
+          <rect
+            x="74"
+            y="18"
+            width="12"
+            height="25"
+            rx="6"
+            fill="#7C6CF2"
+          />
+
+          <rect
+            x="39"
+            y="61"
+            width="10"
+            height="10"
+            rx="2"
+            fill="#7465E9"
+          />
+
+          <rect
+            x="57"
+            y="61"
+            width="10"
+            height="10"
+            rx="2"
+            fill="#7465E9"
+          />
+
+          <rect
+            x="75"
+            y="61"
+            width="10"
+            height="10"
+            rx="2"
+            fill="#7465E9"
+          />
+
+          <rect
+            x="39"
+            y="79"
+            width="10"
+            height="10"
+            rx="2"
+            fill="#7465E9"
+          />
+
+          <rect
+            x="57"
+            y="79"
+            width="10"
+            height="10"
+            rx="2"
+            fill="#7465E9"
+          />
+
+          <rect
+            x="75"
+            y="79"
+            width="10"
+            height="10"
+            rx="2"
+            fill="#7465E9"
+          />
+
+          <defs>
+            <linearGradient
+              id="calendarBackground"
+              x1="23"
+              y1="29"
+              x2="101"
+              y2="104"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stop-color="#E7E4FF" />
+              <stop
+                offset="1"
+                stop-color="#F5F4FF"
+              />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <h4 class="single-class-message__title">
+        ¡Solo tienes esta clase agendada!
+      </h4>
+
+      <p class="single-class-message__description">
+        Sigue practicando y reserva más clases.
+      </p>
+
+      <button
+        type="button"
+        class="primary-booking-button"
+        (click)="handleScheduleClass()"
+      >
+        Agendar otra clase
+      </button>
+    </div>
+
+    <!-- VARIAS CLASES -->
+    <div
+      class="additional-class-banner"
+      *ngIf="hasMultipleMeetings"
+    >
+      <div class="additional-class-banner__content">
+        <span class="additional-class-banner__icon">
+          <svg
+            width="25"
+            height="25"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="16"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M7 3v4M17 3v4M3 9h18"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M12 12v6M9 15h6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <div>
+          <h4 class="additional-class-banner__title">
+            ¿Quieres practicar más?
+          </h4>
+
+          <p class="additional-class-banner__description">
+            Agenda una clase adicional esta semana.
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="primary-booking-button primary-booking-button--compact"
+        (click)="handleScheduleClass()"
+      >
+        Agendar ahora
+      </button>
+    </div>
+  </ng-container>
+
+  <!-- SIN CLASES -->
+  <div
+    class="empty-classes"
+    *ngIf="!loading && meetings.length === 0"
+  >
+    <div
+      class="empty-classes__illustration"
+      aria-hidden="true"
+    >
+      <svg
+        width="102"
+        height="102"
+        viewBox="0 0 102 102"
+        fill="none"
+      >
+        <rect
+          x="16"
+          y="21"
+          width="70"
+          height="66"
+          rx="14"
+          fill="#F0EFFF"
+        />
+
+        <path
+          d="M16 39h70"
+          stroke="#7567E8"
+          stroke-width="4"
+        />
+
+        <rect
+          x="29"
+          y="12"
+          width="11"
+          height="22"
+          rx="5.5"
+          fill="#7567E8"
+        />
+
+        <rect
+          x="62"
+          y="12"
+          width="11"
+          height="22"
+          rx="5.5"
+          fill="#7567E8"
+        />
+
+        <path
+          d="M38 60h26"
+          stroke="#7567E8"
+          stroke-width="4"
+          stroke-linecap="round"
+        />
       </svg>
     </div>
 
-    <p class="empty-title">
+    <h4 class="empty-classes__title">
       No tienes clases agendadas
+    </h4>
+
+    <p class="empty-classes__description">
+      Agenda una clase y continúa practicando tu inglés.
     </p>
 
-    <p class="empty-subtitle">
-      Cuando programes una clase aparecerá aquí.
-    </p>
+    <button
+      type="button"
+      class="primary-booking-button"
+      (click)="handleScheduleClass()"
+    >
+      Agendar una clase
+    </button>
   </div>
-</div>
 
-</div>
+</section>

@@ -1,3 +1,100 @@
+<section class="assessment-page">
+  <div class="assessment-page__container">
+
+    <app-assessment-header />
+
+    <app-assessment-summary
+      [activeCount]="activeCount"
+      [expiredCount]="expiredCount"
+      [completedCount]="completedCount"
+    />
+
+    <div
+      *ngIf="loading"
+      class="assessment-page__loading"
+      aria-live="polite"
+    >
+      <span class="assessment-page__spinner"></span>
+
+      <p class="assessment-page__loading-text">
+        Cargando evaluaciones...
+      </p>
+    </div>
+
+    <ng-container *ngIf="!loading">
+
+      <div class="assessment-page__sections">
+
+        <app-assessment-section
+          *ngIf="hasPending"
+          sectionType="active"
+          title="Evaluaciones activas"
+          description="Tienes evaluaciones pendientes por completar."
+          [count]="activeCount"
+          [assessments]="pendingAssessments"
+          [highlightId]="highlightId"
+          (openAssessment)="onOpenAssessment($event)"
+          (clearHighlight)="clearHighlight()"
+        />
+
+        <app-assessment-section
+          *ngIf="hasExpired"
+          sectionType="expired"
+          title="Evaluaciones vencidas"
+          description="Estas evaluaciones superaron la fecha límite."
+          [count]="expiredCount"
+          [assessments]="expiredAssessments"
+          [highlightId]="highlightId"
+          (clearHighlight)="clearHighlight()"
+        />
+
+        <app-assessment-section
+          *ngIf="hasCompleted"
+          sectionType="completed"
+          title="Evaluaciones completadas"
+          description="Has completado estas evaluaciones."
+          [count]="completedCount"
+          [assessments]="completedAssessments"
+          [highlightId]="highlightId"
+          (viewAssessment)="onViewAssessmentDetail($event)"
+          (clearHighlight)="clearHighlight()"
+        />
+
+      </div>
+
+      <div
+        *ngIf="
+          !hasPending &&
+          !hasExpired &&
+          !hasCompleted
+        "
+        class="assessment-page__empty"
+      >
+        <div class="assessment-page__empty-icon">
+          <i class="fa-solid fa-clipboard-check"></i>
+        </div>
+
+        <div class="assessment-page__empty-content">
+          <h2 class="assessment-page__empty-title">
+            No tienes evaluaciones
+          </h2>
+
+          <p class="assessment-page__empty-description">
+            Cuando te asignen una evaluación, podrás consultarla desde
+            esta sección.
+          </p>
+        </div>
+      </div>
+
+    </ng-container>
+
+    <app-assessment-support
+      (contactSupport)="onContactSupport()"
+    />
+
+  </div>
+</section>
+
 <app-modal
   [showModal]="modal.show"
   [message]="modal.message"
@@ -6,134 +103,3 @@
   [isInfo]="modal.isInfo"
   (close)="modal.show = false">
 </app-modal>
-
-<h2 class="title stage">Assessment</h2>
-
-<div class="page-wrapper">
-
-  <div class="assessment-layout">
-
-    <!-- IZQUIERDA -->
-    <section class="stage-assessment-student-section">
-
-      <!-- RESUMEN -->
-      <p *ngIf="!loading" class="assessment-summary">
-
-        <span class="summary-label">
-          Evaluaciones:
-        </span>
-
-        <span class="summary-badge active-badge">
-          {{ activeCount }} Pendiente(s)
-        </span>
-
-        <span class="summary-badge expired-badge">
-          {{ expiredCount }} Expirada(s)
-        </span>
-
-      </p>
-
-      <div *ngIf="!loading" class="cards-layout">
-
-      <!-- ===================== -->
-      <!-- PENDIENTES (FULL WIDTH) -->
-      <!-- ===================== -->
-      <div class="block-full">
-        <h4 class="block-title active-title">Pendientes</h4>
-
-        <div class="cards-scroll">
-          <ng-container *ngIf="hasPending">
-            <ng-container *ngFor="let a of pendingAssessments">
-              <app-stage-assessment-card
-                [assessment]="a"
-                [highlighted]="a.id === highlightId"
-                (openAndFinish)="onOpenAndFinish($event)">
-              </app-stage-assessment-card>
-            </ng-container>
-          </ng-container>
-
-          <div *ngIf="!hasPending" class="empty-state">
-            <span class="material-icons empty-icon">
-              assignment_turned_in
-            </span>
-            <p class="empty-title">Todo al día</p>
-            <p class="empty-subtitle">
-              No tienes evaluaciones pendientes.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- NOTA IMPORTANTE -->
-      <div class="assessment-note-top">
-        <h4>Importante</h4>
-        <p>
-          El incumplimiento en la realización del assessment dentro del plazo indicado
-          impedirá el agendamiento de nuevas clases.
-          <br>
-          <span class="note-secondline">
-            Para la reactivación del servicio, deberá comunicarse con administración.
-          </span>
-        </p>
-      </div>
-
-      <!-- ===================== -->
-      <!-- FILA INFERIOR -->
-      <!-- ===================== -->
-      <div class="bottom-row-two">
-
-        <!-- REALIZADAS -->
-        <div class="column-block completed-column">
-          <h4 class="block-title completed-title">Realizadas</h4>
-
-          <div class="cards-scroll">
-            <ng-container *ngIf="completedAssessments.length > 0">
-              <ng-container *ngFor="let a of completedAssessments">
-                <app-stage-assessment-card
-                  [assessment]="a"
-                  [highlighted]="a.id === highlightId">
-                </app-stage-assessment-card>
-              </ng-container>
-            </ng-container>
-
-            <div *ngIf="completedAssessments.length === 0" class="empty-state">
-              <p class="empty-subtitle">
-                No hay evaluaciones realizadas.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- EXPIRADAS -->
-        <div class="column-block expired-column">
-          <h4 class="block-title expired-title">Expiradas</h4>
-
-          <div class="cards-scroll">
-            <ng-container *ngIf="hasExpired">
-              <ng-container *ngFor="let a of expiredAssessments">
-                <app-stage-assessment-card
-                  [assessment]="a"
-                  [highlighted]="a.id === highlightId">
-                </app-stage-assessment-card>
-              </ng-container>
-            </ng-container>
-
-            <div *ngIf="!hasExpired" class="empty-state">
-              <p class="empty-subtitle">
-                No hay evaluaciones expiradas.
-              </p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-      
-
-    </section>
-
-  </div>
-
-</div>

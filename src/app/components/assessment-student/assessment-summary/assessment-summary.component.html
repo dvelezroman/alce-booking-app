@@ -1,0 +1,42 @@
+<section
+  class="assessment-summary"
+  aria-label="Resumen de evaluaciones"
+>
+  <article
+    *ngFor="
+      let item of summaryItems;
+      trackBy: trackBySummaryType
+    "
+    class="assessment-summary__item"
+    [class.assessment-summary__item--active]="
+      item.type === 'active'
+    "
+    [class.assessment-summary__item--expired]="
+      item.type === 'expired'
+    "
+    [class.assessment-summary__item--completed]="
+      item.type === 'completed'
+    "
+  >
+    <div
+      class="assessment-summary__icon"
+      aria-hidden="true"
+    >
+      <i [class]="item.icon"></i>
+    </div>
+
+    <div class="assessment-summary__content">
+      <strong class="assessment-summary__count">
+        {{ item.count }}
+      </strong>
+
+      <h2 class="assessment-summary__title">
+        {{ item.title }}
+      </h2>
+
+      <p class="assessment-summary__description">
+        {{ item.description }}
+      </p>
+    </div>
+  </article>
+</section>

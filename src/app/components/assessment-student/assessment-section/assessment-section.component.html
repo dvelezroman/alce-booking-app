@@ -1,0 +1,71 @@
+<section
+  class="assessment-section"
+  [class.assessment-section--active]="isActiveSection"
+  [class.assessment-section--expired]="isExpiredSection"
+  [class.assessment-section--completed]="isCompletedSection"
+  [attr.aria-labelledby]="'assessment-section-title-' + sectionType"
+>
+  <header class="assessment-section__header">
+    <div class="assessment-section__heading">
+      <span
+        class="assessment-section__icon"
+        aria-hidden="true"
+      >
+        <i [class]="sectionIcon"></i>
+      </span>
+
+      <div class="assessment-section__heading-content">
+        <h2
+          class="assessment-section__title"
+          [id]="'assessment-section-title-' + sectionType"
+        >
+          {{ title }}
+        </h2>
+
+        <p class="assessment-section__description">
+          {{ description }}
+        </p>
+      </div>
+    </div>
+
+    <span
+      class="assessment-section__count"
+      [attr.aria-label]="count + ' evaluaciones'"
+    >
+      {{ count }}
+    </span>
+  </header>
+
+  <div
+    *ngIf="assessments.length > 0; else emptySection"
+    class="assessment-section__content"
+  >
+    <app-assessment-card
+      *ngFor="
+        let assessment of assessments;
+        trackBy: trackByAssessmentId
+      "
+      [assessment]="assessment"
+      [sectionType]="sectionType"
+      [highlighted]="isHighlighted(assessment)"
+      (openAssessment)="onOpenAssessment($event)"
+      (viewAssessment)="onViewAssessment($event)"
+      (clearHighlight)="onClearHighlight()"
+    />
+  </div>
+
+  <ng-template #emptySection>
+    <div class="assessment-section__empty">
+      <span
+        class="assessment-section__empty-icon"
+        aria-hidden="true"
+      >
+        <i class="fa-regular fa-folder-open"></i>
+      </span>
+
+      <p class="assessment-section__empty-text">
+        No hay evaluaciones en esta sección.
+      </p>
+    </div>
+  </ng-template>
+</section>

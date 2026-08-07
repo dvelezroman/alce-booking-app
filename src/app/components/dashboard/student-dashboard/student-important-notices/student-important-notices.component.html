@@ -1,0 +1,326 @@
+<section class="important-notices">
+
+  <header class="important-notices__header">
+    <h3 class="important-notices__title">
+      Avisos importantes
+    </h3>
+
+    <button
+      type="button"
+      class="important-notices__view-all"
+      (click)="handleViewAll()"
+    >
+      Ver todos
+    </button>
+  </header>
+
+  <div
+    class="important-notices__list"
+    *ngIf="hasAnyNotice; else emptyNotices"
+  >
+
+    <!-- RESTRICCIÓN KIDS -->
+    <article
+      class="notice-item notice-item--information"
+      *ngIf="isKidsRestrictionActive"
+    >
+      <div class="notice-item__icon notice-item__icon--information">
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M4 5.5h6.2c1 0 1.8.8 1.8 1.8V20c0-1.2-1-2.2-2.2-2.2H4V5.5Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M20 5.5h-6.2c-1 0-1.8.8-1.8 1.8V20c0-1.2 1-2.2 2.2-2.2H20V5.5Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M7 9h2M15 9h2M7 12h2M15 12h2"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <div class="notice-item__content">
+        <div class="notice-item__top">
+          <span class="notice-badge notice-badge--information">
+            Información
+          </span>
+
+          <span class="notice-item__date">
+            Hoy
+          </span>
+        </div>
+
+        <h4 class="notice-item__title">
+          Horario para estudiantes KIDS
+        </h4>
+
+        <p class="notice-item__description">
+          La modalidad presencial no está disponible a las 20:00.
+        </p>
+      </div>
+    </article>
+
+    <!-- AVISO DE HORAS -->
+    <article
+      class="notice-item notice-item--warning"
+      *ngIf="hasMeetingsAlert"
+    >
+      <div class="notice-item__icon notice-item__icon--warning">
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M12 3 21 20H3L12 3Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M12 9v5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="12"
+            cy="17"
+            r="1"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+
+      <div class="notice-item__content">
+        <div class="notice-item__top">
+          <span class="notice-badge notice-badge--warning">
+            Recordatorio
+          </span>
+
+          <span class="notice-item__date">
+            Hoy
+          </span>
+        </div>
+
+        <h4 class="notice-item__title">
+          Agenda tus horas semanales
+        </h4>
+
+        <p class="notice-item__description">
+          Has agendado menos horas esta semana.
+
+          <ng-container *ngIf="minHoursRequired !== null">
+            Se recomienda completar
+            <strong class="min-hours-highlight">
+              {{ minHoursRequired }}
+              {{ minHoursRequired === 1 ? 'hora' : 'horas' }}
+            </strong>.
+          </ng-container>
+        </p>
+      </div>
+    </article>
+
+    <!-- RECURSOS DE EVALUACIÓN -->
+    <ng-container
+      *ngIf="
+        shouldShowAssessmentBanner &&
+        hasAssessmentResources
+      "
+    >
+      <article
+        class="notice-item notice-item--new"
+        *ngFor="
+            let item of assessmentResources;
+            let itemIndex = index
+            "
+      >
+        <div class="notice-item__icon notice-item__icon--new">
+          <svg
+            width="25"
+            height="25"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M18 8a6 6 0 0 0-12 0c0 6.5-2.5 7-2.5 9h17c0-2-2.5-2.5-2.5-9Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M10 20h4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+        <div class="notice-item__content">
+          <div class="notice-item__top">
+            <span class="notice-badge notice-badge--new">
+              Nuevo
+            </span>
+
+            <!-- <span class="notice-item__date">
+              Hoy
+            </span> -->
+          </div>
+
+          <h4 class="notice-item__title">
+            {{ item.title || 'Nuevo recurso disponible' }}
+          </h4>
+
+          <div
+            class="notice-item__description-wrapper"
+            *ngIf="item.note"
+            >
+            <div
+                class="
+                notice-item__description
+                notice-item__description--html
+                "
+                [class.notice-item__description--collapsed]="
+                !isNoteExpanded(itemIndex)
+                "
+                [innerHTML]="item.note"
+            >
+            </div>
+
+            <button
+                type="button"
+                class="notice-item__toggle"
+                *ngIf="shouldShowNoteToggle(item.note)"
+                [attr.aria-expanded]="
+                isNoteExpanded(itemIndex)
+                "
+                (click)="toggleNote(itemIndex)"
+            >
+                {{
+                isNoteExpanded(itemIndex)
+                    ? 'Ver menos'
+                    : 'Ver más'
+                }}
+
+                <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+                [class.notice-item__toggle-icon--expanded]="
+                    isNoteExpanded(itemIndex)
+                "
+                >
+                <path
+                    d="m6 9 6 6 6-6"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+                </svg>
+            </button>
+            </div>
+
+          <button
+            type="button"
+            class="notice-item__link"
+            *ngIf="item.link"
+            (click)="openResourceLink(item.link)"
+          >
+            Ver recurso
+
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 12h14M13 6l6 6-6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </article>
+    </ng-container>
+
+  </div>
+
+  <!-- SIN AVISOS -->
+  <ng-template #emptyNotices>
+    <div class="important-notices__empty">
+      <div class="important-notices__empty-icon">
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M18 8a6 6 0 0 0-12 0c0 6.5-2.5 7-2.5 9h17c0-2-2.5-2.5-2.5-9Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M9.5 12.5 11 14l3.5-3.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M10 20h4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <h4 class="important-notices__empty-title">
+        Todo está al día
+      </h4>
+
+      <p class="important-notices__empty-description">
+        No tienes avisos importantes actualmente.
+      </p>
+    </div>
+  </ng-template>
+
+</section>

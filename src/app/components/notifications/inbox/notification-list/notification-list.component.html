@@ -1,0 +1,36 @@
+<section
+  class="notification-list"
+  aria-label="Lista de notificaciones"
+>
+  <!-- CARDS -->
+  <div class="notification-list__cards">
+    <article
+      *ngFor="
+        let notification of notifications;
+        trackBy: trackByNotificationId
+      "
+      class="notification-list__item"
+      tabindex="0"
+      role="button"
+      (click)="onNotificationClick(notification)"
+      (keydown.enter)="
+        onNotificationClick(notification)
+      "
+      (keydown.space)="
+        $event.preventDefault();
+        onNotificationClick(notification)
+      "
+    >
+      <app-notification-card
+        [notification]="notification"
+      />
+    </article>
+  </div>
+
+  <!-- PAGINACIÓN PROYECTADA DESDE EL PADRE -->
+  <footer class="notification-list__footer">
+    <ng-content
+      select="[notification-list-pagination]"
+    />
+  </footer>
+</section>

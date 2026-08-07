@@ -51,8 +51,12 @@ export class InstructorsService implements OnInit{
     );
   }
 
-  getAll(): Observable<Instructor[]> {
-    return this.http.get<Instructor[]>(this.apiUrl);
+  getAll(status?: string): Observable<Instructor[]> {
+    let params = new HttpParams();
+    if (status) {
+      params = params.set('status', status);
+    }
+    return this.http.get<Instructor[]>(this.apiUrl, { params });
   }
 
   // Find student by ID

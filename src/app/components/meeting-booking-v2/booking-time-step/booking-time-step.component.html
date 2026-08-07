@@ -1,0 +1,91 @@
+<section
+  class="booking-time-step"
+  aria-labelledby="booking-time-step-title"
+>
+  <header
+    class="time-step-header"
+    [class.time-step-header--expanded]="
+      isTimeStepExpanded
+    "
+  >
+    <div class="time-step-heading">
+      <div
+        class="time-step-number"
+        aria-hidden="true"
+      >
+        2
+      </div>
+
+      <div class="time-step-copy">
+        <h2
+          id="booking-time-step-title"
+          class="time-step-title"
+        >
+          Seleccione una hora
+        </h2>
+
+        <p
+          *ngIf="selectedDayInfo; else noSelectedDate"
+          class="time-step-description"
+        >
+          Horarios disponibles para
+          <strong>
+            {{ selectedDateTimeLabel }}
+          </strong>
+        </p>
+
+        <ng-template #noSelectedDate>
+          <p class="time-step-description">
+            Selecciona primero un día para consultar
+            los horarios disponibles.
+          </p>
+        </ng-template>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="time-step-toggle"
+      (click)="toggleTimeStep()"
+      [attr.aria-expanded]="isTimeStepExpanded"
+      aria-controls="booking-time-step-content"
+      aria-label="Mostrar u ocultar horarios"
+    >
+      <span
+        class="material-icons"
+        aria-hidden="true"
+      >
+        expand_more
+      </span>
+    </button>
+  </header>
+
+  <div
+    id="booking-time-step-content"
+    class="time-step-content"
+    [class.time-step-content-disabled]="
+      !selectedDayInfo
+    "
+    [class.time-step-content--collapsed]="
+      !isTimeStepExpanded
+    "
+  >
+    <app-booking-time-list
+      [selectedDayInfo]="selectedDayInfo"
+      [disabledDatesAndHours]="
+        disabledDatesAndHours
+      "
+      [ecuadorTime]="ecuadorTime"
+      [minAllowedHour]="minAllowedHour"
+      [userCity]="userCity"
+      [userMode]="userMode"
+      [userClassification]="
+        userClassification
+      "
+      [selectedTimeSlot]="selectedTimeSlot"
+      (timeSlotSelected)="
+        handleTimeSlotSelected($event)
+      "
+    />
+  </div>
+</section>

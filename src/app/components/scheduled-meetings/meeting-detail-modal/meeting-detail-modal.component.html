@@ -1,0 +1,207 @@
+<!-- Modal de detalles de la reunión -->
+<div
+  class="modal"
+  [ngClass]="{
+    'is-active': isActive
+  }"
+>
+  <div
+    class="modal-background"
+    (click)="closeModal()"
+  ></div>
+
+  <div class="modal-card meeting-detail-modal">
+    <header class="modal-card-head">
+      <p class="modal-card-title">
+        Detalles de la clase
+      </p>
+
+      <button
+        type="button"
+        class="delete"
+        aria-label="Cerrar modal"
+        (click)="closeModal()"
+      ></button>
+    </header>
+
+    <section class="modal-card-body">
+      <ng-container *ngIf="selectedMeeting">
+        <p>
+          <strong>Fecha:</strong>
+
+          <span>
+            {{
+              selectedMeeting.date
+                | date:
+                  'EEEE, d MMMM yyyy':
+                  'UTC'
+            }}
+          </span>
+        </p>
+
+        <p class="meeting-hour-inline">
+          <strong>Hora:</strong>
+
+          <span class="main-hour">
+            {{ selectedMeeting.hour }}:00
+          </span>
+        </p>
+
+        <ng-container
+          *ngIf="
+            selectedMeeting.localhour !==
+            selectedMeeting.hour
+          "
+        >
+          <p class="meeting-hour-inline">
+            <strong>Hora Ecuador:</strong>
+
+            <ng-container
+              *ngIf="
+                selectedMeeting.localdate !==
+                selectedMeeting.date
+              "
+            >
+              <span class="secondary-hour">
+                {{
+                  selectedMeeting.localdate
+                    | date:
+                      'EEEE, d MMMM yyyy':
+                      'UTC'
+                }},
+                {{ selectedMeeting.localhour }}:00
+              </span>
+            </ng-container>
+
+            <ng-container
+              *ngIf="
+                selectedMeeting.localdate ===
+                selectedMeeting.date
+              "
+            >
+              <span class="secondary-hour">
+                {{ selectedMeeting.localhour }}:00
+              </span>
+            </ng-container>
+          </p>
+        </ng-container>
+
+        <p>
+          <strong>Modo:</strong>
+
+          <span>
+            {{
+              selectedMeeting.mode === onlineMode
+                ? 'Online'
+                : 'Presencial'
+            }}
+          </span>
+        </p>
+
+        <p>
+          <strong>Instructor:</strong>
+
+          <span>
+            {{
+              (
+                selectedMeeting.instructor?.user
+                  ?.firstName ||
+                'No asignado'
+              ) | titlecase
+            }}
+
+            {{
+              selectedMeeting.instructor?.user
+                ?.lastName | titlecase
+            }}
+          </span>
+        </p>
+
+        <p
+          *ngIf="
+            selectedMeeting.password &&
+            linkStatus === 'clickable' &&
+            selectedMeeting.mode === onlineMode
+          "
+        >
+          <strong>Contraseña:</strong>
+
+          <span>
+            {{ selectedMeeting.password }}
+          </span>
+        </p>
+
+        <ng-container
+          *ngIf="
+            selectedMeeting.mode === onlineMode
+          "
+        >
+          <p
+            class="meeting-link"
+            [class.no-link]="
+              !selectedMeeting.link
+            "
+            [class.clickable]="
+              linkStatus === 'clickable'
+            "
+            [class.not-clickable]="
+              linkStatus === 'not-clickable'
+            "
+            [class.not-available]="
+              linkStatus === 'not-available'
+            "
+          >
+            <ng-container
+              [ngSwitch]="linkStatus"
+            >
+              <a
+                *ngSwitchCase="'clickable'"
+                [href]="
+                  getFormattedLink(
+                    selectedMeeting.link
+                  )
+                "
+                target="_blank"
+                rel="noopener noreferrer"
+                (click)="
+                  handleMeetingAssistanceClick(
+                    selectedMeeting.id
+                  )
+                "
+              >
+                Ir a la clase
+              </a>
+
+              <span
+                *ngSwitchCase="'not-clickable'"
+                role="link"
+                aria-disabled="true"
+              >
+                {{ getMeetingLinkMessage() }}
+              </span>
+
+              <span
+                *ngSwitchCase="'not-available'"
+                role="link"
+                aria-disabled="true"
+              >
+                Enlace no disponible
+              </span>
+            </ng-container>
+          </p>
+
+          <p
+            class="link-note"
+            *ngIf="selectedMeeting.link"
+          >
+            <small>
+              El enlace estará disponible 5 minutos
+              antes y hasta 6 minutos después de la
+              hora agendada.
+            </small>
+          </p>
+        </ng-container>
+      </ng-container>
+    </section>
+  </div>
+</div>

@@ -12,6 +12,7 @@ import {
   Notification as AppNotification,
   NotificationListResponse
 } from '../../../../services/dtos/notification.dto';
+import { sanitizeNotificationBody } from '../../../../shared/utils/notification-message.util';
 
 @Component({
   selector: 'app-notifications-sent',
@@ -117,6 +118,10 @@ export class NotificationsSentComponent implements OnInit {
 
   trackById(index: number, n: AppNotification) {
     return n.id;
+  }
+
+  notificationBodySnippet(body: string): string {
+    return sanitizeNotificationBody(body);
   }
 
   onRowClick(notification: AppNotification): void {

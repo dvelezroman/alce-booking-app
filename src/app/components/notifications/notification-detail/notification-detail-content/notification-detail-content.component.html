@@ -1,0 +1,611 @@
+<article class="notification-detail-content">
+
+  <!-- ================================
+       TÍTULO
+  ================================= -->
+  <section class="notification-detail-content__section">
+
+    <span class="notification-detail-content__label">
+      Título
+    </span>
+
+    <h2 class="notification-detail-content__title">
+      {{ notification.title || 'Notificación' }}
+    </h2>
+
+  </section>
+
+  <!-- ================================
+       MENSAJE GENERAL
+  ================================= -->
+  <section
+    *ngIf="showNotificationRawBody && formattedBody"
+    class="notification-detail-content__section"
+  >
+
+    <span class="notification-detail-content__label">
+      Mensaje
+    </span>
+
+    <div
+      class="notification-detail-content__message"
+      [innerHTML]="formattedBody | safeNoteHtml"
+    ></div>
+
+  </section>
+
+  <!-- ================================
+       DESTINATARIOS
+  ================================= -->
+  <section
+    *ngIf="showRecipients && recipients.length > 0"
+    class="
+      notification-detail-content__section
+      notification-detail-content__section--bordered
+    "
+  >
+
+    <div class="notification-detail-content__section-header">
+
+      <div>
+        <span class="notification-detail-content__label">
+          Destinatarios
+        </span>
+
+        <p class="notification-detail-content__audience">
+          {{ audienceLine }}
+        </p>
+      </div>
+
+      <button
+        *ngIf="recipients.length > 3"
+        type="button"
+        class="notification-detail-content__text-button"
+        (click)="onToggleRecipients()"
+      >
+        {{
+          showAllRecipients
+            ? 'Mostrar menos'
+            : 'Ver todos'
+        }}
+      </button>
+
+    </div>
+
+    <div class="notification-detail-content__recipients">
+
+      <div
+        *ngFor="
+          let recipient of (
+            showAllRecipients
+              ? recipients
+              : recipients.slice(0, 3)
+          );
+          trackBy: trackByRecipientId
+        "
+        class="notification-detail-content__recipient"
+      >
+
+        <div class="notification-detail-content__recipient-avatar">
+          {{
+            recipient.firstName
+              ? recipient.firstName.charAt(0)
+              : recipient.email
+                ? recipient.email.charAt(0)
+                : 'U'
+          }}
+        </div>
+
+        <div class="notification-detail-content__recipient-info">
+
+          <strong>
+            {{
+              (
+                (recipient.firstName || '') +
+                ' ' +
+                (recipient.lastName || '')
+              ).trim() ||
+              recipient.email ||
+              ('Usuario #' + recipient.id)
+            }}
+          </strong>
+
+          <span *ngIf="recipient.email">
+            {{ recipient.email }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================================
+       SOLICITUD DE CLASE DEMO /
+       EXAMEN DE UBICACIÓN
+  ================================= -->
+  <section
+    *ngIf="isLeadRequestNotification && requestLead"
+    class="
+      notification-detail-content__section
+      notification-detail-content__section--bordered
+    "
+  >
+
+    <span class="notification-detail-content__label">
+      {{
+        isPlacementExamNotification
+          ? 'Solicitud de examen de ubicación'
+          : 'Solicitud de clase de cortesía'
+      }}
+    </span>
+
+    <div class="notification-detail-content__request-card">
+
+      <div class="notification-detail-content__request-header">
+
+        <div class="notification-detail-content__request-icon">
+          <i
+            class="pi"
+            [ngClass]="{
+              'pi-file-edit':
+                isPlacementExamNotification,
+              'pi-calendar':
+                isDemoClassNotification
+            }"
+          ></i>
+        </div>
+
+        <div class="notification-detail-content__request-heading">
+
+          <h3>
+            {{
+              requestLead.firstName || ''
+            }}
+            {{
+              requestLead.lastName || ''
+            }}
+          </h3>
+
+          <span
+            *ngIf="placementExamSubtypeLabel"
+            class="notification-detail-content__badge"
+          >
+            {{ placementExamSubtypeLabel }}
+          </span>
+
+        </div>
+
+      </div>
+
+      <dl class="notification-detail-content__details">
+
+        <div *ngIf="requestLead.email">
+            <dt>Correo electrónico</dt>
+            <dd>{{ requestLead.email }}</dd>
+        </div>
+
+        <div *ngIf="placementExamSubtypeLabel">
+            <dt>Tipo de examen</dt>
+            <dd>{{ placementExamSubtypeLabel }}</dd>
+        </div>
+
+        </dl>
+
+      <div
+        *ngIf="isAdmin"
+        class="notification-detail-content__actions"
+      >
+
+        <button
+          type="button"
+          class="
+            notification-detail-content__button
+            notification-detail-content__button--primary
+          "
+          (click)="onGoToLeadRequestAdminDetail()"
+        >
+          <i class="pi pi-external-link"></i>
+
+          <span>
+            Ver solicitud
+          </span>
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================================
+       ASIGNACIÓN O CANCELACIÓN
+       PARA INSTRUCTOR
+  ================================= -->
+  <section
+    *ngIf="isLeadSchedulingInstructorCard"
+    class="
+      notification-detail-content__section
+      notification-detail-content__section--bordered
+    "
+  >
+
+    <span class="notification-detail-content__label">
+      Información de la solicitud
+    </span>
+
+    <div class="notification-detail-content__assignment-card">
+
+      <div class="notification-detail-content__assignment-header">
+
+        <div class="notification-detail-content__assignment-icon">
+          <i
+            class="pi"
+            [ngClass]="{
+              'pi-file-edit':
+                isPlacementExamNotification ||
+                assignedIsPlacementTest,
+              'pi-calendar':
+                !isPlacementExamNotification &&
+                !assignedIsPlacementTest
+            }"
+          ></i>
+        </div>
+
+        <div>
+
+          <h3>
+            {{
+              leadSchedulingAssignedSummary.leadName ||
+              'Solicitud asignada'
+            }}
+          </h3>
+
+          <p>
+            {{
+              assignedIsPlacementTest
+                ? 'Examen de ubicación'
+                : 'Clase de cortesía'
+            }}
+          </p>
+
+        </div>
+
+      </div>
+
+      <dl class="notification-detail-content__details">
+
+        <div
+          *ngIf="
+            leadSchedulingAssignedSummary
+              .leadSchedulingRequestId
+          "
+        >
+          <dt>Número de solicitud</dt>
+
+          <dd>
+            #{{ 
+              leadSchedulingAssignedSummary
+                .leadSchedulingRequestId
+            }}
+          </dd>
+        </div>
+
+        <div
+          *ngIf="
+            leadSchedulingAssignedSummary
+              .scheduledDate
+          "
+        >
+          <dt>Fecha asignada</dt>
+
+          <dd>
+            {{
+              leadSchedulingAssignedSummary
+                .scheduledDate
+            }}
+          </dd>
+        </div>
+
+        <div
+          *ngIf="
+            leadSchedulingAssignedSummary
+              .scheduledHour !== undefined
+          "
+        >
+          <dt>Hora asignada</dt>
+
+          <dd>
+            {{
+              leadSchedulingAssignedSummary
+                .scheduledHour
+            }}:00
+          </dd>
+        </div>
+
+        <div
+          *ngIf="
+            leadSchedulingAssignedSummary.status
+          "
+        >
+          <dt>Estado</dt>
+
+          <dd>
+            {{
+              leadSchedulingAssignedSummary.status
+            }}
+          </dd>
+        </div>
+
+        <div
+          *ngIf="
+            leadSchedulingAssignedSummary
+              .requestNotes
+          "
+        >
+          <dt>Observaciones</dt>
+
+          <dd>
+            {{
+              leadSchedulingAssignedSummary
+                .requestNotes
+            }}
+          </dd>
+        </div>
+
+      </dl>
+
+      <div
+        *ngIf="leadSchedulingShowGenericNextStep"
+        class="notification-detail-content__notice"
+      >
+        <i class="pi pi-info-circle"></i>
+
+        <span>
+          Revisa la información de la solicitud
+          antes de continuar con el proceso.
+        </span>
+      </div>
+
+      <div class="notification-detail-content__actions">
+
+        <button
+          type="button"
+          class="
+            notification-detail-content__button
+            notification-detail-content__button--primary
+          "
+          (click)="onGoToAssignedLeadScheduling()"
+        >
+          <i class="pi pi-external-link"></i>
+
+          <span>
+            Ver solicitud asignada
+          </span>
+        </button>
+
+        <button
+          *ngIf="showPlacementExamListLink"
+          type="button"
+          class="
+            notification-detail-content__button
+            notification-detail-content__button--secondary
+          "
+          (click)="onGoToPlacementExamList()"
+        >
+          <i class="pi pi-list"></i>
+
+          <span>
+            Ver solicitudes
+          </span>
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================================
+       ACCIÓN PARA EXAMEN DE UBICACIÓN
+  ================================= -->
+  <section
+    *ngIf="
+      showPlacementExamListLink &&
+      !isLeadSchedulingInstructorCard
+    "
+    class="
+      notification-detail-content__section
+      notification-detail-content__section--bordered
+    "
+  >
+
+    <span class="notification-detail-content__label">
+      Acción requerida
+    </span>
+
+    <div class="notification-detail-content__notice">
+      <i class="pi pi-info-circle"></i>
+
+      <span>
+        Revisa las solicitudes de examen de
+        ubicación pendientes.
+      </span>
+    </div>
+
+    <div class="notification-detail-content__actions">
+
+      <button
+        type="button"
+        class="
+          notification-detail-content__button
+          notification-detail-content__button--primary
+        "
+        (click)="onGoToPlacementExamList()"
+      >
+        <i class="pi pi-external-link"></i>
+
+        <span>
+          Ver exámenes de ubicación
+        </span>
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- ================================
+       REPORTE DE ESTUDIANTES ACTIVOS
+  ================================= -->
+  <section
+    *ngIf="
+      notification.message?.kind ===
+      'active_students_report'
+    "
+    class="
+      notification-detail-content__section
+      notification-detail-content__section--bordered
+    "
+  >
+
+    <span class="notification-detail-content__label">
+      Reporte disponible
+    </span>
+
+    <div class="notification-detail-content__notice">
+      <i class="pi pi-chart-bar"></i>
+
+      <span>
+        El reporte de estudiantes activos está
+        disponible para su revisión.
+      </span>
+    </div>
+
+    <div class="notification-detail-content__actions">
+
+      <button
+        type="button"
+        class="
+          notification-detail-content__button
+          notification-detail-content__button--primary
+        "
+        (click)="onGoToActiveStudentsReport()"
+      >
+        <i class="pi pi-external-link"></i>
+
+        <span>
+          Ver reporte
+        </span>
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- ================================
+       NUEVOS ESTUDIANTES
+  ================================= -->
+  <section
+    *ngIf="hasStudentRows"
+    class="
+      notification-detail-content__section
+      notification-detail-content__section--bordered
+    "
+  >
+
+    <div class="notification-detail-content__section-header">
+
+      <div>
+        <span class="notification-detail-content__label">
+          Nuevos estudiantes
+        </span>
+
+        <p class="notification-detail-content__section-description">
+          Revisa la información recibida antes de
+          crear cada estudiante.
+        </p>
+      </div>
+
+      <span class="notification-detail-content__counter">
+        {{ studentRows.length }}
+      </span>
+
+    </div>
+
+    <div class="notification-detail-content__students">
+
+      <article
+        *ngFor="
+          let student of studentRows;
+          let index = index;
+          trackBy: trackByStudentIndex
+        "
+        class="notification-detail-content__student"
+      >
+
+        <div class="notification-detail-content__student-avatar">
+          {{
+            student.firstName
+              ? student.firstName.charAt(0)
+              : 'E'
+          }}
+        </div>
+
+        <div class="notification-detail-content__student-info">
+
+          <strong>
+            {{
+              (
+                (student.firstName || '') +
+                ' ' +
+                (student.lastName || '')
+              ).trim() ||
+              student.email ||
+              'Estudiante'
+            }}
+          </strong>
+
+          <span *ngIf="student.email">
+            {{ student.email }}
+          </span>
+
+        </div>
+
+        <div class="notification-detail-content__student-actions">
+
+          <button
+            type="button"
+            class="notification-detail-content__icon-button"
+            (click)="onToggleStudentMenu(index)"
+            aria-label="Mostrar acciones del estudiante"
+          >
+            <i class="pi pi-ellipsis-v"></i>
+          </button>
+
+          <button
+            type="button"
+            class="
+              notification-detail-content__button
+              notification-detail-content__button--secondary
+              notification-detail-content__button--small
+            "
+            (click)="onEditStudent(student)"
+          >
+            <i class="pi pi-user-edit"></i>
+
+            <span>
+              Revisar
+            </span>
+          </button>
+
+        </div>
+
+      </article>
+
+    </div>
+
+  </section>
+
+</article>

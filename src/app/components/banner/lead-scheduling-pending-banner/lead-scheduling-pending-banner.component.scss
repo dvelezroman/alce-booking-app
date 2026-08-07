@@ -1,0 +1,65 @@
+.lead-pending-banner {
+  position: fixed;
+  top: 88px;
+  left: 64px;
+  z-index: 899;
+  animation: leadBannerSlideIn 0.25s ease-out;
+  max-width: min(420px, calc(100vw - 80px));
+
+  .bubble {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #fef3c7;
+    color: #78350f;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    font-size: 0.9rem;
+    line-height: 1.35;
+
+    .bell {
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .close {
+      margin-left: 4px;
+      border: 0;
+      background: transparent;
+      color: #92400e;
+      font-size: 16px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 2px;
+      flex-shrink: 0;
+
+      &:hover {
+        color: #451a03;
+      }
+    }
+  }
+}
+
+@keyframes leadBannerSlideIn {
+  from {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .lead-pending-banner {
+    left: 70px;
+    top: 128px;
+  }
+
+  .lead-pending-banner .bubble {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+}

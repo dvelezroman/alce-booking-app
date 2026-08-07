@@ -50,7 +50,6 @@ La Aplicación de Reservas Alce College es una Aplicación Web Progresiva (PWA) 
 ### 6. **Comunicación y Notificaciones**
 - **Notificaciones Push**: Alertas en tiempo real para recordatorios de clase y actualizaciones
 - **Sistema de Email**: Gestión integral de correo electrónico con plantillas
-- **Integración WhatsApp**: Capacidades de mensajería directa
 - **Grupos de Notificación**: Comunicación dirigida a grupos específicos de usuarios
 - **Mensajes de Difusión**: Enviar anuncios a todos los usuarios o roles específicos
 - **Historial de Notificaciones**: Rastrear comunicaciones enviadas y recibidas

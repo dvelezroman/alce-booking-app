@@ -1,0 +1,207 @@
+<section class="lead-list">
+  <header class="lead-list__header">
+    <h1>Solicitudes asignadas</h1>
+    <p class="lead-list__sub">
+      Clases de cortesía y exámenes de ubicación donde un <strong>administrador</strong> te asignó como instructor.
+      La asignación no la haces tú desde aquí: solo consultas lo que te enviaron y, cuando la sesión esté agendada, registras asistencia e informe en el detalle.
+    </p>
+  </header>
+
+  <div *ngIf="loading" class="lead-list__state">Cargando…</div>
+  <div *ngIf="error" class="lead-list__error" role="alert">{{ error }}</div>
+
+  <div *ngIf="!loading && !error && sourceItems.length === 0" class="lead-list__state">
+    No tienes solicitudes asignadas.
+  </div>
+
+  <ng-container *ngIf="!loading && !error && sourceItems.length > 0">
+    <div class="lead-filters" [class.lead-filters--active]="hasActiveFilters">
+      <div class="lead-filters__row lead-filters__row--search">
+        <label class="lead-filters__field lead-filters__field--grow">
+          <span class="lead-filters__label">Nombre o email del lead</span>
+          <input
+            type="search"
+            class="lead-filters__input"
+            [(ngModel)]="searchName"
+            (ngModelChange)="onClientFiltersChange()"
+            placeholder="Ej. María, García, correo…"
+            autocomplete="off"
+          />
+        </label>
+      </div>
+
+      <div class="lead-filters__row lead-filters__row--grid">
+        <label class="lead-filters__field">
+          <span class="lead-filters__label">Fecha de sesión desde</span>
+          <input
+            type="date"
+            class="lead-filters__input"
+            [(ngModel)]="dateFrom"
+            (ngModelChange)="onDateRangeChange()"
+          />
+        </label>
+        <label class="lead-filters__field">
+          <span class="lead-filters__label">Fecha de sesión hasta</span>
+          <input
+            type="date"
+            class="lead-filters__input"
+            [(ngModel)]="dateTo"
+            (ngModelChange)="onDateRangeChange()"
+          />
+        </label>
+
+        <label class="lead-filters__field">
+          <span class="lead-filters__label">Estado</span>
+          <select
+            class="lead-filters__select"
+            [(ngModel)]="statusFilter"
+            (ngModelChange)="onServerFiltersChange()"
+          >
+            <option [ngValue]="''">Todos</option>
+            <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+        </label>
+
+        <label class="lead-filters__field">
+          <span class="lead-filters__label">Tipo de solicitud</span>
+          <select
+            class="lead-filters__select"
+            [(ngModel)]="kindFilter"
+            (ngModelChange)="onServerFiltersChange()"
+          >
+            <option [ngValue]="''">Todos</option>
+            <option *ngFor="let opt of kindOptions" [ngValue]="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+        </label>
+      </div>
+
+      <div class="lead-filters__row lead-filters__row--actions">
+        <button
+          type="button"
+          class="lead-filters__chip"
+          [class.lead-filters__chip--on]="sessionTodayOnly"
+          (click)="toggleSessionToday()"
+          title="Solo solicitudes con sesión agendada para hoy"
+        >
+          Sesión hoy
+        </button>
+        <button
+          type="button"
+          class="lead-filters__clear"
+          *ngIf="hasActiveFilters"
+          (click)="clearFilters()"
+        >
+          Limpiar filtros
+        </button>
+      </div>
+    </div>
+
+    <div class="lead-list__toolbar-meta" *ngIf="sourceItems.length > 0">
+      <p class="lead-list__meta">
+        <span *ngIf="totalFromApi > sourceItems.length" class="lead-list__meta-part">
+          Cargadas {{ sourceItems.length }} de {{ totalFromApi }} en el servidor.
+        </span>
+        <span class="lead-list__meta-part">{{ rangeLabel }} con filtros actuales.</span>
+      </p>
+      <label class="lead-list__page-size">
+        <span>Por página</span>
+        <select
+          class="lead-filters__select lead-filters__select--compact"
+          [(ngModel)]="pageSize"
+          (ngModelChange)="onPageSizeChange()"
+        >
+          <option *ngFor="let ps of pageSizeChoices" [ngValue]="ps">{{ ps }}</option>
+        </select>
+      </label>
+    </div>
+
+    <div *ngIf="filteredItems.length === 0" class="lead-list__state lead-list__state--muted">
+      No hay solicitudes que coincidan con los filtros. Prueba ampliar fechas o usar «Limpiar filtros».
+    </div>
+
+    <div *ngIf="filteredItems.length > 0" class="lead-list__table-wrap">
+      <table class="lead-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Lead</th>
+            <th>Agenda / enlace</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of pagedItems">
+            <td>{{ row.id }}</td>
+            <td>{{ kindText(row) }}</td>
+            <td>
+              <span class="badge" [attr.data-status]="row.status">{{
+                statusText(row.status)
+              }}</span>
+            </td>
+            <td class="lead-cell">
+              <span class="lead-cell__name">{{ row.firstName }} {{ row.lastName }}</span>
+              <span
+                *ngIf="notesPreview(row) as notes"
+                class="lead-cell__notes"
+                [title]="row.requestNotes ?? ''"
+                >{{ notes }}</span
+              >
+            </td>
+            <td>{{ slotText(row) }}</td>
+            <td>
+              <a
+                class="link"
+                [routerLink]="['/dashboard/instructor/lead-scheduling-requests', row.id]"
+                >Ver</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <nav class="lead-pagination" aria-label="Paginación de solicitudes">
+        <button
+          type="button"
+          class="lead-pagination__btn"
+          (click)="goFirst()"
+          [disabled]="pageIndex === 0"
+        >
+          Primera
+        </button>
+        <button
+          type="button"
+          class="lead-pagination__btn"
+          (click)="goPrev()"
+          [disabled]="pageIndex === 0"
+        >
+          Anterior
+        </button>
+        <span class="lead-pagination__info">
+          Página {{ pageIndex + 1 }} de {{ totalPages }}
+        </span>
+        <button
+          type="button"
+          class="lead-pagination__btn"
+          (click)="goNext()"
+          [disabled]="pageIndex >= totalPages - 1"
+        >
+          Siguiente
+        </button>
+        <button
+          type="button"
+          class="lead-pagination__btn"
+          (click)="goLast()"
+          [disabled]="pageIndex >= totalPages - 1"
+        >
+          Última
+        </button>
+      </nav>
+    </div>
+  </ng-container>
+</section>

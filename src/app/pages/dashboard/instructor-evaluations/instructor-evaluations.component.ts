@@ -1,13 +1,54 @@
-import { Component, OnInit } from '@angular/core';
-import { InstructorEvaluation, PendingMeetingEvaluation } from '../../../services/dtos/instructor-evaluation.dto';
-import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
-import { InstructorEvaluationService } from '../../../services/instructor-evaluation.service';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ModalComponent } from '../../../components/modal/modal.component';
-import { CompletedEvaluationsComponent } from "../../../components/instructor-evaluations/completed-evaluations/completed-evaluations.component";
-import { PendingEvaluationsComponent } from "../../../components/instructor-evaluations/pending-evaluations/pending-evaluations.component";
-import { EvaluateInstructorModalComponent } from "../../../components/instructor-evaluations/evaluate-instructor-modal/evaluate-instructor-modal.component";
-import { UsersService } from '../../../services/users.service';
+
+import {
+  InstructorEvaluation,
+  PendingMeetingEvaluation
+} from '../../../services/dtos/instructor-evaluation.dto';
+
+import {
+  ModalDto,
+  modalInitializer
+} from '../../../components/modal/modal.dto';
+
+import {
+  InstructorEvaluationService
+} from '../../../services/instructor-evaluation.service';
+
+import {
+  UsersService
+} from '../../../services/users.service';
+
+import {
+  ModalComponent
+} from '../../../components/modal/modal.component';
+
+import {
+  InstructorEvaluationHeaderComponent
+} from '../../../components/instructor-evaluations/instructor-evaluation-header/instructor-evaluation-header.component';
+
+import {
+  EvaluationSupportComponent
+} from '../../../components/instructor-evaluations/evaluation-support/evaluation-support.component';
+
+import {
+  EvaluationTabsComponent
+} from '../../../components/instructor-evaluations/evaluation-tabs/evaluation-tabs.component';
+
+import {
+  CompletedEvaluationsComponent
+} from '../../../components/instructor-evaluations/completed-evaluations/completed-evaluations.component';
+
+import {
+  PendingEvaluationsComponent
+} from '../../../components/instructor-evaluations/pending-evaluations/pending-evaluations.component';
+
+import {
+  EvaluateInstructorModalComponent
+} from '../../../components/instructor-evaluations/evaluate-instructor-modal/evaluate-instructor-modal.component';
 
 @Component({
   selector: 'app-instructor-evaluations',
@@ -15,10 +56,13 @@ import { UsersService } from '../../../services/users.service';
   imports: [
     CommonModule,
     ModalComponent,
+    InstructorEvaluationHeaderComponent,
+    EvaluationSupportComponent,
+    EvaluationTabsComponent,
     CompletedEvaluationsComponent,
-    PendingEvaluationsComponent,
-    EvaluateInstructorModalComponent
-  ],
+    EvaluateInstructorModalComponent,
+    PendingEvaluationsComponent
+],
   templateUrl: './instructor-evaluations.component.html',
   styleUrl: './instructor-evaluations.component.scss'
 })
@@ -31,12 +75,18 @@ export class InstructorEvaluationsComponent implements OnInit {
   loadingCompleted = false;
 
   showEvaluationModal = false;
-  selectedMeeting: PendingMeetingEvaluation | null = null;
+
+  selectedMeeting:
+    PendingMeetingEvaluation | null = null;
+
+  activeTab:
+    'pending' | 'completed' = 'pending';
 
   modal: ModalDto = modalInitializer();
 
   constructor(
-    private instructorEvaluationService: InstructorEvaluationService,
+    private instructorEvaluationService:
+      InstructorEvaluationService,
     private usersService: UsersService
   ) {}
 
@@ -45,13 +95,33 @@ export class InstructorEvaluationsComponent implements OnInit {
     this.loadCompletedEvaluations();
   }
 
-  // ----------------------------------
-  // HELPER (CIERRA SOLO EL MODAL)
-  // ----------------------------------
+  get pendingCount(): number {
+    return this.pendingMeetings.length;
+  }
+
+  get completedCount(): number {
+    return this.completedEvaluations.length;
+  }
+
+  get isLoading(): boolean {
+    return (
+      this.loadingPending ||
+      this.loadingCompleted
+    );
+  }
+
+  get hasPendingEvaluations(): boolean {
+    return this.pendingMeetings.length > 0;
+  }
+
+  get hasCompletedEvaluations(): boolean {
+    return this.completedEvaluations.length > 0;
+  }
+
   private showAutoCloseModal(
     config: Partial<ModalDto>,
     duration = 3000
-  ) {
+  ): void {
     this.modal = {
       ...modalInitializer(),
       ...config,
@@ -66,9 +136,6 @@ export class InstructorEvaluationsComponent implements OnInit {
     }, duration);
   }
 
-  // ----------------------------------
-  // FETCH PENDIENTES
-  // ----------------------------------
   private loadPendingEvaluations(): void {
     this.loadingPending = true;
 
@@ -80,14 +147,12 @@ export class InstructorEvaluationsComponent implements OnInit {
           this.loadingPending = false;
         },
         error: () => {
+          this.pendingMeetings = [];
           this.loadingPending = false;
         }
       });
   }
 
-  // ----------------------------------
-  // FETCH EVALUADAS
-  // ----------------------------------
   private loadCompletedEvaluations(): void {
     this.loadingCompleted = true;
 
@@ -99,19 +164,45 @@ export class InstructorEvaluationsComponent implements OnInit {
           this.loadingCompleted = false;
         },
         error: () => {
+          this.completedEvaluations = [];
           this.loadingCompleted = false;
         }
       });
   }
 
-  // ----------------------------------
-  // SUBMIT EVALUACIÓN
-  // ----------------------------------
-  onSubmitEvaluation(data: { rating: number; observation?: string }) {
-    if (!this.selectedMeeting) return;
+  onTabChange(
+    tab: 'pending' | 'completed'
+  ): void {
+    this.activeTab = tab;
+  }
+
+  onEvaluate(
+    meeting: PendingMeetingEvaluation
+  ): void {
+    this.selectedMeeting = meeting;
+    this.showEvaluationModal = true;
+  }
+
+  closeEvaluationModal(): void {
+    this.selectedMeeting = null;
+    this.showEvaluationModal = false;
+  }
+
+  onSubmitEvaluation(
+    data: {
+      rating: number;
+      observation?: string;
+    }
+  ): void {
+    if (!this.selectedMeeting) {
+      return;
+    }
 
     this.instructorEvaluationService
-      .create(this.selectedMeeting.id, data)
+      .create(
+        this.selectedMeeting.id,
+        data
+      )
       .subscribe({
         next: () => {
           this.showEvaluationModal = false;
@@ -119,13 +210,16 @@ export class InstructorEvaluationsComponent implements OnInit {
 
           this.loadPendingEvaluations();
           this.loadCompletedEvaluations();
-          
-          this.usersService.refreshLogin().subscribe();
+
+          this.usersService
+            .refreshLogin()
+            .subscribe();
 
           this.showAutoCloseModal(
             {
               isSuccess: true,
-              message: 'Evaluación enviada correctamente'
+              message:
+                'Evaluación enviada correctamente'
             },
             1000
           );
@@ -134,7 +228,8 @@ export class InstructorEvaluationsComponent implements OnInit {
           this.showAutoCloseModal(
             {
               isError: true,
-              message: 'Error al enviar la evaluación'
+              message:
+                'Error al enviar la evaluación'
             },
             2000
           );
@@ -142,16 +237,16 @@ export class InstructorEvaluationsComponent implements OnInit {
       });
   }
 
-  // ----------------------------------
-  // ABRIR / CERRAR MODAL EVALUACIÓN
-  // ----------------------------------
-  onEvaluate(meeting: PendingMeetingEvaluation): void {
-    this.selectedMeeting = meeting;
-    this.showEvaluationModal = true;
+  onViewCompletedEvaluation(
+    evaluation: InstructorEvaluation
+  ): void {
+    console.log(
+      'Ver evaluación realizada:',
+      evaluation
+    );
   }
 
-  closeEvaluationModal(): void {
-    this.selectedMeeting = null;
-    this.showEvaluationModal = false;
+  onContactSupport(): void {
+    console.log('Contactar soporte');
   }
 }

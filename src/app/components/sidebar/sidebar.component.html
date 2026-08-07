@@ -22,8 +22,9 @@
   </div>
 
   <div class="nav-section">
+    <div *ngIf="homeNavItem" class="nav-item" [class.active]=" currentRoute === homeNavItem.route || currentRoute.startsWith( homeNavItem.route + '/dashboard/home' )
 
-    <div *ngIf="homeNavItem" class="nav-item" [class.active]="currentRoute === '/home'">
+  ">
       <a [routerLink]="homeNavItem.route">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#e8eaed" viewBox="0 -960 960 960" class="nav-icon">
           <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
@@ -32,7 +33,9 @@
       </a>
     </div>
 
-    <div *ngIf="profileNavItem" class="nav-item" [class.active]="currentRoute === '/profile'">
+    <div *ngIf="profileNavItem" class="nav-item" [class.active]=" currentRoute === profileNavItem.route || currentRoute.startsWith( profileNavItem.route + '/dashboard/profile' )
+
+  ">
       <a [routerLink]="profileNavItem.route">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" viewBox="0 -960 960 960" fill="#e3e3e3" class="nav-icon">
           <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"/>
@@ -119,17 +122,16 @@
               </div>
             </ng-container>
 
+            <ng-container *ngSwitchCase="'whatsapp'">
+              <i class="fa-brands fa-whatsapp category-header__whatsapp-icon" aria-hidden="true"></i>
+            </ng-container>
+
             <ng-container *ngSwitchCase="'email'">
               <div class="notification-icon-wrapper">
                 <svg style="margin-top: 3px; width: 17px; height: 17px;" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280L160-640v400h640v-400L480-440Zm0-80 320-200H160l320 200ZM160-640v-80 480-400Z"/></svg>
               </div>
             </ng-container>
 
-            <ng-container *ngSwitchCase="'whatsapp'">
-              <svg style="width: 17px; height: 17px;" xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#25D366" viewBox="0 0 32 32">
-                <path d="M16 .5C7.44.5.5 7.44.5 16c0 2.82.73 5.58 2.12 8.02L.5 31.5l7.7-2.02C10.42 30.8 13.17 31.5 16 31.5c8.56 0 15.5-6.94 15.5-15.5S24.56.5 16 .5Zm0 28c-2.58 0-5.08-.68-7.28-1.96l-.52-.3-4.57 1.19 1.21-4.45-.34-.55A12.4 12.4 0 0 1 3.5 16c0-6.89 5.61-12.5 12.5-12.5S28.5 9.11 28.5 16 22.89 28.5 16 28.5Zm7.16-9.42c-.4-.2-2.36-1.17-2.73-1.3-.37-.14-.64-.2-.9.2-.27.4-1.04 1.3-1.28 1.56-.23.27-.47.3-.87.1-.4-.2-1.69-.62-3.23-1.97-1.19-1.06-2-2.36-2.23-2.76-.23-.4-.02-.61.18-.8.19-.18.4-.47.6-.7.2-.24.27-.4.4-.67.14-.27.07-.5-.03-.7-.1-.2-.9-2.14-1.23-2.94-.33-.8-.66-.7-.9-.7-.23 0-.5 0-.77.04-.27.03-.7.1-1.07.5-.37.4-1.4 1.36-1.4 3.32s1.43 3.84 1.63 4.11c.2.27 2.81 4.27 6.8 5.99.95.41 1.7.65 2.27.84.95.3 1.82.26 2.5.16.76-.11 2.36-.96 2.7-1.9.34-.93.34-1.73.24-1.9-.1-.18-.36-.28-.76-.48Z"/>
-              </svg>
-            </ng-container>
 
             <ng-container *ngSwitchCase="'config'">
               <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#e8eaed" viewBox="0 -960 960 960">
@@ -152,8 +154,32 @@
                 *ngIf="item.roles.includes(userData?.role || UserRole.STUDENT)"
                 [routerLink]="item.route"
                 (click)="closeSidebar($event)"
+                class="nav-link-row"
               >
                 <span class="link-text">{{ item.text }}</span>
+                <span
+                  *ngIf="showLeadPendingBadge(item.route)"
+                  class="notification-icon-wrapper nav-link-badge has-unread"
+                  aria-hidden="true"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="18px"
+                    width="18px"
+                    viewBox="0 -960 960 960"
+                    fill="#fbbf24"
+                  >
+                    <path
+                      d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25
+                          17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20
+                          130 84.5T720-560v280h80v80H160Zm320-300Zm0
+                          420q-33 0-56.5-23.5T400-160h160q0 33-23.5
+                          56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66
+                          0-113 47t-47 113v280Z"
+                    />
+                  </svg>
+                  <span class="notification-badge">{{ leadPendingCountForRoute(item.route) }}</span>
+                </span>
               </a>
             </ng-container>
 

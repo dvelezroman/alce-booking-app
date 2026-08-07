@@ -1,7 +1,14 @@
-import { Component, Input, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
+
 import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
 
 export type StageAssessmentWithCountdown = StageAssessment & {
@@ -14,22 +21,19 @@ export type StageAssessmentWithCountdown = StageAssessment & {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './pending-assessment-card.component.html',
-  styleUrl: './pending-assessment-card.component.scss'
+  styleUrl: './pending-assessment-card.component.scss',
 })
-export class PendingAssessmentCardComponent implements OnInit, OnDestroy {
-
+export class PendingAssessmentCardComponent
+  implements OnInit, OnDestroy
+{
   @Input() assessments: StageAssessmentWithCountdown[] = [];
 
   @Output() goToAssessment = new EventEmitter<number>();
+  @Output() viewAll = new EventEmitter<void>();
 
-  private intervalSub!: Subscription;
-  
-  iconUrl = 'https://cdn-icons-png.flaticon.com/512/2921/2921222.png';
-  fallbackIcon = 'assets/test.png';
+  private intervalSub?: Subscription;
 
-  constructor(private router: Router) {}
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.updateCountdowns();
 
     this.intervalSub = interval(1000).subscribe(() => {
@@ -37,49 +41,243 @@ export class PendingAssessmentCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.intervalSub?.unsubscribe();
   }
 
-  updateCountdowns() {
+  // ================================
+  // Evaluaciones visibles
+  // ================================
+  get visibleAssessments(): StageAssessmentWithCountdown[] {
+    return this.assessments.slice(0, 3);
+  }
+
+  get hasAssessments(): boolean {
+    return this.assessments.length > 0;
+  }
+
+  // ================================
+  // Actualizar cuenta regresiva
+  // ================================
+  updateCountdowns(): void {
     const now = Date.now();
 
-    this.assessments = this.assessments.map(a => {
+    this.assessments = this.assessments.map((assessment) => {
+      const target = this.getAssessmentTimestamp(
+        assessment.dueDate
+      );
 
-      const [datePart] = a.dueDate.split('T');
-      const [year, month, day] = datePart.split('-').map(Number);
-      const target = new Date(year, month - 1, day, 0, 0, 0).getTime();
+      if (!target) {
+        return {
+          ...assessment,
+          timeFormatted: '',
+          isUrgent: false,
+        };
+      }
 
       const diff = target - now;
 
       if (diff <= 0) {
         return {
-          ...a,
-          timeFormatted: '00:00:00',
-          isUrgent: false
+          ...assessment,
+          timeFormatted: 'Tiempo finalizado',
+          isUrgent: false,
         };
       }
 
       const days = Math.floor(diff / 86400000);
-      const hours = Math.floor((diff / 3600000) % 24);
-      const minutes = Math.floor((diff / 60000) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
+      const hours = Math.floor(
+        (diff / 3600000) % 24
+      );
+
+      const minutes = Math.floor(
+        (diff / 60000) % 60
+      );
+
+      const seconds = Math.floor(
+        (diff / 1000) % 60
+      );
 
       let formatted = '';
-      if (days > 0) formatted += `${days}d `;
-      formatted += `${this.pad(hours)}:${this.pad(minutes)}:${this.pad(seconds)}`;
+
+      if (days > 0) {
+        formatted += `${days}d `;
+      }
+
+      formatted += `${this.pad(hours)}:${this.pad(
+        minutes
+      )}:${this.pad(seconds)}`;
 
       return {
-        ...a,
+        ...assessment,
         timeFormatted: formatted,
-        isUrgent: diff <= 12 * 60 * 60 * 1000
+        isUrgent:
+          diff <= 12 * 60 * 60 * 1000,
       };
     });
   }
 
-  pad(n: number) {
-    return n < 10 ? '0' + n : n.toString();
+  pad(value: number): string {
+    return value < 10
+      ? `0${value}`
+      : value.toString();
   }
 
-  goToAssessmentPage(id: number) { this.goToAssessment.emit(id) }
+  // ================================
+  // Acciones
+  // ================================
+  goToAssessmentPage(id: number): void {
+    this.goToAssessment.emit(id);
+  }
+
+  goToAllAssessments(): void {
+    this.viewAll.emit();
+  }
+
+  // ================================
+  // Información visual
+  // ================================
+  getAssessmentTitle(
+    assessment: StageAssessmentWithCountdown
+  ): string {
+    return (
+      assessment.stageAssessmentResource
+        ?.description || 'Evaluación pendiente'
+    );
+  }
+
+  getAssessmentStage(
+    assessment: StageAssessmentWithCountdown
+  ): string {
+    const stageDescription =
+      assessment.stage?.description?.trim();
+
+    if (stageDescription) {
+      return stageDescription;
+    }
+
+    if (assessment.stage?.number !== undefined) {
+      return `Stage ${assessment.stage.number}`;
+    }
+
+    return 'Nivel por confirmar';
+  }
+
+  getMonthAbbreviation(
+    dueDate: string
+  ): string {
+    const date = this.parseLocalDate(dueDate);
+
+    if (!date) {
+      return '';
+    }
+
+    return date
+      .toLocaleDateString('es-ES', {
+        month: 'short',
+      })
+      .replace('.', '')
+      .toUpperCase();
+  }
+
+  getDayNumber(dueDate: string): string {
+    const date = this.parseLocalDate(dueDate);
+
+    if (!date) {
+      return '';
+    }
+
+    return date.toLocaleDateString('es-ES', {
+      day: '2-digit',
+    });
+  }
+
+  getFormattedDueDate(
+    dueDate: string
+  ): string {
+    const date = this.parseLocalDate(dueDate);
+
+    if (!date) {
+      return 'Fecha por confirmar';
+    }
+
+    const formattedDate =
+      date.toLocaleDateString('es-ES', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+      });
+
+    return this.capitalize(formattedDate);
+  }
+
+  trackByAssessmentId(
+    _index: number,
+    assessment: StageAssessmentWithCountdown
+  ): number {
+    return assessment.id;
+  }
+
+  // ================================
+  // Helpers privados
+  // ================================
+  private getAssessmentTimestamp(
+    dueDate: string
+  ): number | null {
+    const date = this.parseLocalDate(dueDate);
+
+    if (!date) {
+      return null;
+    }
+
+    date.setHours(23, 59, 59, 999);
+
+    return date.getTime();
+  }
+
+  private parseLocalDate(
+    dateValue: string
+  ): Date | null {
+    if (!dateValue) {
+      return null;
+    }
+
+    const datePart = dateValue.split('T')[0];
+    const values = datePart
+      .split('-')
+      .map(Number);
+
+    if (values.length !== 3) {
+      return null;
+    }
+
+    const [year, month, day] = values;
+
+    if (!year || !month || !day) {
+      return null;
+    }
+
+    const date = new Date(
+      year,
+      month - 1,
+      day
+    );
+
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return date;
+  }
+
+  private capitalize(value: string): string {
+    if (!value) {
+      return value;
+    }
+
+    return (
+      value.charAt(0).toUpperCase() +
+      value.slice(1)
+    );
+  }
 }

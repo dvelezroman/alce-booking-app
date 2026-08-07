@@ -28,6 +28,7 @@ import { UserDto } from '../../../services/dtos/user.dto';
 import { FeatureFlagService } from '../../../services/feature-flag.service';
 import { HandleDatesService } from '../../../services/handle-dates.service';
 import { convertEcuadorHourToLocal, getTimezoneOffsetHours, convertEcuadorDateToLocal } from '../../../shared/utils/dates.util';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error-message.util';
 import { selectUserData } from '../../../store/user.selector';
 import { NotificationService } from '../../../services/notification.service';
 import { StageProgressDto, StageProgressList } from '../../../services/dtos/stage-progress.dto';
@@ -438,10 +439,13 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
           this.initializeMeetings();
         },
         error: (err) => {
-          const msg = this.extractBookingErrorMessage(err);
+          const msg = getHttpErrorMessage(
+            err,
+            'No se pudo agendar la clase. Intenta nuevamente.'
+          );
           this.showModalMessage(msg);
           this.showSuccessModal = false;
-          this.hideModalAfterDelay(msg.length > 80 ? 6000 : 4000);
+          this.hideModalAfterDelay(msg.length > 80 ? 6000 : 5000);
         }
       });
     } else {
@@ -467,6 +471,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   isMeetingDataValid() {
     return this.selectedDate && this.selectedTimeSlot;
   }
+  
   createBookingData(): CreateMeetingDto {
     if (!this.userData?.student) {
       throw new Error('Student data is required to create booking data.');
@@ -494,22 +499,6 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       mode: this.meetingType,
       category: this.userData.student.studentClassification,
     };
-  }
-
-  /**
-   * Extrae el mensaje de error del backend (400) para /meetings/book.
-   * Estructura esperada: { message: "error message", code: 400, error_id: "..." }
-   */
-  private extractBookingErrorMessage(err: any): string {
-    const body = err?.error;
-    if (!body) return 'No se pudo agendar la clase. Intenta de nuevo. Si el problema persiste, comunícate con administración.';
-    // Prioridad: message del servidor
-    if (typeof body.message === 'string' && body.message.trim()) return body.message.trim();
-    if (Array.isArray(body.message) && body.message.length > 0) {
-      return body.message.map((m: string) => m?.trim()).filter(Boolean).join('. ');
-    }
-    if (typeof body.error === 'string') return body.error;
-    return 'No se pudo agendar la clase. Intenta de nuevo. Si el problema persiste, comunícate con administración.';
   }
 
   hideModalAfterDelay(delay: number) {
@@ -757,68 +746,146 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   }
 
   isModeAllowedForSelectedDay(mode: Mode): boolean {
+    if (!this.selectedDay) return false;
 
     const monthIndex = this.monthNumber - 1;
     const monthKey = String(monthIndex);
 
-    const rules = this.disabledDates?.[monthKey] ?? [];
+    const rules = this.disabledDatesAndHours?.[monthKey] ?? [];
 
     const normalize = (v: any) =>
-      v ? v.toString().trim().toUpperCase() : null;
+      v === null || v === undefined ? null : v.toString().trim().toUpperCase();
 
     const userCity = normalize(this.userData?.city);
     const userClass = normalize(this.userData?.student?.studentClassification);
+    const selectedMode = normalize(mode);
 
-    const rulesForDay = rules.filter((r: any) => {
+    const fullDayRulesForDay = rules.filter((rule: any) => {
+      if (!rule) return false;
+      if (Number(rule.day) !== Number(this.selectedDay)) return false;
 
-      if (!r) return false;
-      if (Number(r.day) !== Number(this.selectedDay)) return false;
+      const hours = Array.isArray(rule.hours) ? rule.hours : [];
 
-      const cityOk =
-        r.city === null ||
-        normalize(r.city) === userCity;
+      // CLAVE:
+      // Solo hours: [] significa bloqueo completo.
+      // Si tiene horas, NO bloquea el modo completo.
+      if (hours.length > 0) return false;
 
-      const classOk =
-        r.studentClassification === null ||
-        normalize(r.studentClassification) === userClass;
+      const ruleCity = normalize(rule.city);
+      const ruleClass = normalize(rule.studentClassification);
+      const ruleMode = normalize(rule.mode);
 
-      return cityOk && classOk;
+      const cityMatch =
+        ruleCity === null || ruleCity === userCity;
 
+      const classMatch =
+        ruleClass === null || ruleClass === userClass;
+
+      const modeMatch =
+        ruleMode === null || ruleMode === selectedMode;
+
+      return cityMatch && classMatch && modeMatch;
     });
 
-    if (rulesForDay.length === 0) return true;
+    return fullDayRulesForDay.length === 0;
+  }
 
-    // 🔹 primero revisar reglas específicas
-    const specificRules = rulesForDay.filter(r => r.studentClassification !== null);
+  isSelectedHourBlockedForMode(mode: Mode): boolean {
+    if (!this.selectedDay || !this.selectedTimeSlot) return false;
 
-    const applicableRules = specificRules.length > 0 ? specificRules : rulesForDay;
+    const monthIndex = this.monthNumber - 1;
+    const monthKey = String(monthIndex);
 
-    for (const rule of applicableRules) {
+    const rules = this.disabledDatesAndHours?.[monthKey] ?? [];
 
-      if (rule.mode === null) {
-        return true; // no restringe modo
-      }
+    const normalize = (v: any) =>
+      v === null || v === undefined ? null : v.toString().trim().toUpperCase();
 
-      if (normalize(rule.mode) === normalize(mode)) {
-        return false; // bloquea ese modo
-      }
+    const userCity = normalize(this.userData?.city);
+    const userClass = normalize(this.userData?.student?.studentClassification);
+    const selectedMode = normalize(mode);
+    const selectedHour = Number(this.selectedTimeSlot.value);
 
+    return rules.some((rule: any) => {
+      if (!rule) return false;
+      if (Number(rule.day) !== Number(this.selectedDay)) return false;
+
+      const hours = Array.isArray(rule.hours) ? rule.hours : [];
+
+      // Este método solo valida reglas por hora.
+      if (hours.length === 0) return false;
+
+      const ruleCity = normalize(rule.city);
+      const ruleClass = normalize(rule.studentClassification);
+      const ruleMode = normalize(rule.mode);
+
+      const cityMatch =
+        ruleCity === null || ruleCity === userCity;
+
+      const classMatch =
+        ruleClass === null || ruleClass === userClass;
+
+      const modeMatch =
+        ruleMode === null || ruleMode === selectedMode;
+
+      const hourMatch = hours.includes(selectedHour);
+
+      return cityMatch && classMatch && modeMatch && hourMatch;
+    });
+  }
+
+  isModeDisabledForCurrentSelection(mode: Mode): boolean {
+    if (!this.selectedDay || !this.selectedTimeSlot) return true;
+
+    if (!this.isModeAllowedForSelectedDay(mode)) {
+      return true;
     }
 
-    return true;
+    if (this.isSelectedHourBlockedForMode(mode)) {
+      return true;
+    }
+
+    if (
+      mode === Mode.PRESENCIAL &&
+      this.userData?.student?.studentClassification === 'KIDS' &&
+      this.selectedTimeSlot.value === 20
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   setMeetingMode(mode: Mode) {
-
     if (!this.selectedDay) {
+      this.modalMeetingType = null;
+      this.meetingType = undefined as any;
+
       this.showModalMessage("Primero selecciona un día.");
       return;
     }
 
+    if (!this.selectedTimeSlot) {
+      this.modalMeetingType = null;
+      this.meetingType = undefined as any;
+
+      this.showModalMessage("Primero selecciona una hora.");
+      return;
+    }
+
     if (!this.isModeAllowedForSelectedDay(mode)) {
+      this.modalMeetingType = null;
+      this.meetingType = undefined as any;
+
+      return;
+    }
+
+    if (this.isSelectedHourBlockedForMode(mode)) {
+      this.modalMeetingType = null;
+      this.meetingType = undefined as any;
 
       this.showModalMessage(
-        "Este modo no está disponible para la fecha seleccionada.",
+        "Esta hora no está disponible para el modo seleccionado.",
         true
       );
 
@@ -826,6 +893,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
     }
 
     this.modalMeetingType = mode;
+    this.meetingType = mode;
   }
 
   // private removeDuplicateDays(data: any): Record<string, number[]> {

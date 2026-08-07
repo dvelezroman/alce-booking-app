@@ -1,0 +1,134 @@
+<section
+  class="booking-date-step"
+  aria-labelledby="booking-date-step-title"
+>
+  <header class="date-step-header">
+    <div class="date-step-heading">
+      <div
+        class="date-step-number-badge"
+        aria-hidden="true"
+      >
+        1
+      </div>
+
+      <div class="date-step-copy">
+        <h2
+          id="booking-date-step-title"
+          class="date-step-title"
+        >
+          Selecciona el día de tu clase
+        </h2>
+
+        <p class="date-step-description">
+          Elige uno de los días disponibles para
+          continuar con la selección del horario.
+        </p>
+      </div>
+    </div>
+
+    <div class="ecuador-date">
+      <span class="ecuador-date-label">
+        Fecha de Ecuador
+      </span>
+
+      <span class="ecuador-date-value">
+        {{ ecuadorDate }}
+      </span>
+    </div>
+  </header>
+
+  <div
+    *ngIf="!isScheduleEnabled"
+    class="schedule-disabled-message"
+    role="status"
+  >
+    <div
+      class="schedule-disabled-icon"
+      aria-hidden="true"
+    >
+      <i class="fas fa-calendar-times"></i>
+    </div>
+
+    <div>
+      <strong>
+        La agenda no está disponible
+      </strong>
+
+      <p>
+        La selección de fechas se encuentra
+        temporalmente deshabilitada.
+      </p>
+    </div>
+  </div>
+
+  <div
+    *ngIf="selectedDate"
+    class="selected-date-summary"
+    role="status"
+    aria-live="polite"
+  >
+    <div
+      class="selected-date-summary-icon"
+      aria-hidden="true"
+    >
+      <i class="fas fa-check"></i>
+    </div>
+
+    <div class="selected-date-summary-content">
+      <span class="selected-date-summary-label">
+        Día seleccionado
+      </span>
+
+      <strong class="selected-date-summary-value">
+        {{
+          selectedDayFormatted ||
+          selectedDate
+        }}
+      </strong>
+    </div>
+  </div>
+
+  <div class="date-step-content">
+    <div
+      *ngIf="isLoading"
+      class="calendar-loading"
+      aria-live="polite"
+    >
+      <div
+        class="calendar-loading-spinner"
+        aria-hidden="true"
+      ></div>
+
+      <span>
+        Cargando disponibilidad...
+      </span>
+    </div>
+
+    <app-booking-calendar
+      *ngIf="!isLoading"
+      [disabledDates]="disabledDates"
+      [disabledDatesAndHours]="disabledDatesAndHours"
+      [userCity]="userCity"
+      [userMode]="userMode"
+      [userClassification]="userClassification"
+      [isScheduleEnabled]="isScheduleEnabled"
+      [resetSelectionTrigger]="resetSelectionTrigger"
+      (monthChanged)="handleMonthChanged($event)"
+      (daySelected)="handleDaySelected($event)"
+    />
+  </div>
+
+  <footer class="date-step-footer">
+    <div class="date-step-help">
+      <i
+        class="fas fa-info-circle"
+        aria-hidden="true"
+      ></i>
+
+      <p>
+        Solo podrás seleccionar fechas habilitadas
+        dentro de la semana actual o la siguiente.
+      </p>
+    </div>
+  </footer>
+</section>

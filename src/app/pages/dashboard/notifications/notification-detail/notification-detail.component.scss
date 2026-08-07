@@ -820,3 +820,412 @@
     border-radius: 0;
   }
 }
+
+/* Lead scheduling — instructor notification */
+.notif-detail-root .message-col .lead-scheduling-card {
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 14px;
+  border: 1px solid #c7d2fe;
+  background: linear-gradient(145deg, #fafbff 0%, #eef2ff 55%, #e0e7ff 100%);
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+  max-width: 100%;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+  }
+
+  &__eyebrow {
+    margin: 0 0 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #4f46e5;
+  }
+
+  &__title {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: #475569;
+    max-width: 42rem;
+  }
+
+  &__status {
+    flex-shrink: 0;
+    align-self: flex-start;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    background: #f1f5f9;
+    color: #334155;
+
+    &[data-status='PENDING'] {
+      background: #fffbeb;
+      border-color: #fde68a;
+      color: #92400e;
+    }
+    &[data-status='SCHEDULED'] {
+      background: #ecfdf5;
+      border-color: #6ee7b7;
+      color: #065f46;
+    }
+    &[data-status='CANCELLED'] {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #991b1b;
+    }
+    &[data-status='COMPLETED'] {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: #1e40af;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-bottom: 1.15rem;
+
+    @media (max-width: 520px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .lead-scheduling-field {
+    padding: 0.75rem 0.9rem;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+
+    &__label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #64748b;
+      margin-bottom: 0.35rem;
+    }
+
+    &__value {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0f172a;
+      line-height: 1.35;
+      word-break: break-word;
+
+      &--wrap {
+        overflow-wrap: anywhere;
+      }
+
+      &--multiline {
+        white-space: pre-wrap;
+        font-weight: 500;
+      }
+    }
+
+    &--span {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__next {
+    margin-bottom: 1.1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid #e2e8f0;
+  }
+
+  &__next-title {
+    margin: 0 0 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #475569;
+  }
+
+  &__steps {
+    margin: 0;
+    padding-left: 1.15rem;
+    color: #334155;
+    font-size: 0.88rem;
+    line-height: 1.55;
+
+    li + li {
+      margin-top: 0.45rem;
+    }
+
+    strong {
+      color: #0f172a;
+      font-weight: 600;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__cta {
+    border: none;
+    border-radius: 10px;
+    padding: 0.65rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    background: #4f46e5;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
+    transition: background 0.15s ease, transform 0.1s ease;
+
+    &:hover {
+      background: #4338ca;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &--secondary {
+      background: #fff;
+      color: #0d9488;
+      border: 1px solid #5eead4;
+      box-shadow: none;
+
+      &:hover {
+        background: #f0fdfa;
+        color: #0f766e;
+      }
+    }
+  }
+
+  &--placement {
+    border-color: #5eead4;
+    background: linear-gradient(145deg, #f0fdfa 0%, #ccfbf1 55%, #a7f3d0 100%);
+
+    .lead-scheduling-card__eyebrow {
+      color: #0f766e;
+    }
+
+    .lead-scheduling-card__header {
+      border-bottom-color: rgba(13, 148, 136, 0.18);
+    }
+
+    .lead-scheduling-card__cta {
+      background: #0d9488;
+      box-shadow: 0 2px 8px rgba(13, 148, 136, 0.35);
+
+      &:hover {
+        background: #0f766e;
+      }
+    }
+  }
+
+  &--demo {
+    .lead-scheduling-card__eyebrow {
+      color: #4f46e5;
+    }
+  }
+}
+
+/* Nueva solicitud (admin): cortesía/demo o examen de ubicación */
+.notif-detail-root .message-col .request-lead-card {
+  margin-top: 1rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 14px;
+  border: 1px solid #c7d2fe;
+  background: linear-gradient(145deg, #fafbff 0%, #eef2ff 55%, #e0e7ff 100%);
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+
+  &--placement {
+    border-color: #5eead4;
+    background: linear-gradient(145deg, #f0fdfa 0%, #ccfbf1 55%, #a7f3d0 100%);
+
+    .request-lead-card__eyebrow {
+      color: #0f766e;
+    }
+
+    .request-lead-card__header {
+      border-bottom-color: rgba(13, 148, 136, 0.18);
+    }
+  }
+
+  &--demo .request-lead-card__eyebrow {
+    color: #4f46e5;
+  }
+
+  &__header {
+    margin-bottom: 1.1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+  }
+
+  &__eyebrow {
+    margin: 0 0 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #4f46e5;
+  }
+
+  &__title {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: #475569;
+    max-width: 42rem;
+  }
+
+  &__section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(15, 23, 42, 0.06);
+
+    &:first-of-type {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+  }
+
+  &__section-title {
+    margin: 0 0 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+
+    @media (max-width: 520px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .request-lead-field {
+    padding: 0.75rem 0.9rem;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+
+    &--span {
+      grid-column: 1 / -1;
+    }
+
+    &__label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #64748b;
+      margin-bottom: 0.35rem;
+    }
+
+    &__value {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #0f172a;
+      line-height: 1.4;
+      word-break: break-word;
+
+      &--wrap {
+        overflow-wrap: anywhere;
+      }
+
+      &--multiline {
+        white-space: pre-wrap;
+        font-weight: 500;
+      }
+    }
+  }
+
+  &__actions {
+    margin-top: 1.15rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__cta {
+    border: none;
+    border-radius: 10px;
+    padding: 0.65rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    background: #0d9488;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(13, 148, 136, 0.35);
+    transition: background 0.15s ease, transform 0.1s ease;
+
+    &:hover {
+      background: #0f766e;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &--secondary {
+      background: #fff;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      box-shadow: none;
+
+      &:hover {
+        background: #f8fafc;
+      }
+    }
+  }
+
+  &--demo &__cta {
+    background: #4f46e5;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
+
+    &:hover {
+      background: #4338ca;
+    }
+  }
+}

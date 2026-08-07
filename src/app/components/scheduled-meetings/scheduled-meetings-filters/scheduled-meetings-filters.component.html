@@ -1,0 +1,115 @@
+<section
+  class="scheduled-meetings-filters"
+  aria-label="Filtros de clases agendadas"
+>
+  <div class="filters-layout">
+
+    <!-- Buscar instructor -->
+    <div class="filter-control filter-control--search">
+      <span class="filter-icon" aria-hidden="true">
+        <span class="material-icons">
+          search
+        </span>
+      </span>
+
+      <input
+        class="filter-input"
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Buscar por instructor"
+        aria-label="Buscar por instructor"
+      />
+    </div>
+
+    <!-- Filtro por fecha -->
+    <div class="filter-control">
+      <span class="filter-icon" aria-hidden="true">
+        <span class="material-icons">
+          calendar_today
+        </span>
+      </span>
+
+      <select
+        class="filter-select"
+        [ngModel]="selectedDateFilter"
+        (ngModelChange)="onDateFilterChange($event)"
+        aria-label="Filtrar por fecha"
+        >
+        <option value="all">Todas las fechas</option>
+        <option value="today">Hoy</option>
+        <option value="week">Esta semana</option>
+        <option value="month">Este mes</option>
+        <option value="upcoming">Próximas clases</option>
+        <option value="past">Clases anteriores</option>
+        </select>
+
+      <span class="select-arrow" aria-hidden="true">
+        <span class="material-icons">
+          keyboard_arrow_down
+        </span>
+      </span>
+    </div>
+
+    <!-- Filtro por estado -->
+    <div class="filter-control">
+      <span class="filter-icon" aria-hidden="true">
+        <span class="material-icons">
+          filter_alt
+        </span>
+      </span>
+
+      <select
+        class="filter-select"
+        [ngModel]="selectedStatusFilter"
+        (ngModelChange)="onStatusFilterChange($event)"
+        aria-label="Filtrar por estado"
+        >
+        <option value="all">Todos los estados</option>
+        <option value="active">Agendadas</option>
+        <option value="completed">Completadas</option>
+        <option value="cancelled">Canceladas</option>
+        </select>
+
+      <span class="select-arrow" aria-hidden="true">
+        <span class="material-icons">
+          keyboard_arrow_down
+        </span>
+      </span>
+    </div>
+
+    <!-- Selector de vista -->
+    <!-- <div
+      class="view-switcher"
+      role="group"
+      aria-label="Cambiar vista"
+    >
+      <button
+        type="button"
+        class="view-button"
+        [class.view-button--active]="selectedView === 'list'"
+        (click)="onViewChange('list')"
+        aria-label="Vista de lista"
+        [attr.aria-pressed]="selectedView === 'list'"
+        >
+        <span class="material-icons" aria-hidden="true">
+            view_list
+        </span>
+        </button>
+
+        <button
+        type="button"
+        class="view-button"
+        [class.view-button--active]="selectedView === 'grid'"
+        (click)="onViewChange('grid')"
+        aria-label="Vista de cuadrícula"
+        [attr.aria-pressed]="selectedView === 'grid'"
+        >
+        <span class="material-icons" aria-hidden="true">
+            grid_view
+        </span>
+        </button>
+    </div> -->
+
+  </div>
+</section>

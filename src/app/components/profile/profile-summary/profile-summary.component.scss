@@ -1,0 +1,619 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* ================================
+   CARD
+================================ */
+
+.profile-summary {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+  padding: 1.65rem 1.8rem;
+
+  border: 1px solid #e3e5ed;
+  border-radius: 1.35rem;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 91% 12%,
+      rgba(116, 80, 244, 0.055),
+      transparent 18rem
+    ),
+    #ffffff;
+
+  box-shadow:
+    0 10px 28px rgba(31, 42, 89, 0.04);
+}
+
+.profile-summary__content {
+  position: relative;
+  z-index: 1;
+
+  display: grid;
+  grid-template-columns:
+    9.5rem
+    minmax(240px, 1fr)
+    1px
+    minmax(210px, 0.72fr)
+    8rem;
+
+  align-items: center;
+  gap: 1.5rem;
+
+  min-width: 0;
+}
+
+/* ================================
+   AVATAR
+================================ */
+
+.profile-summary__avatar-column {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-summary__avatar {
+  position: relative;
+
+  width: 8.6rem;
+  height: 8.6rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(112, 72, 232, 0.2);
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 28% 22%,
+      rgba(255, 255, 255, 0.42),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      #b9a4ff 0%,
+      #9574ef 55%,
+      #7655dc 100%
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 14px 28px rgba(104, 68, 220, 0.16);
+}
+
+.profile-summary__avatar > span {
+  font-size: 3.5rem;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: -0.05em;
+
+  user-select: none;
+}
+
+.profile-summary__edit-avatar {
+  position: absolute;
+  right: -0.15rem;
+  bottom: 0.45rem;
+
+  width: 2.65rem;
+  height: 2.65rem;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #d9dce7;
+  border-radius: 50%;
+
+  background: #ffffff;
+  color: #171c3d;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 18px rgba(31, 42, 89, 0.12);
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.profile-summary__edit-avatar:hover {
+  transform: translateY(-2px);
+
+  border-color: #a890f2;
+  color: #6844dc;
+
+  box-shadow:
+    0 10px 22px rgba(69, 53, 153, 0.16);
+}
+
+.profile-summary__edit-avatar:active {
+  transform: scale(0.96);
+}
+
+/* ================================
+   IDENTIDAD
+================================ */
+
+.profile-summary__identity {
+  min-width: 0;
+}
+
+.profile-summary__identity-header {
+  min-width: 0;
+  margin-bottom: 1.05rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.profile-summary__name {
+  max-width: 100%;
+  margin: 0;
+
+  overflow-wrap: anywhere;
+
+  color: #10142f;
+
+  font-size: clamp(
+    1.2rem,
+    1.7vw,
+    1.55rem
+  );
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+.profile-summary__role {
+  min-height: 1.65rem;
+  padding: 0.33rem 0.75rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  background: #f0eaff;
+  color: #653bd2;
+
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.profile-summary__contact-list {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.72rem;
+}
+
+.profile-summary__contact-item {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.profile-summary__contact-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #5c527f;
+}
+
+.profile-summary__contact-icon svg {
+  display: block;
+  width: 17px;
+  height: 17px;
+}
+
+.profile-summary__contact-value {
+  min-width: 0;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #252b45;
+
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* ================================
+   DIVIDER
+================================ */
+
+.profile-summary__divider {
+  width: 1px;
+  height: 9rem;
+
+  display: block;
+
+  background: #e6e7ee;
+}
+
+/* ================================
+   METADATA
+================================ */
+
+.profile-summary__metadata {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2.5rem;
+
+  align-self: stretch;
+  padding-block: 0.4rem;
+}
+
+.profile-summary__metadata-block {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.profile-summary__metadata-label {
+  color: #42495f;
+
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.profile-summary__status {
+  min-height: 1.9rem;
+  padding: 0.38rem 0.7rem;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  border-radius: 999px;
+
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1;
+
+  text-transform: uppercase;
+}
+
+.profile-summary__status-dot {
+  width: 0.48rem;
+  height: 0.48rem;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+}
+
+.profile-summary__status--active {
+  background: #e4f8eb;
+  color: #159447;
+}
+
+.profile-summary__status--active
+  .profile-summary__status-dot {
+  background: #28bf61;
+
+  box-shadow:
+    0 0 0 4px rgba(40, 191, 97, 0.1);
+}
+
+.profile-summary__status--inactive {
+  background: #f0f1f5;
+  color: #6e7485;
+}
+
+.profile-summary__status--inactive
+  .profile-summary__status-dot {
+  background: #9298a8;
+}
+
+.profile-summary__status--suspended {
+  background: #fff0e6;
+  color: #bb5b16;
+}
+
+.profile-summary__status--suspended
+  .profile-summary__status-dot {
+  background: #e67722;
+}
+
+.profile-summary__status--default {
+  background: #f0f1f5;
+  color: #686f82;
+}
+
+.profile-summary__status--default
+  .profile-summary__status-dot {
+  background: #9298a8;
+}
+
+.profile-summary__member-date {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+
+  color: #20263f;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+
+  text-transform: lowercase;
+}
+
+.profile-summary__member-date svg {
+  flex: 0 0 auto;
+
+  color: #505873;
+}
+
+/* ================================
+   WATERMARK
+================================ */
+
+.profile-summary__watermark {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  opacity: 0.075;
+
+  user-select: none;
+  pointer-events: none;
+}
+
+.profile-summary__watermark img {
+  width: 7.5rem;
+  max-width: 100%;
+  height: 8.5rem;
+
+  object-fit: contain;
+}
+
+/* ================================
+   DESKTOP MEDIUM
+================================ */
+
+@media (max-width: 1120px) {
+  .profile-summary__content {
+    grid-template-columns:
+      8.5rem
+      minmax(220px, 1fr)
+      1px
+      minmax(185px, 0.75fr)
+      5.5rem;
+
+    gap: 1.2rem;
+  }
+
+  .profile-summary__avatar {
+    width: 7.7rem;
+    height: 7.7rem;
+  }
+
+  .profile-summary__avatar > span {
+    font-size: 3.1rem;
+  }
+
+  .profile-summary__watermark img {
+    width: 5.5rem;
+  }
+}
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 900px) {
+  .profile-summary {
+    padding: 1.4rem;
+  }
+
+  .profile-summary__content {
+    grid-template-columns:
+      7.5rem
+      minmax(0, 1fr)
+      minmax(185px, 0.7fr);
+
+    gap: 1.25rem;
+  }
+
+  .profile-summary__divider {
+    display: none;
+  }
+
+  .profile-summary__watermark {
+    display: none;
+  }
+
+  .profile-summary__avatar {
+    width: 7rem;
+    height: 7rem;
+  }
+
+  .profile-summary__metadata {
+    padding-left: 1.25rem;
+
+    border-left: 1px solid #e6e7ee;
+  }
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 680px) {
+  .profile-summary {
+    padding: 1.15rem;
+
+    border-radius: 1.1rem;
+  }
+
+  .profile-summary__content {
+    grid-template-columns:
+      5.5rem
+      minmax(0, 1fr);
+
+    align-items: start;
+    gap: 1rem;
+  }
+
+  .profile-summary__avatar-column {
+    justify-content: flex-start;
+  }
+
+  .profile-summary__avatar {
+    width: 5.2rem;
+    height: 5.2rem;
+  }
+
+  .profile-summary__avatar > span {
+    font-size: 2.2rem;
+  }
+
+  .profile-summary__edit-avatar {
+    right: -0.3rem;
+    bottom: -0.15rem;
+
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+
+  .profile-summary__edit-avatar svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .profile-summary__name {
+    font-size: 1.05rem;
+  }
+
+  .profile-summary__role {
+    min-height: 1.5rem;
+    padding: 0.3rem 0.6rem;
+
+    font-size: 0.66rem;
+  }
+
+  .profile-summary__identity-header {
+    margin-bottom: 0.8rem;
+    gap: 0.5rem;
+  }
+
+  .profile-summary__contact-list {
+    gap: 0.55rem;
+  }
+
+  .profile-summary__contact-item {
+    gap: 0.5rem;
+  }
+
+  .profile-summary__contact-value {
+    font-size: 0.72rem;
+  }
+
+  .profile-summary__metadata {
+    grid-column: 1 / -1;
+
+    padding: 1rem 0 0;
+
+    display: grid;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 1rem;
+
+    border-top: 1px solid #e7e8ef;
+    border-left: 0;
+  }
+
+  .profile-summary__metadata-block {
+    gap: 0.5rem;
+  }
+}
+
+/* ================================
+   SMALL MOBILE
+================================ */
+
+@media (max-width: 430px) {
+  .profile-summary__content {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-summary__avatar-column {
+    justify-content: center;
+  }
+
+  .profile-summary__identity {
+    text-align: center;
+  }
+
+  .profile-summary__identity-header {
+    align-items: center;
+  }
+
+  .profile-summary__contact-list {
+    width: min(100%, 17rem);
+    margin-inline: auto;
+  }
+
+  .profile-summary__contact-item {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .profile-summary__metadata {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-summary__metadata-block {
+    align-items: center;
+  }
+
+  .profile-summary__member-date {
+    justify-content: center;
+  }
+}

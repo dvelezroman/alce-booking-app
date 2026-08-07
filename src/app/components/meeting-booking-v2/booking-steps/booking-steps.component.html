@@ -1,0 +1,86 @@
+<section
+  class="booking-steps"
+  aria-label="Pasos para agendar una clase"
+>
+  <div
+    class="booking-step"
+    [class.booking-step--active]="isStepActive(1)"
+    [class.booking-step--completed]="isStepCompleted(1)"
+  >
+    <div class="booking-step__number">
+      <span *ngIf="!isStepCompleted(1)">
+        1
+      </span>
+
+      <span
+        *ngIf="isStepCompleted(1)"
+        class="material-icons"
+        aria-hidden="true"
+      >
+        check
+      </span>
+    </div>
+
+    <div class="booking-step__content">
+      <h2 class="booking-step__title">
+        Seleccione día
+      </h2>
+
+      <p class="booking-step__description">
+        Elige una fecha disponible
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="booking-step"
+    [class.booking-step--active]="isStepActive(2)"
+    [class.booking-step--completed]="isStepCompleted(2)"
+    [class.booking-step--disabled]="currentStep < 2"
+  >
+    <div class="booking-step__number">
+      <span *ngIf="!isStepCompleted(2)">
+        2
+      </span>
+
+      <span
+        *ngIf="isStepCompleted(2)"
+        class="material-icons"
+        aria-hidden="true"
+      >
+        check
+      </span>
+    </div>
+
+    <div class="booking-step__content">
+      <h2 class="booking-step__title">
+        Seleccione una hora
+      </h2>
+
+      <p class="booking-step__description">
+        {{ selectedDateLabel }}
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="booking-step"
+    [class.booking-step--active]="isStepActive(3)"
+    [class.booking-step--completed]="isStepCompleted(3)"
+    [class.booking-step--disabled]="currentStep < 3"
+  >
+    <div class="booking-step__number">
+      <span>3</span>
+    </div>
+
+    <div class="booking-step__content">
+      <h2 class="booking-step__title">
+        Confirmación
+      </h2>
+
+      <p class="booking-step__description">
+        Revisa y confirma tu clase
+      </p>
+    </div>
+  </div>
+</section>

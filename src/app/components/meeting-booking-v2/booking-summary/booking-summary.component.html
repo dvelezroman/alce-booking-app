@@ -1,0 +1,159 @@
+<article
+  class="booking-summary"
+  aria-labelledby="booking-summary-title"
+>
+  <header class="summary-header">
+    <h3
+      id="booking-summary-title"
+      class="summary-title"
+    >
+      Resumen de tu clase
+    </h3>
+
+    <div
+      class="summary-calendar-icon"
+      aria-hidden="true"
+    >
+      <i class="far fa-calendar-alt"></i>
+    </div>
+  </header>
+
+  <div
+    *ngIf="!isLoading; else summaryLoading"
+    class="summary-details"
+  >
+    <div class="summary-row">
+      <div class="summary-label">
+        <span
+          class="summary-row-icon"
+          aria-hidden="true"
+        >
+          <i class="far fa-calendar-alt"></i>
+        </span>
+
+        <span>Fecha</span>
+      </div>
+
+      <span
+        class="summary-value"
+        [class.summary-value-pending]="!dateLabel"
+      >
+        {{ displayedDate }}
+      </span>
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-label">
+        <span
+          class="summary-row-icon"
+          aria-hidden="true"
+        >
+          <i class="far fa-clock"></i>
+        </span>
+
+        <span>Hora</span>
+      </div>
+
+      <span
+        class="summary-value"
+        [class.summary-value-pending]="!timeLabel"
+      >
+        {{ displayedTime }}
+      </span>
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-label">
+        <span
+          class="summary-row-icon"
+          aria-hidden="true"
+        >
+          <i class="fas fa-headset"></i>
+        </span>
+
+        <span>Modalidad</span>
+      </div>
+
+      <span
+        class="summary-value"
+        [class.summary-value-pending]="!selectedMode"
+      >
+        {{ modeLabel }}
+      </span>
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-label">
+        <span
+          class="summary-row-icon"
+          aria-hidden="true"
+        >
+          <i class="far fa-user"></i>
+        </span>
+
+        <span>Estudiante</span>
+      </div>
+
+      <span
+        class="summary-value"
+        [class.summary-value-pending]="!studentName"
+      >
+        {{ displayedStudentName }}
+      </span>
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-label">
+        <span
+          class="summary-row-icon"
+          aria-hidden="true"
+        >
+          <i class="fas fa-medal"></i>
+        </span>
+
+        <span>Stage</span>
+      </div>
+
+      <span
+        class="summary-value"
+        [class.summary-value-pending]="!stageName"
+      >
+        {{ displayedStageName }}
+      </span>
+    </div>
+  </div>
+
+  <ng-template #summaryLoading>
+    <div
+      class="summary-loading"
+      aria-label="Cargando resumen de la clase"
+    >
+      <div
+        *ngFor="let item of [1, 2, 3, 4, 5]"
+        class="summary-loading-row"
+      >
+        <span class="summary-skeleton summary-skeleton-label"></span>
+
+        <span class="summary-skeleton summary-skeleton-value"></span>
+      </div>
+    </div>
+  </ng-template>
+
+  <aside class="summary-notice">
+    <div
+      class="summary-notice-icon"
+      aria-hidden="true"
+    >
+      <i class="far fa-lightbulb"></i>
+    </div>
+
+    <div class="summary-notice-content">
+      <strong>Importante</strong>
+
+      <p>
+        Asegúrate de estar disponible 5 minutos antes
+        de la hora programada.
+      </p>
+    </div>
+  </aside>
+</article>

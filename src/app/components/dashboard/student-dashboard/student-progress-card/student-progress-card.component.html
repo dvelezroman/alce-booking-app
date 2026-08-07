@@ -1,0 +1,111 @@
+<section
+  class="progress-card"
+  aria-labelledby="student-progress-title"
+>
+  <ng-container *ngIf="!isLoading; else loadingState">
+
+    <h2
+      id="student-progress-title"
+      class="progress-card__title"
+    >
+      Tu progreso general
+    </h2>
+
+    <div class="progress-card__content">
+
+      <!-- PROGRESO CIRCULAR -->
+      <div class="progress-card__progress-section">
+        <div
+          class="progress-ring"
+          [style.--progress]="progressPercentage"
+          role="progressbar"
+          [attr.aria-valuenow]="progressPercentage"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="Progreso general"
+        >
+          <div class="progress-ring__inner">
+            <strong>
+              {{ progressPercentage }}%
+            </strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- MENSAJE -->
+      <div class="progress-card__message">
+        <h3>
+          ¡Vas por buen camino!
+        </h3>
+
+        <p>
+          {{ progressMessage }}
+        </p>
+      </div>
+
+      <span
+        class="progress-card__divider progress-card__divider--first"
+        aria-hidden="true"
+      ></span>
+
+      <!-- CLASES -->
+      <div class="progress-card__stat">
+        <span class="progress-card__stat-label">
+          Clases tomadas
+        </span>
+
+        <strong class="progress-card__stat-value">
+          {{ totalClasses }}
+        </strong>
+
+        <span class="progress-card__stat-caption">
+          En total
+        </span>
+      </div>
+
+      <!-- RACHA -->
+      <div class="progress-card__stat progress-card__streak">
+        <span class="progress-card__stat-label">
+          Racha de estudio
+        </span>
+
+        <strong class="progress-card__stat-value">
+          <span class="streak-icon" aria-hidden="true">
+            🔥
+          </span>
+
+          {{ studyStreak }}
+          {{ studyStreak === 1 ? 'día' : 'días' }}
+        </strong>
+
+        <span class="progress-card__stat-caption">
+          {{ streakMessage }}
+        </span>
+      </div>
+
+      <!-- IMAGEN -->
+      <div class="progress-card__mascot" aria-hidden="true">
+        <img
+          src="/assets/alce-student-progress.svg"
+          alt=""
+        />
+      </div>
+
+    </div>
+  </ng-container>
+
+  <!-- LOADING -->
+  <ng-template #loadingState>
+    <div class="progress-card__loading">
+      <div class="loading-circle"></div>
+
+      <div class="loading-lines">
+        <span></span>
+        <span></span>
+      </div>
+
+      <div class="loading-stat"></div>
+      <div class="loading-stat"></div>
+    </div>
+  </ng-template>
+</section>

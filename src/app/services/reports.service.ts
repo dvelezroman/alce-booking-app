@@ -6,7 +6,13 @@ import {Injectable} from "@angular/core";
 import {GenerateStudentHistoryResponse, MeetingDataI, MeetingReportDetailed, StatisticalDataI, StudentHistoryStatusResponse} from "./dtos/meeting-theme.dto";
 import {UserRole, UsersResponse, UserStatus} from "./dtos/user.dto";
 import { InstructorsGroupedByDate } from "./dtos/instructor-attendance-grouped.dto";
-import { AbsentStudentsExcelFilterDto, UsersExcelFilterDto } from "./dtos/reports.dto";
+import {
+  AbsentStudentsExcelFilterDto,
+  ActiveStudentsReportFiltersDto,
+  ActiveStudentsReportJobCreatedDto,
+  ActiveStudentsReportJobStatusDto,
+  UsersExcelFilterDto,
+} from "./dtos/reports.dto";
 
 @Injectable({
   providedIn: 'root',
@@ -257,5 +263,37 @@ export class ReportsService {
     return this.http.get<StudentHistoryStatusResponse>(
       `${this.apiUrl}/student-history/${jobId}/status`
     );
+  }
+
+  createActiveStudentsReportJob(
+    filters?: ActiveStudentsReportFiltersDto,
+  ): Observable<ActiveStudentsReportJobCreatedDto> {
+    let params = new HttpParams();
+    if (filters?.stageId != null) {
+      params = params.set('stageId', filters.stageId.toString());
+    }
+    if (filters?.noClasses != null) {
+      params = params.set('noClasses', String(filters.noClasses));
+    }
+    return this.http.post<ActiveStudentsReportJobCreatedDto>(
+      `${this.apiUrl}/active-students/jobs`,
+      {},
+      { params },
+    );
+  }
+
+  getActiveStudentsReportJobStatus(
+    jobId: string,
+  ): Observable<ActiveStudentsReportJobStatusDto> {
+    return this.http.get<ActiveStudentsReportJobStatusDto>(
+      `${this.apiUrl}/active-students/jobs/${jobId}`,
+    );
+  }
+
+  downloadActiveStudentsReport(jobId: string) {
+    return this.http.get(`${this.apiUrl}/active-students/jobs/${jobId}/download`, {
+      responseType: 'blob',
+      observe: 'response',
+    });
   }
 }

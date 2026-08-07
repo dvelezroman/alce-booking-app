@@ -1,0 +1,116 @@
+<section
+  class="booking-confirmation-step"
+  aria-labelledby="booking-confirmation-title"
+>
+  <header
+    class="confirmation-header"
+    [class.confirmation-header--expanded]="
+      isConfirmationExpanded
+    "
+  >
+    <div class="confirmation-heading">
+      <span
+        class="confirmation-step-number"
+        aria-hidden="true"
+      >
+        3
+      </span>
+
+      <div class="confirmation-heading-copy">
+        <h2
+          id="booking-confirmation-title"
+          class="confirmation-title"
+        >
+          Confirmación
+        </h2>
+
+        <p class="confirmation-description">
+          Revisa y confirma tu clase
+        </p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="confirmation-toggle"
+      (click)="toggleConfirmation()"
+      [attr.aria-expanded]="isConfirmationExpanded"
+      aria-controls="booking-confirmation-content"
+      aria-label="Mostrar u ocultar confirmación"
+    >
+      <span
+        class="material-icons"
+        aria-hidden="true"
+      >
+        expand_more
+      </span>
+    </button>
+  </header>
+
+  <div 
+    id="booking-confirmation-content"
+    class="confirmation-content"
+    [class.confirmation-content--collapsed]="
+      !isConfirmationExpanded
+    "
+  >
+    <app-booking-mode-selector
+      [selectedMode]="selectedMode"
+      [onlineDisabled]="onlineDisabled"
+      [presencialDisabled]="presencialDisabled"
+      (modeSelected)="handleModeSelected($event)"
+    />
+
+    <app-booking-summary
+      [dateLabel]="dateLabel"
+      [timeLabel]="timeLabel"
+      [selectedMode]="selectedMode"
+      [studentName]="studentName"
+      [stageName]="stageName"
+    />
+
+    <div class="confirmation-actions">
+      <button
+        type="button"
+        class="confirmation-button confirmation-button-primary"
+        [disabled]="!canConfirm"
+        [attr.aria-busy]="isSubmitting"
+        (click)="handleConfirm()"
+      >
+        <span
+          *ngIf="isSubmitting"
+          class="confirmation-spinner"
+          aria-hidden="true"
+        ></span>
+
+        <i
+          *ngIf="!isSubmitting"
+          class="far fa-calendar-check"
+          aria-hidden="true"
+        ></i>
+
+        <span>
+          {{
+            isSubmitting
+              ? 'Confirmando...'
+              : 'Confirmar clase'
+          }}
+        </span>
+      </button>
+
+      <button
+        type="button"
+        class="confirmation-button confirmation-button-secondary"
+        [disabled]="isSubmitting"
+        (click)="handleClearSelection()"
+      >
+        <i
+          class="fas fa-rotate-right"
+          aria-hidden="true"
+        ></i>
+
+        <span>Limpiar selección</span>
+      </button>
+    </div>
+  </div>
+</section>

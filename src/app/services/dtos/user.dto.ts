@@ -33,6 +33,7 @@ export interface UserDto {
   stage?: Stage;
   currentStageProgress?: number | null; 
   instructor?: Instructor;
+  schedulingEligibility?: SchedulingEligibilityDto;
   comment?: string;
   status?: UserStatus;
   meetingsAlert?: boolean;
@@ -45,6 +46,12 @@ export interface UserDto {
   accessToken?: string;
   suspensionInfo?: SuspensionInfo;
   schedulingBlockReason?: string | null;
+}
+
+export interface SchedulingEligibilityDto {
+  canScheduleForProgramStage: boolean;
+  maxSchedulingStage: number | string | null;
+  currentStageNumber: number | string | null;
 }
 
 export interface SuspensionInfo {

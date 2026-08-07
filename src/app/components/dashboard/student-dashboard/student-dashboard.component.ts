@@ -29,6 +29,14 @@ import { AnnouncementViewerComponent } from '../../announcements/announcement-vi
 import { Announcement } from '../../../services/dtos/announcement.dto';
 import { StudentClassification } from '../../../services/dtos/student.dto';
 import { AnnouncementService } from '../../../services/announcement.service';
+import { MeetingDTO, MeetingStatusEnum } from '../../../services/dtos/booking.dto';
+import { BookingService } from '../../../services/booking.service';
+import { takeUntil } from 'rxjs';
+import { StudentProgressCardComponent } from './student-progress-card/student-progress-card.component';
+import { StudentImportantNoticesComponent } from "./student-important-notices/student-important-notices.component";
+import { StudentDailyQuoteComponent } from "./student-daily-quote/student-daily-quote.component";
+import { StudentStudyStreakComponent } from "./student-study-streak/student-study-streak.component";
+import { MeetingDetailModalComponent } from '../../scheduled-meetings/meeting-detail-modal/meeting-detail-modal.component';
 
 type AnnouncementViewerUser = {
   role?: UserRole;
@@ -54,7 +62,12 @@ type AnnouncementViewerUser = {
     PendingClassEvaluationBannerComponent,
     // StudentIntroVideoComponent,
     // AlceKidsAvisoComponent,
-    AnnouncementViewerComponent
+    AnnouncementViewerComponent,
+    StudentProgressCardComponent,
+    StudentImportantNoticesComponent,
+    StudentDailyQuoteComponent,
+    StudentStudyStreakComponent,
+    MeetingDetailModalComponent,
 ],
   templateUrl: './student-dashboard.component.html',
   styleUrl: './student-dashboard.component.scss',
@@ -69,6 +82,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   @Input() isLoggedIn = false;
 
   modal: ModalDto = modalInitializer();
+
+  currentDate = new Date();
 
   /* UI FLAGS */
   showUserInfoForm = false;
@@ -86,6 +101,10 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   assessments: StageAssessment[] = [];
   hasLiveClasses = false;
   suspensionInfo: SuspensionInfo | null = null;
+  meetings: MeetingDTO[] = [];
+  isLoadingMeetings = false;
+  selectedMeeting: MeetingDTO | null = null;
+  isMeetingDetailModalActive = false;
 
   /* intro video */
   showIntroVideo = false;
@@ -107,7 +126,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     private introVideoService: StudentIntroVideoService,
     private instructorEvaluationService: InstructorEvaluationService,
     private configService: AssessmentPointsConfigService,
-    private announcementService: AnnouncementService
+    private announcementService: AnnouncementService,
+    private readonly bookingService: BookingService
   ) {}
 
   ngOnInit(): void {
@@ -150,6 +170,32 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     this.clearUrgentReminder();
   }
 
+  private loadMeetings(studentId: number): void {
+    this.isLoadingMeetings = true;
+
+    this.bookingService
+      .searchMeetings({
+        studentId,
+        assigned: undefined,
+        status: MeetingStatusEnum.ACTIVE,
+      })
+      .subscribe({
+        next: (meetings: MeetingDTO[]) => {
+          this.meetings = meetings;
+          this.isLoadingMeetings = false;
+        },
+        error: (error) => {
+          console.error(
+            'Error obteniendo las clases del estudiante:',
+            error
+          );
+
+          this.meetings = [];
+          this.isLoadingMeetings = false;
+        },
+      });
+  }
+
   private loadPendingClassEvaluations(): void {
     this.instructorEvaluationService
       .getPendingEvaluations(50, 0)
@@ -189,7 +235,16 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   private applyUserState(): void {
     const user = this.userData;
+
     if (!user || user.role !== UserRole.STUDENT) return;
+
+    const studentId = user.student?.id;
+
+    if (studentId) {
+      this.loadMeetings(studentId);
+    } else {
+      this.meetings = [];
+    }
 
     // ===== BANNER CUENCA =====
     const city = (user.city || '').toLowerCase().trim();
@@ -197,7 +252,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
     this.showBannerCuenca = showCityBanners;
     this.showBannerCuencaComm = showCityBanners;
-    
+
     // ===== AVISO PORTOVIEJO =====
     if (
       city === 'portoviejo' &&
@@ -223,7 +278,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     if (this.isLoggedIn && this.shouldShowAnnouncement()) {
       this.showAssessmentAnnouncement = true;
     }
-    
+
     this.loadAnnouncements();
     this.loadPendingClassEvaluations();
   }
@@ -459,7 +514,17 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   goToBooking(): void {
-    this.router.navigate(['/dashboard/booking']);
+    this.router.navigate(['/dashboard/booking-v2']);
+  }
+
+  onViewMeetingDetails(meeting: MeetingDTO): void {
+    this.selectedMeeting = meeting;
+    this.isMeetingDetailModalActive = true;
+  }
+
+  onCloseMeetingDetailModal(): void {
+    this.isMeetingDetailModalActive = false;
+    this.selectedMeeting = null;
   }
 
   goToInstructorEvaluations(): void {

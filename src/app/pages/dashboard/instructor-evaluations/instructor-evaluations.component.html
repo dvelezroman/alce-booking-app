@@ -1,35 +1,38 @@
-<h2 class="title stage">Evaluar Clase</h2>
+<section class="instructor-evaluations-page">
+  <div class="instructor-evaluations-page__container">
 
-<section class="instructor-evaluation-section">
+    <app-instructor-evaluation-header />
 
-  <div class="horizontal-carousel-wrapper">
+    <app-evaluation-support
+      (contactSupport)="onContactSupport()"
+    />
 
-    <app-pending-evaluations
-      [meetings]="pendingMeetings"
-      [loading]="loadingPending"
-      (evaluate)="onEvaluate($event)">
-    </app-pending-evaluations>
+    <app-evaluation-tabs
+      [activeTab]="activeTab"
+      [pendingCount]="pendingCount"
+      [completedCount]="completedCount"
+      (tabChange)="onTabChange($event)"
+    />
 
-    <app-completed-evaluations
-      [evaluations]="completedEvaluations">
-    </app-completed-evaluations>
+    <main class="instructor-evaluations-page__content">
+
+      <app-pending-evaluations
+        *ngIf="activeTab === 'pending'"
+        [meetings]="pendingMeetings"
+        [loading]="loadingPending"
+        (evaluate)="onEvaluate($event)"
+      />
+
+      <app-completed-evaluations
+        *ngIf="activeTab === 'completed'"
+        [evaluations]="completedEvaluations"
+        [loading]="loadingCompleted"
+        (viewEvaluation)="onViewCompletedEvaluation($event)"
+      />
+
+    </main>
 
   </div>
-
-  <!-- NOTA IMPORTANTE -->
-  <div class="assessment-note-top">
-    <h4>Importante</h4>
-    <p>
-      Para poder agendar nuevas clases, es necesario que completes la evaluación
-      de las clases ya realizadas.
-      <br>
-      <span class="note-secondline">
-        Si existen evaluaciones pendientes, el sistema bloqueará el agendamiento
-        hasta que sean completadas.
-      </span>
-    </p>
-  </div>
-
 </section>
 
 <app-evaluate-instructor-modal

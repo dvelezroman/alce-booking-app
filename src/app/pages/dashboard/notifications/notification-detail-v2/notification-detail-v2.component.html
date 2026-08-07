@@ -1,0 +1,112 @@
+<section class="notification-detail-page">
+
+  <!-- LOADING -->
+  <app-notification-detail-loading
+    *ngIf="!notification && !modal.show"
+  />
+
+  <!-- ERROR -->
+  <app-notification-detail-error
+    *ngIf="!notification"
+  />
+
+  <!-- CONTENIDO -->
+  <ng-container *ngIf="notification">
+
+    <!-- HEADER -->
+    <app-notification-detail-header
+      [notification]="notification"
+      (back)="goBack()"
+    />
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <section class="notification-detail-layout">
+
+      <!-- COLUMNA IZQUIERDA -->
+      <section class="notification-detail-main">
+
+        <app-notification-detail-content
+          [notification]="notification"
+          [formattedBody]="formattedBody"
+          [showNotificationRawBody]="showNotificationRawBody"
+          [audienceLine]="audienceLine"
+          [userRole]="userRole"
+          [isAdmin]="isAdmin"
+          [showRecipients]="showRecipients"
+          [showAllRecipients]="showAllRecipients"
+          [recipients]="recipients"
+          [studentRows]="studentRows"
+          [hasStudentRows]="hasStudentRows"
+          [isDemoClassNotification]="isDemoClassNotification"
+          [isPlacementExamNotification]="isPlacementExamNotification"
+          [isLeadRequestNotification]="isLeadRequestNotification"
+          [requestLead]="requestLead"
+          [placementExamSubtypeLabel]="placementExamSubtypeLabel"
+          [isPlacementTestRequestNotification]="isPlacementTestRequestNotification"
+          [isSpeakingPlacementRequestNotification]="isSpeakingPlacementRequestNotification"
+          [assignedIsPlacementTest]="assignedIsPlacementTest"
+          [isLeadSchedulingInstructorCard]="isLeadSchedulingInstructorCard"
+          [leadSchedulingAssignedSummary]="leadSchedulingAssignedSummary"
+          [leadSchedulingShowGenericNextStep]="leadSchedulingShowGenericNextStep"
+          [showPlacementExamListLink]="showPlacementExamListLink"
+          (toggleRecipients)="toggleRecipients()"
+          (goToPlacementExamList)="goToPlacementExamList()"
+          (goToAssignedLeadScheduling)="goToAssignedLeadScheduling()"
+          (goToLeadRequestAdminDetail)="goToLeadRequestAdminDetail()"
+          (goToActiveStudentsReport)="goToActiveStudentsReport()"
+          (toggleStudentMenu)="toggleStudentMenu($event)"
+          (editStudent)="openStudentEditModal($event)"
+        />
+
+        <app-notification-detail-attachments
+          [notification]="notification"
+        />
+
+      </section>
+
+      <!-- SIDEBAR -->
+      <aside class="notification-detail-sidebar">
+
+        <app-notification-detail-info
+          [notification]="notification"
+          [estadoLabel]="estadoLabel"
+          [tipoLabel]="tipoLabel"
+          [prioridadLabel]="prioridadLabel"
+          [toDisplayName]="toDisplayName"
+        />
+
+        <app-notification-detail-actions
+          [notification]="notification"
+          [deleting]="deleting"
+          (back)="goBack()"
+          (delete)="onDeleteClick()"
+        />
+
+      </aside>
+
+    </section>
+
+  </ng-container>
+
+  <!-- MODAL ELIMINAR -->
+  <app-student-edit-modal
+    [show]="showStudentEditModal"
+    [student]="studentToEdit"
+    [stages]="stages"
+    (close)="closeStudentEditModal()"
+    (create)="onRequestCreateStudent($event)"
+  ></app-student-edit-modal>
+
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [title]="modal.title || ''"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm && modal.confirm()"
+    (close)="modal.close()"
+  ></app-modal>
+
+</section>

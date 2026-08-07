@@ -1,66 +1,261 @@
-<section class="pending-section">
+<section
+  class="pending-evaluations"
+  aria-labelledby="pending-evaluations-title"
+  [attr.aria-busy]="loading"
+>
+  <!-- =========================
+       LOADING
+  ========================== -->
 
-  <h3 class="section-title">
-    Pendientes de Evaluación
-    <span class="count">{{ meetings.length }}</span>
-  </h3>
+  <div
+    *ngIf="loading"
+    class="pending-evaluations__loading"
+    role="status"
+    aria-live="polite"
+  >
+    <span
+      class="pending-evaluations__spinner"
+      aria-hidden="true"
+    ></span>
 
-  <!-- LOADING -->
-  <p class="loading" *ngIf="loading">Cargando evaluaciones...</p>
-
-  <!-- EMPTY -->
-  <div class="empty-state" *ngIf="!loading && meetings.length === 0">
-    <span class="material-icons empty-icon">pending_actions</span>
-    <h4>No tienes evaluaciones pendientes</h4>
-    <p>
-      Cuando tengas clases por evaluar, aparecerán aquí.
+    <p class="pending-evaluations__loading-text">
+      Cargando clases pendientes...
     </p>
   </div>
 
-  <!-- TABLE -->
-  <div class="table-wrapper" *ngIf="!loading && meetings.length > 0">
+  <!-- =========================
+       EMPTY STATE
+  ========================== -->
 
-    <div class="table-scroll">
+  <div
+    *ngIf="!loading && !hasMeetings"
+    class="pending-evaluations__empty"
+  >
+    <div
+      class="pending-evaluations__illustration"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 220 150"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient
+            id="pending-clipboard-gradient"
+            x1="0"
+            y1="0"
+            x2="1"
+            y2="1"
+          >
+            <stop
+              offset="0%"
+              stop-color="#a58aff"
+            />
 
-      <table class="evaluations-table">
-        <thead>
-          <tr>
-            <th class="col-instructor">Instructor</th>
-            <th class="col-date">Fecha</th>
-            <th class="col-hour">Hora</th>
-            <th class="col-action">Acción</th>
-          </tr>
-        </thead>
+            <stop
+              offset="100%"
+              stop-color="#7049df"
+            />
+          </linearGradient>
 
-        <tbody>
-          <tr *ngFor="let meeting of meetings">
+          <linearGradient
+            id="pending-hourglass-gradient"
+            x1="0"
+            y1="0"
+            x2="1"
+            y2="1"
+          >
+            <stop
+              offset="0%"
+              stop-color="#916cf0"
+            />
 
-            <td class="col-instructor">
-              <span class="first-name">{{ meeting.instructor.user.firstName }}</span>
-              <span class="last-name">{{ meeting.instructor.user.lastName }}</span>
-            </td>
+            <stop
+              offset="100%"
+              stop-color="#5731c8"
+            />
+          </linearGradient>
 
-            <td class="col-date">
-              {{ meeting.localdate | date:'d MMM y' }}
-            </td>
+          <filter
+            id="pending-shadow"
+            x="-30%"
+            y="-30%"
+            width="160%"
+            height="160%"
+          >
+            <feDropShadow
+              dx="0"
+              dy="7"
+              stdDeviation="7"
+              flood-color="#7048d9"
+              flood-opacity="0.18"
+            />
+          </filter>
+        </defs>
 
-            <td class="col-hour">
-              {{ meeting.hour }}:00
-            </td>
+        <ellipse
+          cx="105"
+          cy="130"
+          rx="72"
+          ry="7"
+          fill="#eeeaff"
+        />
 
-            <td class="col-action">
-              <button
-                class="evaluate-btn"
-                (click)="onEvaluateClick(meeting)">
-                Evaluar
-              </button>
-            </td>
+        <circle
+          cx="44"
+          cy="69"
+          r="3"
+          fill="#d9ceff"
+        />
 
-          </tr>
-        </tbody>
-      </table>
+        <circle
+          cx="173"
+          cy="46"
+          r="3"
+          fill="#e4dcff"
+        />
 
+        <circle
+          cx="188"
+          cy="72"
+          r="2.5"
+          fill="#d8ccff"
+        />
+
+        <path
+          d="M48 100
+             C38 78 48 48 73 39
+             C98 30 127 43 137 67
+             C146 89 137 114 115 124
+             C89 136 59 124 48 100Z"
+          fill="#f3f0ff"
+        />
+
+        <g filter="url(#pending-shadow)">
+          <rect
+            x="68"
+            y="27"
+            width="72"
+            height="101"
+            rx="10"
+            fill="url(#pending-clipboard-gradient)"
+          />
+
+          <rect
+            x="76"
+            y="36"
+            width="56"
+            height="84"
+            rx="6"
+            fill="#ffffff"
+          />
+
+          <rect
+            x="91"
+            y="20"
+            width="27"
+            height="16"
+            rx="5"
+            fill="#7653df"
+          />
+
+          <circle
+            cx="104.5"
+            cy="20"
+            r="5"
+            fill="#a68cff"
+          />
+        </g>
+
+        <rect
+          x="88"
+          y="55"
+          width="33"
+          height="4"
+          rx="2"
+          fill="#ded7f4"
+        />
+
+        <rect
+          x="88"
+          y="70"
+          width="29"
+          height="4"
+          rx="2"
+          fill="#e9e4f8"
+        />
+
+        <rect
+          x="88"
+          y="85"
+          width="34"
+          height="4"
+          rx="2"
+          fill="#ded7f4"
+        />
+
+        <g
+          transform="translate(125 83)"
+          filter="url(#pending-shadow)"
+        >
+          <circle
+            cx="27"
+            cy="27"
+            r="27"
+            fill="url(#pending-hourglass-gradient)"
+          />
+
+          <path
+            d="M20 15
+               H34
+               M20 39
+               H34
+               M22 16
+               C22 22 25 24 27 27
+               C29 24 32 22 32 16
+               M22 38
+               C22 32 25 30 27 27
+               C29 30 32 32 32 38"
+            fill="none"
+            stroke="#ffffff"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+      </svg>
+    </div>
+
+    <div class="pending-evaluations__empty-content">
+      <h2
+        id="pending-evaluations-title"
+        class="pending-evaluations__empty-title"
+      >
+        No tienes clases pendientes de evaluación
+      </h2>
+
+      <p class="pending-evaluations__empty-description">
+        Aquí se mostrarán las clases que aún no has
+        evaluado.
+      </p>
     </div>
   </div>
 
+  <!-- =========================
+       PENDING LIST
+  ========================== -->
+
+  <div
+    *ngIf="!loading && hasMeetings"
+    class="pending-evaluations__list"
+  >
+    <app-pending-evaluation-card
+      *ngFor="
+        let meeting of meetings;
+        trackBy: trackByMeetingId
+      "
+      [meeting]="meeting"
+      (evaluate)="onEvaluate($event)"
+    />
+  </div>
 </section>

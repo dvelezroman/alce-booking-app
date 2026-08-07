@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { UserDto, UserRole } from '../../services/dtos/user.dto';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { LeadSchedulingPendingCountService } from '../../services/lead-scheduling-pending-count.service';
 import { selectIsAdmin, selectUserData } from '../../store/user.selector';
 import { Store } from '@ngrx/store';
 import { ModalDto, modalInitializer } from '../modal/modal.dto';
@@ -42,7 +43,7 @@ export interface SidebarNavGroup {
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   @Input() unreadCount: number | null = 0;
   @Input() isSidebarClosed = false;
   @Output() toggleSidebarEvent = new EventEmitter<unknown>();
@@ -59,15 +60,21 @@ export class SidebarComponent implements OnInit {
   currentRoute: string = '';
   homeNavItem: SidebarNavItem | null = null;
   profileNavItem: SidebarNavItem | null = null;
+  adminLeadPendingCount = 0;
+  instructorLeadPendingCount = 0;
+  private readonly subs = new Subscription();
 
 navItems: SidebarNavItem[] = [
   { icon: 'home', text: 'Inicio', route: '/dashboard/home', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
   { icon: 'user', text: 'Perfil', route: '/dashboard/profile', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT] },
   { icon: 'event', text: 'Mis Clases', route: '/dashboard/meetings-student', roles: [UserRole.STUDENT] },
-  { icon: 'booking', text: 'Clases y Agendamientos', route: '/dashboard/booking', roles: [UserRole.STUDENT] },
+  // { icon: 'booking', text: 'Agendamientos', route: '/dashboard/booking', roles: [UserRole.STUDENT] },
+  { icon: 'booking', text: 'Agendar clases', route: '/dashboard/booking-v2', roles: [UserRole.STUDENT] },
+  { icon: 'booking', text: 'Mis clases agendadas', route: '/dashboard/scheduled-meetings', roles: [UserRole.STUDENT] },
   { icon: 'test', text: 'Evaluar Clase', route: '/dashboard/instructor-evaluations', roles: [UserRole.STUDENT] },
   { icon: 'group', text: 'Agenda', route: '/dashboard/searching-meeting', roles: [UserRole.ADMIN] },
   { icon: 'school', text: 'Usuarios', route: '/dashboard/searching-students', roles: [UserRole.ADMIN] },
+  { icon: 'reportes', text: 'Solicitudes demo / ubicación', route: '/dashboard/admin/lead-scheduling-requests', roles: [UserRole.ADMIN] },
   { icon: 'asistencias-student', text: 'Asistencias Estudiantes', route: '/dashboard/attendance-student', roles: [UserRole.ADMIN] },
   { icon: 'asistencias-instructor', text: 'Asistencias Instructores', route: '/dashboard/attendance-instructor', roles: [UserRole.ADMIN] },
   { icon: 'link', text: 'Enlaces', route: '/dashboard/link', roles: [UserRole.ADMIN] },
@@ -76,12 +83,14 @@ navItems: SidebarNavItem[] = [
   { icon: 'create', text: 'Crear Estudiante', route: '/dashboard/create-students', roles: [UserRole.ADMIN] },
   { icon: 'create', text: 'Crear Admin / Instructor', route: '/dashboard/create-instructors', roles: [UserRole.ADMIN] },
   { icon: 'video_call', text: 'Agenda', route: '/dashboard/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] },
+  { icon: 'reportes', text: 'Leads (cortesía / ubicación)', route: '/dashboard/instructor/lead-scheduling-requests', roles: [UserRole.INSTRUCTOR] },
   { icon: 'history', text: 'Eventos', route: '/dashboard/processed-events', roles: [UserRole.ADMIN] },
   { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/dashboard/feature-flag', roles: [UserRole.ADMIN] },
   { icon: 'config', text: 'Anuncios', route: '/dashboard/announcements', roles: [UserRole.ADMIN] },
   { icon: 'reporte', text: 'Instructores', route: '/dashboard/report-instructor', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Estudiante', route: '/dashboard/reports-detailed', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Historial Completo', route: '/dashboard/student-history-report', roles: [UserRole.ADMIN] },
+  { icon: 'excel', text: 'Estudiantes activos', route: '/dashboard/active-students-report', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Licencias', route: '/dashboard/suspension-history', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Usuario', route: '/dashboard/report-user', roles: [UserRole.ADMIN] },
   { icon: 'excel', text: 'Inasistencias / info. de Usuarios', route: '/dashboard/report-excel', roles: [UserRole.ADMIN] },
@@ -103,12 +112,8 @@ navItems: SidebarNavItem[] = [
   { icon: 'notifications', text: 'Grupos', route: '/dashboard/notifications-groups', roles: [UserRole.ADMIN] },
   { icon: 'notifications', text: 'Recibidas', route: '/dashboard/notifications-inbox', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT],  },
   { icon: 'notifications', text: 'Enviadas', route: '/dashboard/notifications-sent', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR],  },
-  { icon: 'whatsapp', text: 'Enviar mensaje', route: '/dashboard/whatsapp', roles: [UserRole.ADMIN] , },
-  { icon: 'whatsapp', text: 'Grupos', route: '/dashboard/whatsapp-groups', roles: [UserRole.ADMIN], },
-  { icon: 'whatsapp', text: 'Ajustes de WhatsApp', route: '/dashboard/whatsapp-config', roles: [UserRole.ADMIN], },
-  { icon: 'whatsapp', text: 'Mensajes enviados', route: '/dashboard/whatsapp-sent-messages', roles: [UserRole.ADMIN] },
-  
-  // { icon: 'whatsapp', text: 'Mensajes recibidos', route: '/dashboard/whatsapp-received-messages', roles: [UserRole.ADMIN] },
+  { icon: 'whatsapp', text: 'Enviar WhatsApp', route: '/dashboard/admin/whatsapp-notificador', roles: [UserRole.ADMIN] },
+  { icon: 'whatsapp', text: 'Campañas WhatsApp', route: '/dashboard/admin/whatsapp-campaigns', roles: [UserRole.ADMIN] },
   { icon: 'email', text: 'Enviar Email', route: '/dashboard/send-emails', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'inbox', text: 'Inbox Emails', route: '/dashboard/inbox-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'history', text: 'Historial Emails', route: '/dashboard/historial-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
@@ -121,6 +126,7 @@ navItems: SidebarNavItem[] = [
     private usersService: UsersService,
     private router: Router,
     private store: Store,
+    private leadSchedulingPending: LeadSchedulingPendingCountService,
   ) {
     this.userData$ = this.store.select(selectUserData);
     this.isAdmin$ = this.store.select(selectIsAdmin);
@@ -130,6 +136,17 @@ navItems: SidebarNavItem[] = [
     this.userData$.subscribe(state => {
       this.userData = state;
     });
+
+    this.subs.add(
+      this.leadSchedulingPending.adminPending$.subscribe(
+        (count) => (this.adminLeadPendingCount = count),
+      ),
+    );
+    this.subs.add(
+      this.leadSchedulingPending.instructorPending$.subscribe(
+        (count) => (this.instructorLeadPendingCount = count),
+      ),
+    );
 
     this.isAdmin$.subscribe(state => {
       this.isAdmin = state;
@@ -172,9 +189,12 @@ navItems: SidebarNavItem[] = [
       title: 'Agenda',
       icon: 'event',
       items: [
-        this.findNavItemByRoute('/dashboard/booking'),
+        // this.findNavItemByRoute('/dashboard/booking'),
+        this.findNavItemByRoute('/dashboard/booking-v2'),
+        this.findNavItemByRoute('/dashboard/scheduled-meetings'),
         this.findNavItemByRoute('/dashboard/searching-meeting'),
-        this.findNavItemByRoute('/dashboard/searching-meeting-instructor')
+        this.findNavItemByRoute('/dashboard/searching-meeting-instructor'),
+        this.findNavItemByRoute('/dashboard/instructor/lead-scheduling-requests'),
       ].filter(item => item.roles.includes(role))
     },
     {
@@ -196,6 +216,7 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/attendance-instructor'),
         this.findNavItemByRoute('/dashboard/create-students'),
         this.findNavItemByRoute('/dashboard/create-instructors'),
+        this.findNavItemByRoute('/dashboard/admin/lead-scheduling-requests'),
       ].filter(item => item.roles.includes(role))
     },
     {
@@ -241,6 +262,7 @@ navItems: SidebarNavItem[] = [
           children: [
             this.findNavItemByRoute('/dashboard/reports-detailed'),
             this.findNavItemByRoute('/dashboard/student-history-report'),
+            this.findNavItemByRoute('/dashboard/active-students-report'),
           ].filter(item => item.roles.includes(role)),
         },
 
@@ -264,6 +286,14 @@ navItems: SidebarNavItem[] = [
       ].filter(item => item.roles.includes(role))
     },
     {
+      title: 'WhatsApp',
+      icon: 'whatsapp',
+      items: [
+        this.findNavItemByRoute('/dashboard/admin/whatsapp-notificador'),
+        this.findNavItemByRoute('/dashboard/admin/whatsapp-campaigns'),
+      ].filter(item => item.roles.includes(role))
+    },
+    {
       title: 'Emails',
       icon: 'email',
       items: [
@@ -274,23 +304,12 @@ navItems: SidebarNavItem[] = [
       ].filter(item => item.roles.includes(role))
     },
    
-    // {
-    //   title: 'WhatsApp',
-    //   icon: 'whatsapp',
-    //   items: [
-    //     this.findNavItemByRoute('/dashboard/whatsapp'),
-    //     this.findNavItemByRoute('/dashboard/whatsapp-groups'),
-    //     this.findNavItemByRoute('/dashboard/whatsapp-sent-messages'),
-    //     // this.findNavItemByRoute('/dashboard/whatsapp-received-messages'),
-    //   ].filter(item => item.roles.includes(role))
-    // },
     {
       title: 'Configuración',
       icon: 'config',
       items: [
         this.findNavItemByRoute('/dashboard/feature-flag'),
         this.findNavItemByRoute('/dashboard/assessment-config'),
-        this.findNavItemByRoute('/dashboard/whatsapp-config'),
         this.findNavItemByRoute('/dashboard/announcements'),
       ].filter(item => item.roles.includes(role))
     }
@@ -301,6 +320,24 @@ navItems: SidebarNavItem[] = [
       for (const group of this.navGrouped) {
         this.categoryStates[group.title] = false;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
+  leadPendingCountForRoute(route: string): number {
+    if (route === '/dashboard/admin/lead-scheduling-requests') {
+      return this.adminLeadPendingCount;
+    }
+    if (route === '/dashboard/instructor/lead-scheduling-requests') {
+      return this.instructorLeadPendingCount;
+    }
+    return 0;
+  }
+
+  showLeadPendingBadge(route: string): boolean {
+    return this.leadPendingCountForRoute(route) > 0;
   }
 
   toggleSubCategory(title: string) {

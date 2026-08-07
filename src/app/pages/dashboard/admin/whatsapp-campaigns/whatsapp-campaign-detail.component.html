@@ -1,0 +1,170 @@
+<section class="wa-campaign-detail">
+  <nav class="wa-campaign-detail__nav">
+    <a routerLink="/dashboard/admin/whatsapp-campaigns" class="wa-back">
+      <i class="fas fa-arrow-left" aria-hidden="true"></i>
+      Historial de campañas
+    </a>
+  </nav>
+
+  <div *ngIf="loading" class="wa-campaign-detail__state">Cargando campaña…</div>
+  <div *ngIf="error" class="wa-campaign-detail__error" role="alert">{{ error }}</div>
+
+  <ng-container *ngIf="campaign && !loading">
+    <header class="wa-campaign-detail__hero">
+      <div class="wa-campaign-detail__hero-icon" aria-hidden="true">
+        <i class="fas fa-chart-line"></i>
+      </div>
+
+      <div class="wa-campaign-detail__hero-content">
+        <div class="wa-campaign-detail__hero-top">
+          <span class="wa-campaign-badge" [ngClass]="statusClass(campaign.overallStatus)">
+            {{ statusLabel[campaign.overallStatus] }}
+          </span>
+          <time [attr.datetime]="campaign.lastActivityAt">
+            Última actividad: {{ formatDate(campaign.lastActivityAt) }}
+          </time>
+        </div>
+
+        <h1>Detalle de campaña</h1>
+
+        <p *ngIf="campaign.messagePreview" class="wa-campaign-detail__preview">
+          {{ campaign.messagePreview }}
+        </p>
+      </div>
+
+      <dl class="wa-campaign-detail__summary">
+        <div>
+          <dt>Envíos (jobs)</dt>
+          <dd>{{ campaign.jobCount }}</dd>
+        </div>
+        <div>
+          <dt>Mensajes OK</dt>
+          <dd>{{ campaign.totalSent }}</dd>
+        </div>
+        <div>
+          <dt>Fallidos</dt>
+          <dd [class.text-fail]="campaign.totalFailed > 0">{{ campaign.totalFailed }}</dd>
+        </div>
+        <div>
+          <dt>Cupo del lote</dt>
+          <dd>{{ campaign.sentInBatch }}/10 · {{ campaign.remainingInBatch }} restantes</dd>
+        </div>
+        <div *ngIf="campaign.createdByName">
+          <dt>Administrador</dt>
+          <dd>{{ campaign.createdByName }}</dd>
+        </div>
+        <div>
+          <dt>Inicio</dt>
+          <dd>{{ formatDate(campaign.startedAt) }}</dd>
+        </div>
+      </dl>
+
+      <div class="wa-campaign-detail__actions">
+        <button type="button" class="wa-btn wa-btn--soft" (click)="copyBatchId()">
+          <i class="fas fa-copy" aria-hidden="true"></i>
+          Copiar ID de campaña
+        </button>
+        <a
+          *ngIf="canContinueCampaign"
+          class="wa-btn wa-btn--whatsapp"
+          [routerLink]="['/dashboard/admin/whatsapp-notificador']"
+          [queryParams]="{ batchId: campaign.batchId }"
+        >
+          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+          Continuar esta campaña
+        </a>
+      </div>
+    </header>
+
+    <section class="wa-panel">
+      <h2 class="wa-panel__title">
+        <i class="fas fa-list" aria-hidden="true"></i>
+        Envíos de la campaña
+      </h2>
+
+      <div class="wa-table-wrap">
+        <table class="wa-table">
+          <thead>
+            <tr>
+              <th>Contacto</th>
+              <th>Estado</th>
+              <th>Resultado</th>
+              <th>Fecha</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let job of campaign.jobs; trackBy: trackByJobId">
+              <tr>
+                <td class="wa-table__contact">
+                  <strong class="wa-table__contact-name">{{ job.contact }}</strong>
+                  <span *ngIf="job.contentPreview" class="wa-table__sub">
+                    {{ job.contentPreview }}
+                  </span>
+                </td>
+                <td>
+                  <span class="wa-badge" [ngClass]="jobBadgeClass(job.status)">
+                    {{ jobStatusLabel[job.status] }}
+                  </span>
+                </td>
+                <td>
+                  {{ job.sentCount }} enviados · {{ job.failedCount }} fallidos
+                  <span *ngIf="job.errorMessage" class="wa-table__error-inline">{{ job.errorMessage }}</span>
+                </td>
+                <td>{{ formatDate(job.createdAt) }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="wa-btn wa-btn--ghost wa-btn--sm"
+                    (click)="toggleJobDetail(job.jobId)"
+                  >
+                    {{ expandedJobId === job.jobId ? 'Ocultar' : 'Ver detalle' }}
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="expandedJobId === job.jobId" class="wa-table__expand-row">
+                <td colspan="5">
+                  <div *ngIf="loadingJob" class="wa-table__expand-loading">Cargando detalle…</div>
+                  <div *ngIf="!loadingJob && expandedJob" class="wa-table__expand-body">
+                    <p *ngIf="expandedJob.errorMessage" class="wa-table__expand-error">
+                      {{ expandedJob.errorMessage }}
+                    </p>
+                    <table *ngIf="expandedJob.results?.length" class="wa-table wa-table--nested">
+                      <thead>
+                        <tr>
+                          <th>Teléfono</th>
+                          <th>Estado</th>
+                          <th>Motivo</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let row of expandedJob.results">
+                          <td class="wa-table__mono">{{ row.phone }}</td>
+                          <td>
+                            <span
+                              class="wa-badge"
+                              [class.wa-badge--ok]="row.status === 'sent'"
+                              [class.wa-badge--bad]="row.status === 'failed'"
+                            >
+                              {{ resultStatusLabel(row.status) }}
+                            </span>
+                          </td>
+                          <td [class.wa-table__detail--error]="row.status === 'failed'">
+                            {{ getResultDetail(row) }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <p *ngIf="!expandedJob.results?.length" class="wa-table__expand-empty">
+                      Sin detalle por teléfono.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </ng-container>
+</section>

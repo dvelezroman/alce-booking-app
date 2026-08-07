@@ -1,0 +1,111 @@
+<section
+  class="daily-quote"
+  *ngIf="currentQuote as quote"
+>
+  <header class="daily-quote__header">
+    <h3 class="daily-quote__title">
+      Frase del día
+    </h3>
+  </header>
+
+  <div class="daily-quote__content">
+    <span
+      class="daily-quote__quotation daily-quote__quotation--opening"
+      aria-hidden="true"
+    >
+      “
+    </span>
+
+    <blockquote class="daily-quote__blockquote">
+      <p class="daily-quote__text">
+        “{{ quote.text }}”
+      </p>
+
+      <footer class="daily-quote__author">
+        — {{ quote.author }}
+      </footer>
+    </blockquote>
+
+    <span
+      class="daily-quote__quotation daily-quote__quotation--closing"
+      aria-hidden="true"
+    >
+      ”
+    </span>
+  </div>
+
+  <!-- <div
+    class="daily-quote__controls"
+    *ngIf="quotes.length > 1"
+  >
+    <button
+      type="button"
+      class="daily-quote__arrow"
+      aria-label="Mostrar frase anterior"
+      (click)="showPreviousQuote()"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M19 12H5M11 6l-6 6 6 6"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+    <div class="daily-quote__indicators">
+      <button
+        type="button"
+        class="daily-quote__indicator"
+        *ngFor="
+          let quoteItem of quotes;
+          let index = index
+        "
+        [class.daily-quote__indicator--active]="
+          index === currentQuoteIndex
+        "
+        [attr.aria-label]="
+          'Mostrar frase ' + (index + 1)
+        "
+        [attr.aria-current]="
+          index === currentQuoteIndex
+            ? 'true'
+            : null
+        "
+        (click)="selectQuote(index)"
+      >
+      </button>
+    </div>
+
+    <button
+      type="button"
+      class="daily-quote__arrow"
+      aria-label="Mostrar siguiente frase"
+      (click)="showNextQuote()"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M5 12h14M13 6l6 6-6 6"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+  </div> -->
+</section>

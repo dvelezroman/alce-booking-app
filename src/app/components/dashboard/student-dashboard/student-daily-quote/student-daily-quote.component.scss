@@ -1,0 +1,320 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.daily-quote {
+  position: relative;
+
+  width: 100%;
+  min-height: 14.5rem;
+  padding: 1.4rem 1.45rem 1rem;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(29, 44, 118, 0.22);
+  border-radius: 1.35rem;
+
+  background:
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(67, 92, 188, 0.22),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 15% 100%,
+      rgba(47, 77, 176, 0.18),
+      transparent 34%
+    ),
+    linear-gradient(
+      135deg,
+      #151d63 0%,
+      #10205f 48%,
+      #13296c 100%
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 16px 32px rgba(14, 29, 85, 0.18);
+}
+
+.daily-quote::before {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.035),
+      transparent 38%
+    );
+
+  content: '';
+}
+
+.daily-quote__header,
+.daily-quote__content,
+.daily-quote__controls {
+  position: relative;
+  z-index: 1;
+}
+
+/* ================================
+   HEADER
+================================ */
+
+.daily-quote__header {
+  margin-bottom: 1rem;
+}
+
+.daily-quote__title {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: .92rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+/* ================================
+   CONTENIDO
+================================ */
+
+.daily-quote__content {
+  position: relative;
+
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+}
+
+.daily-quote__blockquote {
+  width: 100%;
+  margin: 0;
+  padding: 0 .85rem;
+}
+
+.daily-quote__text {
+  max-width: 24rem;
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: clamp(
+    .98rem,
+    1.7vw,
+    1.2rem
+  );
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+}
+
+.daily-quote__author {
+  margin-top: 1rem;
+
+  color: rgba(255, 255, 255, 0.88);
+
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.daily-quote__quotation {
+  position: absolute;
+
+  color: rgba(172, 187, 255, 0.55);
+
+  font-family: Georgia, serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+
+  user-select: none;
+}
+
+.daily-quote__quotation--opening {
+  top: -0.55rem;
+  left: -0.1rem;
+}
+
+.daily-quote__quotation--closing {
+  right: 0;
+  bottom: .9rem;
+}
+
+/* ================================
+   CONTROLES
+================================ */
+
+.daily-quote__controls {
+  margin-top: .9rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.daily-quote__arrow {
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.daily-quote__arrow:hover {
+  border-color:
+    rgba(255, 255, 255, 0.32);
+
+  background:
+    rgba(255, 255, 255, 0.15);
+}
+
+.daily-quote__arrow:active {
+  transform: scale(0.94);
+}
+
+.daily-quote__arrow svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
+.daily-quote__indicators {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.32rem;
+}
+
+.daily-quote__indicator {
+  width: 0.35rem;
+  height: 0.35rem;
+  padding: 0;
+
+  border: 0;
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.32);
+
+  cursor: pointer;
+
+  transition:
+    width 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.daily-quote__indicator:hover {
+  transform: scale(1.15);
+
+  background:
+    rgba(255, 255, 255, 0.55);
+}
+
+.daily-quote__indicator--active {
+  width: 1rem;
+
+  background: #ffffff;
+}
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 1024px) {
+  .daily-quote {
+    min-height: 13.5rem;
+    padding: 1.25rem;
+  }
+
+  .daily-quote__text {
+    font-size: 1rem;
+  }
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 640px) {
+  .daily-quote {
+    min-height: 13rem;
+    padding: 1.15rem 1rem 0.85rem;
+  }
+
+  .daily-quote__header {
+    margin-bottom: 0.8rem;
+  }
+
+  .daily-quote__title {
+    font-size: 0.86rem;
+  }
+
+  .daily-quote__blockquote {
+    padding: 0 0.55rem;
+  }
+
+  .daily-quote__text {
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .daily-quote__author {
+    margin-top: 0.8rem;
+
+    font-size: 0.72rem;
+  }
+
+  .daily-quote__quotation {
+    font-size: 2.9rem;
+  }
+
+  .daily-quote__controls {
+    margin-top: 0.8rem;
+  }
+
+  .daily-quote__arrow {
+    width: 1.7rem;
+    height: 1.7rem;
+  }
+}
+
+/* ================================
+   ACCESIBILIDAD
+================================ */
+
+@media (
+  prefers-reduced-motion: reduce
+) {
+  .daily-quote__arrow,
+  .daily-quote__indicator {
+    transition: none;
+  }
+}

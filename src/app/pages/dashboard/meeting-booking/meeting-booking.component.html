@@ -278,37 +278,37 @@
 
     <div class="radio-options">
 
-      <label class="custom-radio">
-        <input
-          type="radio"
-          name="meetingType"
-          [value]="mode.ONLINE"
-          [(ngModel)]="meetingType"
-          (change)="setMeetingMode(mode.ONLINE)"
-          [disabled]="!isModeAllowedForSelectedDay(mode.ONLINE)"
-        >
-        <span class="radio-label">Online</span>
-      </label>
+  <label
+    class="custom-radio"
+    [class.is-disabled]="isModeDisabledForCurrentSelection(mode.ONLINE)"
+  >
+    <input
+      type="radio"
+      name="meetingType"
+      [value]="mode.ONLINE"
+      [checked]="modalMeetingType === mode.ONLINE"
+      [disabled]="isModeDisabledForCurrentSelection(mode.ONLINE)"
+      (click)="setMeetingMode(mode.ONLINE)"
+    >
+    <span class="radio-label">Online</span>
+  </label>
 
-      <label class="custom-radio">
-        <input
-          type="radio"
-          name="meetingType"
-          [value]="mode.PRESENCIAL"
-          [(ngModel)]="meetingType"
-          (change)="setMeetingMode(mode.PRESENCIAL)"
-          [disabled]="
-            !isModeAllowedForSelectedDay(mode.PRESENCIAL) ||
-            (
-              userData?.student?.studentClassification === 'KIDS' &&
-              selectedTimeSlot.value === 20
-            )
-          "
-        >
-        <span class="radio-label">Presencial</span>
-      </label>
+  <label
+    class="custom-radio"
+    [class.is-disabled]="isModeDisabledForCurrentSelection(mode.PRESENCIAL)"
+  >
+    <input
+      type="radio"
+      name="meetingType"
+      [value]="mode.PRESENCIAL"
+      [checked]="modalMeetingType === mode.PRESENCIAL"
+      [disabled]="isModeDisabledForCurrentSelection(mode.PRESENCIAL)"
+      (click)="setMeetingMode(mode.PRESENCIAL)"
+    >
+    <span class="radio-label">Presencial</span>
+  </label>
 
-    </div>
+</div>
 
     <div class="modal-buttons">
       <button class="button is-success" (click)="bookMeeting()">Aceptar</button>

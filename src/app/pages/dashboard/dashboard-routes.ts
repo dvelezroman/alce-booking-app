@@ -31,18 +31,12 @@ import { GroupsComponent } from './notifications/groups/groups.component';
 import { InboxComponent } from './notifications/inbox/inbox.component';
 import { NotificationDetailComponent } from './notifications/notification-detail/notification-detail.component';
 import { NotificationsSentComponent } from './notifications/notifications-sent/notifications-sent.component';
-import { BroadcastComponent } from './whatsapp/broadcast.component';
-import { WhatsAppGroupsComponent } from './whatsapp-groups/whatsapp-groups.component';
-import { WhatsappConfigComponent } from './whatsapp-config/whatsapp-config.component';
-import { WhatsappSentMessagesComponent } from './whatsapp-sent-messages/whatsapp-sent-messages.component';
-import { WhatsappReceivedMessagesComponent } from './whatsapp-received-messages/whatsapp-received-messages.component';
 import { SendEmailsComponent } from './emails/send-emails/send-emails.component';
 import { HistorialEmailComponent } from './emails/historial-email/historial-email.component';
 import { InboxEmailComponent } from './emails/inbox-email/inbox-email.component';
 import { SentEmailComponent } from './emails/sent-email/sent-email.component';
 import { EmailDetailComponent } from './emails/email-detail/email-detail.component';
 import { ProfileComponent } from './profile/profile.component';
-import { WhatsAppMessageDetailComponent } from './whatsapp-message-detail/whatsapp-message-detail.component';
 import { ReportsExcelPageComponent } from './reports-excel-page/reports-excel-page.component';
 import { StageAssessmentComponent } from './stage-assessment/stage-assessment.component';
 import { StageAssessmentResourcesComponent } from './stage-assessment-resources/stage-assessment-resources.component';
@@ -54,16 +48,29 @@ import { InstructorEvaluationsComponent } from './instructor-evaluations/instruc
 import { MeetingEvaluationsComponent } from './meeting-evaluations/meeting-evaluations.component';
 import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluation-statistics.component';
 import { StudentHistoryReportComponent } from './report-students/student-history-report/student-history-report.component';
-import { AnnouncementCardComponent } from '../../components/announcements/announcement-card/announcement-card.component';
+import { ActiveStudentsReportComponent } from './report-students/active-students-report/active-students-report.component';
 import { AnnouncementsComponent } from './announcements/announcements.component';
+import { adminOnlyGuard } from '../auth/admin-role.guard';
+import { instructorOnlyGuard } from '../auth/instructor-role.guard';
+import { AdminLeadSchedulingDetailComponent } from './admin/lead-scheduling-requests/admin-lead-scheduling-detail.component';
+import { AdminLeadSchedulingListComponent } from './admin/lead-scheduling-requests/admin-lead-scheduling-list.component';
+import { InstructorLeadSchedulingDetailComponent } from './instructor/lead-scheduling-requests/instructor-lead-scheduling-detail.component';
+import { InstructorLeadSchedulingListComponent } from './instructor/lead-scheduling-requests/instructor-lead-scheduling-list.component';
+import { WhatsappNotificadorComponent } from './admin/whatsapp-notificador/whatsapp-notificador.component';
+import { WhatsappCampaignHistoryComponent } from './admin/whatsapp-campaigns/whatsapp-campaign-history.component';
+import { WhatsappCampaignDetailComponent } from './admin/whatsapp-campaigns/whatsapp-campaign-detail.component';
+import { ScheduledMeetingsComponent } from './scheduled-meetings/scheduled-meetings.component';
+import { MeetingBookingV2Component } from './meeting-booking-v2/meeting-booking-v2.component';
+import { NotificationDetailV2Component } from './notifications/notification-detail-v2/notification-detail-v2.component';
+import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.component';
 
-
-export const dashboardRoutes: Routes = [
+const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomePrivateComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'register-complete', component: RegisterCompleteComponent },
   { path: 'booking', component: MeetingBookingComponent },
+  { path: 'booking-v2', component: MeetingBookingV2Component },
   { path: 'stage', component: StageComponent },
   { path: 'link', component: LinksComponent },
   { path: 'content', component: ContentComponent },
@@ -71,10 +78,51 @@ export const dashboardRoutes: Routes = [
   { path: 'stage-assessment-resources', component: StageAssessmentResourcesComponent },
   { path: 'assessment-types', component: AssessmentTypesComponent },
   { path: 'meetings-student', component: MeetingsStudentComponent },
+  { path: 'scheduled-meetings', component: ScheduledMeetingsComponent },
   { path: 'meeting-evaluations', component: MeetingEvaluationsComponent },
   { path: 'evaluation-statistics', component: EvaluationStatisticsComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent },
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent },
+  {
+    path: 'admin',
+    canActivate: [adminOnlyGuard],
+    children: [
+      {
+        path: 'lead-scheduling-requests',
+        component: AdminLeadSchedulingListComponent,
+      },
+      {
+        path: 'lead-scheduling-requests/:id',
+        component: AdminLeadSchedulingDetailComponent,
+      },
+      {
+        path: 'whatsapp-notificador',
+        component: WhatsappNotificadorComponent,
+      },
+      {
+        path: 'whatsapp-campaigns',
+        component: WhatsappCampaignHistoryComponent,
+      },
+      {
+        path: 'whatsapp-campaigns/:batchId',
+        component: WhatsappCampaignDetailComponent,
+      },
+    ],
+  },
+  {
+    path: 'instructor',
+    canActivate: [instructorOnlyGuard],
+    children: [
+      {
+        path: 'lead-scheduling-requests',
+        component: InstructorLeadSchedulingListComponent,
+      },
+      {
+        path: 'lead-scheduling-requests/:id',
+        component: InstructorLeadSchedulingDetailComponent,
+      },
+    ],
+  },
   { path: 'searching-students', component: SearchingStudentComponent },
   { path: 'attendance-student', component: AttendanceReportsComponent },
   { path: 'report-instructor', component: ReportInstructorComponent },
@@ -86,6 +134,7 @@ export const dashboardRoutes: Routes = [
   { path: 'create-instructors', component: RegisterInstructorAdminComponent },
   { path: 'reports-detailed', component: ReportsDetailedComponent },
   { path: 'student-history-report', component: StudentHistoryReportComponent },
+  { path: 'active-students-report', component: ActiveStudentsReportComponent },
   { path: 'reports-progress', component: ReportsProgressComponent },
   { path: 'suspension-history', component: SuspensionHistoryComponent },
   { path: 'report-user', component: ReportUserComponent },
@@ -103,17 +152,19 @@ export const dashboardRoutes: Routes = [
   { path: 'notifications-groups', component: GroupsComponent },
   { path: 'notifications-inbox', component: InboxComponent },
   { path: 'notifications-detail', component: NotificationDetailComponent },
+  { path: 'notifications-detail-v2', component: NotificationDetailV2Component },
   { path: 'notifications-sent', component: NotificationsSentComponent },
-  { path: 'whatsapp', component: BroadcastComponent },
-  { path: 'whatsapp-groups', component: WhatsAppGroupsComponent },
-  { path: 'whatsapp-config', component: WhatsappConfigComponent },
-  { path: 'whatsapp-sent-messages', component: WhatsappSentMessagesComponent },
-  { path: 'whatsapp-message-detail', component: WhatsAppMessageDetailComponent },
-  // { path: 'whatsapp-received-messages', component: WhatsappReceivedMessagesComponent },
   { path: 'send-emails', component: SendEmailsComponent },
   { path: 'sent-email', component: SentEmailComponent },
   { path: 'inbox-email', component: InboxEmailComponent },
   { path: 'historial-email', component: HistorialEmailComponent },
   { path: 'email-detail', component: EmailDetailComponent },
-  
+];
+
+export const dashboardRoutes: Routes = [
+  {
+    path: '',
+    component: DashboardLayoutComponent,
+    children: dashboardChildren,
+  },
 ];

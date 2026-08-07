@@ -1,0 +1,108 @@
+<section
+  class="inbox-summary"
+  aria-labelledby="inbox-summary-title"
+>
+  <header class="inbox-summary__header">
+    <h2
+      id="inbox-summary-title"
+      class="inbox-summary__title"
+    >
+      Resumen
+    </h2>
+
+    <div class="inbox-summary__highlight">
+      <div class="inbox-summary__unread">
+        <strong class="inbox-summary__unread-value">
+          {{ unreadCount }}
+        </strong>
+
+        <span class="inbox-summary__unread-label">
+          No leídas
+        </span>
+      </div>
+
+      <div
+  class="inbox-summary__illustration"
+  [class.inbox-summary__illustration--open]="
+    total > 0
+  "
+  [class.inbox-summary__illustration--closed]="
+    total === 0
+  "
+  aria-hidden="true"
+>
+        <!-- TAPA ABIERTA -->
+        <span
+          *ngIf="total > 0"
+          class="inbox-summary__open-flap"
+        ></span>
+
+        <!-- HOJA -->
+        <div
+          *ngIf="total > 0"
+          class="inbox-summary__paper"
+        ></div>
+
+        <!-- CUERPO DEL SOBRE -->
+        <div class="inbox-summary__envelope">
+          <!-- TAPA CERRADA -->
+          <span
+            *ngIf="total === 0"
+            class="inbox-summary__closed-flap"
+          ></span>
+
+          <span
+            class="
+              inbox-summary__envelope-fold
+              inbox-summary__envelope-fold--left
+            "
+          ></span>
+
+          <span
+            class="
+              inbox-summary__envelope-fold
+              inbox-summary__envelope-fold--right
+            "
+          ></span>
+
+          <span
+            class="
+              inbox-summary__envelope-fold
+              inbox-summary__envelope-fold--bottom
+            "
+          ></span>
+        </div>
+
+        <span class="inbox-summary__badge">
+          {{ unreadCount }}
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <div class="inbox-summary__list">
+    <article
+      *ngFor="
+        let item of summaryItems;
+        trackBy: trackByType
+      "
+      class="inbox-summary__item"
+      [attr.data-type]="item.type"
+    >
+      <div class="inbox-summary__item-main">
+        <span
+          class="inbox-summary__dot"
+          aria-hidden="true"
+        ></span>
+
+        <span class="inbox-summary__item-label">
+          {{ item.label }}
+        </span>
+      </div>
+
+      <strong class="inbox-summary__item-value">
+        {{ item.value }}
+      </strong>
+    </article>
+  </div>
+</section>

@@ -55,7 +55,9 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
     if (
       changes['selectedDayInfo'] ||
       changes['disabledDatesAndHours'] ||
-      changes['minAllowedHour']
+      changes['minAllowedHour'] ||
+      changes['userCity'] ||
+      changes['userClassification']
     ) {
       if (this.selectedDayInfo) {
         this.recalculateTimeSlots();
@@ -133,21 +135,26 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
   }
 
   private getDisabledHoursForDay(day: number, monthIndex: number): number[] {
-
     const monthData = this.disabledDatesAndHours[monthIndex.toString()] ?? [];
 
     const normalize = (v: any) =>
-      v ? v.toString().trim().toUpperCase() : null;
+      v === null || v === undefined ? null : v.toString().trim().toUpperCase();
 
     const userClass = normalize(this.userClassification);
     const userCity = normalize(this.userCity);
 
     const applicableRules = monthData.filter((rule: any) => {
-
+      if (!rule) return false;
       if (Number(rule.day) !== Number(day)) return false;
+
+      const hours = Array.isArray(rule.hours) ? rule.hours : [];
+
+      // hours: [] significa bloqueo completo, no bloqueo visual de horas.
+      if (hours.length === 0) return false;
 
       const ruleClass = normalize(rule.studentClassification);
       const ruleCity = normalize(rule.city);
+      const ruleMode = normalize(rule.mode);
 
       const classMatch =
         ruleClass === null || ruleClass === userClass;
@@ -155,12 +162,20 @@ export class MeetingTimeSlotsComponent implements OnInit, OnChanges {
       const cityMatch =
         ruleCity === null || ruleCity === userCity;
 
-      // 🔴 SOLO bloquear horas globales
-      return classMatch && cityMatch && rule.mode === null;
+      /**
+       * CLAVE:
+       * El hijo solo bloquea visualmente horas cuando la regla aplica
+       * a todos los modos.
+       *
+       * Si ruleMode es ONLINE o PRESENCIAL, eso se valida luego
+       * en el padre cuando el usuario selecciona el modo.
+       */
+      const modeIsGlobal = ruleMode === null;
 
+      return classMatch && cityMatch && modeIsGlobal;
     });
 
-    const hours = applicableRules.flatMap(rule => rule.hours ?? []);
+    const hours = applicableRules.flatMap((rule: any) => rule.hours ?? []);
 
     return Array.from(new Set(hours));
   }

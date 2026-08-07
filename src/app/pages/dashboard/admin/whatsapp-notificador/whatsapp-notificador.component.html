@@ -1,0 +1,451 @@
+<section class="wa-notificador">
+  <header class="wa-notificador__hero">
+    <div class="wa-notificador__hero-icon" aria-hidden="true">
+      <i class="fa-brands fa-whatsapp"></i>
+    </div>
+    <div class="wa-notificador__hero-text">
+      <h1>Envío por WhatsApp</h1>
+      <p>
+        Mensajes por plantilla a estudiantes. Máximo {{ maxPhonesPerSend }} destinatarios por envío
+        y 10 mensajes por campaña.
+      </p>
+    </div>
+    <a
+      routerLink="/dashboard/admin/whatsapp-campaigns"
+      class="wa-btn wa-btn--outline wa-notificador__hero-link"
+    >
+      <i class="fas fa-clock-rotate-left" aria-hidden="true"></i>
+      Historial
+    </a>
+  </header>
+
+  <div *ngIf="resumedCampaign" class="wa-alert wa-alert--info wa-notificador__resume">
+    <i class="fas fa-layer-group" aria-hidden="true"></i>
+    <span>
+      Continuando campaña existente
+      <code class="wa-notificador__batch-id">{{ batchId | slice:0:8 }}…</code>
+      — los nuevos envíos se suman a este lote.
+    </span>
+  </div>
+
+  <aside class="wa-help" aria-labelledby="wa-help-title">
+    <button
+      type="button"
+      class="wa-help__toggle"
+      (click)="toggleHelp()"
+      [attr.aria-expanded]="helpExpanded"
+      aria-controls="wa-help-content"
+    >
+      <span class="wa-help__toggle-left">
+        <i class="fas fa-circle-question" aria-hidden="true"></i>
+        <span id="wa-help-title">Cómo usar este formulario</span>
+      </span>
+      <i
+        class="fas fa-chevron-down wa-help__chevron"
+        [class.wa-help__chevron--open]="helpExpanded"
+        aria-hidden="true"
+      ></i>
+    </button>
+
+    <div
+      id="wa-help-content"
+      class="wa-help__content"
+      *ngIf="helpExpanded"
+    >
+      <ol class="wa-help__steps">
+        <li>
+          <strong>Elige destinatarios</strong>
+          <p>
+            Busca por nombre (mínimo 2 letras). Solo aparecen estudiantes con teléfono válido en su
+            perfil. Puedes seleccionar hasta {{ maxPhonesPerSend }} por envío.
+          </p>
+        </li>
+        <li>
+          <strong>Redacta el mensaje</strong>
+          <p>
+            Escribe el texto o elige una plantilla guardada. Con un solo destinatario puedes
+            personalizar el nombre que verá en la plantilla (variable «contact»).
+          </p>
+        </li>
+        <li>
+          <strong>Valida y envía</strong>
+          <p>
+            Pulsa <em>Validar números</em> y revisa el resultado. Si todo es correcto, usa
+            <em>Enviar mensajes</em>. El progreso y el detalle por teléfono aparecen más abajo.
+          </p>
+        </li>
+      </ol>
+
+      <ul class="wa-help__tips">
+        <li>
+          <i class="fas fa-mobile-screen" aria-hidden="true"></i>
+          Los números se toman del perfil del estudiante y se normalizan al formato internacional
+          (Ecuador +593).
+        </li>
+        <li>
+          <i class="fas fa-layer-group" aria-hidden="true"></i>
+          Cada campaña permite hasta <strong>10 mensajes</strong> en total; el contador se muestra
+          arriba cuando hay envíos activos.
+        </li>
+        <li>
+          <i class="fas fa-clock" aria-hidden="true"></i>
+          Si hay cooldown, espera el tiempo indicado antes de volver a enviar.
+        </li>
+        <li>
+          <i class="fas fa-redo" aria-hidden="true"></i>
+          Usa <strong>Nueva campaña</strong> para limpiar destinatarios y mensaje y empezar otro
+          lote (genera un nuevo identificador de campaña).
+        </li>
+        <li>
+          <i class="fas fa-ban" aria-hidden="true"></i>
+          Si un envío falla, <strong>no se reintenta solo</strong>: revisa el error y pulsa Enviar
+          de nuevo solo si quieres reintentar.
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <div class="wa-notificador__alerts" *ngIf="gateStatus || cooldownLabel || loadingStatus">
+    <div
+      *ngIf="gateStatus && gateStatus.remainingInBatch != null"
+      class="wa-alert wa-alert--info"
+    >
+      <i class="fas fa-layer-group" aria-hidden="true"></i>
+      <span>
+        Campaña: <strong>{{ gateStatus.sentInBatch ?? 0 }}</strong> enviados ·
+        <strong>{{ gateStatus.remainingInBatch }}</strong> restantes
+      </span>
+    </div>
+
+    <div *ngIf="cooldownLabel" class="wa-alert wa-alert--warn" role="status">
+      <i class="fas fa-clock" aria-hidden="true"></i>
+      <span>Cooldown activo · disponible en ~{{ cooldownLabel }}</span>
+    </div>
+
+    <div *ngIf="loadingStatus" class="wa-alert wa-alert--muted">
+      <i class="fas fa-sync fa-spin" aria-hidden="true"></i>
+      <span>Actualizando estado…</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="wa-alert wa-alert--error" role="alert">
+    <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+    <span>{{ error }}</span>
+  </div>
+
+  <form class="wa-notificador__form" (ngSubmit)="$event.preventDefault()">
+    <!-- Paso 1: Destinatarios -->
+    <article class="wa-card">
+      <header class="wa-card__head">
+        <span class="wa-card__step">1</span>
+        <div>
+          <h2 class="wa-card__title">Destinatarios</h2>
+          <p class="wa-card__desc">Busca estudiantes con teléfono registrado en su perfil.</p>
+        </div>
+      </header>
+
+      <div class="wa-card__body wa-card__body--flush">
+        <app-user-selector
+          role="student"
+          theme="modern"
+          [maxSelectable]="maxPhonesPerSend"
+          [requireValidPhone]="true"
+          [preloadStudentsOnFocus]="true"
+          [resetTrigger]="selectorResetTrigger"
+          (usersSelected)="onStudentsSelected($event)"
+        ></app-user-selector>
+      </div>
+    </article>
+
+    <!-- Paso 2: Mensaje -->
+    <article class="wa-card">
+      <header class="wa-card__head">
+        <span class="wa-card__step">2</span>
+        <div>
+          <h2 class="wa-card__title">Mensaje</h2>
+          <p class="wa-card__desc">Texto que recibirán en la plantilla de WhatsApp.</p>
+        </div>
+      </header>
+
+      <div class="wa-card__body">
+        <label *ngIf="showSingleContactField" class="wa-field">
+          <span class="wa-field__label">Nombre en la plantilla</span>
+          <span class="wa-field__hint">Variable «contact» — solo con un destinatario</span>
+          <input
+            type="text"
+            class="wa-input"
+            [(ngModel)]="contact"
+            name="contact"
+            placeholder="Ej. María Pérez"
+            autocomplete="name"
+          />
+        </label>
+
+        <div class="wa-templates">
+          <div class="wa-field">
+            <span class="wa-field__label">
+              <i class="fas fa-file-alt" aria-hidden="true"></i>
+              Plantilla guardada
+            </span>
+            <select
+              class="wa-select"
+              [(ngModel)]="selectedTemplateId"
+              (ngModelChange)="onTemplateSelect($event)"
+              name="templateSelect"
+              [disabled]="loadingTemplates"
+            >
+              <option [ngValue]="null">Escribir mensaje manualmente</option>
+              <option *ngFor="let t of templates" [ngValue]="t.id">{{ t.name }}</option>
+            </select>
+          </div>
+
+          <div class="wa-templates__actions">
+            <button type="button" class="wa-btn wa-btn--soft" (click)="openSaveTemplateForm()">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              Nueva plantilla
+            </button>
+            <button
+              type="button"
+              class="wa-btn wa-btn--soft"
+              [disabled]="!selectedTemplate || savingTemplate"
+              (click)="updateSelectedTemplate()"
+            >
+              <i class="fas fa-save" aria-hidden="true"></i>
+              Actualizar
+            </button>
+            <button
+              type="button"
+              class="wa-btn wa-btn--soft wa-btn--danger"
+              [disabled]="!selectedTemplate || savingTemplate"
+              (click)="deleteSelectedTemplate()"
+            >
+              <i class="fas fa-trash-alt" aria-hidden="true"></i>
+              Eliminar
+            </button>
+          </div>
+
+          <div *ngIf="showSaveTemplateForm" class="wa-templates__new">
+            <label class="wa-field">
+              <span class="wa-field__label">Nombre de la plantilla</span>
+              <input
+                type="text"
+                class="wa-input"
+                [(ngModel)]="newTemplateName"
+                name="newTemplateName"
+                placeholder="Ej. Clase confirmada"
+              />
+            </label>
+            <div class="wa-templates__actions">
+              <button
+                type="button"
+                class="wa-btn wa-btn--primary wa-btn--sm"
+                [disabled]="savingTemplate"
+                (click)="saveNewTemplate()"
+              >
+                {{ savingTemplate ? 'Guardando…' : 'Guardar plantilla' }}
+              </button>
+              <button type="button" class="wa-btn wa-btn--ghost wa-btn--sm" (click)="cancelSaveTemplateForm()">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <label class="wa-field">
+          <span class="wa-field__label">Contenido del mensaje</span>
+          <textarea
+            class="wa-textarea"
+            [(ngModel)]="contentMessage"
+            name="contentMessage"
+            rows="5"
+            placeholder="Ej. Tu clase de nivelación está confirmada para el martes a las 10:00. Te esperamos en recepción."
+            (ngModelChange)="onContentMessageChange()"
+          ></textarea>
+          <span class="wa-field__meta">{{ contentMessage.length }} caracteres</span>
+        </label>
+      </div>
+    </article>
+
+    <!-- Paso 3: Enviar -->
+    <article class="wa-card wa-card--actions">
+      <header class="wa-card__head">
+        <span class="wa-card__step">3</span>
+        <div>
+          <h2 class="wa-card__title">Enviar</h2>
+          <p class="wa-card__desc">Valida los números y encola el envío.</p>
+        </div>
+      </header>
+
+      <div class="wa-card__body">
+        <div class="wa-action-bar">
+          <button
+            type="button"
+            class="wa-btn wa-btn--outline"
+            [disabled]="!canValidate"
+            (click)="onValidate()"
+          >
+            <i class="fas fa-check-double" aria-hidden="true"></i>
+            {{ validating ? 'Validando…' : 'Validar números' }}
+          </button>
+          <button
+            type="button"
+            class="wa-btn wa-btn--whatsapp"
+            [disabled]="!canSend"
+            (click)="onSend()"
+          >
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            {{ sending ? 'Enviando…' : 'Enviar mensajes' }}
+          </button>
+          <button
+            type="button"
+            class="wa-btn wa-btn--ghost"
+            [disabled]="jobInProgress || sending"
+            (click)="onNewCampaign()"
+          >
+            <i class="fas fa-redo" aria-hidden="true"></i>
+            Nueva campaña
+          </button>
+        </div>
+
+        <p class="wa-action-hint" *ngIf="!validation?.allValid && selectedRecipients.length">
+          <i class="fas fa-info-circle" aria-hidden="true"></i>
+          Debes validar los números antes de enviar.
+        </p>
+
+        <p class="wa-action-hint wa-action-hint--warn" *ngIf="error && !sending">
+          <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+          {{ error }}
+        </p>
+      </div>
+    </article>
+  </form>
+
+  <section *ngIf="validation" class="wa-panel">
+    <h3 class="wa-panel__title">
+      <i class="fas fa-list-check" aria-hidden="true"></i>
+      Resultado de validación
+    </h3>
+    <p
+      class="wa-panel__summary"
+      [class.wa-panel__summary--ok]="validation.allValid"
+      [class.wa-panel__summary--bad]="!validation.allValid"
+    >
+      {{ validation.allValid ? 'Todos los números son válidos.' : 'Revisa los números marcados como inválidos.' }}
+    </p>
+    <div class="wa-table-wrap">
+      <table class="wa-table">
+        <thead>
+          <tr>
+            <th>Teléfono</th>
+            <th>Estado</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of validation.results; trackBy: trackByPhone">
+            <td class="wa-table__mono">{{ row.phone }}</td>
+            <td>
+              <span class="wa-badge" [class.wa-badge--ok]="row.valid" [class.wa-badge--bad]="!row.valid">
+                {{ row.valid ? 'Válido' : 'Inválido' }}
+              </span>
+            </td>
+            <td>{{ row.valid ? row.normalizedDisplay : row.reason }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section
+    *ngIf="sending || jobInProgress || sendResults.length || (currentJob && currentJob.completed)"
+    class="wa-panel wa-panel--status"
+  >
+    <h3 class="wa-panel__title">
+      <i class="fas fa-paper-plane" aria-hidden="true"></i>
+      Estado del envío
+    </h3>
+
+    <p *ngIf="lastEnqueue" class="wa-panel__meta">
+      Plantilla proveedor {{ lastEnqueue.templateId }}
+      <span *ngIf="lastEnqueue.jobId"> · Job {{ lastEnqueue.jobId }}</span>
+    </p>
+
+    <div *ngIf="bulkSendInProgress || (jobInProgress && !bulkSendInProgress)" class="wa-progress">
+      <div class="wa-progress__track">
+        <div class="wa-progress__bar" [style.width.%]="progressPercent"></div>
+      </div>
+      <p class="wa-progress__label" *ngIf="bulkSendInProgress">
+        Enviando destinatario {{ sendProgressIndex }} de {{ sendProgressTotal }}…
+      </p>
+      <p class="wa-progress__label" *ngIf="jobInProgress && !bulkSendInProgress">
+        Procesando {{ currentJob?.sentCount ?? 0 }} de {{ currentJob?.totalCount ?? 0 }}
+        ({{ statusLabel[currentJob!.status] }})
+      </p>
+    </div>
+
+    <div
+      *ngIf="currentJob?.completed || (sendResults.length > 0 && !sending)"
+      class="wa-panel__result"
+    >
+      <span
+        class="wa-badge wa-badge--lg"
+        [class.wa-badge--ok]="currentJobOutcome === 'success'"
+        [class.wa-badge--warn]="currentJobOutcome === 'partial'"
+        [class.wa-badge--bad]="currentJobOutcome === 'failed'"
+      >
+        {{ outcomeLabel[currentJobOutcome!] }}
+      </span>
+      <span class="wa-panel__counts">
+        {{ aggregatedSentCount }} enviados · {{ aggregatedFailedCount }} fallidos
+      </span>
+      <p *ngIf="currentJob!.errorMessage" class="wa-panel__error-msg">
+        {{ currentJob!.errorMessage }}
+      </p>
+    </div>
+
+    <div *ngIf="displaySendResults.length" class="wa-table-wrap">
+      <table class="wa-table">
+        <thead>
+          <tr>
+            <th *ngIf="sendResults.length">Estudiante</th>
+            <th>Teléfono</th>
+            <th>Estado</th>
+            <th>Motivo / detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let row of displaySendResults; trackBy: trackBySendResult"
+            [class.wa-table__row--failed]="row.status === 'failed'"
+          >
+            <td *ngIf="sendResults.length">{{ row.recipientName || '—' }}</td>
+            <td class="wa-table__mono">{{ row.phone }}</td>
+            <td>
+              <span
+                class="wa-badge"
+                [class.wa-badge--ok]="row.status === 'sent'"
+                [class.wa-badge--bad]="row.status === 'failed'"
+              >
+                {{ resultStatusLabel(row.status) }}
+              </span>
+            </td>
+            <td
+              class="wa-table__detail"
+              [class.wa-table__detail--error]="row.status === 'failed'"
+            >
+              {{ getResultDetail(row) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  (close)="modal.close()"
+/>

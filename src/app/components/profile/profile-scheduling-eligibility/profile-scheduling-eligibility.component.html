@@ -1,0 +1,187 @@
+<section
+  class="scheduling-eligibility-card"
+  aria-labelledby="scheduling-eligibility-title"
+>
+  <header class="scheduling-eligibility-card__header">
+    <span
+      class="scheduling-eligibility-card__header-icon"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <rect
+          x="3"
+          y="5"
+          width="18"
+          height="16"
+          rx="2"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M8 3v4M16 3v4M3 10h18"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M8 14h3M13 14h3M8 17h3"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+
+    <h2
+      id="scheduling-eligibility-title"
+      class="scheduling-eligibility-card__title"
+    >
+      Elegibilidad de programación
+    </h2>
+  </header>
+
+  <div class="scheduling-eligibility-card__content">
+    <div
+      class="scheduling-eligibility-card__status"
+      [class.scheduling-eligibility-card__status--allowed]="
+        statusType === 'allowed'
+      "
+      [class.scheduling-eligibility-card__status--blocked]="
+        statusType === 'blocked'
+      "
+      [class.scheduling-eligibility-card__status--informative]="
+        statusType === 'informative'
+      "
+    >
+      <span
+        class="scheduling-eligibility-card__status-icon"
+        aria-hidden="true"
+      >
+        <ng-container [ngSwitch]="statusType">
+
+          <!-- PERMITIDO -->
+          <svg
+            *ngSwitchCase="'allowed'"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m6 12 4 4 8-8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <!-- BLOQUEADO -->
+          <svg
+            *ngSwitchCase="'blocked'"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M8 8l8 8M16 8l-8 8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <!-- INFORMATIVO -->
+          <svg
+            *ngSwitchDefault
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M12 11v5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M12 8h.01"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        </ng-container>
+      </span>
+
+      <div class="scheduling-eligibility-card__status-content">
+        <strong class="scheduling-eligibility-card__status-text">
+          {{ eligibilityMessage }}
+        </strong>
+
+        <p class="scheduling-eligibility-card__status-description">
+          {{ eligibilityDescription }}
+        </p>
+      </div>
+    </div>
+
+    <div class="scheduling-eligibility-card__details">
+      <div class="scheduling-eligibility-card__detail">
+        <span class="scheduling-eligibility-card__detail-label">
+          Etapa máxima de agendamiento
+        </span>
+
+        <strong
+          class="scheduling-eligibility-card__detail-value"
+          [class.scheduling-eligibility-card__detail-value--not-applicable]="
+            !isStudent
+          "
+        >
+          {{ maxSchedulingStage }}
+        </strong>
+      </div>
+
+      <div class="scheduling-eligibility-card__detail">
+        <span class="scheduling-eligibility-card__detail-label">
+          Número de etapa actual
+        </span>
+
+        <strong
+          class="scheduling-eligibility-card__detail-value"
+          [class.scheduling-eligibility-card__detail-value--not-applicable]="
+            !isStudent
+          "
+        >
+          {{ currentStageNumber }}
+        </strong>
+      </div>
+
+      <div
+        class="
+          scheduling-eligibility-card__detail
+          scheduling-eligibility-card__detail--reason
+        "
+        *ngIf="schedulingBlockReason"
+      >
+        <span class="scheduling-eligibility-card__detail-label">
+          Razón del bloqueo
+        </span>
+
+        <strong class="scheduling-eligibility-card__detail-value">
+          {{ schedulingBlockReason }}
+        </strong>
+      </div>
+    </div>
+  </div>
+</section>
