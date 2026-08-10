@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment';
 import {
   ApplyWritingScoreResult,
   PlatformAssessmentAssignment,
+  RemotePlatformAssessmentFilters,
+  RemotePlatformAssessmentListResponse,
 } from './dtos/platform-assessment.dto';
 
 @Injectable({
@@ -20,6 +22,41 @@ export class PlatformAssessmentService {
     return this.http.get<PlatformAssessmentAssignment[]>(this.apiUrl, {
       params,
     });
+  }
+
+  /**
+   * Admin: live list from Assessments via alce-api S2S proxy.
+   * Browser never talks to Assessments directly.
+   */
+  getRemote(
+    filters: RemotePlatformAssessmentFilters = {},
+  ): Observable<RemotePlatformAssessmentListResponse> {
+    let params = new HttpParams();
+    const entries: Array<[string, string | number | undefined | null]> = [
+      ['page', filters.page],
+      ['limit', filters.limit],
+      ['studentId', filters.studentId],
+      ['externalStudentId', filters.externalStudentId],
+      ['status', filters.status],
+      ['templateId', filters.templateId],
+      ['templateTitle', filters.templateTitle],
+      ['studentStage', filters.studentStage],
+      ['outcome', filters.outcome],
+      ['assignedFrom', filters.assignedFrom],
+      ['assignedTo', filters.assignedTo],
+      ['completedFrom', filters.completedFrom],
+      ['completedTo', filters.completedTo],
+    ];
+
+    for (const [key, value] of entries) {
+      if (value === undefined || value === null || value === '') continue;
+      params = params.set(key, String(value));
+    }
+
+    return this.http.get<RemotePlatformAssessmentListResponse>(
+      `${this.apiUrl}/remote`,
+      { params },
+    );
   }
 
   /** Admin: create/overwrite Writing score from S2S platform result points. */

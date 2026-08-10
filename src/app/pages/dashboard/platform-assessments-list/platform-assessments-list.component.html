@@ -1,0 +1,171 @@
+<h2 class="title stage">Exámenes plataforma</h2>
+
+<section class="platform-list-section">
+  <div class="filters-toggle-wrapper">
+    <button type="button" class="filters-btn" (click)="toggleFilters()">
+      <i class="fas fa-filter"></i>
+      {{ showFilters ? 'Ocultar filtros' : 'Mostrar filtros' }}
+    </button>
+  </div>
+
+  <div class="filters-container" *ngIf="showFilters">
+    <div class="filters-grid">
+      <div class="filter-item">
+        <label class="filter-label">Student ID</label>
+        <input
+          class="filter-input"
+          type="number"
+          [(ngModel)]="draft.studentId"
+          placeholder="students.id"
+        />
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Título template</label>
+        <input
+          class="filter-input"
+          type="text"
+          [(ngModel)]="draft.templateTitle"
+          placeholder="Contiene..."
+        />
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Stage</label>
+        <input
+          class="filter-input"
+          type="number"
+          min="1"
+          max="19"
+          [(ngModel)]="draft.studentStage"
+          placeholder="1–19"
+        />
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Estado assignment</label>
+        <select class="filter-select" [(ngModel)]="draft.status">
+          <option *ngFor="let s of statusOptions" [ngValue]="s">
+            {{ s || 'Todos' }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Resultado</label>
+        <select class="filter-select" [(ngModel)]="draft.outcome">
+          <option *ngFor="let o of outcomeOptions" [ngValue]="o">
+            {{ o || 'Todos' }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filters-actions">
+      <button type="button" class="btn-apply" (click)="applyFilters()">
+        Aplicar filtros
+      </button>
+      <button type="button" class="btn-clear" (click)="clearFilters()">
+        Limpiar
+      </button>
+    </div>
+  </div>
+
+  <p class="error-banner" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="content-wrapper">
+    <div class="table-meta" *ngIf="!loading">
+      {{ total }} resultado(s) · página {{ page }} / {{ totalPages }}
+    </div>
+
+    <div class="table-scroll">
+      <table class="platform-table">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Template</th>
+            <th>Stage</th>
+            <th>Status</th>
+            <th>Resultado</th>
+            <th>Puntos</th>
+            <th>Asignado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="loading">
+            <td colspan="8" class="empty">Cargando...</td>
+          </tr>
+          <tr *ngIf="!loading && rows.length === 0">
+            <td colspan="8" class="empty">Sin assignments</td>
+          </tr>
+          <tr *ngFor="let row of rows">
+            <td>
+              <div class="cell-main">{{ displayStudent(row) }}</div>
+              <div class="cell-sub">ID {{ row.studentId ?? row.externalStudentId }}</div>
+            </td>
+            <td>
+              <div class="cell-main">{{ row.templateTitle }}</div>
+              <div class="cell-sub">{{ row.assignmentId }}</div>
+            </td>
+            <td>{{ row.studentStageSnapshot ?? '—' }}</td>
+            <td><span class="badge badge-blue">{{ row.status }}</span></td>
+            <td>
+              <span class="badge" [ngClass]="outcomeClass(row.outcome)">
+                {{ row.outcome || 'NONE' }}
+              </span>
+            </td>
+            <td>{{ row.points != null ? row.points : '—' }}</td>
+            <td>{{ row.assignedAt | date: 'short' }}</td>
+            <td class="actions">
+              <button
+                type="button"
+                class="btn-link"
+                *ngIf="row.directAccessUrl"
+                (click)="openUrl(row.directAccessUrl)"
+              >
+                Abrir
+              </button>
+              <button
+                type="button"
+                class="btn-link"
+                *ngIf="row.resultsUrl"
+                (click)="openUrl(row.resultsUrl)"
+              >
+                Resultados
+              </button>
+              <button
+                type="button"
+                class="btn-writing"
+                *ngIf="canApplyWriting(row)"
+                (click)="startApplyWriting(row)"
+              >
+                Aplicar Writing
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pager" *ngIf="totalPages > 1">
+      <button type="button" class="btn-clear" [disabled]="page <= 1" (click)="goToPage(page - 1)">
+        Anterior
+      </button>
+      <button type="button" class="btn-clear" [disabled]="page >= totalPages" (click)="goToPage(page + 1)">
+        Siguiente
+      </button>
+    </div>
+  </div>
+</section>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>

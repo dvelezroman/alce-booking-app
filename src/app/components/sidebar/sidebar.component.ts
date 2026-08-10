@@ -98,6 +98,7 @@ navItems: SidebarNavItem[] = [
   { icon: 'test', text: 'Evaluar Estudiante', route: '/dashboard/assessment', roles: [UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Asignar Evaluación', route: '/dashboard/stage-assessment', roles: [UserRole.ADMIN] },
   { icon: 'test', text: 'Evaluaciones Asignadas', route: '/dashboard/stage-assessment-list', roles: [UserRole.ADMIN] },
+  { icon: 'assessment', text: 'Exámenes plataforma', route: '/dashboard/platform-assessments-list', roles: [UserRole.ADMIN] },
   { icon: 'test', text: 'Clases Evaluadas', route: '/dashboard/meeting-evaluations', roles: [UserRole.ADMIN],  },
   { icon: 'test', text: 'Estadísticas', route: '/dashboard/evaluation-statistics', roles: [UserRole.ADMIN],  },
   { icon: 'test', text: 'Evaluaciones', route: '/dashboard/assessment-reports', roles: [UserRole.ADMIN] },
@@ -226,6 +227,7 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/processed-events'),
         this.findNavItemByRoute('/dashboard/stage-assessment'),
         this.findNavItemByRoute('/dashboard/stage-assessment-list'),
+        this.findNavItemByRoute('/dashboard/platform-assessments-list'),
       ].filter(item => item.roles.includes(role))
     },
     {
