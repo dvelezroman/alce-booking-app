@@ -330,12 +330,6 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 
-  openAssessmentResults(): void {
-    const url = this.assessmentResultsMessage?.resultsUrl?.trim();
-    if (!url) return;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }
-
   get placementExamSubtypeLabel(): string | null {
     if (!this.isPlacementExamNotification || !this.requestLead) return null;
     const lead = this.requestLead;

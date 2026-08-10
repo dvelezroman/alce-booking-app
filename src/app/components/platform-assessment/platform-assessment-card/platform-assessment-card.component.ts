@@ -19,13 +19,6 @@ export class PlatformAssessmentCardComponent {
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 
-  openResults(): void {
-    if (this.assessment.status !== 'completed') return;
-    const url = this.assessment.resultsUrl;
-    if (!url) return;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }
-
   get statusLabel(): string {
     switch (this.assessment.status) {
       case 'pending':
@@ -48,9 +41,11 @@ export class PlatformAssessmentCardComponent {
       case 'expired':
         return 'Evaluación expirada';
       case 'completed':
-        return this.assessment.resultsUrl
-          ? 'Ver resultado'
-          : 'Evaluación completada';
+        return this.assessment.outcome === 'PASSED'
+          ? 'Aprobado'
+          : this.assessment.outcome === 'FAILED'
+            ? 'No aprobado'
+            : 'Completada';
     }
   }
 
@@ -58,17 +53,13 @@ export class PlatformAssessmentCardComponent {
     if (this.assessment.status === 'pending') {
       return !!this.assessment.directAccessUrl;
     }
-    if (this.assessment.status === 'completed') {
-      return !!this.assessment.resultsUrl;
-    }
+    // Completed: no action that reveals score.
     return false;
   }
 
   onAction(): void {
     if (this.assessment.status === 'pending') {
       this.openAssessment();
-    } else if (this.assessment.status === 'completed') {
-      this.openResults();
     }
   }
 }
