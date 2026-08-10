@@ -115,7 +115,7 @@ export class PendingPlatformAssessmentCardComponent
   stageLabel(assessment: PlatformAssessmentAssignment): string {
     return assessment.studentStage != null
       ? `Stage ${assessment.studentStage}`
-      : 'Stage por confirmar';
+      : 'Stage —';
   }
 
   expiresLabel(expiresAt: string | null): string {

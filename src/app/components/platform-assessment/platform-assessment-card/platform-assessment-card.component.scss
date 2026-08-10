@@ -96,19 +96,28 @@
 .bottom-row {
   margin-top: 0.85rem;
   display: flex;
+  align-items: center;
   justify-content: flex-end;
 }
 
-.btn-open {
+.actions {
+  margin-top: 0;
+  display: flex;
+  justify-content: flex-end;
   width: 100%;
-  border: none;
-  border-radius: 999px;
-  padding: 0.55rem 1rem;
-  font-size: 0.85rem;
+}
+
+.btn-open {
+  background: #28336f;
+  color: white;
+  padding: 0.45rem 0.95rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
   font-weight: 600;
+  border: none;
   cursor: pointer;
-  background: #2563eb;
-  color: #fff;
+  transition: all 0.2s ease;
+  width: 100%;
 
   &:disabled {
     cursor: not-allowed;
@@ -116,27 +125,23 @@
   }
 
   &.expired-btn {
-    background: #f59e0b;
-    color: #fff;
+    background: rgba(212, 175, 55, 0.15);
+    color: #b88900;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    box-shadow: none;
   }
 
   &.completed-btn {
-    background: #059669;
-    color: #fff;
-
-    &:not(:disabled) {
-      cursor: pointer;
-      opacity: 1;
-    }
+    background: rgba(5, 150, 105, 0.12);
+    color: #059669;
+    border: 1px solid rgba(5, 150, 105, 0.35);
+    box-shadow: none;
   }
 
   &.failed-btn {
-    background: #dc2626;
-    color: #fff;
-
-    &:not(:disabled) {
-      cursor: pointer;
-      opacity: 1;
-    }
+    background: rgba(220, 38, 38, 0.12);
+    color: #dc2626;
+    border: 1px solid rgba(220, 38, 38, 0.35);
+    box-shadow: none;
   }
 }

@@ -31,12 +31,13 @@
     <select class="select" [(ngModel)]="selectedTemplateId" [disabled]="templatesLoading">
       <option value="">{{ templatesLoading ? 'Cargando…' : 'Seleccionar template' }}</option>
       <option *ngFor="let t of templates" [value]="t.id">
-        {{ t.title }} ({{ t.timeLimitMinutes }} min · pass {{ t.passingScorePercent }}%)
+        {{ t.title }} (Stage {{ t.targetStage }} · {{ t.timeLimitMinutes }} min · aprobar {{ t.passingScorePercent }}%)
       </option>
     </select>
     <p class="meta" *ngIf="selectedTemplate as t">
-      Stages: {{ t.stages.length ? t.stages.join(', ') : '—' }} ·
-      {{ t.resultReleasePolicy }}
+      Stage canónico: {{ t.targetStage }}
+      <span *ngIf="t.stages.length"> · Rules: {{ t.stages.join(', ') }}</span>
+      · {{ t.resultReleasePolicy }}
     </p>
   </div>
 

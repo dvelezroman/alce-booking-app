@@ -33,10 +33,16 @@
       <strong>Resultado el:</strong>
       {{ assessment.completedAt | date: 'medium' }}
     </p>
-    <p *ngIf="assessment.studentStage != null">
+    <p *ngIf="assessment.studentStage != null; else stageMissing">
       <strong>Stage:</strong>
       Stage {{ assessment.studentStage }}
     </p>
+    <ng-template #stageMissing>
+      <p>
+        <strong>Stage:</strong>
+        —
+      </p>
+    </ng-template>
     <p>
       <strong>Recurso:</strong>
       {{ assessment.templateTitle }}

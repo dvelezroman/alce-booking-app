@@ -89,6 +89,7 @@ export interface RemoteTemplateItem {
   passingScorePercent: number;
   isActive: boolean;
   resultReleasePolicy: string;
+  targetStage: number;
   stages: number[];
 }
 

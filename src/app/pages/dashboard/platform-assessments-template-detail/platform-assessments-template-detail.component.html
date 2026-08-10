@@ -22,8 +22,9 @@
     <p class="desc" *ngIf="t.description">{{ t.description }}</p>
     <div class="meta-row">
       <span>{{ t.timeLimitMinutes }} min</span>
-      <span>Pass {{ t.passingScorePercent }}%</span>
-      <span>Stages: {{ t.stages.length ? t.stages.join(', ') : '—' }}</span>
+      <span>Aprobar {{ t.passingScorePercent }}%</span>
+      <span>Stage {{ t.targetStage }}</span>
+      <span *ngIf="t.stages.length">Rules: {{ t.stages.join(', ') }}</span>
       <span>{{ t.resultReleasePolicy }}</span>
       <span class="badge" [class.on]="t.isActive" [class.off]="!t.isActive">
         {{ t.isActive ? 'Activo' : 'Inactivo' }}

@@ -43,9 +43,10 @@
       <thead>
         <tr>
           <th>Título</th>
-          <th>Stages</th>
+          <th>Stage</th>
+          <th>Rules</th>
           <th>Tiempo</th>
-          <th>Pass %</th>
+          <th>Aprobar %</th>
           <th>Release</th>
           <th>Estado</th>
           <th></th>
@@ -53,16 +54,17 @@
       </thead>
       <tbody>
         <tr *ngIf="loading">
-          <td colspan="7" class="empty">Cargando…</td>
+          <td colspan="8" class="empty">Cargando…</td>
         </tr>
         <tr *ngIf="!loading && rows.length === 0">
-          <td colspan="7" class="empty">Sin templates</td>
+          <td colspan="8" class="empty">Sin templates</td>
         </tr>
         <tr *ngFor="let row of rows">
           <td>
             <div class="cell-main">{{ row.title }}</div>
             <div class="cell-sub" *ngIf="row.description">{{ row.description }}</div>
           </td>
+          <td>{{ row.targetStage }}</td>
           <td>{{ row.stages.length ? row.stages.join(', ') : '—' }}</td>
           <td>{{ row.timeLimitMinutes }} min</td>
           <td>{{ row.passingScorePercent }}%</td>
