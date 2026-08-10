@@ -4,9 +4,12 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   ApplyWritingScoreResult,
+  AssignPlatformAssessmentsPayload,
+  AssignPlatformAssessmentsResult,
   PlatformAssessmentAssignment,
   RemotePlatformAssessmentFilters,
   RemotePlatformAssessmentListResponse,
+  RemoteTemplateListResponse,
 } from './dtos/platform-assessment.dto';
 
 @Injectable({
@@ -56,6 +59,43 @@ export class PlatformAssessmentService {
     return this.http.get<RemotePlatformAssessmentListResponse>(
       `${this.apiUrl}/remote`,
       { params },
+    );
+  }
+
+  /** Admin: list Assessments templates via alce-api S2S proxy. */
+  getTemplates(filters: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    stage?: number;
+    isActive?: boolean;
+  } = {}): Observable<RemoteTemplateListResponse> {
+    let params = new HttpParams();
+    const entries: Array<[string, string | number | boolean | undefined | null]> =
+      [
+        ['page', filters.page],
+        ['pageSize', filters.pageSize],
+        ['search', filters.search],
+        ['stage', filters.stage],
+        ['isActive', filters.isActive],
+      ];
+    for (const [key, value] of entries) {
+      if (value === undefined || value === null || value === '') continue;
+      params = params.set(key, String(value));
+    }
+    return this.http.get<RemoteTemplateListResponse>(`${this.apiUrl}/templates`, {
+      params,
+    });
+  }
+
+  /** Admin: batch-assign template to ALCE students. */
+  assignTemplate(
+    templateId: string,
+    payload: AssignPlatformAssessmentsPayload,
+  ): Observable<AssignPlatformAssessmentsResult> {
+    return this.http.post<AssignPlatformAssessmentsResult>(
+      `${this.apiUrl}/templates/${encodeURIComponent(templateId)}/assign`,
+      payload,
     );
   }
 

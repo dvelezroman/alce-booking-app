@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { PlatformAssessmentService } from '../../../services/platform-assessment.service';
 import {
   RemotePlatformAssessmentFilters,
@@ -12,7 +13,7 @@ import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto'
 @Component({
   selector: 'app-platform-assessments-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ModalComponent],
+  imports: [CommonModule, FormsModule, RouterLink, ModalComponent],
   templateUrl: './platform-assessments-list.component.html',
   styleUrls: ['./platform-assessments-list.component.scss'],
 })

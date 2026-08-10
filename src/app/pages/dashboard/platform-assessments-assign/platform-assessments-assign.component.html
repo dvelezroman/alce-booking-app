@@ -1,0 +1,128 @@
+<h2 class="title stage">Asignar examen plataforma</h2>
+
+<section class="assign-section">
+  <div class="toolbar">
+    <a routerLink="/dashboard/platform-assessments-list" class="back-link">
+      ← Volver al listado
+    </a>
+  </div>
+
+  <p class="hint">
+    Asigna un template de Assessments a estudiantes ALCE. Ellos reciben
+    notificación con enlace; no se muestran códigos de acceso aquí.
+  </p>
+
+  <p class="error-banner" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="card">
+    <h3>1. Template</h3>
+    <div class="row">
+      <input
+        class="input"
+        type="text"
+        [(ngModel)]="templateSearch"
+        placeholder="Buscar por título…"
+        (keyup.enter)="loadTemplates()"
+      />
+      <button type="button" class="btn-primary" (click)="loadTemplates()" [disabled]="templatesLoading">
+        Buscar
+      </button>
+    </div>
+    <select class="select" [(ngModel)]="selectedTemplateId" [disabled]="templatesLoading">
+      <option value="">{{ templatesLoading ? 'Cargando…' : 'Seleccionar template' }}</option>
+      <option *ngFor="let t of templates" [value]="t.id">
+        {{ t.title }} ({{ t.timeLimitMinutes }} min · pass {{ t.passingScorePercent }}%)
+      </option>
+    </select>
+    <p class="meta" *ngIf="selectedTemplate as t">
+      Stages: {{ t.stages.length ? t.stages.join(', ') : '—' }} ·
+      {{ t.resultReleasePolicy }}
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>2. Estudiantes</h3>
+    <div class="row">
+      <input
+        class="input"
+        type="text"
+        [(ngModel)]="idNumberSearch"
+        placeholder="Cédula / idNumber"
+        (keyup.enter)="addByIdNumber()"
+      />
+      <button type="button" class="btn-primary" (click)="addByIdNumber()">Agregar</button>
+    </div>
+    <div class="row">
+      <input
+        class="input"
+        type="number"
+        [(ngModel)]="studentIdSearch"
+        placeholder="students.id"
+        (keyup.enter)="addByStudentId()"
+      />
+      <button type="button" class="btn-primary" (click)="addByStudentId()">Agregar</button>
+    </div>
+
+    <ul class="selected-list" *ngIf="selected.length; else emptySelected">
+      <li *ngFor="let s of selected">
+        <span>
+          <strong>{{ s.name }}</strong>
+          · ID {{ s.studentId }}
+          <span *ngIf="s.stageNumber">· Stage {{ s.stageNumber }}</span>
+        </span>
+        <button type="button" class="btn-remove" (click)="removeStudent(s.studentId)">Quitar</button>
+      </li>
+    </ul>
+    <ng-template #emptySelected>
+      <p class="meta">Ningún estudiante seleccionado.</p>
+    </ng-template>
+  </div>
+
+  <div class="card">
+    <h3>3. Ventana</h3>
+    <div class="row fields">
+      <label>
+        Vence
+        <input class="input" type="datetime-local" [(ngModel)]="expiresLocal" />
+      </label>
+      <label>
+        Intentos máx.
+        <input class="input" type="number" min="1" [(ngModel)]="maxAttempts" />
+      </label>
+    </div>
+    <button
+      type="button"
+      class="btn-submit"
+      (click)="submit()"
+      [disabled]="submitting"
+    >
+      {{ submitting ? 'Asignando…' : 'Asignar examen' }}
+    </button>
+  </div>
+
+  <div class="card result" *ngIf="lastResult as r">
+    <h3>Resultado batch {{ r.batchId }}</h3>
+    <p class="meta">Creados: {{ r.created.length }} · Fallidos: {{ r.failed.length }}</p>
+    <ul *ngIf="r.created.length">
+      <li *ngFor="let c of r.created">
+        {{ c.studentName || ('ID ' + c.studentId) }} · {{ c.status }} · ***{{ c.accessCodeLast4 }}
+      </li>
+    </ul>
+    <ul class="failed" *ngIf="r.failed.length">
+      <li *ngFor="let f of r.failed">
+        {{ f.externalStudentId }}: {{ f.reason }}
+      </li>
+    </ul>
+  </div>
+</section>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>

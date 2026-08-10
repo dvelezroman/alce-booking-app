@@ -81,6 +81,56 @@ export interface RemotePlatformAssessmentItem {
   writingPoints: number | null;
 }
 
+export interface RemoteTemplateItem {
+  id: string;
+  title: string;
+  description: string | null;
+  timeLimitMinutes: number;
+  passingScorePercent: number;
+  isActive: boolean;
+  resultReleasePolicy: string;
+  stages: number[];
+}
+
+export interface RemoteTemplateListResponse {
+  data: RemoteTemplateItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface AssignPlatformStudentPayload {
+  studentId: number;
+  name?: string;
+  email?: string;
+  stageNumber?: string;
+}
+
+export interface AssignPlatformAssessmentsPayload {
+  students: AssignPlatformStudentPayload[];
+  expiresAt: string;
+  maxAttempts?: number;
+}
+
+export interface AssignPlatformAssessmentsResult {
+  batchId: string;
+  templateId: string;
+  shareUrl: string;
+  created: Array<{
+    assignmentId: string;
+    studentId: number;
+    studentName: string | null;
+    studentStage: number | null;
+    accessCodeLast4: string;
+    status: string;
+  }>;
+  failed: Array<{
+    studentId: number | null;
+    externalStudentId: string;
+    reason: string;
+  }>;
+}
+
 export interface RemotePlatformAssessmentListResponse {
   data: RemotePlatformAssessmentItem[];
   total: number;

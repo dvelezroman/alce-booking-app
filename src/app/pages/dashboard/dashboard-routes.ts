@@ -43,6 +43,7 @@ import { StageAssessmentResourcesComponent } from './stage-assessment-resources/
 import { StageAssessmentStudentComponent } from './stage-assessment-student/stage-assessment-student.component';
 import { PlatformAssessmentsStudentComponent } from './platform-assessments-student/platform-assessments-student.component';
 import { PlatformAssessmentsListComponent } from './platform-assessments-list/platform-assessments-list.component';
+import { PlatformAssessmentsAssignComponent } from './platform-assessments-assign/platform-assessments-assign.component';
 import { StageAssessmentListComponent } from './stage-assessment-list/stage-assessment-list.component';
 import { SuspensionHistoryComponent } from './suspension-history/suspension-history.component';
 import { InstructorEvaluationsComponent } from './instructor-evaluations/instructor-evaluations.component';
@@ -149,6 +150,7 @@ const dashboardChildren: Routes = [
   { path: 'stage-assessment-student', component: StageAssessmentStudentComponent },
   { path: 'platform-assessments', component: PlatformAssessmentsStudentComponent },
   { path: 'platform-assessments-list', component: PlatformAssessmentsListComponent },
+  { path: 'platform-assessments-assign', component: PlatformAssessmentsAssignComponent },
   { path: 'processed-events', component: ProcessedEventsComponent },
   { path: 'notifications-status', component: NotificationsStatusComponent },
   { path: 'notifications-groups', component: GroupsComponent },
