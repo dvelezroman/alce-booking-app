@@ -1,0 +1,91 @@
+<section class="assessment-section">
+  <header class="assessment-header">
+    <h3 class="assessment-header__title">Exámenes pendientes</h3>
+
+    <button
+      type="button"
+      class="assessment-header__view-all"
+      (click)="onViewAll()"
+    >
+      Ver todos
+    </button>
+  </header>
+
+  <ng-container *ngIf="hasAssessments; else emptyAssessments">
+    <div class="assessment-list">
+      <article
+        class="assessment-item"
+        *ngFor="let assessment of visibleAssessments; trackBy: trackById"
+        [class.assessment-item--urgent]="assessment.isUrgent"
+      >
+        <div class="assessment-information assessment-information--full">
+          <h4 class="assessment-information__title">
+            {{ assessment.templateTitle }}
+          </h4>
+
+          <p class="assessment-information__stage">
+            {{ stageLabel(assessment) }}
+          </p>
+
+          <div class="assessment-information__date">
+            <span>{{ expiresLabel(assessment.expiresAt) }}</span>
+          </div>
+
+          <span
+            class="assessment-countdown"
+            [class.assessment-countdown--urgent]="assessment.isUrgent"
+            *ngIf="assessment.timeFormatted"
+          >
+            Tiempo restante: {{ assessment.timeFormatted }}
+          </span>
+        </div>
+
+        <div class="assessment-action">
+          <button
+            type="button"
+            class="assessment-button"
+            [disabled]="!assessment.directAccessUrl"
+            (click)="onOpen(assessment)"
+          >
+            Abrir examen
+          </button>
+        </div>
+      </article>
+    </div>
+
+    <div class="assessment-banner">
+      <div class="assessment-banner__content">
+        <div class="assessment-banner__text">
+          <h4 class="assessment-banner__title">Completa tus exámenes</h4>
+          <p class="assessment-banner__description">
+            Abre el examen desde aquí o desde el hub de Exámenes.
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="assessment-banner__button"
+        (click)="onViewAll()"
+      >
+        Ir a exámenes
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-template #emptyAssessments>
+    <div class="assessment-empty">
+      <h4 class="assessment-empty__title">Sin exámenes pendientes</h4>
+      <p class="assessment-empty__description">
+        Cuando te asignen un examen de plataforma, aparecerá aquí.
+      </p>
+      <button
+        type="button"
+        class="assessment-empty__button"
+        (click)="onViewAll()"
+      >
+        Exámenes
+      </button>
+    </div>
+  </ng-template>
+</section>

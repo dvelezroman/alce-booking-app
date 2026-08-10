@@ -166,11 +166,81 @@
 
             <span class="shortcut-content">
               <span class="shortcut-title">
-                Evaluaciones
+                Tareas de etapa
               </span>
 
               <span class="shortcut-description">
-                Revisa tus evaluaciones académicas
+                Revisa tus tareas académicas
+              </span>
+            </span>
+
+            <span class="shortcut-arrow" aria-hidden="true">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
+
+          <div
+            class="shortcut-card shortcut-card--assessments"
+            (click)="goToPlatformAssessments()"
+          >
+           <span class="shortcut-icon shortcut-icon--assessments">
+            <svg
+              width="29"
+              height="29"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M9 4.5V3h6v1.5M8 9h8M8 13h5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="m14.5 16 1.4 1.4 2.6-3"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+            <span class="shortcut-content">
+              <span class="shortcut-title">
+                Exámenes
+                <span
+                  class="shortcut-badge"
+                  *ngIf="pendingPlatformAssessmentsCount > 0"
+                >
+                  {{ pendingPlatformAssessmentsCount }}
+                </span>
+              </span>
+
+              <span class="shortcut-description">
+                Exámenes de plataforma pendientes
               </span>
             </span>
 
@@ -326,6 +396,15 @@
             (viewAll)="goToAssessments()"
           >
           </app-pending-assessment-card>
+        </div>
+
+        <div class="dashboard-card">
+          <app-pending-platform-assessment-card
+            [assessments]="platformAssessments"
+            (openAssessment)="openPlatformAssessment($event)"
+            (viewAll)="goToPlatformAssessments()"
+          >
+          </app-pending-platform-assessment-card>
         </div>
 
       </section>
