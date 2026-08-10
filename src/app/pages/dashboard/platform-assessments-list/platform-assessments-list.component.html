@@ -134,13 +134,16 @@
               >
                 Resultados
               </button>
+              <span class="writing-status" *ngIf="row.writingApplied">
+                Writing ALCE: {{ row.writingPoints ?? '—' }}
+              </span>
               <button
                 type="button"
                 class="btn-writing"
-                *ngIf="canApplyWriting(row)"
+                *ngIf="canApplyWriting(row) || canCorrectWriting(row)"
                 (click)="startApplyWriting(row)"
               >
-                Aplicar Writing
+                {{ writingActionLabel(row) }}
               </button>
             </td>
           </tr>

@@ -20,6 +20,10 @@ export interface PlatformAssessmentAssignment {
   status: PlatformAssessmentStatus;
   /** Admin / instructor only. */
   points?: number | null;
+  /** Admin / instructor: Writing already linked (S2S auto or prior apply). */
+  writingApplied?: boolean;
+  writingAssessmentId?: number | null;
+  writingPoints?: number | null;
 }
 
 export interface ApplyWritingScoreResult {
@@ -72,6 +76,9 @@ export interface RemotePlatformAssessmentItem {
   points: number | null;
   completedAt: string | null;
   mirrorId: number | null;
+  writingApplied: boolean;
+  writingAssessmentId: number | null;
+  writingPoints: number | null;
 }
 
 export interface RemotePlatformAssessmentListResponse {

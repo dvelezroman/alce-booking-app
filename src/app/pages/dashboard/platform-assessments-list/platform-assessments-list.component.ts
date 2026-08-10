@@ -101,16 +101,37 @@ export class PlatformAssessmentsListComponent implements OnInit {
   }
 
   canApplyWriting(row: RemotePlatformAssessmentItem): boolean {
-    return row.mirrorId != null && row.points != null;
+    return (
+      row.mirrorId != null &&
+      row.points != null &&
+      !row.writingApplied
+    );
+  }
+
+  canCorrectWriting(row: RemotePlatformAssessmentItem): boolean {
+    return row.mirrorId != null && row.writingApplied === true;
+  }
+
+  writingActionLabel(row: RemotePlatformAssessmentItem): string {
+    return this.canCorrectWriting(row) ? 'Corregir Writing' : 'Aplicar Writing';
   }
 
   startApplyWriting(row: RemotePlatformAssessmentItem): void {
-    if (!this.canApplyWriting(row) || row.mirrorId == null) return;
+    if (
+      (!this.canApplyWriting(row) && !this.canCorrectWriting(row)) ||
+      row.mirrorId == null
+    ) {
+      return;
+    }
     this.applyTarget = row;
+    const correcting = this.canCorrectWriting(row);
+    const pts = row.points;
     this.modal = {
       ...modalInitializer(),
       show: true,
-      message: `¿Aplicar Writing con ${row.points} puntos para ${this.displayStudent(row)}?`,
+      message: correcting
+        ? `¿Corregir Writing a ${pts} puntos para ${this.displayStudent(row)}? (ya aplicado vía S2S/admin)`
+        : `¿Aplicar Writing con ${pts} puntos para ${this.displayStudent(row)}?`,
       isError: false,
       isSuccess: false,
       isInfo: true,
@@ -131,27 +152,33 @@ export class PlatformAssessmentsListComponent implements OnInit {
       return;
     }
 
+    const correcting = target.writingApplied === true;
+
     this.platformAssessmentService
       .applyWritingScore(target.mirrorId, target.points ?? undefined)
       .subscribe({
         next: (res) => {
           this.applyTarget = null;
+          const action = correcting ? 'corregido' : 'aplicado';
           this.modal = {
             ...modalInitializer(),
             show: true,
             message: res.updatedStage
-              ? 'Writing aplicado. El estudiante fue promovido de stage.'
-              : 'Writing aplicado. Stage no cambió (faltan otros skills o ya promovido).',
+              ? `Writing ${action}. El estudiante fue promovido de stage.`
+              : `Writing ${action}. Stage no cambió (faltan otros skills o ya promovido).`,
             isSuccess: true,
             close: () => (this.modal.show = false),
           };
+          this.fetch();
         },
         error: () => {
           this.applyTarget = null;
           this.modal = {
             ...modalInitializer(),
             show: true,
-            message: 'No se pudo aplicar Writing.',
+            message: correcting
+              ? 'No se pudo corregir Writing.'
+              : 'No se pudo aplicar Writing.',
             isError: true,
             close: () => (this.modal.show = false),
           };

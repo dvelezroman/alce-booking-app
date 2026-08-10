@@ -209,18 +209,27 @@ export class AssessmentReportsComponent {
 
     const formattedDate = new Date(a.createdAt || '').toLocaleDateString();
     const s2s = this.isS2sAssessment(a);
+    const noteObj =
+      a.note != null && typeof a.note === 'object'
+        ? (a.note as Record<string, unknown>)
+        : null;
     const noteText =
       a.note == null
         ? ''
         : typeof a.note === 'string'
           ? a.note
           : JSON.stringify(a.note);
+    const stageSignal =
+      noteObj?.['studentStage'] != null
+        ? `<span>Stage exam:</span> ${noteObj['studentStage']}<br>`
+        : '';
 
     const message = `
       <span>Instructor:</span> ${instructorName}<br>
       <span>Fecha:</span> ${formattedDate}<br>
       <span>Nota:</span> ${a.points}<br>
       ${s2s ? '<span>Origen:</span> S2S (plataforma)<br>' : ''}
+      ${stageSignal}
       ${noteText ? `<span>Comentario:</span> ${noteText}` : ''}
     `;
 
@@ -274,12 +283,31 @@ export class AssessmentReportsComponent {
 
   startApplyPlatform(row: PlatformAssessmentAssignment): void {
     this.applyingPlatformId = row.id;
-    this.applyPointsOverride = row.points ?? null;
+    this.applyPointsOverride = row.writingApplied
+      ? (row.writingPoints ?? row.points ?? null)
+      : (row.points ?? null);
   }
 
   cancelApplyPlatform(): void {
     this.applyingPlatformId = null;
     this.applyPointsOverride = null;
+  }
+
+  canShowWritingAction(row: PlatformAssessmentAssignment): boolean {
+    return row.points != null || row.writingApplied === true;
+  }
+
+  writingActionLabel(row: PlatformAssessmentAssignment): string {
+    return row.writingApplied ? 'Corregir Writing' : 'Aplicar Writing';
+  }
+
+  writingPointsMismatch(row: PlatformAssessmentAssignment): boolean {
+    return (
+      row.writingApplied === true &&
+      row.points != null &&
+      row.writingPoints != null &&
+      row.points !== row.writingPoints
+    );
   }
 
   confirmApplyPlatform(row: PlatformAssessmentAssignment): void {
@@ -295,12 +323,15 @@ export class AssessmentReportsComponent {
       return;
     }
 
+    const correcting = row.writingApplied === true;
     this.modal = {
       ...modalInitializer(),
       show: true,
       isInfo: true,
-      title: '¿Aplicar nota Writing?',
-      message: `Se ${override != null ? 'usará ' + override : 'usarán los puntos S2S (' + (row.points ?? '—') + ')'} para crear/actualizar la evaluación Writing del estudiante.`,
+      title: correcting ? '¿Corregir Writing?' : '¿Aplicar Writing?',
+      message: correcting
+        ? `Se actualizará la Writing existente a ${override ?? row.points ?? '—'} puntos (corrección admin).`
+        : `Se creará Writing con ${override ?? row.points ?? '—'} puntos desde el resultado S2S.`,
       showButtons: true,
       confirm: () => this.applyPlatformWriting(row, override),
       close: this.closeModal,
@@ -315,13 +346,14 @@ export class AssessmentReportsComponent {
       next: (res) => {
         this.closeModal();
         this.cancelApplyPlatform();
+        const action = res.created ? 'creada' : 'corregida';
         const promo = res.updatedStage
-          ? ' Se promovió de stage.'
-          : '';
+          ? ' Stage promovido.'
+          : ' Stage sin cambio.';
         this.showModal(
           this.createModalParams(
             false,
-            `Writing ${res.created ? 'creada' : 'actualizada'} con ${res.points} puntos.${promo}`,
+            `Writing ${action} con ${res.points} puntos.${promo}`,
           ),
         );
         this.refreshStudentData();
@@ -330,7 +362,7 @@ export class AssessmentReportsComponent {
         this.closeModal();
         const msg =
           err?.error?.message ||
-          'Error al aplicar la nota Writing desde la plataforma.';
+          'Error al aplicar/corregir Writing desde la plataforma.';
         setTimeout(() => {
           this.showModal(this.createModalParams(true, msg));
         }, 200);

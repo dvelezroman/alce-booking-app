@@ -16,7 +16,9 @@
     >
       <h3 class="platform-s2s-title">Resultados S2S (plataforma)</h3>
       <p class="platform-s2s-hint">
-        Aplica o corrige la nota Writing a partir del resultado externo.
+        PASSED aplica Writing automáticamente. Usa «Corregir Writing» solo para
+        ajustar puntos; «Aplicar Writing» queda para casos sin Writing en ALCE
+        (p. ej. FAILED o fallo del notify).
       </p>
 
       <div
@@ -28,8 +30,18 @@
           <span class="pill" [class.passed]="row.outcome === 'PASSED'" [class.failed]="row.outcome === 'FAILED'">
             {{ row.outcome || row.status }}
           </span>
-          <span *ngIf="row.studentStage != null">Stage {{ row.studentStage }}</span>
+          <span *ngIf="row.studentStage != null">Stage exam {{ row.studentStage }}</span>
           <span *ngIf="row.points != null">Puntos S2S: {{ row.points }}</span>
+          <span
+            class="pill writing"
+            *ngIf="row.writingApplied"
+            [class.mismatch]="writingPointsMismatch(row)"
+          >
+            Writing ALCE: {{ row.writingPoints ?? '—' }}
+          </span>
+          <span class="pill pending-writing" *ngIf="!row.writingApplied && row.points != null">
+            Writing pendiente
+          </span>
           <a
             *ngIf="row.resultsUrl"
             [href]="row.resultsUrl"
@@ -47,9 +59,10 @@
           <button
             type="button"
             class="button is-link is-small"
+            *ngIf="canShowWritingAction(row)"
             (click)="startApplyPlatform(row)"
           >
-            Aplicar / actualizar Writing
+            {{ writingActionLabel(row) }}
           </button>
         </div>
 
