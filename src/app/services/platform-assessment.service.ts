@@ -9,6 +9,7 @@ import {
   PlatformAssessmentAssignment,
   RemotePlatformAssessmentFilters,
   RemotePlatformAssessmentListResponse,
+  RemoteTemplateItem,
   RemoteTemplateListResponse,
 } from './dtos/platform-assessment.dto';
 
@@ -71,21 +72,59 @@ export class PlatformAssessmentService {
     isActive?: boolean;
   } = {}): Observable<RemoteTemplateListResponse> {
     let params = new HttpParams();
-    const entries: Array<[string, string | number | boolean | undefined | null]> =
-      [
-        ['page', filters.page],
-        ['pageSize', filters.pageSize],
-        ['search', filters.search],
-        ['stage', filters.stage],
-        ['isActive', filters.isActive],
-      ];
+    const entries: Array<
+      [string, string | number | boolean | undefined | null]
+    > = [
+      ['page', filters.page],
+      ['pageSize', filters.pageSize],
+      ['search', filters.search],
+      ['stage', filters.stage],
+      ['isActive', filters.isActive],
+    ];
     for (const [key, value] of entries) {
       if (value === undefined || value === null || value === '') continue;
       params = params.set(key, String(value));
     }
-    return this.http.get<RemoteTemplateListResponse>(`${this.apiUrl}/templates`, {
-      params,
-    });
+    return this.http.get<RemoteTemplateListResponse>(
+      `${this.apiUrl}/templates`,
+      { params },
+    );
+  }
+
+  /** Admin: one template meta. */
+  getTemplate(templateId: string): Observable<RemoteTemplateItem> {
+    return this.http.get<RemoteTemplateItem>(
+      `${this.apiUrl}/templates/${encodeURIComponent(templateId)}`,
+    );
+  }
+
+  /** Admin: assignments for one template. */
+  getTemplateAssignments(
+    templateId: string,
+    filters: {
+      page?: number;
+      limit?: number;
+      status?: string;
+      outcome?: 'PASSED' | 'FAILED' | 'NONE' | '';
+      studentId?: number | string;
+    } = {},
+  ): Observable<RemotePlatformAssessmentListResponse> {
+    let params = new HttpParams();
+    const entries: Array<[string, string | number | undefined | null]> = [
+      ['page', filters.page],
+      ['limit', filters.limit],
+      ['status', filters.status],
+      ['outcome', filters.outcome],
+      ['studentId', filters.studentId],
+    ];
+    for (const [key, value] of entries) {
+      if (value === undefined || value === null || value === '') continue;
+      params = params.set(key, String(value));
+    }
+    return this.http.get<RemotePlatformAssessmentListResponse>(
+      `${this.apiUrl}/templates/${encodeURIComponent(templateId)}/assignments`,
+      { params },
+    );
   }
 
   /** Admin: batch-assign template to ALCE students. */

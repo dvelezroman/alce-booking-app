@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PlatformAssessmentService } from '../../../services/platform-assessment.service';
 import { StudentsService } from '../../../services/students.service';
 import {
@@ -31,6 +31,7 @@ export class PlatformAssessmentsAssignComponent implements OnInit {
   templatesLoading = false;
   templateSearch = '';
   selectedTemplateId = '';
+  private preferTemplateId = '';
 
   idNumberSearch = '';
   studentIdSearch = '';
@@ -47,6 +48,7 @@ export class PlatformAssessmentsAssignComponent implements OnInit {
   constructor(
     private platformAssessmentService: PlatformAssessmentService,
     private studentsService: StudentsService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +56,12 @@ export class PlatformAssessmentsAssignComponent implements OnInit {
     tomorrow.setDate(tomorrow.getDate() + 7);
     tomorrow.setMinutes(0, 0, 0);
     this.expiresLocal = this.toLocalInput(tomorrow);
+
+    this.preferTemplateId =
+      this.route.snapshot.queryParamMap.get('templateId')?.trim() || '';
+    if (this.preferTemplateId) {
+      this.selectedTemplateId = this.preferTemplateId;
+    }
     this.loadTemplates();
   }
 
@@ -74,12 +82,7 @@ export class PlatformAssessmentsAssignComponent implements OnInit {
         next: (res) => {
           this.templates = res.data ?? [];
           this.templatesLoading = false;
-          if (
-            this.selectedTemplateId &&
-            !this.templates.some((t) => t.id === this.selectedTemplateId)
-          ) {
-            this.selectedTemplateId = '';
-          }
+          this.ensurePreferredTemplate();
         },
         error: (err) => {
           this.templates = [];
@@ -90,6 +93,30 @@ export class PlatformAssessmentsAssignComponent implements OnInit {
             'No se pudieron cargar los templates.';
         },
       });
+  }
+
+  /**
+   * If query templateId not in active page results, fetch that template and prepend.
+   */
+  private ensurePreferredTemplate(): void {
+    const prefer = this.preferTemplateId || this.selectedTemplateId;
+    if (!prefer) return;
+
+    if (this.templates.some((t) => t.id === prefer)) {
+      this.selectedTemplateId = prefer;
+      return;
+    }
+
+    this.platformAssessmentService.getTemplate(prefer).subscribe({
+      next: (t) => {
+        this.templates = [t, ...this.templates];
+        this.selectedTemplateId = t.id;
+      },
+      error: () => {
+        // Keep selected id even if meta fetch fails; user can search.
+        this.selectedTemplateId = prefer;
+      },
+    });
   }
 
   addByIdNumber(): void {

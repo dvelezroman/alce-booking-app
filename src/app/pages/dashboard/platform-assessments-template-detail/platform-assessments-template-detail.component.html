@@ -1,0 +1,147 @@
+<h2 class="title stage">Detalle assessment</h2>
+
+<section class="detail-section">
+  <div class="toolbar">
+    <a routerLink="/dashboard/platform-assessments-templates" class="back-link">
+      ← Assessments
+    </a>
+    <a
+      class="btn-primary-link"
+      [routerLink]="['/dashboard/platform-assessments-assign']"
+      [queryParams]="{ templateId: templateId }"
+    >
+      Asignar más
+    </a>
+  </div>
+
+  <p class="error-banner" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="card header-card" *ngIf="templateLoading">Cargando meta…</div>
+  <div class="card header-card" *ngIf="!templateLoading && template as t">
+    <h3>{{ t.title }}</h3>
+    <p class="desc" *ngIf="t.description">{{ t.description }}</p>
+    <div class="meta-row">
+      <span>{{ t.timeLimitMinutes }} min</span>
+      <span>Pass {{ t.passingScorePercent }}%</span>
+      <span>Stages: {{ t.stages.length ? t.stages.join(', ') : '—' }}</span>
+      <span>{{ t.resultReleasePolicy }}</span>
+      <span class="badge" [class.on]="t.isActive" [class.off]="!t.isActive">
+        {{ t.isActive ? 'Activo' : 'Inactivo' }}
+      </span>
+    </div>
+  </div>
+
+  <div class="filters">
+    <select class="select" [(ngModel)]="statusFilter">
+      <option *ngFor="let s of statusOptions" [ngValue]="s">
+        {{ s || 'Status: todos' }}
+      </option>
+    </select>
+    <select class="select" [(ngModel)]="outcomeFilter">
+      <option *ngFor="let o of outcomeOptions" [ngValue]="o">
+        {{ o || 'Outcome: todos' }}
+      </option>
+    </select>
+    <button type="button" class="btn-primary" (click)="applyFilters()">Filtrar</button>
+    <button type="button" class="btn-clear" (click)="clearFilters()">Limpiar</button>
+  </div>
+
+  <p class="meta" *ngIf="!loading">
+    {{ total }} estudiante(s) · pág. {{ page }} / {{ totalPages }}
+  </p>
+
+  <div class="table-scroll">
+    <table class="students-table">
+      <thead>
+        <tr>
+          <th>Estudiante</th>
+          <th>Status</th>
+          <th>Intentos</th>
+          <th>Outcome</th>
+          <th>Puntos</th>
+          <th>Completado</th>
+          <th>Writing ALCE</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="loading">
+          <td colspan="8" class="empty">Cargando…</td>
+        </tr>
+        <tr *ngIf="!loading && rows.length === 0">
+          <td colspan="8" class="empty">Sin assignments</td>
+        </tr>
+        <tr *ngFor="let row of rows">
+          <td>
+            <div class="cell-main">{{ displayStudent(row) }}</div>
+            <div class="cell-sub">ID {{ row.studentId ?? row.externalStudentId }}</div>
+          </td>
+          <td><span class="badge badge-blue">{{ row.status }}</span></td>
+          <td>{{ row.attemptCount }} / {{ row.maxAttempts }}</td>
+          <td>
+            <span class="badge" [ngClass]="outcomeClass(row.outcome)">
+              {{ row.outcome || 'NONE' }}
+            </span>
+          </td>
+          <td>{{ row.points != null ? row.points : '—' }}</td>
+          <td>{{ row.completedAt ? (row.completedAt | date: 'short') : '—' }}</td>
+          <td>
+            <span *ngIf="row.writingApplied">{{ row.writingPoints ?? '—' }}</span>
+            <span *ngIf="!row.writingApplied" class="muted">—</span>
+          </td>
+          <td class="actions">
+            <button
+              type="button"
+              class="btn-link"
+              *ngIf="row.directAccessUrl"
+              (click)="openUrl(row.directAccessUrl)"
+            >
+              Abrir
+            </button>
+            <button
+              type="button"
+              class="btn-link"
+              *ngIf="row.resultsUrl"
+              (click)="openUrl(row.resultsUrl)"
+            >
+              Resultados
+            </button>
+            <button
+              type="button"
+              class="btn-writing"
+              *ngIf="canApplyWriting(row) || canCorrectWriting(row)"
+              (click)="startApplyWriting(row)"
+            >
+              {{ writingActionLabel(row) }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pager" *ngIf="totalPages > 1">
+    <button type="button" class="btn-clear" [disabled]="page <= 1" (click)="goToPage(page - 1)">
+      Anterior
+    </button>
+    <button
+      type="button"
+      class="btn-clear"
+      [disabled]="page >= totalPages"
+      (click)="goToPage(page + 1)"
+    >
+      Siguiente
+    </button>
+  </div>
+</section>
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>

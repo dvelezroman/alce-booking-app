@@ -44,6 +44,8 @@ import { StageAssessmentStudentComponent } from './stage-assessment-student/stag
 import { PlatformAssessmentsStudentComponent } from './platform-assessments-student/platform-assessments-student.component';
 import { PlatformAssessmentsListComponent } from './platform-assessments-list/platform-assessments-list.component';
 import { PlatformAssessmentsAssignComponent } from './platform-assessments-assign/platform-assessments-assign.component';
+import { PlatformAssessmentsTemplatesComponent } from './platform-assessments-templates/platform-assessments-templates.component';
+import { PlatformAssessmentsTemplateDetailComponent } from './platform-assessments-template-detail/platform-assessments-template-detail.component';
 import { StageAssessmentListComponent } from './stage-assessment-list/stage-assessment-list.component';
 import { SuspensionHistoryComponent } from './suspension-history/suspension-history.component';
 import { InstructorEvaluationsComponent } from './instructor-evaluations/instructor-evaluations.component';
@@ -151,6 +153,11 @@ const dashboardChildren: Routes = [
   { path: 'platform-assessments', component: PlatformAssessmentsStudentComponent },
   { path: 'platform-assessments-list', component: PlatformAssessmentsListComponent },
   { path: 'platform-assessments-assign', component: PlatformAssessmentsAssignComponent },
+  { path: 'platform-assessments-templates', component: PlatformAssessmentsTemplatesComponent },
+  {
+    path: 'platform-assessments-templates/:templateId',
+    component: PlatformAssessmentsTemplateDetailComponent,
+  },
   { path: 'processed-events', component: ProcessedEventsComponent },
   { path: 'notifications-status', component: NotificationsStatusComponent },
   { path: 'notifications-groups', component: GroupsComponent },
