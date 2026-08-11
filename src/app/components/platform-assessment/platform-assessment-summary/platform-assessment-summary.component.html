@@ -1,0 +1,281 @@
+<section class="platform-assessment-summary">
+
+  <!-- PENDIENTES -->
+  <button
+    type="button"
+    class="
+      platform-assessment-summary__card
+      platform-assessment-summary__card--pending
+    "
+    [class.platform-assessment-summary__card--selected]="
+      isPendingSelected
+    "
+    (click)="onSelect('pending')"
+  >
+    <div class="platform-assessment-summary__card-content">
+
+      <span
+        class="
+          platform-assessment-summary__icon
+          platform-assessment-summary__icon--pending
+        "
+        aria-hidden="true"
+      >
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="5"
+            y="4.5"
+            width="14"
+            height="16"
+            rx="2.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="M9 4V3.5A1.5 1.5 0 0 1 10.5 2h3A1.5 1.5 0 0 1 15 3.5V4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M9 9h6M9 13h6M9 17h4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <div class="platform-assessment-summary__information">
+        <span class="platform-assessment-summary__label">
+          Pendientes
+        </span>
+
+        <strong
+          class="
+            platform-assessment-summary__count
+            platform-assessment-summary__count--pending
+          "
+        >
+          {{ activeCount }}
+        </strong>
+
+        <p class="platform-assessment-summary__description">
+          Tienes evaluaciones por completar.
+        </p>
+      </div>
+
+    </div>
+
+    <span
+      class="
+        platform-assessment-summary__arrow
+        platform-assessment-summary__arrow--pending
+      "
+      aria-hidden="true"
+    >
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M5 12h14M14 7l5 5-5 5"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+  </button>
+
+  <!-- VENCIDAS -->
+  <button
+    type="button"
+    class="
+      platform-assessment-summary__card
+      platform-assessment-summary__card--expired
+    "
+    [class.platform-assessment-summary__card--selected]="
+      isExpiredSelected
+    "
+    (click)="onSelect('expired')"
+  >
+    <div class="platform-assessment-summary__card-content">
+
+      <span
+        class="
+          platform-assessment-summary__icon
+          platform-assessment-summary__icon--expired
+        "
+        aria-hidden="true"
+      >
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="M12 7.5V12l3 2"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <div class="platform-assessment-summary__information">
+        <span class="platform-assessment-summary__label">
+          Vencidas
+        </span>
+
+        <strong
+          class="
+            platform-assessment-summary__count
+            platform-assessment-summary__count--expired
+          "
+        >
+          {{ expiredCount }}
+        </strong>
+
+        <p class="platform-assessment-summary__description">
+          Tienes evaluaciones vencidas.
+        </p>
+      </div>
+
+    </div>
+
+    <span
+      class="
+        platform-assessment-summary__arrow
+        platform-assessment-summary__arrow--expired
+      "
+      aria-hidden="true"
+    >
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M5 12h14M14 7l5 5-5 5"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+  </button>
+
+  <!-- COMPLETADAS -->
+  <button
+    type="button"
+    class="
+      platform-assessment-summary__card
+      platform-assessment-summary__card--completed
+    "
+    [class.platform-assessment-summary__card--selected]="
+      isCompletedSelected
+    "
+    (click)="onSelect('completed')"
+  >
+    <div class="platform-assessment-summary__card-content">
+
+      <span
+        class="
+          platform-assessment-summary__icon
+          platform-assessment-summary__icon--completed
+        "
+        aria-hidden="true"
+      >
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="m8.5 12 2.3 2.3 4.8-5.1"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <div class="platform-assessment-summary__information">
+        <span class="platform-assessment-summary__label">
+          Completadas
+        </span>
+
+        <strong
+          class="
+            platform-assessment-summary__count
+            platform-assessment-summary__count--completed
+          "
+        >
+          {{ completedCount }}
+        </strong>
+
+        <p class="platform-assessment-summary__description">
+          Has completado estas evaluaciones.
+        </p>
+      </div>
+
+    </div>
+
+    <span
+      class="
+        platform-assessment-summary__arrow
+        platform-assessment-summary__arrow--completed
+      "
+      aria-hidden="true"
+    >
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M5 12h14M14 7l5 5-5 5"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+  </button>
+
+</section>

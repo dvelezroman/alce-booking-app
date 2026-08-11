@@ -1,109 +1,162 @@
-<app-modal
-  [showModal]="modal.show"
-  [message]="modal.message"
-  [isError]="modal.isError"
-  [isSuccess]="modal.isSuccess"
-  [isInfo]="modal.isInfo"
-  (close)="modal.show = false"
->
-</app-modal>
+<!-- OVERLAY TEMPORAL -->
+<div class="platform-assessments-coming-soon">
+  <div class="platform-assessments-coming-soon__content">
+    <h2 class="platform-assessments-coming-soon__title">
+      Próximamente...
+    </h2>
 
-<h2 class="title stage">Exámenes</h2>
-
-<div class="page-wrapper">
-  <div class="assessment-layout">
-    <section class="stage-assessment-student-section">
-      <p *ngIf="!loading" class="assessment-summary">
-        <span class="summary-label">Evaluaciones:</span>
-
-        <span class="summary-badge active-badge">
-          {{ activeCount }} Pendiente(s)
-        </span>
-
-        <span class="summary-badge expired-badge">
-          {{ expiredCount }} Expirada(s)
-        </span>
-      </p>
-
-      <div *ngIf="loading" class="loading-state">Cargando assessments…</div>
-
-      <div *ngIf="!loading" class="cards-layout">
-        <div class="block-full">
-          <h4 class="block-title active-title">Pendientes</h4>
-
-          <div class="cards-scroll">
-            <ng-container *ngIf="hasPending">
-              <app-platform-assessment-card
-                *ngFor="let a of pendingAssessments"
-                [assessment]="a"
-              >
-              </app-platform-assessment-card>
-            </ng-container>
-
-            <div *ngIf="!hasPending" class="empty-state">
-              <span class="material-icons empty-icon">assignment_turned_in</span>
-              <p class="empty-title">Todo al día</p>
-              <p class="empty-subtitle">
-                No tienes assessments pendientes de la plataforma.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="assessment-note-top">
-          <h4>Importante</h4>
-          <p>
-            Abre el assessment desde el botón de acceso. El estado se actualiza
-            cuando la plataforma publica el resultado (aprobado o no aprobado).
-            <br />
-            <span class="note-secondline">
-              Los resultados aparecen aquí después de que cierre la revisión en
-              la plataforma de assessments.
-            </span>
-          </p>
-        </div>
-
-        <div class="bottom-row-two">
-          <div class="column-block completed-column">
-            <h4 class="block-title completed-title">Realizadas</h4>
-
-            <div class="cards-scroll">
-              <ng-container *ngIf="completedAssessments.length > 0">
-                <app-platform-assessment-card
-                  *ngFor="let a of completedAssessments"
-                  [assessment]="a"
-                >
-                </app-platform-assessment-card>
-              </ng-container>
-
-              <div
-                *ngIf="completedAssessments.length === 0"
-                class="empty-state"
-              >
-                <p class="empty-subtitle">No hay assessments realizados.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="column-block expired-column">
-            <h4 class="block-title expired-title">Expiradas</h4>
-
-            <div class="cards-scroll">
-              <ng-container *ngIf="hasExpired">
-                <app-platform-assessment-card
-                  *ngFor="let a of expiredAssessments"
-                  [assessment]="a"
-                >
-                </app-platform-assessment-card>
-              </ng-container>
-
-              <div *ngIf="!hasExpired" class="empty-state">
-                <p class="empty-subtitle">No hay assessments expirados.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <p class="platform-assessments-coming-soon__description">
+      Esta sección estará disponible muy pronto.
+    </p>
   </div>
 </div>
+
+<main class="platform-assessments-page">
+
+  <!-- HEADER -->
+  <app-platform-assessment-header
+    [loading]="loading"
+    (refresh)="onRefreshAssessments()"
+  ></app-platform-assessment-header>
+
+  <!-- RESUMEN -->
+  <app-platform-assessment-summary
+    [activeCount]="activeCount"
+    [expiredCount]="expiredCount"
+    [completedCount]="completedCount"
+    [selectedTab]="selectedTab"
+    (selectTab)="onSummarySelect($event)"
+  ></app-platform-assessment-summary>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <section class="platform-assessments-content">
+
+    <!-- TABS / FILTROS -->
+    <app-platform-assessment-tabs
+      [selectedTab]="selectedTab"
+      [activeCount]="activeCount"
+      [expiredCount]="expiredCount"
+      [completedCount]="completedCount"
+      (tabChange)="onTabChange($event)"
+    ></app-platform-assessment-tabs>
+
+    <!-- LOADING -->
+    <div
+      class="platform-assessments-loading"
+      *ngIf="loading"
+    >
+      <div
+        class="platform-assessment-skeleton"
+        *ngFor="let item of [1, 2, 3]"
+      >
+        <div class="platform-assessment-skeleton__date"></div>
+
+        <div class="platform-assessment-skeleton__content">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="platform-assessment-skeleton__badge"></div>
+
+        <div class="platform-assessment-skeleton__button"></div>
+      </div>
+    </div>
+
+    <!-- CON DATOS -->
+    <ng-container
+      *ngIf="!loading && hasSelectedAssessments"
+    >
+      <app-platform-assessment-list
+        [assessments]="selectedAssessments"
+        [selectedTab]="selectedTab"
+      ></app-platform-assessment-list>
+    </ng-container>
+
+    <!-- SIN DATOS -->
+    <app-platform-assessment-empty-state
+      *ngIf="
+        !loading &&
+        !hasSelectedAssessments
+      "
+      [selectedTab]="selectedTab"
+      (action)="onEmptyStateAction()"
+    ></app-platform-assessment-empty-state>
+
+    <!-- BANNER INFERIOR -->
+    <div
+      class="platform-assessment-help-banner"
+      *ngIf="!loading && hasSelectedAssessments"
+    >
+      <div class="platform-assessment-help-banner__content">
+
+        <span
+          class="platform-assessment-help-banner__icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="16"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M7 3v4M17 3v4M3 9h18"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M12 12v6M9 15h6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <div>
+          <h4 class="platform-assessment-help-banner__title">
+            ¿No encuentras una evaluación?
+          </h4>
+
+          <p class="platform-assessment-help-banner__description">
+            Las nuevas evaluaciones aparecerán aquí cuando estén disponibles.
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="platform-assessment-help-banner__button"
+        (click)="onRefreshAssessments()"
+      >
+        Actualizar evaluaciones
+      </button>
+    </div>
+
+  </section>
+
+  <!-- MODAL -->
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    (close)="modal.show = false"
+  >
+  </app-modal>
+
+</main>

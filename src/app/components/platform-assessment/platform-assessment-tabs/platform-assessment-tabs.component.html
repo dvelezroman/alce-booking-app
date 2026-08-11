@@ -1,0 +1,171 @@
+<section class="platform-assessment-tabs">
+
+  <!-- TABS -->
+  <div class="platform-assessment-tabs__navigation">
+
+    <button
+      type="button"
+      class="platform-assessment-tabs__tab"
+      [class.platform-assessment-tabs__tab--active]="
+        isPendingSelected
+      "
+      (click)="onTabChange('pending')"
+    >
+      <span>
+        Pendientes
+      </span>
+
+      <span
+        class="
+          platform-assessment-tabs__count
+          platform-assessment-tabs__count--pending
+        "
+      >
+        {{ activeCount }}
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="platform-assessment-tabs__tab"
+      [class.platform-assessment-tabs__tab--active]="
+        isExpiredSelected
+      "
+      (click)="onTabChange('expired')"
+    >
+      <span>
+        Vencidas
+      </span>
+
+      <span
+        class="
+          platform-assessment-tabs__count
+          platform-assessment-tabs__count--expired
+        "
+      >
+        {{ expiredCount }}
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="platform-assessment-tabs__tab"
+      [class.platform-assessment-tabs__tab--active]="
+        isCompletedSelected
+      "
+      (click)="onTabChange('completed')"
+    >
+      <span>
+        Completadas
+      </span>
+
+      <span
+        class="
+          platform-assessment-tabs__count
+          platform-assessment-tabs__count--completed
+        "
+      >
+        {{ completedCount }}
+      </span>
+    </button>
+
+  </div>
+
+  <!-- ACCIONES -->
+  <div class="platform-assessment-tabs__actions">
+
+    <!-- ORDEN -->
+    <div class="platform-assessment-tabs__sort">
+      <span class="platform-assessment-tabs__sort-label">
+        Ordenar por:
+      </span>
+
+      <select
+        class="platform-assessment-tabs__sort-select"
+        aria-label="Ordenar evaluaciones"
+      >
+        <option value="nearest">
+          Próximas primero
+        </option>
+
+        <option value="latest">
+          Más recientes
+        </option>
+
+        <option value="oldest">
+          Más antiguas
+        </option>
+      </select>
+
+      <span
+        class="platform-assessment-tabs__sort-arrow"
+        aria-hidden="true"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m7 10 5 5 5-5"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </div>
+
+    <!-- FILTROS -->
+    <button
+      type="button"
+      class="platform-assessment-tabs__filter-button"
+    >
+      <svg
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M4 7h10M18 7h2"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M4 17h4M12 17h8"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <circle
+          cx="16"
+          cy="7"
+          r="2"
+          stroke="currentColor"
+          stroke-width="1.8"
+        />
+
+        <circle
+          cx="10"
+          cy="17"
+          r="2"
+          stroke="currentColor"
+          stroke-width="1.8"
+        />
+      </svg>
+
+      <span>
+        Filtros
+      </span>
+    </button>
+
+  </div>
+
+</section>

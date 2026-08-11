@@ -1,0 +1,516 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.platform-assessment-list {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border: 1px solid #e8eaf0;
+  border-radius: 0.95rem;
+
+  background: #ffffff;
+}
+
+/* ================================
+   ITEM
+================================ */
+
+.platform-assessment-list__item {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+  padding: 0.8rem 1rem 0.8rem 1.15rem;
+
+  display: grid;
+  grid-template-columns:
+    4.8rem
+    minmax(0, 1fr)
+    auto
+    auto;
+
+  align-items: center;
+  gap: 1rem;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #eceef3;
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.platform-assessment-list__item:last-child {
+  border-bottom: 0;
+}
+
+.platform-assessment-list__item:hover {
+  background: #fdfdff;
+}
+
+/* BARRA IZQUIERDA */
+
+.platform-assessment-list__item::before {
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 0;
+
+  width: 3px;
+
+  border-radius: 0 999px 999px 0;
+
+  background: #6246df;
+
+  content: '';
+}
+
+.platform-assessment-list__item--expired::before {
+  background: #dc2626;
+}
+
+.platform-assessment-list__item--completed::before {
+  background: #1f9a63;
+}
+
+/* ================================
+   FECHA
+================================ */
+
+.platform-assessment-list__date {
+  width: 4.8rem;
+  min-height: 5.5rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border: 1px solid #e2e5ec;
+  border-radius: 0.75rem;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fbfaff 0%,
+      #ffffff 100%
+    );
+
+  box-shadow:
+    0 3px 10px rgba(31, 42, 89, 0.025);
+}
+
+.platform-assessment-list__month {
+  width: 100%;
+  padding: 0.32rem 0.25rem;
+
+  background: #f0edff;
+  color: #5540cb;
+
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+}
+
+.platform-assessment-list__day {
+  margin-top: 0.45rem;
+
+  color: #111735;
+
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.platform-assessment-list__hour {
+  margin-top: 0.35rem;
+
+  color: #667085;
+
+  font-size: 0.64rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ================================
+   INFORMACIÓN
+================================ */
+
+.platform-assessment-list__information {
+  min-width: 0;
+}
+
+.platform-assessment-list__title {
+  max-width: 100%;
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #10142f;
+
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.35;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.platform-assessment-list__stage {
+  margin: 0.18rem 0 0;
+
+  color: #667085;
+
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.platform-assessment-list__date-label {
+  margin-top: 0.45rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  color: #596176;
+
+  font-size: 0.68rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.platform-assessment-list__date-label svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+
+/* ================================
+   COUNTDOWN
+================================ */
+
+.platform-assessment-list__countdown {
+  margin-top: 0.35rem;
+
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+
+  color: #c0322b;
+
+  font-size: 0.66rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.platform-assessment-list__countdown strong {
+  color: #b42318;
+
+  font-weight: 800;
+}
+
+.platform-assessment-list__countdown--urgent,
+.platform-assessment-list__countdown--urgent strong {
+  color: #dc2626;
+}
+
+/* ================================
+   STATUS
+================================ */
+
+.platform-assessment-list__status {
+  margin-top: 0.4rem;
+  padding: 0.2rem 0.5rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.platform-assessment-list__status--expired {
+  color: #b42318;
+  background: #fef3f2;
+}
+
+.platform-assessment-list__status--completed {
+  color: #067647;
+  background: #ecfdf3;
+}
+
+/* ================================
+   BADGE PLATAFORMA
+================================ */
+
+.platform-assessment-list__platform {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.platform-assessment-list__platform-badge {
+  min-height: 1.75rem;
+  padding: 0.3rem 0.65rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.55rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f4f0ff 0%,
+      #eeeaff 100%
+    );
+
+  color: #5540cb;
+
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+/* ================================
+   ACCIÓN
+================================ */
+
+.platform-assessment-list__action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.platform-assessment-list__button {
+  min-width: 7.6rem;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.95rem;
+
+  border: 1px solid #d9dce6;
+  border-radius: 0.7rem;
+
+  background: #ffffff;
+  color: #304ebd;
+
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.platform-assessment-list__button:hover:not(:disabled) {
+  border-color: #b8bfda;
+  background: #fafaff;
+
+  box-shadow:
+    0 5px 14px rgba(48, 78, 189, 0.07);
+}
+
+.platform-assessment-list__button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.platform-assessment-list__button:focus-visible {
+  outline: 3px solid rgba(48, 78, 189, 0.13);
+  outline-offset: 2px;
+}
+
+.platform-assessment-list__button:disabled {
+  color: #98a2b3;
+  background: #f5f6f8;
+  border-color: #e4e7ec;
+
+  cursor: not-allowed;
+}
+
+/* ================================
+   DESKTOP REDUCIDO
+================================ */
+
+@media (max-width: 1200px) {
+  .platform-assessment-list__item {
+    grid-template-columns:
+      4.4rem
+      minmax(0, 1fr)
+      auto
+      auto;
+
+    gap: 0.8rem;
+  }
+
+  .platform-assessment-list__date {
+    width: 4.4rem;
+  }
+
+  .platform-assessment-list__button {
+    min-width: 7rem;
+  }
+}
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 920px) {
+  .platform-assessment-list__item {
+    grid-template-columns:
+      4.25rem
+      minmax(0, 1fr)
+      auto;
+
+    align-items: start;
+  }
+
+  .platform-assessment-list__platform {
+    grid-column: 3;
+  }
+
+  .platform-assessment-list__action {
+    grid-column: 2 / -1;
+
+    justify-content: flex-end;
+  }
+
+  .platform-assessment-list__date {
+    width: 4.25rem;
+  }
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 640px) {
+  .platform-assessment-list {
+    border-radius: 0.85rem;
+  }
+
+  .platform-assessment-list__item {
+    padding: 0.75rem 0.75rem 0.8rem 0.9rem;
+
+    grid-template-columns:
+      3.7rem
+      minmax(0, 1fr);
+
+    align-items: start;
+    gap: 0.7rem;
+  }
+
+  .platform-assessment-list__item::before {
+    top: 0.4rem;
+    bottom: 0.4rem;
+  }
+
+  .platform-assessment-list__date {
+    width: 3.7rem;
+    min-height: 4.7rem;
+
+    border-radius: 0.65rem;
+  }
+
+  .platform-assessment-list__month {
+    padding: 0.28rem 0.2rem;
+
+    font-size: 0.55rem;
+  }
+
+  .platform-assessment-list__day {
+    margin-top: 0.35rem;
+
+    font-size: 1.2rem;
+  }
+
+  .platform-assessment-list__hour {
+    margin-top: 0.25rem;
+
+    font-size: 0.57rem;
+  }
+
+  .platform-assessment-list__title {
+    white-space: normal;
+
+    font-size: 0.78rem;
+  }
+
+  .platform-assessment-list__stage {
+    font-size: 0.65rem;
+  }
+
+  .platform-assessment-list__date-label {
+    margin-top: 0.35rem;
+
+    font-size: 0.62rem;
+  }
+
+  .platform-assessment-list__date-label svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .platform-assessment-list__countdown {
+    margin-top: 0.3rem;
+
+    font-size: 0.6rem;
+  }
+
+  .platform-assessment-list__platform {
+    grid-column: 2;
+
+    justify-content: flex-start;
+
+    margin-top: 0.15rem;
+  }
+
+  .platform-assessment-list__platform-badge {
+    min-height: 1.55rem;
+    padding-inline: 0.5rem;
+
+    font-size: 0.58rem;
+  }
+
+  .platform-assessment-list__action {
+    grid-column: 1 / -1;
+
+    width: 100%;
+  }
+
+  .platform-assessment-list__button {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.3rem;
+
+    font-size: 0.67rem;
+  }
+}

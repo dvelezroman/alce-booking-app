@@ -1,0 +1,450 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.platform-assessment-summary {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 1rem;
+}
+
+/* ================================
+   CARD BASE
+================================ */
+
+.platform-assessment-summary__card {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 7.6rem;
+  padding: 1rem 1.15rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid transparent;
+  border-radius: 1rem;
+
+  font-family: inherit;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.platform-assessment-summary__card:hover {
+  transform: translateY(-1px);
+}
+
+.platform-assessment-summary__card:active {
+  transform: scale(0.98);
+}
+
+.platform-assessment-summary__card:focus-visible {
+  outline: 3px solid rgba(83, 62, 206, 0.14);
+  outline-offset: 2px;
+}
+
+/* ================================
+   PENDIENTES
+================================ */
+
+.platform-assessment-summary__card--pending {
+  border-color: #e1dcf9;
+
+  background:
+    linear-gradient(
+      135deg,
+      #faf9ff 0%,
+      #f5f2ff 100%
+    );
+}
+
+.platform-assessment-summary__card--pending:hover {
+  border-color: #cec5f6;
+
+  box-shadow:
+    0 8px 22px rgba(89, 66, 196, 0.08);
+}
+
+/* ================================
+   VENCIDAS
+================================ */
+
+.platform-assessment-summary__card--expired {
+  border-color: #f2d8d5;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fffafa 0%,
+      #fff4f3 100%
+    );
+}
+
+.platform-assessment-summary__card--expired:hover {
+  border-color: #edc3bf;
+
+  box-shadow:
+    0 8px 22px rgba(200, 55, 45, 0.07);
+}
+
+/* ================================
+   COMPLETADAS
+================================ */
+
+.platform-assessment-summary__card--completed {
+  border-color: #d8ebe3;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fbfefd 0%,
+      #f3faf7 100%
+    );
+}
+
+.platform-assessment-summary__card--completed:hover {
+  border-color: #c6e1d5;
+
+  box-shadow:
+    0 8px 22px rgba(39, 147, 101, 0.07);
+}
+
+/* ================================
+   SELECCIONADA
+================================ */
+
+.platform-assessment-summary__card--selected {
+  box-shadow:
+    0 8px 22px rgba(31, 42, 89, 0.08);
+}
+
+/* ================================
+   CONTENIDO
+================================ */
+
+.platform-assessment-summary__card-content {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+}
+
+.platform-assessment-summary__information {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* ================================
+   ICONO
+================================ */
+
+.platform-assessment-summary__icon {
+  width: 3.55rem;
+  height: 3.55rem;
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+}
+
+.platform-assessment-summary__icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.platform-assessment-summary__icon--pending {
+  color: #5f46df;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eee9ff 0%,
+      #e5deff 100%
+    );
+}
+
+.platform-assessment-summary__icon--expired {
+  color: #d92d20;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffe9e7 0%,
+      #ffdddd 100%
+    );
+}
+
+.platform-assessment-summary__icon--completed {
+  color: #1f9a63;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e5f7ef 0%,
+      #d8f1e6 100%
+    );
+}
+
+/* ================================
+   LABEL
+================================ */
+
+.platform-assessment-summary__label {
+  color: #344054;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* ================================
+   CONTADOR
+================================ */
+
+.platform-assessment-summary__count {
+  margin-top: 0.18rem;
+
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.platform-assessment-summary__count--pending {
+  color: #5840d6;
+}
+
+.platform-assessment-summary__count--expired {
+  color: #d92d20;
+}
+
+.platform-assessment-summary__count--completed {
+  color: #168e5b;
+}
+
+/* ================================
+   DESCRIPCIÓN
+================================ */
+
+.platform-assessment-summary__description {
+  margin: 0.35rem 0 0;
+
+  color: #667085;
+
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* ================================
+   FLECHA
+================================ */
+
+.platform-assessment-summary__arrow {
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease;
+}
+
+.platform-assessment-summary__arrow svg {
+  width: 19px;
+  height: 19px;
+}
+
+.platform-assessment-summary__card:hover
+.platform-assessment-summary__arrow {
+  transform: translateX(2px);
+}
+
+.platform-assessment-summary__arrow--pending {
+  color: #5840d6;
+}
+
+.platform-assessment-summary__arrow--expired {
+  color: #111827;
+}
+
+.platform-assessment-summary__arrow--completed {
+  color: #111827;
+}
+
+/* ================================
+   DESKTOP REDUCIDO
+================================ */
+
+@media (max-width: 1200px) {
+  .platform-assessment-summary {
+    gap: 0.8rem;
+  }
+
+  .platform-assessment-summary__card {
+    min-height: 7rem;
+    padding: 0.9rem 1rem;
+  }
+
+  .platform-assessment-summary__card-content {
+    gap: 0.75rem;
+  }
+
+  .platform-assessment-summary__icon {
+    width: 3.1rem;
+    height: 3.1rem;
+  }
+
+  .platform-assessment-summary__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .platform-assessment-summary__count {
+    font-size: 1.6rem;
+  }
+
+  .platform-assessment-summary__description {
+    font-size: 0.66rem;
+  }
+
+  .platform-assessment-summary__arrow {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+}
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 920px) {
+  .platform-assessment-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .platform-assessment-summary__card--completed {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 640px) {
+  .platform-assessment-summary {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .platform-assessment-summary__card--completed {
+    grid-column: auto;
+  }
+
+  .platform-assessment-summary__card {
+    min-height: 6.3rem;
+    padding: 0.8rem 0.9rem;
+
+    border-radius: 0.85rem;
+  }
+
+  .platform-assessment-summary__card-content {
+    gap: 0.7rem;
+  }
+
+  .platform-assessment-summary__icon {
+    width: 2.85rem;
+    height: 2.85rem;
+  }
+
+  .platform-assessment-summary__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .platform-assessment-summary__label {
+    font-size: 0.7rem;
+  }
+
+  .platform-assessment-summary__count {
+    margin-top: 0.12rem;
+
+    font-size: 1.45rem;
+  }
+
+  .platform-assessment-summary__description {
+    margin-top: 0.25rem;
+
+    font-size: 0.64rem;
+  }
+
+  .platform-assessment-summary__arrow {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .platform-assessment-summary__arrow svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+/* ================================
+   MOBILE PEQUEÑO
+================================ */
+
+@media (max-width: 420px) {
+  .platform-assessment-summary__card {
+    min-height: 5.9rem;
+    padding: 0.7rem 0.75rem;
+  }
+
+  .platform-assessment-summary__icon {
+    width: 2.65rem;
+    height: 2.65rem;
+  }
+
+  .platform-assessment-summary__icon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .platform-assessment-summary__count {
+    font-size: 1.35rem;
+  }
+
+  .platform-assessment-summary__description {
+    font-size: 0.61rem;
+  }
+}
