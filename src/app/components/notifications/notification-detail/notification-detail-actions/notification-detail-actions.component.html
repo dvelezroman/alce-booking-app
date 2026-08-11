@@ -1,0 +1,96 @@
+<section
+  class="notification-detail-actions"
+  aria-label="Acciones de la notificación"
+>
+  <button
+    type="button"
+    class="
+      notification-detail-actions__button
+      notification-detail-actions__button--secondary
+    "
+    (click)="onBack()"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M19 12H5"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      />
+      <path
+        d="M11 18L5 12L11 6"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+
+    <span>
+      Volver
+    </span>
+  </button>
+
+  <button
+    type="button"
+    class="
+      notification-detail-actions__button
+      notification-detail-actions__button--danger
+    "
+    [disabled]="deleting"
+    [attr.aria-busy]="deleting"
+    (click)="onDelete()"
+  >
+    <svg
+      *ngIf="!deleting"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4 7H20"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      />
+      <path
+        d="M9 7V4.8C9 4.36 9.36 4 9.8 4H14.2C14.64 4 15 4.36 15 4.8V7"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      />
+      <path
+        d="M6.5 7L7.2 19C7.24 19.56 7.7 20 8.26 20H15.74C16.3 20 16.76 19.56 16.8 19L17.5 7"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M10 11V16"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      />
+      <path
+        d="M14 11V16"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      />
+    </svg>
+
+    <span
+      *ngIf="deleting"
+      class="notification-detail-actions__spinner"
+      aria-hidden="true"
+    ></span>
+
+    <span>
+      {{ deleting ? 'Eliminando...' : 'Eliminar' }}
+    </span>
+  </button>
+</section>

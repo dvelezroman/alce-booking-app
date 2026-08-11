@@ -5,7 +5,9 @@
 
 .important-notices {
   width: 100%;
-  padding: 1.35rem;
+  max-height: 500px;
+  overflow-y: auto;
+  padding:0 1.35rem 1.35rem;
 
   border: 1px solid #e4e6ee;
   border-radius: 1.35rem;
@@ -21,12 +23,19 @@
 ================================ */
 
 .important-notices__header {
-  margin-bottom: .9rem;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+
+  padding: 1.35rem 0.35rem 0.9rem;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: .8rem;
+  gap: 0.8rem;
+
+  border-bottom: 1px solid #eceef4;
+  background: #ffffff;
 }
 
 .important-notices__title {
@@ -73,11 +82,12 @@
 .important-notices__list {
   display: flex;
   flex-direction: column;
+  padding-top: .5rem;
 }
 
 .notice-item {
   min-width: 0;
-  padding: .8rem 0;
+  padding: 1rem 0;
 
   display: grid;
   grid-template-columns: 3.5rem minmax(0, 1fr);
@@ -405,12 +415,23 @@
 ================================ */
 
 @media (max-width: 1024px) {
-  .important-notices {
-    padding: 1.15rem;
+
+  .important-notices__header {
+    margin:
+      -1.15rem
+      -1.15rem
+      0.9rem;
+
+    padding:
+      1.15rem
+      1.15rem
+      0.9rem;
   }
 
   .notice-item {
-    grid-template-columns: 3.25rem minmax(0, 1fr);
+    grid-template-columns:
+      3.25rem
+      minmax(0, 1fr);
     gap: 0.75rem;
   }
 
@@ -426,9 +447,18 @@
 
 @media (max-width: 640px) {
   .important-notices {
-    padding: 1rem;
-
     border-radius: 1.1rem;
+  }
+  
+  .important-notices__header {
+    margin:
+      -1rem
+      -1rem
+      0.85rem;
+    padding:
+      1rem
+      1rem
+      0.85rem;
   }
 
   .important-notices__title {

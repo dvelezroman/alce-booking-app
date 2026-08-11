@@ -57,40 +57,52 @@ export class ScheduledMeetingsListComponent {
   }
 
   get sortedMeetings(): MeetingDTO[] {
-    const now =
-      Date.now() - 5 * 60 * 60 * 1000
+    const now = Date.now()
+    const meetingDuration =
+      60 * 60 * 1000
 
     return [...this.meetings].sort(
-      (firstMeeting, secondMeeting) => {
+      (
+        firstMeeting,
+        secondMeeting
+      ) => {
         const firstTimestamp =
-          this.getMeetingTimestamp(firstMeeting)
+          this.getMeetingTimestamp(
+            firstMeeting
+          )
 
         const secondTimestamp =
-          this.getMeetingTimestamp(secondMeeting)
+          this.getMeetingTimestamp(
+            secondMeeting
+          )
 
-        const firstIsUpcoming =
-          firstTimestamp >= now
+        const firstIsFinished =
+          firstTimestamp +
+            meetingDuration <=
+          now
 
-        const secondIsUpcoming =
-          secondTimestamp >= now
+        const secondIsFinished =
+          secondTimestamp +
+            meetingDuration <=
+          now
 
         if (
-          firstIsUpcoming &&
-          !secondIsUpcoming
-        ) {
-          return -1
-        }
-
-        if (
-          !firstIsUpcoming &&
-          secondIsUpcoming
+          firstIsFinished &&
+          !secondIsFinished
         ) {
           return 1
         }
 
         if (
-          firstIsUpcoming &&
-          secondIsUpcoming
+          !firstIsFinished &&
+          secondIsFinished
+        ) {
+          return -1
+        }
+
+        if (
+          !firstIsFinished &&
+          !secondIsFinished
         ) {
           return (
             firstTimestamp -
@@ -106,73 +118,57 @@ export class ScheduledMeetingsListComponent {
     )
   }
 
-  isTodayUpcomingMeeting(
-    meeting: MeetingDTO
-  ): boolean {
-    const timestamp =
-      this.getMeetingTimestamp(meeting)
-
-    if (
-      !Number.isFinite(timestamp) ||
-      timestamp < Date.now()
-    ) {
-      return false
-    }
-
-    const meetingDate = new Date(timestamp)
-    const today = new Date()
-
-    return (
-      meetingDate.getFullYear() ===
-        today.getFullYear() &&
-      meetingDate.getMonth() ===
-        today.getMonth() &&
-      meetingDate.getDate() ===
-        today.getDate()
-    )
-  }
-
   private getMeetingTimestamp(
     meeting: MeetingDTO
-    ): number {
-      const rawDate =
-        meeting.localdate ??
-        meeting.date
+  ): number {
+    const rawDate =
+      meeting.localdate ??
+      meeting.date
 
-      if (!rawDate) {
-        return Number.MAX_SAFE_INTEGER
-      }
+    const rawHour =
+      meeting.localhour ??
+      meeting.hour
 
-      const meetingDate = new Date(rawDate)
+    if (
+      !rawDate ||
+      rawHour === null ||
+      rawHour === undefined
+    ) {
+      return Number.MAX_SAFE_INTEGER
+    }
 
-      if (Number.isNaN(meetingDate.getTime())) {
-        return Number.MAX_SAFE_INTEGER
-      }
+    const datePart =
+      String(rawDate).slice(0, 10)
 
-      const rawHour =
-        meeting.localhour ??
-        meeting.hour
+    const [
+      year,
+      month,
+      day,
+    ] = datePart
+      .split('-')
+      .map(Number)
 
-      if (
-        rawHour !== null &&
-        rawHour !== undefined
-      ) {
-        const hour = Number(rawHour)
+    const hour = Number(rawHour)
 
-        if (
-          !Number.isNaN(hour) &&
-          hour >= 0 &&
-          hour <= 23
-        ) {
-          meetingDate.setHours(
-            hour,
-            0,
-            0,
-            0
-          )
-        }
-      }
+    if (
+      !year ||
+      !month ||
+      !day ||
+      Number.isNaN(hour) ||
+      hour < 0 ||
+      hour > 23
+    ) {
+      return Number.MAX_SAFE_INTEGER
+    }
 
-      return meetingDate.getTime()
+    return Date.UTC(
+      year,
+      month - 1,
+      day,
+      hour + 5,
+      0,
+      0,
+      0
+    )
   }
 }

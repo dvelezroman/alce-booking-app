@@ -360,6 +360,95 @@
         <p class="body-text" [innerHTML]="formattedBody | safeNoteHtml"></p>
       </div>
 
+      <!-- ASSESSMENT ASSIGNED (S2S) -->
+      <section
+        class="demo-class-card assessment-assigned-card"
+        *ngIf="isAssessmentAssignedNotification && assessmentMessage as am"
+      >
+        <header class="demo-class-header">
+          <div>
+            <p class="eyebrow">Assessment asignado</p>
+            <h3>{{ am.templateTitle || notification?.title }}</h3>
+          </div>
+          <span class="demo-badge">{{ am.kind }}</span>
+        </header>
+
+        <div
+          class="assessment-cta-row"
+          *ngIf="am.directAccessUrl && !isAssessmentExpired"
+        >
+          <button
+            type="button"
+            class="btn-assessment-primary"
+            (click)="openAssessmentDirectAccess()"
+          >
+            Abrir assessment
+          </button>
+          <p class="cta-hint">
+            Enlace directo: inicia sin escribir código.
+          </p>
+        </div>
+
+        <div class="alert warn" *ngIf="isAssessmentExpired">
+          Este assessment ya venció. Ya no puedes abrirlo desde aquí.
+        </div>
+
+        <div class="demo-block">
+          <h4>Detalles</h4>
+          <div class="demo-class-grid">
+            <div class="demo-field" *ngIf="am.maxAttempts != null">
+              <span>Intentos máximos</span>
+              <strong>{{ am.maxAttempts }}</strong>
+            </div>
+            <div class="demo-field" *ngIf="am.expiresAt">
+              <span>Vence</span>
+              <strong>{{ am.expiresAt | date: "medium" }}</strong>
+            </div>
+            <div class="demo-field" *ngIf="am.expiresAt == null">
+              <span>Vence</span>
+              <strong>Sin vencimiento</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ASSESSMENT RESULTS READY (S2S) — outcome only, never numeric score -->
+      <section
+        class="demo-class-card assessment-assigned-card assessment-results-ready-card"
+        *ngIf="isAssessmentResultsReadyNotification && assessmentResultsMessage as rm"
+      >
+        <header class="demo-class-header">
+          <div>
+            <p class="eyebrow">Resultados listos</p>
+            <h3>{{ rm.templateTitle || notification?.title }}</h3>
+          </div>
+          <span
+            class="demo-badge"
+            [class.outcome-passed]="assessmentResultsPassed === true"
+            [class.outcome-failed]="assessmentResultsPassed === false"
+          >
+            {{ assessmentResultsOutcomeLabel }}
+          </span>
+        </header>
+
+        <div class="demo-block">
+          <h4>Estado</h4>
+          <div class="demo-class-grid">
+            <div class="demo-field">
+              <span>Resultado</span>
+              <strong>{{ assessmentResultsOutcomeLabel }}</strong>
+            </div>
+            <div class="demo-field" *ngIf="rm.studentStage != null">
+              <span>Stage</span>
+              <strong>{{ rm.studentStage }}</strong>
+            </div>
+          </div>
+          <p class="cta-hint">
+            Solo se muestra si aprobaste o no — sin nota numérica.
+          </p>
+        </div>
+      </section>
+
       <section
         class="request-lead-card"
         *ngIf="isActiveStudentsReportNotification"

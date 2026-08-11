@@ -1,0 +1,95 @@
+<section
+  *ngIf="hasAttachments"
+  class="notification-detail-attachments"
+  aria-labelledby="notification-attachments-title"
+>
+  <header class="notification-detail-attachments__header">
+    <div>
+      <span class="notification-detail-attachments__eyebrow">
+        Archivos
+      </span>
+
+      <h3
+        id="notification-attachments-title"
+        class="notification-detail-attachments__title"
+      >
+        Archivos adjuntos
+      </h3>
+
+      <p class="notification-detail-attachments__description">
+        Revisa o descarga los documentos incluidos
+        en esta notificación.
+      </p>
+    </div>
+
+    <span class="notification-detail-attachments__count">
+      {{ attachments.length }}
+    </span>
+  </header>
+
+  <div class="notification-detail-attachments__list">
+    <article
+      *ngFor="
+        let attachment of attachments;
+        let index = index;
+        trackBy: trackByAttachment
+      "
+      class="notification-detail-attachments__item"
+    >
+      <div class="notification-detail-attachments__file-icon">
+        <i
+          class="pi"
+          [ngClass]="getFileIcon(attachment)"
+          aria-hidden="true"
+        ></i>
+      </div>
+
+      <div class="notification-detail-attachments__file-info">
+        <strong
+          class="notification-detail-attachments__file-name"
+          [title]="attachment.name"
+        >
+          {{ attachment.name }}
+        </strong>
+
+        <div class="notification-detail-attachments__metadata">
+          <span *ngIf="attachment.type">
+            {{ attachment.type }}
+          </span>
+
+          <span
+            *ngIf="
+              attachment.type &&
+              formatFileSize(attachment.size)
+            "
+            aria-hidden="true"
+          >
+            •
+          </span>
+
+          <span *ngIf="formatFileSize(attachment.size)">
+            {{ formatFileSize(attachment.size) }}
+          </span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="notification-detail-attachments__button"
+        (click)="openAttachment(attachment.url)"
+        [attr.aria-label]="
+          'Abrir archivo ' + attachment.name
+        "
+      >
+        <i
+          class="pi pi-external-link"
+          aria-hidden="true"
+        ></i>
+
+        <span>
+          Abrir
+        </span>
+      </button>
+    </article>
+  </div>
+</section>

@@ -1,7 +1,5 @@
 import { Routes } from '@angular/router';
 import { HomePublicComponent } from './pages/home-public/home-public.component';
-import { dashboardRoutes } from './pages/dashboard/dashboard-routes';
-import { DashboardLayoutComponent } from './pages/dashboard/dashboard-layout/dashboard-layout.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { AuthGuard } from './pages/auth/auth.guard';
 import { LoginGuard } from './pages/auth/login.guard';
@@ -16,9 +14,9 @@ export const routes: Routes = [
 
   {
     path: 'dashboard',
-    component: DashboardLayoutComponent,
     canActivate: [AuthGuard],
-    children: dashboardRoutes
+    loadChildren: () =>
+      import('./pages/dashboard/dashboard-routes').then((m) => m.dashboardRoutes),
   },
 
   { path: '', redirectTo: '/home-public', pathMatch: 'full' },

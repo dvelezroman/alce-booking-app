@@ -1,0 +1,403 @@
+<section class="assessment-section">
+
+  <!-- HEADER -->
+  <header class="assessment-header">
+    <div class="assessment-header__information">
+      <span
+        class="assessment-header__icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="5"
+            y="4.5"
+            width="14"
+            height="16"
+            rx="2.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="M9 4V3.5A1.5 1.5 0 0 1 10.5 2h3A1.5 1.5 0 0 1 15 3.5V4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M9 9h6M9 13h6M9 17h4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <div class="assessment-header__text">
+        <div class="assessment-header__title-row">
+          <h3 class="assessment-header__title">
+            Exámenes pendientes
+          </h3>
+
+          <span class="assessment-header__coming-soon">
+            Próximamente
+          </span>
+        </div>
+
+        <p class="assessment-header__description">
+          {{
+            hasAssessments
+              ? 'Tienes exámenes por completar.'
+              : 'No tienes exámenes pendientes.'
+          }}
+        </p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="assessment-header__view-all"
+      (click)="onViewAll()"
+    >
+      <span>
+        Ver todos
+      </span>
+
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M5 12h14M14 7l5 5-5 5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+  </header>
+
+  <!-- CON EXÁMENES -->
+  <ng-container
+    *ngIf="hasAssessments; else emptyAssessments"
+  >
+    <div class="assessment-list">
+
+      <article
+        class="assessment-item"
+        *ngFor="
+          let assessment of visibleAssessments;
+          trackBy: trackById
+        "
+        [class.assessment-item--urgent]="
+          assessment.isUrgent
+        "
+      >
+
+        <!-- FECHA -->
+        <div class="assessment-date">
+          <span class="assessment-date__month">
+            {{
+              getAssessmentMonth(
+                assessment.expiresAt
+              )
+            }}
+          </span>
+
+          <strong class="assessment-date__day">
+            {{
+              getAssessmentDay(
+                assessment.expiresAt
+              )
+            }}
+          </strong>
+
+          <span class="assessment-date__hour">
+            {{
+              getAssessmentHour(
+                assessment.expiresAt
+              )
+            }}
+          </span>
+        </div>
+
+        <!-- INFORMACIÓN -->
+        <div class="assessment-information">
+          <h4 class="assessment-information__title">
+            {{ assessment.templateTitle }}
+          </h4>
+
+          <p class="assessment-information__stage">
+            {{ stageLabel(assessment) }}
+          </p>
+
+          <div class="assessment-information__date">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+
+              <path
+                d="M12 7.5V12l3 2"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <span>
+              {{
+                expiresLabel(
+                  assessment.expiresAt
+                )
+              }}
+            </span>
+          </div>
+
+          <div
+            class="assessment-countdown"
+            [class.assessment-countdown--urgent]="
+              assessment.isUrgent
+            "
+            *ngIf="assessment.timeFormatted"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+
+              <path
+                d="M12 7.5V12l2.8 2"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            <span class="assessment-countdown__label">
+              Tiempo restante:
+            </span>
+
+            <strong>
+              {{ assessment.timeFormatted }}
+            </strong>
+          </div>
+        </div>
+
+        <!-- ACCIÓN -->
+        <div class="assessment-action">
+          <button
+            type="button"
+            class="assessment-button"
+            [disabled]="!assessment.directAccessUrl"
+            (click)="onOpen(assessment)"
+          >
+            Abrir examen
+          </button>
+        </div>
+
+      </article>
+
+    </div>
+
+    <!-- BANNER INFERIOR -->
+    <div class="assessment-banner">
+      <div class="assessment-banner__content">
+
+        <span
+          class="assessment-banner__icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M14 5h5v5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M19 5 11 13"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M19 13v4.5A1.5 1.5 0 0 1 17.5 19h-11A1.5 1.5 0 0 1 5 17.5v-11A1.5 1.5 0 0 1 6.5 5H11"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+        <div class="assessment-banner__text">
+          <h4 class="assessment-banner__title">
+            Completa tus exámenes
+          </h4>
+
+          <p class="assessment-banner__description">
+            Abre el examen desde aquí o desde el hub de Exámenes.
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="assessment-banner__button"
+        (click)="onViewAll()"
+      >
+        <span>
+          Ir a exámenes
+        </span>
+
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M5 12h14M14 7l5 5-5 5"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+
+  </ng-container>
+
+  <!-- SIN EXÁMENES -->
+  <ng-template #emptyAssessments>
+    <div class="assessment-empty">
+
+      <div
+        class="assessment-empty__illustration"
+        aria-hidden="true"
+      >
+        <svg
+          width="105"
+          height="105"
+          viewBox="0 0 120 120"
+          fill="none"
+        >
+          <rect
+            x="30"
+            y="25"
+            width="54"
+            height="67"
+            rx="10"
+            fill="#EEEAFE"
+          />
+
+          <rect
+            x="39"
+            y="18"
+            width="36"
+            height="15"
+            rx="7"
+            fill="#8069EA"
+          />
+
+          <path
+            d="M43 48h27M43 59h20M43 70h15"
+            stroke="#B3A6F5"
+            stroke-width="5"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="80"
+            cy="77"
+            r="22"
+            fill="#45B96A"
+          />
+
+          <path
+            d="M70 77l7 7 14-16"
+            stroke="white"
+            stroke-width="5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M22 49h8M26 45v8"
+            stroke="#4DBD78"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M91 39h8M95 35v8"
+            stroke="#F3BB3A"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <h4 class="assessment-empty__title">
+        ¡Excelente!
+      </h4>
+
+      <p class="assessment-empty__description">
+        No tienes exámenes pendientes en este momento.
+        Los nuevos exámenes aparecerán aquí cuando estén disponibles.
+      </p>
+
+      <button
+        type="button"
+        class="assessment-empty__button"
+        (click)="onViewAll()"
+      >
+        Ir a exámenes
+      </button>
+
+    </div>
+  </ng-template>
+
+</section>

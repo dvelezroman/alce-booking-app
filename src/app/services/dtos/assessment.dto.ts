@@ -4,14 +4,17 @@ import { Student } from "./student.dto";
 export enum AssessmentType {
   Speaking = 'Speaking',
   Grammar = 'Grammar',
+  Writing = 'Writing',
   // Listening = 'Listening',
-  // Writing = 'Writing',
 }
 
 export interface AssessementI {
   id: number;
   type: AssessmentType;
-  points: number;
+  /** Omitted for student viewers (pass/fail only). */
+  points?: number;
+  /** Present for student viewers when points are redacted. */
+  passed?: boolean;
   note?: any;
   studentId: number;
   stageId: number;
@@ -44,13 +47,13 @@ export interface CreateAssessmentI {
 }
 
 export interface UpdateAssessmentI {
-  type: AssessmentType;
-  points: number;
+  type?: AssessmentType;
+  points?: number;
   note?: any;
-  studentId: number;
-  stageId: number;
-  instructorId: number;
-  assessmentTypeId: number;
+  studentId?: number;
+  stageId?: number;
+  instructorId?: number;
+  assessmentTypeId?: number;
 }
 
 export interface FilterAssessmentI {

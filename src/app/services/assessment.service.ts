@@ -23,7 +23,7 @@ export class AssessmentService {
   }
 
   update(id: number, data: UpdateAssessmentI): Observable<AssessementI> {
-    return this.http.patch<AssessementI>(`${this.apiUrl}/assessments/${id}`, data);
+    return this.http.patch<AssessementI>(`${this.apiUrl}/${id}`, data);
   }
 
   find(id: number): Observable<AssessementI> {

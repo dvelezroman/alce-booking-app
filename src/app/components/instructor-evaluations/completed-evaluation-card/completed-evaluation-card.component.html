@@ -1,0 +1,75 @@
+<article
+  class="completed-evaluation-card"
+  [ngClass]="cardModifierClass"
+  [attr.aria-label]="classTitle"
+>
+  <div class="completed-evaluation-card__stage">
+    <span class="completed-evaluation-card__stage-label">
+      Stage
+    </span>
+
+    <strong class="completed-evaluation-card__stage-number">
+      {{ stageNumber }}
+    </strong>
+
+    <span
+      class="completed-evaluation-card__stage-status"
+      aria-hidden="true"
+    >
+      <i class="fa-solid fa-check"></i>
+    </span>
+  </div>
+
+  <div class="completed-evaluation-card__information">
+    <div class="completed-evaluation-card__title-row">
+      <h3 class="completed-evaluation-card__title">
+        {{ classTitle }}
+      </h3>
+
+      <span class="completed-evaluation-card__status-badge">
+        Calificada
+      </span>
+    </div>
+
+    <p class="completed-evaluation-card__stage-description">
+      Etapa: {{ stageDescription }}
+    </p>
+
+    <div
+      class="completed-evaluation-card__rating"
+      [attr.aria-label]="
+        'Calificación ' + formattedRating + ' de 10'
+      "
+    >
+      <i
+        class="fa-solid fa-star"
+        aria-hidden="true"
+      ></i>
+
+      <strong>
+        {{ formattedRating }}
+      </strong>
+
+      <span>
+        /10
+      </span>
+    </div>
+
+    <div class="completed-evaluation-card__metadata">
+      <p class="completed-evaluation-card__date">
+        <i
+          class="fa-regular fa-calendar"
+          aria-hidden="true"
+        ></i>
+
+        <span>
+          Evaluada el:
+        </span>
+
+        <strong>
+          {{ formattedEvaluationDate }}
+        </strong>
+      </p>
+    </div>
+  </div>
+</article>

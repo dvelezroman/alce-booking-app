@@ -13,6 +13,9 @@ import { CountdownBannerComponent } from '../../../components/home/countdown-ban
 import { AssessmentAnnouncementComponent } from '../../../components/home/assessment-announcement/assessment-announcement.component';
 import { StudentLiveClassesComponent } from '../../../components/student-live-classes/student-live-classes.component';
 import { PendingAssessmentCardComponent } from '../../../components/home/pending-assessment-card/pending-assessment-card.component';
+import { PendingPlatformAssessmentCardComponent } from '../../../components/home/pending-platform-assessment-card/pending-platform-assessment-card.component';
+import { PlatformAssessmentAssignment } from '../../../services/dtos/platform-assessment.dto';
+import { PlatformAssessmentService } from '../../../services/platform-assessment.service';
 import { StudentCuencaBannerComponent } from '../../../components/home/student-cuenca-banner/student-cuenca-banner.component';
 import { StudentCuencaCommBannerComponent } from '../../../components/home/student-cuenca-comm-banner/student-cuenca-comm-banner.component';
 import { ImageBannerComponent } from '../../../components/home/image-banner/image-banner.component';
@@ -54,6 +57,7 @@ type AnnouncementViewerUser = {
     AssessmentAnnouncementComponent,
     StudentLiveClassesComponent,
     PendingAssessmentCardComponent,
+    PendingPlatformAssessmentCardComponent,
     StudentCuencaBannerComponent,
     // StudentCuencaCommBannerComponent,
     // ImageBannerComponent,
@@ -96,9 +100,11 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   /* DATA */
   pendingAssessmentsCount = 0;
+  pendingPlatformAssessmentsCount = 0;
   pendingClassEvaluationsCount = 0;
   hasPendingClassEvaluations = false;
   assessments: StageAssessment[] = [];
+  platformAssessments: PlatformAssessmentAssignment[] = [];
   hasLiveClasses = false;
   suspensionInfo: SuspensionInfo | null = null;
   meetings: MeetingDTO[] = [];
@@ -127,7 +133,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     private instructorEvaluationService: InstructorEvaluationService,
     private configService: AssessmentPointsConfigService,
     private announcementService: AnnouncementService,
-    private readonly bookingService: BookingService
+    private readonly bookingService: BookingService,
+    private readonly platformAssessmentService: PlatformAssessmentService,
   ) {}
 
   ngOnInit(): void {
@@ -196,6 +203,20 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
+  private loadPlatformAssessments(studentId: number): void {
+    this.platformAssessmentService.getAll(studentId).subscribe({
+      next: (list) => {
+        const pending = (list ?? []).filter((a) => a.status === 'pending');
+        this.platformAssessments = pending;
+        this.pendingPlatformAssessmentsCount = pending.length;
+      },
+      error: () => {
+        this.platformAssessments = [];
+        this.pendingPlatformAssessmentsCount = 0;
+      },
+    });
+  }
+
   private loadPendingClassEvaluations(): void {
     this.instructorEvaluationService
       .getPendingEvaluations(50, 0)
@@ -242,8 +263,11 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
     if (studentId) {
       this.loadMeetings(studentId);
+      this.loadPlatformAssessments(studentId);
     } else {
       this.meetings = [];
+      this.platformAssessments = [];
+      this.pendingPlatformAssessmentsCount = 0;
     }
 
     // ===== BANNER CUENCA =====
@@ -536,6 +560,19 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
       ['/dashboard/stage-assessment-student'],
       assessmentId ? { queryParams: { highlight: assessmentId } } : undefined
     );
+  }
+
+  goToPlatformAssessments(): void {
+    this.router.navigate(['/dashboard/platform-assessments']);
+  }
+
+  openPlatformAssessment(assessment: PlatformAssessmentAssignment): void {
+    const url = assessment.directAccessUrl?.trim();
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    this.goToPlatformAssessments();
   }
 
   goToNotifications(): void {

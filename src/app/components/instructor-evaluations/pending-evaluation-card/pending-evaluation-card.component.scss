@@ -1,0 +1,480 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.pending-evaluation-card {
+  --pending-color: #7652df;
+  --pending-color-dark: #6840cd;
+  --pending-soft-background: #f5f1ff;
+
+  width: 100%;
+  min-height: 8.5rem;
+
+  display: grid;
+  grid-template-columns:
+    6rem
+    minmax(0, 1fr)
+    auto;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 1rem;
+
+  overflow: hidden;
+
+  border: 1px solid #e5e7ee;
+  border-radius: 1rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0.35rem 1.25rem
+    rgba(15, 23, 42, 0.045);
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.pending-evaluation-card:hover {
+  border-color: #dcd4f5;
+
+  box-shadow:
+    0 0.7rem 1.65rem
+    rgba(15, 23, 42, 0.07);
+
+  transform: translateY(-1px);
+}
+
+/* ==========================
+   STAGE
+   ========================== */
+
+.pending-evaluation-card__stage {
+  position: relative;
+
+  width: 6rem;
+  height: 6rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  padding: 0.75rem;
+
+  overflow: hidden;
+
+  border: 1px solid #e2daf9;
+  border-radius: 0.8rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      #faf8ff,
+      #f2edff
+    );
+
+  box-sizing: border-box;
+}
+
+.pending-evaluation-card__stage::before {
+  content: '';
+
+  position: absolute;
+
+  top: -2rem;
+  right: -2rem;
+
+  width: 5rem;
+  height: 5rem;
+
+  border-radius: 50%;
+
+  background:
+    rgba(118, 82, 223, 0.08);
+}
+
+.pending-evaluation-card__stage-label {
+  position: relative;
+  z-index: 1;
+
+  color: #858ba0;
+
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pending-evaluation-card__stage-number {
+  position: relative;
+  z-index: 1;
+
+  margin-top: 0.2rem;
+
+  color: #262c4c;
+
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.pending-evaluation-card__status {
+  position: absolute;
+  z-index: 1;
+
+  right: 0.55rem;
+  bottom: 0.55rem;
+
+  width: 1.6rem;
+  height: 1.6rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+  color: var(--pending-color);
+
+  font-size: 0.62rem;
+
+  box-shadow:
+    0 0.25rem 0.65rem
+    rgba(101, 65, 201, 0.14);
+}
+
+/* ==========================
+   INFORMACIÓN
+   ========================== */
+
+.pending-evaluation-card__information {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pending-evaluation-card__title {
+  margin: 0 0 0.2rem;
+
+  overflow: hidden;
+
+  color: #171b36;
+
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.35;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pending-evaluation-card__stage-description {
+  margin: 0 0 0.55rem;
+
+  color: #737a90;
+
+  font-size: 0.74rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.pending-evaluation-card__metadata {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1rem;
+
+  margin-bottom: 0.6rem;
+}
+
+.pending-evaluation-card__metadata-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  margin: 0;
+
+  color: #666d83;
+
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.3;
+
+  white-space: nowrap;
+}
+
+.pending-evaluation-card__metadata-item i {
+  width: 0.9rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--pending-color);
+
+  font-size: 0.7rem;
+}
+
+.pending-evaluation-card__badge {
+  width: fit-content;
+  min-height: 1.45rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.2rem 0.55rem;
+
+  border: 1px solid #e0d6fa;
+  border-radius: 999px;
+
+  background: var(--pending-soft-background);
+  color: var(--pending-color-dark);
+
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ==========================
+   ACCIONES
+   ========================== */
+
+.pending-evaluation-card__actions {
+  min-width: 10rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.pending-evaluation-card__button {
+  min-width: 9.5rem;
+  min-height: 2.55rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  padding: 0.55rem 0.9rem;
+
+  border: 1px solid #8060df;
+  border-radius: 0.6rem;
+
+  background: #ffffff;
+  color: #6e49d4;
+
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.pending-evaluation-card__button i {
+  font-size: 0.72rem;
+}
+
+.pending-evaluation-card__button:hover {
+  border-color: #6840cd;
+
+  background: #f8f5ff;
+  color: #5e35c4;
+
+  box-shadow:
+    0 0.45rem 1rem
+    rgba(101, 65, 201, 0.1);
+
+  transform: translateY(-1px);
+}
+
+.pending-evaluation-card__button:active {
+  transform: translateY(0);
+}
+
+.pending-evaluation-card__button:focus-visible {
+  outline: 3px solid rgba(110, 73, 212, 0.2);
+  outline-offset: 2px;
+}
+
+/* ==========================
+   TABLET
+   ========================== */
+
+@media (max-width: 56.25rem) {
+  .pending-evaluation-card {
+    grid-template-columns:
+      5.5rem
+      minmax(0, 1fr)
+      auto;
+    gap: 0.85rem;
+
+    min-height: 7.5rem;
+
+    padding: 0.85rem;
+  }
+
+  .pending-evaluation-card__stage {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+
+  .pending-evaluation-card__actions {
+    min-width: 8.5rem;
+  }
+
+  .pending-evaluation-card__button {
+    min-width: 8.5rem;
+  }
+}
+
+/* ==========================
+   MOBILE
+   ========================== */
+
+@media (max-width: 40.625rem) {
+  .pending-evaluation-card {
+    grid-template-columns:
+      4.9rem
+      minmax(0, 1fr);
+    align-items: start;
+    gap: 0.75rem;
+
+    min-height: auto;
+
+    padding: 0.8rem;
+  }
+
+  .pending-evaluation-card__stage {
+    width: 4.9rem;
+    height: 4.9rem;
+
+    padding: 0.6rem;
+
+    border-radius: 0.7rem;
+  }
+
+  .pending-evaluation-card__stage-label {
+    font-size: 0.58rem;
+  }
+
+  .pending-evaluation-card__stage-number {
+    font-size: 1.55rem;
+  }
+
+  .pending-evaluation-card__status {
+    right: 0.4rem;
+    bottom: 0.4rem;
+
+    width: 1.4rem;
+    height: 1.4rem;
+
+    font-size: 0.54rem;
+  }
+
+  .pending-evaluation-card__title {
+    font-size: 0.82rem;
+  }
+
+  .pending-evaluation-card__stage-description {
+    margin-bottom: 0.4rem;
+
+    font-size: 0.67rem;
+  }
+
+  .pending-evaluation-card__metadata {
+    gap: 0.3rem 0.65rem;
+
+    margin-bottom: 0.45rem;
+  }
+
+  .pending-evaluation-card__metadata-item {
+    font-size: 0.66rem;
+  }
+
+  .pending-evaluation-card__metadata-item i {
+    font-size: 0.64rem;
+  }
+
+  .pending-evaluation-card__badge {
+    min-height: 1.35rem;
+
+    padding: 0.17rem 0.45rem;
+
+    font-size: 0.59rem;
+  }
+
+  .pending-evaluation-card__actions {
+    grid-column: 1 / -1;
+
+    width: 100%;
+    min-width: 0;
+
+    margin-top: 0.1rem;
+  }
+
+  .pending-evaluation-card__button {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.35rem;
+
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 30rem) {
+  .pending-evaluation-card {
+    grid-template-columns:
+      4.25rem
+      minmax(0, 1fr);
+    gap: 0.65rem;
+
+    padding: 0.7rem;
+
+    border-radius: 0.85rem;
+  }
+
+  .pending-evaluation-card__stage {
+    width: 4.25rem;
+    height: 4.5rem;
+
+    padding: 0.5rem;
+  }
+
+  .pending-evaluation-card__stage-number {
+    font-size: 1.35rem;
+  }
+
+  .pending-evaluation-card__title {
+    font-size: 0.78rem;
+  }
+
+  .pending-evaluation-card__metadata {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .pending-evaluation-card__button {
+    min-height: 2.3rem;
+  }
+}

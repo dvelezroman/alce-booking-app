@@ -1,0 +1,268 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* ================================
+   CARD
+================================ */
+
+.notification-settings {
+  width: 100%;
+  min-width: 0;
+  padding: 1rem 1.2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  border: 1px solid #e4e6ee;
+  border-radius: 1.15rem;
+
+  background:
+    radial-gradient(
+      circle at 5% 50%,
+      rgba(112, 77, 239, 0.06),
+      transparent 11rem
+    ),
+    #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(31, 42, 89, 0.035);
+}
+
+/* ================================
+   CONTENT
+================================ */
+
+.notification-settings__content {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+}
+
+.notification-settings__icon {
+  width: 3.15rem;
+  height: 3.15rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f2edff 0%,
+      #e9e2ff 100%
+    );
+
+  color: #7651e8;
+
+  box-shadow:
+    0 8px 20px rgba(105, 65, 216, 0.1);
+}
+
+.notification-settings__icon svg {
+  display: block;
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.notification-settings__text {
+  min-width: 0;
+}
+
+.notification-settings__title {
+  margin: 0;
+
+  color: #11162f;
+
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.notification-settings__description {
+  margin: 0.25rem 0 0;
+
+  color: #61697d;
+
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* ================================
+   BUTTON
+================================ */
+
+.notification-settings__button {
+  min-height: 2.7rem;
+  padding: 0.65rem 1rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  border: 1px solid #ded6f6;
+  border-radius: 0.75rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f5f0ff 0%,
+      #eee7ff 100%
+    );
+
+  color: #5e36ca;
+
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.notification-settings__button:hover {
+  transform: translateY(-1px);
+
+  border-color: #c3b1f0;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eee7ff 0%,
+      #e6dcff 100%
+    );
+
+  color: #4c27b5;
+
+  box-shadow:
+    0 8px 18px rgba(85, 53, 174, 0.1);
+}
+
+.notification-settings__button:active {
+  transform: scale(0.97);
+}
+
+.notification-settings__button svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ================================
+   ACTIVE / INACTIVE
+================================ */
+
+.notification-settings--active
+  .notification-settings__icon {
+  background:
+    linear-gradient(
+      135deg,
+      #f2edff 0%,
+      #e9e2ff 100%
+    );
+
+  color: #7651e8;
+}
+
+.notification-settings--inactive
+  .notification-settings__icon {
+  background:
+    linear-gradient(
+      135deg,
+      #fff5e9 0%,
+      #ffedda 100%
+    );
+
+  color: #d87b16;
+}
+
+.notification-settings--inactive
+  .notification-settings__button {
+  border-color: #ead6bd;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff8ef 0%,
+      #fff0df 100%
+    );
+
+  color: #b76512;
+}
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 800px) {
+  .notification-settings {
+    align-items: flex-start;
+  }
+
+  .notification-settings__button {
+    min-height: 2.5rem;
+  }
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 640px) {
+  .notification-settings {
+    padding: 1rem;
+
+    flex-direction: column;
+    align-items: stretch;
+
+    border-radius: 1.05rem;
+  }
+
+  .notification-settings__content {
+    align-items: flex-start;
+  }
+
+  .notification-settings__icon {
+    width: 2.8rem;
+    height: 2.8rem;
+  }
+
+  .notification-settings__icon svg {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .notification-settings__title {
+    font-size: 0.82rem;
+  }
+
+  .notification-settings__description {
+    font-size: 0.68rem;
+  }
+
+  .notification-settings__button {
+    width: 100%;
+    min-height: 2.5rem;
+
+    font-size: 0.7rem;
+  }
+}

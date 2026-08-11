@@ -42,7 +42,9 @@ export class NotificationService {
     if (filters.page != null)     params = params.set('page', String(filters.page));
     if (filters.limit != null)    params = params.set('limit', String(filters.limit));
 
-    return this.http.get<Notification[] | NotificationListResponse>(this.apiUrl, { params });
+    return this.http
+      .get<Notification[] | NotificationListResponse>(this.apiUrl, { params })
+      .pipe(map((res) => this.normalizeListOrArray(res)));
   }
 
   getUserNotifications(opts?: {
@@ -64,11 +66,22 @@ export class NotificationService {
       params = params.set('readDays', String(opts.readDays));
     }
 
-    return this.http.get<NotificationListResponse>(`${this.apiUrl}/user`, { params });
+    return this.http
+      .get<NotificationListResponse>(`${this.apiUrl}/user`, { params })
+      .pipe(
+        map((res) => ({
+          ...res,
+          notifications: (res.notifications || []).map((n) =>
+            this.normalizeNotification(n),
+          ),
+        })),
+      );
   }
 
   getNotificationById(id: number | string): Observable<Notification> {
-    return this.http.get<Notification>(`${this.apiUrl}/${id}`);
+    return this.http
+      .get<Notification>(`${this.apiUrl}/${id}`)
+      .pipe(map((n) => this.normalizeNotification(n)));
   }
 
   markSingleAsRead(notificationId: number): Observable<number> {
@@ -90,6 +103,36 @@ export class NotificationService {
 
   deleteNotification(id: number | string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  /** Parse `message` when API/client returns a JSON string instead of an object. */
+  private normalizeNotification(n: Notification): Notification {
+    const raw = n?.message as unknown;
+    if (typeof raw === 'string') {
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          return { ...n, message: parsed };
+        }
+      } catch {
+        return { ...n, message: { body: raw } };
+      }
+    }
+    return n;
+  }
+
+  private normalizeListOrArray(
+    res: Notification[] | NotificationListResponse,
+  ): Notification[] | NotificationListResponse {
+    if (Array.isArray(res)) {
+      return res.map((n) => this.normalizeNotification(n));
+    }
+    return {
+      ...res,
+      notifications: (res.notifications || []).map((n) =>
+        this.normalizeNotification(n),
+      ),
+    };
   }
 
 }

@@ -33,6 +33,8 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
   meetings: MeetingDTO[] = [];
   loading = false;
 
+  isRefreshTooltipVisible = false;
+
   filterMode: 'today' | 'all' = 'all';
 
   @Output() meetingsCount = new EventEmitter<number>();
@@ -76,7 +78,7 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
   // Reuniones visibles en el dashboard
   // ================================
   get visibleMeetings(): MeetingDTO[] {
-    return this.meetings.slice(0, 3);
+    return this.meetings
   }
 
   get hasOneMeeting(): boolean {
@@ -121,12 +123,12 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
         next: (meetings: MeetingDTO[]) => {
           this.meetings = this.applyFilter(meetings)
             .slice()
-            .sort((firstMeeting, secondMeeting) => {
-              return (
-                this.getMeetingTimestamp(firstMeeting) -
-                this.getMeetingTimestamp(secondMeeting)
-              );
-            });
+            .sort((firstMeeting, secondMeeting) =>
+              this.compareMeetings(
+                firstMeeting,
+                secondMeeting
+              )
+            );
 
           this.meetingsCount.emit(this.meetings.length);
           this.loading = false;
@@ -140,6 +142,52 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
       });
+  }
+
+  private compareMeetings(
+    firstMeeting: MeetingDTO,
+    secondMeeting: MeetingDTO
+  ): number {
+    const firstTimestamp =
+      this.getMeetingTimestamp(firstMeeting);
+
+    const secondTimestamp =
+      this.getMeetingTimestamp(secondMeeting);
+
+    const firstIsFinished =
+      this.isPastMeeting(firstMeeting);
+
+    const secondIsFinished =
+      this.isPastMeeting(secondMeeting);
+
+    if (
+      firstIsFinished &&
+      !secondIsFinished
+    ) {
+      return 1;
+    }
+
+    if (
+      !firstIsFinished &&
+      secondIsFinished
+    ) {
+      return -1;
+    }
+
+    if (
+      !firstIsFinished &&
+      !secondIsFinished
+    ) {
+      return (
+        firstTimestamp -
+        secondTimestamp
+      );
+    }
+
+    return (
+      secondTimestamp -
+      firstTimestamp
+    );
   }
 
   changeFilter(mode: 'today' | 'all'): void {
@@ -166,6 +214,27 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
   // ================================
   // Acciones visuales nuevas
   // ================================
+
+  toggleRefreshTooltip(): void {
+    this.isRefreshTooltipVisible =
+      !this.isRefreshTooltipVisible;
+  }
+
+  showRefreshTooltip(): void {
+    this.isRefreshTooltipVisible = true;
+  }
+
+  hideRefreshTooltip(): void {
+    this.isRefreshTooltipVisible = false;
+  }
+
+  handleRefreshClasses(): void {
+    if (this.loading) {
+      return;
+    }
+    this.loadLiveClasses(this.filterMode);
+  }
+
   showAllClasses(): void {
     this.router.navigate([
       '/dashboard/scheduled-meetings',
@@ -176,13 +245,48 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
     this.scheduleClass.emit();
   }
 
-  handleViewDetails(meeting: MeetingDTO): void {
+  handleViewDetails(
+    meeting: MeetingDTO
+  ): void {
+    if (
+      this.isPastMeeting(meeting) ===
+      'finished'
+    ) {
+      return;
+    }
+
     this.viewMeetingDetails.emit(meeting);
   }
 
   // ================================
   // Información visual de la clase
   // ================================
+
+ isPastMeeting(
+    meeting: MeetingDTO
+  ): 'started' | 'finished' | null {
+    const meetingStart =
+      this.getMeetingTimestamp(meeting);
+
+    const meetingEnd =
+      meetingStart + 60 * 60 * 1000;
+
+    const now = Date.now();
+
+    if (
+      now >= meetingStart &&
+      now < meetingEnd
+    ) {
+      return 'started';
+    }
+
+    if (now >= meetingEnd) {
+      return 'finished';
+    }
+
+    return null;
+  }
+  
   getMeetingTitle(_meeting: MeetingDTO): string {
     return 'Clase de inglés';
   }
@@ -255,7 +359,7 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
   }
 
   getMeetingTime(meeting: MeetingDTO): string {
-    const startHour = Number(meeting.localhour ?? meeting.hour);
+    const startHour = Number(meeting.hour ?? meeting.localhour);
 
     if (Number.isNaN(startHour)) {
       return 'Horario por confirmar';
@@ -415,58 +519,133 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    const LINK_ACTIVE_BEFORE = 5 * 60 * 1000;
-    const LINK_ACTIVE_AFTER = 6 * 60 * 1000;
+    const LINK_ACTIVE_BEFORE =
+      5 * 60 * 1000;
 
-    const localDateISO = new Date(meeting.localdate)
-      .toISOString()
-      .split('T')[0];
+    const LINK_ACTIVE_AFTER =
+      6 * 60 * 1000;
 
-    const localHour = meeting.localhour
-      .toString()
-      .padStart(2, '0');
+    const rawDate =
+      meeting.localdate ??
+      meeting.date;
 
-    const meetingStart = new Date(
-      `${localDateISO}T${localHour}:00`
-    ).getTime();
+    const rawHour =
+      meeting.localhour ??
+      meeting.hour;
+
+    if (
+      !rawDate ||
+      rawHour === null ||
+      rawHour === undefined
+    ) {
+      return false;
+    }
+
+    const datePart =
+      String(rawDate).slice(0, 10);
+
+    const [
+      year,
+      month,
+      day,
+    ] = datePart
+      .split('-')
+      .map(Number);
+
+    const hour = Number(rawHour);
+
+    if (
+      !year ||
+      !month ||
+      !day ||
+      Number.isNaN(hour) ||
+      hour < 0 ||
+      hour > 23
+    ) {
+      return false;
+    }
+
+    const meetingStart =
+      Date.UTC(
+        year,
+        month - 1,
+        day,
+        hour + 5,
+        0,
+        0,
+        0
+      );
 
     const now = Date.now();
 
-    const start = meetingStart - LINK_ACTIVE_BEFORE;
-    const end = meetingStart + LINK_ACTIVE_AFTER;
+    const availableFrom =
+      meetingStart -
+      LINK_ACTIVE_BEFORE;
 
-    return now >= start && now <= end;
+    const availableUntil =
+      meetingStart +
+      LINK_ACTIVE_AFTER;
+
+    return (
+      now >= availableFrom &&
+      now <= availableUntil
+    );
   }
 
   // ================================
   // Helpers privados
   // ================================
   private getMeetingTimestamp(
-    meeting: MeetingDTO
-  ): number {
-    const dateValue =
-      meeting.localdate ?? meeting.date;
+  meeting: MeetingDTO
+): number {
+  const rawDate =
+    meeting.localdate ??
+    meeting.date;
 
-    const parsedDate = new Date(dateValue);
+  const rawHour =
+    meeting.localhour ??
+    meeting.hour;
 
-    if (Number.isNaN(parsedDate.getTime())) {
-      return 0;
-    }
-
-    const meetingDate = this.formatDateForRequest(
-      parsedDate
-    );
-
-    const meetingHour = Number(
-      meeting.localhour ?? meeting.hour ?? 0
-    );
-
-    return new Date(
-      `${meetingDate}T${meetingHour
-        .toString()
-        .padStart(2, '0')}:00:00`
-    ).getTime();
+  if (
+    !rawDate ||
+    rawHour === null ||
+    rawHour === undefined
+  ) {
+    return 0;
   }
+
+  const datePart =
+    String(rawDate).slice(0, 10);
+
+  const [
+    year,
+    month,
+    day,
+  ] = datePart
+    .split('-')
+    .map(Number);
+
+  const hour = Number(rawHour);
+
+  if (
+    !year ||
+    !month ||
+    !day ||
+    Number.isNaN(hour)
+  ) {
+    return 0;
+  }
+
+  return Date.UTC(
+    year,
+    month - 1,
+    day,
+    hour + 5,
+    0,
+    0,
+    0
+  );
+}
 
   private formatDateForRequest(date: Date): string {
     const year = date.getFullYear();

@@ -1,57 +1,115 @@
-<section class="completed-section">
+<section
+  class="completed-evaluations"
+  aria-labelledby="completed-evaluations-title"
+>
+  <header class="completed-evaluations__header">
+    <div class="completed-evaluations__heading">
+      <span
+        class="completed-evaluations__header-icon"
+        aria-hidden="true"
+      >
+        <i class="fa-solid fa-check"></i>
+      </span>
 
-  <h3 class="section-title">
-    Evaluaciones realizadas
-    <span class="count">{{ evaluations.length }}</span>
-  </h3>
+      <div class="completed-evaluations__header-content">
+        <h2
+          id="completed-evaluations-title"
+          class="completed-evaluations__title"
+        >
+          Evaluaciones realizadas
+        </h2>
 
-  <div class="empty-state" *ngIf="evaluations.length === 0">
-    <span class="material-icons empty-icon">rate_review</span>
-    <h4>No tienes evaluaciones aún</h4>
+        <p class="completed-evaluations__description">
+          Estas son las clases que ya has evaluado.
+        </p>
+      </div>
+    </div>
+
+    <span
+      *ngIf="!loading && hasEvaluations"
+      class="completed-evaluations__count"
+    >
+      {{ evaluationsCount }}
+
+      {{
+        evaluationsCount === 1
+          ? 'evaluada'
+          : 'evaluadas'
+      }}
+    </span>
+  </header>
+
+  <div
+    *ngIf="loading"
+    class="completed-evaluations__loading"
+    role="status"
+    aria-live="polite"
+  >
+    <span
+      class="completed-evaluations__spinner"
+      aria-hidden="true"
+    ></span>
+
     <p>
-      Cuando completes una evaluación de instructor, aparecerá aquí.
+      Cargando evaluaciones realizadas...
     </p>
   </div>
 
-  <div class="table-wrapper" *ngIf=" evaluations.length > 0">
+  <div
+    *ngIf="!loading && !hasEvaluations"
+    class="completed-evaluations__empty"
+  >
+    <div
+      class="completed-evaluations__empty-illustration"
+      aria-hidden="true"
+    >
+      <span class="completed-evaluations__empty-document">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
 
-    <div class="table-scroll">
-
-      <table class="evaluations-table">
-        <thead>
-          <tr>
-            <th class="col-instructor">Instructor</th>
-            <th class="col-rating">Calificación</th>
-            <th class="col-observation">Observación</th>
-            <th class="col-date">Fecha</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let evaluation of evaluations">
-            <td class="col-instructor">
-              {{ evaluation.instructor?.user?.firstName }}
-              {{ evaluation.instructor?.user?.lastName }}
-            </td>
-
-            <td class="col-rating rating">
-              {{ evaluation.rating }}/10
-            </td>
-
-            <td class="col-observation">
-              <div class="observation-cell">
-                {{ evaluation.observation || '—' }}
-              </div>
-            </td>
-
-            <td class="col-date date">
-              {{ evaluation.createdAt | date:'mediumDate' }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
+      <span class="completed-evaluations__empty-check">
+        <i class="fa-solid fa-check"></i>
+      </span>
     </div>
+
+    <h3 class="completed-evaluations__empty-title">
+      Aún no tienes evaluaciones realizadas
+    </h3>
+
+    <p class="completed-evaluations__empty-description">
+      Cuando evalúes una clase, podrás consultar aquí su
+      calificación y todos los detalles registrados.
+    </p>
   </div>
 
+  <div
+    *ngIf="!loading && hasEvaluations"
+    class="completed-evaluations__content"
+  >
+    <div class="completed-evaluations__list">
+      <app-completed-evaluation-card
+        *ngFor="
+          let evaluation of evaluations;
+          trackBy: trackByEvaluationId
+        "
+        [evaluation]="evaluation"
+        (viewEvaluation)="onViewEvaluation($event)"
+      />
+    </div>
+
+    <footer class="completed-evaluations__footer">
+      Mostrando
+      <strong>{{ evaluationsCount }}</strong>
+      de
+      <strong>{{ evaluationsCount }}</strong>
+
+      {{
+        evaluationsCount === 1
+          ? 'evaluación realizada'
+          : 'evaluaciones realizadas'
+      }}
+    </footer>
+  </div>
 </section>

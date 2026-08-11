@@ -1,0 +1,162 @@
+<!-- OVERLAY TEMPORAL -->
+<!-- <div class="platform-assessments-coming-soon">
+  <div class="platform-assessments-coming-soon__content">
+    <h2 class="platform-assessments-coming-soon__title">
+      Próximamente...
+    </h2>
+
+    <p class="platform-assessments-coming-soon__description">
+      Esta sección estará disponible muy pronto.
+    </p>
+  </div>
+</div> -->
+
+<main class="platform-assessments-page">
+
+  <!-- HEADER -->
+  <app-platform-assessment-header
+    [loading]="loading"
+    (refresh)="onRefreshAssessments()"
+  ></app-platform-assessment-header>
+
+  <!-- RESUMEN -->
+  <app-platform-assessment-summary
+    [activeCount]="activeCount"
+    [expiredCount]="expiredCount"
+    [completedCount]="completedCount"
+    [selectedTab]="selectedTab"
+    (selectTab)="onSummarySelect($event)"
+  ></app-platform-assessment-summary>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <section class="platform-assessments-content">
+
+    <!-- TABS / FILTROS -->
+    <app-platform-assessment-tabs
+      [selectedTab]="selectedTab"
+      [activeCount]="activeCount"
+      [expiredCount]="expiredCount"
+      [completedCount]="completedCount"
+      (tabChange)="onTabChange($event)"
+    ></app-platform-assessment-tabs>
+
+    <!-- LOADING -->
+    <div
+      class="platform-assessments-loading"
+      *ngIf="loading"
+    >
+      <div
+        class="platform-assessment-skeleton"
+        *ngFor="let item of [1, 2, 3]"
+      >
+        <div class="platform-assessment-skeleton__date"></div>
+
+        <div class="platform-assessment-skeleton__content">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="platform-assessment-skeleton__badge"></div>
+
+        <div class="platform-assessment-skeleton__button"></div>
+      </div>
+    </div>
+
+    <!-- CON DATOS -->
+    <ng-container
+      *ngIf="!loading && hasSelectedAssessments"
+    >
+      <app-platform-assessment-list
+        [assessments]="selectedAssessments"
+        [selectedTab]="selectedTab"
+      ></app-platform-assessment-list>
+    </ng-container>
+
+    <!-- SIN DATOS -->
+    <app-platform-assessment-empty-state
+      *ngIf="
+        !loading &&
+        !hasSelectedAssessments
+      "
+      [selectedTab]="selectedTab"
+      (action)="onEmptyStateAction()"
+    ></app-platform-assessment-empty-state>
+
+    <!-- BANNER INFERIOR -->
+    <div
+      class="platform-assessment-help-banner"
+      *ngIf="!loading && hasSelectedAssessments"
+    >
+      <div class="platform-assessment-help-banner__content">
+
+        <span
+          class="platform-assessment-help-banner__icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="16"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M7 3v4M17 3v4M3 9h18"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M12 12v6M9 15h6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <div>
+          <h4 class="platform-assessment-help-banner__title">
+            ¿No encuentras una evaluación?
+          </h4>
+
+          <p class="platform-assessment-help-banner__description">
+            Las nuevas evaluaciones aparecerán aquí cuando estén disponibles.
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="platform-assessment-help-banner__button"
+        (click)="onRefreshAssessments()"
+      >
+        Actualizar evaluaciones
+      </button>
+    </div>
+
+  </section>
+
+  <!-- MODAL -->
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    (close)="modal.show = false"
+  >
+  </app-modal>
+
+</main>

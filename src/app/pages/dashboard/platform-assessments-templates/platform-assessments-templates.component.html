@@ -1,0 +1,103 @@
+<h2 class="title stage">Assessments plataforma</h2>
+
+<section class="templates-section">
+  <div class="toolbar">
+    <a routerLink="/dashboard/platform-assessments-list" class="link-muted">
+      Ver assignments planos
+    </a>
+    <a routerLink="/dashboard/platform-assessments-assign" class="btn-primary-link">
+      Asignar examen
+    </a>
+  </div>
+
+  <div class="filters">
+    <input
+      class="input"
+      type="text"
+      [(ngModel)]="search"
+      placeholder="Buscar por título…"
+      (keyup.enter)="applyFilters()"
+    />
+    <input
+      class="input stage"
+      type="number"
+      min="1"
+      max="19"
+      [(ngModel)]="stage"
+      placeholder="Stage"
+    />
+    <select class="select" [(ngModel)]="activeOnly">
+      <option [ngValue]="true">Activos</option>
+      <option [ngValue]="false">Inactivos</option>
+      <option [ngValue]="null">Todos</option>
+    </select>
+    <button type="button" class="btn-primary" (click)="applyFilters()">Filtrar</button>
+    <button type="button" class="btn-clear" (click)="clearFilters()">Limpiar</button>
+  </div>
+
+  <p class="error-banner" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <p class="meta" *ngIf="!loading">{{ total }} assessment(s) · pág. {{ page }} / {{ totalPages }}</p>
+
+  <div class="table-scroll">
+    <table class="templates-table">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Stage</th>
+          <th>Rules</th>
+          <th>Tiempo</th>
+          <th>Aprobar %</th>
+          <th>Release</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="loading">
+          <td colspan="8" class="empty">Cargando…</td>
+        </tr>
+        <tr *ngIf="!loading && rows.length === 0">
+          <td colspan="8" class="empty">Sin templates</td>
+        </tr>
+        <tr *ngFor="let row of rows">
+          <td>
+            <div class="cell-main">{{ row.title }}</div>
+            <div class="cell-sub" *ngIf="row.description">{{ row.description }}</div>
+          </td>
+          <td>{{ row.targetStage }}</td>
+          <td>{{ row.stages.length ? row.stages.join(', ') : '—' }}</td>
+          <td>{{ row.timeLimitMinutes }} min</td>
+          <td>{{ row.passingScorePercent }}%</td>
+          <td>{{ row.resultReleasePolicy }}</td>
+          <td>
+            <span class="badge" [class.on]="row.isActive" [class.off]="!row.isActive">
+              {{ row.isActive ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td class="actions">
+            <a
+              class="btn-link"
+              [routerLink]="['/dashboard/platform-assessments-templates', row.id]"
+            >
+              Ver estudiantes
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pager" *ngIf="totalPages > 1">
+    <button type="button" class="btn-clear" [disabled]="page <= 1" (click)="goToPage(page - 1)">
+      Anterior
+    </button>
+    <button
+      type="button"
+      class="btn-clear"
+      [disabled]="page >= totalPages"
+      (click)="goToPage(page + 1)"
+    >
+      Siguiente
+    </button>
+  </div>
+</section>

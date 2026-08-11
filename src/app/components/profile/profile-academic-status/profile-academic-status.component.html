@@ -1,0 +1,154 @@
+<section
+  class="academic-status-card"
+  aria-labelledby="academic-status-title"
+>
+  <header class="academic-status-card__header">
+    <span
+      class="academic-status-card__header-icon"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M3 10.5 12 6l9 4.5-9 4.5-9-4.5Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M7 12.5V17c2.8 2 7.2 2 10 0v-4.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M21 10.5V16"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+
+    <h2
+      id="academic-status-title"
+      class="academic-status-card__title"
+    >
+      Estado académico
+    </h2>
+  </header>
+
+  <div class="academic-status-card__list">
+    <div class="academic-status-card__item">
+      <span class="academic-status-card__label">
+        Inicio de clases
+      </span>
+
+      <strong
+        class="academic-status-card__value"
+        [class.academic-status-card__value--empty]="
+          startClassDate === '—'
+        "
+      >
+        {{ startClassDate }}
+      </strong>
+    </div>
+
+    <div class="academic-status-card__item">
+      <span class="academic-status-card__label">
+        Fin de clases
+      </span>
+
+      <strong
+        class="academic-status-card__value"
+        [class.academic-status-card__value--empty]="
+          endClassDate === '—'
+        "
+      >
+        {{ endClassDate }}
+      </strong>
+    </div>
+
+    <div class="academic-status-card__item">
+      <span class="academic-status-card__label">
+        Suspensión
+      </span>
+
+      <span
+        class="academic-status-card__status"
+        [class.academic-status-card__status--active]="
+          isSuspended
+        "
+        [class.academic-status-card__status--inactive]="
+          !isSuspended
+        "
+      >
+        <span
+          class="academic-status-card__status-dot"
+          aria-hidden="true"
+        ></span>
+
+        {{ suspensionLabel }}
+      </span>
+    </div>
+
+    <div
+      class="academic-status-card__item"
+      *ngIf="suspensionStartDate"
+    >
+      <span class="academic-status-card__label">
+        Inicio de suspensión
+      </span>
+
+      <strong class="academic-status-card__value">
+        {{ suspensionStartDate }}
+      </strong>
+    </div>
+
+    <div
+      class="academic-status-card__item"
+      *ngIf="suspensionEndDate"
+    >
+      <span class="academic-status-card__label">
+        Fin de suspensión
+      </span>
+
+      <strong class="academic-status-card__value">
+        {{ suspensionEndDate }}
+      </strong>
+    </div>
+
+    <div
+      class="academic-status-card__item"
+      *ngIf="suspensionDays !== null"
+    >
+      <span class="academic-status-card__label">
+        Días de suspensión
+      </span>
+
+      <strong class="academic-status-card__value">
+        {{ suspensionDays }}
+      </strong>
+    </div>
+
+    <div class="academic-status-card__item">
+      <span class="academic-status-card__label">
+        Razón de bloqueo
+      </span>
+
+      <strong
+        class="academic-status-card__value academic-status-card__value--reason"
+        [class.academic-status-card__value--empty]="
+          schedulingBlockReason === '—'
+        "
+      >
+        {{ schedulingBlockReason }}
+      </strong>
+    </div>
+  </div>
+</section>

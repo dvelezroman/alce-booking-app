@@ -1,0 +1,188 @@
+<section
+  class="inbox-empty"
+  aria-live="polite"
+>
+  <div
+    class="inbox-empty__illustration"
+    aria-hidden="true"
+  >
+
+    <ng-container
+      *ngIf="
+        !isNoResultsIllustration;
+        else noResultsIllustration
+      "
+    >
+
+      <svg
+        viewBox="0 0 340 240"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <ellipse
+          class="shadow"
+          cx="170"
+          cy="216"
+          rx="88"
+          ry="12"
+        />
+
+        <circle
+          class="circle-bg"
+          cx="170"
+          cy="105"
+          r="84"
+        />
+
+        <rect
+          class="tray"
+          x="90"
+          y="86"
+          width="160"
+          height="95"
+          rx="18"
+        />
+
+        <path
+          class="tray-line"
+          d="M90 115h48l17 22h30l17-22h48"
+        />
+
+        <path
+          class="mail"
+          d="M132 76l38-26 38 26"
+        />
+
+        <circle
+          class="dot"
+          cx="94"
+          cy="60"
+          r="6"
+        />
+
+        <circle
+          class="dot"
+          cx="250"
+          cy="56"
+          r="7"
+        />
+
+        <circle
+          class="dot"
+          cx="271"
+          cy="146"
+          r="5"
+        />
+      </svg>
+
+    </ng-container>
+
+    <ng-template
+      #noResultsIllustration
+    >
+
+      <svg
+        viewBox="0 0 340 240"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <ellipse
+          class="shadow"
+          cx="170"
+          cy="214"
+          rx="86"
+          ry="11"
+        />
+
+        <circle
+          class="circle-bg"
+          cx="160"
+          cy="102"
+          r="80"
+        />
+
+        <circle
+          class="lens"
+          cx="145"
+          cy="100"
+          r="42"
+        />
+
+        <line
+          class="handle"
+          x1="174"
+          y1="130"
+          x2="213"
+          y2="169"
+        />
+
+        <line
+          class="cross"
+          x1="129"
+          y1="84"
+          x2="161"
+          y2="116"
+        />
+
+        <line
+          class="cross"
+          x1="161"
+          y1="84"
+          x2="129"
+          y2="116"
+        />
+
+        <circle
+          class="dot"
+          cx="76"
+          cy="72"
+          r="6"
+        />
+
+        <circle
+          class="dot"
+          cx="248"
+          cy="60"
+          r="7"
+        />
+
+        <circle
+          class="dot"
+          cx="267"
+          cy="148"
+          r="5"
+        />
+      </svg>
+
+    </ng-template>
+
+  </div>
+
+  <div class="inbox-empty__content">
+    <span
+        class="inbox-empty__eyebrow"
+    >
+        Centro de notificaciones
+    </span>
+
+    <h2
+        class="inbox-empty__title"
+    >
+        {{ title }}
+    </h2>
+
+    <p
+        class="inbox-empty__description"
+    >
+        {{ description }}
+    </p>
+
+    <button
+        *ngIf="hasAction"
+        type="button"
+        class="inbox-empty__action"
+        (click)="onAction()"
+    >
+        {{ actionLabel }}
+    </button>
+
+    </div>
+</section>

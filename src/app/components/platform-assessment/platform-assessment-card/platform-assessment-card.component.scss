@@ -1,0 +1,484 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* ================================
+   CARD BASE
+================================ */
+
+.assessment-card {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 7rem;
+
+  padding: 1rem 1.1rem 1rem 1.35rem;
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+
+  grid-template-areas:
+    "header action"
+    "info action";
+
+  align-items: center;
+  column-gap: 1.5rem;
+  row-gap: 0.35rem;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #eceef3;
+
+  background: #ffffff;
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.assessment-card:hover {
+  background: #fdfdff;
+}
+
+:host:last-child .assessment-card {
+  border-bottom: 0;
+}
+
+/* ================================
+   BARRA LATERAL
+================================ */
+
+.assessment-card::before {
+  position: absolute;
+  top: 0.45rem;
+  bottom: 0.45rem;
+  left: 0;
+
+  width: 3px;
+
+  border-radius: 0 999px 999px 0;
+
+  background: #6246df;
+
+  content: '';
+}
+
+.assessment-card.expired-card::before {
+  background: #dc2626;
+}
+
+.assessment-card.completed-card::before {
+  background: #16a36a;
+}
+
+.assessment-card.failed-card::before {
+  background: #d97706;
+}
+
+/* ================================
+   HEADER
+================================ */
+
+.header-row {
+  grid-area: header;
+
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.title {
+  min-width: 0;
+  max-width: 32rem;
+
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #10142f;
+
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.35;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ================================
+   STATUS
+================================ */
+
+.status {
+  min-height: 1.55rem;
+  padding: 0.25rem 0.55rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  font-size: 0.61rem;
+  font-weight: 700;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+.status.pending {
+  color: #5540cb;
+  background: #f0edff;
+}
+
+.status.expired {
+  color: #b42318;
+  background: #fef3f2;
+}
+
+.status.completed {
+  color: #067647;
+  background: #ecfdf3;
+}
+
+.status.failed {
+  color: #b54708;
+  background: #fffaeb;
+}
+
+/* ================================
+   INFORMACIÓN
+================================ */
+
+.info {
+  grid-area: info;
+
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info p {
+  margin: 0;
+
+  color: #667085;
+
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.info strong {
+  color: #475467;
+
+  font-weight: 700;
+}
+
+/* Primera línea / fecha */
+
+.info p:first-child {
+  margin-top: 0.2rem;
+
+  color: #596176;
+}
+
+/* ================================
+   ACCIONES
+================================ */
+
+.bottom-row {
+  grid-area: action;
+
+  align-self: center;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.btn-open {
+  min-width: 8rem;
+  min-height: 2.55rem;
+  padding: 0.55rem 1rem;
+
+  border: 1px solid #d9dce6;
+  border-radius: 0.7rem;
+
+  background: #ffffff;
+  color: #304ebd;
+
+  font-family: inherit;
+  font-size: 0.71rem;
+  font-weight: 700;
+  line-height: 1;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
+}
+
+.btn-open:hover:not(:disabled) {
+  border-color: #b7beda;
+  background: #fafaff;
+
+  box-shadow:
+    0 5px 14px rgba(48, 78, 189, 0.07);
+}
+
+.btn-open:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn-open:focus-visible {
+  outline: 3px solid rgba(48, 78, 189, 0.13);
+  outline-offset: 2px;
+}
+
+/* ================================
+   BOTÓN VENCIDO
+================================ */
+
+.btn-open.expired-btn {
+  color: #b42318;
+
+  border-color: #f0d5d2;
+  background: #fffafa;
+}
+
+/* ================================
+   BOTÓN COMPLETADO
+================================ */
+
+.btn-open.completed-btn {
+  color: #067647;
+
+  border-color: #cce9db;
+  background: #f8fdfb;
+}
+
+/* ================================
+   BOTÓN FALLIDO
+================================ */
+
+.btn-open.failed-btn {
+  color: #b54708;
+
+  border-color: #f1ddb9;
+  background: #fffdf7;
+}
+
+/* ================================
+   DISABLED
+================================ */
+
+.btn-open:disabled {
+  color: #98a2b3;
+
+  border-color: #e4e7ec;
+  background: #f5f6f8;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-open.expired-btn:disabled {
+  color: #b42318;
+
+  border-color: #f1d8d5;
+  background: #fffafa;
+
+  opacity: 0.75;
+}
+
+.btn-open.completed-btn:disabled {
+  color: #067647;
+
+  border-color: #d0e9dd;
+  background: #f8fdfb;
+
+  opacity: 0.8;
+}
+
+.btn-open.failed-btn:disabled {
+  color: #b54708;
+
+  border-color: #f2dfbd;
+  background: #fffaf0;
+
+  opacity: 0.8;
+}
+
+/* ================================
+   DESKTOP REDUCIDO
+================================ */
+
+@media (max-width: 1200px) {
+  .assessment-card {
+    padding:
+      0.9rem
+      0.9rem
+      0.9rem
+      1.2rem;
+
+    column-gap: 1rem;
+  }
+
+  .title {
+    font-size: 0.84rem;
+  }
+
+  .info p {
+    font-size: 0.66rem;
+  }
+
+  .btn-open {
+    min-width: 7.2rem;
+    padding-inline: 0.8rem;
+
+    font-size: 0.68rem;
+  }
+}
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 920px) {
+  .assessment-card {
+    grid-template-columns: minmax(0, 1fr);
+
+    grid-template-areas:
+      "header"
+      "info"
+      "action";
+
+    row-gap: 0.6rem;
+
+    align-items: start;
+  }
+
+  .bottom-row {
+    width: 100%;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+
+  .btn-open {
+    min-width: 7.5rem;
+  }
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 640px) {
+  .assessment-card {
+    min-height: auto;
+
+    padding:
+      0.8rem
+      0.75rem
+      0.85rem
+      1rem;
+
+    row-gap: 0.55rem;
+  }
+
+  .assessment-card::before {
+    top: 0.35rem;
+    bottom: 0.35rem;
+  }
+
+  .header-row {
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .title {
+    width: 100%;
+    max-width: 100%;
+
+    white-space: normal;
+
+    font-size: 0.8rem;
+  }
+
+  .status {
+    min-height: 1.4rem;
+    padding: 0.2rem 0.45rem;
+
+    font-size: 0.57rem;
+  }
+
+  .info {
+    gap: 0.2rem;
+  }
+
+  .info p {
+    font-size: 0.64rem;
+  }
+
+  .bottom-row,
+  .actions {
+    width: 100%;
+  }
+
+  .btn-open {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.35rem;
+
+    font-size: 0.67rem;
+  }
+}
+
+/* ================================
+   MOBILE PEQUEÑO
+================================ */
+
+@media (max-width: 420px) {
+  .assessment-card {
+    padding:
+      0.7rem
+      0.65rem
+      0.75rem
+      0.9rem;
+  }
+
+  .title {
+    font-size: 0.76rem;
+  }
+
+  .info p {
+    font-size: 0.61rem;
+  }
+
+  .btn-open {
+    min-height: 2.3rem;
+
+    font-size: 0.65rem;
+  }
+}

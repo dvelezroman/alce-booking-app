@@ -1,233 +1,295 @@
-/* =======================================================
-   PENDING SECTION
-======================================================= */
-
-.pending-section {
+:host {
+  display: block;
   width: 100%;
 }
 
-/* -------------------- */
-/* TÍTULO */
-/* -------------------- */
-
-.section-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #28336f;
-  margin-bottom: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: .5rem;
-
-  .count {
-    background: #eef2ff;
-    color: #28336f;
-    padding: .15rem .6rem;
-    border-radius: 999px;
-    font-size: .85rem;
-    font-weight: 600;
-    border: 1px solid #c7d2fe;
-  }
-}
-
-/* -------------------- */
-/* TABLE WRAPPER */
-/* -------------------- */
-
-.table-wrapper {
-  border-radius: 14px;
-  background: #ffffff;
+.pending-evaluations {
   width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 8px 24px rgba(40, 51, 111, 0.06);
-  overflow: hidden; 
+  padding-bottom: 1.5rem;
 }
 
-.table-scroll {
-  max-height: 500px;
-  overflow-y: auto;
+/* =========================
+   EMPTY STATE
+========================= */
+
+.pending-evaluations__empty {
   width: 100%;
-}
+  min-height: 19rem;
 
-/* -------------------- */
-/* TABLE */
-/* -------------------- */
-
-.evaluations-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed; /* 🔥 importante */
-
-  th {
-    background: #ffffff;
-    color: #28336f;
-    font-size: .8rem;
-    font-weight: 700;
-    padding: .75rem;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: center;
-  }
-
-  td {
-    padding: .7rem;
-    font-size: .8rem;
-    color: #6b7280;
-    border-bottom: 1px solid #f1f5f9;
-    text-align: center;
-    vertical-align: middle;
-    white-space: normal;
-    word-break: break-word;
-  }
-
-  tbody tr:hover {
-    background: #f8fafc;
-  }
-
-  /* Column widths en porcentaje */
-  .col-theme {
-    width: 25%;
-    text-align: left;
-  }
-
-  .col-instructor {
-    width: 25%;
-    text-align: left;
-  }
-
-  .col-date {
-    width: 15%;
-  }
-
-  .col-hour {
-    width: 10%;
-  }
-
-  .col-status {
-    width: 12%;
-  }
-
-  .col-action {
-    width: 13%;
-  }
-}
-
-/* -------------------- */
-/* BADGE */
-/* -------------------- */
-
-.badge.pending {
-  background: #fffbeb;
-  color: #f59e0b;
-  border: 1px solid #fde68a;
-  padding: .25rem .6rem;
-  border-radius: 999px;
-  font-size: .65rem;
-  font-weight: 600;
-}
-
-/* -------------------- */
-/* BUTTON */
-/* -------------------- */
-
-.evaluate-btn {
-  background: #28336f;
-  color: white;
-  border: none;
-  padding: .4rem .7rem;
-  border-radius: 8px;
-  font-size: .75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all .2s ease;
-}
-
-.evaluate-btn:hover {
-  background: #1f2655;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(40, 51, 111, 0.25);
-}
-
-/* -------------------- */
-/* EMPTY */
-/* -------------------- */
-
-.empty-state {
-  width: 100%;
-  padding: 3rem 1.5rem;
-  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+
+  padding: 2rem;
+
+  border: 1px solid #e4e6ee;
+  border-radius: 1.15rem;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(124, 88, 230, 0.035),
+      transparent 14rem
+    ),
+    #ffffff;
+
+  text-align: center;
+
+  box-shadow:
+    0 0.5rem 1.5rem rgba(31, 36, 61, 0.02);
+}
+
+.pending-evaluations__illustration {
+  width: 11.5rem;
+  height: 8rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pending-evaluations__illustration svg {
+  width: 100%;
+  height: auto;
+
+  display: block;
+}
+
+.pending-evaluations__empty-content {
+  max-width: 30rem;
+}
+
+.pending-evaluations__empty-title {
+  margin: 0 0 0.75rem;
+
+  color: #171a35;
+
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+}
+
+.pending-evaluations__empty-description {
+  margin: 0;
+
+  color: #777d91;
+
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.pending-evaluations__loading {
+  width: 100%;
+  min-height: 19rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 1rem;
+
+  padding: 2rem;
+
+  border: 1px solid #e4e6ee;
+  border-radius: 1.15rem;
+
   background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  text-align: center;
 }
 
-.empty-icon {
-  font-size: 44px;
-  color: #28336f;
-  background: #eef2ff;
-  padding: 1rem;
+.pending-evaluations__spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+
+  border: 0.22rem solid #ebe7fa;
+  border-top-color: #7149dc;
   border-radius: 50%;
+
+  animation:
+    pending-evaluations-spinner
+    0.8s
+    linear
+    infinite;
 }
 
-.empty-state h4 {
-  color: #28336f;
+.pending-evaluations__loading-text {
+  margin: 0;
+
+  color: #777d91;
+
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
-.empty-state p {
-  color: #6b7280;
+/* =========================
+   LIST
+========================= */
+
+.pending-evaluations__list {
+  width: 100%;
+  max-height: 500px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-right: 0.35rem;
 }
 
-/* -------------------- */
-/* LOADING */
-/* -------------------- */
-
-.loading {
-  text-align: center;
-  color: #6b7280;
-  margin-top: 1rem;
+.pending-evaluations__list::-webkit-scrollbar {
+  width: 0.45rem;
 }
 
-@media (max-width: 520px) {
+.pending-evaluations__list::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  .evaluations-table {
-    table-layout: auto;
+.pending-evaluations__list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background: #c8bee9;
+}
+
+.pending-evaluations__list::-webkit-scrollbar-thumb:hover {
+  background: #aa9bdc;
+}
+
+app-pending-evaluation-card {
+  display: block;
+  width: 100%;
+}
+
+app-pending-evaluation-card:not(:last-child) {
+  border-bottom: 1px solid #e8eaf0;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes pending-evaluations-spinner {
+  from {
+    transform: rotate(0deg);
   }
 
-  .evaluations-table th,
-  .evaluations-table td {
-    padding: .55rem .5rem;
-    font-size: .72rem;
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 56.25rem) {
+  .pending-evaluations__empty,
+  .pending-evaluations__loading {
+    min-height: 17rem;
+
+    padding: 1.75rem;
+
+    border-radius: 1rem;
   }
 
-  .evaluations-table .col-instructor .last-name {
-    display: none;
+  .pending-evaluations__illustration {
+    width: 10.5rem;
+    height: 7.25rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 40.625rem) {
+  .pending-evaluations__empty,
+  .pending-evaluations__loading {
+    min-height: 15rem;
+
+    padding: 1.5rem 1rem;
+
+    border-radius: 0.9rem;
   }
 
-  .evaluations-table .col-date { width: 88px; }
-  .evaluations-table .col-hour { width: 58px; }
-  .evaluations-table .col-action { width: 92px; }
-
-  .evaluations-table td.col-instructor {
-    white-space: nowrap;
+  .pending-evaluations__illustration {
+    width: 9rem;
+    height: 6.25rem;
   }
 
-  .evaluations-table td.col-date,
-  .evaluations-table td.col-hour {
-    white-space: nowrap;
+  .pending-evaluations__empty-title {
+    margin-bottom: 0.55rem;
+
+    font-size: 0.95rem;
   }
 
-  .evaluate-btn {
-    width: 100%;
-    padding: .45rem .35rem;
-    font-size: .72rem;
-    white-space: nowrap;
-    border-radius: 10px;
+  .pending-evaluations__empty-description,
+  .pending-evaluations__loading-text {
+    font-size: 0.76rem;
   }
+
+  .pending-evaluations__list {
+    border-radius: 0.9rem;
+    gap: .75rem;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 30rem) {
+  .pending-evaluations__empty,
+  .pending-evaluations__loading {
+    min-height: 14rem;
+
+    padding: 1.25rem 0.875rem;
+  }
+
+  .pending-evaluations__illustration {
+    width: 8rem;
+    height: 5.5rem;
+  }
+
+  .pending-evaluations__empty-title {
+    font-size: 0.9rem;
+  }
+
+  .pending-evaluations__empty-description {
+    max-width: 18rem;
+
+    font-size: 0.72rem;
+  }
+
+  .pending-evaluations__list {
+    max-height: 450px;
+
+    overflow: visible;
+
+    border: 0;
+    border-radius: 0;
+
+    background: transparent;
+  }
+
+  app-pending-evaluation-card {
+    border: 1px solid #e4e6ee;
+    border-radius: 0.875rem;
+
+    background: #ffffff;
+  }
+
+  // app-pending-evaluation-card:not(:last-child) {
+  //   margin-bottom: .75rem;
+  // }
 }

@@ -41,6 +41,11 @@ import { ReportsExcelPageComponent } from './reports-excel-page/reports-excel-pa
 import { StageAssessmentComponent } from './stage-assessment/stage-assessment.component';
 import { StageAssessmentResourcesComponent } from './stage-assessment-resources/stage-assessment-resources.component';
 import { StageAssessmentStudentComponent } from './stage-assessment-student/stage-assessment-student.component';
+import { PlatformAssessmentsStudentComponent } from './platform-assessments-student/platform-assessments-student.component';
+import { PlatformAssessmentsListComponent } from './platform-assessments-list/platform-assessments-list.component';
+import { PlatformAssessmentsAssignComponent } from './platform-assessments-assign/platform-assessments-assign.component';
+import { PlatformAssessmentsTemplatesComponent } from './platform-assessments-templates/platform-assessments-templates.component';
+import { PlatformAssessmentsTemplateDetailComponent } from './platform-assessments-template-detail/platform-assessments-template-detail.component';
 import { StageAssessmentListComponent } from './stage-assessment-list/stage-assessment-list.component';
 import { SuspensionHistoryComponent } from './suspension-history/suspension-history.component';
 import { InstructorEvaluationsComponent } from './instructor-evaluations/instructor-evaluations.component';
@@ -48,7 +53,6 @@ import { MeetingEvaluationsComponent } from './meeting-evaluations/meeting-evalu
 import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluation-statistics.component';
 import { StudentHistoryReportComponent } from './report-students/student-history-report/student-history-report.component';
 import { ActiveStudentsReportComponent } from './report-students/active-students-report/active-students-report.component';
-import { AnnouncementCardComponent } from '../../components/announcements/announcement-card/announcement-card.component';
 import { AnnouncementsComponent } from './announcements/announcements.component';
 import { adminOnlyGuard } from '../auth/admin-role.guard';
 import { instructorOnlyGuard } from '../auth/instructor-role.guard';
@@ -61,9 +65,10 @@ import { WhatsappCampaignHistoryComponent } from './admin/whatsapp-campaigns/wha
 import { WhatsappCampaignDetailComponent } from './admin/whatsapp-campaigns/whatsapp-campaign-detail.component';
 import { ScheduledMeetingsComponent } from './scheduled-meetings/scheduled-meetings.component';
 import { MeetingBookingV2Component } from './meeting-booking-v2/meeting-booking-v2.component';
+import { NotificationDetailV2Component } from './notifications/notification-detail-v2/notification-detail-v2.component';
+import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.component';
 
-
-export const dashboardRoutes: Routes = [
+const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomePrivateComponent },
   { path: 'profile', component: ProfileComponent },
@@ -145,16 +150,32 @@ export const dashboardRoutes: Routes = [
   { path: 'stage-assessment', component: StageAssessmentComponent },
   { path: 'stage-assessment-list', component: StageAssessmentListComponent },
   { path: 'stage-assessment-student', component: StageAssessmentStudentComponent },
+  { path: 'platform-assessments', component: PlatformAssessmentsStudentComponent },
+  { path: 'platform-assessments-list', component: PlatformAssessmentsListComponent },
+  { path: 'platform-assessments-assign', component: PlatformAssessmentsAssignComponent },
+  { path: 'platform-assessments-templates', component: PlatformAssessmentsTemplatesComponent },
+  {
+    path: 'platform-assessments-templates/:templateId',
+    component: PlatformAssessmentsTemplateDetailComponent,
+  },
   { path: 'processed-events', component: ProcessedEventsComponent },
   { path: 'notifications-status', component: NotificationsStatusComponent },
   { path: 'notifications-groups', component: GroupsComponent },
   { path: 'notifications-inbox', component: InboxComponent },
   { path: 'notifications-detail', component: NotificationDetailComponent },
+  { path: 'notifications-detail-v2', component: NotificationDetailV2Component },
   { path: 'notifications-sent', component: NotificationsSentComponent },
   { path: 'send-emails', component: SendEmailsComponent },
   { path: 'sent-email', component: SentEmailComponent },
   { path: 'inbox-email', component: InboxEmailComponent },
   { path: 'historial-email', component: HistorialEmailComponent },
   { path: 'email-detail', component: EmailDetailComponent },
-  
+];
+
+export const dashboardRoutes: Routes = [
+  {
+    path: '',
+    component: DashboardLayoutComponent,
+    children: dashboardChildren,
+  },
 ];

@@ -1,121 +1,131 @@
-/* ------------------------------ */
-/* TITULO SUPERIOR */
-/* ------------------------------ */
-
-.title {
-  position: fixed;
-  top: 0;
-  left: 0;
+:host {
+  display: block;
   width: 100%;
-  background-color: #fff;
-  color: rgb(53, 53, 53);
-  z-index: 10;
-  text-align: center;
 }
 
-.title.stage {
-  font-size: 1.5rem;
-  line-height: 75px;
-  font-weight: bold;
-}
+/* =========================
+   PAGE WRAPPER
+========================= */
 
-/* ------------------------------ */
-/* CONTENEDOR PRINCIPAL */
-/* ------------------------------ */
-
-.instructor-evaluation-section {
-  background-color: #fff;
+.instructor-evaluations-page {
+  width: calc(100% - 76px);
   min-height: 100vh;
+
+  margin-left: 70px;
+
+  overflow-x: hidden;
+}
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+
+.instructor-evaluations-page__container {
   width: 100%;
-  padding: 1.5rem;
-  padding-top: 100px;
-  box-sizing: border-box;
+  max-width: 1500px;
+  margin: 0 auto;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
-/* ------------------------------ */
-/* WRAPPER FLEX ROW / COLUMN */
-/* ------------------------------ */
+/* =========================
+   CHILD COMPONENTS
+========================= */
 
-.horizontal-carousel-wrapper {
-  width: 95%;
-  margin-left: 3rem;
-  display: flex;
-  flex-direction: row;
-  gap: 1.5rem;
-  align-items: flex-start;
-  justify-content: center;
+app-instructor-evaluation-header,
+app-evaluation-support,
+app-evaluation-tabs,
+app-pending-evaluations,
+app-completed-evaluations {
+  display: block;
+  width: 100%;
 }
 
-/* Que ambos componentes ocupen el mismo espacio */
-.horizontal-carousel-wrapper > * {
-  flex: 1;
-  min-width: 0;
+app-evaluation-support {
+  margin-top: 1.5rem;
 }
 
-/* ------------------------------ */
-/* NOTA IMPORTANTE ARRIBA         */
-/* ------------------------------ */
+app-evaluation-tabs {
+  margin-top: 1.5rem;
+}
 
-.assessment-note-top {
-  width: 65%;
-  background: #fff7ed;
-  border: 1px solid #fdba74;
-  border-radius: 14px;
-  padding: 1rem 1.2rem;
-  margin-top: 2rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+/* =========================
+   CONTENT
+========================= */
 
-  h4 {
-    margin: 0 0 0.4rem;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #c2410c;
+.instructor-evaluations-page__content {
+  width: 100%;
+
+  margin-top: 1.5rem;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 75rem) {
+  .instructor-evaluations-page {
+    padding: 1rem 1.25rem 1.75rem;
   }
 
-  p {
-    font-size: 0.85rem;
-    color: #7c2d12;
-    line-height: 1.5;
-    margin: 0;
+  .instructor-evaluations-page__container {
+    padding: 1.25rem;
   }
 
-  .note-secondline{
-    font-size: .9rem;
-    font-weight: 600;
+  app-evaluation-support,
+  app-evaluation-tabs,
+  .instructor-evaluations-page__content {
+    margin-top: 1.25rem;
   }
 }
 
-/* ------------------------------ */
-/* RESPONSIVE */
-/* ------------------------------ */
-@media (max-width: 1100px) {
-
-  .horizontal-carousel-wrapper {
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    gap: 2.5rem;
-    margin-left: 0rem;
-  }
-
-  .horizontal-carousel-wrapper > * {
-    width: 100%;
-    max-width: 700px;
-  }
-
-}
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 768px) {
+  .instructor-evaluations-page {
+    width: 100%;
 
-  .title.stage {
-    font-size: 1.1rem;
+    margin-left: 0;
+    padding: 1rem;
+
+    background: #f8f9fc;
   }
-  .assessment-note-top {
-    width: 95%;
+
+  .instructor-evaluations-page__container {
+    padding: 1rem;
+
+    border-radius: 1.25rem;
+  }
+
+  app-evaluation-support,
+  app-evaluation-tabs,
+  .instructor-evaluations-page__content {
+    margin-top: 1rem;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 30rem) {
+  .instructor-evaluations-page {
+    padding: 0.5rem;
+  }
+
+  .instructor-evaluations-page__container {
+    padding: 0.75rem;
+
+    border-radius: 1rem;
+
+    box-shadow:
+      0 0.5rem 1.5rem rgba(32, 37, 64, 0.04);
+  }
+
+  app-evaluation-support,
+  app-evaluation-tabs,
+  .instructor-evaluations-page__content {
+    margin-top: 0.875rem;
   }
 }

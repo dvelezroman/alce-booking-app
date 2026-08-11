@@ -166,11 +166,81 @@
 
             <span class="shortcut-content">
               <span class="shortcut-title">
-                Evaluaciones
+                Tareas de etapa
               </span>
 
               <span class="shortcut-description">
-                Revisa tus evaluaciones académicas
+                Revisa tus tareas académicas
+              </span>
+            </span>
+
+            <span class="shortcut-arrow" aria-hidden="true">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
+
+          <div
+            class="shortcut-card shortcut-card--assessments"
+            (click)="goToPlatformAssessments()"
+          >
+           <span class="shortcut-icon shortcut-icon--assessments">
+            <svg
+              width="29"
+              height="29"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M9 4.5V3h6v1.5M8 9h8M8 13h5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="m14.5 16 1.4 1.4 2.6-3"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+            <span class="shortcut-content">
+              <span class="shortcut-title">
+                Exámenes
+                <span
+                  class="shortcut-badge"
+                  *ngIf="pendingPlatformAssessmentsCount > 0"
+                >
+                  {{ pendingPlatformAssessmentsCount }}
+                </span>
+              </span>
+
+              <span class="shortcut-description">
+                Exámenes de plataforma pendientes
               </span>
             </span>
 
@@ -309,12 +379,6 @@
         </div>
       </section>
 
-      <app-pending-class-evaluation-banner
-        *ngIf="pendingClassEvaluationsCount > 0"
-        [count]="pendingClassEvaluationsCount"
-        (goToEvaluate)="goToInstructorEvaluations()">
-      </app-pending-class-evaluation-banner>
-
       <!-- CONTENT GRID -->
       <section class="content-grid">
 
@@ -334,6 +398,15 @@
           </app-pending-assessment-card>
         </div>
 
+        <div class="dashboard-card">
+          <app-pending-platform-assessment-card
+            [assessments]="platformAssessments"
+            (openAssessment)="openPlatformAssessment($event)"
+            (viewAll)="goToPlatformAssessments()"
+          >
+          </app-pending-platform-assessment-card>
+        </div>
+
       </section>
 
     </div>
@@ -349,13 +422,13 @@
       >
       </app-student-important-notices>
 
-      <!-- <app-student-daily-quote/> -->
-
+      
       <app-student-study-streak
         [meetings]="meetings"
         [isLoading]="isLoadingMeetings"
       >
       </app-student-study-streak>
+      <app-student-daily-quote/>
     </aside>
 
   </div>
@@ -375,41 +448,12 @@
     (closed)="onCustomAnnouncementClosed($event)"
   ></app-announcement-viewer>
 
-  <!-- <app-student-intro-video
-    [show]="showIntroVideo"
-    [canClose]="canCloseIntroVideo"
-    (completed)="onIntroVideoCompleted()"
-    (closed)="onIntroVideoClosed()">
-  </app-student-intro-video> -->
-
   <app-assessment-announcement
     *ngIf="showAssessmentAnnouncement && pendingAssessmentsCount > 0"
     [show]="showAssessmentAnnouncement"
     [count]="pendingAssessmentsCount"
     (closed)="onAnnouncementClosed()">
   </app-assessment-announcement>
-
-  <!-- <app-alce-kids-aviso
-    [show]="showPortoviejoNotice"
-    (closed)="showPortoviejoNotice = false">
-  </app-alce-kids-aviso> -->
-
-  <!-- <app-student-cuenca-banner
-    *ngIf="showBannerCuenca"
-    [show]="showBannerCuenca"
-    (close)="showBannerCuenca = false">
-  </app-student-cuenca-banner> -->
-
-  <!-- <app-student-cuenca-comm-banner
-    *ngIf="showBannerCuencaComm"
-    [show]="showBannerCuencaComm">
-  </app-student-cuenca-comm-banner> -->
-
-  <!-- IMAGE -->
-  <!-- <app-image-banner
-    *ngIf="showImageBanner"
-    (close)="showImageBanner = false">
-  </app-image-banner> -->
 
   <app-student-suspension-modal
     *ngIf="showSuspensionModal && suspensionInfo"

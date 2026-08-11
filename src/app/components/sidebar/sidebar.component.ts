@@ -98,10 +98,14 @@ navItems: SidebarNavItem[] = [
   { icon: 'test', text: 'Evaluar Estudiante', route: '/dashboard/assessment', roles: [UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Asignar Evaluación', route: '/dashboard/stage-assessment', roles: [UserRole.ADMIN] },
   { icon: 'test', text: 'Evaluaciones Asignadas', route: '/dashboard/stage-assessment-list', roles: [UserRole.ADMIN] },
+  { icon: 'assessment', text: 'Exámenes plataforma', route: '/dashboard/platform-assessments-list', roles: [UserRole.ADMIN] },
+  { icon: 'folder', text: 'Assessments', route: '/dashboard/platform-assessments-templates', roles: [UserRole.ADMIN] },
+  { icon: 'assignment', text: 'Asignar examen', route: '/dashboard/platform-assessments-assign', roles: [UserRole.ADMIN] },
   { icon: 'test', text: 'Clases Evaluadas', route: '/dashboard/meeting-evaluations', roles: [UserRole.ADMIN],  },
   { icon: 'test', text: 'Estadísticas', route: '/dashboard/evaluation-statistics', roles: [UserRole.ADMIN],  },
   { icon: 'test', text: 'Evaluaciones', route: '/dashboard/assessment-reports', roles: [UserRole.ADMIN] },
-  { icon: 'assessment', text: 'Assessments', route: '/dashboard/stage-assessment-student', roles: [UserRole.STUDENT] },
+  { icon: 'assessment', text: 'Evaluaciones de etapa', route: '/dashboard/stage-assessment-student', roles: [UserRole.STUDENT] },
+  { icon: 'assessment', text: 'Exámenes ( Próximamente )', route: '/dashboard/platform-assessments', roles: [UserRole.STUDENT] },
   { icon: 'book-open', text: 'Recursos Académicos', route: '/dashboard/resources', roles: [UserRole.ADMIN]},
   { icon: 'book-open', text: 'Recursos Stages', route: '/dashboard/stage-assessment-resources', roles: [UserRole.ADMIN]},
   { icon: 'book-type', text: 'Tipos de Evaluación',  route: '/dashboard/assessment-types', roles: [UserRole.ADMIN]},
@@ -201,6 +205,7 @@ navItems: SidebarNavItem[] = [
       icon: 'assessment',
       items: [
         this.findNavItemByRoute('/dashboard/stage-assessment-student'),
+        this.findNavItemByRoute('/dashboard/platform-assessments'),
         this.findNavItemByRoute('/dashboard/instructor-evaluations'),
         
       ].filter(item => item.roles.includes(role))
@@ -224,6 +229,7 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/processed-events'),
         this.findNavItemByRoute('/dashboard/stage-assessment'),
         this.findNavItemByRoute('/dashboard/stage-assessment-list'),
+        this.findNavItemByRoute('/dashboard/platform-assessments-list'),
       ].filter(item => item.roles.includes(role))
     },
     {

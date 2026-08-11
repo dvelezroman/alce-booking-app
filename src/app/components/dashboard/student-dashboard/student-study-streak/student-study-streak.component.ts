@@ -71,13 +71,24 @@ export class StudentStudyStreakComponent {
       return 0;
     }
 
-    const today = this.startOfDay(new Date());
-    const todayKey = this.formatDateKey(today);
+    const cursor = this.startOfDay(new Date());
 
-    const cursor = new Date(today);
-
-    if (!completedDates.has(todayKey)) {
+    /*
+    * Si hoy es domingo, empezamos desde el sábado.
+    * El domingo no suma ni corta la racha.
+    */
+    if (this.isSunday(cursor)) {
       cursor.setDate(cursor.getDate() - 1);
+    }
+
+    const cursorKey = this.formatDateKey(cursor);
+
+    /*
+    * Si hoy todavía no tiene actividad,
+    * revisamos el día de clase anterior.
+    */
+    if (!completedDates.has(cursorKey)) {
+      this.moveToPreviousClassDay(cursor);
     }
 
     let streak = 0;
@@ -88,7 +99,7 @@ export class StudentStudyStreakComponent {
       )
     ) {
       streak += 1;
-      cursor.setDate(cursor.getDate() - 1);
+      this.moveToPreviousClassDay(cursor);
     }
 
     return streak;
@@ -104,22 +115,22 @@ export class StudentStudyStreakComponent {
     const streak = this.currentStreak;
 
     if (streak === 0) {
-      return 'Empieza hoy y construye tu racha de estudio.';
+      return 'Asiste a una clase y empieza tu racha.';
     }
 
     if (streak < 3) {
-      return 'Buen comienzo. Sigue practicando cada día.';
+      return 'Buen comienzo. Sigue así.';
     }
 
     if (streak < 7) {
-      return '¡Sigue así! La constancia es la clave.';
+      return '¡Sigue así! Mantén la constancia.';
     }
 
     if (streak < 14) {
       return '¡Excelente progreso! Mantén el ritmo.';
     }
 
-    return 'Tu constancia está dando resultados. Continúa así.';
+    return 'Tu constancia está dando resultados.';
   }
 
   trackByDate(
@@ -131,12 +142,16 @@ export class StudentStudyStreakComponent {
 
   /**
    * Obtiene las fechas únicas en las que el estudiante
-   * registra una clase.
+   * asistió a una clase.
    */
   private getCompletedDateKeys(): Set<string> {
     const dates = new Set<string>();
 
     for (const meeting of this.meetings) {
+      if (meeting.present !== true) {
+        continue;
+      }
+
       const date = this.getMeetingDate(meeting);
 
       if (!date) {
@@ -214,6 +229,18 @@ export class StudentStudyStreakComponent {
       date.getMonth(),
       date.getDate()
     );
+  }
+
+  private isSunday(date: Date): boolean {
+    return date.getDay() === 0;
+  }
+
+  private moveToPreviousClassDay(
+    date: Date
+  ): void {
+    do {
+      date.setDate(date.getDate() - 1);
+    } while (this.isSunday(date));
   }
 
   private formatDateKey(date: Date): string {

@@ -187,60 +187,222 @@
 }
 
 .time-empty-state {
-  width: 100%;
-  min-height: 15rem;
+  min-height: 23rem;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  padding: 1.5rem 1rem;
+  padding: 2rem 1.5rem;
 
-  border: 1px dashed #d9dce4;
-  border-radius: 1rem;
+  border: 1px dashed #ddd5f2;
+  border-radius: 1.15rem;
 
-  background: #fafafa;
+  background:
+    radial-gradient(
+      circle at 50% 25%,
+      rgba(118, 82, 223, 0.07),
+      transparent 12rem
+    ),
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #fbf9ff 100%
+    );
 
   text-align: center;
-
-  h3 {
-    margin: 0.9rem 0 0;
-
-    color: #252846;
-
-    font-size: 0.95rem;
-    font-weight: 700;
-    line-height: 1.3;
-  }
-
-  p {
-    max-width: 17rem;
-
-    margin: 0.45rem 0 0;
-
-    color: #6b7280;
-
-    font-size: 0.78rem;
-    line-height: 1.55;
-  }
 }
 
-.time-empty-icon {
-  width: 3rem;
-  height: 3rem;
+.time-empty-state__illustration {
+  width: 13rem;
+  height: 9.75rem;
 
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 0.85rem;
+  margin-bottom: 0.85rem;
+}
 
-  background: #efedff;
+.time-empty-state__illustration svg {
+  width: 100%;
+  height: 100%;
+
+  overflow: visible;
+
+  filter:
+    drop-shadow(
+      0 0.75rem 1.2rem rgba(88, 57, 177, 0.08)
+    );
+}
+
+.time-empty-state__title {
+  margin: 0 0 0.45rem;
+
+  color: #20213b;
+
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.time-empty-state__description {
+  max-width: 23rem;
+
+  margin: 0;
+
+  color: #797d91;
+
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.time-slots-empty {
+  min-height: 18rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.9rem;
+
+  padding: 2rem 1.5rem;
+
+  border: 1px dashed #ddd5f2;
+  border-radius: 0.9rem;
+
+  background: #fcfbff;
+
+  text-align: center;
+}
+
+.time-slots-empty__icon {
+  width: 3.8rem;
+  height: 3.8rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f1efff;
   color: #5b4ed3;
 
   .material-icons {
-    font-size: 1.35rem;
+    font-size: 1.9rem;
+  }
+}
+
+.time-slots-empty__title {
+  margin: 0;
+
+  color: #2b3154;
+
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.time-slots-empty__description {
+  max-width: 18rem;
+
+  margin: 0;
+
+  color: #7a8194;
+
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 48rem) {
+  .time-empty-state {
+    min-height: 20rem;
+
+    padding: 1.5rem 1rem;
+  }
+
+  .time-empty-state__illustration {
+    width: 11.5rem;
+    height: 8.5rem;
+  }
+
+  .time-empty-state__title {
+    font-size: 0.95rem;
+  }
+
+  .time-empty-state__description {
+    max-width: 20rem;
+
+    font-size: 0.74rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 40.625rem) {
+  .time-empty-state {
+    min-height: 18rem;
+
+    padding: 1.25rem 0.9rem;
+
+    border-radius: 0.95rem;
+  }
+
+  .time-empty-state__illustration {
+    width: 10rem;
+    height: 7.5rem;
+
+    margin-bottom: 0.65rem;
+  }
+
+  .time-empty-state__title {
+    margin-bottom: 0.35rem;
+
+    font-size: 0.88rem;
+  }
+
+  .time-empty-state__description {
+    max-width: 17rem;
+
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 30rem) {
+  .time-empty-state {
+    min-height: 16.5rem;
+
+    padding: 1rem 0.75rem;
+  }
+
+  .time-empty-state__illustration {
+    width: 8.75rem;
+    height: 6.6rem;
+  }
+
+  .time-empty-state__title {
+    font-size: 0.82rem;
+  }
+
+  .time-empty-state__description {
+    max-width: 15rem;
+
+    font-size: 0.67rem;
   }
 }
 
@@ -304,13 +466,5 @@
 
     width: 1.4rem;
     height: 1.4rem;
-  }
-
-  .time-empty-state {
-    min-height: 15rem;
-
-    padding:
-      1.5rem
-      1rem;
   }
 }

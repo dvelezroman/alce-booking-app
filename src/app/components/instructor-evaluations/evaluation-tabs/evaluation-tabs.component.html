@@ -1,0 +1,64 @@
+<nav
+  class="evaluation-tabs"
+  aria-label="Filtros de evaluaciones"
+>
+  <button
+    type="button"
+    class="evaluation-tabs__item"
+    [class.evaluation-tabs__item--active]="
+      isTabActive('pending')
+    "
+    [attr.aria-pressed]="
+      isTabActive('pending')
+    "
+    (click)="onSelectTab('pending')"
+  >
+    <span
+      class="evaluation-tabs__icon"
+      aria-hidden="true"
+    >
+      <i class="fa-regular fa-clock"></i>
+    </span>
+
+    <span class="evaluation-tabs__label">
+      Pendientes de evaluación
+    </span>
+
+    <span
+      *ngIf="pendingCount > 0"
+      class="evaluation-tabs__count"
+    >
+      {{ pendingCount }}
+    </span>
+  </button>
+
+  <button
+    type="button"
+    class="evaluation-tabs__item"
+    [class.evaluation-tabs__item--active]="
+      isTabActive('completed')
+    "
+    [attr.aria-pressed]="
+      isTabActive('completed')
+    "
+    (click)="onSelectTab('completed')"
+  >
+    <span
+      class="evaluation-tabs__icon"
+      aria-hidden="true"
+    >
+      <i class="fa-regular fa-circle-check"></i>
+    </span>
+
+    <span class="evaluation-tabs__label">
+      Evaluaciones realizadas
+    </span>
+
+    <span
+      *ngIf="completedCount > 0"
+      class="evaluation-tabs__count"
+    >
+      {{ completedCount }}
+    </span>
+  </button>
+</nav>

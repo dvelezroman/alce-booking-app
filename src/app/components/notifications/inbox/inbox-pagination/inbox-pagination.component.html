@@ -1,0 +1,91 @@
+<section
+  class="inbox-pagination"
+  aria-label="Paginación de notificaciones"
+>
+  <!-- INFORMACIÓN -->
+  <div class="inbox-pagination__summary">
+    {{ resultsLabel }}
+  </div>
+
+  <!-- PAGINACIÓN -->
+  <nav
+    class="inbox-pagination__navigation"
+    aria-label="Navegación entre páginas"
+  >
+    <button
+      type="button"
+      class="inbox-pagination__button inbox-pagination__button--arrow"
+      [disabled]="!hasPreviousPage"
+      (click)="onPreviousPage()"
+      aria-label="Página anterior"
+    >
+      <svg viewBox="0 0 24 24">
+        <path d="M15 18 9 12l6-6"></path>
+      </svg>
+    </button>
+
+    <ng-container
+      *ngFor="
+        let page of visiblePages;
+        trackBy: trackByPage
+      "
+    >
+      <button
+        *ngIf="page !== 'ellipsis'; else ellipsisTemplate"
+        type="button"
+        class="inbox-pagination__button"
+        [class.inbox-pagination__button--active]="
+          page === currentPage
+        "
+        (click)="onPageSelect(page)"
+      >
+        {{ page }}
+      </button>
+
+      <ng-template #ellipsisTemplate>
+        <span
+          class="inbox-pagination__ellipsis"
+          aria-hidden="true"
+        >
+          ...
+        </span>
+      </ng-template>
+    </ng-container>
+
+    <button
+      type="button"
+      class="inbox-pagination__button inbox-pagination__button--arrow"
+      [disabled]="!hasNextPage"
+      (click)="onNextPage()"
+      aria-label="Página siguiente"
+    >
+      <svg viewBox="0 0 24 24">
+        <path d="m9 6 6 6-6 6"></path>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- LÍMITE -->
+  <div class="inbox-pagination__limit">
+    <label
+      class="visually-hidden"
+      for="pagination-limit"
+    >
+      Notificaciones por página
+    </label>
+
+    <select
+      id="pagination-limit"
+      class="inbox-pagination__select"
+      [value]="limit"
+      (change)="onLimitSelect($event)"
+    >
+      <option
+        *ngFor="let option of limitOptions"
+        [value]="option"
+      >
+        {{ option }} por página
+      </option>
+    </select>
+  </div>
+</section>

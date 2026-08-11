@@ -1,0 +1,93 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.notification-detail-page {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  padding:
+    1.5rem
+    2rem
+    2.5rem
+    calc(76px + 1rem);
+
+  box-sizing: border-box;
+}
+
+.notification-detail-layout {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 2.15fr)
+    minmax(19rem, 0.8fr);
+
+  align-items: start;
+  gap: 1rem;
+
+  margin-top: 1rem;
+}
+
+.notification-detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  min-width: 0;
+}
+
+.notification-detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  position: sticky;
+  top: 100px;
+
+  align-self: start;
+}
+
+/* ==========================
+   TABLET
+========================== */
+
+@media (max-width: 1100px) {
+
+  .notification-detail-layout {
+    grid-template-columns:
+      minmax(0, 1fr);
+
+    gap: 1.25rem;
+  }
+
+  .notification-detail-sidebar {
+    position: static;
+  }
+
+}
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 768px) {
+
+  .notification-detail-page {
+    width: 100%;
+
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .notification-detail-layout {
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .notification-detail-main,
+  .notification-detail-sidebar {
+    gap: 1rem;
+  }
+
+}
