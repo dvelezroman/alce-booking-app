@@ -33,6 +33,8 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
   meetings: MeetingDTO[] = [];
   loading = false;
 
+  isRefreshTooltipVisible = false;
+
   filterMode: 'today' | 'all' = 'all';
 
   @Output() meetingsCount = new EventEmitter<number>();
@@ -212,6 +214,27 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
   // ================================
   // Acciones visuales nuevas
   // ================================
+
+  toggleRefreshTooltip(): void {
+    this.isRefreshTooltipVisible =
+      !this.isRefreshTooltipVisible;
+  }
+
+  showRefreshTooltip(): void {
+    this.isRefreshTooltipVisible = true;
+  }
+
+  hideRefreshTooltip(): void {
+    this.isRefreshTooltipVisible = false;
+  }
+
+  handleRefreshClasses(): void {
+    if (this.loading) {
+      return;
+    }
+    this.loadLiveClasses(this.filterMode);
+  }
+
   showAllClasses(): void {
     this.router.navigate([
       '/dashboard/scheduled-meetings',

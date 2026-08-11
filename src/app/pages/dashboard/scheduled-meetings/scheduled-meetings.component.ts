@@ -56,7 +56,6 @@ export class ScheduledMeetingsComponent implements OnInit, OnDestroy {
   searchTerm = ''
   selectedDateFilter = 'all'
   selectedStatusFilter = 'all'
-  selectedView: 'list' | 'grid' = 'list'
 
   isLoadingMeetings = false
   isDeletingMeeting = false
@@ -145,6 +144,14 @@ export class ScheduledMeetingsComponent implements OnInit, OnDestroy {
       })
   }
 
+  onRefreshMeetings(): void {
+    const studentId = this.userData?.student?.id
+    if (!studentId || this.isLoadingMeetings) {
+      return
+    }
+    this.loadMeetings(studentId)
+  }
+
   get paginatedMeetings(): MeetingDTO[] {
     const startIndex =
       (this.currentPage - 1) * this.itemsPerPage
@@ -200,10 +207,6 @@ export class ScheduledMeetingsComponent implements OnInit, OnDestroy {
   onStatusFilterChange(value: string): void {
     this.selectedStatusFilter = value
     this.applyFilters()
-  }
-
-  onViewChange(view: 'list' | 'grid'): void {
-    this.selectedView = view
   }
 
   private applyFilters(): void {

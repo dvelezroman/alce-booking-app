@@ -51,65 +51,24 @@
       </span>
     </div>
 
-    <!-- Filtro por estado -->
-    <div class="filter-control">
-      <span class="filter-icon" aria-hidden="true">
-        <span class="material-icons">
-          filter_alt
-        </span>
-      </span>
-
-      <select
-        class="filter-select"
-        [ngModel]="selectedStatusFilter"
-        (ngModelChange)="onStatusFilterChange($event)"
-        aria-label="Filtrar por estado"
-        >
-        <option value="all">Todos los estados</option>
-        <option value="active">Agendadas</option>
-        <option value="completed">Completadas</option>
-        <option value="cancelled">Canceladas</option>
-        </select>
-
-      <span class="select-arrow" aria-hidden="true">
-        <span class="material-icons">
-          keyboard_arrow_down
-        </span>
-      </span>
-    </div>
-
-    <!-- Selector de vista -->
-    <!-- <div
-      class="view-switcher"
-      role="group"
-      aria-label="Cambiar vista"
+    <button
+      type="button"
+      class="refresh-button"
+      [class.refresh-button--loading]="isRefreshing"
+      [disabled]="isRefreshing"
+      (click)="onRefresh()"
+      aria-label="Actualizar lista de clases"
     >
-      <button
-        type="button"
-        class="view-button"
-        [class.view-button--active]="selectedView === 'list'"
-        (click)="onViewChange('list')"
-        aria-label="Vista de lista"
-        [attr.aria-pressed]="selectedView === 'list'"
-        >
-        <span class="material-icons" aria-hidden="true">
-            view_list
-        </span>
-        </button>
-
-        <button
-        type="button"
-        class="view-button"
-        [class.view-button--active]="selectedView === 'grid'"
-        (click)="onViewChange('grid')"
-        aria-label="Vista de cuadrícula"
-        [attr.aria-pressed]="selectedView === 'grid'"
-        >
-        <span class="material-icons" aria-hidden="true">
-            grid_view
-        </span>
-        </button>
-    </div> -->
+      <span
+        class="material-icons refresh-button__icon"
+        [class.refresh-button__icon--spinning]="isRefreshing"
+      >
+        refresh
+      </span>
+      <span class="refresh-button__text">
+        {{ isRefreshing ? 'Actualizando...' : 'Actualizar lista' }}
+      </span>
+    </button>
 
   </div>
 </section>

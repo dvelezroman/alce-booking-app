@@ -19,16 +19,14 @@
         [searchTerm]="searchTerm"
         [selectedDateFilter]="selectedDateFilter"
         [selectedStatusFilter]="selectedStatusFilter"
-        [selectedView]="selectedView"
         (searchTermChange)="onSearchTermChange($event)"
         (selectedDateFilterChange)="onDateFilterChange($event)"
         (selectedStatusFilterChange)="onStatusFilterChange($event)"
-        (selectedViewChange)="onViewChange($event)"
+        (refreshMeetings)="onRefreshMeetings()"
       ></app-scheduled-meetings-filters>
 
       <app-scheduled-meetings-list
         [meetings]="paginatedMeetings"
-        [view]="selectedView"
         [isLoading]="isLoadingMeetings"
         (viewDetails)="onViewMeetingDetails($event)"
         (openOptions)="onOpenMeetingOptions($event)"

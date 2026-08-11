@@ -21,12 +21,12 @@ export class ScheduledMeetingsFiltersComponent {
   @Input() searchTerm = ''
   @Input() selectedDateFilter = 'all'
   @Input() selectedStatusFilter = 'all'
-  @Input() selectedView: 'list' | 'grid' = 'list'
+  @Input() isRefreshing = false
 
   @Output() searchTermChange = new EventEmitter<string>()
   @Output() selectedDateFilterChange = new EventEmitter<string>()
   @Output() selectedStatusFilterChange = new EventEmitter<string>()
-  @Output() selectedViewChange = new EventEmitter<'list' | 'grid'>()
+  @Output() refreshMeetings = new EventEmitter<void>()
 
   onSearchChange(value: string): void {
     this.searchTermChange.emit(value)
@@ -40,7 +40,9 @@ export class ScheduledMeetingsFiltersComponent {
     this.selectedStatusFilterChange.emit(value)
   }
 
-  onViewChange(view: 'list' | 'grid'): void {
-    this.selectedViewChange.emit(view)
+  onRefresh(): void { if (this.isRefreshing) {
+    return
+  }
+    this.refreshMeetings.emit()
   }
 }
