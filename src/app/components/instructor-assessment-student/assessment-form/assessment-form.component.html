@@ -1,0 +1,503 @@
+<section class="assessment-form">
+
+  <h2 class="assessment-form__title">
+    Nueva evaluación
+  </h2>
+
+
+  <!-- =========================
+       TYPE
+  ========================== -->
+
+  <div class="assessment-form__field">
+
+    <label class="assessment-form__label">
+      Tipo de evaluación
+    </label>
+
+    <div class="assessment-form__select-wrapper">
+
+      <button
+        type="button"
+        class="assessment-form__select"
+        [disabled]="!selectedStudent"
+        (click)="toggleTypeDropdown()"
+      >
+        <span
+          [class.assessment-form__select-placeholder]="!selectedType"
+        >
+          {{ selectedTypeLabel }}
+        </span>
+
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m7 10 5 5 5-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+
+      <div
+        *ngIf="showTypeDropdown"
+        class="assessment-form__dropdown"
+      >
+
+        <button
+          *ngFor="
+            let type of availableAssessmentTypes;
+            trackBy: trackByAssessmentType
+          "
+          type="button"
+          class="assessment-form__dropdown-option"
+          [class.assessment-form__dropdown-option--selected]="
+            selectedType === type
+          "
+          (click)="selectAssessmentType(type)"
+        >
+          {{ getTypeLabel(type) }}
+        </button>
+
+
+        <div
+          *ngIf="availableAssessmentTypes.length === 0"
+          class="assessment-form__dropdown-empty"
+        >
+          No hay tipos disponibles.
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       POINTS
+  ========================== -->
+
+  <div class="assessment-form__field">
+
+    <label class="assessment-form__label">
+      Puntaje obtenido
+    </label>
+
+
+    <div class="assessment-form__score-control">
+
+      <!-- DECREASE -->
+
+      <button
+        type="button"
+        class="assessment-form__score-button"
+        [disabled]="
+          !selectedStudent ||
+          pointsValue <= 0
+        "
+        aria-label="Disminuir puntaje"
+        (click)="decreasePoints()"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M6 12h12"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+
+
+      <!-- INPUT -->
+
+      <div class="assessment-form__score-input-wrapper">
+
+        <input
+          type="number"
+          class="assessment-form__score-input"
+          placeholder="Ingrese el puntaje"
+          min="0"
+          max="100"
+          [disabled]="!selectedStudent"
+          [ngModel]="points"
+          (ngModelChange)="onPointsChange($event)"
+        />
+
+        <span class="assessment-form__score-total">
+          /100
+        </span>
+
+      </div>
+
+
+      <!-- INCREASE -->
+
+      <button
+        type="button"
+        class="assessment-form__score-button"
+        [disabled]="
+          !selectedStudent ||
+          pointsValue >= 100
+        "
+        aria-label="Aumentar puntaje"
+        (click)="increasePoints()"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M12 6v12M6 12h12"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+
+    </div>
+
+
+    <div class="assessment-form__score-range">
+      <span>0</span>
+      <span>100</span>
+    </div>
+
+
+    <p class="assessment-form__minimum">
+      Puntaje mínimo para aprobar:
+
+      <strong>
+        {{ minPointsAssessment ?? '--' }} puntos
+      </strong>
+    </p>
+
+
+    <!-- =========================
+         REINFORCEMENT NOTICE
+    ========================== -->
+
+    <div
+      *ngIf="requiresReinforcement"
+      class="assessment-form__reinforcement-notice"
+    >
+
+      <span
+        class="assessment-form__reinforcement-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 8v5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="12"
+            cy="16.5"
+            r="1"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+
+
+      <div class="assessment-form__reinforcement-content">
+
+        <strong>
+          Requiere refuerzo
+        </strong>
+
+        <span>
+          Para registrar esta evaluación debes agregar una nota y seleccionar al menos un recurso.
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       NOTES
+  ========================== -->
+
+  <div class="assessment-form__field">
+
+    <label
+      for="assessment-notes"
+      class="assessment-form__label"
+    >
+      Notas
+
+      <span
+        *ngIf="requiresReinforcement"
+        class="assessment-form__required"
+      >
+        *
+      </span>
+
+      <span
+        *ngIf="!requiresReinforcement"
+        class="assessment-form__optional"
+      >
+        (opcional)
+      </span>
+    </label>
+
+
+    <textarea
+      id="assessment-notes"
+      class="assessment-form__textarea"
+      rows="4"
+      [placeholder]="
+        requiresReinforcement
+          ? 'Indica qué temas o aspectos debe reforzar el estudiante...'
+          : 'Agrega observaciones o comentarios...'
+      "
+      [class.assessment-form__textarea--required]="
+        requiresReinforcement &&
+        !hasRequiredNotes
+      "
+      [disabled]="!selectedStudent"
+      [(ngModel)]="notes"
+    ></textarea>
+
+
+    <p
+      *ngIf="
+        requiresReinforcement &&
+        !hasRequiredNotes
+      "
+      class="
+        assessment-form__field-helper
+        assessment-form__field-helper--required
+      "
+    >
+      Debes indicar qué temas o aspectos necesita reforzar el estudiante.
+    </p>
+
+  </div>
+
+
+  <!-- =========================
+       RESOURCES
+  ========================== -->
+
+  <div class="assessment-form__field">
+
+    <label class="assessment-form__label">
+      Recursos de refuerzo
+
+      <span
+        *ngIf="requiresReinforcement"
+        class="assessment-form__required"
+      >
+        *
+      </span>
+
+      <span
+        *ngIf="!requiresReinforcement"
+        class="assessment-form__optional"
+      >
+        (opcional)
+      </span>
+    </label>
+
+
+    <div class="assessment-form__select-wrapper">
+
+      <button
+        type="button"
+        class="assessment-form__select"
+        [class.assessment-form__select--required]="
+          requiresReinforcement &&
+          !hasRequiredResources
+        "
+        [disabled]="!selectedStudent"
+        (click)="toggleResourcesDropdown()"
+      >
+
+        <span
+          [class.assessment-form__select-placeholder]="
+            selectedResourceIds.length === 0
+          "
+        >
+          {{ selectedResourcesLabel }}
+        </span>
+
+
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m7 10 5 5 5-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </button>
+
+
+      <!-- RESOURCE DROPDOWN -->
+
+      <div
+        *ngIf="showResourcesDropdown"
+        class="
+          assessment-form__dropdown
+          assessment-form__dropdown--resources
+        "
+      >
+
+        <button
+          *ngFor="
+            let resource of resources;
+            trackBy: trackByResourceId
+          "
+          type="button"
+          class="assessment-form__resource-option"
+          [class.assessment-form__resource-option--selected]="
+            isResourceSelected(resource.id)
+          "
+          (click)="toggleResource(resource.id)"
+        >
+
+          <span class="assessment-form__resource-check">
+
+            <svg
+              *ngIf="isResourceSelected(resource.id)"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="m5 12 4 4 10-10"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <span class="assessment-form__resource-name">
+            {{ resource.name }}
+          </span>
+
+        </button>
+
+
+        <div
+          *ngIf="resources.length === 0"
+          class="assessment-form__dropdown-empty"
+        >
+          No hay recursos disponibles.
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <p
+      *ngIf="
+        requiresReinforcement &&
+        !hasRequiredResources
+      "
+      class="
+        assessment-form__field-helper
+        assessment-form__field-helper--required
+      "
+    >
+      Debes seleccionar al menos un recurso de refuerzo para el estudiante.
+    </p>
+
+  </div>
+
+
+  <!-- =========================
+       SUBMIT
+  ========================== -->
+
+  <button
+    type="button"
+    class="assessment-form__submit"
+    [disabled]="!canSubmit"
+    (click)="submitAssessment()"
+  >
+
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M6 3.5h10l3 3V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20V5a1.5 1.5 0 0 1 1-1.5Z"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linejoin="round"
+      />
+
+      <path
+        d="M8 3.5V9h8V4M9 15h6M9 18h4"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+      />
+    </svg>
+
+    <span>
+      Registrar evaluación
+    </span>
+
+  </button>
+
+</section>

@@ -1,43 +1,138 @@
-<section class="section">
-    <h1 class="reports-progress-header reports-progress-title">
-        Evaluar Estudiante
-    </h1>
+<section class="assessment-page">
 
-  <app-assessment-form
-    [instructorId]="instructorId"
-    [blockedTypes]="blockedTypes"
-    [availableResources]="transformedResources"
-    [minPointsAssessment]="minPointsAssessment"
-    (assessmentCreated)="handleAssessmentCreated($event)"
-    (studentSelected)="fetchAssessments($event.studentId.toString(), $event.stageId)"
-    (studentSelected)="handleStudentSelected($event)"
-  ></app-assessment-form>
+  <!-- =========================
+       HEADER
+  ========================== -->
+  <header class="assessment-page__header">
 
-  <div *ngIf="selectedStudent" class="box has-background-light">
-    <p class="is-size-6 has-text-weight-semibold">
-      {{ selectedStudent.firstName }} {{ selectedStudent.lastName }}
-    </p>
-    <p class="is-size-6 has-text-grey-dark">
-      Stage actual:
-      <span class="has-text-weight-semibold">
-        {{ selectedStudent.student?.stage?.description ?? 'No asignado' }}
-      </span>
-    </p>
+    <div class="assessment-page__heading">
+      <h1 class="assessment-page__title">
+        Evaluación del estudiante
+      </h1>
+
+      <p class="assessment-page__description">
+        Registra y revisa las evaluaciones por tipo de competencia.
+      </p>
+    </div>
+
+
+    <!-- PUNTAJE MÍNIMO -->
+    <div class="minimum-score-card">
+
+      <div
+        class="minimum-score-card__icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 3.5L14.6 8.77L20.42 9.62L16.21 13.72L17.2 19.52L12 16.78L6.8 19.52L7.79 13.72L3.58 9.62L9.4 8.77L12 3.5Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+
+      <div class="minimum-score-card__content">
+
+        <span class="minimum-score-card__label">
+          Puntaje mínimo para aprobar
+        </span>
+
+        <strong class="minimum-score-card__value">
+          {{ minPointsAssessment ?? '--' }} puntos
+        </strong>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       CONTENIDO PRINCIPAL
+  ========================== -->
+  <div class="assessment-page__content">
+
+
+    <!-- =========================
+         COLUMNA IZQUIERDA
+    ========================== -->
+    <div class="assessment-page__main-column">
+
+
+      <!-- ESTUDIANTE Y ETAPA ACTUAL -->
+      <app-student-summary
+        [selectedStudent]="selectedStudent"
+        [currentStageId]="currentStageId"
+        [instructorId]="instructorId"
+        (studentSelected)="handleStudentSelected($event)"
+      />
+
+
+      <!-- EVALUACIONES REGISTRADAS -->
+      <app-assessment-list
+        [assessments]="assessments"
+        [selectedStudent]="selectedStudent"
+        [currentStageId]="currentStageId"
+        [minPointsAssessment]="minPointsAssessment"
+        [hasSearched]="hasSearched"
+      />
+
+    </div>
+
+
+    <!-- =========================
+         COLUMNA DERECHA
+    ========================== -->
+    <aside class="assessment-page__side-column">
+
+
+      <!-- NUEVA EVALUACIÓN -->
+      <app-assessment-form
+        [selectedStudent]="selectedStudent"
+        [currentStageId]="currentStageId"
+        [instructorId]="instructorId"
+        [minPointsAssessment]="minPointsAssessment"
+        [blockedTypes]="blockedTypes"
+        [resources]="transformedResources"
+        (assessmentCreated)="handleAssessmentCreated($event)"
+      />
+
+
+      <!-- RECURSOS DE REFUERZO -->
+      <app-assessment-resources
+        [resources]="resources"
+      />
+
+    </aside>
+
   </div>
 
-  <div class="assessment-table-wrapper">
-    <app-assessment-table 
-      [assessments]="assessments"
+
+  <!-- =========================
+       PROMOCIÓN DE ETAPA
+  ========================== -->
+  <div class="assessment-page__promotion">
+
+    <app-stage-promotion-info
+      [selectedStudent]="selectedStudent"
       [minPointsAssessment]="minPointsAssessment"
-     />
-  </div>
-  <div class="no-results" *ngIf="hasSearched && assessments.length === 0">
-    No hay evaluaciones disponibles para este estudiante.
+    />
+
   </div>
 
-</section>
 
- <app-modal
+  <!-- =========================
+       MODAL GLOBAL
+  ========================== -->
+  <app-modal
     [showModal]="modal.show"
     [message]="modal.message"
     [isError]="modal.isError"
@@ -47,3 +142,5 @@
     (confirmAction)="modal.confirm && modal.confirm()"
     (close)="modal.close()"
   />
+
+</section>

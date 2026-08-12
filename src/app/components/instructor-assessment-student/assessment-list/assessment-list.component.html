@@ -1,0 +1,354 @@
+<section class="assessment-list">
+
+  <!-- =========================
+       HEADER CURRENT STAGE
+  ========================== -->
+
+  <div class="assessment-list__header">
+
+    <div class="assessment-list__header-left">
+
+      <h2 class="assessment-list__title">
+        Evaluaciones del stage actual
+      </h2>
+
+      <span
+        *ngIf="totalAssessments > 0"
+        class="assessment-list__count"
+      >
+        {{ totalAssessments }}
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       TABLE HEADER CURRENT
+  ========================== -->
+
+  <div
+    *ngIf="shouldShowList"
+    class="assessment-list__columns"
+  >
+    <span>Tipo de evaluación</span>
+    <span>Puntaje</span>
+    <span>Estado</span>
+    <span>Fecha</span>
+    <span>Instructor</span>
+    <!-- <span>Acciones</span> -->
+  </div>
+
+
+  <!-- =========================
+       CURRENT STAGE LIST
+  ========================== -->
+
+  <div
+    *ngIf="shouldShowList"
+    class="assessment-list__items"
+  >
+
+    <app-assessment-item
+      *ngFor="
+        let assessment of currentStageAssessments;
+        trackBy: trackByAssessmentId
+      "
+      [assessment]="assessment"
+      [minPointsAssessment]="minPointsAssessment"
+    />
+
+  </div>
+
+
+  <!-- =========================
+       INITIAL STATE
+  ========================== -->
+
+  <div
+    *ngIf="shouldShowInitialState"
+    class="assessment-list__empty"
+  >
+
+    <div
+      class="assessment-list__empty-icon"
+      aria-hidden="true"
+    >
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <rect
+          x="6"
+          y="5"
+          width="12"
+          height="15"
+          rx="2"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M9 5V3.8C9 3.36 9.36 3 9.8 3h4.4c.44 0 .8.36.8.8V5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M9 10h6M9 14h4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="m9.5 17 1.2 1.2 2.5-2.7"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+    <h3 class="assessment-list__empty-title">
+      Selecciona un estudiante
+    </h3>
+
+    <p class="assessment-list__empty-description">
+      Selecciona un estudiante para revisar sus evaluaciones registradas.
+    </p>
+
+  </div>
+
+
+  <!-- =========================
+       EMPTY CURRENT STAGE
+  ========================== -->
+
+  <div
+    *ngIf="shouldShowEmptyState"
+    class="assessment-list__empty"
+  >
+
+    <div
+      class="assessment-list__empty-icon"
+      aria-hidden="true"
+    >
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <rect
+          x="6"
+          y="5"
+          width="12"
+          height="15"
+          rx="2"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M9 5V3.8C9 3.36 9.36 3 9.8 3h4.4c.44 0 .8.36.8.8V5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M9 10h6M9 14h4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="m9.5 17 1.2 1.2 2.5-2.7"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+    <h3 class="assessment-list__empty-title">
+      Aún no hay evaluaciones en este stage
+    </h3>
+
+    <p class="assessment-list__empty-description">
+      Comienza registrando una evaluación para el stage actual.
+    </p>
+
+  </div>
+
+
+  <!-- =====================================================
+       PREVIOUS STAGES
+  ====================================================== -->
+
+  <section
+    *ngIf="shouldShowPreviousStageList"
+    class="assessment-list__previous"
+  >
+
+    <!-- =========================
+         HEADER PREVIOUS
+    ========================== -->
+
+    <div class="assessment-list__previous-header">
+
+      <div class="assessment-list__header-left">
+
+        <h2 class="assessment-list__title">
+          Evaluaciones de stages anteriores
+        </h2>
+
+        <span class="assessment-list__count">
+          {{ totalPreviousStageAssessments }}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         TABLE HEADER PREVIOUS
+    ========================== -->
+
+    <div class="assessment-list__columns">
+
+      <span>Tipo de evaluación</span>
+      <span>Puntaje</span>
+      <span>Estado</span>
+      <span>Fecha</span>
+      <span>Instructor</span>
+      <!-- <span>Acciones</span> -->
+
+    </div>
+
+
+    <!-- =========================
+         PREVIOUS LIST
+    ========================== -->
+
+    <div class="assessment-list__items">
+
+      <app-assessment-item
+        *ngFor="
+          let assessment of paginatedPreviousStageAssessments;
+          trackBy: trackByAssessmentId
+        "
+        [assessment]="assessment"
+        [minPointsAssessment]="minPointsAssessment"
+      />
+
+    </div>
+
+
+    <!-- =========================
+         PAGINATION
+    ========================== -->
+
+    <div
+      *ngIf="totalPreviousPages > 1"
+      class="assessment-list__pagination"
+    >
+
+      <!-- PREVIOUS BUTTON -->
+
+      <button
+        type="button"
+        class="
+          assessment-list__pagination-button
+          assessment-list__pagination-button--arrow
+        "
+        [disabled]="!canGoPreviousPage"
+        aria-label="Página anterior"
+        title="Página anterior"
+        (click)="goToPreviousPage()"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m15 18-6-6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+
+      <!-- PAGE NUMBERS -->
+
+      <button
+        *ngFor="
+          let page of previousPageNumbers;
+          trackBy: trackByPageNumber
+        "
+        type="button"
+        class="assessment-list__pagination-button"
+        [class.assessment-list__pagination-button--active]="
+          previousPage === page
+        "
+        [attr.aria-current]="
+          previousPage === page
+            ? 'page'
+            : null
+        "
+        (click)="goToPreviousPageNumber(page)"
+      >
+        {{ page }}
+      </button>
+
+
+      <!-- NEXT BUTTON -->
+
+      <button
+        type="button"
+        class="
+          assessment-list__pagination-button
+          assessment-list__pagination-button--arrow
+        "
+        [disabled]="!canGoNextPage"
+        aria-label="Página siguiente"
+        title="Página siguiente"
+        (click)="goToNextPage()"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m9 6 6 6-6 6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+    </div>
+
+  </section>
+
+</section>

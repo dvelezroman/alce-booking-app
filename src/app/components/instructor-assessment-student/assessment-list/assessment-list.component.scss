@@ -1,0 +1,532 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.assessment-list {
+  width: 100%;
+
+  padding:
+    1.3rem
+    1.4rem
+    1.45rem;
+
+  border: 1px solid #e3e6ef;
+  border-radius: .75rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 6px 18px rgba(31, 42, 89, 0.025);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.assessment-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-bottom: 1.5rem;
+}
+
+.assessment-list__header-left {
+  display: flex;
+  align-items: center;
+
+  gap: .65rem;
+}
+
+.assessment-list__title {
+  margin: 0;
+
+  color: #1d2433;
+
+  font-size: .94rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.assessment-list__count {
+  min-width: 1.55rem;
+  height: 1.55rem;
+
+  padding: 0 .4rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: .45rem;
+
+  background: #eeeaff;
+  color: #6547f5;
+
+  font-size: .66rem;
+  font-weight: 700;
+}
+
+
+/* =========================
+   COLUMN HEADER
+========================= */
+
+.assessment-list__columns {
+  display: grid;
+
+  grid-template-columns:
+    minmax(210px, 1.6fr)
+    minmax(90px, .7fr)
+    minmax(110px, .85fr)
+    minmax(110px, .9fr)
+    minmax(120px, .95fr);
+    // minmax(70px, .5fr);
+
+  align-items: center;
+
+  gap: 1rem;
+
+  padding:
+    0
+    .9rem
+    .8rem;
+}
+
+.assessment-list__columns span {
+  color: #4f586d;
+
+  font-size: .68rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+
+/* =========================
+   LIST
+========================= */
+
+.assessment-list__items {
+  display: flex;
+  flex-direction: column;
+
+  gap: .9rem;
+}
+
+app-assessment-item {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   PREVIOUS STAGES
+========================= */
+
+.assessment-list__previous {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid #eceef4;
+}
+
+.assessment-list__previous-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.assessment-list__empty {
+  min-height: 15.5rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 2rem 1rem;
+
+  border: 1px dashed #d8dce7;
+  border-radius: .7rem;
+
+  background: #ffffff;
+
+  text-align: center;
+}
+
+.assessment-list__empty-icon {
+  width: 4.3rem;
+  height: 4.3rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 1rem;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f0f1f7,
+      #f7f7fa
+    );
+
+  color: #7a8499;
+}
+
+.assessment-list__empty-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.assessment-list__empty-title {
+  margin: 0;
+
+  color: #202638;
+
+  font-size: .9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.assessment-list__empty-description {
+  margin: .4rem 0 0;
+
+  color: #7b8499;
+
+  font-size: .7rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+/* =========================
+   PAGINATION
+========================= */
+
+.assessment-list__pagination {
+  width: 100%;
+
+  margin-top: 1rem;
+  padding-top: 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .4rem;
+
+  border-top: 1px solid #eceef4;
+}
+
+.assessment-list__pagination-button {
+  min-width: 2rem;
+  height: 2rem;
+
+  padding:
+    0
+    .45rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #dfe3ec;
+  border-radius: .45rem;
+
+  background: #ffffff;
+  color: #586174;
+
+  font-family: inherit;
+  font-size: .65rem;
+  font-weight: 600;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    transform 100ms ease,
+    opacity 150ms ease;
+}
+
+.assessment-list__pagination-button:hover:not(:disabled):not(
+  .assessment-list__pagination-button--active
+) {
+  background: #f7f7fa;
+  border-color: #d3d7e2;
+
+  color: #343c50;
+}
+
+.assessment-list__pagination-button:active:not(:disabled) {
+  transform: scale(.95);
+}
+
+
+/* =========================
+   ACTIVE
+========================= */
+
+.assessment-list__pagination-button--active {
+  border-color: #6547f5;
+
+  background: #6547f5;
+  color: #ffffff;
+
+  box-shadow:
+    0 3px 8px rgba(101, 71, 245, .18);
+
+  cursor: default;
+}
+
+
+/* =========================
+   ARROWS
+========================= */
+
+.assessment-list__pagination-button--arrow {
+  width: 2rem;
+  min-width: 2rem;
+
+  padding: 0;
+}
+
+.assessment-list__pagination-button--arrow svg {
+  width: 14px;
+  height: 14px;
+}
+
+
+/* =========================
+   DISABLED
+========================= */
+
+.assessment-list__pagination-button:disabled {
+  opacity: .35;
+
+  cursor: not-allowed;
+
+  background: #fafafa;
+  color: #9aa1af;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+
+  .assessment-list__pagination {
+    margin-top: .8rem;
+    padding-top: .8rem;
+
+    gap: .3rem;
+  }
+
+  .assessment-list__pagination-button {
+    min-width: 1.9rem;
+    height: 1.9rem;
+
+    padding:
+      0
+      .38rem;
+
+    border-radius: .4rem;
+
+    font-size: .61rem;
+  }
+
+  .assessment-list__pagination-button--arrow {
+    width: 1.9rem;
+    min-width: 1.9rem;
+  }
+
+  .assessment-list__pagination-button--arrow svg {
+    width: 13px;
+    height: 13px;
+  }
+
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .assessment-list__pagination {
+    gap: .25rem;
+  }
+
+  .assessment-list__pagination-button {
+    min-width: 1.8rem;
+    height: 1.8rem;
+
+    font-size: .59rem;
+  }
+
+  .assessment-list__pagination-button--arrow {
+    width: 1.8rem;
+    min-width: 1.8rem;
+  }
+
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1100px) {
+
+  .assessment-list__columns {
+    grid-template-columns:
+      minmax(190px, 1.5fr)
+      minmax(80px, .65fr)
+      minmax(100px, .8fr)
+      minmax(100px, .85fr)
+      minmax(110px, .9fr);
+    //   minmax(60px, .45fr);
+
+    gap: .8rem;
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  .assessment-list {
+    padding: 1.05rem;
+    border-radius: .75rem;
+  }
+
+  .assessment-list__header {
+    margin-bottom: 1.1rem;
+  }
+
+  .assessment-list__columns {
+    display: none;
+  }
+
+  .assessment-list__items {
+    gap: .75rem;
+  }
+
+  .assessment-list__previous {
+    margin-top: 1.2rem;
+    padding-top: 1.1rem;
+  }
+
+  .assessment-list__previous-header {
+    margin-bottom: .9rem;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+
+  .assessment-list {
+    padding: .9rem;
+
+    border-radius: .75rem;
+  }
+
+  .assessment-list__header {
+    margin-bottom: .9rem;
+  }
+
+  .assessment-list__title {
+    font-size: .84rem;
+  }
+
+  .assessment-list__count {
+    min-width: 1.4rem;
+    height: 1.4rem;
+    font-size: .61rem;
+  }
+
+  .assessment-list__previous {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+
+  .assessment-list__empty {
+    min-height: 12rem;
+
+    padding:
+      1.5rem
+      .8rem;
+
+    border-radius: .65rem;
+  }
+
+  .assessment-list__empty-icon {
+    width: 3.6rem;
+    height: 3.6rem;
+
+    margin-bottom: .8rem;
+  }
+
+  .assessment-list__empty-icon svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .assessment-list__empty-title {
+    font-size: .82rem;
+  }
+
+  .assessment-list__empty-description {
+    max-width: 20rem;
+
+    font-size: .66rem;
+  }
+
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .assessment-list {
+    padding: .78rem;
+  }
+
+  .assessment-list__header-left {
+    gap: .5rem;
+  }
+
+  .assessment-list__empty {
+    min-height: 11rem;
+  }
+
+}
