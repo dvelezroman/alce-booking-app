@@ -7,6 +7,7 @@ import {
   AssignPlatformAssessmentsPayload,
   AssignPlatformAssessmentsResult,
   PlatformAssessmentAssignment,
+  PlatformAssignmentMutationResult,
   RemotePlatformAssessmentFilters,
   RemotePlatformAssessmentListResponse,
   RemoteTemplateItem,
@@ -26,6 +27,21 @@ export class PlatformAssessmentService {
     return this.http.get<PlatformAssessmentAssignment[]>(this.apiUrl, {
       params,
     });
+  }
+
+  /**
+   * Sync mirror from live Assessments via alce-api, then return student list.
+   * Use on page load / refresh so booking status matches S2S.
+   */
+  syncFromRemote(
+    studentId: number,
+  ): Observable<PlatformAssessmentAssignment[]> {
+    const params = new HttpParams().set('studentId', studentId);
+    return this.http.post<PlatformAssessmentAssignment[]>(
+      `${this.apiUrl}/sync`,
+      {},
+      { params },
+    );
   }
 
   /**
@@ -135,6 +151,27 @@ export class PlatformAssessmentService {
     return this.http.post<AssignPlatformAssessmentsResult>(
       `${this.apiUrl}/templates/${encodeURIComponent(templateId)}/assign`,
       payload,
+    );
+  }
+
+  /** Admin: extend / change due date via alce-api → Assessments S2S. */
+  updateAssignment(
+    assignmentId: string,
+    expiresAt: string,
+  ): Observable<PlatformAssignmentMutationResult> {
+    return this.http.patch<PlatformAssignmentMutationResult>(
+      `${this.apiUrl}/remote/${encodeURIComponent(assignmentId)}`,
+      { expiresAt },
+    );
+  }
+
+  /** Admin: grant another attempt; mirror returns to pending. */
+  grantAttempt(
+    assignmentId: string,
+  ): Observable<PlatformAssignmentMutationResult> {
+    return this.http.post<PlatformAssignmentMutationResult>(
+      `${this.apiUrl}/remote/${encodeURIComponent(assignmentId)}/grant-attempt`,
+      {},
     );
   }
 

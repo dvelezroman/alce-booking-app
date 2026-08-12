@@ -204,7 +204,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private loadPlatformAssessments(studentId: number): void {
-    this.platformAssessmentService.getAll(studentId).subscribe({
+    this.platformAssessmentService.syncFromRemote(studentId).subscribe({
       next: (list) => {
         const pending = (list ?? []).filter((a) => a.status === 'pending');
         this.platformAssessments = pending;

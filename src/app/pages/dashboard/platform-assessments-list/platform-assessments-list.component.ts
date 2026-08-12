@@ -32,6 +32,10 @@ export class PlatformAssessmentsListComponent implements OnInit {
 
   modal: ModalDto = modalInitializer();
   applyTarget: RemotePlatformAssessmentItem | null = null;
+  extendTarget: RemotePlatformAssessmentItem | null = null;
+  extendDraft = '';
+  grantTarget: RemotePlatformAssessmentItem | null = null;
+  actionBusyId: string | null = null;
 
   readonly statusOptions = [
     '',
@@ -185,6 +189,165 @@ export class PlatformAssessmentsListComponent implements OnInit {
           };
         },
       });
+  }
+
+  canGrantAttempt(row: RemotePlatformAssessmentItem): boolean {
+    return row.status !== 'REVOKED';
+  }
+
+  canExtend(row: RemotePlatformAssessmentItem): boolean {
+    return row.status !== 'REVOKED';
+  }
+
+  startExtend(row: RemotePlatformAssessmentItem): void {
+    if (!this.canExtend(row)) return;
+    const draft = window.prompt(
+      `Nueva fecha límite (local YYYY-MM-DDTHH:mm) para ${this.displayStudent(row)}`,
+      this.toDatetimeLocalValue(row.expiresAt),
+    );
+    if (!draft?.trim()) return;
+
+    const parsed = new Date(draft.trim());
+    if (Number.isNaN(parsed.getTime())) {
+      this.modal = {
+        ...modalInitializer(),
+        show: true,
+        message: 'Fecha inválida.',
+        isError: true,
+        close: () => (this.modal.show = false),
+      };
+      return;
+    }
+
+    this.extendTarget = row;
+    this.extendDraft = draft.trim();
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: `¿Extender fecha límite de ${this.displayStudent(row)} a ${parsed.toLocaleString()}?`,
+      isInfo: true,
+      showButtons: true,
+      confirm: () => this.confirmExtend(),
+      close: () => {
+        this.extendTarget = null;
+        this.modal.show = false;
+      },
+    };
+  }
+
+  confirmExtend(): void {
+    const target = this.extendTarget;
+    const draft = this.extendDraft?.trim();
+    if (!target || !draft) {
+      this.extendTarget = null;
+      this.modal.show = false;
+      return;
+    }
+
+    const expiresAt = new Date(draft).toISOString();
+    this.actionBusyId = target.assignmentId;
+    this.platformAssessmentService
+      .updateAssignment(target.assignmentId, expiresAt)
+      .subscribe({
+        next: () => {
+          this.actionBusyId = null;
+          this.extendTarget = null;
+          this.modal = {
+            ...modalInitializer(),
+            show: true,
+            message: 'Fecha límite actualizada.',
+            isSuccess: true,
+            close: () => (this.modal.show = false),
+          };
+          this.fetch();
+        },
+        error: (err) => {
+          this.actionBusyId = null;
+          this.extendTarget = null;
+          this.modal = {
+            ...modalInitializer(),
+            show: true,
+            message:
+              err?.error?.message ||
+              err?.message ||
+              'No se pudo actualizar la fecha límite.',
+            isError: true,
+            close: () => (this.modal.show = false),
+          };
+        },
+      });
+  }
+
+  startGrantAttempt(row: RemotePlatformAssessmentItem): void {
+    if (!this.canGrantAttempt(row)) return;
+    this.grantTarget = row;
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: `¿Otorgar otro intento a ${this.displayStudent(row)}? (maxAttempts ${row.maxAttempts} → al menos ${row.attemptCount + 1}). El estado en booking vuelve a pending.`,
+      isInfo: true,
+      showButtons: true,
+      confirm: () => this.confirmGrantAttempt(),
+      close: () => {
+        this.grantTarget = null;
+        this.modal.show = false;
+      },
+    };
+  }
+
+  confirmGrantAttempt(): void {
+    const target = this.grantTarget;
+    if (!target) {
+      this.modal.show = false;
+      return;
+    }
+
+    this.actionBusyId = target.assignmentId;
+    this.platformAssessmentService.grantAttempt(target.assignmentId).subscribe({
+      next: (res) => {
+        this.actionBusyId = null;
+        this.grantTarget = null;
+        this.modal = {
+          ...modalInitializer(),
+          show: true,
+          message: `Intento otorgado. maxAttempts=${res.maxAttempts}, status=${res.status}.`,
+          isSuccess: true,
+          close: () => (this.modal.show = false),
+        };
+        this.fetch();
+      },
+      error: (err) => {
+        this.actionBusyId = null;
+        this.grantTarget = null;
+        this.modal = {
+          ...modalInitializer(),
+          show: true,
+          message:
+            err?.error?.message ||
+            err?.message ||
+            'No se pudo otorgar otro intento.',
+          isError: true,
+          close: () => (this.modal.show = false),
+        };
+      },
+    });
+  }
+
+  private toDatetimeLocalValue(iso: string | null): string {
+    if (!iso) {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      d.setMinutes(0, 0, 0);
+      return this.formatDatetimeLocal(d);
+    }
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    return this.formatDatetimeLocal(d);
+  }
+
+  private formatDatetimeLocal(d: Date): string {
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
   }
 
   private emptyFilters(): RemotePlatformAssessmentFilters {

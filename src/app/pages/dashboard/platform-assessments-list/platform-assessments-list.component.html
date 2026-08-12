@@ -145,6 +145,24 @@
               </span>
               <button
                 type="button"
+                class="btn-link"
+                *ngIf="canExtend(row)"
+                [disabled]="actionBusyId === row.assignmentId"
+                (click)="startExtend(row)"
+              >
+                Extender
+              </button>
+              <button
+                type="button"
+                class="btn-link"
+                *ngIf="canGrantAttempt(row)"
+                [disabled]="actionBusyId === row.assignmentId"
+                (click)="startGrantAttempt(row)"
+              >
+                + Intento
+              </button>
+              <button
+                type="button"
                 class="btn-writing"
                 *ngIf="canApplyWriting(row) || canCorrectWriting(row)"
                 (click)="startApplyWriting(row)"

@@ -177,7 +177,7 @@ export class PlatformAssessmentsStudentComponent
     this.loading = true;
 
     this.platformAssessmentService
-      .getAll(this.studentId)
+      .syncFromRemote(this.studentId)
       .subscribe({
         next: (
           list:
@@ -214,14 +214,18 @@ export class PlatformAssessmentsStudentComponent
 
         error: (error) => {
           console.error(
-            'Error al obtener assessments de plataforma:',
+            'Error al sincronizar assessments de plataforma:',
             error
           );
 
+          this.pendingAssessments = [];
+          this.expiredAssessments = [];
+          this.completedAssessments = [];
+          this.updateAssessmentCounters();
           this.loading = false;
 
           this.showNotification(
-            'Error al obtener assessments de plataforma.',
+            'No disponible por el momento. Intente más tarde.',
             true,
           );
         },

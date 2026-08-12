@@ -132,6 +132,18 @@ export interface AssignPlatformAssessmentsResult {
   }>;
 }
 
+export interface PlatformAssignmentMutationResult {
+  assignmentId: string;
+  templateId: string;
+  externalStudentId: string;
+  studentId: number | null;
+  status: string;
+  expiresAt: string | null;
+  maxAttempts: number;
+  attemptCount: number;
+  mirrorId: number | null;
+}
+
 export interface RemotePlatformAssessmentListResponse {
   data: RemotePlatformAssessmentItem[];
   total: number;
