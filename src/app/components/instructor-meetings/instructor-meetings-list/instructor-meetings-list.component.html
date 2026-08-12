@@ -1,0 +1,126 @@
+<section class="meetings-list">
+  <!-- HEADER -->
+  <header class="meetings-list__header">
+    <div class="meetings-list__heading">
+      <h2 class="meetings-list__title">Clases encontradas</h2>
+
+      <span class="meetings-list__count">
+        {{ meetingsCountLabel }}
+      </span>
+    </div>
+
+    <button
+      type="button"
+      class="meetings-list__refresh"
+      [disabled]="isLoading"
+      (click)="onRefresh()"
+    >
+      <svg
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        [class.meetings-list__refresh-icon--loading]="isLoading"
+      >
+        <path
+          d="M20 6v5h-5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M4 18v-5h5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M5.8 9A7 7 0 0 1 18.5 6M18.2 15A7 7 0 0 1 5.5 18"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <span>{{ isLoading ? 'Actualizando...' : 'Actualizar' }}</span>
+    </button>
+  </header>
+
+  <!-- TABLE -->
+  <div class="meetings-list__table-wrapper">
+    <div class="meetings-list__table">
+
+      <!-- TABLE HEADER -->
+      <div class="meetings-list__table-header">
+        <div class="meetings-list__column meetings-list__column--date">Fecha</div>
+        <div class="meetings-list__column meetings-list__column--hour">Hora</div>
+        <div class="meetings-list__column meetings-list__column--student">Estudiante</div>
+        <div class="meetings-list__column meetings-list__column--stage">Stage</div>
+        <div class="meetings-list__column meetings-list__column--progress">Progreso</div>
+        <div class="meetings-list__column meetings-list__column--mode">Modalidad</div>
+        <div class="meetings-list__column meetings-list__column--content">Contenido</div>
+        <div class="meetings-list__column meetings-list__column--assistance">Asistencia</div>
+        <div class="meetings-list__column meetings-list__column--reinforcement">Refuerzos</div>
+        <div class="meetings-list__column meetings-list__column--notes">Notas</div>
+        <div class="meetings-list__column meetings-list__column--actions">Acciones</div>
+      </div>
+
+      <!-- LOADING -->
+      <div *ngIf="isLoading" class="meetings-list__loading">
+        <div class="meeting-row-skeleton" *ngFor="let item of [1, 2, 3, 4, 5]">
+          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--date"></span>
+          <span class="meeting-row-skeleton__block"></span>
+          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--student"></span>
+          <span class="meeting-row-skeleton__block"></span>
+
+          <!-- PROGRESO -->
+          <span class="meeting-row-skeleton__block"></span>
+
+          <span class="meeting-row-skeleton__block"></span>
+          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--content"></span>
+          <span class="meeting-row-skeleton__block"></span>
+          <span class="meeting-row-skeleton__block"></span>
+          <span class="meeting-row-skeleton__block"></span>
+          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--action"></span>
+        </div>
+      </div>
+
+      <!-- ROWS -->
+      <ng-container *ngIf="!isLoading && hasMeetings">
+        <app-instructor-meeting-row
+          *ngFor="let meeting of meetings; trackBy: trackByMeetingId"
+          [meeting]="meeting"
+          [isToday]="isToday"
+          [hasMeetingPassed]="hasMeetingPassed"
+          [formatStudyContent]="formatStudyContent"
+          (contentViewRequested)="onContentViewRequested($event)"
+          (temporaryCommentRequested)="onTemporaryCommentRequested($event)"
+          (commentViewRequested)="onCommentViewRequested($event)"
+          (studentContentHistoryRequested)="onStudentContentHistoryRequested($event)"
+          (assistanceCheckboxClicked)="onAssistanceCheckboxClicked($event)"
+          (evaluationRequested)="onEvaluationRequested($event)"
+          (noteSaved)="onNoteSaved($event)">
+        </app-instructor-meeting-row>
+      </ng-container>
+
+      <!-- EMPTY -->
+      <div *ngIf="!isLoading && !hasMeetings" class="meetings-list__empty">
+        <div class="meetings-list__empty-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.7" />
+            <path d="M7 3v4M17 3v4M3 9h18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+            <path d="M8.5 14.5h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <h3 class="meetings-list__empty-title">No hay clases para mostrar</h3>
+        <p class="meetings-list__empty-description">Prueba modificando los filtros de búsqueda.</p>
+      </div>
+    </div>
+  </div>
+</section>

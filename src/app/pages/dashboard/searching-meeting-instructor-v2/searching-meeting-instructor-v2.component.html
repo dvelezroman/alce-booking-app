@@ -1,0 +1,188 @@
+<section class="instructor-meetings-page">
+  <div class="instructor-meetings-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <app-instructor-meetings-header
+      [isPreparationOpen]="showContentPreparationPanel"
+      (prepareAssistance)="toggleContentPreparationPanel()"
+      (createMeeting)="onCreateMeeting()">
+    </app-instructor-meetings-header>
+
+    <!-- =========================
+         FILTROS
+    ========================== -->
+
+    <app-instructor-meetings-filters
+      [filter]="filter"
+      [stages]="stages"
+      [availableHours]="availableHours"
+      [ageGroupOptions]="ageGroupOptions"
+      [isLoading]="isLoadingMeetings"
+      (filterChange)="onFilterChange()"
+      (clearFilters)="clearFilters()">
+    </app-instructor-meetings-filters>
+
+    <!-- =========================
+         CONTENIDO PRINCIPAL
+    ========================== -->
+
+    <div
+      class="instructor-meetings-page__workspace"
+      [class.instructor-meetings-page__workspace--with-panel]="showContentPreparationPanel"
+    >
+
+      <!-- =========================
+           LISTADO DE CLASES
+      ========================== -->
+
+      <div class="instructor-meetings-page__meetings">
+        <app-instructor-meetings-list
+          [meetings]="paginatedMeetings"
+          [totalMeetings]="totalMeetings"
+          [isLoading]="isLoadingMeetings"
+          [isToday]="isToday.bind(this)"
+          [hasMeetingPassed]="hasMeetingPassed.bind(this)"
+          [formatStudyContent]="formatStudyContent.bind(this)"
+          (refreshRequested)="refreshMeetings()"
+          (contentViewRequested)="showContentViewer($event.content, $event.title)"
+          (temporaryCommentRequested)="onTemporaryCommentViewRequested($event)"
+          (commentViewRequested)="onCommentViewRequested($event)"
+          (studentContentHistoryRequested)="loadStudentContentHistory($event)"
+          (assistanceCheckboxClicked)="onAssistanceCheckboxClick($event.event, $event.meeting)"
+          (evaluationRequested)="onEvaluationRequested($event)"
+          (noteSaved)="onNoteSaved($event)">
+        </app-instructor-meetings-list>
+
+        <!-- =========================
+             PAGINACIÓN
+        ========================== -->
+
+        <app-instructor-meetings-pagination
+          *ngIf="!isLoadingMeetings && totalMeetings > 0"
+          [currentPage]="currentPage"
+          [totalPages]="totalPages"
+          [totalItems]="totalMeetings"
+          [startItem]="paginationStart"
+          [endItem]="paginationEnd"
+          (pageChange)="onPageChange($event)">
+        </app-instructor-meetings-pagination>
+      </div>
+
+      <!-- =========================
+           PREPARAR ASISTENCIA
+      ========================== -->
+
+      <aside
+        *ngIf="showContentPreparationPanel"
+        class="instructor-meetings-page__preparation"
+      >
+        <app-instructor-content-preparation-panel
+          [stages]="filteredStages"
+          [studyContentIds]="studyContentIds"
+          [studyContentOptions]="studyContentOptions"
+          [stepState]="stepState"
+          (contentIdsSelected)="onContentIdsSelected($event)"
+          (stepStateChanged)="onStepStateChanged($event)"
+          (clearSelectedContents)="clearSelectedContents()"
+          (closePanel)="closeContentPreparationPanel()">
+        </app-instructor-content-preparation-panel>
+      </aside>
+
+    </div>
+
+    <!-- =========================
+         GUÍA DE ÍCONOS
+    ========================== -->
+
+    <app-instructor-meetings-icon-guide
+      *ngIf="!isLoadingMeetings && totalMeetings > 0">
+    </app-instructor-meetings-icon-guide>
+
+  </div>
+</section>
+
+<!-- =========================
+     MODAL NOTA DE ASISTENCIA
+========================== -->
+
+<app-assistance-note-modal
+  [show]="showAssistanceNoteModal"
+  (save)="onAssistanceNoteSaved($event)"
+  (cancel)="handleAssistanceNoteCancel()">
+</app-assistance-note-modal>
+
+<!-- =========================
+     HISTORIAL DE CONTENIDOS
+========================== -->
+
+<app-student-content-history-modal
+  *ngIf="isStudentContentHistoryModalVisible"
+  [history]="studentContentHistory"
+  [stageContents]="studentStageContents"
+  [stageDescription]="selectedMeeting?.stage?.description"
+  [canGoPrevious]="canGoPrevious"
+  [canGoNext]="canGoNext"
+  [show]="isStudentContentHistoryModalVisible"
+  (previousStage)="goToPreviousStage()"
+  (nextStage)="goToNextStage()"
+  (close)="closeStudentContentHistoryModal()">
+</app-student-content-history-modal>
+
+<!-- =========================
+     CREAR CLASE
+========================== -->
+
+<app-create-meeting-modal
+  *ngIf="showCreateModal"
+  [instructorId]="instructorId ?? undefined"
+  (close)="showCreateModal = false"
+  (meetingCreated)="handleMeetingCreated($event)">
+</app-create-meeting-modal>
+
+<!-- =========================
+     MODAL GENERAL
+========================== -->
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [title]="modal.title || ''"
+  [isContentViewer]="modal.isContentViewer ?? false"
+  [isMetadataViewer]="modal.isMetadataViewer ?? false"
+  [metadata]="modal.metadata"
+  (close)="closeModal()">
+</app-modal>
+
+<!-- =========================
+     MODAL CONFIRMACIÓN
+========================== -->
+
+<app-modal
+  [showModal]="confirmationModal.show"
+  [message]="confirmationModal.message"
+  [isInfo]="true"
+  [isError]="false"
+  [showButtons]="confirmationModal.showButtons ?? false"
+  (confirmAction)="confirmationModal.confirm && confirmationModal.confirm()"
+  (close)="confirmationModal.close()">
+</app-modal>
+
+<!-- =========================
+     EVALUACIONES
+========================== -->
+
+<app-evaluation-modal
+  [visible]="showEvaluationModal"
+  [assessments]="assessmentsByStudent"
+  [stagesWithContent]="filteredStages"
+  [maxPointsAssessment]="null"
+  [minPointsAssessment]="minPoints"
+  [highlightStageId]="highlightStageId"
+  (closed)="showEvaluationModal = false">
+</app-evaluation-modal>

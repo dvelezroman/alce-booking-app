@@ -83,6 +83,7 @@ navItems: SidebarNavItem[] = [
   { icon: 'create', text: 'Crear Estudiante', route: '/dashboard/create-students', roles: [UserRole.ADMIN] },
   { icon: 'create', text: 'Crear Admin / Instructor', route: '/dashboard/create-instructors', roles: [UserRole.ADMIN] },
   { icon: 'video_call', text: 'Agenda', route: '/dashboard/searching-meeting-instructor', roles: [UserRole.INSTRUCTOR] },
+  { icon: 'video_call', text: 'Agenda-v2', route: '/dashboard/searching-meeting-instructor-v2', roles: [UserRole.INSTRUCTOR] },
   { icon: 'reportes', text: 'Leads (cortesía / ubicación)', route: '/dashboard/instructor/lead-scheduling-requests', roles: [UserRole.INSTRUCTOR] },
   { icon: 'history', text: 'Eventos', route: '/dashboard/processed-events', roles: [UserRole.ADMIN] },
   { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/dashboard/feature-flag', roles: [UserRole.ADMIN] },
@@ -197,6 +198,7 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/scheduled-meetings'),
         this.findNavItemByRoute('/dashboard/searching-meeting'),
         this.findNavItemByRoute('/dashboard/searching-meeting-instructor'),
+        this.findNavItemByRoute('/dashboard/searching-meeting-instructor-v2'),
         this.findNavItemByRoute('/dashboard/instructor/lead-scheduling-requests'),
       ].filter(item => item.roles.includes(role))
     },

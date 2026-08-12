@@ -1,0 +1,239 @@
+<section class="content-preparation-panel">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="content-preparation-panel__header">
+    <div class="content-preparation-panel__header-text">
+      <h2 class="content-preparation-panel__title">
+        Seleccionar contenidos para la clase
+      </h2>
+
+      <p class="content-preparation-panel__description">
+        Selecciona el stage y los temas que se trabajarán en esta clase.
+        Estos contenidos se enviarán al marcar la asistencia.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="content-preparation-panel__close"
+      aria-label="Cerrar preparación de asistencia"
+      title="Cerrar"
+      (click)="onClosePanel()"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M6 6l12 12M18 6 6 18"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+  </header>
+
+  <!-- =========================
+       PASO 1 Y 2
+       SELECTOR EXISTENTE
+  ========================== -->
+
+  <div class="content-preparation-panel__selection">
+
+    <div class="content-preparation-panel__step-heading">
+      <span
+        class="content-preparation-panel__step-number"
+        [class.content-preparation-panel__step-number--active]="stepState.stageSelected"
+      >
+        1
+      </span>
+
+      <span class="content-preparation-panel__step-title">
+        Selecciona el Stage
+      </span>
+    </div>
+
+    <div class="content-preparation-panel__selector">
+      <app-content-selector
+        [stages]="stages"
+        (contentIdsSelected)="onContentIdsSelected($event)"
+        (stepStateChanged)="onStepStateChanged($event)">
+      </app-content-selector>
+    </div>
+
+  </div>
+
+  <!-- =========================
+       CONTENIDOS SELECCIONADOS
+  ========================== -->
+
+  <section
+    *ngIf="hasSelectedContents"
+    class="content-preparation-panel__selected"
+  >
+    <div class="content-preparation-panel__selected-header">
+      <div class="content-preparation-panel__step-heading">
+        <span
+          class="content-preparation-panel__step-number"
+          [class.content-preparation-panel__step-number--active]="stepState.topicsSelected"
+        >
+          2
+        </span>
+
+        <span class="content-preparation-panel__step-title">
+          Contenidos seleccionados
+        </span>
+      </div>
+
+      <button
+        type="button"
+        class="content-preparation-panel__clear"
+        (click)="onClearSelectedContents()"
+      >
+        Limpiar
+      </button>
+    </div>
+
+    <div class="content-preparation-panel__selected-list">
+      <div
+        *ngFor="let content of studyContentOptions; trackBy: trackByContentId"
+        class="content-preparation-panel__selected-item"
+      >
+        <span class="content-preparation-panel__selected-check" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path
+              d="m5 12 4 4 10-10"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+        <span class="content-preparation-panel__selected-name">
+          {{ content.name }}
+        </span>
+      </div>
+    </div>
+
+    <div class="content-preparation-panel__selected-count">
+      {{ selectedContentsCount }}
+      {{ selectedContentsCount === 1 ? 'contenido seleccionado' : 'contenidos seleccionados' }}
+    </div>
+  </section>
+
+  <!-- =========================
+       ASISTENCIA
+  ========================== -->
+
+  <section class="content-preparation-panel__attendance">
+    <div class="content-preparation-panel__step-heading">
+      <span
+        class="content-preparation-panel__step-number"
+        [class.content-preparation-panel__step-number--active]="hasSelectedContents"
+      >
+        3
+      </span>
+
+      <span class="content-preparation-panel__step-title">
+        Asistencia
+      </span>
+
+      <span
+        class="content-preparation-panel__information-icon"
+        title="Los contenidos seleccionados se asociarán cuando marques asistencia en una clase."
+        aria-hidden="true"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 10.5v5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <circle cx="12" cy="7.5" r="1" fill="currentColor" />
+        </svg>
+      </span>
+    </div>
+
+    <div
+      class="content-preparation-panel__attendance-status"
+      [class.content-preparation-panel__attendance-status--ready]="hasSelectedContents"
+    >
+      <span class="content-preparation-panel__attendance-check" aria-hidden="true">
+        <svg
+          *ngIf="hasSelectedContents"
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m5 12 4 4 10-10"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <span>
+        {{ hasSelectedContents ? 'Listo para marcar asistencia' : 'Selecciona al menos un contenido' }}
+      </span>
+    </div>
+
+    <p class="content-preparation-panel__attendance-description">
+      Al marcar una clase como presente, se enviará la asistencia junto con los contenidos seleccionados.
+    </p>
+  </section>
+
+  <!-- =========================
+       ESTADO LISTO
+  ========================== -->
+
+  <div
+    *ngIf="hasSelectedContents"
+    class="content-preparation-panel__ready"
+  >
+    <span class="content-preparation-panel__ready-icon" aria-hidden="true">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+        <circle
+          cx="12"
+          cy="12"
+          r="8.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="m8.5 12 2.2 2.2 4.8-5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+
+    <div class="content-preparation-panel__ready-text">
+      <strong>Contenidos preparados</strong>
+
+      <span>
+        Ahora puedes marcar la asistencia del estudiante desde la tabla.
+      </span>
+    </div>
+  </div>
+
+</section>

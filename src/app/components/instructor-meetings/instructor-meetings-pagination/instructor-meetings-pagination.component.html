@@ -1,0 +1,72 @@
+<nav class="meetings-pagination" aria-label="Paginación de clases">
+  <div class="meetings-pagination__summary">
+    Mostrando
+    <strong>{{ startItem }}</strong>
+    -
+    <strong>{{ endItem }}</strong>
+    de
+    <strong>{{ totalItems }}</strong>
+    clases
+  </div>
+
+  <div class="meetings-pagination__controls">
+    <button
+      type="button"
+      class="meetings-pagination__button meetings-pagination__button--nav"
+      [disabled]="!canGoPrevious"
+      aria-label="Página anterior"
+      (click)="goToPrevious()"
+    >
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="m14 6-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <button
+      *ngIf="showFirstPage"
+      type="button"
+      class="meetings-pagination__button"
+      [class.meetings-pagination__button--active]="isActivePage(1)"
+      (click)="goToPage(1)"
+    >
+      1
+    </button>
+
+    <span *ngIf="showStartEllipsis" class="meetings-pagination__ellipsis" aria-hidden="true">…</span>
+
+    <button
+      *ngFor="let page of pages; trackBy: trackByPage"
+      type="button"
+      class="meetings-pagination__button"
+      [class.meetings-pagination__button--active]="isActivePage(page)"
+      [attr.aria-current]="isActivePage(page) ? 'page' : null"
+      (click)="goToPage(page)"
+    >
+      {{ page }}
+    </button>
+
+    <span *ngIf="showEndEllipsis" class="meetings-pagination__ellipsis" aria-hidden="true">…</span>
+
+    <button
+      *ngIf="showLastPage"
+      type="button"
+      class="meetings-pagination__button"
+      [class.meetings-pagination__button--active]="isActivePage(totalPages)"
+      (click)="goToPage(totalPages)"
+    >
+      {{ totalPages }}
+    </button>
+
+    <button
+      type="button"
+      class="meetings-pagination__button meetings-pagination__button--nav"
+      [disabled]="!canGoNext"
+      aria-label="Página siguiente"
+      (click)="goToNext()"
+    >
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="m10 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </div>
+</nav>

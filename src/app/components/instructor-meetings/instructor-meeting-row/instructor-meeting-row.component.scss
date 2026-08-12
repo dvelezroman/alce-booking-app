@@ -1,0 +1,780 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   ROW
+========================= */
+
+.meeting-row {
+  position: relative;
+
+  width: 100%;
+  min-width: 1280px;
+  min-height: 4.8rem;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    .75fr
+    1.65fr
+    1.05fr
+    .85fr
+    1.1fr
+    1.5fr
+    1.1fr
+    1.15fr
+    1fr
+    .75fr;
+
+  align-items: stretch;
+
+  border-bottom: 1px solid #eceef4;
+
+  background: #ffffff;
+
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+:host:last-child .meeting-row {
+  border-bottom: 0;
+}
+
+.meeting-row:hover {
+  background: #fcfcfe;
+}
+
+.meeting-row--today {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(91, 75, 231, .025),
+      #ffffff 22%
+    );
+}
+
+/* =========================
+   CELLS
+========================= */
+
+.meeting-row__cell {
+  min-width: 0;
+  padding: 0 .8rem;
+
+  display: flex;
+  align-items: center;
+
+  border-right: 1px solid #eceef4;
+
+  color: #29324a;
+}
+
+.meeting-row__cell:last-child {
+  border-right: 0;
+}
+
+/* =========================
+   DATE
+========================= */
+
+.meeting-row__cell--date {
+  gap: .5rem;
+}
+
+.meeting-row__date-icon {
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #52607d;
+}
+
+.meeting-row__date-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.meeting-row__date-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+
+.meeting-row__weekday {
+  color: #1d2742;
+
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.meeting-row__date-value {
+  color: #35405a;
+
+  font-size: .62rem;
+  font-weight: 600;
+  line-height: 1.25;
+
+  white-space: nowrap;
+}
+
+/* =========================
+   HOUR
+========================= */
+
+.meeting-row__cell--hour {
+  gap: .45rem;
+}
+
+.meeting-row__hour-icon {
+  flex: 0 0 auto;
+
+  display: inline-flex;
+
+  color: #667085;
+}
+
+.meeting-row__hour-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.meeting-row__hour-value {
+  color: #26314d;
+
+  font-size: .65rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* =========================
+   STUDENT
+========================= */
+
+.meeting-row__cell--student {
+  gap: .65rem;
+}
+
+.meeting-row__avatar {
+  width: 2.4rem;
+  height: 2.4rem;
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eeeaff 0%,
+      #dcd5ff 100%
+    );
+
+  color: #4b3ac4;
+
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 1;
+
+  user-select: none;
+}
+
+.meeting-row__student-information {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+
+.meeting-row__student-name {
+  max-width: 100%;
+
+  overflow: hidden;
+
+  color: #111735;
+
+  font-size: .69rem;
+  font-weight: 800;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meeting-row__student-meta {
+  color: #667085;
+
+  font-size: .59rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* =========================
+   STAGE
+========================= */
+
+.meeting-row__cell--stage {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: .3rem;
+}
+
+.meeting-row__stage-badge {
+  min-height: 1.25rem;
+  padding: .18rem .4rem;
+
+  display: inline-flex;
+  align-items: center;
+
+  border-radius: .35rem;
+
+  background: #ece9ff;
+  color: #5942cf;
+
+  font-size: .59rem;
+  font-weight: 700;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+.meeting-row__stage-description {
+  max-width: 100%;
+
+  overflow: hidden;
+
+  color: #465069;
+
+  font-size: .59rem;
+  font-weight: 500;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   PROGRESO
+========================= */
+
+.meeting-row__cell--progress {
+  justify-content: center;
+}
+
+.meeting-row__progress {
+  width: 100%;
+  min-width: 70px;
+  max-width: 95px;
+
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.meeting-row__progress-value {
+  font-size: .68rem;
+  font-weight: 800;
+  line-height: 1;
+
+  color: #344054;
+}
+
+.meeting-row__progress-track {
+  position: relative;
+
+  width: 100%;
+  height: .35rem;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: #eceef4;
+}
+
+.meeting-row__progress-bar {
+  height: 100%;
+
+  border-radius: inherit;
+
+  transition: width 180ms ease;
+}
+
+.meeting-row__progress--low {
+  color: #c2413b;
+}
+
+.meeting-row__progress-bar.meeting-row__progress--low {
+  background: #ef4444;
+}
+
+.meeting-row__progress--medium {
+  color: #b86f00;
+}
+
+.meeting-row__progress-bar.meeting-row__progress--medium {
+  background: #f59e0b;
+}
+
+.meeting-row__progress--good {
+  color: #27885d;
+}
+
+.meeting-row__progress-bar.meeting-row__progress--good {
+  background: #22a06b;
+}
+
+.meeting-row__progress--high {
+  color: #176b43;
+}
+
+.meeting-row__progress-bar.meeting-row__progress--high {
+  background: #16a34a;
+}
+
+/* =========================
+   MODE
+========================= */
+
+.meeting-row__cell--mode {
+  gap: .45rem;
+}
+
+.meeting-row__mode-icon {
+  flex: 0 0 auto;
+
+  display: inline-flex;
+
+  color: #475471;
+}
+
+.meeting-row__mode-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.meeting-row__mode-label {
+  color: #303b57;
+
+  font-size: .63rem;
+  font-weight: 600;
+  line-height: 1.25;
+
+  white-space: nowrap;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.meeting-row__cell--content {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.meeting-row__content-list {
+  width: 100%;
+  margin: 0;
+  padding: 0 0 0 .3rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: .22rem;
+
+  color: #29324a;
+
+  font-size: .61rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.meeting-row__content-list li {
+  max-width: 100%;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meeting-row__text-action {
+  margin-top: .35rem;
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  color: #4338df;
+
+  font-family: inherit;
+  font-size: .6rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.meeting-row__text-action:hover {
+  color: #2d26bd;
+}
+
+.meeting-row__text-action:active {
+  transform: scale(.97);
+}
+
+.meeting-row__empty-value {
+  color: #8a92a5;
+
+  font-size: .61rem;
+  font-weight: 500;
+}
+
+/* =========================
+   ATTENDANCE
+========================= */
+
+.meeting-row__cell--assistance {
+  justify-content: flex-start;
+}
+
+.meeting-row__attendance {
+  padding: .25rem 0;
+
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+
+  border: 0;
+  background: transparent;
+
+  color: #596176;
+
+  font-family: inherit;
+  font-size: .62rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.meeting-row__attendance:active:not(.meeting-row__attendance--disabled) {
+  transform: scale(.97);
+}
+
+.meeting-row__attendance-box {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1.5px solid #b8bfcd;
+  border-radius: .18rem;
+
+  background: #ffffff;
+}
+
+.meeting-row__attendance--present {
+  color: #148143;
+}
+
+.meeting-row__attendance--present .meeting-row__attendance-box {
+  border-color: #1a9b50;
+
+  background: #edfff3;
+  color: #178445;
+}
+
+.meeting-row__attendance--absent {
+  color: #c32d2d;
+}
+
+.meeting-row__attendance--absent .meeting-row__attendance-box {
+  border-color: #dc3e3e;
+
+  background: #fff7f7;
+  color: #c92e2e;
+}
+
+.meeting-row__attendance--pending {
+  color: #5f677b;
+}
+
+.meeting-row__attendance--disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+/* =========================
+   REINFORCEMENT
+========================= */
+
+.meeting-row__reinforcement {
+  max-width: 100%;
+  padding: .2rem 0;
+
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+
+  border: 0;
+  background: transparent;
+
+  color: #35405c;
+
+  font-family: inherit;
+  font-size: .61rem;
+  font-weight: 600;
+  line-height: 1.3;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.meeting-row__reinforcement:hover {
+  color: #4237d5;
+}
+
+.meeting-row__reinforcement:active {
+  transform: scale(.97);
+}
+
+.meeting-row__reinforcement-icon {
+  flex: 0 0 auto;
+
+  display: inline-flex;
+
+  color: #19934d;
+}
+
+.meeting-row__reinforcement-icon--comments {
+  color: #5143dc;
+}
+
+.meeting-row__reinforcement--active {
+  color: #20864a;
+}
+
+/* =========================
+   NOTES
+========================= */
+
+.meeting-row__note {
+  padding: .2rem 0;
+
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+
+  border: 0;
+  background: transparent;
+
+  color: #35405c;
+
+  font-family: inherit;
+  font-size: .61rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.meeting-row__note:hover {
+  color: #2864b8;
+}
+
+.meeting-row__note:active {
+  transform: scale(.97);
+}
+
+.meeting-row__note-icon {
+  display: inline-flex;
+
+  color: #1683d5;
+}
+
+.meeting-row__empty-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+
+  color: #7a8294;
+
+  font-size: .6rem;
+  font-weight: 500;
+}
+
+.meeting-row__dash {
+  color: #9097a7;
+
+  font-size: .8rem;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.meeting-row__cell--actions {
+  justify-content: center;
+}
+
+.meeting-row__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .15rem;
+}
+
+.meeting-row__action-button,
+.meeting-row__more-button {
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: .45rem;
+
+  background: transparent;
+  color: #53607c;
+
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.meeting-row__action-button:hover,
+.meeting-row__more-button:hover {
+  background: #f1f2f7;
+  color: #342cca;
+}
+
+.meeting-row__action-button:active,
+.meeting-row__more-button:active {
+  transform: scale(.94);
+}
+
+.meeting-row__action-button svg,
+.meeting-row__more-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* =========================
+   FOCUS
+========================= */
+
+.meeting-row button:focus-visible {
+  outline: 2px solid rgba(79, 70, 229, .18);
+  outline-offset: 2px;
+}
+
+/* =========================
+   WHEN PREPARATION PANEL
+   REDUCES AVAILABLE WIDTH
+========================= */
+
+@media (max-width: 1250px) {
+  .meeting-row {
+    min-height: 5.9rem;
+  }
+
+  .meeting-row__cell {
+    padding: .7rem;
+  }
+
+  .meeting-row__avatar {
+    width: 2.2rem;
+    height: 2.2rem;
+
+    font-size: .68rem;
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .meeting-row {
+    min-height: 5.7rem;
+  }
+
+  .meeting-row__cell {
+    padding: .65rem .7rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+  .meeting-row {
+    min-height: 5.4rem;
+  }
+
+  .meeting-row__cell {
+    padding: .6rem .65rem;
+  }
+
+  .meeting-row__student-name {
+    font-size: .65rem;
+  }
+
+  .meeting-row__student-meta,
+  .meeting-row__date-value,
+  .meeting-row__stage-description,
+  .meeting-row__mode-label,
+  .meeting-row__content-list,
+  .meeting-row__attendance,
+  .meeting-row__reinforcement,
+  .meeting-row__note {
+    font-size: .57rem;
+  }
+
+  .meeting-row__avatar {
+    width: 2rem;
+    height: 2rem;
+
+    font-size: .62rem;
+  }
+}

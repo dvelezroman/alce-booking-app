@@ -1,73 +1,424 @@
-<div class="modal is-active">
-    <div class="modal-background"></div>
-  
-    <div class="modal-card slide-up-animation">
-      <header class="modal-card-head">
-        <p class="modal-card-title">Crear Nueva Clase</p>
-        <button class="delete" aria-label="close" (click)="close.emit()"></button>
-      </header>
-      <div class="selected-info">
-        <p> <strong>Fecha seleccionada:</strong> {{ fromDate }} </p>
-        <p> <strong>Hora seleccionada:</strong> {{ hour }}:00 </p>
-      </div>
-  
-      <div class="modal-card-body">
-        <div class="field fixed-input-container">
-          <label class="label">Buscar estudiante</label>
-      
-          <div class="control has-icons-left">
-            <input
-              class="input"
-              type="text"
-              [(ngModel)]="searchTerm"
-              (ngModelChange)="onSearchChange($event)"
-              (focus)="showUserDropdown = true"
-              (blur)="hideDropdown()"
-              placeholder="Escribe el nombre del estudiante"
-              name="studentSearch"
-            />
-            <span class="icon is-left">
-              <i class="fas fa-search"></i>
-            </span>
-          </div>
-        </div>
-      
-        <div
-          class="dropdown-list-fixed"
-          *ngIf="showUserDropdown && filteredUsers.length > 0"
-        >
-          <div
-            class="dropdown-item"
-            *ngFor="let user of filteredUsers"
-            (click)="selectUser(user)"
-          >
-            {{ user.firstName }} {{ user.lastName }}
-          </div>
-        </div>
+<div class="create-meeting-modal">
+  <div class="create-meeting-modal__overlay" (click)="closeModal()"></div>
 
-        <div class="field mt-4">
-          <label class="label">Modo de clase</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select [(ngModel)]="selectedMode" class="select custom-select">
-                <option [ngValue]="'ONLINE'">Online</option>
-                <option [ngValue]="'PRESENCIAL'">Presencial</option>
-              </select>
+  <section
+    class="create-meeting-modal__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="create-meeting-title"
+  >
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="create-meeting-modal__header">
+      <div class="create-meeting-modal__header-main">
+        <span class="create-meeting-modal__header-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <rect x="3.5" y="5.5" width="17" height="15" rx="2.4" stroke="currentColor" stroke-width="1.8" />
+            <path d="M7 3.5v4M17 3.5v4M3.5 9.5h17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M12 12v5M9.5 14.5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </span>
+
+        <div class="create-meeting-modal__header-text">
+          <h2 id="create-meeting-title" class="create-meeting-modal__title">
+            Crear nueva clase
+          </h2>
+
+          <p class="create-meeting-modal__subtitle">
+            Agenda una clase para hoy con un estudiante.
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="create-meeting-modal__close"
+        aria-label="Cerrar modal"
+        title="Cerrar"
+        (click)="closeModal()"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" />
+        </svg>
+      </button>
+    </header>
+
+    <!-- =========================
+         FECHA / HORARIO
+    ========================== -->
+
+    <section class="create-meeting-modal__summary">
+      <div class="create-meeting-modal__summary-item">
+        <span class="create-meeting-modal__summary-icon" aria-hidden="true">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7" />
+            <path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+
+        <div class="create-meeting-modal__summary-content">
+          <span class="create-meeting-modal__summary-label">
+            Fecha seleccionada
+          </span>
+
+          <strong class="create-meeting-modal__summary-value">
+            <span class="create-meeting-modal__summary-value-icon" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                <rect x="3.5" y="5.5" width="17" height="15" rx="2.3" stroke="currentColor" stroke-width="1.7" />
+                <path d="M7 3.5v4M17 3.5v4M3.5 9.5h17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+              </svg>
+            </span>
+
+            Hoy, {{ todayLabel }}
+          </strong>
+        </div>
+      </div>
+
+      <div class="create-meeting-modal__summary-divider"></div>
+
+      <div class="create-meeting-modal__summary-item">
+        <span class="create-meeting-modal__summary-icon" aria-hidden="true">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7" />
+            <path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+
+        <div class="create-meeting-modal__summary-content">
+          <span class="create-meeting-modal__summary-label">
+            Horario disponible desde
+          </span>
+
+          <strong class="create-meeting-modal__summary-value">
+            {{ availableHours.length > 0 ? formatHour(availableHours[0]) : 'Sin horarios disponibles' }}
+
+            <span *ngIf="availableHours.length > 0" class="create-meeting-modal__timezone">
+              (GMT-5)
+            </span>
+          </strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         INFORMACIÓN
+    ========================== -->
+
+    <section class="create-meeting-modal__notice">
+      <span class="create-meeting-modal__notice-icon" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7" />
+          <path d="M12 10.5v5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+          <circle cx="12" cy="7.5" r="1" fill="currentColor" />
+        </svg>
+      </span>
+
+      <div class="create-meeting-modal__notice-content">
+        <strong>Solo puedes agendar clases para el día de hoy.</strong>
+
+        <span>
+          Selecciona uno de los horarios disponibles para continuar.
+        </span>
+      </div>
+    </section>
+
+    <!-- =========================
+         CONTENIDO PRINCIPAL
+    ========================== -->
+
+    <div class="create-meeting-modal__content">
+      <!-- =========================
+           ESTUDIANTE
+      ========================== -->
+
+      <section class="create-meeting-modal__student-section">
+        <h3 class="create-meeting-modal__section-title">
+          1. Selecciona al estudiante
+        </h3>
+
+        <div class="create-meeting-modal__student-search">
+          <span class="create-meeting-modal__search-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8" />
+              <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </span>
+
+          <input
+            type="text"
+            class="create-meeting-modal__search-input"
+            placeholder="Buscar estudiante por nombre o apellido..."
+            [(ngModel)]="searchTerm"
+            autocomplete="off"
+            (ngModelChange)="onSearchChange($event)"
+            (focus)="searchTerm.length >= 2 && (showUserDropdown = true)"
+            (blur)="hideDropdown()"
+          />
+
+          <button
+            *ngIf="selectedStudent"
+            type="button"
+            class="create-meeting-modal__search-clear"
+            aria-label="Limpiar estudiante"
+            title="Limpiar"
+            (mousedown)="$event.preventDefault()"
+            (click)="clearSelectedStudent()"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </button>
+          <!-- RESULTADOS DE BÚSQUEDA -->
+          <div *ngIf="showUserDropdown" class="create-meeting-modal__students-dropdown">
+            <button
+              *ngFor="let user of filteredUsers; trackBy: trackByUserId"
+              type="button"
+              class="create-meeting-modal__student-option"
+              [class.create-meeting-modal__student-option--selected]="selectedStudent?.id === user.id"
+              (mousedown)="$event.preventDefault()"
+              (click)="selectUser(user)"
+            >
+              <span class="create-meeting-modal__student-avatar" aria-hidden="true">
+                {{ (user.firstName?.charAt(0) || '') + (user.lastName?.charAt(0) || '') }}
+              </span>
+  
+              <span class="create-meeting-modal__student-information">
+                <strong>
+                  {{ user.firstName }} {{ user.lastName }}
+                </strong>
+  
+                <span>
+                  Stage {{ user.student?.stage?.number || 'N/A' }}
+  
+                  <ng-container *ngIf="user.student?.studentClassification">
+                    · {{ user.student?.studentClassification }}
+                  </ng-container>
+                </span>
+              </span>
+            </button>
+  
+            <div *ngIf="filteredUsers.length === 0" class="create-meeting-modal__student-empty">
+              No se encontraron estudiantes.
             </div>
           </div>
         </div>
-      </div>
-      <p *ngIf="validationMessage" class="has-text-danger is-flex is-justify-content-center p-3 text-xs centered-message">
-        {{ validationMessage }}
-      </p>
-  
-      <footer class="modal-card-foot buttons-footer">
-        <button class="button is-blue" (click)="createMeeting()" [disabled]="!canCreateMeeting()">Crear</button>
-        <button class="button is-purple" (click)="close.emit()">Cancelar</button>
-      </footer>
-    </div>
-  </div>
 
-  <div class="toast-center notification is-danger" *ngIf="showErrorToast">
-    {{ errorToastMessage }}
-  </div>
+
+        <!-- ESTUDIANTE SELECCIONADO -->
+        <div *ngIf="selectedStudent" class="create-meeting-modal__selected-student">
+          <span
+            class="create-meeting-modal__student-avatar create-meeting-modal__student-avatar--selected"
+            aria-hidden="true"
+          >
+            {{ selectedStudentInitials }}
+          </span>
+
+          <div class="create-meeting-modal__student-information">
+            <strong>
+              {{ selectedStudentName }}
+            </strong>
+
+            <span>
+              {{ selectedStudentStage }} · {{ selectedStudentCategory }}
+            </span>
+          </div>
+
+          <span class="create-meeting-modal__selected-check" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+        </div>
+      </section>
+
+      <!-- =========================
+           CONFIGURACIÓN
+      ========================== -->
+
+      <div class="create-meeting-modal__configuration">
+        <!-- =========================
+             HORA
+        ========================== -->
+
+        <section class="create-meeting-modal__time-section">
+          <h3 class="create-meeting-modal__section-title">
+            2. Selecciona la hora de la clase
+          </h3>
+
+          <div
+            *ngIf="availableHours.length > 0; else noAvailableHours"
+            class="create-meeting-modal__time-content"
+          >
+            <p class="create-meeting-modal__time-helper">
+              <span aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7" />
+                  <path d="M12 10.5v5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                  <circle cx="12" cy="7.5" r="1" fill="currentColor" />
+                </svg>
+              </span>
+
+              <span>
+                Horarios disponibles desde:
+                <strong>{{ formatHour(availableHours[0]) }}</strong>
+              </span>
+            </p>
+
+            <div class="create-meeting-modal__hours-grid">
+              <button
+                *ngFor="let hour of availableHours; trackBy: trackByHour"
+                type="button"
+                class="create-meeting-modal__hour-button"
+                [class.create-meeting-modal__hour-button--selected]="isHourSelected(hour)"
+                (click)="selectHour(hour)"
+              >
+                {{ formatHour(hour) }}
+              </button>
+            </div>
+
+            <p class="create-meeting-modal__current-time">
+              <span aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7" />
+                  <path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+
+              <span>
+                Hora actual: {{ currentTimeLabel }} (GMT-5)
+              </span>
+            </p>
+          </div>
+
+          <ng-template #noAvailableHours>
+            <div class="create-meeting-modal__no-hours">
+              Ya no hay horarios disponibles para hoy.
+            </div>
+          </ng-template>
+        </section>
+
+        <!-- =========================
+             MODALIDAD
+        ========================== -->
+
+        <section class="create-meeting-modal__mode-section">
+          <h3 class="create-meeting-modal__section-title">
+            3. Modalidad de la clase
+          </h3>
+
+          <div class="create-meeting-modal__mode-grid">
+            <button
+              type="button"
+              class="create-meeting-modal__mode-option"
+              [class.create-meeting-modal__mode-option--selected]="isOnlineSelected"
+              (click)="selectMode($any('ONLINE'))"
+            >
+              <span class="create-meeting-modal__mode-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="4.5" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7" />
+                  <path d="M8 20h8M12 17.5V20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                </svg>
+              </span>
+
+              <span class="create-meeting-modal__mode-text">
+                <strong>Online</strong>
+                <small>Clase virtual</small>
+              </span>
+
+              <span
+                *ngIf="isOnlineSelected"
+                class="create-meeting-modal__mode-check"
+                aria-hidden="true"
+              >
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                  <path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              class="create-meeting-modal__mode-option"
+              [class.create-meeting-modal__mode-option--selected]="isPresentialSelected"
+              (click)="selectMode($any('PRESENCIAL'))"
+            >
+              <span class="create-meeting-modal__mode-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M8.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM15.5 10a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" stroke="currentColor" stroke-width="1.6" />
+                  <path d="M3.5 19v-1.5A4.5 4.5 0 0 1 8 13h1a4.5 4.5 0 0 1 4.5 4.5V19M14.5 13.5a4 4 0 0 1 6 3.5v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                </svg>
+              </span>
+
+              <span class="create-meeting-modal__mode-text">
+                <strong>Presencial</strong>
+                <small>Clase en aula</small>
+              </span>
+
+              <span
+                *ngIf="isPresentialSelected"
+                class="create-meeting-modal__mode-check"
+                aria-hidden="true"
+              >
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                  <path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="create-meeting-modal__footer">
+      <button
+        type="button"
+        class="create-meeting-modal__cancel-button"
+        (click)="closeModal()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="create-meeting-modal__create-button"
+        [disabled]="!canCreateMeeting"
+        (click)="createMeeting()"
+      >
+        <span class="create-meeting-modal__create-icon" aria-hidden="true">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+            <rect x="3.5" y="5.5" width="17" height="15" rx="2.3" stroke="currentColor" stroke-width="1.7" />
+            <path d="M7 3.5v4M17 3.5v4M3.5 9.5h17M12 12v5M9.5 14.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+          </svg>
+        </span>
+
+        <span>Crear clase</span>
+      </button>
+    </footer>
+
+    <!-- =========================
+         ERROR
+    ========================== -->
+
+    <div
+      *ngIf="showErrorToast"
+      class="create-meeting-modal__toast"
+      role="alert"
+    >
+      <span class="create-meeting-modal__toast-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8" />
+          <path d="M12 7.5v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <circle cx="12" cy="16.5" r="1" fill="currentColor" />
+        </svg>
+      </span>
+
+      <span>{{ errorToastMessage }}</span>
+    </div>
+  </section>
+</div>

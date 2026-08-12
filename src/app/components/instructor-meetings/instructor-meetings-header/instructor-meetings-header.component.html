@@ -1,0 +1,97 @@
+<header class="instructor-meetings-header">
+  <div class="instructor-meetings-header__information">
+    <h1 class="instructor-meetings-header__title">
+      Clases asignadas
+    </h1>
+
+    <p class="instructor-meetings-header__description">
+      Gestiona tus clases asignadas, asistencia, contenidos y evaluaciones.
+    </p>
+  </div>
+
+  <div class="instructor-meetings-header__actions">
+    <button
+      type="button"
+      class="instructor-meetings-header__button instructor-meetings-header__button--outline"
+      [class.instructor-meetings-header__button--active]="isPreparationOpen"
+      (click)="onPrepareAssistance()"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M4 5.75A2.75 2.75 0 0 1 6.75 3H11v17H6.75A2.75 2.75 0 0 0 4 22V5.75Z"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M20 5.75A2.75 2.75 0 0 0 17.25 3H13v17h4.25A2.75 2.75 0 0 1 20 22V5.75Z"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M7 8h2M7 11h2M15 8h2M15 11h2"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <span>
+        {{ isPreparationOpen ? 'Cerrar preparación' : 'Preparar asistencia' }}
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="instructor-meetings-header__button instructor-meetings-header__button--primary"
+      (click)="onCreateMeeting()"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <rect
+          x="3"
+          y="5"
+          width="18"
+          height="16"
+          rx="2.5"
+          stroke="currentColor"
+          stroke-width="1.8"
+        />
+
+        <path
+          d="M7 3v4M17 3v4M3 9h18"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M12 12v5M9.5 14.5h5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <span>
+        Agendar Clase
+      </span>
+    </button>
+  </div>
+</header>

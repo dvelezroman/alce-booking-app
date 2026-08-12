@@ -1,0 +1,270 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.instructor-meetings-header {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1.25rem;
+}
+
+/* =========================
+   INFORMATION
+========================= */
+
+.instructor-meetings-header__information {
+  min-width: 0;
+}
+
+.instructor-meetings-header__title {
+  margin: 0;
+
+  color: #101735;
+
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.instructor-meetings-header__description {
+  margin: .35rem 0 0;
+
+  color: #667085;
+
+  font-size: .82rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.instructor-meetings-header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: .75rem;
+
+  flex-shrink: 0;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.instructor-meetings-header__button {
+  min-height: 2.8rem;
+  padding: .65rem 1.1rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .5rem;
+
+  border-radius: .65rem;
+
+  font-family: inherit;
+  font-size: .78rem;
+  font-weight: 750;
+  line-height: 1;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
+}
+
+.instructor-meetings-header__button svg {
+  flex: 0 0 auto;
+
+  width: 18px;
+  height: 18px;
+}
+
+/* =========================
+   OUTLINE BUTTON
+========================= */
+
+.instructor-meetings-header__button--outline {
+  border: 1.5px solid #4d42ef;
+
+  background: #ffffff;
+  color: #3730d9;
+
+  box-shadow:
+    0 2px 6px rgba(69, 61, 223, 0.04);
+}
+
+.instructor-meetings-header__button--outline:hover {
+  border-color: #3932d7;
+
+  background: #f8f8ff;
+
+  box-shadow:
+    0 5px 14px rgba(69, 61, 223, 0.08);
+}
+
+.instructor-meetings-header__button--outline:active {
+  transform: scale(.98);
+}
+
+/* =========================
+   PREPARATION ACTIVE
+========================= */
+
+.instructor-meetings-header__button--active {
+  border-color: #4338ca;
+
+  background: #f2f1ff;
+  color: #352bb7;
+}
+
+/* =========================
+   PRIMARY BUTTON
+========================= */
+
+.instructor-meetings-header__button--primary {
+  border: 1px solid #4638e8;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5147f5 0%,
+      #392ee7 100%
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 7px 16px rgba(67, 56, 230, 0.2);
+}
+
+.instructor-meetings-header__button--primary:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #473de9 0%,
+      #3026d9 100%
+    );
+
+  box-shadow:
+    0 9px 20px rgba(67, 56, 230, 0.25);
+}
+
+.instructor-meetings-header__button--primary:active {
+  transform: scale(.98);
+}
+
+/* =========================
+   FOCUS
+========================= */
+
+.instructor-meetings-header__button:focus-visible {
+  outline: 3px solid rgba(79, 70, 229, 0.16);
+  outline-offset: 2px;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .instructor-meetings-header {
+    align-items: flex-start;
+  }
+
+  .instructor-meetings-header__title {
+    font-size: 1.3rem;
+  }
+
+  .instructor-meetings-header__description {
+    font-size: .76rem;
+  }
+
+  .instructor-meetings-header__button {
+    min-height: 2.55rem;
+    padding: .58rem .9rem;
+
+    font-size: .72rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+  .instructor-meetings-header {
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: .85rem;
+  }
+
+  .instructor-meetings-header__title {
+    font-size: 1.2rem;
+  }
+
+  .instructor-meetings-header__description {
+    margin-top: .25rem;
+
+    font-size: .72rem;
+  }
+
+  .instructor-meetings-header__actions {
+    width: 100%;
+
+    justify-content: stretch;
+
+    gap: .55rem;
+  }
+
+  .instructor-meetings-header__button {
+    flex: 1;
+
+    min-width: 0;
+    min-height: 2.45rem;
+
+    padding: .55rem .7rem;
+
+    font-size: .68rem;
+  }
+
+  .instructor-meetings-header__button svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .instructor-meetings-header__actions {
+    flex-direction: column;
+  }
+
+  .instructor-meetings-header__button {
+    width: 100%;
+  }
+}

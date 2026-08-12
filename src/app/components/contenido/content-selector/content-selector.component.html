@@ -1,46 +1,136 @@
-<div class="box">
-  <!-- Select de Stage -->
-  <div class="field">
-    <label class="label">Selecciona una Stage</label>
-    <div class="control">
-      <div class="select is-fullwidth">
-        <select [(ngModel)]="selectedStageId" (change)="onStageChange()" required>
-          <option [ngValue]="null">Seleccionar...</option>
-          <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
-        </select>
+<div class="content-selector">
+  <!-- =========================
+       STAGE
+  ========================== -->
+
+  <div class="content-selector__section">
+    <label class="content-selector__label" for="content-stage">
+      Selecciona una Stage
+    </label>
+
+    <div class="content-selector__select-wrapper">
+      <select
+        id="content-stage"
+        class="content-selector__select"
+        [(ngModel)]="selectedStageId"
+        (ngModelChange)="onStageChange()"
+      >
+        <option [ngValue]="null" disabled>Selecciona un Stage</option>
+
+        <option *ngFor="let stage of stages" [ngValue]="stage.id">
+          Stage {{ stage.number }} - {{ stage.description }}
+        </option>
+      </select>
+
+      <span class="content-selector__select-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  <!-- =========================
+       CONTENIDOS
+  ========================== -->
+
+  <div *ngIf="selectedStageId" class="content-selector__section content-selector__section--contents">
+    <div class="content-selector__section-heading">
+      <span class="content-selector__step-number">2</span>
+      <span class="content-selector__section-title">Selecciona los contenidos</span>
+    </div>
+
+    <!-- BUSCADOR -->
+    <div class="content-selector__search">
+      <span class="content-selector__search-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8" />
+          <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+      </span>
+
+      <input
+        type="text"
+        class="content-selector__search-input"
+        placeholder="Buscar contenidos..."
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange()"
+      />
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="isLoadingContents" class="content-selector__loading">
+      <div class="content-selector__loading-item" *ngFor="let item of [1, 2, 3, 4, 5]">
+        <span class="content-selector__loading-check"></span>
+        <span class="content-selector__loading-line"></span>
+      </div>
+    </div>
+
+    <!-- LISTA -->
+    <div *ngIf="!isLoadingContents" class="content-selector__contents-box">
+      <div *ngIf="filteredContents.length > 0" class="content-selector__contents-list">
+        <label
+          *ngFor="let content of filteredContents"
+          class="content-selector__content-item"
+          [class.content-selector__content-item--selected]="isContentSelected(content.id)"
+        >
+          <input
+            type="checkbox"
+            class="content-selector__checkbox-input"
+            [checked]="isContentSelected(content.id)"
+            (change)="toggleContent(content.id)"
+          />
+
+          <span class="content-selector__checkbox" aria-hidden="true">
+            <svg *ngIf="isContentSelected(content.id)" width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+
+          <span class="content-selector__content-information">
+            <span class="content-selector__content-title">
+              {{ content.title }}
+            </span>
+
+            <span *ngIf="content.unit" class="content-selector__content-unit">
+              Unidad {{ content.unit }}
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <!-- SIN RESULTADOS -->
+      <div *ngIf="filteredContents.length === 0 && contents.length > 0" class="content-selector__empty">
+        No encontramos contenidos con esa búsqueda.
+      </div>
+
+      <div *ngIf="contents.length === 0" class="content-selector__empty">
+        No hay contenidos disponibles para este Stage.
+      </div>
+
+      <!-- CONTADOR -->
+      <div *ngIf="contents.length > 0" class="content-selector__count">
+        {{ selectedContentIds.length }}
+        {{ selectedContentIds.length === 1 ? 'contenido seleccionado' : 'contenidos seleccionados' }}
       </div>
     </div>
   </div>
 
-  <!-- Select de Temas disponibles -->
-  <div *ngIf="availableContents.length > 0" class="field">
-    <label class="label">Seleccionar temas</label>
-    <div class="control">
-      <div class="select is-fullwidth">
-        <select (change)="addContent($event)" required>
-          <option *ngFor="let content of availableContents"
-            [value]="content.id"
-            [disabled]="isSelected(content.id)">
-            {{ content.name }}
-          </option>
-        </select>
-      </div>
-    </div>
-  </div>
+  <!-- =========================
+       CONFIRMAR
+  ========================== -->
 
-  <!-- Badges de Temas seleccionados -->
-  <div *ngIf="selectedContents.length > 0" class="tags mt-4">
-    <span *ngFor="let content of selectedContents" class="tag is-info is-blue">
-      {{ content.name }}
-      <button type="button" class="delete is-small" (click)="removeContent(content.id)"></button>
-    </span>
-  </div>
+  <button
+    *ngIf="selectedStageId && selectedContentIds.length > 0"
+    type="button"
+    class="content-selector__confirm"
+    [disabled]="isLoadingContents"
+    (click)="confirmSelection()"
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
 
-  <div class="field mt-4 has-text-centered">
-    <button type="button" class="button is-confirm"
-            [disabled]="!selectedStageId || selectedContents.length === 0"
-            (click)="confirmSelection()">
-      Confirmar selección
-    </button>
-  </div>
+    <span>Confirmar selección</span>
+  </button>
 </div>

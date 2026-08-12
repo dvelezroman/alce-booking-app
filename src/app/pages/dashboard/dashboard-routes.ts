@@ -67,6 +67,7 @@ import { ScheduledMeetingsComponent } from './scheduled-meetings/scheduled-meeti
 import { MeetingBookingV2Component } from './meeting-booking-v2/meeting-booking-v2.component';
 import { NotificationDetailV2Component } from './notifications/notification-detail-v2/notification-detail-v2.component';
 import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.component';
+import { SearchingMeetingInstructorV2Component } from './searching-meeting-instructor-v2/searching-meeting-instructor-v2.component';
 
 const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -87,6 +88,7 @@ const dashboardChildren: Routes = [
   { path: 'evaluation-statistics', component: EvaluationStatisticsComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent },
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent },
+  { path: 'searching-meeting-instructor-v2', component: SearchingMeetingInstructorV2Component },
   {
     path: 'admin',
     canActivate: [adminOnlyGuard],
@@ -154,10 +156,7 @@ const dashboardChildren: Routes = [
   { path: 'platform-assessments-list', component: PlatformAssessmentsListComponent },
   { path: 'platform-assessments-assign', component: PlatformAssessmentsAssignComponent },
   { path: 'platform-assessments-templates', component: PlatformAssessmentsTemplatesComponent },
-  {
-    path: 'platform-assessments-templates/:templateId',
-    component: PlatformAssessmentsTemplateDetailComponent,
-  },
+  { path: 'platform-assessments-templates/:templateId', component: PlatformAssessmentsTemplateDetailComponent },
   { path: 'processed-events', component: ProcessedEventsComponent },
   { path: 'notifications-status', component: NotificationsStatusComponent },
   { path: 'notifications-groups', component: GroupsComponent },

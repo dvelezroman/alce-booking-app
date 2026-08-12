@@ -1,0 +1,147 @@
+<section class="meeting-filters">
+  <div class="meeting-filters__header">
+    <span class="meeting-filters__header-icon" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M4 5h16l-6 7v5l-4 2v-7L4 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </span>
+
+    <h2 class="meeting-filters__title">Filtros de Búsqueda</h2>
+  </div>
+
+  <div class="meeting-filters__grid">
+    <div class="meeting-filter-field">
+      <label class="meeting-filter-field__label" for="filter-from">Desde</label>
+
+      <div class="meeting-filter-field__control">
+        <input
+          id="filter-from"
+          type="date"
+          class="meeting-filter-field__input"
+          [(ngModel)]="filter.from"
+          [disabled]="isLoading"
+          (keydown)="onEnterPressed($event)"
+        />
+      </div>
+    </div>
+
+    <div class="meeting-filter-field">
+      <label class="meeting-filter-field__label" for="filter-to">Hasta</label>
+
+      <div class="meeting-filter-field__control">
+        <input
+          id="filter-to"
+          type="date"
+          class="meeting-filter-field__input"
+          [(ngModel)]="filter.to"
+          [disabled]="isLoading"
+          (keydown)="onEnterPressed($event)"
+        />
+      </div>
+    </div>
+
+    <div class="meeting-filter-field">
+      <label class="meeting-filter-field__label" for="filter-hour">Hora</label>
+
+      <div class="meeting-filter-field__control">
+        <select id="filter-hour" class="meeting-filter-field__select" [(ngModel)]="filter.hour" [disabled]="isLoading">
+          <option value="">Todas</option>
+
+          <option *ngFor="let hour of availableHours; trackBy: trackByHour" [ngValue]="hour">
+            {{ formatHour(hour) }}
+          </option>
+        </select>
+
+        <span class="meeting-filter-field__chevron" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="meeting-filter-field">
+      <label class="meeting-filter-field__label" for="filter-stage">Stage</label>
+
+      <div class="meeting-filter-field__control">
+        <select id="filter-stage" class="meeting-filter-field__select" [(ngModel)]="filter.stageId" [disabled]="isLoading">
+          <option value="">Todos</option>
+
+          <option *ngFor="let stage of stages; trackBy: trackByStageId" [ngValue]="stage.id">
+            {{ formatStageLabel(stage) }}
+          </option>
+        </select>
+
+        <span class="meeting-filter-field__chevron" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="meeting-filter-field">
+      <label class="meeting-filter-field__label" for="filter-category">Categoría / Modalidad</label>
+
+      <div class="meeting-filter-field__control">
+        <select id="filter-category" class="meeting-filter-field__select" [(ngModel)]="filter.category" [disabled]="isLoading">
+          <option [ngValue]="undefined">Todas</option>
+
+          <option *ngFor="let ageGroup of ageGroupOptions; trackBy: trackByAgeGroup" [ngValue]="ageGroup">
+            {{ ageGroup }}
+          </option>
+
+          <option value="ONLINE">Online</option>
+          <option value="PRESENTIAL">Presencial</option>
+        </select>
+
+        <span class="meeting-filter-field__chevron" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="meeting-filter-field">
+      <label class="meeting-filter-field__label" for="filter-assigned">Asignadas</label>
+
+      <div class="meeting-filter-field__control">
+        <select id="filter-assigned" class="meeting-filter-field__select" [(ngModel)]="filter.assigned" [disabled]="isLoading">
+          <option [ngValue]="true">Sí</option>
+          <option [ngValue]="false">No</option>
+        </select>
+
+        <span class="meeting-filter-field__chevron" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="meeting-filters__actions">
+      <button type="button" class="meeting-filters__search-button" [disabled]="isSearchDisabled" (click)="onSearch()">
+        <span class="meeting-filters__search-icon" aria-hidden="true">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.9" />
+            <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" />
+          </svg>
+        </span>
+
+        <span>{{ isLoading ? 'Buscando...' : 'Buscar' }}</span>
+      </button>
+
+      <button type="button" class="meeting-filters__clear-button" [disabled]="isLoading" (click)="onClearFilters()">
+        <span class="meeting-filters__clear-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M4.5 8.5A8 8 0 1 1 5.8 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M4 4v5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+
+        <span>Limpiar filtros</span>
+      </button>
+    </div>
+  </div>
+</section>

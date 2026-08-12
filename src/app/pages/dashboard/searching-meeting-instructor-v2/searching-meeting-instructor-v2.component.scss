@@ -1,0 +1,324 @@
+/* =========================
+   PAGE
+========================= */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.instructor-meetings-page {
+  width: calc(100% - 76px);
+  min-height: 100vh;
+  margin-left: 64px;
+  padding: 1rem 1rem 2rem;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .instructor-meetings-page {
+    width: 100%;
+    margin-left: 0;
+    padding: 1rem;
+  }
+}
+
+.instructor-meetings-page__container {
+  width: min(100%, 1450px);
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem 2rem;
+}
+
+/* =========================
+   WORKSPACE
+========================= */
+
+.instructor-meetings-page__workspace {
+  width: 100%;
+  margin-top: 1rem;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 1rem;
+
+  transition:
+    grid-template-columns 180ms ease,
+    gap 180ms ease;
+}
+
+.instructor-meetings-page__workspace--with-panel {
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(280px, 340px);
+}
+
+/* =========================
+   MEETINGS
+========================= */
+
+.instructor-meetings-page__meetings {
+  min-width: 0;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid #e3e6ef;
+  border-radius: 1rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(31, 42, 89, 0.035);
+
+  overflow: hidden;
+}
+
+/* =========================
+   PREPARATION PANEL
+========================= */
+
+.instructor-meetings-page__preparation {
+  position: sticky;
+  top: 1rem;
+
+  min-width: 0;
+  width: 100%;
+
+  border: 1px solid #e3e6ef;
+  border-radius: 1rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(31, 42, 89, 0.035);
+
+  overflow: hidden;
+}
+
+/* =========================
+   COMPONENT HOSTS
+========================= */
+
+app-instructor-meetings-header,
+app-instructor-meetings-filters,
+app-instructor-meetings-list,
+app-instructor-meetings-pagination,
+app-instructor-meetings-icon-guide,
+app-instructor-content-preparation-panel {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   HEADER SPACING
+========================= */
+
+app-instructor-meetings-header {
+  margin-bottom: 1rem;
+}
+
+/* =========================
+   FILTER SPACING
+========================= */
+
+app-instructor-meetings-filters {
+  margin-bottom: 0;
+}
+
+/* =========================
+   PAGINATION
+========================= */
+
+app-instructor-meetings-pagination {
+  border-top: 1px solid #eceef4;
+}
+
+/* =========================
+   ICON GUIDE
+========================= */
+
+app-instructor-meetings-icon-guide {
+  margin-top: 1rem;
+}
+
+/* =========================
+   TABLE / PANEL ANIMATION
+========================= */
+
+.instructor-meetings-page__meetings,
+.instructor-meetings-page__preparation {
+  animation: instructor-meetings-fade-in 180ms ease;
+}
+
+@keyframes instructor-meetings-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   LARGE DESKTOP
+========================= */
+
+@media (min-width: 1500px) {
+  .instructor-meetings-page__container {
+    width: min(100%, 1520px);
+  }
+
+  .instructor-meetings-page__workspace--with-panel {
+    grid-template-columns:
+      minmax(0, 1fr)
+      350px;
+  }
+}
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1250px) {
+  .instructor-meetings-page__container {
+    padding-inline: 1rem;
+  }
+
+  .instructor-meetings-page__workspace--with-panel {
+    grid-template-columns:
+      minmax(0, 1fr)
+      300px;
+  }
+}
+
+/* =========================
+   TABLET / SMALL DESKTOP
+========================= */
+
+@media (max-width: 1050px) {
+  .instructor-meetings-page__workspace--with-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .instructor-meetings-page__preparation {
+    position: static;
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .instructor-meetings-page__container {
+    padding:
+      1rem
+      .85rem
+      1.5rem;
+  }
+
+  .instructor-meetings-page__workspace {
+    gap: .8rem;
+  }
+
+  .instructor-meetings-page__meetings,
+  .instructor-meetings-page__preparation {
+    border-radius: .85rem;
+  }
+
+  .instructor-meetings-page__empty {
+    min-height: 15rem;
+    border-radius: .85rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+  .instructor-meetings-page {
+    background: #ffffff;
+  }
+
+  .instructor-meetings-page__container {
+    padding:
+      .85rem
+      .65rem
+      1.25rem;
+  }
+
+  app-instructor-meetings-header {
+    margin-bottom: .8rem;
+  }
+
+  .instructor-meetings-page__workspace {
+    margin-top: .8rem;
+    gap: .7rem;
+  }
+
+  .instructor-meetings-page__meetings,
+  .instructor-meetings-page__preparation {
+    border-radius: .75rem;
+
+    box-shadow:
+      0 4px 14px rgba(31, 42, 89, 0.03);
+  }
+
+  app-instructor-meetings-icon-guide {
+    margin-top: .8rem;
+  }
+
+  .instructor-meetings-page__empty {
+    min-height: 13rem;
+    margin-top: .8rem;
+    padding: 1.4rem .8rem;
+
+    border-radius: .75rem;
+  }
+
+  .instructor-meetings-page__empty-icon {
+    width: 2.8rem;
+    height: 2.8rem;
+    margin-bottom: .55rem;
+  }
+
+  .instructor-meetings-page__empty-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .instructor-meetings-page__empty-title {
+    font-size: .82rem;
+  }
+
+  .instructor-meetings-page__empty-description {
+    max-width: 20rem;
+
+    font-size: .66rem;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .instructor-meetings-page__container {
+    padding-inline: .5rem;
+  }
+
+  .instructor-meetings-page__workspace {
+    gap: .6rem;
+  }
+
+  .instructor-meetings-page__meetings,
+  .instructor-meetings-page__preparation {
+    border-radius: .7rem;
+  }
+}
