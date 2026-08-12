@@ -1,0 +1,228 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.scheduling-request-header {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1.25rem;
+
+  background: transparent;
+}
+
+/* =========================
+   INFORMATION
+========================= */
+
+.scheduling-request-header__information {
+  min-width: 0;
+}
+
+.scheduling-request-header__title {
+  margin: 0;
+
+  color: #101735;
+
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.scheduling-request-header__description {
+  margin: .35rem 0 0;
+
+  color: #667085;
+
+  font-size: .82rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* =========================
+   REFRESH BUTTON
+========================= */
+
+.scheduling-request-header__refresh {
+  min-height: 2.8rem;
+  padding: .65rem 1.1rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .5rem;
+
+  border: 1.5px solid #4d42ef;
+  border-radius: .65rem;
+
+  background: #ffffff;
+  color: #3730d9;
+
+  font-family: inherit;
+  font-size: .78rem;
+  font-weight: 750;
+  line-height: 1;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 2px 6px rgba(69, 61, 223, 0.04);
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease,
+    opacity 160ms ease;
+}
+
+/* =========================
+   REFRESH HOVER
+========================= */
+
+.scheduling-request-header__refresh:hover:not(:disabled) {
+  border-color: #3932d7;
+
+  background: #f8f8ff;
+
+  box-shadow:
+    0 5px 14px rgba(69, 61, 223, 0.08);
+}
+
+/* =========================
+   REFRESH ACTIVE
+========================= */
+
+.scheduling-request-header__refresh:active:not(:disabled) {
+  transform: scale(.98);
+}
+
+/* =========================
+   REFRESH DISABLED
+========================= */
+
+.scheduling-request-header__refresh:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+/* =========================
+   REFRESH ICON
+========================= */
+
+.scheduling-request-header__refresh svg {
+  width: 18px;
+  height: 18px;
+
+  flex: 0 0 auto;
+}
+
+.scheduling-request-header__refresh-icon--loading {
+  animation:
+    scheduling-request-refresh-spin
+    .8s
+    linear
+    infinite;
+}
+
+@keyframes scheduling-request-refresh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================
+   FOCUS
+========================= */
+
+.scheduling-request-header__refresh:focus-visible {
+  outline: 3px solid rgba(79, 70, 229, 0.16);
+  outline-offset: 2px;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .scheduling-request-header {
+    align-items: flex-start;
+  }
+
+  .scheduling-request-header__title {
+    font-size: 1.3rem;
+  }
+
+  .scheduling-request-header__description {
+    font-size: .76rem;
+  }
+
+  .scheduling-request-header__refresh {
+    min-height: 2.55rem;
+    padding: .58rem .9rem;
+
+    font-size: .72rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+  .scheduling-request-header {
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: .85rem;
+  }
+
+  .scheduling-request-header__title {
+    font-size: 1.2rem;
+  }
+
+  .scheduling-request-header__description {
+    margin-top: .25rem;
+
+    font-size: .72rem;
+  }
+
+  .scheduling-request-header__refresh {
+    align-self: flex-end;
+
+    min-height: 2.45rem;
+    padding: .55rem .7rem;
+
+    font-size: .68rem;
+  }
+
+  .scheduling-request-header__refresh svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .scheduling-request-header__refresh {
+    width: 100%;
+  }
+}

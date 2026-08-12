@@ -1,0 +1,316 @@
+<div class="scheduling-request-row">
+
+  <!-- =========================
+       ESTUDIANTE
+  ========================== -->
+
+  <div class="scheduling-request-row__cell scheduling-request-row__cell--student">
+    <div class="scheduling-request-row__avatar" aria-hidden="true">
+      {{ studentInitials }}
+    </div>
+
+    <div class="scheduling-request-row__student-information">
+      <span class="scheduling-request-row__student-name">
+        {{ studentName }}
+      </span>
+
+      <span class="scheduling-request-row__student-email">
+        {{ studentEmail }}
+      </span>
+    </div>
+  </div>
+
+  <!-- =========================
+       TIPO DE SOLICITUD
+  ========================== -->
+
+  <div class="scheduling-request-row__cell scheduling-request-row__cell--kind">
+    <span
+      class="scheduling-request-row__kind"
+      [class.scheduling-request-row__kind--demo]="requestKindClass === 'demo'"
+      [class.scheduling-request-row__kind--placement]="requestKindClass === 'placement'"
+    >
+      <span class="scheduling-request-row__kind-icon" aria-hidden="true">
+
+        <svg
+          *ngIf="isDemoClass"
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m3 9 9-4 9 4-9 4-9-4Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M7 11.2V15c0 1.5 2.2 2.8 5 2.8s5-1.3 5-2.8v-3.8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M21 9v5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <svg
+          *ngIf="isPlacementExam"
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M6 3.5h8.5L18 7v13.5H6V3.5Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M14.5 3.5V7H18M9 11h6M9 14h6M9 17h4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span>{{ requestKindLabel }}</span>
+    </span>
+  </div>
+
+  <!-- =========================
+       FECHA Y HORA
+  ========================== -->
+
+  <div class="scheduling-request-row__cell scheduling-request-row__cell--schedule">
+    <ng-container *ngIf="hasScheduledSession; else noSchedule">
+      <div class="scheduling-request-row__schedule-information">
+        <div class="scheduling-request-row__schedule-line">
+          <span class="scheduling-request-row__schedule-icon" aria-hidden="true">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+              <rect
+                x="3.5"
+                y="5.5"
+                width="17"
+                height="15"
+                rx="2.2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M7 3.5v4M17 3.5v4M3.5 9.5h17"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <span>{{ formattedDate }}</span>
+        </div>
+
+        <div class="scheduling-request-row__schedule-line">
+          <span class="scheduling-request-row__schedule-icon" aria-hidden="true">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="8.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M12 7.5V12l3 2"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <span>{{ formattedHour }}</span>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #noSchedule>
+      <span class="scheduling-request-row__empty-value">
+        Sin agendar
+      </span>
+    </ng-template>
+  </div>
+
+  <!-- =========================
+       ESTADO
+  ========================== -->
+
+  <div class="scheduling-request-row__cell scheduling-request-row__cell--status">
+    <span
+      class="scheduling-request-row__status"
+      [class.scheduling-request-row__status--pending]="isPending"
+      [class.scheduling-request-row__status--scheduled]="isScheduled"
+      [class.scheduling-request-row__status--completed]="isCompleted"
+      [class.scheduling-request-row__status--cancelled]="isCancelled"
+    >
+      <span class="scheduling-request-row__status-icon" aria-hidden="true">
+
+        <svg
+          *ngIf="isPending"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 7.5V12l3 2"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        <svg
+          *ngIf="isScheduled"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="3.5"
+            y="5.5"
+            width="17"
+            height="15"
+            rx="2.2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M7 3.5v4M17 3.5v4M3.5 9.5h17"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <svg
+          *ngIf="isCompleted"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="m8.5 12 2.2 2.2 4.8-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        <svg
+          *ngIf="isCancelled"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M9 9l6 6M15 9l-6 6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span>{{ requestStatusLabel }}</span>
+    </span>
+  </div>
+
+  <!-- =========================
+       NOTAS
+  ========================== -->
+
+  <div class="scheduling-request-row__cell scheduling-request-row__cell--notes">
+    <span
+      *ngIf="hasNotes; else noNotes"
+      class="scheduling-request-row__notes"
+      [title]="item.requestNotes || ''"
+    >
+      {{ requestNotes }}
+    </span>
+
+    <ng-template #noNotes>
+      <span class="scheduling-request-row__empty-value">
+        —
+      </span>
+    </ng-template>
+  </div>
+
+  <!-- =========================
+       ACCIONES
+  ========================== -->
+
+  <div class="scheduling-request-row__cell scheduling-request-row__cell--actions">
+    <button
+      type="button"
+      class="scheduling-request-row__more"
+      aria-label="Más opciones"
+      title="Más opciones"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="5" r="1.6" />
+        <circle cx="12" cy="12" r="1.6" />
+        <circle cx="12" cy="19" r="1.6" />
+      </svg>
+    </button>
+  </div>
+
+</div>

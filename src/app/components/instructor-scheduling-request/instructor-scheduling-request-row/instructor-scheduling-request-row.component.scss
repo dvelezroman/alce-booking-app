@@ -1,0 +1,422 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   ROW
+========================= */
+
+.scheduling-request-row {
+  width: 100%;
+  min-width: 1080px;
+  min-height: 5.5rem;
+
+  display: grid;
+  grid-template-columns:
+    1.55fr
+    1.25fr
+    1.2fr
+    .9fr
+    1fr
+    .32fr;
+
+  align-items: stretch;
+
+  border-bottom: 1px solid #e8ebf1;
+
+  background: #ffffff;
+
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+:host:last-child .scheduling-request-row {
+  border-bottom: 0;
+}
+
+.scheduling-request-row:hover {
+  background: #fcfcfe;
+}
+
+/* =========================
+   CELL
+========================= */
+
+.scheduling-request-row__cell {
+  min-width: 0;
+  padding: .8rem 1rem;
+
+  display: flex;
+  align-items: center;
+
+  color: #29324a;
+}
+
+/* =========================
+   STUDENT
+========================= */
+
+.scheduling-request-row__cell--student {
+  gap: .75rem;
+}
+
+.scheduling-request-row__avatar {
+  width: 2.65rem;
+  height: 2.65rem;
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eeeaff 0%,
+      #dcd5ff 100%
+    );
+
+  color: #4e3bc6;
+
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 1;
+
+  user-select: none;
+}
+
+.scheduling-request-row__student-information {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+
+.scheduling-request-row__student-name {
+  max-width: 100%;
+
+  overflow: hidden;
+
+  color: #151c35;
+
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scheduling-request-row__student-email {
+  max-width: 100%;
+
+  overflow: hidden;
+
+  color: #667085;
+
+  font-size: .62rem;
+  font-weight: 500;
+  line-height: 1.35;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   KIND
+========================= */
+
+.scheduling-request-row__cell--kind {
+  justify-content: flex-start;
+}
+
+.scheduling-request-row__kind {
+  max-width: 100%;
+  min-height: 2rem;
+  padding: .38rem .65rem;
+
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+
+  border-radius: .55rem;
+
+  font-size: .65rem;
+  font-weight: 700;
+  line-height: 1.2;
+
+  white-space: nowrap;
+}
+
+.scheduling-request-row__kind-icon {
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scheduling-request-row__kind-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.scheduling-request-row__kind--demo {
+  background: #edf5ff;
+  color: #1766b3;
+}
+
+.scheduling-request-row__kind--placement {
+  background: #f2efff;
+  color: #5543cf;
+}
+
+/* =========================
+   SCHEDULE
+========================= */
+
+.scheduling-request-row__cell--schedule {
+  align-items: center;
+}
+
+.scheduling-request-row__schedule-information {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+}
+
+.scheduling-request-row__schedule-line {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+
+  color: #29324a;
+
+  font-size: .65rem;
+  font-weight: 500;
+  line-height: 1.3;
+
+  white-space: nowrap;
+}
+
+.scheduling-request-row__schedule-icon {
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #53607d;
+}
+
+.scheduling-request-row__schedule-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.scheduling-request-row__cell--status {
+  justify-content: flex-start;
+}
+
+.scheduling-request-row__status {
+  min-height: 2rem;
+  padding: .38rem .65rem;
+
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+
+  border-radius: 999px;
+
+  font-size: .64rem;
+  font-weight: 700;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+.scheduling-request-row__status-icon {
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scheduling-request-row__status-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.scheduling-request-row__status--pending {
+  background: #fff5dc;
+  color: #a86c00;
+}
+
+.scheduling-request-row__status--scheduled {
+  background: #e9f3ff;
+  color: #1765ad;
+}
+
+.scheduling-request-row__status--completed {
+  background: #eaf8ef;
+  color: #17804a;
+}
+
+.scheduling-request-row__status--cancelled {
+  background: #ffebeb;
+  color: #c52e2e;
+}
+
+/* =========================
+   NOTES
+========================= */
+
+.scheduling-request-row__cell--notes {
+  align-items: center;
+}
+
+.scheduling-request-row__notes {
+  max-width: 100%;
+
+  display: -webkit-box;
+  overflow: hidden;
+
+  color: #3d455c;
+
+  font-size: .63rem;
+  font-weight: 500;
+  line-height: 1.45;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.scheduling-request-row__empty-value {
+  color: #9399a8;
+
+  font-size: .64rem;
+  font-weight: 500;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.scheduling-request-row__cell--actions {
+  justify-content: center;
+}
+
+.scheduling-request-row__more {
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: .45rem;
+
+  background: transparent;
+  color: #53607c;
+
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.scheduling-request-row__more:hover {
+  background: #f1f2f7;
+  color: #3f35ca;
+}
+
+.scheduling-request-row__more:active {
+  transform: scale(.94);
+}
+
+.scheduling-request-row__more svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* =========================
+   FOCUS
+========================= */
+
+.scheduling-request-row__more:focus-visible {
+  outline: 2px solid rgba(79, 70, 229, .18);
+  outline-offset: 2px;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .scheduling-request-row {
+    min-height: 5.2rem;
+  }
+
+  .scheduling-request-row__cell {
+    padding: .7rem .85rem;
+  }
+
+  .scheduling-request-row__avatar {
+    width: 2.35rem;
+    height: 2.35rem;
+
+    font-size: .68rem;
+  }
+
+  .scheduling-request-row__student-name {
+    font-size: .68rem;
+  }
+
+  .scheduling-request-row__student-email,
+  .scheduling-request-row__kind,
+  .scheduling-request-row__schedule-line,
+  .scheduling-request-row__status,
+  .scheduling-request-row__notes {
+    font-size: .59rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+  .scheduling-request-row {
+    min-width: 980px;
+    min-height: 5rem;
+  }
+
+  .scheduling-request-row__cell {
+    padding: .65rem .75rem;
+  }
+
+  .scheduling-request-row__avatar {
+    width: 2.15rem;
+    height: 2.15rem;
+
+    font-size: .64rem;
+  }
+}

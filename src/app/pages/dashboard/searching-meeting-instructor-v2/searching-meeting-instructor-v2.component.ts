@@ -271,18 +271,12 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
 
     this.loadAssessmentConfig();
 
-    this.stagesService
-      .getAll()
-      .subscribe(response => {
+    this.stagesService.getAll().subscribe(response => {
         this.stages = this.sortStages(response);
-
         this.filter.stageId = '';
       });
 
-    this.availableHours = Array.from(
-      { length: 13 },
-      (_, i) => 8 + i,
-    );
+    this.availableHours = Array.from({ length: 13 }, (_, i) => 8 + i);
 
     /*
      * Esperamos a tener el instructorId
@@ -311,11 +305,7 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
         }
       });
 
-    this.store
-      .select(selectInstructorLink)
-      .subscribe(link => {
-        this.instructorLink = link;
-      });
+    this.store.select(selectInstructorLink).subscribe(link => { this.instructorLink = link });
   }
 
   /* =========================
@@ -327,18 +317,16 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
       .now()
       .setZone('America/Guayaquil');
 
-    const startOfWeek = now
-      .startOf('week')
-      .toISODate();
+    const today = now.toISODate();
 
-    const endOfWeek = now
-      .endOf('week')
+    const threeDaysLater = now
+      .plus({ days: 1 })
       .toISODate();
 
     this.filter = {
       ...this.filter,
-      from: startOfWeek ?? '',
-      to: endOfWeek ?? '',
+      from: today ?? '',
+      to: threeDaysLater ?? '',
       assigned: true,
     };
   }
@@ -595,13 +583,10 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
       return;
     }
 
-    const searchParams:
-      FilterMeetingsDto = {
-        ...params,
-
-        instructorId:
-          this.instructorId.toString(),
-      };
+    const searchParams: FilterMeetingsDto = {
+      ...params,
+      instructorId: this.instructorId.toString(),
+    };
 
     this.isLoadingMeetings = true;
 
@@ -609,18 +594,15 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
       .searchMeetings(searchParams)
       .subscribe({
         next: meetings => {
-          this.meetings = meetings;
+          this.meetings = this.sortMeetingsByNewest(meetings);
 
           this.currentPage = 1;
-
           this.isLoadingMeetings = false;
         },
 
         error: () => {
           this.meetings = [];
-
           this.currentPage = 1;
-
           this.isLoadingMeetings = false;
 
           this.showModal(
@@ -631,6 +613,32 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
           );
         },
       });
+  }
+
+  private sortMeetingsByNewest(
+    meetings: MeetingDTO[],
+  ): MeetingDTO[] {
+    return [...meetings].sort((a, b) => {
+      const dateA = DateTime
+        .fromISO(String(a.localdate))
+        .set({
+          hour: Number(a.localhour ?? a.hour ?? 0),
+          minute: 0,
+          second: 0,
+        })
+        .setZone('America/Guayaquil');
+
+      const dateB = DateTime
+        .fromISO(String(b.localdate))
+        .set({
+          hour: Number(b.localhour ?? b.hour ?? 0),
+          minute: 0,
+          second: 0,
+        })
+        .setZone('America/Guayaquil');
+
+      return dateB.toMillis() - dateA.toMillis();
+    });
   }
 
   /* =========================

@@ -1,0 +1,65 @@
+<nav class="scheduling-request-pagination" aria-label="Paginación de solicitudes">
+  <button
+    type="button"
+    class="scheduling-request-pagination__button scheduling-request-pagination__button--edge"
+    [disabled]="!canPrev"
+    aria-label="Ir a la primera página"
+    title="Primera página"
+    (click)="onFirstPage()"
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M7 5v14M18 6l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <button
+    type="button"
+    class="scheduling-request-pagination__button"
+    [disabled]="!canPrev"
+    aria-label="Ir a la página anterior"
+    title="Página anterior"
+    (click)="onPreviousPage()"
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="m15 6-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <button
+    *ngFor="let page of visiblePages; trackBy: trackByPage"
+    type="button"
+    class="scheduling-request-pagination__button scheduling-request-pagination__page"
+    [class.scheduling-request-pagination__page--active]="isCurrentPage(page)"
+    [attr.aria-current]="isCurrentPage(page) ? 'page' : null"
+    [attr.aria-label]="'Ir a la página ' + (page + 1)"
+    (click)="onPageSelected(page)"
+  >
+    {{ page + 1 }}
+  </button>
+
+  <button
+    type="button"
+    class="scheduling-request-pagination__button"
+    [disabled]="!canNext"
+    aria-label="Ir a la página siguiente"
+    title="Página siguiente"
+    (click)="onNextPage()"
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <button
+    type="button"
+    class="scheduling-request-pagination__button scheduling-request-pagination__button--edge"
+    [disabled]="!canNext"
+    aria-label="Ir a la última página"
+    title="Última página"
+    (click)="onLastPage()"
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M17 5v14M6 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+</nav>

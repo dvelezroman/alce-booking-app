@@ -1,0 +1,188 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   PAGINATION
+========================= */
+
+.scheduling-request-pagination {
+  width: 100%;
+  min-height: 4rem;
+  padding: .7rem 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+
+  border-top: 1px solid #e8ebf1;
+
+  background: #ffffff;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.scheduling-request-pagination__button {
+  min-width: 2.35rem;
+  height: 2.35rem;
+  padding: 0 .65rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid transparent;
+  border-radius: .5rem;
+
+  background: transparent;
+  color: #4a556d;
+
+  font-family: inherit;
+  font-size: .67rem;
+  font-weight: 700;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease,
+    opacity 150ms ease;
+}
+
+.scheduling-request-pagination__button:hover:not(:disabled):not(.scheduling-request-pagination__page--active) {
+  border-color: #dedfe8;
+
+  background: #f7f8fb;
+  color: #383f55;
+}
+
+.scheduling-request-pagination__button:active:not(:disabled) {
+  transform: scale(.95);
+}
+
+.scheduling-request-pagination__button:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+/* =========================
+   EDGE BUTTONS
+========================= */
+
+.scheduling-request-pagination__button--edge {
+  border-color: #e1e4eb;
+
+  background: #ffffff;
+}
+
+.scheduling-request-pagination__button--edge:hover:not(:disabled) {
+  border-color: #c9ced8;
+
+  background: #f8f9fb;
+}
+
+/* =========================
+   PAGE BUTTON
+========================= */
+
+.scheduling-request-pagination__page {
+  min-width: 2.35rem;
+
+  color: #30384d;
+}
+
+.scheduling-request-pagination__page--active {
+  border-color: #493ee5;
+
+  background:
+    linear-gradient(
+      135deg,
+      #584cf4 0%,
+      #4034e2 100%
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 5px 12px rgba(67, 56, 224, .2);
+
+  cursor: default;
+}
+
+.scheduling-request-pagination__page--active:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #584cf4 0%,
+      #4034e2 100%
+    );
+
+  color: #ffffff;
+}
+
+/* =========================
+   ICONS
+========================= */
+
+.scheduling-request-pagination__button svg {
+  width: 15px;
+  height: 15px;
+
+  flex: 0 0 auto;
+}
+
+/* =========================
+   FOCUS
+========================= */
+
+.scheduling-request-pagination__button:focus-visible {
+  outline: 3px solid rgba(79, 70, 229, .14);
+  outline-offset: 2px;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .scheduling-request-pagination {
+    width: 100%;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+  .scheduling-request-pagination {
+    width: 100%;
+    padding: .65rem .75rem;
+
+    gap: .3rem;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+  }
+
+  .scheduling-request-pagination::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scheduling-request-pagination__button {
+    min-width: 2.15rem;
+    height: 2.15rem;
+    padding: 0 .55rem;
+
+    font-size: .63rem;
+  }
+}

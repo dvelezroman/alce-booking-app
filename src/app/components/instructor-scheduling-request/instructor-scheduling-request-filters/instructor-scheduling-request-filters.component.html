@@ -1,0 +1,158 @@
+<section class="scheduling-request-filters">
+  <div class="scheduling-request-filters__search-row">
+    <div class="scheduling-request-filters__field scheduling-request-filters__field--search">
+      <label class="scheduling-request-filters__label" for="search-student">
+        Buscar por nombre o correo
+      </label>
+
+      <div class="scheduling-request-filters__search-wrapper">
+        <span class="scheduling-request-filters__search-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8" />
+            <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </span>
+
+        <input
+          id="search-student"
+          type="text"
+          class="scheduling-request-filters__search-input"
+          placeholder="Buscar estudiante..."
+          autocomplete="off"
+          [ngModel]="searchName"
+          [disabled]="loading"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="scheduling-request-filters__filters-row">
+    <div class="scheduling-request-filters__field">
+      <label class="scheduling-request-filters__label" for="request-status">
+        Estado
+      </label>
+
+      <div class="scheduling-request-filters__select-wrapper">
+        <select
+          id="request-status"
+          class="scheduling-request-filters__select"
+          [ngModel]="filterStatus"
+          [disabled]="loading"
+          (ngModelChange)="onStatusChange($event)"
+        >
+          <option value="">Todos</option>
+
+          <option
+            *ngFor="let option of statusOptions"
+            [ngValue]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+
+        <span class="scheduling-request-filters__select-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="m7 9.5 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="scheduling-request-filters__field">
+      <label class="scheduling-request-filters__label" for="request-kind">
+        Tipo de solicitud
+      </label>
+
+      <div class="scheduling-request-filters__select-wrapper">
+        <select
+          id="request-kind"
+          class="scheduling-request-filters__select"
+          [ngModel]="filterKind"
+          [disabled]="loading"
+          (ngModelChange)="onKindChange($event)"
+        >
+          <option value="">Todos</option>
+
+          <option
+            *ngFor="let option of kindOptions"
+            [ngValue]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+
+        <span class="scheduling-request-filters__select-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="m7 9.5 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="scheduling-request-filters__field">
+      <label class="scheduling-request-filters__label" for="date-from">
+        Desde
+      </label>
+
+      <div class="scheduling-request-filters__date-wrapper">
+        <input
+          id="date-from"
+          type="date"
+          class="scheduling-request-filters__date"
+          [ngModel]="dateFrom"
+          [disabled]="loading"
+          (ngModelChange)="onFromDateChange($event)"
+        />
+      </div>
+    </div>
+
+    <div class="scheduling-request-filters__field">
+      <label class="scheduling-request-filters__label" for="date-to">
+        Hasta
+      </label>
+
+      <div class="scheduling-request-filters__date-wrapper">
+        <input
+          id="date-to"
+          type="date"
+          class="scheduling-request-filters__date"
+          [ngModel]="dateTo"
+          [disabled]="loading"
+          (ngModelChange)="onToDateChange($event)"
+        />
+      </div>
+    </div>
+
+    <div class="scheduling-request-filters__actions">
+      <button
+        type="button"
+        class="scheduling-request-filters__today"
+        [class.scheduling-request-filters__today--active]="sessionTodayOnly"
+        [disabled]="loading"
+        (click)="onTodayClick()"
+      >
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="3.5" y="5.5" width="17" height="15" rx="2.2" stroke="currentColor" stroke-width="1.7" />
+          <path d="M7 3.5v4M17 3.5v4M3.5 9.5h17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+        </svg>
+
+        <span>Sesiones de hoy</span>
+      </button>
+
+      <button
+        type="button"
+        class="scheduling-request-filters__clear"
+        [disabled]="loading || !hasActiveFilters"
+        (click)="onClearFilters()"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 7h14M7.5 12h9M10 17h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+          <path d="m17.5 4.5 2.5 2.5-2.5 2.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+
+        <span>Limpiar filtros</span>
+      </button>
+    </div>
+  </div>
+</section>

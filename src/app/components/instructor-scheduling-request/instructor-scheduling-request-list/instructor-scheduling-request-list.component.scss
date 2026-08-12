@@ -1,0 +1,450 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.scheduling-request-list {
+  width: 100%;
+
+  overflow: hidden;
+
+  border: 1px solid #e1e5ec;
+  border-radius: .85rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 16px rgba(25, 35, 70, .035);
+}
+
+/* =========================
+   TABLE WRAPPER
+========================= */
+
+.scheduling-request-list__table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scrollbar-width: thin;
+  scrollbar-color: #d5d9e3 transparent;
+}
+
+.scheduling-request-list__table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scheduling-request-list__table-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background: #d5d9e3;
+}
+
+.scheduling-request-list__table-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.scheduling-request-list__table {
+  width: 100%;
+  min-width: 0;
+}
+
+.scheduling-request-list__table--scrollable {
+  min-width: 1080px;
+}
+
+/* =========================
+   TABLE HEADER
+========================= */
+
+.scheduling-request-list__table-header {
+  min-height: 3.35rem;
+
+  display: grid;
+
+  grid-template-columns:
+    1.55fr
+    1.25fr
+    1.2fr
+    .9fr
+    1fr
+    .32fr;
+
+  align-items: center;
+
+  border-bottom: 1px solid #e6e9ef;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fbfcfe 0%,
+      #f9fafc 100%
+    );
+}
+
+.scheduling-request-list__column {
+  min-width: 0;
+  height: 100%;
+
+  padding: .75rem 1rem;
+
+  display: flex;
+  align-items: center;
+
+  color: #465069;
+
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 1.25;
+
+  white-space: nowrap;
+}
+
+.scheduling-request-list__column--actions {
+  justify-content: center;
+}
+
+/* =========================
+   ROW CHILD
+========================= */
+
+app-instructor-scheduling-request-row {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.scheduling-request-list__loading {
+  display: flex;
+  flex-direction: column;
+}
+
+.scheduling-request-list__skeleton-row {
+  min-height: 5.5rem;
+
+  display: grid;
+
+  grid-template-columns:
+    1.55fr
+    1.25fr
+    1.2fr
+    .9fr
+    1fr
+    .32fr;
+
+  align-items: stretch;
+
+  border-bottom: 1px solid #e8ebf1;
+
+  background: #ffffff;
+}
+
+.scheduling-request-list__skeleton-row:last-child {
+  border-bottom: 0;
+}
+
+.scheduling-request-list__skeleton-cell {
+  min-width: 0;
+
+  padding: .8rem 1rem;
+
+  display: flex;
+  align-items: center;
+}
+
+.scheduling-request-list__skeleton-cell--student {
+  gap: .75rem;
+}
+
+.scheduling-request-list__skeleton-cell--action {
+  justify-content: center;
+}
+
+/* =========================
+   SKELETON AVATAR
+========================= */
+
+.scheduling-request-list__skeleton-avatar {
+  position: relative;
+
+  width: 2.65rem;
+  height: 2.65rem;
+
+  flex: 0 0 auto;
+
+  overflow: hidden;
+
+  border-radius: 50%;
+
+  background: #edf0f5;
+}
+
+/* =========================
+   SKELETON INFO
+========================= */
+
+.scheduling-request-list__skeleton-information {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .4rem;
+}
+
+.scheduling-request-list__skeleton-line,
+.scheduling-request-list__skeleton-block,
+.scheduling-request-list__skeleton-action {
+  position: relative;
+
+  overflow: hidden;
+
+  background: #edf0f5;
+}
+
+/* =========================
+   SKELETON LINES
+========================= */
+
+.scheduling-request-list__skeleton-line {
+  height: .55rem;
+
+  border-radius: 999px;
+}
+
+.scheduling-request-list__skeleton-line--name {
+  width: 58%;
+}
+
+.scheduling-request-list__skeleton-line--email {
+  width: 78%;
+}
+
+.scheduling-request-list__skeleton-line--date {
+  width: 70%;
+}
+
+.scheduling-request-list__skeleton-line--hour {
+  width: 46%;
+}
+
+.scheduling-request-list__skeleton-line--notes {
+  width: 82%;
+}
+
+/* =========================
+   SKELETON BLOCKS
+========================= */
+
+.scheduling-request-list__skeleton-block {
+  height: 1.8rem;
+
+  border-radius: .5rem;
+}
+
+.scheduling-request-list__skeleton-block--kind {
+  width: 72%;
+}
+
+.scheduling-request-list__skeleton-block--status {
+  width: 72%;
+
+  border-radius: 999px;
+}
+
+.scheduling-request-list__skeleton-action {
+  width: 1.6rem;
+  height: 1.6rem;
+
+  border-radius: .4rem;
+}
+
+/* =========================
+   SKELETON ANIMATION
+========================= */
+
+.scheduling-request-list__skeleton-avatar::after,
+.scheduling-request-list__skeleton-line::after,
+.scheduling-request-list__skeleton-block::after,
+.scheduling-request-list__skeleton-action::after {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, .85),
+      transparent
+    );
+
+  content: '';
+
+  transform: translateX(-100%);
+
+  animation:
+    scheduling-request-skeleton
+    1.3s
+    infinite;
+}
+
+@keyframes scheduling-request-skeleton {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.scheduling-request-list__empty {
+  min-height: 16rem;
+
+  padding: 2rem 1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  background: #ffffff;
+}
+
+.scheduling-request-list__empty-icon {
+  width: 3rem;
+  height: 3rem;
+
+  margin-bottom: .7rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: .8rem;
+
+  background: #f0eeff;
+  color: #5145df;
+}
+
+.scheduling-request-list__empty-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.scheduling-request-list__empty-title {
+  margin: 0;
+
+  color: #151c35;
+
+  font-size: .82rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.scheduling-request-list__empty-description {
+  margin: .3rem 0 0;
+
+  color: #667085;
+
+  font-size: .7rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .scheduling-request-list {
+    width: 100%;
+  }
+
+  .scheduling-request-list__table--scrollable {
+    min-width: 1040px;
+  }
+
+  .scheduling-request-list__column {
+    padding: .7rem .85rem;
+    font-size: .68rem;
+  }
+
+  .scheduling-request-list__skeleton-row {
+    min-height: 5.2rem;
+  }
+
+  .scheduling-request-list__skeleton-cell {
+    padding: .7rem .85rem;
+  }
+
+  .scheduling-request-list__skeleton-avatar {
+    width: 2.35rem;
+    height: 2.35rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+  .scheduling-request-list {
+    width: 100%;
+    border-radius: .75rem;
+  }
+
+  .scheduling-request-list__table--scrollable {
+    min-width: 980px;
+  }
+
+  .scheduling-request-list__table-header {
+    min-height: 3rem;
+  }
+
+  .scheduling-request-list__column {
+    padding: .65rem .75rem;
+    font-size: .64rem;
+  }
+
+  .scheduling-request-list__skeleton-row {
+    min-height: 5rem;
+  }
+
+  .scheduling-request-list__skeleton-cell {
+    padding: .65rem .75rem;
+  }
+
+  .scheduling-request-list__skeleton-avatar {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+
+  .scheduling-request-list__empty {
+    min-height: 13rem;
+  }
+
+  .scheduling-request-list__empty-title {
+    font-size: .78rem;
+  }
+
+  .scheduling-request-list__empty-description {
+    font-size: .66rem;
+  }
+}

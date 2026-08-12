@@ -1,0 +1,70 @@
+<section class="scheduling-request-summary">
+  <div class="scheduling-request-summary__left">
+    <span class="scheduling-request-summary__icon" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M8.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM15.5 10a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"
+          stroke="currentColor"
+          stroke-width="1.6"
+        />
+
+        <path
+          d="M3.5 19v-1.5A4.5 4.5 0 0 1 8 13h1a4.5 4.5 0 0 1 4.5 4.5V19M14.5 13.5a4 4 0 0 1 6 3.5v2"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+
+    <div class="scheduling-request-summary__heading">
+      <h2 class="scheduling-request-summary__title">
+        Solicitudes encontradas
+      </h2>
+
+      <span class="scheduling-request-summary__count">
+        {{ total }}
+      </span>
+    </div>
+  </div>
+
+  <div class="scheduling-request-summary__right">
+    <span class="scheduling-request-summary__range">
+      Mostrando {{ rangeLabel }}
+    </span>
+
+    <div class="scheduling-request-summary__page-size">
+      <span class="scheduling-request-summary__page-size-label">
+        Ver
+      </span>
+
+      <div class="scheduling-request-summary__select-wrapper">
+        <select
+          class="scheduling-request-summary__select"
+          [ngModel]="pageSize"
+          [disabled]="loading"
+          (ngModelChange)="onPageSizeChange($event)"
+        >
+          <option
+            *ngFor="let size of pageSizeChoices; trackBy: trackByPageSize"
+            [ngValue]="size"
+          >
+            {{ size }}
+          </option>
+        </select>
+
+        <span class="scheduling-request-summary__select-icon" aria-hidden="true">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+            <path
+              d="m7 9.5 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

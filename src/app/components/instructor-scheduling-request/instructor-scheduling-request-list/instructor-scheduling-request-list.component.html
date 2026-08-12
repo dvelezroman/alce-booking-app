@@ -1,0 +1,129 @@
+<section class="scheduling-request-list">
+  <div class="scheduling-request-list__table-wrapper">
+    <div class="scheduling-request-list__table"
+         [class.scheduling-request-list__table--scrollable]="loading || hasItems"
+
+>
+
+      <!-- =========================
+            TABLE HEADER
+        ========================== -->
+
+        <div
+        *ngIf="loading || hasItems"
+        class="scheduling-request-list__table-header"
+        >
+        <div class="scheduling-request-list__column scheduling-request-list__column--student">
+            Estudiante
+        </div>
+
+        <div class="scheduling-request-list__column scheduling-request-list__column--kind">
+            Tipo de solicitud
+        </div>
+
+        <div class="scheduling-request-list__column scheduling-request-list__column--schedule">
+            Fecha y hora de sesión
+        </div>
+
+        <div class="scheduling-request-list__column scheduling-request-list__column--status">
+            Estado
+        </div>
+
+        <div class="scheduling-request-list__column scheduling-request-list__column--notes">
+            Notas
+        </div>
+
+        <div class="scheduling-request-list__column scheduling-request-list__column--actions"></div>
+        </div>
+
+      <!-- =========================
+           LOADING
+      ========================== -->
+
+      <div *ngIf="loading" class="scheduling-request-list__loading">
+        <div
+          *ngFor="let item of [1, 2, 3, 4, 5]"
+          class="scheduling-request-list__skeleton-row"
+        >
+          <div class="scheduling-request-list__skeleton-cell scheduling-request-list__skeleton-cell--student">
+            <span class="scheduling-request-list__skeleton-avatar"></span>
+
+            <div class="scheduling-request-list__skeleton-information">
+              <span class="scheduling-request-list__skeleton-line scheduling-request-list__skeleton-line--name"></span>
+              <span class="scheduling-request-list__skeleton-line scheduling-request-list__skeleton-line--email"></span>
+            </div>
+          </div>
+
+          <div class="scheduling-request-list__skeleton-cell">
+            <span class="scheduling-request-list__skeleton-block scheduling-request-list__skeleton-block--kind"></span>
+          </div>
+
+          <div class="scheduling-request-list__skeleton-cell">
+            <div class="scheduling-request-list__skeleton-information">
+              <span class="scheduling-request-list__skeleton-line scheduling-request-list__skeleton-line--date"></span>
+              <span class="scheduling-request-list__skeleton-line scheduling-request-list__skeleton-line--hour"></span>
+            </div>
+          </div>
+
+          <div class="scheduling-request-list__skeleton-cell">
+            <span class="scheduling-request-list__skeleton-block scheduling-request-list__skeleton-block--status"></span>
+          </div>
+
+          <div class="scheduling-request-list__skeleton-cell">
+            <span class="scheduling-request-list__skeleton-line scheduling-request-list__skeleton-line--notes"></span>
+          </div>
+
+          <div class="scheduling-request-list__skeleton-cell scheduling-request-list__skeleton-cell--action">
+            <span class="scheduling-request-list__skeleton-action"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- =========================
+           ROWS
+      ========================== -->
+
+      <ng-container *ngIf="!loading && hasItems">
+        <app-instructor-scheduling-request-row
+          *ngFor="let item of items; trackBy: trackByRequestId"
+          [item]="item"
+          [kindText]="kindText"
+          [statusText]="statusText"
+          [slotText]="slotText"
+          [notesPreview]="notesPreview">
+        </app-instructor-scheduling-request-row>
+      </ng-container>
+
+      <!-- =========================
+           EMPTY
+      ========================== -->
+
+      <div *ngIf="!loading && !hasItems" class="scheduling-request-list__empty">
+        <span class="scheduling-request-list__empty-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M8.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM15.5 10a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="M3.5 19v-1.5A4.5 4.5 0 0 1 8 13h1a4.5 4.5 0 0 1 4.5 4.5V19M14.5 13.5a4 4 0 0 1 6 3.5v2"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <h3 class="scheduling-request-list__empty-title">
+          No hay solicitudes para mostrar
+        </h3>
+
+        <p class="scheduling-request-list__empty-description">
+          Prueba modificando los filtros de búsqueda.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

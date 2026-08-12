@@ -2,15 +2,25 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+
+import { InstructorSchedulingRequestHeaderComponent } from '../../../../components/instructor-scheduling-request/instructor-scheduling-request-header/instructor-scheduling-request-header.component';
+import { InstructorSchedulingRequestFiltersComponent } from '../../../../components/instructor-scheduling-request/instructor-scheduling-request-filters/instructor-scheduling-request-filters.component';
+import { InstructorSchedulingRequestSummaryComponent } from '../../../../components/instructor-scheduling-request/instructor-scheduling-request-summary/instructor-scheduling-request-summary.component';
+import { InstructorSchedulingRequestListComponent } from '../../../../components/instructor-scheduling-request/instructor-scheduling-request-list/instructor-scheduling-request-list.component';
+import { InstructorSchedulingRequestPaginationComponent } from '../../../../components/instructor-scheduling-request/instructor-scheduling-request-pagination/instructor-scheduling-request-pagination.component';
+
 import { LeadSchedulingRequestService } from '../../../../services/lead-scheduling-request.service';
 import { LeadSchedulingPendingCountService } from '../../../../services/lead-scheduling-pending-count.service';
 import { UserRole } from '../../../../services/dtos/user.dto';
+
 import {
   LeadSchedulingRequestKind,
   LeadSchedulingRequestRow,
   LeadSchedulingRequestStatus,
 } from '../../../../services/dtos/lead-scheduling-request.dto';
+
 import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message.util';
+
 import {
   leadSchedulingKindLabel,
   leadSchedulingScheduleSummary,
@@ -20,28 +30,42 @@ import {
 @Component({
   selector: 'app-instructor-lead-scheduling-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    InstructorSchedulingRequestHeaderComponent,
+    InstructorSchedulingRequestFiltersComponent,
+    InstructorSchedulingRequestSummaryComponent,
+    InstructorSchedulingRequestListComponent,
+    InstructorSchedulingRequestPaginationComponent,
+  ],
   templateUrl: './instructor-lead-scheduling-list.component.html',
   styleUrl: './instructor-lead-scheduling-list.component.scss',
 })
 export class InstructorLeadSchedulingListComponent implements OnInit {
   /** Filas acumuladas del API (según estado/tipo seleccionados en servidor). */
   sourceItems: LeadSchedulingRequestRow[] = [];
+
   /** Total de filas que reporta el API para el filtro servidor actual. */
   totalFromApi = 0;
+
   loading = false;
   error: string | null = null;
 
   /** Por defecto 25 registros por página (vista). */
   pageSize = 25;
+
   /** Índice de página base 0 sobre `filteredItems`. */
   pageIndex = 0;
 
   searchName = '';
   dateFrom = '';
   dateTo = '';
+
   /** Sesión agendada exactamente para el día calendario actual (fecha local). */
   sessionTodayOnly = false;
+
   statusFilter: '' | LeadSchedulingRequestStatus = '';
   kindFilter: '' | LeadSchedulingRequestKind = '';
 
@@ -62,16 +86,40 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
     COMPLETED: 'Completada',
   };
 
-  readonly statusOptions: { value: LeadSchedulingRequestStatus; label: string }[] = [
-    { value: 'PENDING', label: 'Pendiente' },
-    { value: 'SCHEDULED', label: 'Agendada' },
-    { value: 'COMPLETED', label: 'Completada' },
-    { value: 'CANCELLED', label: 'Cancelada' },
+  readonly statusOptions: {
+    value: LeadSchedulingRequestStatus;
+    label: string;
+  }[] = [
+    {
+      value: 'PENDING',
+      label: 'Pendiente',
+    },
+    {
+      value: 'SCHEDULED',
+      label: 'Agendada',
+    },
+    {
+      value: 'COMPLETED',
+      label: 'Completada',
+    },
+    {
+      value: 'CANCELLED',
+      label: 'Cancelada',
+    },
   ];
 
-  readonly kindOptions: { value: LeadSchedulingRequestKind; label: string }[] = [
-    { value: 'DEMO_CLASS', label: 'Cortesía / demo' },
-    { value: 'PLACEMENT_EXAM', label: 'Examen de ubicación' },
+  readonly kindOptions: {
+    value: LeadSchedulingRequestKind;
+    label: string;
+  }[] = [
+    {
+      value: 'DEMO_CLASS',
+      label: 'Cortesía / demo',
+    },
+    {
+      value: 'PLACEMENT_EXAM',
+      label: 'Examen de ubicación',
+    },
   ];
 
   constructor(
@@ -115,22 +163,30 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
           next: (res) => {
             reportedTotal = res.total;
             acc.push(...res.items);
+
             const got = res.items.length;
             const underTotal = acc.length < reportedTotal;
             const fullBatch = got === this.fetchBatchSize;
             const underCap = acc.length < this.fetchCap;
+
             if (underTotal && fullBatch && underCap && got > 0) {
               pull(offset + this.fetchBatchSize);
             } else {
               this.sourceItems = acc;
               this.totalFromApi = reportedTotal > 0 ? reportedTotal : acc.length;
               this.loading = false;
+
               this.clampPageIndex();
-              this.leadSchedulingPending.refresh(UserRole.INSTRUCTOR).subscribe();
+
+              this.leadSchedulingPending
+                .refresh(UserRole.INSTRUCTOR)
+                .subscribe();
             }
           },
+
           error: (err) => {
             this.loading = false;
+
             this.error = getHttpErrorMessage(
               err,
               'No se pudo cargar la lista de solicitudes.',
@@ -146,30 +202,45 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
   get filteredItems(): LeadSchedulingRequestRow[] {
     let list = [...this.sourceItems];
 
-    const q = this.searchName.trim().toLowerCase();
+    const q = this.searchName
+      .trim()
+      .toLowerCase();
+
     if (q) {
       list = list.filter((r) => {
-        const full = `${r.firstName ?? ''} ${r.lastName ?? ''}`.toLowerCase().trim();
-        const email = (r.email ?? '').toLowerCase();
+        const full = `${r.firstName ?? ''} ${r.lastName ?? ''}`
+          .toLowerCase()
+          .trim();
+
+        const email = (r.email ?? '')
+          .toLowerCase();
+
         return full.includes(q) || email.includes(q);
       });
     }
 
     if (this.sessionTodayOnly) {
       const today = this.toYyyyMmDdLocal(new Date());
-      list = list.filter((r) => this.scheduledYyyyMmDd(r) === today);
+
+      list = list.filter(
+        (r) => this.scheduledYyyyMmDd(r) === today,
+      );
     } else {
       const from = this.dateFrom.trim();
       const to = this.dateTo.trim();
+
       if (from) {
         list = list.filter((r) => {
           const key = this.scheduledYyyyMmDd(r);
+
           return key !== '' && key >= from;
         });
       }
+
       if (to) {
         list = list.filter((r) => {
           const key = this.scheduledYyyyMmDd(r);
+
           return key !== '' && key <= to;
         });
       }
@@ -180,19 +251,35 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
 
   get pagedItems(): LeadSchedulingRequestRow[] {
     const start = this.pageIndex * this.pageSize;
-    return this.filteredItems.slice(start, start + this.pageSize);
+
+    return this.filteredItems.slice(
+      start,
+      start + this.pageSize,
+    );
   }
 
   get totalPages(): number {
     const n = this.filteredItems.length;
-    return Math.max(1, Math.ceil(n / this.pageSize));
+
+    return Math.max(
+      1,
+      Math.ceil(n / this.pageSize),
+    );
   }
 
   get rangeLabel(): string {
     const n = this.filteredItems.length;
-    if (n === 0) return '0 resultados';
+
+    if (n === 0) {
+      return '0 resultados';
+    }
+
     const start = this.pageIndex * this.pageSize + 1;
-    const end = Math.min(n, (this.pageIndex + 1) * this.pageSize);
+    const end = Math.min(
+      n,
+      (this.pageIndex + 1) * this.pageSize,
+    );
+
     return `${start}–${end} de ${n}`;
   }
 
@@ -238,11 +325,18 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
   }
 
   goLast(): void {
-    this.pageIndex = Math.max(0, this.totalPages - 1);
+    this.pageIndex = Math.max(
+      0,
+      this.totalPages - 1,
+    );
   }
 
   private clampPageIndex(): void {
-    const maxIndex = Math.max(0, this.totalPages - 1);
+    const maxIndex = Math.max(
+      0,
+      this.totalPages - 1,
+    );
+
     if (this.pageIndex > maxIndex) {
       this.pageIndex = maxIndex;
     }
@@ -250,10 +344,12 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
 
   toggleSessionToday(): void {
     this.sessionTodayOnly = !this.sessionTodayOnly;
+
     if (this.sessionTodayOnly) {
       this.dateFrom = '';
       this.dateTo = '';
     }
+
     this.onClientFiltersChange();
   }
 
@@ -261,6 +357,7 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
     if (this.dateFrom || this.dateTo) {
       this.sessionTodayOnly = false;
     }
+
     this.onClientFiltersChange();
   }
 
@@ -273,40 +370,77 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
     this.kindFilter = '';
     this.pageIndex = 0;
     this.pageSize = 25;
+
     this.load();
   }
 
-  kindText(row: LeadSchedulingRequestRow): string {
+  kindText(
+    row: LeadSchedulingRequestRow,
+  ): string {
     return leadSchedulingKindLabel(row);
   }
 
-  statusText(s: LeadSchedulingRequestStatus): string {
+  statusText(
+    s: LeadSchedulingRequestStatus,
+  ): string {
     return this.statusLabel[s] ?? s;
   }
 
-  slotText(row: LeadSchedulingRequestRow): string {
+  slotText(
+    row: LeadSchedulingRequestRow,
+  ): string {
     return leadSchedulingScheduleSummary(row);
   }
 
-  notesPreview(row: LeadSchedulingRequestRow): string | null {
-    return requestNotesPreview(row.requestNotes, 56);
+  notesPreview(
+    row: LeadSchedulingRequestRow,
+  ): string | null {
+    return requestNotesPreview(
+      row.requestNotes,
+      56,
+    );
   }
 
-  private scheduledYyyyMmDd(row: LeadSchedulingRequestRow): string {
+  private scheduledYyyyMmDd(
+    row: LeadSchedulingRequestRow,
+  ): string {
     const raw = row.scheduledDate;
-    if (!raw || typeof raw !== 'string') return '';
-    return raw.length >= 10 ? raw.slice(0, 10) : raw;
+
+    if (!raw || typeof raw !== 'string') {
+      return '';
+    }
+
+    return raw.length >= 10
+      ? raw.slice(0, 10)
+      : raw;
   }
 
-  private toYyyyMmDdLocal(d: Date): string {
+  private toYyyyMmDdLocal(
+    d: Date,
+  ): string {
     const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
+
+    const m = String(
+      d.getMonth() + 1,
+    ).padStart(2, '0');
+
+    const day = String(
+      d.getDate(),
+    ).padStart(2, '0');
+
     return `${y}-${m}-${day}`;
   }
 
-  private normalizeDateForParse(iso: string): string {
-    if (iso.includes('T') || iso.endsWith('Z')) return iso;
+  private normalizeDateForParse(
+    iso: string,
+  ): string {
+    if (
+      iso.includes('T') ||
+      iso.endsWith('Z')
+    ) {
+      return iso;
+    }
+
     return `${iso}T12:00:00`;
   }
 }

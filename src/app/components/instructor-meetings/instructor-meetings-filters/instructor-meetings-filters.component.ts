@@ -17,13 +17,9 @@ import { Stage } from '../../../services/dtos/student.dto';
 })
 export class InstructorMeetingsFiltersComponent {
   @Input() filter!: FilterMeetingsDto;
-
   @Input() stages: Stage[] = [];
-
   @Input() availableHours: number[] = [];
-
   @Input() ageGroupOptions: string[] = [];
-
   @Input() isLoading: boolean = false;
 
   @Output() filterChange = new EventEmitter<void>();
