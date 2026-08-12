@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { filter, take } from 'rxjs';
@@ -71,11 +71,14 @@ export type PlatformAssessmentTab =
   ],
 })
 export class PlatformAssessmentsStudentComponent
-  implements OnInit
+  implements OnInit, OnDestroy
 {
   studentId: number | null = null;
 
   loading = true;
+
+  private notificationTimer: ReturnType<typeof setTimeout> | null =
+    null;
 
   /* ================================
      ASSESSMENTS
@@ -364,6 +367,11 @@ export class PlatformAssessmentsStudentComponent
     isError = false,
     isSuccess = false,
   ): void {
+    if (this.notificationTimer) {
+      clearTimeout(this.notificationTimer);
+      this.notificationTimer = null;
+    }
+
     this.modal = {
       ...modalInitializer(),
       show: true,
@@ -374,5 +382,17 @@ export class PlatformAssessmentsStudentComponent
         !isError &&
         !isSuccess,
     };
+
+    this.notificationTimer = setTimeout(() => {
+      this.modal.show = false;
+      this.notificationTimer = null;
+    }, 3000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.notificationTimer) {
+      clearTimeout(this.notificationTimer);
+      this.notificationTimer = null;
+    }
   }
 }
