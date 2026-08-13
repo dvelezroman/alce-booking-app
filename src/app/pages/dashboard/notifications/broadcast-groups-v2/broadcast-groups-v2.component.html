@@ -1,0 +1,350 @@
+<section class="broadcast-page">
+
+  <div class="broadcast-page__container">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="broadcast-page__header">
+
+      <div class="broadcast-page__header-main">
+
+        <div
+          class="broadcast-page__header-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M21 3 9.5 14.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="m21 3-7 18-4.5-6.5L3 10l18-7Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+
+
+        <div class="broadcast-page__heading">
+
+          <h1 class="broadcast-page__title">
+            Enviar notificación
+          </h1>
+
+          <p class="broadcast-page__description">
+            Crea y envía notificaciones a los destinatarios seleccionados.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- ILUSTRACIÓN -->
+
+      <div
+        class="broadcast-page__illustration"
+        aria-hidden="true"
+      >
+        <div class="broadcast-page__illustration-circle">
+
+          <svg
+            width="92"
+            height="76"
+            viewBox="0 0 120 96"
+            fill="none"
+          >
+            <rect
+              x="26"
+              y="39"
+              width="69"
+              height="45"
+              rx="8"
+              fill="currentColor"
+              opacity=".14"
+            />
+
+            <path
+              d="M28 45 60.5 67 94 45"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="m28 79 23-21M94 79 70 58"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+
+            <rect
+              x="38"
+              y="17"
+              width="48"
+              height="42"
+              rx="6"
+              fill="white"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+
+            <path
+              d="M48 29h28M48 37h23M48 45h17"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              opacity=".55"
+            />
+
+            <path
+              d="m91 26 20-13-6 21-5-7-9-1Z"
+              fill="currentColor"
+            />
+          </svg>
+
+        </div>
+      </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
+    <nav
+        class="broadcast-page__tabs"
+        aria-label="Navegación de notificaciones"
+        >
+
+        <button
+            type="button"
+            class="broadcast-page__tab"
+            (click)="goToInbox()"
+        >
+            Inbox
+        </button>
+
+        <button
+            type="button"
+            class="
+            broadcast-page__tab
+            broadcast-page__tab--active
+            "
+        >
+            Enviar
+        </button>
+
+        <button
+            type="button"
+            class="broadcast-page__tab"
+            (click)="goToSentNotifications()"
+        >
+            Enviadas
+        </button>
+
+        </nav>
+
+
+    <!-- =====================================================
+         IMPORTANT INFO
+    ====================================================== -->
+
+    <div class="broadcast-page__notice">
+
+      <span
+        class="broadcast-page__notice-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 10.5v5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="12"
+            cy="7.5"
+            r="1"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+
+
+      <p class="broadcast-page__notice-text">
+        <strong>Importante:</strong>
+        Las notificaciones programadas se enviarán automáticamente
+        en la fecha y hora seleccionadas.
+      </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         WORKSPACE
+    ====================================================== -->
+
+    <div class="broadcast-page__workspace">
+
+      <!-- ===================================================
+           LEFT COLUMN
+      ==================================================== -->
+
+      <main class="broadcast-page__main">
+
+        <!-- =========================
+             1. RECIPIENTS
+        ========================== -->
+
+        <app-broadcast-recipient-selector
+          [userRole]="userRole"
+          [selectedAction]="selectedAction"
+          [selectedUser]="selectedUser"
+          [selectedStage]="selectedStage"
+          [selectedRole]="selectedRole"
+          [stages]="stages"
+          [groups]="groups"
+          [loadingGroups]="loadingGroups"
+          [reset]="resetChildren"
+          (sendOptionSelected)="onSendOptionSelected($event)"
+          (userSelected)="handleUserSelect($event)"
+          (stageSelected)="handleStageSelect($event)"
+          (roleSelected)="handleRoleSelect($event)"
+        />
+
+
+        <!-- =========================
+             2. CONTENT
+        ========================== -->
+
+       <app-broadcast-notification-content
+        [selectedAction]="selectedAction"
+        [selectedUser]="selectedUser"
+        [selectedStage]="selectedStage"
+        [selectedRole]="selectedRole"
+        [reset]="resetChildren"
+        (contentChanged)="handleNotificationContentChange($event)"
+        />
+
+
+        <!-- =========================
+             3. DELIVERY OPTIONS
+        ========================== -->
+
+        <app-broadcast-delivery-options
+            [selectedAction]="selectedAction"
+            [selectedStage]="selectedStage"
+            [stages]="stages"
+            [reset]="resetChildren"
+            (deliveryOptionsChanged)="handleDeliveryOptionsChange($event)"
+            />
+
+      </main>
+
+
+      <!-- ===================================================
+           RIGHT COLUMN
+      ==================================================== -->
+
+      <aside class="broadcast-page__aside">
+
+        <!-- =========================
+             SEND SUMMARY
+        ========================== -->
+
+        <app-broadcast-send-summary
+            [selectedAction]="selectedAction"
+            [selectedUser]="selectedUser"
+            [selectedStage]="selectedStage"
+            [selectedRole]="selectedRole"
+            [groups]="groups"
+            [notificationType]="notificationContent.notificationType"
+            [priority]="notificationContent.priority"
+            [scheduledAt]="deliveryOptions.scheduledAt ?? null"
+            [expiresAt]="deliveryOptions.expiresAt ?? null"
+            />
+
+
+        <!-- =========================
+             PREVIEW
+        ========================== -->
+
+        <app-broadcast-notification-preview
+            [selectedAction]="selectedAction"
+            [selectedUser]="selectedUser"
+            [selectedStage]="selectedStage"
+            [selectedRole]="selectedRole"
+            [title]="notificationContent.title"
+            [message]="notificationContent.message"
+            [notificationType]="notificationContent.notificationType"
+            [priority]="notificationContent.priority"
+            />
+
+
+        <!-- =========================
+             SEND ACTION
+        ========================== -->
+
+        <app-broadcast-send-action
+            [selectedAction]="selectedAction"
+            [selectedUser]="selectedUser"
+            [selectedStage]="selectedStage"
+            [selectedRole]="selectedRole"
+            [notificationContent]="notificationContent"
+            [deliveryOptions]="deliveryOptions"
+            [senderId]="senderId"
+            [reset]="resetChildren"
+            (notificationSubmitted)="handleNotificationSubmit($event)"
+            />
+
+      </aside>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       GLOBAL MODAL
+  ====================================================== -->
+
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [title]="modal.title || ''"
+    (close)="modal.close()"
+    />
+
+</section>

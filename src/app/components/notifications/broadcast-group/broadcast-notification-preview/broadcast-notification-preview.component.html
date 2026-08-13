@@ -1,0 +1,128 @@
+<section class="broadcast-notification-preview">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <div class="broadcast-notification-preview__header">
+
+    <div
+      class="broadcast-notification-preview__header-icon"
+      aria-hidden="true"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M2.5 12s3.5-5 9.5-5 9.5 5 9.5 5-3.5 5-9.5 5-9.5-5-9.5-5Z"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linejoin="round"
+        />
+
+        <circle
+          cx="12"
+          cy="12"
+          r="2.4"
+          stroke="currentColor"
+          stroke-width="1.6"
+        />
+      </svg>
+    </div>
+
+
+    <h2 class="broadcast-notification-preview__title">
+      Vista previa
+    </h2>
+
+  </div>
+
+
+  <!-- =========================
+       PREVIEW CARD
+  ========================== -->
+
+  <div class="broadcast-notification-preview__card">
+
+    <!-- TOP -->
+
+    <div class="broadcast-notification-preview__top">
+
+      <div
+        class="broadcast-notification-preview__type-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M5 10H3.8A1.8 1.8 0 0 0 2 11.8v.4A1.8 1.8 0 0 0 3.8 14H5l4 4V6l-4 4Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M13 9.5a4 4 0 0 1 0 5M16 7a7 7 0 0 1 0 10"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+
+      <div class="broadcast-notification-preview__information">
+
+        <div class="broadcast-notification-preview__title-row">
+
+          <strong class="broadcast-notification-preview__notification-title">
+            {{ previewTitle }}
+          </strong>
+
+          <span
+            class="broadcast-notification-preview__priority"
+            [ngClass]="
+              'broadcast-notification-preview__priority--' +
+              priorityClass
+            "
+          >
+            {{ priorityLabel }}
+          </span>
+
+        </div>
+
+
+        <span class="broadcast-notification-preview__meta">
+          De: {{ senderLabel }}
+        </span>
+
+        <span class="broadcast-notification-preview__meta">
+          Para: {{ recipientLabel }}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- DIVIDER -->
+
+    <div class="broadcast-notification-preview__divider"></div>
+
+
+    <!-- MESSAGE -->
+
+    <p class="broadcast-notification-preview__message">
+      {{ previewMessage }}
+    </p>
+
+  </div>
+
+</section>

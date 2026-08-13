@@ -1,0 +1,780 @@
+<section class="broadcast-recipient-selector">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <div class="broadcast-recipient-selector__header">
+
+    <div class="broadcast-recipient-selector__step">
+      1
+    </div>
+
+    <div class="broadcast-recipient-selector__heading">
+
+      <h2 class="broadcast-recipient-selector__title">
+        Destinatarios
+      </h2>
+
+      <p class="broadcast-recipient-selector__description">
+        Selecciona a quién deseas enviar la notificación
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       OPTIONS
+  ========================== -->
+
+  <div class="broadcast-recipient-selector__options">
+
+    <button
+      *ngFor="
+        let option of availableOptions;
+        trackBy: trackByOption
+      "
+      type="button"
+      class="broadcast-recipient-selector__option"
+      [class.broadcast-recipient-selector__option--selected]="
+        isOptionSelected(option)
+      "
+      (click)="selectSendOption(option)"
+    >
+
+      <!-- USER -->
+      <span
+        *ngIf="option === 'user'"
+        class="broadcast-recipient-selector__option-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="7"
+            r="3.3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M5 20v-1.5A5.5 5.5 0 0 1 10.5 13h3A5.5 5.5 0 0 1 19 18.5V20"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <!-- STAGE -->
+      <span
+        *ngIf="option === 'stage'"
+        class="broadcast-recipient-selector__option-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m3 8 9-4 9 4-9 4-9-4Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M7 10.2V16c0 1.6 2.2 3 5 3s5-1.4 5-3v-5.8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M21 8v6"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <!-- GROUP -->
+      <span
+        *ngIf="option === 'group'"
+        class="broadcast-recipient-selector__option-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="9"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <circle
+            cx="17"
+            cy="9"
+            r="2.5"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M3.5 19v-1A5.5 5.5 0 0 1 9 12.5h.8A5.5 5.5 0 0 1 15.3 18v1"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M15.5 13.5A4.5 4.5 0 0 1 20.5 18v1"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <!-- ROLE -->
+      <span
+        *ngIf="option === 'role'"
+        class="broadcast-recipient-selector__option-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="3.5"
+            y="5"
+            width="17"
+            height="14"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <circle
+            cx="8"
+            cy="10"
+            r="2"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M5.5 15a2.5 2.5 0 0 1 5 0M13 9h4.5M13 13h4.5"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <!-- SEGMENT -->
+      <span
+        *ngIf="option === 'segment'"
+        class="broadcast-recipient-selector__option-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 4v8h8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m12 12-5.5 5.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <span class="broadcast-recipient-selector__option-text">
+
+        <strong>
+          {{ getOptionTitle(option) }}
+        </strong>
+
+        <small>
+          {{ getOptionDescription(option) }}
+        </small>
+
+      </span>
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       USER
+  ====================================================== -->
+
+  <ng-container *ngIf="selectedAction === 'user'">
+
+    <div class="broadcast-recipient-selector__field">
+
+      <label class="broadcast-recipient-selector__label">
+        Buscar usuario
+
+        <span class="broadcast-recipient-selector__required">
+          *
+        </span>
+      </label>
+
+
+      <div class="broadcast-recipient-selector__search">
+
+        <input
+          type="text"
+          class="broadcast-recipient-selector__search-input"
+          placeholder="Buscar por nombre, email o ID..."
+          [(ngModel)]="searchTerm"
+          autocomplete="off"
+          (ngModelChange)="onSearchChange($event)"
+          (focus)="showUsers()"
+          (blur)="hideUsers()"
+        />
+
+
+        <span
+          class="broadcast-recipient-selector__search-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+
+        <!-- SEARCH RESULTS -->
+
+        <div
+          *ngIf="showUserDropdown"
+          class="broadcast-recipient-selector__dropdown"
+        >
+
+          <div
+            *ngIf="isSearchingUsers"
+            class="broadcast-recipient-selector__dropdown-state"
+          >
+            Buscando usuarios...
+          </div>
+
+
+          <button
+            *ngFor="
+              let user of filteredUsers;
+              trackBy: trackByUserId
+            "
+            type="button"
+            class="broadcast-recipient-selector__user-option"
+            (mousedown)="$event.preventDefault()"
+            (click)="selectUser(user)"
+          >
+
+            <span
+              class="broadcast-recipient-selector__user-avatar"
+              aria-hidden="true"
+            >
+              {{ getUserInitials(user) }}
+            </span>
+
+
+            <span class="broadcast-recipient-selector__user-info">
+
+              <strong>
+                {{ getUserFullName(user) }}
+              </strong>
+
+              <small>
+                {{ user.email || user.emailAddress || 'Sin correo' }}
+              </small>
+
+            </span>
+
+          </button>
+
+
+          <div
+            *ngIf="
+              !isSearchingUsers &&
+              filteredUsers.length === 0
+            "
+            class="broadcast-recipient-selector__dropdown-state"
+          >
+            No se encontraron usuarios.
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- SELECTED USER -->
+
+    <div
+      *ngIf="selectedUser"
+      class="broadcast-recipient-selector__selected"
+    >
+
+      <span
+        class="broadcast-recipient-selector__selected-avatar"
+        aria-hidden="true"
+      >
+        {{ selectedUserInitials }}
+      </span>
+
+
+      <div class="broadcast-recipient-selector__selected-info">
+
+        <strong>
+          {{ selectedUserName }}
+        </strong>
+
+        <span>
+          {{ selectedUserEmail || 'Sin correo registrado' }}
+        </span>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="broadcast-recipient-selector__selected-remove"
+        aria-label="Quitar usuario seleccionado"
+        title="Quitar usuario"
+        (click)="clearSelectedUser()"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M6 6l12 12M18 6 6 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+
+    </div>
+
+  </ng-container>
+
+
+  <!-- =====================================================
+       STAGE
+  ====================================================== -->
+
+  <ng-container *ngIf="selectedAction === 'stage'">
+
+    <div class="broadcast-recipient-selector__field">
+
+      <label class="broadcast-recipient-selector__label">
+        Seleccionar stage
+
+        <span class="broadcast-recipient-selector__required">
+          *
+        </span>
+      </label>
+
+
+      <div class="broadcast-recipient-selector__select-wrapper">
+
+        <button
+          type="button"
+          class="broadcast-recipient-selector__select"
+          (click)="toggleStageDropdown()"
+        >
+
+          <span
+            [class.broadcast-recipient-selector__placeholder]="
+              !selectedStage
+            "
+          >
+            {{ selectedStageLabel }}
+          </span>
+
+
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m7 10 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </button>
+
+
+        <div
+          *ngIf="showStageDropdown"
+          class="broadcast-recipient-selector__dropdown"
+        >
+
+          <div class="broadcast-recipient-selector__dropdown-search">
+
+            <input
+              type="text"
+              placeholder="Buscar stage..."
+              [(ngModel)]="stageSearchTerm"
+            />
+
+          </div>
+
+
+          <button
+            *ngFor="
+              let stage of filteredStages;
+              trackBy: trackByStageId
+            "
+            type="button"
+            class="broadcast-recipient-selector__stage-option"
+            (click)="selectStage(stage)"
+          >
+            <strong>
+              {{ getStageLabel(stage) }}
+            </strong>
+
+            <span>
+              {{ stage.description }}
+            </span>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+
+  <!-- =====================================================
+       GROUP
+  ====================================================== -->
+
+  <ng-container *ngIf="selectedAction === 'group'">
+
+    <div class="broadcast-recipient-selector__field">
+
+      <label class="broadcast-recipient-selector__label">
+        Seleccionar grupo
+
+        <span class="broadcast-recipient-selector__required">
+          *
+        </span>
+      </label>
+
+
+      <div class="broadcast-recipient-selector__select-wrapper">
+
+        <button
+          type="button"
+          class="broadcast-recipient-selector__select"
+          (click)="toggleGroupDropdown()"
+        >
+
+          <span
+            [class.broadcast-recipient-selector__placeholder]="
+              !selectedGroup
+            "
+          >
+            {{ selectedGroupLabel }}
+          </span>
+
+
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m7 10 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </button>
+
+
+        <div
+          *ngIf="showGroupDropdown"
+          class="broadcast-recipient-selector__dropdown"
+        >
+
+          <div
+            *ngIf="loadingGroups"
+            class="broadcast-recipient-selector__dropdown-state"
+          >
+            Cargando grupos...
+          </div>
+
+
+          <button
+            *ngFor="
+              let group of filteredGroups;
+              trackBy: trackByGroupId
+            "
+            type="button"
+            class="broadcast-recipient-selector__group-option"
+            (click)="selectGroup(group)"
+          >
+            <strong>
+              {{ group.name }}
+            </strong>
+
+            <span>
+              {{ group.description }}
+            </span>
+
+            <small>
+              {{ group.userIds.length }} usuarios
+            </small>
+          </button>
+
+
+          <div
+            *ngIf="
+              !loadingGroups &&
+              filteredGroups.length === 0
+            "
+            class="broadcast-recipient-selector__dropdown-state"
+          >
+            No hay grupos disponibles.
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+
+  <!-- =====================================================
+       ROLE
+  ====================================================== -->
+
+  <ng-container *ngIf="selectedAction === 'role'">
+
+    <div class="broadcast-recipient-selector__field">
+
+      <label class="broadcast-recipient-selector__label">
+        Seleccionar rol
+
+        <span class="broadcast-recipient-selector__required">
+          *
+        </span>
+      </label>
+
+
+      <div class="broadcast-recipient-selector__role-grid">
+
+        <button
+          *ngFor="
+            let role of roleOptions;
+            trackBy: trackByRole
+          "
+          type="button"
+          class="broadcast-recipient-selector__role-option"
+          [class.broadcast-recipient-selector__role-option--selected]="
+            isRoleSelected(role.value)
+          "
+          (click)="selectRole(role.value)"
+        >
+
+          <strong>
+            {{ role.label }}
+          </strong>
+
+          <span>
+            {{ role.description }}
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+
+  <!-- =====================================================
+       SEGMENT
+  ====================================================== -->
+
+  <ng-container *ngIf="selectedAction === 'segment'">
+
+    <div class="broadcast-recipient-selector__field">
+
+      <label class="broadcast-recipient-selector__label">
+        Seleccionar segmento
+
+        <span class="broadcast-recipient-selector__required">
+          *
+        </span>
+      </label>
+
+
+      <div class="broadcast-recipient-selector__segment-grid">
+
+        <button
+          type="button"
+          class="broadcast-recipient-selector__segment-option"
+          [class.broadcast-recipient-selector__segment-option--selected]="
+            isSegmentSelected('kids')
+          "
+          (click)="selectSegment('kids')"
+        >
+          <strong>
+            Kids
+          </strong>
+
+          <span>
+            Estudiantes de clasificación Kids
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          class="broadcast-recipient-selector__segment-option"
+          [class.broadcast-recipient-selector__segment-option--selected]="
+            isSegmentSelected('teens')
+          "
+          (click)="selectSegment('teens')"
+        >
+          <strong>
+            Teens
+          </strong>
+
+          <span>
+            Estudiantes de clasificación Teens
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          class="broadcast-recipient-selector__segment-option"
+          [class.broadcast-recipient-selector__segment-option--selected]="
+            isSegmentSelected('adults')
+          "
+          (click)="selectSegment('adults')"
+        >
+          <strong>
+            Adults
+          </strong>
+
+          <span>
+            Estudiantes de clasificación Adults
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          class="broadcast-recipient-selector__segment-option"
+          [class.broadcast-recipient-selector__segment-option--selected]="
+            isSegmentSelected('city')
+          "
+          (click)="selectSegment('city')"
+        >
+          <strong>
+            Ciudad
+          </strong>
+
+          <span>
+            Segmentación por ciudad
+          </span>
+        </button>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+</section>

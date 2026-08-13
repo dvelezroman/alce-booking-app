@@ -1,0 +1,227 @@
+<section class="broadcast-send-summary">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <div class="broadcast-send-summary__header">
+
+    <div
+      class="broadcast-send-summary__header-icon"
+      aria-hidden="true"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <circle
+          cx="9"
+          cy="8"
+          r="3"
+          stroke="currentColor"
+          stroke-width="1.6"
+        />
+
+        <circle
+          cx="17"
+          cy="9"
+          r="2.4"
+          stroke="currentColor"
+          stroke-width="1.6"
+        />
+
+        <path
+          d="M3.5 19v-1A5.5 5.5 0 0 1 9 12.5h.8A5.5 5.5 0 0 1 15.3 18v1"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M15.5 13.5A4.5 4.5 0 0 1 20.5 18v1"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+
+    <h2 class="broadcast-send-summary__title">
+      Resumen del envío
+    </h2>
+
+  </div>
+
+
+  <!-- =========================
+       RECIPIENTS
+  ========================== -->
+
+  <div class="broadcast-send-summary__recipients">
+
+    <div class="broadcast-send-summary__recipients-header">
+
+      <span class="broadcast-send-summary__label">
+        Destinatarios
+      </span>
+
+      <span class="broadcast-send-summary__count">
+        {{ recipientCountLabel }}
+      </span>
+
+    </div>
+
+
+    <div class="broadcast-send-summary__recipient">
+
+      <!-- USER -->
+
+      <div
+        *ngIf="selectedAction === 'user' && selectedUser"
+        class="broadcast-send-summary__recipient-avatar"
+        aria-hidden="true"
+      >
+        {{ selectedUserInitials }}
+      </div>
+
+
+      <!-- OTHER TYPES -->
+
+      <div
+        *ngIf="selectedAction !== 'user'"
+        class="broadcast-send-summary__recipient-avatar broadcast-send-summary__recipient-avatar--generic"
+        aria-hidden="true"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="9"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M4 19v-1a5 5 0 0 1 5-5h1a5 5 0 0 1 5 5v1"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+
+      <div class="broadcast-send-summary__recipient-info">
+
+        <strong>
+          {{ recipientTitle }}
+        </strong>
+
+        <span>
+          {{ recipientDescription }}
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       DIVIDER
+  ========================== -->
+
+  <div class="broadcast-send-summary__divider"></div>
+
+
+  <!-- =========================
+       DETAILS
+  ========================== -->
+
+  <div class="broadcast-send-summary__details">
+
+    <!-- TYPE -->
+
+    <div class="broadcast-send-summary__row">
+
+      <span class="broadcast-send-summary__row-label">
+        Tipo de notificación
+      </span>
+
+      <strong class="broadcast-send-summary__row-value">
+        {{ notificationTypeLabel }}
+      </strong>
+
+    </div>
+
+
+    <!-- PRIORITY -->
+
+    <div class="broadcast-send-summary__row">
+
+      <span class="broadcast-send-summary__row-label">
+        Prioridad
+      </span>
+
+
+      <div class="broadcast-send-summary__priority">
+
+        <span
+          class="broadcast-send-summary__priority-dot"
+          [ngClass]="
+            'broadcast-send-summary__priority-dot--' +
+            priorityClass
+          "
+          aria-hidden="true"
+        ></span>
+
+        <strong>
+          {{ priorityLabel }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- SCHEDULED -->
+
+    <div class="broadcast-send-summary__row">
+
+      <span class="broadcast-send-summary__row-label">
+        Envío programado
+      </span>
+
+      <strong class="broadcast-send-summary__row-value">
+        {{ scheduledLabel }}
+      </strong>
+
+    </div>
+
+
+    <!-- EXPIRATION -->
+
+    <div class="broadcast-send-summary__row">
+
+      <span class="broadcast-send-summary__row-label">
+        Expiración
+      </span>
+
+      <strong class="broadcast-send-summary__row-value">
+        {{ expirationLabel }}
+      </strong>
+
+    </div>
+
+  </div>
+
+</section>

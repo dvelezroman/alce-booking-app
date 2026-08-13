@@ -148,28 +148,23 @@ export class ProgressHistoryListComponent {
 
 
             rows.push({
-              key:
-                `${history.stageId}-${index}-${date}-${history.data.title}`,
+              key: `${history.stageId}-${index}-${date}-${history.data.title}`,
 
               date,
 
               stageId,
 
               stageLabel:
-                this.getStageLabel(stage),
+                history.data?.stage || '--',
 
               contentTitle:
                 this.getHistoryTitle(history),
 
               instructorName:
-                this.getInstructorName(
-                  instructor,
-                ),
+                this.getInstructorName(instructor),
 
               instructorInitials:
-                this.getInstructorInitials(
-                  instructor,
-                ),
+                this.getInstructorInitials(instructor),
             });
 
           },

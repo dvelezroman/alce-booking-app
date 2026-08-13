@@ -69,6 +69,7 @@ import { NotificationDetailV2Component } from './notifications/notification-deta
 import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.component';
 import { SearchingMeetingInstructorV2Component } from './searching-meeting-instructor-v2/searching-meeting-instructor-v2.component';
 import { ReportsProgressV2Component } from './report-progress-v2/reports-progress-v2.component';
+import { BroadcastGroupsV2Component } from './notifications/broadcast-groups-v2/broadcast-groups-v2.component';
 
 const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -148,6 +149,7 @@ const dashboardChildren: Routes = [
   { path: 'report-user', component: ReportUserComponent },
   { path: 'report-excel', component: ReportsExcelPageComponent },
   { path: 'broadcast-groups', component: BroadcastGroupsComponent },
+  { path: 'broadcast-groups-v2', component: BroadcastGroupsV2Component },
   { path: 'assessment', component: AssessmentComponent },
   { path: 'assessment-reports', component: AssessmentReportsComponent },
   { path: 'assessment-config', component: AssessmentConfigComponent },

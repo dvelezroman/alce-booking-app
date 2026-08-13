@@ -1,0 +1,337 @@
+<section class="broadcast-notification-content">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <div class="broadcast-notification-content__header">
+
+    <div class="broadcast-notification-content__step">
+      2
+    </div>
+
+    <div class="broadcast-notification-content__heading">
+      <h2 class="broadcast-notification-content__title">
+        Contenido de la notificación
+      </h2>
+
+      <p class="broadcast-notification-content__description">
+        Completa la información de tu notificación
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       CONTENT GRID
+  ========================== -->
+
+  <div class="broadcast-notification-content__grid">
+
+    <!-- =====================================================
+         LEFT
+    ====================================================== -->
+
+    <div class="broadcast-notification-content__left">
+
+      <!-- =========================
+           TITLE
+      ========================== -->
+
+      <div class="broadcast-notification-content__field">
+
+        <label
+          for="notification-title"
+          class="broadcast-notification-content__label"
+        >
+          Título
+
+          <span class="broadcast-notification-content__required">
+            *
+          </span>
+        </label>
+
+
+        <div class="broadcast-notification-content__input-wrapper">
+
+          <input
+            id="notification-title"
+            type="text"
+            class="broadcast-notification-content__input"
+            placeholder="Ej: Recordatorio de clase"
+            [disabled]="!isFormEnabled"
+            [maxlength]="titleMaxLength"
+            [ngModel]="title"
+            (ngModelChange)="onTitleChange($event)"
+          />
+
+          <span class="broadcast-notification-content__counter">
+            {{ titleLength }}/{{ titleMaxLength }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           MESSAGE
+      ========================== -->
+
+      <div class="broadcast-notification-content__field">
+
+        <label
+          for="notification-message"
+          class="broadcast-notification-content__label"
+        >
+          Mensaje
+
+          <span class="broadcast-notification-content__required">
+            *
+          </span>
+        </label>
+
+
+        <div class="broadcast-notification-content__textarea-wrapper">
+
+          <textarea
+            id="notification-message"
+            class="broadcast-notification-content__textarea"
+            rows="5"
+            placeholder="Escribe tu mensaje aquí..."
+            [disabled]="!isFormEnabled"
+            [maxlength]="messageMaxLength"
+            [ngModel]="message"
+            (ngModelChange)="onMessageChange($event)"
+          ></textarea>
+
+          <span class="broadcast-notification-content__counter">
+            {{ messageLength }}/{{ messageMaxLength }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RIGHT
+    ====================================================== -->
+
+    <div class="broadcast-notification-content__right">
+
+      <!-- =========================
+           NOTIFICATION TYPE
+      ========================== -->
+
+      <div class="broadcast-notification-content__field">
+
+        <label class="broadcast-notification-content__label">
+          Tipo de notificación
+
+          <span class="broadcast-notification-content__required">
+            *
+          </span>
+        </label>
+
+
+        <div class="broadcast-notification-content__select-wrapper">
+
+          <button
+            type="button"
+            class="broadcast-notification-content__select"
+            [disabled]="!isFormEnabled"
+            (click)="toggleTypeDropdown()"
+          >
+
+            <span class="broadcast-notification-content__select-main">
+
+              <span
+                class="broadcast-notification-content__select-icon"
+                aria-hidden="true"
+              >
+                <svg
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M5 10H3.8A1.8 1.8 0 0 0 2 11.8v.4A1.8 1.8 0 0 0 3.8 14H5l4 4V6l-4 4Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+
+                  <path
+                    d="M13 9.5a4 4 0 0 1 0 5M16 7a7 7 0 0 1 0 10"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+
+              <span
+                [class.broadcast-notification-content__placeholder]="
+                  !selectedNotificationType
+                "
+              >
+                {{ selectedNotificationTypeLabel }}
+              </span>
+
+            </span>
+
+
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="m7 10 5 5 5-5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </button>
+
+
+          <!-- DROPDOWN -->
+
+          <div
+            *ngIf="showTypeDropdown"
+            class="broadcast-notification-content__dropdown"
+          >
+
+            <button
+              *ngFor="
+                let type of notificationTypes;
+                trackBy: trackByNotificationType
+              "
+              type="button"
+              class="broadcast-notification-content__dropdown-option"
+              [class.broadcast-notification-content__dropdown-option--selected]="
+                selectedNotificationType === type
+              "
+              (click)="selectNotificationType(type)"
+            >
+
+              <span class="broadcast-notification-content__dropdown-option-icon">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M5 10H3.8A1.8 1.8 0 0 0 2 11.8v.4A1.8 1.8 0 0 0 3.8 14H5l4 4V6l-4 4Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+
+                  <path
+                    d="M13 9.5a4 4 0 0 1 0 5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+              <span>
+                {{ getNotificationTypeLabel(type) }}
+              </span>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           PRIORITY
+      ========================== -->
+
+      <div class="broadcast-notification-content__field">
+
+        <label class="broadcast-notification-content__label">
+          Prioridad
+
+          <span class="broadcast-notification-content__required">
+            *
+          </span>
+        </label>
+
+
+        <div class="broadcast-notification-content__priority-grid">
+
+          <button
+            *ngFor="
+              let option of priorityOptions;
+              trackBy: trackByPriority
+            "
+            type="button"
+            class="broadcast-notification-content__priority"
+            [class.broadcast-notification-content__priority--selected]="
+              isPrioritySelected(option.value)
+            "
+            [class.broadcast-notification-content__priority--low]="
+              option.value === 0
+            "
+            [class.broadcast-notification-content__priority--normal]="
+              option.value === 1
+            "
+            [class.broadcast-notification-content__priority--high]="
+              option.value === 2
+            "
+            [class.broadcast-notification-content__priority--urgent]="
+              option.value === 3
+            "
+            [disabled]="!isFormEnabled"
+            (click)="selectPriority(option.value)"
+          >
+
+            <span class="broadcast-notification-content__priority-label">
+
+              <span
+                class="broadcast-notification-content__priority-dot"
+                aria-hidden="true"
+              ></span>
+
+              <strong>
+                {{ option.label }}
+              </strong>
+
+            </span>
+
+
+            <span class="broadcast-notification-content__priority-value">
+              {{ option.value }}
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
