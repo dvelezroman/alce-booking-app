@@ -1,0 +1,94 @@
+<div class="notification-historial-pagination">
+
+  <div class="notification-historial-pagination__info">
+    {{ resultsLabel }}
+  </div>
+
+  <div class="notification-historial-pagination__controls">
+
+    <!-- <div class="notification-historial-pagination__limit">
+      {{ limit }} por página
+    </div> -->
+
+    <nav
+      class="notification-historial-pagination__pages"
+      aria-label="Paginación"
+    >
+
+      <button
+        type="button"
+        class="notification-historial-pagination__arrow"
+        [disabled]="!canGoPrev"
+        (click)="onPrev()"
+        aria-label="Página anterior"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m15 18-6-6 6-6"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+      @for (item of visiblePages; track $index) {
+
+        @if (item === 'ellipsis') {
+
+          <span class="notification-historial-pagination__ellipsis">
+            ...
+          </span>
+
+        } @else {
+
+          <button
+            type="button"
+            class="notification-historial-pagination__page"
+            [class.notification-historial-pagination__page--active]="item === page"
+            [attr.aria-current]="item === page ? 'page' : null"
+            (click)="onPageChange(item)"
+          >
+            {{ item }}
+          </button>
+
+        }
+
+      }
+
+      <button
+        type="button"
+        class="notification-historial-pagination__arrow"
+        [disabled]="!canGoNext"
+        (click)="onNext()"
+        aria-label="Página siguiente"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m9 18 6-6-6-6"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+    </nav>
+
+  </div>
+
+</div>

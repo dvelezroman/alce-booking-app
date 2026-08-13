@@ -1,0 +1,358 @@
+<section class="notification-historial-filters">
+
+  <!-- =========================
+       TOP ROW
+  ========================== -->
+  <div class="notification-historial-filters__top">
+
+    <!-- FILTER INDICATOR -->
+    <!-- <button
+      type="button"
+      class="notification-historial-filters__toggle"
+      [attr.aria-expanded]="showFilters"
+      (click)="onToggleFilters()"
+    >
+      <span
+        class="notification-historial-filters__toggle-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M4 5h16l-6.2 7.1v5.2l-3.6 1.8v-7L4 5Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <span>
+        Filtros
+      </span>
+
+      <span
+        class="notification-historial-filters__toggle-chevron"
+        [class.notification-historial-filters__toggle-chevron--open]="showFilters"
+        aria-hidden="true"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m6 15 6-6 6 6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </button> -->
+
+    <!-- DATES -->
+    <div class="notification-historial-filters__dates">
+
+      <label class="notification-historial-filters__field">
+        <span class="notification-historial-filters__label">
+          Desde
+        </span>
+
+        <input
+          type="date"
+          class="notification-historial-filters__control"
+          [value]="fromDate"
+          (change)="onFromDateChange($any($event.target).value)"
+        />
+      </label>
+
+      <label class="notification-historial-filters__field">
+        <span class="notification-historial-filters__label">
+          Hasta
+        </span>
+
+        <input
+          type="date"
+          class="notification-historial-filters__control"
+          [value]="toDate"
+          (change)="onToDateChange($any($event.target).value)"
+        />
+      </label>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="notification-historial-filters__actions">
+
+      <button
+        type="button"
+        class="notification-historial-filters__button notification-historial-filters__button--clear"
+        (click)="onClearFilters()"
+      >
+        <span
+          class="notification-historial-filters__button-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M3 12a9 9 0 1 0 3-6.7"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M3 4.5v5h5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+        <span>
+          Limpiar filtros
+        </span>
+      </button>
+
+      <button
+        type="button"
+        class="notification-historial-filters__button notification-historial-filters__button--apply"
+        (click)="onApplyFilters()"
+      >
+        <span
+          class="notification-historial-filters__button-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <span>
+          Aplicar filtros
+        </span>
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       ADVANCED FILTERS
+  ========================== -->
+  <div class="notification-historial-filters__advanced">
+
+    <!-- STATUS -->
+    <label class="notification-historial-filters__field">
+      <span class="notification-historial-filters__label">
+        Estado
+      </span>
+
+      <div class="notification-historial-filters__select-wrapper">
+        <select
+          class="notification-historial-filters__control notification-historial-filters__select"
+          [value]="statusFilter"
+          (change)="onStatusFilterChange($any($event.target).value)"
+        >
+          <option value="">
+            Todos los estados
+          </option>
+
+          <option value="SENT">
+            {{ statusMap['SENT'] || 'Enviado' }}
+          </option>
+
+          <option value="PENDING">
+            {{ statusMap['PENDING'] || 'Pendiente' }}
+          </option>
+
+          <option value="DELIVERED">
+            {{ statusMap['DELIVERED'] || 'Entregado' }}
+          </option>
+
+          <option value="READ">
+            {{ statusMap['READ'] || 'Leído' }}
+          </option>
+
+          <option value="FAILED">
+            {{ statusMap['FAILED'] || 'Fallido' }}
+          </option>
+        </select>
+
+        <svg
+          class="notification-historial-filters__select-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+    </label>
+
+
+    <!-- TYPE -->
+    <label class="notification-historial-filters__field">
+      <span class="notification-historial-filters__label">
+        Tipo de notificación
+      </span>
+
+      <div class="notification-historial-filters__select-wrapper">
+        <select
+          class="notification-historial-filters__control notification-historial-filters__select"
+          [value]="typeFilter"
+          (change)="onTypeFilterChange($any($event.target).value)"
+        >
+          <option value="">
+            Todos los tipos
+          </option>
+
+          <option value="Announce">
+            {{ typeMap['Announce'] || 'Anuncio' }}
+          </option>
+
+          <option value="Advice">
+            {{ typeMap['Advice'] || 'Consejo' }}
+          </option>
+
+          <option value="Commentary">
+            {{ typeMap['Commentary'] || 'Comentario' }}
+          </option>
+
+          <option value="Mandatory">
+            {{ typeMap['Mandatory'] || 'Obligatorio' }}
+          </option>
+
+          <option value="System">
+            {{ typeMap['System'] || 'Sistema' }}
+          </option>
+
+          <option value="Meeting">
+            {{ typeMap['Meeting'] || 'Reunión' }}
+          </option>
+
+          <option value="Assessment">
+            {{ typeMap['Assessment'] || 'Evaluación' }}
+          </option>
+        </select>
+
+        <svg
+          class="notification-historial-filters__select-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+    </label>
+
+
+    <!-- SCOPE -->
+    <label class="notification-historial-filters__field">
+      <span class="notification-historial-filters__label">
+        Alcance
+      </span>
+
+      <div class="notification-historial-filters__select-wrapper">
+        <select
+          class="notification-historial-filters__control notification-historial-filters__select"
+          [value]="scopeFilter"
+          (change)="onScopeFilterChange($any($event.target).value)"
+        >
+          <option value="">
+            Todos los alcances
+          </option>
+
+          <option value="INDIVIDUAL">
+            Individual
+          </option>
+
+          <option value="ALL_USERS">
+            Todos los usuarios
+          </option>
+
+          <option value="ALL_STUDENTS">
+            Todos los estudiantes
+          </option>
+
+          <option value="ALL_INSTRUCTORS">
+            Todos los instructores
+          </option>
+
+          <option value="STAGE_STUDENTS">
+            Estudiantes por etapa
+          </option>
+        </select>
+
+        <svg
+          class="notification-historial-filters__select-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+    </label>
+
+  </div>
+
+</section>

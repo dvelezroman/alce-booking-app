@@ -201,7 +201,7 @@ export class BroadcastGroupsV2Component implements OnInit {
   }
 
   goToSentNotifications(): void {
-    this.router.navigate(['/dashboard/notifications-sent']);
+    this.router.navigate(['/dashboard/notifications-sent-v2']);
   }
 
 

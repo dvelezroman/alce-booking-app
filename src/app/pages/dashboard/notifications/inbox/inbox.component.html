@@ -101,6 +101,60 @@
         (action)="onClearFilters()"
       />
 
+      <div
+        *ngIf="loading"
+        class="notifications-page__list-skeleton"
+      >
+
+        <!-- HEADER -->
+        <div class="notifications-page__list-skeleton-header">
+          <span class="notifications-page__list-skeleton-head notifications-page__list-skeleton-head--title"></span>
+          <span class="notifications-page__list-skeleton-head"></span>
+          <span class="notifications-page__list-skeleton-head"></span>
+          <span class="notifications-page__list-skeleton-head"></span>
+          <span class="notifications-page__list-skeleton-head"></span>
+          <span class="notifications-page__list-skeleton-head notifications-page__list-skeleton-head--action"></span>
+        </div>
+
+        <!-- ROWS -->
+        <div
+          *ngFor="let item of [1, 2, 3, 4, 5, 6]"
+          class="notifications-page__list-skeleton-row"
+        >
+
+          <div class="notifications-page__list-skeleton-notification">
+            <span class="notifications-page__list-skeleton-circle"></span>
+
+            <div class="notifications-page__list-skeleton-texts">
+              <span class="notifications-page__list-skeleton-line notifications-page__list-skeleton-line--title"></span>
+              <span class="notifications-page__list-skeleton-line notifications-page__list-skeleton-line--description"></span>
+            </div>
+          </div>
+
+          <span class="notifications-page__list-skeleton-badge"></span>
+
+          <div class="notifications-page__list-skeleton-sender">
+            <span class="notifications-page__list-skeleton-avatar"></span>
+
+            <div class="notifications-page__list-skeleton-texts">
+              <span class="notifications-page__list-skeleton-line notifications-page__list-skeleton-line--name"></span>
+              <span class="notifications-page__list-skeleton-line notifications-page__list-skeleton-line--email"></span>
+            </div>
+          </div>
+
+          <div class="notifications-page__list-skeleton-texts">
+            <span class="notifications-page__list-skeleton-line notifications-page__list-skeleton-line--date"></span>
+            <span class="notifications-page__list-skeleton-line notifications-page__list-skeleton-line--time"></span>
+          </div>
+
+          <span class="notifications-page__list-skeleton-badge"></span>
+
+          <span class="notifications-page__list-skeleton-action"></span>
+
+        </div>
+
+      </div>
+
       <!-- LISTA CON PAGINACIÓN INTERNA -->
       <app-notification-list
         *ngIf="

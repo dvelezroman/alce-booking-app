@@ -1,0 +1,495 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   FILTERS
+========================= */
+
+.notification-sent-filters {
+  width: 100%;
+  min-height: 5.4rem;
+
+  display: grid;
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  align-items: end;
+  gap: 1.25rem;
+
+  padding:
+    .8rem
+    1rem;
+
+  border: 1px solid #e7e9f0;
+  border-radius: .7rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 1px 6px rgba(28, 39, 66, .02);
+}
+
+
+/* =========================
+   TOGGLE
+========================= */
+
+.notification-sent-filters__toggle {
+  min-width: 8.4rem;
+  height: 2.65rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .5rem;
+
+  padding:
+    .55rem
+    .8rem;
+
+  border: 1px solid #dfe3eb;
+  border-radius: .5rem;
+
+  background: #ffffff;
+  color: #1b2237;
+
+  font-family: inherit;
+  font-size: .72rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    transform 100ms ease;
+}
+
+.notification-sent-filters__toggle:hover {
+  border-color: #cfd5df;
+  background: #fafbfc;
+}
+
+.notification-sent-filters__toggle:active {
+  transform: scale(.98);
+}
+
+.notification-sent-filters__toggle-icon,
+.notification-sent-filters__toggle-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+}
+
+.notification-sent-filters__toggle-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.notification-sent-filters__toggle-chevron {
+  margin-left: .2rem;
+
+  transition:
+    transform 150ms ease;
+}
+
+.notification-sent-filters__toggle-chevron svg {
+  width: 15px;
+  height: 15px;
+}
+
+.notification-sent-filters__toggle-chevron--open {
+  transform: rotate(180deg);
+}
+
+
+/* =========================
+   DATES
+========================= */
+
+.notification-sent-filters__dates {
+  min-width: 0;
+
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(10rem, 13rem));
+
+  align-items: end;
+
+  gap: 1rem;
+}
+
+.notification-sent-filters__field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .3rem;
+}
+
+.notification-sent-filters__label {
+  color: #171d32;
+
+  font-size: .66rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.notification-sent-filters__input-wrapper {
+  width: 100%;
+}
+
+.notification-sent-filters__input {
+  width: 100%;
+  height: 2.65rem;
+
+  padding:
+    0
+    .75rem;
+
+  border: 1px solid #dfe3eb;
+  border-radius: .5rem;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #171d32;
+
+  font-family: inherit;
+  font-size: .7rem;
+  font-weight: 500;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.notification-sent-filters__input:hover {
+  border-color: #ccd2dd;
+}
+
+.notification-sent-filters__input:focus {
+  border-color: #6a38f5;
+
+  box-shadow:
+    0 0 0 2px rgba(106, 56, 245, .07);
+}
+
+.notification-sent-filters__input::-webkit-calendar-picker-indicator {
+  width: 15px;
+  height: 15px;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.notification-sent-filters__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: .65rem;
+}
+
+.notification-sent-filters__button {
+  height: 2.65rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .5rem;
+
+  padding:
+    .55rem
+    1rem;
+
+  border-radius: .5rem;
+
+  font-family: inherit;
+  font-size: .7rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    transform 100ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    filter 150ms ease;
+}
+
+.notification-sent-filters__button:active {
+  transform: scale(.98);
+}
+
+.notification-sent-filters__button-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-sent-filters__button-icon svg {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+}
+
+
+/* =========================
+   CLEAR
+========================= */
+
+.notification-sent-filters__button--clear {
+  min-width: 9.5rem;
+
+  border: 1px solid #dfe3eb;
+
+  background: #ffffff;
+  color: #1b2237;
+}
+
+.notification-sent-filters__button--clear:hover {
+  border-color: #cfd5df;
+
+  background: #fafbfc;
+}
+
+
+/* =========================
+   APPLY
+========================= */
+
+.notification-sent-filters__button--apply {
+  min-width: 9.7rem;
+
+  border: 1px solid transparent;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5d21f3 0%,
+      #7139f5 100%
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 5px 12px rgba(96, 42, 240, .12);
+}
+
+.notification-sent-filters__button--apply:hover {
+  filter: brightness(1.03);
+
+  box-shadow:
+    0 6px 14px rgba(96, 42, 240, .16);
+}
+
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1250px) {
+
+  .notification-sent-filters {
+    grid-template-columns:
+      auto
+      minmax(0, 1fr)
+      auto;
+
+    gap: .9rem;
+  }
+
+  .notification-sent-filters__dates {
+    grid-template-columns:
+      repeat(2, minmax(9rem, 11rem));
+
+    gap: .75rem;
+  }
+
+  .notification-sent-filters__button--clear {
+    min-width: 8.6rem;
+  }
+
+  .notification-sent-filters__button--apply {
+    min-width: 8.8rem;
+  }
+
+}
+
+
+/* =========================
+   SMALL DESKTOP
+========================= */
+
+@media (max-width: 1050px) {
+
+  .notification-sent-filters {
+    grid-template-columns:
+      auto
+      minmax(0, 1fr);
+
+    align-items: end;
+  }
+
+  .notification-sent-filters__dates {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .notification-sent-filters__actions {
+    grid-column:
+      1 /
+      -1;
+
+    justify-content: flex-end;
+  }
+
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .notification-sent-filters {
+    grid-template-columns: 1fr;
+
+    align-items: stretch;
+
+    gap: .75rem;
+
+    padding: .8rem;
+  }
+
+  .notification-sent-filters__toggle {
+    width: fit-content;
+  }
+
+  .notification-sent-filters__dates {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .notification-sent-filters__actions {
+    grid-column: auto;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+
+  .notification-sent-filters {
+    min-height: auto;
+
+    padding: .7rem;
+
+    gap: .7rem;
+
+    border-radius: .65rem;
+  }
+
+  .notification-sent-filters__toggle {
+    width: 100%;
+    min-width: 0;
+    height: 2.5rem;
+
+    justify-content: flex-start;
+
+    font-size: .66rem;
+  }
+
+  .notification-sent-filters__toggle-chevron {
+    margin-left: auto;
+  }
+
+  .notification-sent-filters__dates {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: .55rem;
+  }
+
+  .notification-sent-filters__label {
+    font-size: .6rem;
+  }
+
+  .notification-sent-filters__input {
+    height: 2.5rem;
+
+    padding-inline: .6rem;
+
+    font-size: .64rem;
+  }
+
+  .notification-sent-filters__actions {
+    display: grid;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: .55rem;
+  }
+
+  .notification-sent-filters__button {
+    width: 100%;
+    min-width: 0;
+    height: 2.5rem;
+
+    padding-inline: .6rem;
+
+    font-size: .63rem;
+  }
+
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .notification-sent-filters {
+    padding: .65rem;
+  }
+
+  .notification-sent-filters__dates {
+    grid-template-columns: 1fr;
+  }
+
+  .notification-sent-filters__actions {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}

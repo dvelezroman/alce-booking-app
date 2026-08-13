@@ -4,7 +4,7 @@ import { Student } from "./student.dto";
 export enum AssessmentType {
   Speaking = 'Speaking',
   Grammar = 'Grammar',
-  Writing = 'Writing',
+  // Writing = 'Writing',
   // Listening = 'Listening',
 }
 

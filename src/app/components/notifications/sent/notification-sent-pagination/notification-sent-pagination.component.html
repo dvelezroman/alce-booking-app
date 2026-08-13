@@ -1,0 +1,108 @@
+<div class="notification-sent-pagination">
+
+  <div class="notification-sent-pagination__info">
+    {{ resultsLabel }}
+  </div>
+
+  <div class="notification-sent-pagination__controls">
+
+    <div class="notification-sent-pagination__limit-wrapper">
+        <select
+            class="notification-sent-pagination__limit"
+            [value]="limit"
+            (change)="onLimitChange($any($event.target).value)"
+        >
+            <option value="10">
+            10 por página
+            </option>
+
+            <option value="20">
+            20 por página
+            </option>
+
+            <option value="50">
+            50 por página
+            </option>
+        </select>
+
+        <svg
+            class="notification-sent-pagination__limit-icon"
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+        >
+            <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            />
+        </svg>
+        </div>
+
+    <div class="notification-sent-pagination__pages">
+
+      <button
+        type="button"
+        class="notification-sent-pagination__arrow"
+        [disabled]="!canGoPrev"
+        (click)="onPrev()"
+        aria-label="Página anterior"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m15 18-6-6 6-6"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+      <span class="notification-sent-pagination__page notification-sent-pagination__page--active">
+        {{ page }}
+      </span>
+
+      <span class="notification-sent-pagination__total-pages">
+        de {{ totalPages }}
+      </span>
+
+      <button
+        type="button"
+        class="notification-sent-pagination__arrow"
+        [disabled]="!canGoNext"
+        (click)="onNext()"
+        aria-label="Página siguiente"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m9 18 6-6-6-6"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

@@ -86,8 +86,8 @@
 }
 
 .notifications-page__filter-button > svg {
-  width: 1rem;
-  height: 1rem;
+  width: .75rem;
+  height: .75rem;
   flex-shrink: 0;
   fill: none;
   stroke: currentColor;
@@ -126,9 +126,7 @@
   flex-direction: column;
   gap: 0.85rem;
 
-  padding: 0.85rem;
-
-  border: 1px solid #e2e7f0;
+  padding: 0rem;
   border-radius: 0.95rem;
 
   background: #ffffff;
@@ -212,6 +210,223 @@
 }
 
 /* ==========================
+   LIST SKELETON
+========================== */
+
+.notifications-page__list-skeleton {
+  width: 100%;
+
+  overflow: hidden;
+
+  border: 1px solid #e5e8f0;
+  border-radius: .8rem;
+
+  background: #ffffff;
+}
+
+.notifications-page__list-skeleton-header,
+.notifications-page__list-skeleton-row {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns:
+    32%
+    12%
+    22%
+    14%
+    12%
+    8%;
+
+  align-items: center;
+}
+
+.notifications-page__list-skeleton-header {
+  min-height: 3rem;
+
+  padding:
+    .65rem
+    .75rem;
+
+  border-bottom: 1px solid #e7e9f0;
+
+  background: #fbfbfd;
+}
+
+.notifications-page__list-skeleton-row {
+  min-height: 4.75rem;
+
+  padding:
+    .65rem
+    .75rem;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.notifications-page__list-skeleton-row:last-child {
+  border-bottom: 0;
+}
+
+.notifications-page__list-skeleton-head,
+.notifications-page__list-skeleton-line,
+.notifications-page__list-skeleton-circle,
+.notifications-page__list-skeleton-avatar,
+.notifications-page__list-skeleton-badge,
+.notifications-page__list-skeleton-action {
+  display: block;
+
+  background: #edf0f5;
+
+  animation:
+    notifications-list-skeleton
+    1.15s ease-in-out infinite;
+}
+
+
+/* HEADER */
+
+.notifications-page__list-skeleton-head {
+  width: 55%;
+  height: .5rem;
+
+  border-radius: .25rem;
+}
+
+.notifications-page__list-skeleton-head--title {
+  width: 4.5rem;
+}
+
+.notifications-page__list-skeleton-head--action {
+  width: 2.8rem;
+
+  margin: 0 auto;
+}
+
+
+/* NOTIFICATION */
+
+.notifications-page__list-skeleton-notification {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: .7rem;
+}
+
+.notifications-page__list-skeleton-circle {
+  width: 2.7rem;
+  height: 2.7rem;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+}
+
+.notifications-page__list-skeleton-texts {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .35rem;
+}
+
+
+/* LINES */
+
+.notifications-page__list-skeleton-line {
+  width: 65%;
+  height: .5rem;
+
+  border-radius: .25rem;
+}
+
+.notifications-page__list-skeleton-line--title {
+  width: 8rem;
+}
+
+.notifications-page__list-skeleton-line--description {
+  width: 11rem;
+  height: .42rem;
+}
+
+.notifications-page__list-skeleton-line--name {
+  width: 6rem;
+}
+
+.notifications-page__list-skeleton-line--email {
+  width: 8rem;
+  height: .42rem;
+}
+
+.notifications-page__list-skeleton-line--date {
+  width: 4.5rem;
+}
+
+.notifications-page__list-skeleton-line--time {
+  width: 3.4rem;
+  height: .42rem;
+}
+
+
+/* SENDER */
+
+.notifications-page__list-skeleton-sender {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: .6rem;
+}
+
+.notifications-page__list-skeleton-avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+}
+
+
+/* BADGE */
+
+.notifications-page__list-skeleton-badge {
+  width: 4rem;
+  height: 1.4rem;
+
+  border-radius: 999px;
+}
+
+
+/* ACTION */
+
+.notifications-page__list-skeleton-action {
+  width: 2.2rem;
+  height: 2.2rem;
+
+  margin: 0 auto;
+
+  border-radius: .45rem;
+}
+
+
+/* ANIMATION */
+
+@keyframes notifications-list-skeleton {
+  0%,
+  100% {
+    opacity: .5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+
+/* ==========================
    RESPONSIVE
    ========================== */
 
@@ -257,6 +472,25 @@
   .notifications-page__pagination {
     margin-top: 0.85rem;
   }
+
+
+  .notifications-page__list-skeleton-header,
+  .notifications-page__list-skeleton-row {
+    grid-template-columns:
+      30%
+      13%
+      22%
+      15%
+      12%
+      8%;
+
+    padding-inline: .6rem;
+  }
+
+  .notifications-page__list-skeleton-circle {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
 }
 
 @media screen and (max-width: 700px) {
@@ -295,6 +529,30 @@
 
   .notifications-page__pagination {
     margin-top: 0.7rem;
+  }
+
+   .notifications-page__list-skeleton-header,
+  .notifications-page__list-skeleton-row {
+    min-width: 0;
+
+    grid-template-columns:
+      36%
+      15%
+      25%
+      16%
+      8%;
+  }
+
+  .notifications-page__list-skeleton-header
+    > :nth-child(5),
+  .notifications-page__list-skeleton-row
+    > :nth-child(5) {
+    display: none;
+  }
+
+  .notifications-page__list-skeleton-circle {
+    width: 2.2rem;
+    height: 2.2rem;
   }
 }
 

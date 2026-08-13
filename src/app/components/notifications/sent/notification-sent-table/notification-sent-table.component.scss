@@ -1,42 +1,6 @@
 :host {
-  display: flex;
+  display: block;
   width: 100%;
-  min-height: 0;
-  flex: 1;
-}
-
-.notification-list {
-  width: 100%;
-  min-width: 0;
-  min-height: 100%;
-
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-
-  overflow: hidden;
-
-  border: 1px solid #e5e8f0;
-  border-radius: .8rem;
-
-  background: #ffffff;
-
-  box-shadow:
-    0 1px 6px rgba(28, 39, 66, .02);
-}
-
-
-/* =========================
-   TABLE WRAPPER
-========================= */
-
-.notification-list__table-wrapper {
-  width: 100%;
-  min-width: 0;
-
-  flex: 0 0 auto;
-
-  overflow: hidden;
 }
 
 
@@ -44,12 +8,29 @@
    TABLE
 ========================= */
 
-.notification-list__table {
+.notification-sent-table {
   width: 100%;
   min-width: 0;
-  max-width: 100%;
+
+  background: #ffffff;
+}
+
+.notification-sent-table__scroll {
+  width: 100%;
+
+  overflow-x: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: #d8dce6 transparent;
+}
+
+.notification-sent-table__table {
+  width: 100%;
+  min-width: 1080px;
+
   border-collapse: collapse;
   table-layout: fixed;
+
   background: #ffffff;
 }
 
@@ -58,36 +39,36 @@
    COLUMN WIDTHS
 ========================= */
 
-.notification-list__column--title {
+.notification-sent-table__title-column {
   width: 23%;
 }
 
-.notification-list__column--type {
-  width: 10%;
+.notification-sent-table__table th:nth-child(2) {
+  width: 9%;
 }
 
-.notification-list__column--scope {
-  width: 14%;
+.notification-sent-table__table th:nth-child(3) {
+  width: 12%;
 }
 
-.notification-list__column--sender {
+.notification-sent-table__table th:nth-child(4) {
   width: 20%;
 }
 
-.notification-list__column--priority {
+.notification-sent-table__table th:nth-child(5) {
   width: 10%;
 }
 
-.notification-list__column--date {
-  width: 10%;
+.notification-sent-table__table th:nth-child(6) {
+  width: 11%;
 }
 
-.notification-list__column--status {
-  width: 8%;
+.notification-sent-table__table th:nth-child(7) {
+  width: 9%;
 }
 
-.notification-list__column--actions {
-  width: 5%;
+.notification-sent-table__actions-column {
+  width: 6%;
 }
 
 
@@ -95,11 +76,11 @@
    HEADER
 ========================= */
 
-.notification-list__table thead {
+.notification-sent-table__table thead {
   background: #fbfbfd;
 }
 
-.notification-list__table th {
+.notification-sent-table__table th {
   height: 3rem;
 
   padding:
@@ -110,17 +91,16 @@
 
   color: #22283a;
 
-  font-size: .69rem;
+  font-size: .72rem;
   font-weight: 700;
   line-height: 1.2;
 
   text-align: left;
-  vertical-align: middle;
 
   white-space: nowrap;
 }
 
-.notification-list__column--actions {
+.notification-sent-table__actions-column {
   text-align: center;
 }
 
@@ -129,37 +109,25 @@
    ROW
 ========================= */
 
-.notification-list__row {
-  outline: none;
-
+.notification-sent-table__row {
   cursor: pointer;
 
   transition:
-    background-color 150ms ease,
-    box-shadow 150ms ease;
+    background-color 150ms ease;
 }
 
-.notification-list__row:hover {
+.notification-sent-table__row:hover {
   background: #fafbfe;
 }
 
-.notification-list__row:focus-visible {
-  position: relative;
-
-  background: #f8f7ff;
-
-  box-shadow:
-    inset 0 0 0 1px rgba(99, 55, 239, .2);
-}
-
-.notification-list__row td {
-  height: 4.75rem;
+.notification-sent-table__row td {
+  height: 4.7rem;
 
   padding:
     .65rem
     .75rem;
 
-  // border-bottom: 1px solid #edf0f4;
+  border-bottom: 1px solid #edf0f4;
 
   vertical-align: middle;
 
@@ -168,7 +136,7 @@
   font-size: .68rem;
 }
 
-.notification-list__row:last-child td {
+.notification-sent-table__row:last-child td {
   border-bottom: 0;
 }
 
@@ -177,7 +145,7 @@
    NOTIFICATION
 ========================= */
 
-.notification-list__notification {
+.notification-sent-table__notification {
   min-width: 0;
 
   display: flex;
@@ -186,7 +154,7 @@
   gap: .75rem;
 }
 
-.notification-list__notification-icon {
+.notification-sent-table__notification-icon {
   width: 2.8rem;
   height: 2.8rem;
 
@@ -202,45 +170,65 @@
   color: #6338f2;
 }
 
-.notification-list__notification-icon svg {
+.notification-sent-table__notification-icon svg {
   width: 1.25rem;
   height: 1.25rem;
 }
 
 
-/* =========================
-   ICON VARIANTS
-========================= */
+/* ANNOUNCE */
 
-.notification-list__notification-icon--announce {
+.notification-sent-table__notification-icon--announce {
   background: #f0edff;
   color: #6338f2;
 }
 
-.notification-list__notification-icon--advice,
-.notification-list__notification-icon--commentary {
+
+/* ADVICE */
+
+.notification-sent-table__notification-icon--advice {
   background: #fff2e4;
   color: #f2942c;
 }
 
-.notification-list__notification-icon--meeting {
-  background: #eeeaff;
-  color: #6844f4;
+
+/* COMMENTARY */
+
+.notification-sent-table__notification-icon--commentary {
+  background: #fff2e4;
+  color: #f2942c;
 }
 
-.notification-list__notification-icon--assessment {
-  background: #ebf8ef;
-  color: #29a95b;
-}
 
-.notification-list__notification-icon--mandatory {
+/* MANDATORY */
+
+.notification-sent-table__notification-icon--mandatory {
   background: #ffecef;
   color: #ef4b5f;
 }
 
-.notification-list__notification-icon--system {
+
+/* SYSTEM */
+
+.notification-sent-table__notification-icon--system {
   background: #f0f2f6;
   color: #525d74;
+}
+
+
+/* MEETING */
+
+.notification-sent-table__notification-icon--meeting {
+  background: #eeeaff;
+  color: #6844f4;
+}
+
+
+/* ASSESSMENT */
+
+.notification-sent-table__notification-icon--assessment {
+  background: #ebf8ef;
+  color: #29a95b;
 }
 
 
@@ -248,18 +236,18 @@
    NOTIFICATION CONTENT
 ========================= */
 
-.notification-list__notification-content {
+.notification-sent-table__notification-content {
   min-width: 0;
 }
 
-.notification-list__notification-title {
+.notification-sent-table__notification-title {
   margin: 0;
 
   overflow: hidden;
 
   color: #171d32;
 
-  font-size: .71rem;
+  font-size: .82rem;
   font-weight: 700;
   line-height: 1.3;
 
@@ -267,7 +255,7 @@
   white-space: nowrap;
 }
 
-.notification-list__notification-description {
+.notification-sent-table__notification-description {
   max-width: 15rem;
 
   margin:
@@ -279,7 +267,7 @@
 
   color: #7a8395;
 
-  font-size: .61rem;
+  font-size: .62rem;
   font-weight: 400;
   line-height: 1.3;
 
@@ -292,7 +280,7 @@
    TYPE
 ========================= */
 
-.notification-list__type {
+.notification-sent-table__type {
   min-height: 1.55rem;
 
   display: inline-flex;
@@ -314,33 +302,33 @@
   white-space: nowrap;
 }
 
-.notification-list__type--announce {
+.notification-sent-table__type--announce {
   background: #f1efff;
   color: #6545df;
 }
 
-.notification-list__type--advice,
-.notification-list__type--commentary {
+.notification-sent-table__type--advice,
+.notification-sent-table__type--commentary {
   background: #fff2e5;
   color: #e98a27;
 }
 
-.notification-list__type--meeting {
+.notification-sent-table__type--meeting {
   background: #ebf1ff;
   color: #416bd8;
 }
 
-.notification-list__type--assessment {
+.notification-sent-table__type--assessment {
   background: #f0edff;
   color: #6947db;
 }
 
-.notification-list__type--mandatory {
+.notification-sent-table__type--mandatory {
   background: #ffecee;
   color: #e94c5d;
 }
 
-.notification-list__type--system {
+.notification-sent-table__type--system {
   background: #eff1f5;
   color: #606879;
 }
@@ -350,61 +338,41 @@
    SCOPE
 ========================= */
 
-// .notification-list__scope {
-//   min-width: 0;
+.notification-sent-table__scope {
+  min-width: 0;
 
-//   display: flex;
-//   align-items: center;
+  display: flex;
+  align-items: center;
 
-//   gap: .45rem;
-// }
+  gap: .45rem;
 
-// .notification-list__scope-icon {
-//   flex: 0 0 auto;
+  color: #2d3447;
 
-//   display: inline-flex;
-//   align-items: center;
-//   justify-content: center;
+  font-size: .66rem;
+  font-weight: 500;
+}
 
-//   color: #596378;
-// }
+.notification-sent-table__scope-icon {
+  flex: 0 0 auto;
 
-// .notification-list__scope-icon svg {
-//   width: 1rem;
-//   height: 1rem;
-// }
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-// .notification-list__scope-content {
-//   min-width: 0;
+  color: #596378;
+}
 
-//   display: flex;
-//   flex-direction: column;
-
-//   gap: .15rem;
-// }
-
-// .notification-list__scope-label {
-//   color: #2d3447;
-
-//   font-size: .66rem;
-//   font-weight: 500;
-//   line-height: 1.25;
-// }
-
-// .notification-list__scope-count {
-//   color: #7c8597;
-
-//   font-size: .58rem;
-//   font-weight: 400;
-//   line-height: 1.25;
-// }
+.notification-sent-table__scope-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
 
 
 /* =========================
-   SENDER
+   RECIPIENT
 ========================= */
 
-.notification-list__sender {
+.notification-sent-table__recipient {
   min-width: 0;
 
   display: flex;
@@ -413,7 +381,7 @@
   gap: .6rem;
 }
 
-.notification-list__sender-avatar {
+.notification-sent-table__recipient-avatar {
   width: 2.35rem;
   height: 2.35rem;
 
@@ -432,11 +400,11 @@
   font-weight: 700;
 }
 
-.notification-list__sender-content {
+.notification-sent-table__recipient-content {
   min-width: 0;
 }
 
-.notification-list__sender-name {
+.notification-sent-table__recipient-name {
   margin: 0;
 
   overflow: hidden;
@@ -451,7 +419,7 @@
   white-space: nowrap;
 }
 
-.notification-list__sender-email {
+.notification-sent-table__recipient-secondary {
   max-width: 12rem;
 
   margin:
@@ -472,10 +440,36 @@
 
 
 /* =========================
+   RECIPIENT COUNT
+========================= */
+
+.notification-sent-table__recipient-count {
+  display: flex;
+  flex-direction: column;
+
+  gap: .15rem;
+}
+
+.notification-sent-table__recipient-count strong {
+  color: #20263a;
+
+  font-size: .67rem;
+  font-weight: 700;
+}
+
+.notification-sent-table__recipient-count span {
+  color: #7c8597;
+
+  font-size: .59rem;
+  font-weight: 400;
+}
+
+
+/* =========================
    PRIORITY
 ========================= */
 
-.notification-list__priority {
+.notification-sent-table__priority {
   display: inline-flex;
   align-items: center;
 
@@ -489,7 +483,7 @@
   white-space: nowrap;
 }
 
-.notification-list__priority-dot {
+.notification-sent-table__priority-dot {
   width: .42rem;
   height: .42rem;
 
@@ -497,26 +491,21 @@
 
   border-radius: 50%;
 
+  background: #3d6af2;
+}
+
+.notification-sent-table__priority--normal
+.notification-sent-table__priority-dot {
   background: #3766ef;
 }
 
-.notification-list__priority--low
-.notification-list__priority-dot {
-  background: #8a93a5;
-}
-
-.notification-list__priority--normal
-.notification-list__priority-dot {
-  background: #3766ef;
-}
-
-.notification-list__priority--high
-.notification-list__priority-dot {
+.notification-sent-table__priority--high
+.notification-sent-table__priority-dot {
   background: #ff941f;
 }
 
-.notification-list__priority--urgent
-.notification-list__priority-dot {
+.notification-sent-table__priority--urgent
+.notification-sent-table__priority-dot {
   background: #f23c50;
 }
 
@@ -525,14 +514,14 @@
    DATE
 ========================= */
 
-.notification-list__date {
+.notification-sent-table__date {
   display: flex;
   flex-direction: column;
 
   gap: .18rem;
 }
 
-.notification-list__date-day {
+.notification-sent-table__date-day {
   color: #252c40;
 
   font-size: .65rem;
@@ -541,7 +530,7 @@
   white-space: nowrap;
 }
 
-.notification-list__date-time {
+.notification-sent-table__date-time {
   color: #788195;
 
   font-size: .59rem;
@@ -555,7 +544,7 @@
    STATUS
 ========================= */
 
-.notification-list__status {
+.notification-sent-table__status {
   min-height: 1.55rem;
 
   display: inline-flex;
@@ -574,21 +563,21 @@
   white-space: nowrap;
 }
 
-.notification-list__status--sent,
-.notification-list__status--delivered,
-.notification-list__status--read {
+.notification-sent-table__status--delivered,
+.notification-sent-table__status--read,
+.notification-sent-table__status--sent {
   background: #e8f7eb;
   color: #299346;
 }
 
-.notification-list__status--pending {
-  background: #fff4df;
-  color: #c9851d;
-}
-
-.notification-list__status--failed {
+.notification-sent-table__status--failed {
   background: #ffe9eb;
   color: #dc4352;
+}
+
+.notification-sent-table__status--pending {
+  background: #fff4df;
+  color: #c9851d;
 }
 
 
@@ -596,11 +585,11 @@
    ACTIONS
 ========================= */
 
-.notification-list__actions-cell {
+.notification-sent-table__actions-cell {
   text-align: center;
 }
 
-.notification-list__view-button {
+.notification-sent-table__view-button {
   width: 2.4rem;
   height: 2.4rem;
 
@@ -625,39 +614,38 @@
     transform 100ms ease;
 }
 
-.notification-list__view-button:hover {
+.notification-sent-table__view-button:hover {
   border-color: #cfd4df;
 
   background: #f8f9fc;
   color: #5834e8;
 }
 
-.notification-list__view-button:active {
+.notification-sent-table__view-button:active {
   transform: scale(.96);
 }
 
-.notification-list__view-button svg {
+.notification-sent-table__view-button svg {
   width: 1rem;
   height: 1rem;
 }
 
 
 /* =========================
-   FOOTER
+   EMPTY
 ========================= */
 
-.notification-list__footer {
-  width: 100%;
+.notification-sent-table__empty {
+  height: 8rem;
 
-  flex: 0 0 auto;
+  padding: 1rem;
 
-  display: block;
+  color: #7b8497;
 
-  margin-top: auto;
+  font-size: .68rem;
+  font-weight: 500;
 
-  border-top: 1px solid #e7e9f0;
-
-  background: #ffffff;
+  text-align: center;
 }
 
 
@@ -667,20 +655,20 @@
 
 @media (max-width: 1250px) {
 
-  .notification-list__table {
+  .notification-sent-table__table {
     min-width: 1020px;
   }
 
-  .notification-list__table th,
-  .notification-list__row td {
+  .notification-sent-table__table th,
+  .notification-sent-table__row td {
     padding-inline: .6rem;
   }
 
-  .notification-list__notification {
+  .notification-sent-table__notification {
     gap: .6rem;
   }
 
-  .notification-list__notification-icon {
+  .notification-sent-table__notification-icon {
     width: 2.55rem;
     height: 2.55rem;
   }
@@ -694,36 +682,32 @@
 
 @media (max-width: 900px) {
 
-  .notification-list {
-    border-radius: .7rem;
-  }
-
-  .notification-list__table {
+  .notification-sent-table__table {
     min-width: 980px;
   }
 
-  .notification-list__table th {
+  .notification-sent-table__table th {
     height: 2.8rem;
 
     font-size: .64rem;
   }
 
-  .notification-list__row td {
+  .notification-sent-table__row td {
     height: 4.4rem;
 
     font-size: .63rem;
   }
 
-  .notification-list__notification-icon {
+  .notification-sent-table__notification-icon {
     width: 2.4rem;
     height: 2.4rem;
   }
 
-  .notification-list__notification-title {
+  .notification-sent-table__notification-title {
     font-size: .67rem;
   }
 
-  .notification-list__notification-description {
+  .notification-sent-table__notification-description {
     font-size: .58rem;
   }
 
@@ -736,15 +720,15 @@
 
 @media (max-width: 767px) {
 
-  .notification-list {
-    border-radius: .65rem;
+  .notification-sent-table__scroll {
+    margin: 0;
   }
 
-  .notification-list__table {
+  .notification-sent-table__table {
     min-width: 930px;
   }
 
-  .notification-list__table th {
+  .notification-sent-table__table th {
     height: 2.65rem;
 
     padding:
@@ -754,7 +738,7 @@
     font-size: .61rem;
   }
 
-  .notification-list__row td {
+  .notification-sent-table__row td {
     height: 4.15rem;
 
     padding:
@@ -762,39 +746,32 @@
       .5rem;
   }
 
-  .notification-list__notification-icon {
+  .notification-sent-table__notification-icon {
     width: 2.2rem;
     height: 2.2rem;
   }
 
-  .notification-list__notification-icon svg {
+  .notification-sent-table__notification-icon svg {
     width: 1.05rem;
     height: 1.05rem;
   }
 
-  .notification-list__notification-title {
+  .notification-sent-table__notification-title {
     font-size: .63rem;
   }
 
-  .notification-list__notification-description {
+  .notification-sent-table__notification-description {
     max-width: 11rem;
 
     font-size: .55rem;
   }
 
-  .notification-list__type,
-  .notification-list__status {
+  .notification-sent-table__type,
+  .notification-sent-table__status {
     font-size: .56rem;
   }
 
-  .notification-list__sender-avatar {
-    width: 2.1rem;
-    height: 2.1rem;
-
-    font-size: .62rem;
-  }
-
-  .notification-list__view-button {
+  .notification-sent-table__view-button {
     width: 2.15rem;
     height: 2.15rem;
   }

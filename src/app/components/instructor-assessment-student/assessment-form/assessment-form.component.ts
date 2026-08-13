@@ -37,24 +37,17 @@ export class AssessmentFormComponent {
   /* =========================
      INPUTS
   ========================= */
-
   @Input() selectedStudent: UserDto | null = null;
-
   @Input() currentStageId: number | null = null;
-
   @Input() instructorId: number | null = null;
-
   @Input() minPointsAssessment: number | null = null;
-
   @Input() blockedTypes: AssessmentType[] = [];
-
   @Input() resources: AssessmentFormResource[] = [];
 
 
   /* =========================
      OUTPUT
   ========================= */
-
   @Output() assessmentCreated =
     new EventEmitter<CreateAssessmentI>();
 
@@ -62,22 +55,16 @@ export class AssessmentFormComponent {
   /* =========================
      FORM
   ========================= */
-
   selectedType: AssessmentType | null = null;
-
   points: number | null = null;
-
   notes: string = '';
-
   selectedResourceIds: number[] = [];
 
 
   /* =========================
      UI
   ========================= */
-
   showTypeDropdown: boolean = false;
-
   showResourcesDropdown: boolean = false;
 
 
@@ -124,8 +111,8 @@ export class AssessmentFormComponent {
       case 'grammar':
         return 'Grammar';
 
-      case 'writing':
-        return 'Writing';
+      // case 'writing':
+      //   return 'Writing';
 
       default:
         return this.formatLabel(

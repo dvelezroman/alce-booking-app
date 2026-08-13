@@ -48,67 +48,41 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   /* =========================
      INPUTS
   ========================= */
-
   @Input() userRole: UserRole | null = null;
-
-  @Input() selectedAction:
-    | SendOption
-    | '' = '';
-
+  @Input() selectedAction: | SendOption | '' = '';
   @Input() selectedUser: UserDto | null = null;
-
   @Input() selectedStage: Stage | null = null;
-
   @Input() selectedRole: RecipientRole | null = null;
-
   @Input() stages: Stage[] = [];
-
   @Input() groups: NotificationGroupDto[] = [];
-
   @Input() loadingGroups = false;
-
   @Input() reset = false;
 
 
   /* =========================
      OUTPUTS
   ========================= */
-
-  @Output() sendOptionSelected =
-    new EventEmitter<SendOption>();
-
-  @Output() userSelected =
-    new EventEmitter<UserDto | null>();
-
-  @Output() stageSelected =
-    new EventEmitter<Stage | null>();
+  @Output() sendOptionSelected = new EventEmitter<SendOption>();
+  @Output() userSelected = new EventEmitter<UserDto | null>();
+  @Output() stageSelected = new EventEmitter<Stage | null>();
 
 
   /*
    * Lo dejamos preparado porque cuando hagamos
    * Rol necesitaremos comunicarlo al padre.
    */
-  @Output() roleSelected =
-    new EventEmitter<RecipientRole | null>();
+  @Output() roleSelected = new EventEmitter<RecipientRole | null>();
 
 
   /* =========================
      USER SEARCH
   ========================= */
-
   searchTerm = '';
-
   filteredUsers: UserDto[] = [];
-
   showUserDropdown = false;
-
   isSearchingUsers = false;
-
-  private searchInput$ =
-    new Subject<string>();
-
-  private destroy$ =
-    new Subject<void>();
+  private searchInput$ = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
 
   /* =========================

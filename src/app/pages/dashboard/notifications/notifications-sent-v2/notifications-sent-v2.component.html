@@ -1,0 +1,172 @@
+<div class="notifications-sent-page">
+  <div class="notifications-sent-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <app-notification-sent-header
+      (createNotification)="onCreateNotification()"
+    ></app-notification-sent-header>
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+    <app-notification-sent-filters
+      [fromDate]="fromDate"
+      [toDate]="toDate"
+      (fromDateChange)="fromDate = $event"
+      (toDateChange)="toDate = $event"
+      (filterChange)="onFilterChange()"
+    ></app-notification-sent-filters>
+
+    <!-- =========================
+         CONTENT
+    ========================== -->
+    <section class="notifications-sent-page__content">
+
+      <!-- =========================
+           LOADING / SKELETON
+      ========================== -->
+      @if (loading) {
+
+        <div class="notifications-sent-page__skeleton">
+
+          <!-- HEADER -->
+          <div class="notifications-sent-page__skeleton-header">
+            <span class="notifications-sent-page__skeleton-header-item notifications-sent-page__skeleton-header-item--title"></span>
+            <span class="notifications-sent-page__skeleton-header-item"></span>
+            <span class="notifications-sent-page__skeleton-header-item"></span>
+            <span class="notifications-sent-page__skeleton-header-item notifications-sent-page__skeleton-header-item--recipient"></span>
+            <span class="notifications-sent-page__skeleton-header-item"></span>
+            <span class="notifications-sent-page__skeleton-header-item"></span>
+            <span class="notifications-sent-page__skeleton-header-item"></span>
+            <span class="notifications-sent-page__skeleton-header-item notifications-sent-page__skeleton-header-item--action"></span>
+          </div>
+
+          <!-- ROWS -->
+          @for (row of [1, 2, 3, 4, 5, 6]; track row) {
+
+            <div class="notifications-sent-page__skeleton-row">
+
+              <!-- TITLE -->
+              <div class="notifications-sent-page__skeleton-notification">
+                <span class="notifications-sent-page__skeleton-circle"></span>
+
+                <div class="notifications-sent-page__skeleton-texts">
+                  <span class="notifications-sent-page__skeleton-line notifications-sent-page__skeleton-line--title"></span>
+                  <span class="notifications-sent-page__skeleton-line notifications-sent-page__skeleton-line--description"></span>
+                </div>
+              </div>
+
+              <!-- TYPE -->
+              <span class="notifications-sent-page__skeleton-badge"></span>
+
+              <!-- SCOPE -->
+              <span class="notifications-sent-page__skeleton-line notifications-sent-page__skeleton-line--scope"></span>
+
+              <!-- RECIPIENT -->
+              <div class="notifications-sent-page__skeleton-recipient">
+                <span class="notifications-sent-page__skeleton-avatar"></span>
+
+                <div class="notifications-sent-page__skeleton-texts">
+                  <span class="notifications-sent-page__skeleton-line notifications-sent-page__skeleton-line--recipient-name"></span>
+                  <span class="notifications-sent-page__skeleton-line notifications-sent-page__skeleton-line--recipient-detail"></span>
+                </div>
+              </div>
+
+              <!-- PRIORITY -->
+              <span class="notifications-sent-page__skeleton-line notifications-sent-page__skeleton-line--priority"></span>
+
+              <!-- DATE -->
+              <div class="notifications-sent-page__skeleton-texts">
+                <span class="notifications-sent-page__skeleton-line notifications-sent-page__skeleton-line--date"></span>
+                <span class="notifications-sent-page__skeleton-line notifications-sent-page__skeleton-line--time"></span>
+              </div>
+
+              <!-- STATUS -->
+              <span class="notifications-sent-page__skeleton-badge"></span>
+
+              <!-- ACTION -->
+              <span class="notifications-sent-page__skeleton-action"></span>
+
+            </div>
+
+          }
+
+        </div>
+
+      } @else if (items.length > 0) {
+
+        <!-- =========================
+             TABLE
+        ========================== -->
+        <app-notification-sent-table
+          [items]="items"
+          (rowClick)="onRowClick($event)"
+        ></app-notification-sent-table>
+
+        <!-- =========================
+             PAGINATION
+        ========================== -->
+        <app-notification-sent-pagination
+          [page]="page"
+          [limit]="limit"
+          [total]="total"
+          [startIndex]="startIndex"
+          [endIndex]="endIndex"
+          (prev)="onPrev()"
+          (next)="onNext()"
+          (pageSizeChange)="onLimitChange($event)"
+        ></app-notification-sent-pagination>
+
+      } @else {
+
+        <!-- =========================
+             EMPTY
+        ========================== -->
+        <div class="notifications-sent-page__empty">
+
+          <div
+            class="notifications-sent-page__empty-icon"
+            aria-hidden="true"
+          >
+            <svg
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M22 2 11 13"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M22 2 15 22 11 13 2 9 22 2Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+
+          <h3 class="notifications-sent-page__empty-title">
+            No hay notificaciones enviadas
+          </h3>
+
+          <p class="notifications-sent-page__empty-description">
+            Las notificaciones que envíes aparecerán aquí.
+          </p>
+
+        </div>
+
+      }
+
+    </section>
+
+  </div>
+</div>

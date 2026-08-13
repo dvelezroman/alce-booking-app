@@ -180,4 +180,43 @@ export class NotificationDetailContentComponent {
   ): number {
     return index;
   }
+
+  get isStudentAssessmentAccess(): boolean {
+    return (
+      this.userRole === UserRole.STUDENT &&
+      this.notification?.message?.kind === 'assessment-assigned' &&
+      !!(
+        this.notification?.message?.directAccessUrl ||
+        this.notification?.message?.shareUrl
+      )
+    );
+  }
+
+  get assessmentDirectAccessUrl(): string {
+    return this.notification?.message?.directAccessUrl || '';
+  }
+
+  get assessmentShareUrl(): string {
+    return this.notification?.message?.shareUrl || '';
+  }
+
+  get assessmentAccessCode(): string {
+    return this.notification?.message?.studentAccessCode || '';
+  }
+
+  openAssessment(): void {
+    if (!this.assessmentDirectAccessUrl) return;
+
+    window.open(
+      this.assessmentDirectAccessUrl,
+      '_blank',
+      'noopener,noreferrer',
+    );
+  }
+
+  copyToClipboard(value: string): void {
+    if (!value) return;
+
+    navigator.clipboard.writeText(value);
+  }
 }

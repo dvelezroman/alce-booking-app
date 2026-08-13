@@ -1,0 +1,523 @@
+
+<div class="notification-historial-table">
+
+  <div class="notification-historial-table__scroll">
+
+    <table class="notification-historial-table__table">
+
+      <!-- =========================
+           HEADER
+      ========================== -->
+      <thead>
+        <tr>
+          <th class="notification-historial-table__title-column">
+            Título
+          </th>
+
+          <th>
+            Tipo
+          </th>
+
+          <th>
+            Alcance
+          </th>
+
+          <th>
+            Remitente
+          </th>
+
+          <th>
+            Prioridad
+          </th>
+
+          <th>
+            Enviado el
+          </th>
+
+          <th>
+            Estado
+          </th>
+
+          <th class="notification-historial-table__actions-column">
+            Acciones
+          </th>
+        </tr>
+      </thead>
+
+
+      <!-- =========================
+           BODY
+      ========================== -->
+      <tbody>
+
+        @for (
+          notification of notifications;
+          track notification.id
+        ) {
+
+          <tr
+            class="notification-historial-table__row"
+            (click)="onRowClick(notification)"
+          >
+
+            <!-- =========================
+                 TITLE
+            ========================== -->
+            <td>
+              <div class="notification-historial-table__notification">
+
+                <div
+                  class="notification-historial-table__notification-icon"
+                  [class.notification-historial-table__notification-icon--announce]="notification.notificationType === 'Announce'"
+                  [class.notification-historial-table__notification-icon--advice]="notification.notificationType === 'Advice'"
+                  [class.notification-historial-table__notification-icon--commentary]="notification.notificationType === 'Commentary'"
+                  [class.notification-historial-table__notification-icon--mandatory]="notification.notificationType === 'Mandatory'"
+                  [class.notification-historial-table__notification-icon--system]="notification.notificationType === 'System'"
+                  [class.notification-historial-table__notification-icon--meeting]="notification.notificationType === 'Meeting'"
+                  [class.notification-historial-table__notification-icon--assessment]="notification.notificationType === 'Assessment'"
+                  aria-hidden="true"
+                >
+
+                  @switch (notification.notificationType) {
+
+                    @case ('Announce') {
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M4 13V9l11-4v12L4 13Z"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linejoin="round"
+                        />
+
+                        <path
+                          d="M15 9h2.5a2.5 2.5 0 0 1 0 5H15"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"
+                        />
+
+                        <path
+                          d="M6 13l1 5h3l-1.4-4.2"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    }
+
+                    @case ('Advice') {
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M7 17.5 4 20l.8-4A7 7 0 1 1 7 17.5Z"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linejoin="round"
+                        />
+
+                        <path
+                          d="M8 10h.01M12 10h.01M16 10h.01"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    }
+
+                    @case ('Meeting') {
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <rect
+                          x="4"
+                          y="5.5"
+                          width="16"
+                          height="14"
+                          rx="2"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                        />
+
+                        <path
+                          d="M8 3.5v4M16 3.5v4M4 9h16M8 12h2M14 12h2M8 16h2M14 16h2"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    }
+
+                    @case ('Assessment') {
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <rect
+                          x="5"
+                          y="4"
+                          width="13"
+                          height="16"
+                          rx="2"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                        />
+
+                        <path
+                          d="m9 12 2 2 4-5"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    }
+
+                    @case ('Mandatory') {
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M12 3 21 20H3L12 3Z"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linejoin="round"
+                        />
+
+                        <path
+                          d="M12 9v5M12 17.2v.1"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    }
+
+                    @default {
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="3"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                        />
+
+                        <path
+                          d="M12 2.8v2M12 19.2v2M4.8 4.8l1.4 1.4M17.8 17.8l1.4 1.4M2.8 12h2M19.2 12h2M4.8 19.2l1.4-1.4M17.8 6.2l1.4-1.4"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    }
+
+                  }
+
+                </div>
+
+                <div class="notification-historial-table__notification-content">
+
+                  <p class="notification-historial-table__notification-title">
+                    {{ notification.title }}
+                  </p>
+
+                  <p class="notification-historial-table__notification-description">
+                    {{ notification.message.body }}
+                  </p>
+
+                </div>
+
+              </div>
+            </td>
+
+
+            <!-- =========================
+                 TYPE
+            ========================== -->
+            <td>
+              <span
+                class="notification-historial-table__type"
+                [class.notification-historial-table__type--announce]="notification.notificationType === 'Announce'"
+                [class.notification-historial-table__type--advice]="notification.notificationType === 'Advice'"
+                [class.notification-historial-table__type--commentary]="notification.notificationType === 'Commentary'"
+                [class.notification-historial-table__type--mandatory]="notification.notificationType === 'Mandatory'"
+                [class.notification-historial-table__type--system]="notification.notificationType === 'System'"
+                [class.notification-historial-table__type--meeting]="notification.notificationType === 'Meeting'"
+                [class.notification-historial-table__type--assessment]="notification.notificationType === 'Assessment'"
+              >
+                {{
+                  typeMap[notification.notificationType] ||
+                  notification.notificationType
+                }}
+              </span>
+            </td>
+
+
+            <!-- =========================
+                 SCOPE
+            ========================== -->
+            <td>
+              <div class="notification-historial-table__scope">
+
+                <span
+                  class="notification-historial-table__scope-icon"
+                  aria-hidden="true"
+                >
+
+                  @if (notification.scope === 'INDIVIDUAL') {
+
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="8"
+                        r="3"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+
+                      <path
+                        d="M6.5 19c.5-3 2.3-5 5.5-5s5 2 5.5 5"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+
+                  } @else {
+
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="9"
+                        cy="8"
+                        r="2.5"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                      />
+
+                      <circle
+                        cx="16"
+                        cy="9"
+                        r="2"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                      />
+
+                      <path
+                        d="M4 18c.4-3 2-5 5-5s4.6 2 5 5M14 14c2.8 0 4.5 1.5 5 4"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+
+                  }
+
+                </span>
+
+                <div class="notification-historial-table__scope-content">
+
+                  <span class="notification-historial-table__scope-label">
+                    {{ scopeLabel(notification) }}
+                  </span>
+
+                  @if (
+                    notification.scope !== 'INDIVIDUAL' &&
+                    notification.to &&
+                    notification.to.length > 0
+                  ) {
+                    <span class="notification-historial-table__scope-count">
+                      {{ notification.to.length }}
+                      {{
+                        notification.scope === 'ALL_INSTRUCTORS'
+                          ? 'instructores'
+                          : notification.scope === 'ALL_USERS'
+                            ? 'usuarios'
+                            : 'estudiantes'
+                      }}
+                    </span>
+                  }
+
+                </div>
+
+              </div>
+            </td>
+
+
+            <!-- =========================
+                 SENDER
+            ========================== -->
+            <td>
+              <div class="notification-historial-table__sender">
+
+                <div class="notification-historial-table__sender-avatar">
+                  {{
+                    (notification.fromUser?.firstName || 'U').charAt(0)
+                  }}
+                  {{
+                    (notification.fromUser?.lastName || '').charAt(0)
+                  }}
+                </div>
+
+                <div class="notification-historial-table__sender-content">
+
+                  <p class="notification-historial-table__sender-name">
+                    {{ senderName(notification) }}
+                  </p>
+
+                  <p class="notification-historial-table__sender-email">
+                    {{
+                      notification.fromUser?.emailAddress ||
+                      notification.fromUser?.email ||
+                      ''
+                    }}
+                  </p>
+
+                </div>
+
+              </div>
+            </td>
+
+
+            <!-- =========================
+                 PRIORITY
+            ========================== -->
+            <td>
+              <div
+                class="notification-historial-table__priority"
+                [class.notification-historial-table__priority--low]="notification.priority === 0"
+                [class.notification-historial-table__priority--normal]="notification.priority === 1"
+                [class.notification-historial-table__priority--high]="notification.priority === 2"
+                [class.notification-historial-table__priority--urgent]="notification.priority >= 3"
+              >
+                <span class="notification-historial-table__priority-dot"></span>
+
+                <span>
+                  {{
+                    priorityMap[notification.priority] ||
+                    notification.priority
+                  }}
+                </span>
+              </div>
+            </td>
+
+
+            <!-- =========================
+                 SENT DATE
+            ========================== -->
+            <td>
+              <div class="notification-historial-table__date">
+
+                <span class="notification-historial-table__date-value">
+                  {{
+                    formatDate(
+                      notification.sentAt ||
+                      notification.scheduledAt ||
+                      notification.createdAt
+                    )
+                  }}
+                </span>
+
+              </div>
+            </td>
+
+
+            <!-- =========================
+                 STATUS
+            ========================== -->
+            <td>
+              <span
+                class="notification-historial-table__status"
+                [class.notification-historial-table__status--delivered]="notification.status === 'DELIVERED'"
+                [class.notification-historial-table__status--read]="notification.status === 'READ'"
+                [class.notification-historial-table__status--failed]="notification.status === 'FAILED'"
+                [class.notification-historial-table__status--sent]="notification.status === 'SENT'"
+                [class.notification-historial-table__status--pending]="notification.status === 'PENDING'"
+              >
+                {{
+                  statusMap[notification.status] ||
+                  notification.status
+                }}
+              </span>
+            </td>
+
+
+            <!-- =========================
+                 ACTIONS
+            ========================== -->
+            <td class="notification-historial-table__actions-cell">
+
+              <button
+                type="button"
+                class="notification-historial-table__view-button"
+                aria-label="Ver detalle de la notificación"
+                (click)="$event.stopPropagation(); onRowClick(notification)"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="2.5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+                </svg>
+              </button>
+
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

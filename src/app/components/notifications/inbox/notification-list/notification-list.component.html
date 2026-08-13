@@ -2,35 +2,512 @@
   class="notification-list"
   aria-label="Lista de notificaciones"
 >
-  <!-- CARDS -->
-  <div class="notification-list__cards">
-    <article
-      *ngFor="
-        let notification of notifications;
-        trackBy: trackByNotificationId
-      "
-      class="notification-list__item"
-      tabindex="0"
-      role="button"
-      (click)="onNotificationClick(notification)"
-      (keydown.enter)="
-        onNotificationClick(notification)
-      "
-      (keydown.space)="
-        $event.preventDefault();
-        onNotificationClick(notification)
-      "
-    >
-      <app-notification-card
-        [notification]="notification"
-      />
-    </article>
+
+  <!-- =========================
+       TABLE
+  ========================== -->
+  <div class="notification-list__table-wrapper">
+
+    <table class="notification-list__table">
+
+      <!-- =========================
+           HEADER
+      ========================== -->
+      <thead>
+        <tr>
+          <th class="notification-list__column notification-list__column--title">
+            Título
+          </th>
+
+          <th class="notification-list__column notification-list__column--type">
+            Tipo
+          </th>
+
+          <!-- <th class="notification-list__column notification-list__column--scope">
+            Alcance
+          </th> -->
+
+          <th class="notification-list__column notification-list__column--sender">
+            Remitente
+          </th>
+
+          <th class="notification-list__column notification-list__column--priority">
+            Prioridad
+          </th>
+
+          <th class="notification-list__column notification-list__column--date">
+            Enviado el
+          </th>
+
+          <!-- <th class="notification-list__column notification-list__column--status">
+            Estado
+          </th> -->
+
+          <!-- <th class="notification-list__column notification-list__column--actions">
+            Acciones
+          </th> -->
+        </tr>
+      </thead>
+
+
+      <!-- =========================
+           BODY
+      ========================== -->
+      <tbody>
+
+        <tr
+          *ngFor="
+            let notification of notifications;
+            trackBy: trackByNotificationId
+          "
+          class="notification-list__row"
+          tabindex="0"
+          role="button"
+          (click)="onNotificationClick(notification)"
+          (keydown.enter)="onNotificationClick(notification)"
+          (keydown.space)="
+            $event.preventDefault();
+            onNotificationClick(notification)
+          "
+        >
+
+          <!-- =========================
+               TITLE
+          ========================== -->
+          <td>
+            <div class="notification-list__notification">
+
+              <div
+                class="notification-list__notification-icon"
+                [class.notification-list__notification-icon--announce]="notification.notificationType === 'Announce'"
+                [class.notification-list__notification-icon--advice]="notification.notificationType === 'Advice'"
+                [class.notification-list__notification-icon--commentary]="notification.notificationType === 'Commentary'"
+                [class.notification-list__notification-icon--mandatory]="notification.notificationType === 'Mandatory'"
+                [class.notification-list__notification-icon--system]="notification.notificationType === 'System'"
+                [class.notification-list__notification-icon--meeting]="notification.notificationType === 'Meeting'"
+                [class.notification-list__notification-icon--assessment]="notification.notificationType === 'Assessment'"
+                aria-hidden="true"
+              >
+
+                @switch (notification.notificationType) {
+
+                  @case ('Announce') {
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M4 13V9l11-4v12L4 13Z"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linejoin="round"
+                      />
+
+                      <path
+                        d="M15 9h2.5a2.5 2.5 0 0 1 0 5H15"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                      />
+
+                      <path
+                        d="M6 13l1 5h3l-1.4-4.2"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  }
+
+                  @case ('Advice') {
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M7 17.5 4 20l.8-4A7 7 0 1 1 7 17.5Z"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linejoin="round"
+                      />
+
+                      <path
+                        d="M8 10h.01M12 10h.01M16 10h.01"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  }
+
+                  @case ('Meeting') {
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <rect
+                        x="4"
+                        y="5.5"
+                        width="16"
+                        height="14"
+                        rx="2"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+
+                      <path
+                        d="M8 3.5v4M16 3.5v4M4 9h16M8 12h2M14 12h2M8 16h2M14 16h2"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  }
+
+                  @case ('Assessment') {
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <rect
+                        x="5"
+                        y="4"
+                        width="13"
+                        height="16"
+                        rx="2"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+
+                      <path
+                        d="m9 12 2 2 4-5"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  }
+
+                  @case ('Mandatory') {
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M12 3 21 20H3L12 3Z"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linejoin="round"
+                      />
+
+                      <path
+                        d="M12 9v5M12 17.2v.1"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  }
+
+                  @default {
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="3"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+
+                      <path
+                        d="M12 2.8v2M12 19.2v2M4.8 4.8l1.4 1.4M17.8 17.8l1.4 1.4M2.8 12h2M19.2 12h2M4.8 19.2l1.4-1.4M17.8 6.2l1.4-1.4"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  }
+
+                }
+
+              </div>
+
+              <div class="notification-list__notification-content">
+
+                <p class="notification-list__notification-title">
+                  {{ notification.title }}
+                </p>
+
+                <p class="notification-list__notification-description">
+                  {{ notification.message?.body || '' }}
+                </p>
+
+              </div>
+
+            </div>
+          </td>
+
+
+          <!-- =========================
+               TYPE
+          ========================== -->
+          <td>
+            <span
+              class="notification-list__type"
+              [class.notification-list__type--announce]="notification.notificationType === 'Announce'"
+              [class.notification-list__type--advice]="notification.notificationType === 'Advice'"
+              [class.notification-list__type--commentary]="notification.notificationType === 'Commentary'"
+              [class.notification-list__type--mandatory]="notification.notificationType === 'Mandatory'"
+              [class.notification-list__type--system]="notification.notificationType === 'System'"
+              [class.notification-list__type--meeting]="notification.notificationType === 'Meeting'"
+              [class.notification-list__type--assessment]="notification.notificationType === 'Assessment'"
+            >
+              {{ getNotificationTypeLabel(notification) }}
+            </span>
+          </td>
+
+
+          <!-- =========================
+               SCOPE
+          ========================== -->
+          <!-- <td>
+            <div class="notification-list__scope">
+
+              <span
+                class="notification-list__scope-icon"
+                aria-hidden="true"
+              >
+                @if (notification.scope === 'INDIVIDUAL') {
+
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="8"
+                      r="3"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                    />
+
+                    <path
+                      d="M6.5 19c.5-3 2.3-5 5.5-5s5 2 5.5 5"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+
+                } @else {
+
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="9"
+                      cy="8"
+                      r="2.5"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    />
+
+                    <circle
+                      cx="16"
+                      cy="9"
+                      r="2"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    />
+
+                    <path
+                      d="M4 18c.4-3 2-5 5-5s4.6 2 5 5M14 14c2.8 0 4.5 1.5 5 4"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+
+                }
+              </span>
+
+              <div class="notification-list__scope-content">
+
+                <span class="notification-list__scope-label">
+                  {{ getScopeLabel(notification) }}
+                </span>
+
+                <span
+                  *ngIf="getScopeCountLabel(notification)"
+                  class="notification-list__scope-count"
+                >
+                  {{ getScopeCountLabel(notification) }}
+                </span>
+
+              </div>
+
+            </div>
+          </td> -->
+
+
+          <!-- =========================
+               SENDER
+          ========================== -->
+          <td>
+            <div class="notification-list__sender">
+
+              <div class="notification-list__sender-avatar">
+                {{ getSenderInitials(notification) }}
+              </div>
+
+              <div class="notification-list__sender-content">
+
+                <p class="notification-list__sender-name">
+                  {{ getSenderName(notification) }}
+                </p>
+
+                <p class="notification-list__sender-email">
+                  {{ notification.fromUser?.email || '' }}
+                </p>
+
+              </div>
+
+            </div>
+          </td>
+
+
+          <!-- =========================
+               PRIORITY
+          ========================== -->
+          <td>
+            <div
+              class="notification-list__priority"
+              [class.notification-list__priority--low]="notification.priority === 0"
+              [class.notification-list__priority--normal]="notification.priority === 1"
+              [class.notification-list__priority--high]="notification.priority === 2"
+              [class.notification-list__priority--urgent]="notification.priority >= 3"
+            >
+              <span class="notification-list__priority-dot"></span>
+
+              <span>
+                {{ getPriorityLabel(notification) }}
+              </span>
+            </div>
+          </td>
+
+
+          <!-- =========================
+               DATE
+          ========================== -->
+          <td>
+            <div class="notification-list__date">
+
+              <span class="notification-list__date-day">
+                {{ formatDate(notification) }}
+              </span>
+
+              <span class="notification-list__date-time">
+                {{ formatTime(notification) }}
+              </span>
+
+            </div>
+          </td>
+
+
+          <!-- =========================
+               STATUS
+          ========================== -->
+          <!-- <td>
+            <span
+              class="notification-list__status"
+              [class.notification-list__status--sent]="notification.status === 'SENT'"
+              [class.notification-list__status--pending]="notification.status === 'PENDING'"
+              [class.notification-list__status--delivered]="notification.status === 'DELIVERED'"
+              [class.notification-list__status--read]="notification.status === 'READ'"
+              [class.notification-list__status--failed]="notification.status === 'FAILED'"
+            >
+              {{ getStatusLabel(notification) }}
+            </span>
+          </td> -->
+
+
+          <!-- =========================
+               ACTION
+          ========================== -->
+          <!-- <td class="notification-list__actions-cell">
+
+            <button
+              type="button"
+              class="notification-list__view-button"
+              aria-label="Ver detalle de la notificación"
+              (click)="
+                $event.stopPropagation();
+                onNotificationClick(notification)
+              "
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"
+                />
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="2.5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+              </svg>
+            </button>
+
+          </td> -->
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
   </div>
 
-  <!-- PAGINACIÓN PROYECTADA DESDE EL PADRE -->
+
+  <!-- =========================
+       PAGINATION
+  ========================== -->
   <footer class="notification-list__footer">
     <ng-content
       select="[notification-list-pagination]"
     />
   </footer>
+
 </section>

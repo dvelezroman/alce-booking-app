@@ -1,0 +1,258 @@
+<div class="notifications-historial-page">
+  <div class="notifications-historial-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <app-notification-historial-header
+     (createNotification)="onCreateNotification()">
+    </app-notification-historial-header>
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+    <app-notification-historial-filters
+      [showFilters]="showFilters"
+      [fromDate]="fromDate"
+      [toDate]="toDate"
+      [statusFilter]="statusFilter"
+      [typeFilter]="typeFilter"
+      [scopeFilter]="scopeFilter"
+      [statusMap]="statusMap"
+      [typeMap]="typeMap"
+
+      (toggleFilters)="toggleFilters()"
+      (fromDateChange)="fromDate = $event"
+      (toDateChange)="toDate = $event"
+      (statusFilterChange)="statusFilter = $event"
+      (typeFilterChange)="typeFilter = $event"
+      (scopeFilterChange)="scopeFilter = $event"
+      (filterChange)="onFilterChange()"
+    ></app-notification-historial-filters>
+
+    <!-- =========================
+         CONTENT
+    ========================== -->
+    <section class="notifications-historial-page__content">
+
+      <!-- =========================
+           LOADING
+      ========================== -->
+      @if (loading) {
+
+        <div class="notifications-historial-page__skeleton">
+
+          <!-- TABLE HEADER -->
+          <div class="notifications-historial-page__skeleton-header">
+            <span
+              class="notifications-historial-page__skeleton-header-item notifications-historial-page__skeleton-header-item--title"
+            ></span>
+
+            <span
+              class="notifications-historial-page__skeleton-header-item"
+            ></span>
+
+            <span
+              class="notifications-historial-page__skeleton-header-item"
+            ></span>
+
+            <span
+              class="notifications-historial-page__skeleton-header-item notifications-historial-page__skeleton-header-item--sender"
+            ></span>
+
+            <span
+              class="notifications-historial-page__skeleton-header-item"
+            ></span>
+
+            <span
+              class="notifications-historial-page__skeleton-header-item"
+            ></span>
+
+            <span
+              class="notifications-historial-page__skeleton-header-item"
+            ></span>
+
+            <span
+              class="notifications-historial-page__skeleton-header-item notifications-historial-page__skeleton-header-item--action"
+            ></span>
+          </div>
+
+          <!-- TABLE ROWS -->
+          @for (row of [1, 2, 3, 4, 5, 6]; track row) {
+
+            <div class="notifications-historial-page__skeleton-row">
+
+              <!-- TITLE -->
+              <div class="notifications-historial-page__skeleton-notification">
+
+                <span
+                  class="notifications-historial-page__skeleton-circle"
+                ></span>
+
+                <div class="notifications-historial-page__skeleton-texts">
+
+                  <span
+                    class="notifications-historial-page__skeleton-line notifications-historial-page__skeleton-line--title"
+                  ></span>
+
+                  <span
+                    class="notifications-historial-page__skeleton-line notifications-historial-page__skeleton-line--description"
+                  ></span>
+
+                </div>
+
+              </div>
+
+              <!-- TYPE -->
+              <span
+                class="notifications-historial-page__skeleton-badge"
+              ></span>
+
+              <!-- SCOPE -->
+              <span
+                class="notifications-historial-page__skeleton-line notifications-historial-page__skeleton-line--scope"
+              ></span>
+
+              <!-- SENDER -->
+              <div class="notifications-historial-page__skeleton-sender">
+
+                <span
+                  class="notifications-historial-page__skeleton-avatar"
+                ></span>
+
+                <div class="notifications-historial-page__skeleton-texts">
+
+                  <span
+                    class="notifications-historial-page__skeleton-line notifications-historial-page__skeleton-line--sender-name"
+                  ></span>
+
+                  <span
+                    class="notifications-historial-page__skeleton-line notifications-historial-page__skeleton-line--sender-detail"
+                  ></span>
+
+                </div>
+
+              </div>
+
+              <!-- PRIORITY -->
+              <span
+                class="notifications-historial-page__skeleton-line notifications-historial-page__skeleton-line--priority"
+              ></span>
+
+              <!-- DATE -->
+              <div class="notifications-historial-page__skeleton-texts">
+
+                <span
+                  class="notifications-historial-page__skeleton-line notifications-historial-page__skeleton-line--date"
+                ></span>
+
+                <span
+                  class="notifications-historial-page__skeleton-line notifications-historial-page__skeleton-line--time"
+                ></span>
+
+              </div>
+
+              <!-- STATUS -->
+              <span
+                class="notifications-historial-page__skeleton-badge"
+              ></span>
+
+              <!-- ACTION -->
+              <span
+                class="notifications-historial-page__skeleton-action"
+              ></span>
+
+            </div>
+
+          }
+
+        </div>
+
+      } @else if (notifications.length > 0) {
+
+        <!-- =========================
+             TABLE
+        ========================== -->
+        <app-notification-historial-table
+          [notifications]="notifications"
+          [statusMap]="statusMap"
+          [typeMap]="typeMap"
+          [priorityMap]="priorityMap"
+          [formatDate]="formatDate"
+          [senderName]="senderName"
+          [scopeLabel]="scopeLabel"
+          (rowClick)="onRowClick($event)"
+        ></app-notification-historial-table>
+
+        <!-- =========================
+             PAGINATION
+        ========================== -->
+        <app-notification-historial-pagination
+            [page]="page"
+            [limit]="limit"
+            [total]="total"
+            [startIndex]="startIndex"
+            [endIndex]="endIndex"
+            (prev)="onPrev()"
+            (next)="onNext()"
+            (pageChange)="onPageChange($event)"
+            ></app-notification-historial-pagination>
+
+      } @else {
+
+        <!-- =========================
+             EMPTY
+        ========================== -->
+        <div class="notifications-historial-page__empty">
+
+          <div
+            class="notifications-historial-page__empty-icon"
+            aria-hidden="true"
+          >
+            <svg
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M3 12a9 9 0 1 0 3-6.7"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M3 4.5v5h5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M12 7v5l3 2"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+
+          <h3 class="notifications-historial-page__empty-title">
+            No hay notificaciones en el historial
+          </h3>
+
+          <p class="notifications-historial-page__empty-description">
+            No encontramos notificaciones que coincidan con los filtros seleccionados.
+          </p>
+
+        </div>
+
+      }
+
+    </section>
+
+  </div>
+</div>

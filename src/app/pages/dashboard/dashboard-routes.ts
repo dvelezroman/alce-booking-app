@@ -70,6 +70,8 @@ import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.co
 import { SearchingMeetingInstructorV2Component } from './searching-meeting-instructor-v2/searching-meeting-instructor-v2.component';
 import { ReportsProgressV2Component } from './report-progress-v2/reports-progress-v2.component';
 import { BroadcastGroupsV2Component } from './notifications/broadcast-groups-v2/broadcast-groups-v2.component';
+import { NotificationsSentV2Component } from './notifications/notifications-sent-v2/notifications-sent-v2.component';
+import { NotificationsHistorialComponent } from './notifications/notifications-historial/notifications-historial.component';
 
 const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -163,11 +165,13 @@ const dashboardChildren: Routes = [
   { path: 'platform-assessments-templates/:templateId', component: PlatformAssessmentsTemplateDetailComponent },
   { path: 'processed-events', component: ProcessedEventsComponent },
   { path: 'notifications-status', component: NotificationsStatusComponent },
+  { path: 'notifications-historial', component: NotificationsHistorialComponent },
   { path: 'notifications-groups', component: GroupsComponent },
   { path: 'notifications-inbox', component: InboxComponent },
   { path: 'notifications-detail', component: NotificationDetailComponent },
   { path: 'notifications-detail-v2', component: NotificationDetailV2Component },
   { path: 'notifications-sent', component: NotificationsSentComponent },
+  { path: 'notifications-sent-v2', component: NotificationsSentV2Component },
   { path: 'send-emails', component: SendEmailsComponent },
   { path: 'sent-email', component: SentEmailComponent },
   { path: 'inbox-email', component: InboxEmailComponent },
