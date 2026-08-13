@@ -1,0 +1,159 @@
+<div class="searching-meeting-page">
+  <div class="searching-meeting-page__container">
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <app-searching-meeting-header
+      [selectedCount]="totalSelectedMeetings"
+      (assignRequested)="openModal()"
+    ></app-searching-meeting-header>
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+    <app-searching-meeting-filters
+      [filter]="filter"
+      [availableHours]="availableHours"
+      [stages]="stages"
+      [ageGroupOptions]="ageGroupOptions"
+      [modeOptions]="mode"
+      (filterChange)="onFilterChange()"
+      (clearFilters)="onClearFilters()"
+    ></app-searching-meeting-filters>
+
+    <!-- =========================
+         WORKSPACE
+    ========================== -->
+    <div class="searching-meeting-page__workspace">
+      <!-- =========================
+           LEFT / MEETINGS
+      ========================== -->
+      <main class="searching-meeting-page__main">
+        @if (isLoadingMeetings) {
+          <div class="searching-meeting-page__table-skeleton">
+            <!-- HEADER -->
+            <div class="searching-meeting-page__table-skeleton-header">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+
+            <!-- ROWS -->
+            @for (row of [1, 2, 3, 4, 5, 6, 7, 8]; track row) {
+              <div class="searching-meeting-page__table-skeleton-row">
+                <span
+                  class="searching-meeting-page__table-skeleton-checkbox"
+                ></span>
+
+                <div class="searching-meeting-page__table-skeleton-lines">
+                  <span></span>
+                  <span></span>
+                </div>
+
+                <div class="searching-meeting-page__table-skeleton-lines">
+                  <span></span>
+                  <span></span>
+                </div>
+
+                <span
+                  class="searching-meeting-page__table-skeleton-badge"
+                ></span>
+
+                <span
+                  class="searching-meeting-page__table-skeleton-badge"
+                ></span>
+
+                <span
+                  class="searching-meeting-page__table-skeleton-badge"
+                ></span>
+
+                <span
+                  class="searching-meeting-page__table-skeleton-line"
+                ></span>
+
+                <span
+                  class="searching-meeting-page__table-skeleton-badge"
+                ></span>
+
+                <div class="searching-meeting-page__table-skeleton-lines">
+                  <span></span>
+                  <span></span>
+                </div>
+
+                <span
+                  class="searching-meeting-page__table-skeleton-line"
+                ></span>
+              </div>
+            }
+          </div>
+        } @else {
+          <app-searching-meeting-table
+            [meetings]="paginatedMeetings"
+            [selectedMeetingIds]="selectedMeetingIds"
+            [getStudentDisplayName]="getStudentDisplayName"
+            [getInstructorDisplayName]="getInstructorDisplayName"
+            [isNewUser]="isNewUser"
+            (selectionChange)="toggleSelection($event)"
+            (selectAllChange)="onSelectAllVisible($event)"
+          ></app-searching-meeting-table>
+
+          <app-searching-meeting-pagination
+            *ngIf="totalMeetings > 0"
+            [page]="page"
+            [limit]="limit"
+            [total]="totalMeetings"
+            [startIndex]="startIndex"
+            [endIndex]="endIndex"
+            (prev)="onPrevPage()"
+            (next)="onNextPage()"
+            (pageChange)="onPageChange($event)"
+            (limitChange)="onLimitChange($event)"
+          ></app-searching-meeting-pagination>
+        }
+      </main>
+
+      <!-- =========================
+           RIGHT / ASIDE
+      ========================== -->
+      <aside class="searching-meeting-page__aside">
+        <!-- SELECCIÓN ACTUAL -->
+        <app-searching-meeting-selection-summary
+          [selectedCount]="totalSelectedMeetings"
+          [disabled]="totalSelectedMeetings === 0"
+          (assignRequested)="assignLink()"
+        ></app-searching-meeting-selection-summary>
+
+        <!-- ASIGNACIÓN -->
+        <app-searching-meeting-assignment-form
+          [instructors]="instructorList"
+          [selectedInstructor]="selectedInstructor"
+          [selectedCount]="totalSelectedMeetings"
+          (selectedInstructorChange)="selectedInstructor = $event"
+          (assignRequested)="assignLink()"
+        ></app-searching-meeting-assignment-form>
+      </aside>
+    </div>
+  </div>
+
+
+  <!-- =========================
+       FEEDBACK MODAL
+  ========================== -->
+  <app-modal
+    [showModal]="modalConfig.show"
+    [message]="modalConfig.message"
+    [isError]="modalConfig.isError"
+    [isSuccess]="modalConfig.isSuccess"
+    [isInfo]="modalConfig.isInfo"
+    [showButtons]="modalConfig.confirm !== undefined"
+    (confirmAction)="modalConfig.confirm && modalConfig.confirm()"
+    (close)="modalConfig.close()"
+  />
+</div>

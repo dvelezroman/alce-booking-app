@@ -72,6 +72,7 @@ import { ReportsProgressV2Component } from './report-progress-v2/reports-progres
 import { BroadcastGroupsV2Component } from './notifications/broadcast-groups-v2/broadcast-groups-v2.component';
 import { NotificationsSentV2Component } from './notifications/notifications-sent-v2/notifications-sent-v2.component';
 import { NotificationsHistorialComponent } from './notifications/notifications-historial/notifications-historial.component';
+import { SearchingMeetingV2Component } from './searching-meeting-v2/searching-meeting-v2.component';
 
 const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -91,6 +92,7 @@ const dashboardChildren: Routes = [
   { path: 'meeting-evaluations', component: MeetingEvaluationsComponent },
   { path: 'evaluation-statistics', component: EvaluationStatisticsComponent },
   { path: 'searching-meeting', component: SearchingMeetingComponent },
+  { path: 'searching-meeting-v2', component: SearchingMeetingV2Component },
   { path: 'searching-meeting-instructor', component: SearchingMeetingInstructorComponent },
   { path: 'searching-meeting-instructor-v2', component: SearchingMeetingInstructorV2Component },
   {

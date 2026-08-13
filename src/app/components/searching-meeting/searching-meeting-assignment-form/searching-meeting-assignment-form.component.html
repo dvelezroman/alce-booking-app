@@ -1,0 +1,239 @@
+<section class="searching-meeting-assignment">
+
+  <!-- =========================
+       TITLE
+  ========================== -->
+  <h2 class="searching-meeting-assignment__title">
+    Asignar a instructor
+  </h2>
+
+
+  <!-- =========================
+       INSTRUCTOR
+  ========================== -->
+  <div class="searching-meeting-assignment__field">
+
+    <label
+      class="searching-meeting-assignment__label"
+      for="searching-meeting-instructor"
+    >
+      Instructor
+    </label>
+
+    <div class="searching-meeting-assignment__instructor-control">
+
+      @if (selectedInstructor) {
+
+        <div class="searching-meeting-assignment__instructor-avatar">
+          {{ getInstructorInitials(selectedInstructor) }}
+        </div>
+
+        <div class="searching-meeting-assignment__instructor-info">
+
+          <strong class="searching-meeting-assignment__instructor-name">
+            {{ getInstructorName(selectedInstructor) }}
+          </strong>
+
+          <span class="searching-meeting-assignment__instructor-secondary">
+            {{ getInstructorSubtitle(selectedInstructor) }}
+          </span>
+
+        </div>
+
+      } @else {
+
+        <div class="searching-meeting-assignment__instructor-avatar searching-meeting-assignment__instructor-avatar--empty">
+          IN
+        </div>
+
+        <div class="searching-meeting-assignment__instructor-info">
+
+          <strong class="searching-meeting-assignment__instructor-name">
+            Selecciona un instructor
+          </strong>
+
+          <span class="searching-meeting-assignment__instructor-secondary">
+            Instructor disponible
+          </span>
+
+        </div>
+
+      }
+
+      <select
+        id="searching-meeting-instructor"
+        class="searching-meeting-assignment__select"
+        [value]="selectedInstructor?.id || ''"
+        (change)="onInstructorChange($any($event.target).value)"
+      >
+        <option value="">
+          Selecciona un instructor
+        </option>
+
+        <option
+          *ngFor="
+            let instructor of instructors;
+            trackBy: trackByInstructorId
+          "
+          [value]="instructor.id"
+        >
+          {{ getInstructorName(instructor) }}
+        </option>
+      </select>
+
+      <svg
+        class="searching-meeting-assignment__select-chevron"
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m6 9 6 6 6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       MEETING LINK
+  ========================== -->
+  <div class="searching-meeting-assignment__field">
+
+    <label
+      class="searching-meeting-assignment__label"
+      for="searching-meeting-link"
+    >
+      Enlace de reunión
+    </label>
+
+    <div class="searching-meeting-assignment__input-wrapper">
+
+      <input
+        id="searching-meeting-link"
+        type="text"
+        class="searching-meeting-assignment__input searching-meeting-assignment__input--link"
+        [value]="meetingLink"
+        placeholder="https://zoom.us/j/1234567890"
+        readonly
+      />
+
+      <a
+        *ngIf="meetingLink"
+        class="searching-meeting-assignment__external-link"
+        [href]="meetingLink"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Abrir enlace de reunión"
+      >
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M14 4h6v6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m20 4-9 9"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       PASSWORD
+  ========================== -->
+  <div class="searching-meeting-assignment__field">
+
+    <label
+      class="searching-meeting-assignment__label"
+      for="searching-meeting-password"
+    >
+      Contraseña
+      <span class="searching-meeting-assignment__label-muted">
+        (opcional)
+      </span>
+    </label>
+
+    <input
+      id="searching-meeting-password"
+      type="text"
+      class="searching-meeting-assignment__input"
+      [value]="meetingPassword"
+      placeholder="Contraseña de la reunión"
+      readonly
+    />
+
+  </div>
+
+
+  <!-- =========================
+       INFO
+  ========================== -->
+  <div class="searching-meeting-assignment__info">
+
+    <span
+      class="searching-meeting-assignment__info-icon"
+      aria-hidden="true"
+    >
+      <svg
+        width="21"
+        height="21"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M12 3 20 6v5c0 5.1-3.1 8.6-8 10-4.9-1.4-8-4.9-8-10V6l8-3Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="m8.5 12 2.2 2.2 4.8-5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+
+    <p class="searching-meeting-assignment__info-text">
+      El enlace y la contraseña se asignarán a todas las reuniones seleccionadas.
+    </p>
+
+  </div>
+
+</section>

@@ -1,0 +1,159 @@
+<div class="searching-meeting-pagination">
+
+  <!-- =========================
+       INFO
+  ========================== -->
+  <div class="searching-meeting-pagination__info">
+    Mostrando
+    {{ startIndex }}
+    a
+    {{ endIndex }}
+    de
+    {{ total }}
+    resultados
+  </div>
+
+
+  <!-- =========================
+       CONTROLS
+  ========================== -->
+  <div class="searching-meeting-pagination__controls">
+
+    <!-- LIMIT -->
+    <!-- <label class="searching-meeting-pagination__limit">
+      <select
+        [value]="limit"
+        (change)="onLimitChange($event)"
+      >
+        <option [value]="10">
+          10 por página
+        </option>
+
+        <option [value]="20">
+          20 por página
+        </option>
+
+        <option [value]="50">
+          50 por página
+        </option>
+      </select>
+
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m6 9 6 6 6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </label> -->
+
+
+    <!-- PAGES -->
+    <div class="searching-meeting-pagination__pages">
+
+      <!-- PREV -->
+      <button
+        type="button"
+        class="searching-meeting-pagination__arrow"
+        [disabled]="!canGoPrev"
+        (click)="onPrev()"
+        aria-label="Página anterior"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m15 18-6-6 6-6"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+
+      <!-- PAGE NUMBERS -->
+      @for (pageNumber of visiblePages; track pageNumber) {
+
+        <button
+          type="button"
+          class="searching-meeting-pagination__page"
+          [class.searching-meeting-pagination__page--active]="pageNumber === page"
+          (click)="onPageChange(pageNumber)"
+        >
+          {{ pageNumber }}
+        </button>
+
+      }
+
+
+      <!-- ELLIPSIS -->
+      @if (
+        totalPages > 6 &&
+        visiblePages[visiblePages.length - 1] < totalPages - 1
+      ) {
+        <span class="searching-meeting-pagination__ellipsis">
+          ...
+        </span>
+      }
+
+
+      <!-- LAST PAGE -->
+      @if (
+        totalPages > 5 &&
+        visiblePages[visiblePages.length - 1] < totalPages
+      ) {
+        <button
+          type="button"
+          class="searching-meeting-pagination__page"
+          [class.searching-meeting-pagination__page--active]="page === totalPages"
+          (click)="onPageChange(totalPages)"
+        >
+          {{ totalPages }}
+        </button>
+      }
+
+
+      <!-- NEXT -->
+      <button
+        type="button"
+        class="searching-meeting-pagination__arrow"
+        [disabled]="!canGoNext"
+        (click)="onNext()"
+        aria-label="Página siguiente"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m9 18 6-6-6-6"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
