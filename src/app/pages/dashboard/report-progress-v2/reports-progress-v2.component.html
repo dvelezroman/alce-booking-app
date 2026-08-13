@@ -1,0 +1,206 @@
+<section class="reports-progress-v2">
+
+  <div class="reports-progress-v2__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="reports-progress-v2__header">
+
+      <div class="reports-progress-v2__heading">
+
+        <h1 class="reports-progress-v2__title">
+          Reporte de progreso
+        </h1>
+
+        <p class="reports-progress-v2__description">
+          Consulta el avance académico del estudiante por stage,
+          contenidos trabajados e historial de actividades.
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="reports-progress-v2__help"
+        title="Ayuda"
+      >
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M9.8 9.2a2.4 2.4 0 0 1 4.6 1c0 1.8-2.4 2-2.4 3.8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="12"
+            cy="17"
+            r="1"
+            fill="currentColor"
+          />
+        </svg>
+
+        <span>
+          Ayuda
+        </span>
+      </button>
+
+    </header>
+
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+
+    <app-report-progress-filters
+      [stages]="stages"
+      (filtersSubmitted)="onFiltersSubmitted($event)"
+    />
+
+
+    <!-- =========================
+         RESULTS
+    ========================== -->
+
+    <ng-container *ngIf="searchExecuted">
+
+      <!-- =========================
+           STUDENT SUMMARY
+      ========================== -->
+
+      <app-student-progress-summary
+        [studentId]="selectedStudentId"
+        [currentStage]="currentStage"
+        [studentStageDescription]="studentStageDescription"
+        [studentCurrentStageProgress]="studentCurrentStageProgress"
+        [studentStageContents]="studentStageContents"
+        [studentContentHistory]="studentContentHistory"
+      />
+
+
+      <!-- =========================
+           STAGE NAVIGATION
+      ========================== -->
+
+      <app-stage-navigation
+        [stages]="stages"
+        [currentStage]="currentStage"
+        [currentStageIndex]="currentStageIndex"
+        [studentCurrentStageProgress]="studentCurrentStageProgress"
+        [canGoPrevious]="canGoPrevious"
+        [canGoNext]="canGoNext"
+        (previousStage)="goToPreviousStage()"
+        (nextStage)="goToNextStage()"
+      />
+
+
+      <!-- =========================
+           MAIN CONTENT
+      ========================== -->
+
+      <div class="reports-progress-v2__workspace">
+
+        <!-- =========================
+             STAGE CONTENT
+        ========================== -->
+
+        <app-stage-content-list
+          [currentStage]="currentStage"
+          [studentStageContents]="studentStageContents"
+          [studentContentHistory]="studentContentHistory"
+          [studentCurrentStageProgress]="studentCurrentStageProgress"
+          (hasVisibleResults)="onHasVisibleResults($event)"
+        />
+
+
+        <!-- =========================
+             PROGRESS HISTORY
+        ========================== -->
+
+        <app-progress-history-list
+          [studentContentHistory]="studentContentHistory"
+          [stages]="stages"
+          [currentStage]="currentStage"
+        />
+
+      </div>
+
+
+      <!-- =========================
+           INFO
+      ========================== -->
+
+      <app-report-progress-info
+        [currentStage]="currentStage"
+        [studentCurrentStageProgress]="studentCurrentStageProgress"
+      />
+
+    </ng-container>
+
+
+    <!-- =========================
+         INITIAL EMPTY STATE
+    ========================== -->
+
+    <div
+      *ngIf="!searchExecuted"
+      class="reports-progress-v2__empty"
+    >
+
+      <div
+        class="reports-progress-v2__empty-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M5 19V10M10 19V5M15 19v-7M20 19V8"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M4 19h17"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <h2 class="reports-progress-v2__empty-title">
+        Consulta el progreso de un estudiante
+      </h2>
+
+      <p class="reports-progress-v2__empty-description">
+        Selecciona un estudiante y aplica los filtros para visualizar
+        su avance académico por stage.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>

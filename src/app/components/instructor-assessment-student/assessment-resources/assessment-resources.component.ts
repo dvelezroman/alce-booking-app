@@ -8,7 +8,6 @@ import {
   AssessmentResourceI,
 } from '../../../services/dtos/assessment-resources.dto';
 
-
 @Component({
   selector: 'app-assessment-resources',
   standalone: true,
@@ -31,6 +30,9 @@ export class AssessmentResourcesComponent {
      STATE
   ========================= */
 
+  isExpanded: boolean = false;
+
+
   get hasResources(): boolean {
     return this.resources.length > 0;
   }
@@ -38,6 +40,15 @@ export class AssessmentResourcesComponent {
 
   get totalResources(): number {
     return this.resources.length;
+  }
+
+
+  /* =========================
+     EXPAND / COLLAPSE
+  ========================= */
+
+  toggleResources(): void {
+    this.isExpanded = !this.isExpanded;
   }
 
 

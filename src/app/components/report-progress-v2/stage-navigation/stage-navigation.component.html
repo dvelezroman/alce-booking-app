@@ -1,0 +1,198 @@
+<section class="stage-navigation">
+
+  <!-- =========================
+       TITLE
+  ========================== -->
+
+  <h2 class="stage-navigation__title">
+    Navegación del stages
+  </h2>
+
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  <div class="stage-navigation__content">
+
+    <!-- =========================
+         PREVIOUS
+    ========================== -->
+
+    <button
+      type="button"
+      class="stage-navigation__button"
+      [disabled]="!canGoPrevious"
+      (click)="goPrevious()"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M19 12H5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="m11 6-6 6 6 6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+      <span>
+        Stage anterior
+      </span>
+    </button>
+
+
+    <!-- =========================
+         CENTER
+    ========================== -->
+
+    <div class="stage-navigation__center">
+
+      <!-- STAGE TITLE -->
+
+      <div class="stage-navigation__stage">
+
+        <span
+          class="stage-navigation__stage-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="23"
+            height="23"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M3.5 5.5c2.8-.9 5.5-.4 8.5 1.5v13c-3-1.9-5.7-2.4-8.5-1.5v-13Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M20.5 5.5c-2.8-.9-5.5-.4-8.5 1.5v13c3-1.9 5.7-2.4 8.5-1.5v-13Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M12 7v13"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+          </svg>
+        </span>
+
+
+        <strong class="stage-navigation__stage-title">
+          {{ stageTitle }}
+        </strong>
+
+      </div>
+
+
+      <!-- PROGRESS -->
+
+      <div class="stage-navigation__progress-row">
+
+        <div class="stage-navigation__progress-track">
+
+          <div
+            class="stage-navigation__progress-bar"
+            [style.width.%]="progressValue"
+          ></div>
+
+        </div>
+
+
+        <strong class="stage-navigation__progress-value">
+          {{ formattedProgress }}
+        </strong>
+
+      </div>
+
+
+      <!-- DOTS -->
+
+      <div
+        *ngIf="totalStages > 0"
+        class="stage-navigation__dots"
+      >
+
+        <span
+          *ngFor="
+            let stageIndex of stageDots;
+            trackBy: trackByStageDot
+          "
+          class="stage-navigation__dot"
+          [class.stage-navigation__dot--current]="
+            isCurrentStageDot(stageIndex)
+          "
+          [class.stage-navigation__dot--previous]="
+            isPreviousStageDot(stageIndex)
+          "
+          [attr.aria-label]="
+            'Stage ' + (stageIndex + 1)
+          "
+        ></span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         NEXT
+    ========================== -->
+
+    <button
+      type="button"
+      class="stage-navigation__button"
+      [disabled]="!canGoNext"
+      (click)="goNext()"
+    >
+      <span>
+        Siguiente stage
+      </span>
+
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M5 12h14"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="m13 6 6 6-6 6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+    </button>
+
+  </div>
+
+</section>

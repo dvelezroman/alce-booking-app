@@ -95,7 +95,8 @@ navItems: SidebarNavItem[] = [
   { icon: 'reportes', text: 'Licencias', route: '/dashboard/suspension-history', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Usuario', route: '/dashboard/report-user', roles: [UserRole.ADMIN] },
   { icon: 'excel', text: 'Inasistencias / info. de Usuarios', route: '/dashboard/report-excel', roles: [UserRole.ADMIN] },
-  { icon: 'reportes', text: 'Progreso', route: '/dashboard/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
+  // { icon: 'reportes', text: 'Progreso', route: '/dashboard/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
+  { icon: 'reportes', text: 'Progreso del estudiante', route: '/dashboard/reports-progress-v2', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Evaluar Estudiante', route: '/dashboard/assessment', roles: [UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Asignar Evaluación', route: '/dashboard/stage-assessment', roles: [UserRole.ADMIN] },
   { icon: 'test', text: 'Evaluaciones Asignadas', route: '/dashboard/stage-assessment-list', roles: [UserRole.ADMIN] },
@@ -272,7 +273,8 @@ navItems: SidebarNavItem[] = [
           ].filter(item => item.roles.includes(role)),
         },
 
-        this.findNavItemByRoute('/dashboard/reports-progress'),
+        // this.findNavItemByRoute('/dashboard/reports-progress'),
+        this.findNavItemByRoute('/dashboard/reports-progress-v2'),
         this.findNavItemByRoute('/dashboard/assessment-reports'),
         this.findNavItemByRoute('/dashboard/suspension-history'),
       ].filter(entry => {

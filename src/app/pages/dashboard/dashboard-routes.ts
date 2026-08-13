@@ -68,6 +68,7 @@ import { MeetingBookingV2Component } from './meeting-booking-v2/meeting-booking-
 import { NotificationDetailV2Component } from './notifications/notification-detail-v2/notification-detail-v2.component';
 import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.component';
 import { SearchingMeetingInstructorV2Component } from './searching-meeting-instructor-v2/searching-meeting-instructor-v2.component';
+import { ReportsProgressV2Component } from './report-progress-v2/reports-progress-v2.component';
 
 const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -141,7 +142,8 @@ const dashboardChildren: Routes = [
   { path: 'reports-detailed', component: ReportsDetailedComponent },
   { path: 'student-history-report', component: StudentHistoryReportComponent },
   { path: 'active-students-report', component: ActiveStudentsReportComponent },
-  { path: 'reports-progress', component: ReportsProgressComponent },
+  // { path: 'reports-progress', component: ReportsProgressComponent },
+  { path: 'reports-progress-v2', component: ReportsProgressV2Component },
   { path: 'suspension-history', component: SuspensionHistoryComponent },
   { path: 'report-user', component: ReportUserComponent },
   { path: 'report-excel', component: ReportsExcelPageComponent },

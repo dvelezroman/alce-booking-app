@@ -1,0 +1,329 @@
+<section class="progress-history-list">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <div class="progress-history-list__header">
+
+    <div
+      class="progress-history-list__header-icon"
+      aria-hidden="true"
+    >
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="8.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M12 7.5V12l3 2"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+
+    <div class="progress-history-list__header-text">
+
+      <h2 class="progress-history-list__title">
+        Historial de actividad
+      </h2>
+
+      <p class="progress-history-list__description">
+        Historial de actividades en las que el estudiante trabajó los contenidos
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  <ng-container *ngIf="hasHistory; else emptyHistory">
+
+    <!-- =========================
+         COLUMNS
+    ========================== -->
+
+    <div class="progress-history-list__columns">
+
+      <span>
+        Fecha y hora
+      </span>
+
+      <span>
+        Stage
+      </span>
+
+      <span>
+        Contenido
+      </span>
+
+      <span>
+        Instructor
+      </span>
+
+      <span>
+        Detalle
+      </span>
+
+    </div>
+
+
+    <!-- =========================
+         ROWS
+    ========================== -->
+
+    <div class="progress-history-list__rows">
+
+      <div
+        *ngFor="
+          let row of currentStageHistory;
+          trackBy: trackByHistoryRow
+        "
+        class="progress-history-list__row"
+      >
+
+        <!-- =========================
+             DATE
+        ========================== -->
+
+        <div
+          class="
+            progress-history-list__cell
+            progress-history-list__cell--date
+          "
+        >
+
+          <strong class="progress-history-list__date">
+            {{ formatDate(row.date) }}
+          </strong>
+
+          <span class="progress-history-list__hour">
+            {{ formatHour(row.date) }}
+          </span>
+
+        </div>
+
+
+        <!-- =========================
+             STAGE
+        ========================== -->
+
+        <div class="progress-history-list__cell">
+
+          <span class="progress-history-list__stage">
+            {{ row.stageLabel }}
+          </span>
+
+        </div>
+
+
+        <!-- =========================
+             CONTENT
+        ========================== -->
+
+        <div
+          class="
+            progress-history-list__cell
+            progress-history-list__cell--content
+          "
+        >
+
+          <span
+            class="progress-history-list__content-title"
+            [title]="row.contentTitle"
+          >
+            {{ row.contentTitle }}
+          </span>
+
+        </div>
+
+
+        <!-- =========================
+             INSTRUCTOR
+        ========================== -->
+
+        <div
+          class="
+            progress-history-list__cell
+            progress-history-list__cell--instructor
+          "
+        >
+
+          <span
+            class="progress-history-list__instructor-avatar"
+            aria-hidden="true"
+          >
+            {{ row.instructorInitials }}
+          </span>
+
+
+          <span
+            class="progress-history-list__instructor-name"
+            [title]="row.instructorName"
+          >
+            {{ row.instructorName }}
+          </span>
+
+        </div>
+
+
+        <!-- =========================
+             DETAIL
+        ========================== -->
+
+        <div
+          class="
+            progress-history-list__cell
+            progress-history-list__cell--detail
+          "
+        >
+
+          <button
+            type="button"
+            class="progress-history-list__detail-button"
+            aria-label="Ver detalle de la actividad"
+            title="Ver detalle"
+          >
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M2.8 12s3.4-5.5 9.2-5.5 9.2 5.5 9.2 5.5-3.4 5.5-9.2 5.5S2.8 12 2.8 12Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <circle
+                cx="12"
+                cy="12"
+                r="2.4"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+            </svg>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <!-- <div class="progress-history-list__footer">
+
+      <button
+        type="button"
+        class="progress-history-list__view-all"
+      >
+
+        <span>
+          Ver historial completo
+        </span>
+
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M5 12h14"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="m13 6 6 6-6 6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </button>
+
+    </div> -->
+
+  </ng-container>
+
+
+  <!-- =========================
+       EMPTY STATE
+  ========================== -->
+
+  <ng-template #emptyHistory>
+
+    <div class="progress-history-list__empty">
+
+      <div
+        class="progress-history-list__empty-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 7.5V12l3 2"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+
+
+      <h3 class="progress-history-list__empty-title">
+        Sin actividad registrada
+      </h3>
+
+      <p class="progress-history-list__empty-description">
+        No se encontraron actividades del estudiante para {{ currentStageLabel }}.
+      </p>
+
+    </div>
+
+  </ng-template>
+
+</section>

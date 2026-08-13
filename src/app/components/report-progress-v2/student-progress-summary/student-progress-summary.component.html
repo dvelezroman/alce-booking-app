@@ -1,0 +1,340 @@
+<section class="student-progress-summary">
+
+  <!-- =========================
+       TITLE
+  ========================== -->
+
+  <h2 class="student-progress-summary__title">
+    Información del estudiante
+  </h2>
+
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  <div class="student-progress-summary__content">
+
+    <!-- =========================
+         STUDENT
+    ========================== -->
+
+    <div class="student-progress-summary__student">
+
+      <div
+        class="student-progress-summary__student-avatar"
+        aria-hidden="true"
+      >
+        ES
+      </div>
+
+
+      <div class="student-progress-summary__student-info">
+
+        <strong class="student-progress-summary__student-name">
+          Estudiante
+        </strong>
+
+        <span class="student-progress-summary__student-email">
+          Información del estudiante
+        </span>
+
+        <span class="student-progress-summary__student-id">
+          ID: {{ studentIdLabel }}
+        </span>
+
+
+        <span class="student-progress-summary__status">
+          <span
+            class="student-progress-summary__status-dot"
+            aria-hidden="true"
+          ></span>
+
+          Activo
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- DIVIDER -->
+
+    <div class="student-progress-summary__divider"></div>
+
+
+    <!-- =========================
+         STAGE
+    ========================== -->
+
+    <div class="student-progress-summary__stage">
+
+      <span class="student-progress-summary__section-label">
+        Stage seleccionado
+      </span>
+
+
+      <div class="student-progress-summary__stage-content">
+
+        <div
+          class="student-progress-summary__stage-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m12 3 7 4-7 4-7-4 7-4Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="m5 7 7 4 7-4v10l-7 4-7-4V7Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M12 11v10"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+          </svg>
+        </div>
+
+
+        <div class="student-progress-summary__stage-info">
+
+          <strong class="student-progress-summary__stage-title">
+            {{ stageTitle }}
+          </strong>
+
+          <span class="student-progress-summary__stage-description">
+            {{ stageDescription }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- DIVIDER -->
+
+    <div class="student-progress-summary__divider"></div>
+
+
+    <!-- =========================
+         PROGRESS
+    ========================== -->
+
+    <div class="student-progress-summary__progress">
+
+      <span class="student-progress-summary__section-label">
+        Progreso en este stage
+      </span>
+
+
+      <div class="student-progress-summary__progress-content">
+
+        <!-- CIRCLE -->
+
+        <div
+          class="student-progress-summary__progress-circle"
+          [style.--progress]="progressValue"
+        >
+
+          <div class="student-progress-summary__progress-circle-inner">
+
+            <strong>
+              {{ formattedProgress }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- INFORMATION -->
+
+        <div class="student-progress-summary__progress-info">
+
+          <strong class="student-progress-summary__progress-value">
+            {{ formattedProgress }}
+          </strong>
+
+          <span class="student-progress-summary__progress-title">
+            Progreso total
+          </span>
+
+          <span class="student-progress-summary__progress-description">
+            Avance del estudiante en este stage
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         REPORT SUMMARY
+    ========================== -->
+
+    <div class="student-progress-summary__report">
+
+      <!-- DATE -->
+
+      <div class="student-progress-summary__report-item">
+
+        <span
+          class="student-progress-summary__report-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="3.5"
+              y="5.5"
+              width="17"
+              height="15"
+              rx="2.2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M7 3.5v4M17 3.5v4M3.5 9.5h17"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+
+        <div class="student-progress-summary__report-info">
+
+          <span class="student-progress-summary__report-label">
+            Fecha del reporte
+          </span>
+
+          <strong class="student-progress-summary__report-value">
+            {{ reportDate }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- TOTAL CONTENT -->
+
+      <div class="student-progress-summary__report-item">
+
+        <span
+          class="student-progress-summary__report-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m12 3 8 4-8 4-8-4 8-4Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="m4 11 8 4 8-4M4 15l8 4 8-4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+
+        <div class="student-progress-summary__report-info">
+
+          <span class="student-progress-summary__report-label">
+            Total de contenidos
+          </span>
+
+          <strong class="student-progress-summary__report-value">
+            {{ totalContents }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- COMPLETED -->
+
+      <div class="student-progress-summary__report-item">
+
+        <span
+          class="student-progress-summary__report-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m8.5 12 2.2 2.2 4.8-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+
+        <div class="student-progress-summary__report-info">
+
+          <span class="student-progress-summary__report-label">
+            Contenidos completados
+          </span>
+
+          <strong class="student-progress-summary__report-value">
+            {{ completedContents }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

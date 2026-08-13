@@ -1,0 +1,556 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   PAGE
+========================= */
+
+.reports-progress-v2 {
+  width: calc(100% - 76px);
+  min-height: 100vh;
+
+  margin-left: 64px;
+
+  padding:
+    1rem
+    1rem
+    2rem;
+
+  overflow-x: hidden;
+
+  background: #ffffff;
+}
+
+.reports-progress-v2__container {
+  width: min(100%, 1450px);
+
+  margin: 0 auto;
+
+  padding:
+    1.25rem
+    1.25rem
+    2rem;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.reports-progress-v2__header {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+}
+
+.reports-progress-v2__heading {
+  min-width: 0;
+}
+
+.reports-progress-v2__title {
+  margin: 0;
+
+  color: #171d34;
+
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.reports-progress-v2__description {
+  max-width: 44rem;
+
+  margin:
+    .3rem
+    0
+    0;
+
+  color: #7a8295;
+
+  font-size: .78rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+
+/* =========================
+   HELP
+========================= */
+
+.reports-progress-v2__help {
+  min-height: 2.4rem;
+
+  padding:
+    .48rem
+    .8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .4rem;
+
+  flex: 0 0 auto;
+
+  border: 1px solid #dfe3ec;
+  border-radius: .5rem;
+
+  background: #ffffff;
+  color: #46506b;
+
+  font-family: inherit;
+  font-size: .68rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    transform 100ms ease;
+}
+
+.reports-progress-v2__help:hover {
+  background: #f7f7fa;
+  border-color: #d4d8e3;
+
+  color: #2f374b;
+}
+
+.reports-progress-v2__help:active {
+  transform: scale(.97);
+}
+
+.reports-progress-v2__help svg {
+  flex: 0 0 auto;
+}
+
+
+/* =========================
+   COMPONENT HOSTS
+========================= */
+
+app-report-progress-filters,
+app-student-progress-summary,
+app-stage-navigation,
+app-stage-content-list,
+app-progress-history-list,
+app-report-progress-info {
+  display: block;
+
+  width: 100%;
+}
+
+
+/* =========================
+   FILTERS
+========================= */
+
+app-report-progress-filters {
+  margin-bottom: .85rem;
+}
+
+
+/* =========================
+   STUDENT SUMMARY
+========================= */
+
+app-student-progress-summary {
+  margin-bottom: .85rem;
+}
+
+
+/* =========================
+   STAGE NAVIGATION
+========================= */
+
+app-stage-navigation {
+  margin-bottom: .85rem;
+}
+
+
+/* =========================
+   WORKSPACE
+========================= */
+
+.reports-progress-v2__workspace {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  align-items: stretch;
+
+  gap: .85rem;
+
+  margin-bottom: .85rem;
+}
+
+.reports-progress-v2__workspace
+app-stage-content-list,
+.reports-progress-v2__workspace
+app-progress-history-list {
+  min-width: 0;
+}
+
+
+/* =========================
+   INFO
+========================= */
+
+app-report-progress-info {
+  margin-top: 0;
+}
+
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.reports-progress-v2__empty {
+  width: 100%;
+  min-height: 18rem;
+
+  margin-top: .85rem;
+
+  padding:
+    2rem
+    1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px dashed #d9dde7;
+  border-radius: .75rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #fbfbfe 100%
+    );
+
+  text-align: center;
+}
+
+.reports-progress-v2__empty-icon {
+  width: 4rem;
+  height: 4rem;
+
+  margin-bottom: .9rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eeebff,
+      #f7f5ff
+    );
+
+  color: #6547f5;
+}
+
+.reports-progress-v2__empty-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.reports-progress-v2__empty-title {
+  margin: 0;
+
+  color: #242b3d;
+
+  font-size: .9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.reports-progress-v2__empty-description {
+  max-width: 28rem;
+
+  margin:
+    .4rem
+    0
+    0;
+
+  color: #7d8598;
+
+  font-size: .7rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+
+/* =========================
+   ENTRY ANIMATION
+========================= */
+
+app-student-progress-summary,
+app-stage-navigation,
+.reports-progress-v2__workspace,
+app-report-progress-info,
+.reports-progress-v2__empty {
+  animation:
+    reports-progress-v2-fade-in
+    180ms
+    ease;
+}
+
+@keyframes reports-progress-v2-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================
+   LARGE DESKTOP
+========================= */
+
+@media (min-width: 1500px) {
+
+  .reports-progress-v2__container {
+    width: min(100%, 1520px);
+  }
+
+}
+
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1250px) {
+
+  .reports-progress-v2__container {
+    padding-inline: 1rem;
+  }
+
+  .reports-progress-v2__workspace {
+    gap: .75rem;
+  }
+
+}
+
+
+/* =========================
+   SMALL DESKTOP / TABLET
+========================= */
+
+@media (max-width: 1050px) {
+
+  .reports-progress-v2__workspace {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .reports-progress-v2__container {
+    padding:
+      1rem
+      .85rem
+      1.5rem;
+  }
+
+  .reports-progress-v2__header {
+    margin-bottom: .85rem;
+  }
+
+  .reports-progress-v2__title {
+    font-size: 1.2rem;
+  }
+
+  .reports-progress-v2__description {
+    font-size: .69rem;
+  }
+
+  .reports-progress-v2__workspace {
+    gap: .75rem;
+  }
+
+  .reports-progress-v2__empty {
+    min-height: 15rem;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .reports-progress-v2 {
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: .5rem;
+
+    background: #ffffff;
+  }
+
+}
+
+
+@media (max-width: 767px) {
+
+  .reports-progress-v2__container {
+    padding:
+      .85rem
+      .65rem
+      1.25rem;
+  }
+
+
+  /* HEADER */
+
+  .reports-progress-v2__header {
+    align-items: center;
+
+    gap: .7rem;
+
+    margin-bottom: .8rem;
+  }
+
+  .reports-progress-v2__title {
+    font-size: 1.05rem;
+  }
+
+  .reports-progress-v2__description {
+    max-width: 100%;
+
+    font-size: .65rem;
+  }
+
+
+  /* HELP */
+
+  .reports-progress-v2__help {
+    width: 2.2rem;
+    min-width: 2.2rem;
+    height: 2.2rem;
+    min-height: 2.2rem;
+
+    padding: 0;
+  }
+
+  .reports-progress-v2__help span {
+    display: none;
+  }
+
+
+  /* COMPONENT SPACING */
+
+  app-report-progress-filters,
+  app-student-progress-summary,
+  app-stage-navigation {
+    margin-bottom: .7rem;
+  }
+
+
+  /* WORKSPACE */
+
+  .reports-progress-v2__workspace {
+    gap: .7rem;
+
+    margin-bottom: .7rem;
+  }
+
+
+  /* EMPTY */
+
+  .reports-progress-v2__empty {
+    min-height: 13rem;
+
+    margin-top: .7rem;
+
+    padding:
+      1.4rem
+      .8rem;
+
+    border-radius: .7rem;
+  }
+
+  .reports-progress-v2__empty-icon {
+    width: 3.2rem;
+    height: 3.2rem;
+
+    margin-bottom: .7rem;
+  }
+
+  .reports-progress-v2__empty-icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .reports-progress-v2__empty-title {
+    font-size: .82rem;
+  }
+
+  .reports-progress-v2__empty-description {
+    max-width: 20rem;
+
+    font-size: .64rem;
+  }
+
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .reports-progress-v2__container {
+    padding-inline: .5rem;
+  }
+
+  .reports-progress-v2__header {
+    gap: .55rem;
+  }
+
+  .reports-progress-v2__title {
+    font-size: .98rem;
+  }
+
+  .reports-progress-v2__workspace {
+    gap: .6rem;
+  }
+
+}

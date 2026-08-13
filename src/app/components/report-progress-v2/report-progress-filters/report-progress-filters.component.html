@@ -1,0 +1,459 @@
+<section class="report-progress-filters">
+
+  <!-- =========================
+       TITLE
+  ========================== -->
+
+  <h2 class="report-progress-filters__title">
+    Buscar estudiante
+  </h2>
+
+
+  <!-- =========================
+       GRID
+  ========================== -->
+
+  <div class="report-progress-filters__grid">
+
+    <!-- =========================
+         STUDENT
+    ========================== -->
+
+    <div class="report-progress-filters__field">
+
+      <label class="report-progress-filters__label">
+        Estudiante
+
+        <span class="report-progress-filters__required">
+          *
+        </span>
+      </label>
+
+
+      <div class="report-progress-filters__student-search">
+
+        <span
+          class="report-progress-filters__field-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="8"
+              r="3.2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M6 19c0-3 2.5-5 6-5s6 2 6 5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+
+        <input
+          type="text"
+          class="report-progress-filters__input report-progress-filters__input--student"
+          placeholder="Selecciona un estudiante"
+          [(ngModel)]="searchTerm"
+          autocomplete="off"
+          (ngModelChange)="onSearchChange($event)"
+          (focus)="searchTerm.length >= 2 && (showStudentDropdown = true)"
+          (blur)="hideStudentDropdown()"
+        />
+
+
+        <span
+          *ngIf="isSearchingStudents"
+          class="report-progress-filters__loading"
+          aria-hidden="true"
+        ></span>
+
+
+        <button
+          *ngIf="!isSearchingStudents && selectedStudent"
+          type="button"
+          class="report-progress-filters__clear"
+          aria-label="Limpiar estudiante"
+          title="Limpiar estudiante"
+          (mousedown)="$event.preventDefault()"
+          (click)="clearSelectedStudent()"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M7 7l10 10M17 7 7 17"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+
+        <span
+          *ngIf="!isSearchingStudents && !selectedStudent"
+          class="report-progress-filters__search-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="10.5"
+              cy="10.5"
+              r="5.8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m15 15 4 4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+
+        <!-- STUDENT DROPDOWN -->
+
+        <div
+          *ngIf="showStudentDropdown"
+          class="report-progress-filters__dropdown report-progress-filters__dropdown--student"
+        >
+
+          <button
+            *ngFor="
+              let user of filteredUsers;
+              trackBy: trackByUserId
+            "
+            type="button"
+            class="report-progress-filters__student-option"
+            [class.report-progress-filters__student-option--selected]="
+              selectedStudent?.id === user.id
+            "
+            (mousedown)="$event.preventDefault()"
+            (click)="selectStudent(user)"
+          >
+
+            <span
+              class="report-progress-filters__student-avatar"
+              aria-hidden="true"
+            >
+              {{
+                (user.firstName?.charAt(0) || '') +
+                (user.lastName?.charAt(0) || '')
+              }}
+            </span>
+
+
+            <span class="report-progress-filters__student-info">
+
+              <strong>
+                {{ user.firstName }} {{ user.lastName }}
+              </strong>
+
+              <span>
+                ID: {{ user.student?.id || '--' }}
+
+                <ng-container *ngIf="user.student?.stage?.number">
+                  · Stage {{ user.student?.stage?.number }}
+                </ng-container>
+              </span>
+
+            </span>
+
+          </button>
+
+
+          <div
+            *ngIf="
+              !isSearchingStudents &&
+              filteredUsers.length === 0
+            "
+            class="report-progress-filters__dropdown-empty"
+          >
+            No se encontraron estudiantes.
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         STAGE
+    ========================== -->
+
+    <div class="report-progress-filters__field">
+
+      <label class="report-progress-filters__label">
+        Stage
+
+        <span class="report-progress-filters__optional">
+          (opcional)
+        </span>
+      </label>
+
+
+      <div class="report-progress-filters__select-wrapper">
+
+        <button
+          type="button"
+          class="report-progress-filters__select"
+          [disabled]="!selectedStudent"
+          (click)="toggleStageDropdown()"
+        >
+
+          <span
+            [class.report-progress-filters__placeholder]="!selectedStage"
+          >
+            {{ selectedStageLabel }}
+          </span>
+
+
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m7 10 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </button>
+
+
+        <div
+          *ngIf="showStageDropdown"
+          class="report-progress-filters__dropdown"
+        >
+
+          <button
+            *ngFor="
+              let stage of stages;
+              trackBy: trackByStageId
+            "
+            type="button"
+            class="report-progress-filters__stage-option"
+            [class.report-progress-filters__stage-option--selected]="
+              selectedStage?.id === stage.id
+            "
+            (click)="selectStage(stage)"
+          >
+            <strong>
+              Stage {{ stage.number }}
+            </strong>
+
+            <span *ngIf="stage.description">
+              {{ stage.description }}
+            </span>
+          </button>
+
+
+          <div
+            *ngIf="stages.length === 0"
+            class="report-progress-filters__dropdown-empty"
+          >
+            No hay stages disponibles.
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         DATE RANGE
+    ========================== -->
+
+    <div class="report-progress-filters__field report-progress-filters__field--dates">
+
+      <label class="report-progress-filters__label">
+        Rango de fechas
+
+        <span class="report-progress-filters__optional">
+          (opcional)
+        </span>
+      </label>
+
+
+      <div class="report-progress-filters__dates">
+
+        <!-- FROM -->
+
+        <div class="report-progress-filters__date-input">
+
+          <span
+            class="report-progress-filters__date-icon"
+            aria-hidden="true"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3.5"
+                y="5.5"
+                width="17"
+                height="15"
+                rx="2.2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M7 3.5v4M17 3.5v4M3.5 9.5h17"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+
+          <input
+            type="date"
+            class="report-progress-filters__input report-progress-filters__input--date"
+            [ngModel]="fromDate"
+            (ngModelChange)="onFromDateChange($event)"
+          />
+
+        </div>
+
+
+        <span
+          class="report-progress-filters__date-separator"
+          aria-hidden="true"
+        >
+          –
+        </span>
+
+
+        <!-- TO -->
+
+        <div class="report-progress-filters__date-input">
+
+          <span
+            class="report-progress-filters__date-icon"
+            aria-hidden="true"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3.5"
+                y="5.5"
+                width="17"
+                height="15"
+                rx="2.2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M7 3.5v4M17 3.5v4M3.5 9.5h17"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+
+          <input
+            type="date"
+            class="report-progress-filters__input report-progress-filters__input--date"
+            [min]="minToDate"
+            [ngModel]="toDate"
+            (ngModelChange)="onToDateChange($event)"
+          />
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         SUBMIT
+    ========================== -->
+
+    <div class="report-progress-filters__actions">
+
+      <button
+        type="button"
+        class="report-progress-filters__submit"
+        [disabled]="!canSubmit"
+        (click)="submitFilters()"
+      >
+
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="10.5"
+            cy="10.5"
+            r="5.8"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="m15 15 4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Buscar reporte
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
