@@ -132,7 +132,6 @@ export class StudentProgressSummaryComponent {
   ========================= */
 
   get completedContents(): number {
-
     if (
       !this.currentStage ||
       this.studentContentHistory.length === 0
@@ -140,44 +139,58 @@ export class StudentProgressSummaryComponent {
       return 0;
     }
 
-
     const currentStageDescription =
-      this.currentStage.description;
+      this.currentStage.description
+        ?.trim()
+        .toLowerCase();
 
+    if (!currentStageDescription) {
+      return 0;
+    }
 
-    const completedContentIds =
-      new Set<number>();
-
+    const uniqueContents = new Set<string>();
 
     this.studentContentHistory
-      .filter(
-        record =>
-          record.data?.stage ===
+      .filter((record) => {
+        const contentStage =
+          record.data?.stage
+            ?.trim()
+            .toLowerCase();
+
+        return (
+          contentStage ===
           currentStageDescription
-      )
-      .forEach(record => {
+        );
+      })
+      .forEach((record) => {
+        const stage =
+          record.data?.stage
+            ?.trim()
+            .toLowerCase() ?? '';
 
-        const contentId =
-          this.getHistoryContentId(
-            record
-          );
+        const unit =
+          String(
+            record.data?.unit ?? ''
+          )
+            .trim()
+            .toLowerCase();
 
-        if (contentId != null) {
-          completedContentIds.add(
-            contentId
-          );
+        const title =
+          record.data?.title
+            ?.trim()
+            .toLowerCase() ?? '';
+
+        if (!title) {
+          return;
         }
 
+        const uniqueKey =
+          `${stage}|${unit}|${title}`;
+
+        uniqueContents.add(uniqueKey);
       });
 
-
-    /*
-     * Si el backend permite más de un registro
-     * para el mismo contenido, Set evita contarlo
-     * varias veces.
-     */
-
-    return completedContentIds.size;
+    return uniqueContents.size;
   }
 
 
