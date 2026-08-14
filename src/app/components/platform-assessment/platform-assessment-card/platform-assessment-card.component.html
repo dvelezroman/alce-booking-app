@@ -3,6 +3,8 @@
   [class.expired-card]="assessment.status === 'expired'"
   [class.completed-card]="assessment.status === 'completed'"
   [class.failed-card]="assessment.status === 'completed' && assessment.outcome === 'FAILED'"
+  [class.clickable]="canAct"
+  (click)="onAction()"
 >
   <div class="header-row">
     <h3 class="title">{{ assessment.templateTitle }}</h3>
@@ -59,7 +61,7 @@
           'failed-btn': assessment.status === 'completed' && assessment.outcome === 'FAILED'
         }"
         [disabled]="!canAct"
-        (click)="onAction()"
+        (click)="onAction($event)"
       >
         {{ actionLabel }}
       </button>

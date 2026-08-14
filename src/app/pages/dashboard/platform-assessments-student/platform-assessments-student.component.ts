@@ -307,11 +307,16 @@ export class PlatformAssessmentsStudentComponent
     assessment:
       PlatformAssessmentAssignment
   ): void {
-    if (
-      !assessment?.directAccessUrl
-    ) {
+    const url =
+      assessment.status === 'completed'
+        ? assessment.resultsUrl?.trim()
+        : assessment.directAccessUrl?.trim();
+
+    if (!url) {
       this.showNotification(
-        'Este examen no tiene un enlace disponible.',
+        assessment.status === 'completed'
+          ? 'Este examen no tiene resultados disponibles.'
+          : 'Este examen no tiene un enlace disponible.',
         true,
       );
 
@@ -319,7 +324,7 @@ export class PlatformAssessmentsStudentComponent
     }
 
     window.open(
-      assessment.directAccessUrl,
+      url,
       '_blank',
       'noopener,noreferrer',
     );

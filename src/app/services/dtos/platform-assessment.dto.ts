@@ -1,7 +1,7 @@
 export type PlatformAssessmentStatus = 'pending' | 'expired' | 'completed';
 export type PlatformAssessmentOutcome = 'PASSED' | 'FAILED';
 
-/** Row from GET /platform-assessments (points/resultsUrl only for ADMIN). */
+/** Row from GET /platform-assessments (points only for ADMIN; students get resultsUrl). */
 export interface PlatformAssessmentAssignment {
   id: number;
   assignmentId: string;

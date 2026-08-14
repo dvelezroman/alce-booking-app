@@ -22,25 +22,20 @@ export class PlatformAssessmentCardComponent {
   @Input({ required: true })
   assessment!: PlatformAssessmentAssignment;
 
-  openAssessment(): void {
-    if (
-      this.assessment.status !== 'pending'
-    ) {
-      return;
+  get actionUrl(): string | null {
+    if (this.assessment.status === 'pending') {
+      return this.assessment.directAccessUrl?.trim() || null;
     }
 
-    const url =
-      this.assessment.directAccessUrl;
-
-    if (!url) {
-      return;
+    if (this.assessment.status === 'completed') {
+      return this.assessment.resultsUrl?.trim() || null;
     }
 
-    window.open(
-      url,
-      '_blank',
-      'noopener,noreferrer'
-    );
+    return null;
+  }
+
+  openUrl(url: string): void {
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   get statusLabel(): string {
@@ -71,31 +66,25 @@ export class PlatformAssessmentCardComponent {
         return 'Evaluación expirada';
 
       case 'completed':
-        return this.assessment.outcome ===
-          'PASSED'
-          ? 'Aprobado'
-          : this.assessment.outcome ===
-              'FAILED'
-            ? 'No aprobado'
-            : 'Completada';
+        return 'Ver resultados';
     }
   }
 
   get canAct(): boolean {
-    if (
-      this.assessment.status === 'pending'
-    ) {
-      return !!this.assessment.directAccessUrl;
-    }
-
-    return false;
+    return !!this.actionUrl;
   }
 
-  onAction(): void {
-    if (
-      this.assessment.status === 'pending'
-    ) {
-      this.openAssessment();
+  onAction(event?: Event): void {
+    event?.stopPropagation();
+    if (event instanceof KeyboardEvent) {
+      event.preventDefault();
     }
+
+    const url = this.actionUrl;
+    if (!url) {
+      return;
+    }
+
+    this.openUrl(url);
   }
 }
