@@ -53,13 +53,14 @@ export interface NotificationMessage {
   outcome?: 'PASSED' | 'FAILED';
   points?: number;
   studentStage?: number | null;
-  /** Shared classroom / QR landing */
+  /** Shared classroom landing (legacy payloads may still include this). */
   shareUrl?: string;
   studentAccessCode?: string;
   assignmentId?: string;
   templateId?: string;
   templateTitle?: string;
   expiresAt?: string | null;
+  expiresAtLabel?: string | null;
   maxAttempts?: number;
   batchId?: string | null;
   eventId?: string;

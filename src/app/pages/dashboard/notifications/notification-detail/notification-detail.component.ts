@@ -28,6 +28,7 @@ import { StagesService } from '../../../../services/stages.service';
 import { StudentsService } from '../../../../services/students.service';
 import { sanitizeNotificationBody } from '../../../../shared/utils/notification-message.util';
 import { isPlacementTestExam } from '../../../../shared/utils/lead-scheduling-request.util';
+import { formatRelativeDueDateEs } from '../../../../shared/utils/dates.util';
 
 @Component({
   selector: 'app-notification-detail',
@@ -323,6 +324,17 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return ms <= Date.now();
   }
 
+  get assessmentDueLabel(): string {
+    const formatted = formatRelativeDueDateEs(this.assessmentMessage?.expiresAt ?? null);
+    if (formatted) return formatted.display;
+    if (this.assessmentMessage?.expiresAt == null) return 'Sin vencimiento';
+    return this.assessmentMessage.expiresAtLabel || 'Fecha no disponible';
+  }
+
+  get assessmentDueRelative(): string | null {
+    return formatRelativeDueDateEs(this.assessmentMessage?.expiresAt ?? null)?.relativePhrase ?? null;
+  }
+
   openAssessmentDirectAccess(): void {
     if (this.isAssessmentExpired) return;
     const url = this.assessmentMessage?.directAccessUrl?.trim();
@@ -542,6 +554,9 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     if (this.isActiveStudentsReportNotification) return false;
     if (this.isLeadRequestNotification && this.requestLead) return false;
     if (this.isLeadSchedulingInstructorCard) {
+      return false;
+    }
+    if (this.notification?.message?.kind === 'assessment-assigned') {
       return false;
     }
     return true;

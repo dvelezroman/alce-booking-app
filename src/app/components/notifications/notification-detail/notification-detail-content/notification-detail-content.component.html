@@ -35,6 +35,84 @@
   </section>
 
   <!-- ================================
+       ASSESSMENT ASIGNADO
+  ================================= -->
+  <section
+    *ngIf="isAssessmentAssignedNotification"
+    class="
+      notification-detail-content__section
+      notification-detail-content__section--bordered
+    "
+  >
+    <span class="notification-detail-content__label">
+      Mensaje
+    </span>
+
+    <div class="assessment-card">
+      <div class="assessment-card__header">
+        <div>
+          <p class="assessment-card__eyebrow">Nuevo assessment</p>
+          <h3 class="assessment-card__title">
+            {{ notification.message.templateTitle || notification.title }}
+          </h3>
+        </div>
+        <span
+          class="assessment-card__badge"
+          [class.assessment-card__badge--expired]="isAssessmentExpired"
+        >
+          {{ isAssessmentExpired ? 'Vencido' : assessmentDueRelative }}
+        </span>
+      </div>
+
+      <p class="assessment-card__lead">
+        Se te asignó este assessment. Abre el enlace para comenzar.
+      </p>
+
+      <ng-container *ngIf="assessmentDirectUrl && !isAssessmentExpired">
+        <a
+          class="assessment-card__cta"
+          [href]="assessmentDirectUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Abrir assessment
+        </a>
+        <p class="assessment-card__link-label">Enlace directo</p>
+        <a
+          class="assessment-card__url"
+          [href]="assessmentDirectUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >{{ assessmentDirectUrl }}</a>
+      </ng-container>
+
+      <p
+        *ngIf="isAssessmentExpired"
+        class="assessment-card__expired"
+      >
+        Este assessment ya venció. Ya no puedes abrirlo desde aquí.
+      </p>
+
+      <dl class="assessment-card__meta">
+        <div *ngIf="notification.message?.maxAttempts != null">
+          <dt>Intentos máximos</dt>
+          <dd>{{ notification.message.maxAttempts }}</dd>
+        </div>
+        <div>
+          <dt>Vence</dt>
+          <dd>{{ assessmentDueLabel }}</dd>
+        </div>
+      </dl>
+
+      <ol *ngIf="!isAssessmentExpired" class="assessment-card__steps">
+        <li>Toca <strong>Abrir assessment</strong> o el enlace.</li>
+        <li>Completa la evaluación en una sola sesión si puedes.</li>
+        <li>Hazlo antes de la fecha límite.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================================
        DESTINATARIOS
   ================================= -->
   <section

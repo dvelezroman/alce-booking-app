@@ -1125,6 +1125,13 @@ export class NotificationDetailV2Component
       return false;
     }
 
+    if (
+      this.notification?.message?.kind ===
+      'assessment-assigned'
+    ) {
+      return false;
+    }
+
     return true;
   }
 

@@ -367,25 +367,42 @@
       >
         <header class="demo-class-header">
           <div>
-            <p class="eyebrow">Assessment asignado</p>
+            <p class="eyebrow">Nuevo assessment</p>
             <h3>{{ am.templateTitle || notification?.title }}</h3>
           </div>
-          <span class="demo-badge">{{ am.kind }}</span>
+          <span
+            class="demo-badge"
+            [class.due-soon]="!isAssessmentExpired"
+            [class.outcome-failed]="isAssessmentExpired"
+          >
+            {{ isAssessmentExpired ? "Vencido" : (assessmentDueRelative || "Pendiente") }}
+          </span>
         </header>
+
+        <p class="assessment-lead">
+          Se te asignó este assessment. Abre el enlace de abajo para comenzar.
+        </p>
 
         <div
           class="assessment-cta-row"
           *ngIf="am.directAccessUrl && !isAssessmentExpired"
         >
-          <button
-            type="button"
+          <a
             class="btn-assessment-primary"
-            (click)="openAssessmentDirectAccess()"
+            [href]="am.directAccessUrl"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             Abrir assessment
-          </button>
-          <p class="cta-hint">
-            Enlace directo: inicia sin escribir código.
+          </a>
+          <p class="cta-hint assessment-link-wrap">
+            <span>Enlace directo</span>
+            <a
+              class="assessment-url"
+              [href]="am.directAccessUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >{{ am.directAccessUrl }}</a>
           </p>
         </div>
 
@@ -400,15 +417,20 @@
               <span>Intentos máximos</span>
               <strong>{{ am.maxAttempts }}</strong>
             </div>
-            <div class="demo-field" *ngIf="am.expiresAt">
+            <div class="demo-field">
               <span>Vence</span>
-              <strong>{{ am.expiresAt | date: "medium" }}</strong>
-            </div>
-            <div class="demo-field" *ngIf="am.expiresAt == null">
-              <span>Vence</span>
-              <strong>Sin vencimiento</strong>
+              <strong>{{ assessmentDueLabel }}</strong>
             </div>
           </div>
+        </div>
+
+        <div class="demo-block assessment-steps" *ngIf="!isAssessmentExpired">
+          <h4>Cómo empezar</h4>
+          <ol>
+            <li>Toca <strong>Abrir assessment</strong> o el enlace.</li>
+            <li>Completa la evaluación en una sola sesión si puedes.</li>
+            <li>Hazlo antes de la fecha límite.</li>
+          </ol>
         </div>
       </section>
 
