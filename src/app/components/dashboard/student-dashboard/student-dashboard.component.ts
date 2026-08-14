@@ -314,8 +314,12 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     return this.userData?.firstName || '';
   }
 
+  get currentStage() {
+    return this.userData?.stage ?? this.userData?.student?.stage ?? null;
+  }
+
   get studentStage(): string {
-    return this.userData?.stage?.description || 'Sin asignar';
+    return this.currentStage?.description || 'Sin asignar';
   }
 
   get isAgendaBlocked(): boolean {

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MeetingDTO } from '../../../../services/dtos/booking.dto';
+import { Stage } from '../../../../services/dtos/student.dto';
 
 
 @Component({
@@ -13,6 +14,34 @@ import { MeetingDTO } from '../../../../services/dtos/booking.dto';
 export class StudentProgressCardComponent {
   @Input() meetings: MeetingDTO[] = [];
   @Input() isLoading = false;
+  @Input() stage: Stage | null = null;
+
+  get stageNumber(): string | null {
+    const number = this.stage?.number?.trim();
+    return number || null;
+  }
+
+  get stageDescription(): string | null {
+    const description = this.stage?.description?.trim();
+    return description || null;
+  }
+
+  get hasAssignedStage(): boolean {
+    return !!(this.stageNumber || this.stageDescription);
+  }
+
+  get stageAriaLabel(): string {
+    if (!this.hasAssignedStage) {
+      return 'Stage actual no asignado';
+    }
+
+    const parts = [
+      this.stageNumber ? `Stage ${this.stageNumber}` : null,
+      this.stageDescription,
+    ].filter(Boolean);
+
+    return `Stage actual: ${parts.join(' — ')}`;
+  }
 
   get totalClasses(): number {
     return this.meetings.filter(
