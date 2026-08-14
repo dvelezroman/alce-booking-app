@@ -1,0 +1,184 @@
+<nav
+  class="attendance-instructor-pagination"
+  aria-label="Paginación de resultados"
+>
+
+  <!-- =========================
+       RESULTS INFO
+  ========================== -->
+  <div class="attendance-instructor-pagination__info">
+    Mostrando {{ resultsStart }} a {{ resultsEnd }} de {{ totalItems }} resultados
+  </div>
+
+
+  <!-- =========================
+       CONTROLS
+  ========================== -->
+  @if (totalPages > 1) {
+
+    <div class="attendance-instructor-pagination__controls">
+
+      <!-- FIRST -->
+      <button
+        type="button"
+        class="attendance-instructor-pagination__button"
+        [disabled]="isFirstPage"
+        aria-label="Primera página"
+        (click)="goToPage(1)"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m13 17-5-5 5-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m18 17-5-5 5-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+
+      <!-- PREVIOUS -->
+      <button
+        type="button"
+        class="attendance-instructor-pagination__button"
+        [disabled]="isFirstPage"
+        aria-label="Página anterior"
+        (click)="previousPage()"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m15 18-6-6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+
+      <!-- PAGES -->
+      @for (page of pages; track page) {
+
+        <button
+          type="button"
+          class="attendance-instructor-pagination__button attendance-instructor-pagination__page"
+          [class.attendance-instructor-pagination__page--active]="page === currentPage"
+          [attr.aria-current]="page === currentPage ? 'page' : null"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+
+      }
+
+
+      <!-- NEXT -->
+      <button
+        type="button"
+        class="attendance-instructor-pagination__button"
+        [disabled]="isLastPage"
+        aria-label="Página siguiente"
+        (click)="nextPage()"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m9 18 6-6-6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+
+      <!-- LAST -->
+      <button
+        type="button"
+        class="attendance-instructor-pagination__button"
+        [disabled]="isLastPage"
+        aria-label="Última página"
+        (click)="goToPage(totalPages)"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 17 5-5-5-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m11 17 5-5-5-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+    </div>
+
+  }
+
+
+  <!-- =========================
+       PAGE SIZE
+  ========================== -->
+  <div class="attendance-instructor-pagination__page-size">
+    {{ itemsPerPage }} por página
+
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="m6 9 6 6 6-6"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </div>
+
+</nav>

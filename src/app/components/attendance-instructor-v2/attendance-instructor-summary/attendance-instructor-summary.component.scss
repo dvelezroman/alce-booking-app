@@ -1,0 +1,252 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.attendance-instructor-summary {
+  width: 100%;
+  min-width: 0;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 1rem;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.attendance-instructor-summary__card {
+  min-width: 0;
+  min-height: 6.3rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: .9rem;
+
+  padding: .9rem 1rem;
+
+  border: 1px solid #e3e6ed;
+  border-radius: .7rem;
+
+  background: #fff;
+
+  box-shadow:
+    0 .15rem .55rem rgba(24, 31, 50, .035);
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease,
+    transform .15s ease;
+}
+
+.attendance-instructor-summary__card:hover {
+  border-color: #d9dce6;
+
+  box-shadow:
+    0 .3rem .8rem rgba(24, 31, 50, .055);
+
+  transform: translateY(-1px);
+}
+
+/* =========================
+   ICON
+========================= */
+
+.attendance-instructor-summary__icon {
+  width: 3.25rem;
+  height: 3.25rem;
+
+  flex: 0 0 3.25rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+}
+
+.attendance-instructor-summary__icon svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+/* =========================
+   ICON COLORS
+========================= */
+
+.attendance-instructor-summary__icon--purple {
+  background: #f0ecff;
+  color: #6040df;
+}
+
+.attendance-instructor-summary__icon--success {
+  background: #e8f7ee;
+  color: #23935b;
+}
+
+.attendance-instructor-summary__icon--danger {
+  background: #fff0f2;
+  color: #e14f5d;
+}
+
+.attendance-instructor-summary__icon--blue {
+  background: #eeebff;
+  color: #5942dc;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.attendance-instructor-summary__content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .12rem;
+}
+
+/* =========================
+   LABEL
+========================= */
+
+.attendance-instructor-summary__label {
+  color: #60697b;
+
+  font-size: .68rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* =========================
+   VALUE
+========================= */
+
+.attendance-instructor-summary__value {
+  overflow: hidden;
+
+  color: #202739;
+
+  font-size: 1.08rem;
+  font-weight: 760;
+  line-height: 1.25;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.attendance-instructor-summary__description {
+  overflow: hidden;
+
+  color: #7f8798;
+
+  font-size: .61rem;
+  font-weight: 450;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1200px) {
+
+  .attendance-instructor-summary {
+    gap: .8rem;
+  }
+
+  .attendance-instructor-summary__card {
+    gap: .7rem;
+
+    padding: .8rem;
+  }
+
+  .attendance-instructor-summary__icon {
+    width: 2.9rem;
+    height: 2.9rem;
+
+    flex-basis: 2.9rem;
+  }
+
+  .attendance-instructor-summary__value {
+    font-size: .98rem;
+  }
+
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .attendance-instructor-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 640px) {
+
+  .attendance-instructor-summary {
+    grid-template-columns: 1fr;
+
+    gap: .65rem;
+  }
+
+  .attendance-instructor-summary__card {
+    min-height: 5.5rem;
+
+    gap: .75rem;
+
+    padding: .75rem .8rem;
+
+    border-radius: .6rem;
+  }
+
+  .attendance-instructor-summary__icon {
+    width: 2.8rem;
+    height: 2.8rem;
+
+    flex-basis: 2.8rem;
+  }
+
+  .attendance-instructor-summary__icon svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .attendance-instructor-summary__label {
+    font-size: .65rem;
+  }
+
+  .attendance-instructor-summary__value {
+    font-size: .94rem;
+  }
+
+  .attendance-instructor-summary__description {
+    font-size: .59rem;
+  }
+
+}

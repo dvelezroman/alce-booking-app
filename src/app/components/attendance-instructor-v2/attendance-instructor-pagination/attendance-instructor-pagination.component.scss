@@ -1,0 +1,260 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.attendance-instructor-pagination {
+  width: 100%;
+  min-height: 3.8rem;
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto
+    minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 1rem;
+
+  padding: .7rem 1rem;
+
+  border-top: 1px solid #eceef2;
+
+  background: #fff;
+}
+
+/* =========================
+   INFO
+========================= */
+
+.attendance-instructor-pagination__info {
+  min-width: 0;
+
+  color: #747c8e;
+
+  font-size: .64rem;
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
+.attendance-instructor-pagination__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .35rem;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.attendance-instructor-pagination__button {
+  min-width: 2.1rem;
+  height: 2.1rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 .4rem;
+
+  border: 1px solid #e0e3e9;
+  border-radius: .4rem;
+
+  background: #fff;
+  color: #555e72;
+
+  font-family: inherit;
+  font-size: .67rem;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    border-color .15s ease,
+    color .15s ease,
+    box-shadow .15s ease,
+    transform .1s ease;
+}
+
+.attendance-instructor-pagination__button:hover:not(:disabled) {
+  border-color: #d2ccf3;
+
+  background: #f7f5ff;
+  color: #6040df;
+}
+
+.attendance-instructor-pagination__button:active:not(:disabled) {
+  transform: scale(.94);
+}
+
+/* =========================
+   ACTIVE PAGE
+========================= */
+
+.attendance-instructor-pagination__page--active {
+  border-color: #6040df;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5934db 0%,
+      #7048eb 100%
+    );
+
+  color: #fff;
+
+  box-shadow:
+    0 .15rem .4rem rgba(96, 64, 223, .2);
+}
+
+.attendance-instructor-pagination__page--active:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #5330cf 0%,
+      #663cdd 100%
+    );
+
+  color: #fff;
+}
+
+/* =========================
+   DISABLED
+========================= */
+
+.attendance-instructor-pagination__button:disabled {
+  opacity: .4;
+
+  background: #fafafa;
+  color: #9ca2af;
+
+  cursor: not-allowed;
+}
+
+/* =========================
+   PAGE SIZE
+========================= */
+
+.attendance-instructor-pagination__page-size {
+  justify-self: end;
+
+  min-width: 8.6rem;
+  height: 2.1rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: .65rem;
+
+  padding: 0 .7rem;
+
+  border: 1px solid #e0e3e9;
+  border-radius: .4rem;
+
+  background: #fff;
+  color: #4f586c;
+
+  font-size: .64rem;
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .attendance-instructor-pagination {
+    grid-template-columns:
+      1fr
+      auto;
+
+    row-gap: .7rem;
+  }
+
+  .attendance-instructor-pagination__info {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .attendance-instructor-pagination__page-size {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .attendance-instructor-pagination__controls {
+    grid-column: 1 / -1;
+    grid-row: 2;
+
+    justify-self: center;
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 640px) {
+
+  .attendance-instructor-pagination {
+    display: flex;
+    flex-direction: column;
+
+    gap: .65rem;
+
+    padding: .75rem;
+  }
+
+  .attendance-instructor-pagination__info {
+    width: 100%;
+
+    text-align: center;
+
+    white-space: normal;
+  }
+
+  .attendance-instructor-pagination__controls {
+    width: 100%;
+
+    justify-content: flex-start;
+
+    overflow-x: auto;
+
+    padding-bottom: .1rem;
+
+    scrollbar-width: none;
+  }
+
+  .attendance-instructor-pagination__controls::-webkit-scrollbar {
+    display: none;
+  }
+
+  .attendance-instructor-pagination__button {
+    flex: 0 0 auto;
+  }
+
+  .attendance-instructor-pagination__page-size {
+    width: 100%;
+
+    justify-self: auto;
+  }
+
+}

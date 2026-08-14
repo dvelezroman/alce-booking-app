@@ -1,0 +1,335 @@
+<section class="attendance-instructor-info">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+  <header class="attendance-instructor-info__header">
+
+    <div class="attendance-instructor-info__header-icon">
+      <svg
+        width="19"
+        height="19"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="12"
+          cy="7"
+          r="3"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M5 20a7 7 0 0 1 14 0"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+    <h2 class="attendance-instructor-info__title">
+      Información del instructor
+    </h2>
+
+  </header>
+
+
+  <!-- =========================
+       PROFILE
+  ========================== -->
+  <div class="attendance-instructor-info__profile">
+
+    <div class="attendance-instructor-info__avatar">
+      {{ instructorInitials }}
+    </div>
+
+    <div class="attendance-instructor-info__profile-content">
+
+      <strong class="attendance-instructor-info__name">
+        {{ displayInstructorName }}
+      </strong>
+
+      <span class="attendance-instructor-info__id">
+        ID: {{ instructorId || '—' }}
+      </span>
+
+      <span class="attendance-instructor-info__email">
+        {{ instructorEmail }}
+      </span>
+
+      @if (hasInstructorSelected) {
+        <span class="attendance-instructor-info__status">
+          Activo
+        </span>
+      }
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       DIVIDER
+  ========================== -->
+  <div class="attendance-instructor-info__divider"></div>
+
+
+  <!-- =========================
+       STATS
+  ========================== -->
+  <div class="attendance-instructor-info__stats">
+
+    <!-- UNIQUE STUDENTS -->
+    <div class="attendance-instructor-info__stat">
+
+      <div class="attendance-instructor-info__stat-icon">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="9"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M3 20a6 6 0 0 1 12 0"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M16 6.5a3 3 0 0 1 0 5.8M17 16a5 5 0 0 1 4 4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <div class="attendance-instructor-info__stat-content">
+
+        <span class="attendance-instructor-info__stat-label">
+          Total de estudiantes únicos
+        </span>
+
+        <strong class="attendance-instructor-info__stat-value">
+          {{ uniqueStudentsCount }}
+        </strong>
+
+        <small class="attendance-instructor-info__stat-description">
+          En el período seleccionado
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <!-- MOST FREQUENT STAGE -->
+    <div class="attendance-instructor-info__stat">
+
+      <div class="attendance-instructor-info__stat-icon">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M12 3 5.5 6.5v5c0 4.1 2.7 7.7 6.5 9.5 3.8-1.8 6.5-5.4 6.5-9.5v-5L12 3Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <circle
+            cx="12"
+            cy="11"
+            r="2.3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+        </svg>
+      </div>
+
+      <div class="attendance-instructor-info__stat-content">
+
+        <span class="attendance-instructor-info__stat-label">
+          Etapa más frecuente
+        </span>
+
+        <strong class="attendance-instructor-info__stat-value">
+          {{ mostFrequentStage }}
+        </strong>
+
+        <small class="attendance-instructor-info__stat-description">
+          Basado en las clases impartidas
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <!-- LAST CLASS -->
+    <div class="attendance-instructor-info__stat">
+
+      <div class="attendance-instructor-info__stat-icon">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <div class="attendance-instructor-info__stat-content">
+
+        <span class="attendance-instructor-info__stat-label">
+          Última clase impartida
+        </span>
+
+        <strong class="attendance-instructor-info__stat-value">
+          {{ lastClassDate }}
+
+          @if (lastClass) {
+            <span class="attendance-instructor-info__separator">
+              -
+            </span>
+
+            {{ lastClassHour }}
+          }
+        </strong>
+
+        <small class="attendance-instructor-info__stat-description">
+          Dentro del período consultado
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <!-- ASSESSMENTS -->
+    <div class="attendance-instructor-info__stat">
+
+      <div class="attendance-instructor-info__stat-icon">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="6"
+            y="3"
+            width="12"
+            height="18"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M9 8h6M9 12h6M9 16h4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <div class="attendance-instructor-info__stat-content">
+
+        <span class="attendance-instructor-info__stat-label">
+          Evaluaciones realizadas
+        </span>
+
+        <strong class="attendance-instructor-info__stat-value">
+          {{ assessmentsCount }}
+        </strong>
+
+        <small class="attendance-instructor-info__stat-description">
+          En el período seleccionado
+        </small>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       INFO MESSAGE
+  ========================== -->
+  <div class="attendance-instructor-info__notice">
+
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        stroke="currentColor"
+        stroke-width="1.7"
+      />
+
+      <path
+        d="M12 11v5"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+      />
+
+      <circle
+        cx="12"
+        cy="8"
+        r=".9"
+        fill="currentColor"
+      />
+    </svg>
+
+    <p>
+      La información se basa únicamente en los resultados de la búsqueda actual.
+    </p>
+
+  </div>
+
+</section>

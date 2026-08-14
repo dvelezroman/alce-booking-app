@@ -1,0 +1,323 @@
+<section class="attendance-instructor-filters">
+
+  <div class="attendance-instructor-filters__grid">
+
+    <!-- =========================
+         INSTRUCTOR
+    ========================== -->
+    <div class="attendance-instructor-filters__field attendance-instructor-filters__field--instructor">
+
+      <label
+        class="attendance-instructor-filters__label"
+        for="attendance-instructor-search"
+      >
+        Instructor
+      </label>
+
+      <div class="attendance-instructor-filters__search-wrapper">
+
+        <svg
+          class="attendance-instructor-filters__search-icon"
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <input
+          id="attendance-instructor-search"
+          type="text"
+          class="attendance-instructor-filters__input attendance-instructor-filters__input--search"
+          [class.attendance-instructor-filters__input--invalid]="isNameFieldInvalid"
+          [(ngModel)]="filter.instructorName"
+          placeholder="Buscar instructor por nombre..."
+          autocomplete="off"
+          (input)="onInstructorInputChange(filter.instructorName)"
+          (blur)="onInstructorInputBlur()"
+        />
+
+      </div>
+
+
+      <!-- =========================
+           ERROR
+      ========================== -->
+      @if (isNameFieldInvalid) {
+        <span class="attendance-instructor-filters__error">
+          Selecciona un instructor de la lista.
+        </span>
+      }
+
+
+      <!-- =========================
+           DROPDOWN
+      ========================== -->
+      @if (showDropdown && filteredInstructors.length > 0) {
+
+        <div class="attendance-instructor-filters__dropdown">
+
+          @for (instructor of filteredInstructors; track instructor.id) {
+
+            <button
+              type="button"
+              class="attendance-instructor-filters__option"
+              (mousedown)="$event.preventDefault()"
+              (click)="onSelectInstructor(instructor)"
+            >
+
+              <div class="attendance-instructor-filters__option-avatar">
+                {{ getInstructorInitials(instructor) }}
+              </div>
+
+              <div class="attendance-instructor-filters__option-content">
+
+                <strong>
+                  {{ getInstructorFullName(instructor) }}
+                </strong>
+
+                <span>
+                  {{ getInstructorEmail(instructor) }}
+                </span>
+
+              </div>
+
+            </button>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- =========================
+         FROM
+    ========================== -->
+    <div class="attendance-instructor-filters__field">
+
+      <label
+        class="attendance-instructor-filters__label"
+        for="attendance-instructor-from"
+      >
+        Desde
+      </label>
+
+      <input
+        id="attendance-instructor-from"
+        type="date"
+        class="attendance-instructor-filters__input"
+        [(ngModel)]="filter.from"
+      />
+
+    </div>
+
+
+    <!-- =========================
+         TO
+    ========================== -->
+    <div class="attendance-instructor-filters__field">
+
+      <label
+        class="attendance-instructor-filters__label"
+        for="attendance-instructor-to"
+      >
+        Hasta
+      </label>
+
+      <input
+        id="attendance-instructor-to"
+        type="date"
+        class="attendance-instructor-filters__input"
+        [(ngModel)]="filter.to"
+      />
+
+    </div>
+
+
+    <!-- =========================
+         ATTENDANCE
+    ========================== -->
+    <div class="attendance-instructor-filters__field">
+
+      <label
+        class="attendance-instructor-filters__label"
+        for="attendance-instructor-present"
+      >
+        Asistencia
+      </label>
+
+      <div class="attendance-instructor-filters__select-wrapper">
+
+        <select
+          id="attendance-instructor-present"
+          class="attendance-instructor-filters__select"
+          [(ngModel)]="filter.present"
+        >
+          <option value="true">
+            Presentes
+          </option>
+
+          <option value="false">
+            Ausentes
+          </option>
+        </select>
+
+        <svg
+          class="attendance-instructor-filters__select-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         ACTIONS
+    ========================== -->
+    <div class="attendance-instructor-filters__actions">
+
+      <button
+        type="button"
+        class="attendance-instructor-filters__search-button"
+        (click)="onSearch()"
+      >
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Buscar asistencia
+        </span>
+      </button>
+
+
+      <button
+        type="button"
+        class="attendance-instructor-filters__clear-button"
+        (click)="clearFilters()"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M4 12a8 8 0 1 0 2.35-5.65"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M4 5v5h5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        <span>
+          Limpiar filtros
+        </span>
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       INFORMATION
+  ========================== -->
+  <div class="attendance-instructor-filters__information">
+
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        stroke="currentColor"
+        stroke-width="1.7"
+      />
+
+      <path
+        d="M12 11v5"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+      />
+
+      <circle
+        cx="12"
+        cy="8"
+        r=".9"
+        fill="currentColor"
+      />
+    </svg>
+
+    <span>
+      Los resultados muestran las clases del instructor en el rango de fechas seleccionado.
+    </span>
+
+  </div>
+
+</section>

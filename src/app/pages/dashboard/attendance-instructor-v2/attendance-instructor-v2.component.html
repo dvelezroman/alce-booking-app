@@ -1,0 +1,105 @@
+<section class="attendance-instructor-page">
+
+  <div class="attendance-instructor-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <app-attendance-instructor-header>
+    </app-attendance-instructor-header>
+
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+    <app-attendance-instructor-filters
+      [filter]="filter"
+      [filteredInstructors]="filteredInstructors"
+      [showDropdown]="showDropdown"
+      [isNameFieldInvalid]="isNameFieldInvalid"
+      (instructorInputChange)="onInstructorInputChange($event)"
+      (instructorSelected)="selectInstructor($event)"
+      (dropdownHidden)="hideDropdown()"
+      (searchRequested)="searchInstructorAttendance()"
+    >
+    </app-attendance-instructor-filters>
+
+
+    <!-- =========================
+         SUMMARY
+    ========================== -->
+    <app-attendance-instructor-summary
+      [meetings]="meetings"
+    >
+    </app-attendance-instructor-summary>
+
+
+    <!-- =========================
+         MAIN LAYOUT
+    ========================== -->
+    <div class="attendance-instructor-page__layout">
+
+
+      <!-- =========================
+           LEFT COLUMN
+      ========================== -->
+      <main class="attendance-instructor-page__main">
+
+        <!-- =========================
+             TABLE
+        ========================== -->
+        <app-attendance-instructor-table
+          [meetings]="paginatedMeetings"
+          [searchAttempted]="searchAttempted"
+          (contentRequested)="showContent($event)"
+        >
+        </app-attendance-instructor-table>
+
+
+        <!-- =========================
+             PAGINATION
+        ========================== -->
+        <app-attendance-instructor-pagination
+        [currentPage]="currentPage"
+        [itemsPerPage]="itemsPerPage"
+        [totalItems]="meetings.length"
+        (pageChange)="changePage($event)">
+        </app-attendance-instructor-pagination>
+
+      </main>
+
+
+      <!-- =========================
+           RIGHT COLUMN
+      ========================== -->
+      <aside class="attendance-instructor-page__sidebar">
+
+        <app-attendance-instructor-info
+          [instructorId]="selectedInstructorId"
+          [instructorName]="filter.instructorName"
+          [meetings]="meetings"
+        >
+        </app-attendance-instructor-info>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       CONTENT MODAL
+  ========================== -->
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [isContentViewer]="!!modal.isContentViewer"
+    [title]="modal.title || ''"
+    (close)="modal.close()"
+    ></app-modal>
+
+</section>

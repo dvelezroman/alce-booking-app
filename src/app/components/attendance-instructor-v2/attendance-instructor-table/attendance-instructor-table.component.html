@@ -1,0 +1,393 @@
+<section class="attendance-instructor-table">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+  <header class="attendance-instructor-table__header">
+
+    <div class="attendance-instructor-table__header-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect
+          x="4"
+          y="5"
+          width="16"
+          height="15"
+          rx="2"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M8 3v4M16 3v4M4 9h16"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+    <h2 class="attendance-instructor-table__title">
+      Clases del instructor
+    </h2>
+
+  </header>
+
+
+  @if (hasResults) {
+
+    <div class="attendance-instructor-table__wrapper">
+
+      <!-- =========================
+           COLUMNS
+      ========================== -->
+      <div class="attendance-instructor-table__columns">
+
+        <div>Fecha / Hora</div>
+        <div>Stage</div>
+        <div>Estudiantes</div>
+        <div>Asistencia</div>
+        <div>Contenido de la clase</div>
+        <div></div>
+
+      </div>
+
+
+      <!-- =========================
+           GROUPS
+      ========================== -->
+      <div class="attendance-instructor-table__body">
+
+        @for (group of groupedMeetings; track group.key) {
+
+          <article class="attendance-instructor-table__group">
+
+            <!-- =========================
+                 DATE HEADER
+            ========================== -->
+            <button
+              type="button"
+              class="attendance-instructor-table__group-header"
+              (click)="toggleGroup(group.key)"
+            >
+
+              <div class="attendance-instructor-table__group-date">
+
+                <svg
+                  class="attendance-instructor-table__group-chevron"
+                  [class.attendance-instructor-table__group-chevron--collapsed]="!isGroupExpanded(group.key)"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="m6 9 6 6 6-6"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+                <strong>
+                  {{ getGroupDate(group) }}
+                </strong>
+
+                <span class="attendance-instructor-table__group-count">
+                  {{ getGroupClassesLabel(group) }}
+                </span>
+
+              </div>
+
+            </button>
+
+
+            <!-- =========================
+                 CLASSES OF DAY
+            ========================== -->
+            @if (isGroupExpanded(group.key)) {
+
+              <div class="attendance-instructor-table__group-rows">
+
+                @for (
+                  item of group.items;
+                  track trackByAttendance($index, item)
+                ) {
+
+                  <div class="attendance-instructor-table__row">
+
+
+                    <!-- DATE / HOUR -->
+                    <div class="attendance-instructor-table__datetime">
+
+                      <strong class="attendance-instructor-table__datetime-date">
+                        {{ getMeetingDate(item) }}
+                      </strong>
+
+                      <span class="attendance-instructor-table__datetime-hour">
+                        {{ getMeetingHour(item) }}
+                      </span>
+
+                    </div>
+
+                    <!-- =========================
+                        STAGE
+                    ========================== -->
+                    <div class="attendance-instructor-table__stage">
+
+                      <span
+                        class="attendance-instructor-table__stage-badge"
+                        [title]="getStageDescription(item)"
+                      >
+                        {{ getStage(item) }}
+                      </span>
+
+                    </div>
+
+
+                    <!-- STUDENTS -->
+                    <div class="attendance-instructor-table__students">
+
+                      <div class="attendance-instructor-table__avatars">
+
+                        @for (
+                          meeting of item.meetings.slice(0, 3);
+                          track meeting.id
+                        ) {
+
+                          <span
+                            class="attendance-instructor-table__avatar"
+                            [title]="getStudentName(meeting)"
+                          >
+                            {{ getStudentInitials(meeting) }}
+                          </span>
+
+                        }
+
+                        @if (getStudentsCount(item) > 3) {
+
+                          <span
+                            class="
+                              attendance-instructor-table__avatar
+                              attendance-instructor-table__avatar--more
+                            "
+                          >
+                            +{{ getStudentsCount(item) - 3 }}
+                          </span>
+
+                        }
+
+                      </div>
+
+                      <span class="attendance-instructor-table__students-count">
+                        {{ getStudentsCount(item) }}
+                        {{
+                          getStudentsCount(item) === 1
+                            ? 'estudiante'
+                            : 'estudiantes'
+                        }}
+                      </span>
+
+                    </div>
+
+
+                    <!-- ATTENDANCE -->
+                    <div class="attendance-instructor-table__attendance">
+
+                      <div
+                        class="attendance-instructor-table__attendance-icon"
+                        [ngClass]="getAttendanceClass(item)"
+                      >
+
+                        @if (getPresentCount(item) > 0) {
+
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <circle
+                              cx="12"
+                              cy="12"
+                              r="9"
+                              fill="currentColor"
+                            />
+
+                            <path
+                              d="m8 12 2.5 2.5 5.5-6"
+                              stroke="#fff"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+
+                        } @else {
+
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <circle
+                              cx="12"
+                              cy="12"
+                              r="9"
+                              fill="currentColor"
+                            />
+
+                            <path
+                              d="m9 9 6 6M15 9l-6 6"
+                              stroke="#fff"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                            />
+                          </svg>
+
+                        }
+
+                      </div>
+
+                      <div class="attendance-instructor-table__attendance-content">
+
+                        <strong>
+                          {{ getAttendanceLabel(item) }}
+                        </strong>
+
+                        <span
+                          [ngClass]="getAttendanceClass(item)"
+                        >
+                          {{ getAttendanceStatus(item) }}
+                        </span>
+
+                      </div>
+
+                    </div>
+
+
+                    <!-- CONTENT -->
+                    <div class="attendance-instructor-table__content">
+
+                      <button
+                        type="button"
+                        class="attendance-instructor-table__content-button"
+                        (click)="onViewContent(item)"
+                      >
+
+                        <svg
+                          width="15"
+                          height="15"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linejoin="round"
+                          />
+
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="2.5"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                          />
+                        </svg>
+
+                        <span>
+                          Ver contenidos
+                        </span>
+
+                      </button>
+
+                    </div>
+
+
+                    <!-- ARROW
+                    <div class="attendance-instructor-table__action">
+
+                      <button
+                        type="button"
+                        class="attendance-instructor-table__arrow"
+                        aria-label="Ver contenido de la clase"
+                        (click)="onViewContent(item)"
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <path
+                            d="m9 18 6-6-6-6"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </button>
+
+                    </div> -->
+
+                  </div>
+
+                }
+
+              </div>
+
+            }
+
+          </article>
+
+        }
+
+      </div>
+
+    </div>
+
+  } @else {
+
+    <!-- =========================
+         EMPTY
+    ========================== -->
+    <div class="attendance-instructor-table__empty">
+
+      <div class="attendance-instructor-table__empty-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle
+            cx="11"
+            cy="11"
+            r="7"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      @if (showEmptySearch) {
+
+        <h3>No se encontraron clases</h3>
+
+        <p>
+          No existen resultados para los filtros seleccionados.
+        </p>
+
+      } @else {
+
+        <h3>Realiza una búsqueda</h3>
+
+        <p>
+          Selecciona un instructor y utiliza los filtros superiores.
+        </p>
+
+      }
+
+    </div>
+
+  }
+
+</section>
