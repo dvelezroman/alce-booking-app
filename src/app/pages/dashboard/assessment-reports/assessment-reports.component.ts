@@ -298,7 +298,7 @@ export class AssessmentReportsComponent {
   }
 
   writingActionLabel(row: PlatformAssessmentAssignment): string {
-    return row.writingApplied ? 'Corregir Writing' : 'Aplicar Writing';
+    return row.writingApplied ? 'Agregar Grammar' : 'Registrar Grammar';
   }
 
   writingPointsMismatch(row: PlatformAssessmentAssignment): boolean {
@@ -328,10 +328,10 @@ export class AssessmentReportsComponent {
       ...modalInitializer(),
       show: true,
       isInfo: true,
-      title: correcting ? '¿Corregir Writing?' : '¿Aplicar Writing?',
+      title: correcting ? '¿Agregar Grammar?' : '¿Registrar Grammar?',
       message: correcting
-        ? `Se actualizará la Writing existente a ${override ?? row.points ?? '—'} puntos (corrección admin).`
-        : `Se creará Writing con ${override ?? row.points ?? '—'} puntos desde el resultado S2S.`,
+        ? `Se insertará un nuevo Grammar con ${override ?? row.points ?? '—'} puntos (mismo stage).`
+        : `Se creará Grammar con ${override ?? row.points ?? '—'} puntos desde el resultado S2S.`,
       showButtons: true,
       confirm: () => this.applyPlatformWriting(row, override),
       close: this.closeModal,
@@ -346,14 +346,13 @@ export class AssessmentReportsComponent {
       next: (res) => {
         this.closeModal();
         this.cancelApplyPlatform();
-        const action = res.created ? 'creada' : 'corregida';
         const promo = res.updatedStage
           ? ' Stage promovido.'
           : ' Stage sin cambio.';
         this.showModal(
           this.createModalParams(
             false,
-            `Writing ${action} con ${res.points} puntos.${promo}`,
+            `Grammar creada con ${res.points} puntos.${promo}`,
           ),
         );
         this.refreshStudentData();
@@ -362,7 +361,7 @@ export class AssessmentReportsComponent {
         this.closeModal();
         const msg =
           err?.error?.message ||
-          'Error al aplicar/corregir Writing desde la plataforma.';
+          'Error al registrar Grammar desde la plataforma.';
         setTimeout(() => {
           this.showModal(this.createModalParams(true, msg));
         }, 200);

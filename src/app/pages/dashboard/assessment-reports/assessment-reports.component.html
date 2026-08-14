@@ -16,9 +16,8 @@
     >
       <h3 class="platform-s2s-title">Resultados S2S (plataforma)</h3>
       <p class="platform-s2s-hint">
-        PASSED aplica Writing automáticamente. Usa «Corregir Writing» solo para
-        ajustar puntos; «Aplicar Writing» queda para casos sin Writing en ALCE
-        (p. ej. FAILED o fallo del notify).
+        PASSED aplica Grammar automáticamente (registro nuevo por score/stage). Usa
+        «Registrar Grammar» si el notify falló; cada apply inserta otra fila Grammar.
       </p>
 
       <div
@@ -37,10 +36,10 @@
             *ngIf="row.writingApplied"
             [class.mismatch]="writingPointsMismatch(row)"
           >
-            Writing ALCE: {{ row.writingPoints ?? '—' }}
+            Grammar ALCE: {{ row.writingPoints ?? '—' }}
           </span>
           <span class="pill pending-writing" *ngIf="!row.writingApplied && row.points != null">
-            Writing pendiente
+            Grammar pendiente
           </span>
           <a
             *ngIf="row.resultsUrl"

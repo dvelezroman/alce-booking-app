@@ -117,7 +117,9 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
   }
 
   writingActionLabel(row: RemotePlatformAssessmentItem): string {
-    return this.canCorrectWriting(row) ? 'Corregir Writing' : 'Aplicar Writing';
+    return this.canCorrectWriting(row)
+      ? 'Agregar Grammar'
+      : 'Registrar Grammar';
   }
 
   startApplyWriting(row: RemotePlatformAssessmentItem): void {
@@ -133,8 +135,8 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
       ...modalInitializer(),
       show: true,
       message: correcting
-        ? `¿Corregir Writing a ${row.points} puntos para ${this.displayStudent(row)}?`
-        : `¿Aplicar Writing con ${row.points} puntos para ${this.displayStudent(row)}?`,
+        ? `¿Insertar otro Grammar (${row.points} pts) para ${this.displayStudent(row)}?`
+        : `¿Registrar Grammar con ${row.points} puntos para ${this.displayStudent(row)}?`,
       isInfo: true,
       showButtons: true,
       confirm: () => this.confirmApplyWriting(),
@@ -152,7 +154,6 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
       this.modal.show = false;
       return;
     }
-    const correcting = target.writingApplied === true;
     this.platformAssessmentService
       .applyWritingScore(target.mirrorId, target.points ?? undefined)
       .subscribe({
@@ -163,8 +164,8 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
             show: true,
             isSuccess: true,
             message: res.updatedStage
-              ? `Writing ${correcting ? 'corregido' : 'aplicado'}. Stage promovido.`
-              : `Writing ${correcting ? 'corregido' : 'aplicado'}. Stage sin cambio.`,
+              ? 'Grammar registrado. Stage promovido.'
+              : 'Grammar registrado. Stage sin cambio.',
             close: () => (this.modal.show = false),
           };
           this.fetchAssignments();
@@ -175,7 +176,7 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
             ...modalInitializer(),
             show: true,
             isError: true,
-            message: 'No se pudo aplicar/corregir Writing.',
+            message: 'No se pudo registrar Grammar.',
             close: () => (this.modal.show = false),
           };
         },

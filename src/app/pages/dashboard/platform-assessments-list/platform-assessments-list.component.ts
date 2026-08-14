@@ -118,7 +118,9 @@ export class PlatformAssessmentsListComponent implements OnInit {
   }
 
   writingActionLabel(row: RemotePlatformAssessmentItem): string {
-    return this.canCorrectWriting(row) ? 'Corregir Writing' : 'Aplicar Writing';
+    return this.canCorrectWriting(row)
+      ? 'Agregar Grammar'
+      : 'Registrar Grammar';
   }
 
   startApplyWriting(row: RemotePlatformAssessmentItem): void {
@@ -135,8 +137,8 @@ export class PlatformAssessmentsListComponent implements OnInit {
       ...modalInitializer(),
       show: true,
       message: correcting
-        ? `¿Corregir Writing a ${pts} puntos para ${this.displayStudent(row)}? (ya aplicado vía S2S/admin)`
-        : `¿Aplicar Writing con ${pts} puntos para ${this.displayStudent(row)}?`,
+        ? `¿Insertar otro Grammar (${pts} pts) para ${this.displayStudent(row)}? Ya hay Grammar para este assignment.`
+        : `¿Registrar Grammar con ${pts} puntos para ${this.displayStudent(row)}?`,
       isError: false,
       isSuccess: false,
       isInfo: true,
@@ -164,13 +166,13 @@ export class PlatformAssessmentsListComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.applyTarget = null;
-          const action = correcting ? 'corregido' : 'aplicado';
+          const action = correcting ? 'registrado de nuevo' : 'registrado';
           this.modal = {
             ...modalInitializer(),
             show: true,
             message: res.updatedStage
-              ? `Writing ${action}. El estudiante fue promovido de stage.`
-              : `Writing ${action}. Stage no cambió (faltan otros skills o ya promovido).`,
+              ? `Grammar ${action}. El estudiante fue promovido de stage.`
+              : `Grammar ${action}. Stage no cambió (faltan otros skills o ya promovido).`,
             isSuccess: true,
             close: () => (this.modal.show = false),
           };
@@ -181,9 +183,7 @@ export class PlatformAssessmentsListComponent implements OnInit {
           this.modal = {
             ...modalInitializer(),
             show: true,
-            message: correcting
-              ? 'No se pudo corregir Writing.'
-              : 'No se pudo aplicar Writing.',
+            message: 'No se pudo registrar Grammar.',
             isError: true,
             close: () => (this.modal.show = false),
           };
