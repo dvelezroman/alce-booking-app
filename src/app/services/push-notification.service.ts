@@ -132,14 +132,16 @@ export class PushNotificationService {
 
     this.devLog('Permission granted, creating push subscription...');
     try {
-      // Register the custom service worker for push notifications
-      const registration = await this.registerPushServiceWorker();
+      const registration = await this.getControllingServiceWorker();
       this.devLog('Push service worker ready, subscribing to push manager...');
-      
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKey) as ArrayBuffer
-      });
+
+      const existing = await registration.pushManager.getSubscription();
+      const subscription =
+        existing ||
+        (await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKey) as ArrayBuffer
+        }));
 
       this.devLog('Push subscription created:', {
         endpoint: subscription.endpoint,
@@ -167,32 +169,42 @@ export class PushNotificationService {
   }
 
   /**
-   * Register the custom service worker for push notifications
+   * Use the SW that actually controls the PWA (ngsw-worker when installed).
+   * custom-sw.js is fallback for local/dev without ngsw.
    */
-  private async registerPushServiceWorker(): Promise<ServiceWorkerRegistration> {
-    try {
-      // First, try to get existing registration
-      let registration = await navigator.serviceWorker.getRegistration('/custom-sw.js');
-      
-      if (!registration) {
-        // Register the custom service worker
-        this.devLog('Registering custom service worker for push notifications...');
-        registration = await navigator.serviceWorker.register('/custom-sw.js', {
-          scope: '/'
-        });
-        this.devLog('Custom service worker registered successfully');
-      } else {
-        this.devLog('Custom service worker already registered');
-      }
-
-      // Wait for the service worker to be ready
-      await navigator.serviceWorker.ready;
-      return registration;
-    } catch (error) {
-      this.errorLog('Error registering push service worker:', error);
-      // Fallback to the default service worker
-      return await navigator.serviceWorker.ready;
+  private async getControllingServiceWorker(): Promise<ServiceWorkerRegistration> {
+    if (!('serviceWorker' in navigator)) {
+      throw new Error('Service workers are not supported');
     }
+
+    try {
+      const ready = await navigator.serviceWorker.ready;
+      if (ready) {
+        this.devLog('Using controlling service worker', ready.active?.scriptURL);
+        return ready;
+      }
+    } catch (error) {
+      this.errorLog('navigator.serviceWorker.ready failed:', error);
+    }
+
+    this.devLog('Registering custom service worker for push notifications...');
+    return navigator.serviceWorker.register('/custom-sw.js', {
+      scope: '/',
+    });
+  }
+
+  /**
+   * Bind push to the installed PWA worker and persist endpoint.
+   * Does not prompt if permission is not already granted.
+   */
+  async ensureInstalledPwaPushSubscription(): Promise<PushSubscription | null> {
+    if (!this.isSupported()) {
+      return null;
+    }
+    if (!('Notification' in window) || Notification.permission !== 'granted') {
+      return null;
+    }
+    return this.subscribeToPush();
   }
 
   /**
@@ -200,14 +212,7 @@ export class PushNotificationService {
    */
   async unsubscribeFromPush(): Promise<boolean> {
     try {
-      // Try to get subscription from custom service worker first
-      let registration = await navigator.serviceWorker.getRegistration('/custom-sw.js');
-      
-      if (!registration) {
-        // Fallback to default service worker
-        registration = await navigator.serviceWorker.ready;
-      }
-      
+      const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
       
       if (subscription) {
@@ -228,14 +233,7 @@ export class PushNotificationService {
    */
   private async loadExistingSubscription(): Promise<void> {
     try {
-      // Try to get subscription from custom service worker first
-      let registration = await navigator.serviceWorker.getRegistration('/custom-sw.js');
-      
-      if (!registration) {
-        // Fallback to default service worker
-        registration = await navigator.serviceWorker.ready;
-      }
-      
+      const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
       
       if (subscription) {

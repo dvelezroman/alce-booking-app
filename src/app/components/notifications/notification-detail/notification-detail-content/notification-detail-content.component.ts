@@ -173,6 +173,10 @@ export class NotificationDetailContentComponent {
     return this.notification?.message?.kind === 'assessment-assigned';
   }
 
+  get isAssessmentRetake(): boolean {
+    return this.notification?.message?.reason === 'RETAKE';
+  }
+
   get assessmentDirectUrl(): string | null {
     const url = this.notification?.message?.directAccessUrl?.trim();
     return url || null;

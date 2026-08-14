@@ -367,7 +367,7 @@
       >
         <header class="demo-class-header">
           <div>
-            <p class="eyebrow">Nuevo assessment</p>
+            <p class="eyebrow">{{ isAssessmentRetake ? "Nuevo intento" : "Nuevo assessment" }}</p>
             <h3>{{ am.templateTitle || notification?.title }}</h3>
           </div>
           <span
@@ -380,7 +380,11 @@
         </header>
 
         <p class="assessment-lead">
-          Se te asignó este assessment. Abre el enlace de abajo para comenzar.
+          {{
+            isAssessmentRetake
+              ? "Se te autorizó un nuevo intento. Abre el enlace de abajo para comenzar."
+              : "Se te asignó este assessment. Abre el enlace de abajo para comenzar."
+          }}
         </p>
 
         <div

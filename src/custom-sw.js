@@ -14,7 +14,7 @@ self.addEventListener('push', (event) => {
     badge: '/assets/icons/icon-72x72.png',
     tag: 'notification',
     data: {
-      url: '/dashboard/notifications',
+      url: '/dashboard/notifications-inbox',
       timestamp: Date.now()
     },
     requireInteraction: true,
@@ -50,17 +50,32 @@ self.addEventListener('push', (event) => {
           console.log('Successfully parsed push data:', pushData);
           
           if (pushData && typeof pushData === 'object') {
+            const nested = pushData.notification && typeof pushData.notification === 'object'
+              ? pushData.notification
+              : {};
+            const nestedData = nested.data && typeof nested.data === 'object' ? nested.data : {};
+            const topData = pushData.data && typeof pushData.data === 'object' ? pushData.data : {};
             notificationData = {
               ...notificationData,
-              title: pushData.title || notificationData.title,
-              body: pushData.body || notificationData.body,
-              icon: pushData.icon || notificationData.icon,
-              badge: pushData.badge || notificationData.badge,
-              tag: pushData.tag || notificationData.tag,
-              data: pushData.data || notificationData.data,
-              requireInteraction: pushData.requireInteraction !== undefined ? pushData.requireInteraction : notificationData.requireInteraction,
-              silent: pushData.silent !== undefined ? pushData.silent : notificationData.silent,
-              actions: pushData.actions || notificationData.actions
+              title: nested.title || pushData.title || notificationData.title,
+              body: nested.body || pushData.body || notificationData.body,
+              icon: nested.icon || pushData.icon || notificationData.icon,
+              badge: nested.badge || pushData.badge || notificationData.badge,
+              tag: nested.tag || pushData.tag || notificationData.tag,
+              data: {
+                ...notificationData.data,
+                ...nestedData,
+                ...topData,
+              },
+              requireInteraction: nested.requireInteraction !== undefined
+                ? nested.requireInteraction
+                : (pushData.requireInteraction !== undefined
+                  ? pushData.requireInteraction
+                  : notificationData.requireInteraction),
+              silent: nested.silent !== undefined
+                ? nested.silent
+                : (pushData.silent !== undefined ? pushData.silent : notificationData.silent),
+              actions: pushData.actions || nested.actions || notificationData.actions
             };
           }
         } catch (parseError) {
@@ -85,6 +100,22 @@ self.addEventListener('push', (event) => {
   );
 });
 
+function resolveNotificationOpenUrl(url) {
+  const fallback = self.location.origin + '/dashboard/notifications-inbox';
+  if (!url || typeof url !== 'string') {
+    return fallback;
+  }
+  const trimmed = url.trim();
+  if (!trimmed) {
+    return fallback;
+  }
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return trimmed;
+  }
+  const path = trimmed.startsWith('/') ? trimmed : '/' + trimmed;
+  return self.location.origin + path;
+}
+
 // Listen for notification click events
 self.addEventListener('notificationclick', (event) => {
   console.log('Notification click received:', event);
@@ -97,30 +128,32 @@ self.addEventListener('notificationclick', (event) => {
     return;
   }
 
-  // Handle notification click
-  const urlToOpen = event.notification.data?.url || '/dashboard/notifications';
-  
+  const urlToOpen = resolveNotificationOpenUrl(event.notification.data?.url);
+
   event.waitUntil(
     Promise.all([
-      // Decrease unread count when notification is clicked
       updateUnreadNotificationCount(-1),
-      // Navigate to the app
       clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-        // Check if app is already open
+        const isAbsolute =
+          urlToOpen.startsWith('http://') || urlToOpen.startsWith('https://');
+        const isExternal =
+          isAbsolute && !urlToOpen.startsWith(self.location.origin);
+
+        if (isExternal && clients.openWindow) {
+          return clients.openWindow(urlToOpen);
+        }
+
         for (const client of clientList) {
           if (client.url.includes(self.location.origin)) {
-            // App is open, navigate to the specific page
             if ('navigate' in client) {
               client.navigate(urlToOpen);
             }
             return client.focus();
           }
         }
-        
-        // App is not open, launch it
+
         if (clients.openWindow) {
-          // For mobile, this will launch the PWA
-          return clients.openWindow(self.location.origin + urlToOpen);
+          return clients.openWindow(urlToOpen);
         }
       })
     ])

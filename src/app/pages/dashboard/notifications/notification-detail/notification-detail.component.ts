@@ -285,6 +285,10 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.notification?.message?.kind === 'assessment-assigned';
   }
 
+  get isAssessmentRetake(): boolean {
+    return this.assessmentMessage?.reason === 'RETAKE';
+  }
+
   get isAssessmentResultsReadyNotification(): boolean {
     return this.notification?.message?.kind === 'assessment-results-ready';
   }

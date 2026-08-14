@@ -64,6 +64,7 @@ export interface NotificationMessage {
   maxAttempts?: number;
   batchId?: string | null;
   eventId?: string;
+  reason?: 'ASSIGNED' | 'RETAKE' | 'MANUAL_NOTIFY' | 'ACCESS_CODE_RESET' | string;
   [key: string]: any;
 }
 

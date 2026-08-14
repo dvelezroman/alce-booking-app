@@ -51,7 +51,9 @@
     <div class="assessment-card">
       <div class="assessment-card__header">
         <div>
-          <p class="assessment-card__eyebrow">Nuevo assessment</p>
+          <p class="assessment-card__eyebrow">
+            {{ isAssessmentRetake ? 'Nuevo intento' : 'Nuevo assessment' }}
+          </p>
           <h3 class="assessment-card__title">
             {{ notification.message.templateTitle || notification.title }}
           </h3>
@@ -65,7 +67,11 @@
       </div>
 
       <p class="assessment-card__lead">
-        Se te asignó este assessment. Abre el enlace para comenzar.
+        {{
+          isAssessmentRetake
+            ? 'Se te autorizó un nuevo intento. Abre el enlace para comenzar.'
+            : 'Se te asignó este assessment. Abre el enlace para comenzar.'
+        }}
       </p>
 
       <ng-container *ngIf="assessmentDirectUrl && !isAssessmentExpired">

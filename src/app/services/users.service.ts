@@ -123,10 +123,11 @@ export class UsersService implements OnInit{
         }
 
         // Check if user already has an active subscription on the server
-        const hasActiveSubscription = await this.pushNotificationService.hasActiveSubscription();
+        const rebound = await this.pushNotificationService.ensureInstalledPwaPushSubscription();
+        const hasActiveSubscription =
+          !!rebound || (await this.pushNotificationService.hasActiveSubscription());
         if (hasActiveSubscription) {
           this.devLog('User already has an active push subscription on server');
-          // Start periodic notification checks even if already subscribed
           this.pushNotificationService.startPeriodicNotificationCheck(5);
           return;
         }
