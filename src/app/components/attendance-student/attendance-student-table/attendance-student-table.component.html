@@ -1,0 +1,226 @@
+<section class="attendance-student-table">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+  <header class="attendance-student-table__header">
+    <h2 class="attendance-student-table__title">
+      Resultados de la búsqueda
+    </h2>
+
+    <span class="attendance-student-table__line"></span>
+  </header>
+
+
+  <!-- =========================
+       RESULTS
+  ========================== -->
+  @if (hasResults) {
+
+    <div class="attendance-student-table__wrapper">
+
+      <table class="attendance-student-table__table">
+
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Tema / Reunión</th>
+            <th>Instructor</th>
+            <th>Estado</th>
+            <th>Observación</th>
+            <th class="attendance-student-table__actions-column">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let meeting of meetings; trackBy: trackByMeetingId"
+            class="attendance-student-table__row"
+          >
+
+            <!-- =========================
+                 DATE
+            ========================== -->
+            <td>
+              <div class="attendance-student-table__date">
+
+                <strong>
+                  {{ getMeetingDate(meeting) }}
+                </strong>
+
+                <span>
+                  {{ meeting.date | date:'EEEE':'':'es-EC' }}
+                </span>
+
+              </div>
+            </td>
+
+
+            <!-- =========================
+                 HOUR
+            ========================== -->
+            <td>
+              <div class="attendance-student-table__hour">
+                <strong>
+                  {{ getMeetingHour(meeting) }}
+                </strong>
+              </div>
+            </td>
+
+
+            <!-- =========================
+                 THEME
+            ========================== -->
+            <td>
+              <div class="attendance-student-table__theme">
+
+                <strong [title]="getTheme(meeting)">
+                  {{ getTheme(meeting) }}
+                </strong>
+
+                <span [title]="getStage(meeting)">
+                  {{ getStage(meeting) }}
+                </span>
+
+              </div>
+            </td>
+
+
+            <!-- =========================
+                 INSTRUCTOR
+            ========================== -->
+            <td>
+              <div class="attendance-student-table__instructor">
+
+                <!-- <div class="attendance-student-table__instructor-avatar">
+                  {{ getInstructorName(meeting).charAt(0) }}
+                </div> -->
+
+                <span [title]="getInstructorName(meeting)">
+                  {{ getInstructorName(meeting) }}
+                </span>
+
+              </div>
+            </td>
+
+
+            <!-- =========================
+                 STATUS
+            ========================== -->
+            <td>
+              <span
+                class="attendance-student-table__status"
+                [ngClass]="getAttendanceClass(meeting)"
+              >
+                {{ getAttendanceLabel(meeting) }}
+              </span>
+            </td>
+
+
+            <!-- =========================
+                 OBSERVATION
+            ========================== -->
+            <td>
+              <span
+                class="attendance-student-table__observation"
+                [title]="getObservation(meeting)"
+              >
+                {{ getObservation(meeting) }}
+              </span>
+            </td>
+
+
+            <!-- =========================
+                 ACTIONS
+            ========================== -->
+            <td class="attendance-student-table__actions-cell">
+
+              <button
+                type="button"
+                class="attendance-student-table__action-button"
+                aria-label="Ver detalles del tema de la reunión"
+                (click)="onViewTheme(meeting)"
+              >
+                <svg
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="2.5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+                </svg>
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  } @else {
+
+    <!-- =========================
+         EMPTY
+    ========================== -->
+    <div class="attendance-student-table__empty">
+
+      <div class="attendance-student-table__empty-icon">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="7"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      @if (showEmptySearch) {
+        <h3>No se encontraron asistencias</h3>
+        <p>No existen reuniones para los filtros seleccionados.</p>
+      } @else {
+        <h3>Realiza una búsqueda</h3>
+        <p>Selecciona un estudiante y utiliza los filtros superiores.</p>
+      }
+
+    </div>
+
+  }
+
+</section>

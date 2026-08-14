@@ -1,0 +1,392 @@
+:host {
+  display: block;
+}
+
+/* =========================
+   OVERLAY
+========================= */
+
+.attendance-student-theme-modal__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+
+  background: rgba(15, 23, 42, .42);
+  backdrop-filter: blur(2px);
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.attendance-student-theme-modal {
+  width: min(100%, 34rem);
+
+  overflow: hidden;
+
+  border: 1px solid #dfe2e9;
+  border-radius: .8rem;
+
+  background: #fff;
+
+  box-shadow:
+    0 1.3rem 3.5rem rgba(20, 27, 45, .18),
+    0 .25rem .8rem rgba(20, 27, 45, .07);
+
+  animation: attendance-theme-modal-enter .16s ease-out;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.attendance-student-theme-modal__header {
+  min-height: 3.6rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: .8rem 1rem;
+
+  background:
+    linear-gradient(
+      90deg,
+      #fbfbff 0%,
+      #f4f0ff 100%
+    );
+}
+
+.attendance-student-theme-modal__title {
+  margin: 0;
+
+  color: #202739;
+
+  font-size: .88rem;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.attendance-student-theme-modal__close {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: .4rem;
+
+  background: transparent;
+  color: #535c70;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    color .15s ease,
+    transform .1s ease;
+}
+
+.attendance-student-theme-modal__close:hover {
+  background: #ece9fb;
+  color: #5038d1;
+}
+
+.attendance-student-theme-modal__close:active {
+  transform: scale(.92);
+}
+
+/* =========================
+   BODY
+========================= */
+
+.attendance-student-theme-modal__body {
+  padding: 1rem;
+}
+
+/* =========================
+   MEETING
+========================= */
+
+.attendance-student-theme-modal__meeting {
+  display: flex;
+  align-items: center;
+
+  gap: .75rem;
+}
+
+.attendance-student-theme-modal__meeting-icon {
+  width: 2.8rem;
+  height: 2.8rem;
+
+  flex: 0 0 2.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: .45rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5933dc 0%,
+      #7149ed 100%
+    );
+
+  color: #fff;
+
+  box-shadow:
+    0 .2rem .5rem rgba(100, 68, 232, .2);
+}
+
+.attendance-student-theme-modal__meeting-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .18rem;
+}
+
+.attendance-student-theme-modal__meeting-content strong {
+  overflow: hidden;
+
+  color: #252c40;
+
+  font-size: .78rem;
+  font-weight: 750;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attendance-student-theme-modal__meeting-content span {
+  color: #737b8d;
+
+  font-size: .62rem;
+  font-weight: 500;
+}
+
+.attendance-student-theme-modal__dot {
+  margin: 0 .2rem;
+}
+
+/* =========================
+   DIVIDER
+========================= */
+
+.attendance-student-theme-modal__divider {
+  width: 100%;
+  height: 1px;
+
+  margin: .9rem 0;
+
+  background: #eceef2;
+}
+
+/* =========================
+   META
+========================= */
+
+.attendance-student-theme-modal__meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+}
+
+.attendance-student-theme-modal__meta-item {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .14rem;
+}
+
+.attendance-student-theme-modal__meta-item span {
+  color: #848c9d;
+
+  font-size: .6rem;
+  font-weight: 500;
+}
+
+.attendance-student-theme-modal__meta-item strong {
+  overflow: hidden;
+
+  color: #30384d;
+
+  font-size: .67rem;
+  font-weight: 700;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.attendance-student-theme-modal__section + 
+.attendance-student-theme-modal__section {
+  margin-top: 1rem;
+}
+
+.attendance-student-theme-modal__section-label {
+  display: block;
+
+  margin-bottom: .22rem;
+
+  color: #858d9e;
+
+  font-size: .61rem;
+  font-weight: 550;
+}
+
+.attendance-student-theme-modal__section p {
+  margin: 0;
+
+  color: #3f475a;
+
+  font-size: .65rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.attendance-student-theme-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  padding:
+    .25rem
+    1rem
+    1rem;
+}
+
+.attendance-student-theme-modal__footer-close {
+  height: 2.35rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 1rem;
+
+  border: 1px solid #dfe2e9;
+  border-radius: .42rem;
+
+  background: #fff;
+  color: #343c50;
+
+  font-family: inherit;
+  font-size: .67rem;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    border-color .15s ease,
+    transform .1s ease;
+}
+
+.attendance-student-theme-modal__footer-close:hover {
+  border-color: #cfd3dd;
+  background: #f8f9fb;
+}
+
+.attendance-student-theme-modal__footer-close:active {
+  transform: scale(.97);
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes attendance-theme-modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(.35rem) scale(.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 640px) {
+  .attendance-student-theme-modal__overlay {
+    align-items: flex-end;
+
+    padding: .5rem;
+  }
+
+  .attendance-student-theme-modal {
+    width: 100%;
+
+    border-radius:
+      .75rem
+      .75rem
+      .55rem
+      .55rem;
+  }
+
+  .attendance-student-theme-modal__header {
+    padding: .75rem .8rem;
+  }
+
+  .attendance-student-theme-modal__body {
+    padding: .85rem;
+  }
+
+  .attendance-student-theme-modal__meta {
+    grid-template-columns: 1fr;
+
+    gap: .7rem;
+  }
+
+  .attendance-student-theme-modal__meeting-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+
+    flex-basis: 2.5rem;
+  }
+
+  .attendance-student-theme-modal__footer {
+    padding:
+      .2rem
+      .85rem
+      .85rem;
+  }
+
+  .attendance-student-theme-modal__footer-close {
+    width: 100%;
+  }
+}

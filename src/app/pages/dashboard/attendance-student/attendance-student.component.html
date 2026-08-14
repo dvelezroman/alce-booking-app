@@ -1,0 +1,117 @@
+<section class="attendance-student-page">
+
+  <div class="attendance-student-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <app-attendance-student-header>
+    </app-attendance-student-header>
+
+
+    <!-- =========================
+         PAGE CONTENT
+    ========================== -->
+    <div class="attendance-student-page__layout">
+
+
+      <!-- =========================
+           LEFT COLUMN
+      ========================== -->
+      <main class="attendance-student-page__main">
+
+        <!-- =========================
+             FILTERS
+        ========================== -->
+        <app-attendance-student-filters
+          [filter]="filter"
+          [availableHours]="availableHours"
+          [filteredStudents]="filteredStudents"
+          [showDropdown]="showDropdown"
+          [isNameFieldInvalid]="isNameFieldInvalid"
+          (studentInputChange)="onStudentInputChange($event)"
+          (studentSelected)="selectStudent($event)"
+          (dropdownHidden)="hideDropdown()"
+          (searchRequested)="searchAttendance()"
+        >
+        </app-attendance-student-filters>
+
+
+        <!-- =========================
+             RESULTS
+        ========================== -->
+        <app-attendance-student-table
+          [meetings]="paginatedMeetings"
+          [searchAttempted]="searchAttempted"
+          (themeRequested)="openThemeModal($event)"
+        >
+        </app-attendance-student-table>
+
+
+        <!-- =========================
+             PAGINATION
+        ========================== -->
+        @if (meetings.length > itemsPerPage) {
+
+          <app-attendance-student-pagination
+            [currentPage]="currentPage"
+            [itemsPerPage]="itemsPerPage"
+            [totalItems]="meetings.length"
+            (pageChange)="changePage($event)"
+          >
+          </app-attendance-student-pagination>
+
+        }
+
+      </main>
+
+
+      <!-- =========================
+           RIGHT COLUMN
+      ========================== -->
+      <aside class="attendance-student-page__sidebar">
+
+        <!-- =========================
+             SUMMARY
+        ========================== -->
+        <app-attendance-student-summary
+          [studentId]="selectedStudentId"
+          [studentName]="selectedStudentName"
+          [meetings]="meetings"
+        >
+        </app-attendance-student-summary>
+
+
+        <!-- =========================
+             ADDITIONAL INFO
+        ========================== -->
+        <app-attendance-student-info
+          [studentId]="selectedStudentId"
+          [studentName]="selectedStudentName"
+          [meetings]="meetings"
+        >
+        </app-attendance-student-info>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       THEME MODAL
+  ========================== -->
+  @if (isModalOpen && selectedMeeting) {
+
+    
+    <app-attendance-student-theme-modal
+      [meeting]="selectedMeeting"
+      (close)="closeThemeModal()"
+    >
+    </app-attendance-student-theme-modal>
+   
+
+  }
+
+</section>

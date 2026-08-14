@@ -1,0 +1,195 @@
+<section class="attendance-student-filters">
+
+  <h2 class="attendance-student-filters__title">
+    Filtros de búsqueda
+  </h2>
+
+  <div class="attendance-student-filters__grid">
+
+    <!-- =========================
+         STUDENT
+    ========================== -->
+    <div class="attendance-student-filters__field attendance-student-filters__field--student">
+
+      <label class="attendance-student-filters__label">
+        Estudiante
+      </label>
+
+      <div class="attendance-student-filters__student-search">
+
+        <span class="attendance-student-filters__input-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8" />
+            <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </span>
+
+        <input
+          type="text"
+          class="attendance-student-filters__input attendance-student-filters__input--search"
+          placeholder="Buscar estudiante..."
+          [(ngModel)]="filter.studentName"
+          [class.attendance-student-filters__input--invalid]="isNameFieldInvalid"
+          (ngModelChange)="onStudentInputChange($event)"
+          (blur)="onStudentInputBlur()"
+        />
+
+        @if (showDropdown && filteredStudents.length > 0) {
+
+          <div class="attendance-student-filters__dropdown">
+
+            @for (student of filteredStudents; track student.id) {
+
+              <button
+                type="button"
+                class="attendance-student-filters__student-option"
+                (mousedown)="onSelectStudent(student)"
+              >
+
+                <span class="attendance-student-filters__student-avatar">
+                  {{ getStudentInitials(student) }}
+                </span>
+
+                <span class="attendance-student-filters__student-content">
+                  <strong>
+                    {{ getStudentFullName(student) }}
+                  </strong>
+
+                  <small>
+                    Estudiante
+                  </small>
+                </span>
+
+                <span class="attendance-student-filters__student-id">
+                  {{ getStudentId(student) }}
+                </span>
+
+              </button>
+
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+      @if (isNameFieldInvalid) {
+        <span class="attendance-student-filters__error">
+          Selecciona un estudiante válido.
+        </span>
+      }
+
+    </div>
+
+
+    <!-- =========================
+         FROM
+    ========================== -->
+    <div class="attendance-student-filters__field">
+
+      <label class="attendance-student-filters__label">
+        Desde
+      </label>
+
+      <input
+        type="date"
+        class="attendance-student-filters__input"
+        [(ngModel)]="filter.from"
+      />
+
+    </div>
+
+
+    <!-- =========================
+         TO
+    ========================== -->
+    <div class="attendance-student-filters__field">
+
+      <label class="attendance-student-filters__label">
+        Hasta
+      </label>
+
+      <input
+        type="date"
+        class="attendance-student-filters__input"
+        [(ngModel)]="filter.to"
+      />
+
+    </div>
+
+
+    <!-- =========================
+         HOUR
+    ========================== -->
+    <div class="attendance-student-filters__field">
+
+      <label class="attendance-student-filters__label">
+        Hora
+      </label>
+
+      <div class="attendance-student-filters__select-wrapper">
+
+        <select
+          class="attendance-student-filters__input attendance-student-filters__select"
+          [(ngModel)]="filter.hour"
+        >
+          <option value="">
+            Seleccionar hora
+          </option>
+
+          @for (hour of availableHours; track hour) {
+            <option [value]="hour">
+              {{ formatHour(hour) }}
+            </option>
+          }
+        </select>
+
+        <span class="attendance-student-filters__select-icon" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       ACTIONS
+  ========================== -->
+  <div class="attendance-student-filters__actions">
+
+    <button
+      type="button"
+      class="attendance-student-filters__clear"
+      (click)="clearFilters()"
+    >
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 4v6h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M5.5 15a7 7 0 1 0 .7-7.6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+
+      <span>Limpiar</span>
+    </button>
+
+
+    <button
+      type="button"
+      class="attendance-student-filters__search"
+      (click)="onSearch()"
+    >
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8" />
+        <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+
+      <span>Buscar</span>
+    </button>
+
+  </div>
+
+</section>

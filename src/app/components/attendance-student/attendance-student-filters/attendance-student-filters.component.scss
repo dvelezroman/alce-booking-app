@@ -1,0 +1,498 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.attendance-student-filters {
+  position: relative;
+
+  width: 100%;
+
+  padding: 1.15rem;
+
+  border: 1px solid #e3e6ed;
+  border-radius: .75rem;
+
+  background: #fff;
+
+  box-shadow: 0 .15rem .6rem rgba(24, 31, 50, .035);
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.attendance-student-filters__title {
+  margin: 0 0 1rem;
+
+  color: #202739;
+
+  font-size: .88rem;
+  font-weight: 750;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.attendance-student-filters__grid {
+  display: grid;
+  grid-template-columns:
+    minmax(16rem, 1.45fr)
+    minmax(10rem, .8fr)
+    minmax(10rem, .8fr)
+    minmax(11rem, .88fr);
+
+  gap: .8rem;
+}
+
+/* =========================
+   FIELD
+========================= */
+
+.attendance-student-filters__field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .4rem;
+}
+
+.attendance-student-filters__field--student {
+  position: relative;
+  z-index: 20;
+}
+
+.attendance-student-filters__label {
+  color: #252c40;
+
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+/* =========================
+   INPUT
+========================= */
+
+.attendance-student-filters__student-search,
+.attendance-student-filters__select-wrapper {
+  position: relative;
+}
+
+.attendance-student-filters__input {
+  width: 100%;
+  height: 2.75rem;
+
+  padding: 0 .8rem;
+
+  border: 1px solid #dfe2e9;
+  border-radius: .45rem;
+
+  outline: none;
+
+  background: #fff;
+  color: #30384d;
+
+  font-family: inherit;
+  font-size: .72rem;
+  font-weight: 500;
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease;
+}
+
+.attendance-student-filters__input::placeholder {
+  color: #949bac;
+}
+
+.attendance-student-filters__input:hover {
+  border-color: #cfd3dd;
+}
+
+.attendance-student-filters__input:focus {
+  border-color: #7458e8;
+
+  box-shadow:
+    0 0 0 .16rem rgba(100, 68, 232, .09);
+}
+
+.attendance-student-filters__input--search {
+  padding-left: 2.35rem;
+}
+
+.attendance-student-filters__input--invalid {
+  border-color: #e15c5c;
+}
+
+.attendance-student-filters__input--invalid:focus {
+  border-color: #e15c5c;
+
+  box-shadow:
+    0 0 0 .16rem rgba(225, 92, 92, .08);
+}
+
+/* =========================
+   INPUT ICON
+========================= */
+
+.attendance-student-filters__input-icon {
+  position: absolute;
+  top: 50%;
+  left: .8rem;
+  z-index: 2;
+
+  display: inline-flex;
+
+  color: #687185;
+
+  pointer-events: none;
+
+  transform: translateY(-50%);
+}
+
+/* =========================
+   SELECT
+========================= */
+
+.attendance-student-filters__select {
+  padding-right: 2.3rem;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  cursor: pointer;
+}
+
+.attendance-student-filters__select-icon {
+  position: absolute;
+  top: 50%;
+  right: .75rem;
+
+  display: inline-flex;
+
+  color: #555e72;
+
+  pointer-events: none;
+
+  transform: translateY(-50%);
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.attendance-student-filters__error {
+  margin-top: .05rem;
+
+  color: #d85151;
+
+  font-size: .61rem;
+  font-weight: 550;
+}
+
+/* =========================
+   DROPDOWN
+========================= */
+
+.attendance-student-filters__dropdown {
+  position: absolute;
+  top: calc(100% + .35rem);
+  right: 0;
+  left: 0;
+  z-index: 100;
+
+  max-height: 17rem;
+
+  overflow-y: auto;
+
+  padding: .35rem;
+
+  border: 1px solid #e1e4eb;
+  border-radius: .55rem;
+
+  background: #fff;
+
+  box-shadow:
+    0 .75rem 2rem rgba(30, 36, 58, .12),
+    0 .15rem .5rem rgba(30, 36, 58, .05);
+}
+
+/* =========================
+   STUDENT OPTION
+========================= */
+
+.attendance-student-filters__student-option {
+  width: 100%;
+  min-height: 3.35rem;
+
+  display: grid;
+  grid-template-columns:
+    2rem
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: .65rem;
+
+  padding: .45rem .55rem;
+
+  border: 0;
+  border-radius: .4rem;
+
+  background: transparent;
+  color: #30384d;
+
+  font-family: inherit;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    transform .1s ease;
+}
+
+.attendance-student-filters__student-option:hover {
+  background: #f5f2ff;
+}
+
+.attendance-student-filters__student-option:active {
+  transform: scale(.99);
+}
+
+/* =========================
+   AVATAR
+========================= */
+
+.attendance-student-filters__student-avatar {
+  width: 2rem;
+  height: 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #e5f7ed;
+  color: #23875a;
+
+  font-size: .65rem;
+  font-weight: 750;
+}
+
+/* =========================
+   STUDENT CONTENT
+========================= */
+
+.attendance-student-filters__student-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
+}
+
+.attendance-student-filters__student-content strong {
+  overflow: hidden;
+
+  color: #252c40;
+
+  font-size: .68rem;
+  font-weight: 700;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attendance-student-filters__student-content small {
+  color: #858d9e;
+
+  font-size: .6rem;
+}
+
+.attendance-student-filters__student-id {
+  color: #777f91;
+
+  font-size: .61rem;
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.attendance-student-filters__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: .65rem;
+
+  margin-top: 1rem;
+}
+
+.attendance-student-filters__clear,
+.attendance-student-filters__search {
+  height: 2.55rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .45rem;
+
+  padding: 0 1.25rem;
+
+  border-radius: .45rem;
+
+  font-family: inherit;
+  font-size: .7rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    border-color .15s ease,
+    color .15s ease,
+    transform .1s ease,
+    box-shadow .15s ease;
+}
+
+.attendance-student-filters__clear {
+  border: 1px solid #dfe2e9;
+
+  background: #fff;
+  color: #41495d;
+}
+
+.attendance-student-filters__clear:hover {
+  border-color: #d0d4de;
+
+  background: #f8f9fb;
+}
+
+.attendance-student-filters__search {
+  min-width: 7rem;
+
+  border: 1px solid #6240df;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5933dc 0%,
+      #7046ed 100%
+    );
+
+  color: #fff;
+
+  box-shadow:
+    0 .2rem .5rem rgba(100, 68, 232, .16);
+}
+
+.attendance-student-filters__search:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #5130cc 0%,
+      #653bdc 100%
+    );
+}
+
+.attendance-student-filters__clear:active,
+.attendance-student-filters__search:active {
+  transform: scale(.97);
+}
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1250px) {
+  .attendance-student-filters__grid {
+    grid-template-columns:
+      minmax(14rem, 1.35fr)
+      minmax(9rem, .8fr)
+      minmax(9rem, .8fr)
+      minmax(10rem, .9fr);
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .attendance-student-filters__grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .attendance-student-filters__field--student {
+    grid-column: 1 / -1;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 640px) {
+  .attendance-student-filters {
+    padding: .8rem;
+
+    border-radius: .6rem;
+  }
+
+  .attendance-student-filters__title {
+    margin-bottom: .8rem;
+
+    font-size: .82rem;
+  }
+
+  .attendance-student-filters__grid {
+    grid-template-columns: 1fr;
+
+    gap: .7rem;
+  }
+
+  .attendance-student-filters__field--student {
+    grid-column: auto;
+  }
+
+  .attendance-student-filters__input {
+    height: 2.6rem;
+  }
+
+  .attendance-student-filters__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: .55rem;
+
+    margin-top: .85rem;
+  }
+
+  .attendance-student-filters__clear,
+  .attendance-student-filters__search {
+    width: 100%;
+
+    padding: 0 .7rem;
+  }
+
+  .attendance-student-filters__dropdown {
+    max-height: 14rem;
+  }
+}

@@ -74,6 +74,7 @@ import { NotificationsSentV2Component } from './notifications/notifications-sent
 import { NotificationsHistorialComponent } from './notifications/notifications-historial/notifications-historial.component';
 import { SearchingMeetingV2Component } from './searching-meeting-v2/searching-meeting-v2.component';
 import { SearchingUserComponent } from './searching-user/searching-user.component';
+import { AttendanceStudentComponent } from './attendance-student/attendance-student.component';
 
 const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -138,7 +139,8 @@ const dashboardChildren: Routes = [
   },
   { path: 'searching-students', component: SearchingStudentComponent },
   { path: 'searching-user', component: SearchingUserComponent },
-  { path: 'attendance-student', component: AttendanceReportsComponent },
+  // { path: 'attendance-student', component: AttendanceReportsComponent },
+  { path: 'attendance-student', component: AttendanceStudentComponent },
   { path: 'report-instructor', component: ReportInstructorComponent },
   { path: 'attendance-instructor', component: AttendanceInstructorComponent },
   { path: 'instructor-evaluations', component: InstructorEvaluationsComponent },

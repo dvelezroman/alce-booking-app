@@ -1,0 +1,250 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.attendance-student-summary {
+  width: 100%;
+
+  padding: 1rem;
+
+  border: 1px solid #e3e6ed;
+  border-radius: .75rem;
+
+  background: #fff;
+
+  box-shadow: 0 .15rem .6rem rgba(24, 31, 50, .035);
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.attendance-student-summary__title {
+  margin: 0 0 1rem;
+
+  color: #202739;
+
+  font-size: .9rem;
+  font-weight: 750;
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.attendance-student-summary__profile {
+  display: flex;
+  align-items: center;
+
+  gap: .8rem;
+}
+
+.attendance-student-summary__avatar {
+  width: 3.6rem;
+  height: 3.6rem;
+
+  flex: 0 0 3.6rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #dcf5e8;
+  color: #218557;
+
+  font-size: 1rem;
+  font-weight: 750;
+}
+
+.attendance-student-summary__profile-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .12rem;
+}
+
+.attendance-student-summary__profile-info strong {
+  overflow: hidden;
+
+  color: #252c40;
+
+  font-size: .78rem;
+  font-weight: 750;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attendance-student-summary__profile-info span {
+  color: #7b8394;
+
+  font-size: .64rem;
+}
+
+.attendance-student-summary__profile-info small {
+  color: #697185;
+
+  font-size: .61rem;
+  font-weight: 550;
+}
+
+/* =========================
+   DIVIDER
+========================= */
+
+.attendance-student-summary__divider {
+  width: 100%;
+  height: 1px;
+
+  margin: 1rem 0 .8rem;
+
+  background: #eceef2;
+}
+
+/* =========================
+   ITEM
+========================= */
+
+.attendance-student-summary__item {
+  display: flex;
+  align-items: center;
+
+  gap: .7rem;
+
+  min-height: 3.3rem;
+
+  padding: .45rem 0;
+}
+
+.attendance-student-summary__icon {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: .5rem;
+}
+
+/* =========================
+   ICON COLORS
+========================= */
+
+.attendance-student-summary__icon--purple {
+  background: #f0ecff;
+  color: #6543df;
+}
+
+.attendance-student-summary__icon--success {
+  background: #e8f7ee;
+  color: #25945e;
+}
+
+.attendance-student-summary__icon--danger {
+  background: #fff0f3;
+  color: #df4f68;
+}
+
+.attendance-student-summary__icon--blue {
+  background: #eef0ff;
+  color: #5360df;
+}
+
+/* =========================
+   ITEM CONTENT
+========================= */
+
+.attendance-student-summary__item-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
+}
+
+.attendance-student-summary__item-content span {
+  color: #7b8394;
+
+  font-size: .62rem;
+  font-weight: 500;
+}
+
+.attendance-student-summary__item-content strong {
+  color: #252c40;
+
+  font-size: .78rem;
+  font-weight: 750;
+}
+
+.attendance-student-summary__item-content strong small {
+  color: inherit;
+
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1000px) {
+  .attendance-student-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: .5rem 1rem;
+  }
+
+  .attendance-student-summary__title,
+  .attendance-student-summary__profile,
+  .attendance-student-summary__divider {
+    grid-column: 1 / -1;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 640px) {
+  .attendance-student-summary {
+    grid-template-columns: 1fr;
+
+    padding: .8rem;
+
+    border-radius: .6rem;
+  }
+
+  .attendance-student-summary__title,
+  .attendance-student-summary__profile,
+  .attendance-student-summary__divider {
+    grid-column: auto;
+  }
+
+  .attendance-student-summary__avatar {
+    width: 3.2rem;
+    height: 3.2rem;
+
+    flex-basis: 3.2rem;
+
+    font-size: .9rem;
+  }
+
+  .attendance-student-summary__item {
+    min-height: 3rem;
+  }
+}
