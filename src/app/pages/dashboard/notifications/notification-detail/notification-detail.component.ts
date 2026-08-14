@@ -293,6 +293,10 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.notification?.message?.kind === 'assessment-results-ready';
   }
 
+  get isAssessmentUnassignedNotification(): boolean {
+    return this.notification?.message?.kind === 'assessment-unassigned';
+  }
+
   get assessmentMessage() {
     return this.isAssessmentAssignedNotification
       ? this.notification?.message ?? null
@@ -561,6 +565,12 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       return false;
     }
     if (this.notification?.message?.kind === 'assessment-assigned') {
+      return false;
+    }
+    if (this.notification?.message?.kind === 'assessment-results-ready') {
+      return false;
+    }
+    if (this.notification?.message?.kind === 'assessment-unassigned') {
       return false;
     }
     return true;

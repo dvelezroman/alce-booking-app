@@ -38,6 +38,7 @@ export interface NotificationMessage {
     | 'placement-exam'
     | 'assessment-assigned'
     | 'assessment-results-ready'
+    | 'assessment-unassigned'
     | 'S2S_NEW_STUDENTS_TO_CREATE'
     | 'lead-scheduling-assigned'
     | 'lead-scheduling-cancelled'

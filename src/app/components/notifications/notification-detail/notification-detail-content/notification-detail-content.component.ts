@@ -173,6 +173,10 @@ export class NotificationDetailContentComponent {
     return this.notification?.message?.kind === 'assessment-assigned';
   }
 
+  get isAssessmentUnassignedNotification(): boolean {
+    return this.notification?.message?.kind === 'assessment-unassigned';
+  }
+
   get isAssessmentRetake(): boolean {
     return this.notification?.message?.reason === 'RETAKE';
   }

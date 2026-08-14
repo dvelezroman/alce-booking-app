@@ -119,6 +119,38 @@
   </section>
 
   <!-- ================================
+       ASSESSMENT RETIRADO
+  ================================= -->
+  <section
+    *ngIf="isAssessmentUnassignedNotification"
+    class="
+      notification-detail-content__section
+      notification-detail-content__section--bordered
+    "
+  >
+    <span class="notification-detail-content__label">
+      Mensaje
+    </span>
+
+    <div class="assessment-card">
+      <div class="assessment-card__header">
+        <div>
+          <p class="assessment-card__eyebrow">
+            Assessment retirado
+          </p>
+          <h3 class="assessment-card__title">
+            {{ notification.message.templateTitle || notification.title }}
+          </h3>
+        </div>
+      </div>
+
+      <p class="assessment-card__lead">
+        Ya no estás asignado a este assessment. No aparece en tu listado y el enlace anterior ya no es válido.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================================
        DESTINATARIOS
   ================================= -->
   <section
