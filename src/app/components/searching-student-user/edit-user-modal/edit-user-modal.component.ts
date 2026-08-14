@@ -31,12 +31,18 @@ export class EditUserModalComponent {
 
   constructor(private fb: FormBuilder) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initForm();
+
+    if (this.user) {
+      this.patchForm(this.user);
+    }
   }
 
-  ngOnChanges() {
-    if (this.user) this.patchForm(this.user);
+  ngOnChanges(): void {
+    if (this.form && this.user) {
+      this.patchForm(this.user);
+    }
   }
 
   /** Inicializa formulario */

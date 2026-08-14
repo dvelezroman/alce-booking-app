@@ -1,0 +1,635 @@
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+
+import { ModalComponent } from '../../../components/modal/modal.component';
+import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
+import { ContactDetailsModalComponent } from '../../../components/student/contact-details-modal/contact-details-modal.component';
+import { EditUserModalComponent } from '../../../components/searching-student-user/edit-user-modal/edit-user-modal.component';
+
+import { SearchingUserHeaderComponent } from '../../../components/searching-user/searching-user-header/searching-user-header.component';
+import { SearchingUserSearchTypeComponent } from '../../../components/searching-user/searching-user-search-type/searching-user-search-type.component';
+import { SearchingUserFiltersComponent } from '../../../components/searching-user/searching-user-filters/searching-user-filters.component';
+import { SearchingUserTableComponent } from '../../../components/searching-user/searching-user-table/searching-user-table.component';
+import { SearchingUserPaginationComponent } from '../../../components/searching-user/searching-user-pagination/searching-user-pagination.component';
+import { SearchingUserInfoComponent } from '../../../components/searching-user/searching-user-info/searching-user-info.component';
+
+import { MeetingLinkDto } from '../../../services/dtos/booking.dto';
+import { Stage } from '../../../services/dtos/student.dto';
+import { UserDto, UserRole, UserStatus } from '../../../services/dtos/user.dto';
+import { Instructor } from '../../../services/dtos/instructor.dto';
+
+import { LinksService } from '../../../services/links.service';
+import { StagesService } from '../../../services/stages.service';
+import { UsersService } from '../../../services/users.service';
+import { InstructorsService } from '../../../services/instructors.service';
+import { StudentsService } from '../../../services/students.service';
+
+import { updateStudentData } from '../../../store/user.action';
+
+@Component({
+  selector: 'app-searching-user',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ModalComponent,
+    ContactDetailsModalComponent,
+    EditUserModalComponent,
+    SearchingUserHeaderComponent,
+    SearchingUserSearchTypeComponent,
+    SearchingUserFiltersComponent,
+    SearchingUserTableComponent,
+    SearchingUserPaginationComponent,
+    SearchingUserInfoComponent,
+  ],
+  templateUrl: './searching-user.component.html',
+  styleUrl: './searching-user.component.scss',
+})
+export class SearchingUserComponent {
+  // --- Variables principales ---
+  screenWidth: number = 0;
+  //isStudentForm = true;
+
+  currentForm: 'student' | 'user' | 'code' = 'student';
+
+  studentForm!: FormGroup;
+  userForm!: FormGroup;
+  codeForm!: FormGroup;
+
+  roles = ['STUDENT', 'INSTRUCTOR', 'ADMIN'];
+  ageGroupOptions: string[] = ['KIDS', 'TEENS', 'ADULTS'];
+
+  links: MeetingLinkDto[] = [];
+  stages: Stage[] = [];
+
+  users: UserDto[] = [];
+  totalUsers: number = 0;
+  currentPage: number = 1;
+  itemsPerPage: number = 100;
+  showStageColumn: boolean = true;
+  noResults: boolean = false;
+
+  // --- Modales ---
+  modalConfig: ModalDto = modalInitializer();
+  selectedUser: UserDto | null = null;
+  isEditModalOpen = false;
+
+  isEditPasswordModalOpen = false;
+  userToDelete: UserDto | null = null;
+
+  showContactModal: boolean = false;
+  selectedUserForContact: UserDto | null = null;
+
+  instructors: Instructor[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    private store: Store,
+    private usersService: UsersService,
+    private stagesService: StagesService,
+    private linksService: LinksService,
+    private instructorsService: InstructorsService,
+    private studentsService: StudentsService
+  ) {}
+
+  ngOnInit() {
+    this.stagesService.getAll().subscribe((stages) => (this.stages = stages));
+    this.linksService.getAll().subscribe((links) => (this.links = links));
+
+    this.instructorsService.getAll().subscribe({
+      next: (instructors) => this.instructors = instructors,
+      error: (err) => console.error('Error al obtener instructores:', err)
+    });
+
+    // Formularios de búsqueda
+    this.studentForm = this.fb.group({
+      userId: [''],
+      firstName: [''],
+      lastName: [''],
+      stageId: '',
+    });
+
+    this.userForm = this.fb.group({
+      email: ['', Validators.required],
+      role: ['', Validators.required],
+    });
+
+    this.codeForm = this.fb.group({
+      idNumber: ['', Validators.required],
+    });
+
+    this.screenWidth = window.innerWidth;
+  }
+
+  changeForm(formType: 'student' | 'user' | 'code') {
+    this.currentForm = formType;
+
+    // Limpiar los formularios
+    this.studentForm.reset({
+      userId: '',
+      firstName: '',
+      lastName: '',
+      stageId: '',
+    });
+
+    this.userForm.reset({
+      email: '',
+      role: '',
+    });
+
+    this.codeForm.reset({
+      idNumber: '',
+    });
+
+    // Limpiar los resultados y la paginación
+    this.users = [];
+    this.totalUsers = 0;
+    this.currentPage = 1;
+    this.noResults = false;
+  }
+
+  // --- Búsqueda ---
+  // toggleForm() {
+  //   this.isStudentForm = !this.isStudentForm;
+  //   this.users = [];
+  //   this.totalUsers = 0;
+  //   this.currentPage = 1;
+  // }
+
+  searchUsers() {
+    this.noResults = false;
+    const role = this.userForm.value.role;
+    this.showStageColumn = !role || role === 'STUDENT';
+
+    if (this.currentForm === 'student') {
+      const { firstName, lastName, stageId } = this.studentForm.value;
+
+      this.usersService
+        .searchUsers(
+          (this.currentPage - 1) * this.itemsPerPage,
+          this.itemsPerPage,
+          undefined,
+          firstName,
+          lastName,
+          undefined,
+          UserRole.STUDENT,
+          undefined,
+          stageId
+        )
+        .subscribe({
+          next: (result) => {
+            this.users = result.users;
+            this.totalUsers = result.total;
+
+            if (this.users.length === 0) {
+              setTimeout(() => (this.noResults = true), 1000);
+            }
+          },
+          error: (error) => {
+            console.log('Error:', error);
+            this.showErrorModal('Error occurred while searching users.');
+          },
+        });
+    } else if (this.currentForm === 'user') {
+      const { email, role } = this.userForm.value;
+
+      this.usersService
+        .searchUsers(
+          (this.currentPage - 1) * this.itemsPerPage,
+          this.itemsPerPage,
+          email,
+          undefined,
+          undefined,
+          undefined,
+          role,
+          undefined
+        )
+        .subscribe({
+          next: (result) => {
+            this.users = result.users;
+            this.totalUsers = result.total;
+          },
+          error: (error) => {
+            console.log('Error:', error);
+            this.showErrorModal('Error occurred while searching users.');
+          },
+        });
+    }
+  }
+
+  searchByCode() {
+    this.noResults = false;
+    const { idNumber } = this.codeForm.value;
+
+    if (!idNumber || idNumber.trim() === '') {
+      this.showErrorModal('Por favor ingrese un código válido.');
+      return;
+    }
+
+    this.studentsService.findStudents({ idNumber }).subscribe({
+      next: (students) => {
+        this.users = students.map((s) => s.user as UserDto);
+        this.totalUsers = this.users.length;
+
+        if (this.users.length === 0) {
+          setTimeout(() => (this.noResults = true), 1000);
+        }
+      },
+      error: (error) => {
+        console.error('Error al buscar estudiante por código:', error);
+        this.showErrorModal('Ocurrió un error al buscar por código.');
+      },
+    });
+  }
+
+  // --- MODAL: Editar usuario ---
+  openEditUserModal(user: UserDto) {
+    this.selectedUser = user;
+    this.isEditModalOpen = true;
+  }
+
+  closeEditModal() {
+    this.isEditModalOpen = false;
+    this.selectedUser = null;
+  }
+
+  updateUserFromChild(payload: any) {
+    if (!this.selectedUser) return;
+
+    this.updateUserProfile(payload);
+  }
+
+  /** Actualiza los datos generales del usuario */
+  private updateUserProfile(payload: any): void {
+    this.usersService.update(this.selectedUser!.id, payload).subscribe({
+      next: () => {
+        this.updateUserInList(payload);
+        this.showSuccessModal('Usuario actualizado exitosamente.');
+
+        // Enviar datos del tutor si aplica
+        this.updateTutorInfoIfNeeded(payload);
+      },
+      error: (error) => {
+        console.error('Error actualizando usuario:', error);
+        this.showErrorModal('Ocurrió un error al actualizar el usuario.');
+      }
+    });
+  }
+
+  /** Actualiza el usuario en la lista local sin esperar reload */
+  private updateUserInList(payload: any): void {
+    const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
+
+    if (index !== -1) {
+      this.users[index] = {
+        ...this.users[index],
+        ...payload
+      };
+    }
+
+    this.isEditModalOpen = false;
+  }
+
+  /** Envía la información del tutor al endpoint de student si aplica */
+  private updateTutorInfoIfNeeded(payload: any): void {
+    if (
+      this.selectedUser?.role === 'STUDENT' &&
+      this.selectedUser?.student?.id &&
+      (payload.tutorName || payload.tutorEmail || payload.tutorPhone)
+    ) {
+      const tutorPayload = {
+        tutorName: payload.tutorName || null,
+        tutorEmail: payload.tutorEmail || null,
+        tutorPhone: payload.tutorPhone || null,
+      };
+
+      this.studentsService.updateStudentById(this.selectedUser.student.id, tutorPayload).subscribe({
+        next: (updatedStudent) => {
+          // Actualizar también el store global (para sincronizar el estado)
+          this.store.dispatch(
+            updateStudentData({
+              student: {
+                ...this.selectedUser!.student!,
+                ...updatedStudent
+              }
+            })
+          );
+
+          // Actualizar la lista local visible en el admin sin esperar reload
+          const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
+
+          if (index !== -1) {
+            this.users[index] = {
+              ...this.users[index],
+              student: {
+                ...this.users[index].student,
+                ...updatedStudent
+              },
+            };
+          }
+
+          this.showSuccessModal('Datos del representante actualizados con éxito.');
+        },
+        error: () => {
+          this.showErrorModal('Error al actualizar los datos del representante.');
+        },
+      });
+    }
+  }
+
+  // --- Suspender estudiante ---
+  onSuspendStudent(days: number) {
+    if (!this.selectedUser) return;
+
+    this.modalConfig = {
+      show: true,
+      message: `¿Estás seguro de suspender al estudiante por ${days} día${days > 1 ? 's' : ''}?`,
+      isError: false,
+      isSuccess: false,
+      isInfo: true,
+      showButtons: true,
+      close: () => {
+        this.modalConfig.show = false;
+      },
+      confirm: () => {
+        this.modalConfig.show = false;
+        this.confirmSuspendStudent(days);
+      }
+    };
+  }
+
+  private confirmSuspendStudent(days: number) {
+    if (!this.selectedUser?.student?.id) return;
+
+    this.studentsService
+      .suspendStudent(this.selectedUser.student.id, days)
+      .subscribe({
+        next: (updatedStudent) => {
+          // Actualizar USUARIO SELECCIONADO (MODAL)
+          this.selectedUser = {
+            ...this.selectedUser!,
+            student: {
+              ...this.selectedUser!.student!,
+              ...updatedStudent,
+            },
+          };
+
+          // Actualizar LISTA (TABLA)
+          const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
+
+          if (index !== -1) {
+            this.users[index] = {
+              ...this.users[index],
+              student: {
+                ...this.users[index].student,
+                ...updatedStudent,
+              },
+            };
+          }
+
+          this.showSuccessModal(
+            `Estudiante suspendido por ${days} día${days > 1 ? 's' : ''}`
+          );
+        },
+        error: () => {
+          this.showErrorModal('No se pudo suspender al estudiante');
+        },
+      });
+  }
+
+  onRemoveSuspensionFromTable(user: UserDto): void {
+    const studentId = user.student?.id;
+
+    if (!studentId) return;
+
+    this.selectedUser = user;
+
+    this.modalConfig = {
+      show: true,
+      message: '¿Estás seguro de cancelar la suspensión del estudiante?',
+      isError: false,
+      isSuccess: false,
+      isInfo: true,
+      showButtons: true,
+      close: () => {
+        this.modalConfig.show = false;
+      },
+      confirm: () => {
+        this.modalConfig.show = false;
+        this.confirmRemoveSuspension(studentId);
+      }
+    };
+  }
+
+  onRemoveSuspension(studentId: number) {
+    this.modalConfig = {
+      show: true,
+      message: '¿Estás seguro de cancelar la suspensión del estudiante?',
+      isError: false,
+      isSuccess: false,
+      isInfo: true,
+      showButtons: true,
+      close: () => {
+        this.modalConfig.show = false;
+      },
+      confirm: () => {
+        this.modalConfig.show = false;
+        this.confirmRemoveSuspension(studentId);
+      }
+    };
+  }
+
+  private confirmRemoveSuspension(studentId: number) {
+    if (!this.selectedUser?.student) return;
+
+    this.studentsService
+      .removeStudentSuspension(studentId)
+      .subscribe({
+        next: (updatedStudent) => {
+          // Actualizar selectedUser (MODAL)
+          this.selectedUser = {
+            ...this.selectedUser!,
+            student: {
+              ...this.selectedUser!.student!,
+              ...updatedStudent,
+            },
+          };
+
+          // Actualizar lista visible
+          const index = this.users.findIndex(u => u.id === this.selectedUser?.id);
+
+          if (index !== -1) {
+            this.users[index] = {
+              ...this.users[index],
+              student: {
+                ...this.users[index].student,
+                ...updatedStudent,
+              },
+            };
+          }
+
+          this.showSuccessModal('Suspensión cancelada correctamente');
+        },
+        error: () => {
+          this.showErrorModal('No se pudo cancelar la suspensión');
+        },
+      });
+  }
+
+  // --- MODAL: Password ---
+  openEditPasswordModal(user: UserDto): void {
+    this.selectedUser = { ...user };
+    this.isEditPasswordModalOpen = true;
+    this.selectedUser.password = '';
+  }
+
+  updatePassword(): void {
+    if (this.selectedUser) {
+      const updateData = { password: this.selectedUser.password };
+
+      this.usersService.update(this.selectedUser.id, updateData).subscribe({
+        next: () => this.closeEditPasswordModal(),
+        error: () => console.error('No se pudo actualizar el password del Link!'),
+      });
+    }
+  }
+
+  closeEditPasswordModal(): void {
+    this.isEditPasswordModalOpen = false;
+    this.selectedUser = null;
+  }
+
+  // --- MODAL: Contacto ---
+  openContactModal(user: UserDto) {
+    this.selectedUserForContact = user;
+    this.showContactModal = true;
+  }
+
+  closeContactModal() {
+    this.showContactModal = false;
+    this.selectedUserForContact = null;
+  }
+
+  // --- MODAL: Eliminación ---
+  openDeleteModal(user: UserDto): void {
+    this.userToDelete = user;
+
+    this.modalConfig = {
+      show: true,
+      message: `¿Estás seguro de que deseas eliminar al usuario ${user.firstName} ${user.lastName}?`,
+      isError: false,
+      isSuccess: false,
+      isInfo: true,
+      showButtons: true,
+      close: () => (this.modalConfig.show = false),
+      confirm: () => this.confirmDelete(),
+    };
+  }
+
+  confirmDelete(): void {
+    if (this.userToDelete) {
+      this.usersService.delete(this.userToDelete.id).subscribe({
+        next: () => {
+          this.showSuccessModal('Usuario eliminado exitosamente');
+          this.searchUsers();
+        },
+        error: (error) => {
+          console.error('Error al eliminar el usuario:', error);
+          this.showErrorModal('No se pudo eliminar el usuario');
+        },
+      });
+    }
+  }
+
+  // --- Paginación ---
+  changePage(page: number): void {
+    if (page === this.currentPage) {
+      return;
+    }
+
+    this.currentPage = page;
+
+    if (this.currentForm === 'code') {
+      this.searchByCode();
+      return;
+    }
+
+    this.searchUsers();
+  }
+
+  onSearchUsers(): void {
+    this.currentPage = 1;
+    this.searchUsers();
+  }
+
+  onSearchByCode(): void {
+    this.currentPage = 1;
+    this.searchByCode();
+  }
+
+  // --- Modales de mensajes ---
+  showSuccessModal(message: string) {
+    this.modalConfig = {
+      show: true,
+      message,
+      isSuccess: true,
+      isError: false,
+      isInfo: false,
+      showButtons: false,
+      close: () => (this.modalConfig.show = false),
+    };
+
+    setTimeout(() => (this.modalConfig.show = false), 3000);
+  }
+
+  showErrorModal(message: string) {
+    this.modalConfig = {
+      show: true,
+      message,
+      isSuccess: false,
+      isError: true,
+      isInfo: false,
+      showButtons: false,
+      close: () => (this.modalConfig.show = false),
+    };
+
+    setTimeout(() => (this.modalConfig.show = false), 3000);
+  }
+
+  // --- Helpers ---
+  getStartClassDate(user: UserDto): string {
+    const date = user?.student?.startClassDate;
+    return date ? new Date(date).toISOString().split('T')[0] : '';
+  }
+
+  getEndClassDate(user: UserDto): string {
+    const date = user?.student?.endClassDate;
+    return date ? new Date(date).toISOString().split('T')[0] : '';
+  }
+
+  getCreatedAt(user: UserDto): string {
+    const date = user?.createdAt;
+    return date ? new Date(date).toISOString().split('T')[0] : '';
+  }
+
+  protected readonly Math = Math;
+  protected readonly UserRole = UserRole;
+  protected readonly UserStatus = UserStatus;
+
+  getProgressClass(progress?: number): string {
+    if (progress == null) return '';
+
+    if (progress <= 25) return 'level-red';
+    if (progress <= 50) return 'level-orange';
+    if (progress <= 75) return 'level-green-light';
+
+    return 'level-green-strong';
+  }
+
+  formatProgressValue(progress?: number): string {
+    return progress != null ? `${progress}%` : '0%';
+  }
+}

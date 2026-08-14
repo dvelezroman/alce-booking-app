@@ -1,0 +1,97 @@
+@if (totalPages > 1) {
+
+  <nav
+    class="searching-user-pagination"
+    aria-label="Paginación de usuarios"
+  >
+
+    <!-- PREVIOUS -->
+    <button
+      type="button"
+      class="searching-user-pagination__arrow"
+      [disabled]="!canGoPrevious"
+      aria-label="Página anterior"
+      (click)="previousPage()"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m15 18-6-6 6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+
+    <!-- PAGES -->
+    @for (item of visiblePages; track $index) {
+
+      @if (isPage(item)) {
+
+        <button
+          type="button"
+          class="searching-user-pagination__page"
+          [class.searching-user-pagination__page--active]="
+            item === currentPage
+          "
+          [attr.aria-current]="
+            item === currentPage
+              ? 'page'
+              : null
+          "
+          [attr.aria-label]="'Ir a la página ' + item"
+          (click)="changePage(item)"
+        >
+          {{ item }}
+        </button>
+
+      } @else {
+
+        <span
+          class="searching-user-pagination__ellipsis"
+          aria-hidden="true"
+        >
+          ...
+        </span>
+
+      }
+
+    }
+
+
+    <!-- NEXT -->
+    <button
+      type="button"
+      class="searching-user-pagination__arrow"
+      [disabled]="!canGoNext"
+      aria-label="Página siguiente"
+      (click)="nextPage()"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m9 18 6-6-6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+  </nav>
+
+}

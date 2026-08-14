@@ -1,249 +1,716 @@
-<div class="modal" [ngClass]="{ 'is-active': showModal }">
-  <div class="edit-user-modal-background" (click)="onClose()"></div>
-  <div class="edit-user-modal-card">
-    <header class="edit-user-modal-head">
-      <p class="edit-user-modal-title">Datos del Usuario</p>
-      <button class="edit-user-close" aria-label="close" (click)="onClose()">&times;</button>
-    </header>
+@if (showModal && user) {
 
-    <section class="edit-user-modal-body">
-      <form [formGroup]="form">
+  <div class="edit-user-modal__overlay" (click)="onClose()">
 
-        <!-- ESTADO -->
-        <div class="form-field-edit checkbox-field">
-          <label class="checkbox-title" for="status">
-            Activar Usuario
-          </label>
+    <section
+      class="edit-user-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="edit-user-modal-title"
+      (click)="$event.stopPropagation()"
+    >
 
-          <input
-            type="checkbox"
-            id="status"
-            formControlName="status"
-            class="center-checkbox"
-          />
-        </div>
+      <!-- =========================
+           HEADER
+      ========================== -->
+      <header class="edit-user-modal__header">
 
-        <!-- SUSPENSIÓN DE ESTUDIANTE -->
-        <div *ngIf="user?.role === UserRole.STUDENT" class="form-field-edit suspend-block">
-          <label for="suspensionDays">
-            Suspender estudiante (días)
-          </label>
+        <div class="edit-user-modal__header-info">
+          <span class="edit-user-modal__header-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.7" />
+              <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+            </svg>
+          </span>
 
-          <!-- INPUT + BOTÓN -->
-          <div class="suspend-input-wrapper">
-            <input
-              type="number"
-              id="suspensionDays"
-              formControlName="suspensionDays"
-              min="1"
-              placeholder="Ej: 7"
-              [disabled]="hasActiveSuspension"
-            />
-
-            <!-- BOTÓN SUSPENDER -->
-            <button
-              *ngIf="!hasActiveSuspension"
-              type="button"
-              class="suspend-btn inside neutral"
-              (click)="onSuspendStudent()"
-            >
-              Suspender
-            </button>
-
-            <button
-              *ngIf="hasActiveSuspension"
-              type="button"
-              class="suspend-btn inside danger"
-              (click)="onRemoveSuspension()"
-            >
-              Cancelar
-            </button>
-          </div>
-
-          <!-- INFO DE SUSPENSIÓN ACTUAL -->
-          <small
-            *ngIf="user?.student?.suspensionDays"
-            class="suspension-info"
-          >
-            Actualmente suspendido por
-            <strong>{{ user?.student?.suspensionDays }}</strong>
-            día{{ (user?.student?.suspensionDays || 0) > 1 ? 's' : '' }}
-            (hasta
-            {{ user?.student?.suspensionEndDate | date:'longDate' }})
-          </small>
-        </div>
-
-        <!-- DATOS BÁSICOS -->
-        <div class="form-field-edit">
-          <label for="idNumber">Número de Identificación</label>
-          <input type="number" id="idNumber" formControlName="idNumber" readonly />
-        </div>
-
-        <!-- DATOS PERSONALES (MOVIDOS AQUÍ) -->
-        <div class="form-field-edit">
-          <label for="firstName">First Name</label>
-          <input type="text" id="firstName" formControlName="firstName" />
-        </div>
-
-        <div class="form-field-edit">
-          <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" formControlName="lastName" />
-        </div>
-
-        <div class="form-field-edit">
-          <label for="email">Usuario</label>
-          <input type="text" id="email" formControlName="email" />
-        </div>
-
-        <!-- FECHA DE NACIMIENTO -->
-        <div class="form-field-edit">
-          <label for="birthday">Fecha de Nacimiento</label>
-          <input type="date" id="birthday" formControlName="birthday" />
-        </div>
-
-       <!-- Campos de tutor: solo si es menor -->
-        <div *ngIf="user?.role === UserRole.STUDENT && isMinor">
-          <div class="form-field-edit">
-            <label for="tutorName">Nombre del Representante</label>
-            <input type="text" id="tutorName" formControlName="tutorName" placeholder="Nombre completo" />
-          </div>
-
-          <div class="form-field-edit">
-            <label for="tutorEmail">Correo del Representante</label>
-            <input type="email" id="tutorEmail" formControlName="tutorEmail" placeholder="correo@ejemplo.com" />
-          </div>
-
-          <div class="form-field-edit">
-            <label for="tutorPhone">Teléfono del Representante</label>
-            <input type="text" id="tutorPhone" formControlName="tutorPhone" placeholder="+593..." />
+          <div>
+            <h2 id="edit-user-modal-title" class="edit-user-modal__title">Editar usuario</h2>
+            <p class="edit-user-modal__subtitle">Actualiza la información del usuario</p>
           </div>
         </div>
 
-        <!-- INFORMACIÓN DE CONTACTO -->
-        <div class="form-field-edit">
-          <label for="emailAddress">Correo del Estudiante</label>
-          <input
-            type="email"
-            id="emailAddress"
-            formControlName="emailAddress"
-            placeholder="correo@ejemplo.com"
-          />
-        </div>
+        <button type="button" class="edit-user-modal__close" aria-label="Cerrar modal" (click)="onClose()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </button>
 
-        <div class="form-field-edit">
-          <label for="contact">Contacto</label>
-          <input
-            type="tel"
-            id="contact"
-            formControlName="contact"
-            placeholder="+593999000000"
-            readonly
-          />
-        </div>
+      </header>
 
-        <div class="form-field-edit">
-          <label for="country">País</label>
-          <input
-            type="text"
-            id="country"
-            formControlName="country"
-            placeholder="EC / Ecuador"
-            readonly
-          />
-        </div>
 
-        <div class="form-field-edit">
-          <label for="city">Ciudad</label>
-          <input
-            type="text"
-            id="city"
-            formControlName="city"
-            placeholder="Portoviejo"
-            readonly
-          />
-        </div>
+      <!-- =========================
+           BODY
+      ========================== -->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="edit-user-modal__form">
 
-        <!-- Ocupación -->
-        <div class="form-field-edit">
-          <label for="occupation">Ocupación</label>
-          <input type="text" id="occupation" formControlName="occupation" placeholder="" />
-        </div>
+        <div class="edit-user-modal__body">
 
-        <!-- FECHAS -->
-        <div class="form-field-edit">
-          <label for="createdAt">Fecha de Creación</label>
-          <input type="date" id="createdAt" formControlName="createdAt" readonly />
-        </div>
+          <!-- =========================
+               LEFT CONTENT
+          ========================== -->
+          <div class="edit-user-modal__main">
 
-        <div class="form-field-edit">
-          <label for="updatedAt">Última Actualización</label>
-          <input type="date" id="updatedAt" formControlName="updatedAt" readonly />
-        </div>
+            <!-- =========================
+                 PERSONAL INFORMATION
+            ========================== -->
+            <section class="edit-user-modal__section">
 
-        <!-- ROLE -->
-        <div class="form-field-edit">
-          <label for="role">Role</label>
-          <select id="role" class="input" formControlName="role">
-            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
-          </select>
-        </div>
+              <div class="edit-user-modal__section-heading">
+                <span class="edit-user-modal__section-icon">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.7" />
+                    <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                  </svg>
+                </span>
+                <h3>Información personal</h3>
+              </div>
 
-        <!-- SOLO STUDENT -->
-        <ng-container *ngIf="user?.role === UserRole.STUDENT">
-          <div class="form-field-edit">
-            <label for="ageGroup">Categoría de Edad</label>
-            <select id="ageGroup" formControlName="ageGroup">
-              <option *ngFor="let group of ageGroupOptions" [value]="group">{{ group }}</option>
-            </select>
+
+              <!-- ROW 1 -->
+              <div class="edit-user-modal__grid edit-user-modal__grid--3">
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-id-number">ID / Número de identificación</label>
+
+                  <div class="edit-user-modal__input-wrapper">
+                    <input id="edit-id-number" type="text" formControlName="idNumber" />
+
+                    <span class="edit-user-modal__input-icon edit-user-modal__input-icon--right">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                        <rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.7" />
+                        <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.7" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-role">Rol</label>
+
+                  <div class="edit-user-modal__select-wrapper">
+                    <select id="edit-role" formControlName="role">
+                      <option value="">Seleccionar rol</option>
+
+                      @for (role of roles; track role) {
+                        <option [value]="role">{{ role }}</option>
+                      }
+                    </select>
+
+                    <span class="edit-user-modal__select-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                        <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-register">Registro</label>
+                  <input id="edit-register" type="text" formControlName="register" readonly />
+                </div>
+
+              </div>
+
+
+              <!-- ROW 2 -->
+              <div class="edit-user-modal__grid edit-user-modal__grid--3">
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-first-name">Nombres</label>
+                  <input id="edit-first-name" type="text" formControlName="firstName" placeholder="Nombres" />
+                </div>
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-last-name">Apellidos</label>
+                  <input id="edit-last-name" type="text" formControlName="lastName" placeholder="Apellidos" />
+                </div>
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-email">Email (Usuario)</label>
+                  <input id="edit-email" type="text" formControlName="email" placeholder="Usuario" />
+                </div>
+
+              </div>
+
+
+              <!-- ROW 3 -->
+              <div class="edit-user-modal__grid edit-user-modal__grid--3">
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-email-address">Email (Dirección)</label>
+                  <input id="edit-email-address" type="email" formControlName="emailAddress" placeholder="correo@ejemplo.com" />
+                </div>
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-contact">Teléfono / Contacto</label>
+                  <input id="edit-contact" type="text" formControlName="contact" placeholder="+593..." />
+                </div>
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-country">País</label>
+                  <input id="edit-country" type="text" formControlName="country" placeholder="País" />
+                </div>
+
+              </div>
+
+
+              <!-- ROW 4 -->
+              <div class="edit-user-modal__grid edit-user-modal__grid--3">
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-city">Ciudad</label>
+                  <input id="edit-city" type="text" formControlName="city" placeholder="Ciudad" />
+                </div>
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-birthday">Fecha de nacimiento</label>
+                  <input id="edit-birthday" type="date" formControlName="birthday" />
+                </div>
+
+                <div class="edit-user-modal__field">
+                  <label>Edad</label>
+
+                  <div
+                    class="edit-user-modal__age"
+                    [class.edit-user-modal__age--minor]="isMinor"
+                  >
+                    <span class="edit-user-modal__age-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.7" />
+                        <path d="M3 20a6 6 0 0 1 12 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                        <path d="M17 9v6M14 12h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                      </svg>
+                    </span>
+
+                    <div>
+                      @if (isMinor) {
+                        <strong>Menor de edad</strong>
+                        <span>Requiere información de representante</span>
+                      } @else {
+                        <strong>Mayor de edad</strong>
+                        <span>Usuario adulto</span>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+
+              <!-- ROW 5 -->
+              <div class="edit-user-modal__grid edit-user-modal__grid--3">
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-occupation">Ocupación</label>
+                  <input id="edit-occupation" type="text" formControlName="occupation" placeholder="Ocupación" />
+                </div>
+
+                @if (user.role === UserRole.STUDENT) {
+                  <div class="edit-user-modal__field">
+                    <label for="edit-age-group">Clasificación</label>
+
+                    <div class="edit-user-modal__select-wrapper">
+                      <select id="edit-age-group" formControlName="ageGroup">
+                        <option value="">Seleccionar clasificación</option>
+
+                        @for (option of ageGroupOptions; track option) {
+                          <option [value]="option">{{ option }}</option>
+                        }
+                      </select>
+
+                      <span class="edit-user-modal__select-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                          <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                }
+
+              </div>
+
+            </section>
+
+
+            <!-- =========================
+                 ACADEMIC INFORMATION
+            ========================== -->
+            @if (user.role === UserRole.STUDENT) {
+
+              <section class="edit-user-modal__section">
+
+                <div class="edit-user-modal__section-heading edit-user-modal__section-heading--academic">
+                  <span class="edit-user-modal__section-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                      <path d="m3 10 9-5 9 5-9 5-9-5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                      <path d="M7 12.5V17c3 2 7 2 10 0v-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                    </svg>
+                  </span>
+
+                  <h3>Información académica</h3>
+                </div>
+
+
+                <div class="edit-user-modal__grid edit-user-modal__grid--4">
+
+                  <div class="edit-user-modal__field">
+                    <label for="edit-stage">Etapa actual</label>
+
+                    <div class="edit-user-modal__select-wrapper">
+                      <select id="edit-stage" formControlName="stageId">
+                        <option value="">Seleccionar etapa</option>
+
+                        @for (stage of stages; track stage.id) {
+                          <option [value]="stage.id">{{ stage.number }}</option>
+                        }
+                      </select>
+
+                      <span class="edit-user-modal__select-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                          <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+
+
+                  <div class="edit-user-modal__field">
+                    <label>Progreso en etapa</label>
+
+                    <div class="edit-user-modal__progress">
+                      <span>{{ user.currentStageProgress ?? 0 }}%</span>
+
+                      <div class="edit-user-modal__progress-track">
+                        <span
+                          class="edit-user-modal__progress-bar"
+                          [style.width.%]="user.currentStageProgress ?? 0"
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="edit-user-modal__field">
+                    <label for="edit-student-id">ID de estudiante</label>
+                    <input id="edit-student-id" type="text" formControlName="studentId" readonly />
+                  </div>
+
+
+                  <div class="edit-user-modal__field">
+                    <label>Modalidad</label>
+                    <input type="text" [value]="user.student?.mode || ''" readonly />
+                  </div>
+
+                </div>
+
+
+                <div class="edit-user-modal__grid edit-user-modal__grid--3">
+
+                  <div class="edit-user-modal__field">
+                    <label for="edit-start-date">Fecha inicio de clases</label>
+                    <input id="edit-start-date" type="date" formControlName="startClassDate" />
+                  </div>
+
+                  <div class="edit-user-modal__field">
+                    <label for="edit-end-date">Fecha fin de clases</label>
+                    <input id="edit-end-date" type="date" formControlName="endClassDate" />
+                  </div>
+
+                  <div class="edit-user-modal__field">
+                    <label for="edit-link">Enlace de reunión</label>
+
+                    <div class="edit-user-modal__select-wrapper">
+                      <select id="edit-link" formControlName="linkId">
+                        <option value="">Seleccionar enlace</option>
+
+                        @for (link of links; track link.id) {
+                          <option [value]="link.id">
+                            {{ link.description || link.link }}
+                          </option>
+                        }
+                      </select>
+
+                      <span class="edit-user-modal__select-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                          <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+
+              </section>
+
+            }
+
+
+            <!-- =========================
+                 CONTACT / TUTOR
+            ========================== -->
+            @if (user.role === UserRole.STUDENT && isMinor) {
+
+              <section class="edit-user-modal__section">
+
+                <div class="edit-user-modal__section-heading">
+                  <span class="edit-user-modal__section-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                      <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.7" />
+                      <path d="M2.5 20a5.5 5.5 0 0 1 11 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                    </svg>
+                  </span>
+
+                  <h3>Datos del representante</h3>
+                </div>
+
+                <div class="edit-user-modal__grid edit-user-modal__grid--3">
+
+                  <div class="edit-user-modal__field">
+                    <label for="edit-tutor-name">Nombre del representante</label>
+                    <input
+                      id="edit-tutor-name"
+                      type="text"
+                      formControlName="tutorName"
+                      placeholder="Nombre completo"
+                    />
+                  </div>
+
+                  <div class="edit-user-modal__field">
+                    <label for="edit-tutor-email">Correo del representante</label>
+                    <input
+                      id="edit-tutor-email"
+                      type="email"
+                      formControlName="tutorEmail"
+                      placeholder="correo@ejemplo.com"
+                    />
+                  </div>
+
+                  <div class="edit-user-modal__field">
+                    <label for="edit-tutor-phone">Teléfono del representante</label>
+                    <input
+                      id="edit-tutor-phone"
+                      type="text"
+                      formControlName="tutorPhone"
+                      placeholder="+593..."
+                    />
+                  </div>
+
+                </div>
+
+              </section>
+
+            }
+
+            <!-- =========================
+                 COMMENTS
+            ========================== -->
+            <section class="edit-user-modal__section">
+
+              <div class="edit-user-modal__section-heading">
+                <span class="edit-user-modal__section-icon">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 5h16v11H9l-5 4V5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                  </svg>
+                </span>
+
+                <h3>Comentarios</h3>
+              </div>
+
+
+              <div class="edit-user-modal__grid edit-user-modal__grid--2">
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-comment">Comentario</label>
+                  <textarea id="edit-comment" rows="3" formControlName="comment" placeholder="Comentario del usuario"></textarea>
+                </div>
+
+                <div class="edit-user-modal__field">
+                  <label for="edit-temporary-comment">Comentario temporal</label>
+                  <textarea id="edit-temporary-comment" rows="3" formControlName="temporaryComment" placeholder="Comentario temporal"></textarea>
+                </div>
+
+              </div>
+
+            </section>
+
           </div>
 
-          <div class="form-field-edit">
-            <label for="stageId">Stage</label>
-            <select id="stageId" formControlName="stageId">
-              <option *ngFor="let stage of stages" [value]="stage.id">{{ stage.description }}</option>
-            </select>
-          </div>
 
-          <div class="form-field-edit">
-            <label for="startClassDate">Inicio de Clases</label>
-            <input type="date" id="startClassDate" formControlName="startClassDate" readonly />
-          </div>
+          <!-- =========================
+               RIGHT SIDEBAR
+          ========================== -->
+          <aside class="edit-user-modal__sidebar">
 
-          <div class="form-field-edit">
-            <label for="endClassDate">Fin de Clases</label>
-            <input type="date" id="endClassDate" formControlName="endClassDate" readonly />
-          </div>
 
-          <div class="form-field-edit">
-            <label for="comment">Observación</label>
-            <input type="text" id="comment" formControlName="comment" />
-          </div>
+            <!-- =========================
+                 USER SUMMARY
+            ========================== -->
+            <section class="edit-user-modal__summary-card">
 
-          <div class="form-field-edit">
-            <label for="temporaryComment">Comentario Temporal</label>
-            <input type="text" id="temporaryComment" formControlName="temporaryComment" />
-          </div>
-        </ng-container>
+              <div class="edit-user-modal__summary-title">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 20V10M10 20V4M15 20v-7M20 20V7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                </svg>
 
-        <!-- SOLO INSTRUCTOR -->
-        <ng-container *ngIf="user?.role === UserRole.INSTRUCTOR">
-          <div class="form-field-edit">
-            <label for="linkId">URL Meeting</label>
-            <select id="linkId" formControlName="linkId">
-              <option value="">Seleccione un Link (URL)</option>
-              <option *ngFor="let link of links" [value]="link.id">{{ link.description }}</option>
-            </select>
-          </div>
-        </ng-container>
+                <h3>Resumen del usuario</h3>
+              </div>
+
+
+              <div class="edit-user-modal__summary-user">
+
+                <div class="edit-user-modal__avatar">
+                  {{ (user.firstName?.charAt(0) || '') + (user.lastName?.charAt(0) || '') }}
+                </div>
+
+                <div class="edit-user-modal__summary-user-info">
+                  <strong>
+                    {{ user.firstName || '' }} {{ user.lastName || '' }}
+                  </strong>
+
+                  <span>{{ user.emailAddress || user.email }}</span>
+                  <span>{{ user.contact || 'Sin teléfono' }}</span>
+
+                  <span
+                    class="edit-user-modal__status-badge"
+                    [class.edit-user-modal__status-badge--active]="form.get('status')?.value"
+                  >
+                    {{ form.get('status')?.value ? 'Usuario activo' : 'Usuario inactivo' }}
+                  </span>
+                </div>
+
+              </div>
+
+
+              <div class="edit-user-modal__summary-divider"></div>
+
+
+              <div class="edit-user-modal__summary-list">
+
+                <div class="edit-user-modal__summary-row">
+                  <span>ID / Número:</span>
+                  <strong>{{ user.idNumber || '—' }}</strong>
+                </div>
+
+                <div class="edit-user-modal__summary-row">
+                  <span>Rol:</span>
+                  <strong>{{ user.role || '—' }}</strong>
+                </div>
+
+                <div class="edit-user-modal__summary-row">
+                  <span>Registrado:</span>
+                  <strong>
+                    {{ user.createdAt ? (user.createdAt | date: 'dd/MM/yyyy') : '—' }}
+                  </strong>
+                </div>
+
+                <div class="edit-user-modal__summary-row">
+                  <span>Última actualización:</span>
+                  <strong>
+                    {{ user.updatedAt ? (user.updatedAt | date: 'dd/MM/yyyy') : '—' }}
+                  </strong>
+                </div>
+
+                @if (user.role === UserRole.STUDENT) {
+                  <div class="edit-user-modal__summary-row">
+                    <span>Etapa actual:</span>
+                    <strong>{{ user.student?.stage?.number || '—' }}</strong>
+                  </div>
+
+                  <div class="edit-user-modal__summary-row edit-user-modal__summary-row--progress">
+                    <span>Progreso general:</span>
+
+                    <div class="edit-user-modal__summary-progress">
+                      <strong>{{ user.currentStageProgress ?? 0 }}%</strong>
+
+                      <div class="edit-user-modal__progress-track">
+                        <span
+                          class="edit-user-modal__progress-bar"
+                          [style.width.%]="user.currentStageProgress ?? 0"
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+              </div>
+
+
+              <!-- STATUS -->
+              <div class="edit-user-modal__summary-status">
+
+                <div>
+                  <span class="edit-user-modal__summary-status-label">Estado del usuario</span>
+                  <small>Controla el acceso general del usuario.</small>
+                </div>
+
+                <label class="edit-user-modal__switch">
+                  <input type="checkbox" formControlName="status" />
+
+                  <span class="edit-user-modal__switch-track">
+                    <span class="edit-user-modal__switch-thumb"></span>
+                  </span>
+                </label>
+
+              </div>
+
+            </section>
+
+
+            <!-- =========================
+                 SUSPENSION
+            ========================== -->
+            @if (user.role === UserRole.STUDENT) {
+
+              <section class="edit-user-modal__suspension-card">
+
+                <div class="edit-user-modal__suspension-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3 5.5 6v5c0 4.2 2.7 8 6.5 10 3.8-2 6.5-5.8 6.5-10V6L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                    <path d="M9.5 12h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                  </svg>
+
+                  <h3>Estado de suspensión</h3>
+                </div>
+
+
+                @if (hasActiveSuspension) {
+
+                  <div class="edit-user-modal__suspension-message edit-user-modal__suspension-message--warning">
+                    <span>Este estudiante tiene una suspensión activa.</span>
+                  </div>
+
+                  <div class="edit-user-modal__suspension-details">
+                    <div>
+                      <span>Días</span>
+                      <strong>{{ user.student?.suspensionDays || '—' }}</strong>
+                    </div>
+
+                    <div>
+                      <span>Inicio</span>
+                      <strong>
+                        {{ user.student?.suspensionStartDate ? (user.student?.suspensionStartDate | date: 'dd/MM/yyyy') : '—' }}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Fin</span>
+                      <strong>
+                        {{ user.student?.suspensionEndDate ? (user.student?.suspensionEndDate | date: 'dd/MM/yyyy') : '—' }}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div class="edit-user-modal__remove-suspension">
+                    <div>
+                      <strong>Quitar suspensión</strong>
+                      <span>Elimina la suspensión activa del estudiante.</span>
+                    </div>
+
+                    <button type="button" (click)="onRemoveSuspension()">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                        <path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M4 4v4.5h4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+
+                      <span>Quitar suspensión</span>
+                    </button>
+                  </div>
+
+                } @else {
+
+                  <div class="edit-user-modal__suspension-message edit-user-modal__suspension-message--success">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7" />
+                      <path d="m8.5 12 2.3 2.3 4.7-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+
+                    <span>Este estudiante no tiene una suspensión activa.</span>
+                  </div>
+
+
+                  <div class="edit-user-modal__suspend">
+
+                    <div class="edit-user-modal__suspend-heading">
+                      <strong>Suspender estudiante</strong>
+                      <span>Define el número de días de suspensión.</span>
+                    </div>
+
+                    <div class="edit-user-modal__suspend-action">
+
+                      <div class="edit-user-modal__field">
+                        <label for="edit-suspension-days">Días de suspensión</label>
+
+                        <input
+                          id="edit-suspension-days"
+                          type="number"
+                          min="1"
+                          formControlName="suspensionDays"
+                          placeholder="Ej: 7"
+                        />
+                      </div>
+
+                      <button
+                        type="button"
+                        class="edit-user-modal__suspend-button"
+                        [disabled]="
+                          !form.get('suspensionDays')?.value ||
+                          form.get('suspensionDays')?.invalid
+                        "
+                        (click)="onSuspendStudent()"
+                      >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7" />
+                          <path d="M10 9v6M14 9v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                        </svg>
+
+                        <span>Suspender estudiante</span>
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                }
+
+              </section>
+
+            }
+
+          </aside>
+
+        </div>
+
+
+        <!-- =========================
+             FOOTER
+        ========================== -->
+        <footer class="edit-user-modal__footer">
+
+          <button type="button" class="edit-user-modal__cancel" (click)="onClose()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+
+            <span>Cancelar</span>
+          </button>
+
+          <button type="submit" class="edit-user-modal__save" [disabled]="form.invalid">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path d="M5 4h12l2 2v14H5V4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+              <path d="M8 4v6h8V4M8 20v-6h8v6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+            </svg>
+
+            <span>Guardar cambios</span>
+          </button>
+
+        </footer>
 
       </form>
+
     </section>
 
-    <footer class="edit-user-modal-foot">
-      <button class="button is-success" (click)="onSubmit()" [disabled]="form.invalid">
-        Actualizar
-      </button>
-      <button class="button delete-cancel-button" (click)="onClose()">Cancelar</button>
-    </footer>
   </div>
-</div>
+
+}

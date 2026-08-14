@@ -1,0 +1,965 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.searching-user-table {
+  width: 100%;
+  overflow: visible;
+  min-height: 26rem;
+
+  border: 1px solid #e6e8ef;
+  border-radius: .75rem;
+
+  background: #fff;
+
+  box-shadow: 0 .15rem .6rem rgba(24, 31, 50, .035);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.searching-user-table__header {
+  min-height: 4.4rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: .75rem 1rem;
+
+  border-bottom: 1px solid #e8eaf0;
+}
+
+.searching-user-table__heading {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: .7rem;
+}
+
+.searching-user-table__heading-icon {
+  width: 2.65rem;
+  height: 2.65rem;
+
+  flex: 0 0 2.65rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: .5rem;
+
+  background: #7458e8;
+  color: #fff;
+}
+
+.searching-user-table__heading-icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.searching-user-table__heading-content {
+  min-width: 0;
+}
+
+.searching-user-table__title-row {
+  display: flex;
+  align-items: center;
+
+  gap: .5rem;
+}
+
+.searching-user-table__title {
+  margin: 0;
+
+  color: #252c40;
+
+  font-size: .9rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.searching-user-table__count {
+  min-width: 1.75rem;
+  height: 1.4rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 .45rem;
+
+  border-radius: 999px;
+
+  background: #eeeaff;
+  color: #6444e8;
+
+  font-size: .67rem;
+  font-weight: 700;
+}
+
+.searching-user-table__description {
+  margin: .18rem 0 0;
+
+  color: #7e8698;
+
+  font-size: .7rem;
+  font-weight: 400;
+}
+
+/* =========================
+   HEADER ACTIONS
+========================= */
+
+.searching-user-table__header-actions {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: .65rem;
+}
+
+.searching-user-table__page-size {
+  position: relative;
+
+  min-width: 8.6rem;
+}
+
+.searching-user-table__page-size-select {
+  width: 100%;
+  height: 2.45rem;
+
+  padding: 0 2.3rem 0 .8rem;
+
+  border: 1px solid #dfe2e9;
+  border-radius: .42rem;
+
+  outline: none;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  background: #fff;
+  color: #30384d;
+
+  font-family: inherit;
+  font-size: .72rem;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.searching-user-table__page-size-select:focus {
+  border-color: #7458e8;
+
+  box-shadow: 0 0 0 .16rem rgba(100, 68, 232, .08);
+}
+
+.searching-user-table__page-size-icon {
+  position: absolute;
+  top: 50%;
+  right: .75rem;
+
+  display: inline-flex;
+
+  color: #555e72;
+
+  pointer-events: none;
+
+  transform: translateY(-50%);
+}
+
+.searching-user-table__export {
+  height: 2.45rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .45rem;
+
+  padding: 0 1rem;
+
+  border: 1px solid #dfe2e9;
+  border-radius: .42rem;
+
+  background: #fff;
+  color: #30384d;
+
+  font-family: inherit;
+  font-size: .72rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    border-color .15s ease,
+    transform .1s ease;
+}
+
+.searching-user-table__export:hover {
+  border-color: #d0d4de;
+
+  background: #f8f9fb;
+}
+
+.searching-user-table__export:active {
+  transform: scale(.98);
+}
+
+/* =========================
+   TABLE WRAPPER
+========================= */
+
+.searching-user-table__wrapper {
+  width: 100%;
+
+  position: relative;
+
+  overflow: visible;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.searching-user-table__table {
+  width: 100%;
+  min-width: 76rem;
+
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* =========================
+   COLUMNS
+========================= */
+
+.searching-user-table__table th:nth-child(1),
+.searching-user-table__table td:nth-child(1) {
+  width: 14rem;
+}
+
+.searching-user-table__table th:nth-child(2),
+.searching-user-table__table td:nth-child(2) {
+  width: 8.5rem;
+}
+
+.searching-user-table__table th:nth-child(3),
+.searching-user-table__table td:nth-child(3) {
+  width: 7.5rem;
+}
+
+/* NUEVA: SUSPENSIÓN */
+.searching-user-table__table th:nth-child(4),
+.searching-user-table__table td:nth-child(4) {
+  width: 9rem;
+}
+
+/* ETAPA */
+.searching-user-table__table th:nth-child(5),
+.searching-user-table__table td:nth-child(5) {
+  width: 7rem;
+}
+
+/* PROGRESO */
+.searching-user-table__table th:nth-child(6),
+.searching-user-table__table td:nth-child(6) {
+  width: 7rem;
+}
+
+/* INICIO / FIN */
+.searching-user-table__table th:nth-child(7),
+.searching-user-table__table td:nth-child(7),
+.searching-user-table__table th:nth-child(8),
+.searching-user-table__table td:nth-child(8) {
+  width: 8.5rem;
+}
+
+/* CREADO */
+.searching-user-table__table th:nth-child(9),
+.searching-user-table__table td:nth-child(9) {
+  width: 7rem;
+}
+
+/* ACCIONES */
+.searching-user-table__table th:nth-child(10),
+.searching-user-table__table td:nth-child(10) {
+  width: 5.5rem;
+}
+
+
+/* =========================
+   TABLE HEADER
+========================= */
+
+.searching-user-table__table thead {
+  background: #fbfbfd;
+}
+
+.searching-user-table__table th {
+  height: 3rem;
+
+  padding: .55rem .7rem;
+
+  border-bottom: 1px solid #e4e6ec;
+
+  color: #252c40;
+
+  font-size: .68rem;
+  font-weight: 700;
+
+  text-align: left;
+  white-space: nowrap;
+}
+
+.searching-user-table__actions-column {
+  text-align: center !important;
+}
+
+/* =========================
+   ROWS
+========================= */
+
+.searching-user-table__row {
+  transition: background-color .15s ease;
+}
+
+.searching-user-table__row:hover {
+  background: #fcfcfe;
+}
+
+.searching-user-table__table td {
+  height: 4.45rem;
+
+  padding: .55rem .7rem;
+
+  border-bottom: 1px solid #eceef2;
+
+  color: #343c50;
+
+  font-size: .7rem;
+
+  vertical-align: middle;
+}
+
+.searching-user-table__table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* =========================
+   USER
+========================= */
+
+.searching-user-table__user {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: .65rem;
+}
+
+.searching-user-table__avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+
+  flex: 0 0 2.25rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #e4f7ec;
+  color: #218557;
+
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.searching-user-table__user-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
+}
+
+.searching-user-table__user-name {
+  overflow: hidden;
+
+  color: #252c40;
+
+  font-size: .72rem;
+  font-weight: 700;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searching-user-table__user-email,
+.searching-user-table__user-id {
+  overflow: hidden;
+
+  color: #858d9e;
+
+  font-size: .64rem;
+  font-weight: 400;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   ROLE
+========================= */
+
+.searching-user-table__role {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: .28rem;
+
+  padding: .27rem .5rem;
+
+  border-radius: 999px;
+
+  font-size: .61rem;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.searching-user-table__role--student {
+  background: #f0ecff;
+  color: #6543df;
+}
+
+.searching-user-table__role--instructor {
+  background: #eaf5ff;
+  color: #2881bd;
+}
+
+.searching-user-table__role--admin {
+  background: #fff2e5;
+  color: #dc8127;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.searching-user-table__status {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: .32rem;
+
+  padding: .27rem .52rem;
+
+  border-radius: 999px;
+
+  font-size: .61rem;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.searching-user-table__status-dot {
+  width: .35rem;
+  height: .35rem;
+
+  flex: 0 0 .35rem;
+
+  border-radius: 50%;
+
+  background: currentColor;
+}
+
+.searching-user-table__status--active {
+  background: #e8f7ee;
+  color: #25945e;
+}
+
+.searching-user-table__status--inactive {
+  background: #f1f2f4;
+  color: #7d8492;
+}
+
+.searching-user-table__status--suspended {
+  background: #fff0eb;
+  color: #e26435;
+}
+
+/* =========================
+   SUSPENSION
+========================= */
+
+.searching-user-table__suspension {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: .32rem;
+
+  padding: .27rem .52rem;
+
+  border-radius: 999px;
+
+  font-size: .61rem;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.searching-user-table__suspension-dot {
+  width: .35rem;
+  height: .35rem;
+
+  flex: 0 0 .35rem;
+
+  border-radius: 50%;
+
+  background: currentColor;
+}
+
+.searching-user-table__suspension--active {
+  background: #fff0eb;
+  color: #e26435;
+}
+
+.searching-user-table__suspension--none {
+  background: #e8f7ee;
+  color: #25945e;
+}
+
+/* =========================
+   STAGE
+========================= */
+
+.searching-user-table__stage {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .12rem;
+}
+
+.searching-user-table__stage-name {
+  overflow: hidden;
+
+  color: #30384d;
+
+  font-size: .69rem;
+  font-weight: 600;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searching-user-table__stage-category {
+  color: #858d9e;
+
+  font-size: .61rem;
+  font-weight: 500;
+
+  text-transform: uppercase;
+}
+
+/* =========================
+   PROGRESS
+========================= */
+
+.searching-user-table__progress {
+  width: 100%;
+  max-width: 7rem;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .28rem;
+}
+
+.searching-user-table__progress-value {
+  color: #30384d;
+
+  font-size: .68rem;
+  font-weight: 700;
+}
+
+.searching-user-table__progress-track {
+  width: 100%;
+  height: .28rem;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: #e6e8ed;
+}
+
+.searching-user-table__progress-bar {
+  display: block;
+
+  height: 100%;
+
+  border-radius: inherit;
+
+  transition: width .25s ease;
+}
+
+.searching-user-table__progress-bar--low {
+  background: #e96335;
+}
+
+.searching-user-table__progress-bar--medium {
+  background: #f39a24;
+}
+
+.searching-user-table__progress-bar--high {
+  background: #159b62;
+}
+
+/* =========================
+   DATE
+========================= */
+
+.searching-user-table__date {
+  display: block;
+
+  overflow: hidden;
+
+  color: #4f586c;
+
+  font-size: .67rem;
+  font-weight: 500;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searching-user-table__empty-value {
+  color: #a0a6b2;
+
+  font-size: .7rem;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.searching-user-table__actions-cell {
+  position: relative;
+
+  overflow: visible;
+
+  text-align: center;
+}
+
+.searching-user-table__actions {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: visible;
+}
+
+.searching-user-table__actions-button {
+  width: 2.2rem;
+  height: 2.2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid #dfe2e9;
+  border-radius: .42rem;
+
+  background: #fff;
+  color: #343c50;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    border-color .15s ease,
+    color .15s ease,
+    transform .1s ease;
+}
+
+.searching-user-table__actions-button:hover {
+  border-color: #d1d5df;
+  background: #f6f5ff;
+  color: #6444e8;
+}
+
+.searching-user-table__actions-button:active {
+  transform: scale(.95);
+}
+
+/* =========================
+   ACTIONS MENU
+========================= */
+
+.searching-user-table__actions-menu {
+  position: absolute;
+
+  top: calc(100% + .35rem);
+  right: 0;
+
+  z-index: 9999;
+
+  width: 12.5rem;
+
+  padding: .4rem;
+
+  border: 1px solid #e2e5ec;
+  border-radius: .55rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 .55rem 1.5rem rgba(26, 33, 54, .14),
+    0 .1rem .3rem rgba(26, 33, 54, .06);
+
+  text-align: left;
+}
+
+/* Últimas filas: menú hacia arriba */
+.searching-user-table__actions-menu--up {
+  top: auto;
+  bottom: calc(100% + .35rem);
+}
+
+/* =========================
+   MENU ITEM
+========================= */
+
+.searching-user-table__menu-item {
+  width: 100%;
+  min-height: 2.35rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: .65rem;
+
+  padding: .45rem .6rem;
+
+  border: 0;
+  border-radius: .38rem;
+
+  background: transparent;
+  color: #343c50;
+
+  font-family: inherit;
+  font-size: .68rem;
+  font-weight: 550;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    color .15s ease,
+    transform .1s ease;
+}
+
+.searching-user-table__menu-item svg {
+  width: 1rem;
+  height: 1rem;
+
+  flex: 0 0 auto;
+}
+
+.searching-user-table__menu-item:hover {
+  background: #f6f5fb;
+  color: #6040df;
+}
+
+.searching-user-table__menu-item:active {
+  transform: scale(.98);
+}
+
+/* =========================
+   SUCCESS
+========================= */
+
+.searching-user-table__menu-item--success {
+  color: #26915d;
+}
+
+.searching-user-table__menu-item--success:hover {
+  background: #eef9f3;
+  color: #18824f;
+}
+
+/* =========================
+   DANGER
+========================= */
+
+.searching-user-table__menu-item--danger {
+  color: #dc4b4b;
+}
+
+.searching-user-table__menu-item--danger:hover {
+  background: #fff2f2;
+  color: #cc3737;
+}
+
+/* =========================
+   SEPARATOR
+========================= */
+
+.searching-user-table__menu-separator {
+  width: 100%;
+  height: 1px;
+
+  margin: .3rem 0;
+
+  background: #eceef2;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.searching-user-table__empty {
+  min-height: 22rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 2rem;
+
+  text-align: center;
+}
+
+.searching-user-table__empty-icon {
+  width: 2.7rem;
+  height: 2.7rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: .6rem;
+
+  border-radius: 50%;
+
+  background: #f3f1ff;
+  color: #6444e8;
+}
+
+.searching-user-table__empty h3 {
+  margin: 0;
+
+  color: #252c40;
+
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.searching-user-table__empty p {
+  margin: .25rem 0 0;
+
+  color: #858d9e;
+
+  font-size: .68rem;
+}
+
+/* =========================
+   SMALL DESKTOP
+========================= */
+
+@media (max-width: 1200px) {
+  .searching-user-table__table {
+    min-width: 72rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 640px) {
+  .searching-user-table__header {
+    align-items: flex-start;
+    flex-direction: column;
+
+    padding: .8rem;
+  }
+
+  .searching-user-table__heading-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+
+    flex-basis: 2.4rem;
+  }
+
+  .searching-user-table__header-actions {
+    width: 100%;
+  }
+
+  .searching-user-table__page-size,
+  .searching-user-table__export {
+    flex: 1;
+  }
+
+  .searching-user-table__page-size-select,
+  .searching-user-table__export {
+    height: 2.35rem;
+  }
+
+  .searching-user-table__table {
+    min-width: 70rem;
+  }
+
+  .searching-user-table__table th {
+    height: 2.8rem;
+
+    font-size: .65rem;
+  }
+
+  .searching-user-table__table td {
+    height: 4.1rem;
+
+    font-size: .67rem;
+  }
+
+  .searching-user-table__pagination {
+    justify-content: flex-start;
+
+    overflow-x: auto;
+  }
+}

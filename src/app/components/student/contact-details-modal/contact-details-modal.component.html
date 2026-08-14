@@ -1,126 +1,897 @@
-<div *ngIf="showModal" class="contact-modal-overlay">
-  <div class="contact-modal-content">
-    <div class="modal-header">
-      <h2>Detalles del Usuario</h2>
-    </div>
+@if (showModal && user) {
 
-    <div class="modal-body grid-container">
-      <!-- Columna izquierda -->
-      <div class="grid-column">
-        <div class="info-row">
-          <label>Usuario:</label>
-          <span>{{ user?.email || 'No registrado' }}</span>
-        </div>
+  <div class="contact-details-modal__overlay" (click)="handleClose()">
 
-        <div class="info-row">
-          <label>Email:</label>
-          <span>{{ user?.emailAddress || 'No registrado' }}</span>
-        </div>
+    <section
+      class="contact-details-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="contact-details-title"
+      (click)="$event.stopPropagation()"
+    >
 
-        <div class="info-row">
-          <label>Teléfono:</label>
-          <span>{{ user?.contact || 'No registrado' }}</span>
-        </div>
+      <!-- =========================
+           HEADER
+      ========================== -->
+      <header class="contact-details-modal__header">
 
-        <div class="info-row">
-          <label>País:</label>
-          <span>{{ user?.country || 'No registrado' }}</span>
-        </div>
+        <div class="contact-details-modal__header-user">
 
-        <div class="info-row">
-          <label>Ciudad:</label>
-          <span>{{ user?.city || 'No registrado' }}</span>
-        </div>
-
-        <div class="info-row">
-          <label>Ocupación:</label>
-          <span>{{ user?.occupation || 'No especificada' }}</span>
-        </div>
-      </div>
-
-      <!-- Columna derecha -->
-      <div class="grid-column">
-        <div class="info-row">
-          <label>Fecha de nacimiento:</label>
-          <span>{{ user?.birthday ? (user?.birthday | date: 'yyyy-MM-dd') : 'No disponible' }}</span>
-        </div>
-
-        <div class="info-row">
-          <label>Creado el:</label>
-          <span>{{ user?.createdAt ? (user?.createdAt | date: 'yyyy-MM-dd') : 'No disponible' }}</span>
-        </div>
-
-        <div class="info-row">
-          <label>Actualizado el:</label>
-          <span>{{ user?.updatedAt ? (user?.updatedAt | date: 'yyyy-MM-dd') : 'No disponible' }}</span>
-        </div>
-
-        <ng-container *ngIf="user?.student">
-          <div class="info-row">
-            <label>Stage:</label>
-            <span>{{ user?.student?.stage?.description || 'No asignado' }}</span>
+          <div class="contact-details-modal__header-avatar">
+            {{ (user.firstName?.charAt(0) || '') + (user.lastName?.charAt(0) || '') }}
           </div>
 
-          <div class="info-row">
-            <label>Categoría de edad:</label>
-            <span>{{ user?.student?.studentClassification || 'No definida' }}</span>
+          <div>
+            <h2 id="contact-details-title" class="contact-details-modal__title">
+              Detalles del usuario
+            </h2>
+
+            <p class="contact-details-modal__subtitle">
+              Información completa del usuario
+            </p>
           </div>
 
-          <div class="info-row">
-            <label>Inicio de clases:</label>
-            <span>
-              {{
-                user?.student?.startClassDate
-                  ? (user?.student?.startClassDate | date: 'yyyy-MM-dd')
-                  : 'No disponible'
-              }}
-            </span>
-          </div>
+        </div>
 
-          <div class="info-row">
-            <label>Fin de clases:</label>
-            <span>
-              {{
-                user?.student?.endClassDate
-                  ? (user?.student?.endClassDate | date: 'yyyy-MM-dd')
-                  : 'No disponible'
-              }}
-            </span>
-          </div>
+        <button
+          type="button"
+          class="contact-details-modal__close"
+          aria-label="Cerrar"
+          (click)="handleClose()"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </button>
 
-          <!-- ✅ Sección del representante (solo si existen datos del representante) -->
-          <ng-container
-            *ngIf="
-              user?.student?.tutorName ||
-              user?.student?.tutorEmail ||
-              user?.student?.tutorPhone
-            "
-          >
-            <div class="tutor-section">
-              <h3>Datos del Representante</h3>
+      </header>
 
-              <div class="info-row">
-                <label>Nombre:</label>
-                <span>{{ user?.student?.tutorName || 'No registrado' }}</span>
-              </div>
 
-              <div class="info-row">
-                <label>Email:</label>
-                <span>{{ user?.student?.tutorEmail || 'No registrado' }}</span>
-              </div>
+      <!-- =========================
+           CONTENT
+      ========================== -->
+      <div class="contact-details-modal__content">
 
-              <div class="info-row">
-                <label>Teléfono:</label>
-                <span>{{ user?.student?.tutorPhone || 'No registrado' }}</span>
-              </div>
+        <!-- =========================
+             LEFT
+        ========================== -->
+        <div class="contact-details-modal__main">
+
+          <!-- =========================
+               TABS
+          ========================== -->
+          <nav class="contact-details-modal__tabs" aria-label="Secciones del usuario">
+
+            <button
+              type="button"
+              class="contact-details-modal__tab"
+              [class.contact-details-modal__tab--active]="activeTab === 'personal'"
+              (click)="setActiveTab('personal')"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.7" />
+                <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+              </svg>
+
+              <span>Información personal</span>
+            </button>
+
+
+            @if (user.role === 'STUDENT') {
+
+              <button
+                type="button"
+                class="contact-details-modal__tab"
+                [class.contact-details-modal__tab--active]="activeTab === 'academic'"
+                (click)="setActiveTab('academic')"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="m3 10 9-5 9 5-9 5-9-5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                  <path d="M7 12.5V17c3 2 7 2 10 0v-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                </svg>
+
+                <span>Información académica</span>
+              </button>
+
+
+              @if (
+                user.student?.tutorName ||
+                user.student?.tutorEmail ||
+                user.student?.tutorPhone
+              ) {
+                <button
+                  type="button"
+                  class="contact-details-modal__tab"
+                  [class.contact-details-modal__tab--active]="activeTab === 'representative'"
+                  (click)="setActiveTab('representative')"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.7" />
+                    <circle cx="17" cy="9" r="2.5" stroke="currentColor" stroke-width="1.7" />
+                    <path d="M2.5 20a5.5 5.5 0 0 1 11 0M13 20a4.5 4.5 0 0 1 9 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                  </svg>
+
+                  <span>Representante</span>
+                </button>
+              }
+
+            }
+
+
+            <button
+              type="button"
+              class="contact-details-modal__tab"
+              [class.contact-details-modal__tab--active]="activeTab === 'activity'"
+              (click)="setActiveTab('activity')"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.7" />
+                <path d="M8 3v4M16 3v4M4 10h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+              </svg>
+
+              <span>Actividad y fechas</span>
+            </button>
+
+
+            <button
+              type="button"
+              class="contact-details-modal__tab"
+              [class.contact-details-modal__tab--active]="activeTab === 'notes'"
+              (click)="setActiveTab('notes')"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <rect x="5" y="4" width="14" height="16" rx="2" stroke="currentColor" stroke-width="1.7" />
+                <path d="M9 9h6M9 13h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+              </svg>
+
+              <span>Notas</span>
+            </button>
+
+          </nav>
+
+
+          <!-- =========================
+               PERSONAL TAB
+          ========================== -->
+          @if (activeTab === 'personal') {
+
+            <div class="contact-details-modal__tab-content">
+
+              <section class="contact-details-modal__section">
+
+                <div class="contact-details-modal__section-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.7" />
+                    <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                  </svg>
+
+                  <h3>Información personal</h3>
+                </div>
+
+
+                <div class="contact-details-modal__details-grid">
+
+                  <div class="contact-details-modal__details-column">
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.7" />
+                          <path d="M6 20a6 6 0 0 1 12 0" stroke="currentColor" stroke-width="1.7" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">Usuario:</span>
+                      <strong>{{ user.email || 'No registrado' }}</strong>
+                    </div>
+
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7" />
+                          <path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">Email:</span>
+                      <strong>{{ user.emailAddress || 'No registrado' }}</strong>
+                    </div>
+
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <path d="M6.5 3.5 9 8l-2 2c1.5 3 4 5.5 7 7l2-2 4.5 2.5c.4.2.6.6.5 1-.4 2-2 3.5-4 3.5C9.8 22 2 14.2 2 7c0-2 1.5-3.6 3.5-4 .4-.1.8.1 1 .5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">Teléfono:</span>
+                      <strong>{{ user.contact || 'No registrado' }}</strong>
+                    </div>
+
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7" />
+                          <path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9S9.5 5.5 12 3Z" stroke="currentColor" stroke-width="1.5" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">País:</span>
+                      <strong>{{ user.country || 'No registrado' }}</strong>
+                    </div>
+
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z" stroke="currentColor" stroke-width="1.7" />
+                          <circle cx="12" cy="10" r="2" stroke="currentColor" stroke-width="1.7" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">Ciudad:</span>
+                      <strong>{{ user.city || 'No registrado' }}</strong>
+                    </div>
+
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <rect x="3" y="7" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.7" />
+                          <path d="M8 7V5h8v2M3 12h18" stroke="currentColor" stroke-width="1.7" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">Ocupación:</span>
+                      <strong>{{ user.occupation || 'No especificada' }}</strong>
+                    </div>
+
+                  </div>
+
+
+                  <div class="contact-details-modal__details-column">
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.7" />
+                          <path d="M8 3v4M16 3v4M4 10h16" stroke="currentColor" stroke-width="1.7" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">Fecha de nacimiento:</span>
+
+                      <strong>
+                        {{ user.birthday ? (user.birthday | date: 'dd/MM/yyyy') : 'No disponible' }}
+                      </strong>
+                    </div>
+
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.7" />
+                          <path d="M8 3v4M16 3v4M4 10h16" stroke="currentColor" stroke-width="1.7" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">Creado el:</span>
+
+                      <strong>
+                        {{ user.createdAt ? (user.createdAt | date: 'dd/MM/yyyy') : 'No disponible' }}
+                      </strong>
+                    </div>
+
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <path d="M20 7v5h-5M4 17v-5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M6 9a7 7 0 0 1 12-2l2 5M18 15a7 7 0 0 1-12 2l-2-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">Actualizado el:</span>
+
+                      <strong>
+                        {{ user.updatedAt ? (user.updatedAt | date: 'dd/MM/yyyy') : 'No disponible' }}
+                      </strong>
+                    </div>
+
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <path d="M12 3 5.5 6v5c0 4.2 2.7 8 6.5 10 3.8-2 6.5-5.8 6.5-10V6L12 3Z" stroke="currentColor" stroke-width="1.7" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">Estado de la cuenta:</span>
+
+                      <strong
+                        class="contact-details-modal__badge"
+                        [class.contact-details-modal__badge--active]="user.status === 'ACTIVE'"
+                        [class.contact-details-modal__badge--blocked]="user.status === 'BLOCK'"
+                      >
+                        {{ user.status || 'No definido' }}
+                      </strong>
+                    </div>
+
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <path d="m3 10 9-5 9 5-9 5-9-5Z" stroke="currentColor" stroke-width="1.7" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">Rol:</span>
+
+                      <strong class="contact-details-modal__role">
+                        {{ user.role || 'No definido' }}
+                      </strong>
+                    </div>
+
+
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7" />
+                          <circle cx="8" cy="10" r="2" stroke="currentColor" stroke-width="1.5" />
+                          <path d="M6 16a3 3 0 0 1 4 0M13 9h5M13 13h5" stroke="currentColor" stroke-width="1.5" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">
+                        ID / Número de identificación:
+                      </span>
+
+                      <strong>{{ user.idNumber || 'No disponible' }}</strong>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </section>
+
             </div>
-          </ng-container>
-        </ng-container>
-      </div>
-    </div>
+          }
 
-    <div class="modal-footer">
-      <button class="confirm-btn" (click)="handleClose()">Cerrar</button>
-    </div>
+
+          <!-- =========================
+               ACADEMIC TAB
+          ========================== -->
+          @if (activeTab === 'academic' && user.role === 'STUDENT') {
+
+            <div class="contact-details-modal__tab-content">
+
+              <section class="contact-details-modal__section">
+
+                <div class="contact-details-modal__section-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="m3 10 9-5 9 5-9 5-9-5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                    <path d="M7 12.5V17c3 2 7 2 10 0v-4.5" stroke="currentColor" stroke-width="1.7" />
+                  </svg>
+
+                  <h3>Información académica</h3>
+                </div>
+
+
+                <div class="contact-details-modal__academic-grid">
+
+                  <div class="contact-details-modal__academic-card">
+                    <span>Etapa actual</span>
+                    <strong>{{ user.student?.stage?.number || 'No asignada' }}</strong>
+                    <small>{{ user.student?.stage?.description || '' }}</small>
+                  </div>
+
+                  <div class="contact-details-modal__academic-card">
+                    <span>Clasificación</span>
+                    <strong>{{ user.student?.studentClassification || 'No definida' }}</strong>
+                  </div>
+
+                  <div class="contact-details-modal__academic-card">
+                    <span>Modalidad</span>
+                    <strong>{{ user.student?.mode || 'No definida' }}</strong>
+                  </div>
+
+                  <div class="contact-details-modal__academic-card">
+                    <span>ID de estudiante</span>
+                    <strong>{{ user.student?.id || '—' }}</strong>
+                  </div>
+
+                </div>
+
+
+                <div class="contact-details-modal__progress-card">
+
+                  <div class="contact-details-modal__progress-header">
+                    <div>
+                      <span>Progreso actual</span>
+                      <small>Progreso dentro de la etapa asignada</small>
+                    </div>
+
+                    <strong>{{ user.currentStageProgress ?? 0 }}%</strong>
+                  </div>
+
+                  <div class="contact-details-modal__progress-track">
+                    <span
+                      class="contact-details-modal__progress-bar"
+                      [style.width.%]="user.currentStageProgress ?? 0"
+                    ></span>
+                  </div>
+
+                </div>
+
+
+                <div class="contact-details-modal__dates-grid">
+
+                  <div class="contact-details-modal__date-card">
+                    <span>Inicio de clases</span>
+
+                    <strong>
+                      {{
+                        user.student?.startClassDate
+                          ? (user.student?.startClassDate | date: 'dd/MM/yyyy')
+                          : 'No disponible'
+                      }}
+                    </strong>
+                  </div>
+
+                  <div class="contact-details-modal__date-card">
+                    <span>Fin de clases</span>
+
+                    <strong>
+                      {{
+                        user.student?.endClassDate
+                          ? (user.student?.endClassDate | date: 'dd/MM/yyyy')
+                          : 'No disponible'
+                      }}
+                    </strong>
+                  </div>
+
+                </div>
+
+              </section>
+
+
+              <!-- SUSPENSION -->
+              <section class="contact-details-modal__suspension">
+
+                <div class="contact-details-modal__suspension-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3 5.5 6v5c0 4.2 2.7 8 6.5 10 3.8-2 6.5-5.8 6.5-10V6L12 3Z" stroke="currentColor" stroke-width="1.7" />
+                  </svg>
+
+                  <h3>Estado de suspensión</h3>
+                </div>
+
+
+                @if (
+                  user.student?.suspensionDays &&
+                  user.student?.suspensionStartDate &&
+                  user.student?.suspensionEndDate
+                ) {
+
+                  <div class="contact-details-modal__suspension-alert contact-details-modal__suspension-alert--active">
+                    <strong>Suspensión activa</strong>
+
+                    <span>
+                      El estudiante se encuentra suspendido actualmente.
+                    </span>
+                  </div>
+
+
+                  <div class="contact-details-modal__suspension-data">
+
+                    <div>
+                      <span>Días</span>
+                      <strong>{{ user.student?.suspensionDays }}</strong>
+                    </div>
+
+                    <div>
+                      <span>Inicio</span>
+                      <strong>
+                        {{ user.student?.suspensionStartDate | date: 'dd/MM/yyyy' }}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Fin</span>
+                      <strong>
+                        {{ user.student?.suspensionEndDate | date: 'dd/MM/yyyy' }}
+                      </strong>
+                    </div>
+
+                  </div>
+
+                } @else {
+
+                  <div class="contact-details-modal__suspension-alert contact-details-modal__suspension-alert--none">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7" />
+                      <path d="m8.5 12 2.3 2.3 4.7-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+
+                    <div>
+                      <strong>Sin suspensión activa</strong>
+                      <span>El estudiante no tiene ninguna suspensión activa.</span>
+                    </div>
+                  </div>
+
+                }
+
+              </section>
+
+            </div>
+          }
+
+
+          <!-- =========================
+               REPRESENTATIVE TAB
+          ========================== -->
+          @if (activeTab === 'representative' && user.role === 'STUDENT') {
+
+            <div class="contact-details-modal__tab-content">
+
+              <section class="contact-details-modal__section">
+
+                <div class="contact-details-modal__section-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.7" />
+                    <circle cx="17" cy="9" r="2.5" stroke="currentColor" stroke-width="1.7" />
+                    <path d="M2.5 20a5.5 5.5 0 0 1 11 0M13 20a4.5 4.5 0 0 1 9 0" stroke="currentColor" stroke-width="1.7" />
+                  </svg>
+
+                  <h3>Información del representante</h3>
+                </div>
+
+
+                <div class="contact-details-modal__representative">
+
+                  <div class="contact-details-modal__representative-avatar">
+                    {{ user.student?.tutorName?.charAt(0) || 'R' }}
+                  </div>
+
+                  <div class="contact-details-modal__representative-info">
+
+                    <div class="contact-details-modal__representative-row">
+                      <span>Nombre</span>
+                      <strong>{{ user.student?.tutorName || 'No registrado' }}</strong>
+                    </div>
+
+                    <div class="contact-details-modal__representative-row">
+                      <span>Email</span>
+                      <strong>{{ user.student?.tutorEmail || 'No registrado' }}</strong>
+                    </div>
+
+                    <div class="contact-details-modal__representative-row">
+                      <span>Teléfono</span>
+                      <strong>{{ user.student?.tutorPhone || 'No registrado' }}</strong>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </section>
+
+            </div>
+          }
+
+
+          <!-- =========================
+               ACTIVITY TAB
+          ========================== -->
+          @if (activeTab === 'activity') {
+
+            <div class="contact-details-modal__tab-content">
+
+              <section class="contact-details-modal__section">
+
+                <div class="contact-details-modal__section-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.7" />
+                    <path d="M8 3v4M16 3v4M4 10h16" stroke="currentColor" stroke-width="1.7" />
+                  </svg>
+
+                  <h3>Actividad y fechas</h3>
+                </div>
+
+
+                <div class="contact-details-modal__timeline">
+
+                  <div class="contact-details-modal__timeline-item">
+                    <span class="contact-details-modal__timeline-dot"></span>
+
+                    <div>
+                      <span>Usuario creado</span>
+
+                      <strong>
+                        {{ user.createdAt ? (user.createdAt | date: 'dd/MM/yyyy') : 'No disponible' }}
+                      </strong>
+                    </div>
+                  </div>
+
+
+                  <div class="contact-details-modal__timeline-item">
+                    <span class="contact-details-modal__timeline-dot"></span>
+
+                    <div>
+                      <span>Última actualización</span>
+
+                      <strong>
+                        {{ user.updatedAt ? (user.updatedAt | date: 'dd/MM/yyyy') : 'No disponible' }}
+                      </strong>
+                    </div>
+                  </div>
+
+
+                  @if (user.role === 'STUDENT') {
+
+                    <div class="contact-details-modal__timeline-item">
+                      <span class="contact-details-modal__timeline-dot"></span>
+
+                      <div>
+                        <span>Inicio de clases</span>
+
+                        <strong>
+                          {{
+                            user.student?.startClassDate
+                              ? (user.student?.startClassDate | date: 'dd/MM/yyyy')
+                              : 'No disponible'
+                          }}
+                        </strong>
+                      </div>
+                    </div>
+
+
+                    <div class="contact-details-modal__timeline-item">
+                      <span class="contact-details-modal__timeline-dot"></span>
+
+                      <div>
+                        <span>Fin de clases</span>
+
+                        <strong>
+                          {{
+                            user.student?.endClassDate
+                              ? (user.student?.endClassDate | date: 'dd/MM/yyyy')
+                              : 'No disponible'
+                          }}
+                        </strong>
+                      </div>
+                    </div>
+
+                  }
+
+                </div>
+
+              </section>
+
+            </div>
+          }
+
+
+          <!-- =========================
+               NOTES TAB
+          ========================== -->
+          @if (activeTab === 'notes') {
+
+            <div class="contact-details-modal__tab-content">
+
+              <section class="contact-details-modal__section">
+
+                <div class="contact-details-modal__section-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 5h16v11H9l-5 4V5Z" stroke="currentColor" stroke-width="1.7" />
+                  </svg>
+
+                  <h3>Notas y comentarios</h3>
+                </div>
+
+
+                <div class="contact-details-modal__notes">
+
+                  <article class="contact-details-modal__note">
+                    <span>Comentario permanente</span>
+
+                    <p>
+                      {{ user.comment || 'No hay comentarios registrados.' }}
+                    </p>
+                  </article>
+
+
+                  <article class="contact-details-modal__note contact-details-modal__note--temporary">
+                    <span>Comentario temporal</span>
+
+                    <p>
+                      {{ user.temporaryComment || 'No hay comentarios temporales.' }}
+                    </p>
+                  </article>
+
+                </div>
+
+              </section>
+
+            </div>
+          }
+
+        </div>
+
+
+        <!-- =========================
+             RIGHT SIDEBAR
+        ========================== -->
+        <aside class="contact-details-modal__sidebar">
+
+          <section class="contact-details-modal__summary">
+
+            <div class="contact-details-modal__summary-title">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                <path d="M5 20V10M10 20V4M15 20v-7M20 20V7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+              </svg>
+
+              <h3>Resumen del usuario</h3>
+            </div>
+
+
+            <div class="contact-details-modal__summary-profile">
+
+              <div class="contact-details-modal__summary-avatar">
+                {{ (user.firstName?.charAt(0) || '') + (user.lastName?.charAt(0) || '') }}
+              </div>
+
+              <div>
+                <strong>
+                  {{ user.firstName || '' }} {{ user.lastName || '' }}
+                </strong>
+
+                <span>
+                  @switch (user.role) {
+                    @case ('STUDENT') {
+                      Estudiante
+                    }
+
+                    @case ('INSTRUCTOR') {
+                      Instructor
+                    }
+
+                    @case ('ADMIN') {
+                      Administrador
+                    }
+
+                    @default {
+                      Usuario
+                    }
+                  }
+                </span>
+
+                <small>ID: {{ user.idNumber || user.id }}</small>
+
+                <span
+                  class="contact-details-modal__summary-status"
+                  [class.contact-details-modal__summary-status--active]="user.status === 'ACTIVE'"
+                >
+                  {{ user.status === 'ACTIVE' ? 'Cuenta activa' : (user.status || 'Sin estado') }}
+                </span>
+              </div>
+
+            </div>
+
+
+            <div class="contact-details-modal__summary-divider"></div>
+
+
+            <div class="contact-details-modal__summary-list">
+
+              <div>
+                <span>Email:</span>
+                <strong>{{ user.emailAddress || 'No registrado' }}</strong>
+              </div>
+
+              <div>
+                <span>Teléfono:</span>
+                <strong>{{ user.contact || 'No registrado' }}</strong>
+              </div>
+
+              <div>
+                <span>País:</span>
+                <strong>{{ user.country || 'No registrado' }}</strong>
+              </div>
+
+              <div>
+                <span>Ciudad:</span>
+                <strong>{{ user.city || 'No registrado' }}</strong>
+              </div>
+
+              <div>
+                <span>Fecha de nacimiento:</span>
+                <strong>
+                  {{ user.birthday ? (user.birthday | date: 'dd/MM/yyyy') : 'No disponible' }}
+                </strong>
+              </div>
+
+              <div>
+                <span>Ocupación:</span>
+                <strong>{{ user.occupation || 'No especificada' }}</strong>
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- NOTES SUMMARY -->
+          <section class="contact-details-modal__comments">
+
+            <div class="contact-details-modal__comments-title">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                <path d="M4 5h16v11H9l-5 4V5Z" stroke="currentColor" stroke-width="1.7" />
+              </svg>
+
+              <h3>Notas y comentarios</h3>
+            </div>
+
+
+            <div class="contact-details-modal__comments-item">
+              <strong>Comentario permanente:</strong>
+
+              <p>{{ user.comment || 'No hay comentarios' }}</p>
+            </div>
+
+
+            <div class="contact-details-modal__comments-item">
+              <strong>Comentario temporal:</strong>
+
+              <p>{{ user.temporaryComment || 'No hay comentarios temporales' }}</p>
+            </div>
+
+          </section>
+
+        </aside>
+
+      </div>
+
+
+      <!-- =========================
+           FOOTER
+      ========================== -->
+      <footer class="contact-details-modal__footer">
+
+        <button
+          type="button"
+          class="contact-details-modal__footer-close"
+          (click)="handleClose()"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+
+          <span>Cerrar</span>
+        </button>
+
+
+        @if (user.emailAddress || user.email) {
+          <a
+            class="contact-details-modal__contact"
+            [href]="'mailto:' + (user.emailAddress || user.email)"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path d="M4 5h16v11H9l-5 4V5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+            </svg>
+
+            <span>Contactar usuario</span>
+          </a>
+        }
+
+      </footer>
+
+    </section>
+
   </div>
-</div>
+
+}

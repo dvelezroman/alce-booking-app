@@ -1,0 +1,214 @@
+<section class="searching-user-page">
+
+  <div class="searching-user-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <app-searching-user-header>
+    </app-searching-user-header>
+
+
+    <!-- =========================
+         SEARCH TYPE
+    ========================== -->
+    <app-searching-user-search-type
+      [currentForm]="currentForm"
+      (formChange)="changeForm($event)"
+    >
+    </app-searching-user-search-type>
+
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+    <app-searching-user-filters
+      [currentForm]="currentForm"
+      [studentForm]="studentForm"
+      [userForm]="userForm"
+      [codeForm]="codeForm"
+      [stages]="stages"
+      [roles]="roles"
+      (searchRequested)="searchUsers()"
+      (codeSearchRequested)="searchByCode()"
+    >
+    </app-searching-user-filters>
+
+
+    <!-- =========================
+         RESULTS
+    ========================== -->
+    <app-searching-user-table
+      [users]="users"
+      [totalUsers]="totalUsers"
+      [currentPage]="currentPage"
+      [itemsPerPage]="itemsPerPage"
+      [showStageColumn]="showStageColumn"
+      [noResults]="noResults"
+      (editRequested)="openEditUserModal($event)"
+      (passwordRequested)="openEditPasswordModal($event)"
+      (contactRequested)="openContactModal($event)"
+      (deleteRequested)="openDeleteModal($event)"
+      (removeSuspensionRequested)="onRemoveSuspensionFromTable($event)"
+    >
+    </app-searching-user-table>
+
+
+    <!-- =========================
+         PAGINATION
+    ========================== -->
+    @if (totalUsers > itemsPerPage) {
+      <app-searching-user-pagination
+        [currentPage]="currentPage"
+        [itemsPerPage]="itemsPerPage"
+        [totalItems]="totalUsers"
+        (pageChange)="changePage($event)"
+      >
+      </app-searching-user-pagination>
+    }
+
+
+    <!-- =========================
+         INFORMATION
+    ========================== -->
+    <app-searching-user-info>
+    </app-searching-user-info>
+
+  </div>
+
+
+  <!-- =========================
+       EDIT USER MODAL
+  ========================== -->
+  <app-edit-user-modal
+    *ngIf="isEditModalOpen && selectedUser"
+    [showModal]="isEditModalOpen"
+    [user]="selectedUser"
+    [stages]="stages"
+    [links]="links"
+    [roles]="roles"
+    [ageGroupOptions]="ageGroupOptions"
+    (close)="closeEditModal()"
+    (save)="updateUserFromChild($event)"
+    (suspend)="onSuspendStudent($event)"
+    (removeSuspension)="onRemoveSuspension($event)"
+  >
+  </app-edit-user-modal>
+
+
+  <!-- =========================
+       CONTACT DETAILS MODAL
+  ========================== -->
+  <app-contact-details-modal
+    *ngIf="showContactModal && selectedUserForContact"
+    [showModal]="showContactModal"
+    [user]="selectedUserForContact"
+    (close)="closeContactModal()"
+  >
+  </app-contact-details-modal>
+
+
+  <!-- =========================
+       PASSWORD MODAL
+  ========================== -->
+  @if (isEditPasswordModalOpen && selectedUser) {
+
+    <div class="searching-user-page__modal-backdrop">
+
+      <div class="searching-user-page__password-modal">
+
+        <div class="searching-user-page__password-header">
+
+          <div>
+            <h2 class="searching-user-page__password-title">
+              Cambiar contraseña
+            </h2>
+
+            <p class="searching-user-page__password-description">
+              Actualiza la contraseña de
+              {{ selectedUser.firstName }} {{ selectedUser.lastName }}.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="searching-user-page__password-close"
+            aria-label="Cerrar"
+            (click)="closeEditPasswordModal()"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="m6 6 12 12M18 6 6 18"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+
+        </div>
+
+
+        <div class="searching-user-page__password-body">
+
+          <label
+            class="searching-user-page__password-label"
+            for="new-password"
+          >
+            Nueva contraseña
+          </label>
+
+          <input
+            id="new-password"
+            type="password"
+            class="searching-user-page__password-input"
+            [(ngModel)]="selectedUser.password"
+            placeholder="Ingresa la nueva contraseña"
+          />
+
+        </div>
+
+
+        <div class="searching-user-page__password-actions">
+
+          <button
+            type="button"
+            class="searching-user-page__password-cancel"
+            (click)="closeEditPasswordModal()"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            class="searching-user-page__password-save"
+            (click)="updatePassword()"
+          >
+            Guardar contraseña
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =========================
+       GENERAL MODAL
+  ========================== -->
+  <app-modal
+    [showModal]="modalConfig.show"
+    [message]="modalConfig.message"
+    [isError]="modalConfig.isError"
+    [isSuccess]="modalConfig.isSuccess"
+    [isInfo]="modalConfig.isInfo"
+    [showButtons]="modalConfig.showButtons ?? false"
+    (close)="modalConfig.close()"
+    (confirmAction)="modalConfig.confirm?.()"
+  >
+  </app-modal>
+
+</section>

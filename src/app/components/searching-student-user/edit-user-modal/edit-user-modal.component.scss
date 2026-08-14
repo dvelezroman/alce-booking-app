@@ -1,331 +1,1274 @@
-/* Estilos específicos para el modal de editar usuario */
-.modal {
-  z-index: 1100;
+:host {
+  display: block;
 }
 
-/* Fondo del modal */
-.edit-user-modal-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.25);
-  z-index: 999;
-}
+/* =========================
+   OVERLAY
+========================= */
 
-/* Contenedor principal del modal */
-.edit-user-modal-card {
+.edit-user-modal__overlay {
   position: fixed;
-  top: 10%;
-  left: 50%;
-  transform: translate(-50%, 0);
-  width: 500px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.25),
-    0 8px 25px rgba(0, 0, 0, 0.15);
-  border-radius: 16px;
-  display: flex;
-  flex-direction: column;
+  inset: 0;
   z-index: 1000;
 
-  @media (max-width: 480px) {
-    width: 350px;
-  }
-}
-
-/* Cabecera del modal */
-.edit-user-modal-head {
   display: flex;
-  justify-content: center;
   align-items: center;
-  position: relative;
-  padding: 0.75rem 1.25rem;
+  justify-content: center;
+
+  padding: 1rem;
+
+  background: rgba(17, 24, 39, .52);
+  backdrop-filter: blur(2px);
 }
 
-.edit-user-modal-title {
-  flex-grow: 1;
-  font-size: 1.2rem;
-  text-align: center;
-  color: #111827;
-  font-weight: 600;
-  margin: 0;
-  margin-bottom: 1rem;
-}
+/* =========================
+   MODAL
+========================= */
 
-.edit-user-close {
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  font-size: 1.5rem;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  color: #706f6f;
-  transition: all 0.2s ease;
-}
+.edit-user-modal {
+  width: min(96vw, 94rem);
+  max-height: 94dvh;
 
-.edit-user-close:hover {
-  color: #28336f;
-}
-
-/* Cuerpo del modal con scroll */
-.edit-user-modal-body {
-  overflow-y: auto;
-  height: 60vh;
-  padding: 1rem 1.5rem;
-  scrollbar-width: thin;
-  scrollbar-color: #d1d5db transparent;
-
-   &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #d1d5db;
-    border-radius: 10px;
-  }
-
-   @media (max-width: 480px) {
-    padding: 0.5rem 0.85rem;
-  }
-}
-
-/* Campos del formulario */
-.form-field-edit {
-  margin-bottom: 1rem;
-}
-
-.form-field-edit label {
-  display: block;
-  margin-bottom: 0.3rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-left: 5px;
-  color: #374151;
-}
-
-/* Checkbox Activar Usuario */
-.checkbox-field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+
+  overflow: hidden;
+
+  border: 1px solid #dde1e8;
+  border-radius: .85rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 1.5rem 4rem rgba(15, 23, 42, .18),
+    0 .25rem .9rem rgba(15, 23, 42, .08);
 }
 
-.checkbox-title {
-  width: 100%;
-  text-align: left;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #374151;
-}
+/* =========================
+   HEADER
+========================= */
 
-.center-checkbox {
-  align-self: center;
-  width: 25px !important;
-  height: 25px !important;
-  cursor: pointer;
-  accent-color: #28336f;
-}
+.edit-user-modal__header {
+  flex: 0 0 auto;
 
-.center-checkbox:hover {
-  box-shadow: 0 0 0 4px rgba(40, 51, 111, 0.15);
-  border-radius: 4px;
-}
+  min-height: 4.8rem;
 
-/* BOTÓN SUSPENDER */
-.suspend-input-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.suspend-input-wrapper input {
-  padding-right: 95px;
-}
-
-.suspend-btn.inside {
-  position: absolute;
-  top: 50%;
-  right: 6px;
-  transform: translateY(-50%);
-  height: 26px;
-  padding: 0 10px;
-  font-size: 0.7rem;
-  border-radius: 8px;
-  background: #d4af37;
-  color: #111827;
-  border: none;
-  cursor: pointer;
   display: flex;
   align-items: center;
-  transition: all 0.2s ease;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: .9rem 1.4rem;
+
+  border-bottom: 1px solid #e6e8ef;
 }
 
-.suspend-btn.inside:hover {
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
-}
+.edit-user-modal__header-info {
+  min-width: 0;
 
-.suspend-btn.inside:active {
-  transform: translateY(-50%) scale(0.97);
-}
-
-.suspension-info strong {
-  display: inline-block;
-  margin: 0 4px;
-  padding: 1px 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #92400e;
-  background: #fef3c7;
-  border-radius: 6px;
-  line-height: 1.4;
-}
-
-.suspension-info {
-  display: block;
-  margin-top: 6px;
-  font-size: 0.85rem;
-  color: #92400e;
-}
-
-.suspend-btn.inside.neutral {
-  background: #e5e7eb;
-  color: #374151;
-}
-
-.suspend-btn.inside.neutral:hover {
-  background: #d1d5db;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
-}
-
-/* Checkbox estilo activado */
-.form-field-edit input[type="checkbox"] {
-  accent-color: #28336f;
-  cursor: pointer;
-  border-radius: 12px;
-  transition: all 0.2s ease;
-}
-
-.form-field-edit input[type="checkbox"]:hover {
-  box-shadow: 0 0 0 4px rgba(40, 51, 111, 0.15);
-}
-
-.form-field-edit input,
-.form-field-edit select {
-  width: 100%;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
-  height: 38px;
-  background-color: #fafafa;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  box-sizing: border-box;
-  transition: all 0.2s ease;
-}
-
-.form-field-edit input:focus,
-.form-field-edit select:focus {
-  background-color: #ffffff;
-  border-color: #28336f;
-  box-shadow: 0 0 0 4px rgba(40, 51, 111, 0.15);
-  outline: none;
-}
-
-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-select::-ms-expand {
-  display: none;
-}
-
-/* Pie del modal */
-.edit-user-modal-foot {
   display: flex;
+  align-items: center;
+
+  gap: .75rem;
+}
+
+.edit-user-modal__header-icon {
+  width: 2.55rem;
+  height: 2.55rem;
+
+  flex: 0 0 2.55rem;
+
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  padding: 1.5rem 1rem;
+
+  border: 1px solid #e1e4eb;
+  border-radius: 50%;
+
+  background: #f8f9fb;
+  color: #2f3749;
 }
 
-.edit-user-modal-foot .button {
-  padding: 0.6rem 1.8rem;
-  font-size: .9rem;
-  border: none;
-  border-radius: 12px;
+.edit-user-modal__title {
+  margin: 0;
+
+  color: #202739;
+
+  font-size: 1.15rem;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.edit-user-modal__subtitle {
+  margin: .14rem 0 0;
+
+  color: #7c8496;
+
+  font-size: .72rem;
+}
+
+.edit-user-modal__close {
+  width: 2.25rem;
+  height: 2.25rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: .45rem;
+
+  background: transparent;
+  color: #687185;
+
   cursor: pointer;
-  margin: 0 0.5rem;
-  color: white;
-  transition: all 0.2s ease;
+
+  transition:
+    background-color .15s ease,
+    color .15s ease,
+    transform .1s ease;
 }
 
-/* Botón azul eléctrico */
-.edit-user-modal-foot .button.is-success {
-  background-color: #28336f;
+.edit-user-modal__close:hover {
+  background: #f3f4f7;
+  color: #252c40;
 }
 
-.edit-user-modal-foot .button.is-success:hover {
-  background-color: #1f2857;
-  box-shadow: 0 8px 20px rgba(40, 51, 111, 0.35);
+.edit-user-modal__close:active {
+  transform: scale(.95);
 }
 
-/* Botón gris Vercel */
-.edit-user-modal-foot .delete-cancel-button {
-  background: #f3f4f6;
-  color: #374151;
+/* =========================
+   FORM / BODY
+========================= */
+
+.edit-user-modal__form {
+  min-height: 0;
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 
-.edit-user-modal-foot .delete-cancel-button:hover {
-  background: #e5e7eb;
+.edit-user-modal__body {
+  min-height: 0;
+
+  display: grid;
+  grid-template-columns: minmax(0, 2.1fr) minmax(19rem, .95fr);
+
+  gap: .9rem;
+
+  padding: .9rem 1rem;
+
+  overflow-y: auto;
+
+  background: #fcfcfe;
 }
 
-.form-field-edit input,
-.form-field-edit select,
-.form-field-edit textarea {
-  color: #222;
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.edit-user-modal__main {
+  min-width: 0;
+
+  border: 1px solid #e3e6ed;
+  border-radius: .65rem;
+
+  background: #ffffff;
 }
 
-.form-field-edit input::placeholder,
-.form-field-edit textarea::placeholder {
-  color: #555;
-  opacity: 1;
+/* =========================
+   SECTIONS
+========================= */
+
+.edit-user-modal__section {
+  padding: 1rem;
+
+  border-bottom: 1px solid #eceef3;
 }
 
-.form-field-edit input[readonly],
-.form-field-edit select[readonly] {
-  color: #333;
-  background-color: #f9fafb;
+.edit-user-modal__section:last-child {
+  border-bottom: 0;
 }
 
-.form-field-edit select {
-  color: #222;
-  background-color: #fff;
+.edit-user-modal__section-heading {
+  display: flex;
+  align-items: center;
+
+  gap: .45rem;
+
+  margin-bottom: .85rem;
 }
 
-@media (max-width: 480px) {
+.edit-user-modal__section-heading h3 {
+  margin: 0;
 
-  .edit-user-modal-body {
-    padding: 0.75rem 1rem;
+  color: #293147;
+
+  font-size: .82rem;
+  font-weight: 750;
+}
+
+.edit-user-modal__section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #5760df;
+}
+
+.edit-user-modal__section-heading--academic {
+  color: #4561d8;
+}
+
+/* =========================
+   GRIDS
+========================= */
+
+.edit-user-modal__grid {
+  display: grid;
+
+  gap: .75rem;
+
+  margin-bottom: .8rem;
+}
+
+.edit-user-modal__grid:last-child {
+  margin-bottom: 0;
+}
+
+.edit-user-modal__grid--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.edit-user-modal__grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.edit-user-modal__grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* =========================
+   FIELD
+========================= */
+
+.edit-user-modal__field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .36rem;
+}
+
+.edit-user-modal__field label {
+  color: #343c50;
+
+  font-size: .67rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.edit-user-modal__field input,
+.edit-user-modal__field select,
+.edit-user-modal__field textarea {
+  width: 100%;
+
+  border: 1px solid #dfe3ea;
+  border-radius: .42rem;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #3d465a;
+
+  font-family: inherit;
+  font-size: .7rem;
+  font-weight: 450;
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease,
+    background-color .15s ease;
+}
+
+.edit-user-modal__field input,
+.edit-user-modal__field select {
+  height: 2.55rem;
+
+  padding: 0 .78rem;
+}
+
+.edit-user-modal__field textarea {
+  min-height: 5.4rem;
+
+  padding: .7rem .78rem;
+
+  resize: vertical;
+}
+
+.edit-user-modal__field input::placeholder,
+.edit-user-modal__field textarea::placeholder {
+  color: #9aa1b0;
+}
+
+.edit-user-modal__field input:hover,
+.edit-user-modal__field select:hover,
+.edit-user-modal__field textarea:hover {
+  border-color: #cdd2dc;
+}
+
+.edit-user-modal__field input:focus,
+.edit-user-modal__field select:focus,
+.edit-user-modal__field textarea:focus {
+  border-color: #6d59e7;
+
+  box-shadow: 0 0 0 .16rem rgba(109, 89, 231, .09);
+}
+
+.edit-user-modal__field input:disabled,
+.edit-user-modal__field input[readonly] {
+  background: #f7f8fa;
+  color: #7f8798;
+
+  cursor: not-allowed;
+}
+
+/* =========================
+   INPUT WRAPPER
+========================= */
+
+.edit-user-modal__input-wrapper,
+.edit-user-modal__select-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+.edit-user-modal__input-wrapper input {
+  padding-right: 2.4rem;
+}
+
+.edit-user-modal__input-icon {
+  position: absolute;
+  top: 50%;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #5c6578;
+
+  pointer-events: none;
+
+  transform: translateY(-50%);
+}
+
+.edit-user-modal__input-icon--right {
+  right: .75rem;
+}
+
+/* =========================
+   SELECT
+========================= */
+
+.edit-user-modal__select-wrapper select {
+  padding-right: 2.3rem;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  cursor: pointer;
+}
+
+.edit-user-modal__select-icon {
+  position: absolute;
+  top: 50%;
+  right: .72rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #5d6578;
+
+  pointer-events: none;
+
+  transform: translateY(-50%);
+}
+
+/* =========================
+   AGE
+========================= */
+
+.edit-user-modal__age {
+  min-height: 2.55rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: .55rem;
+
+  padding: .45rem .7rem;
+
+  border: 1px solid #e0e4ea;
+  border-radius: .42rem;
+
+  background: #f8f9fb;
+  color: #3a4558;
+}
+
+.edit-user-modal__age-icon {
+  display: inline-flex;
+
+  color: #3fa46d;
+}
+
+.edit-user-modal__age div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .02rem;
+}
+
+.edit-user-modal__age strong {
+  color: #252c40;
+  font-size: .68rem;
+  font-weight: 700;
+}
+
+.edit-user-modal__age span:not(.edit-user-modal__age-icon) {
+  color: #7b8495;
+
+  font-size: .59rem;
+}
+
+.edit-user-modal__age--minor {
+  border-color: #cfe7d8;
+
+  background: #f0faf4;
+  color: #238a57;
+}
+
+/* =========================
+   PROGRESS
+========================= */
+
+.edit-user-modal__progress {
+  min-height: 2.55rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: .55rem;
+
+  padding: 0 .75rem;
+
+  border: 1px solid #e1e4eb;
+  border-radius: .42rem;
+
+  background: #ffffff;
+}
+
+.edit-user-modal__progress > span {
+  flex: 0 0 auto;
+
+  color: #495267;
+
+  font-size: .68rem;
+  font-weight: 700;
+}
+
+.edit-user-modal__progress-track {
+  width: 100%;
+  height: .3rem;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: #e7e9ee;
+}
+
+.edit-user-modal__progress-bar {
+  display: block;
+
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #6771e8;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.edit-user-modal__sidebar {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .8rem;
+}
+
+/* =========================
+   SUMMARY CARD
+========================= */
+
+.edit-user-modal__summary-card,
+.edit-user-modal__suspension-card {
+  border: 1px solid #e1e4eb;
+  border-radius: .65rem;
+
+  background: #ffffff;
+}
+
+.edit-user-modal__summary-card {
+  padding: 1rem;
+}
+
+.edit-user-modal__summary-title,
+.edit-user-modal__suspension-title {
+  display: flex;
+  align-items: center;
+
+  gap: .45rem;
+}
+
+.edit-user-modal__summary-title {
+  margin-bottom: .85rem;
+}
+
+.edit-user-modal__summary-title svg {
+  color: #5760df;
+}
+
+.edit-user-modal__summary-title h3,
+.edit-user-modal__suspension-title h3 {
+  margin: 0;
+
+  color: #283045;
+
+  font-size: .8rem;
+  font-weight: 750;
+}
+
+/* =========================
+   SUMMARY USER
+========================= */
+
+.edit-user-modal__summary-user {
+  display: flex;
+  align-items: center;
+
+  gap: .75rem;
+}
+
+.edit-user-modal__avatar {
+  width: 3.45rem;
+  height: 3.45rem;
+
+  flex: 0 0 3.45rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #8d72ef, #b092f4);
+  color: #ffffff;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  text-transform: uppercase;
+}
+
+.edit-user-modal__summary-user-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
+}
+
+.edit-user-modal__summary-user-info strong {
+  overflow: hidden;
+
+  color: #252c40;
+
+  font-size: .78rem;
+  font-weight: 750;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.edit-user-modal__summary-user-info > span:not(.edit-user-modal__status-badge) {
+  overflow: hidden;
+
+  color: #6e778b;
+
+  font-size: .64rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.edit-user-modal__status-badge {
+  width: fit-content;
+
+  margin-top: .18rem;
+
+  padding: .2rem .45rem;
+
+  border-radius: 999px;
+
+  background: #f1f2f4;
+  color: #7d8492;
+
+  font-size: .58rem;
+  font-weight: 700;
+}
+
+.edit-user-modal__status-badge--active {
+  background: #e8f7ee;
+  color: #228f5a;
+}
+
+/* =========================
+   SUMMARY DATA
+========================= */
+
+.edit-user-modal__summary-divider {
+  height: 1px;
+
+  margin: .9rem 0;
+
+  background: #eceef2;
+}
+
+.edit-user-modal__summary-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: .55rem;
+}
+
+.edit-user-modal__summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: .75rem;
+
+  color: #667084;
+
+  font-size: .64rem;
+}
+
+.edit-user-modal__summary-row strong {
+  color: #354057;
+
+  font-size: .64rem;
+  font-weight: 650;
+
+  text-align: right;
+}
+
+.edit-user-modal__summary-row--progress {
+  align-items: flex-start;
+}
+
+.edit-user-modal__summary-progress {
+  width: 8rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: .45rem;
+}
+
+.edit-user-modal__summary-progress .edit-user-modal__progress-track {
+  flex: 1;
+}
+
+/* =========================
+   SUMMARY STATUS
+========================= */
+
+.edit-user-modal__summary-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-top: 1rem;
+  padding-top: .8rem;
+
+  border-top: 1px solid #eceef2;
+}
+
+.edit-user-modal__summary-status > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
+}
+
+.edit-user-modal__summary-status-label {
+  color: #343c50;
+
+  font-size: .65rem;
+  font-weight: 700;
+}
+
+.edit-user-modal__summary-status small {
+  color: #858d9e;
+
+  font-size: .56rem;
+}
+
+/* =========================
+   SWITCH
+========================= */
+
+.edit-user-modal__switch {
+  position: relative;
+
+  flex: 0 0 auto;
+
+  cursor: pointer;
+}
+
+.edit-user-modal__switch input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
+}
+
+.edit-user-modal__switch-track {
+  position: relative;
+
+  width: 2.35rem;
+  height: 1.3rem;
+
+  display: block;
+
+  border-radius: 999px;
+
+  background: #cfd4dc;
+
+  transition: background-color .15s ease;
+}
+
+.edit-user-modal__switch-thumb {
+  position: absolute;
+  top: .16rem;
+  left: .17rem;
+
+  width: .98rem;
+  height: .98rem;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  box-shadow: 0 .08rem .2rem rgba(0, 0, 0, .16);
+
+  transition: transform .15s ease;
+}
+
+.edit-user-modal__switch input:checked + .edit-user-modal__switch-track {
+  background: #28a96b;
+}
+
+.edit-user-modal__switch input:checked +
+.edit-user-modal__switch-track
+.edit-user-modal__switch-thumb {
+  transform: translateX(1.02rem);
+}
+
+/* =========================
+   SUSPENSION CARD
+========================= */
+
+.edit-user-modal__suspension-card {
+  padding: 1rem;
+
+  border-color: #f0d6d6;
+
+  background: #fffafa;
+}
+
+.edit-user-modal__suspension-title {
+  margin-bottom: .75rem;
+
+  color: #dd4242;
+}
+
+.edit-user-modal__suspension-title svg,
+.edit-user-modal__suspension-title h3 {
+  color: #dd4242;
+}
+
+.edit-user-modal__suspension-message {
+  display: flex;
+  align-items: center;
+
+  gap: .4rem;
+
+  padding: .55rem .65rem;
+
+  border: 1px solid transparent;
+  border-radius: .42rem;
+
+  font-size: .62rem;
+  font-weight: 550;
+}
+
+.edit-user-modal__suspension-message--success {
+  border-color: #bce5cb;
+
+  background: #effaf3;
+  color: #278d59;
+}
+
+.edit-user-modal__suspension-message--warning {
+  border-color: #f0c9c9;
+
+  background: #fff1f1;
+  color: #cf4545;
+}
+
+/* =========================
+   SUSPENSION DETAILS
+========================= */
+
+.edit-user-modal__suspension-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: .5rem;
+
+  margin-top: .7rem;
+}
+
+.edit-user-modal__suspension-details > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
+
+  padding: .5rem;
+
+  border: 1px solid #e8eaf0;
+  border-radius: .4rem;
+
+  background: #ffffff;
+}
+
+.edit-user-modal__suspension-details span {
+  color: #858d9e;
+
+  font-size: .55rem;
+}
+
+.edit-user-modal__suspension-details strong {
+  color: #343c50;
+
+  font-size: .62rem;
+}
+
+/* =========================
+   SUSPEND
+========================= */
+
+.edit-user-modal__suspend {
+  margin-top: .75rem;
+}
+
+.edit-user-modal__suspend-heading {
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
+
+  margin-bottom: .55rem;
+}
+
+.edit-user-modal__suspend-heading strong {
+  color: #d83f3f;
+
+  font-size: .67rem;
+}
+
+.edit-user-modal__suspend-heading span {
+  color: #858d9e;
+
+  font-size: .57rem;
+}
+
+.edit-user-modal__suspend-action {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+
+  gap: .55rem;
+}
+
+.edit-user-modal__suspend-button {
+  height: 2.55rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .4rem;
+
+  padding: 0 .75rem;
+
+  border: 1px solid #ef5555;
+  border-radius: .42rem;
+
+  background: #ffffff;
+  color: #e24444;
+
+  font-family: inherit;
+  font-size: .62rem;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    color .15s ease,
+    transform .1s ease;
+}
+
+.edit-user-modal__suspend-button:hover:not(:disabled) {
+  background: #fff1f1;
+}
+
+.edit-user-modal__suspend-button:active:not(:disabled) {
+  transform: scale(.98);
+}
+
+.edit-user-modal__suspend-button:disabled {
+  opacity: .45;
+
+  cursor: not-allowed;
+}
+
+/* =========================
+   REMOVE SUSPENSION
+========================= */
+
+.edit-user-modal__remove-suspension {
+  margin-top: .75rem;
+  padding: .65rem;
+
+  border: 1px solid #cfc3ff;
+  border-radius: .48rem;
+
+  background: #faf8ff;
+}
+
+.edit-user-modal__remove-suspension > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
+
+  margin-bottom: .5rem;
+}
+
+.edit-user-modal__remove-suspension strong {
+  color: #6543df;
+
+  font-size: .66rem;
+}
+
+.edit-user-modal__remove-suspension span {
+  color: #7c719d;
+
+  font-size: .57rem;
+}
+
+.edit-user-modal__remove-suspension button {
+  height: 2.15rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .4rem;
+
+  padding: 0 .7rem;
+
+  border: 1px solid #7659e7;
+  border-radius: .4rem;
+
+  background: #ffffff;
+  color: #6543df;
+
+  font-family: inherit;
+  font-size: .62rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    transform .1s ease;
+}
+
+.edit-user-modal__remove-suspension button:hover {
+  background: #f2efff;
+}
+
+.edit-user-modal__remove-suspension button:active {
+  transform: scale(.98);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.edit-user-modal__footer {
+  flex: 0 0 auto;
+
+  min-height: 4.2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: .6rem;
+
+  padding: .75rem 1.2rem;
+
+  border-top: 1px solid #e5e7ed;
+
+  background: #ffffff;
+}
+
+.edit-user-modal__cancel,
+.edit-user-modal__save {
+  height: 2.45rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .42rem;
+
+  padding: 0 1rem;
+
+  border-radius: .42rem;
+
+  font-family: inherit;
+  font-size: .68rem;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    border-color .15s ease,
+    transform .1s ease;
+}
+
+.edit-user-modal__cancel {
+  border: 1px solid #dfe2e9;
+
+  background: #ffffff;
+  color: #465065;
+}
+
+.edit-user-modal__cancel:hover {
+  background: #f8f9fb;
+}
+
+.edit-user-modal__save {
+  border: 1px solid #4c61df;
+
+  background: #4c61df;
+  color: #ffffff;
+
+  box-shadow: 0 .15rem .4rem rgba(76, 97, 223, .18);
+}
+
+.edit-user-modal__save:hover:not(:disabled) {
+  background: #4055d1;
+  border-color: #4055d1;
+}
+
+.edit-user-modal__cancel:active,
+.edit-user-modal__save:active:not(:disabled) {
+  transform: scale(.98);
+}
+
+.edit-user-modal__save:disabled {
+  opacity: .45;
+
+  cursor: not-allowed;
+}
+
+/* =========================
+   SMALL DESKTOP
+========================= */
+
+@media (max-width: 1200px) {
+  .edit-user-modal {
+    width: min(97vw, 76rem);
   }
 
-  .form-field-edit input,
-  .form-field-edit select {
-    font-size: 0.75rem;
-    height: 34px;
+  .edit-user-modal__body {
+    grid-template-columns: minmax(0, 1.7fr) minmax(17rem, .9fr);
   }
 
-  .suspension-info {
-    font-size: 0.75rem;
+  .edit-user-modal__grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .edit-user-modal {
+    max-height: 96dvh;
   }
 
-  .suspension-info strong {
-    font-size: 0.7rem;
+  .edit-user-modal__body {
+    grid-template-columns: 1fr;
   }
 
-  .suspend-btn.inside {
-    font-size: 0.65rem;
-    height: 24px;
+  .edit-user-modal__sidebar {
+    order: 2;
+  }
+
+  .edit-user-modal__grid--3,
+  .edit-user-modal__grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 640px) {
+  .edit-user-modal__overlay {
+    align-items: flex-start;
+
+    padding: .5rem;
+  }
+
+  .edit-user-modal {
+    width: 100%;
+    max-height: calc(100dvh - 1rem);
+
+    border-radius: .7rem;
+  }
+
+  .edit-user-modal__header {
+    min-height: 4.2rem;
+
+    padding: .75rem .85rem;
+  }
+
+  .edit-user-modal__header-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+
+    flex-basis: 2.25rem;
+  }
+
+  .edit-user-modal__title {
+    font-size: .95rem;
+  }
+
+  .edit-user-modal__subtitle {
+    font-size: .63rem;
+  }
+
+  .edit-user-modal__body {
+    padding: .55rem;
+
+    gap: .6rem;
+  }
+
+  .edit-user-modal__navigation {
+    padding: .55rem .55rem 0;
+  }
+
+  .edit-user-modal__navigation-item {
+    min-height: 2.35rem;
+
+    padding: 0 .55rem;
+
+    font-size: .62rem;
+  }
+
+  .edit-user-modal__section,
+  .edit-user-modal__summary-card,
+  .edit-user-modal__suspension-card {
+    padding: .75rem;
+  }
+
+  .edit-user-modal__grid--2,
+  .edit-user-modal__grid--3,
+  .edit-user-modal__grid--4 {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-user-modal__field input,
+  .edit-user-modal__field select {
+    height: 2.45rem;
+  }
+
+  .edit-user-modal__suspend-action {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-user-modal__suspend-button {
+    width: 100%;
+  }
+
+  .edit-user-modal__footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    padding: .65rem;
+  }
+
+  .edit-user-modal__cancel,
+  .edit-user-modal__save {
+    width: 100%;
+    min-width: 0;
+
+    padding: 0 .6rem;
   }
 }
