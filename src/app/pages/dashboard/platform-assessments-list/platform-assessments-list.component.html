@@ -14,6 +14,35 @@
     </a>
   </div>
 
+  <div class="quick-filters">
+    <div class="filter-item">
+      <label class="filter-label">Assessment</label>
+      <select
+        class="filter-select"
+        [(ngModel)]="draft.templateId"
+        (ngModelChange)="applyFilters()"
+      >
+        <option [ngValue]="''">Todos</option>
+        <option *ngFor="let t of templates" [ngValue]="t.id">
+          {{ t.title }}
+        </option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label class="filter-label">Stage</label>
+      <select
+        class="filter-select"
+        [(ngModel)]="draft.studentStage"
+        (ngModelChange)="applyFilters()"
+      >
+        <option [ngValue]="undefined">Todos</option>
+        <option *ngFor="let s of stages" [ngValue]="s.id">
+          {{ stageLabel(s) }}
+        </option>
+      </select>
+    </div>
+  </div>
+
   <div class="filters-container" *ngIf="showFilters">
     <div class="filters-grid">
       <div class="filter-item">
@@ -23,28 +52,6 @@
           type="number"
           [(ngModel)]="draft.studentId"
           placeholder="students.id"
-        />
-      </div>
-
-      <div class="filter-item">
-        <label class="filter-label">Título del examen</label>
-        <input
-          class="filter-input"
-          type="text"
-          [(ngModel)]="draft.templateTitle"
-          placeholder="Contiene…"
-        />
-      </div>
-
-      <div class="filter-item">
-        <label class="filter-label">Stage</label>
-        <input
-          class="filter-input"
-          type="number"
-          min="1"
-          max="19"
-          [(ngModel)]="draft.studentStage"
-          placeholder="1–19"
         />
       </div>
 
@@ -164,10 +171,11 @@
               <button
                 type="button"
                 class="btn-writing"
-                *ngIf="canApplyWriting(row)"
+                *ngIf="canShowWritingAction(row)"
+                [disabled]="isWritingLocked(row) || actionBusyId === row.assignmentId"
                 (click)="startApplyWriting(row)"
               >
-                {{ writingActionLabel() }}
+                {{ writingActionLabel(row) }}
               </button>
             </td>
           </tr>

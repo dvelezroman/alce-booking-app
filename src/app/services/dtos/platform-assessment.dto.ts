@@ -22,6 +22,7 @@ export interface PlatformAssessmentAssignment {
   points?: number | null;
   /** Admin / instructor: Writing already linked (S2S auto or prior apply). */
   writingApplied?: boolean;
+  writingAccepted?: boolean;
   writingAssessmentId?: number | null;
   writingPoints?: number | null;
 }
@@ -77,6 +78,7 @@ export interface RemotePlatformAssessmentItem {
   completedAt: string | null;
   mirrorId: number | null;
   writingApplied: boolean;
+  writingAccepted: boolean;
   writingAssessmentId: number | null;
   writingPoints: number | null;
 }

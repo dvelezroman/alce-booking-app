@@ -16,7 +16,7 @@
     >
       <h3 class="platform-s2s-title">Resultados S2S (plataforma)</h3>
       <p class="platform-s2s-hint">
-        PASSED aplica Grammar automáticamente. «Aceptar Evaluación» solo si aún no hay Grammar.
+        PASSED aplica Grammar automáticamente. «Aceptar Evaluación» queda hasta que el admin acepte (PASSED o FAILED), aunque ya exista Grammar.
       </p>
 
       <div
@@ -58,9 +58,10 @@
             type="button"
             class="button is-link is-small"
             *ngIf="canShowWritingAction(row)"
+            [disabled]="isWritingLocked(row)"
             (click)="startApplyPlatform(row)"
           >
-            {{ writingActionLabel() }}
+            {{ writingActionLabel(row) }}
           </button>
         </div>
 

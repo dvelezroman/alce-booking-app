@@ -2,11 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { PlatformAssessmentService } from '../../../services/platform-assessment.service';
 import {
   RemotePlatformAssessmentFilters,
   RemotePlatformAssessmentItem,
+  RemoteTemplateItem,
 } from '../../../services/dtos/platform-assessment.dto';
+import { StagesService } from '../../../services/stages.service';
+import { Stage } from '../../../services/dtos/student.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 
@@ -37,6 +41,9 @@ export class PlatformAssessmentsListComponent implements OnInit {
   grantTarget: RemotePlatformAssessmentItem | null = null;
   actionBusyId: string | null = null;
 
+  templates: RemoteTemplateItem[] = [];
+  stages: Stage[] = [];
+
   readonly statusOptions = [
     '',
     'CREATED',
@@ -52,9 +59,13 @@ export class PlatformAssessmentsListComponent implements OnInit {
     'NONE',
   ];
 
-  constructor(private platformAssessmentService: PlatformAssessmentService) {}
+  constructor(
+    private platformAssessmentService: PlatformAssessmentService,
+    private stagesService: StagesService,
+  ) {}
 
   ngOnInit(): void {
+    this.loadFilterOptions();
     this.fetch();
   }
 
@@ -97,6 +108,11 @@ export class PlatformAssessmentsListComponent implements OnInit {
     return 'badge-gray';
   }
 
+  stageLabel(stage: Stage): string {
+    const desc = stage.description?.trim();
+    return desc ? `${stage.number} — ${desc}` : stage.number;
+  }
+
   displayStudent(row: RemotePlatformAssessmentItem): string {
     return (
       row.studentDisplayName?.trim() ||
@@ -105,20 +121,24 @@ export class PlatformAssessmentsListComponent implements OnInit {
     );
   }
 
-  canApplyWriting(row: RemotePlatformAssessmentItem): boolean {
-    return (
-      row.mirrorId != null &&
-      row.points != null &&
-      !row.writingApplied
-    );
+  canShowWritingAction(row: RemotePlatformAssessmentItem): boolean {
+    return row.mirrorId != null && row.points != null;
   }
 
-  writingActionLabel(): string {
-    return 'Aceptar Evaluación';
+  isWritingLocked(row: RemotePlatformAssessmentItem): boolean {
+    return row.writingAccepted === true;
+  }
+
+  writingActionLabel(row: RemotePlatformAssessmentItem): string {
+    return this.isWritingLocked(row) ? 'Aceptada' : 'Aceptar Evaluación';
   }
 
   startApplyWriting(row: RemotePlatformAssessmentItem): void {
-    if (!this.canApplyWriting(row) || row.mirrorId == null) {
+    if (
+      !this.canShowWritingAction(row) ||
+      this.isWritingLocked(row) ||
+      row.mirrorId == null
+    ) {
       return;
     }
     this.applyTarget = row;
@@ -338,11 +358,31 @@ export class PlatformAssessmentsListComponent implements OnInit {
   private emptyFilters(): RemotePlatformAssessmentFilters {
     return {
       studentId: undefined,
+      templateId: '',
       templateTitle: '',
       status: '',
       outcome: '',
       studentStage: undefined,
     };
+  }
+
+  private loadFilterOptions(): void {
+    forkJoin({
+      templates: this.platformAssessmentService.getTemplates({
+        page: 1,
+        pageSize: 100,
+      }),
+      stages: this.stagesService.getAll(),
+    }).subscribe({
+      next: ({ templates, stages }) => {
+        this.templates = templates.data ?? [];
+        this.stages = stages ?? [];
+      },
+      error: () => {
+        this.templates = [];
+        this.stages = [];
+      },
+    });
   }
 
   private fetch(): void {

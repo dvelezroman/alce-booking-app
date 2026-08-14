@@ -108,16 +108,24 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
     );
   }
 
-  canApplyWriting(row: RemotePlatformAssessmentItem): boolean {
-    return row.mirrorId != null && row.points != null && !row.writingApplied;
+  canShowWritingAction(row: RemotePlatformAssessmentItem): boolean {
+    return row.mirrorId != null && row.points != null;
   }
 
-  writingActionLabel(): string {
-    return 'Aceptar Evaluación';
+  isWritingLocked(row: RemotePlatformAssessmentItem): boolean {
+    return row.writingAccepted === true;
+  }
+
+  writingActionLabel(row: RemotePlatformAssessmentItem): string {
+    return this.isWritingLocked(row) ? 'Aceptada' : 'Aceptar Evaluación';
   }
 
   startApplyWriting(row: RemotePlatformAssessmentItem): void {
-    if (!this.canApplyWriting(row) || row.mirrorId == null) {
+    if (
+      !this.canShowWritingAction(row) ||
+      this.isWritingLocked(row) ||
+      row.mirrorId == null
+    ) {
       return;
     }
     this.applyTarget = row;

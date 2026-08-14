@@ -282,7 +282,7 @@ export class AssessmentReportsComponent {
   }
 
   startApplyPlatform(row: PlatformAssessmentAssignment): void {
-    if (!this.canShowWritingAction(row)) {
+    if (!this.canShowWritingAction(row) || this.isWritingLocked(row)) {
       return;
     }
     this.applyingPlatformId = row.id;
@@ -295,11 +295,15 @@ export class AssessmentReportsComponent {
   }
 
   canShowWritingAction(row: PlatformAssessmentAssignment): boolean {
-    return row.points != null && row.writingApplied !== true;
+    return row.points != null;
   }
 
-  writingActionLabel(): string {
-    return 'Aceptar Evaluación';
+  isWritingLocked(row: PlatformAssessmentAssignment): boolean {
+    return row.writingAccepted === true;
+  }
+
+  writingActionLabel(row: PlatformAssessmentAssignment): string {
+    return this.isWritingLocked(row) ? 'Aceptada' : 'Aceptar Evaluación';
   }
 
   writingPointsMismatch(row: PlatformAssessmentAssignment): boolean {
@@ -324,8 +328,7 @@ export class AssessmentReportsComponent {
       return;
     }
 
-    const correcting = row.writingApplied === true;
-    if (correcting) {
+    if (this.isWritingLocked(row)) {
       return;
     }
     this.modal = {

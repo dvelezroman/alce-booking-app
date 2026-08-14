@@ -110,10 +110,11 @@
             <button
               type="button"
               class="btn-writing"
-              *ngIf="canApplyWriting(row)"
+              *ngIf="canShowWritingAction(row)"
+              [disabled]="isWritingLocked(row)"
               (click)="startApplyWriting(row)"
             >
-              {{ writingActionLabel() }}
+              {{ writingActionLabel(row) }}
             </button>
           </td>
         </tr>
