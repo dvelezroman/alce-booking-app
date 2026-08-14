@@ -160,7 +160,7 @@ export class AssessmentReportsComponent {
   }
 
   private loadPlatformAssessments(studentId: number): void {
-    this.platformAssessmentService.getAll(studentId).subscribe({
+    this.platformAssessmentService.syncFromRemote(studentId).subscribe({
       next: (list) => {
         this.platformAssessments = (list ?? []).filter(
           (a) => a.status === 'completed' || a.points != null,
