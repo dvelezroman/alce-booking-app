@@ -112,31 +112,19 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
     return row.mirrorId != null && row.points != null && !row.writingApplied;
   }
 
-  canCorrectWriting(row: RemotePlatformAssessmentItem): boolean {
-    return row.mirrorId != null && row.writingApplied === true;
-  }
-
-  writingActionLabel(row: RemotePlatformAssessmentItem): string {
-    return this.canCorrectWriting(row)
-      ? 'Agregar Grammar'
-      : 'Registrar Grammar';
+  writingActionLabel(): string {
+    return 'Aceptar Evaluación';
   }
 
   startApplyWriting(row: RemotePlatformAssessmentItem): void {
-    if (
-      (!this.canApplyWriting(row) && !this.canCorrectWriting(row)) ||
-      row.mirrorId == null
-    ) {
+    if (!this.canApplyWriting(row) || row.mirrorId == null) {
       return;
     }
     this.applyTarget = row;
-    const correcting = this.canCorrectWriting(row);
     this.modal = {
       ...modalInitializer(),
       show: true,
-      message: correcting
-        ? `¿Insertar otro Grammar (${row.points} pts) para ${this.displayStudent(row)}?`
-        : `¿Registrar Grammar con ${row.points} puntos para ${this.displayStudent(row)}?`,
+      message: `¿Aceptar evaluación con ${row.points} puntos para ${this.displayStudent(row)}?`,
       isInfo: true,
       showButtons: true,
       confirm: () => this.confirmApplyWriting(),

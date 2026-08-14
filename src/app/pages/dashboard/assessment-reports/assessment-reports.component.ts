@@ -282,10 +282,11 @@ export class AssessmentReportsComponent {
   }
 
   startApplyPlatform(row: PlatformAssessmentAssignment): void {
+    if (!this.canShowWritingAction(row)) {
+      return;
+    }
     this.applyingPlatformId = row.id;
-    this.applyPointsOverride = row.writingApplied
-      ? (row.writingPoints ?? row.points ?? null)
-      : (row.points ?? null);
+    this.applyPointsOverride = row.points ?? null;
   }
 
   cancelApplyPlatform(): void {
@@ -294,11 +295,11 @@ export class AssessmentReportsComponent {
   }
 
   canShowWritingAction(row: PlatformAssessmentAssignment): boolean {
-    return row.points != null || row.writingApplied === true;
+    return row.points != null && row.writingApplied !== true;
   }
 
-  writingActionLabel(row: PlatformAssessmentAssignment): string {
-    return row.writingApplied ? 'Agregar Grammar' : 'Registrar Grammar';
+  writingActionLabel(): string {
+    return 'Aceptar Evaluación';
   }
 
   writingPointsMismatch(row: PlatformAssessmentAssignment): boolean {
@@ -324,14 +325,15 @@ export class AssessmentReportsComponent {
     }
 
     const correcting = row.writingApplied === true;
+    if (correcting) {
+      return;
+    }
     this.modal = {
       ...modalInitializer(),
       show: true,
       isInfo: true,
-      title: correcting ? '¿Agregar Grammar?' : '¿Registrar Grammar?',
-      message: correcting
-        ? `Se insertará un nuevo Grammar con ${override ?? row.points ?? '—'} puntos (mismo stage).`
-        : `Se creará Grammar con ${override ?? row.points ?? '—'} puntos desde el resultado S2S.`,
+      title: '¿Aceptar Evaluación?',
+      message: `Se creará Grammar con ${override ?? row.points ?? '—'} puntos desde el resultado S2S.`,
       showButtons: true,
       confirm: () => this.applyPlatformWriting(row, override),
       close: this.closeModal,

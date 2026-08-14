@@ -113,32 +113,20 @@ export class PlatformAssessmentsListComponent implements OnInit {
     );
   }
 
-  canCorrectWriting(row: RemotePlatformAssessmentItem): boolean {
-    return row.mirrorId != null && row.writingApplied === true;
-  }
-
-  writingActionLabel(row: RemotePlatformAssessmentItem): string {
-    return this.canCorrectWriting(row)
-      ? 'Agregar Grammar'
-      : 'Registrar Grammar';
+  writingActionLabel(): string {
+    return 'Aceptar Evaluación';
   }
 
   startApplyWriting(row: RemotePlatformAssessmentItem): void {
-    if (
-      (!this.canApplyWriting(row) && !this.canCorrectWriting(row)) ||
-      row.mirrorId == null
-    ) {
+    if (!this.canApplyWriting(row) || row.mirrorId == null) {
       return;
     }
     this.applyTarget = row;
-    const correcting = this.canCorrectWriting(row);
     const pts = row.points;
     this.modal = {
       ...modalInitializer(),
       show: true,
-      message: correcting
-        ? `¿Insertar otro Grammar (${pts} pts) para ${this.displayStudent(row)}? Ya hay Grammar para este assignment.`
-        : `¿Registrar Grammar con ${pts} puntos para ${this.displayStudent(row)}?`,
+      message: `¿Aceptar evaluación con ${pts} puntos para ${this.displayStudent(row)}?`,
       isError: false,
       isSuccess: false,
       isInfo: true,
@@ -159,20 +147,17 @@ export class PlatformAssessmentsListComponent implements OnInit {
       return;
     }
 
-    const correcting = target.writingApplied === true;
-
     this.platformAssessmentService
       .applyWritingScore(target.mirrorId, target.points ?? undefined)
       .subscribe({
         next: (res) => {
           this.applyTarget = null;
-          const action = correcting ? 'registrado de nuevo' : 'registrado';
           this.modal = {
             ...modalInitializer(),
             show: true,
             message: res.updatedStage
-              ? `Grammar ${action}. El estudiante fue promovido de stage.`
-              : `Grammar ${action}. Stage no cambió (faltan otros skills o ya promovido).`,
+              ? 'Evaluación aceptada. El estudiante fue promovido de stage.'
+              : 'Evaluación aceptada. Stage no cambió (faltan otros skills o ya promovido).',
             isSuccess: true,
             close: () => (this.modal.show = false),
           };
