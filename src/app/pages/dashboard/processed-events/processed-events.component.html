@@ -1,156 +1,98 @@
-<div class="section">
-    <div class="container">
-      <div class="block title-container">
-        <h1 class="title">Buscar Eventos</h1>
-      </div>
+<section class="processed-events-page">
 
-      <div class="block-search">
-        <form #form="ngForm" (ngSubmit)="searchEvents(form)" novalidate>
+  <div class="processed-events-page__container">
 
-          <!-- Usuario -->
-          <div class="field">
-            <label class="label">Nombre de Usuario o Estudiante</label>
-            <div class="control">
-              <input
-                class="input"
-                type="text"
-                name="searchTerm"
-                placeholder="Buscar por nombre de usuario o estudiante"
-                [(ngModel)]="searchTerm"
-                #searchTermInput="ngModel"
-                (input)="searchInput$.next(searchTerm)"
-                (blur)="hideDropdown()"
-                autocomplete="off"
-              />
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <app-events-header>
+    </app-events-header>
 
-              <div *ngIf="showUserDropdown" class="dropdown">
-                <div *ngIf="filteredUsers.length === 0" class="no-results">
-                  No se encontraron coincidencias
-                </div>
-                <ul *ngIf="filteredUsers.length > 0">
-                  <li *ngFor="let user of filteredUsers" (mousedown)="selectUser(user)">
-                    {{ user.firstName }} {{ user.lastName }}
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
 
-          <!-- search -->
-          <div class="field">
-            <label class="label">Buscar en detalles del evento</label>
-            <div class="control">
-              <input
-                class="input"
-                type="text"
-                name="search"
-                placeholder="Buscar texto en metadatos"
-                [(ngModel)]="filter.search"
-              />
-            </div>
-          </div>
+    <!-- =========================
+         FILTERS
+    ========================== -->
+    <app-events-filters
+      [filter]="filter"
+      [searchTerm]="searchTerm"
+      [eventTypes]="eventTypes"
+      [filteredUsers]="filteredUsers"
+      [showUserDropdown]="showUserDropdown"
+      [showFromError]="showFromError"
+      [showToError]="showToError"
+      (userInputChange)="onUserInputChange($event)"
+      (userSelected)="selectUser($event)"
+      (eventTypeChange)="onEventTypeChange($event)"
+      (fromChange)="onFromChange($event)"
+      (toChange)="onToChange($event)"
+      (sortChange)="onSortChange($event)"
+      (descriptionChange)="onDescriptionSearchChange($event)"
+      (searchRequested)="onSearchRequested()"
+      (clearRequested)="clearFilters()"
+      (dropdownBlurred)="hideDropdown()"
+    >
+    </app-events-filters>
 
-          <!-- Fechas -->
-          <div class="columns is-mobile">
-            <div class="column">
-              <div class="field">
-                <label class="label">Fecha desde</label>
-                <div class="control input-date-container">
-                  <input
-                    class="input has-calendar-icon"
-                    type="date"
-                    [(ngModel)]="filter.from"
-                    name="from"
-                    #from="ngModel"
-                  />
-                  <span class="calendar-icon material-icons">calendar_today</span>
-                </div>
-                <p class="error-message" *ngIf="showFromError">
-                  Fecha es obligatoria si hay una fecha final
-                </p>
-              </div>
-            </div>
 
-            <div class="column">
-              <div class="field">
-                <label class="label">Fecha hasta</label>
-                <div class="control input-date-container">
-                  <input
-                    class="input has-calendar-icon"
-                    type="date"
-                    [(ngModel)]="filter.to"
-                    name="to"
-                    #to="ngModel"
-                  />
-                  <span class="calendar-icon material-icons">calendar_today</span>
-                </div>
-                <p class="error-message" *ngIf="showToError">
-                  Fecha final es obligatoria si hay una fecha inicial
-                </p>
-              </div>
-            </div>
-          </div>
+    <!-- =========================
+         SUMMARY
+    ========================== -->
+    @if (searchAttempted && !loading) {
+      <app-events-summary
+        [totalEvents]="totalEvents"
+        [loginEvents]="loginEventsCount"
+        [userEvents]="userEventsCount"
+        [contentEvents]="contentEventsCount"
+        [meetingEvents]="meetingEventsCount"
+        [otherEvents]="otherEventsCount"
+      >
+      </app-events-summary>
+    }
 
-          <!-- Tipo de evento -->
-          <div class="field">
-            <label class="label">Tipo de Evento</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select
-                  [(ngModel)]="filter.eventType"
-                  name="eventType"
-                  #eventType="ngModel"
-                >
-                <option [ngValue]="undefined">Seleccionar evento</option>
-                  <option *ngFor="let event of eventTypes" [ngValue]="event.key">
-                    {{ event.label }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
 
-          <div class="field mt-4">
-            <div class="control">
-              <button type="submit" class="button is-primary is-fullwidth">Buscar</button>
-            </div>
-          </div>
+    <!-- =========================
+         RESULTS
+    ========================== -->
+    <div class="processed-events-page__results">
 
-        </form>
-      </div>
+      <app-events-table
+        [events]="paginatedEvents"
+        [loading]="loading"
+        [searchAttempted]="searchAttempted"
+        (metadataRequested)="showMetadata($event)"
+      >
+      </app-events-table>
+
+
+      @if (
+        !loading &&
+        searchAttempted &&
+        events.length > 0
+      ) {
+        <app-events-pagination
+          [currentPage]="currentPage"
+          [totalPages]="totalPages"
+          [itemsPerPage]="itemsPerPage"
+          [itemsPerPageOptions]="itemsPerPageOptions"
+          [rangeLabel]="paginationLabel"
+          [canPreviousPage]="canPreviousPage"
+          [canNextPage]="canNextPage"
+          (pageChange)="changePage($event)"
+          (itemsPerPageChange)="changeItemsPerPage($event)"
+          (previousRequested)="previousPage()"
+          (nextRequested)="nextPage()"
+        >
+        </app-events-pagination>
+      }
+
     </div>
-    <div class="block-results">
-      <p *ngIf="formSubmitted && events && events.length === 0" class="no-results-message">
-        No hay eventos para los filtros aplicados.
-      </p>
 
-      <div class="table-container" *ngIf="events && events.length > 0">
-        <table class="table-results is-fullwidth">
-          <thead>
-            <tr>
-              <th>Usuario</th>
-              <th>Tipo de Evento</th>
-              <th>Descripción</th>
-              <th>Metadata</th>
-              <th>Fecha</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let event of events">
-              <td data-label="Usuario">{{ getUserFullName(event.processedBy) }}</td>
-              <td data-label="Tipo de Evento">{{ event.eventType | enumLabel: EventTypeE }}</td>
-              <td data-label="Descripción">{{ event.description }}</td>
-              <td>
-                <button class="button is-small is-grey" (click)="showMetadata(event.metadata)">Ver</button>
-              </td>
-              <td data-label="Fecha">{{ formatDate(event.createdAt || '') }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
   </div>
 
+
+  <!-- =========================
+       METADATA MODAL
+  ========================== -->
   <app-modal
     [showModal]="modal.show"
     [title]="modal.title ?? ''"
@@ -159,3 +101,4 @@
     (close)="modal.close()"
   />
 
+</section>

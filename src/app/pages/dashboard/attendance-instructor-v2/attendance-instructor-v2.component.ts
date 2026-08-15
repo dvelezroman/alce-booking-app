@@ -282,27 +282,107 @@ export class AttendanceInstructorV2Component implements OnInit {
     return meetingDate > currentDate;
   }
 
-  /* =========================
-   PAGINATION
+ /* =========================
+    PAGINATION
   ========================= */
 
-  get totalPages(): number {
-    return Math.ceil(
-      this.meetings.length / this.itemsPerPage,
-    );
+  private getDateKey(item: InstructorAttendanceDto): string {
+    const value = item.localdate || item.date;
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return String(value);
+    }
+
+    return [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, '0'),
+      String(date.getDate()).padStart(2, '0'),
+    ].join('-');
   }
 
-  get paginatedMeetings(): InstructorAttendanceDto[] {
-    const start =
-      (this.currentPage - 1) *
-      this.itemsPerPage;
-    const end =
-      start + this.itemsPerPage;
-    return this.meetings.slice(
-      start,
-      end,
-    );
+
+  /**
+   * Construye páginas respetando los grupos por fecha.
+   *
+   * itemsPerPage funciona como cantidad objetivo de clases,
+   * pero nunca divide las clases de un mismo día entre páginas.
+   */
+  get meetingPages(): InstructorAttendanceDto[][] {
+    if (this.meetings.length === 0) {
+      return [];
+    }
+
+    /* =========================
+      GROUP BY DATE
+    ========================= */
+
+    const groups = new Map<string, InstructorAttendanceDto[]>();
+
+    const sortedMeetings = [...this.meetings].sort((a, b) => {
+      const dateA = new Date(a.localdate || a.date).getTime();
+      const dateB = new Date(b.localdate || b.date).getTime();
+
+      if (dateA !== dateB) {
+        return dateB - dateA;
+      }
+
+      return (
+        Number(b.localhour ?? b.hour) -
+        Number(a.localhour ?? a.hour)
+      );
+    });
+
+    sortedMeetings.forEach((meeting) => {
+      const key = this.getDateKey(meeting);
+
+      if (!groups.has(key)) {
+        groups.set(key, []);
+      }
+
+      groups.get(key)!.push(meeting);
+    });
+
+
+    /* =========================
+      BUILD PAGES
+    ========================= */
+
+    const pages: InstructorAttendanceDto[][] = [];
+    let currentPageItems: InstructorAttendanceDto[] = [];
+
+    groups.forEach((dayMeetings) => {
+
+      const wouldExceedLimit =
+        currentPageItems.length > 0 &&
+        currentPageItems.length + dayMeetings.length > this.itemsPerPage;
+
+      if (wouldExceedLimit) {
+        pages.push(currentPageItems);
+        currentPageItems = [];
+      }
+
+      currentPageItems.push(...dayMeetings);
+    });
+
+
+    if (currentPageItems.length > 0) {
+      pages.push(currentPageItems);
+    }
+
+    return pages;
   }
+
+
+  get totalPages(): number {
+    return this.meetingPages.length;
+  }
+
+
+  get paginatedMeetings(): InstructorAttendanceDto[] {
+    return this.meetingPages[this.currentPage - 1] ?? [];
+  }
+
 
   changePage(page: number): void {
     if (
@@ -311,6 +391,7 @@ export class AttendanceInstructorV2Component implements OnInit {
     ) {
       return;
     }
+
     this.currentPage = page;
   }
 }

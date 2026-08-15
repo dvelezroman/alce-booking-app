@@ -1,0 +1,300 @@
+<section class="events-filters">
+
+  <!-- =========================
+       TOP GRID
+  ========================== -->
+  <div class="events-filters__grid">
+
+    <!-- USER -->
+    <div class="events-filters__field events-filters__field--user">
+
+      <label class="events-filters__label">
+        Usuario
+      </label>
+
+      <div class="events-filters__user-wrapper">
+
+        <input
+          type="text"
+          class="events-filters__control"
+          [value]="searchTerm"
+          placeholder="Buscar por nombre o correo"
+          autocomplete="off"
+          (input)="onUserInput($any($event.target).value)"
+          (blur)="onUserBlur()"
+        />
+
+        <svg
+          class="events-filters__control-icon"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+
+        @if (
+          showUserDropdown &&
+          filteredUsers.length > 0
+        ) {
+          <div class="events-filters__dropdown">
+
+            @for (
+              user of filteredUsers;
+              track user.id
+            ) {
+              <button
+                type="button"
+                class="events-filters__user-option"
+                (mousedown)="onSelectUser(user)"
+              >
+                <span class="events-filters__avatar">
+                  {{ getUserInitials(user) }}
+                </span>
+
+                <span class="events-filters__user-info">
+                  <strong>
+                    {{ getUserName(user) }}
+                  </strong>
+
+                  <small>
+                    {{ getUserSecondaryText(user) }}
+                  </small>
+                </span>
+              </button>
+            }
+
+          </div>
+        }
+
+      </div>
+
+    </div>
+
+
+    <!-- EVENT TYPE -->
+    <div class="events-filters__field">
+
+      <label class="events-filters__label">
+        Tipo de evento
+      </label>
+
+      <div class="events-filters__select-wrapper">
+
+        <select
+          class="events-filters__control events-filters__select"
+          [value]="filter.eventType || ''"
+          (change)="onEventTypeChange($any($event.target).value)"
+        >
+          <option value="">
+            Seleccionar tipo
+          </option>
+
+          @for (
+            eventType of eventTypes;
+            track eventType.key
+          ) {
+            <option [value]="eventType.key">
+              {{ eventType.label }}
+            </option>
+          }
+        </select>
+
+        <svg
+          class="events-filters__control-icon"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </div>
+
+    </div>
+
+
+    <!-- FROM -->
+    <div class="events-filters__field">
+
+      <label class="events-filters__label">
+        Desde
+      </label>
+
+      <input
+        type="date"
+        class="events-filters__control events-filters__date"
+        [class.events-filters__control--invalid]="showFromError"
+        [value]="filter.from || ''"
+        (change)="onFromChange($any($event.target).value)"
+      />
+
+      @if (showFromError) {
+        <span class="events-filters__error">
+          Selecciona la fecha inicial.
+        </span>
+      }
+
+    </div>
+
+
+    <!-- TO -->
+    <div class="events-filters__field">
+
+      <label class="events-filters__label">
+        Hasta
+      </label>
+
+      <input
+        type="date"
+        class="events-filters__control events-filters__date"
+        [class.events-filters__control--invalid]="showToError"
+        [value]="filter.to || ''"
+        (change)="onToChange($any($event.target).value)"
+      />
+
+      @if (showToError) {
+        <span class="events-filters__error">
+          Selecciona la fecha final.
+        </span>
+      }
+
+    </div>
+
+
+    <!-- SORT -->
+    <div class="events-filters__field">
+
+      <label class="events-filters__label">
+        Orden
+      </label>
+
+      <div class="events-filters__select-wrapper">
+
+        <select
+          class="events-filters__control events-filters__select"
+          [value]="filter.sort || 'desc'"
+          (change)="onSortChange($any($event.target).value)"
+        >
+          <option value="desc">
+            Más reciente
+          </option>
+
+          <option value="asc">
+            Más antiguo
+          </option>
+        </select>
+
+        <svg
+          class="events-filters__control-icon"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       BOTTOM
+  ========================== -->
+  <div class="events-filters__bottom">
+
+    <!-- DESCRIPTION -->
+    <div class="events-filters__field events-filters__description">
+
+      <label class="events-filters__label">
+        Buscar en descripción
+      </label>
+
+      <input
+        type="text"
+        class="events-filters__control"
+        [value]="filter.search || ''"
+        placeholder="Buscar por palabra clave en la descripción"
+        (input)="onDescriptionChange($any($event.target).value)"
+      />
+
+    </div>
+
+
+    <!-- ACTIONS -->
+    <div class="events-filters__actions">
+
+      <button
+        type="button"
+        class="events-filters__clear"
+        [disabled]="!hasActiveFilters"
+        (click)="onClear()"
+      >
+        Limpiar filtros
+      </button>
+
+
+      <button
+        type="button"
+        class="events-filters__search"
+        (click)="onSearch()"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        Buscar eventos
+      </button>
+
+    </div>
+
+  </div>
+
+</section>

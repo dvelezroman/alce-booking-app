@@ -1,0 +1,216 @@
+<section class="events-table">
+
+  <div class="events-table__wrapper">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    @if (loading || hasResults) {
+      <div class="events-table__head">
+
+        <div>
+          Fecha y hora
+        </div>
+
+        <div>
+          Tipo de evento
+        </div>
+
+        <div>
+          Descripción
+        </div>
+
+        <div>
+          Realizado por
+        </div>
+
+        <div>
+          Detalles
+        </div>
+
+      </div>
+    }
+
+
+    <!-- =========================
+         LOADING
+    ========================== -->
+    @if (loading) {
+
+      <div class="events-table__loading">
+
+        @for (row of [1, 2, 3, 4, 5]; track row) {
+
+          <div class="events-table__skeleton-row">
+
+            @for (column of [1, 2, 3, 4, 5]; track column) {
+              <span class="events-table__skeleton"></span>
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+    } @else if (hasResults) {
+
+      <!-- =========================
+           BODY
+      ========================== -->
+      <div class="events-table__body">
+
+        @for (
+          event of events;
+          track trackByEvent($index, event)
+        ) {
+
+          <article class="events-table__row">
+
+            <!-- =========================
+                 DATE
+            ========================== -->
+            <div class="events-table__date">
+
+              <strong>
+                {{ getEventDate(event) }}
+              </strong>
+
+              <span>
+                {{ getEventTime(event) }}
+              </span>
+
+            </div>
+
+
+            <!-- =========================
+                 TYPE
+            ========================== -->
+            <div>
+
+              <span
+                class="events-table__type"
+                [ngClass]="getEventTypeClass(event.eventType)"
+              >
+                {{ getEventTypeLabel(event.eventType) }}
+              </span>
+
+            </div>
+
+
+            <!-- =========================
+                 DESCRIPTION
+            ========================== -->
+            <div class="events-table__description">
+              {{ getDescription(event) }}
+            </div>
+
+
+            <!-- =========================
+                USER
+            ========================== -->
+            <div class="events-table__user">
+
+              <span class="events-table__avatar">
+                {{ getUserInitials(event) }}
+              </span>
+
+              <div class="events-table__user-content">
+
+                <strong>
+                  {{ getUserFullName(event) }}
+                </strong>
+
+                <span>
+                  {{ getProcessedById(event) }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- =========================
+                 DETAILS
+            ========================== -->
+            <div class="events-table__details">
+
+              <button
+                type="button"
+                class="events-table__details-button"
+                (click)="onViewMetadata(event)"
+              >
+                Ver detalles
+              </button>
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    } @else {
+
+      <!-- =========================
+           EMPTY
+      ========================== -->
+      <div class="events-table__empty">
+
+        <div class="events-table__empty-icon">
+
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="7"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        </div>
+
+        @if (showEmptySearch) {
+
+          <h3>
+            No se encontraron eventos
+          </h3>
+
+          <p>
+            No existen resultados para los filtros seleccionados.
+          </p>
+
+        } @else {
+
+          <h3>
+            Realiza una búsqueda
+          </h3>
+
+          <p>
+            Utiliza los filtros superiores para consultar los eventos.
+          </p>
+
+        }
+
+      </div>
+
+    }
+
+  </div>
+
+</section>
