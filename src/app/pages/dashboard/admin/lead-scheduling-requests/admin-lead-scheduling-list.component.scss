@@ -1,188 +1,244 @@
-.admin-lead {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem 1.25rem 2rem;
-
-  &__header h1 {
-    margin: 0 0 0.5rem;
-    font-size: 1.35rem;
-  }
-
-  &__sub {
-    margin: 0 0 1rem;
-    color: #475569;
-    line-height: 1.45;
-    font-size: 0.95rem;
-  }
-
-  &__filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1rem;
-
-    label {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #334155;
-    }
-
-    select {
-      min-width: 180px;
-      padding: 0.4rem 0.5rem;
-      border-radius: 6px;
-      border: 1px solid #cbd5e1;
-    }
-  }
-
-  &__state,
-  &__error {
-    padding: 1rem;
-    border-radius: 8px;
-    background: #f8fafc;
-  }
-
-  &__error {
-    background: #fef2f2;
-    color: #991b1b;
-  }
-
-  &__table-wrap {
-    overflow-x: auto;
-  }
-
-  &__meta {
-    margin-top: 0.75rem;
-    font-size: 0.85rem;
-    color: #64748b;
-  }
-
-  &__page-size select {
-    min-width: 5rem;
-  }
-
-  &__state--muted {
-    margin-top: 0.75rem;
-    border: 1px dashed #cbd5e1;
-    color: #64748b;
-    font-size: 0.9rem;
-  }
-}
-
-.pager {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem 1rem;
-  margin: 0.75rem 0;
-  padding: 0.65rem 0.85rem;
-  border-radius: 8px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  font-size: 0.88rem;
-  color: #334155;
-
-  &--bottom {
-    margin-top: 1rem;
-  }
-
-  &__range {
-    font-weight: 600;
-    color: #0f172a;
-  }
-
-  &__pages {
-    color: #64748b;
-  }
-
-  &__nav {
-    display: flex;
-    gap: 0.5rem;
-    margin-left: auto;
-  }
-
-  &__btn {
-    padding: 0.4rem 0.85rem;
-    border-radius: 6px;
-    border: 1px solid #cbd5e1;
-    background: #fff;
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
-    color: #334155;
-
-    &:hover:not(:disabled) {
-      background: #f1f5f9;
-      border-color: #94a3b8;
-    }
-
-    &:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-  }
-}
-
-.lead-table {
+:host {
+  display: block;
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-
-  th,
-  td {
-    text-align: left;
-    padding: 0.65rem 0.75rem;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  th {
-    font-weight: 600;
-    color: #334155;
-    background: #f1f5f9;
-  }
+  min-width: 0;
 }
 
-.badge[data-status='SCHEDULED'] {
-  color: #0369a1;
-}
-.badge[data-status='PENDING'] {
-  color: #a16207;
-}
-.badge[data-status='COMPLETED'] {
-  color: #15803d;
-}
-.badge[data-status='CANCELLED'] {
-  color: #64748b;
+/* =========================
+   PAGE
+========================= */
+
+.lead-scheduling-page {
+  width: calc(100% - 76px);
+  min-height: 100vh;
+
+  margin-left: 64px;
+
+  padding:
+    1rem
+    1rem
+    2rem;
+
+  overflow-x: hidden;
+
+  color: #17152c;
 }
 
-.link {
-  color: #0284c7;
+/* =========================
+   CONTAINER
+========================= */
+
+.lead-scheduling-page__container {
+  width: min(100%, 1750px);
+
+  margin: 0 auto;
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+}
+
+/* =========================
+   CHILDREN
+========================= */
+
+app-admin-lead-scheduling-header,
+app-admin-lead-scheduling-filters,
+app-admin-lead-scheduling-table,
+app-admin-lead-scheduling-pagination {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.lead-scheduling-page__error {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: .65rem;
+
+  padding: .8rem 1rem;
+
+  border: 1px solid #fecaca;
+  border-radius: .6rem;
+
+  background: #fff7f7;
+  color: #b42318;
+
+  font-size: .78rem;
   font-weight: 600;
-  text-decoration: none;
-}
-.link:hover {
-  text-decoration: underline;
+  line-height: 1.4;
 }
 
-.notes-cell {
-  max-width: 14rem;
-  font-size: 0.82rem;
-  color: #475569;
-  vertical-align: top;
+.lead-scheduling-page__error-icon {
+  width: 1.8rem;
+  height: 1.8rem;
 
-  &__text {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* =========================
+   RESULTS
+========================= */
+
+.lead-scheduling-page__results {
+  width: 100%;
+  min-width: 0;
+
+  overflow: hidden;
+
+  border: 1px solid #e5e3ed;
+  border-radius: .7rem;
+
+  background: #fff;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, .02),
+    0 4px 14px rgba(15, 23, 42, .025);
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.lead-scheduling-page__results
+app-admin-lead-scheduling-table {
+  width: 100%;
+}
+
+/* =========================
+   PAGINATION
+========================= */
+
+.lead-scheduling-page__results
+app-admin-lead-scheduling-pagination {
+  width: 100%;
+
+  border-top: 1px solid #eceaf2;
+}
+
+/* =========================
+   LARGE DESKTOP
+========================= */
+
+@media (min-width: 1500px) {
+
+  .lead-scheduling-page__container {
+    max-width: 1750px;
+  }
+
+}
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1250px) {
+
+  .lead-scheduling-page {
+    padding:
+      .9rem
+      .9rem
+      1.5rem;
+  }
+
+  .lead-scheduling-page__container {
+    gap: .85rem;
+  }
+
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .lead-scheduling-page {
+    padding:
+      .75rem
+      .75rem
+      1.25rem;
+  }
+
+  .lead-scheduling-page__container {
+    gap: .75rem;
+  }
+
+  .lead-scheduling-page__results {
+    border-radius: .65rem;
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+
+  .lead-scheduling-page {
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: 0;
+
+    background: #fbfbfd;
+  }
+
+  .lead-scheduling-page__container {
+    width: 100%;
+
+    margin: 0;
+
+    padding: 1rem;
+
+    gap: .65rem;
+  }
+
+  .lead-scheduling-page__results {
     overflow: hidden;
-    line-height: 1.35;
-    word-break: break-word;
+
+    border-radius: .6rem;
   }
 
-  &__empty {
-    color: #94a3b8;
+  .lead-scheduling-page__error {
+    align-items: flex-start;
+
+    padding: .75rem;
+
+    font-size: .75rem;
   }
+
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+
+  .lead-scheduling-page__container {
+    gap: .55rem;
+  }
+
 }

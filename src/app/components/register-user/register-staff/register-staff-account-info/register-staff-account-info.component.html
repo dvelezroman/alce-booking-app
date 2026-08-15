@@ -1,0 +1,228 @@
+<section
+  class="register-staff-account"
+  [formGroup]="registerForm"
+>
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+  <header class="register-staff-account__header">
+
+    <div class="register-staff-account__header-icon">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="9"
+          cy="8"
+          r="3"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M3 20a6 6 0 0 1 12 0"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M18 6v6M15 9h6"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+    <h2 class="register-staff-account__title">
+      Información de cuenta
+    </h2>
+
+  </header>
+
+
+  <!-- =========================
+       GRID
+  ========================== -->
+  <div class="register-staff-account__grid">
+
+    <!-- =========================
+         ROLE
+    ========================== -->
+    <div class="register-staff-account__field">
+
+      <label
+        for="role"
+        class="register-staff-account__label"
+      >
+        Rol
+        <span>*</span>
+      </label>
+
+      <div class="register-staff-account__select-wrapper">
+
+        <select
+            id="role"
+            formControlName="role"
+            class="register-staff-account__control register-staff-account__select"
+            [class.register-staff-account__control--invalid]="
+                isInvalid('role')
+            "
+            (change)="onRoleChange()"
+            >
+            <option value="">
+                Selecciona el rol
+            </option>
+
+            @for (role of roles; track role) {
+                <option
+                [value]="role"
+                [disabled]="isRoleDisabled(role)"
+                >
+                {{ getRoleLabel(role) }}
+                </option>
+            }
+            </select>
+
+        <svg
+          class="register-staff-account__select-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </div>
+
+      @if (hasRequiredError('role')) {
+        <span class="register-staff-account__error">
+          Selecciona un rol.
+        </span>
+      }
+
+    </div>
+
+
+    <!-- =========================
+         INSTRUCTOR LINK
+    ========================== -->
+    <div
+      class="register-staff-account__field"
+      [class.register-staff-account__field--disabled]="
+        !showInstructorLink
+      "
+    >
+
+      <label
+        for="instructorLink"
+        class="register-staff-account__label"
+      >
+        Enlace de instructor
+        <span class="register-staff-account__optional">
+          (solo para instructores)
+        </span>
+      </label>
+
+      <div class="register-staff-account__select-wrapper">
+
+        <select
+            id="instructorLink"
+            formControlName="instructorLink"
+            class="register-staff-account__control register-staff-account__select"
+            [disabled]="isInstructorLinkDisabled"
+            (change)="onInstructorLinkChange()"
+            >
+            <option value="">
+                Selecciona el enlace
+            </option>
+
+            @for (link of links; track link.id) {
+                <option [value]="link.id">
+                {{ getLinkLabel(link) }}
+                </option>
+            }
+            </select>
+
+        <svg
+          class="register-staff-account__select-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       INFORMATION
+  ========================== -->
+  <div class="register-staff-account__information">
+
+    <div class="register-staff-account__information-icon">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M12 11v5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <circle
+          cx="12"
+          cy="8"
+          r=".9"
+          fill="currentColor"
+        />
+      </svg>
+    </div>
+
+    <p>
+      Si seleccionas el rol de Instructor, deberás asignar un enlace de reunión para sus clases.
+    </p>
+
+  </div>
+
+</section>

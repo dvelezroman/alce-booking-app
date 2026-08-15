@@ -1,0 +1,339 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.register-student-page {
+  width: calc(100% - 76px);
+  min-height: 100vh;
+
+  margin-left: 64px;
+
+  padding:
+    1rem
+    1rem
+    2rem;
+
+  overflow-x: hidden;
+
+  background: #fbfbfd;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.register-student-page__container {
+  width: min(100%, 1750px);
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+}
+
+/* =========================
+   CHILD COMPONENTS
+========================= */
+
+app-register-student-header,
+app-register-student-personal-info,
+app-register-student-academic-info,
+app-register-student-tutor-info,
+app-register-student-summary,
+app-register-student-actions {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.register-student-page__layout {
+  width: 100%;
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(18rem, 20rem);
+
+  align-items: start;
+
+  gap: 1rem;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.register-student-page__main {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .7rem;
+}
+
+/* =========================
+   FORM CARD
+========================= */
+
+.register-student-page__form-card {
+  width: 100%;
+  min-width: 0;
+
+  overflow: hidden;
+
+  border: 1px solid #e2e5ed;
+  border-radius: .8rem;
+
+  background: #fff;
+
+  box-shadow:
+    0 .15rem .6rem rgba(24, 31, 50, .035);
+}
+
+/* =========================
+   FORM GRID
+========================= */
+
+.register-student-page__form-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.15fr)
+    minmax(0, .85fr);
+
+  border-bottom: 1px solid #eceef2;
+}
+
+/* =========================
+   PERSONAL
+========================= */
+
+.register-student-page__personal {
+  min-width: 0;
+
+  padding: 1rem;
+
+  border-right: 1px solid #eceef2;
+}
+
+/* =========================
+   ACADEMIC
+========================= */
+
+.register-student-page__academic {
+  min-width: 0;
+
+  padding: 1rem;
+}
+
+/* =========================
+   TUTOR
+========================= */
+
+.register-student-page__tutor {
+  padding:
+    1rem
+    1rem
+    0;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.register-student-page__actions {
+  padding: 1rem;
+}
+
+/* =========================
+   REQUIRED
+========================= */
+
+.register-student-page__required {
+  display: flex;
+  align-items: center;
+
+  gap: .4rem;
+
+  padding-left: .4rem;
+
+  color: #858d9e;
+
+  font-size: .61rem;
+  font-weight: 500;
+}
+
+.register-student-page__required svg {
+  flex: 0 0 auto;
+
+  color: #737c8f;
+}
+
+.register-student-page__required strong {
+  margin: 0 .1rem;
+
+  color: #e35c55;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.register-student-page__sidebar {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+}
+
+/* =========================
+   LARGE DESKTOP
+========================= */
+
+@media (min-width: 1500px) {
+
+  .register-student-page__layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      20rem;
+  }
+
+}
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1250px) {
+
+  .register-student-page {
+    padding:
+      .9rem
+      .9rem
+      1.5rem;
+  }
+
+  .register-student-page__container {
+    gap: .85rem;
+  }
+
+  .register-student-page__layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(17rem, 19rem);
+
+    gap: .85rem;
+  }
+
+  .register-student-page__form-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(18rem, .8fr);
+  }
+
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1000px) {
+
+  .register-student-page__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .register-student-page__sidebar {
+    width: 100%;
+  }
+
+  .register-student-page__form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .register-student-page__personal {
+    border-right: 0;
+    border-bottom: 1px solid #eceef2;
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+
+  .register-student-page {
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: 0;
+
+    background: #fbfbfd;
+  }
+
+  .register-student-page__container {
+    width: 100%;
+
+    margin: 0;
+
+    padding: 1rem;
+
+    gap: .65rem;
+  }
+
+  .register-student-page__layout {
+    grid-template-columns: 1fr;
+
+    gap: .65rem;
+  }
+
+  .register-student-page__form-card {
+    border-radius: .6rem;
+  }
+
+  .register-student-page__personal,
+  .register-student-page__academic {
+    padding: .8rem;
+  }
+
+  .register-student-page__tutor {
+    padding:
+      .8rem
+      .8rem
+      0;
+  }
+
+  .register-student-page__actions {
+    padding: .8rem;
+  }
+
+  .register-student-page__required {
+    padding:
+      0
+      .8rem
+      .5rem;
+  }
+
+}

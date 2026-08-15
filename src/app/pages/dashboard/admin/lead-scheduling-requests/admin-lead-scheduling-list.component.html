@@ -1,121 +1,126 @@
-<section class="admin-lead">
-  <header class="admin-lead__header">
-    <h1>Solicitudes demo / examen de ubicación</h1>
-    <p class="admin-lead__sub">
-      Gestión administrativa: asignar instructor; para placement test el enlace del examen; para speaking/demo fecha y hora.
-      El estado lo deriva el API; para anular use <strong>Cancelar solicitud</strong>.
-    </p>
-  </header>
+<section class="lead-scheduling-page">
 
-  <div class="admin-lead__filters">
-    <label>
-      Tipo
-      <select [(ngModel)]="filterKind" (ngModelChange)="onFiltersChange()">
-        <option value="">Todos</option>
-        <option value="DEMO_CLASS">Demo / cortesía</option>
-        <option value="PLACEMENT_EXAM">Examen ubicación</option>
-      </select>
-    </label>
-    <label>
-      Estado
-      <select [(ngModel)]="filterStatus" (ngModelChange)="onFiltersChange()">
-        <option value="">Todos</option>
-        <option value="PENDING">Pendiente</option>
-        <option value="SCHEDULED">Agendada</option>
-        <option value="CANCELLED">Cancelada</option>
-        <option value="COMPLETED">Completada</option>
-      </select>
-    </label>
-    <label class="admin-lead__page-size">
-      Por página
-      <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
-        <option *ngFor="let n of pageSizeOptions" [ngValue]="n">{{ n }}</option>
-      </select>
-    </label>
+  <div class="lead-scheduling-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <app-admin-lead-scheduling-header
+      [total]="total"
+      [items]="items"
+      [loading]="loading"
+    >
+    </app-admin-lead-scheduling-header>
+
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+    
+    <app-admin-lead-scheduling-filters
+      [filterKind]="filterKind"
+      [filterStatus]="filterStatus"
+      [loading]="loading"
+      (kindChange)="onKindChange($event)"
+      (statusChange)="onStatusChange($event)"
+      (clearRequested)="clearFilters()"
+      (refreshRequested)="refresh()"
+    >
+    </app-admin-lead-scheduling-filters>
+   
+
+
+    <!-- =========================
+         ERROR
+    ========================== -->
+    @if (error) {
+      <div
+        class="lead-scheduling-page__error"
+        role="alert"
+      >
+
+        <div class="lead-scheduling-page__error-icon">
+
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M12 8v5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <circle
+              cx="12"
+              cy="16.5"
+              r="1"
+              fill="currentColor"
+            />
+          </svg>
+
+        </div>
+
+        <span>
+          {{ error }}
+        </span>
+
+      </div>
+    }
+
+
+    <!-- =========================
+         RESULTS
+    ========================== -->
+    <div class="lead-scheduling-page__results">
+
+      <!-- TABLE -->
+      
+      <app-admin-lead-scheduling-table
+        [items]="items"
+        [loading]="loading"
+      >
+      </app-admin-lead-scheduling-table>
+     
+
+
+      <!-- PAGINATION -->
+      @if (!loading && total > 0) {
+
+        
+        <app-admin-lead-scheduling-pagination
+          [currentPage]="currentPage"
+          [totalPages]="totalPages"
+          [totalItems]="total"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="pageSizeOptions"
+          [rangeLabel]="rangeLabel"
+          [canPrevPage]="canPrevPage"
+          [canNextPage]="canNextPage"
+          (pageChange)="changePage($event)"
+          (pageSizeChange)="changePageSize($event)"
+          (previousRequested)="prevPage()"
+          (nextRequested)="nextPage()"
+        >
+        </app-admin-lead-scheduling-pagination>
+       
+
+      }
+
+    </div>
+
   </div>
 
-  <div *ngIf="loading" class="admin-lead__state">Cargando…</div>
-  <div *ngIf="error" class="admin-lead__error" role="alert">{{ error }}</div>
-
-  <div *ngIf="!loading && !error && total === 0" class="admin-lead__state">
-    No hay solicitudes con los filtros seleccionados.
-  </div>
-
-  <ng-container *ngIf="!loading && !error && total > 0">
-    <div class="pager">
-      <span class="pager__range">{{ rangeLabel }}</span>
-      <span class="pager__pages">Página {{ pageIndex + 1 }} de {{ totalPages }}</span>
-      <div class="pager__nav">
-        <button type="button" class="pager__btn" [disabled]="!canPrevPage" (click)="prevPage()">
-          Anterior
-        </button>
-        <button type="button" class="pager__btn" [disabled]="!canNextPage" (click)="nextPage()">
-          Siguiente
-        </button>
-      </div>
-    </div>
-
-    <div *ngIf="items.length === 0" class="admin-lead__state admin-lead__state--muted">
-      No hay filas en esta página. Use «Anterior» o cambie el tamaño de página.
-    </div>
-
-    <div *ngIf="items.length > 0" class="admin-lead__table-wrap">
-      <table class="lead-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Tipo</th>
-            <th>Estado</th>
-            <th>Lead</th>
-            <th>Notas</th>
-            <th>Instructor</th>
-            <th>Agenda / enlace</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let row of items">
-            <td>{{ row.id }}</td>
-            <td>{{ kindText(row) }}</td>
-            <td>
-              <span class="badge" [attr.data-status]="row.status">{{
-                statusText(row.status)
-              }}</span>
-            </td>
-            <td>{{ row.firstName }} {{ row.lastName }}</td>
-            <td class="notes-cell">
-              <span
-                *ngIf="notesPreview(row) as notes"
-                class="notes-cell__text"
-                [title]="row.requestNotes ?? ''"
-                >{{ notes }}</span
-              >
-              <span *ngIf="!notesPreview(row)" class="notes-cell__empty">—</span>
-            </td>
-            <td>{{ instructorLabel(row) }}</td>
-            <td>{{ slotText(row) }}</td>
-            <td>
-              <a
-                class="link"
-                [routerLink]="['/dashboard/admin/lead-scheduling-requests', row.id]"
-                >Editar</a
-              >
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="pager pager--bottom" *ngIf="items.length > 0">
-      <span class="pager__range">{{ rangeLabel }}</span>
-      <div class="pager__nav">
-        <button type="button" class="pager__btn" [disabled]="!canPrevPage" (click)="prevPage()">
-          Anterior
-        </button>
-        <button type="button" class="pager__btn" [disabled]="!canNextPage" (click)="nextPage()">
-          Siguiente
-        </button>
-      </div>
-    </div>
-  </ng-container>
 </section>

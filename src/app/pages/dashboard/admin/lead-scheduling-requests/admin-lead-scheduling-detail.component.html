@@ -1,191 +1,1054 @@
-<section class="admin-detail" *ngIf="!loading && !error && row as r">
-  <header class="admin-detail__header">
-    <button type="button" class="back" (click)="goList()">← Volver al listado</button>
-    <h1>Solicitud #{{ r.id }}</h1>
-    <p class="admin-detail__meta">
-      <span class="badge badge--pill" [attr.data-status]="r.status">{{ statusText(r.status) }}</span>
-      · {{ typeDetailLabel }}
-    </p>
-  </header>
+<section class="lead-detail-page">
 
-  <div class="admin-detail__grid">
-    <article class="card">
-      <h2>Lead</h2>
-      <dl class="kv">
-        <dt>Nombre</dt>
-        <dd>{{ r.firstName }} {{ r.lastName }}</dd>
-        <dt>Email</dt>
-        <dd>{{ r.email }}</dd>
-        <dt>Teléfono</dt>
-        <dd>{{ r.contactPhone }}</dd>
-        <dt>Documento</dt>
-        <dd>{{ r.idNumber || '—' }}</dd>
-        <ng-container *ngIf="isDemoClass">
-          <dt>Horas de cortesía</dt>
-          <dd>{{ r.courtesyClassHours ?? '—' }}</dd>
-          <dt>Etapa</dt>
-          <dd>
-            <ng-container *ngIf="r.stage as st"
-              >{{ st.number }} — {{ st.description || '—' }}</ng-container
-            >
-            <ng-container *ngIf="!r.stage">—</ng-container>
-          </dd>
-          <dt>Fecha/hora solicitadas</dt>
-          <dd>{{ slotText(r) }}</dd>
-        </ng-container>
-      </dl>
-      <div class="request-notes" *ngIf="r.requestNotes?.trim() as notes">
-        <h3 class="request-notes__title">Notas del requerimiento</h3>
-        <p class="request-notes__body pre">{{ notes }}</p>
+  <div class="lead-detail-page__container">
+
+    <!-- =========================
+         LOADING
+    ========================== -->
+    @if (loading) {
+      <div class="lead-detail-state">
+        Cargando solicitud...
       </div>
-      <p class="hint request-notes--empty" *ngIf="!r.requestNotes?.trim()">
-        Sin notas adicionales del asesor o sistema externo.
-      </p>
-    </article>
+    }
 
-    <article class="card">
-      <h2>Asesor / referencia</h2>
-      <dl class="kv">
-        <dt>Asesor</dt>
-        <dd>{{ r.requestingAdvisorName || '—' }}</dd>
-        <dt>Email asesor</dt>
-        <dd>{{ r.requestingAdvisorEmail || '—' }}</dd>
-        <dt>Ref. externa</dt>
-        <dd>{{ r.externalReferenceId || '—' }}</dd>
-      </dl>
-    </article>
+
+    <!-- =========================
+         ERROR GENERAL
+    ========================== -->
+    @if (!loading && error && !row) {
+      <div class="lead-detail-state lead-detail-state--error">
+        {{ error }}
+      </div>
+    }
+
+
+    <!-- =========================
+         CONTENT
+    ========================== -->
+    @if (!loading && row; as r) {
+
+      <!-- =========================
+           HEADER
+      ========================== -->
+      <header class="lead-detail-header">
+
+        <div class="lead-detail-header__content">
+
+          <button
+            type="button"
+            class="lead-detail-header__back"
+            (click)="goList()"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="m15 18-6-6 6-6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            Volver al listado
+          </button>
+
+
+          <div class="lead-detail-header__title-row">
+
+            <h1 class="lead-detail-header__title">
+              Solicitud de horario #{{ r.id }}
+            </h1>
+
+            <span
+              class="lead-detail-status"
+              [attr.data-status]="r.status"
+            >
+              {{ statusText(r.status) }}
+            </span>
+
+          </div>
+
+
+          <p class="lead-detail-header__meta">
+            Creada el
+            {{ r.createdAt | date:'dd/MM/yyyy hh:mm a' }}
+
+            <span>•</span>
+
+            Actualizada el
+            {{ (r.updatedAt || r.createdAt) | date:'dd/MM/yyyy hh:mm a' }}
+          </p>
+
+        </div>
+
+
+        @if (!isCancelled && !isCompleted) {
+          <button
+            type="button"
+            class="lead-detail-header__cancel"
+            [disabled]="saving"
+            (click)="confirmCancel()"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="m7 7 10 10M17 7 7 17"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            Cancelar solicitud
+          </button>
+        }
+
+      </header>
+
+
+      <!-- =========================
+           ERROR DE OPERACIÓN
+      ========================== -->
+      @if (error) {
+        <div
+          class="lead-detail-notice lead-detail-notice--error"
+          role="alert"
+        >
+          {{ error }}
+        </div>
+      }
+
+
+      <!-- =========================
+           SUMMARY
+      ========================== -->
+      <section class="lead-detail-card">
+
+        <div class="lead-detail-summary">
+
+          <div class="lead-detail-summary__main">
+
+            <div class="lead-detail-section-title">
+
+              <span class="lead-detail-section-title__icon">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <rect
+                    x="4"
+                    y="5"
+                    width="16"
+                    height="15"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+                  <path
+                    d="M8 3v4M16 3v4M4 9h16"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+              <strong>
+                Resumen de la solicitud
+              </strong>
+
+            </div>
+
+
+            <div class="lead-detail-summary__description">
+
+              <p>
+                Esta solicitud fue creada por un asesor y se encuentra
+                actualmente en estado
+                <strong>{{ statusText(r.status) }}</strong>.
+              </p>
+
+              @if (!isCancelled && !isCompleted) {
+                <p>
+                  Completa la información necesaria y guarda los cambios
+                  para continuar con el proceso de agendamiento.
+                </p>
+              }
+
+            </div>
+
+          </div>
+
+
+          <div class="lead-detail-summary__aside">
+
+            <span class="lead-detail-field-label">
+              Tipo de solicitud
+            </span>
+
+            <strong class="lead-detail-request-type">
+              {{ typeDetailLabel }}
+            </strong>
+
+
+            @if (r.courtesyClassHours != null) {
+              <span class="lead-detail-field-label">
+                Horas de clase de cortesía
+              </span>
+
+              <strong>
+                {{ r.courtesyClassHours }}
+                {{ r.courtesyClassHours === 1 ? 'hora' : 'horas' }}
+              </strong>
+            }
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           APPLICANT
+      ========================== -->
+      <section class="lead-detail-card">
+
+        <div class="lead-detail-section-title">
+
+          <span class="lead-detail-section-title__icon">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="7"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+              <path
+                d="M5 20a7 7 0 0 1 14 0"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <strong>
+            Información del solicitante
+          </strong>
+
+        </div>
+
+
+        <div class="lead-detail-grid lead-detail-grid--4">
+
+          <div>
+            <span>Nombres</span>
+            <strong>{{ r.firstName || '—' }}</strong>
+          </div>
+
+          <div>
+            <span>Apellidos</span>
+            <strong>{{ r.lastName || '—' }}</strong>
+          </div>
+
+          <div>
+            <span>Número de identificación</span>
+            <strong>{{ r.idNumber || '—' }}</strong>
+          </div>
+
+          <div>
+            <span>Correo electrónico</span>
+            <strong>{{ r.email || '—' }}</strong>
+          </div>
+
+          <div>
+            <span>Teléfono de contacto</span>
+            <strong>{{ r.contactPhone || '—' }}</strong>
+          </div>
+
+          <div>
+            <span>Referencia externa</span>
+            <strong>{{ r.externalReferenceId || '—' }}</strong>
+          </div>
+
+          <div class="lead-detail-grid__wide">
+            <span>Notas de la solicitud</span>
+
+            @if (r.requestNotes?.trim()) {
+              <strong class="lead-detail-pre">
+                {{ r.requestNotes }}
+              </strong>
+            } @else {
+              <strong>—</strong>
+              <small>
+                Sin notas adicionales del asesor o sistema externo.
+              </small>
+            }
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           ADVISOR
+      ========================== -->
+      <section class="lead-detail-card">
+
+        <div class="lead-detail-section-title">
+
+          <span class="lead-detail-section-title__icon">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="7"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+              <path
+                d="M5 20a7 7 0 0 1 14 0"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <strong>
+            Información del asesor que solicitó
+          </strong>
+
+        </div>
+
+
+        <div class="lead-detail-grid lead-detail-grid--4">
+
+          <div>
+            <span>Nombre del asesor</span>
+            <strong>{{ r.requestingAdvisorName || '—' }}</strong>
+          </div>
+
+          <div>
+            <span>Correo del asesor</span>
+            <strong>{{ r.requestingAdvisorEmail || '—' }}</strong>
+          </div>
+
+          <div>
+            <span>Teléfono del asesor</span>
+            <strong>{{ r.requestingAdvisorPhone || '—' }}</strong>
+          </div>
+
+          <div>
+            <span>Oficina / Sucursal</span>
+            <strong>{{ r.requestingAdvisorOfficeLabel || '—' }}</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           ACADEMIC
+      ========================== -->
+      <section class="lead-detail-card">
+
+        <div class="lead-detail-section-title">
+
+          <span class="lead-detail-section-title__icon">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M3 9 12 4l9 5-9 5-9-5Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M7 12v4c2.5 2 7.5 2 10 0v-4"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+            </svg>
+          </span>
+
+          <strong>
+            Información académica
+          </strong>
+
+        </div>
+
+
+        <div class="lead-detail-grid lead-detail-grid--4">
+
+          <div>
+            <span>Etapa</span>
+
+            @if (r.stage) {
+              <strong class="lead-detail-stage">
+                {{ r.stage.number }}
+                @if (r.stage.description) {
+                  <small>{{ r.stage.description }}</small>
+                }
+              </strong>
+            } @else {
+              <strong>—</strong>
+            }
+          </div>
+
+
+          <div>
+            <span>Fecha y hora solicitada</span>
+            <strong>{{ slotText(r) }}</strong>
+          </div>
+
+
+          <div>
+            <span>Tipo de solicitud</span>
+            <strong>{{ typeDetailLabel }}</strong>
+          </div>
+
+
+          <div>
+            <span>Horas de cortesía</span>
+            <strong>{{ r.courtesyClassHours ?? '—' }}</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           CURRENT ASSIGNMENT
+      ========================== -->
+      <section class="lead-detail-card">
+
+        <div class="lead-detail-section-title">
+
+          <span class="lead-detail-section-title__icon">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="9"
+                cy="8"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+              <path
+                d="M3 20a6 6 0 0 1 12 0"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+              <path
+                d="m16 11 2 2 4-5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <strong>
+            Información de asignación actual
+          </strong>
+
+        </div>
+
+
+        <div class="lead-detail-grid lead-detail-grid--4">
+
+          <div>
+            <span>Instructor asignado</span>
+            <strong>{{ instructorLabelFromRow(r) }}</strong>
+
+            @if (r.instructorId) {
+              <small>ID: {{ r.instructorId }}</small>
+            }
+          </div>
+
+
+          <div>
+            <span>Asignado por</span>
+
+            @if (r.assignedBy) {
+              <strong>
+                {{ r.assignedBy.firstName || '' }}
+                {{ r.assignedBy.lastName || '' }}
+              </strong>
+
+              <small>
+                {{ r.assignedBy.email }}
+              </small>
+            } @else {
+              <strong>—</strong>
+            }
+          </div>
+
+
+          <div>
+            <span>Estado actual</span>
+
+            <strong
+              class="lead-detail-status"
+              [attr.data-status]="r.status"
+            >
+              {{ statusText(r.status) }}
+            </strong>
+          </div>
+
+
+          <div>
+            <span>Última actualización</span>
+
+            <strong>
+              {{ (r.updatedAt || r.createdAt) | date:'dd/MM/yyyy hh:mm a' }}
+            </strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           COMPLETED WARNING
+      ========================== -->
+      @if (isCompleted) {
+        <div class="lead-detail-notice lead-detail-notice--warning">
+
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+            <path
+              d="M12 7v6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+            <circle
+              cx="12"
+              cy="16.5"
+              r=".9"
+              fill="currentColor"
+            />
+          </svg>
+
+          <p>
+            Esta solicitud está <strong>Completada</strong> mediante el
+            informe del instructor. No puede marcarse como completada
+            manualmente desde esta página. Si modificas instructor, fecha
+            u hora, el sistema puede reabrir el flujo según las reglas
+            definidas por la API.
+          </p>
+
+        </div>
+      }
+
+
+      <!-- =========================
+           EDIT FORM
+      ========================== -->
+      <form
+        class="lead-detail-card"
+        [formGroup]="form"
+        (ngSubmit)="save()"
+      >
+
+        <div class="lead-detail-section-title">
+
+          <span class="lead-detail-section-title__icon">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M13 5h6v6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="m19 5-9 9"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+              <path
+                d="M11 6H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <strong>
+            Editar información
+          </strong>
+
+          <small>
+            (solo campos permitidos)
+          </small>
+
+        </div>
+
+
+        <!-- HINT -->
+        <div class="lead-detail-notice lead-detail-notice--info">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+            <path
+              d="M12 11v5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+            <circle
+              cx="12"
+              cy="8"
+              r=".9"
+              fill="currentColor"
+            />
+          </svg>
+
+          <p>
+            {{ schedulingHint }}
+          </p>
+        </div>
+
+
+        <div class="lead-detail-edit-grid">
+
+          <!-- LEFT -->
+          <div class="lead-detail-edit-column">
+
+            <label class="lead-detail-field">
+
+              <span>
+                Instructor
+              </span>
+
+              <select
+                formControlName="instructorId"
+                [compareWith]="compareIdOrEmpty"
+              >
+                <option [ngValue]="''">
+                  Sin asignar
+                </option>
+
+                @for (ins of instructors; track ins.id) {
+                  <option [ngValue]="ins.id">
+                    {{ instructorOptionLabel(ins) }}
+                  </option>
+                }
+              </select>
+
+              <small>
+                Actual en servidor:
+                <strong>{{ instructorLabelFromRow(r) }}</strong>
+              </small>
+
+            </label>
+
+
+            <label class="lead-detail-field">
+
+              <span>
+                Notas administrativas
+              </span>
+
+              <textarea
+                rows="4"
+                formControlName="adminNotes"
+                placeholder="Visibles en operación; no son el informe del instructor."
+              ></textarea>
+
+              <small>
+                Estas notas son internas para administración y no corresponden
+                al informe que posteriormente registra el instructor.
+              </small>
+
+            </label>
+
+          </div>
+
+
+          <!-- RIGHT -->
+          <div class="lead-detail-edit-column">
+
+            @if (requiresScheduleTriple) {
+
+              <div class="lead-detail-date-row">
+
+                <label class="lead-detail-field">
+
+                  <span>
+                    Fecha
+                  </span>
+
+                  <input
+                    type="date"
+                    formControlName="scheduledDate"
+                  />
+
+                </label>
+
+
+                <label class="lead-detail-field">
+
+                  <span>
+                    Hora
+                  </span>
+
+                  <select
+                    formControlName="scheduledHour"
+                    [compareWith]="compareIdOrEmpty"
+                  >
+                    <option [ngValue]="''">
+                      —
+                    </option>
+
+                    @for (hour of hourOptions; track hour) {
+                      <option [ngValue]="hour">
+                        {{ hour }}:00
+                      </option>
+                    }
+                  </select>
+
+                </label>
+
+              </div>
+
+
+              @if (isSpeakingPlacement) {
+                <small class="lead-detail-field-help">
+                  La fecha y la hora normalmente vienen definidas en la
+                  solicitud del asesor. Modifícalas únicamente si es necesario.
+                </small>
+              }
+
+            }
+
+
+            @if (isPlacementTest) {
+
+              <label class="lead-detail-field">
+
+                <span>
+                  Enlace del examen
+                </span>
+
+                <input
+                  type="url"
+                  formControlName="examLink"
+                  placeholder="https://..."
+                  autocomplete="off"
+                />
+
+                <small>
+                  El instructor y el enlace del examen deben estar definidos
+                  para pasar la solicitud a estado Agendada. Al guardar,
+                  se notificará al estudiante por correo.
+                </small>
+
+              </label>
+
+
+              @if (r.examLink) {
+                <div class="lead-detail-current-value">
+
+                  <span>
+                    Enlace actual:
+                  </span>
+
+                  <a
+                    [href]="r.examLink"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{ r.examLink }}
+                  </a>
+
+                </div>
+              }
+
+            }
+
+          </div>
+
+        </div>
+
+
+        <!-- CURRENT SCHEDULE -->
+        <div class="lead-detail-current-value">
+          <span>
+            Agendamiento actual:
+          </span>
+
+          <strong>
+            {{ slotText(r) }}
+          </strong>
+        </div>
+
+
+        <!-- CURRENT STATUS -->
+        <div class="lead-detail-current-status">
+
+          <div>
+            <span>
+              Estado actual
+            </span>
+
+            <strong
+              class="lead-detail-status"
+              [attr.data-status]="r.status"
+            >
+              {{ statusText(r.status) }}
+            </strong>
+          </div>
+
+          <p>
+            El estado se actualiza automáticamente cuando se cumplen los
+            requisitos de asignación según el tipo de solicitud.
+            Para anularla utiliza
+            <strong>Cancelar solicitud</strong>.
+          </p>
+
+        </div>
+
+      </form>
+
+
+      <!-- =========================
+           ADDITIONAL
+      ========================== -->
+      <section class="lead-detail-card">
+
+        <div class="lead-detail-section-title">
+
+          <span class="lead-detail-section-title__icon">
+            ⓘ
+          </span>
+
+          <strong>
+            Información adicional
+          </strong>
+
+        </div>
+
+
+        <div class="lead-detail-grid lead-detail-grid--4">
+
+          <div>
+            <span>Estado</span>
+
+            <strong
+              class="lead-detail-status"
+              [attr.data-status]="r.status"
+            >
+              {{ statusText(r.status) }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Tipo de solicitud</span>
+            <strong>{{ typeDetailLabel }}</strong>
+          </div>
+
+          <div>
+            <span>Horas de clase de cortesía</span>
+            <strong>{{ r.courtesyClassHours ?? '—' }}</strong>
+          </div>
+
+          <div>
+            <span>Asistencia registrada</span>
+
+            <strong>
+              @if (isPlacementTest) {
+                No aplica
+              } @else {
+                {{
+                  r.attendancePresent === true
+                    ? 'Presente'
+                    : r.attendancePresent === false
+                      ? 'Ausente'
+                      : '—'
+                }}
+              }
+            </strong>
+          </div>
+
+          <div class="lead-detail-grid__wide">
+            <span>Informe del instructor</span>
+            <strong class="lead-detail-pre">
+              {{ r.instructorReportNotes || '—' }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Informe enviado por</span>
+
+            @if (r.reportSubmittedByInstructor?.user) {
+              <strong>
+                {{ r.reportSubmittedByInstructor?.user?.firstName || '' }}
+                {{ r.reportSubmittedByInstructor?.user?.lastName || '' }}
+              </strong>
+            } @else {
+              <strong>—</strong>
+            }
+          </div>
+
+          <div>
+            <span>Fecha de envío del informe</span>
+
+            <strong>
+              {{
+                r.instructorReportSubmittedAt
+                  ? (r.instructorReportSubmittedAt | date:'dd/MM/yyyy hh:mm a')
+                  : '—'
+              }}
+            </strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           ACTIONS
+      ========================== -->
+      <footer class="lead-detail-actions">
+
+        <button
+          type="button"
+          class="lead-detail-actions__secondary"
+          [disabled]="saving"
+          (click)="discardEdits()"
+        >
+          Descartar cambios
+        </button>
+
+        <button
+          type="button"
+          class="lead-detail-actions__primary"
+          [disabled]="saving"
+          (click)="save()"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 4h12l2 2v14H5V4Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M8 4v6h8V4M8 20v-6h8v6"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+          </svg>
+
+          {{ saving ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+
+      </footer>
+
+    }
+
   </div>
 
-  <article class="card card--wide" *ngIf="isCompleted">
-    <p class="hint">
-      Esta solicitud está <strong>COMPLETED</strong> (informe del instructor). No puede marcarse completada desde aquí.
-      Si cambia <strong>instructor</strong>, <strong>fecha</strong> u <strong>hora</strong>, el sistema puede reabrir el flujo según política del API.
-    </p>
-  </article>
 
-  <form class="card card--wide" [formGroup]="form" (ngSubmit)="save()">
-    <h2>Asignación y agenda</h2>
-    <p class="hint">{{ schedulingHint }}</p>
+  <!-- =========================
+       MODAL
+  ========================== -->
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm?.()"
+    (close)="modal.close()"
+  >
+  </app-modal>
 
-    <label class="field">
-      <span>Instructor</span>
-      <select formControlName="instructorId" [compareWith]="compareIdOrEmpty">
-        <option [ngValue]="''">Sin asignar</option>
-        <option *ngFor="let ins of instructors" [ngValue]="ins.id">
-          {{ instructorOptionLabel(ins) }}
-        </option>
-      </select>
-      <small class="field__help">Actual en servidor: {{ instructorLabelFromRow(r) }}</small>
-    </label>
-
-    <label class="field" *ngIf="isPlacementTest">
-      <span>Enlace del examen (URL)</span>
-      <input
-        type="url"
-        formControlName="examLink"
-        placeholder="https://…"
-        autocomplete="off"
-      />
-      <small class="field__help">
-        Obligatorio junto con el instructor para pasar a <strong>Agendada</strong>. Al guardar, el API
-        notifica por correo al estudiante y al asesor.
-      </small>
-      <p class="hint" *ngIf="r.examLink">
-        Enlace actual:
-        <a [href]="r.examLink" target="_blank" rel="noopener noreferrer">{{ r.examLink }}</a>
-      </p>
-    </label>
-
-    <ng-container *ngIf="requiresScheduleTriple">
-      <div class="row2">
-        <label class="field">
-          <span>Fecha (YYYY-MM-DD)</span>
-          <input type="date" formControlName="scheduledDate" />
-        </label>
-        <label class="field">
-          <span>Hora (0–23)</span>
-          <select formControlName="scheduledHour" [compareWith]="compareIdOrEmpty">
-            <option [ngValue]="''">—</option>
-            <option *ngFor="let h of hourOptions" [ngValue]="h">{{ h }}:00</option>
-          </select>
-        </label>
-      </div>
-      <p class="hint" *ngIf="isSpeakingPlacement">
-        La fecha y hora suelen venir en la solicitud del asesor; ajústalas solo si hace falta.
-      </p>
-    </ng-container>
-
-    <p class="hint">Agendamiento en servidor: <strong>{{ slotText(r) }}</strong></p>
-
-    <div class="status-readonly">
-      <span class="status-readonly__label">Estado actual</span>
-      <span class="badge badge--pill" [attr.data-status]="r.status">{{ statusText(r.status) }}</span>
-      <small class="field__help"
-        >El estado lo actualiza el API al completar la asignación según el tipo. Para anular use
-        <strong>Cancelar solicitud</strong>.</small
-      >
-    </div>
-
-    <label class="field">
-      <span>Notas internas (admin)</span>
-      <textarea rows="4" formControlName="adminNotes" placeholder="Visibles en operación; no son el informe del instructor."></textarea>
-    </label>
-
-    <div class="actions">
-      <button type="submit" class="btn primary" [disabled]="saving">
-        {{ saving ? 'Guardando…' : 'Guardar cambios' }}
-      </button>
-      <button
-        type="button"
-        class="btn secondary"
-        [disabled]="saving"
-        (click)="discardEdits()"
-      >
-        Cancelar edición
-      </button>
-      <button
-        type="button"
-        class="btn danger"
-        [disabled]="saving || isCancelled"
-        (click)="confirmCancel()"
-      >
-        Cancelar solicitud
-      </button>
-    </div>
-  </form>
-
-  <article class="card card--wide" *ngIf="r.status === 'COMPLETED' || r.instructorReportSubmittedAt">
-    <h2>Informe del instructor</h2>
-    <dl class="kv">
-      <dt>Asistencia</dt>
-      <dd>
-        <ng-container *ngIf="isPlacementTest">No aplica (placement test)</ng-container>
-        <ng-container *ngIf="!isPlacementTest">{{
-          r.attendancePresent === true
-            ? 'Presente'
-            : r.attendancePresent === false
-              ? 'Ausente'
-              : '—'
-        }}</ng-container>
-      </dd>
-      <dt>Notas del informe</dt>
-      <dd class="pre">{{ r.instructorReportNotes || '—' }}</dd>
-      <dt>Enviado</dt>
-      <dd>{{ r.instructorReportSubmittedAt || '—' }}</dd>
-    </dl>
-  </article>
 </section>
-
-<div *ngIf="loading" class="state">Cargando…</div>
-<div *ngIf="error" class="state state--error" role="alert">{{ error }}</div>
-
-<app-modal
-  [showModal]="modal.show"
-  [message]="modal.message"
-  [isError]="modal.isError"
-  [isSuccess]="modal.isSuccess"
-  [isInfo]="modal.isInfo"
-  [showButtons]="modal.showButtons ?? false"
-  (confirmAction)="modal.confirm?.()"
-  (close)="modal.close()"
-></app-modal>

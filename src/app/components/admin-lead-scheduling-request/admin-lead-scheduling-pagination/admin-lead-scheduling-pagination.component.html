@@ -1,0 +1,165 @@
+<section class="lead-scheduling-pagination">
+
+  <!-- =========================
+       RANGE
+  ========================== -->
+  <div class="lead-scheduling-pagination__range">
+    Mostrando {{ rangeLabel }}
+  </div>
+
+
+  <!-- =========================
+       PAGE SIZE
+  ========================== -->
+  <div class="lead-scheduling-pagination__page-size">
+
+    <label
+      for="leadSchedulingPageSize"
+      class="lead-scheduling-pagination__page-size-label"
+    >
+      Resultados por página:
+    </label>
+
+    <div class="lead-scheduling-pagination__select-wrapper">
+
+      <select
+        id="leadSchedulingPageSize"
+        class="lead-scheduling-pagination__select"
+        [ngModel]="pageSize"
+        (ngModelChange)="onPageSizeChange($event)"
+      >
+        @for (option of pageSizeOptions; track option) {
+          <option [ngValue]="option">
+            {{ option }}
+          </option>
+        }
+      </select>
+
+      <svg
+        class="lead-scheduling-pagination__select-icon"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m6 9 6 6 6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       NAVIGATION
+  ========================== -->
+  <nav
+    class="lead-scheduling-pagination__navigation"
+    aria-label="Paginación"
+  >
+
+    <!-- PREVIOUS -->
+    <button
+      type="button"
+      class="
+        lead-scheduling-pagination__navigation-button
+        lead-scheduling-pagination__navigation-button--wide
+      "
+      [disabled]="!canPrevPage"
+      (click)="previousPage()"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m15 18-6-6 6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+      <span>
+        Anterior
+      </span>
+    </button>
+
+
+    <!-- PAGES -->
+    @for (page of visiblePages; track $index) {
+
+      @if (page === 'ellipsis') {
+
+        <span class="lead-scheduling-pagination__ellipsis">
+          …
+        </span>
+
+      } @else {
+
+        <button
+          type="button"
+          class="lead-scheduling-pagination__page"
+          [class.lead-scheduling-pagination__page--active]="
+            page === currentPage
+          "
+          [attr.aria-current]="
+            page === currentPage
+              ? 'page'
+              : null
+          "
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+
+      }
+
+    }
+
+
+    <!-- NEXT -->
+    <button
+      type="button"
+      class="
+        lead-scheduling-pagination__navigation-button
+        lead-scheduling-pagination__navigation-button--wide
+      "
+      [disabled]="!canNextPage"
+      (click)="nextPage()"
+    >
+      <span>
+        Siguiente
+      </span>
+
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m9 18 6-6-6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+  </nav>
+
+</section>

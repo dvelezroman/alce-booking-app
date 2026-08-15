@@ -1,0 +1,98 @@
+<section class="register-staff-page">
+
+  <div class="register-staff-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <app-register-staff-header>
+    </app-register-staff-header>
+
+
+    <!-- =========================
+         MAIN LAYOUT
+    ========================== -->
+    <div class="register-staff-page__layout">
+
+      <!-- =========================
+           LEFT COLUMN
+      ========================== -->
+      <main class="register-staff-page__main">
+
+        <!-- =========================
+             PERSONAL INFO
+        ========================== -->
+        <section class="register-staff-page__card">
+
+          <app-register-staff-personal-info
+            [registerForm]="registerForm"
+          >
+          </app-register-staff-personal-info>
+
+        </section>
+
+
+        <!-- =========================
+             ACCOUNT INFO
+        ========================== -->
+        <section class="register-staff-page__card">
+
+          <app-register-staff-account-info
+            [registerForm]="registerForm"
+            [roles]="roles"
+            [links]="links"
+            [showInstructorLink]="showInstructorLink"
+          >
+          </app-register-staff-account-info>
+
+        </section>
+
+
+        <!-- =========================
+             ACTIONS
+        ========================== -->
+        <section class="register-staff-page__actions">
+
+          <app-register-staff-actions
+            [registerForm]="registerForm"
+            (submitRequested)="onSubmit()"
+          >
+          </app-register-staff-actions>
+
+        </section>
+
+      </main>
+
+
+      <!-- =========================
+           SUMMARY
+      ========================== -->
+      <aside class="register-staff-page__sidebar">
+
+        <app-register-staff-summary
+          [registerForm]="registerForm"
+          [showInstructorLink]="showInstructorLink"
+        >
+        </app-register-staff-summary>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       MODAL
+  ========================== -->
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    (close)="closeModal()"
+  >
+  </app-modal>
+
+</section>

@@ -76,6 +76,8 @@ import { SearchingMeetingV2Component } from './searching-meeting-v2/searching-me
 import { SearchingUserComponent } from './searching-user/searching-user.component';
 import { AttendanceStudentComponent } from './attendance-student/attendance-student.component';
 import { AttendanceInstructorV2Component } from './attendance-instructor-v2/attendance-instructor-v2.component';
+import { RegisterStudentV2Component } from './register-student-v2/register-student-v2.component';
+import { RegisterStaffComponent } from './register-staff/register-staff.component';
 
 const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -148,8 +150,10 @@ const dashboardChildren: Routes = [
   { path: 'instructor-evaluations', component: InstructorEvaluationsComponent },
   { path: 'feature-flag', component: FeatureFlagComponent },
   { path: 'announcements', component: AnnouncementsComponent },
-  { path: 'create-students', component: RegisterStudentComponent },
-  { path: 'create-instructors', component: RegisterInstructorAdminComponent },
+  // { path: 'create-students', component: RegisterStudentComponent },
+  { path: 'create-students', component: RegisterStudentV2Component },
+  // { path: 'create-instructors', component: RegisterInstructorAdminComponent },
+   { path: 'create-staff', component: RegisterStaffComponent },
   { path: 'reports-detailed', component: ReportsDetailedComponent },
   { path: 'student-history-report', component: StudentHistoryReportComponent },
   { path: 'active-students-report', component: ActiveStudentsReportComponent },

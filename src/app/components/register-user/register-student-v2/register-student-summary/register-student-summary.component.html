@@ -1,0 +1,269 @@
+<section
+  class="register-student-summary"
+  [formGroup]="registerForm"
+>
+
+  <!-- =========================
+       TITLE
+  ========================== -->
+  <h2 class="register-student-summary__title">
+    Resumen de registro
+  </h2>
+
+
+  <!-- =========================
+       PROFILE
+  ========================== -->
+  <div class="register-student-summary__profile">
+
+    <div class="register-student-summary__avatar">
+      @if (studentInitials === 'NE') {
+
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="12"
+            cy="7"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M5 20a7 7 0 0 1 14 0"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      } @else {
+
+        <span>
+          {{ studentInitials }}
+        </span>
+
+      }
+    </div>
+
+
+    <div class="register-student-summary__profile-content">
+
+      <strong class="register-student-summary__student-name">
+        {{ studentName }}
+      </strong>
+
+      <span
+        class="register-student-summary__status"
+        [class.register-student-summary__status--ready]="readyToReview"
+      >
+        {{ registrationStatus }}
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       DIVIDER
+  ========================== -->
+  <div class="register-student-summary__divider"></div>
+
+
+  <!-- =========================
+       STEPS TITLE
+  ========================== -->
+  <h3 class="register-student-summary__subtitle">
+    Para completar el registro:
+  </h3>
+
+
+  <!-- =========================
+       STEPS
+  ========================== -->
+  <div class="register-student-summary__steps">
+
+    <!-- PERSONAL -->
+    <div
+      class="register-student-summary__step"
+      [ngClass]="personalStatusClass"
+    >
+      <span class="register-student-summary__step-dot">
+        @if (personalCompleted) {
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6 12 4 4 8-9"
+              stroke="currentColor"
+              stroke-width="2.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        }
+      </span>
+
+      <span class="register-student-summary__step-label">
+        Información personal
+      </span>
+    </div>
+
+
+    <!-- ACADEMIC -->
+    <div
+      class="register-student-summary__step"
+      [ngClass]="academicStatusClass"
+    >
+      <span class="register-student-summary__step-dot">
+        @if (academicCompleted) {
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6 12 4 4 8-9"
+              stroke="currentColor"
+              stroke-width="2.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        }
+      </span>
+
+      <span class="register-student-summary__step-label">
+        Información académica
+      </span>
+    </div>
+
+
+    <!-- TUTOR -->
+    <div
+      class="register-student-summary__step"
+      [ngClass]="tutorStatusClass"
+    >
+      <span class="register-student-summary__step-dot">
+        @if (isMinor && tutorCompleted) {
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6 12 4 4 8-9"
+              stroke="currentColor"
+              stroke-width="2.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        }
+      </span>
+
+      <span class="register-student-summary__step-label">
+        Datos del tutor (si es menor)
+      </span>
+    </div>
+
+
+    <!-- REVIEW -->
+    <div
+      class="register-student-summary__step"
+      [ngClass]="reviewStatusClass"
+    >
+      <span class="register-student-summary__step-dot">
+        @if (readyToReview) {
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6 12 4 4 8-9"
+              stroke="currentColor"
+              stroke-width="2.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        }
+      </span>
+
+      <span class="register-student-summary__step-label">
+        Revisar y confirmar
+      </span>
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       INFORMATION
+  ========================== -->
+  <div class="register-student-summary__information">
+
+    <div class="register-student-summary__information-icon">
+      <svg
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M12 11v5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <circle
+          cx="12"
+          cy="8"
+          r=".9"
+          fill="currentColor"
+        />
+      </svg>
+    </div>
+
+    <div class="register-student-summary__information-content">
+
+      <strong>
+        Información importante
+      </strong>
+
+      <p>
+        Asegúrate de que todos los datos sean correctos antes de registrar al estudiante.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>

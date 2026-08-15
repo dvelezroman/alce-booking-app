@@ -1,0 +1,261 @@
+<section class="lead-scheduling-filters">
+
+  <!-- =========================
+       FILTERS
+  ========================== -->
+  <div class="lead-scheduling-filters__fields">
+
+    <!-- =========================
+         KIND
+    ========================== -->
+    <div class="lead-scheduling-filters__field">
+
+      <label
+        for="filterKind"
+        class="lead-scheduling-filters__label"
+      >
+        Tipo de solicitud
+      </label>
+
+      <div class="lead-scheduling-filters__select-wrapper">
+
+        <svg
+          class="lead-scheduling-filters__select-leading-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <select
+          id="filterKind"
+          class="lead-scheduling-filters__select"
+          [ngModel]="filterKind"
+          [disabled]="loading"
+          (ngModelChange)="onKindChange($event)"
+        >
+          <option value="">
+            Todos
+          </option>
+
+          @for (option of kindOptions; track option.value) {
+            <option [value]="option.value">
+              {{ option.label }}
+            </option>
+          }
+        </select>
+
+        <svg
+          class="lead-scheduling-filters__select-arrow"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         STATUS
+    ========================== -->
+    <div class="lead-scheduling-filters__field">
+
+      <label
+        for="filterStatus"
+        class="lead-scheduling-filters__label"
+      >
+        Estado
+      </label>
+
+      <div class="lead-scheduling-filters__select-wrapper">
+
+        <svg
+          class="lead-scheduling-filters__select-leading-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <circle
+            cx="12"
+            cy="12"
+            r="2"
+            fill="currentColor"
+          />
+        </svg>
+
+        <select
+          id="filterStatus"
+          class="lead-scheduling-filters__select"
+          [ngModel]="filterStatus"
+          [disabled]="loading"
+          (ngModelChange)="onStatusChange($event)"
+        >
+          <option value="">
+            Todos
+          </option>
+
+          @for (option of statusOptions; track option.value) {
+            <option [value]="option.value">
+              {{ option.label }}
+            </option>
+          }
+        </select>
+
+        <svg
+          class="lead-scheduling-filters__select-arrow"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       ACTIONS
+  ========================== -->
+  <div class="lead-scheduling-filters__actions">
+
+    <!-- CLEAR -->
+    <button
+      type="button"
+      class="
+        lead-scheduling-filters__button
+        lead-scheduling-filters__button--secondary
+      "
+      [disabled]="loading"
+      (click)="onClear()"
+    >
+      <svg
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M4 12a8 8 0 1 0 2.35-5.65"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M4 5v5h5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+      <span>
+        Limpiar filtros
+      </span>
+    </button>
+
+
+    <!-- REFRESH -->
+    <button
+      type="button"
+      class="
+        lead-scheduling-filters__button
+        lead-scheduling-filters__button--primary
+      "
+      [disabled]="loading"
+      (click)="onRefresh()"
+    >
+      <svg
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        [class.lead-scheduling-filters__refresh-icon--loading]="loading"
+      >
+        <path
+          d="M20 6v5h-5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M4 18v-5h5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M18.5 9A7 7 0 0 0 6.3 6.3L4 8M5.5 15A7 7 0 0 0 17.7 17.7L20 16"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <span>
+        {{ loading ? 'Actualizando...' : 'Actualizar' }}
+      </span>
+    </button>
+
+  </div>
+
+</section>

@@ -1,0 +1,300 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.register-student-personal {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.register-student-personal__header {
+  display: flex;
+  align-items: center;
+
+  gap: .55rem;
+}
+
+.register-student-personal__header-icon {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f1edff;
+  color: #6543df;
+}
+
+.register-student-personal__header-icon svg {
+  width: 1.12rem;
+  height: 1.12rem;
+}
+
+.register-student-personal__title {
+  margin: 0;
+
+  color: #5c3fd3;
+
+  font-size: .9rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.register-student-personal__grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 1rem .8rem;
+}
+
+/* =========================
+   FIELD
+========================= */
+
+.register-student-personal__field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .35rem;
+}
+
+.register-student-personal__field--full {
+  grid-column: 1 / -1;
+}
+
+/* =========================
+   LABEL
+========================= */
+
+.register-student-personal__label {
+  color: #2e3549;
+
+  font-size: .66rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.register-student-personal__label span {
+  margin-left: .12rem;
+
+  color: #e15d55;
+}
+
+/* =========================
+   INPUT WRAPPER
+========================= */
+
+.register-student-personal__input-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+/* =========================
+   ICON
+========================= */
+
+.register-student-personal__input-icon {
+  position: absolute;
+
+  top: 50%;
+  left: .75rem;
+
+  color: #8991a2;
+
+  pointer-events: none;
+
+  transform: translateY(-50%);
+}
+
+/* =========================
+   CONTROL
+========================= */
+
+.register-student-personal__control {
+  width: 100%;
+  height: 2.75rem;
+
+  padding:
+    0
+    .8rem
+    0
+    2.25rem;
+
+  border: 1px solid #dfe2ea;
+  border-radius: .48rem;
+
+  outline: none;
+
+  background: #fff;
+  color: #30384d;
+
+  font-family: inherit;
+  font-size: .69rem;
+  font-weight: 500;
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease,
+    background-color .15s ease;
+}
+
+.register-student-personal__control::placeholder {
+  color: #a0a7b5;
+}
+
+.register-student-personal__control:hover {
+  border-color: #cfd4df;
+}
+
+.register-student-personal__control:focus {
+  border-color: #6946e7;
+
+  box-shadow:
+    0 0 0 .18rem rgba(105, 70, 231, .08);
+}
+
+/* =========================
+   DATE
+========================= */
+
+.register-student-personal__date {
+  padding-left: .8rem;
+
+  cursor: pointer;
+}
+
+.register-student-personal__date::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+
+  opacity: .65;
+}
+
+/* =========================
+   INVALID
+========================= */
+
+.register-student-personal__control--invalid {
+  border-color: #dc5656;
+}
+
+.register-student-personal__control--invalid:focus {
+  border-color: #dc5656;
+
+  box-shadow:
+    0 0 0 .18rem rgba(220, 86, 86, .08);
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.register-student-personal__error {
+  color: #d84c4c;
+
+  font-size: .56rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1250px) {
+
+  .register-student-personal__grid {
+    grid-template-columns: 1fr;
+
+    gap: .85rem;
+  }
+
+  .register-student-personal__field--full {
+    grid-column: auto;
+  }
+
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1000px) {
+
+  .register-student-personal__grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .register-student-personal__field--full {
+    grid-column: 1 / -1;
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 640px) {
+
+  .register-student-personal {
+    gap: .85rem;
+  }
+
+  .register-student-personal__header-icon {
+    width: 1.9rem;
+    height: 1.9rem;
+
+    flex-basis: 1.9rem;
+  }
+
+  .register-student-personal__title {
+    font-size: .82rem;
+  }
+
+  .register-student-personal__grid {
+    grid-template-columns: 1fr;
+
+    gap: .75rem;
+  }
+
+  .register-student-personal__field--full {
+    grid-column: auto;
+  }
+
+  .register-student-personal__control {
+    height: 2.85rem;
+
+    font-size: .68rem;
+  }
+
+}

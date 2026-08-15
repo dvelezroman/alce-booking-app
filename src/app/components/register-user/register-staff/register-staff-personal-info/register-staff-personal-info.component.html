@@ -1,0 +1,390 @@
+<section
+  class="register-staff-personal"
+  [formGroup]="registerForm"
+>
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+  <header class="register-staff-personal__header">
+
+    <div class="register-staff-personal__header-icon">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="12"
+          cy="7"
+          r="3"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M5 20a7 7 0 0 1 14 0"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+    <h2 class="register-staff-personal__title">
+      Información personal
+    </h2>
+
+  </header>
+
+
+  <!-- =========================
+       GRID
+  ========================== -->
+  <div class="register-staff-personal__grid">
+
+    <!-- NOMBRES -->
+    <div class="register-staff-personal__field">
+
+      <label
+        for="firstName"
+        class="register-staff-personal__label"
+      >
+        Nombres
+        <span>*</span>
+      </label>
+
+      <div class="register-staff-personal__input-wrapper">
+
+        <svg
+          class="register-staff-personal__input-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="12"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M5 20a7 7 0 0 1 14 0"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <input
+          id="firstName"
+          type="text"
+          formControlName="firstName"
+          class="register-staff-personal__control"
+          [class.register-staff-personal__control--invalid]="
+            isInvalid('firstName')
+          "
+          placeholder="Ingresa los nombres"
+        />
+
+      </div>
+
+      @if (hasRequiredError('firstName')) {
+        <span class="register-staff-personal__error">
+          Los nombres son obligatorios.
+        </span>
+      }
+
+    </div>
+
+
+    <!-- APELLIDOS -->
+    <div class="register-staff-personal__field">
+
+      <label
+        for="lastName"
+        class="register-staff-personal__label"
+      >
+        Apellidos
+        <span>*</span>
+      </label>
+
+      <div class="register-staff-personal__input-wrapper">
+
+        <svg
+          class="register-staff-personal__input-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="12"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M5 20a7 7 0 0 1 14 0"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <input
+          id="lastName"
+          type="text"
+          formControlName="lastName"
+          class="register-staff-personal__control"
+          [class.register-staff-personal__control--invalid]="
+            isInvalid('lastName')
+          "
+          placeholder="Ingresa los apellidos"
+        />
+
+      </div>
+
+      @if (hasRequiredError('lastName')) {
+        <span class="register-staff-personal__error">
+          Los apellidos son obligatorios.
+        </span>
+      }
+
+    </div>
+
+
+    <!-- IDENTIFICACIÓN -->
+    <div class="register-staff-personal__field">
+
+      <label
+        for="idNumber"
+        class="register-staff-personal__label"
+      >
+        Número de identificación
+        <span>*</span>
+      </label>
+
+      <div class="register-staff-personal__input-wrapper">
+
+        <svg
+          class="register-staff-personal__input-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="4"
+            y="6"
+            width="16"
+            height="12"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <circle
+            cx="9"
+            cy="11"
+            r="1.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+
+          <path
+            d="M7 15c.6-1.3 1.3-2 2-2s1.4.7 2 2M14 10h3M14 14h3"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <input
+          id="idNumber"
+          type="text"
+          formControlName="idNumber"
+          class="register-staff-personal__control"
+          [class.register-staff-personal__control--invalid]="
+            isInvalid('idNumber')
+          "
+          placeholder="Ej: 0966369506"
+        />
+
+      </div>
+
+      @if (hasRequiredError('idNumber')) {
+        <span class="register-staff-personal__error">
+          La identificación es obligatoria.
+        </span>
+      }
+
+    </div>
+
+
+    <!-- FECHA NACIMIENTO -->
+    <div class="register-staff-personal__field">
+
+      <label
+        for="birthDate"
+        class="register-staff-personal__label"
+      >
+        Fecha de nacimiento
+      </label>
+
+      <input
+        id="birthDate"
+        type="date"
+        formControlName="birthDate"
+        class="register-staff-personal__control register-staff-personal__date"
+      />
+
+    </div>
+
+
+    <!-- EMAIL -->
+    <div class="register-staff-personal__field register-staff-personal__field--full">
+
+      <label
+        for="email"
+        class="register-staff-personal__label"
+      >
+        Correo electrónico
+        <span>*</span>
+      </label>
+
+      <div class="register-staff-personal__input-wrapper">
+
+        <svg
+          class="register-staff-personal__input-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="3"
+            y="5"
+            width="18"
+            height="14"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="m4 7 8 6 8-6"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        <input
+          id="email"
+          type="text"
+          formControlName="email"
+          class="register-staff-personal__control"
+          [class.register-staff-personal__control--invalid]="
+            isInvalid('email')
+          "
+          placeholder="ejemplo@correo.com"
+        />
+
+      </div>
+
+      @if (hasRequiredError('email')) {
+        <span class="register-staff-personal__error">
+          El correo electrónico es obligatorio.
+        </span>
+      }
+
+      @if (hasMinLengthError('email')) {
+        <span class="register-staff-personal__error">
+          El correo debe tener mínimo 6 caracteres.
+        </span>
+      }
+
+    </div>
+
+
+    <!-- PASSWORD -->
+    <div class="register-staff-personal__field register-staff-personal__field--full">
+
+      <label
+        for="password"
+        class="register-staff-personal__label"
+      >
+        Contraseña
+        <span>*</span>
+      </label>
+
+      <div class="register-staff-personal__input-wrapper">
+
+        <svg
+          class="register-staff-personal__input-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="5"
+            y="10"
+            width="14"
+            height="10"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M8 10V7a4 4 0 0 1 8 0v3"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          class="register-staff-personal__control"
+          [class.register-staff-personal__control--invalid]="
+            isInvalid('password')
+          "
+          placeholder="Mínimo 6 caracteres"
+        />
+
+      </div>
+
+      @if (hasRequiredError('password')) {
+        <span class="register-staff-personal__error">
+          La contraseña es obligatoria.
+        </span>
+      }
+
+      @if (hasMinLengthError('password')) {
+        <span class="register-staff-personal__error">
+          La contraseña debe tener mínimo 6 caracteres.
+        </span>
+      }
+
+    </div>
+
+  </div>
+
+</section>

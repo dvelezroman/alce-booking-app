@@ -1,0 +1,165 @@
+<section class="register-student-page">
+
+  <div class="register-student-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <app-register-student-header>
+    </app-register-student-header>
+
+
+    <!-- =========================
+         MAIN LAYOUT
+    ========================== -->
+    <div class="register-student-page__layout">
+
+      <!-- =========================
+           LEFT COLUMN
+      ========================== -->
+      <main class="register-student-page__main">
+
+        <!-- =========================
+             FORM CARD
+        ========================== -->
+        <section class="register-student-page__form-card">
+
+          <!-- =========================
+               TOP SECTIONS
+          ========================== -->
+          <div class="register-student-page__form-grid">
+
+            <!-- PERSONAL -->
+            <div class="register-student-page__personal">
+
+              <app-register-student-personal-info
+                [registerForm]="registerForm"
+              >
+              </app-register-student-personal-info>
+
+            </div>
+
+
+            <!-- ACADEMIC -->
+            <div class="register-student-page__academic">
+
+              <app-register-student-academic-info
+                [registerForm]="registerForm"
+                [stages]="stages"
+                [modes]="modes"
+                [studentClassifications]="studentClassifications"
+              >
+              </app-register-student-academic-info>
+
+            </div>
+
+          </div>
+
+
+          <!-- =========================
+               TUTOR
+          ========================== -->
+          @if (isMinor) {
+
+            <div class="register-student-page__tutor">
+
+              <app-register-student-tutor-info
+                [registerForm]="registerForm"
+                [isMinor]="isMinor"
+              >
+              </app-register-student-tutor-info>
+
+            </div>
+
+          }
+
+
+          <!-- =========================
+               ACTIONS
+          ========================== -->
+          <div class="register-student-page__actions">
+
+            <app-register-student-actions
+              [registerForm]="registerForm"
+              (submitRequested)="onSubmit()"
+            >
+            </app-register-student-actions>
+
+          </div>
+
+        </section>
+
+
+        <!-- =========================
+             REQUIRED INFO
+        ========================== -->
+        <div class="register-student-page__required">
+
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="6"
+              y="10"
+              width="12"
+              height="9"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M9 10V7a3 3 0 0 1 6 0v3"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            Los campos marcados con
+            <strong>*</strong>
+            son obligatorios
+          </span>
+
+        </div>
+
+      </main>
+
+
+      <!-- =========================
+           RIGHT SIDEBAR
+      ========================== -->
+      <aside class="register-student-page__sidebar">
+
+        <app-register-student-summary
+          [registerForm]="registerForm"
+          [isMinor]="isMinor"
+        >
+        </app-register-student-summary>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       MODAL
+  ========================== -->
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    (close)="modal.close()"
+  >
+  </app-modal>
+
+</section>

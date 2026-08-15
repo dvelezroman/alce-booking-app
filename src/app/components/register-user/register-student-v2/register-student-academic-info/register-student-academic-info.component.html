@@ -1,0 +1,336 @@
+<section
+  class="register-student-academic"
+  [formGroup]="registerForm"
+>
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+  <header class="register-student-academic__header">
+
+    <div class="register-student-academic__header-icon">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M3 8.5 12 4l9 4.5-9 4.5-9-4.5Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M6.5 10.5v5.2c0 1.4 2.5 2.8 5.5 2.8s5.5-1.4 5.5-2.8v-5.2"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M21 9v5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+    <h2 class="register-student-academic__title">
+      Información académica
+    </h2>
+
+  </header>
+
+
+  <!-- =========================
+       GRID
+  ========================== -->
+  <div class="register-student-academic__grid">
+
+    <!-- =========================
+         CLASSIFICATION
+    ========================== -->
+    <div class="register-student-academic__field">
+
+      <label
+        for="studentClassification"
+        class="register-student-academic__label"
+      >
+        Clasificación del estudiante
+        <span>*</span>
+      </label>
+
+      <div class="register-student-academic__select-wrapper">
+
+        <select
+          id="studentClassification"
+          formControlName="studentClassification"
+          class="register-student-academic__control register-student-academic__select"
+          [class.register-student-academic__control--invalid]="
+            isInvalid('studentClassification')
+          "
+        >
+          <option value="" disabled>
+            Selecciona la clasificación
+          </option>
+
+          @for (
+            classification of studentClassifications;
+            track classification
+          ) {
+            <option [value]="classification">
+              {{ getClassificationLabel(classification) }}
+            </option>
+          }
+        </select>
+
+        <svg
+          class="register-student-academic__select-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </div>
+
+      @if (isInvalid('studentClassification')) {
+        <span class="register-student-academic__error">
+          Selecciona la clasificación del estudiante.
+        </span>
+      }
+
+    </div>
+
+
+    <!-- =========================
+         STAGE
+    ========================== -->
+    <div class="register-student-academic__field">
+
+      <label
+        for="stageId"
+        class="register-student-academic__label"
+      >
+        Stage
+        <span>*</span>
+      </label>
+
+      <div class="register-student-academic__select-wrapper">
+
+        <select
+          id="stageId"
+          formControlName="stageId"
+          class="register-student-academic__control register-student-academic__select"
+          [class.register-student-academic__control--invalid]="
+            isInvalid('stageId')
+          "
+        >
+          <option value="" disabled>
+            Selecciona el stage
+          </option>
+
+          @for (stage of stages; track stage.id) {
+            <option [value]="stage.id">
+              {{ getStageLabel(stage) }}
+            </option>
+          }
+        </select>
+
+        <svg
+          class="register-student-academic__select-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </div>
+
+      @if (isInvalid('stageId')) {
+        <span class="register-student-academic__error">
+          Selecciona el stage.
+        </span>
+      }
+
+    </div>
+
+
+    <!-- =========================
+         MODE
+    ========================== -->
+    <div class="register-student-academic__field">
+
+      <label
+        for="mode"
+        class="register-student-academic__label"
+      >
+        Modalidad
+        <span>*</span>
+      </label>
+
+      <div class="register-student-academic__select-wrapper">
+
+        <select
+          id="mode"
+          formControlName="mode"
+          class="register-student-academic__control register-student-academic__select"
+          [class.register-student-academic__control--invalid]="
+            isInvalid('mode')
+          "
+        >
+          <option value="" disabled>
+            Selecciona la modalidad
+          </option>
+
+          @for (mode of modes; track mode) {
+            <option [value]="mode">
+              {{ getModeLabel(mode) }}
+            </option>
+          }
+        </select>
+
+        <svg
+          class="register-student-academic__select-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </div>
+
+      @if (isInvalid('mode')) {
+        <span class="register-student-academic__error">
+          Selecciona la modalidad.
+        </span>
+      }
+
+    </div>
+
+
+    <!-- =========================
+         START DATE
+    ========================== -->
+    <div class="register-student-academic__field">
+
+      <label
+        for="startClassDate"
+        class="register-student-academic__label"
+      >
+        Fecha inicio de clases
+      </label>
+
+      <input
+        id="startClassDate"
+        type="date"
+        formControlName="startClassDate"
+        class="register-student-academic__control register-student-academic__date"
+      />
+
+    </div>
+
+
+    <!-- =========================
+         END DATE
+    ========================== -->
+    <div class="register-student-academic__field register-student-academic__field--full">
+
+      <label
+        for="endClassDate"
+        class="register-student-academic__label"
+      >
+        Fecha fin de clases
+        <span class="register-student-academic__optional">
+          (opcional)
+        </span>
+      </label>
+
+      <input
+        id="endClassDate"
+        type="date"
+        formControlName="endClassDate"
+        class="register-student-academic__control register-student-academic__date"
+      />
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       INFORMATION
+  ========================== -->
+  <div class="register-student-academic__information">
+
+    <div class="register-student-academic__information-icon">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M12 11v5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <circle
+          cx="12"
+          cy="8"
+          r=".9"
+          fill="currentColor"
+        />
+      </svg>
+    </div>
+
+    <p>
+      La fecha fin de clases es opcional.
+      Déjala en blanco si aún no está definida.
+    </p>
+
+  </div>
+
+</section>
