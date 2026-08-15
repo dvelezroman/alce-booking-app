@@ -1,0 +1,165 @@
+<section class="stage-assessment-page">
+
+  <div class="stage-assessment-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <app-stage-assessment-header>
+    </app-stage-assessment-header>
+
+
+    <!-- =========================
+         STAGE / ACTIONS
+         SIEMPRE FULL WIDTH
+    ========================== -->
+    <app-stage-assessment-stage-selector
+      [selectedStageId]="selectedStageId"
+      [selectedStage]="selectedStage"
+      [resourcesCount]="resourcesCount"
+      [selectedStudentsCount]="selectedStudentsCount"
+      [isRecalculating]="isRecalculating"
+      (stageSelected)="onStageSelected($event)"
+      (recalculateRequested)="confirmRecalculateProgress()"
+      (assignRequested)="openCreateAssessmentPanel()"
+    >
+    </app-stage-assessment-stage-selector>
+
+
+    <!-- =========================
+         WORKSPACE
+    ========================== -->
+    <div
+      class="stage-assessment-page__workspace"
+      [class.stage-assessment-page__workspace--panel-open]="
+        isCreatePanelOpen
+      "
+    >
+
+      <!-- =========================
+           MAIN CONTENT
+      ========================== -->
+      <main class="stage-assessment-page__main">
+
+        <!-- =========================
+             SUMMARY
+        ========================== -->
+        <app-stage-assessment-summary
+          [hasStageSelected]="!!selectedStageId"
+          [totalStudents]="stageProgressList.length"
+          [averageProgress]="averageProgress"
+          [activeAssessmentsCount]="activeAssessmentsCount"
+          [resourcesCount]="resourcesCount"
+          [stageEntryDate]="stageEntryDate"
+        >
+        </app-stage-assessment-summary>
+
+
+        <!-- =========================
+             STUDENTS
+        ========================== -->
+        <section class="stage-assessment-page__students">
+
+          <app-stage-assessment-student-list
+            [students]="pagedList"
+            [totalStudents]="total"
+            [selectedStudentIds]="selectedStudentIds"
+            [resetSelection]="resetSelectionFlag"
+            [searchTerm]="searchTerm"
+            [limit]="limit"
+            [limitOptions]="limitOptions"
+            [hasStageSelected]="!!selectedStageId"
+            (searchTermChange)="onSearchTermChange($event)"
+            (limitChange)="onLimitChange($event)"
+            (selectionChange)="onStudentSelection($event)"
+            (selectAllRequested)="selectAllStudents()"
+            (clearSelectionRequested)="clearStudentSelection()"
+            (assignRequested)="openCreateAssessmentPanel()"
+            (activeAssessmentDetailRequested)="onActiveAssessmentDetailRequested($event)"
+          >
+          </app-stage-assessment-student-list>
+
+
+          <!-- =========================
+               PAGINATION
+          ========================== -->
+          @if (selectedStageId && total > 0) {
+            <app-stage-assessment-pagination
+              [page]="page"
+              [totalPages]="totalPages"
+              [startIndex]="startIndex"
+              [endIndex]="endIndex"
+              [total]="total"
+              [canPrev]="canPrev"
+              [canNext]="canNext"
+              [paginationLabel]="paginationLabel"
+              (pageChange)="onPageChange($event)"
+              (previousRequested)="onPrev()"
+              (nextRequested)="onNext()"
+            >
+            </app-stage-assessment-pagination>
+          }
+
+        </section>
+
+      </main>
+
+
+      <!-- =========================
+           CREATE ASSESSMENT PANEL
+      ========================== -->
+      @if (isCreatePanelOpen) {
+
+        <aside class="stage-assessment-page__create-panel">
+
+          <app-stage-assessment-create-panel
+            [stageId]="selectedStageId"
+            [stage]="selectedStage"
+            [studentIds]="selectedStudentIds"
+            [resources]="resourcesList"
+            (closeRequested)="closeCreateAssessmentPanel()"
+            (cancelRequested)="closeCreateAssessmentPanel()"
+            (createRequested)="onCreateAssessment($event)"
+          >
+          </app-stage-assessment-create-panel>
+
+        </aside>
+
+      }
+
+    </div>
+
+  </div>
+
+  @if (
+    isAssessmentDetailModalOpen &&
+    selectedAssessmentStudent
+  ) {
+
+    <app-stage-assessment-active-detail-modal
+      [student]="selectedAssessmentStudent"
+      [assessments]="selectedAssessmentStudent.activeAssessments || []"
+      (closeRequested)="closeAssessmentDetailModal()"
+    >
+    </app-stage-assessment-active-detail-modal>
+
+  }
+
+
+  <!-- =========================
+       NOTIFICATION /
+       RECALCULATE CONFIRMATION
+  ========================== -->
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm?.()"
+    (close)="modal.close()"
+  >
+  </app-modal>
+
+</section>

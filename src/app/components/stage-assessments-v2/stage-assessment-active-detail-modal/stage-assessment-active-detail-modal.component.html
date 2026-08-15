@@ -1,0 +1,380 @@
+<p>stage-assessment-active-detail-modal works!</p>
+<div
+  class="assessment-detail-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="assessment-detail-title"
+>
+
+  <!-- BACKDROP -->
+
+  <button
+    type="button"
+    class="assessment-detail-modal__backdrop"
+    aria-label="Cerrar detalle"
+    (click)="onClose()"
+  >
+  </button>
+
+
+  <!-- =========================
+       MODAL
+  ========================== -->
+
+  <section class="assessment-detail-modal__panel">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="assessment-detail-modal__header">
+
+      <div class="assessment-detail-modal__header-main">
+
+        <div
+          class="assessment-detail-modal__header-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="5"
+              width="16"
+              height="15"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M8 3v4M16 3v4M4 9h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M8.5 13h7M8.5 16h4.5"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+
+        <div class="assessment-detail-modal__header-text">
+
+          <h2
+            id="assessment-detail-title"
+            class="assessment-detail-modal__title"
+          >
+            Evaluaciones activas
+          </h2>
+
+          <p class="assessment-detail-modal__subtitle">
+            Detalle de las evaluaciones asignadas al estudiante
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="assessment-detail-modal__close"
+        aria-label="Cerrar"
+        (click)="onClose()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m6 6 12 12M18 6 6 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+
+    </header>
+
+
+    <!-- =========================
+         STUDENT
+    ========================== -->
+
+    <div class="assessment-detail-modal__student">
+
+      <div class="assessment-detail-modal__avatar">
+        {{ studentInitials }}
+      </div>
+
+      <div class="assessment-detail-modal__student-info">
+
+        <span class="assessment-detail-modal__student-label">
+          Estudiante
+        </span>
+
+        <strong class="assessment-detail-modal__student-name">
+          {{ studentName }}
+        </strong>
+
+        <span class="assessment-detail-modal__student-email">
+          {{ studentEmail }}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         ASSESSMENTS
+    ========================== -->
+
+    <div class="assessment-detail-modal__content">
+
+      @for (
+        assessment of assessments;
+        track assessment.id
+      ) {
+
+        <article class="assessment-detail-modal__assessment">
+
+          <!-- ASSESSMENT HEADER -->
+
+          <div class="assessment-detail-modal__assessment-header">
+
+            <div class="assessment-detail-modal__assessment-heading">
+
+              <span class="assessment-detail-modal__assessment-label">
+                Evaluación
+              </span>
+
+              <strong class="assessment-detail-modal__assessment-name">
+                {{ getAssessmentName(assessment) }}
+              </strong>
+
+            </div>
+
+
+            <span
+              class="assessment-detail-modal__status"
+              [class.assessment-detail-modal__status--active]="
+                getStatusClass(assessment) === 'active'
+              "
+              [class.assessment-detail-modal__status--expired]="
+                getStatusClass(assessment) === 'expired'
+              "
+              [class.assessment-detail-modal__status--finished]="
+                getStatusClass(assessment) === 'finished'
+              "
+            >
+              {{ getStatusLabel(assessment) }}
+            </span>
+
+          </div>
+
+
+          <!-- INFORMATION GRID -->
+
+          <div class="assessment-detail-modal__grid">
+
+            <!-- ASSIGNED -->
+
+            <div class="assessment-detail-modal__item">
+
+              <span class="assessment-detail-modal__item-icon">
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <rect
+                    x="4"
+                    y="5"
+                    width="16"
+                    height="15"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+
+                  <path
+                    d="M8 3v4M16 3v4M4 9h16"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+
+              </span>
+
+
+              <div class="assessment-detail-modal__item-content">
+
+                <span class="assessment-detail-modal__item-label">
+                  Asignado
+                </span>
+
+                <strong class="assessment-detail-modal__item-value">
+                  {{ formatDate(assessment.createdAt) }}
+                </strong>
+
+                <span class="assessment-detail-modal__item-secondary">
+                  {{ formatTime(assessment.createdAt) }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- DUE DATE -->
+
+            <div class="assessment-detail-modal__item">
+
+              <span
+                class="
+                  assessment-detail-modal__item-icon
+                  assessment-detail-modal__item-icon--warning
+                "
+              >
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="8"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+
+                  <path
+                    d="M12 7.5V12l3 2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+              </span>
+
+
+              <div class="assessment-detail-modal__item-content">
+
+                <span class="assessment-detail-modal__item-label">
+                  Fecha límite
+                </span>
+
+                <strong class="assessment-detail-modal__item-value">
+                  {{ formatDate(assessment.dueDate) }}
+                </strong>
+
+                <span class="assessment-detail-modal__item-secondary">
+                  {{ formatTime(assessment.dueDate) }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- CREATOR -->
+
+            <div
+              class="
+                assessment-detail-modal__item
+                assessment-detail-modal__item--full
+              "
+            >
+
+              <span
+                class="
+                  assessment-detail-modal__item-icon
+                  assessment-detail-modal__item-icon--creator
+                "
+              >
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="8"
+                    r="3"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+
+                  <path
+                    d="M5.5 19c.5-3.7 2.7-5.8 6.5-5.8s6 2.1 6.5 5.8"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+
+              </span>
+
+
+              <div class="assessment-detail-modal__item-content">
+
+                <span class="assessment-detail-modal__item-label">
+                  Asignado por
+                </span>
+
+                <strong class="assessment-detail-modal__item-value">
+                  {{ getCreatorName(assessment) }}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      } @empty {
+
+        <div class="assessment-detail-modal__empty">
+          No existen evaluaciones activas para este estudiante.
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="assessment-detail-modal__footer">
+
+      <button
+        type="button"
+        class="assessment-detail-modal__button"
+        (click)="onClose()"
+      >
+        Cerrar
+      </button>
+
+    </footer>
+
+  </section>
+
+</div>

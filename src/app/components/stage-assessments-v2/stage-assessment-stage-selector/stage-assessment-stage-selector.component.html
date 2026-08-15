@@ -1,0 +1,310 @@
+<section class="stage-selector">
+
+  <!-- =========================
+       STAGE SELECT
+  ========================== -->
+
+  <div class="stage-selector__selection">
+
+    <label
+      class="stage-selector__label"
+      for="stage"
+    >
+      Etapa (Stage)
+    </label>
+
+    <div class="stage-selector__select-wrapper">
+
+      <span
+        class="stage-selector__select-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 3 3.5 7.5 12 12l8.5-4.5L12 3Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m5.5 11 6.5 3.5 6.5-3.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m5.5 15 6.5 3.5 6.5-3.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <select
+        id="stage"
+        class="stage-selector__select"
+        [ngModel]="selectedStageId"
+        (ngModelChange)="onStageChange($event)"
+        [disabled]="isLoadingStages"
+      >
+
+        <option
+          [ngValue]="undefined"
+          disabled
+        >
+          {{
+            isLoadingStages
+              ? 'Cargando etapas...'
+              : 'Seleccionar etapa'
+          }}
+        </option>
+
+        @for (
+          stage of stages;
+          track stage.id
+        ) {
+          <option
+            [ngValue]="stage.id"
+          >
+            {{ getStageLabel(stage) }}
+          </option>
+        }
+
+      </select>
+
+      <span
+        class="stage-selector__chevron"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m7 9.5 5 5 5-5"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+    </div>
+
+    <p class="stage-selector__helper">
+      Selecciona una etapa para ver los estudiantes y asignar evaluaciones
+    </p>
+
+  </div>
+
+
+  <!-- =========================
+       STAGE INFORMATION
+  ========================== -->
+
+  <div
+    class="stage-selector__information"
+    [class.stage-selector__information--empty]="
+      !selectedStageId
+    "
+  >
+
+    <div
+      class="stage-selector__information-icon"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M4.5 5.5c2.5-.8 5-.4 7.5 1.2v12c-2.5-1.6-5-2-7.5-1.2v-12Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M19.5 5.5c-2.5-.8-5-.4-7.5 1.2v12c2.5-1.6 5-2 7.5-1.2v-12Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+
+    <div class="stage-selector__information-content">
+
+      <span class="stage-selector__information-label">
+        Información de la etapa
+      </span>
+
+      @if (selectedStageId) {
+
+        <strong class="stage-selector__information-title">
+          {{ selectedStageLabel }}
+        </strong>
+
+        <div class="stage-selector__information-meta">
+
+          <span>
+            ID: {{ selectedStageId }}
+          </span>
+
+          <span
+            class="stage-selector__information-dot"
+            aria-hidden="true"
+          >
+            •
+          </span>
+
+          <span>
+            {{ resourcesCount }}
+            {{
+              resourcesCount === 1
+                ? 'recurso disponible'
+                : 'recursos disponibles'
+            }}
+          </span>
+
+        </div>
+
+      } @else {
+
+        <strong class="stage-selector__information-title">
+          Sin etapa seleccionada
+        </strong>
+
+        <span class="stage-selector__information-empty-text">
+          Selecciona una etapa para visualizar su información.
+        </span>
+
+      }
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       ACTIONS
+  ========================== -->
+
+  <div class="stage-selector__actions">
+
+    <button
+      type="button"
+      class="
+        stage-selector__button
+        stage-selector__button--secondary
+      "
+      [disabled]="
+        !selectedStageId ||
+        isRecalculating
+      "
+      (click)="onRecalculate()"
+    >
+
+      <span
+        class="stage-selector__button-icon"
+        [class.stage-selector__button-icon--loading]="
+          isRecalculating
+        "
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M20 7v5h-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M4.7 9A8 8 0 0 1 18.6 6.2L20 8"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M4 17v-5h5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M19.3 15A8 8 0 0 1 5.4 17.8L4 16"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span>
+        {{
+          isRecalculating
+            ? 'Re-calculando...'
+            : 'Re-calcular progreso'
+        }}
+      </span>
+
+    </button>
+
+
+    <button
+      type="button"
+      class="
+        stage-selector__button
+        stage-selector__button--primary
+      "
+      [disabled]="
+        !selectedStageId ||
+        selectedStudentsCount === 0
+      "
+      (click)="onAssignAssessment()"
+    >
+
+      <span
+        class="stage-selector__button-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 5v14M5 12h14"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span>
+        Asignar evaluación
+      </span>
+
+    </button>
+
+  </div>
+
+</section>

@@ -1,0 +1,282 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.stage-assessment-page {
+  width: calc(100% - 76px);
+  min-height: 100vh;
+
+  margin-left: 64px;
+
+  padding: 1rem 1rem 2rem;
+
+  overflow-x: hidden;
+
+  background: #fbfbfd;
+  color: #252c40;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.stage-assessment-page__container {
+  width: min(100%, 1500px);
+  min-width: 0;
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+}
+
+/* =========================
+   CHILDREN
+========================= */
+
+app-stage-assessment-header,
+app-stage-assessment-stage-selector,
+app-stage-assessment-summary,
+app-stage-assessment-student-list,
+app-stage-assessment-pagination,
+app-stage-assessment-create-panel {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================
+   WORKSPACE
+
+   Cerrado:
+   1 sola columna.
+
+   Abierto:
+   contenido + panel derecho.
+========================= */
+
+.stage-assessment-page__workspace {
+  width: 100%;
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr);
+
+  align-items: start;
+
+  gap: 1rem;
+
+  transition:
+    grid-template-columns .2s ease;
+}
+
+.stage-assessment-page__workspace--panel-open {
+  grid-template-columns:
+    minmax(0, 1fr)
+    25rem;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.stage-assessment-page__main {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+}
+
+/* =========================
+   STUDENTS CARD
+========================= */
+
+.stage-assessment-page__students {
+  width: 100%;
+  min-width: 0;
+
+  overflow: hidden;
+
+  border: 1px solid #e3e5ec;
+  border-radius: .75rem;
+
+  background: #fff;
+
+  box-shadow:
+    0 .12rem .5rem rgba(24, 31, 50, .025);
+}
+
+/* =========================
+   PAGINATION
+========================= */
+
+.stage-assessment-page__students
+  app-stage-assessment-pagination {
+  border-top: 1px solid #eceef2;
+}
+
+/* =========================
+   CREATE PANEL
+========================= */
+
+.stage-assessment-page__create-panel {
+  width: 100%;
+  min-width: 0;
+
+  position: sticky;
+  top: 1rem;
+
+  align-self: start;
+}
+
+/* =========================
+   LARGE DESKTOP
+========================= */
+
+@media (min-width: 1600px) {
+
+  .stage-assessment-page__container {
+    max-width: 1500px;
+  }
+
+  .stage-assessment-page__workspace--panel-open {
+    grid-template-columns:
+      minmax(0, 1fr)
+      26rem;
+  }
+
+}
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1350px) {
+
+  .stage-assessment-page {
+    padding:
+      .9rem
+      .9rem
+      1.75rem;
+  }
+
+  .stage-assessment-page__workspace--panel-open {
+    grid-template-columns:
+      minmax(0, 1fr)
+      22.5rem;
+  }
+
+}
+
+/* =========================
+   SMALL DESKTOP
+========================= */
+
+@media (max-width: 1150px) {
+
+  .stage-assessment-page__container,
+  .stage-assessment-page__main,
+  .stage-assessment-page__workspace {
+    gap: .85rem;
+  }
+
+  .stage-assessment-page__workspace--panel-open {
+    grid-template-columns:
+      minmax(0, 1fr)
+      21rem;
+  }
+
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1000px) {
+
+  /*
+   * A esta resolución ya no conviene comprimir
+   * la tabla y el panel horizontalmente.
+   */
+
+  .stage-assessment-page__workspace,
+  .stage-assessment-page__workspace--panel-open {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-assessment-page__create-panel {
+    position: static;
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+
+  .stage-assessment-page {
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: 0;
+
+    background: #fbfbfd;
+  }
+
+  .stage-assessment-page__container {
+    width: 100%;
+
+    margin: 0;
+
+    padding: .7rem;
+
+    gap: .75rem;
+  }
+
+  .stage-assessment-page__workspace,
+  .stage-assessment-page__main {
+    gap: .75rem;
+  }
+
+  .stage-assessment-page__students {
+    border-radius: .65rem;
+  }
+
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+
+  .stage-assessment-page__container {
+    padding: .5rem;
+  }
+
+  .stage-assessment-page__workspace,
+  .stage-assessment-page__main {
+    gap: .65rem;
+  }
+
+  .stage-assessment-page__students {
+    border-radius: .58rem;
+  }
+
+}

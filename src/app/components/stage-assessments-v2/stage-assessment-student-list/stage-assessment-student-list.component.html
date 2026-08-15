@@ -1,0 +1,714 @@
+<section class="student-list">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="student-list__header">
+
+    <div class="student-list__heading">
+
+      <h2 class="student-list__title">
+        Lista de estudiantes
+      </h2>
+
+      <p class="student-list__subtitle">
+        Selecciona estudiantes y asígnales evaluaciones
+      </p>
+
+    </div>
+
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+
+    <div class="student-list__filters">
+
+      <div class="student-list__search">
+
+        <span
+          class="student-list__search-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <input
+          type="text"
+          class="student-list__search-input"
+          placeholder="Buscar por nombre o apellido..."
+          [ngModel]="searchTerm"
+          (ngModelChange)="searchTermChange.emit($event)"
+          [disabled]="!hasStageSelected"
+        />
+
+      </div>
+
+
+      <div class="student-list__limit-wrapper">
+
+        <select
+          class="student-list__limit"
+          [ngModel]="limit"
+          (ngModelChange)="limitChange.emit($event)"
+          [disabled]="!hasStageSelected"
+        >
+          @for (
+            option of limitOptions;
+            track option
+          ) {
+            <option [ngValue]="option">
+              {{ option }} por página
+            </option>
+          }
+        </select>
+
+        <span
+          class="student-list__limit-chevron"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m7 9.5 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+        EMPTY STATE
+    ========================== -->
+
+    @if (!hasStageSelected || students.length === 0) {
+
+    <div class="student-list__empty">
+
+        <div class="student-list__empty-icon">
+
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+        >
+            <circle
+            cx="12"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.6"
+            />
+
+            <path
+            d="M5.5 19c.5-3.7 2.7-5.8 6.5-5.8s6 2.1 6.5 5.8"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            />
+        </svg>
+
+        </div>
+
+        <strong>
+        {{
+            !hasStageSelected
+            ? 'Selecciona una etapa'
+            : 'No se encontraron estudiantes'
+        }}
+        </strong>
+
+        <span>
+        {{
+            !hasStageSelected
+            ? 'Los estudiantes de la etapa seleccionada aparecerán aquí.'
+            : 'No existen estudiantes para mostrar en esta etapa.'
+        }}
+        </span>
+
+    </div>
+
+    } @else {
+    <!-- =========================
+         SELECTION ACTIONS
+    ========================== -->
+
+    <div class="student-list__selection-bar">
+
+      <div class="student-list__selection-count">
+
+        <strong>
+          {{ selectedStudentIds.length }}
+        </strong>
+
+        <span>
+          {{
+            selectedStudentIds.length === 1
+              ? 'estudiante seleccionado'
+              : 'estudiantes seleccionados'
+          }}
+        </span>
+
+      </div>
+
+
+      <div class="student-list__selection-actions">
+
+        <label class="student-list__select-all">
+
+          <input
+            type="checkbox"
+            class="student-list__checkbox"
+            [checked]="allStudentsSelected"
+            (change)="selectAllRequested.emit()"
+          />
+
+          <span>
+            Seleccionar todos
+          </span>
+
+        </label>
+
+
+        <button
+          type="button"
+          class="
+            student-list__action-button
+            student-list__action-button--primary
+          "
+          [disabled]="selectedStudentIds.length === 0"
+          (click)="assignRequested.emit()"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="4"
+              y="5"
+              width="16"
+              height="15"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M8 3v4M16 3v4M4 9h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M12 12v5M9.5 14.5h5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            Asignar evaluación
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="
+            student-list__action-button
+            student-list__action-button--secondary
+          "
+          [disabled]="selectedStudentIds.length === 0"
+          (click)="clearSelectionRequested.emit()"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6 6 12 12M18 6 6 18"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            Limpiar selección
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         TABLE
+    ========================== -->
+
+    <div class="student-list__table-wrapper">
+
+      <table class="student-list__table">
+
+        <thead>
+
+          <tr>
+
+            <th class="student-list__column-check">
+
+              <input
+                type="checkbox"
+                class="student-list__checkbox"
+                [checked]="allStudentsSelected"
+                (change)="selectAllRequested.emit()"
+              />
+
+            </th>
+
+
+            <th class="student-list__column-student">
+              <div class="student-list__th-content">
+                Estudiante
+              </div>
+            </th>
+
+
+            <th>
+              <div class="student-list__th-content">
+                Inicio de stage
+              </div>
+            </th>
+
+
+            <th>
+              <div class="student-list__th-content">
+                Progreso
+              </div>
+            </th>
+
+
+            <th>
+              <div class="student-list__th-content">
+                Evaluaciones asignadas
+              </div>
+            </th>
+
+
+            <th>
+              <div class="student-list__th-content">
+                Evaluaciones
+              </div>
+            </th>
+
+
+            <th>
+              Recursos
+            </th>
+
+
+            <th class="student-list__column-actions"></th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            item of students;
+            track item.studentId
+          ) {
+
+            <tr
+              [class.student-list__row--selected]="
+                selectedStudentIds.includes(item.studentId)
+              "
+            >
+
+              <!-- CHECK -->
+
+              <td class="student-list__column-check">
+
+                <input
+                  type="checkbox"
+                  class="student-list__checkbox"
+                  [checked]="
+                    selectedStudentIds.includes(item.studentId)
+                  "
+                  [disabled]="hasActiveAssessment(item)"
+                  (change)="toggleStudent(item.studentId)"
+                />
+              </td>
+
+
+              <!-- STUDENT -->
+
+              <td class="student-list__column-student">
+
+                <div class="student-list__student">
+
+                  <div class="student-list__avatar">
+
+                    {{
+                      (
+                        item.student.user?.firstName?.charAt(0) ||
+                        ''
+                      ) +
+                      (
+                        item.student.user?.lastName?.charAt(0) ||
+                        ''
+                      )
+                    }}
+
+                  </div>
+
+
+                  <div class="student-list__student-info">
+
+                    <strong class="student-list__student-name">
+
+                      {{
+                        item.student.user?.firstName || ''
+                      }}
+
+                      {{
+                        item.student.user?.lastName || ''
+                      }}
+
+                    </strong>
+
+                    <span class="student-list__student-email">
+                      {{
+                        item.student.user?.email || 'Sin correo'
+                      }}
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <!-- ENTRY DATE -->
+
+              <td>
+
+                @if (item.stageEntryDate) {
+
+                  <div class="student-list__date">
+
+                    <span>
+                      {{
+                        item.stageEntryDate
+                          | date:'dd/MM/yyyy'
+                      }}
+                    </span>
+
+                    <span class="student-list__secondary-text">
+                      {{
+                        item.stageEntryDate
+                          | date:'HH:mm'
+                      }}
+                    </span>
+
+                  </div>
+
+                } @else {
+
+                  <span class="student-list__empty-value">
+                    —
+                  </span>
+
+                }
+
+              </td>
+
+
+              <!-- PROGRESS -->
+
+              <td>
+
+                <div class="student-list__progress">
+
+                  <strong>
+                    {{
+                      item.progress || 0
+                    }}%
+                  </strong>
+
+                  <div class="student-list__progress-track">
+
+                    <div
+                      class="student-list__progress-value"
+                      [class.student-list__progress-value--high]="
+                        (item.progress || 0) >= 70
+                      "
+                      [class.student-list__progress-value--medium]="
+                        (item.progress || 0) >= 40 &&
+                        (item.progress || 0) < 70
+                      "
+                      [class.student-list__progress-value--low]="
+                        (item.progress || 0) > 0 &&
+                        (item.progress || 0) < 40
+                      "
+                      [style.width.%]="
+                        item.progress || 0
+                      "
+                    >
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <!-- ASSESSMENTS -->
+
+              <td>
+
+                <div class="student-list__assessment-data">
+
+                  <span>
+                    {{
+                      item.activeAssessments?.length || 0
+                    }}
+
+                    {{
+                      (item.activeAssessments?.length || 0) === 1
+                        ? 'evaluación'
+                        : 'evaluaciones'
+                    }}
+                  </span>
+
+                  @if (
+                    (item.activeAssessments?.length || 0) > 0
+                  ) {
+
+                    <span class="student-list__badge student-list__badge--pending">
+                      Activas
+                    </span>
+
+                  } @else {
+
+                    <span class="student-list__badge student-list__badge--empty">
+                      —
+                    </span>
+
+                  }
+
+                </div>
+
+              </td>
+
+
+            <!-- =========================
+                ASSESSMENTS STATUS
+            ========================== -->
+
+            <td>
+
+              <div class="student-list__assessment-types">
+
+                <!-- SPEAKING -->
+
+                <span
+                  class="student-list__assessment-type"
+                  [class.student-list__assessment-type--approved]="
+                    getAssessmentTypeStatus(
+                      item,
+                      'Speaking'
+                    ) === 'approved'
+                  "
+                  [class.student-list__assessment-type--failed]="
+                    getAssessmentTypeStatus(
+                      item,
+                      'Speaking'
+                    ) === 'failed'
+                  "
+                  [class.student-list__assessment-type--pending]="
+                    getAssessmentTypeStatus(
+                      item,
+                      'Speaking'
+                    ) === 'pending'
+                  "
+                >
+                  Speaking
+                </span>
+
+
+                <!-- GRAMMAR -->
+
+                <span
+                  class="student-list__assessment-type"
+                  [class.student-list__assessment-type--approved]="
+                    getAssessmentTypeStatus(
+                      item,
+                      'Grammar'
+                    ) === 'approved'
+                  "
+                  [class.student-list__assessment-type--failed]="
+                    getAssessmentTypeStatus(
+                      item,
+                      'Grammar'
+                    ) === 'failed'
+                  "
+                  [class.student-list__assessment-type--pending]="
+                    getAssessmentTypeStatus(
+                      item,
+                      'Grammar'
+                    ) === 'pending'
+                  "
+                >
+                  Grammar
+                </span>
+
+              </div>
+
+            </td>
+
+
+              <!-- ACTIVE ASSESSMENT RESOURCES -->
+
+              <td>
+
+                @let activeResources =
+                  getActiveAssessmentResources(item);
+
+                @if (activeResources.length > 0) {
+
+                  <div class="student-list__resources">
+
+                    @for (
+                      resource of activeResources;
+                      track resource
+                    ) {
+
+                      <span
+                        class="
+                          student-list__badge
+                          student-list__badge--resources
+                        "
+                      >
+                        {{ resource }}
+                      </span>
+
+                    }
+
+                  </div>
+
+                } @else {
+
+                  <span class="student-list__empty-value">
+                    —
+                  </span>
+
+                }
+
+              </td>
+
+
+              <!-- OPTIONS -->
+
+              <td class="student-list__column-actions">
+
+                <button
+                  type="button"
+                  class="student-list__menu-button"
+                  aria-label="Ver evaluación activa"
+                  [disabled]="!hasActiveAssessment(item)"
+                  (click)="onViewActiveAssessment(item)"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <circle
+                      cx="12"
+                      cy="5"
+                      r="1.4"
+                    />
+
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="1.4"
+                    />
+
+                    <circle
+                      cx="12"
+                      cy="19"
+                      r="1.4"
+                    />
+                  </svg>
+                </button>
+
+              </td>
+
+            </tr>
+
+          } @empty {
+
+            <tr>
+
+              <td
+                colspan="8"
+                class="student-list__no-results"
+              >
+                No se encontraron estudiantes.
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  }
+
+</section>

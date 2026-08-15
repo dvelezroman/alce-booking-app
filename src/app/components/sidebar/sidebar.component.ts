@@ -104,6 +104,7 @@ navItems: SidebarNavItem[] = [
   // { icon: 'reportes', text: 'Progreso', route: '/dashboard/reports-progress', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'reportes', text: 'Progreso del estudiante', route: '/dashboard/reports-progress-v2', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'test', text: 'Evaluar Estudiante', route: '/dashboard/assessment', roles: [UserRole.INSTRUCTOR] },
+  // { icon: 'test', text: 'Asignar Evaluación', route: '/dashboard/stage-assessment', roles: [UserRole.ADMIN] },
   { icon: 'test', text: 'Asignar Evaluación', route: '/dashboard/stage-assessment', roles: [UserRole.ADMIN] },
   { icon: 'test', text: 'Evaluaciones Asignadas', route: '/dashboard/stage-assessment-list', roles: [UserRole.ADMIN] },
   { icon: 'assessment', text: 'Exámenes plataforma', route: '/dashboard/platform-assessments-list', roles: [UserRole.ADMIN] },

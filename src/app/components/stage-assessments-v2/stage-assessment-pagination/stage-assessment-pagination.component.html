@@ -1,0 +1,142 @@
+<nav
+  class="assessment-pagination"
+  aria-label="Paginación de estudiantes"
+>
+
+  <!-- =========================
+       INFORMATION
+  ========================== -->
+
+  <div class="assessment-pagination__information">
+    {{ paginationLabel }}
+  </div>
+
+
+  <!-- =========================
+       CONTROLS
+  ========================== -->
+
+  <div class="assessment-pagination__controls">
+
+    <!-- PREVIOUS -->
+
+    <button
+      type="button"
+      class="
+        assessment-pagination__button
+        assessment-pagination__button--navigation
+      "
+      [disabled]="!canPrev"
+      (click)="onPrevious()"
+    >
+
+      <span
+        class="assessment-pagination__navigation-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m14.5 7-5 5 5 5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <span>
+        Anterior
+      </span>
+
+    </button>
+
+
+    <!-- =========================
+         PAGES
+    ========================== -->
+
+    <div class="assessment-pagination__pages">
+
+      @for (
+        item of visiblePages;
+        track trackPage($index, item)
+      ) {
+
+        @if (item === 'ellipsis') {
+
+          <span
+            class="assessment-pagination__ellipsis"
+            aria-hidden="true"
+          >
+            ...
+          </span>
+
+        } @else {
+
+          <button
+            type="button"
+            class="assessment-pagination__page"
+            [class.assessment-pagination__page--active]="
+              item === page
+            "
+            [attr.aria-current]="
+              item === page
+                ? 'page'
+                : null
+            "
+            (click)="onPageSelect(item)"
+          >
+            {{ item }}
+          </button>
+
+        }
+
+      }
+
+    </div>
+
+
+    <!-- NEXT -->
+
+    <button
+      type="button"
+      class="
+        assessment-pagination__button
+        assessment-pagination__button--navigation
+        assessment-pagination__button--next
+      "
+      [disabled]="!canNext"
+      (click)="onNext()"
+    >
+
+      <span>
+        Siguiente
+      </span>
+
+      <span
+        class="assessment-pagination__navigation-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m9.5 7 5 5-5 5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+    </button>
+
+  </div>
+
+</nav>
