@@ -1,32 +1,19 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  OnInit,
-} from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
-import {
-  Router,
-  RouterModule,
-} from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { ModalComponent } from '../../../components/modal/modal.component';
+import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 
 import {
-  ModalDto,
-  modalInitializer,
-} from '../../../components/modal/modal.dto';
-
-import {
-  Stage,
-  RegisterStudentDto,
   Mode,
+  Stage,
   StudentClassification,
 } from '../../../services/dtos/student.dto';
 
@@ -39,21 +26,15 @@ import { StagesService } from '../../../services/stages.service';
 import { StudentsService } from '../../../services/students.service';
 import { UsersService } from '../../../services/users.service';
 
-
 /* =========================
    CHILD COMPONENTS
 ========================= */
 
 import { RegisterStudentHeaderComponent } from '../../../components/register-user/register-student-v2/register-student-header/register-student-header.component';
-
 import { RegisterStudentPersonalInfoComponent } from '../../../components/register-user/register-student-v2/register-student-personal-info/register-student-personal-info.component';
-
 import { RegisterStudentAcademicInfoComponent } from '../../../components/register-user/register-student-v2/register-student-academic-info/register-student-academic-info.component';
-
 import { RegisterStudentTutorInfoComponent } from '../../../components/register-user/register-student-v2/register-student-tutor-info/register-student-tutor-info.component';
-
 import { RegisterStudentSummaryComponent } from '../../../components/register-user/register-student-v2/register-student-summary/register-student-summary.component';
-
 import { RegisterStudentActionsComponent } from '../../../components/register-user/register-student-v2/register-student-actions/register-student-actions.component';
 
 
@@ -65,7 +46,6 @@ import { RegisterStudentActionsComponent } from '../../../components/register-us
     RouterModule,
     ReactiveFormsModule,
     ModalComponent,
-
     RegisterStudentHeaderComponent,
     RegisterStudentPersonalInfoComponent,
     RegisterStudentAcademicInfoComponent,
@@ -79,37 +59,22 @@ import { RegisterStudentActionsComponent } from '../../../components/register-us
 export class RegisterStudentV2Component implements OnInit {
 
   /* =========================
-     MODAL
+     STATE
   ========================= */
 
-  modal: ModalDto =
-    modalInitializer();
-
-
-  /* =========================
-     FORM
-  ========================= */
+  modal: ModalDto = modalInitializer();
 
   registerForm: FormGroup;
 
-
-  /* =========================
-     DATA
-  ========================= */
-
   stages: Stage[] = [];
-
   instructors: UserDto[] = [];
 
   isMinor = false;
 
-  modes =
-    Object.values(Mode);
+  modes = Object.values(Mode);
 
   studentClassifications =
-    Object.values(
-      StudentClassification,
-    );
+    Object.values(StudentClassification);
 
 
   /* =========================
@@ -123,86 +88,45 @@ export class RegisterStudentV2Component implements OnInit {
     private stagesService: StagesService,
     private router: Router,
   ) {
+    this.registerForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      idNumber: ['', Validators.required],
+      email: ['', Validators.required],
 
-    this.registerForm =
-      this.fb.group({
-
-        firstName: [
-          '',
+      emailAddress: [
+        '',
+        [
           Validators.required,
+          Validators.email,
         ],
+      ],
 
-        lastName: [
-          '',
+      password: [
+        '',
+        [
           Validators.required,
+          Validators.minLength(6),
         ],
+      ],
 
-        idNumber: [
-          '',
-          Validators.required,
-        ],
+      birthday: ['', Validators.required],
 
-        email: [
-          '',
-          Validators.required,
-        ],
+      studentClassification: [
+        '',
+        Validators.required,
+      ],
 
-        emailAddress: [
-          '',
-          [
-            Validators.required,
-            Validators.email,
-          ],
-        ],
+      stageId: ['', Validators.required],
+      mode: ['', Validators.required],
 
-        password: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(6),
-          ],
-        ],
+      startClassDate: [''],
+      endClassDate: [''],
 
-        birthday: [
-          '',
-          Validators.required,
-        ],
-
-        studentClassification: [
-          '',
-          Validators.required,
-        ],
-
-        stageId: [
-          '',
-          Validators.required,
-        ],
-
-        mode: [
-          '',
-          Validators.required,
-        ],
-
-        startClassDate: [
-          '',
-        ],
-
-        endClassDate: [
-          '',
-        ],
-
-        tutorName: [
-          '',
-        ],
-
-        tutorEmail: [
-          '',
-        ],
-
-        tutorPhone: [
-          '',
-        ],
-      });
+      tutorName: [''],
+      tutorEmail: [''],
+      tutorPhone: [''],
+    });
   }
 
 
@@ -211,23 +135,28 @@ export class RegisterStudentV2Component implements OnInit {
   ========================= */
 
   ngOnInit(): void {
+    this.loadStages();
+    this.loadInstructors();
+    this.listenBirthdayChanges();
+  }
 
-    // Obtener stages
+
+  /* =========================
+     LOAD DATA
+  ========================= */
+
+  private loadStages(): void {
     this.stagesService
       .getAll()
       .subscribe(
-        (
-          stages,
-        ) => {
+        stages => {
           this.stages =
-            this.filterAndSortStages(
-              stages,
-            );
+            this.filterAndSortStages(stages);
         },
       );
+  }
 
-
-    // Obtener instructores para el campo tutor
+  private loadInstructors(): void {
     this.usersService
       .searchUsers(
         0,
@@ -239,45 +168,31 @@ export class RegisterStudentV2Component implements OnInit {
         UserRole.INSTRUCTOR,
       )
       .subscribe({
+        next: (res) => {
+          this.instructors = res.users;
+        },
 
-        next: (
-          res,
-        ) =>
-          this.instructors =
-            res.users,
-
-        error: (
-          err,
-        ) =>
+        error: (err) => {
           console.error(
             'Error cargando instructores:',
             err,
-          ),
+          );
+        },
       });
+  }
 
-
-    // Detectar si el estudiante es menor
+  private listenBirthdayChanges(): void {
     this.registerForm
       .get('birthday')
       ?.valueChanges
       .subscribe(
-        (
-          birthday: string,
-        ) => {
-
+        (birthday: string) => {
           this.isMinor =
-            this.calculateAge(
-              birthday,
-            ) < 18;
+            this.calculateAge(birthday) < 18;
 
-          const tutorControl =
+          if (!this.isMinor) {
             this.registerForm
-              .get('tutorId');
-
-          if (
-            !this.isMinor
-          ) {
-            tutorControl
+              .get('tutorId')
               ?.setValue('');
           }
         },
@@ -292,35 +207,28 @@ export class RegisterStudentV2Component implements OnInit {
   private calculateAge(
     birthDateString: string,
   ): number {
-
-    if (
-      !birthDateString
-    ) {
+    if (!birthDateString) {
       return 0;
     }
 
-    const today =
-      new Date();
-
+    const today = new Date();
     const birthDate =
-      new Date(
-        birthDateString,
-      );
+      new Date(birthDateString);
 
     let age =
       today.getFullYear() -
       birthDate.getFullYear();
 
-    const m =
+    const monthDifference =
       today.getMonth() -
       birthDate.getMonth();
 
     if (
-      m < 0 ||
+      monthDifference < 0 ||
       (
-        m === 0 &&
+        monthDifference === 0 &&
         today.getDate() <
-        birthDate.getDate()
+          birthDate.getDate()
       )
     ) {
       age--;
@@ -337,58 +245,35 @@ export class RegisterStudentV2Component implements OnInit {
   private filterAndSortStages(
     stages: Stage[],
   ): Stage[] {
+    const getStageNumber = (
+      description: string,
+    ): number => {
+      const match =
+        description.match(
+          /\d+(\.\d+)?/,
+        );
+
+      return match
+        ? parseFloat(match[0])
+        : 0;
+    };
 
     return stages
-
       .filter(
         stage => {
-
-          const desc =
-            stage.description
-              .toUpperCase();
+          const description =
+            stage.description.toUpperCase();
 
           return (
-            !desc.startsWith(
-              'K-STG',
-            ) &&
-            desc !==
-              'STAGE 1.0'
+            !description.startsWith('K-STG') &&
+            description !== 'STAGE 1.0'
           );
         },
       )
-
       .sort(
-        (
-          a,
-          b,
-        ) => {
-
-          const getNumber =
-            (
-              desc: string,
-            ) => {
-
-              const match =
-                desc.match(
-                  /\d+(\.\d+)?/,
-                );
-
-              return match
-                ? parseFloat(
-                    match[0],
-                  )
-                : 0;
-            };
-
-          return (
-            getNumber(
-              a.description,
-            ) -
-            getNumber(
-              b.description,
-            )
-          );
-        },
+        (a, b) =>
+          getStageNumber(a.description) -
+          getStageNumber(b.description),
       );
   }
 
@@ -398,331 +283,168 @@ export class RegisterStudentV2Component implements OnInit {
   ========================= */
 
   onSubmit(): void {
-
-    if (
-      this.registerForm.invalid
-    ) {
-
+    if (this.registerForm.invalid) {
       this.markFormGroupTouched(
         this.registerForm,
       );
 
-      this.showModal(
-        this.createModalParams(
-          true,
-          'El formulario debe ser completado.',
-        ),
+      this.showError(
+        'El formulario debe ser completado.',
       );
 
       return;
     }
 
+    const form =
+      this.registerForm.value;
 
     const {
       stageId,
       mode,
       studentClassification,
-    } =
-      this.registerForm.value;
-
+    } = form;
 
     if (
       !stageId ||
       !mode ||
       !studentClassification
     ) {
-
-      this.showModal(
-        this.createModalParams(
-          true,
-          'Debe completar todos los datos académicos antes de continuar.',
-        ),
+      this.showError(
+        'Debe completar todos los datos académicos antes de continuar.',
       );
 
       return;
     }
 
-
     if (
-      this.isMinor
+      this.isMinor &&
+      (
+        !form.tutorName?.trim() ||
+        !form.tutorEmail?.trim() ||
+        !form.tutorPhone?.trim()
+      )
     ) {
+      this.showError(
+        'Debe completar los datos del tutor antes de continuar.',
+      );
 
-      const {
-        tutorName,
-        tutorEmail,
-        tutorPhone,
-      } =
-        this.registerForm.value;
-
-
-      if (
-        !tutorName?.trim() ||
-        !tutorEmail?.trim() ||
-        !tutorPhone?.trim()
-      ) {
-
-        this.showModal(
-          this.createModalParams(
-            true,
-            'Debe completar los datos del tutor antes de continuar.',
-          ),
-        );
-
-        return;
-      }
+      return;
     }
 
-
-    const userData:
-      Omit<
-        UserDto,
-        'id'
-      > = {
-
-      firstName:
-        this.registerForm
-          .value
-          .firstName,
-
-      lastName:
-        this.registerForm
-          .value
-          .lastName,
-
-      email:
-        this.registerForm
-          .value
-          .email,
-
-      password:
-        this.registerForm
-          .value
-          .password,
-
-      idNumber:
-        this.registerForm
-          .value
-          .idNumber
-          .toString(),
-
-      birthday:
-        this.registerForm
-          .value
-          .birthday,
-
-      role:
-        UserRole.STUDENT,
-
-      emailAddress:
-        this.registerForm
-          .value
-          .emailAddress,
+    const userData: Omit<UserDto, 'id'> = {
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+      password: form.password,
+      idNumber: form.idNumber.toString(),
+      birthday: form.birthday,
+      role: UserRole.STUDENT,
+      emailAddress: form.emailAddress,
     };
 
-
-    const startClassDate =
-      this.registerForm
-        .value
-        .startClassDate
-        ? new Date(
-            this.registerForm
-              .value
-              .startClassDate,
-          ).toISOString()
-        : null;
-
-
-    const endClassDate =
-      this.registerForm
-        .value
-        .endClassDate
-        ? new Date(
-            this.registerForm
-              .value
-              .endClassDate,
-          ).toISOString()
-        : null;
-
-
     this.usersService
-      .create(
-        userData,
-      )
+      .create(userData)
       .subscribe({
-
-        next: (
-          userResponse,
-        ) => {
-
-          const studentData:
-            any = {
-
-            userId:
-              userResponse
-                .user
-                .id,
-
-            stageId:
-              parseInt(
-                this.registerForm
-                  .value
-                  .stageId,
-                10,
-              ),
-
-            mode:
-              this.registerForm
-                .value
-                .mode,
-
-            studentClassification:
-              this.registerForm
-                .value
-                .studentClassification,
-          };
-
-
-          if (
-            this.registerForm
-              .value
-              .startClassDate
-          ) {
-
-            studentData
-              .startClassDate =
-                new Date(
-                  this.registerForm
-                    .value
-                    .startClassDate,
-                )
-                  .toISOString();
-          }
-
-
-          if (
-            this.registerForm
-              .value
-              .endClassDate
-          ) {
-
-            studentData
-              .endClassDate =
-                new Date(
-                  this.registerForm
-                    .value
-                    .endClassDate,
-                )
-                  .toISOString();
-          }
-
-
-          if (
-            this.isMinor
-          ) {
-
-            studentData
-              .tutorName =
-                this.registerForm
-                  .value
-                  .tutorName;
-
-            studentData
-              .tutorEmail =
-                this.registerForm
-                  .value
-                  .tutorEmail;
-
-            studentData
-              .tutorPhone =
-                this.registerForm
-                  .value
-                  .tutorPhone;
-          }
-
-
-          this.studentsService
-            .registerStudent(
-              studentData,
-            )
-            .subscribe({
-
-              next:
-                () => {
-
-                  this.showModal(
-                    this.createModalParams(
-                      false,
-                      'Registro exitoso.',
-                    ),
-                  );
-
-                  setTimeout(
-                    () => {
-
-                      this.router.navigate(
-                        [
-                          '/students',
-                        ],
-                      );
-                    },
-                    2000,
-                  );
-                },
-
-              error:
-                (
-                  error,
-                ) => {
-
-                  console.error(
-                    'Error al registrar estudiante:',
-                    error,
-                  );
-
-                  this.showModal(
-                    this.createModalParams(
-                      true,
-                      'No se pudo registrar el estudiante.',
-                    ),
-                  );
-                },
-            });
+        next: (userResponse) => {
+          this.registerStudent(
+            userResponse.user.id,
+          );
         },
 
-
-        error: (
-          error,
-        ) => {
-
+        error: (error) => {
           console.error(
             'Error al crear usuario:',
             error,
           );
 
+          const message =
+            error?.error?.code === 422
+              ? 'Ya existe un usuario registrado con esos datos.'
+              : 'No se pudo registrar el usuario.';
 
-          if (
-            error?.error?.code ===
-            422
-          ) {
+          this.showError(message);
+        },
+      });
+  }
 
-            // Muestra mensaje específico del backend
-            this.showModal(
-              this.createModalParams(
-                true,
-                'Ya existe un usuario registrado con esos datos.',
-              ),
-            );
 
-          } else {
+  /* =========================
+     REGISTER STUDENT
+  ========================= */
 
-            // Mensaje genérico
-            this.showModal(
-              this.createModalParams(
-                true,
-                'No se pudo registrar el usuario.',
-              ),
-            );
-          }
+  private registerStudent(
+    userId: number,
+  ): void {
+    const form =
+      this.registerForm.value;
+
+    const studentData: any = {
+      userId,
+      stageId:
+        parseInt(form.stageId, 10),
+
+      mode:
+        form.mode,
+
+      studentClassification:
+        form.studentClassification,
+    };
+
+    if (form.startClassDate) {
+      studentData.startClassDate =
+        new Date(
+          form.startClassDate,
+        ).toISOString();
+    }
+
+    if (form.endClassDate) {
+      studentData.endClassDate =
+        new Date(
+          form.endClassDate,
+        ).toISOString();
+    }
+
+    if (this.isMinor) {
+      studentData.tutorName =
+        form.tutorName;
+
+      studentData.tutorEmail =
+        form.tutorEmail;
+
+      studentData.tutorPhone =
+        form.tutorPhone;
+    }
+
+    this.studentsService
+      .registerStudent(studentData)
+      .subscribe({
+        next: () => {
+          this.showModal(
+            this.createModalParams(
+              false,
+              'Registro exitoso.',
+            ),
+          );
+
+          setTimeout(
+            () => {
+              this.router.navigate([
+                '/students',
+              ]);
+            },
+            2000,
+          );
+        },
+
+        error: (error) => {
+          console.error(
+            'Error al registrar estudiante:',
+            error,
+          );
+
+          this.showError(
+            'No se pudo registrar el estudiante.',
+          );
         },
       });
   }
@@ -734,88 +456,63 @@ export class RegisterStudentV2Component implements OnInit {
 
   private markFormGroupTouched(
     formGroup: FormGroup,
-  ) {
-
+  ): void {
     Object
-      .keys(
-        formGroup.controls,
-      )
+      .values(formGroup.controls)
       .forEach(
-        (
-          key,
-        ) => {
-
-          const control =
-            formGroup.get(
-              key,
-            );
-
-          control
-            ?.markAsTouched();
-
-          control
-            ?.markAsDirty();
+        control => {
+          control.markAsTouched();
+          control.markAsDirty();
         },
       );
   }
 
 
   /* =========================
-     MODAL PARAMS
+     MODAL
   ========================= */
+
+  private showError(
+    message: string,
+  ): void {
+    this.showModal(
+      this.createModalParams(
+        true,
+        message,
+      ),
+    );
+  }
 
   createModalParams(
     isError: boolean,
     message: string,
   ): ModalDto {
-
     return {
       ...this.modal,
-
       show: true,
-
       isError,
-
-      isSuccess:
-        !isError,
-
+      isSuccess: !isError,
       message,
-
-      close:
-        this.closeModal,
+      close: this.closeModal,
     };
   }
 
-
-  /* =========================
-     SHOW MODAL
-  ========================= */
-
   showModal(
     params: ModalDto,
-  ) {
-
+  ): void {
     this.modal = {
       ...params,
     };
 
     setTimeout(
       () => {
-
         this.modal.close();
-
       },
       2500,
     );
   }
 
-
-  /* =========================
-     CLOSE MODAL
-  ========================= */
-
-  closeModal = () => {
-
+  closeModal = (): void => {
     this.modal = {
       ...modalInitializer(),
     };

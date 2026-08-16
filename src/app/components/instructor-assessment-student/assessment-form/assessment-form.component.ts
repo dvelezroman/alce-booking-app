@@ -352,6 +352,12 @@ export class AssessmentFormComponent {
   ========================= */
 
   get canSubmit(): boolean {
+    const assessmentTypeId =
+      this.selectedType
+        ? this.getAssessmentTypeId(
+            this.selectedType,
+          )
+        : null;
 
     const baseValid =
       !!(
@@ -359,6 +365,7 @@ export class AssessmentFormComponent {
         this.currentStageId &&
         this.instructorId &&
         this.selectedType &&
+        assessmentTypeId &&
         this.points != null
       );
 
@@ -366,11 +373,6 @@ export class AssessmentFormComponent {
       return false;
     }
 
-    /*
-    * Si no aprueba:
-    * - nota obligatoria
-    * - recurso obligatorio
-    */
     if (this.requiresReinforcement) {
       return (
         this.hasRequiredNotes &&
@@ -427,38 +429,54 @@ export class AssessmentFormComponent {
   ========================= */
 
   submitAssessment(): void {
-
     if (!this.canSubmit) {
       return;
     }
 
+    const assessmentTypeId =
+      this.getAssessmentTypeId(
+        this.selectedType!,
+      );
+
+    if (!assessmentTypeId) {
+      return;
+    }
+
     const payload: CreateAssessmentI = {
-      studentId: this.studentId!,
-      stageId: this.currentStageId!,
-      instructorId: this.instructorId!,
-      type: this.selectedType!,
-      points: this.points!,
+      studentId:
+        this.studentId!,
 
-      ...(this.notes.trim()
-        ? {
-            notes:
-              this.notes.trim(),
-          }
-        : {}),
+      stageId:
+        this.currentStageId!,
 
-      ...(this.selectedResourceIds.length
-        ? {
-            resources:
-              this.selectedResourceIds,
-          }
-        : {}),
-    } as CreateAssessmentI;
+      instructorId:
+        this.instructorId!,
 
+      type:
+        this.selectedType!,
 
-    this.assessmentCreated.emit(
-      payload
+      points:
+        this.points!,
+
+      assessmentTypeId:
+        assessmentTypeId,
+
+      assessmentResourceIds: [
+        ...this.selectedResourceIds,
+      ],
+
+      note:
+        this.notes.trim(),
+    };
+
+    console.log(
+      'Payload evaluación:',
+      payload,
     );
 
+    this.assessmentCreated.emit(
+      payload,
+    );
 
     this.resetForm();
   }
@@ -530,4 +548,27 @@ export class AssessmentFormComponent {
     );
   }
 
+  /* =========================
+    ASSESSMENT TYPE ID
+  ========================= */
+
+  getAssessmentTypeId(
+    type: AssessmentType,
+  ): number | null {
+    const normalized =
+      String(type)
+        .trim()
+        .toLowerCase();
+
+    switch (normalized) {
+      case 'speaking':
+        return 1;
+
+      case 'grammar':
+        return 2;
+
+      default:
+        return null;
+    }
+  }
 }

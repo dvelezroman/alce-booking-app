@@ -143,6 +143,388 @@ app-stage-assessment-create-panel {
 }
 
 /* =========================
+   STUDENT LIST SKELETON
+========================= */
+
+.student-list-skeleton {
+  width: 100%;
+
+  border: 1px solid #edf0f5;
+  border-radius: 0.85rem;
+
+  background: #ffffff;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 4px 14px
+    rgba(15, 23, 42, 0.02);
+}
+
+
+/* =========================
+   BASE BLOCK
+========================= */
+
+.student-list-skeleton__block {
+  position: relative;
+
+  overflow: hidden;
+
+  border-radius: 0.35rem;
+
+  background: #eef0f4;
+}
+
+.student-list-skeleton__block::after {
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  transform: translateX(-100%);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.7) 50%,
+      transparent 100%
+    );
+
+  animation:
+    student-list-skeleton-shimmer
+    1.35s
+    ease-in-out
+    infinite;
+}
+
+@keyframes student-list-skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+
+/* =========================
+   TOP
+========================= */
+
+.student-list-skeleton__top {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1.5rem;
+
+  padding: 1rem 1.15rem;
+}
+
+.student-list-skeleton__heading {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.35rem;
+}
+
+.student-list-skeleton__filters {
+  display: flex;
+  align-items: center;
+
+  gap: 0.75rem;
+}
+
+.student-list-skeleton__block--title {
+  width: 9rem;
+  height: 0.95rem;
+}
+
+.student-list-skeleton__block--subtitle {
+  width: 14rem;
+  height: 0.62rem;
+}
+
+.student-list-skeleton__block--search {
+  width: 19rem;
+  height: 2.45rem;
+
+  border-radius: 0.55rem;
+}
+
+.student-list-skeleton__block--limit {
+  width: 10.25rem;
+  height: 2.45rem;
+
+  border-radius: 0.55rem;
+}
+
+
+/* =========================
+   SELECTION
+========================= */
+
+.student-list-skeleton__selection {
+  min-height: 4.1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin:
+    0
+    1rem
+    0.45rem;
+
+  padding: 0.75rem 1rem;
+
+  border: 1px solid #ebeaf5;
+  border-radius: 0.65rem;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ffffff 0%,
+      #fbfaff 100%
+    );
+}
+
+.student-list-skeleton__selection-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+}
+
+.student-list-skeleton__block--selection {
+  width: 10rem;
+  height: 0.75rem;
+}
+
+.student-list-skeleton__block--button {
+  width: 8.5rem;
+  height: 2.35rem;
+
+  border-radius: 0.5rem;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.student-list-skeleton__table {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+
+/* =========================
+   TABLE HEADER
+========================= */
+
+.student-list-skeleton__table-header {
+  width: 100%;
+  min-width: 78rem;
+
+  display: grid;
+
+  grid-template-columns:
+    2.4rem
+    minmax(15rem, 1.35fr)
+    minmax(8rem, 0.8fr)
+    minmax(8rem, 0.8fr)
+    minmax(10rem, 1fr)
+    minmax(10rem, 1fr)
+    minmax(8rem, 0.8fr)
+    2.5rem;
+
+  align-items: center;
+
+  gap: 0.75rem;
+
+  min-height: 3rem;
+
+  padding:
+    0.65rem
+    0.75rem;
+
+  border-top: 1px solid #eceef3;
+  border-bottom: 1px solid #eceef3;
+
+  background:
+    linear-gradient(
+      90deg,
+      #fafbfe 0%,
+      #f8f8fc 100%
+    );
+}
+
+.student-list-skeleton__block--header {
+  width: 70%;
+  height: 0.65rem;
+}
+
+
+/* =========================
+   ROW
+========================= */
+
+.student-list-skeleton__row {
+  width: 100%;
+  min-width: 78rem;
+
+  display: grid;
+
+  grid-template-columns:
+    2.4rem
+    minmax(15rem, 1.35fr)
+    minmax(8rem, 0.8fr)
+    minmax(8rem, 0.8fr)
+    minmax(10rem, 1fr)
+    minmax(10rem, 1fr)
+    minmax(8rem, 0.8fr)
+    2.5rem;
+
+  align-items: center;
+
+  gap: 0.75rem;
+
+  min-height: 4.25rem;
+
+  padding:
+    0.72rem
+    0.75rem;
+
+  border-bottom: 1px solid #eceef2;
+}
+
+
+/* =========================
+   STUDENT
+========================= */
+
+.student-list-skeleton__student {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.7rem;
+}
+
+.student-list-skeleton__student-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.35rem;
+}
+
+
+/* =========================
+   COLUMN
+========================= */
+
+.student-list-skeleton__column {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.3rem;
+}
+
+.student-list-skeleton__badges {
+  display: flex;
+  align-items: center;
+
+  gap: 0.35rem;
+}
+
+
+/* =========================
+   SIZES
+========================= */
+
+.student-list-skeleton__block--checkbox {
+  width: 1rem;
+  height: 1rem;
+
+  border-radius: 0.2rem;
+}
+
+.student-list-skeleton__block--avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+}
+
+.student-list-skeleton__block--name {
+  width: 8.5rem;
+  max-width: 90%;
+
+  height: 0.72rem;
+}
+
+.student-list-skeleton__block--email {
+  width: 10.5rem;
+  max-width: 95%;
+
+  height: 0.58rem;
+}
+
+.student-list-skeleton__block--medium {
+  width: 5.5rem;
+  height: 0.68rem;
+}
+
+.student-list-skeleton__block--tiny {
+  width: 3.5rem;
+  height: 0.55rem;
+}
+
+.student-list-skeleton__block--small {
+  width: 2rem;
+  height: 0.65rem;
+}
+
+.student-list-skeleton__block--progress {
+  width: 6rem;
+  height: 0.34rem;
+
+  border-radius: 999px;
+}
+
+.student-list-skeleton__block--badge {
+  width: 4.3rem;
+  height: 1.25rem;
+
+  border-radius: 0.35rem;
+}
+
+.student-list-skeleton__block--resource {
+  width: 5.5rem;
+  height: 1.35rem;
+
+  border-radius: 0.4rem;
+}
+
+.student-list-skeleton__block--menu {
+  width: 1.8rem;
+  height: 1.8rem;
+
+  border-radius: 0.4rem;
+}
+
+/* =========================
    LARGE DESKTOP
 ========================= */
 
@@ -197,6 +579,32 @@ app-stage-assessment-create-panel {
     grid-template-columns:
       minmax(0, 1fr)
       21rem;
+  }
+
+  .student-list-skeleton__top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .student-list-skeleton__filters {
+    width: 100%;
+  }
+
+  .student-list-skeleton__block--search {
+    flex: 1;
+
+    width: auto;
+  }
+
+  .student-list-skeleton__selection {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 0.7rem;
+  }
+
+  .student-list-skeleton__selection-actions {
+    width: 100%;
   }
 
 }
@@ -258,6 +666,46 @@ app-stage-assessment-create-panel {
     border-radius: .65rem;
   }
 
+  .student-list-skeleton__top {
+    gap: 0.8rem;
+
+    padding: 0.9rem;
+  }
+
+  .student-list-skeleton__filters {
+    align-items: stretch;
+    flex-direction: column;
+
+    gap: 0.55rem;
+  }
+
+  .student-list-skeleton__block--search,
+  .student-list-skeleton__block--limit {
+    width: 100%;
+    height: 2.35rem;
+  }
+
+  .student-list-skeleton__selection {
+    margin:
+      0
+      0.75rem
+      0.4rem;
+
+    padding: 0.7rem;
+  }
+
+  .student-list-skeleton__selection-actions {
+    flex-wrap: wrap;
+  }
+
+  .student-list-skeleton__block--button {
+    flex: 1;
+
+    min-width: 8rem;
+
+    height: 2.35rem;
+  }
+
 }
 
 /* =========================
@@ -277,6 +725,28 @@ app-stage-assessment-create-panel {
 
   .stage-assessment-page__students {
     border-radius: .58rem;
+  }
+
+    .student-list-skeleton {
+    border-radius: 0.7rem;
+  }
+
+  .student-list-skeleton__block--title {
+    width: 8rem;
+  }
+
+  .student-list-skeleton__block--subtitle {
+    width: 12rem;
+    max-width: 100%;
+  }
+
+  .student-list-skeleton__selection-actions {
+    flex-direction: column;
+  }
+
+  .student-list-skeleton__block--button {
+    width: 100%;
+    flex: none;
   }
 
 }

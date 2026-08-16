@@ -9,22 +9,15 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import {
-  StageProgressByStage,
-} from '../../../services/dtos/stage-progress.dto';
-
-import {
-  AssessmentPointsConfigService,
-} from '../../../services/assessment-points-config.service';
+import { StageProgressByStage } from '../../../services/dtos/stage-progress.dto';
+import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 
 
-type StageProgressItem =
-  StageProgressByStage[number];
+type StageProgressItem = StageProgressByStage[number];
 
-type StageAssessmentStudentRow =
-  StageProgressItem & {
-    resourcesCount?: number;
-  };
+type StageAssessmentStudentRow = StageProgressItem & {
+  resourcesCount?: number;
+};
 
 
 @Component({
@@ -43,63 +36,26 @@ export class StageAssessmentStudentListComponent implements OnInit {
      INPUTS
   ========================= */
 
-  @Input()
-  students: StageAssessmentStudentRow[] = [];
-
-  @Input()
-  totalStudents = 0;
-
-  @Input()
-  selectedStudentIds: number[] = [];
-
-  @Input()
-  resetSelection = false;
-
-  @Input()
-  searchTerm = '';
-
-  @Input()
-  limit = 20;
-
-  @Input()
-  limitOptions: number[] = [
-    10,
-    20,
-    50,
-    100,
-  ];
-
-  @Input()
-  hasStageSelected = false;
+  @Input() students: StageAssessmentStudentRow[] = [];
+  @Input() totalStudents = 0;
+  @Input() selectedStudentIds: number[] = [];
+  @Input() resetSelection = false;
+  @Input() searchTerm = '';
+  @Input() limit = 20;
+  @Input() limitOptions: number[] = [10, 20, 50, 100];
+  @Input() hasStageSelected = false;
 
 
   /* =========================
      OUTPUTS
   ========================= */
 
-  @Output()
-  searchTermChange =
-    new EventEmitter<string>();
-
-  @Output()
-  limitChange =
-    new EventEmitter<number>();
-
-  @Output()
-  selectionChange =
-    new EventEmitter<number[]>();
-
-  @Output()
-  selectAllRequested =
-    new EventEmitter<void>();
-
-  @Output()
-  clearSelectionRequested =
-    new EventEmitter<void>();
-
-  @Output()
-  assignRequested =
-    new EventEmitter<void>();
+  @Output() searchTermChange = new EventEmitter<string>();
+  @Output() limitChange = new EventEmitter<number>();
+  @Output() selectionChange = new EventEmitter<number[]>();
+  @Output() selectAllRequested = new EventEmitter<void>();
+  @Output() clearSelectionRequested = new EventEmitter<void>();
+  @Output() assignRequested = new EventEmitter<void>();
 
   @Output()
   activeAssessmentDetailRequested =
@@ -111,9 +67,7 @@ export class StageAssessmentStudentListComponent implements OnInit {
   ========================= */
 
   minPointsAssessment = 0;
-
   maxPointsAssessment = 0;
-
   isLoadingAssessmentConfig = false;
 
 
@@ -122,8 +76,7 @@ export class StageAssessmentStudentListComponent implements OnInit {
   ========================= */
 
   constructor(
-    private assessmentPointsConfigService:
-      AssessmentPointsConfigService,
+    private assessmentPointsConfigService: AssessmentPointsConfigService,
   ) {}
 
 
@@ -148,14 +101,10 @@ export class StageAssessmentStudentListComponent implements OnInit {
       .subscribe({
         next: (config) => {
           this.minPointsAssessment =
-            Number(
-              config.minPointsAssessment,
-            ) || 0;
+            Number(config.minPointsAssessment) || 0;
 
           this.maxPointsAssessment =
-            Number(
-              config.maxPointsAssessment,
-            ) || 0;
+            Number(config.maxPointsAssessment) || 0;
 
           this.isLoadingAssessmentConfig = false;
         },
@@ -168,54 +117,42 @@ export class StageAssessmentStudentListComponent implements OnInit {
 
           this.minPointsAssessment = 0;
           this.maxPointsAssessment = 0;
-
           this.isLoadingAssessmentConfig = false;
         },
       });
   }
 
+
   /* =========================
-    ASSESSMENT TYPES
+     ASSESSMENT TYPES
   ========================= */
 
   hasAssessmentType(
     item: StageAssessmentStudentRow,
     type: string,
   ): boolean {
-    if (
-      !item.assessments ||
-      item.assessments.length === 0
-    ) {
+    if (!item.assessments?.length) {
       return false;
     }
 
     const normalizedType =
-      type
-        .trim()
-        .toLowerCase();
+      type.trim().toLowerCase();
 
     return item.assessments.some(
-      assessment => {
-        const assessmentType =
-          (
-            assessment.assessmentType?.name ||
-            assessment.type ||
-            ''
-          )
-            .trim()
-            .toLowerCase();
-
-        return (
-          assessmentType ===
-          normalizedType
-        );
-      },
+      assessment =>
+        (
+          assessment.assessmentType?.name ||
+          assessment.type ||
+          ''
+        )
+          .trim()
+          .toLowerCase() === normalizedType,
     );
   }
 
 
   /* =========================
-    ASSESSMENT TYPE APPROVED
+     ASSESSMENT APPROVED
   ========================= */
 
   isAssessmentTypeApproved(
@@ -223,17 +160,14 @@ export class StageAssessmentStudentListComponent implements OnInit {
     type: string,
   ): boolean {
     if (
-      !item.assessments ||
-      item.assessments.length === 0 ||
+      !item.assessments?.length ||
       !this.minPointsAssessment
     ) {
       return false;
     }
 
     const normalizedType =
-      type
-        .trim()
-        .toLowerCase();
+      type.trim().toLowerCase();
 
     return item.assessments.some(
       assessment => {
@@ -247,76 +181,62 @@ export class StageAssessmentStudentListComponent implements OnInit {
             .toLowerCase();
 
         return (
-          assessmentType ===
-            normalizedType &&
-          Number(
-            assessment.points || 0,
-          ) >=
+          assessmentType === normalizedType &&
+          Number(assessment.points || 0) >=
             this.minPointsAssessment
         );
       },
     );
   }
 
-  /* =========================
-    ACTIVE ASSESSMENT RESOURCES
-  ========================= */
-
-  getActiveAssessmentResources(
-    item: StageAssessmentStudentRow,
-  ): string[] {
-    if (
-      !item.activeAssessments ||
-      item.activeAssessments.length === 0
-    ) {
-      return [];
-    }
-
-    return item.activeAssessments
-      .map(
-        assessment =>
-          assessment
-            .stageAssessmentResource
-            ?.description,
-      )
-      .filter(
-        (
-          description,
-        ): description is string =>
-          !!description,
-      );
-  }
-
 
   /* =========================
-    ASSESSMENT TYPE STATUS
+     ASSESSMENT STATUS
   ========================= */
 
   getAssessmentTypeStatus(
     item: StageAssessmentStudentRow,
     type: string,
   ): 'approved' | 'failed' | 'pending' {
-
-    const hasAssessment =
-      this.hasAssessmentType(
-        item,
-        type,
-      );
-
-    if (!hasAssessment) {
+    if (!this.hasAssessmentType(item, type)) {
       return 'pending';
     }
 
-    if (
-      this.isAssessmentTypeApproved(
-        item,
-        type,
-      )
-    ) {
-      return 'approved';
-    }
+    return this.isAssessmentTypeApproved(item, type)
+      ? 'approved'
+      : 'failed';
+  }
 
-    return 'failed';
+
+  /* =========================
+     ACTIVE RESOURCES
+  ========================= */
+
+  getActiveAssessmentResources(
+    item: StageAssessmentStudentRow,
+  ): string[] {
+    return (
+      item.activeAssessments
+        ?.map(
+          assessment =>
+            assessment.stageAssessmentResource?.description,
+        )
+        .filter(
+          (description): description is string =>
+            !!description,
+        ) || []
+    );
+  }
+
+
+  /* =========================
+     ACTIVE ASSESSMENT
+  ========================= */
+
+  hasActiveAssessment(
+    item: StageAssessmentStudentRow,
+  ): boolean {
+    return !!item.activeAssessments?.length;
   }
 
 
@@ -341,9 +261,7 @@ export class StageAssessmentStudentListComponent implements OnInit {
     }
 
     const isSelected =
-      this.selectedStudentIds.includes(
-        studentId,
-      );
+      this.selectedStudentIds.includes(studentId);
 
     const updatedSelection =
       isSelected
@@ -362,17 +280,11 @@ export class StageAssessmentStudentListComponent implements OnInit {
   }
 
 
-  /* =========================
-     CHECK SELECTED
-  ========================= */
-
   isStudentSelected(
     studentId: number,
   ): boolean {
-    return (
-      this.selectedStudentIds.includes(
-        studentId,
-      )
+    return this.selectedStudentIds.includes(
+      studentId,
     );
   }
 
@@ -388,9 +300,7 @@ export class StageAssessmentStudentListComponent implements OnInit {
           !this.hasActiveAssessment(item),
       );
 
-    if (
-      selectableStudents.length === 0
-    ) {
+    if (!selectableStudents.length) {
       return false;
     }
 
@@ -427,9 +337,7 @@ export class StageAssessmentStudentListComponent implements OnInit {
       Number(value);
 
     if (
-      !Number.isFinite(
-        parsedValue,
-      ) ||
+      !Number.isFinite(parsedValue) ||
       parsedValue <= 0
     ) {
       return;
@@ -455,9 +363,7 @@ export class StageAssessmentStudentListComponent implements OnInit {
   ========================= */
 
   onClearSelection(): void {
-    if (
-      this.selectedStudentIds.length === 0
-    ) {
+    if (!this.selectedStudentIds.length) {
       return;
     }
 
@@ -470,9 +376,7 @@ export class StageAssessmentStudentListComponent implements OnInit {
   ========================= */
 
   onAssignAssessment(): void {
-    if (
-      this.selectedStudentIds.length === 0
-    ) {
+    if (!this.selectedStudentIds.length) {
       return;
     }
 
@@ -481,52 +385,31 @@ export class StageAssessmentStudentListComponent implements OnInit {
 
 
   /* =========================
-     SELECTED COUNT
-  ========================= */
-
-  get selectedCount(): number {
-    return (
-      this.selectedStudentIds.length
-    );
-  }
-
-
-  get hasSelectedStudents(): boolean {
-    return (
-      this.selectedStudentIds.length >
-      0
-    );
-  }
-
-  /* =========================
-    ACTIVE ASSESSMENT
-  ========================= */
-
-  hasActiveAssessment(
-    item: StageAssessmentStudentRow,
-  ): boolean {
-    return (
-      !!item.activeAssessments &&
-      item.activeAssessments.length > 0
-    );
-  }
-
-  /* =========================
-    ACTIVE ASSESSMENT DETAIL
+     ACTIVE ASSESSMENT DETAIL
   ========================= */
 
   onViewActiveAssessment(
     item: StageAssessmentStudentRow,
   ): void {
-    if (
-      !item.activeAssessments ||
-      item.activeAssessments.length === 0
-    ) {
+    if (!this.hasActiveAssessment(item)) {
       return;
     }
 
     this.activeAssessmentDetailRequested.emit(
       item,
     );
+  }
+
+
+  /* =========================
+     SELECTION STATE
+  ========================= */
+
+  get selectedCount(): number {
+    return this.selectedStudentIds.length;
+  }
+
+  get hasSelectedStudents(): boolean {
+    return this.selectedStudentIds.length > 0;
   }
 }

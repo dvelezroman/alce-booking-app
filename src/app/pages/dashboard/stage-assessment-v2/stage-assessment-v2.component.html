@@ -11,7 +11,6 @@
 
     <!-- =========================
          STAGE / ACTIONS
-         SIEMPRE FULL WIDTH
     ========================== -->
     <app-stage-assessment-stage-selector
       [selectedStageId]="selectedStageId"
@@ -60,30 +59,385 @@
         ========================== -->
         <section class="stage-assessment-page__students">
 
-          <app-stage-assessment-student-list
-            [students]="pagedList"
-            [totalStudents]="total"
-            [selectedStudentIds]="selectedStudentIds"
-            [resetSelection]="resetSelectionFlag"
-            [searchTerm]="searchTerm"
-            [limit]="limit"
-            [limitOptions]="limitOptions"
-            [hasStageSelected]="!!selectedStageId"
-            (searchTermChange)="onSearchTermChange($event)"
-            (limitChange)="onLimitChange($event)"
-            (selectionChange)="onStudentSelection($event)"
-            (selectAllRequested)="selectAllStudents()"
-            (clearSelectionRequested)="clearStudentSelection()"
-            (assignRequested)="openCreateAssessmentPanel()"
-            (activeAssessmentDetailRequested)="onActiveAssessmentDetailRequested($event)"
-          >
-          </app-stage-assessment-student-list>
+          <!-- =========================
+               LOADING SKELETON
+          ========================== -->
+          @if (isLoadingStudents) {
+
+            <div class="student-list-skeleton">
+
+              <!-- SKELETON HEADER -->
+
+              <div class="student-list-skeleton__top">
+
+                <div class="student-list-skeleton__heading">
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--title
+                    "
+                  >
+                  </div>
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--subtitle
+                    "
+                  >
+                  </div>
+
+                </div>
+
+
+                <div class="student-list-skeleton__filters">
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--search
+                    "
+                  >
+                  </div>
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--limit
+                    "
+                  >
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <!-- SKELETON SELECTION BAR -->
+
+              <div class="student-list-skeleton__selection">
+
+                <div
+                  class="
+                    student-list-skeleton__block
+                    student-list-skeleton__block--selection
+                  "
+                >
+                </div>
+
+                <div class="student-list-skeleton__selection-actions">
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--button
+                    "
+                  >
+                  </div>
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--button
+                    "
+                  >
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <!-- SKELETON TABLE -->
+
+              <div class="student-list-skeleton__table">
+
+                <!-- TABLE HEADER -->
+
+                <div class="student-list-skeleton__table-header">
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--checkbox
+                    "
+                  >
+                  </div>
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--header
+                    "
+                  >
+                  </div>
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--header
+                    "
+                  >
+                  </div>
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--header
+                    "
+                  >
+                  </div>
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--header
+                    "
+                  >
+                  </div>
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--header
+                    "
+                  >
+                  </div>
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--header
+                    "
+                  >
+                  </div>
+
+                  <div
+                    class="
+                      student-list-skeleton__block
+                      student-list-skeleton__block--small
+                    "
+                  >
+                  </div>
+
+                </div>
+
+
+                <!-- ROWS -->
+
+                @for (
+                  row of [1, 2, 3, 4, 5];
+                  track row
+                ) {
+
+                  <div class="student-list-skeleton__row">
+
+                    <!-- CHECKBOX -->
+
+                    <div
+                      class="
+                        student-list-skeleton__block
+                        student-list-skeleton__block--checkbox
+                      "
+                    >
+                    </div>
+
+
+                    <!-- STUDENT -->
+
+                    <div class="student-list-skeleton__student">
+
+                      <div
+                        class="
+                          student-list-skeleton__block
+                          student-list-skeleton__block--avatar
+                        "
+                      >
+                      </div>
+
+                      <div class="student-list-skeleton__student-content">
+
+                        <div
+                          class="
+                            student-list-skeleton__block
+                            student-list-skeleton__block--name
+                          "
+                        >
+                        </div>
+
+                        <div
+                          class="
+                            student-list-skeleton__block
+                            student-list-skeleton__block--email
+                          "
+                        >
+                        </div>
+
+                      </div>
+
+                    </div>
+
+
+                    <!-- ENTRY DATE -->
+
+                    <div class="student-list-skeleton__column">
+
+                      <div
+                        class="
+                          student-list-skeleton__block
+                          student-list-skeleton__block--medium
+                        "
+                      >
+                      </div>
+
+                      <div
+                        class="
+                          student-list-skeleton__block
+                          student-list-skeleton__block--tiny
+                        "
+                      >
+                      </div>
+
+                    </div>
+
+
+                    <!-- PROGRESS -->
+
+                    <div class="student-list-skeleton__column">
+
+                      <div
+                        class="
+                          student-list-skeleton__block
+                          student-list-skeleton__block--tiny
+                        "
+                      >
+                      </div>
+
+                      <div
+                        class="
+                          student-list-skeleton__block
+                          student-list-skeleton__block--progress
+                        "
+                      >
+                      </div>
+
+                    </div>
+
+
+                    <!-- ACTIVE ASSESSMENTS -->
+
+                    <div class="student-list-skeleton__column">
+
+                      <div
+                        class="
+                          student-list-skeleton__block
+                          student-list-skeleton__block--medium
+                        "
+                      >
+                      </div>
+
+                      <div
+                        class="
+                          student-list-skeleton__block
+                          student-list-skeleton__block--badge
+                        "
+                      >
+                      </div>
+
+                    </div>
+
+
+                    <!-- ASSESSMENTS -->
+
+                    <div class="student-list-skeleton__badges">
+
+                      <div
+                        class="
+                          student-list-skeleton__block
+                          student-list-skeleton__block--badge
+                        "
+                      >
+                      </div>
+
+                      <div
+                        class="
+                          student-list-skeleton__block
+                          student-list-skeleton__block--badge
+                        "
+                      >
+                      </div>
+
+                    </div>
+
+
+                    <!-- RESOURCE -->
+
+                    <div
+                      class="
+                        student-list-skeleton__block
+                        student-list-skeleton__block--resource
+                      "
+                    >
+                    </div>
+
+
+                    <!-- OPTIONS -->
+
+                    <div
+                      class="
+                        student-list-skeleton__block
+                        student-list-skeleton__block--menu
+                      "
+                    >
+                    </div>
+
+                  </div>
+
+                }
+
+              </div>
+
+            </div>
+
+          } @else {
+
+            <!-- =========================
+                 STUDENT LIST
+            ========================== -->
+            <app-stage-assessment-student-list
+              [students]="pagedList"
+              [totalStudents]="total"
+              [selectedStudentIds]="selectedStudentIds"
+              [resetSelection]="resetSelectionFlag"
+              [searchTerm]="searchTerm"
+              [limit]="limit"
+              [limitOptions]="limitOptions"
+              [hasStageSelected]="!!selectedStageId"
+              (searchTermChange)="onSearchTermChange($event)"
+              (limitChange)="onLimitChange($event)"
+              (selectionChange)="onStudentSelection($event)"
+              (selectAllRequested)="selectAllStudents()"
+              (clearSelectionRequested)="clearStudentSelection()"
+              (assignRequested)="openCreateAssessmentPanel()"
+              (activeAssessmentDetailRequested)="
+                onActiveAssessmentDetailRequested($event)
+              "
+            >
+            </app-stage-assessment-student-list>
+
+          }
 
 
           <!-- =========================
                PAGINATION
           ========================== -->
-          @if (selectedStageId && total > 0) {
+          @if (
+            selectedStageId &&
+            total > 0 &&
+            !isLoadingStudents
+          ) {
+
             <app-stage-assessment-pagination
               [page]="page"
               [totalPages]="totalPages"
@@ -98,6 +452,7 @@
               (nextRequested)="onNext()"
             >
             </app-stage-assessment-pagination>
+
           }
 
         </section>
@@ -131,6 +486,10 @@
 
   </div>
 
+
+  <!-- =========================
+       ACTIVE ASSESSMENT MODAL
+  ========================== -->
   @if (
     isAssessmentDetailModalOpen &&
     selectedAssessmentStudent
@@ -138,7 +497,9 @@
 
     <app-stage-assessment-active-detail-modal
       [student]="selectedAssessmentStudent"
-      [assessments]="selectedAssessmentStudent.activeAssessments || []"
+      [assessments]="
+        selectedAssessmentStudent.activeAssessments || []
+      "
       (closeRequested)="closeAssessmentDetailModal()"
     >
     </app-stage-assessment-active-detail-modal>
