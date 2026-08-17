@@ -35,6 +35,7 @@ import { StageAssessmentListFiltersComponent } from '../../../components/stage-a
 import { StageAssessmentListTableComponent } from '../../../components/stage-assessment-list-v2/stage-assessment-list-table/stage-assessment-list-table.component';
 import { StageAssessmentListPaginationComponent } from '../../../components/stage-assessment-list-v2/stage-assessment-list-pagination/stage-assessment-list-pagination.component';
 import { StageAssessmentStudentsModalComponent } from '../../../components/stage-assessment-list-v2/stage-assessment-students-modal/stage-assessment-students-modal.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -120,6 +121,7 @@ export class StageAssessmentListComponent implements OnInit {
   constructor(
     private stageAssessmentService: StageAssessmentService,
     private usersService: UsersService,
+    private router: Router,
   ) {}
 
 
@@ -141,6 +143,11 @@ export class StageAssessmentListComponent implements OnInit {
       );
   }
 
+  onNewAssessmentRequested(): void {
+    this.router.navigate([
+      '/dashboard/stage-assessment',
+    ]);
+  }
 
   /* =========================
      FETCH

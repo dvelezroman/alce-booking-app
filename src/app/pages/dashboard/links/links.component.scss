@@ -1,744 +1,424 @@
 :host {
   display: block;
-  height: 100vh;
-  background-color: #f2f2f2; 
-  padding: 0rem;
-  box-sizing: border-box;
-  overflow-x: hidden;
+  min-height: 100%;
 }
 
-.container {
+
+/* =========================
+   PAGE
+========================= */
+
+.links-page {
+  width: calc(100% - 76px);
+  min-height: 100vh;
+
+  margin-left: 64px;
+
+  color: #161b2c;
+}
+
+
+.links-page__container {
   width: 100%;
-  margin-top: 1.5rem;
-  padding: 1rem;
-  border-radius: 8px;
-  text-align: center;
-  margin: auto;
-}
+  max-width: 1450px;
 
-h2.title {
-  position: fixed; 
-  top: 0; 
-  left: 0px;
-  color: rgb(53, 53, 53);
-  width: 100%; 
-  background-color: #f2f2f2;
-  z-index: 10; 
-  text-align: center;
-}
-
-.title.link{
-  font-size: 1.8rem;
-  line-height: 75px;
-  color: #282828;
-  text-align: center;
-}
-
-/* BOTóN PARA CREAR LINKS */
-button {
-  display: flex;
-  align-items: center; 
-  justify-content: center; 
-}
-
-button .material-icons {
-  font-size: 19px; 
-  vertical-align: middle; 
-  margin-right: 2px; 
-  margin-bottom: 2px;
-}
-
-.button.is-primary {
-  display: block;   
-  background-color: transparent;
-  color: #7743a8;
-  font-size: 1rem;
-  border: .5px solid #7743a8;
-  margin: 7rem auto 0 auto; 
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.button.is-primary:hover {
-  color: #ffffff;
-  background-color: #7743a8;
-  border-color: #7743a8;
-}
-
-.table-container {
-  width: 100%;
-  margin: auto;
-  max-height: 600px; 
-  overflow-x: auto;
-}
-
-.table {
   margin: 0 auto;
-  margin-top: 1.5rem;
-  margin-bottom: 2rem;
-  width: 90%;
-  min-width: 750px;
-  background-color: #ffffff;
-  table-layout: fixed;
-  border-collapse: collapse;
-  border-radius: 5px 5px 2px 2px;
-  overflow: hidden;
+
+  padding:
+    1.75rem
+    1.5rem
+    2.5rem;
 }
 
-.table thead {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-}
 
-.table tbody {
-  display: block;
-  max-height: 475px; 
-  overflow-y: auto;
-  width: 100%;
-}
+/* =========================
+   CONTENT
+========================= */
 
-.table tbody tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-}
-
-.table th, .table td {
-  text-align: center;
-  vertical-align: middle;
-}
-
-.table th {
-  position: sticky;
-  top: 0;
-  background-color: #dfecfb;
-  color: #333;
-  padding: .55rem;
-  font-size: 0.9rem;
-  border-bottom: .5px solid #eeeeee;
-  z-index: 2;
-}
-
-.table td {
-  background-color: white;
-  color: rgb(63, 63, 63);
-  padding: .55rem;
-  font-size: 0.9rem;
-  border: 1px solid #f4f4f4;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.table th:nth-child(1), 
-.table td:nth-child(1) {
-  width: 6%;
-  min-width: 50px;
-}
-
-.table th:nth-child(4), 
-.table td:nth-child(4) {
-  width: 15%;
-}
-
-.table tbody tr:nth-child(even) td {
-  background-color: #ffffff;
-}
-
-.purple-link {
-  color: purple;
-  text-decoration: none;
-}
-
-.purple-link:hover {
-  text-decoration: underline;
-}
-
-.buttons {
+.links-page__content {
   display: flex;
-  justify-content: center;
-  gap: 0.7rem;
-}
+  flex-direction: column;
 
-.button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  border: 1px solid transparent;
-  background-color: transparent;
-  font-size: 0.7rem;
-  cursor: pointer;
-  padding: 0.3rem 0.8rem;
-  transition: all 0.3s ease;
-}
+  gap: 1rem;
 
-.password-button {
-  background-color:transparent;
-  color: rgb(151, 151, 151); 
-  border-color: rgb(151, 151, 151);
-}
-
-.password-button i {
-  font-size: .8rem; 
-}
-
-.password-button:hover {
-  background-color: rgb(151, 151, 151); 
-  color: white; 
-  border-color: transparent; 
-}
-
-.edit-button {
-  color: #4a90e2;
-  border-color: #4a90e2;
-}
-
-.edit-button i {
-  font-size: 0.8rem;
-}
-
-.edit-button:hover {
-  background-color: #4a90e2;
-  color: white;
-}
-
-.delete-button {
-  color: #7743a8;
-  border-color: #7743a8;
-}
-
-.delete-button i {
-  font-size: 0.8rem;
-}
-
-.delete-button:hover {
-  background-color: #7743a8;
-  color: white;
-}
-
-/* Modal de Crear y Editar Link */
-.modal {
-  .modal-background {
-    background-color: rgba(38, 37, 37, 0.3);
-    backdrop-filter: blur(8px);
-  }
-
-  .modal-content {
-    max-height: 100vh;
-    margin: auto;
-    padding: .8rem 0.4rem;
-    background-color: rgb(255, 255, 255);
-    border-radius: 15px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-  }
-
-  .box {
-    background-color: transparent;
-    box-shadow: none;
-  }
-
-  h3.title {
-    color: rgb(83, 82, 82);
-    font-size: 1.3rem;
-  }
-
-.label {
-  color: #373636;
-  text-align: left;
-  font-weight: 400;
-  margin-left: 5px;
-  font-size: 0.9rem;
-}
-
-.textarea {
-  min-height: 80px;
-  background-color: #ffffff;
-  color: #393535;
-  border: 1px solid #cccccc;
-  padding: 0.55rem;
-  border-radius: 5px;
-  font-size: 1rem;
-  resize: none;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.textarea:focus {
-  background-color: #ffffff;
-  outline: none;
-}
-
-.input {
-  background-color: #f5f5f5; 
-  color: #333; 
-  border: 1px solid #ccc; 
-  padding: 0.55rem;
-  border-radius: 5px;
-  font-size: 1rem;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.input:focus {
-  background-color: #ffffff; 
-  outline: none;
-}
-
-::placeholder{
-  color: rgb(183, 183, 183);
-}
-}
-
-.buttons-container {
-  display: flex;
-  justify-content: center; 
-  align-items: center; 
-  gap: 1rem; 
   margin-top: 1.5rem;
 }
 
-.create-link-btn, .update-link-btn {
-  width: 100%;
-  background-color: #3273dc;
-  color: white;
-  font-size: 0.9rem;
-  padding: 0.7rem 2.5rem;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+
+/* =========================
+   TABLE CARD
+========================= */
+
+.links-page__table-card {
+  position: relative;
+
+  overflow: visible;
+
+  background: #ffffff;
 }
 
-.create-link-btn:hover, .update-link-btn:hover {
-  background-color: #275bb5;
-}
 
-.cancel-link-btn {
-  width: 100%;
-  background-color: transparent;
-  color: rgb(127, 56, 198);
-  font-size: 0.9rem;
-  padding: 0.65rem 2.5rem;
-  border-radius: 5px;
-  border: 0.5px solid rgb(127, 56, 198);
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
+/* =========================
+   MODAL BACKDROP
+========================= */
 
-.cancel-link-btn:hover {
-  background-color: rgb(110, 44, 176);
-  color: white;
-}
+.links-page__modal-backdrop {
+  position: fixed;
 
-/* Modal de Delete */
-.modal.is-active .modal-content {
-  max-width: 400px;
-  margin: auto;
-  background-color: rgb(249, 249, 249);
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-}
+  inset: 0;
 
-.delete-modal-box {
-  background-color: transparent;
-  box-shadow: none;
-  text-align: center;
-}
+  z-index: 1000;
 
-.delete-modal-title {
-  font-size: 1.4rem;
-  color: #333; 
-  margin-bottom: .5rem;
-}
-
-/* Ajuste específico para el párrafo dentro del modal de eliminación */
-.modal-content .box p {
-  width: 100%;
-  margin: auto;
-  color: #333; 
-  text-align: left;
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.delete-buttons-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: .6rem;
-}
-
-/* Botón de Eliminar */
-.delete-link-btn {
-  width: 48%;
-  padding: 0.6rem;
-  font-size: 0.9rem;
-  border-radius: 5px;
-  background-color: #3273dc;
-  color: white;
-  border: .5px solid #3273dc; ;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.delete-link-btn:hover {
-  background-color: #275bb5;
-}
-
-/* Botón de Cancelar en el Modal de Delete */
-.cancel-delete-link-btn {
-  width: 48%;
-  padding: 0.6rem;
-  font-size: 0.9rem;
-  border-radius: 5px;
-  background-color: transparent;
-  color: rgb(127, 56, 198); 
-  border: .5px solid rgb(127, 56, 198);
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.cancel-delete-link-btn:hover {
-  background-color: rgb(127, 56, 198);
-  color: white; 
-}
-
-@media (max-width: 768px) {
-
-h2.title{
-  background: linear-gradient(45deg, #4a90e2,  #7743a8);
-}
-
-.title.link{
-  font-size: 1.5rem;
-  line-height: 75px;
-  color: white;
-}
-
-/* Botón para crear links */
-.button.is-primary {
-  font-size: 0.95rem;
-  padding: 0.3rem 0.6rem;
-  margin: 8rem auto 0 auto; 
-}
-
-  /* Botones en la tabla */
-
-.button {
-  gap: 0.4rem;
-  padding: 0.3rem 0.6rem;
-}
-
-.edit-button i {
-  font-size: 0.8rem;
-}
-
-.delete-button {
-  color: #7743a8;
-  border-color: #7743a8;
-}
-
-.delete-button i {
-  font-size: 0.8rem;
-}
-
-.modal {
-  .modal-content {
-    width: 350px;
-    padding: 0.5rem 0.4rem !important;
-  }
-
-  h3.title {
-    font-size: 1.3rem;
-  }
-
-  .label {
-    font-size: 0.9rem;
-  }
-
-    .textarea {
-      min-height: 75px;
-      padding: 0.25rem .5rem;
-  }
-}
-  
-  .buttons-container {
-    gap: .5rem; 
-  }
-  
-  .create-link-btn, .update-link-btn {
-    padding: 0.6rem 2.5rem;
-  }
-  
-  .cancel-link-btn {
-    font-size: 0.9rem;
-    padding: 0.6rem 2.5rem;
-  }
-
-    /* Modal de Delete */
-  .modal.is-active .modal-content {
-    padding: .8rem 0rem !important;
-  }
-
-  .delete-modal-title {
-    font-size: 1rem;
-  }
-
-  /* Ajuste específico para el párrafo dentro del modal de eliminación */
-  .modal-content .box p {
-    width: 90%;
-    margin-bottom: 1rem;
-  }
-
-  /* Botón de Eliminar */
-  .delete-link-btn {
-    width: 45%;
-    padding: 0.6rem;
-  }
-
-  /* Botón de Cancelar en el Modal de Delete */
-  .cancel-delete-link-btn {
-    width: 45%;
-    padding: 0.6rem;
-    font-size: 0.85rem;
-  }
-
-}
-
-@media (max-width: 492px) {
-
-  h2.title{
-    padding: .29rem 0;
-  }
-  
-  h2.title {
-    font-size: 1.5rem; 
-  }
-
-  /* Botón para crear links */
-  .button.is-primary {
-    font-size: 0.9rem;
-    padding: 0.3rem 2rem;
-    margin: 6rem auto 0 auto; 
-    border: 1px solid rgb(127, 56, 198); ;
-  }
-
-
-  /* Botones en la tabla */
-
-.table th:nth-child(4), 
-.table td:nth-child(4) {
-  width: 13.5%; 
-  min-width: 50px;
-  font-size: 0.7rem; 
-  padding: 0.35rem 0rem;
-}
-
-.buttons {
-  display: flex;
-  justify-content: center;
-  gap: 0.4rem;
-}
-
-.button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  border: none;
-  font-size: 0.6rem;
-  padding: 0.2rem 0.2rem;
-  transition: all 0.3s ease;
+
+  padding: 1.25rem;
+
+  background:
+    rgba(15, 23, 42, 0.36);
+
+  backdrop-filter: blur(2px);
 }
 
-.table .buttons .button {
-  font-size: 0; 
+
+/* =========================
+   DELETE MODAL
+========================= */
+
+.links-page__delete-modal {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 1.5rem;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    #e4e7ef;
+
+  border-radius: 0.85rem;
+
+  box-shadow:
+    0 20px 50px
+    rgba(15, 23, 42, 0.14);
 }
 
-.button:hover {
-  opacity: 0.8;
-}
 
-.password-button i {
-  font-size: .8rem; 
-}
+.links-page__delete-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-.edit-button {
-  color: #4a90e2;
-  border-color: #4a90e2;
-}
+  width: 2.75rem;
+  height: 2.75rem;
 
-.edit-button i {
-  font-size: 0.8rem;
-}
-
-.edit-button:hover {
-  background-color: #4a90e2;
-  color: white;
-}
-
-.delete-button i {
-  font-size: 0.8rem;
-}
-
-/* Modal de crear link y editar  */
-.modal {
-
-  .modal-content {
-    width: 90%;
-    padding: 0.5rem 0.4rem !important;
-  }
-
-  h3.title {
-    font-size: 1.3rem;
-  }
-
-  .label {
-    font-size: 0.85rem;
-  }
-
-  .textarea {
-    min-height: 75px;
-    background-color: #f5f5f5;
-    color: #393535;
-    border: 1px solid #cccccc;
-    padding: 0.25rem .5rem;
-    border-radius: 5px;
-    font-size: .9rem;
-    resize: none;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-  }
-
-  .textarea:focus {
-    background-color: #f5f5f5;
-    outline: none;
-  }
-
-  .input {
-    background-color: #f5f5f5; 
-    color: #333; 
-    border: 1px solid #ccc; 
-    padding: 0.55rem .5rem;
-    border-radius: 5px;
-    font-size: .9rem;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-  }
-  
-  .input:focus {
-    background-color: #eaeaea; 
-    border: none; 
-    outline: none;
-  }
-}
-
-  .buttons-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center; 
-    gap: .7rem; 
-    margin-top: 1.5rem;
-  }
-  
-  .create-link-btn, .update-link-btn {
-    width: 100%;
-    background-color: #3273dc;
-    color: white;
-    font-size: 0.9rem;
-    padding: 0.6rem 2rem;
-    border-radius: 5px;
-    border: 1px solid #3273dc; ;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .create-link-btn:hover, .update-link-btn:hover {
-    background-color: #275bb5;
-  }
-  
-  .cancel-link-btn {
-    width: 100%;
-    background-color: transparent;
-    color: rgb(127, 56, 198);
-    font-size: 0.8rem;
-    padding: 0.6rem 2rem;
-    border-radius: 5px;
-    border: 0.5px solid rgb(127, 56, 198);
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .cancel-link-btn:hover {
-    background-color: rgb(110, 44, 176);
-    color: white;
-  }
-
-/* Modal de Delete */
-.modal.is-active .modal-content {
-  max-width: 400px;
-  margin: auto;
-  padding: .8rem 0rem !important;
-}
-
-.delete-modal-box {
-  background-color: transparent;
-  box-shadow: none;
-  text-align: center;
-}
-
-.delete-modal-title {
-  font-size: 1rem;
-  color: #333; 
-  margin-bottom: 0rem;
-}
-
-/* Ajuste específico para el párrafo dentro del modal de eliminación */
-.modal-content .box p {
-  width: 90%;
-  margin: auto;
-  color: #333; 
-  text-align: left;
-  font-size: 1rem;
   margin-bottom: 1rem;
+
+  border-radius: 0.7rem;
+
+  background: #fff1f2;
+  color: #dc2626;
+
+  svg {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
 }
 
-/* Botón de Eliminar */
-.delete-link-btn {
-  width: 45%;
-  padding: 0.6rem;
-  font-size: 0.85rem;
-  border-radius: 5px;
-  background-color: #3273dc;
-  color: white;
-  border: .5px solid #3273dc; ;
+
+.links-page__delete-content {
+
+  h3 {
+    margin: 0 0 0.45rem;
+
+    font-size: 1rem;
+    font-weight: 700;
+
+    color: #181c2b;
+  }
+
+  p {
+    margin: 0;
+
+    font-size: 0.82rem;
+    line-height: 1.55;
+
+    color: #555d70;
+
+    strong {
+      color: #242a3a;
+      font-weight: 650;
+    }
+  }
+
+  > span {
+    display: block;
+
+    margin-top: 0.4rem;
+
+    font-size: 0.74rem;
+
+    color: #8a91a2;
+  }
+}
+
+
+/* =========================
+   DELETE ACTIONS
+========================= */
+
+.links-page__delete-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 0.65rem;
+
+  margin-top: 1.4rem;
+}
+
+
+.links-page__delete-button {
+  min-height: 2.35rem;
+
+  padding:
+    0.55rem
+    1rem;
+
+  border-radius: 0.5rem;
+
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+
   cursor: pointer;
-  transition: background-color 0.3s ease;
+
+  transition:
+    transform 0.12s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
 }
 
-.delete-link-btn:hover {
-  background-color: #275bb5;
+
+.links-page__delete-button--cancel {
+  border:
+    1px solid
+    #dfe3eb;
+
+  background: #ffffff;
+
+  color: #3e4557;
+
+  &:hover {
+    background: #f7f8fb;
+  }
 }
 
-/* Botón de Cancelar en el Modal de Delete */
-.cancel-delete-link-btn {
-  width: 45%;
-  padding: 0.6rem;
-  font-size: 0.85rem;
-  border-radius: 5px;
-  background-color: transparent;
-  color: rgb(127, 56, 198); 
-  border: .5px solid rgb(127, 56, 198);
+
+.links-page__delete-button--danger {
+  border:
+    1px solid
+    #dc2626;
+
+  background: #dc2626;
+
+  color: #ffffff;
+
+  &:hover {
+    background: #c91e1e;
+  }
+}
+
+
+/* =========================
+   ERROR MODAL
+========================= */
+
+.links-page__error-modal {
+  width: 100%;
+  max-width: 390px;
+
+  padding: 1.5rem;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    #e4e7ef;
+
+  border-radius: 0.85rem;
+
+  box-shadow:
+    0 20px 50px
+    rgba(15, 23, 42, 0.14);
+
+  h3 {
+    margin:
+      0.8rem
+      0
+      0.4rem;
+
+    font-size: 1rem;
+    font-weight: 700;
+
+    color: #181c2b;
+  }
+
+  p {
+    margin: 0;
+
+    font-size: 0.8rem;
+    line-height: 1.5;
+
+    color: #697084;
+  }
+}
+
+
+.links-page__error-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.7rem;
+  height: 2.7rem;
+
+  margin: 0 auto;
+
+  border-radius: 50%;
+
+  background: #fff1f2;
+
+  color: #dc2626;
+
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+
+.links-page__error-button {
+  min-height: 2.35rem;
+
+  margin-top: 1.25rem;
+
+  padding:
+    0.55rem
+    1.25rem;
+
+  border: 0;
+  border-radius: 0.5rem;
+
+  background: #4f46e5;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+
+  transition:
+    background 0.15s ease,
+    transform 0.12s ease;
+
+  &:hover {
+    background: #4338ca;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
 }
 
-.cancel-delete-link-btn:hover {
-  background-color: rgb(127, 56, 198);
-  color: white; 
+
+/* =========================
+   TABLE CHILD
+========================= */
+
+app-links-table {
+  display: block;
+
+  /*
+   * Importante para el menú de 3 puntos:
+   * el padre no debe recortarlo.
+   */
+  overflow: visible;
 }
 
 
+app-links-pagination {
+  display: block;
 }
 
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1100px) {
+
+  .links-page__container {
+    padding:
+      1.5rem
+      1rem
+      2rem;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+
+  .links-page {
+    width: 100%;
+
+    margin-left: 0;
+  }
+
+
+  .links-page__container {
+    padding:
+      1rem
+      0.75rem
+      1.5rem;
+  }
+
+
+  .links-page__content {
+    gap: 0.75rem;
+
+    margin-top: 1rem;
+  }
+
+
+  .links-page__table-card {
+    border-radius: 0.65rem;
+  }
+
+
+  .links-page__delete-modal,
+  .links-page__error-modal {
+    padding: 1.25rem;
+  }
+
+
+  .links-page__delete-actions {
+    flex-direction: column-reverse;
+  }
+
+
+  .links-page__delete-button {
+    width: 100%;
+  }
+}

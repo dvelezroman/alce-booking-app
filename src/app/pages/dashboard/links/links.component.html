@@ -1,189 +1,185 @@
-<div class="container">
-    <h2 class="title link is-3">Links List</h2>
+<main class="links-page">
 
-    <!-- Botón para abrir el modal de creación de link -->
-    <button (click)="openCreateModal()" class="button is-primary">
-      <span class="material-icons">add</span>
-      Crear Nuevo link
-    </button>
+  <div class="links-page__container">
 
-    <!-- Tabla para listar los links -->
-     <div class="table-container">
-       <table class="table is-striped">
-         <thead>
-           <tr>
-             <th>No.</th>
-             <th>Descripción</th>
-             <th>Link</th>
-             <th>Contraseña</th>
-             <th>Acciones</th>
-           </tr>
-         </thead>
-         <tbody>
-           <tr *ngFor="let link of links; index as i">
-             <td>{{ i + 1 }}</td>
-             <td>{{ link.description }}</td>
-             <td>
-               <a [href]="link.link" target="_blank" class="purple-link">{{ link.link }}</a>
-             </td>
-             <td>{{ link.password }}</td>
-             <td>
-               <div class="buttons">
-                 <button (click)="openEditPasswordModal(link)" class="button password-button">
-                   <i class="fas fa-key"></i>
-                 </button>
-                 <button (click)="openEditModal(link)" class="button edit-button">
-                   <i class="fas fa-edit"></i>
-                 </button>
-                 <button (click)="openDeleteModal(link)" class="button delete-button">
-                   <i class="fas fa-trash"></i>
-                 </button>
-               </div>
-             </td>
-           </tr>
-         </tbody>
-       </table>
-     </div>
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-    <!-- Modal para crear un nuevo link -->
-    <div id="createModal" class="modal" [ngClass]="{ 'is-active': isCreateModalOpen }">
-      <div class="modal-background"></div>
-        <div class="modal-content">
-          <div class="box">
-            <h3 class="title is-4">Crear Link</h3>
-            <form (ngSubmit)="createLink()">
+    <app-links-header
+      (createRequested)="openCreateModal()"
+    >
+    </app-links-header>
 
-              <!-- Campo para la descripción -->
-              <div class="field">
-                <label class="label">Descripción</label>
-                <div class="control">
-                  <textarea class="textarea" [(ngModel)]="newLink.description" name="description" required></textarea>
-                </div>
-              </div>
 
-              <!-- Campo para el link -->
-              <div class="field">
-                <label class="label">Link</label>
-                <div class="control">
-                  <input class="input" type="url" [(ngModel)]="newLink.link" name="link" placeholder="https://example.com" required />
-                </div>
-              </div>
+    <!-- =========================
+         CONTENT
+    ========================== -->
 
-              <!-- Campo para el password de la meeting -->
-             <!-- Campo para el password de la meeting -->
-              <!--
-              <div class="field">
-                <label class="label">Password de la meeting</label>
-                <div class="control">
-                  <input class="input" type="text" [(ngModel)]="newLink.password" name="password" placeholder="password" />
-                </div>
-              </div>
-              -->
+    <section class="links-page__content">
 
-              <div class="buttons-container">
-                <button type="submit" class="button create-link-btn">Crear</button>
-                <button type="button" class="button cancel-link-btn" (click)="closeCreateModal()">Cancelar</button>
-              </div>
-            </form>
-          </div>
-        </div>
+      <!-- FILTERS / SEARCH -->
+
+      <app-links-filters
+          [searchTerm]="searchTerm"
+          [total]="total"
+          (searchTermChange)="onSearchChange($event)"
+          (clearRequested)="clearSearch()"
+        >
+        </app-links-filters>
+
+
+      <!-- TABLE -->
+
+      <div class="links-page__table-card">
+
+        <app-links-table
+          [links]="pagedLinks"
+          (editRequested)="openEditModal($event)"
+          (editPasswordRequested)="openEditPasswordModal($event)"
+          (deleteRequested)="openDeleteModal($event)"
+        >
+        </app-links-table>
+
+
+        <!-- PAGINATION -->
+
+        <app-links-pagination
+          [page]="page"
+          [totalPages]="totalPages"
+          [total]="total"
+          [limit]="limit"
+          [limitOptions]="limitOptions"
+          [canPrev]="canPrev"
+          [canNext]="canNext"
+          [paginationLabel]="paginationLabel"
+          (pageChange)="onPageChange($event)"
+          (previousRequested)="onPrev()"
+          (nextRequested)="onNext()"
+          (limitChange)="onLimitChange($event)"
+        >
+        </app-links-pagination>
+
       </div>
 
-      <!-- Modal para editar un link existente -->
-      <div id="editModal" class="modal" [ngClass]="{ 'is-active': isEditModalOpen }">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-          <div class="box">
-            <h3 class="title is-4">Editar Link</h3>
-            <form>
+    </section>
 
-              <!-- Campo para la descripción -->
-              <div class="field">
-                <label class="label">Descripción</label>
-                <div class="control" *ngIf="selectedLink">
-                  <textarea class="textarea" [(ngModel)]="selectedLink.description" name="description" required></textarea>
-                </div>
-              </div>
-
-              <!-- Campo para el link -->
-              <div class="field">
-                <label class="label">Link</label>
-                <div class="control" *ngIf="selectedLink">
-                  <input class="input" type="url" [(ngModel)]="selectedLink.link" name="link" placeholder="https://example.com" required />
-                </div>
-              </div>
-
-              <!-- Campo para el password de la meeting -->
-              <!--<div class="field">
-                <label class="label">Password de la meeting</label>
-                <div class="control" *ngIf="selectedLink">
-                  <input class="input" type="text" [(ngModel)]="selectedLink.password" name="password" placeholder="password" />
-                </div>
-              </div>
-              -->
-
-              <div class="buttons-container">
-                <button type="submit" class="button update-link-btn" (click)="updateLink()">Actualizar</button>
-                <button type="button" class="button cancel-link-btn" (click)="closeEditModal()">Cancelar</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <div id="editPasswordModal" class="modal" [ngClass]="{ 'is-active': isEditPasswordModalOpen }">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-          <div class="box">
-            <h3 class="title is-4">
-              {{ selectedLink?.password ? 'Editar Password' : 'Agregar Password' }}
-            </h3>
-            <form (ngSubmit)="updatePassword()">
-              <!-- Campo para el password de la meeting -->
-              <div class="field">
-                <label class="label">Password de la meeting</label>
-                <div *ngIf="selectedLink" class="control">
-                  <input class="input" type="text" [(ngModel)]="selectedLink.password" name="password" placeholder="password" required />
-                </div>
-              </div>
-
-              <div class="buttons-container">
-                <button type="submit" class="button update-link-btn">Actualizar</button>
-                <button type="button" class="button cancel-link-btn" (click)="closeEditPasswordModal()">Cancelar</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-
-
-    <!-- Modal para confirmar la eliminación de un link -->
-    <div id="deleteModal" class="modal" [ngClass]="{ 'is-active': isDeleteModalOpen }">
-      <div class="modal-background"></div>
-      <div class="modal-content">
-        <div class="box">
-          <h3 class="title is-4">Eliminar</h3>
-          <p>¿Deseas eliminar el link "{{ selectedLink?.description }}"?</p>
-          <div class="delete-buttons-container">
-            <button class="button delete-link-btn" (click)="deleteLink()">Eliminar</button>
-            <button class="button cancel-delete-link-btn" (click)="closeDeleteModal()">Cancelar</button>
-        </div>
-        </div>
-      </div>
-    </div>
   </div>
 
-<!-- Error Modal -->
-<div id="errorModal" [ngClass]="{ 'is-active': isErrorModalOpen }" class="modal">
-  <div class="modal-background"></div>
-  <div class="modal-content">
-    <div class="box">
-      <h3 class="title is-4">Error</h3>
-      <p>{{ errorMessage }}</p>
-      <div class="delete-buttons-container">
-        <button class="button cancel-delete-link-btn" (click)="closeErrorModal()">Cerrar</button>
+
+  <!-- =========================
+       CREATE MODAL
+  ========================== -->
+
+  @if (isCreateModalOpen) {
+
+    <app-links-form-modal
+      mode="create"
+      [link]="newLink"
+      (saveRequested)="createLink()"
+      (closeRequested)="closeCreateModal()"
+    >
+    </app-links-form-modal>
+
+  }
+
+
+  <!-- =========================
+       EDIT MODAL
+  ========================== -->
+
+  @if (
+    isEditModalOpen &&
+    selectedLink
+  ) {
+
+    <app-links-form-modal
+      mode="edit"
+      [link]="selectedLink"
+      (saveRequested)="updateLink()"
+      (closeRequested)="closeEditModal()"
+    >
+    </app-links-form-modal>
+
+  }
+
+
+  <!-- =========================
+       EDIT PASSWORD MODAL
+  ========================== -->
+
+  @if (
+    isEditPasswordModalOpen &&
+    selectedLink
+  ) {
+
+    <app-links-form-modal
+      mode="password"
+      [link]="selectedLink"
+      (saveRequested)="updatePassword()"
+      (closeRequested)="closeEditPasswordModal()"
+    >
+    </app-links-form-modal>
+
+  }
+
+
+  <!-- =========================
+       ERROR MODAL
+  ========================== -->
+
+  @if (isErrorModalOpen) {
+
+    <div
+      class="links-page__modal-backdrop"
+      (click)="closeErrorModal()"
+    >
+
+      <div
+        class="links-page__error-modal"
+        (click)="$event.stopPropagation()"
+      >
+
+        <div class="links-page__error-icon">
+          !
+        </div>
+
+        <h3>
+          Ocurrió un error
+        </h3>
+
+        <p>
+          {{ errorMessage }}
+        </p>
+
+        <button
+          type="button"
+          class="links-page__error-button"
+          (click)="closeErrorModal()"
+        >
+          Entendido
+        </button>
+
       </div>
+
     </div>
-  </div>
-</div>
+
+  }
+
+</main>
+
+<!-- =========================
+     GLOBAL MODAL
+========================== -->
+
+<app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+>
+</app-modal>

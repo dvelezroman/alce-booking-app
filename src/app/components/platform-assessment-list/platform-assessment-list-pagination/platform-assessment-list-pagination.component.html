@@ -1,0 +1,251 @@
+<section class="platform-pagination">
+
+  <!-- =========================
+       LIMIT
+  ========================== -->
+
+  <div class="platform-pagination__limit">
+
+    <span class="platform-pagination__text">
+      Mostrar
+    </span>
+
+    <div class="platform-pagination__select-wrapper">
+
+      <select
+        class="platform-pagination__select"
+        [ngModel]="limit"
+        (ngModelChange)="onLimitChange($event)"
+        aria-label="Resultados por página"
+      >
+        @for (
+          option of limitOptions;
+          track option
+        ) {
+          <option [ngValue]="option">
+            {{ option }}
+          </option>
+        }
+      </select>
+
+      <span
+        class="platform-pagination__select-chevron"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m7 9.5 5 5 5-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+    </div>
+
+    <span class="platform-pagination__text">
+      por página
+    </span>
+
+  </div>
+
+
+  <!-- =========================
+       NAVIGATION
+  ========================== -->
+
+  <nav
+    class="platform-pagination__navigation"
+    aria-label="Paginación"
+  >
+
+    <!-- FIRST -->
+
+    <button
+      type="button"
+      class="platform-pagination__button"
+      [disabled]="!canPrev"
+      aria-label="Primera página"
+      title="Primera página"
+      (click)="onFirst()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="m13 8-4 4 4 4"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="m18 8-4 4 4 4"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+
+    <!-- PREVIOUS -->
+
+    <button
+      type="button"
+      class="platform-pagination__button"
+      [disabled]="!canPrev"
+      aria-label="Página anterior"
+      title="Página anterior"
+      (click)="onPrevious()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="m14 8-4 4 4 4"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+
+    <!-- START ELLIPSIS -->
+
+    @if (showStartEllipsis) {
+
+      <button
+        type="button"
+        class="platform-pagination__button"
+        (click)="onPage(1)"
+      >
+        1
+      </button>
+
+      <span class="platform-pagination__ellipsis">
+        ...
+      </span>
+
+    }
+
+
+    <!-- PAGES -->
+
+    @for (
+      item of visiblePages;
+      track item
+    ) {
+
+      <button
+        type="button"
+        class="platform-pagination__button platform-pagination__page"
+        [class.platform-pagination__page--active]="item === page"
+        [attr.aria-current]="item === page ? 'page' : null"
+        (click)="onPage(item)"
+      >
+        {{ item }}
+      </button>
+
+    }
+
+
+    <!-- END ELLIPSIS -->
+
+    @if (showEndEllipsis) {
+
+      <span class="platform-pagination__ellipsis">
+        ...
+      </span>
+
+      <button
+        type="button"
+        class="platform-pagination__button"
+        (click)="onPage(totalPages)"
+      >
+        {{ totalPages }}
+      </button>
+
+    }
+
+
+    <!-- NEXT -->
+
+    <button
+      type="button"
+      class="platform-pagination__button"
+      [disabled]="!canNext"
+      aria-label="Página siguiente"
+      title="Página siguiente"
+      (click)="onNext()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="m10 8 4 4-4 4"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+
+    <!-- LAST -->
+
+    <button
+      type="button"
+      class="platform-pagination__button"
+      [disabled]="!canNext"
+      aria-label="Última página"
+      title="Última página"
+      (click)="onLast()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="m6 8 4 4-4 4"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="m11 8 4 4-4 4"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+  </nav>
+
+
+  <!-- =========================
+       SUMMARY
+  ========================== -->
+
+  <div class="platform-pagination__summary">
+    {{ paginationLabel }}
+  </div>
+
+</section>

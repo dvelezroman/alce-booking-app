@@ -1,0 +1,542 @@
+:host {
+  display: block;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+.links-table {
+  width: 100%;
+
+  border: 1px solid #e8eaf0;
+  border-radius: 8px;
+
+  overflow: hidden;
+}
+
+
+.links-table__wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+
+.links-table__table {
+  width: 100%;
+  min-width: 760px;
+
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  color: #252a3a;
+}
+
+
+/* =========================
+   COLUMNS
+========================= */
+
+.links-table__description-column {
+  width: 25%;
+}
+
+.links-table__link-column {
+  width: 39%;
+}
+
+.links-table__password-column {
+  width: 18%;
+}
+
+.links-table__actions-column {
+  width: 110px;
+  text-align: center;
+}
+
+
+/* =========================
+   HEAD
+========================= */
+
+.links-table__table thead {
+  background: #fafbfc;
+}
+
+
+.links-table__table th {
+  height: 3.3rem;
+
+  padding:
+    0.7rem
+    1.5rem;
+
+  border-bottom:
+    1px solid
+    #e8eaf0;
+
+  text-align: left;
+
+  font-size: 0.77rem;
+  font-weight: 600;
+
+  color: #4f5568;
+}
+
+
+.links-table__table th.links-table__actions-column {
+  text-align: center;
+}
+
+
+/* =========================
+   ROWS
+========================= */
+
+.links-table__table td {
+  height: 4.65rem;
+
+  padding:
+    0.8rem
+    1.5rem;
+
+  border-bottom:
+    1px solid
+    #eceef3;
+
+  vertical-align: middle;
+
+  font-size: 0.8rem;
+}
+
+
+.links-table__table tbody tr {
+  transition:
+    background-color 0.15s ease;
+}
+
+
+.links-table__table tbody tr:hover {
+  background: #fcfcfe;
+}
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.links-table__description {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.2rem;
+
+  min-width: 0;
+}
+
+
+.links-table__description-name {
+  overflow: hidden;
+
+  font-size: 0.82rem;
+  line-height: 1.3;
+  font-weight: 600;
+
+  color: #202536;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.links-table__secondary {
+  font-size: 0.72rem;
+
+  color: #83899a;
+}
+
+
+/* =========================
+   URL
+========================= */
+
+.links-table__url {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.45rem;
+
+  max-width: 100%;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  font-family: inherit;
+
+  color: #365fc7;
+
+  cursor: pointer;
+
+  transition:
+    color 0.15s ease,
+    transform 0.12s ease;
+}
+
+
+.links-table__url:hover {
+  color: #4338ca;
+}
+
+
+.links-table__url:active {
+  transform: scale(0.99);
+}
+
+
+.links-table__url-text {
+  display: block;
+
+  overflow: hidden;
+
+  font-size: 0.78rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.links-table__url-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 1rem;
+  height: 1rem;
+}
+
+
+.links-table__url-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================
+   PASSWORD
+========================= */
+
+.links-table__password {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 3.5rem;
+  height: 1.55rem;
+
+  padding:
+    0
+    0.55rem;
+
+  border-radius: 999px;
+
+  background: #eaf8ef;
+
+  color: #48a562;
+
+  font-size: 0.83rem;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+}
+
+
+.links-table__empty-value {
+  color: #a0a5b2;
+}
+
+
+/* =========================
+   MENU TRIGGER
+========================= */
+
+.links-table__menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.2rem;
+  height: 2.2rem;
+
+  padding: 0;
+
+  border:
+    1px solid
+    transparent;
+
+  border-radius: 0.5rem;
+
+  background: transparent;
+
+  color: #616778;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.12s ease;
+}
+
+
+.links-table__menu-trigger svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+
+.links-table__menu-trigger:hover,
+.links-table__menu-trigger--active {
+  border-color: #dcd9fa;
+
+  background: #f2f0ff;
+
+  color: #5146d9;
+}
+
+
+.links-table__menu-trigger:active {
+  transform: scale(0.95);
+}
+
+
+/* =========================
+   FIXED MENU
+========================= */
+
+.links-table__menu {
+  position: fixed;
+
+  z-index: 10000;
+
+  width: 230px;
+
+  padding: 0.45rem;
+
+  border:
+    1px solid
+    #e3e5eb;
+
+  border-radius: 0.65rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 12px 32px
+    rgba(31, 36, 55, 0.14);
+
+  text-align: left;
+}
+
+
+/* =========================
+   MENU ITEM
+========================= */
+
+.links-table__menu-item {
+  display: flex;
+  align-items: center;
+
+  gap: 0.7rem;
+
+  width: 100%;
+
+  padding:
+    0.65rem
+    0.7rem;
+
+  border: 0;
+  border-radius: 0.45rem;
+
+  background: transparent;
+
+  color: #313647;
+
+  font-family: inherit;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    transform 0.12s ease;
+}
+
+
+.links-table__menu-item:hover {
+  background: #f6f7fa;
+}
+
+
+.links-table__menu-item:active {
+  transform: scale(0.98);
+}
+
+
+.links-table__menu-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+
+.links-table__menu-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+.links-table__menu-content {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.12rem;
+
+  min-width: 0;
+}
+
+
+.links-table__menu-content strong {
+  font-size: 0.77rem;
+  font-weight: 600;
+
+  color: inherit;
+}
+
+
+.links-table__menu-content small {
+  font-size: 0.67rem;
+  font-weight: 400;
+
+  color: #8a8f9e;
+}
+
+
+/* =========================
+   DIVIDER
+========================= */
+
+.links-table__menu-divider {
+  height: 1px;
+
+  margin:
+    0.3rem
+    0.4rem;
+
+  background: #eceef2;
+}
+
+
+/* =========================
+   DANGER
+========================= */
+
+.links-table__menu-item--danger {
+  color: #d14343;
+}
+
+
+.links-table__menu-item--danger:hover {
+  background: #fff4f4;
+}
+
+
+.links-table__menu-item--danger
+.links-table__menu-content small {
+  color: #d98a8a;
+}
+
+
+/* =========================
+   EMPTY
+========================= */
+
+.links-table__empty {
+  height: 15rem !important;
+
+  text-align: center;
+}
+
+
+.links-table__empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.4rem;
+
+  color: #7d8392;
+}
+
+
+.links-table__empty-content strong {
+  font-size: 0.85rem;
+
+  color: #343949;
+}
+
+
+.links-table__empty-content > span:last-child {
+  font-size: 0.75rem;
+}
+
+
+.links-table__empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.5rem;
+  height: 2.5rem;
+
+  margin-bottom: 0.25rem;
+
+  border-radius: 50%;
+
+  background: #f1f0ff;
+
+  color: #5146d9;
+}
+
+
+.links-table__empty-icon svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .links-table__table th,
+  .links-table__table td {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+}

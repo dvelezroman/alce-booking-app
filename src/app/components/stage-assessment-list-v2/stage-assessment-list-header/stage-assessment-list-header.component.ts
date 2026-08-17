@@ -13,10 +13,7 @@ import {
 })
 export class StageAssessmentListHeaderComponent {
 
-  @Output()
-  newAssessmentRequested =
-    new EventEmitter<void>();
-
+  @Output() newAssessmentRequested = new EventEmitter<void>();
 
   onNewAssessment(): void {
     this.newAssessmentRequested.emit();

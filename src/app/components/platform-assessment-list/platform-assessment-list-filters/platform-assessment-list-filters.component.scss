@@ -1,0 +1,580 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.platform-filters {
+  width: 100%;
+
+  overflow: visible;
+
+  border: 1px solid #e6e9ef;
+  border-radius: 0.8rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 3px 14px
+    rgba(15, 23, 42, 0.025);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.platform-filters__header {
+  min-height: 3.65rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding:
+    0.75rem
+    1.2rem;
+
+  border-bottom: 1px solid #eceef2;
+}
+
+.platform-filters__heading {
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+}
+
+.platform-filters__heading-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #30384a;
+}
+
+.platform-filters__heading-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.platform-filters__title {
+  margin: 0;
+
+  color: #20242f;
+
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+
+/* =========================
+   TOGGLE
+========================= */
+
+.platform-filters__toggle {
+  height: 2.25rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.45rem;
+
+  padding:
+    0
+    0.85rem;
+
+  border: 1px solid #dfe3ea;
+  border-radius: 0.5rem;
+
+  background: #ffffff;
+  color: #343946;
+
+  font-family: inherit;
+  font-size: 0.66rem;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.platform-filters__toggle:hover {
+  background: #f8f9fb;
+}
+
+.platform-filters__toggle:active {
+  transform: scale(0.98);
+}
+
+.platform-filters__toggle-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+
+  display: inline-flex;
+
+  transition:
+    transform 0.18s ease;
+}
+
+.platform-filters__toggle-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.platform-filters__toggle-icon--closed {
+  transform: rotate(180deg);
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.platform-filters__content {
+  padding:
+    1.05rem
+    1.2rem
+    1rem;
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+.platform-filters__grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(13rem, 1.2fr)
+    minmax(12rem, 1.1fr)
+    minmax(10rem, 0.9fr)
+    minmax(10rem, 0.9fr)
+    minmax(10rem, 0.9fr);
+
+  gap: 1rem;
+}
+
+
+/* =========================
+   FIELD
+========================= */
+
+.platform-filters__field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.4rem;
+}
+
+.platform-filters__label {
+  color: #353a47;
+
+  font-size: 0.67rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+
+/* =========================
+   CONTROL
+========================= */
+
+.platform-filters__control {
+  width: 100%;
+  height: 2.55rem;
+
+  padding:
+    0
+    0.8rem;
+
+  border: 1px solid #dfe3e9;
+  border-radius: 0.5rem;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #303541;
+
+  font-family: inherit;
+  font-size: 0.69rem;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.platform-filters__control:hover {
+  border-color: #cfd4dd;
+}
+
+.platform-filters__control:focus {
+  border-color: #727ee2;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(74, 89, 215, 0.07);
+}
+
+.platform-filters__control::placeholder {
+  color: #8c919e;
+}
+
+
+/* =========================
+   ICON INPUT
+========================= */
+
+.platform-filters__input-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+.platform-filters__input-icon {
+  position: absolute;
+  z-index: 2;
+
+  top: 50%;
+  left: 0.72rem;
+
+  width: 0.95rem;
+  height: 0.95rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #6f7685;
+
+  transform: translateY(-50%);
+
+  pointer-events: none;
+}
+
+.platform-filters__input-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.platform-filters__control--icon {
+  padding-left: 2.15rem;
+}
+
+
+/* =========================
+   SELECT
+========================= */
+
+.platform-filters__select-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+.platform-filters__select {
+  appearance: none;
+
+  padding-right: 2.2rem;
+
+  cursor: pointer;
+}
+
+.platform-filters__chevron {
+  position: absolute;
+
+  top: 50%;
+  right: 0.7rem;
+
+  width: 0.9rem;
+  height: 0.9rem;
+
+  display: inline-flex;
+
+  color: #3e4554;
+
+  transform: translateY(-50%);
+
+  pointer-events: none;
+}
+
+.platform-filters__chevron svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================
+   BOTTOM
+========================= */
+
+.platform-filters__bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 1.5rem;
+
+  margin-top: 0.9rem;
+}
+
+
+/* =========================
+   DATES
+========================= */
+
+.platform-filters__dates {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(10rem, 1fr)
+    );
+
+  gap: 1rem;
+
+  width: min(
+    100%,
+    25rem
+  );
+}
+
+.platform-filters__date-wrapper {
+  position: relative;
+}
+
+.platform-filters__date {
+  cursor: pointer;
+}
+
+.platform-filters__date::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+
+  opacity: 0.65;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.platform-filters__actions {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.platform-filters__button {
+  height: 2.45rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.45rem;
+
+  padding:
+    0
+    1rem;
+
+  border-radius: 0.5rem;
+
+  font-family: inherit;
+  font-size: 0.69rem;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.platform-filters__button:active {
+  transform: scale(0.98);
+}
+
+.platform-filters__button-icon {
+  width: 1rem;
+  height: 1rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.platform-filters__button-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================
+   SECONDARY
+========================= */
+
+.platform-filters__button--secondary {
+  min-width: 8.8rem;
+
+  border: 1px solid #d9dee7;
+
+  background: #ffffff;
+  color: #343946;
+}
+
+.platform-filters__button--secondary:hover {
+  background: #f8f9fb;
+
+  border-color: #cfd4dd;
+}
+
+
+/* =========================
+   PRIMARY
+========================= */
+
+.platform-filters__button--primary {
+  min-width: 9rem;
+
+  border: 1px solid #4939d9;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4936dd 0%,
+      #4b42e3 100%
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 4px 10px
+    rgba(72, 57, 214, 0.16);
+}
+
+.platform-filters__button--primary:hover {
+  box-shadow:
+    0 5px 14px
+    rgba(72, 57, 214, 0.22);
+}
+
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1250px) {
+
+  .platform-filters__grid {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(12rem, 1fr)
+      );
+  }
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 850px) {
+
+  .platform-filters__grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .platform-filters__bottom {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .platform-filters__dates {
+    width: 100%;
+  }
+
+  .platform-filters__actions {
+    justify-content: flex-end;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .platform-filters__header {
+    padding:
+      0.7rem
+      0.8rem;
+  }
+
+  .platform-filters__content {
+    padding:
+      0.85rem
+      0.8rem;
+  }
+
+  .platform-filters__grid {
+    grid-template-columns: 1fr;
+
+    gap: 0.75rem;
+  }
+
+  .platform-filters__dates {
+    grid-template-columns: 1fr;
+
+    gap: 0.75rem;
+  }
+
+  .platform-filters__actions {
+    flex-direction: column;
+
+    width: 100%;
+  }
+
+  .platform-filters__button {
+    width: 100%;
+    min-width: 0;
+
+    height: 2.35rem;
+  }
+
+  .platform-filters__control {
+    height: 2.45rem;
+  }
+}

@@ -1,0 +1,461 @@
+<section class="platform-filters">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="platform-filters__header">
+
+    <div class="platform-filters__heading">
+
+      <span
+        class="platform-filters__heading-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M4 5h16l-6.5 7.2V18l-3 1.5v-7.3L4 5Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <h2 class="platform-filters__title">
+        Filtros
+      </h2>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="platform-filters__toggle"
+      (click)="toggleRequested.emit()"
+    >
+      <span>
+        {{
+          showFilters
+            ? 'Ocultar filtros'
+            : 'Mostrar filtros'
+        }}
+      </span>
+
+      <span
+        class="platform-filters__toggle-icon"
+        [class.platform-filters__toggle-icon--closed]="
+          !showFilters
+        "
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m7 14 5-5 5 5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </button>
+
+  </header>
+
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  @if (showFilters) {
+
+    <div class="platform-filters__content">
+
+      <!-- =========================
+           MAIN FILTERS
+      ========================== -->
+
+      <div class="platform-filters__grid">
+
+        <!-- STUDENT -->
+
+        <div class="platform-filters__field">
+
+          <label class="platform-filters__label">
+            ID / Estudiante
+          </label>
+
+          <div class="platform-filters__input-wrapper">
+
+            <span
+              class="platform-filters__input-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="6"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+
+                <path
+                  d="m16 16 4 4"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <input
+              type="text"
+              class="
+                platform-filters__control
+                platform-filters__control--icon
+              "
+              placeholder="Buscar por ID o nombre del estudiante..."
+              [(ngModel)]="draft.studentId"
+            />
+
+          </div>
+
+        </div>
+
+
+        <!-- TEMPLATE TITLE -->
+
+        <div class="platform-filters__field">
+
+          <label class="platform-filters__label">
+            Título del examen
+          </label>
+
+          <input
+            type="text"
+            class="platform-filters__control"
+            placeholder="Buscar por título del examen..."
+            [(ngModel)]="draft.templateTitle"
+          />
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="platform-filters__field">
+
+          <label class="platform-filters__label">
+            Estado
+          </label>
+
+          <div class="platform-filters__select-wrapper">
+
+            <select
+              class="
+                platform-filters__control
+                platform-filters__select
+              "
+              [(ngModel)]="draft.status"
+            >
+              @for (
+                status of statusOptions;
+                track status
+              ) {
+                <option [ngValue]="status">
+                  {{
+                    !status
+                      ? 'Todos los estados'
+                      : status
+                  }}
+                </option>
+              }
+            </select>
+
+            <span class="platform-filters__chevron">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 9.5 5 5 5-5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- OUTCOME -->
+
+        <div class="platform-filters__field">
+
+          <label class="platform-filters__label">
+            Resultado
+          </label>
+
+          <div class="platform-filters__select-wrapper">
+
+            <select
+              class="
+                platform-filters__control
+                platform-filters__select
+              "
+              [(ngModel)]="draft.outcome"
+            >
+              @for (
+                outcome of outcomeOptions;
+                track outcome
+              ) {
+                <option [ngValue]="outcome">
+                  @switch (outcome) {
+                    @case ('PASSED') {
+                      Aprobado
+                    }
+
+                    @case ('FAILED') {
+                      Reprobado
+                    }
+
+                    @case ('NONE') {
+                      Sin resultado
+                    }
+
+                    @default {
+                      Todos los resultados
+                    }
+                  }
+                </option>
+              }
+            </select>
+
+            <span class="platform-filters__chevron">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 9.5 5 5 5-5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- STAGE -->
+
+        <div class="platform-filters__field">
+
+          <label class="platform-filters__label">
+            Stage del estudiante
+          </label>
+
+          <div class="platform-filters__select-wrapper">
+
+            <select
+              class="
+                platform-filters__control
+                platform-filters__select
+              "
+              [(ngModel)]="draft.studentStage"
+            >
+              <option [ngValue]="undefined">
+                Todos los stages
+              </option>
+
+              @for (
+                stage of [
+                  1, 2, 3, 4, 5,
+                  6, 7, 8, 9, 10,
+                  11, 12, 13, 14, 15
+                ];
+                track stage
+              ) {
+                <option [ngValue]="stage">
+                  Stage {{ stage }}
+                </option>
+              }
+            </select>
+
+            <span class="platform-filters__chevron">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 9.5 5 5 5-5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           BOTTOM ROW
+      ========================== -->
+
+      <div class="platform-filters__bottom">
+
+        <div class="platform-filters__dates">
+
+          <!-- ASSIGNED FROM -->
+
+          <div class="platform-filters__field">
+
+            <label class="platform-filters__label">
+              Asignado desde
+            </label>
+
+            <div class="platform-filters__date-wrapper">
+
+              <input
+                type="date"
+                class="
+                  platform-filters__control
+                  platform-filters__date
+                "
+                [(ngModel)]="draft.assignedFrom"
+              />
+
+            </div>
+
+          </div>
+
+
+          <!-- ASSIGNED TO -->
+
+          <div class="platform-filters__field">
+
+            <label class="platform-filters__label">
+              Asignado hasta
+            </label>
+
+            <div class="platform-filters__date-wrapper">
+
+              <input
+                type="date"
+                class="
+                  platform-filters__control
+                  platform-filters__date
+                "
+                [(ngModel)]="draft.assignedTo"
+              />
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             ACTIONS
+        ========================== -->
+
+        <div class="platform-filters__actions">
+
+          <button
+            type="button"
+            class="
+              platform-filters__button
+              platform-filters__button--secondary
+            "
+            (click)="clearRequested.emit()"
+          >
+            <span class="platform-filters__button-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M19 8a7 7 0 1 0 .5 7"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+
+                <path
+                  d="M19 4v4h-4"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span>
+              Limpiar filtros
+            </span>
+          </button>
+
+
+          <button
+            type="button"
+            class="
+              platform-filters__button
+              platform-filters__button--primary
+            "
+            (click)="applyRequested.emit()"
+          >
+            <span class="platform-filters__button-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m6 12 4 4 8-9"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span>
+              Aplicar filtros
+            </span>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</section>

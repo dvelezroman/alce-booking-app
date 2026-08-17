@@ -1,0 +1,64 @@
+<section class="links-filters">
+
+  <!-- SEARCH -->
+  <div class="links-filters__search">
+
+    <span
+      class="links-filters__search-icon"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <circle
+          cx="11"
+          cy="11"
+          r="6.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="m16 16 4 4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+
+    <input
+      type="text"
+      class="links-filters__input"
+      placeholder="Buscar por descripción o enlace..."
+      [ngModel]="searchTerm"
+      (ngModelChange)="onSearchChange($event)"
+      autocomplete="off"
+    />
+
+    @if (hasSearch) {
+      <button
+        type="button"
+        class="links-filters__clear"
+        aria-label="Limpiar búsqueda"
+        title="Limpiar búsqueda"
+        (click)="clearSearch()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m7 7 10 10M17 7 7 17"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+    }
+
+  </div>
+
+</section>

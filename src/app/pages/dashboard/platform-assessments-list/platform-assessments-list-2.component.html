@@ -1,0 +1,112 @@
+<section class="platform-assessments-page">
+
+  <div class="platform-assessments-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <app-platform-assessment-list-header>
+    </app-platform-assessment-list-header>
+
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+
+    <app-platform-assessment-list-filters
+      [draft]="draft"
+      [showFilters]="showFilters"
+      [statusOptions]="statusOptions"
+      [outcomeOptions]="outcomeOptions"
+      (draftChange)="onDraftChange($event)"
+      (toggleRequested)="toggleFilters()"
+      (applyRequested)="applyFilters()"
+      (clearRequested)="clearFilters()"
+    >
+    </app-platform-assessment-list-filters>
+
+
+    <!-- =========================
+         RESULTS
+    ========================== -->
+
+    <section class="platform-assessments-page__results">
+
+      <!-- =========================
+           TABLE
+      ========================== -->
+
+      @if (
+        !loading &&
+        rows.length === 0
+      ) {
+
+        <app-platform-assessment-list-empty-state
+          [errorMessage]="errorMessage"
+        >
+        </app-platform-assessment-list-empty-state>
+
+      } @else {
+
+        <app-platform-assessment-list-table
+          [rows]="rows"
+          [loading]="loading"
+          [total]="total"
+          (openUrlRequested)="openUrl($event)"
+          (applyWritingRequested)="startApplyWriting($event)"
+        >
+        </app-platform-assessment-list-table>
+
+
+        <!-- =========================
+             PAGINATION
+        ========================== -->
+
+        @if (
+          !loading &&
+          total > 0
+        ) {
+
+          <app-platform-assessment-list-pagination
+            [page]="page"
+            [totalPages]="totalPages"
+            [total]="total"
+            [limit]="limit"
+            [limitOptions]="limitOptions"
+            [canPrev]="canPrev"
+            [canNext]="canNext"
+            [paginationLabel]="paginationLabel"
+            (pageChange)="onPageChange($event)"
+            (previousRequested)="onPrev()"
+            (nextRequested)="onNext()"
+            (limitChange)="onLimitChange($event)"
+          >
+          </app-platform-assessment-list-pagination>
+
+        }
+
+      }
+
+    </section>
+
+  </div>
+
+
+  <!-- =========================
+       WRITING MODAL
+  ========================== -->
+
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm?.()"
+    (close)="modal.close()"
+  >
+  </app-modal>
+
+</section>
