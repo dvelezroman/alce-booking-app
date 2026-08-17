@@ -111,7 +111,7 @@ navItems: SidebarNavItem[] = [
   { icon: 'book-open', text: 'Recursos Stages', route: '/dashboard/stage-assessment-resources', roles: [UserRole.ADMIN]},
   { icon: 'book-type', text: 'Tipos de Evaluación',  route: '/dashboard/assessment-types', roles: [UserRole.ADMIN]},
   { icon: 'settings', text: 'Configuración de Evaluación', route: '/dashboard/assessment-config', roles: [UserRole.ADMIN] },
-  { icon: 'settings', text: 'Promoción automática', route: '/dashboard/stage-promotion', roles: [UserRole.ADMIN] },
+  { icon: 'reportes', text: 'Promoción automática de stage', route: '/dashboard/stage-promotion', roles: [UserRole.ADMIN] },
   { icon: 'notifications', text: 'Enviar', route: '/dashboard/broadcast-groups', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR], },
   { icon: 'notifications', text: 'Historial', route: '/dashboard/notifications-status', roles: [UserRole.ADMIN] },
   { icon: 'notifications', text: 'Grupos', route: '/dashboard/notifications-groups', roles: [UserRole.ADMIN] },
@@ -276,6 +276,7 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/reports-progress'),
         this.findNavItemByRoute('/dashboard/assessment-reports'),
         this.findNavItemByRoute('/dashboard/suspension-history'),
+        this.findNavItemByRoute('/dashboard/stage-promotion'),
       ].filter(entry => {
         if (this.isSubGroup(entry)) return entry.children.length > 0;
         return entry.roles.includes(role);
@@ -317,7 +318,6 @@ navItems: SidebarNavItem[] = [
       items: [
         this.findNavItemByRoute('/dashboard/feature-flag'),
         this.findNavItemByRoute('/dashboard/assessment-config'),
-        this.findNavItemByRoute('/dashboard/stage-promotion'),
         this.findNavItemByRoute('/dashboard/announcements'),
       ].filter(item => item.roles.includes(role))
     }
@@ -370,6 +370,12 @@ navItems: SidebarNavItem[] = [
 
     return allRoutes.some(route =>
       this.currentRoute === route || this.currentRoute.startsWith(route + '/')
+    );
+  }
+
+  isSubGroupActive(group: SidebarNavSubGroup): boolean {
+    return group.children.some(child =>
+      this.currentRoute === child.route || this.currentRoute.startsWith(child.route + '/')
     );
   }
 

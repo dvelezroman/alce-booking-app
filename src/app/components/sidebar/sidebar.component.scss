@@ -6,7 +6,7 @@
   left: 0;
   z-index: 9999;
   background:  #ffffff;
-  color: white;
+  color: rgba(75, 74, 74, 0.8);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -251,16 +251,22 @@
 
 .nav-item.active,
 .category-header.active,
+.sub-category-header.active,
 .nav-item:hover:not(.active),
 .category-header:hover:not(.active),
+.sub-category-header:hover:not(.active),
+.sidebar ul li a.active,
 .sidebar ul li a:hover:not(.active) {
   position: relative;
 }
 
 .nav-item.active::before,
 .category-header.active::before,
+.sub-category-header.active::before,
 .nav-item:hover:not(.active)::before,
 .category-header:hover:not(.active)::before,
+.sub-category-header:hover:not(.active)::before,
+.sidebar ul li a.active::before,
 .sidebar ul li a:hover:not(.active)::before {
   content: '';
   position: absolute;
@@ -485,21 +491,9 @@
   padding: 12px 19px;
   font-size: 0.8rem;
   cursor: pointer;
-  color: #ffffff;
+  color: rgba(75, 74, 74, 0.8);
   transition: all 0.3s ease;
   position: relative;
-}
-
-.sub-category-header:hover::before {
-  content: '';
-  position: absolute;
-  top: 3px;
-  bottom: 3px;
-  left: 5px;
-  right: 5px;
-  background-color: rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  z-index: -1;
 }
 
 .sub-category-header .chevron-icon {
@@ -524,23 +518,10 @@
   display: flex;
   align-items: center;
   font-size: 0.8rem;
-  color: #ffffff;
+  color: rgba(75, 74, 74, 0.8);
   text-decoration: none;
   position: relative;
   transition: all 0.3s ease;
-}
-
-.sub-list li a:hover::before,
-.sub-list li a.active::before {
-  content: '';
-  position: absolute;
-  top: 3px;
-  bottom: 3px;
-  left: 10px;
-  right: 10px;
-  background-color: rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  z-index: -1;
 }
 
 /* Ocultar cuando sidebar cerrado */
