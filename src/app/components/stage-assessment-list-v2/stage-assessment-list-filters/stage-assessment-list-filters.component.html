@@ -92,7 +92,10 @@
           <div class="assessment-filters__select-wrapper">
 
             <select
-              class="assessment-filters__control assessment-filters__select"
+              class="
+                assessment-filters__control
+                assessment-filters__select
+              "
               [(ngModel)]="selectedStageId"
             >
               <option [ngValue]="null">
@@ -145,7 +148,10 @@
           <div class="assessment-filters__select-wrapper">
 
             <select
-              class="assessment-filters__control assessment-filters__select"
+              class="
+                assessment-filters__control
+                assessment-filters__select
+              "
               [(ngModel)]="selectedResourceId"
             >
               <option [ngValue]="null">
@@ -198,7 +204,10 @@
           <div class="assessment-filters__select-wrapper">
 
             <select
-              class="assessment-filters__control assessment-filters__select"
+              class="
+                assessment-filters__control
+                assessment-filters__select
+              "
               [(ngModel)]="selectedCreatorId"
             >
               <option [ngValue]="null">
@@ -239,7 +248,7 @@
 
 
         <!-- =========================
-             STUDENT
+             STUDENT SEARCH
         ========================== -->
 
         <div class="assessment-filters__field">
@@ -248,7 +257,12 @@
             Estudiante
           </label>
 
-          <div class="assessment-filters__select-wrapper">
+          <div
+            class="
+              assessment-filters__select-wrapper
+              assessment-filters__student-search
+            "
+          >
 
             <span
               class="assessment-filters__control-icon"
@@ -275,45 +289,63 @@
               </svg>
             </span>
 
-            <select
+
+            <input
+              type="text"
               class="
                 assessment-filters__control
-                assessment-filters__select
-                assessment-filters__select--icon
+                assessment-filters__student-input
               "
-              [(ngModel)]="selectedStudentId"
-            >
-              <option [ngValue]="null">
-                Buscar estudiante...
-              </option>
+              placeholder="Buscar estudiante..."
+              autocomplete="off"
+              [ngModel]="searchTerm"
+              (ngModelChange)="onUserInput($event)"
+              (blur)="onUserBlur()"
+            />
 
-              @for (
-                student of students;
-                track student.studentId
-              ) {
-                <option [ngValue]="student.studentId">
-                  {{ getStudentLabel(student) }}
-                </option>
-              }
-            </select>
 
-            <span
-              class="assessment-filters__chevron"
-              aria-hidden="true"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="m7 9.5 5 5 5-5"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </span>
+            @if (
+              showUserDropdown &&
+              filteredUsers.length > 0
+            ) {
+
+              <div class="assessment-filters__student-dropdown">
+
+                @for (
+                  user of filteredUsers;
+                  track user.id
+                ) {
+
+                  <button
+                    type="button"
+                    class="assessment-filters__student-option"
+                    (mousedown)="onSelectUser(user)"
+                  >
+
+                    <span class="assessment-filters__student-avatar">
+                      {{ getUserInitials(user) }}
+                    </span>
+
+
+                    <span class="assessment-filters__student-information">
+
+                      <strong class="assessment-filters__student-name">
+                        {{ getUserName(user) }}
+                      </strong>
+
+                      <span class="assessment-filters__student-secondary">
+                        {{ getUserSecondaryText(user) }}
+                      </span>
+
+                    </span>
+
+                  </button>
+
+                }
+
+              </div>
+
+            }
 
           </div>
 

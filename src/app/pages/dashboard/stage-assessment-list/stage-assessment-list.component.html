@@ -32,8 +32,18 @@
       [filters]="filters"
       [showFilters]="showFilters"
       [assessments]="assessments"
+
+      [searchTerm]="searchTerm"
+      [filteredUsers]="filteredUsers"
+      [showUserDropdown]="showUserDropdown"
+
       (filtersChanged)="onFiltersChanged($event)"
       (toggleRequested)="toggleFilters()"
+
+      (userInputChange)="onUserInputChange($event)"
+      (userSelected)="selectUser($event)"
+      (dropdownBlurred)="hideUserDropdown()"
+      (clearUserSearchRequested)="clearFilters()"
     >
     </app-stage-assessment-list-filters>
 

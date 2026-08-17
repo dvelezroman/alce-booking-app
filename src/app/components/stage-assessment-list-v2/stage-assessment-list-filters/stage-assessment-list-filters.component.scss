@@ -245,6 +245,230 @@
   padding-left: 2.2rem;
 }
 
+/* =========================
+   STUDENT SEARCH
+========================= */
+
+.assessment-filters__student-search {
+  position: relative;
+  width: 100%;
+}
+
+.assessment-filters__student-input {
+  width: 100%;
+  padding-left: 2.2rem;
+  padding-right: 0.8rem;
+
+  background: #ffffff;
+  color: #343844;
+
+  font-family: inherit;
+
+  outline: none;
+}
+
+.assessment-filters__student-input::placeholder {
+  color: #9296a2;
+  opacity: 1;
+}
+
+.assessment-filters__student-input:focus {
+  border-color: #7888e7;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(76, 95, 218, 0.07);
+}
+
+
+/* =========================
+   INPUT ICON
+========================= */
+
+.assessment-filters__student-search
+.assessment-filters__control-icon {
+  position: absolute;
+  z-index: 2;
+
+  top: 50%;
+  left: 0.75rem;
+
+  width: 1rem;
+  height: 1rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #777d8d;
+
+  transform: translateY(-50%);
+
+  pointer-events: none;
+}
+
+.assessment-filters__student-search
+.assessment-filters__control-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================
+   DROPDOWN
+========================= */
+
+.assessment-filters__student-dropdown {
+  position: absolute;
+  z-index: 1000;
+
+  top: calc(100% + 0.35rem);
+  left: 0;
+
+  width: 100%;
+  max-height: 14rem;
+
+  padding: 0.3rem;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  border: 1px solid #dfe3ea;
+  border-radius: 0.55rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 10px 30px
+    rgba(31, 42, 89, 0.12);
+}
+
+
+/* =========================
+   RESULT OPTION
+========================= */
+
+.assessment-filters__student-option {
+  width: 100%;
+  min-height: 3rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.6rem;
+
+  padding: 0.45rem 0.55rem;
+
+  border: 0;
+  border-radius: 0.4rem;
+
+  background: transparent;
+  color: #343844;
+
+  font-family: inherit;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    transform 0.12s ease;
+}
+
+.assessment-filters__student-option:hover {
+  background: #f5f6f9;
+}
+
+.assessment-filters__student-option:active {
+  background: #eef0f5;
+  transform: scale(0.99);
+}
+
+
+/* =========================
+   AVATAR
+========================= */
+
+.assessment-filters__student-avatar {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eef1ff;
+  color: #5261cf;
+
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+
+/* =========================
+   STUDENT INFORMATION
+========================= */
+
+.assessment-filters__student-information {
+  min-width: 0;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.1rem;
+}
+
+.assessment-filters__student-name {
+  overflow: hidden;
+
+  color: #303440;
+
+  font-size: 0.68rem;
+  font-weight: 650;
+  line-height: 1.25;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.assessment-filters__student-secondary {
+  overflow: hidden;
+
+  color: #7c8290;
+
+  font-size: 0.61rem;
+  font-weight: 400;
+  line-height: 1.25;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.assessment-filters__student-dropdown::-webkit-scrollbar {
+  width: 0.35rem;
+}
+
+.assessment-filters__student-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.assessment-filters__student-dropdown::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #d4d8e1;
+}
+
 
 /* =========================
    CONTROL ICON
@@ -371,22 +595,14 @@
 ========================= */
 
 .assessment-filters__button--primary {
-  min-width: 8.5rem;
+   min-width: 7.4rem;
 
-  border: 1px solid #2c55d8;
+  border: 1px solid #6444e8;
 
-  background:
-    linear-gradient(
-      135deg,
-      #234acb 0%,
-      #275ee8 100%
-    );
-
+  background: #6444e8;
   color: #ffffff;
 
-  box-shadow:
-    0 4px 10px
-    rgba(37, 79, 218, 0.16);
+  box-shadow: 0 .15rem .4rem rgba(100, 68, 232, .16)
 }
 
 .assessment-filters__button--primary:hover {
@@ -450,6 +666,14 @@
     height: 2.35rem;
 
     font-size: 0.7rem;
+  }
+
+  .assessment-filters__student-dropdown {
+    max-height: 12rem;
+  }
+
+  .assessment-filters__student-option {
+    min-height: 3.1rem;
   }
 
   .assessment-filters__actions {

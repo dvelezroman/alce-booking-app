@@ -13,6 +13,10 @@ import {
   StageAssessmentFilters,
 } from '../../../services/dtos/stage-assessment.dto';
 
+import {
+  UserDto,
+} from '../../../services/dtos/user.dto';
+
 
 @Component({
   selector: 'app-stage-assessment-list-filters',
@@ -34,18 +38,32 @@ export class StageAssessmentListFiltersComponent {
   @Input() showFilters = false;
   @Input() assessments: StageAssessment[] = [];
 
+  @Input() searchTerm = '';
+  @Input() filteredUsers: UserDto[] = [];
+  @Input() showUserDropdown = false;
+
 
   /* =========================
      OUTPUTS
   ========================= */
 
-  @Output()
-  filtersChanged =
+  @Output() filtersChanged =
     new EventEmitter<StageAssessmentFilters>();
 
-  @Output()
-  toggleRequested =
+  @Output() toggleRequested =
     new EventEmitter<void>();
+
+  @Output() userInputChange =
+    new EventEmitter<string>();
+
+  @Output() userSelected =
+    new EventEmitter<UserDto>();
+
+  @Output() dropdownBlurred =
+    new EventEmitter<void>();
+
+  @Output() clearUserSearchRequested =
+  new EventEmitter<void>();
 
 
   /* =========================
@@ -55,7 +73,6 @@ export class StageAssessmentListFiltersComponent {
   selectedStageId: number | null = null;
   selectedResourceId: number | null = null;
   selectedCreatorId: number | null = null;
-  selectedStudentId: number | null = null;
 
 
   /* =========================
@@ -63,22 +80,19 @@ export class StageAssessmentListFiltersComponent {
   ========================= */
 
   get stages() {
-    const map =
-      new Map<number, any>();
+    const map = new Map<number, any>();
 
-    this.assessments.forEach(
-      assessment => {
-        if (
-          assessment.stageId &&
-          assessment.stage
-        ) {
-          map.set(
-            assessment.stageId,
-            assessment.stage,
-          );
-        }
-      },
-    );
+    this.assessments.forEach(assessment => {
+      if (
+        assessment.stageId &&
+        assessment.stage
+      ) {
+        map.set(
+          assessment.stageId,
+          assessment.stage,
+        );
+      }
+    });
 
     return Array.from(
       map.values(),
@@ -87,25 +101,22 @@ export class StageAssessmentListFiltersComponent {
 
 
   get resources() {
-    const map =
-      new Map<number, any>();
+    const map = new Map<number, any>();
 
-    this.assessments.forEach(
-      assessment => {
-        const resource =
-          assessment.stageAssessmentResource;
+    this.assessments.forEach(assessment => {
+      const resource =
+        assessment.stageAssessmentResource;
 
-        if (
-          assessment.stageAssessmentResourceId &&
-          resource
-        ) {
-          map.set(
-            assessment.stageAssessmentResourceId,
-            resource,
-          );
-        }
-      },
-    );
+      if (
+        assessment.stageAssessmentResourceId &&
+        resource
+      ) {
+        map.set(
+          assessment.stageAssessmentResourceId,
+          resource,
+        );
+      }
+    });
 
     return Array.from(
       map.entries(),
@@ -119,45 +130,19 @@ export class StageAssessmentListFiltersComponent {
 
 
   get creators() {
-    const map =
-      new Map<number, any>();
+    const map = new Map<number, any>();
 
-    this.assessments.forEach(
-      assessment => {
-        if (
-          assessment.createdBy &&
-          assessment.creator
-        ) {
-          map.set(
-            assessment.createdBy,
-            assessment.creator,
-          );
-        }
-      },
-    );
-
-    return Array.from(
-      map.values(),
-    );
-  }
-
-
-  get students() {
-    const map =
-      new Map<number, any>();
-
-    this.assessments.forEach(
-      assessment => {
-        assessment.students?.forEach(
-          student => {
-            map.set(
-              student.studentId,
-              student,
-            );
-          },
+    this.assessments.forEach(assessment => {
+      if (
+        assessment.createdBy &&
+        assessment.creator
+      ) {
+        map.set(
+          assessment.createdBy,
+          assessment.creator,
         );
-      },
-    );
+      }
+    });
 
     return Array.from(
       map.values(),
@@ -166,35 +151,66 @@ export class StageAssessmentListFiltersComponent {
 
 
   /* =========================
+     USER SEARCH
+  ========================= */
+
+  onUserInput(
+    value: string,
+  ): void {
+    this.userInputChange.emit(
+      value || '',
+    );
+  }
+
+
+  onSelectUser(
+    user: UserDto,
+  ): void {
+    this.userSelected.emit(user);
+  }
+
+
+  onUserBlur(): void {
+    this.dropdownBlurred.emit();
+  }
+
+
+  /* =========================
      APPLY
   ========================= */
 
   applyFilters(): void {
-    const filters: StageAssessmentFilters = {};
+    const filters: StageAssessmentFilters = {
+      ...(this.selectedStageId
+        ? {
+            stageId:
+              this.selectedStageId,
+          }
+        : {}),
 
-    if (this.selectedStageId) {
-      filters.stageId =
-        this.selectedStageId;
-    }
+      ...(this.selectedResourceId
+        ? {
+            stageAssessmentResourceId:
+              this.selectedResourceId,
+          }
+        : {}),
 
-    if (this.selectedResourceId) {
-      filters.stageAssessmentResourceId =
-        this.selectedResourceId;
-    }
+      ...(this.selectedCreatorId
+        ? {
+            createdBy:
+              this.selectedCreatorId,
+          }
+        : {}),
 
-    if (this.selectedCreatorId) {
-      filters.createdBy =
-        this.selectedCreatorId;
-    }
+      ...(this.filters.studentId
+        ? {
+            studentId:
+              this.filters.studentId,
+          }
+        : {}),
+    };
 
-    if (this.selectedStudentId) {
-      filters.studentId =
-        this.selectedStudentId;
-    }
-
-    this.filtersChanged.emit(
-      filters,
-    );
+    this.filtersChanged.emit(filters);
   }
 
 
@@ -206,9 +222,8 @@ export class StageAssessmentListFiltersComponent {
     this.selectedStageId = null;
     this.selectedResourceId = null;
     this.selectedCreatorId = null;
-    this.selectedStudentId = null;
 
-    this.filtersChanged.emit({});
+    this.clearUserSearchRequested.emit();
   }
 
 
@@ -263,17 +278,51 @@ export class StageAssessmentListFiltersComponent {
   }
 
 
-  getStudentLabel(
-    student: any,
+  /* =========================
+     USER HELPERS
+  ========================= */
+
+  getUserName(
+    user: UserDto,
   ): string {
     const name =
-      `${student.firstName || ''} ${student.lastName || ''}`
+      `${user.firstName || ''} ${user.lastName || ''}`
         .trim();
 
     return (
       name ||
-      student.email ||
-      `Estudiante ${student.studentId}`
+      user.email ||
+      'Estudiante'
+    );
+  }
+
+
+  getUserSecondaryText(
+    user: UserDto,
+  ): string {
+    return (
+      user.emailAddress ||
+      user.email ||
+      `ID ${user.student?.id || user.id}`
+    );
+  }
+
+
+  getUserInitials(
+    user: UserDto,
+  ): string {
+    const first =
+      user.firstName
+        ?.charAt(0) || '';
+
+    const last =
+      user.lastName
+        ?.charAt(0) || '';
+
+    return (
+      `${first}${last}`
+        .toUpperCase() ||
+      'E'
     );
   }
 }

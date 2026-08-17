@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  Subject,
+} from 'rxjs';
 
 import {
   StageAssessment,
@@ -7,10 +12,18 @@ import {
   StageAssessmentStudent,
 } from '../../../services/dtos/stage-assessment.dto';
 
+import {
+  UserDto,
+} from '../../../services/dtos/user.dto';
+
 import { StageAssessmentService } from '../../../services/stage-assessment.service';
+import { UsersService } from '../../../services/users.service';
 
 import { ModalComponent } from '../../../components/modal/modal.component';
-import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
+import {
+  ModalDto,
+  modalInitializer,
+} from '../../../components/modal/modal.dto';
 
 /* =========================
    CHILD COMPONENTS V2
@@ -49,7 +62,6 @@ export class StageAssessmentListComponent implements OnInit {
   assessments: StageAssessment[] = [];
   filteredAssessments: StageAssessment[] = [];
   pagedAssessments: StageAssessment[] = [];
-
   loading = false;
 
 
@@ -60,6 +72,13 @@ export class StageAssessmentListComponent implements OnInit {
   filters: StageAssessmentFilters = {};
   showFilters = false;
 
+  searchTerm = '';
+  filteredUsers: UserDto[] = [];
+  showUserDropdown = false;
+
+  private searchInput$ =
+    new Subject<string>();
+
 
   /* =========================
      PAGINATION
@@ -69,7 +88,12 @@ export class StageAssessmentListComponent implements OnInit {
   limit = 20;
   total = 0;
 
-  readonly limitOptions = [10, 20, 50, 100];
+  readonly limitOptions = [
+    10,
+    20,
+    50,
+    100,
+  ];
 
 
   /* =========================
@@ -89,13 +113,32 @@ export class StageAssessmentListComponent implements OnInit {
   assessmentToDelete: StageAssessment | null = null;
 
 
+  /* =========================
+     CONSTRUCTOR
+  ========================= */
+
   constructor(
     private stageAssessmentService: StageAssessmentService,
+    private usersService: UsersService,
   ) {}
 
 
+  /* =========================
+     INIT
+  ========================= */
+
   ngOnInit(): void {
     this.fetchAssessments();
+
+    this.searchInput$
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+      )
+      .subscribe(
+        term =>
+          this.filterUsers(term),
+      );
   }
 
 
@@ -113,9 +156,13 @@ export class StageAssessmentListComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.assessments = res || [];
-          this.filteredAssessments = [...this.assessments];
+          this.filteredAssessments = [
+            ...this.assessments,
+          ];
 
-          this.total = this.filteredAssessments.length;
+          this.total =
+            this.filteredAssessments.length;
+
           this.page = 1;
 
           this.updatePagedAssessments();
@@ -143,12 +190,170 @@ export class StageAssessmentListComponent implements OnInit {
   onFiltersChanged(
     filters: StageAssessmentFilters,
   ): void {
-    this.filters = filters;
-    this.fetchAssessments(filters);
+    /*
+     * Conservamos el estudiante seleccionado
+     * desde el buscador del padre.
+     */
+    this.filters = {
+      ...filters,
+      ...(this.filters.studentId
+        ? {
+            studentId:
+              this.filters.studentId,
+          }
+        : {}),
+    };
+
+    this.fetchAssessments(
+      this.filters,
+    );
   }
 
+
   toggleFilters(): void {
-    this.showFilters = !this.showFilters;
+    this.showFilters =
+      !this.showFilters;
+  }
+
+
+  /* =========================
+     USER INPUT
+  ========================= */
+
+  onUserInputChange(
+    term: string,
+  ): void {
+    this.searchTerm =
+      term || '';
+
+    /*
+     * Si ya había un estudiante seleccionado
+     * y el usuario modifica el texto,
+     * eliminamos el studentId anterior.
+     */
+    if (this.filters.studentId) {
+      this.filters = {
+        ...this.filters,
+        studentId: undefined,
+      };
+    }
+
+    this.searchInput$.next(
+      this.searchTerm,
+    );
+  }
+
+
+  /* =========================
+     SELECT USER
+  ========================= */
+
+  selectUser(
+    user: UserDto,
+  ): void {
+    const studentId =
+      user.student?.id;
+
+    if (!studentId) {
+      return;
+    }
+
+    this.searchTerm =
+      `${user.firstName || ''} ${user.lastName || ''}`
+        .trim();
+
+    this.filters = {
+      ...this.filters,
+      studentId,
+    };
+
+    this.filteredUsers = [];
+    this.showUserDropdown = false;
+  }
+
+
+  /* =========================
+     HIDE USER DROPDOWN
+  ========================= */
+
+  hideUserDropdown(): void {
+    setTimeout(() => {
+      this.showUserDropdown = false;
+    }, 200);
+  }
+
+
+  /* =========================
+     FILTER USERS
+  ========================= */
+
+  filterUsers(
+    term: string,
+  ): void {
+    const value =
+      term?.trim();
+
+    if (
+      !value ||
+      value.length < 2
+    ) {
+      this.filteredUsers = [];
+      this.showUserDropdown = false;
+
+      return;
+    }
+
+    this.usersService
+      .searchUsers(
+        undefined,
+        undefined,
+        undefined,
+        value,
+        value,
+        undefined,
+      )
+      .subscribe({
+        next: (result) => {
+          /*
+           * Solo mostramos usuarios que realmente
+           * tienen perfil de estudiante.
+           */
+          this.filteredUsers =
+            (result.users || [])
+              .filter(
+                user =>
+                  !!user.student?.id,
+              );
+
+          this.showUserDropdown =
+            this.filteredUsers.length > 0;
+        },
+
+        error: (error) => {
+          console.error(
+            'Error al buscar estudiantes:',
+            error,
+          );
+
+          this.filteredUsers = [];
+          this.showUserDropdown = false;
+        },
+      });
+  }
+
+
+  /* =========================
+     CLEAR FILTERS
+  ========================= */
+
+  clearFilters(): void {
+    this.filters = {};
+
+    this.searchTerm = '';
+    this.filteredUsers = [];
+    this.showUserDropdown = false;
+
+    this.fetchAssessments();
   }
 
 
@@ -159,8 +364,12 @@ export class StageAssessmentListComponent implements OnInit {
   onAssigned(
     assessment: StageAssessment,
   ): void {
-    this.modalTitle = 'Estudiantes asignados';
-    this.modalUsers = assessment.students ?? [];
+    this.modalTitle =
+      'Estudiantes asignados';
+
+    this.modalUsers =
+      assessment.students ?? [];
+
     this.showModal = true;
   }
 
@@ -172,7 +381,8 @@ export class StageAssessmentListComponent implements OnInit {
   onFinished(
     assessment: StageAssessment,
   ): void {
-    this.modalTitle = 'Estudiantes que finalizaron';
+    this.modalTitle =
+      'Estudiantes que finalizaron';
 
     this.modalUsers =
       assessment.students?.filter(
@@ -203,18 +413,22 @@ export class StageAssessmentListComponent implements OnInit {
   onDeleteAssessment(
     assessment: StageAssessment,
   ): void {
-    this.assessmentToDelete = assessment;
+    this.assessmentToDelete =
+      assessment;
 
     this.modal = {
       ...modalInitializer(),
       show: true,
-      message: '¿Deseas eliminar esta evaluación?',
+      message:
+        '¿Deseas eliminar esta evaluación?',
       isError: false,
       isSuccess: false,
       isInfo: true,
       showButtons: true,
-      confirm: () => this.confirmDelete(),
-      close: () => (this.modal.show = false),
+      confirm: () =>
+        this.confirmDelete(),
+      close: () =>
+        this.modal.show = false,
     };
   }
 
@@ -225,15 +439,19 @@ export class StageAssessmentListComponent implements OnInit {
     }
 
     this.stageAssessmentService
-      .delete(this.assessmentToDelete.id)
+      .delete(
+        this.assessmentToDelete.id,
+      )
       .subscribe({
         next: () => {
           this.modal = {
             ...modalInitializer(),
             show: true,
-            message: 'Evaluación eliminada correctamente.',
+            message:
+              'Evaluación eliminada correctamente.',
             isSuccess: true,
-            close: () => (this.modal.show = false),
+            close: () =>
+              this.modal.show = false,
           };
 
           this.assessmentToDelete = null;
@@ -247,9 +465,11 @@ export class StageAssessmentListComponent implements OnInit {
           this.modal = {
             ...modalInitializer(),
             show: true,
-            message: 'No se pudo eliminar la evaluación.',
+            message:
+              'No se pudo eliminar la evaluación.',
             isError: true,
-            close: () => (this.modal.show = false),
+            close: () =>
+              this.modal.show = false,
           };
         },
       });
@@ -262,7 +482,8 @@ export class StageAssessmentListComponent implements OnInit {
 
   updatePagedAssessments(): void {
     const start =
-      (this.page - 1) * this.limit;
+      (this.page - 1) *
+      this.limit;
 
     this.pagedAssessments =
       this.filteredAssessments.slice(
@@ -271,23 +492,31 @@ export class StageAssessmentListComponent implements OnInit {
       );
   }
 
+
   onPrev(): void {
     if (this.page <= 1) {
       return;
     }
 
     this.page--;
+
     this.updatePagedAssessments();
   }
 
+
   onNext(): void {
-    if (this.page >= this.totalPages) {
+    if (
+      this.page >=
+      this.totalPages
+    ) {
       return;
     }
 
     this.page++;
+
     this.updatePagedAssessments();
   }
+
 
   onPageChange(
     page: number,
@@ -300,13 +529,16 @@ export class StageAssessmentListComponent implements OnInit {
     }
 
     this.page = page;
+
     this.updatePagedAssessments();
   }
+
 
   onLimitChange(
     value: number,
   ): void {
-    const limit = Number(value);
+    const limit =
+      Number(value);
 
     if (
       !Number.isFinite(limit) ||
@@ -330,18 +562,25 @@ export class StageAssessmentListComponent implements OnInit {
     return Math.max(
       1,
       Math.ceil(
-        this.total / this.limit,
+        this.total /
+        this.limit,
       ),
     );
   }
+
 
   get canPrev(): boolean {
     return this.page > 1;
   }
 
+
   get canNext(): boolean {
-    return this.page < this.totalPages;
+    return (
+      this.page <
+      this.totalPages
+    );
   }
+
 
   get startIndex(): number {
     if (!this.total) {
@@ -354,12 +593,15 @@ export class StageAssessmentListComponent implements OnInit {
     ) + 1;
   }
 
+
   get endIndex(): number {
     return Math.min(
-      this.page * this.limit,
+      this.page *
+      this.limit,
       this.total,
     );
   }
+
 
   get paginationLabel(): string {
     if (!this.total) {
@@ -382,23 +624,34 @@ export class StageAssessmentListComponent implements OnInit {
     return this.assessments.length;
   }
 
+
   get totalAssignedStudents(): number {
     return this.assessments.reduce(
       (total, assessment) =>
         total +
-        (assessment.studentIds?.length || 0),
+        (
+          assessment.studentIds
+            ?.length ||
+          0
+        ),
       0,
     );
   }
+
 
   get totalFinishedStudents(): number {
     return this.assessments.reduce(
       (total, assessment) =>
         total +
-        (assessment.finished?.length || 0),
+        (
+          assessment.finished
+            ?.length ||
+          0
+        ),
       0,
     );
   }
+
 
   get totalPastDueAssessments(): number {
     return this.assessments.filter(
