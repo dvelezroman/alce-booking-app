@@ -241,8 +241,16 @@
           <span class="stage-chip stage-chip--next">{{ row.nextStageNumber }}</span>
         </div>
         <div class="preview-row__scores">
-          <span>G: {{ row.grammarPoints }}</span>
-          <span>S: {{ row.speakingPoints }}</span>
+          <div class="score-item">
+            <span class="score-item__label">Grammar</span>
+            <span class="score-item__value">{{ row.grammarPoints }} pts</span>
+            <span class="score-item__date">{{ row.grammarAssessedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="score-item">
+            <span class="score-item__label">Speaking</span>
+            <span class="score-item__value">{{ row.speakingPoints }} pts</span>
+            <span class="score-item__date">{{ row.speakingAssessedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
         </div>
       </label>
     </div>

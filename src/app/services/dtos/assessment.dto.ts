@@ -115,5 +115,7 @@ export interface EligiblePromotionPreview {
   nextStageId: number;
   nextStageNumber: string;
   grammarPoints: number;
+  grammarAssessedAt: string;
   speakingPoints: number;
+  speakingAssessedAt: string;
 }
