@@ -1,109 +1,179 @@
-<section class="class-booking-header">
-  <h1 class="title is-3">Promoción automática de stage</h1>
-</section>
-
-<div class="page-wrapper">
-  <div class="settings-card">
-    <div class="settings-header">
-      <h3>Cron diario</h3>
-      <p>
-        A las 6:15 (Ecuador) revisa alumnos con Grammar y Speaking aprobados
-        y los promueve al siguiente stage. Requiere <code>ENABLE_CRONS=true</code>
-        en el servidor.
+<section class="page-header">
+  <div class="page-header__inner">
+    <div class="page-header__text">
+      <p class="page-eyebrow">Configuración</p>
+      <h1 class="page-title">Promoción automática de stage</h1>
+      <p class="page-subtitle">
+        Grammar + Speaking aprobados en el stage actual promueven al siguiente nivel.
       </p>
     </div>
+    <div class="stat-pill" *ngIf="!reportLoading">
+      <span class="stat-pill__value">{{ total }}</span>
+      <span class="stat-pill__label">promociones registradas</span>
+    </div>
+  </div>
+</section>
 
-    <label class="cron-toggle">
-      <input
-        type="checkbox"
-        [checked]="cronEnabled"
-        [disabled]="cronLoading"
-        (change)="onCronToggle($any($event.target).checked)"
-      />
-      <span>{{ cronEnabled ? 'Activado' : 'Desactivado' }}</span>
-    </label>
+<div class="page-content">
+  <div class="card cron-card">
+    <div class="card__header">
+      <div class="card__icon card__icon--cron">
+        <span class="material-icons">schedule</span>
+      </div>
+      <div class="card__heading">
+        <h2>Cron diario</h2>
+        <p>
+          Cada día a las <strong>6:15</strong> (Ecuador) revisa alumnos elegibles
+          y aplica la promoción. El servidor debe tener
+          <code>ENABLE_CRONS=true</code>.
+        </p>
+      </div>
+    </div>
 
-    <div class="actions">
+    <div class="cron-panel">
+      <div class="cron-status">
+        <span
+          class="status-chip"
+          [class.status-chip--on]="cronEnabled"
+          [class.status-chip--off]="!cronEnabled"
+        >
+          {{ cronEnabled ? 'Activo' : 'Inactivo' }}
+        </span>
+        <label class="switch" [class.switch--disabled]="cronLoading">
+          <input
+            type="checkbox"
+            [checked]="cronEnabled"
+            [disabled]="cronLoading"
+            (change)="onCronToggle($any($event.target).checked)"
+          />
+          <span class="slider"></span>
+        </label>
+      </div>
+
       <button
         type="button"
-        class="button is-blue"
-        [disabled]="runLoading"
+        class="btn btn-primary"
+        [disabled]="runLoading || cronLoading"
         (click)="confirmRunNow()"
       >
+        <span class="material-icons btn__icon" *ngIf="!runLoading">play_arrow</span>
+        <span class="btn-spinner" *ngIf="runLoading"></span>
         {{ runLoading ? 'Ejecutando…' : 'Ejecutar ahora' }}
       </button>
     </div>
   </div>
 
-  <div class="report-card">
-    <div class="settings-header">
-      <h3>Alumnos promovidos automáticamente</h3>
-      <p>Incluye promociones en vivo (Grammar/Speaking) y las del cron o ejecución manual.</p>
+  <div class="card report-card">
+    <div class="card__header">
+      <div class="card__icon card__icon--report">
+        <span class="material-icons">trending_up</span>
+      </div>
+      <div class="card__heading">
+        <h2>Reporte de promociones</h2>
+        <p>
+          Historial de alumnos promovidos automáticamente por plataforma, instructor
+          o barrido programado.
+        </p>
+      </div>
     </div>
 
     <form class="filters" (ngSubmit)="applyFilters()">
-      <label>
-        Desde
-        <input type="date" [(ngModel)]="from" name="from" />
+      <label class="filter-field">
+        <span class="filter-label">Desde</span>
+        <input type="date" [(ngModel)]="from" name="from" class="filter-input" />
       </label>
-      <label>
-        Hasta
-        <input type="date" [(ngModel)]="to" name="to" />
+      <label class="filter-field">
+        <span class="filter-label">Hasta</span>
+        <input type="date" [(ngModel)]="to" name="to" class="filter-input" />
       </label>
-      <label class="search">
-        Buscar
+      <label class="filter-field filter-field--grow">
+        <span class="filter-label">Buscar</span>
         <input
           type="text"
           [(ngModel)]="search"
           name="search"
-          placeholder="Nombre o stage"
+          class="filter-input"
+          placeholder="Nombre del alumno o stage"
         />
       </label>
-      <button type="submit" class="button is-blue" [disabled]="reportLoading">
+      <button type="submit" class="btn btn-secondary" [disabled]="reportLoading">
+        <span class="material-icons btn__icon">search</span>
         Filtrar
       </button>
     </form>
 
-    <p class="empty" *ngIf="!reportLoading && rows.length === 0">
-      No hay promociones automáticas con esos filtros.
-    </p>
+    <div class="table-state" *ngIf="reportLoading">
+      <span class="table-state__spinner"></span>
+      <span>Cargando reporte…</span>
+    </div>
 
-    <table class="table is-striped" *ngIf="rows.length > 0">
-      <thead>
-        <tr>
-          <th>Fecha</th>
-          <th>Alumno</th>
-          <th>De</th>
-          <th>A</th>
-          <th>Origen</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let row of rows">
-          <td>{{ row.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>
-            {{ studentLabel(row) }}
-            <span class="student-id" *ngIf="row.studentId">#{{ row.studentId }}</span>
-          </td>
-          <td>{{ row.fromStage || '—' }}</td>
-          <td>{{ row.toStage || '—' }}</td>
-          <td>{{ sourceLabel(row.source) }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="empty-state" *ngIf="!reportLoading && rows.length === 0">
+      <span class="material-icons empty-state__icon">inbox</span>
+      <p class="empty-state__title">Sin promociones en este rango</p>
+      <p class="empty-state__hint">
+        Ajusta las fechas o ejecuta el barrido manual para procesar alumnos pendientes.
+      </p>
+    </div>
 
-    <div class="pager" *ngIf="totalPages > 1">
-      <button type="button" class="button" [disabled]="page <= 1" (click)="prevPage()">
-        Anterior
-      </button>
-      <span>Página {{ page }} de {{ totalPages }} ({{ total }})</span>
+    <div class="table-wrap" *ngIf="!reportLoading && rows.length > 0">
+      <table class="promo-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Alumno</th>
+            <th>Transición</th>
+            <th>Origen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rows">
+            <td class="col-date">
+              <span class="date-main">{{ row.createdAt | date:'dd/MM/yyyy' }}</span>
+              <span class="date-time">{{ row.createdAt | date:'HH:mm' }}</span>
+            </td>
+            <td class="col-student">
+              <span class="student-name">{{ studentLabel(row) }}</span>
+              <span class="student-id" *ngIf="row.studentId">ID {{ row.studentId }}</span>
+            </td>
+            <td class="col-stage">
+              <div class="stage-flow">
+                <span class="stage-chip">{{ row.fromStage || '—' }}</span>
+                <span class="material-icons stage-arrow">arrow_forward</span>
+                <span class="stage-chip stage-chip--next">{{ row.toStage || '—' }}</span>
+              </div>
+            </td>
+            <td class="col-source">
+              <span class="source-badge" [ngClass]="sourceBadgeClass(row.source)">
+                {{ sourceLabel(row.source) }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pager" *ngIf="!reportLoading && totalPages > 1">
       <button
         type="button"
-        class="button"
+        class="btn btn-ghost"
+        [disabled]="page <= 1"
+        (click)="prevPage()"
+      >
+        <span class="material-icons btn__icon">chevron_left</span>
+        Anterior
+      </button>
+      <span class="pager__meta">
+        Página <strong>{{ page }}</strong> de <strong>{{ totalPages }}</strong>
+        <span class="pager__total">({{ total }} registros)</span>
+      </span>
+      <button
+        type="button"
+        class="btn btn-ghost"
         [disabled]="page >= totalPages"
         (click)="nextPage()"
       >
         Siguiente
+        <span class="material-icons btn__icon">chevron_right</span>
       </button>
     </div>
   </div>

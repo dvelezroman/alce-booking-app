@@ -175,6 +175,17 @@ export class StagePromotionConfigComponent implements OnInit {
     }
   }
 
+  sourceBadgeClass(source: AutomaticPromotionSource): string {
+    switch (source) {
+      case 'live':
+        return 'badge-live';
+      case 'backfill':
+        return 'badge-backfill';
+      default:
+        return 'badge-legacy';
+    }
+  }
+
   showModal(message: string, isError = false, isSuccess = false): void {
     this.modal = {
       ...modalInitializer(),
