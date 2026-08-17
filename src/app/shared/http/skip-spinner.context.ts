@@ -9,6 +9,8 @@ export function skipSpinnerContext(): { context: HttpContext } {
 export function shouldSkipSpinnerForUrl(url: string): boolean {
   return (
     url.includes('/notificador/whatsapp/jobs/') ||
-    url.includes('/notificador/whatsapp/status')
+    url.includes('/notificador/whatsapp/status') ||
+    url.includes('/push-notifications/vapid-key') ||
+    url.includes('/push-notifications/has-subscription')
   );
 }

@@ -194,29 +194,32 @@ async function syncNotifications() {
   }
 }
 
-// Handle push subscription changes
+// Handle push subscription changes — app re-saves endpoint (API has no /resubscribe)
 self.addEventListener('pushsubscriptionchange', (event) => {
   console.log('Push subscription changed:', event);
-  
-  event.waitUntil(
-    // Re-subscribe to push notifications
-    self.registration.pushManager.subscribe({
+
+  event.waitUntil((async () => {
+    const applicationServerKey = event.oldSubscription?.options?.applicationServerKey;
+    if (!applicationServerKey) {
+      return;
+    }
+
+    const newSubscription = await self.registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: event.oldSubscription.options.applicationServerKey
-    }).then((newSubscription) => {
-      // Send new subscription to server
-      return fetch('/api/push-notifications/resubscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          oldSubscription: event.oldSubscription,
-          newSubscription: newSubscription
-        })
+      applicationServerKey,
+    });
+
+    const clients = await self.clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true,
+    });
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'PUSH_SUBSCRIPTION_CHANGED',
+        endpoint: newSubscription.endpoint,
       });
-    })
-  );
+    });
+  })());
 });
 
 // Handle messages from the main thread

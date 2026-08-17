@@ -110,7 +110,13 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
         this.refreshLeadSchedulingPendingCount(false);
         await this.pushNotificationService.ensureInstalledPwaPushSubscription();
         const hasSubscription = await this.pushNotificationService.hasActiveSubscription();
-        this.showNotificationBanner = !hasSubscription;
+        const permission =
+          typeof Notification !== 'undefined' ? Notification.permission : 'default';
+        this.showNotificationBanner =
+          this.pushNotificationService.isPreferenceEnabled() &&
+          !hasSubscription &&
+          permission !== 'denied' &&
+          !this.pushNotificationService.isBannerDismissed();
       } else {
         this.pendingSessionLeadToast = false;
         this.leadSchedulingPending.reset();

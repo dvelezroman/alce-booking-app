@@ -132,7 +132,21 @@ export class UsersService implements OnInit{
           return;
         }
 
-        // Check if already subscribed locally
+        if (!this.pushNotificationService.isPreferenceEnabled()) {
+          this.devLog('Push preference is off, skipping banner');
+          return;
+        }
+
+        if (Notification.permission === 'denied') {
+          this.devLog('Notification permission denied, skipping banner');
+          return;
+        }
+
+        if (this.pushNotificationService.isBannerDismissed()) {
+          this.devLog('Push banner dismissed recently, skipping');
+          return;
+        }
+
         const isSubscribed = await firstValueFrom(this.pushNotificationService.isSubscribed());
         if (isSubscribed) {
           this.devLog('User already subscribed locally to push notifications');

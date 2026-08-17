@@ -30,7 +30,7 @@ import { PushNotificationService } from '../../services/push-notification.servic
             <button 
               class="button is-primary" 
               (click)="enableNotifications()"
-              [disabled]="isLoading || permission === 'granted'">
+              [disabled]="isLoading || isSubscribed || permission === 'denied'">
               <span *ngIf="!isLoading">Activar Notificaciones</span>
               <span *ngIf="isLoading" class="loading-spinner"></span>
             </button>
@@ -38,11 +38,15 @@ import { PushNotificationService } from '../../services/push-notification.servic
             <button 
               class="button is-danger" 
               (click)="disableNotifications()"
-              [disabled]="isLoading || permission !== 'granted'">
+              [disabled]="isLoading || !isSubscribed">
               Desactivar Notificaciones
             </button>
           </div>
         </div>
+        <p class="help is-danger" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <p class="help is-danger" *ngIf="permission === 'denied'">
+          El navegador bloqueó las notificaciones. Actívalas en la configuración del sitio y vuelve a intentar.
+        </p>
       </div>
 
       <div class="notification-info" *ngIf="isSupported">
@@ -90,8 +94,8 @@ import { PushNotificationService } from '../../services/push-notification.servic
       <div class="notification-tips">
         <h4 class="title is-5">Consejos</h4>
         <ul>
-          <li>Las notificaciones solo funcionan cuando la aplicación está instalada como PWA</li>
-          <li>Puedes desactivar las notificaciones en cualquier momento desde la configuración de tu navegador</li>
+          <li>Funcionan en el navegador; en iOS es más fiable con la PWA instalada</li>
+          <li>Puedes desactivar las notificaciones en cualquier momento desde aquí o desde la configuración del navegador</li>
           <li>Las notificaciones se sincronizan automáticamente cuando vuelves a estar en línea</li>
         </ul>
       </div>
@@ -255,6 +259,7 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
   permission: NotificationPermission = 'default';
   isSubscribed = false;
   isLoading = false;
+  errorMessage: string | null = null;
   private subscriptions: Subscription[] = [];
 
   constructor(private pushNotificationService: PushNotificationService) {}
@@ -274,6 +279,12 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
           this.isSubscribed = isSubscribed;
         })
       );
+
+      this.subscriptions.push(
+        this.pushNotificationService.lastError$.subscribe(message => {
+          this.errorMessage = message;
+        })
+      );
     }
   }
 
@@ -285,10 +296,12 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     
     try {
-      const subscription = await this.pushNotificationService.subscribeToPush();
+      this.pushNotificationService.setPreferenceEnabled(true);
+      const subscription = await this.pushNotificationService.subscribeToPush({
+        ignorePreference: true,
+      });
       
       if (subscription) {
-        // Start periodic notification checks
         this.pushNotificationService.startPeriodicNotificationCheck(5);
       }
     } catch (error) {
