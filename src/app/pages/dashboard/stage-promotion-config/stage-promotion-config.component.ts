@@ -5,6 +5,7 @@ import { AssessmentService } from '../../../services/assessment.service';
 import {
   AutomaticPromotionRow,
   AutomaticPromotionSource,
+  EligiblePromotionPreview,
 } from '../../../services/dtos/assessment.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
@@ -19,8 +20,13 @@ import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto'
 export class StagePromotionConfigComponent implements OnInit {
   cronEnabled = true;
   cronLoading = false;
-  runLoading = false;
+  previewLoading = false;
+  promoteLoading = false;
   reportLoading = false;
+
+  showPreviewPanel = false;
+  previewRows: EligiblePromotionPreview[] = [];
+  selectedStudentIds = new Set<number>();
 
   from = '';
   to = '';
@@ -38,6 +44,17 @@ export class StagePromotionConfigComponent implements OnInit {
   ngOnInit(): void {
     this.loadCron();
     this.loadReport();
+  }
+
+  get selectedCount(): number {
+    return this.selectedStudentIds.size;
+  }
+
+  get allPreviewSelected(): boolean {
+    return (
+      this.previewRows.length > 0 &&
+      this.selectedStudentIds.size === this.previewRows.length
+    );
   }
 
   loadCron(): void {
@@ -75,40 +92,89 @@ export class StagePromotionConfigComponent implements OnInit {
     });
   }
 
-  confirmRunNow(): void {
-    this.modal = {
-      ...modalInitializer(),
-      show: true,
-      isInfo: true,
-      showButtons: true,
-      title: 'Ejecutar promoción',
-      message:
-        'Se revisarán alumnos con Grammar y Speaking aprobados en el stage actual y se promoverán si corresponde. ¿Continuar?',
-      close: () => this.closeModal(),
-      confirm: () => {
-        this.closeModal();
-        this.runNow();
+  openPreview(): void {
+    this.previewLoading = true;
+    this.showPreviewPanel = true;
+    this.previewRows = [];
+    this.selectedStudentIds = new Set();
+
+    this.assessmentService.previewPromoteEligible().subscribe({
+      next: (rows) => {
+        this.previewRows = rows;
+        this.selectedStudentIds = new Set(rows.map((row) => row.studentId));
+        this.previewLoading = false;
       },
-    };
+      error: () => {
+        this.previewLoading = false;
+        this.showPreviewPanel = false;
+        this.showModal('Error al cargar alumnos elegibles', true);
+      },
+    });
   }
 
-  runNow(): void {
-    this.runLoading = true;
-    this.assessmentService.promoteEligible().subscribe({
+  closePreviewPanel(): void {
+    if (this.promoteLoading) {
+      return;
+    }
+    this.showPreviewPanel = false;
+    this.previewRows = [];
+    this.selectedStudentIds = new Set();
+  }
+
+  toggleSelectAll(checked: boolean): void {
+    if (checked) {
+      this.selectedStudentIds = new Set(
+        this.previewRows.map((row) => row.studentId),
+      );
+      return;
+    }
+    this.selectedStudentIds = new Set();
+  }
+
+  toggleStudent(studentId: number, checked: boolean): void {
+    const next = new Set(this.selectedStudentIds);
+    if (checked) {
+      next.add(studentId);
+    } else {
+      next.delete(studentId);
+    }
+    this.selectedStudentIds = next;
+  }
+
+  isStudentSelected(studentId: number): boolean {
+    return this.selectedStudentIds.has(studentId);
+  }
+
+  promoteSelected(): void {
+    const studentIds = [...this.selectedStudentIds];
+    if (studentIds.length === 0) {
+      return;
+    }
+
+    this.promoteLoading = true;
+    this.assessmentService.promoteEligible(studentIds).subscribe({
       next: (result) => {
-        this.runLoading = false;
+        this.promoteLoading = false;
+        this.closePreviewPanel();
         this.showModal(
-          `Revisados: ${result.scanned}. Promovidos: ${result.promoted}.`,
+          `Promovidos: ${result.promoted} de ${studentIds.length} seleccionados.`,
           false,
           true,
         );
         this.loadReport();
       },
       error: () => {
-        this.runLoading = false;
-        this.showModal('Error al ejecutar la promoción', true);
+        this.promoteLoading = false;
+        this.showModal('Error al promover alumnos seleccionados', true);
       },
     });
+  }
+
+  previewStudentLabel(row: EligiblePromotionPreview): string {
+    const name = `${row.lastName}, ${row.firstName}`
+      .replace(/^,\s*|,\s*$/g, '')
+      .trim();
+    return name || '—';
   }
 
   loadReport(): void {

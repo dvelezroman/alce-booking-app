@@ -105,3 +105,15 @@ export interface PromoteEligibleResult {
   promoted: number;
   promotedStudentIds: number[];
 }
+
+export interface EligiblePromotionPreview {
+  studentId: number;
+  firstName: string;
+  lastName: string;
+  currentStageId: number;
+  currentStageNumber: string;
+  nextStageId: number;
+  nextStageNumber: string;
+  grammarPoints: number;
+  speakingPoints: number;
+}

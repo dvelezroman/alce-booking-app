@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {AssessementI, AutomaticPromotionsReport, CreateAssessmentI, FilterAssessmentI, PromoteEligibleResult, PromotionCronStatus, UpdateAssessmentI} from "./dtos/assessment.dto";
+import {AssessementI, AutomaticPromotionsReport, CreateAssessmentI, EligiblePromotionPreview, FilterAssessmentI, PromoteEligibleResult, PromotionCronStatus, UpdateAssessmentI} from "./dtos/assessment.dto";
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -95,10 +95,16 @@ export class AssessmentService {
     );
   }
 
-  promoteEligible(): Observable<PromoteEligibleResult> {
+  previewPromoteEligible(): Observable<EligiblePromotionPreview[]> {
+    return this.http.get<EligiblePromotionPreview[]>(
+      `${this.apiUrl}/promote-eligible/preview`,
+    );
+  }
+
+  promoteEligible(studentIds: number[]): Observable<PromoteEligibleResult> {
     return this.http.post<PromoteEligibleResult>(
       `${this.apiUrl}/promote-eligible`,
-      {},
+      { studentIds },
     );
   }
 }
