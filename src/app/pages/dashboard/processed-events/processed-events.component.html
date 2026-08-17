@@ -120,6 +120,13 @@
       </div>
     </div>
     <div class="block-results">
+      <div class="event-id-banner" *ngIf="eventIdFilterActive && highlightEventId">
+        <span>Mostrando evento de auditoría <strong>#{{ highlightEventId }}</strong></span>
+        <a routerLink="/dashboard/processed-events" class="event-id-banner__clear" (click)="clearEventIdFilter()">
+          Ver todos los eventos
+        </a>
+      </div>
+
       <p *ngIf="formSubmitted && events && events.length === 0" class="no-results-message">
         No hay eventos para los filtros aplicados.
       </p>
@@ -136,7 +143,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let event of events">
+            <tr *ngFor="let event of events" [class.event-row--highlight]="event.id === highlightEventId">
               <td data-label="Usuario">{{ getUserFullName(event.processedBy) }}</td>
               <td data-label="Tipo de Evento">{{ event.eventType | enumLabel: EventTypeE }}</td>
               <td data-label="Descripción">{{ event.description }}</td>

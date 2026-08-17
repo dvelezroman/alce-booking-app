@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DateTime } from 'luxon';
 import {debounceTime} from "rxjs/operators";
 import {Subject} from "rxjs";
@@ -15,7 +16,7 @@ import { modalInitializer } from '../../../components/modal/modal.dto';
 @Component({
   selector: 'app-processed-events',
   standalone: true,
-  imports: [CommonModule, FormsModule, EnumLabelPipe, ModalComponent],
+  imports: [CommonModule, FormsModule, EnumLabelPipe, ModalComponent, RouterLink],
   templateUrl: './processed-events.component.html',
   styleUrl: './processed-events.component.scss'
 })
@@ -40,11 +41,14 @@ export class ProcessedEventsComponent implements OnInit {
   searchInput$ = new Subject<string>();
   showFromError = false;
   showToError = false;
+  highlightEventId: number | null = null;
+  eventIdFilterActive = false;
 
 
   constructor(
     private processedEventService: ProcessedEventsService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
@@ -54,6 +58,37 @@ export class ProcessedEventsComponent implements OnInit {
         this.filterUsers(term);
       });
     this.loadEventTypes();
+    this.route.queryParams.subscribe((params) => {
+      const rawId = params['eventId'];
+      const eventId = rawId != null ? Number(rawId) : NaN;
+      if (Number.isFinite(eventId) && eventId > 0) {
+        this.loadEventById(eventId);
+        return;
+      }
+      this.eventIdFilterActive = false;
+      this.highlightEventId = null;
+    });
+  }
+
+  loadEventById(id: number): void {
+    this.formSubmitted = true;
+    this.eventIdFilterActive = true;
+    this.highlightEventId = id;
+    this.processedEventService.getProcessedEventById(id).subscribe({
+      next: (event) => {
+        this.events = event ? [event] : [];
+      },
+      error: () => {
+        this.events = [];
+      },
+    });
+  }
+
+  clearEventIdFilter(): void {
+    this.eventIdFilterActive = false;
+    this.highlightEventId = null;
+    this.events = [];
+    this.formSubmitted = false;
   }
 
   private loadEventTypes() {
@@ -99,6 +134,8 @@ export class ProcessedEventsComponent implements OnInit {
     this.formSubmitted = true;
     this.showFromError = false;
     this.showToError = false;
+    this.eventIdFilterActive = false;
+    this.highlightEventId = null;
 
     if ((this.filter.from && !this.filter.to)) {
       this.showToError = true;

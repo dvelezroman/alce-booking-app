@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { AssessmentService } from '../../../services/assessment.service';
 import {
   AutomaticPromotionRow,
@@ -14,7 +15,7 @@ import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto'
 @Component({
   selector: 'app-stage-promotion-config',
   standalone: true,
-  imports: [CommonModule, FormsModule, ModalComponent],
+  imports: [CommonModule, FormsModule, ModalComponent, RouterLink],
   templateUrl: './stage-promotion-config.component.html',
   styleUrl: './stage-promotion-config.component.scss',
 })
@@ -231,6 +232,22 @@ export class StagePromotionConfigComponent implements OnInit {
     const first = row.studentFirstName ?? '';
     const name = `${last}, ${first}`.replace(/^,\s*|,\s*$/g, '').trim();
     return name || '—';
+  }
+
+  processorLabel(row: AutomaticPromotionRow): string {
+    const last = row.processedByLastName ?? '';
+    const first = row.processedByFirstName ?? '';
+    const name = `${last}, ${first}`.replace(/^,\s*|,\s*$/g, '').trim();
+    if (name) {
+      return name;
+    }
+    if (row.source === 'live') {
+      return 'Sistema (evaluación)';
+    }
+    if (row.source === 'backfill') {
+      return 'Sistema (cron)';
+    }
+    return '—';
   }
 
   sourceLabel(source: AutomaticPromotionSource): string {

@@ -72,7 +72,8 @@
         <h2>Reporte de promociones</h2>
         <p>
           Historial de promociones automáticas (Grammar + Speaking) y cambios
-          manuales de stage.
+          manuales de stage. Cada fila es un evento de auditoría
+          (<code>ProcessedEvent</code>).
         </p>
       </div>
     </div>
@@ -137,6 +138,7 @@
             <th>Alumno</th>
             <th>Transición</th>
             <th>Origen</th>
+            <th>Realizado por</th>
           </tr>
         </thead>
         <tbody>
@@ -160,6 +162,16 @@
               <span class="source-badge" [ngClass]="sourceBadgeClass(row.source)">
                 {{ sourceLabel(row.source) }}
               </span>
+            </td>
+            <td class="col-audit">
+              <span class="audit-name">{{ processorLabel(row) }}</span>
+              <a
+                class="audit-link"
+                [routerLink]="['/dashboard/processed-events']"
+                [queryParams]="{ eventId: row.id }"
+              >
+                Evento #{{ row.id }}
+              </a>
             </td>
           </tr>
         </tbody>

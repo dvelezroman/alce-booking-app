@@ -96,6 +96,9 @@ export interface AutomaticPromotionRow {
   fromStage: string | null;
   toStage: string | null;
   source: AutomaticPromotionSource;
+  processedById: number | null;
+  processedByFirstName: string | null;
+  processedByLastName: string | null;
 }
 
 export interface AutomaticPromotionsReport {

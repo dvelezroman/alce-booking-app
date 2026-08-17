@@ -36,4 +36,8 @@ export class ProcessedEventsService {
     }
     return this.http.get<ProcessedEventDto[]>(this.apiUrl, { params });
   }
+
+  getProcessedEventById(id: number): Observable<ProcessedEventDto> {
+    return this.http.get<ProcessedEventDto>(`${this.apiUrl}/${id}`);
+  }
 }
