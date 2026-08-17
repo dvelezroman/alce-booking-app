@@ -88,6 +88,7 @@ navItems: SidebarNavItem[] = [
   { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/dashboard/feature-flag', roles: [UserRole.ADMIN] },
   { icon: 'config', text: 'Anuncios', route: '/dashboard/announcements', roles: [UserRole.ADMIN] },
   { icon: 'reporte', text: 'Instructores', route: '/dashboard/report-instructor', roles: [UserRole.ADMIN] },
+  { icon: 'video_call', text: 'Clases creadas por instructor', route: '/dashboard/instructor-created-meetings', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Estudiante', route: '/dashboard/reports-detailed', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Historial Completo', route: '/dashboard/student-history-report', roles: [UserRole.ADMIN] },
   { icon: 'excel', text: 'Estudiantes activos', route: '/dashboard/active-students-report', roles: [UserRole.ADMIN] },
@@ -261,6 +262,7 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/report-user'),
         this.findNavItemByRoute('/dashboard/report-excel'),
         this.findNavItemByRoute('/dashboard/report-instructor'),
+        this.findNavItemByRoute('/dashboard/instructor-created-meetings'),
 
         {
           title: 'Estudiante',

@@ -35,6 +35,7 @@ export class BookingService {
       category,
       status,
       mode,
+      createdByInstructor,
     } = filterParams;
     let params = new HttpParams();
 
@@ -79,6 +80,10 @@ export class BookingService {
     }
     if (mode) {
       params = params.set('mode', mode);
+    }
+
+    if (createdByInstructor !== undefined) {
+      params = params.set('createdByInstructor', String(createdByInstructor));
     }
 
     return this.http.get<MeetingDTO[]>(`${this.apiUrl}/search`, { params });

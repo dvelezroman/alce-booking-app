@@ -54,6 +54,7 @@ import { MeetingEvaluationsComponent } from './meeting-evaluations/meeting-evalu
 import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluation-statistics.component';
 import { StudentHistoryReportComponent } from './report-students/student-history-report/student-history-report.component';
 import { ActiveStudentsReportComponent } from './report-students/active-students-report/active-students-report.component';
+import { InstructorCreatedMeetingsComponent } from './instructor-created-meetings/instructor-created-meetings.component';
 import { AnnouncementsComponent } from './announcements/announcements.component';
 import { adminOnlyGuard } from '../auth/admin-role.guard';
 import { instructorOnlyGuard } from '../auth/instructor-role.guard';
@@ -132,6 +133,7 @@ const dashboardChildren: Routes = [
   { path: 'searching-students', component: SearchingStudentComponent },
   { path: 'attendance-student', component: AttendanceReportsComponent },
   { path: 'report-instructor', component: ReportInstructorComponent },
+  { path: 'instructor-created-meetings', component: InstructorCreatedMeetingsComponent },
   { path: 'attendance-instructor', component: AttendanceInstructorComponent },
   { path: 'instructor-evaluations', component: InstructorEvaluationsComponent },
   { path: 'feature-flag', component: FeatureFlagComponent },
