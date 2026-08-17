@@ -1,0 +1,450 @@
+:host {
+  display: contents;
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+.students-modal {
+  position: fixed;
+  z-index: 1200;
+
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+}
+
+
+/* =========================
+   BACKDROP
+========================= */
+
+.students-modal__backdrop {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 0;
+
+  border: 0;
+
+  background:
+    rgba(15, 23, 42, 0.28);
+
+  backdrop-filter: blur(2px);
+}
+
+
+/* =========================
+   PANEL
+========================= */
+
+.students-modal__panel {
+  position: relative;
+  z-index: 1;
+
+  width: min(
+    100%,
+    22rem
+  );
+
+  max-height: min(
+    82dvh,
+    36rem
+  );
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border: 1px solid #dfe4ed;
+  border-radius: 0.8rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 18px 50px
+    rgba(15, 23, 42, 0.16);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.students-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.75rem;
+
+  padding:
+    1rem
+    1rem
+    0.75rem;
+}
+
+.students-modal__title {
+  margin: 0;
+
+  color: #20242f;
+
+  font-size: 0.9rem;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+
+/* =========================
+   CLOSE
+========================= */
+
+.students-modal__close {
+  width: 1.8rem;
+  height: 1.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 0.4rem;
+
+  background: transparent;
+  color: #414754;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    transform 0.12s ease;
+}
+
+.students-modal__close:hover {
+  background: #f2f3f6;
+}
+
+.students-modal__close:active {
+  transform: scale(0.95);
+}
+
+.students-modal__close svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+
+/* =========================
+   META
+========================= */
+
+.students-modal__meta {
+  display: flex;
+  align-items: center;
+
+  gap: 0.4rem;
+
+  padding:
+    0
+    1rem;
+}
+
+.students-modal__assessment-name {
+  color: #343844;
+
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.students-modal__stage {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    0.12rem
+    0.4rem;
+
+  border: 1px solid #bfd9f8;
+  border-radius: 999px;
+
+  background: #edf6ff;
+  color: #2f69ba;
+
+  font-size: 0.6rem;
+  font-weight: 650;
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+.students-modal__summary {
+  margin:
+    0.7rem
+    1rem
+    0;
+
+  color: #686e7d;
+
+  font-size: 0.67rem;
+  line-height: 1.35;
+}
+
+
+/* =========================
+   LIST
+========================= */
+
+.students-modal__list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.25rem;
+
+  margin-top: 0.65rem;
+
+  padding:
+    0
+    1rem
+    0.8rem;
+
+  overflow-y: auto;
+}
+
+
+/* =========================
+   STUDENT
+========================= */
+
+.students-modal__student {
+  min-height: 3.25rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  padding:
+    0.45rem
+    0.25rem;
+}
+
+.students-modal__avatar {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e9f0fb 0%,
+      #dae6f7 100%
+    );
+
+  color: #315d91;
+
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.students-modal__finished-icon {
+  width: 1.85rem;
+  height: 1.85rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #18a45e;
+}
+
+.students-modal__finished-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.students-modal__student-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.08rem;
+}
+
+.students-modal__student-name {
+  overflow: hidden;
+
+  color: #2d313c;
+
+  font-size: 0.69rem;
+  font-weight: 650;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.students-modal__student-email {
+  overflow: hidden;
+
+  color: #777d8c;
+
+  font-size: 0.62rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================
+   EMPTY
+========================= */
+
+.students-modal__empty {
+  min-height: 6rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #818694;
+
+  font-size: 0.68rem;
+
+  text-align: center;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.students-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+
+  padding:
+    0.75rem
+    1rem;
+
+  border-top: 1px solid #edf0f4;
+}
+
+.students-modal__button {
+  min-width: 6.5rem;
+  height: 2.25rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 0.9rem;
+
+  border: 1px solid #d9dee7;
+  border-radius: 0.5rem;
+
+  background: #ffffff;
+  color: #30343f;
+
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    background-color 0.15s ease;
+}
+
+.students-modal__button:hover {
+  background: #f7f8fa;
+}
+
+.students-modal__button:active {
+  transform: scale(0.98);
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .students-modal {
+    padding: 0.85rem;
+  }
+
+  .students-modal__panel {
+    width: 100%;
+    max-width: 22rem;
+
+    max-height: calc(100dvh - 1.7rem);
+  }
+
+  .students-modal__header {
+    padding:
+      0.9rem
+      0.9rem
+      0.7rem;
+  }
+
+  .students-modal__meta,
+  .students-modal__summary {
+    margin-left: 0;
+    margin-right: 0;
+
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+  }
+
+  .students-modal__list {
+    padding:
+      0
+      0.9rem
+      0.75rem;
+  }
+
+  .students-modal__footer {
+    padding:
+      0.7rem
+      0.9rem
+      0.85rem;
+  }
+
+  .students-modal__button {
+    width: 100%;
+    height: 2.35rem;
+  }
+}

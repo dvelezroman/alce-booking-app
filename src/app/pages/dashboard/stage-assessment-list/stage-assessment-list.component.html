@@ -1,53 +1,294 @@
-<h2 class="title stage">Evaluaciones Asignadas</h2>
+<section class="assessment-list-page">
 
-<section class="stage-assessment-section">
+  <div class="assessment-list-page__container">
 
-  <div class="filters-toggle-wrapper">
-    <button class="filters-btn" (click)="toggleFilters()">
-      <i class="fa-solid fa-filter"></i> Filtros
-    </button>
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <app-stage-assessment-list-header>
+    </app-stage-assessment-list-header>
+
+
+    <!-- =========================
+         SUMMARY
+    ========================== -->
+
+    <app-stage-assessment-list-summary
+      [totalAssessments]="totalAssessments"
+      [totalAssignedStudents]="totalAssignedStudents"
+      [totalPastDueAssessments]="totalPastDueAssessments"
+      [totalFinishedStudents]="totalFinishedStudents"
+      [loading]="loading"
+    >
+    </app-stage-assessment-list-summary>
+
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+
+    <app-stage-assessment-list-filters
+      [filters]="filters"
+      [showFilters]="showFilters"
+      [assessments]="assessments"
+      (filtersChanged)="onFiltersChanged($event)"
+      (toggleRequested)="toggleFilters()"
+    >
+    </app-stage-assessment-list-filters>
+
+
+    <!-- =========================
+         TABLE CARD
+    ========================== -->
+
+    <section class="assessment-list-page__table-card">
+
+
+      <!-- =========================
+           LOADING
+      ========================== -->
+
+      @if (loading) {
+
+        <div class="assessment-list-page__skeleton">
+
+          <div class="assessment-list-page__skeleton-header">
+
+            @for (
+              item of [1, 2, 3, 4, 5, 6, 7, 8];
+              track item
+            ) {
+              <div class="assessment-list-page__skeleton-line"></div>
+            }
+
+          </div>
+
+
+          @for (
+            row of [1, 2, 3, 4, 5];
+            track row
+          ) {
+
+            <div class="assessment-list-page__skeleton-row">
+
+              <div class="assessment-list-page__skeleton-resource">
+
+                <div
+                  class="
+                    assessment-list-page__skeleton-block
+                    assessment-list-page__skeleton-block--icon
+                  "
+                >
+                </div>
+
+                <div class="assessment-list-page__skeleton-resource-text">
+
+                  <div
+                    class="
+                      assessment-list-page__skeleton-block
+                      assessment-list-page__skeleton-block--name
+                    "
+                  >
+                  </div>
+
+                  <div
+                    class="
+                      assessment-list-page__skeleton-block
+                      assessment-list-page__skeleton-block--small
+                    "
+                  >
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              @for (
+                column of [1, 2, 3, 4, 5, 6, 7];
+                track column
+              ) {
+                <div
+                  class="
+                    assessment-list-page__skeleton-block
+                    assessment-list-page__skeleton-block--value
+                  "
+                >
+                </div>
+              }
+
+            </div>
+
+          }
+
+        </div>
+
+      } @else {
+
+        <!-- =========================
+             TABLE
+        ========================== -->
+
+        <app-stage-assessment-list-table
+          [assessments]="pagedAssessments"
+          (assignedRequested)="onAssigned($event)"
+          (finishedRequested)="onFinished($event)"
+          (deleteRequested)="onDeleteAssessment($event)"
+        >
+        </app-stage-assessment-list-table>
+
+      }
+
+
+      <!-- =========================
+           PAGINATION
+      ========================== -->
+
+      @if (
+        !loading &&
+        total > 0
+      ) {
+
+        <app-stage-assessment-list-pagination
+          [page]="page"
+          [totalPages]="totalPages"
+          [startIndex]="startIndex"
+          [endIndex]="endIndex"
+          [total]="total"
+          [canPrev]="canPrev"
+          [canNext]="canNext"
+          [paginationLabel]="paginationLabel"
+          [limit]="limit"
+          [limitOptions]="limitOptions"
+          (pageChange)="onPageChange($event)"
+          (previousRequested)="onPrev()"
+          (nextRequested)="onNext()"
+          (limitChange)="onLimitChange($event)"
+        >
+        </app-stage-assessment-list-pagination>
+
+      }
+
+    </section>
+
+
+    <!-- =========================
+         STATUS LEGEND
+    ========================== -->
+
+    <section class="assessment-list-page__legend">
+
+      <h3>
+        Leyenda de estados
+      </h3>
+
+      <div class="assessment-list-page__legend-items">
+
+        <div class="assessment-list-page__legend-item">
+
+          <span
+            class="
+              assessment-list-page__legend-dot
+              assessment-list-page__legend-dot--active
+            "
+          >
+          </span>
+
+          <span>
+            Activa
+          </span>
+
+        </div>
+
+
+        <div class="assessment-list-page__legend-item">
+
+          <span
+            class="
+              assessment-list-page__legend-dot
+              assessment-list-page__legend-dot--warning
+            "
+          >
+          </span>
+
+          <span>
+            Por vencer
+          </span>
+
+        </div>
+
+
+        <div class="assessment-list-page__legend-item">
+
+          <span
+            class="
+              assessment-list-page__legend-dot
+              assessment-list-page__legend-dot--expired
+            "
+          >
+          </span>
+
+          <span>
+            Vencida
+          </span>
+
+        </div>
+
+
+        <div class="assessment-list-page__legend-item">
+
+          <span
+            class="
+              assessment-list-page__legend-dot
+              assessment-list-page__legend-dot--finished
+            "
+          >
+          </span>
+
+          <span>
+            Finalizada
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
   </div>
 
-  <!-- FILTRO -->
-  <div class="filters-container" *ngIf="showFilters">
-    <app-assessment-filters
-      (filtersChange)="onFiltersChanged($event)">
-    </app-assessment-filters>
-  </div>
 
-  <!-- RESULTADOS -->
-  <div class="content-wrapper">
+  <!-- =========================
+       STUDENTS MODAL
+  ========================== -->
 
-    <app-assessment-table
-        [assessments]="assessments"
-        [loading]="loading"
-        (assignedClick)="onAssigned($event)"
-        (finishedClick)="onFinished($event)"
-        (deleteClick)="onDeleteAssessment($event)">
-    </app-assessment-table>
+  @if (showModal) {
 
-  </div>
+    <app-stage-assessment-students-modal
+      [title]="modalTitle"
+      [students]="modalUsers"
+      (closeRequested)="closeModal()"
+    >
+    </app-stage-assessment-students-modal>
 
-    <p class="info" *ngIf="false">
-      No existen resultados para los filtros aplicados.
-    </p>
+  }
+
+
+  <!-- =========================
+       DELETE / NOTIFICATION
+  ========================== -->
+
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm?.()"
+    (close)="modal.close()"
+  >
+  </app-modal>
 
 </section>
-
-<app-assessment-modal
-  [show]="showModal"
-  [title]="modalTitle"
-  [users]="modalUsers"
-  (close)="closeModal()">
-</app-assessment-modal>
-
-<app-modal
-  [showModal]="modal.show"
-  [message]="modal.message"
-  [isError]="modal.isError"
-  [isSuccess]="modal.isSuccess"
-  [isInfo]="modal.isInfo"
-  [showButtons]="modal.showButtons ?? false"
-  (confirmAction)="modal.confirm?.()"
-  (close)="modal.close()"
-></app-modal>

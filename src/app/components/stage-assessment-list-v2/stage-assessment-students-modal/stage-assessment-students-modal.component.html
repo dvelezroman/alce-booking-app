@@ -1,0 +1,171 @@
+<div
+  class="students-modal"
+  role="dialog"
+  aria-modal="true"
+>
+
+  <!-- =========================
+       BACKDROP
+  ========================== -->
+
+  <button
+    type="button"
+    class="students-modal__backdrop"
+    aria-label="Cerrar modal"
+    (click)="onClose()"
+  >
+  </button>
+
+
+  <!-- =========================
+       PANEL
+  ========================== -->
+
+  <section class="students-modal__panel">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="students-modal__header">
+
+      <h2 class="students-modal__title">
+        {{ title }}
+      </h2>
+
+      <button
+        type="button"
+        class="students-modal__close"
+        aria-label="Cerrar"
+        (click)="onClose()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m6 6 12 12M18 6 6 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+
+    </header>
+
+
+    <!-- =========================
+         META
+    ========================== -->
+
+    <div class="students-modal__meta">
+
+      <span class="students-modal__assessment-name">
+        Evaluación asignada
+      </span>
+
+      <span class="students-modal__stage">
+        Stage
+      </span>
+
+    </div>
+
+
+    <p class="students-modal__summary">
+      {{ totalLabel }}
+    </p>
+
+
+    <!-- =========================
+         STUDENTS
+    ========================== -->
+
+    <div class="students-modal__list">
+
+      @for (
+        student of students;
+        track student.studentId
+      ) {
+
+        <div class="students-modal__student">
+
+          @if (isFinishedView) {
+
+            <div class="students-modal__finished-icon">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  fill="currentColor"
+                />
+
+                <path
+                  d="m8 12 2.4 2.4L16 9"
+                  stroke="#ffffff"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+            </div>
+
+          } @else {
+
+            <div class="students-modal__avatar">
+              {{ getStudentInitials(student) }}
+            </div>
+
+          }
+
+
+          <div class="students-modal__student-content">
+
+            <strong class="students-modal__student-name">
+              {{ getStudentName(student) }}
+            </strong>
+
+            <span class="students-modal__student-email">
+              {{ student.email || 'Sin correo' }}
+            </span>
+
+          </div>
+
+        </div>
+
+      } @empty {
+
+        <div class="students-modal__empty">
+          No hay estudiantes para mostrar.
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="students-modal__footer">
+
+      <button
+        type="button"
+        class="students-modal__button"
+        (click)="onClose()"
+      >
+        Cerrar
+      </button>
+
+    </footer>
+
+  </section>
+
+</div>

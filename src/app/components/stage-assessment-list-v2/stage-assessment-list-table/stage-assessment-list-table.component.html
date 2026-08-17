@@ -1,0 +1,478 @@
+<section
+  class="assessment-table"
+  (click)="closeMenu()"
+>
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="assessment-table__header">
+
+    <h2 class="assessment-table__title">
+      Evaluaciones
+
+      <span>
+        ({{ filteredAssessments.length }})
+      </span>
+    </h2>
+
+
+    <div class="assessment-table__search">
+
+      <span
+        class="assessment-table__search-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <input
+        type="text"
+        class="assessment-table__search-input"
+        placeholder="Buscar evaluación..."
+        [(ngModel)]="searchTerm"
+      />
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       TABLE
+  ========================== -->
+
+  <div class="assessment-table__wrapper">
+
+    <table class="assessment-table__table">
+
+      <thead>
+
+        <tr>
+
+          <th class="assessment-table__resource-column">
+            Recurso de evaluación
+          </th>
+
+          <th>
+            Etapa
+          </th>
+
+          <th>
+            Asignados
+          </th>
+
+          <th>
+            Finalizados
+          </th>
+
+          <th>
+            Fecha de entrega
+          </th>
+
+          <th>
+            Creado por
+          </th>
+
+          <th>
+            Estado
+          </th>
+
+          <th class="assessment-table__actions-column">
+            Acciones
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        @for (
+          assessment of filteredAssessments;
+          track assessment.id
+        ) {
+
+          <tr
+            [class.assessment-table__row--menu-open]="
+              isMenuOpen(assessment.id)
+            "
+          >
+
+            <!-- RESOURCE -->
+
+            <td class="assessment-table__resource-column">
+
+              <div class="assessment-table__resource">
+
+                <div class="assessment-table__resource-icon">
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <rect
+                      x="6"
+                      y="4"
+                      width="12"
+                      height="16"
+                      rx="2"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    />
+
+                    <path
+                      d="M9 3.5h6M9 8h6M9 12h6M9 16h4"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+
+                </div>
+
+
+                <div class="assessment-table__resource-content">
+
+                  <strong class="assessment-table__resource-name">
+                    {{ getResourceName(assessment) }}
+                  </strong>
+
+                  <span class="assessment-table__secondary">
+                    Evaluación
+                  </span>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- STAGE -->
+
+            <td>
+
+              <span class="assessment-table__stage">
+                {{ getStageLabel(assessment) }}
+              </span>
+
+            </td>
+
+
+            <!-- ASSIGNED -->
+
+            <td>
+
+              <span class="assessment-table__count">
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="9"
+                    cy="8"
+                    r="2.4"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+
+                  <circle
+                    cx="16.5"
+                    cy="9"
+                    r="1.8"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+
+                  <path
+                    d="M4.5 18c.4-3.4 2-5.1 4.5-5.1s4.1 1.7 4.5 5.1"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+
+                  <path
+                    d="M14 13.5c2.8-.4 4.6 1 5 4"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+
+                {{ getAssignedCount(assessment) }}
+
+              </span>
+
+            </td>
+
+
+            <!-- FINISHED -->
+
+            <td>
+
+              <span
+                class="assessment-table__finished"
+                [class.assessment-table__finished--complete]="
+                  getFinishedPercentage(assessment) === 100
+                "
+                [class.assessment-table__finished--partial]="
+                  getFinishedPercentage(assessment) < 100
+                "
+              >
+                {{ getFinishedCount(assessment) }}
+                ({{ getFinishedPercentage(assessment) }}%)
+              </span>
+
+            </td>
+
+
+            <!-- DUE DATE -->
+
+            <td>
+
+              <div class="assessment-table__date">
+
+                <span class="assessment-table__date-value">
+                  {{ formatDate(assessment.dueDate) }}
+                </span>
+
+                <span
+                  class="assessment-table__date-label"
+                  [class.assessment-table__date-label--expired]="
+                    getStatus(assessment) === 'expired'
+                  "
+                  [class.assessment-table__date-label--finished]="
+                    getStatus(assessment) === 'finished'
+                  "
+                >
+                  {{ getDueDateLabel(assessment) }}
+                </span>
+
+              </div>
+
+            </td>
+
+
+            <!-- CREATOR -->
+
+            <td>
+
+              <div class="assessment-table__creator">
+
+                <div class="assessment-table__creator-avatar">
+                  {{ getCreatorInitials(assessment) }}
+                </div>
+
+                <div class="assessment-table__creator-content">
+
+                  <span class="assessment-table__creator-name">
+                    {{ getCreatorName(assessment) }}
+                  </span>
+
+                  <span class="assessment-table__secondary">
+                    Instructor
+                  </span>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="assessment-table__status"
+                [class.assessment-table__status--active]="
+                  getStatus(assessment) === 'active'
+                "
+                [class.assessment-table__status--warning]="
+                  getStatus(assessment) === 'warning'
+                "
+                [class.assessment-table__status--expired]="
+                  getStatus(assessment) === 'expired'
+                "
+                [class.assessment-table__status--finished]="
+                  getStatus(assessment) === 'finished'
+                "
+              >
+                {{ getStatusLabel(assessment) }}
+              </span>
+
+            </td>
+
+
+            <!-- ACTIONS -->
+
+            <td class="assessment-table__actions-column">
+
+              <div
+                class="assessment-table__menu-wrapper"
+                (click)="$event.stopPropagation()"
+              >
+
+                <button
+                  type="button"
+                  class="assessment-table__menu-trigger"
+                  [class.assessment-table__menu-trigger--active]="
+                    isMenuOpen(assessment.id)
+                  "
+                  aria-label="Opciones"
+                  (click)="toggleMenu(assessment.id, $event)"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <circle cx="12" cy="5" r="1.35" />
+                    <circle cx="12" cy="12" r="1.35" />
+                    <circle cx="12" cy="19" r="1.35" />
+                  </svg>
+                </button>
+
+
+                @if (
+                  isMenuOpen(assessment.id)
+                ) {
+
+                  <div
+                    class="assessment-table__menu"
+                    [class.assessment-table__menu--top]="
+                      shouldOpenMenuUp(assessment)
+                    "
+                  >
+
+                    <button
+                      type="button"
+                      class="assessment-table__menu-item"
+                      (click)="onAssigned(assessment)"
+                    >
+                      <span>
+                        Ver estudiantes asignados
+                      </span>
+                    </button>
+
+
+                    <button
+                      type="button"
+                      class="assessment-table__menu-item"
+                      (click)="onFinished(assessment)"
+                    >
+                      <span>
+                        Ver evaluaciones realizadas
+                      </span>
+                    </button>
+
+
+                    <div class="assessment-table__menu-divider">
+                    </div>
+
+
+                    <button
+                      type="button"
+                      class="
+                        assessment-table__menu-item
+                        assessment-table__menu-item--danger
+                      "
+                      (click)="onDelete(assessment)"
+                    >
+                      <span>
+                        Eliminar evaluación
+                      </span>
+                    </button>
+
+                  </div>
+
+                }
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        } @empty {
+
+          <tr>
+
+            <td
+              colspan="8"
+              class="assessment-table__empty"
+            >
+
+              <div class="assessment-table__empty-content">
+
+                <div class="assessment-table__empty-icon">
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <rect
+                      x="6"
+                      y="4"
+                      width="12"
+                      height="16"
+                      rx="2"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    />
+
+                    <path
+                      d="M9 9h6M9 13h6"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+
+                </div>
+
+                <strong>
+                  No se encontraron evaluaciones
+                </strong>
+
+                <span>
+                  Intenta buscar con otro término.
+                </span>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>

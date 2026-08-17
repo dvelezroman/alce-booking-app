@@ -1,0 +1,390 @@
+<section class="assessment-filters">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="assessment-filters__header">
+
+    <div class="assessment-filters__title-group">
+
+      <span
+        class="assessment-filters__title-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M4 5h16l-6.5 7.2V18l-3 1.5v-7.3L4 5Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <h2 class="assessment-filters__title">
+        Filtros
+      </h2>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="assessment-filters__toggle"
+      (click)="toggleFilters()"
+    >
+      <span>
+        {{
+          showFilters
+            ? 'Ocultar filtros'
+            : 'Mostrar filtros'
+        }}
+      </span>
+
+      <span
+        class="assessment-filters__toggle-icon"
+        [class.assessment-filters__toggle-icon--open]="showFilters"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m7 14.5 5-5 5 5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+    </button>
+
+  </header>
+
+
+  <!-- =========================
+       FILTER CONTENT
+  ========================== -->
+
+  @if (showFilters) {
+
+    <div class="assessment-filters__content">
+
+      <div class="assessment-filters__grid">
+
+        <!-- =========================
+             STAGE
+        ========================== -->
+
+        <div class="assessment-filters__field">
+
+          <label class="assessment-filters__label">
+            Etapa
+          </label>
+
+          <div class="assessment-filters__select-wrapper">
+
+            <select
+              class="assessment-filters__control assessment-filters__select"
+              [(ngModel)]="selectedStageId"
+            >
+              <option [ngValue]="null">
+                Todas
+              </option>
+
+              @for (
+                stage of stages;
+                track stage.id
+              ) {
+                <option [ngValue]="stage.id">
+                  {{ getStageLabel(stage) }}
+                </option>
+              }
+            </select>
+
+            <span
+              class="assessment-filters__chevron"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 9.5 5 5 5-5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             RESOURCE
+        ========================== -->
+
+        <div class="assessment-filters__field">
+
+          <label class="assessment-filters__label">
+            Recurso de evaluación
+          </label>
+
+          <div class="assessment-filters__select-wrapper">
+
+            <select
+              class="assessment-filters__control assessment-filters__select"
+              [(ngModel)]="selectedResourceId"
+            >
+              <option [ngValue]="null">
+                Todos
+              </option>
+
+              @for (
+                item of resources;
+                track item.id
+              ) {
+                <option [ngValue]="item.id">
+                  {{ getResourceLabel(item.resource) }}
+                </option>
+              }
+            </select>
+
+            <span
+              class="assessment-filters__chevron"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 9.5 5 5 5-5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             CREATED BY
+        ========================== -->
+
+        <div class="assessment-filters__field">
+
+          <label class="assessment-filters__label">
+            Creado por
+          </label>
+
+          <div class="assessment-filters__select-wrapper">
+
+            <select
+              class="assessment-filters__control assessment-filters__select"
+              [(ngModel)]="selectedCreatorId"
+            >
+              <option [ngValue]="null">
+                Todos
+              </option>
+
+              @for (
+                creator of creators;
+                track creator.id
+              ) {
+                <option [ngValue]="creator.id">
+                  {{ getCreatorLabel(creator) }}
+                </option>
+              }
+            </select>
+
+            <span
+              class="assessment-filters__chevron"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 9.5 5 5 5-5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             STUDENT
+        ========================== -->
+
+        <div class="assessment-filters__field">
+
+          <label class="assessment-filters__label">
+            Estudiante
+          </label>
+
+          <div class="assessment-filters__select-wrapper">
+
+            <span
+              class="assessment-filters__control-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="12"
+                  cy="8"
+                  r="3"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+
+                <path
+                  d="M5.5 19c.5-3.7 2.7-5.8 6.5-5.8s6 2.1 6.5 5.8"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <select
+              class="
+                assessment-filters__control
+                assessment-filters__select
+                assessment-filters__select--icon
+              "
+              [(ngModel)]="selectedStudentId"
+            >
+              <option [ngValue]="null">
+                Buscar estudiante...
+              </option>
+
+              @for (
+                student of students;
+                track student.studentId
+              ) {
+                <option [ngValue]="student.studentId">
+                  {{ getStudentLabel(student) }}
+                </option>
+              }
+            </select>
+
+            <span
+              class="assessment-filters__chevron"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 9.5 5 5 5-5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           ACTIONS
+      ========================== -->
+
+      <div class="assessment-filters__actions">
+
+        <button
+          type="button"
+          class="
+            assessment-filters__button
+            assessment-filters__button--secondary
+          "
+          (click)="clearFilters()"
+        >
+          Limpiar filtros
+        </button>
+
+
+        <button
+          type="button"
+          class="
+            assessment-filters__button
+            assessment-filters__button--primary
+          "
+          (click)="applyFilters()"
+        >
+
+          <span
+            class="assessment-filters__button-icon"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+
+              <path
+                d="m9 12 2 2 4-4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <span>
+            Aplicar filtros
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  }
+
+</section>

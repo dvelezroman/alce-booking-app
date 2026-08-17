@@ -1,0 +1,274 @@
+<section class="assessment-summary">
+
+  @if (loading) {
+
+    @for (
+      item of [1, 2, 3, 4];
+      track item
+    ) {
+
+      <article class="assessment-summary__card assessment-summary__card--loading">
+
+        <div
+          class="
+            assessment-summary__skeleton
+            assessment-summary__skeleton--icon
+          "
+        ></div>
+
+        <div class="assessment-summary__content">
+
+          <div
+            class="
+              assessment-summary__skeleton
+              assessment-summary__skeleton--value
+            "
+          ></div>
+
+          <div
+            class="
+              assessment-summary__skeleton
+              assessment-summary__skeleton--label
+            "
+          ></div>
+
+          <div
+            class="
+              assessment-summary__skeleton
+              assessment-summary__skeleton--description
+            "
+          ></div>
+
+        </div>
+
+      </article>
+
+    }
+
+  } @else {
+
+    <!-- TOTAL ASSESSMENTS -->
+
+    <article class="assessment-summary__card">
+
+      <div
+        class="
+          assessment-summary__icon
+          assessment-summary__icon--purple
+        "
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="6"
+            y="4"
+            width="12"
+            height="16"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M9 3.5h6M9 8h6M9 12h6M9 16h4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <div class="assessment-summary__content">
+
+        <strong class="assessment-summary__value">
+          {{ totalAssessments }}
+        </strong>
+
+        <span class="assessment-summary__label">
+          Total evaluaciones
+        </span>
+
+        <span class="assessment-summary__description">
+          Asignadas
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <!-- ASSIGNED STUDENTS -->
+
+    <article class="assessment-summary__card">
+
+      <div
+        class="
+          assessment-summary__icon
+          assessment-summary__icon--green
+        "
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="9"
+            cy="8"
+            r="2.5"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <circle
+            cx="16.5"
+            cy="9"
+            r="2"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M4.5 18c.4-3.4 2-5.2 4.5-5.2s4.1 1.8 4.5 5.2"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M14 13.5c2.8-.5 4.6 1 5 4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <div class="assessment-summary__content">
+
+        <strong class="assessment-summary__value">
+          {{ totalAssignedStudents }}
+        </strong>
+
+        <span class="assessment-summary__label">
+          Estudiantes asignados
+        </span>
+
+        <span class="assessment-summary__description">
+          En total
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <!-- PAST DUE -->
+
+    <article class="assessment-summary__card">
+
+      <div
+        class="
+          assessment-summary__icon
+          assessment-summary__icon--warning
+        "
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 7.5V12l3 2"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+
+      <div class="assessment-summary__content">
+
+        <strong class="assessment-summary__value">
+          {{ totalPastDueAssessments }}
+        </strong>
+
+        <span class="assessment-summary__label">
+          Vencidas
+        </span>
+
+        <span class="assessment-summary__description">
+          Requieren atención
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <!-- FINISHED -->
+
+    <article class="assessment-summary__card">
+
+      <div
+        class="
+          assessment-summary__icon
+          assessment-summary__icon--blue
+        "
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="m8.5 12 2.2 2.2 4.8-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+
+      <div class="assessment-summary__content">
+
+        <strong class="assessment-summary__value">
+          {{ totalFinishedStudents }}
+        </strong>
+
+        <span class="assessment-summary__label">
+          Finalizadas
+        </span>
+
+        <span class="assessment-summary__description">
+          Completadas
+        </span>
+
+      </div>
+
+    </article>
+
+  }
+
+</section>

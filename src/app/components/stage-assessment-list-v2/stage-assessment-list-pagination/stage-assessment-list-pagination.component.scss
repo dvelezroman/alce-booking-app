@@ -1,0 +1,232 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   PAGINATION
+========================= */
+
+.assessment-pagination {
+  width: 100%;
+  min-height: 4rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding:
+    0.75rem
+    1rem;
+
+  border-top: 1px solid #eceef2;
+
+  background: #ffffff;
+}
+
+
+/* =========================
+   INFORMATION
+========================= */
+
+.assessment-pagination__information {
+  min-width: 0;
+
+  color: #686e7d;
+
+  font-size: 0.68rem;
+  font-weight: 450;
+  line-height: 1.3;
+}
+
+
+/* =========================
+   CONTROLS
+========================= */
+
+.assessment-pagination__controls {
+  display: flex;
+  align-items: center;
+
+  gap: 0.45rem;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.assessment-pagination__button {
+  min-width: 2.15rem;
+  height: 2.15rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    0
+    0.55rem;
+
+  border: 1px solid #dfe3ea;
+  border-radius: 0.45rem;
+
+  background: #ffffff;
+  color: #343944;
+
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.assessment-pagination__button:hover:not(:disabled):not(
+  .assessment-pagination__button--active
+) {
+  border-color: #cbd2de;
+
+  background: #f8f9fb;
+}
+
+.assessment-pagination__button:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+
+/* =========================
+   ACTIVE PAGE
+========================= */
+
+.assessment-pagination__button--active {
+  border-color: #7891e9;
+
+  background:
+    linear-gradient(
+      135deg,
+      #edf2ff 0%,
+      #e8eeff 100%
+    );
+
+  color: #2456c9;
+
+  font-weight: 750;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(70, 94, 211, 0.05);
+}
+
+
+/* =========================
+   ARROW
+========================= */
+
+.assessment-pagination__button--arrow {
+  width: 2.15rem;
+
+  padding: 0;
+}
+
+.assessment-pagination__button--arrow svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+
+/* =========================
+   DISABLED
+========================= */
+
+.assessment-pagination__button:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.4;
+
+  background: #fafafa;
+}
+
+
+/* =========================
+   ELLIPSIS
+========================= */
+
+.assessment-pagination__ellipsis {
+  min-width: 2.15rem;
+  height: 2.15rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #666c79;
+
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 700px) {
+  .assessment-pagination {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    padding: 0.75rem;
+  }
+
+  .assessment-pagination__controls {
+    width: 100%;
+
+    justify-content: flex-end;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .assessment-pagination__information {
+    width: 100%;
+
+    text-align: center;
+
+    font-size: 0.65rem;
+  }
+
+  .assessment-pagination__controls {
+    justify-content: center;
+
+    gap: 0.3rem;
+  }
+
+  .assessment-pagination__button,
+  .assessment-pagination__ellipsis {
+    min-width: 2rem;
+    height: 2rem;
+
+    padding: 0 0.4rem;
+
+    font-size: 0.65rem;
+  }
+
+  .assessment-pagination__button--arrow {
+    width: 2rem;
+  }
+}
