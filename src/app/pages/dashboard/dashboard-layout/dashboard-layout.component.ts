@@ -19,6 +19,7 @@ import { NotificationPermissionComponent } from "../../../components/notificatio
 import { PwaInstallBannerComponent } from "../../../components/pwa-install-banner/pwa-install-banner.component";
 import { PwaInstallComponent } from "../../../components/pwa-install/pwa-install.component";
 import { PushNotificationService } from "../../../services/push-notification.service";
+import { PwaService } from "../../../services/pwa.service";
 import { HeaderComponent } from "../../../components/header/header.component";
 import { LeadSchedulingPendingCountService } from "../../../services/lead-scheduling-pending-count.service";
 import { LeadSchedulingPendingBannerComponent } from "../../../components/banner/lead-scheduling-pending-banner/lead-scheduling-pending-banner.component";
@@ -68,6 +69,7 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
   private readonly subs = new Subscription();
   private wasLoggedIn = false;
   private pendingSessionLeadToast = false;
+  private promptPushAfterUpdate = false;
 
   constructor(
     private store: Store,
@@ -76,6 +78,7 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private configService: AssessmentPointsConfigService,
     private pushNotificationService: PushNotificationService,
+    private pwaService: PwaService,
     private leadSchedulingPending: LeadSchedulingPendingCountService,
   ) {
         this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
@@ -84,6 +87,10 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.promptPushAfterUpdate = this.pwaService.consumePromptPushAfterUpdate();
+    if (this.promptPushAfterUpdate) {
+      this.pushNotificationService.setPreferenceEnabled(true);
+    }
     this.unreadCount$ = this.notificationService.unreadCount$;
     this.leadSchedulingPendingCount$ = combineLatest([
       this.userData$,
@@ -116,7 +123,8 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
           this.pushNotificationService.isPreferenceEnabled() &&
           !hasSubscription &&
           permission !== 'denied' &&
-          !this.pushNotificationService.isBannerDismissed();
+          (this.promptPushAfterUpdate ||
+            !this.pushNotificationService.isBannerDismissed());
       } else {
         this.pendingSessionLeadToast = false;
         this.leadSchedulingPending.reset();
