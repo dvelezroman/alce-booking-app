@@ -99,6 +99,10 @@ export interface AutomaticPromotionRow {
   processedById: number | null;
   processedByFirstName: string | null;
   processedByLastName: string | null;
+  grammarPoints: number | null;
+  grammarAssessedAt: string | null;
+  speakingPoints: number | null;
+  speakingAssessedAt: string | null;
 }
 
 export interface AutomaticPromotionsReport {

@@ -137,6 +137,7 @@
             <th>Fecha</th>
             <th>Alumno</th>
             <th>Transición</th>
+            <th>Notas</th>
             <th>Origen</th>
             <th>Realizado por</th>
           </tr>
@@ -157,6 +158,27 @@
                 <span class="material-icons stage-arrow">arrow_forward</span>
                 <span class="stage-chip stage-chip--next">{{ row.toStage || '—' }}</span>
               </div>
+            </td>
+            <td class="col-scores">
+              <div class="report-scores" *ngIf="hasPromotionScores(row); else noScores">
+                <div class="score-item score-item--compact">
+                  <span class="score-item__label">Grammar</span>
+                  <span class="score-item__value">{{ row.grammarPoints }} pts</span>
+                  <span class="score-item__date" *ngIf="row.grammarAssessedAt">
+                    {{ row.grammarAssessedAt | date:'dd/MM/yyyy' }}
+                  </span>
+                </div>
+                <div class="score-item score-item--compact">
+                  <span class="score-item__label">Speaking</span>
+                  <span class="score-item__value">{{ row.speakingPoints }} pts</span>
+                  <span class="score-item__date" *ngIf="row.speakingAssessedAt">
+                    {{ row.speakingAssessedAt | date:'dd/MM/yyyy' }}
+                  </span>
+                </div>
+              </div>
+              <ng-template #noScores>
+                <span class="scores-empty">—</span>
+              </ng-template>
             </td>
             <td class="col-source">
               <span class="source-badge" [ngClass]="sourceBadgeClass(row.source)">

@@ -250,6 +250,10 @@ export class StagePromotionConfigComponent implements OnInit {
     return '—';
   }
 
+  hasPromotionScores(row: AutomaticPromotionRow): boolean {
+    return row.grammarPoints != null && row.speakingPoints != null;
+  }
+
   sourceLabel(source: AutomaticPromotionSource): string {
     switch (source) {
       case 'live':
