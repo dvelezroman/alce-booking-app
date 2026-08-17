@@ -6,6 +6,7 @@ import {
   AutomaticPromotionRow,
   AutomaticPromotionSource,
   EligiblePromotionPreview,
+  StagePromotionReportCategory,
 } from '../../../services/dtos/assessment.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
@@ -31,6 +32,7 @@ export class StagePromotionConfigComponent implements OnInit {
   from = '';
   to = '';
   search = '';
+  reportCategory: StagePromotionReportCategory = 'automatic';
   page = 1;
   limit = 25;
   total = 0;
@@ -181,6 +183,7 @@ export class StagePromotionConfigComponent implements OnInit {
     this.reportLoading = true;
     this.assessmentService
       .listAutomaticPromotions({
+        category: this.reportCategory,
         from: this.from || undefined,
         to: this.to || undefined,
         search: this.search.trim() || undefined,
@@ -235,7 +238,11 @@ export class StagePromotionConfigComponent implements OnInit {
       case 'live':
         return 'En vivo';
       case 'backfill':
-        return 'Cron / manual';
+        return 'Cron';
+      case 'manual':
+        return 'Manual (Ejecutar ahora)';
+      case 'profile':
+        return 'Manual (perfil)';
       default:
         return 'Histórico';
     }
@@ -247,8 +254,44 @@ export class StagePromotionConfigComponent implements OnInit {
         return 'badge-live';
       case 'backfill':
         return 'badge-backfill';
+      case 'manual':
+        return 'badge-manual';
+      case 'profile':
+        return 'badge-profile';
       default:
         return 'badge-legacy';
+    }
+  }
+
+  reportCategoryLabel(category: StagePromotionReportCategory): string {
+    switch (category) {
+      case 'automatic':
+        return 'Automáticas (todas)';
+      case 'live':
+        return 'En vivo';
+      case 'backfill':
+        return 'Cron';
+      case 'manual':
+        return 'Manual (Ejecutar ahora)';
+      case 'profile':
+        return 'Manual (perfil de alumno)';
+      default:
+        return 'Automáticas';
+    }
+  }
+
+  emptyReportHint(): string {
+    switch (this.reportCategory) {
+      case 'manual':
+        return 'Aún no hay promociones desde Ejecutar ahora en este rango.';
+      case 'profile':
+        return 'No hay cambios de stage hechos manualmente en el perfil del alumno.';
+      case 'backfill':
+        return 'No hay promociones registradas por el cron en este rango.';
+      case 'live':
+        return 'No hay promociones en vivo en este rango.';
+      default:
+        return 'Ajusta las fechas o ejecuta el barrido manual para procesar alumnos pendientes.';
     }
   }
 

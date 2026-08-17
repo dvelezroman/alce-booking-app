@@ -71,13 +71,27 @@
       <div class="card__heading">
         <h2>Reporte de promociones</h2>
         <p>
-          Historial de alumnos promovidos automáticamente por plataforma, instructor
-          o barrido programado.
+          Historial de promociones automáticas (Grammar + Speaking) y cambios
+          manuales de stage.
         </p>
       </div>
     </div>
 
     <form class="filters" (ngSubmit)="applyFilters()">
+      <label class="filter-field filter-field--category">
+        <span class="filter-label">Tipo</span>
+        <select
+          [(ngModel)]="reportCategory"
+          name="reportCategory"
+          class="filter-input"
+        >
+          <option value="automatic">Automáticas (todas)</option>
+          <option value="live">En vivo</option>
+          <option value="backfill">Cron</option>
+          <option value="manual">Manual (Ejecutar ahora)</option>
+          <option value="profile">Manual (perfil de alumno)</option>
+        </select>
+      </label>
       <label class="filter-field">
         <span class="filter-label">Desde</span>
         <input type="date" [(ngModel)]="from" name="from" class="filter-input" />
@@ -111,7 +125,7 @@
       <span class="material-icons empty-state__icon">inbox</span>
       <p class="empty-state__title">Sin promociones en este rango</p>
       <p class="empty-state__hint">
-        Ajusta las fechas o ejecuta el barrido manual para procesar alumnos pendientes.
+        {{ emptyReportHint() }}
       </p>
     </div>
 

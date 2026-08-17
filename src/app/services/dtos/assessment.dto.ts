@@ -73,7 +73,19 @@ export interface AssessmentConfigI {
   minHoursScheduled: number;
 }
 
-export type AutomaticPromotionSource = 'live' | 'backfill' | 'unknown';
+export type AutomaticPromotionSource =
+  | 'live'
+  | 'backfill'
+  | 'manual'
+  | 'profile'
+  | 'unknown';
+
+export type StagePromotionReportCategory =
+  | 'automatic'
+  | 'live'
+  | 'backfill'
+  | 'manual'
+  | 'profile';
 
 export interface AutomaticPromotionRow {
   id: number;

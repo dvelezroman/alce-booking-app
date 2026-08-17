@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {AssessementI, AutomaticPromotionsReport, CreateAssessmentI, EligiblePromotionPreview, FilterAssessmentI, PromoteEligibleResult, PromotionCronStatus, UpdateAssessmentI} from "./dtos/assessment.dto";
+import {AssessementI, AutomaticPromotionsReport, CreateAssessmentI, EligiblePromotionPreview, FilterAssessmentI, PromoteEligibleResult, PromotionCronStatus, StagePromotionReportCategory, UpdateAssessmentI} from "./dtos/assessment.dto";
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -67,6 +67,7 @@ export class AssessmentService {
   }
 
   listAutomaticPromotions(query: {
+    category?: StagePromotionReportCategory;
     from?: string;
     to?: string;
     search?: string;
@@ -74,6 +75,9 @@ export class AssessmentService {
     limit?: number;
   }): Observable<AutomaticPromotionsReport> {
     let params = new HttpParams();
+    if (query.category) {
+      params = params.set('category', query.category);
+    }
     if (query.from) {
       params = params.set('from', query.from);
     }
