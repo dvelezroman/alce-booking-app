@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {AssessementI, CreateAssessmentI, FilterAssessmentI, UpdateAssessmentI} from "./dtos/assessment.dto";
+import {AssessementI, AutomaticPromotionsReport, CreateAssessmentI, FilterAssessmentI, PromoteEligibleResult, PromotionCronStatus, UpdateAssessmentI} from "./dtos/assessment.dto";
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -54,5 +54,51 @@ export class AssessmentService {
 
   remove(id: number) {
     return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  getPromotionCron(): Observable<PromotionCronStatus> {
+    return this.http.get<PromotionCronStatus>(`${this.apiUrl}/promotion-cron`);
+  }
+
+  setPromotionCron(enabled: boolean): Observable<PromotionCronStatus> {
+    return this.http.patch<PromotionCronStatus>(`${this.apiUrl}/promotion-cron`, {
+      enabled,
+    });
+  }
+
+  listAutomaticPromotions(query: {
+    from?: string;
+    to?: string;
+    search?: string;
+    page?: number;
+    limit?: number;
+  }): Observable<AutomaticPromotionsReport> {
+    let params = new HttpParams();
+    if (query.from) {
+      params = params.set('from', query.from);
+    }
+    if (query.to) {
+      params = params.set('to', query.to);
+    }
+    if (query.search) {
+      params = params.set('search', query.search);
+    }
+    if (query.page != null) {
+      params = params.set('page', query.page.toString());
+    }
+    if (query.limit != null) {
+      params = params.set('limit', query.limit.toString());
+    }
+    return this.http.get<AutomaticPromotionsReport>(
+      `${this.apiUrl}/automatic-promotions`,
+      { params },
+    );
+  }
+
+  promoteEligible(): Observable<PromoteEligibleResult> {
+    return this.http.post<PromoteEligibleResult>(
+      `${this.apiUrl}/promote-eligible`,
+      {},
+    );
   }
 }

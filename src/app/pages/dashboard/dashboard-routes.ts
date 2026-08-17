@@ -23,6 +23,7 @@ import { StageComponent } from './stage/stage.component';
 import { AcademicResourcesComponent } from './academic-resources/academic-resources.component';
 import { AssessmentTypesComponent } from './assessment-types/assessment-types.component';
 import { AssessmentConfigComponent } from './assessment-config/assessment-config.component';
+import { StagePromotionConfigComponent } from './stage-promotion-config/stage-promotion-config.component';
 import { ReportUserComponent } from './report-user/report-user.component';
 import { AttendanceInstructorComponent } from './attendance-instructor/attendance-instructor.component';
 import { BroadcastGroupsComponent } from './notifications/broadcast-groups/broadcast-groups.component';
@@ -148,6 +149,7 @@ const dashboardChildren: Routes = [
   { path: 'assessment', component: AssessmentComponent },
   { path: 'assessment-reports', component: AssessmentReportsComponent },
   { path: 'assessment-config', component: AssessmentConfigComponent },
+  { path: 'stage-promotion', component: StagePromotionConfigComponent },
   { path: 'stage-assessment', component: StageAssessmentComponent },
   { path: 'stage-assessment-list', component: StageAssessmentListComponent },
   { path: 'stage-assessment-student', component: StageAssessmentStudentComponent },
