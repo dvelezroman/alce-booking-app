@@ -1,0 +1,162 @@
+<section class="stages-filters">
+
+  <!-- =========================
+       SEARCH
+  ========================== -->
+
+  <div class="stages-filters__search">
+
+    <span
+      class="stages-filters__search-icon"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <circle
+          cx="11"
+          cy="11"
+          r="6.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="m16 16 4 4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+
+
+    <input
+      #searchInput
+      type="text"
+      class="stages-filters__search-input"
+      [ngModel]="searchTerm"
+      (ngModelChange)="onSearchChange($event)"
+      placeholder="Buscar por número o descripción..."
+      autocomplete="off"
+      aria-label="Buscar stage"
+    />
+
+
+    @if (searchTerm) {
+
+      <button
+        type="button"
+        class="stages-filters__clear"
+        aria-label="Limpiar búsqueda"
+        title="Limpiar búsqueda"
+        (click)="clearSearch()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m7 7 10 10M17 7 7 17"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+
+    }
+
+  </div>
+
+
+  <!-- =========================
+       RIGHT ACTIONS
+  ========================== -->
+
+  <div class="stages-filters__actions">
+
+    <!-- LIMIT -->
+
+    <div class="stages-filters__limit">
+
+      <span class="stages-filters__limit-label">
+        Mostrar
+      </span>
+
+
+      <div class="stages-filters__select-wrapper">
+
+        <select
+          class="stages-filters__select"
+          [ngModel]="limit"
+          (ngModelChange)="onLimitChange($event)"
+          aria-label="Resultados por página"
+        >
+
+          @for (
+            option of limitOptions;
+            track option
+          ) {
+
+            <option [ngValue]="option">
+              {{ option }}
+            </option>
+
+          }
+
+        </select>
+
+
+        <span
+          class="stages-filters__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m8 10 4 4 4-4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- FILTER BUTTON -->
+
+    <button
+      type="button"
+      class="stages-filters__filter-button"
+      title="Filtros"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M4 6h16M7 12h10M10 18h4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <span>
+        Filtros
+      </span>
+    </button>
+
+  </div>
+
+</section>

@@ -1,0 +1,517 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.stages-table {
+  position: relative;
+
+  width: 100%;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7ee;
+  border-radius: 0.7rem;
+
+  box-shadow:
+    0 3px 12px
+    rgba(31, 42, 89, 0.025);
+}
+
+
+/* =========================
+   SCROLL
+========================= */
+
+.stages-table__scroll {
+  width: 100%;
+
+  overflow-x: auto;
+
+  border-radius: inherit;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.stages-table__table {
+  width: 100%;
+  min-width: 720px;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  table-layout: fixed;
+
+  color: #272c3c;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+thead {
+  background: #fbfbfd;
+}
+
+
+th {
+  height: 3rem;
+
+  padding: 0 1rem;
+
+  border-bottom: 1px solid #e6e8ee;
+
+  color: #4437b9;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  text-align: left;
+  vertical-align: middle;
+
+  white-space: nowrap;
+
+  &:first-child {
+    border-top-left-radius: 0.65rem;
+  }
+
+  &:last-child {
+    border-top-right-radius: 0.65rem;
+  }
+}
+
+
+/* =========================
+   BODY
+========================= */
+
+td {
+  height: 4.2rem;
+
+  padding: 0.75rem 1rem;
+
+  border-bottom: 1px solid #eceef2;
+
+  color: #303544;
+
+  font-size: 0.78rem;
+
+  vertical-align: middle;
+}
+
+
+tbody {
+
+  tr {
+    transition:
+      background-color 0.15s ease;
+
+    &:hover {
+      background: #fcfcfe;
+    }
+
+    &:last-child {
+
+      td {
+        border-bottom: 0;
+      }
+    }
+  }
+}
+
+
+/* =========================
+   COLUMNS
+========================= */
+
+.stages-table__index {
+  width: 8%;
+}
+
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 20%;
+}
+
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 57%;
+}
+
+
+.stages-table__actions-column {
+  width: 15%;
+
+  text-align: center;
+}
+
+
+/* =========================
+   STAGE BADGE
+========================= */
+
+.stages-table__stage-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 1.8rem;
+
+  padding: 0.25rem 0.65rem;
+
+  border: 1px solid #e4e0fb;
+  border-radius: 0.4rem;
+
+  background: #f4f2ff;
+
+  color: #4c3dc3;
+
+  font-size: 0.74rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.stages-table__description {
+  display: block;
+
+  overflow: hidden;
+
+  color: #303544;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================
+   MENU TRIGGER
+========================= */
+
+.stages-table__menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.35rem;
+  height: 2.35rem;
+
+  padding: 0;
+
+  border: 1px solid #dfe2e9;
+  border-radius: 0.5rem;
+
+  background: #ffffff;
+
+  color: #4d5361;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.1s ease;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &:hover {
+    border-color: #d2cdef;
+
+    background: #f8f7ff;
+
+    color: #5142d8;
+  }
+
+  &:active {
+    transform: scale(0.94);
+  }
+}
+
+
+.stages-table__menu-trigger--active {
+  border-color: #d2cdef;
+
+  background: #f1effd;
+
+  color: #5142d8;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(81, 66, 216, 0.06);
+}
+
+
+/* =========================
+   FLOATING MENU
+========================= */
+
+.stages-table__menu {
+  position: fixed;
+
+  z-index: 9999;
+
+  width: 12rem;
+
+  padding: 0.4rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e0e2e8;
+  border-radius: 0.65rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 12px 32px
+    rgba(27, 31, 48, 0.15);
+
+  animation:
+    stageMenuEnter
+    0.12s ease-out;
+}
+
+
+@keyframes stageMenuEnter {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(-3px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================
+   MENU ITEM
+========================= */
+
+.stages-table__menu-item {
+  display: flex;
+  align-items: center;
+
+  gap: 0.7rem;
+
+  width: 100%;
+
+  padding: 0.65rem 0.7rem;
+
+  border: 0;
+  border-radius: 0.45rem;
+
+  background: transparent;
+
+  color: #353a49;
+
+  font-family: inherit;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
+
+  &:hover {
+    background: #f6f5fc;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+
+/* =========================
+   MENU ICON
+========================= */
+
+.stages-table__menu-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 1.25rem;
+  height: 1.25rem;
+
+  color: #313133;
+
+  svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+}
+
+
+/* =========================
+   MENU CONTENT
+========================= */
+
+.stages-table__menu-content {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+
+.stages-table__menu-title {
+  color: inherit;
+
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+
+.stages-table__menu-description {
+  margin-top: 0.1rem;
+
+  color: #8b909c;
+
+  font-size: 0.64rem;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+
+/* =========================
+   DIVIDER
+========================= */
+
+.stages-table__menu-divider {
+  height: 1px;
+
+  margin: 0.3rem 0.4rem;
+
+  background: #eceef2;
+}
+
+
+/* =========================
+   DANGER
+========================= */
+
+.stages-table__menu-item--danger {
+  color: #d94750;
+
+  .stages-table__menu-icon {
+    color: #d94750;
+  }
+
+  &:hover {
+    background: #fff5f5;
+  }
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .stages-table__table {
+    min-width: 650px;
+  }
+
+
+  th,
+  td {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .stages-table {
+    border-radius: 0.6rem;
+  }
+
+
+  .stages-table__table {
+    min-width: 600px;
+  }
+
+
+  th {
+    height: 2.7rem;
+
+    font-size: 0.7rem;
+  }
+
+
+  td {
+    height: 3.8rem;
+
+    padding:
+      0.65rem
+      0.75rem;
+
+    font-size: 0.73rem;
+  }
+
+
+  .stages-table__stage-badge {
+    min-height: 1.65rem;
+
+    padding:
+      0.2rem
+      0.55rem;
+
+    font-size: 0.68rem;
+  }
+
+
+  .stages-table__menu-trigger {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+
+
+  .stages-table__menu {
+    width: min(
+      12rem,
+      calc(100vw - 1.5rem)
+    );
+  }
+}
