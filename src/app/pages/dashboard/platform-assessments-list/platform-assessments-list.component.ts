@@ -167,31 +167,23 @@ export class PlatformAssessmentsListComponent implements OnInit {
       return;
     }
 
+    this.modal.show = false;
     this.platformAssessmentService
       .applyWritingScore(target.mirrorId, target.points ?? undefined)
       .subscribe({
         next: (res) => {
           this.applyTarget = null;
-          this.modal = {
-            ...modalInitializer(),
-            show: true,
-            message: res.updatedStage
+          this.showFeedback(
+            res.updatedStage
               ? 'Evaluación aceptada. El estudiante fue promovido de stage.'
               : 'Evaluación aceptada. Stage no cambió (faltan otros skills o ya promovido).',
-            isSuccess: true,
-            close: () => (this.modal.show = false),
-          };
+            'success',
+          );
           this.fetch();
         },
         error: () => {
           this.applyTarget = null;
-          this.modal = {
-            ...modalInitializer(),
-            show: true,
-            message: 'No se pudo registrar Grammar.',
-            isError: true,
-            close: () => (this.modal.show = false),
-          };
+          this.showFeedback('No se pudo registrar Grammar.', 'error');
         },
       });
   }
@@ -214,13 +206,7 @@ export class PlatformAssessmentsListComponent implements OnInit {
 
     const parsed = new Date(draft.trim());
     if (Number.isNaN(parsed.getTime())) {
-      this.modal = {
-        ...modalInitializer(),
-        show: true,
-        message: 'Fecha inválida.',
-        isError: true,
-        close: () => (this.modal.show = false),
-      };
+      this.showFeedback('Fecha inválida.', 'error');
       return;
     }
 
@@ -251,34 +237,25 @@ export class PlatformAssessmentsListComponent implements OnInit {
 
     const expiresAt = new Date(draft).toISOString();
     this.actionBusyId = target.assignmentId;
+    this.modal.show = false;
     this.platformAssessmentService
       .updateAssignment(target.assignmentId, expiresAt)
       .subscribe({
         next: () => {
           this.actionBusyId = null;
           this.extendTarget = null;
-          this.modal = {
-            ...modalInitializer(),
-            show: true,
-            message: 'Fecha límite actualizada.',
-            isSuccess: true,
-            close: () => (this.modal.show = false),
-          };
+          this.showFeedback('Fecha límite actualizada.', 'success');
           this.fetch();
         },
         error: (err) => {
           this.actionBusyId = null;
           this.extendTarget = null;
-          this.modal = {
-            ...modalInitializer(),
-            show: true,
-            message:
-              err?.error?.message ||
+          this.showFeedback(
+            err?.error?.message ||
               err?.message ||
               'No se pudo actualizar la fecha límite.',
-            isError: true,
-            close: () => (this.modal.show = false),
-          };
+            'error',
+          );
         },
       });
   }
@@ -308,32 +285,26 @@ export class PlatformAssessmentsListComponent implements OnInit {
     }
 
     this.actionBusyId = target.assignmentId;
+    this.modal.show = false;
     this.platformAssessmentService.grantAttempt(target.assignmentId).subscribe({
       next: (res) => {
         this.actionBusyId = null;
         this.grantTarget = null;
-        this.modal = {
-          ...modalInitializer(),
-          show: true,
-          message: `Intento otorgado. maxAttempts=${res.maxAttempts}, status=${res.status}.`,
-          isSuccess: true,
-          close: () => (this.modal.show = false),
-        };
+        this.showFeedback(
+          `Intento otorgado. maxAttempts=${res.maxAttempts}, status=${res.status}.`,
+          'success',
+        );
         this.fetch();
       },
       error: (err) => {
         this.actionBusyId = null;
         this.grantTarget = null;
-        this.modal = {
-          ...modalInitializer(),
-          show: true,
-          message:
-            err?.error?.message ||
+        this.showFeedback(
+          err?.error?.message ||
             err?.message ||
             'No se pudo otorgar otro intento.',
-          isError: true,
-          close: () => (this.modal.show = false),
-        };
+          'error',
+        );
       },
     });
   }
@@ -353,6 +324,22 @@ export class PlatformAssessmentsListComponent implements OnInit {
   private formatDatetimeLocal(d: Date): string {
     const pad = (n: number) => String(n).padStart(2, '0');
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  private showFeedback(
+    message: string,
+    kind: 'success' | 'error',
+    durationMs = 2500,
+  ): void {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message,
+      isSuccess: kind === 'success',
+      isError: kind === 'error',
+      close: () => (this.modal.show = false),
+    };
+    setTimeout(() => (this.modal.show = false), durationMs);
   }
 
   private emptyFilters(): RemotePlatformAssessmentFilters {
