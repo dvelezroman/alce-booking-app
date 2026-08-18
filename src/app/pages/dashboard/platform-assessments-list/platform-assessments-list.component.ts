@@ -108,6 +108,20 @@ export class PlatformAssessmentsListComponent implements OnInit {
     return 'badge-gray';
   }
 
+  statusLabel(row: RemotePlatformAssessmentItem): string {
+    if (row.submitReason === 'FOCUS_GUARD') {
+      return 'FOCUS_GUARD';
+    }
+    return row.status;
+  }
+
+  statusClass(row: RemotePlatformAssessmentItem): string {
+    if (row.submitReason === 'FOCUS_GUARD') {
+      return 'badge-orange';
+    }
+    return 'badge-blue';
+  }
+
   stageLabel(stage: Stage): string {
     const desc = stage.description?.trim();
     return desc ? `${stage.number} — ${desc}` : stage.number;

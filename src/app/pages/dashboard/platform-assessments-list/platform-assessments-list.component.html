@@ -122,7 +122,11 @@
               <div class="cell-sub">{{ row.assignmentId }}</div>
             </td>
             <td>{{ row.studentStageSnapshot ?? '—' }}</td>
-            <td><span class="badge badge-blue">{{ row.status }}</span></td>
+            <td>
+              <span class="badge" [ngClass]="statusClass(row)">
+                {{ statusLabel(row) }}
+              </span>
+            </td>
             <td>
               <span class="badge" [ngClass]="outcomeClass(row.outcome)">
                 {{ row.outcome || 'NONE' }}

@@ -3,6 +3,7 @@
   [class.expired-card]="assessment.status === 'expired'"
   [class.completed-card]="assessment.status === 'completed'"
   [class.failed-card]="assessment.status === 'completed' && assessment.outcome === 'FAILED'"
+  [class.focus-guard-card]="assessment.status === 'focus_guard'"
   [class.clickable]="canAct"
   (click)="onAction()"
 >
@@ -15,7 +16,8 @@
         pending: assessment.status === 'pending',
         expired: assessment.status === 'expired',
         completed: assessment.status === 'completed' && assessment.outcome !== 'FAILED',
-        failed: assessment.status === 'completed' && assessment.outcome === 'FAILED'
+        failed: assessment.status === 'completed' && assessment.outcome === 'FAILED',
+        'focus-guard': assessment.status === 'focus_guard'
       }"
     >
       {{ statusLabel }}
@@ -31,7 +33,7 @@
       <strong>Fecha límite:</strong>
       Sin vencimiento
     </p>
-    <p *ngIf="assessment.status === 'completed' && assessment.completedAt">
+    <p *ngIf="(assessment.status === 'completed' || assessment.status === 'focus_guard') && assessment.completedAt">
       <strong>Resultado el:</strong>
       {{ assessment.completedAt | date: 'medium' }}
     </p>
@@ -58,7 +60,8 @@
         [ngClass]="{
           'expired-btn': assessment.status === 'expired',
           'completed-btn': assessment.status === 'completed' && assessment.outcome !== 'FAILED',
-          'failed-btn': assessment.status === 'completed' && assessment.outcome === 'FAILED'
+          'failed-btn': assessment.status === 'completed' && assessment.outcome === 'FAILED',
+          'focus-guard-btn': assessment.status === 'focus_guard'
         }"
         [disabled]="!canAct"
         (click)="onAction($event)"

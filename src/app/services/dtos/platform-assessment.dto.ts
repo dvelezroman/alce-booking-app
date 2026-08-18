@@ -1,5 +1,13 @@
-export type PlatformAssessmentStatus = 'pending' | 'expired' | 'completed';
+export type PlatformAssessmentStatus =
+  | 'pending'
+  | 'expired'
+  | 'completed'
+  | 'focus_guard';
 export type PlatformAssessmentOutcome = 'PASSED' | 'FAILED';
+export type PlatformAssessmentSubmitReason =
+  | 'MANUAL'
+  | 'TIMEOUT'
+  | 'FOCUS_GUARD';
 
 /** Row from GET /platform-assessments (points only for ADMIN; students get resultsUrl). */
 export interface PlatformAssessmentAssignment {
@@ -18,6 +26,7 @@ export interface PlatformAssessmentAssignment {
   studentStage: number | null;
   completedAt: string | null;
   status: PlatformAssessmentStatus;
+  submitReason?: PlatformAssessmentSubmitReason | null;
   /** Admin / instructor only. */
   points?: number | null;
   /** Admin / instructor: Writing already linked (S2S auto or prior apply). */
@@ -76,6 +85,7 @@ export interface RemotePlatformAssessmentItem {
   outcome: PlatformAssessmentOutcome | null;
   points: number | null;
   completedAt: string | null;
+  submitReason?: PlatformAssessmentSubmitReason | null;
   mirrorId: number | null;
   writingApplied: boolean;
   writingAccepted: boolean;

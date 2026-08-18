@@ -100,6 +100,20 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
     return 'badge-gray';
   }
 
+  statusLabel(row: RemotePlatformAssessmentItem): string {
+    if (row.submitReason === 'FOCUS_GUARD') {
+      return 'FOCUS_GUARD';
+    }
+    return row.status;
+  }
+
+  statusClass(row: RemotePlatformAssessmentItem): string {
+    if (row.submitReason === 'FOCUS_GUARD') {
+      return 'badge-orange';
+    }
+    return 'badge-blue';
+  }
+
   displayStudent(row: RemotePlatformAssessmentItem): string {
     return (
       row.studentDisplayName?.trim() ||

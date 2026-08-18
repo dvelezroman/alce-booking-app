@@ -77,7 +77,11 @@
             <div class="cell-main">{{ displayStudent(row) }}</div>
             <div class="cell-sub">ID {{ row.studentId ?? row.externalStudentId }}</div>
           </td>
-          <td><span class="badge badge-blue">{{ row.status }}</span></td>
+          <td>
+            <span class="badge" [ngClass]="statusClass(row)">
+              {{ statusLabel(row) }}
+            </span>
+          </td>
           <td>{{ row.attemptCount }} / {{ row.maxAttempts }}</td>
           <td>
             <span class="badge" [ngClass]="outcomeClass(row.outcome)">

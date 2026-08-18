@@ -207,7 +207,9 @@ export class PlatformAssessmentsStudentComponent
             items.filter(
               (assessment) =>
                 assessment.status ===
-                'completed'
+                  'completed' ||
+                assessment.status ===
+                  'focus_guard'
             );
 
           this.updateAssessmentCounters();
@@ -308,13 +310,15 @@ export class PlatformAssessmentsStudentComponent
       PlatformAssessmentAssignment
   ): void {
     const url =
-      assessment.status === 'completed'
+      assessment.status === 'completed' ||
+      assessment.status === 'focus_guard'
         ? assessment.resultsUrl?.trim()
         : assessment.directAccessUrl?.trim();
 
     if (!url) {
       this.showNotification(
-        assessment.status === 'completed'
+        assessment.status === 'completed' ||
+        assessment.status === 'focus_guard'
           ? 'Este examen no tiene resultados disponibles.'
           : 'Este examen no tiene un enlace disponible.',
         true,

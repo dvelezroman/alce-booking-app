@@ -27,7 +27,10 @@ export class PlatformAssessmentCardComponent {
       return this.assessment.directAccessUrl?.trim() || null;
     }
 
-    if (this.assessment.status === 'completed') {
+    if (
+      this.assessment.status === 'completed' ||
+      this.assessment.status === 'focus_guard'
+    ) {
       return this.assessment.resultsUrl?.trim() || null;
     }
 
@@ -45,6 +48,9 @@ export class PlatformAssessmentCardComponent {
 
       case 'expired':
         return 'Expirada';
+
+      case 'focus_guard':
+        return 'Cambio de pestaña';
 
       case 'completed':
         return this.assessment.outcome ===
@@ -65,6 +71,7 @@ export class PlatformAssessmentCardComponent {
       case 'expired':
         return 'Evaluación expirada';
 
+      case 'focus_guard':
       case 'completed':
         return 'Ver resultados';
     }
