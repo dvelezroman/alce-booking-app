@@ -1,0 +1,751 @@
+:host {
+  display: block;
+}
+
+
+/* =========================
+   OVERLAY
+========================= */
+
+.assessment-type-modal {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 10000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+
+  background:
+    rgba(20, 21, 35, 0.38);
+
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+
+  box-sizing: border-box;
+
+  animation:
+    assessment-type-modal-fade
+    0.15s ease;
+}
+
+
+/* =========================
+   DIALOG
+========================= */
+
+.assessment-type-modal__dialog {
+  width: 100%;
+  max-width: 31rem;
+
+  max-height:
+    calc(100dvh - 2rem);
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e6e8ef;
+
+  border-radius: 0.8rem;
+
+  box-shadow:
+    0 24px 70px rgba(23, 25, 48, 0.16),
+    0 6px 20px rgba(23, 25, 48, 0.07);
+
+  overflow: hidden;
+
+  animation:
+    assessment-type-modal-enter
+    0.18s ease;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.assessment-type-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding:
+    1rem
+    1.1rem;
+
+  border-bottom:
+    1px solid #eceef3;
+}
+
+
+.assessment-type-modal__header-main {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.75rem;
+}
+
+
+/* =========================
+   ICON
+========================= */
+
+.assessment-type-modal__icon {
+  width: 2.65rem;
+  height: 2.65rem;
+
+  flex: 0 0 2.65rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #5138dd;
+
+  background:
+    rgba(81, 56, 221, 0.09);
+
+  border-radius: 0.6rem;
+}
+
+
+.assessment-type-modal__icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+
+/* =========================
+   HEADER CONTENT
+========================= */
+
+.assessment-type-modal__header-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.18rem;
+}
+
+
+.assessment-type-modal__title {
+  margin: 0;
+
+  color: #222338;
+
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+
+.assessment-type-modal__description {
+  margin: 0;
+
+  color: #7b7c90;
+
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+
+/* =========================
+   CLOSE
+========================= */
+
+.assessment-type-modal__close {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  color: #737487;
+
+  background: transparent;
+
+  border: 0;
+  border-radius: 0.45rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+
+.assessment-type-modal__close:hover {
+  color: #3f4053;
+
+  background: #f5f6f9;
+}
+
+
+.assessment-type-modal__close:active {
+  transform: scale(0.94);
+}
+
+
+.assessment-type-modal__close svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.assessment-type-modal__form {
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* =========================
+   BODY
+========================= */
+
+.assessment-type-modal__body {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.95rem;
+
+  padding:
+    1.05rem
+    1.1rem;
+
+  overflow-y: auto;
+}
+
+
+/* =========================
+   FIELD
+========================= */
+
+.assessment-type-modal__field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.35rem;
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+.assessment-type-modal__label {
+  color: #45465a;
+
+  font-size: 0.73rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+
+.assessment-type-modal__label span {
+  color: #d83a47;
+}
+
+
+/* =========================
+   INPUT WRAPPER
+========================= */
+
+.assessment-type-modal__input-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+
+/* =========================
+   INPUT ICON
+========================= */
+
+.assessment-type-modal__input-icon {
+  position: absolute;
+
+  top: 50%;
+  left: 0.75rem;
+
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #9596a9;
+
+  pointer-events: none;
+}
+
+
+.assessment-type-modal__input-icon svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+
+/* =========================
+   INPUT
+========================= */
+
+.assessment-type-modal__input {
+  width: 100%;
+  height: 2.4rem;
+
+  padding:
+    0
+    0.8rem
+    0
+    2.2rem;
+
+  color: #303144;
+
+  background: #ffffff;
+
+  border:
+    1px solid #dfe2ea;
+
+  border-radius: 0.5rem;
+
+  outline: none;
+
+  font-family: inherit;
+  font-size: 0.75rem;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.assessment-type-modal__input::placeholder {
+  color: #a1a2b2;
+}
+
+
+.assessment-type-modal__input:hover {
+  border-color: #cfd2dd;
+}
+
+
+.assessment-type-modal__input:focus {
+  border-color: #7664e8;
+
+  box-shadow:
+    0 0 0 3px rgba(88, 66, 221, 0.08);
+}
+
+
+/* =========================
+   TEXTAREA
+========================= */
+
+.assessment-type-modal__textarea {
+  width: 100%;
+  min-height: 5.5rem;
+
+  resize: vertical;
+
+  padding:
+    0.7rem
+    0.75rem;
+
+  color: #303144;
+
+  background: #ffffff;
+
+  border:
+    1px solid #dfe2ea;
+
+  border-radius: 0.5rem;
+
+  outline: none;
+
+  font-family: inherit;
+  font-size: 0.75rem;
+  line-height: 1.45;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.assessment-type-modal__textarea::placeholder {
+  color: #a1a2b2;
+}
+
+
+.assessment-type-modal__textarea:hover {
+  border-color: #cfd2dd;
+}
+
+
+.assessment-type-modal__textarea:focus {
+  border-color: #7664e8;
+
+  box-shadow:
+    0 0 0 3px rgba(88, 66, 221, 0.08);
+}
+
+
+/* =========================
+   INVALID
+========================= */
+
+.assessment-type-modal__control--invalid
+.assessment-type-modal__input,
+
+.assessment-type-modal__textarea--invalid {
+  border-color: #df606b;
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+.assessment-type-modal__error {
+  color: #d53b47;
+
+  font-size: 0.66rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+
+/* =========================
+   FIELD FOOTER
+========================= */
+
+.assessment-type-modal__field-footer {
+  min-height: 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.5rem;
+}
+
+
+.assessment-type-modal__counter {
+  margin-left: auto;
+
+  color: #9293a5;
+
+  font-size: 0.65rem;
+}
+
+
+/* =========================
+   INFO
+========================= */
+
+.assessment-type-modal__info {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0.6rem;
+
+  padding:
+    0.65rem
+    0.7rem;
+
+  color: #615f80;
+
+  background:
+    rgba(86, 61, 222, 0.055);
+
+  border:
+    1px solid rgba(86, 61, 222, 0.1);
+
+  border-radius: 0.5rem;
+}
+
+
+.assessment-type-modal__info-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+
+  flex: 0 0 1.1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 0.02rem;
+
+  color: #6049d8;
+}
+
+
+.assessment-type-modal__info-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+
+.assessment-type-modal__info p {
+  margin: 0;
+
+  font-size: 0.68rem;
+  line-height: 1.4;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.assessment-type-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 0.55rem;
+
+  padding:
+    0.8rem
+    1.1rem;
+
+  background: #fbfbfd;
+
+  border-top:
+    1px solid #eceef3;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.assessment-type-modal__button {
+  min-height: 2.3rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.4rem;
+
+  padding:
+    0.5rem
+    0.9rem;
+
+  border-radius: 0.48rem;
+
+  font-family: inherit;
+  font-size: 0.73rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.assessment-type-modal__button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+
+.assessment-type-modal__button svg {
+  width: 0.95rem;
+  height: 0.95rem;
+
+  flex-shrink: 0;
+}
+
+
+/* SECONDARY */
+
+.assessment-type-modal__button--secondary {
+  color: #5e5f72;
+
+  background: #ffffff;
+
+  border:
+    1px solid #dfe2e9;
+}
+
+
+.assessment-type-modal__button--secondary:hover {
+  background: #f6f7f9;
+}
+
+
+/* PRIMARY */
+
+.assessment-type-modal__button--primary {
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4b2ce8 0%,
+      #5e32e9 100%
+    );
+
+  border:
+    1px solid transparent;
+
+  box-shadow:
+    0 3px 8px rgba(76, 47, 220, 0.14);
+}
+
+
+.assessment-type-modal__button--primary:hover:not(:disabled) {
+  box-shadow:
+    0 5px 12px rgba(76, 47, 220, 0.2);
+}
+
+
+.assessment-type-modal__button:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes assessment-type-modal-fade {
+
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+@keyframes assessment-type-modal-enter {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(6px)
+      scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .assessment-type-modal {
+    align-items: flex-end;
+
+    padding: 0;
+  }
+
+
+  .assessment-type-modal__dialog {
+    max-width: none;
+    max-height: 92dvh;
+
+    border-radius:
+      0.9rem
+      0.9rem
+      0
+      0;
+  }
+
+
+  .assessment-type-modal__header {
+    padding:
+      0.9rem
+      0.85rem;
+  }
+
+
+  .assessment-type-modal__body {
+    padding:
+      0.9rem
+      0.85rem;
+  }
+
+
+  .assessment-type-modal__footer {
+    padding:
+      0.75rem
+      0.85rem
+      calc(
+        0.75rem +
+        env(safe-area-inset-bottom)
+      );
+  }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+
+  .assessment-type-modal__footer {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+
+  .assessment-type-modal__button {
+    width: 100%;
+  }
+}

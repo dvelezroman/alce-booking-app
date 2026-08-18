@@ -1,0 +1,560 @@
+:host {
+  display: contents;
+}
+
+
+/* =========================
+   OVERLAY
+========================= */
+
+.resource-detail-modal {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 10000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+
+  background: rgba(20, 21, 35, 0.38);
+
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+
+  box-sizing: border-box;
+
+  animation:
+    resource-detail-fade
+    0.15s ease;
+}
+
+
+/* =========================
+   DIALOG
+========================= */
+
+.resource-detail-modal__dialog {
+  width: 100%;
+  max-width: 32rem;
+
+  max-height: calc(100dvh - 2rem);
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+
+  border: 1px solid #e6e8ef;
+  border-radius: 0.8rem;
+
+  box-shadow:
+    0 24px 70px rgba(23, 25, 48, 0.16),
+    0 6px 20px rgba(23, 25, 48, 0.07);
+
+  overflow: hidden;
+
+  animation:
+    resource-detail-enter
+    0.18s ease;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.resource-detail-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: 1rem 1.1rem;
+
+  border-bottom: 1px solid #eceef3;
+}
+
+
+/* =========================
+   HEADER MAIN
+========================= */
+
+.resource-detail-modal__header-main {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.75rem;
+}
+
+
+/* =========================
+   HEADER ICON
+========================= */
+
+.resource-detail-modal__icon {
+  width: 2.65rem;
+  height: 2.65rem;
+
+  flex: 0 0 2.65rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #5138dd;
+
+  background: rgba(81, 56, 221, 0.09);
+
+  border-radius: 0.6rem;
+}
+
+.resource-detail-modal__icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+
+/* =========================
+   HEADER CONTENT
+========================= */
+
+.resource-detail-modal__header-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.18rem;
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.resource-detail-modal__title {
+  margin: 0;
+
+  color: #222338;
+
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.resource-detail-modal__description {
+  margin: 0;
+
+  color: #7b7c90;
+
+  font-size: 0.73rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+
+/* =========================
+   CLOSE
+========================= */
+
+.resource-detail-modal__close {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  color: #737487;
+  background: transparent;
+
+  border: 0;
+  border-radius: 0.45rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.resource-detail-modal__close:hover {
+  color: #3f4053;
+
+  background: #f5f6f9;
+}
+
+.resource-detail-modal__close:active {
+  transform: scale(0.94);
+}
+
+.resource-detail-modal__close svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+
+/* =========================
+   BODY
+========================= */
+
+.resource-detail-modal__body {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+
+  padding: 1.1rem;
+
+  overflow-y: auto;
+}
+
+
+/* =========================
+   GROUP
+========================= */
+
+.resource-detail-modal__group {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.4rem;
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+.resource-detail-modal__label {
+  color: #77788c;
+
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+
+/* =========================
+   VALUE ROW
+========================= */
+
+.resource-detail-modal__value-row {
+  min-width: 0;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0.65rem;
+
+  padding: 0.75rem;
+
+  background: #fbfbfd;
+
+  border: 1px solid #eceef3;
+  border-radius: 0.55rem;
+}
+
+
+/* =========================
+   VALUE ICON
+========================= */
+
+.resource-detail-modal__value-icon {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.45rem;
+}
+
+.resource-detail-modal__value-icon svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+
+.resource-detail-modal__value-icon--title {
+  color: #563dde;
+
+  background: rgba(86, 61, 222, 0.08);
+}
+
+.resource-detail-modal__value-icon--note {
+  color: #78654a;
+
+  background: rgba(180, 143, 77, 0.09);
+}
+
+.resource-detail-modal__value-icon--link {
+  color: #3266df;
+
+  background: rgba(50, 102, 223, 0.08);
+}
+
+
+/* =========================
+   VALUE
+========================= */
+
+.resource-detail-modal__value {
+  min-width: 0;
+
+  padding-top: 0.35rem;
+
+  color: #303144;
+
+  font-size: 0.77rem;
+  font-weight: 600;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
+}
+
+.resource-detail-modal__value--secondary {
+  color: #67687c;
+
+  font-weight: 400;
+}
+
+
+/* =========================
+   LINK
+========================= */
+
+.resource-detail-modal__value-row--link {
+  align-items: center;
+}
+
+.resource-detail-modal__link {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.45rem;
+
+  color: #4e36d5;
+
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+
+  text-decoration: none;
+
+  transition:
+    color 0.15s ease;
+}
+
+.resource-detail-modal__link:hover {
+  color: #3720ba;
+
+  text-decoration: underline;
+}
+
+.resource-detail-modal__link span {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
+}
+
+.resource-detail-modal__link > svg {
+  width: 0.9rem;
+  height: 0.9rem;
+
+  flex: 0 0 0.9rem;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.resource-detail-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  padding: 0.8rem 1.1rem;
+
+  background: #fbfbfd;
+
+  border-top: 1px solid #eceef3;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.resource-detail-modal__button {
+  min-height: 2.3rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.5rem 0.95rem;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4b2ce8 0%,
+      #5e32e9 100%
+    );
+
+  border: 1px solid transparent;
+  border-radius: 0.48rem;
+
+  box-shadow:
+    0 3px 8px rgba(76, 47, 220, 0.14);
+
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.resource-detail-modal__button:hover {
+  box-shadow:
+    0 5px 12px rgba(76, 47, 220, 0.2);
+}
+
+.resource-detail-modal__button:active {
+  transform: scale(0.98);
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes resource-detail-fade {
+
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+@keyframes resource-detail-enter {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(6px)
+      scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .resource-detail-modal {
+    align-items: flex-end;
+
+    padding: 0;
+  }
+
+  .resource-detail-modal__dialog {
+    max-width: none;
+    max-height: 92dvh;
+
+    border-radius:
+      0.9rem
+      0.9rem
+      0
+      0;
+  }
+
+  .resource-detail-modal__header {
+    padding: 0.9rem 0.85rem;
+  }
+
+  .resource-detail-modal__body {
+    padding: 0.9rem 0.85rem;
+  }
+
+  .resource-detail-modal__footer {
+    padding:
+      0.75rem
+      0.85rem
+      calc(
+        0.75rem +
+        env(safe-area-inset-bottom)
+      );
+  }
+
+  .resource-detail-modal__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+
+    flex-basis: 2.5rem;
+  }
+
+  .resource-detail-modal__title {
+    font-size: 0.95rem;
+  }
+
+  .resource-detail-modal__description {
+    font-size: 0.7rem;
+  }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+
+  .resource-detail-modal__button {
+    width: 100%;
+  }
+}

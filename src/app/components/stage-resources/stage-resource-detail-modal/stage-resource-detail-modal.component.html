@@ -1,0 +1,425 @@
+<div
+  *ngIf="show && resource"
+  class="stage-resource-detail-modal"
+  role="presentation"
+  (click)="onBackdropClick()"
+>
+
+  <div
+    class="stage-resource-detail-modal__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="stage-resource-detail-title"
+    (click)="stopPropagation($event)"
+  >
+
+    <!-- HEADER -->
+    <header class="stage-resource-detail-modal__header">
+
+      <div class="stage-resource-detail-modal__header-main">
+
+        <div
+          class="stage-resource-detail-modal__icon"
+          aria-hidden="true"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="5"
+              y="4"
+              width="14"
+              height="15"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M8 8h8M8 12h8M8 16h5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        </div>
+
+
+        <div class="stage-resource-detail-modal__header-content">
+
+          <h2
+            id="stage-resource-detail-title"
+            class="stage-resource-detail-modal__title"
+          >
+            Detalle del recurso
+          </h2>
+
+          <p class="stage-resource-detail-modal__description">
+            Información del recurso académico asociado al stage.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="stage-resource-detail-modal__close"
+        aria-label="Cerrar modal"
+        (click)="onClose()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M6 6L18 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M18 6L6 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </button>
+
+    </header>
+
+
+    <!-- BODY -->
+    <div class="stage-resource-detail-modal__body">
+
+      <!-- STAGE / STATUS -->
+      <div class="stage-resource-detail-modal__grid">
+
+        <div class="stage-resource-detail-modal__group">
+
+          <span class="stage-resource-detail-modal__label">
+            Stage
+          </span>
+
+          <div class="stage-resource-detail-modal__value-box">
+
+            <div
+              class="
+                stage-resource-detail-modal__value-icon
+                stage-resource-detail-modal__value-icon--stage
+              "
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M6 5h12v14H6z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M9 9h6M9 13h6"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+
+
+            <span class="stage-resource-detail-modal__value">
+              {{ stageLabel }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="stage-resource-detail-modal__group">
+
+          <span class="stage-resource-detail-modal__label">
+            Estado
+          </span>
+
+          <div class="stage-resource-detail-modal__value-box">
+
+            <span
+              class="stage-resource-detail-modal__status"
+              [class.stage-resource-detail-modal__status--active]="
+                resource.active
+              "
+              [class.stage-resource-detail-modal__status--inactive]="
+                !resource.active
+              "
+            >
+
+              <span
+                class="stage-resource-detail-modal__status-dot"
+              ></span>
+
+              {{ statusLabel }}
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- DESCRIPTION -->
+      <div class="stage-resource-detail-modal__group">
+
+        <span class="stage-resource-detail-modal__label">
+          Descripción
+        </span>
+
+        <div class="stage-resource-detail-modal__value-box">
+
+          <div
+            class="
+              stage-resource-detail-modal__value-icon
+              stage-resource-detail-modal__value-icon--description
+            "
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="4"
+                y="4"
+                width="16"
+                height="16"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 9h8M8 13h8M8 17h5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+
+
+          <span
+            class="
+              stage-resource-detail-modal__value
+              stage-resource-detail-modal__value--secondary
+            "
+          >
+            {{ resource.description }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- URL -->
+      <div class="stage-resource-detail-modal__group">
+
+        <span class="stage-resource-detail-modal__label">
+          URL del recurso
+        </span>
+
+        <div class="stage-resource-detail-modal__value-box">
+
+          <div
+            class="
+              stage-resource-detail-modal__value-icon
+              stage-resource-detail-modal__value-icon--link
+            "
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M10.6 13.4a4 4 0 0 0 5.66 0l2.14-2.14a4 4 0 0 0-5.66-5.66L11.5 6.84"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M13.4 10.6a4 4 0 0 0-5.66 0L5.6 12.74a4 4 0 1 0 5.66 5.66l1.23-1.23"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+
+
+          <a
+            class="stage-resource-detail-modal__link"
+            [href]="resource.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            [title]="resource.url"
+          >
+
+            <span>
+              {{ resource.url }}
+            </span>
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M14 5h5v5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M10 14 19 5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- DATES -->
+      <div class="stage-resource-detail-modal__grid">
+
+        <div class="stage-resource-detail-modal__group">
+
+          <span class="stage-resource-detail-modal__label">
+            Creado
+          </span>
+
+          <div class="stage-resource-detail-modal__date-box">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="4"
+                y="5"
+                width="16"
+                height="15"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 3v4M16 3v4M4 9h16"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            <span>
+              {{ formatDateTime(getCreatedAt()) }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="stage-resource-detail-modal__group">
+
+          <span class="stage-resource-detail-modal__label">
+            Actualizado
+          </span>
+
+          <div class="stage-resource-detail-modal__date-box">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M20 11a8 8 0 1 0-2.34 5.66"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M20 5v6h-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <span>
+              {{ formatDateTime(getUpdatedAt()) }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer class="stage-resource-detail-modal__footer">
+
+      <button
+        type="button"
+        class="stage-resource-detail-modal__button"
+        (click)="onClose()"
+      >
+        Cerrar
+      </button>
+
+    </footer>
+
+  </div>
+
+</div>

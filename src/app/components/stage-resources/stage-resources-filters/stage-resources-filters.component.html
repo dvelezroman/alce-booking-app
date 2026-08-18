@@ -1,0 +1,211 @@
+<section class="stage-resources-filters">
+
+  <div class="stage-resources-filters__grid">
+
+    <!-- =========================
+         STAGE
+    ========================== -->
+
+    <div class="stage-resources-filters__field">
+
+      <label
+        for="stage-filter"
+        class="stage-resources-filters__label"
+      >
+        Stage
+      </label>
+
+
+      <div class="stage-resources-filters__select-wrapper">
+
+        <select
+          id="stage-filter"
+          class="stage-resources-filters__select"
+          [ngModel]="selectedStageId ?? ''"
+          (ngModelChange)="onStageChange($event)"
+        >
+
+          <option value="">
+            Selecciona un stage
+          </option>
+
+          <option
+            *ngFor="let stage of stages"
+            [ngValue]="stage.id"
+          >
+            {{ stage.label }}
+          </option>
+
+        </select>
+
+
+        <span
+          class="stage-resources-filters__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M7 10L12 15L17 10"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         STATUS
+    ========================== -->
+
+    <div class="stage-resources-filters__field">
+
+      <label
+        for="status-filter"
+        class="stage-resources-filters__label"
+      >
+        Estado
+      </label>
+
+
+      <div class="stage-resources-filters__select-wrapper">
+
+        <select
+          id="status-filter"
+          class="stage-resources-filters__select"
+          [ngModel]="selectedStatus"
+          (ngModelChange)="onStatusChange($event)"
+        >
+
+          <option value="all">
+            Selecciona un estado
+          </option>
+
+          <option value="active">
+            Activos
+          </option>
+
+          <option value="inactive">
+            Inactivos
+          </option>
+
+        </select>
+
+
+        <span
+          class="stage-resources-filters__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M7 10L12 15L17 10"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         ACTIONS
+    ========================== -->
+
+    <div class="stage-resources-filters__actions">
+
+      <!-- CLEAR -->
+      <button
+        type="button"
+        class="
+          stage-resources-filters__button
+          stage-resources-filters__button--clear
+        "
+        (click)="onClearFilters()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M20 11a8 8 0 1 0-2.34 5.66"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M20 5v6h-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        <span>
+          Limpiar
+        </span>
+
+      </button>
+
+
+      <!-- SEARCH -->
+      <button
+        type="button"
+        class="
+          stage-resources-filters__button
+          stage-resources-filters__button--search
+        "
+        (click)="onSearch()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="M16 16L20 20"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Buscar
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>

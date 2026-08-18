@@ -1,0 +1,347 @@
+<div
+  *ngIf="show"
+  class="assessment-type-modal"
+  role="presentation"
+  (click)="onBackdropClick()"
+>
+
+  <div
+    class="assessment-type-modal__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="assessment-type-modal-title"
+    (click)="stopPropagation($event)"
+  >
+
+    <!-- HEADER -->
+    <header class="assessment-type-modal__header">
+
+      <div class="assessment-type-modal__header-main">
+
+        <div
+          class="assessment-type-modal__icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="5"
+              y="4"
+              width="14"
+              height="16"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M8.5 8.5h7M8.5 12.5h7M8.5 16.5h4.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+
+        <div class="assessment-type-modal__header-content">
+
+          <h2
+            id="assessment-type-modal-title"
+            class="assessment-type-modal__title"
+          >
+            {{ modalTitle }}
+          </h2>
+
+          <p class="assessment-type-modal__description">
+            {{ modalDescription }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="assessment-type-modal__close"
+        aria-label="Cerrar modal"
+        (click)="onClose()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M6 6L18 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M18 6L6 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+
+    </header>
+
+
+    <!-- FORM -->
+    <form
+      class="assessment-type-modal__form"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+    >
+
+      <div class="assessment-type-modal__body">
+
+        <!-- NAME -->
+        <div class="assessment-type-modal__field">
+
+          <label
+            for="assessment-type-name"
+            class="assessment-type-modal__label"
+          >
+            Nombre
+
+            <span>
+              *
+            </span>
+          </label>
+
+
+          <div
+            class="assessment-type-modal__input-wrapper"
+            [class.assessment-type-modal__control--invalid]="
+              nameControl?.invalid &&
+              nameControl?.touched
+            "
+          >
+
+            <span
+              class="assessment-type-modal__input-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 5h14M5 10h14M5 15h8"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+
+            <input
+              id="assessment-type-name"
+              type="text"
+              class="assessment-type-modal__input"
+              formControlName="name"
+              placeholder="Ej. Evaluación escrita"
+              autocomplete="off"
+            />
+
+          </div>
+
+
+          <small
+            *ngIf="
+              nameControl?.hasError('required') &&
+              nameControl?.touched
+            "
+            class="assessment-type-modal__error"
+          >
+            El nombre es obligatorio.
+          </small>
+
+
+          <small
+            *ngIf="
+              nameControl?.hasError('maxlength') &&
+              nameControl?.touched
+            "
+            class="assessment-type-modal__error"
+          >
+            El nombre es demasiado largo.
+          </small>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+        <div class="assessment-type-modal__field">
+
+          <label
+            for="assessment-type-description"
+            class="assessment-type-modal__label"
+          >
+            Descripción
+          </label>
+
+
+          <textarea
+            id="assessment-type-description"
+            class="assessment-type-modal__textarea"
+            formControlName="description"
+            rows="4"
+            maxlength="250"
+            placeholder="Agrega una descripción opcional..."
+            [class.assessment-type-modal__textarea--invalid]="
+              descriptionControl?.invalid &&
+              descriptionControl?.touched
+            "
+          ></textarea>
+
+
+          <div class="assessment-type-modal__field-footer">
+
+            <small
+              *ngIf="
+                descriptionControl?.hasError('maxlength') &&
+                descriptionControl?.touched
+              "
+              class="assessment-type-modal__error"
+            >
+              La descripción es demasiado larga.
+            </small>
+
+
+            <small class="assessment-type-modal__counter">
+              {{
+                descriptionControl?.value?.length || 0
+              }}/250
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- INFO -->
+        <div class="assessment-type-modal__info">
+
+          <div
+            class="assessment-type-modal__info-icon"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M12 10.5V16"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <circle
+                cx="12"
+                cy="7.5"
+                r="1"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+
+
+          <p>
+            Este tipo podrá utilizarse al crear nuevas evaluaciones.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- FOOTER -->
+      <footer class="assessment-type-modal__footer">
+
+        <button
+          type="button"
+          class="
+            assessment-type-modal__button
+            assessment-type-modal__button--secondary
+          "
+          (click)="onClose()"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="submit"
+          class="
+            assessment-type-modal__button
+            assessment-type-modal__button--primary
+          "
+          [disabled]="
+            form.invalid ||
+            isSubmitting
+          "
+        >
+
+          <svg
+            *ngIf="mode === 'create'"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 5V19M5 12H19"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+
+          <svg
+            *ngIf="mode === 'edit'"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 12.5L9.2 17L19 7"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+
+          <span>
+            {{ submitLabel }}
+          </span>
+
+        </button>
+
+      </footer>
+
+    </form>
+
+  </div>
+
+</div>

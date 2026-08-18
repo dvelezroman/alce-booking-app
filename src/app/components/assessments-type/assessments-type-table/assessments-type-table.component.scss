@@ -1,0 +1,884 @@
+:host {
+  display: block;
+  width: 100%;
+
+  overflow: visible;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.assessment-type-table {
+  position: relative;
+
+  width: 100%;
+
+  background: #ffffff;
+
+  overflow: visible;
+
+  box-sizing: border-box;
+}
+
+.assessment-type-table--menu-open {
+  z-index: 100;
+}
+
+
+/* =========================
+   WRAPPER
+========================= */
+
+.assessment-type-table__wrapper {
+  position: relative;
+
+  width: 100%;
+
+  overflow: visible;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.assessment-type-table__table {
+  width: 100%;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  table-layout: fixed;
+
+  background: #ffffff;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.assessment-type-table__table thead {
+  position: relative;
+
+  z-index: 1;
+}
+
+.assessment-type-table__table thead tr {
+  height: 3rem;
+}
+
+.assessment-type-table__table th {
+  padding:
+    0.7rem
+    0.8rem;
+
+  color: #4932c9;
+
+  background: #fdfdff;
+
+  border-bottom:
+    1px solid #e9eaf1;
+
+  text-align: left;
+  vertical-align: middle;
+
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+
+/* =========================
+   COLUMNS
+========================= */
+
+.assessment-type-table__col-number {
+  width: 5%;
+}
+
+.assessment-type-table__col-name {
+  width: 22%;
+}
+
+.assessment-type-table__col-description {
+  width: 29%;
+}
+
+.assessment-type-table__col-status {
+  width: 11%;
+}
+
+.assessment-type-table__col-date {
+  width: 12%;
+}
+
+.assessment-type-table__col-actions {
+  width: 9%;
+
+  text-align: center !important;
+}
+
+
+/* =========================
+   ROW
+========================= */
+
+.assessment-type-table__row {
+  position: relative;
+
+  z-index: 1;
+
+  overflow: visible;
+}
+
+.assessment-type-table__row td {
+  height: 4.1rem;
+
+  padding:
+    0.65rem
+    0.8rem;
+
+  color: #35364a;
+
+  background: #ffffff;
+
+  border-bottom:
+    1px solid #eceef4;
+
+  vertical-align: middle;
+
+  font-size: 0.75rem;
+  line-height: 1.4;
+
+  box-sizing: border-box;
+
+  transition:
+    background-color 0.15s ease;
+}
+
+.assessment-type-table__row:hover td {
+  background: #fcfcff;
+}
+
+
+/* fila que tiene menú abierto */
+
+.assessment-type-table__row--menu-open {
+  z-index: 500;
+}
+
+.assessment-type-table__row--menu-open td {
+  position: relative;
+
+  z-index: 500;
+}
+
+
+/* =========================
+   NUMBER
+========================= */
+
+.assessment-type-table__number {
+  color: #36374c !important;
+
+  font-weight: 500;
+}
+
+
+/* =========================
+   NAME
+========================= */
+
+.assessment-type-table__name-wrapper {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.6rem;
+}
+
+
+.assessment-type-table__name-icon {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #563dde;
+
+  background:
+    rgba(86, 61, 222, 0.08);
+
+  border-radius: 0.45rem;
+}
+
+.assessment-type-table__name-icon svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+
+.assessment-type-table__name {
+  min-width: 0;
+
+  display: block;
+
+  overflow: hidden;
+
+  color: #2b2c40;
+
+  font-size: 0.76rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.assessment-type-table__description {
+  display: block;
+
+  overflow: hidden;
+
+  color: #707185;
+
+  font-size: 0.74rem;
+  font-weight: 400;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.assessment-type-table__status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.35rem;
+
+  min-height: 1.65rem;
+
+  padding:
+    0.25rem
+    0.5rem;
+
+  border-radius: 0.35rem;
+
+  font-size: 0.68rem;
+  font-weight: 550;
+
+  white-space: nowrap;
+}
+
+
+.assessment-type-table__status-dot {
+  width: 0.38rem;
+  height: 0.38rem;
+
+  flex: 0 0 0.38rem;
+
+  border-radius: 50%;
+}
+
+
+/* ACTIVE */
+
+.assessment-type-table__status--active {
+  color: #17824e;
+
+  background:
+    rgba(35, 181, 105, 0.1);
+}
+
+.assessment-type-table__status--active
+.assessment-type-table__status-dot {
+  background: #1aaf65;
+}
+
+
+/* INACTIVE */
+
+.assessment-type-table__status--inactive {
+  color: #8b4d54;
+
+  background:
+    rgba(203, 78, 91, 0.09);
+}
+
+.assessment-type-table__status--inactive
+.assessment-type-table__status-dot {
+  background: #cc5360;
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+// .assessment-type-table__date {
+//   display: flex;
+//   flex-direction: column;
+
+//   gap: 0.1rem;
+// }
+
+// .assessment-type-table__date span {
+//   color: #333449;
+
+//   font-size: 0.71rem;
+//   font-weight: 500;
+
+//   white-space: nowrap;
+// }
+
+// .assessment-type-table__date small {
+//   color: #838497;
+
+//   font-size: 0.66rem;
+//   font-weight: 400;
+
+//   white-space: nowrap;
+// }
+
+
+/* =========================
+   ACTION CELL
+========================= */
+
+.assessment-type-table__actions-cell {
+  position: relative !important;
+
+  overflow: visible !important;
+
+  text-align: center;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.assessment-type-table__actions {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: visible;
+
+  /*
+   * Bajo a propósito.
+   * No colocar 300 aquí porque
+   * los botones de otras filas
+   * quedarían encima del menú.
+   */
+  z-index: 2;
+}
+
+
+/* =========================
+   MENU BUTTON
+========================= */
+
+.assessment-type-table__menu-button {
+  width: 2.05rem;
+  height: 2.05rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  color: #55566c;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e5e7ee;
+
+  border-radius: 0.48rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.assessment-type-table__menu-button:hover,
+.assessment-type-table__menu-button--active {
+  color: #4731c7;
+
+  background: #f8f7ff;
+
+  border-color: #dad5f7;
+}
+
+.assessment-type-table__menu-button:active {
+  transform: scale(0.96);
+}
+
+.assessment-type-table__menu-button:focus-visible {
+  outline:
+    2px solid
+    rgba(79, 59, 231, 0.16);
+
+  outline-offset: 2px;
+}
+
+.assessment-type-table__menu-button svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+.assessment-type-table__menu {
+  position: absolute;
+
+  top: calc(100% + 0.4rem);
+  right: 0;
+
+  z-index: 1000;
+
+  width: 10.25rem;
+
+  padding: 0.35rem;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e7e8ef;
+
+  border-radius: 0.6rem;
+
+  box-shadow:
+    0 12px 30px rgba(24, 27, 55, 0.13),
+    0 2px 8px rgba(24, 27, 55, 0.05);
+
+  box-sizing: border-box;
+}
+
+
+/* últimas filas abre hacia arriba */
+
+.assessment-type-table__menu--up {
+  top: auto;
+
+  bottom: calc(100% + 0.4rem);
+}
+
+
+/* =========================
+   MENU ITEM
+========================= */
+
+.assessment-type-table__menu-item {
+  width: 100%;
+  min-height: 2.2rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.6rem;
+
+  padding:
+    0.48rem
+    0.62rem;
+
+  color: #37384c;
+
+  background: transparent;
+
+  border: 0;
+  border-radius: 0.4rem;
+
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 500;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    color 0.12s ease,
+    background-color 0.12s ease;
+}
+
+.assessment-type-table__menu-item:hover {
+  color: #302e54;
+
+  background: #f6f6fa;
+}
+
+.assessment-type-table__menu-item:active {
+  transform: scale(0.98);
+}
+
+.assessment-type-table__menu-item svg {
+  width: 0.95rem;
+  height: 0.95rem;
+
+  flex: 0 0 0.95rem;
+}
+
+
+/* DELETE */
+
+.assessment-type-table__menu-item--danger {
+  color: #d83b49;
+}
+
+.assessment-type-table__menu-item--danger:hover {
+  color: #c42e3c;
+
+  background: #fff4f5;
+}
+
+
+/* =========================
+   EMPTY
+========================= */
+
+.assessment-type-table__empty {
+  min-height: 12rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.3rem;
+
+  padding: 2rem;
+
+  color: #7b7c90;
+
+  text-align: center;
+}
+
+.assessment-type-table__empty-icon {
+  width: 2.7rem;
+  height: 2.7rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 0.3rem;
+
+  color: #5d47db;
+
+  background:
+    rgba(93, 71, 219, 0.08);
+
+  border-radius: 0.65rem;
+}
+
+.assessment-type-table__empty-icon svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.assessment-type-table__empty strong {
+  color: #38394d;
+
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.assessment-type-table__empty span {
+  font-size: 0.7rem;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.assessment-type-table__footer {
+  position: relative;
+
+  z-index: 1;
+
+  min-height: 3.2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding:
+    0.6rem
+    1rem;
+
+  background: #ffffff;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   RESULTS
+========================= */
+
+.assessment-type-table__results {
+  margin: 0;
+
+  color: #77788d;
+
+  font-size: 0.71rem;
+  font-weight: 400;
+}
+
+.assessment-type-table__results strong {
+  color: #55566b;
+
+  font-weight: 600;
+}
+
+
+/* =========================
+   PAGINATION
+========================= */
+
+.assessment-type-table__pagination {
+  display: flex;
+  align-items: center;
+
+  gap: 0.35rem;
+}
+
+
+.assessment-type-table__pagination-button,
+.assessment-type-table__current-page {
+  width: 2rem;
+  height: 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.45rem;
+}
+
+
+.assessment-type-table__pagination-button {
+  padding: 0;
+
+  color: #696a7c;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e4e6ed;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.assessment-type-table__pagination-button:hover:not(:disabled) {
+  color: #4b35ce;
+
+  background: #f8f7ff;
+
+  border-color: #d8d2f5;
+}
+
+.assessment-type-table__pagination-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.assessment-type-table__pagination-button:disabled {
+  opacity: 0.4;
+
+  cursor: not-allowed;
+}
+
+.assessment-type-table__pagination-button svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+
+.assessment-type-table__current-page {
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4b2ce8 0%,
+      #5e32e9 100%
+    );
+
+  font-size: 0.73rem;
+  font-weight: 600;
+
+  box-shadow:
+    0 3px 7px rgba(77, 48, 220, 0.15);
+}
+
+
+/* =========================
+   SKELETON
+========================= */
+
+.assessment-type-table__skeleton {
+  display: block;
+
+  height: 0.72rem;
+
+  background:
+    linear-gradient(
+      90deg,
+      #f0f1f5 25%,
+      #f7f7fa 50%,
+      #f0f1f5 75%
+    );
+
+  background-size: 200% 100%;
+
+  border-radius: 0.3rem;
+
+  animation:
+    assessment-type-loading
+    1.3s
+    infinite;
+}
+
+
+.assessment-type-table__skeleton--small {
+  width: 1rem;
+}
+
+.assessment-type-table__skeleton--name {
+  width: 70%;
+}
+
+.assessment-type-table__skeleton--description {
+  width: 85%;
+}
+
+.assessment-type-table__skeleton--status {
+  width: 3.6rem;
+}
+
+.assessment-type-table__skeleton--date {
+  width: 4.5rem;
+}
+
+.assessment-type-table__skeleton--button {
+  width: 2rem;
+  height: 2rem;
+
+  margin: 0 auto;
+
+  border-radius: 0.45rem;
+}
+
+
+@keyframes assessment-type-loading {
+
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1100px) {
+
+  .assessment-type-table__table {
+    min-width: 950px;
+  }
+
+  .assessment-type-table__wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .assessment-type-table__table {
+    min-width: 900px;
+  }
+
+  .assessment-type-table__table th {
+    font-size: 0.69rem;
+  }
+
+  .assessment-type-table__row td {
+    font-size: 0.72rem;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .assessment-type-table__table {
+    min-width: 880px;
+  }
+
+  .assessment-type-table__footer {
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 0.6rem;
+
+    padding: 0.75rem;
+  }
+
+  .assessment-type-table__pagination {
+    width: 100%;
+
+    justify-content: flex-end;
+  }
+}

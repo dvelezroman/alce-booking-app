@@ -1,0 +1,696 @@
+:host {
+  display: contents;
+}
+
+
+/* =========================
+   OVERLAY
+========================= */
+
+.stage-resource-detail-modal {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 10000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+
+  background:
+    rgba(20, 21, 35, 0.38);
+
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+
+  box-sizing: border-box;
+
+  animation:
+    stage-resource-detail-fade
+    0.15s ease;
+}
+
+
+/* =========================
+   DIALOG
+========================= */
+
+.stage-resource-detail-modal__dialog {
+  width: 100%;
+  max-width: 34rem;
+
+  max-height:
+    calc(100dvh - 2rem);
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+
+  border: 1px solid #e6e8ef;
+  border-radius: 0.8rem;
+
+  box-shadow:
+    0 24px 70px rgba(23, 25, 48, 0.16),
+    0 6px 20px rgba(23, 25, 48, 0.07);
+
+  overflow: hidden;
+
+  animation:
+    stage-resource-detail-enter
+    0.18s ease;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.stage-resource-detail-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding:
+    1rem
+    1.1rem;
+
+  border-bottom:
+    1px solid #eceef3;
+}
+
+
+.stage-resource-detail-modal__header-main {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.75rem;
+}
+
+
+/* =========================
+   HEADER ICON
+========================= */
+
+.stage-resource-detail-modal__icon {
+  width: 2.65rem;
+  height: 2.65rem;
+
+  flex: 0 0 2.65rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #5138dd;
+
+  background:
+    rgba(81, 56, 221, 0.09);
+
+  border-radius: 0.6rem;
+}
+
+
+.stage-resource-detail-modal__icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+
+/* =========================
+   HEADER CONTENT
+========================= */
+
+.stage-resource-detail-modal__header-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.18rem;
+}
+
+
+.stage-resource-detail-modal__title {
+  margin: 0;
+
+  color: #222338;
+
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+
+.stage-resource-detail-modal__description {
+  margin: 0;
+
+  color: #7b7c90;
+
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+
+/* =========================
+   CLOSE
+========================= */
+
+.stage-resource-detail-modal__close {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  color: #737487;
+
+  background: transparent;
+
+  border: 0;
+  border-radius: 0.45rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+
+.stage-resource-detail-modal__close:hover {
+  color: #3f4053;
+
+  background: #f5f6f9;
+}
+
+
+.stage-resource-detail-modal__close:active {
+  transform: scale(0.94);
+}
+
+
+.stage-resource-detail-modal__close svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+
+/* =========================
+   BODY
+========================= */
+
+.stage-resource-detail-modal__body {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.95rem;
+
+  padding:
+    1.05rem
+    1.1rem;
+
+  overflow-y: auto;
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+.stage-resource-detail-modal__grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 0.75rem;
+}
+
+
+/* =========================
+   GROUP
+========================= */
+
+.stage-resource-detail-modal__group {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.38rem;
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+.stage-resource-detail-modal__label {
+  color: #77788c;
+
+  font-size: 0.69rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+
+/* =========================
+   VALUE BOX
+========================= */
+
+.stage-resource-detail-modal__value-box {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  min-height: 3rem;
+
+  padding:
+    0.65rem
+    0.7rem;
+
+  background: #fbfbfd;
+
+  border:
+    1px solid #eceef3;
+
+  border-radius: 0.55rem;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   VALUE ICON
+========================= */
+
+.stage-resource-detail-modal__value-icon {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.45rem;
+}
+
+
+.stage-resource-detail-modal__value-icon svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+
+.stage-resource-detail-modal__value-icon--stage {
+  color: #563dde;
+
+  background:
+    rgba(86, 61, 222, 0.08);
+}
+
+
+.stage-resource-detail-modal__value-icon--description {
+  color: #78654a;
+
+  background:
+    rgba(180, 143, 77, 0.09);
+}
+
+
+.stage-resource-detail-modal__value-icon--link {
+  color: #3266df;
+
+  background:
+    rgba(50, 102, 223, 0.08);
+}
+
+
+/* =========================
+   VALUE
+========================= */
+
+.stage-resource-detail-modal__value {
+  min-width: 0;
+
+  color: #303144;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
+}
+
+
+.stage-resource-detail-modal__value--secondary {
+  color: #646579;
+
+  font-weight: 400;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.stage-resource-detail-modal__status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.35rem;
+
+  min-height: 1.7rem;
+
+  padding:
+    0.25rem
+    0.55rem;
+
+  border-radius: 0.35rem;
+
+  font-size: 0.69rem;
+  font-weight: 600;
+}
+
+
+.stage-resource-detail-modal__status-dot {
+  width: 0.38rem;
+  height: 0.38rem;
+
+  border-radius: 50%;
+}
+
+
+.stage-resource-detail-modal__status--active {
+  color: #17824e;
+
+  background:
+    rgba(35, 181, 105, 0.1);
+}
+
+
+.stage-resource-detail-modal__status--active
+.stage-resource-detail-modal__status-dot {
+  background: #1aaf65;
+}
+
+
+.stage-resource-detail-modal__status--inactive {
+  color: #8b4d54;
+
+  background:
+    rgba(203, 78, 91, 0.09);
+}
+
+
+.stage-resource-detail-modal__status--inactive
+.stage-resource-detail-modal__status-dot {
+  background: #cc5360;
+}
+
+
+/* =========================
+   LINK
+========================= */
+
+.stage-resource-detail-modal__link {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.45rem;
+
+  color: #4e36d5;
+
+  font-size: 0.73rem;
+  font-weight: 500;
+  line-height: 1.4;
+
+  text-decoration: none;
+
+  transition:
+    color 0.15s ease;
+}
+
+
+.stage-resource-detail-modal__link:hover {
+  color: #3720ba;
+
+  text-decoration: underline;
+}
+
+
+.stage-resource-detail-modal__link span {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
+}
+
+
+.stage-resource-detail-modal__link > svg {
+  width: 0.88rem;
+  height: 0.88rem;
+
+  flex: 0 0 0.88rem;
+}
+
+
+/* =========================
+   DATE BOX
+========================= */
+
+.stage-resource-detail-modal__date-box {
+  min-height: 2.65rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.5rem;
+
+  padding:
+    0.55rem
+    0.65rem;
+
+  color: #5c5d71;
+
+  background: #fbfbfd;
+
+  border:
+    1px solid #eceef3;
+
+  border-radius: 0.5rem;
+
+  box-sizing: border-box;
+}
+
+
+.stage-resource-detail-modal__date-box svg {
+  width: 0.9rem;
+  height: 0.9rem;
+
+  flex-shrink: 0;
+
+  color: #7160dc;
+}
+
+
+.stage-resource-detail-modal__date-box span {
+  font-size: 0.69rem;
+  line-height: 1.35;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.stage-resource-detail-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  padding:
+    0.8rem
+    1.1rem;
+
+  background: #fbfbfd;
+
+  border-top:
+    1px solid #eceef3;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.stage-resource-detail-modal__button {
+  min-height: 2.3rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    0.5rem
+    0.95rem;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4b2ce8 0%,
+      #5e32e9 100%
+    );
+
+  border: 1px solid transparent;
+  border-radius: 0.48rem;
+
+  box-shadow:
+    0 3px 8px rgba(76, 47, 220, 0.14);
+
+  font-family: inherit;
+  font-size: 0.73rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.stage-resource-detail-modal__button:hover {
+  box-shadow:
+    0 5px 12px rgba(76, 47, 220, 0.2);
+}
+
+
+.stage-resource-detail-modal__button:active {
+  transform: scale(0.98);
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes stage-resource-detail-fade {
+
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+@keyframes stage-resource-detail-enter {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(6px)
+      scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .stage-resource-detail-modal {
+    align-items: flex-end;
+
+    padding: 0;
+  }
+
+
+  .stage-resource-detail-modal__dialog {
+    max-width: none;
+    max-height: 92dvh;
+
+    border-radius:
+      0.9rem
+      0.9rem
+      0
+      0;
+  }
+
+
+  .stage-resource-detail-modal__header {
+    padding:
+      0.9rem
+      0.85rem;
+  }
+
+
+  .stage-resource-detail-modal__body {
+    padding:
+      0.9rem
+      0.85rem;
+  }
+
+
+  .stage-resource-detail-modal__grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .stage-resource-detail-modal__footer {
+    padding:
+      0.75rem
+      0.85rem
+      calc(
+        0.75rem +
+        env(safe-area-inset-bottom)
+      );
+  }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+
+  .stage-resource-detail-modal__button {
+    width: 100%;
+  }
+}

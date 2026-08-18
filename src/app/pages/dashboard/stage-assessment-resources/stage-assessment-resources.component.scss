@@ -1,151 +1,185 @@
-
-.class-booking-header {
-  position: fixed;
-  top: 0;
-  left: 0;
+:host {
+  display: block;
   width: 100%;
-  background-color: #f2f2f2;
-  z-index: 10;
-  text-align: center;
 }
 
-.class-booking-header .title.is-3 {
-  font-size: 1.5rem;
-  line-height: 75px;
-  color: #333;
-  font-weight: bold;
-  text-align: center;
-  margin: 0;
-}
 
-.page-wrapper {
-  background-color: #f2f2f2;
+/* =========================
+   PAGE
+========================= */
+
+.stage-resources-page {
+  width: calc(100% - 76px);
   min-height: 100vh;
-  padding: 2rem;
-  margin-top: 5rem; 
+
+  margin-left: 64px;
+
+  padding: 1.15rem 1.25rem 1.8rem;
+
+  background: #ffffff;
+
+  box-sizing: border-box;
 }
 
-.block-results {
+
+/* =========================
+   CONTAINER
+========================= */
+
+.stage-resources-page__container {
   width: 100%;
-  margin: 2rem auto 4rem auto;
+  max-width: 1450px;
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.9rem;
 }
 
-.table-container {
-  max-width: 100%;
-  margin: auto;
-  display: flex;
-  border-radius: 8px;
-  max-height: 600px;
-  overflow-y: auto;
-  overflow-x: auto;
+
+/* =========================
+   SECTIONS
+========================= */
+
+.stage-resources-page__section {
   position: relative;
-  
-   @media (max-width: 768px) {
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  /*
+   * Importante para que el menú de acciones
+   * de la tabla no quede cortado.
+   */
+  overflow: visible;
+}
+
+
+/* =========================
+   TABLE SECTION
+========================= */
+
+.stage-resources-page__section:nth-child(3) {
+  z-index: 2;
+
+  overflow: visible;
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+.stage-resources-page__summary {
+  position: relative;
+
+  z-index: 1;
+
+  width: 100%;
+}
+
+
+/* =========================
+   LARGE DESKTOP
+========================= */
+
+@media (min-width: 1500px) {
+
+  .stage-resources-page {
+    padding:
+      1.2rem
+      1.4rem
+      2rem;
+  }
+}
+
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1200px) {
+
+  .stage-resources-page {
+    padding:
+      1rem
+      1rem
+      1.6rem;
+  }
+
+  .stage-resources-page__container {
+    gap: 0.8rem;
+  }
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 991px) {
+
+  .stage-resources-page {
+    width: 100%;
+
+    margin-left: 0;
+
+    padding:
+      0.9rem
+      0.9rem
+      1.4rem;
+  }
+
+  .stage-resources-page__container {
     max-width: 100%;
   }
 }
 
-.table-results {
-  width: 100%;
-  max-width: 80%;
-  margin: auto;
-  min-width: 700px;
-  border-collapse: collapse;
-  table-layout: fixed;
-  word-wrap: break-word;
 
-   @media (max-width: 768px) {
-    min-width: 750px;
-  }
-}
+/* =========================
+   MOBILE
+========================= */
 
-.table-results th {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  text-align: center;
-  vertical-align: middle;
-  padding: 0.55rem;
-  font-size: 0.8rem;
-  background-color: #e5effa;
-  color: black;
-  white-space: nowrap;
-}
+@media (max-width: 767px) {
 
-.table-results td {
-  text-align: center;
-  vertical-align: middle;
-  padding: 0.5rem;
-  font-size: 0.75rem;
-  background-color: #fff;
-  border-bottom: 0.5px solid #d0d0d0;
-  color: #4c4c4c;
-  overflow: visible;
-  text-overflow: clip;
-}
-
-.link-truncate {
-  display: inline-block;
-  max-width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #2563eb;
-  text-decoration: none;
-  font-weight: 500;
-
-    @media (max-width: 768px) {
-    .link-truncate {
-        max-width: 220px;
-    }
-  }
-}
-
-.link-truncate:hover {
-  text-decoration: underline;
-  color: #1d4ed8;
-}
-
-/* Columna estado (Sí/No) */
-.td-status {
-  width: 150px;
-  max-width: 150px;
-  text-align: center;
-}
-
-.table-actions {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-
-  .icon-button {
-    background: transparent;
-    border: none;
-    padding: 8px;
-    cursor: pointer;
-    color: #555;
-    transition: color 0.2s ease;
+  .stage-resources-page {
+    padding:
+      0.7rem
+      0.7rem
+      1.2rem;
   }
 
-  .edit-icon {
-    color: #4a90e2;
-
-    &:hover {
-      color: #357ac3;
-    }
+  .stage-resources-page__container {
+    gap: 0.7rem;
   }
 
-  .delete-icon {
-    color: #9e9e9e;
-
-    &:hover {
-      color: #616161;
-    }
-  }
-
-  i.fas {
-    font-size: 1rem;
+  .stage-resources-page__section {
+    border-radius: 0.7rem;
   }
 }
 
 
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .stage-resources-page {
+    padding:
+      0.6rem
+      0.6rem
+      1rem;
+  }
+
+  .stage-resources-page__container {
+    gap: 0.6rem;
+  }
+
+  .stage-resources-page__section {
+    border-radius: 0.65rem;
+  }
+}

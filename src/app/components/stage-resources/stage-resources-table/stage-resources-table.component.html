@@ -1,0 +1,672 @@
+<section
+  class="stage-resources-table"
+  [class.stage-resources-table--menu-open]="
+    openMenuId !== null
+  "
+>
+
+  <div class="stage-resources-table__wrapper">
+
+    <table class="stage-resources-table__table">
+
+      <!-- =========================
+           HEADER
+      ========================== -->
+
+      <thead>
+        <tr>
+
+          <th class="stage-resources-table__col-number">
+            #
+          </th>
+
+          <th class="stage-resources-table__col-stage">
+            Stage
+          </th>
+
+          <th class="stage-resources-table__col-description">
+            Descripción
+          </th>
+
+          <th class="stage-resources-table__col-url">
+            URL
+          </th>
+
+          <th class="stage-resources-table__col-status">
+            Estado
+          </th>
+
+          <th class="stage-resources-table__col-date">
+            Creado
+          </th>
+
+          <th class="stage-resources-table__col-date">
+            Actualizado
+          </th>
+
+          <th class="stage-resources-table__col-actions">
+            Acciones
+          </th>
+
+        </tr>
+      </thead>
+
+
+      <!-- =========================
+           LOADING
+      ========================== -->
+
+      <tbody *ngIf="isLoading">
+
+        <tr
+          *ngFor="let item of [1, 2, 3, 4]"
+          class="stage-resources-table__row"
+        >
+
+          <td>
+            <span
+              class="
+                stage-resources-table__skeleton
+                stage-resources-table__skeleton--small
+              "
+            ></span>
+          </td>
+
+          <td>
+            <span
+              class="
+                stage-resources-table__skeleton
+                stage-resources-table__skeleton--stage
+              "
+            ></span>
+          </td>
+
+          <td>
+            <span
+              class="
+                stage-resources-table__skeleton
+                stage-resources-table__skeleton--description
+              "
+            ></span>
+          </td>
+
+          <td>
+            <span
+              class="
+                stage-resources-table__skeleton
+                stage-resources-table__skeleton--url
+              "
+            ></span>
+          </td>
+
+          <td>
+            <span
+              class="
+                stage-resources-table__skeleton
+                stage-resources-table__skeleton--status
+              "
+            ></span>
+          </td>
+
+          <td>
+            <span
+              class="
+                stage-resources-table__skeleton
+                stage-resources-table__skeleton--date
+              "
+            ></span>
+          </td>
+
+          <td>
+            <span
+              class="
+                stage-resources-table__skeleton
+                stage-resources-table__skeleton--date
+              "
+            ></span>
+          </td>
+
+          <td>
+            <span
+              class="
+                stage-resources-table__skeleton
+                stage-resources-table__skeleton--button
+              "
+            ></span>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+
+      <!-- =========================
+           DATA
+      ========================== -->
+
+      <tbody *ngIf="!isLoading">
+
+        <tr
+          *ngFor="
+            let resource of paginatedResources;
+            let i = index;
+            trackBy: trackByResourceId
+          "
+          class="stage-resources-table__row"
+          [class.stage-resources-table__row--menu-open]="
+            isMenuOpen(resource.id)
+          "
+        >
+
+          <!-- NUMBER -->
+          <td class="stage-resources-table__number">
+
+            {{
+              (currentPage - 1) *
+              pageSize +
+              i +
+              1
+            }}
+
+          </td>
+
+
+          <!-- STAGE -->
+          <td>
+
+            <span class="stage-resources-table__stage">
+              {{ getStageLabel(resource) }}
+            </span>
+
+          </td>
+
+
+          <!-- DESCRIPTION -->
+          <td>
+
+            <span
+              class="stage-resources-table__description"
+              [title]="resource.description"
+            >
+              {{ resource.description }}
+            </span>
+
+          </td>
+
+
+          <!-- URL -->
+          <td>
+
+            <a
+              class="stage-resources-table__link"
+              [href]="resource.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              [title]="resource.url"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M10.6 13.4a4 4 0 0 0 5.66 0l2.14-2.14a4 4 0 0 0-5.66-5.66L11.5 6.84"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M13.4 10.6a4 4 0 0 0-5.66 0L5.6 12.74a4 4 0 1 0 5.66 5.66l1.23-1.23"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              <span>
+                {{ resource.url }}
+              </span>
+
+            </a>
+
+          </td>
+
+
+          <!-- STATUS -->
+          <td>
+
+            <span
+              class="stage-resources-table__status"
+              [class.stage-resources-table__status--active]="
+                resource.active
+              "
+              [class.stage-resources-table__status--inactive]="
+                !resource.active
+              "
+            >
+
+              <span
+                class="stage-resources-table__status-dot"
+              ></span>
+
+              {{
+                resource.active
+                  ? 'Activo'
+                  : 'Inactivo'
+              }}
+
+            </span>
+
+          </td>
+
+
+          <!-- CREATED -->
+          <td>
+
+            <div class="stage-resources-table__date">
+
+              <span>
+                {{
+                  formatDate(
+                    getCreatedAt(resource)
+                  )
+                }}
+              </span>
+
+              <small>
+                {{
+                  formatTime(
+                    getCreatedAt(resource)
+                  )
+                }}
+              </small>
+
+            </div>
+
+          </td>
+
+
+          <!-- UPDATED -->
+          <td>
+
+            <div class="stage-resources-table__date">
+
+              <span>
+                {{
+                  formatDate(
+                    getUpdatedAt(resource)
+                  )
+                }}
+              </span>
+
+              <small>
+                {{
+                  formatTime(
+                    getUpdatedAt(resource)
+                  )
+                }}
+              </small>
+
+            </div>
+
+          </td>
+
+
+          <!-- ACTIONS -->
+          <td class="stage-resources-table__actions-cell">
+
+            <div
+              class="stage-resources-table__actions"
+              (click)="$event.stopPropagation()"
+            >
+
+              <button
+                type="button"
+                class="stage-resources-table__menu-button"
+                [class.stage-resources-table__menu-button--active]="
+                  isMenuOpen(resource.id)
+                "
+                aria-label="Opciones del recurso"
+                [attr.aria-expanded]="
+                  isMenuOpen(resource.id)
+                "
+                (click)="
+                  toggleMenu(
+                    $event,
+                    resource.id
+                  )
+                "
+              >
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <circle
+                    cx="12"
+                    cy="5"
+                    r="1.7"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="1.7"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="19"
+                    r="1.7"
+                  />
+                </svg>
+
+              </button>
+
+
+              <!-- MENU -->
+              <div
+                *ngIf="isMenuOpen(resource.id)"
+                class="stage-resources-table__menu"
+                [class.stage-resources-table__menu--up]="
+                  shouldOpenMenuUp(i)
+                "
+                (click)="$event.stopPropagation()"
+              >
+
+                <!-- VIEW -->
+                <button
+                  type="button"
+                  class="stage-resources-table__menu-item"
+                  (click)="
+                    onView(
+                      $event,
+                      resource
+                    )
+                  "
+                >
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="2.5"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                    />
+                  </svg>
+
+                  <span>
+                    Ver detalles
+                  </span>
+
+                </button>
+
+
+                <!-- EDIT -->
+                <button
+                  type="button"
+                  class="stage-resources-table__menu-item"
+                  (click)="
+                    onEdit(
+                      $event,
+                      resource
+                    )
+                  "
+                >
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M4 20h4L18.5 9.5a2.12 2.12 0 0 0-3-3L5 17v3Z"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+
+                    <path
+                      d="m13.8 8.2 3 3"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                    />
+                  </svg>
+
+                  <span>
+                    Editar
+                  </span>
+
+                </button>
+
+
+                <!-- DELETE -->
+                <button
+                  type="button"
+                  class="
+                    stage-resources-table__menu-item
+                    stage-resources-table__menu-item--danger
+                  "
+                  (click)="
+                    onDelete(
+                      $event,
+                      resource
+                    )
+                  "
+                >
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M4 7h16"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                    />
+
+                    <path
+                      d="M9 7V4h6v3"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linejoin="round"
+                    />
+
+                    <path
+                      d="m7 7 1 13h8l1-13"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linejoin="round"
+                    />
+
+                    <path
+                      d="M10 11v5M14 11v5"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+
+                  <span>
+                    Eliminar
+                  </span>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+
+    <!-- =========================
+         EMPTY
+    ========================== -->
+
+    <div
+      *ngIf="
+        !isLoading &&
+        resources.length === 0
+      "
+      class="stage-resources-table__empty"
+    >
+
+      <div class="stage-resources-table__empty-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M4.5 5.5C4.5 4.4 5.4 3.5 6.5 3.5H10.2C11.2 3.5 12 4.3 12 5.3V19.5C12 18.1 10.9 17 9.5 17H4.5V5.5Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M19.5 5.5C19.5 4.4 18.6 3.5 17.5 3.5H13.8C12.8 3.5 12 4.3 12 5.3V19.5C12 18.1 13.1 17 14.5 17H19.5V5.5Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+        </svg>
+
+      </div>
+
+      <strong>
+        No hay recursos
+      </strong>
+
+      <span>
+        No se encontraron recursos para los filtros seleccionados.
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer
+    *ngIf="
+      !isLoading &&
+      resources.length > 0
+    "
+    class="stage-resources-table__footer"
+  >
+
+    <p class="stage-resources-table__results">
+
+      Mostrando
+
+      <strong>
+        {{ startItem }}
+      </strong>
+
+      a
+
+      <strong>
+        {{ endItem }}
+      </strong>
+
+      de
+
+      <strong>
+        {{ resources.length }}
+      </strong>
+
+      recursos
+
+    </p>
+
+
+    <div class="stage-resources-table__pagination">
+
+      <button
+        type="button"
+        class="stage-resources-table__pagination-button"
+        [disabled]="currentPage === 1"
+        aria-label="Página anterior"
+        (click)="previousPage()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m15 18-6-6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </button>
+
+
+      <span class="stage-resources-table__current-page">
+        {{ currentPage }}
+      </span>
+
+
+      <button
+        type="button"
+        class="stage-resources-table__pagination-button"
+        [disabled]="currentPage === totalPages"
+        aria-label="Página siguiente"
+        (click)="nextPage()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m9 18 6-6-6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </button>
+
+    </div>
+
+  </footer>
+
+</section>

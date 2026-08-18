@@ -1,0 +1,351 @@
+<div
+  *ngIf="show"
+  class="resource-modal"
+  role="presentation"
+  (click)="onBackdropClick()"
+>
+
+  <div
+    class="resource-modal__dialog"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="'resource-modal-title'"
+    (click)="stopPropagation($event)"
+  >
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="resource-modal__header">
+
+      <div class="resource-modal__header-main">
+
+        <div
+          class="resource-modal__icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M4.5 5.5C4.5 4.4 5.4 3.5 6.5 3.5H10.2C11.2 3.5 12 4.3 12 5.3V19.5C12 18.1 10.9 17 9.5 17H4.5V5.5Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M19.5 5.5C19.5 4.4 18.6 3.5 17.5 3.5H13.8C12.8 3.5 12 4.3 12 5.3V19.5C12 18.1 13.1 17 14.5 17H19.5V5.5Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+
+
+        <div class="resource-modal__header-content">
+
+          <h2
+            id="resource-modal-title"
+            class="resource-modal__title"
+          >
+            {{ modalTitle }}
+          </h2>
+
+          <p class="resource-modal__description">
+            {{ modalDescription }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="resource-modal__close"
+        aria-label="Cerrar modal"
+        (click)="onClose()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M6 6L18 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M18 6L6 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+
+    </header>
+
+
+    <!-- =========================
+         FORM
+    ========================== -->
+
+    <form
+      class="resource-modal__form"
+      [formGroup]="resourceForm"
+      (ngSubmit)="onSubmit()"
+    >
+
+      <div class="resource-modal__body">
+
+        <!-- TITLE -->
+        <div class="resource-modal__field">
+
+          <label
+            for="resource-title"
+            class="resource-modal__label"
+          >
+            Título
+
+            <span>
+              *
+            </span>
+          </label>
+
+
+          <div
+            class="resource-modal__control"
+            [class.resource-modal__control--invalid]="
+              titleControl?.invalid &&
+              titleControl?.touched
+            "
+          >
+
+            <span
+              class="resource-modal__control-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 5h14M5 10h14M5 15h8"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+
+            <input
+              id="resource-title"
+              type="text"
+              formControlName="title"
+              class="resource-modal__input"
+              placeholder="Ej. Stage 01 Review Video"
+              autocomplete="off"
+            />
+
+          </div>
+
+
+          <small
+            *ngIf="
+              titleControl?.hasError('required') &&
+              titleControl?.touched
+            "
+            class="resource-modal__error"
+          >
+            El título es obligatorio.
+          </small>
+
+
+          <small
+            *ngIf="
+              titleControl?.hasError('maxlength') &&
+              titleControl?.touched
+            "
+            class="resource-modal__error"
+          >
+            El título es demasiado largo.
+          </small>
+
+        </div>
+
+
+        <!-- LINK -->
+        <div class="resource-modal__field">
+
+          <label
+            for="resource-link"
+            class="resource-modal__label"
+          >
+            URL del recurso
+
+            <span>
+              *
+            </span>
+          </label>
+
+
+          <div
+            class="resource-modal__control"
+            [class.resource-modal__control--invalid]="
+              linkControl?.invalid &&
+              linkControl?.touched
+            "
+          >
+
+            <span
+              class="resource-modal__control-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M10.6 13.4a4 4 0 0 0 5.66 0l2.14-2.14a4 4 0 0 0-5.66-5.66L11.5 6.84"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M13.4 10.6a4 4 0 0 0-5.66 0L5.6 12.74a4 4 0 1 0 5.66 5.66l1.23-1.23"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+
+            <input
+              id="resource-link"
+              type="url"
+              formControlName="link"
+              class="resource-modal__input"
+              placeholder="https://..."
+              autocomplete="off"
+            />
+
+          </div>
+
+
+          <small
+            *ngIf="
+              linkControl?.hasError('required') &&
+              linkControl?.touched
+            "
+            class="resource-modal__error"
+          >
+            La URL es obligatoria.
+          </small>
+
+
+          <small
+            *ngIf="
+              linkControl?.hasError('pattern') &&
+              linkControl?.touched
+            "
+            class="resource-modal__error"
+          >
+            Ingresa una URL válida comenzando con http:// o https://
+          </small>
+
+
+          <p class="resource-modal__hint">
+            Ingresa el enlace completo al recurso académico.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           FOOTER
+      ========================== -->
+
+      <footer class="resource-modal__footer">
+
+        <button
+          type="button"
+          class="
+            resource-modal__button
+            resource-modal__button--secondary
+          "
+          (click)="onClose()"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="submit"
+          class="
+            resource-modal__button
+            resource-modal__button--primary
+          "
+          [disabled]="
+            resourceForm.invalid ||
+            isSubmitting
+          "
+        >
+
+          <svg
+            *ngIf="mode === 'create'"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 5v14M5 12h14"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+
+          <svg
+            *ngIf="mode === 'edit'"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 12.5 9.2 17 19 7"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <span>
+            {{ submitLabel }}
+          </span>
+
+        </button>
+
+      </footer>
+
+    </form>
+
+  </div>
+
+</div>

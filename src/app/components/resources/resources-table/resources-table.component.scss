@@ -1,0 +1,811 @@
+:host {
+  display: block;
+  width: 100%;
+
+  /*
+   * Muy importante:
+   * no colocar overflow:hidden aquí.
+   */
+  overflow: visible;
+}
+
+
+/* =========================
+   TABLE CONTAINER
+========================= */
+
+.resources-table {
+  position: relative;
+
+  width: 100%;
+
+  background: #ffffff;
+
+  /*
+   * Permite que el menú salga
+   * visualmente del bloque.
+   */
+  overflow: visible;
+
+  isolation: auto;
+
+  box-sizing: border-box;
+}
+
+
+/*
+ * Mientras exista un menú abierto,
+ * toda la tabla queda por encima
+ * de las secciones siguientes.
+ */
+.resources-table--menu-open {
+  z-index: 100;
+}
+
+
+/* =========================
+   DESKTOP WRAPPER
+========================= */
+
+.resources-table__desktop {
+  position: relative;
+
+  width: 100%;
+
+  /*
+   * NO usar:
+   * overflow: hidden;
+   * overflow-y: auto;
+   *
+   * porque cortaría el dropdown.
+   */
+  overflow: visible;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.resources-table__table {
+  width: 100%;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  table-layout: fixed;
+
+  background: #ffffff;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.resources-table__table thead {
+  position: relative;
+
+  z-index: 1;
+}
+
+.resources-table__table thead tr {
+  height: 3rem;
+}
+
+.resources-table__table th {
+  padding: 0.7rem 0.9rem;
+
+  color: #4f35cf;
+
+  background: #fdfdff;
+
+  border-bottom: 1px solid #e9eaf1;
+
+  text-align: left;
+  vertical-align: middle;
+
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+
+/* =========================
+   COLUMN WIDTH
+========================= */
+
+.resources-table__column-number {
+  width: 4.5%;
+}
+
+.resources-table__column-title {
+  width: 23%;
+}
+
+.resources-table__column-note {
+  width: 28%;
+}
+
+.resources-table__column-url {
+  width: 36%;
+}
+
+.resources-table__column-actions {
+  width: 8.5%;
+
+  text-align: center !important;
+}
+
+
+/* =========================
+   ROW
+========================= */
+
+.resources-table__row {
+  position: relative;
+
+  /*
+   * Mantener visible para dropdown.
+   */
+  overflow: visible;
+}
+
+.resources-table__row td {
+  height: 4rem;
+
+  padding: 0.65rem 0.9rem;
+
+  color: #35364a;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #eceef4;
+
+  vertical-align: middle;
+
+  font-size: 0.77rem;
+  line-height: 1.4;
+
+  box-sizing: border-box;
+
+  transition:
+    background-color 0.15s ease;
+}
+
+.resources-table__row:hover td {
+  background: #fcfcff;
+}
+
+
+/*
+ * Esta fila debe quedar encima de todas
+ * las demás mientras su menú esté abierto.
+ */
+.resources-table__row--menu-open {
+  z-index: 200;
+}
+
+.resources-table__row--menu-open td {
+  position: relative;
+
+  z-index: 200;
+}
+
+
+/* =========================
+   NUMBER
+========================= */
+
+.resources-table__number {
+  color: #3d3e52 !important;
+
+  font-weight: 500;
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.resources-table__title {
+  display: block;
+
+  overflow: hidden;
+
+  color: #25263a;
+
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.resources-table__note {
+  display: block;
+
+  overflow: hidden;
+
+  color: #73758c;
+
+  font-size: 0.76rem;
+  font-weight: 400;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   LINK
+========================= */
+
+.resources-table__link {
+  min-width: 0;
+  max-width: 100%;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.55rem;
+
+  color: #4f35d5;
+
+  text-decoration: none;
+
+  font-size: 0.76rem;
+  font-weight: 500;
+
+  transition:
+    color 0.15s ease;
+}
+
+.resources-table__link:hover {
+  color: #3920c0;
+}
+
+.resources-table__link svg {
+  width: 1rem;
+  height: 1rem;
+
+  flex: 0 0 1rem;
+}
+
+.resources-table__link span {
+  min-width: 0;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   ACTION CELL
+========================= */
+
+.resources-table__actions-cell {
+  position: relative !important;
+
+  overflow: visible !important;
+
+  text-align: center;
+}
+
+
+/* =========================
+   ACTION CONTAINER
+========================= */
+
+.resources-table__actions {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: visible;
+
+  z-index: 300;
+}
+
+
+/* =========================
+   THREE DOT BUTTON
+========================= */
+
+.resources-table__menu-button {
+  width: 2.15rem;
+  height: 2.15rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  color: #52536a;
+  background: #ffffff;
+
+  border: 1px solid #e5e7ee;
+  border-radius: 0.5rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.resources-table__menu-button:hover,
+.resources-table__menu-button--active {
+  color: #4832ca;
+
+  background: #f8f7ff;
+
+  border-color: #d9d4f8;
+}
+
+.resources-table__menu-button:active {
+  transform: scale(0.96);
+}
+
+.resources-table__menu-button:focus-visible {
+  outline: 2px solid rgba(79, 59, 231, 0.16);
+  outline-offset: 2px;
+}
+
+.resources-table__menu-button svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+
+/* =========================
+   DROPDOWN MENU
+========================= */
+
+.resources-table__menu {
+  position: absolute;
+
+  top: calc(100% + 0.4rem);
+  right: 0;
+
+  z-index: 9999;
+
+  width: 10.5rem;
+
+  padding: 0.35rem;
+
+  background: #ffffff;
+
+  border: 1px solid #e7e8ef;
+  border-radius: 0.6rem;
+
+  box-shadow:
+    0 10px 30px rgba(24, 27, 55, 0.12),
+    0 2px 8px rgba(24, 27, 55, 0.05);
+
+  box-sizing: border-box;
+}
+
+
+/*
+ * Para las últimas dos filas,
+ * abrimos el menú hacia arriba.
+ */
+.resources-table__menu--up {
+  top: auto;
+
+  bottom: calc(100% + 0.4rem);
+}
+
+
+/* =========================
+   MENU ITEM
+========================= */
+
+.resources-table__menu-item {
+  width: 100%;
+  min-height: 2.25rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  padding: 0.5rem 0.65rem;
+
+  color: #37384d;
+  background: transparent;
+
+  border: 0;
+  border-radius: 0.4rem;
+
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 500;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    background-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.resources-table__menu-item:hover {
+  color: #312d57;
+
+  background: #f6f6fa;
+}
+
+.resources-table__menu-item:active {
+  transform: scale(0.98);
+}
+
+.resources-table__menu-item svg {
+  width: 1rem;
+  height: 1rem;
+
+  flex: 0 0 1rem;
+}
+
+
+/* =========================
+   DELETE ITEM
+========================= */
+
+.resources-table__menu-item--danger {
+  color: #dc3545;
+}
+
+.resources-table__menu-item--danger:hover {
+  color: #c72a39;
+
+  background: #fff4f5;
+}
+
+
+/* =========================
+   EMPTY
+========================= */
+
+.resources-table__empty {
+  min-height: 13rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.3rem;
+
+  padding: 2rem;
+
+  color: #77798f;
+
+  text-align: center;
+}
+
+.resources-table__empty-icon {
+  width: 2.8rem;
+  height: 2.8rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 0.3rem;
+
+  color: #6351df;
+
+  background: rgba(99, 81, 223, 0.08);
+
+  border-radius: 0.7rem;
+}
+
+.resources-table__empty-icon svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.resources-table__empty strong {
+  color: #38394d;
+
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.resources-table__empty span {
+  font-size: 0.73rem;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.resources-table__footer {
+  position: relative;
+
+  z-index: 1;
+
+  min-height: 3.3rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: 0.6rem 1rem;
+
+  background: #ffffff;
+
+  border-top: 0;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   RESULTS
+========================= */
+
+.resources-table__results {
+  margin: 0;
+
+  color: #77788d;
+
+  font-size: 0.73rem;
+  font-weight: 400;
+}
+
+.resources-table__results strong {
+  color: #55566b;
+
+  font-weight: 600;
+}
+
+
+/* =========================
+   PAGINATION
+========================= */
+
+.resources-table__pagination {
+  display: flex;
+  align-items: center;
+
+  gap: 0.35rem;
+}
+
+.resources-table__pagination-button,
+.resources-table__current-page {
+  width: 2rem;
+  height: 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.45rem;
+}
+
+.resources-table__pagination-button {
+  padding: 0;
+
+  color: #696a7c;
+  background: #ffffff;
+
+  border: 1px solid #e4e6ed;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.resources-table__pagination-button:hover:not(:disabled) {
+  color: #4b35ce;
+
+  background: #f8f7ff;
+
+  border-color: #d8d2f5;
+}
+
+.resources-table__pagination-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.resources-table__pagination-button:disabled {
+  opacity: 0.4;
+
+  cursor: not-allowed;
+}
+
+.resources-table__pagination-button svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.resources-table__current-page {
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4b2ce8 0%,
+      #5e32e9 100%
+    );
+
+  font-size: 0.74rem;
+  font-weight: 600;
+
+  box-shadow:
+    0 3px 7px rgba(77, 48, 220, 0.15);
+}
+
+
+/* =========================
+   SKELETON
+========================= */
+
+.resources-table__skeleton {
+  display: block;
+
+  height: 0.75rem;
+
+  background:
+    linear-gradient(
+      90deg,
+      #f0f1f5 25%,
+      #f7f7fa 50%,
+      #f0f1f5 75%
+    );
+
+  background-size: 200% 100%;
+
+  border-radius: 0.3rem;
+
+  animation:
+    resources-table-loading
+    1.3s
+    infinite;
+}
+
+.resources-table__skeleton--number {
+  width: 1.2rem;
+}
+
+.resources-table__skeleton--title {
+  width: 75%;
+}
+
+.resources-table__skeleton--note {
+  width: 85%;
+}
+
+.resources-table__skeleton--url {
+  width: 82%;
+}
+
+.resources-table__skeleton--button {
+  width: 2rem;
+  height: 2rem;
+
+  margin: 0 auto;
+
+  border-radius: 0.45rem;
+}
+
+@keyframes resources-table-loading {
+
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1150px) {
+
+  .resources-table__column-number {
+    width: 5%;
+  }
+
+  .resources-table__column-title {
+    width: 23%;
+  }
+
+  .resources-table__column-note {
+    width: 25%;
+  }
+
+  .resources-table__column-url {
+    width: 37%;
+  }
+
+  .resources-table__column-actions {
+    width: 10%;
+  }
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  /*
+   * Aquí permitimos desplazamiento horizontal,
+   * pero mantenemos vertical visible.
+   *
+   * El menú de las últimas filas abre hacia arriba.
+   */
+  .resources-table__desktop {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+
+  .resources-table__table {
+    min-width: 850px;
+  }
+
+  .resources-table__table th {
+    font-size: 0.72rem;
+  }
+
+  .resources-table__row td {
+    font-size: 0.74rem;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .resources-table__table {
+    min-width: 800px;
+  }
+
+  .resources-table__footer {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 0.65rem;
+
+    padding: 0.75rem;
+  }
+
+  .resources-table__pagination {
+    width: 100%;
+
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,434 @@
+<div
+  *ngIf="show"
+  class="stage-resource-modal"
+  role="presentation"
+  (click)="onBackdropClick()"
+>
+
+  <div
+    class="stage-resource-modal__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="stage-resource-modal-title"
+    (click)="stopPropagation($event)"
+  >
+
+    <!-- HEADER -->
+    <header class="stage-resource-modal__header">
+
+      <div class="stage-resource-modal__header-main">
+
+        <div
+          class="stage-resource-modal__icon"
+          aria-hidden="true"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="5"
+              y="4"
+              width="14"
+              height="15"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M8 8h8M8 12h8M8 16h5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        </div>
+
+
+        <div class="stage-resource-modal__header-content">
+
+          <h2
+            id="stage-resource-modal-title"
+            class="stage-resource-modal__title"
+          >
+            {{ modalTitle }}
+          </h2>
+
+          <p class="stage-resource-modal__description">
+            {{ modalDescription }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="stage-resource-modal__close"
+        aria-label="Cerrar modal"
+        (click)="onClose()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M6 6L18 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M18 6L6 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </button>
+
+    </header>
+
+
+    <!-- FORM -->
+    <form
+      class="stage-resource-modal__form"
+      [formGroup]="resourceForm"
+      (ngSubmit)="onSubmit()"
+    >
+
+      <div class="stage-resource-modal__body">
+
+        <!-- STAGE -->
+        <div class="stage-resource-modal__field">
+
+          <label
+            for="resource-stage"
+            class="stage-resource-modal__label"
+          >
+            Stage
+
+            <span>
+              *
+            </span>
+          </label>
+
+
+          <div
+            class="stage-resource-modal__select-wrapper"
+            [class.stage-resource-modal__control--invalid]="
+              stageControl?.invalid &&
+              stageControl?.touched
+            "
+          >
+
+            <select
+              id="resource-stage"
+              class="stage-resource-modal__select"
+              formControlName="stageId"
+            >
+
+              <option
+                [ngValue]="null"
+                disabled
+              >
+                Selecciona un stage
+              </option>
+
+              <option
+                *ngFor="let stage of stages"
+                [ngValue]="stage.id"
+              >
+                {{ stage.label }}
+              </option>
+
+            </select>
+
+
+            <span
+              class="stage-resource-modal__select-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M7 10L12 15L17 10"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+          </div>
+
+
+          <small
+            *ngIf="
+              stageControl?.hasError('required') &&
+              stageControl?.touched
+            "
+            class="stage-resource-modal__error"
+          >
+            Selecciona un Stage.
+          </small>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+        <div class="stage-resource-modal__field">
+
+          <label
+            for="resource-description"
+            class="stage-resource-modal__label"
+          >
+            Descripción
+
+            <span>
+              *
+            </span>
+          </label>
+
+
+          <textarea
+            id="resource-description"
+            class="stage-resource-modal__textarea"
+            formControlName="description"
+            rows="4"
+            maxlength="250"
+            placeholder="Escribe una descripción del recurso..."
+            [class.stage-resource-modal__input--invalid]="
+              descriptionControl?.invalid &&
+              descriptionControl?.touched
+            "
+          ></textarea>
+
+
+          <div class="stage-resource-modal__field-footer">
+
+            <small
+              *ngIf="
+                descriptionControl?.hasError('required') &&
+                descriptionControl?.touched
+              "
+              class="stage-resource-modal__error"
+            >
+              La descripción es obligatoria.
+            </small>
+
+            <small
+              class="stage-resource-modal__counter"
+            >
+              {{
+                descriptionControl?.value?.length || 0
+              }}/250
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- URL -->
+        <div class="stage-resource-modal__field">
+
+          <label
+            for="resource-url"
+            class="stage-resource-modal__label"
+          >
+            URL del recurso
+
+            <span>
+              *
+            </span>
+          </label>
+
+
+          <div
+            class="stage-resource-modal__input-wrapper"
+            [class.stage-resource-modal__control--invalid]="
+              urlControl?.invalid &&
+              urlControl?.touched
+            "
+          >
+
+            <span
+              class="stage-resource-modal__input-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M10.6 13.4a4 4 0 0 0 5.66 0l2.14-2.14a4 4 0 0 0-5.66-5.66L11.5 6.84"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M13.4 10.6a4 4 0 0 0-5.66 0L5.6 12.74a4 4 0 1 0 5.66 5.66l1.23-1.23"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+
+            <input
+              id="resource-url"
+              type="url"
+              class="stage-resource-modal__input"
+              formControlName="url"
+              placeholder="https://..."
+              autocomplete="off"
+            />
+
+          </div>
+
+
+          <small
+            *ngIf="
+              urlControl?.hasError('required') &&
+              urlControl?.touched
+            "
+            class="stage-resource-modal__error"
+          >
+            La URL es obligatoria.
+          </small>
+
+
+          <small
+            *ngIf="
+              urlControl?.hasError('pattern') &&
+              urlControl?.touched
+            "
+            class="stage-resource-modal__error"
+          >
+            Ingresa una URL válida comenzando con http:// o https://
+          </small>
+
+        </div>
+
+
+        <!-- STATUS -->
+        <div class="stage-resource-modal__status-row">
+
+          <div class="stage-resource-modal__status-content">
+
+            <span class="stage-resource-modal__status-title">
+              Recurso activo
+            </span>
+
+            <span class="stage-resource-modal__status-description">
+              Permite que este recurso se encuentre disponible.
+            </span>
+
+          </div>
+
+
+          <label class="stage-resource-modal__switch">
+
+            <input
+              type="checkbox"
+              formControlName="active"
+            />
+
+            <span class="stage-resource-modal__switch-track">
+
+              <span class="stage-resource-modal__switch-thumb">
+              </span>
+
+            </span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <!-- FOOTER -->
+      <footer class="stage-resource-modal__footer">
+
+        <button
+          type="button"
+          class="
+            stage-resource-modal__button
+            stage-resource-modal__button--secondary
+          "
+          (click)="onClose()"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="submit"
+          class="
+            stage-resource-modal__button
+            stage-resource-modal__button--primary
+          "
+          [disabled]="
+            resourceForm.invalid ||
+            isSubmitting
+          "
+        >
+
+          <svg
+            *ngIf="mode === 'create'"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M12 5V19M5 12H19"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+
+          <svg
+            *ngIf="mode === 'edit'"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M5 12.5L9.2 17L19 7"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+
+          <span>
+            {{ submitLabel }}
+          </span>
+
+        </button>
+
+      </footer>
+
+    </form>
+
+  </div>
+
+</div>

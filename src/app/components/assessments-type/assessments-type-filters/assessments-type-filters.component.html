@@ -1,0 +1,208 @@
+<section class="assessment-type-filters">
+
+  <div class="assessment-type-filters__grid">
+
+    <!-- =========================
+         SEARCH
+    ========================== -->
+
+    <div class="assessment-type-filters__field">
+
+      <label
+        for="assessment-type-search"
+        class="assessment-type-filters__label"
+      >
+        Buscar
+      </label>
+
+
+      <div class="assessment-type-filters__input-wrapper">
+
+        <span
+          class="assessment-type-filters__input-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M16 16L20 20"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+
+        <input
+          id="assessment-type-search"
+          type="text"
+          class="assessment-type-filters__input"
+          placeholder="Buscar por nombre..."
+          [ngModel]="searchTerm"
+          (ngModelChange)="onSearchTermChange($event)"
+          (keyup.enter)="onEnter()"
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         STATUS
+    ========================== -->
+
+    <div class="assessment-type-filters__field">
+
+      <label
+        for="assessment-type-status"
+        class="assessment-type-filters__label"
+      >
+        Estado
+      </label>
+
+
+      <div class="assessment-type-filters__select-wrapper">
+
+        <select
+          id="assessment-type-status"
+          class="assessment-type-filters__select"
+          [ngModel]="selectedStatus"
+          (ngModelChange)="onStatusChange($event)"
+        >
+
+          <option value="all">
+            Todos
+          </option>
+
+          <option value="active">
+            Activos
+          </option>
+
+          <option value="inactive">
+            Inactivos
+          </option>
+
+        </select>
+
+
+        <span
+          class="assessment-type-filters__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M7 10L12 15L17 10"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         ACTIONS
+    ========================== -->
+
+    <div class="assessment-type-filters__actions">
+
+      <!-- CLEAR -->
+      <button
+        type="button"
+        class="
+          assessment-type-filters__button
+          assessment-type-filters__button--clear
+        "
+        (click)="onClearFilters()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M20 11a8 8 0 1 0-2.34 5.66"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M20 5v6h-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        <span>
+          Limpiar
+        </span>
+
+      </button>
+
+
+      <!-- SEARCH -->
+      <button
+        type="button"
+        class="
+          assessment-type-filters__button
+          assessment-type-filters__button--search
+        "
+        (click)="onSearch()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="M16 16L20 20"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Buscar
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>

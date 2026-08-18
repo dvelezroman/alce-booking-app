@@ -1,66 +1,89 @@
-<section class="class-booking-header">
-  <h1 class="title is-3">Tipos de Evaluaciones</h1>
+<section class="assessment-types-page">
+
+  <div class="assessment-types-page__container">
+
+    <!-- HEADER -->
+    <div class="assessment-types-page__section">
+
+      <app-assessments-type-header
+        (createAssessmentType)="openCreateAssessmentTypeModal()"
+      ></app-assessments-type-header>
+
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="assessment-types-page__summary">
+
+      <app-assessments-type-summary
+        [totalAssessmentTypes]="totalAssessmentTypes"
+        [activeAssessmentTypes]="activeAssessmentTypes"
+        [assessmentTypesInUse]="assessmentTypesInUse"
+      ></app-assessments-type-summary>
+
+    </div>
+
+
+    <!-- FILTERS -->
+    <div class="assessment-types-page__section">
+
+      <app-assessments-type-filters
+        [searchTerm]="searchTerm"
+        [selectedStatus]="selectedStatus"
+
+        (searchTermChange)="handleSearchTermChange($event)"
+        (statusChange)="handleStatusChange($event)"
+        (search)="handleSearch()"
+        (clearFilters)="handleClearFilters()"
+      ></app-assessments-type-filters>
+
+    </div>
+
+
+    <!-- TABLE -->
+    <div class="assessment-types-page__section">
+
+      <app-assessments-type-table
+        [assessmentTypes]="filteredAssessmentTypes"
+        [isLoading]="isLoading"
+
+        (viewAssessmentType)="openAssessmentTypeDetail($event)"
+        (editAssessmentType)="openEditAssessmentTypeModal($event)"
+        (deleteAssessmentType)="confirmDeleteType($event)"
+      ></app-assessments-type-table>
+
+    </div>
+
+  </div>
+
 </section>
 
-<div class="page-wrapper">
 
-  <app-assessment-type-form
-    (formSubmit)="handleCreateAssessmentType($event)"
-  ></app-assessment-type-form>
+<!-- CREATE / EDIT -->
+<app-assessment-type-form-modal
+  *ngIf="showAssessmentTypeFormModal"
 
-  <div class="block-results" *ngIf="assessmentTypes.length > 0">
-    <div class="table-container">
-      <table class="table-results is-fullwidth">
-        <thead>
-          <tr>
-            <th>Tipo</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let type of assessmentTypes">
-            <td>{{ type.name }}</td>
-            <td>{{ type.description || "-" }}</td>
-            <td class="table-actions">
-              <button class="icon-button edit-icon" title="Editar" (click)="openEditModal(type)">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-button delete-icon" title="Eliminar" (click)="confirmDeleteType(type)">
-                <i class="fas fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+  [show]="showAssessmentTypeFormModal"
+  [mode]="assessmentTypeFormMode"
+  [assessmentType]="selectedAssessmentType"
 
-<div class="modal-backdrop" *ngIf="typeToEdit">
-  <div class="edit-modal">
-    <form [formGroup]="editForm" (ngSubmit)="updateAssessmentType()" class="search-form">
-      <div class="field">
-        <label class="label">Tipo de Evaluación</label>
-        <input type="text" class="input" formControlName="name" />
-        <p class="error-message" *ngIf="editForm.get('name')?.touched && editForm.get('name')?.invalid">
-          Campo obligatorio.
-        </p>
-      </div>
+  (createAssessmentType)="handleCreateAssessmentType($event)"
+  (updateAssessmentType)="handleUpdateAssessmentType($event)"
+  (close)="closeAssessmentTypeFormModal()"
+></app-assessment-type-form-modal>
 
-      <div class="field">
-        <label class="label">Descripción (opcional)</label>
-        <textarea class="input" formControlName="description" rows="2"></textarea>
-      </div>
 
-      <div class="modal-actions">
-        <button type="submit" class="modal-button is-primary">Actualizar</button>
-        <button type="button" class="modal-button is-secondary" (click)="cancelEdit()">Cancelar</button>
-      </div>
-    </form>
-  </div>
-</div>
+<!-- DETAIL -->
+<app-assessment-type-detail-modal
+  *ngIf="showAssessmentTypeDetailModal"
 
+  [show]="showAssessmentTypeDetailModal"
+  [assessmentType]="selectedAssessmentType"
+
+  (close)="closeAssessmentTypeDetailModal()"
+></app-assessment-type-detail-modal>
+
+
+<!-- GLOBAL MODAL -->
 <app-modal
   [showModal]="modal.show"
   [message]="modal.message"

@@ -1,71 +1,72 @@
-<section class="class-booking-header">
-  <h1 class="title is-3">Recursos Académicos</h1>
+<section class="academic-resources-page">
+  <div class="academic-resources-page__container">
+
+    <!-- HEADER -->
+    <div class="academic-resources-page__section">
+      <app-resources-header
+        (createResource)="openCreateResourceModal()"
+      ></app-resources-header>
+    </div>
+
+     <!-- SUMMARY -->
+    <div class="academic-resources-page__summary">
+      <app-resources-summary
+        [totalResources]="totalResources"
+        [activeResources]="activeResources"
+        [resourcesWithLink]="resourcesWithLink"
+      ></app-resources-summary>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="academic-resources-page__section">
+      <app-resources-filters
+        [searchTerm]="searchTerm"
+        [selectedStatus]="selectedStatus"
+        (searchTermChange)="handleSearchTermChange($event)"
+        (statusChange)="handleStatusChange($event)"
+        (search)="handleSearch()"
+        (clearFilters)="handleClearFilters()"
+      ></app-resources-filters>
+    </div>
+
+
+    <!-- TABLE -->
+    <div class="academic-resources-page__section">
+      <app-resources-table
+        [resources]="filteredResources"
+        [isLoading]="isLoading"
+        (viewResource)="openResourceDetail($event)"
+        (editResource)="openEditResourceModal($event)"
+        (deleteResource)="confirmDeleteResource($event)"
+      ></app-resources-table>
+    </div>
+
+  </div>
 </section>
 
-<div class="page-wrapper">
 
-  <app-assessment-resource-form
-    (formSubmit)="handleCreateResource($event)"
-  ></app-assessment-resource-form>
+<!-- CREATE / EDIT RESOURCE -->
+<app-resource-form-modal
+  *ngIf="showResourceFormModal"
+  [show]="showResourceFormModal"
+  [mode]="resourceFormMode"
+  [resource]="selectedResource"
+  (createResource)="handleCreateResource($event)"
+  (updateResource)="handleUpdateResource($event)"
+  (close)="closeResourceFormModal()"
+></app-resource-form-modal>
 
-  <div class="block-results" *ngIf="resources.length > 0">
-    <div class="table-container">
-      <table class="table-results is-fullwidth">
-        <thead>
-          <tr>
-            <th>Título</th>
-            <th>Enlace</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let resource of resources">
-            <td>{{ resource.title }}</td>
-            <td>
-              <a [href]="resource.link" target="_blank" class="link-truncate">{{ resource.link }}</a>
-            </td>
-            <td class="table-actions">
-              <button class="icon-button edit-icon" title="Editar" (click)="openEditModal(resource)">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="icon-button delete-icon" title="Eliminar" (click)="confirmDeleteResource(resource)">
-                <i class="fas fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
 
-<div class="modal-backdrop" *ngIf="resourceToEdit">
-  <div class="edit-modal">
-    <form [formGroup]="editForm" (ngSubmit)="updateResource()" class="search-form">
-      <div class="field">
-        <label class="label">Título del Recurso</label>
-        <input type="text" class="input" formControlName="title" />
-        <p class="error-message" *ngIf="editForm.get('title')?.touched && editForm.get('title')?.invalid">
-          Campo obligatorio.
-        </p>
-      </div>
+<!-- RESOURCE DETAIL -->
+<app-resource-detail-modal
+  *ngIf="showResourceDetailModal"
+  [show]="showResourceDetailModal"
+  [resource]="selectedResource"
+  (close)="closeResourceDetailModal()"
+></app-resource-detail-modal>
 
-      <div class="field">
-        <label class="label">Enlace del Recurso</label>
-        <input type="url" class="input" formControlName="link" />
-        <p class="error-message" *ngIf="editForm.get('link')?.touched && editForm.get('link')?.invalid">
-          Enlace inválido.
-        </p>
-      </div>
 
-      <div class="modal-actions">
-        <button type="submit" class="modal-button is-primary">Actualizar</button>
-        <button type="button" class="modal-button is-secondary" (click)="cancelEdit()">Cancelar</button>
-      </div>
-    </form>
-  </div>
-</div>
-
+<!-- GENERAL MODAL -->
 <app-modal
   [showModal]="modal.show"
   [message]="modal.message"

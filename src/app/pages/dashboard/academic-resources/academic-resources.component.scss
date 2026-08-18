@@ -1,283 +1,151 @@
-
-.class-booking-header {
-  position: fixed;
-  top: 0;
-  left: 0;
+:host {
+  display: block;
   width: 100%;
-  background-color: #f9fafb;
-  z-index: 10;
-  text-align: center;
 }
 
-.class-booking-header .title.is-3 {
-  font-size: 1.5rem;
-  line-height: 75px;
-  color: #333;
-  font-weight: bold;
-  text-align: center;
-  margin: 0;
-}
 
-/* WRAPPER */
-.page-wrapper {
-  background: #f9fafb;
+/* =========================
+   PAGE
+========================= */
+
+.academic-resources-page {
+  width: calc(100% - 76px);
   min-height: 100vh;
-  padding: 2rem;
-  margin-top: 5rem;
+
+  margin-left: 64px;
+
+  padding: 1.25rem;
+
+  background:#ffffff;
+
+  box-sizing: border-box;
 }
 
-/* BLOQUE */
-.block-results {
+
+/* =========================
+   CONTAINER
+========================= */
+
+.academic-resources-page__container {
   width: 100%;
-  margin: 2rem auto 4rem auto;
-}
+  max-width: 1450px;
 
-/* CONTENEDOR */
-.table-container {
-  max-width: 900px;
-  margin: auto;
+  margin: 0 auto;
 
-  border-radius: 14px;
-  border: 1px solid #e5e7eb;
-
-  background: #ffffff;
-
-  overflow: hidden;
-
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.08),
-    0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-/* TABLA */
-.table-results {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-}
-
-/* HEADER */
-.table-results thead {
-  background: #f9fafb;
-}
-
-.table-results th {
-  text-align: left;
-  padding: 0.85rem 1rem;
-
-  font-size: 0.7rem;
-  font-weight: 600;
-
-  color: #6b7280;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-
-  border-bottom: 1px solid #e5e7eb;
-}
-
-/* FILAS */
-.table-results tbody tr {
-  transition: background 0.2s ease;
-}
-
-.table-results tbody tr:hover {
-  background: #f9fafb;
-}
-
-/* CELDAS */
-.table-results td {
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid #f1f5f9;
-  color: #111827;
-}
-
-/* LINK */
-.link-truncate {
-  display: inline-block;
-  max-width: 280px;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  font-size: 0.8rem;
-  color: #2563eb;
-
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.link-truncate:hover {
-  color: #1d4ed8;
-  text-decoration: underline;
-}
-
-/* ACTIONS */
-.table-actions {
-  display: flex;
-  gap: 0.4rem;
-}
-
-/* BOTONES ICON */
-.icon-button {
-  width: 32px;
-  height: 32px;
-
-  border-radius: 8px;
-  border: 1px solid transparent;
-
-  background: transparent;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  transition: all 0.2s ease;
-}
-
-/* EDIT */
-.edit-icon {
-  color: #2563eb;
-}
-
-.edit-icon:hover {
-  background: #eff6ff;
-  border-color: #dbeafe;
-  color: #1d4ed8;
-}
-
-/* DELETE */
-.delete-icon {
-  color: #9ca3af;
-}
-
-.delete-icon:hover {
-  background: #f3f4f6;
-  border-color: #e5e7eb;
-  color: #374151;
-}
-
-/* ICON SIZE */
-.icon-button i {
-  font-size: 0.9rem;
-}
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-/* MODAL */
-.edit-modal {
-  width: 100%;
-  max-width: 420px;
-
-  padding: 1.8rem;
-
-  background: #ffffff;
-  border-radius: 14px;
-
-  border: 1px solid #e5e7eb;
-
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.25),
-    0 4px 20px rgba(0, 0, 0, 0.1);
-
-  animation: popUp 0.25s ease-out;
-}
-
-/* FIELD */
-.field {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  margin-bottom: 1rem;
+
+  gap: 1rem;
 }
 
-/* 🔥 LABEL estilo Vercel */
-.label {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #6b7280; // muted
-  letter-spacing: 0.02em;
-}
 
-/* INPUT */
-.input {
-  height: 38px;
-  padding: 0 0.75rem;
+/* =========================
+   SECTIONS
+========================= */
 
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+.academic-resources-page__section {
+  width: 100%;
 
-  background: #f9fafb;
-  color: #111827;
-
-  font-size: 0.85rem;
-
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-/* 🔥 FOCUS PRO */
-.input:focus {
   background: #ffffff;
-  border-color: #d4af37;
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25);
+
+  border: 1px solid #e8eaf2;
+  border-radius: 0.9rem;
+
+  box-shadow:
+    0 4px 18px rgba(31, 42, 89, 0.025);
+
+  overflow: visible;
+
+  box-sizing: border-box;
 }
 
-/* ERROR */
-.error-message {
-  font-size: 0.7rem;
-  color: #ef4444;
+
+/* La tabla necesita poder contener
+   dropdowns/menús sin cortarlos */
+.academic-resources-page__section:nth-child(3) {
+  overflow: visible;
 }
 
-/* ACTIONS */
-.modal-actions {
-  display: flex;
-  gap: 0.6rem;
-  margin-top: 1.5rem;
+
+/* =========================
+   SUMMARY
+========================= */
+
+.academic-resources-page__summary {
+  width: 100%;
 }
 
-/* BOTONES */
-.modal-button {
-  flex: 1;
-  height: 36px;
 
-  font-size: 0.8rem;
-  font-weight: 500;
+/* =========================
+   RESPONSIVE
+========================= */
 
-  border-radius: 8px;
-  border: none;
+@media (max-width: 1200px) {
 
-  cursor: pointer;
-  transition: all 0.2s ease;
+  .academic-resources-page {
+    padding:
+      1.1rem
+      1.1rem
+      1.75rem;
+  }
+
+  .academic-resources-page__container {
+    gap: 0.9rem;
+  }
 }
 
-/* 🔥 PRIMARY PRO */
-.modal-button.is-primary {
-  background: #28336f;
-  color: white;
+
+@media (max-width: 991px) {
+
+  .academic-resources-page {
+    width: 100%;
+    margin-left: 0;
+
+    padding:
+      1rem
+      1rem
+      1.5rem;
+  }
+
+  .academic-resources-page__container {
+    max-width: 100%;
+  }
 }
 
-.modal-button.is-primary:hover {
-  background: #1f2758;
+
+@media (max-width: 767px) {
+
+  .academic-resources-page {
+    padding:
+      0.75rem
+      0.75rem
+      1.25rem;
+  }
+
+  .academic-resources-page__container {
+    gap: 0.75rem;
+  }
+
+  .academic-resources-page__section {
+    border-radius: 0.75rem;
+  }
 }
 
-/* 🔥 SECONDARY PRO */
-.modal-button.is-secondary {
-  background: #f3f4f6;
-  color: #374151;
-}
 
-.modal-button.is-secondary:hover {
-  background: #e5e7eb;
+@media (max-width: 480px) {
+
+  .academic-resources-page {
+    padding:
+      0.65rem
+      0.65rem
+      1rem;
+  }
+
+  .academic-resources-page__container {
+    gap: 0.65rem;
+  }
+
+  .academic-resources-page__section {
+    border-radius: 0.7rem;
+  }
 }

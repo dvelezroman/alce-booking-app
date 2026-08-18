@@ -1,0 +1,661 @@
+<section
+  class="assessment-type-table"
+  [class.assessment-type-table--menu-open]="
+    openMenuId !== null
+  "
+>
+
+  <div class="assessment-type-table__wrapper">
+
+    <table class="assessment-type-table__table">
+
+      <!-- =========================
+           HEADER
+      ========================== -->
+
+      <thead>
+        <tr>
+
+          <th class="assessment-type-table__col-number">
+            #
+          </th>
+
+          <th class="assessment-type-table__col-name">
+            Nombre
+          </th>
+
+          <th class="assessment-type-table__col-description">
+            Descripción
+          </th>
+
+          <th class="assessment-type-table__col-status">
+            Estado
+          </th>
+<!-- 
+          <th class="assessment-type-table__col-date">
+            Creado
+          </th>
+
+          <th class="assessment-type-table__col-date">
+            Actualizado
+          </th> -->
+
+          <th class="assessment-type-table__col-actions">
+            Acciones
+          </th>
+
+        </tr>
+      </thead>
+
+
+      <!-- =========================
+           LOADING
+      ========================== -->
+
+      <tbody *ngIf="isLoading">
+
+        <tr
+          *ngFor="let item of [1, 2, 3, 4]"
+          class="assessment-type-table__row"
+        >
+
+          <td>
+            <span
+              class="
+                assessment-type-table__skeleton
+                assessment-type-table__skeleton--small
+              "
+            ></span>
+          </td>
+
+          <td>
+            <span
+              class="
+                assessment-type-table__skeleton
+                assessment-type-table__skeleton--name
+              "
+            ></span>
+          </td>
+
+          <td>
+            <span
+              class="
+                assessment-type-table__skeleton
+                assessment-type-table__skeleton--description
+              "
+            ></span>
+          </td>
+
+          <td>
+            <span
+              class="
+                assessment-type-table__skeleton
+                assessment-type-table__skeleton--status
+              "
+            ></span>
+          </td>
+
+          <!-- <td>
+            <span
+              class="
+                assessment-type-table__skeleton
+                assessment-type-table__skeleton--date
+              "
+            ></span>
+          </td>
+
+          <td>
+            <span
+              class="
+                assessment-type-table__skeleton
+                assessment-type-table__skeleton--date
+              "
+            ></span>
+          </td> -->
+
+          <td>
+            <span
+              class="
+                assessment-type-table__skeleton
+                assessment-type-table__skeleton--button
+              "
+            ></span>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+
+      <!-- =========================
+           DATA
+      ========================== -->
+
+      <tbody *ngIf="!isLoading">
+
+        <tr
+          *ngFor="
+            let type of paginatedAssessmentTypes;
+            let i = index;
+            trackBy: trackByAssessmentTypeId
+          "
+          class="assessment-type-table__row"
+          [class.assessment-type-table__row--menu-open]="
+            type.id !== undefined &&
+            isMenuOpen(type.id)
+          "
+        >
+
+          <!-- NUMBER -->
+          <td class="assessment-type-table__number">
+
+            {{
+              (currentPage - 1) *
+              pageSize +
+              i +
+              1
+            }}
+
+          </td>
+
+
+          <!-- NAME -->
+          <td>
+
+            <div class="assessment-type-table__name-wrapper">
+
+              <span class="assessment-type-table__name-icon">
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <rect
+                    x="5"
+                    y="4"
+                    width="14"
+                    height="16"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M8.5 8.5h7M8.5 12.5h7M8.5 16.5h4.5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+
+              </span>
+
+
+              <span
+                class="assessment-type-table__name"
+                [title]="type.name"
+              >
+                {{ type.name }}
+              </span>
+
+            </div>
+
+          </td>
+
+
+          <!-- DESCRIPTION -->
+          <td>
+
+            <span
+              class="assessment-type-table__description"
+              [title]="getDescription(type)"
+            >
+              {{ getDescription(type) }}
+            </span>
+
+          </td>
+
+
+          <!-- STATUS -->
+          <td>
+
+            <span
+              class="assessment-type-table__status"
+              [class.assessment-type-table__status--active]="
+                getStatus(type)
+              "
+              [class.assessment-type-table__status--inactive]="
+                !getStatus(type)
+              "
+            >
+
+              <span
+                class="assessment-type-table__status-dot"
+              ></span>
+
+              {{
+                getStatus(type)
+                  ? 'Activo'
+                  : 'Inactivo'
+              }}
+
+            </span>
+
+          </td>
+
+
+          <!-- CREATED -->
+          <!-- <td>
+
+            <div class="assessment-type-table__date">
+
+              <span>
+                {{
+                  formatDate(
+                    getCreatedAt(type)
+                  )
+                }}
+              </span>
+
+              <small>
+                {{
+                  formatTime(
+                    getCreatedAt(type)
+                  )
+                }}
+              </small>
+
+            </div>
+
+          </td> -->
+
+
+          <!-- UPDATED -->
+          <!-- <td>
+
+            <div class="assessment-type-table__date">
+
+              <span>
+                {{
+                  formatDate(
+                    getUpdatedAt(type)
+                  )
+                }}
+              </span>
+
+              <small>
+                {{
+                  formatTime(
+                    getUpdatedAt(type)
+                  )
+                }}
+              </small>
+
+            </div>
+
+          </td> -->
+
+
+          <!-- ACTIONS -->
+          <td class="assessment-type-table__actions-cell">
+
+            <div
+              *ngIf="type.id !== undefined"
+              class="assessment-type-table__actions"
+              (click)="$event.stopPropagation()"
+            >
+
+              <button
+                type="button"
+                class="assessment-type-table__menu-button"
+                [class.assessment-type-table__menu-button--active]="
+                  isMenuOpen(type.id)
+                "
+                aria-label="Opciones del tipo de evaluación"
+                [attr.aria-expanded]="
+                  isMenuOpen(type.id)
+                "
+                (click)="
+                  toggleMenu(
+                    $event,
+                    type.id
+                  )
+                "
+              >
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <circle
+                    cx="12"
+                    cy="5"
+                    r="1.7"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="1.7"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="19"
+                    r="1.7"
+                  />
+                </svg>
+
+              </button>
+
+
+              <!-- MENU -->
+              <div
+                *ngIf="isMenuOpen(type.id)"
+                class="assessment-type-table__menu"
+                [class.assessment-type-table__menu--up]="
+                  shouldOpenMenuUp(i)
+                "
+                (click)="$event.stopPropagation()"
+              >
+
+                <!-- VIEW -->
+                <button
+                  type="button"
+                  class="assessment-type-table__menu-item"
+                  (click)="
+                    onView(
+                      $event,
+                      type
+                    )
+                  "
+                >
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="2.5"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                    />
+                  </svg>
+
+                  <span>
+                    Ver detalles
+                  </span>
+
+                </button>
+
+
+                <!-- EDIT -->
+                <button
+                  type="button"
+                  class="assessment-type-table__menu-item"
+                  (click)="
+                    onEdit(
+                      $event,
+                      type
+                    )
+                  "
+                >
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M4 20h4L18.5 9.5a2.12 2.12 0 0 0-3-3L5 17v3Z"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+
+                    <path
+                      d="m13.8 8.2 3 3"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                    />
+                  </svg>
+
+                  <span>
+                    Editar
+                  </span>
+
+                </button>
+
+
+                <!-- DELETE -->
+                <button
+                  type="button"
+                  class="
+                    assessment-type-table__menu-item
+                    assessment-type-table__menu-item--danger
+                  "
+                  (click)="
+                    onDelete(
+                      $event,
+                      type
+                    )
+                  "
+                >
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M4 7h16"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                    />
+
+                    <path
+                      d="M9 7V4h6v3"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linejoin="round"
+                    />
+
+                    <path
+                      d="m7 7 1 13h8l1-13"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linejoin="round"
+                    />
+
+                    <path
+                      d="M10 11v5M14 11v5"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+
+                  <span>
+                    Eliminar
+                  </span>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+
+    <!-- =========================
+         EMPTY
+    ========================== -->
+
+    <div
+      *ngIf="
+        !isLoading &&
+        assessmentTypes.length === 0
+      "
+      class="assessment-type-table__empty"
+    >
+
+      <div class="assessment-type-table__empty-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="5"
+            y="4"
+            width="14"
+            height="16"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M8.5 8.5h7M8.5 12.5h7M8.5 16.5h4.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </div>
+
+      <strong>
+        No hay tipos de evaluación
+      </strong>
+
+      <span>
+        No se encontraron tipos de evaluación con los filtros seleccionados.
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer
+    *ngIf="
+      !isLoading &&
+      assessmentTypes.length > 0
+    "
+    class="assessment-type-table__footer"
+  >
+
+    <p class="assessment-type-table__results">
+
+      Mostrando
+
+      <strong>
+        {{ startItem }}
+      </strong>
+
+      a
+
+      <strong>
+        {{ endItem }}
+      </strong>
+
+      de
+
+      <strong>
+        {{ assessmentTypes.length }}
+      </strong>
+
+      tipos
+
+    </p>
+
+
+    <div class="assessment-type-table__pagination">
+
+      <button
+        type="button"
+        class="assessment-type-table__pagination-button"
+        [disabled]="currentPage === 1"
+        aria-label="Página anterior"
+        (click)="previousPage()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m15 18-6-6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </button>
+
+
+      <span class="assessment-type-table__current-page">
+        {{ currentPage }}
+      </span>
+
+
+      <button
+        type="button"
+        class="assessment-type-table__pagination-button"
+        [disabled]="currentPage === totalPages"
+        aria-label="Página siguiente"
+        (click)="nextPage()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m9 18 6-6-6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </button>
+
+    </div>
+
+  </footer>
+
+</section>
