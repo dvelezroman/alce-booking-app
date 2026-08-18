@@ -1,0 +1,421 @@
+<div
+  class="content-details"
+  (click)="onBackdropClick($event)"
+>
+
+  <section
+    class="content-details__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="content-details-title"
+  >
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="content-details__header">
+
+      <div class="content-details__header-main">
+
+        <span
+          class="content-details__header-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M3.5 12s3.1-5 8.5-5 8.5 5 8.5 5-3.1 5-8.5 5-8.5-5-8.5-5Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <circle
+              cx="12"
+              cy="12"
+              r="2.3"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+          </svg>
+        </span>
+
+
+        <h2
+          id="content-details-title"
+          class="content-details__title"
+        >
+          Detalles del contenido
+        </h2>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="content-details__close"
+        aria-label="Cerrar"
+        title="Cerrar"
+        (click)="close()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m7 7 10 10M17 7 7 17"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+
+    </header>
+
+
+    <!-- =========================
+         BODY
+    ========================== -->
+
+    <div class="content-details__body">
+
+      <!-- =========================
+           MAIN INFORMATION
+      ========================== -->
+
+      <div class="content-details__main">
+
+        <!-- ID -->
+
+        <div class="content-details__row">
+
+          <span class="content-details__label">
+            ID:
+          </span>
+
+          <span class="content-details__value">
+            {{ content.id }}
+          </span>
+
+        </div>
+
+
+        <!-- STAGE -->
+
+        <div class="content-details__row">
+
+          <span class="content-details__label">
+            Stage:
+          </span>
+
+          <div class="content-details__stage-value">
+
+            <span class="content-details__stage">
+              {{ stageNumber }}
+            </span>
+
+            @if (stageDescription) {
+
+              <span class="content-details__stage-description">
+                -
+                {{ stageDescription }}
+              </span>
+
+            }
+
+          </div>
+
+        </div>
+
+
+        <!-- UNIT -->
+
+        <div class="content-details__row">
+
+          <span class="content-details__label">
+            Unidad:
+          </span>
+
+          <span class="content-details__value">
+            {{ content.unit }}
+          </span>
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <div class="content-details__row">
+
+          <span class="content-details__label">
+            Título:
+          </span>
+
+          <span class="content-details__value">
+            {{ content.title }}
+          </span>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="content-details__row">
+
+          <span class="content-details__label">
+            Descripción:
+          </span>
+
+          <span class="content-details__value">
+            {{
+              content.description ||
+              '—'
+            }}
+          </span>
+
+        </div>
+
+
+        <!-- CONTENT -->
+
+        <div class="content-details__row">
+
+          <span class="content-details__label">
+            Contenido:
+          </span>
+
+          <span
+            class="
+              content-details__value
+              content-details__value--content
+            "
+          >
+            {{ parsedContent }}
+          </span>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="content-details__row">
+
+          <span class="content-details__label">
+            Estado:
+          </span>
+
+          <span
+            class="content-details__status"
+            [class.content-details__status--enabled]="
+              content.enabled
+            "
+            [class.content-details__status--disabled]="
+              !content.enabled
+            "
+          >
+            <span class="content-details__status-dot">
+            </span>
+
+            {{
+              content.enabled
+                ? 'Habilitado'
+                : 'Deshabilitado'
+            }}
+          </span>
+
+        </div>
+
+
+        <!-- MEASURABLE -->
+
+        <div class="content-details__row">
+
+          <span class="content-details__label">
+            Medible:
+          </span>
+
+          <div class="content-details__measurable">
+
+            @if (content.measurable) {
+
+              <span
+                class="
+                  content-details__measurable-icon
+                  content-details__measurable-icon--yes
+                "
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="8"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="m8.5 12 2.2 2.2 4.8-5"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+
+              <span>
+                Sí
+              </span>
+
+            } @else {
+
+              <span
+                class="
+                  content-details__measurable-icon
+                  content-details__measurable-icon--no
+                "
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="8"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="m9 9 6 6M15 9l-6 6"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+              <span>
+                No
+              </span>
+
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           DATES
+      ========================== -->
+
+      <aside class="content-details__dates">
+
+        <!-- CREATED -->
+
+        <div class="content-details__date-row">
+
+          <span class="content-details__date-label">
+            Creado:
+          </span>
+
+          <div class="content-details__date-value">
+            <span>
+              {{ formatDate(content.createdAt) }}
+            </span>
+
+            <small>
+              {{ formatTime(content.createdAt) }}
+            </small>
+          </div>
+
+        </div>
+
+
+        <!-- UPDATED -->
+
+        <div class="content-details__date-row">
+
+          <span class="content-details__date-label">
+            Actualizado:
+          </span>
+
+          <div class="content-details__date-value">
+            <span>
+              {{ formatDate(content.updatedAt) }}
+            </span>
+
+            <small>
+              {{ formatTime(content.updatedAt) }}
+            </small>
+          </div>
+
+        </div>
+
+
+        <!-- DISABLED -->
+
+        <div class="content-details__date-row">
+
+          <span class="content-details__date-label">
+            Deshabilitado:
+          </span>
+
+          <div class="content-details__date-value">
+
+            @if (content.disabledAt) {
+
+              <span>
+                {{ formatDate(content.disabledAt) }}
+              </span>
+
+              <small>
+                {{ formatTime(content.disabledAt) }}
+              </small>
+
+            } @else {
+
+              <span>
+                —
+              </span>
+
+            }
+
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="content-details__footer">
+
+      <button
+        type="button"
+        class="content-details__button"
+        (click)="close()"
+      >
+        Cerrar
+      </button>
+
+    </footer>
+
+  </section>
+
+</div>

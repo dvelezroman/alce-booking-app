@@ -1,1 +1,358 @@
-<p>stages-form-modal works!</p>
+<div
+  class="stage-modal"
+  role="presentation"
+  (click)="onBackdropClick($event)"
+>
+
+  <section
+    class="stage-modal__dialog"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="
+      isCreateMode
+        ? 'create-stage-title'
+        : 'edit-stage-title'
+    "
+  >
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="stage-modal__header">
+
+      <div class="stage-modal__header-main">
+
+        <span
+          class="stage-modal__header-icon"
+          aria-hidden="true"
+        >
+
+          @if (isCreateMode) {
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M12 5v14M5 12h14"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          } @else {
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M13.5 6.5 17.5 10.5M5 19l3.4-.7L18.3 8.4a1.5 1.5 0 0 0 0-2.1l-.6-.6a1.5 1.5 0 0 0-2.1 0L5.7 15.6 5 19Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          }
+
+        </span>
+
+
+        <div class="stage-modal__heading">
+
+          <h2
+            class="stage-modal__title"
+            [id]="
+              isCreateMode
+                ? 'create-stage-title'
+                : 'edit-stage-title'
+            "
+          >
+            {{ title }}
+          </h2>
+
+          <p class="stage-modal__description">
+            {{ description }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- CLOSE -->
+
+      <button
+        type="button"
+        class="stage-modal__close"
+        aria-label="Cerrar"
+        title="Cerrar"
+        (click)="close()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m7 7 10 10M17 7 7 17"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </button>
+
+    </header>
+
+
+    <!-- =========================
+         FORM
+    ========================== -->
+
+    <form
+      class="stage-modal__form"
+      (ngSubmit)="save()"
+      novalidate
+    >
+
+      <div class="stage-modal__body">
+
+        <!-- =========================
+             NUMBER
+        ========================== -->
+
+        <div class="stage-modal__field">
+
+          <label
+            for="stage-number"
+            class="stage-modal__label"
+          >
+            Número del stage
+
+            <span class="stage-modal__required">
+              *
+            </span>
+          </label>
+
+
+          <div class="stage-modal__input-wrapper">
+
+            <span
+              class="stage-modal__input-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M10 4 8 20M16 4l-2 16M5 9h14M4 15h14"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+
+            <input
+              id="stage-number"
+              name="stageNumber"
+              type="text"
+              class="
+                stage-modal__control
+                stage-modal__control--with-icon
+              "
+              [class.stage-modal__control--error]="
+                showNumberError
+              "
+              [(ngModel)]="stage.number"
+              placeholder="Ej. 1"
+              autocomplete="off"
+              required
+              (input)="onNumberInput()"
+              (blur)="onNumberBlur()"
+            />
+
+          </div>
+
+
+          @if (showNumberError) {
+
+            <span class="stage-modal__error">
+              Ingresa el número del stage.
+            </span>
+
+          } @else {
+
+            <span class="stage-modal__hint">
+              Identificador visible del nivel académico.
+            </span>
+
+          }
+
+        </div>
+
+
+        <!-- =========================
+             DESCRIPTION
+        ========================== -->
+
+        <div class="stage-modal__field">
+
+          <label
+            for="stage-description"
+            class="stage-modal__label"
+          >
+            Descripción
+
+            <span class="stage-modal__required">
+              *
+            </span>
+          </label>
+
+
+          <div class="stage-modal__input-wrapper">
+
+            <span
+              class="
+                stage-modal__input-icon
+                stage-modal__input-icon--textarea
+              "
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 6h14M5 10h14M5 14h9M5 18h6"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+
+            <textarea
+              id="stage-description"
+              name="stageDescription"
+              class="
+                stage-modal__control
+                stage-modal__textarea
+                stage-modal__control--with-icon
+              "
+              [class.stage-modal__control--error]="
+                showDescriptionError
+              "
+              [(ngModel)]="stage.description"
+              placeholder="Ej. Nivel inicial de inglés"
+              rows="4"
+              required
+              (input)="onDescriptionInput()"
+              (blur)="onDescriptionBlur()"
+            ></textarea>
+
+          </div>
+
+
+          @if (showDescriptionError) {
+
+            <span class="stage-modal__error">
+              Ingresa una descripción para el stage.
+            </span>
+
+          } @else {
+
+            <span class="stage-modal__hint">
+              Escribe una descripción breve y clara del nivel.
+            </span>
+
+          }
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           FOOTER
+      ========================== -->
+
+      <footer class="stage-modal__footer">
+
+        <button
+          type="button"
+          class="
+            stage-modal__button
+            stage-modal__button--secondary
+          "
+          (click)="close()"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="submit"
+          class="
+            stage-modal__button
+            stage-modal__button--primary
+          "
+          [disabled]="!isValid"
+        >
+
+          @if (isCreateMode) {
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 5v14M5 12h14"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          } @else {
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="m6 12 4 4 8-8"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          }
+
+          <span>
+            {{ saveLabel }}
+          </span>
+
+        </button>
+
+      </footer>
+
+    </form>
+
+  </section>
+
+</div>

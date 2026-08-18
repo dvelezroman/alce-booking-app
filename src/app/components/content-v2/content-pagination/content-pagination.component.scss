@@ -1,0 +1,321 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.content-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  width: 100%;
+  min-height: 4.25rem;
+
+  padding:
+    0.8rem
+    1rem;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+.content-pagination__label {
+  color: #646a79;
+
+  font-size: 0.75rem;
+  font-weight: 400;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.content-pagination__navigation {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 0.35rem;
+
+  flex: 0 0 auto;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.content-pagination__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 2.35rem;
+  height: 2.35rem;
+
+  padding: 0;
+
+  border:
+    1px solid
+    #dfe2e8;
+
+  border-radius: 0.45rem;
+
+  background: #ffffff;
+
+  color: #353a49;
+
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.1s ease;
+
+
+  &:hover:not(:disabled) {
+    border-color: #d2cdef;
+
+    background: #f8f7ff;
+  }
+
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+
+  &:disabled {
+    color: #b8bdc8;
+
+    background: #fafafa;
+
+    cursor: not-allowed;
+
+    opacity: 0.65;
+  }
+}
+
+
+/* =========================
+   ARROW
+========================= */
+
+.content-pagination__button--arrow {
+
+  svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+}
+
+
+/* =========================
+   ACTIVE
+========================= */
+
+.content-pagination__page--active {
+  border-color: #5142d8;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5949df 0%,
+      #4032c8 100%
+    );
+
+  color: #ffffff;
+
+  font-weight: 600;
+
+  box-shadow:
+    0 3px 8px
+    rgba(
+      73,
+      58,
+      205,
+      0.22
+    );
+
+
+  &:hover:not(:disabled) {
+    border-color: #5142d8;
+
+    background:
+      linear-gradient(
+        135deg,
+        #5949df 0%,
+        #4032c8 100%
+      );
+
+    color: #ffffff;
+  }
+}
+
+
+/* =========================
+   ELLIPSIS
+========================= */
+
+.content-pagination__ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 1.6rem;
+  height: 2.35rem;
+
+  color: #747987;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  user-select: none;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 800px) {
+
+  .content-pagination {
+    gap: 0.75rem;
+
+    padding:
+      0.75rem
+      0.85rem;
+  }
+
+
+  .content-pagination__label {
+    font-size: 0.72rem;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .content-pagination {
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.8rem;
+
+    min-height: auto;
+
+    padding:
+      0.9rem
+      0.7rem;
+  }
+
+
+  /* NAV FIRST */
+
+  .content-pagination__navigation {
+    order: 1;
+
+    justify-content: center;
+
+    width: 100%;
+
+    gap: 0.25rem;
+  }
+
+
+  /* LABEL SECOND */
+
+  .content-pagination__label {
+    order: 2;
+
+    width: 100%;
+
+    text-align: center;
+
+    white-space: normal;
+
+    font-size: 0.7rem;
+  }
+
+
+  /* SMALLER BUTTONS */
+
+  .content-pagination__button {
+    width: 2.2rem;
+    height: 2.2rem;
+
+    font-size: 0.7rem;
+  }
+
+
+  .content-pagination__ellipsis {
+    width: 1rem;
+    height: 2.2rem;
+
+    font-size: 0.7rem;
+  }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 390px) {
+
+  .content-pagination {
+    padding:
+      0.8rem
+      0.5rem;
+  }
+
+
+  .content-pagination__navigation {
+    gap: 0.2rem;
+  }
+
+
+  .content-pagination__button {
+    width: 2.05rem;
+    height: 2.05rem;
+  }
+
+
+  .content-pagination__ellipsis {
+    width: 0.85rem;
+    height: 2.05rem;
+  }
+}

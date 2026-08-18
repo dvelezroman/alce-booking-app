@@ -1,0 +1,125 @@
+<div class="content-pagination">
+
+  <!-- =========================
+       LABEL
+  ========================== -->
+
+  <div class="content-pagination__label">
+    {{ paginationLabel }}
+  </div>
+
+
+  <!-- =========================
+       NAVIGATION
+  ========================== -->
+
+  @if (totalPages > 1) {
+
+    <nav
+      class="content-pagination__navigation"
+      aria-label="Paginación de contenidos"
+    >
+
+      <!-- PREVIOUS -->
+
+      <button
+        type="button"
+        class="
+          content-pagination__button
+          content-pagination__button--arrow
+        "
+        [disabled]="!canPrev"
+        aria-label="Página anterior"
+        title="Página anterior"
+        (click)="previous()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m14 7-5 5 5 5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </button>
+
+
+      <!-- PAGES -->
+
+      @for (
+        item of visiblePages;
+        track $index
+      ) {
+
+        @if (item === 'ellipsis') {
+
+          <span class="content-pagination__ellipsis">
+            ...
+          </span>
+
+        } @else {
+
+          <button
+            type="button"
+            class="
+              content-pagination__button
+              content-pagination__page
+            "
+            [class.content-pagination__page--active]="
+              item === page
+            "
+            [attr.aria-current]="
+              item === page
+                ? 'page'
+                : null
+            "
+            (click)="selectPage(item)"
+          >
+            {{ item }}
+          </button>
+
+        }
+
+      }
+
+
+      <!-- NEXT -->
+
+      <button
+        type="button"
+        class="
+          content-pagination__button
+          content-pagination__button--arrow
+        "
+        [disabled]="!canNext"
+        aria-label="Página siguiente"
+        title="Página siguiente"
+        (click)="next()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m10 7 5 5-5 5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </button>
+
+    </nav>
+
+  }
+
+</div>

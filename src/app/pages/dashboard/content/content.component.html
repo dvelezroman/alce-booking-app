@@ -1,111 +1,127 @@
-<div class="class-booking-header">
-    <h1 class="title is-3">Contenido</h1>
-  </div>
+<main class="content-page">
 
-  <div class="page-wrapper">
-    <form [formGroup]="filterForm" (ngSubmit)="searchContent()" class="search-form">
-      <div class="field-group">
-        <div class="field">
-          <label class="label">Stage</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select formControlName="stageId">
-                <option [ngValue]="null" disabled selected>Seleccione un Stage</option>
-                <option *ngFor="let stage of stages" [value]="stage.id">
-                  {{ stage.description }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
+  <div class="content-page__container">
 
-        <div class="field">
-            <label class="label">Unidad</label>
-            <div class="control">
-                <input type="number" class="input" formControlName="unit" placeholder="Número de Unidad" />
-            </div>
-        </div>
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-        <div class="field">
-          <div class="button-wrapper">
-            <button class="button is-blue" type="submit">
-              Buscar Contenido
-            </button>
-          </div>
-        </div>
-      </div>
-    </form>
+    <app-content-header
+      (createRequested)="openModal()"
+    >
+    </app-content-header>
 
-    <div class="content-actions">
-      <button class="button is-light" (click)="openModal()">
-        + Nuevo Contenido
-      </button>
-    </div>
 
-    <app-content-form
-      *ngIf="showModal"
+    <!-- =========================
+         FILTERS
+    ========================== -->
+
+    <app-content-filters
+      [form]="filterForm"
       [stages]="stages"
-      [isModalOpen]="showModal"
-      (formSubmit)="handleFormSubmit($event)"
-      (closeModal)="closeModal()">
-    </app-content-form>
+      (searchRequested)="searchContent()"
+      (clearRequested)="clearFilters()"
+    >
+    </app-content-filters>
 
-    <app-edit-content-modal
-      *ngIf="contentToEdit"
-      [content]="contentToEdit"
-      (update)="handleUpdateContent($event)"
-      (close)="closeEditModal()"
-    ></app-edit-content-modal>
 
-    <div class="block-results" *ngIf="filteredContents.length > 0">
-      <div class="table-container">
-        <table class="table-results is-fullwidth">
-          <thead>
-            <tr>
-<!--              <th>ID</th>-->
-              <th>Stage</th>
-              <th>Unidad</th>
-              <th>Título</th>
-              <th>Descripción</th>
-              <th>Contenido</th>
-              <th>Calculable</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let content of filteredContents">
-<!--              <td>{{ content.id }}</td>-->
-              <td>{{ content.stage.number }}</td>
-              <td>{{ content.unit }}</td>
-              <td><span class="truncate-2" [title]="content.title">{{ content.title }}</span></td>
-              <td><span class="truncate-2" [title]="content.description">{{ content.description }}</span></td>
-<!--              <td>-->
-<!--                <span [ngClass]="content.enabled ? 'has-text-success' : 'has-text-danger'">-->
-<!--                  {{ content.enabled ? 'Activo' : 'Inactivo' }}-->
-<!--                </span>-->
-<!--              </td>-->
-              <td>{{ parseContent(content.content) }}</td>
-              <td>
-                  <span
-                    [ngClass]="content.measurable ? 'has-text-success' : 'has-text-danger'"
-                  >
-                    {{ content.measurable ? 'Sí' : 'No' }}
-                  </span>
-                </td>
-              <td class="table-actions">
-                <button (click)="editContent(content)" class="icon-button edit-icon" title="Editar">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button (click)="deleteContent(content.id)" class="icon-button delete-icon" title="Eliminar">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <!-- =========================
+         TABLE CARD
+    ========================== -->
+
+    <section class="content-page__table-card">
+
+      <app-content-table
+        [contents]="pagedContents"
+        [startIndex]="startIndex"
+        (detailsRequested)="viewContent($event)"
+        (editRequested)="editContent($event)"
+        (deleteRequested)="deleteContent($event.id)"
+      >
+      </app-content-table>
+
+
+      <!-- =========================
+           PAGINATION
+      ========================== -->
+
+      @if (total > 0) {
+
+        <app-content-pagination
+          [page]="page"
+          [totalPages]="totalPages"
+          [total]="total"
+          [limit]="limit"
+          [canPrev]="canPrev"
+          [canNext]="canNext"
+          [paginationLabel]="paginationLabel"
+          (pageChange)="onPageChange($event)"
+          (previousRequested)="onPrev()"
+          (nextRequested)="onNext()"
+          (limitChange)="onLimitChange($event)"
+        >
+        </app-content-pagination>
+
+      }
+
+    </section>
+
   </div>
+
+
+  <!-- =========================
+       CREATE MODAL
+  ========================== -->
+
+  @if (showModal) {
+
+    <app-content-form-modal
+      mode="create"
+      [stages]="stages"
+      (saveRequested)="handleFormSubmit($event)"
+      (closeRequested)="closeModal()"
+    >
+    </app-content-form-modal>
+
+  }
+
+
+  <!-- =========================
+       EDIT MODAL
+  ========================== -->
+
+  @if (contentToEdit) {
+
+    <app-content-form-modal
+      mode="edit"
+      [stages]="stages"
+      [content]="contentToEdit"
+      (updateRequested)="handleUpdateContent($event)"
+      (closeRequested)="closeEditModal()"
+    >
+    </app-content-form-modal>
+
+  }
+
+
+  <!-- =========================
+       DETAILS MODAL
+  ========================== -->
+
+  @if (contentToView) {
+
+    <app-content-details-modal
+      [content]="contentToView"
+      (closeRequested)="closeDetailsModal()"
+    >
+    </app-content-details-modal>
+
+  }
+
+
+  <!-- =========================
+       GLOBAL MODAL
+  ========================== -->
 
   <app-modal
     [showModal]="modal.show"
@@ -115,5 +131,8 @@
     [isInfo]="modal.isInfo"
     [showButtons]="modal.showButtons ?? false"
     (confirmAction)="modal.confirm?.()"
-    (close)="modal.close()">
-</app-modal>
+    (close)="modal.close()"
+  >
+  </app-modal>
+
+</main>

@@ -1,261 +1,209 @@
-/* bloque titulo del componente */
 :host {
   display: block;
-  background-color: #f2f2f2;
+
+  width: 100%;
+  min-height: 100%;
 }
 
-.class-booking-header {
-    position: fixed; 
-    top: 0; 
-    left: 0px;
-    color: rgb(53, 53, 53);
-    width: 100%; 
-    background: white;
-    background-color: #f2f2f2;
-    z-index: 10; 
-    text-align: center;
+
+/* =========================
+   PAGE
+========================= */
+
+.content-page {
+  width: calc(100% - 76px);
+  min-height: 100vh;
+
+  margin-left: 64px;
+
+  padding:
+    1.25rem
+    1.5rem
+    2rem;
+
+  box-sizing: border-box;
+
+  background: #fafafd;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.content-page__container {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1.15rem;
+
+  width: 100%;
+  max-width: 1450px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================
+   CHILD COMPONENTS
+========================= */
+
+app-content-header,
+app-content-filters,
+app-content-table,
+app-content-pagination {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   TABLE CARD
+========================= */
+
+.content-page__table-card {
+  width: 100%;
+
+  overflow: visible;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e5e7ee;
+  border-radius: 0.75rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 16px
+    rgba(31, 42, 89, 0.025);
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+app-content-table {
+  position: relative;
+
+  width: 100%;
+
+  overflow: visible;
+}
+
+
+/* =========================
+   PAGINATION
+========================= */
+
+app-content-pagination {
+  border-top: 1px solid #e8eaf0;
+}
+
+
+/* =========================
+   LARGE DESKTOP
+========================= */
+
+@media (min-width: 1500px) {
+
+  .content-page {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
-  
-  .title.is-3 {
-    font-size: 1.5rem;
-    line-height: 75px;
-    color: #333;
-    font-weight: bold;
-    text-align: center;
+}
+
+
+/* =========================
+   LAPTOP
+========================= */
+
+@media (max-width: 1200px) {
+
+  .content-page {
+    padding:
+      1.1rem
+      1.15rem
+      1.75rem;
   }
 
-.page-wrapper {
-    background-color: #f2f2f2;
-    min-height: 100vh;
-    padding: 2rem;
-    margin-top: 5rem;
+  .content-page__container {
+    gap: 1rem;
   }
-  
-  .content-actions {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-  
-    .button.is-light {
-      background-color: #e0e0e0; 
-      color: #333;
-      font-weight: 500;
-      padding: 0.7rem 1.4rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      transition: background-color 0.2s ease;
-      border: none;
-    }
-      
-    .button.is-light:hover {
-      background-color: #cacaca; 
-    }
-    
-  }
+}
 
-  .search-form {
-    background-color: white;
-    max-width: 330px;
-    margin: 0 auto 2rem;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  }
-  
-  .search-form .field {
-    margin-bottom: 1.2rem;
-  }
-  
-  .search-form .label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 0.3rem;
-  }
-  
-  .search-form .input,
-  .search-form select {
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .content-page {
     width: 100%;
-    height: 35px;
-    font-size: 0.85rem;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    color: #333;
-    border-radius: 6px;
-    padding: 0.5rem 0.75rem;
-    box-sizing: border-box;
+
+    margin-left: 0;
+
+    padding:
+      1rem
+      1rem
+      1.5rem;
   }
 
-  input[type="number"]::-webkit-outer-spin-button,
-  input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  .content-page__container {
+    gap: 0.9rem;
   }
+}
 
-  input[type="number"] {
-    appearance: textfield;      
-    -webkit-appearance: none;
-    -moz-appearance: textfield; 
-  }
-  
-  .search-form .input:focus,
-  .search-form select:focus {
-    outline: none;
-    border-color: #4a90e2;
-    background-color: white;
-  }
 
-  .error-message {
-    color: #e74c3c; 
-    font-size: 0.75rem;
-    margin-top: 0.3rem;
-    font-weight: 500;
-  }
-  
-  .button-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-  }
+/* =========================
+   MOBILE
+========================= */
 
-  .button.is-blue {
-    background-color: #3273dc;
-    color: white;
-    border: none;
-    font-size: 0.9rem;
-    padding: 0.5rem 1.2rem;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-  }
+@media (max-width: 600px) {
 
-  .button.is-blue:hover {
-    background-color: #275fad;
-  }
-
-  .block-results {
-    width: 90%;
-    margin: 2rem auto 4rem auto;
-  }
-  
-  .table-container {
-    max-width: 100%;
-    margin: auto;
-    display: flex;
-    border-radius: 8px;
-    max-height: 475px;
-    overflow-y: auto;
-    overflow-x: auto;
-    position: relative;
-  }
-  
-  .table-results {
+  .content-page {
     width: 100%;
-    min-width: 1000px;
-    border-collapse: collapse;
-    table-layout: fixed;
-    word-wrap: break-word;
-  }
-  
-  .table-results th {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    text-align: center;
-    vertical-align: middle;
-    padding: 0.55rem;
-    font-size: 0.8rem;
-    background-color: #fff !important;
-    color: black;
-    white-space: nowrap;
-  }
-  
-  .table-results td {
-    text-align: center;
-    vertical-align: middle;
-    padding: 0.75rem;
-    font-size: 0.8rem;
-    background-color: #fff;
-    border-bottom: 0.5px solid #d0d0d0;
-    color: #4c4c4c;
-    overflow: visible;
-    text-overflow: clip;
+    min-height: 100dvh;
+
+    margin-left: 0;
+
+    padding:
+      0.75rem
+      0.75rem
+      1.25rem;
   }
 
-  .table-results td.table-actions {
-    position: relative;
-    height: 70px;
-    background-color: #fff !important;
+
+  .content-page__container {
+    gap: 0.75rem;
   }
 
-  .truncate-2 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2; 
-    -webkit-box-orient: vertical;
-    line-clamp: 2;
-    box-orient: vertical;
-    line-height: 1.3rem;
-    max-height: calc(1.3rem * 2);
+
+  .content-page__table-card {
+    border-radius: 0.65rem;
+
+    box-shadow:
+      0 2px 10px
+      rgba(31, 42, 89, 0.025);
   }
-  
-  .table-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    align-items: center;
-    max-height: 100%;
-  
-    .icon-button {
-      background: transparent;
-      border: none;
-      padding: 10px;
-      cursor: pointer;
-      color: #555;
-      transition: color 0.2s ease;
-    }
-  
-    .edit-icon {
-      color: #4a90e2;
-  
-      &:hover {
-        color: #357ac3;
-      }
-    }
-  
-    .delete-icon {
-      color: #9e9e9e;
-  
-      &:hover {
-        color: #616161;
-      }
-    }
-  
-    i.fas {
-      font-size: 1rem;
-    }
-  }
-  
-  .has-text-success {
-    color: #28a745;
-    font-weight: bold;
-  }
-  
-  .has-text-danger {
-    color: #dc3545;
-    font-weight: bold;
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+
+  .content-page {
+    padding:
+      0.65rem
+      0.6rem
+      1rem;
   }
 
-  @media (max-width: 768px) {
-    .class-booking-header {
-      background: linear-gradient(45deg, #4a90e2,  #7743a8);
-    }
-  
-    .title.is-3 {
-      color: white;
-    }
-
-    .block-results {
-      width: 100%;
-    }
+  .content-page__container {
+    gap: 0.65rem;
+  }
 }

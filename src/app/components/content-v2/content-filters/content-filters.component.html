@@ -1,0 +1,275 @@
+<section
+  class="content-filters"
+  [formGroup]="form"
+>
+
+  <div class="content-filters__grid">
+
+    <!-- =========================
+         STAGE
+    ========================== -->
+
+    <div class="content-filters__field">
+
+      <label class="content-filters__label">
+        Stage
+      </label>
+
+
+      <div class="content-filters__select-wrapper">
+
+        <select
+          class="content-filters__control content-filters__select"
+          formControlName="stageId"
+        >
+
+          <option [ngValue]="undefined">
+            Selecciona un stage
+          </option>
+
+
+          @for (
+            stage of stages;
+            track stage.id
+          ) {
+
+            <option [ngValue]="stage.id">
+              {{ getStageLabel(stage) }}
+            </option>
+
+          }
+
+        </select>
+
+
+        <span
+          class="content-filters__chevron"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m7 9.5 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         UNIT
+    ========================== -->
+
+    <div class="content-filters__field">
+
+      <label class="content-filters__label">
+        Unidad
+      </label>
+
+
+      <div class="content-filters__select-wrapper">
+
+        <select
+          class="content-filters__control content-filters__select"
+          formControlName="unit"
+        >
+
+          <option [ngValue]="undefined">
+            Selecciona una unidad
+          </option>
+
+
+          @for (
+            unit of unitOptions;
+            track unit
+          ) {
+
+            <option [ngValue]="unit">
+              Unidad {{ unit }}
+            </option>
+
+          }
+
+        </select>
+
+
+        <span
+          class="content-filters__chevron"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m7 9.5 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         STATUS
+    ========================== -->
+
+    <div class="content-filters__field">
+
+      <label class="content-filters__label">
+        Estado
+      </label>
+
+
+      <div class="content-filters__select-wrapper">
+
+        <select
+          class="content-filters__control content-filters__select"
+          [(value)]="selectedStatus"
+        >
+
+          <option value="all">
+            Todos los estados
+          </option>
+
+          <option value="enabled">
+            Habilitados
+          </option>
+
+          <option value="disabled">
+            Deshabilitados
+          </option>
+
+        </select>
+
+
+        <span
+          class="content-filters__chevron"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m7 9.5 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         ACTIONS
+    ========================== -->
+
+    <div class="content-filters__actions">
+
+      <button
+        type="button"
+        class="
+          content-filters__button
+          content-filters__button--secondary
+        "
+        (click)="clear()"
+      >
+
+        <span
+          class="content-filters__button-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M20 11a8 8 0 1 0-2.3 5.7"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M20 5v6h-6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+        <span>
+          Limpiar
+        </span>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="
+          content-filters__button
+          content-filters__button--primary
+        "
+        (click)="search()"
+      >
+
+        <span
+          class="content-filters__button-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <span>
+          Buscar
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>

@@ -10,7 +10,7 @@
    BACKDROP
 ========================= */
 
-.stage-modal {
+.content-modal {
   position: fixed;
   inset: 0;
 
@@ -36,10 +36,10 @@
    DIALOG
 ========================= */
 
-.stage-modal__dialog {
+.content-modal__dialog {
   width: min(
     100%,
-    31rem
+    46rem
   );
 
   max-height:
@@ -49,29 +49,22 @@
 
   overflow: hidden;
 
-  background: #ffffff;
-
-  border:
-    1px solid
-    #e2e5ec;
-
+  border: 1px solid #e2e5ec;
   border-radius: 0.75rem;
+
+  background: #ffffff;
 
   box-shadow:
     0 20px 55px
     rgba(26, 31, 50, 0.18);
 
   animation:
-    stageModalEnter
+    contentModalEnter
     0.16s ease-out;
 }
 
 
-/* =========================
-   ANIMATION
-========================= */
-
-@keyframes stageModalEnter {
+@keyframes contentModalEnter {
 
   from {
     opacity: 0;
@@ -95,7 +88,7 @@
    HEADER
 ========================= */
 
-.stage-modal__header {
+.content-modal__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -103,12 +96,9 @@
   gap: 1rem;
 
   padding:
+    1.05rem
     1.15rem
-    1.25rem;
-
-  border-bottom:
-    1px solid
-    #eceef3;
+    0.9rem;
 }
 
 
@@ -116,11 +106,11 @@
    HEADER MAIN
 ========================= */
 
-.stage-modal__header-main {
+.content-modal__header-main {
   display: flex;
   align-items: flex-start;
 
-  gap: 0.75rem;
+  gap: 0.7rem;
 
   min-width: 0;
 }
@@ -130,25 +120,26 @@
    HEADER ICON
 ========================= */
 
-.stage-modal__header-icon {
-  display: flex;
+.content-modal__header-icon {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
   flex: 0 0 auto;
 
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.35rem;
+  height: 2.35rem;
 
   border-radius: 0.55rem;
 
-  background: #f0eefe;
+  background: #f0edff;
 
   color: #5142d8;
 
+
   svg {
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.2rem;
+    height: 1.2rem;
   }
 }
 
@@ -157,32 +148,32 @@
    HEADING
 ========================= */
 
-.stage-modal__heading {
+.content-modal__heading {
   min-width: 0;
 }
 
 
-.stage-modal__title {
+.content-modal__title {
   margin: 0;
 
-  color: #1f2432;
+  color: #202533;
 
   font-size: 0.95rem;
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.3;
 }
 
 
-.stage-modal__description {
+.content-modal__subtitle {
   margin:
-    0.2rem
+    0.15rem
     0
     0;
 
-  color: #767c89;
+  color: #777d8a;
 
-  font-size: 0.74rem;
-  line-height: 1.45;
+  font-size: 0.68rem;
+  line-height: 1.4;
 }
 
 
@@ -190,7 +181,7 @@
    CLOSE
 ========================= */
 
-.stage-modal__close {
+.content-modal__close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -218,8 +209,8 @@
 
 
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: 0.95rem;
+    height: 0.95rem;
   }
 
 
@@ -240,7 +231,7 @@
    FORM
 ========================= */
 
-.stage-modal__form {
+.content-modal__form {
   display: flex;
   flex-direction: column;
 
@@ -252,17 +243,35 @@
    BODY
 ========================= */
 
-.stage-modal__body {
+.content-modal__body {
   display: flex;
   flex-direction: column;
 
-  gap: 1.1rem;
+  gap: 0.9rem;
 
   padding:
-    1.2rem
-    1.25rem;
+    0.25rem
+    1.15rem
+    1rem;
 
   overflow-y: auto;
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+.content-modal__grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 0.85rem;
 }
 
 
@@ -270,11 +279,11 @@
    FIELD
 ========================= */
 
-.stage-modal__field {
+.content-modal__field {
   display: flex;
   flex-direction: column;
 
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 
@@ -282,36 +291,33 @@
    LABEL
 ========================= */
 
-.stage-modal__label {
+.content-modal__label {
   display: flex;
   align-items: center;
 
-  gap: 0.25rem;
+  gap: 0.2rem;
 
-  color: #303543;
+  color: #353a48;
 
-  font-size: 0.76rem;
+  font-size: 0.69rem;
   font-weight: 600;
 }
 
 
 /* =========================
-   REQUIRED
+   REQUIRED / OPTIONAL
 ========================= */
 
-.stage-modal__required {
+.content-modal__required {
   color: #d74755;
 }
 
 
-/* =========================
-   INPUT WRAPPER
-========================= */
+.content-modal__optional {
+  color: #858b97;
 
-.stage-modal__input-wrapper {
-  position: relative;
-
-  width: 100%;
+  font-size: 0.61rem;
+  font-weight: 400;
 }
 
 
@@ -319,13 +325,13 @@
    CONTROL
 ========================= */
 
-.stage-modal__control {
+.content-modal__control {
   width: 100%;
-  height: 2.6rem;
+  height: 2.45rem;
 
   padding:
     0
-    0.85rem;
+    0.75rem;
 
   box-sizing: border-box;
 
@@ -333,31 +339,29 @@
     1px solid
     #dfe2e8;
 
-  border-radius: 0.45rem;
+  border-radius: 0.42rem;
 
   background: #ffffff;
 
   color: #292e3c;
 
   font-family: inherit;
-  font-size: 0.76rem;
-  font-weight: 400;
+  font-size: 0.71rem;
 
   outline: none;
 
   transition:
     border-color 0.15s ease,
-    box-shadow 0.15s ease,
-    background-color 0.15s ease;
+    box-shadow 0.15s ease;
 
 
   &::placeholder {
-    color: #a2a7b2;
+    color: #a0a5b0;
   }
 
 
   &:hover {
-    border-color: #ccd0d9;
+    border-color: #cdd1da;
   }
 
 
@@ -366,58 +370,69 @@
 
     box-shadow:
       0 0 0 3px
-      rgba(81, 66, 216, 0.08);
+      rgba(81, 66, 216, 0.07);
   }
 }
 
 
 /* =========================
-   CONTROL WITH ICON
+   ERROR
 ========================= */
 
-.stage-modal__control--with-icon {
-  padding-left: 2.45rem;
-}
-
-
-/* =========================
-   ERROR CONTROL
-========================= */
-
-.stage-modal__control--error {
-  border-color: #e29a9f;
-
-  background: #fffdfd;
+.content-modal__control--error {
+  border-color: #dc7e86;
 
 
   &:focus {
-    border-color: #d95d67;
+    border-color: #d6535d;
 
     box-shadow:
       0 0 0 3px
-      rgba(217, 71, 80, 0.07);
+      rgba(214, 83, 93, 0.07);
   }
 }
 
 
+.content-modal__error {
+  color: #d14c56;
+
+  font-size: 0.62rem;
+}
+
+
 /* =========================
-   INPUT ICON
+   SELECT
 ========================= */
 
-.stage-modal__input-icon {
+.content-modal__select-wrapper {
+  position: relative;
+}
+
+
+.content-modal__select {
+  padding-right: 2rem;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  cursor: pointer;
+}
+
+
+.content-modal__chevron {
   position: absolute;
 
   top: 50%;
-  left: 0.82rem;
+  right: 0.65rem;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  width: 1rem;
-  height: 1rem;
+  width: 0.8rem;
+  height: 0.8rem;
 
-  color: #777e8c;
+  color: #646a78;
 
   transform:
     translateY(-50%);
@@ -433,58 +448,148 @@
 
 
 /* =========================
-   TEXTAREA ICON
-========================= */
-
-.stage-modal__input-icon--textarea {
-  top: 0.9rem;
-
-  transform: none;
-}
-
-
-/* =========================
    TEXTAREA
 ========================= */
 
-.stage-modal__textarea {
+.content-modal__textarea {
   display: block;
 
   height: auto;
-  min-height: 6.5rem;
 
-  padding-top: 0.72rem;
-  padding-bottom: 0.72rem;
+  padding:
+    0.65rem
+    0.75rem;
 
-  line-height: 1.5;
+  line-height: 1.45;
 
   resize: vertical;
 }
 
 
-/* =========================
-   HINT
-========================= */
+.content-modal__textarea--description {
+  min-height: 4rem;
+}
 
-.stage-modal__hint {
-  color: #8a909c;
 
-  font-size: 0.67rem;
-  font-weight: 400;
-  line-height: 1.4;
+.content-modal__textarea--content {
+  min-height: 5.2rem;
 }
 
 
 /* =========================
-   ERROR
+   SWITCHES
 ========================= */
 
-.stage-modal__error {
-  color: #cc4c56;
+.content-modal__switches {
+  display: flex;
+  align-items: center;
 
-  font-size: 0.67rem;
+  gap: 3rem;
+
+  padding-top: 0.2rem;
+}
+
+
+/* =========================
+   SWITCH CONTROL
+========================= */
+
+.content-modal__switch-control {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.5rem;
+
+  cursor: pointer;
+
+
+  input {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    opacity: 0;
+
+    pointer-events: none;
+  }
+
+
+  input:checked +
+  .content-modal__switch {
+    background: #5142d8;
+  }
+
+
+  input:checked +
+  .content-modal__switch
+  .content-modal__switch-thumb {
+    transform:
+      translateX(0.95rem);
+  }
+}
+
+
+/* =========================
+   SWITCH
+========================= */
+
+.content-modal__switch {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+
+  flex: 0 0 auto;
+
+  width: 2rem;
+  height: 1.08rem;
+
+  padding: 0.1rem;
+
+  box-sizing: border-box;
+
+  border-radius: 999px;
+
+  background: #d7dae1;
+
+  transition:
+    background-color 0.15s ease;
+}
+
+
+/* =========================
+   SWITCH THUMB
+========================= */
+
+.content-modal__switch-thumb {
+  display: block;
+
+  width: 0.78rem;
+  height: 0.78rem;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 1px 3px
+    rgba(22, 27, 42, 0.2);
+
+  transition:
+    transform 0.15s ease;
+}
+
+
+/* =========================
+   SWITCH LABEL
+========================= */
+
+.content-modal__switch-label {
+  color: #555b69;
+
+  font-size: 0.69rem;
   font-weight: 500;
-  line-height: 1.4;
 }
 
 
@@ -492,16 +597,16 @@
    FOOTER
 ========================= */
 
-.stage-modal__footer {
+.content-modal__footer {
   display: flex;
   align-items: center;
   justify-content: flex-end;
 
-  gap: 0.6rem;
+  gap: 0.55rem;
 
   padding:
-    0.85rem
-    1.25rem;
+    0.8rem
+    1.15rem;
 
   border-top:
     1px solid
@@ -515,40 +620,31 @@
    BUTTON
 ========================= */
 
-.stage-modal__button {
+.content-modal__button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  gap: 0.4rem;
-
-  min-width: 7.2rem;
-  height: 2.4rem;
+  min-width: 7.5rem;
+  height: 2.35rem;
 
   padding:
     0
     1rem;
 
-  border-radius: 0.45rem;
+  border-radius: 0.42rem;
 
   font-family: inherit;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
 
   cursor: pointer;
 
   transition:
-    background-color 0.15s ease,
     border-color 0.15s ease,
+    background-color 0.15s ease,
     box-shadow 0.15s ease,
-    color 0.15s ease,
     transform 0.1s ease;
-
-
-  svg {
-    width: 0.95rem;
-    height: 0.95rem;
-  }
 
 
   &:active:not(:disabled) {
@@ -558,32 +654,32 @@
 
 
 /* =========================
-   SECONDARY BUTTON
+   SECONDARY
 ========================= */
 
-.stage-modal__button--secondary {
+.content-modal__button--secondary {
   border:
     1px solid
     #dfe2e8;
 
   background: #ffffff;
 
-  color: #474d5c;
+  color: #484e5d;
 
 
   &:hover {
-    border-color: #ccd0d8;
+    background: #f6f7f9;
 
-    background: #f5f6f8;
+    border-color: #ccd0d8;
   }
 }
 
 
 /* =========================
-   PRIMARY BUTTON
+   PRIMARY
 ========================= */
 
-.stage-modal__button--primary {
+.content-modal__button--primary {
   border:
     1px solid
     #5142d8;
@@ -604,15 +700,15 @@
 
   &:hover:not(:disabled) {
     box-shadow:
-      0 4px 11px
-      rgba(73, 58, 205, 0.25);
+      0 5px 11px
+      rgba(73, 58, 205, 0.24);
   }
 
 
   &:disabled {
     border-color: #d8d9df;
 
-    background: #e7e7eb;
+    background: #e6e7eb;
 
     color: #9c9fa8;
 
@@ -624,74 +720,113 @@
 
 
 /* =========================
+   TABLET
+========================= */
+
+@media (max-width: 700px) {
+
+  .content-modal__dialog {
+    width: min(
+      100%,
+      34rem
+    );
+  }
+
+
+  .content-modal__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================
    MOBILE
 ========================= */
 
 @media (max-width: 600px) {
 
-  .stage-modal {
+  .content-modal {
     align-items: center;
     justify-content: center;
 
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
 
-  .stage-modal__dialog {
+  .content-modal__dialog {
     width: 100%;
 
     max-height:
       calc(
-        100dvh - 2rem
+        100dvh - 1.5rem
       );
 
-    border-radius: 0.75rem;
+    margin: auto;
+
+    border-radius: 0.7rem;
   }
 
 
-  .stage-modal__header {
+  .content-modal__header {
     padding:
-      1rem
-      1rem
-      0.9rem;
+      0.9rem
+      0.9rem
+      0.75rem;
   }
 
 
-  .stage-modal__header-icon {
-    width: 2.1rem;
-    height: 2.1rem;
+  .content-modal__header-icon {
+    width: 2.15rem;
+    height: 2.15rem;
   }
 
 
-  .stage-modal__title {
-    font-size: 0.9rem;
+  .content-modal__title {
+    font-size: 0.88rem;
   }
 
 
-  .stage-modal__description {
-    font-size: 0.7rem;
+  .content-modal__subtitle {
+    font-size: 0.64rem;
   }
 
 
-  .stage-modal__body {
+  .content-modal__body {
+    gap: 0.75rem;
+
+    padding:
+      0.2rem
+      0.9rem
+      0.85rem;
+  }
+
+
+  .content-modal__grid {
+    grid-template-columns: 1fr;
+
+    gap: 0.75rem;
+  }
+
+
+  .content-modal__switches {
+    justify-content: space-between;
+
     gap: 1rem;
-
-    padding: 1rem;
   }
 
 
-  .stage-modal__footer {
+  .content-modal__footer {
     padding:
-      0.8rem
-      1rem
+      0.75rem
+      0.9rem
       calc(
-        0.8rem +
+        0.75rem +
         env(safe-area-inset-bottom)
       );
   }
 
 
-  .stage-modal__button {
+  .content-modal__button {
     flex: 1;
 
     min-width: 0;
@@ -705,48 +840,34 @@
 
 @media (max-width: 390px) {
 
-  .stage-modal {
-    padding: 0.75rem;
+  .content-modal {
+    padding: 0.5rem;
   }
 
 
-  .stage-modal__header {
-    gap: 0.65rem;
-  }
-
-
-  .stage-modal__header-main {
-    gap: 0.6rem;
-  }
-
-
-  .stage-modal__body {
-    padding:
-      0.9rem
-      0.85rem;
-  }
-
-
-  .stage-modal__footer {
-    gap: 0.5rem;
-
-    padding:
-      0.75rem
-      0.85rem
+  .content-modal__dialog {
+    max-height:
       calc(
-        0.75rem +
-        env(safe-area-inset-bottom)
+        100dvh - 1rem
       );
   }
 
 
-  .stage-modal__button {
-    height: 2.35rem;
+  .content-modal__switches {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 0.65rem;
+  }
+
+
+  .content-modal__button {
+    height: 2.3rem;
 
     padding:
       0
-      0.7rem;
+      0.65rem;
 
-    font-size: 0.71rem;
+    font-size: 0.67rem;
   }
 }

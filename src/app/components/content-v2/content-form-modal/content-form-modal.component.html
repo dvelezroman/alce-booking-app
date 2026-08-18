@@ -1,0 +1,454 @@
+<div
+  class="content-modal"
+  (click)="onBackdropClick($event)"
+>
+
+  <section
+    class="content-modal__dialog"
+    role="dialog"
+    aria-modal="true"
+  >
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="content-modal__header">
+
+      <div class="content-modal__header-main">
+
+        <span
+          class="content-modal__header-icon"
+          aria-hidden="true"
+        >
+
+          @if (isCreateMode) {
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M12 8v8M8 12h8"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          } @else {
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M13.5 6.5 17.5 10.5M5 19l3.4-.7L18.3 8.4a1.5 1.5 0 0 0 0-2.1l-.6-.6a1.5 1.5 0 0 0-2.1 0L5.7 15.6 5 19Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          }
+
+        </span>
+
+
+        <div class="content-modal__heading">
+
+          <h2 class="content-modal__title">
+            {{ title }}
+          </h2>
+
+          <p class="content-modal__subtitle">
+            {{ subtitle }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="content-modal__close"
+        aria-label="Cerrar"
+        title="Cerrar"
+        (click)="close()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m7 7 10 10M17 7 7 17"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </button>
+
+    </header>
+
+
+    <!-- =========================
+         FORM
+    ========================== -->
+
+    <form
+      class="content-modal__form"
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+    >
+
+      <div class="content-modal__body">
+
+        <!-- =========================
+             FIRST ROW
+        ========================== -->
+
+        <div class="content-modal__grid">
+
+          <!-- STAGE -->
+
+          <div class="content-modal__field">
+
+            <label class="content-modal__label">
+              Stage
+
+              <span class="content-modal__required">
+                *
+              </span>
+            </label>
+
+
+            <div class="content-modal__select-wrapper">
+
+              <select
+                class="content-modal__control content-modal__select"
+                [class.content-modal__control--error]="
+                  isInvalid('stageId')
+                "
+                formControlName="stageId"
+              >
+
+                <option [ngValue]="null">
+                  Selecciona un stage
+                </option>
+
+                @for (
+                  stage of stages;
+                  track stage.id
+                ) {
+
+                  <option [ngValue]="stage.id">
+                    {{ getStageLabel(stage) }}
+                  </option>
+
+                }
+
+              </select>
+
+
+              <span
+                class="content-modal__chevron"
+                aria-hidden="true"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="m7 9.5 5 5 5-5"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+
+            </div>
+
+
+            @if (
+              isInvalid('stageId')
+            ) {
+
+              <span class="content-modal__error">
+                Selecciona un stage.
+              </span>
+
+            }
+
+          </div>
+
+
+          <!-- UNIT -->
+
+          <div class="content-modal__field">
+
+            <label
+              for="content-unit"
+              class="content-modal__label"
+            >
+              Unidad
+
+              <span class="content-modal__required">
+                *
+              </span>
+            </label>
+
+
+            <input
+              id="content-unit"
+              type="number"
+              min="1"
+              class="content-modal__control"
+              [class.content-modal__control--error]="
+                isInvalid('unit')
+              "
+              formControlName="unit"
+              placeholder="Ej. 1"
+            />
+
+
+            @if (
+              isInvalid('unit')
+            ) {
+
+              <span class="content-modal__error">
+                Ingresa una unidad válida.
+              </span>
+
+            }
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             TITLE
+        ========================== -->
+
+        <div class="content-modal__field">
+
+          <label
+            for="content-title"
+            class="content-modal__label"
+          >
+            Título
+
+            <span class="content-modal__required">
+              *
+            </span>
+          </label>
+
+
+          <input
+            id="content-title"
+            type="text"
+            class="content-modal__control"
+            [class.content-modal__control--error]="
+              isInvalid('title')
+            "
+            formControlName="title"
+            placeholder="Ej. 1.1 Personal pronouns, possessive adjectives"
+          />
+
+
+          @if (
+            isInvalid('title')
+          ) {
+
+            <span class="content-modal__error">
+              Ingresa un título.
+            </span>
+
+          }
+
+        </div>
+
+
+        <!-- =========================
+             DESCRIPTION
+        ========================== -->
+
+        <div class="content-modal__field">
+
+          <label
+            for="content-description"
+            class="content-modal__label"
+          >
+            Descripción
+
+            <span class="content-modal__required">
+              *
+            </span>
+          </label>
+
+
+          <textarea
+            id="content-description"
+            class="
+              content-modal__control
+              content-modal__textarea
+              content-modal__textarea--description
+            "
+            [class.content-modal__control--error]="
+              isInvalid('description')
+            "
+            formControlName="description"
+            placeholder="Describe brevemente el contenido..."
+            rows="3"
+          ></textarea>
+
+
+          @if (
+            isInvalid('description')
+          ) {
+
+            <span class="content-modal__error">
+              Ingresa una descripción.
+            </span>
+
+          }
+
+        </div>
+
+
+        <!-- =========================
+             CONTENT
+        ========================== -->
+
+        <div class="content-modal__field">
+
+          <label
+            for="content-body"
+            class="content-modal__label"
+          >
+            Contenido
+
+            <span class="content-modal__optional">
+              opcional
+            </span>
+          </label>
+
+
+          <textarea
+            id="content-body"
+            class="
+              content-modal__control
+              content-modal__textarea
+              content-modal__textarea--content
+            "
+            formControlName="content"
+            placeholder="Desarrolla el contenido, explicaciones, ejemplos, etc..."
+            rows="4"
+          ></textarea>
+
+        </div>
+
+
+        <!-- =========================
+             SWITCHES
+        ========================== -->
+
+        <div class="content-modal__switches">
+
+          <!-- ENABLED -->
+
+          <label class="content-modal__switch-control">
+
+            <input
+              type="checkbox"
+              formControlName="enabled"
+            />
+
+            <span class="content-modal__switch">
+              <span class="content-modal__switch-thumb">
+              </span>
+            </span>
+
+            <span class="content-modal__switch-label">
+              Habilitado
+            </span>
+
+          </label>
+
+
+          <!-- MEASURABLE -->
+
+          <label class="content-modal__switch-control">
+
+            <input
+              type="checkbox"
+              formControlName="measurable"
+            />
+
+            <span class="content-modal__switch">
+              <span class="content-modal__switch-thumb">
+              </span>
+            </span>
+
+            <span class="content-modal__switch-label">
+              Medible
+            </span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           FOOTER
+      ========================== -->
+
+      <footer class="content-modal__footer">
+
+        <button
+          type="button"
+          class="
+            content-modal__button
+            content-modal__button--secondary
+          "
+          (click)="close()"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="submit"
+          class="
+            content-modal__button
+            content-modal__button--primary
+          "
+          [disabled]="form.invalid"
+        >
+          {{ submitLabel }}
+        </button>
+
+      </footer>
+
+    </form>
+
+  </section>
+
+</div>

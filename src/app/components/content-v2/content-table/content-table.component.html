@@ -1,0 +1,535 @@
+<div class="content-table">
+
+  <div class="content-table__scroll">
+
+    <table class="content-table__table">
+
+      <!-- =========================
+           HEADER
+      ========================== -->
+
+      <thead>
+
+        <tr>
+
+          <th class="content-table__index">
+            #
+          </th>
+
+          <th>
+            Stage
+          </th>
+
+          <th>
+            Unidad
+          </th>
+
+          <th>
+            Título
+          </th>
+
+          <th>
+            Descripción
+          </th>
+
+          <th>
+            Contenido
+          </th>
+
+          <th>
+            Estado
+          </th>
+
+          <th class="content-table__measurable-column">
+            Medible
+          </th>
+
+          <th>
+            Creado
+          </th>
+
+          <th class="content-table__actions-column">
+            Acciones
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <!-- =========================
+           BODY
+      ========================== -->
+
+      <tbody>
+
+        @for (
+          content of contents;
+          track content.id;
+          let i = $index
+        ) {
+
+          <tr>
+
+            <!-- INDEX -->
+
+            <td class="content-table__index">
+              {{ getRowNumber(i) }}
+            </td>
+
+
+            <!-- STAGE -->
+
+            <td>
+
+              <span class="content-table__stage">
+                {{ getStageLabel(content) }}
+              </span>
+
+            </td>
+
+
+            <!-- UNIT -->
+
+            <td class="content-table__unit">
+              {{ content.unit }}
+            </td>
+
+
+            <!-- TITLE -->
+
+            <td>
+
+              <span
+                class="content-table__title"
+                [title]="content.title"
+              >
+                {{ content.title }}
+              </span>
+
+            </td>
+
+
+            <!-- DESCRIPTION -->
+
+            <td>
+
+              <span
+                class="content-table__text"
+                [title]="content.description"
+              >
+                {{
+                  content.description ||
+                  '—'
+                }}
+              </span>
+
+            </td>
+
+
+            <!-- CONTENT -->
+
+            <td>
+
+              <span
+                class="
+                  content-table__text
+                  content-table__text--muted
+                "
+                [title]="parseContent(content.content)"
+              >
+                {{
+                  parseContent(
+                    content.content
+                  )
+                }}
+              </span>
+
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="content-table__status"
+                [class.content-table__status--enabled]="
+                  content.enabled
+                "
+                [class.content-table__status--disabled]="
+                  !content.enabled
+                "
+              >
+
+                <span class="content-table__status-dot">
+                </span>
+
+                <span>
+                  {{
+                    content.enabled
+                      ? 'Habilitado'
+                      : 'Deshabilitado'
+                  }}
+                </span>
+
+              </span>
+
+            </td>
+
+
+            <!-- MEASURABLE -->
+
+            <td class="content-table__measurable-column">
+
+              @if (content.measurable) {
+
+                <span
+                  class="
+                    content-table__measurable
+                    content-table__measurable--yes
+                  "
+                  title="Contenido medible"
+                  aria-label="Contenido medible"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="8"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                    />
+
+                    <path
+                      d="m8.5 12 2.2 2.2 4.8-5"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+
+              } @else {
+
+                <span
+                  class="
+                    content-table__measurable
+                    content-table__measurable--no
+                  "
+                  title="Contenido no medible"
+                  aria-label="Contenido no medible"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="8"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                    />
+
+                    <path
+                      d="m9 9 6 6M15 9l-6 6"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </span>
+
+              }
+
+            </td>
+
+
+            <!-- CREATED -->
+
+            <td>
+
+              <div class="content-table__date">
+
+                <span class="content-table__date-value">
+                  {{ formatDate(content.createdAt) }}
+                </span>
+
+                <span class="content-table__date-time">
+                  {{ formatTime(content.createdAt) }}
+                </span>
+
+              </div>
+
+            </td>
+
+
+            <!-- ACTIONS -->
+
+            <td class="content-table__actions-column">
+
+              <button
+                type="button"
+                class="content-table__menu-trigger"
+                [class.content-table__menu-trigger--active]="
+                  isMenuOpen(content)
+                "
+                aria-label="Opciones del contenido"
+                title="Opciones"
+                (click)="toggleMenu(content, $event)"
+              >
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <circle
+                    cx="12"
+                    cy="5"
+                    r="1.5"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="1.5"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="19"
+                    r="1.5"
+                  />
+                </svg>
+
+              </button>
+
+
+              <!-- =========================
+                   FLOATING MENU
+              ========================== -->
+
+              @if (
+                isMenuOpen(content)
+              ) {
+
+                <div
+                  class="content-table__menu"
+                  [style.top.px]="menuPosition.top"
+                  [style.left.px]="menuPosition.left"
+                  (click)="$event.stopPropagation()"
+                >
+
+                  <!-- DETAILS -->
+
+                  <button
+                    type="button"
+                    class="content-table__menu-item"
+                    (click)="
+                      viewDetails(
+                        content,
+                        $event
+                      )
+                    "
+                  >
+
+                    <span class="content-table__menu-icon">
+
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M3.5 12s3.1-5 8.5-5 8.5 5 8.5 5-3.1 5-8.5 5-8.5-5-8.5-5Z"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                        />
+
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="2.3"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                        />
+                      </svg>
+
+                    </span>
+
+
+                    <div class="content-table__menu-content">
+
+                      <span class="content-table__menu-title">
+                        Ver detalles
+                      </span>
+
+                      <span class="content-table__menu-description">
+                        Consultar contenido
+                      </span>
+
+                    </div>
+
+                  </button>
+
+
+                  <!-- EDIT -->
+
+                  <button
+                    type="button"
+                    class="content-table__menu-item"
+                    (click)="
+                      edit(
+                        content,
+                        $event
+                      )
+                    "
+                  >
+
+                    <span class="content-table__menu-icon">
+
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M13.5 6.5 17.5 10.5M5 19l3.4-.7L18.3 8.4a1.5 1.5 0 0 0 0-2.1l-.6-.6a1.5 1.5 0 0 0-2.1 0L5.7 15.6 5 19Z"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+
+                    </span>
+
+
+                    <div class="content-table__menu-content">
+
+                      <span class="content-table__menu-title">
+                        Editar
+                      </span>
+
+                      <span class="content-table__menu-description">
+                        Modificar información
+                      </span>
+
+                    </div>
+
+                  </button>
+
+
+                  <div class="content-table__menu-divider">
+                  </div>
+
+
+                  <!-- DELETE -->
+
+                  <button
+                    type="button"
+                    class="
+                      content-table__menu-item
+                      content-table__menu-item--danger
+                    "
+                    (click)="
+                      delete(
+                        content,
+                        $event
+                      )
+                    "
+                  >
+
+                    <span class="content-table__menu-icon">
+
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+
+                    </span>
+
+
+                    <div class="content-table__menu-content">
+
+                      <span class="content-table__menu-title">
+                        Eliminar
+                      </span>
+
+                      <span class="content-table__menu-description">
+                        Eliminar contenido
+                      </span>
+
+                    </div>
+
+                  </button>
+
+                </div>
+
+              }
+
+            </td>
+
+          </tr>
+
+        } @empty {
+
+          <tr>
+
+            <td
+              colspan="10"
+              class="content-table__empty"
+            >
+
+              <div class="content-table__empty-content">
+
+                <span class="content-table__empty-icon">
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M4.5 5.5h5.7c1.1 0 1.8.3 2.3.9.5-.6 1.2-.9 2.3-.9h4.7v13h-4.7c-1.2 0-1.9.3-2.3 1-.4-.7-1.1-1-2.3-1H4.5v-13Z"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    />
+                  </svg>
+
+                </span>
+
+                <strong>
+                  No hay contenido
+                </strong>
+
+                <span>
+                  Selecciona los filtros y realiza una búsqueda.
+                </span>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
