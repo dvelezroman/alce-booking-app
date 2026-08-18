@@ -1,0 +1,150 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.meeting-evaluations-summary {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.meeting-evaluations-summary__card {
+  min-width: 0;
+  min-height: 5.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 0.9rem;
+  background: #ffffff;
+  border: 1px solid #e8eaf2;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 16px rgba(31, 42, 89, 0.025);
+  box-sizing: border-box;
+}
+
+.meeting-evaluations-summary__icon {
+  width: 2.9rem;
+  height: 2.9rem;
+  flex: 0 0 2.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.meeting-evaluations-summary__icon svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.meeting-evaluations-summary__icon--total {
+  color: #553be0;
+  background: rgba(85, 59, 224, 0.09);
+}
+
+.meeting-evaluations-summary__icon--average {
+  color: #16945b;
+  background: rgba(30, 178, 108, 0.1);
+}
+
+.meeting-evaluations-summary__icon--accepted {
+  color: #15965d;
+  background: rgba(28, 176, 105, 0.1);
+}
+
+.meeting-evaluations-summary__icon--observation {
+  color: #d99315;
+  background: rgba(232, 159, 36, 0.11);
+}
+
+.meeting-evaluations-summary__icon--rejected {
+  color: #d83f4c;
+  background: rgba(216, 63, 76, 0.09);
+}
+
+.meeting-evaluations-summary__content {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.08rem;
+}
+
+.meeting-evaluations-summary__title {
+  color: #55566b;
+  font-size: 0.69rem;
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meeting-evaluations-summary__value {
+  color: #191a31;
+  font-size: 1.25rem;
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.meeting-evaluations-summary__description {
+  color: #818295;
+  font-size: 0.65rem;
+  font-weight: 400;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meeting-evaluations-summary__rating {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.meeting-evaluations-summary__rating-total {
+  color: #55566c;
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+@media (max-width: 1250px) {
+  .meeting-evaluations-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .meeting-evaluations-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+  }
+
+  .meeting-evaluations-summary__card {
+    min-height: 5.2rem;
+  }
+
+  .meeting-evaluations-summary__icon {
+    width: 2.7rem;
+    height: 2.7rem;
+    flex-basis: 2.7rem;
+  }
+
+  .meeting-evaluations-summary__value {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .meeting-evaluations-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .meeting-evaluations-summary__card {
+    min-height: 4.8rem;
+    padding: 0.75rem;
+  }
+}

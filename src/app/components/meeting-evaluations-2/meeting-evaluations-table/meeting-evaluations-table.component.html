@@ -1,0 +1,417 @@
+<section
+  class="evaluations-table"
+  [class.evaluations-table--menu-open]="openMenuId !== null">
+
+  <div class="evaluations-table__wrapper">
+
+    <table class="evaluations-table__table">
+
+      <thead>
+        <tr>
+          <th class="evaluations-table__col-index">#</th>
+          <th class="evaluations-table__col-date">Fecha y hora</th>
+
+          <th
+            *ngIf="showStudentColumn"
+            class="evaluations-table__col-student">
+            Estudiante
+          </th>
+
+          <th
+            *ngIf="showInstructorColumn"
+            class="evaluations-table__col-instructor">
+            Instructor
+          </th>
+
+          <th class="evaluations-table__col-class">Clase</th>
+          <th class="evaluations-table__col-rating">Puntuación</th>
+          <th class="evaluations-table__col-observation">Observación</th>
+          <th class="evaluations-table__col-status">Estado</th>
+          <th class="evaluations-table__col-actions">Acciones</th>
+        </tr>
+      </thead>
+
+      <!-- LOADING -->
+      <tbody *ngIf="isLoading">
+        <tr
+          *ngFor="let item of [1, 2, 3, 4, 5]"
+          class="evaluations-table__row">
+
+          <td>
+            <span class="evaluations-table__skeleton evaluations-table__skeleton--xs"></span>
+          </td>
+
+          <td>
+            <div class="evaluations-table__skeleton-stack">
+              <span class="evaluations-table__skeleton evaluations-table__skeleton--medium"></span>
+              <span class="evaluations-table__skeleton evaluations-table__skeleton--small"></span>
+            </div>
+          </td>
+
+          <td *ngIf="showStudentColumn">
+            <div class="evaluations-table__student">
+              <span class="evaluations-table__skeleton evaluations-table__skeleton--avatar"></span>
+              <div class="evaluations-table__skeleton-stack">
+                <span class="evaluations-table__skeleton evaluations-table__skeleton--medium"></span>
+                <span class="evaluations-table__skeleton evaluations-table__skeleton--large"></span>
+              </div>
+            </div>
+          </td>
+
+          <td *ngIf="showInstructorColumn">
+            <div class="evaluations-table__skeleton-stack">
+              <span class="evaluations-table__skeleton evaluations-table__skeleton--medium"></span>
+              <span class="evaluations-table__skeleton evaluations-table__skeleton--large"></span>
+            </div>
+          </td>
+
+          <td>
+            <div class="evaluations-table__skeleton-stack">
+              <span class="evaluations-table__skeleton evaluations-table__skeleton--medium"></span>
+              <span class="evaluations-table__skeleton evaluations-table__skeleton--small"></span>
+            </div>
+          </td>
+
+          <td>
+            <span class="evaluations-table__skeleton evaluations-table__skeleton--rating"></span>
+          </td>
+
+          <td>
+            <span class="evaluations-table__skeleton evaluations-table__skeleton--large"></span>
+          </td>
+
+          <td>
+            <span class="evaluations-table__skeleton evaluations-table__skeleton--status"></span>
+          </td>
+
+          <td>
+            <span class="evaluations-table__skeleton evaluations-table__skeleton--button"></span>
+          </td>
+
+        </tr>
+      </tbody>
+
+      <!-- DATA -->
+      <tbody *ngIf="!isLoading">
+
+        <tr
+          *ngFor="
+            let evaluation of evaluations;
+            let i = index;
+            trackBy: trackByEvaluationId
+          "
+          class="evaluations-table__row"
+          [class.evaluations-table__row--accepted]="evaluation.accepted"
+          [class.evaluations-table__row--rejected]="!evaluation.accepted"
+          [class.evaluations-table__row--observation]=" evaluation.accepted &&
+            hasObservation(evaluation) "
+          [class.evaluations-table__row--menu-open]="isMenuOpen(evaluation)">
+
+          <!-- INDEX -->
+          <td class="evaluations-table__index">
+            {{ i + 1 }}
+          </td>
+
+          <!-- DATE -->
+          <td>
+            <div class="evaluations-table__date">
+              <span>
+                {{ formatDate(getEvaluationDate(evaluation)) }}
+              </span>
+
+              <small>
+                {{
+                  formatHour(
+                    getEvaluationHour(evaluation),
+                    getEvaluationDate(evaluation)
+                  )
+                }}
+              </small>
+            </div>
+          </td>
+
+          <!-- STUDENT -->
+          <td *ngIf="showStudentColumn">
+            <div class="evaluations-table__student">
+
+              <span class="evaluations-table__avatar">
+                {{ getStudentInitials(evaluation) }}
+              </span>
+
+              <div class="evaluations-table__person-info">
+                <strong
+                  [title]="getStudentName(evaluation)">
+                  {{ getStudentName(evaluation) }}
+                </strong>
+
+                <small
+                  *ngIf="getStudentEmail(evaluation)"
+                  [title]="getStudentEmail(evaluation)">
+                  {{ getStudentEmail(evaluation) }}
+                </small>
+              </div>
+
+            </div>
+          </td>
+
+          <!-- INSTRUCTOR -->
+          <td *ngIf="showInstructorColumn">
+            <div class="evaluations-table__person-info">
+              <strong
+                [title]="getInstructorName(evaluation)">
+                {{ getInstructorName(evaluation) }}
+              </strong>
+
+              <small
+                *ngIf="getInstructorEmail(evaluation)"
+                [title]="getInstructorEmail(evaluation)">
+                {{ getInstructorEmail(evaluation) }}
+              </small>
+            </div>
+          </td>
+
+          <!-- CLASS -->
+          <td>
+            <div class="evaluations-table__class">
+
+              <span class="evaluations-table__class-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true">
+                  <rect
+                    x="3.5"
+                    y="4"
+                    width="17"
+                    height="13"
+                    rx="1.8"
+                    stroke="currentColor"
+                    stroke-width="1.7"/>
+                  <path
+                    d="M8 20h8M12 17v3"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"/>
+                </svg>
+              </span>
+
+              <div class="evaluations-table__class-info">
+                <strong
+                  [title]="getClassTitle(evaluation)">
+                  {{ getClassTitle(evaluation) }}
+                </strong>
+
+                <small
+                  *ngIf="getClassDescription(evaluation)"
+                  [title]="getClassDescription(evaluation)">
+                  {{ getClassDescription(evaluation) }}
+                </small>
+              </div>
+
+            </div>
+          </td>
+
+          <!-- RATING -->
+          <td>
+            <div class="evaluations-table__rating">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true">
+                <path
+                  d="m12 2.8 2.82 5.72 6.31.92-4.57 4.45 1.08 6.28L12 17.2l-5.64 2.97 1.08-6.28-4.57-4.45 6.31-.92L12 2.8Z"/>
+              </svg>
+
+              <span>
+                {{ getRating(evaluation) }}/10
+              </span>
+
+            </div>
+          </td>
+
+          <!-- OBSERVATION -->
+          <td>
+            <p
+              class="evaluations-table__observation"
+              [title]="getObservation(evaluation)">
+              {{ getObservation(evaluation) }}
+            </p>
+          </td>
+
+          <!-- STATUS -->
+          <td>
+            <span
+              class="evaluations-table__status"
+              [class.evaluations-table__status--accepted]="evaluation.accepted"
+              [class.evaluations-table__status--rejected]="!evaluation.accepted">
+
+              <span class="evaluations-table__status-dot"></span>
+
+              {{
+                evaluation.accepted
+                  ? 'Aceptada'
+                  : 'No aceptada'
+              }}
+
+            </span>
+          </td>
+
+          <!-- ACTIONS -->
+          <td class="evaluations-table__actions-cell">
+
+            <div
+              class="evaluations-table__actions"
+              (click)="$event.stopPropagation()">
+
+              <button
+                type="button"
+                class="evaluations-table__menu-button"
+                [class.evaluations-table__menu-button--active]="isMenuOpen(evaluation)"
+                aria-label="Opciones de evaluación"
+                [attr.aria-expanded]="isMenuOpen(evaluation)"
+                (click)="toggleMenu($event, evaluation)">
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true">
+                  <circle cx="12" cy="5" r="1.7"/>
+                  <circle cx="12" cy="12" r="1.7"/>
+                  <circle cx="12" cy="19" r="1.7"/>
+                </svg>
+
+              </button>
+
+              <!-- MENU -->
+              <div
+                *ngIf="isMenuOpen(evaluation)"
+                class="evaluations-table__menu"
+                (click)="$event.stopPropagation()">
+
+                <button
+                  type="button"
+                  class="evaluations-table__menu-item"
+                  (click)="onView($event, evaluation)">
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true">
+                    <path
+                      d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="2.5"
+                      stroke="currentColor"
+                      stroke-width="1.7"/>
+                  </svg>
+
+                  <span>Ver detalles</span>
+
+                </button>
+
+                <button
+                  type="button"
+                  class="evaluations-table__menu-item"
+                  [class.evaluations-table__menu-item--danger]="evaluation.accepted"
+                  [disabled]="updatingEvaluationId === evaluation.id"
+                  (click)="onToggleAcceptance($event, evaluation)">
+
+                  <svg
+                    *ngIf="!evaluation.accepted"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true">
+                    <path
+                      d="m5 12 4 4L19 6"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+                  </svg>
+
+                  <svg
+                    *ngIf="evaluation.accepted"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="8"
+                      stroke="currentColor"
+                      stroke-width="1.7"/>
+                    <path
+                      d="m9 9 6 6M15 9l-6 6"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"/>
+                  </svg>
+
+                  <span>
+                    {{
+                      updatingEvaluationId === evaluation.id
+                        ? 'Actualizando...'
+                        : evaluation.accepted
+                          ? 'No aceptar'
+                          : 'Aceptar'
+                    }}
+                  </span>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <!-- EMPTY -->
+    <div
+      *ngIf="!isLoading && evaluations.length === 0"
+      class="evaluations-table__empty">
+
+      <span class="evaluations-table__empty-icon">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true">
+          <rect
+            x="4"
+            y="4"
+            width="16"
+            height="16"
+            rx="2.5"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+          <path
+            d="M8 9h8M8 13h5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+        </svg>
+      </span>
+
+      <strong>No hay evaluaciones</strong>
+
+      <span>
+        No se encontraron evaluaciones con los filtros seleccionados.
+      </span>
+
+    </div>
+
+  </div>
+
+</section>

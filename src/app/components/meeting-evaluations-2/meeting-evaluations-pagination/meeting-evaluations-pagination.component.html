@@ -1,0 +1,110 @@
+<footer
+  class="meeting-evaluations-pagination"
+  *ngIf="total > 0">
+
+  <div class="meeting-evaluations-pagination__info">
+    {{ paginationLabel }}
+  </div>
+
+  <div class="meeting-evaluations-pagination__pages">
+
+    <button
+      type="button"
+      class="meeting-evaluations-pagination__button"
+      [disabled]="!canPrev"
+      aria-label="Página anterior"
+      (click)="onPrevious()">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true">
+        <path
+          d="m15 18-6-6 6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <ng-container
+      *ngFor="let item of visiblePages">
+
+      <button
+        *ngIf="isPage(item)"
+        type="button"
+        class="meeting-evaluations-pagination__page"
+        [class.meeting-evaluations-pagination__page--active]="item === page"
+        (click)="onPage(item)">
+        {{ item }}
+      </button>
+
+      <span
+        *ngIf="item === 'ellipsis'"
+        class="meeting-evaluations-pagination__ellipsis">
+        ...
+      </span>
+
+    </ng-container>
+
+    <button
+      type="button"
+      class="meeting-evaluations-pagination__button"
+      [disabled]="!canNext"
+      aria-label="Página siguiente"
+      (click)="onNext()">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true">
+        <path
+          d="m9 18 6-6-6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+  </div>
+
+  <div class="meeting-evaluations-pagination__limit">
+
+    <label for="meeting-evaluations-limit">
+      Filas por página
+    </label>
+
+    <div class="meeting-evaluations-pagination__select-wrapper">
+
+      <select
+        id="meeting-evaluations-limit"
+        class="meeting-evaluations-pagination__select"
+        [ngModel]="limit"
+        (ngModelChange)="onLimitChange($event)">
+        <option
+          *ngFor="let option of limitOptions"
+          [ngValue]="option">
+          {{ option }}
+        </option>
+      </select>
+
+      <span
+        class="meeting-evaluations-pagination__select-icon"
+        aria-hidden="true">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+          <path
+            d="M7 10L12 15L17 10"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+        </svg>
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>

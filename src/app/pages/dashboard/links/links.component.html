@@ -13,6 +13,20 @@
 
 
     <!-- =========================
+         SUMMARY
+    ========================== -->
+
+    <app-links-summary
+      [totalLinks]="totalLinks"
+      [linksWithPassword]="linksWithPassword"
+      [linksWithoutPassword]="linksWithoutPassword"
+      [passwordCoveragePercentage]="passwordCoveragePercentage"
+      [latestLinkDescription]="latestLinkDescription"
+    >
+    </app-links-summary>
+
+
+    <!-- =========================
          CONTENT
     ========================== -->
 
@@ -21,12 +35,12 @@
       <!-- FILTERS / SEARCH -->
 
       <app-links-filters
-          [searchTerm]="searchTerm"
-          [total]="total"
-          (searchTermChange)="onSearchChange($event)"
-          (clearRequested)="clearSearch()"
-        >
-        </app-links-filters>
+        [searchTerm]="searchTerm"
+        [total]="total"
+        (searchTermChange)="onSearchChange($event)"
+        (clearRequested)="clearSearch()"
+      >
+      </app-links-filters>
 
 
       <!-- TABLE -->
@@ -59,6 +73,61 @@
           (limitChange)="onLimitChange($event)"
         >
         </app-links-pagination>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         ADVICE
+    ========================== -->
+
+    <section class="links-page__advice">
+
+      <div
+        class="links-page__advice-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="9"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 10.5V16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="12"
+            cy="7.5"
+            r="1"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+
+
+      <div class="links-page__advice-content">
+
+        <strong>
+          Consejo
+        </strong>
+
+        <p>
+          Mantén actualizados los enlaces de reuniones y utiliza
+          contraseña cuando necesites restringir el acceso.
+        </p>
 
       </div>
 
@@ -167,6 +236,7 @@
   }
 
 </main>
+
 
 <!-- =========================
      GLOBAL MODAL

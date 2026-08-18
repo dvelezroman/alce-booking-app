@@ -1,0 +1,215 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.meeting-evaluations-pagination {
+  width: 100%;
+  min-height: 3.7rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  padding: 0.65rem 1rem;
+  background: #ffffff;
+  border-top: 1px solid #eceef3;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  box-sizing: border-box;
+}
+
+.meeting-evaluations-pagination__info {
+  min-width: 0;
+  color: #74768b;
+  font-size: 0.69rem;
+  font-weight: 400;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meeting-evaluations-pagination__pages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.32rem;
+}
+
+.meeting-evaluations-pagination__button,
+.meeting-evaluations-pagination__page {
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #626377;
+  background: #ffffff;
+  border: 1px solid #e3e5ec;
+  border-radius: 0.45rem;
+  font-family: inherit;
+  font-size: 0.69rem;
+  font-weight: 550;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.meeting-evaluations-pagination__button:hover:not(:disabled),
+.meeting-evaluations-pagination__page:hover:not(
+  .meeting-evaluations-pagination__page--active
+) {
+  color: #4d35cd;
+  background: #f8f7ff;
+  border-color: #d8d3f4;
+}
+
+.meeting-evaluations-pagination__button:active:not(:disabled),
+.meeting-evaluations-pagination__page:active {
+  transform: scale(0.95);
+}
+
+.meeting-evaluations-pagination__button:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.meeting-evaluations-pagination__button svg {
+  width: 0.88rem;
+  height: 0.88rem;
+}
+
+.meeting-evaluations-pagination__page--active {
+  color: #ffffff;
+  background:
+    linear-gradient(
+      135deg,
+      #4b2ce8 0%,
+      #5e32e9 100%
+    );
+  border-color: transparent;
+  box-shadow:
+    0 3px 8px rgba(77, 48, 220, 0.16);
+  cursor: default;
+}
+
+.meeting-evaluations-pagination__ellipsis {
+  width: 1.5rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #858699;
+  font-size: 0.72rem;
+}
+
+.meeting-evaluations-pagination__limit {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.meeting-evaluations-pagination__limit label {
+  color: #65667a;
+  font-size: 0.68rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.meeting-evaluations-pagination__select-wrapper {
+  position: relative;
+  width: 4.2rem;
+}
+
+.meeting-evaluations-pagination__select {
+  width: 100%;
+  height: 2rem;
+  appearance: none;
+  padding: 0 1.6rem 0 0.65rem;
+  color: #444559;
+  background: #ffffff;
+  border: 1px solid #e1e3ea;
+  border-radius: 0.45rem;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.meeting-evaluations-pagination__select:focus {
+  border-color: #7563e7;
+  box-shadow:
+    0 0 0 3px rgba(91, 70, 232, 0.07);
+}
+
+.meeting-evaluations-pagination__select-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #737488;
+  pointer-events: none;
+}
+
+.meeting-evaluations-pagination__select-icon svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+@media (max-width: 900px) {
+  .meeting-evaluations-pagination {
+    grid-template-columns: 1fr auto;
+  }
+
+  .meeting-evaluations-pagination__info {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .meeting-evaluations-pagination__limit {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .meeting-evaluations-pagination__pages {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .meeting-evaluations-pagination {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    padding: 0.75rem;
+  }
+
+  .meeting-evaluations-pagination__info {
+    text-align: center;
+  }
+
+  .meeting-evaluations-pagination__pages {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: center;
+    padding-bottom: 0.15rem;
+  }
+
+  .meeting-evaluations-pagination__limit {
+    justify-content: center;
+  }
+}

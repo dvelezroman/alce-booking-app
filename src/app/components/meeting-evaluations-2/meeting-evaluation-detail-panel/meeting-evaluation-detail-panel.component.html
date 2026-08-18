@@ -1,0 +1,208 @@
+<aside
+  *ngIf="evaluation"
+  class="evaluation-detail">
+
+  <header class="evaluation-detail__header">
+    <div class="evaluation-detail__title">
+      <span class="evaluation-detail__title-icon">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+          <circle
+            cx="12"
+            cy="12"
+            r="2.5"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+        </svg>
+      </span>
+
+      <h3>
+        Detalles de la evaluación
+      </h3>
+    </div>
+
+    <button
+      type="button"
+      class="evaluation-detail__close"
+      aria-label="Cerrar detalles"
+      (click)="onClose()">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M6 6l12 12M18 6 6 18"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"/>
+      </svg>
+    </button>
+  </header>
+
+  <div class="evaluation-detail__content">
+
+    <div class="evaluation-detail__grid evaluation-detail__grid--top">
+      <span class="evaluation-detail__label">
+        ID:
+      </span>
+
+      <span class="evaluation-detail__value">
+        {{ getEvaluationId() }}
+      </span>
+
+      <span class="evaluation-detail__label">
+        Estado:
+      </span>
+
+      <span
+        class="evaluation-detail__status"
+        [class.evaluation-detail__status--accepted]="evaluation.accepted"
+        [class.evaluation-detail__status--rejected]="!evaluation.accepted">
+        <span class="evaluation-detail__status-dot"></span>
+        {{ evaluation.accepted ? 'Aceptada' : 'No aceptada' }}
+      </span>
+    </div>
+
+    <div class="evaluation-detail__row">
+      <span class="evaluation-detail__label">
+        Fecha de evaluación:
+      </span>
+
+      <div class="evaluation-detail__value-stack">
+        <strong>
+          {{ formatDate(getEvaluationDate()) }}
+        </strong>
+        <small>
+          {{
+            formatMeetingHour(
+              getEvaluationHour(),
+              getEvaluationDate()
+            )
+          }}
+        </small>
+      </div>
+    </div>
+
+    <div class="evaluation-detail__row">
+      <span class="evaluation-detail__label">
+        Estudiante:
+      </span>
+
+      <div class="evaluation-detail__value-stack">
+        <strong>
+          {{ getStudentName() }}
+        </strong>
+
+        <small *ngIf="getStudentEmail()">
+          {{ getStudentEmail() }}
+        </small>
+      </div>
+    </div>
+
+    <div class="evaluation-detail__row">
+      <span class="evaluation-detail__label">
+        Instructor:
+      </span>
+
+      <div class="evaluation-detail__value-stack">
+        <strong>
+          {{ getInstructorName() }}
+        </strong>
+
+        <small *ngIf="getInstructorEmail()">
+          {{ getInstructorEmail() }}
+        </small>
+      </div>
+    </div>
+
+    <div class="evaluation-detail__row">
+      <span class="evaluation-detail__label">
+        Clase:
+      </span>
+
+      <div class="evaluation-detail__value-stack">
+        <strong>
+          {{ getClassTitle() }}
+        </strong>
+
+        <small *ngIf="getClassDescription()">
+          {{ getClassDescription() }}
+        </small>
+      </div>
+    </div>
+
+    <div class="evaluation-detail__row">
+      <span class="evaluation-detail__label">
+        Puntuación:
+      </span>
+
+      <div class="evaluation-detail__rating">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="m12 2.8 2.82 5.72 6.31.92-4.57 4.45 1.08 6.28L12 17.2l-5.64 2.97 1.08-6.28-4.57-4.45 6.31-.92L12 2.8Z"/>
+        </svg>
+
+        <strong>
+          {{ getRating() }}/10
+        </strong>
+      </div>
+    </div>
+
+    <div class="evaluation-detail__row evaluation-detail__row--observation">
+      <span class="evaluation-detail__label">
+        Observación:
+      </span>
+
+      <p class="evaluation-detail__observation">
+        {{ getObservation() }}
+      </p>
+    </div>
+
+    <div class="evaluation-detail__divider"></div>
+
+    <div class="evaluation-detail__row">
+      <span class="evaluation-detail__label">
+        Creado:
+      </span>
+
+      <div class="evaluation-detail__value-stack">
+        <strong>
+          {{ formatDate(getCreatedAt()) }}
+        </strong>
+
+        <small>
+          {{ formatTime(getCreatedAt()) }}
+        </small>
+      </div>
+    </div>
+
+    <div class="evaluation-detail__row">
+      <span class="evaluation-detail__label">
+        Actualizado:
+      </span>
+
+      <div class="evaluation-detail__value-stack">
+        <strong>
+          {{ formatDate(getUpdatedAt()) }}
+        </strong>
+
+        <small>
+          {{ formatTime(getUpdatedAt()) }}
+        </small>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="evaluation-detail__footer">
+    <button
+      type="button"
+      class="evaluation-detail__close-button"
+      (click)="onClose()">
+      Cerrar
+    </button>
+  </footer>
+
+</aside>

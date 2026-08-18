@@ -1,0 +1,746 @@
+:host {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.evaluations-table {
+  position: relative;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e7ef;
+  border-radius: 0.75rem;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.evaluations-table--menu-open {
+  z-index: 100;
+}
+
+/* =========================
+   WRAPPER
+========================= */
+
+.evaluations-table__wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: inherit;
+  overflow: visible;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.evaluations-table__table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.evaluations-table__table thead {
+  position: relative;
+  z-index: 1;
+}
+
+.evaluations-table__table thead tr {
+  height: 3.55rem;
+}
+
+.evaluations-table__table th {
+  padding: 0.75rem 0.7rem;
+  color: #4932c9;
+  background: #fdfdff;
+  border-bottom: 1px solid #e8e9f0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.evaluations-table__table th:first-child {
+  border-top-left-radius: 0.72rem;
+}
+
+.evaluations-table__table th:last-child {
+  border-top-right-radius: 0.72rem;
+}
+
+/* =========================
+   COLUMNS
+========================= */
+
+.evaluations-table__col-index {
+  width: 4%;
+  padding-left: 1.65rem !important;
+}
+
+.evaluations-table__col-date {
+  width: 12%;
+}
+
+.evaluations-table__col-student {
+  width: 16%;
+}
+
+.evaluations-table__col-instructor {
+  width: 14%;
+}
+
+.evaluations-table__col-class {
+  width: 15%;
+}
+
+.evaluations-table__col-rating {
+  width: 9%;
+}
+
+.evaluations-table__col-observation {
+  width: 13%;
+}
+
+.evaluations-table__col-status {
+  width: 10%;
+}
+
+.evaluations-table__col-actions {
+  width: 7%;
+  text-align: center !important;
+}
+
+/* =========================
+   ROW
+========================= */
+
+.evaluations-table__row {
+  position: relative;
+  z-index: 1;
+}
+
+.evaluations-table__row td {
+  position: relative;
+  height: 5.15rem;
+  padding: 0.7rem;
+  color: #28293d;
+  background: #ffffff;
+  border-bottom: 1px solid #eceef3;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  vertical-align: middle;
+  box-sizing: border-box;
+  transition: background-color 0.15s ease;
+}
+
+.evaluations-table__row:hover td {
+  background: #fcfcff;
+}
+
+.evaluations-table__row:last-child td {
+  border-bottom: 0;
+}
+
+.evaluations-table__row:last-child td:first-child {
+  border-bottom-left-radius: 0.72rem;
+}
+
+.evaluations-table__row:last-child td:last-child {
+  border-bottom-right-radius: 0.72rem;
+}
+
+ /* =========================
+   STATUS LINE
+========================= */
+
+.evaluations-table__row > td:first-child {
+  position: relative;
+}
+
+.evaluations-table__row > td:first-child::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0.45rem;
+  bottom: 0.45rem;
+  left: 0;
+
+  width: 2px;
+
+  border-radius: 0 2px 2px 0;
+}
+
+.evaluations-table__row--accepted
+> td:first-child::before {
+  background: #85e2b5;
+}
+
+.evaluations-table__row--observation
+> td:first-child::before {
+  background: #f0a91f;
+}
+
+.evaluations-table__row--rejected
+> td:first-child::before {
+  background: #e1444f;
+}
+
+/* =========================
+   MENU ROW
+========================= */
+
+.evaluations-table__row--menu-open {
+  z-index: 500;
+}
+
+.evaluations-table__row--menu-open td {
+  z-index: 500;
+}
+
+/* =========================
+   INDEX
+========================= */
+
+.evaluations-table__index {
+  padding-left: 1.65rem !important;
+  color: #292a3d !important;
+  font-size: 0.76rem !important;
+  font-weight: 600;
+}
+
+/* =========================
+   DATE
+========================= */
+
+.evaluations-table__date {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.evaluations-table__date span {
+  color: #292a3d;
+  font-size: 0.73rem;
+  font-weight: 550;
+  white-space: nowrap;
+}
+
+.evaluations-table__date small {
+  color: #73758a;
+  font-size: 0.69rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+/* =========================
+   STUDENT
+========================= */
+
+.evaluations-table__student {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.evaluations-table__avatar {
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 2.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #4328c8;
+  background: linear-gradient(
+    135deg,
+    #eeeaff 0%,
+    #ddd6ff 100%
+  );
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+/* =========================
+   PERSON
+========================= */
+
+.evaluations-table__person-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.evaluations-table__person-info strong {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  color: #242539;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.evaluations-table__person-info small {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  color: #74768c;
+  font-size: 0.65rem;
+  font-weight: 400;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   CLASS
+========================= */
+
+.evaluations-table__class {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.evaluations-table__class-icon {
+  width: 1.55rem;
+  height: 1.55rem;
+  flex: 0 0 1.55rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #5034dc;
+}
+
+.evaluations-table__class-icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.evaluations-table__class-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.evaluations-table__class-info strong {
+  display: block;
+  overflow: hidden;
+  color: #27283b;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.evaluations-table__class-info small {
+  display: block;
+  overflow: hidden;
+  color: #74768b;
+  font-size: 0.65rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   RATING
+========================= */
+
+.evaluations-table__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  color: #242539;
+  white-space: nowrap;
+}
+
+.evaluations-table__rating svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: 0 0 1.05rem;
+  color: #f5b83d;
+}
+
+.evaluations-table__rating span {
+  font-size: 0.77rem;
+  font-weight: 600;
+}
+
+/* =========================
+   OBSERVATION
+========================= */
+
+.evaluations-table__observation {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: #303145;
+  font-size: 0.68rem;
+  font-weight: 400;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.evaluations-table__status {
+  min-height: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.52rem;
+  border-radius: 0.35rem;
+  font-size: 0.64rem;
+  font-weight: 550;
+  white-space: nowrap;
+}
+
+.evaluations-table__status-dot {
+  width: 0.36rem;
+  height: 0.36rem;
+  flex: 0 0 0.36rem;
+  border-radius: 50%;
+}
+
+.evaluations-table__status--accepted {
+  color: #198153;
+  background: #e8f7ef;
+}
+
+.evaluations-table__status--accepted
+.evaluations-table__status-dot {
+  background: #18ad67;
+}
+
+.evaluations-table__status--rejected {
+  color: #c4313d;
+  background: #fdebed;
+}
+
+.evaluations-table__status--rejected
+.evaluations-table__status-dot {
+  background: #df3544;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.evaluations-table__actions-cell {
+  position: relative !important;
+  overflow: visible !important;
+  text-align: center;
+}
+
+.evaluations-table__actions {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.evaluations-table__menu-button {
+  width: 2.15rem;
+  height: 2.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #37384c;
+  background: #ffffff;
+  border: 1px solid #e2e4eb;
+  border-radius: 0.48rem;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.evaluations-table__menu-button:hover,
+.evaluations-table__menu-button--active {
+  color: #4930cf;
+  background: #f9f8ff;
+  border-color: #d9d4f5;
+}
+
+.evaluations-table__menu-button:active {
+  transform: scale(0.96);
+}
+
+.evaluations-table__menu-button:focus-visible {
+  outline: 2px solid rgba(79, 59, 231, 0.16);
+  outline-offset: 2px;
+}
+
+.evaluations-table__menu-button svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* =========================
+   ACTION MENU
+========================= */
+
+.evaluations-table__menu {
+  position: absolute;
+  z-index: 1000;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  width: 10.5rem;
+  padding: 0.35rem;
+  background: #ffffff;
+  border: 1px solid #e6e7ee;
+  border-radius: 0.6rem;
+  box-shadow:
+    0 12px 30px rgba(24, 27, 55, 0.13),
+    0 2px 8px rgba(24, 27, 55, 0.05);
+  box-sizing: border-box;
+}
+
+.evaluations-table__menu-item {
+  width: 100%;
+  min-height: 2.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.48rem 0.62rem;
+  color: #37384c;
+  background: transparent;
+  border: 0;
+  border-radius: 0.4rem;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    color 0.12s ease,
+    background-color 0.12s ease;
+}
+
+.evaluations-table__menu-item:hover {
+  color: #302e54;
+  background: #f6f6fa;
+}
+
+.evaluations-table__menu-item:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.evaluations-table__menu-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.evaluations-table__menu-item svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex: 0 0 0.95rem;
+}
+
+.evaluations-table__menu-item--danger {
+  color: #cf3542;
+}
+
+.evaluations-table__menu-item--danger:hover {
+  color: #bd2c38;
+  background: #fff3f4;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.evaluations-table__empty {
+  min-height: 13rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 2rem;
+  color: #77798d;
+  background: #ffffff;
+  border-radius: 0 0 0.72rem 0.72rem;
+  text-align: center;
+}
+
+.evaluations-table__empty-icon {
+  width: 2.8rem;
+  height: 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.3rem;
+  color: #5941d8;
+  background: rgba(89, 65, 216, 0.08);
+  border-radius: 0.65rem;
+}
+
+.evaluations-table__empty-icon svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.evaluations-table__empty strong {
+  color: #37384c;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.evaluations-table__empty > span:last-child {
+  font-size: 0.69rem;
+}
+
+/* =========================
+   SKELETON
+========================= */
+
+.evaluations-table__skeleton-stack {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.evaluations-table__skeleton {
+  display: block;
+  height: 0.65rem;
+  background: linear-gradient(
+    90deg,
+    #f0f1f5 25%,
+    #f7f7fa 50%,
+    #f0f1f5 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 0.3rem;
+  animation: evaluations-table-loading 1.3s infinite;
+}
+
+.evaluations-table__skeleton--xs {
+  width: 1rem;
+}
+
+.evaluations-table__skeleton--small {
+  width: 55%;
+}
+
+.evaluations-table__skeleton--medium {
+  width: 72%;
+}
+
+.evaluations-table__skeleton--large {
+  width: 88%;
+}
+
+.evaluations-table__skeleton--avatar {
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 2.35rem;
+  border-radius: 50%;
+}
+
+.evaluations-table__skeleton--rating {
+  width: 3.3rem;
+}
+
+.evaluations-table__skeleton--status {
+  width: 4.7rem;
+  height: 1.5rem;
+}
+
+.evaluations-table__skeleton--button {
+  width: 2.15rem;
+  height: 2.15rem;
+  margin: 0 auto;
+  border-radius: 0.48rem;
+}
+
+@keyframes evaluations-table-loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1250px) {
+  .evaluations-table__table {
+    min-width: 1120px;
+  }
+
+  .evaluations-table__wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .evaluations-table__table {
+    min-width: 1080px;
+  }
+
+  .evaluations-table__table th {
+    font-size: 0.67rem;
+  }
+
+  .evaluations-table__row td {
+    font-size: 0.69rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .evaluations-table {
+    border-radius: 0.65rem;
+  }
+
+  .evaluations-table__table {
+    min-width: 1050px;
+  }
+
+  .evaluations-table__row td {
+    height: 4.8rem;
+  }
+}

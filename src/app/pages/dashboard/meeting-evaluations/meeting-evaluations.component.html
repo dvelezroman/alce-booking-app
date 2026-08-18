@@ -1,63 +1,101 @@
-<h2 class="title stage">Clases Evaluadas</h2>
+<main class="meeting-evaluations-page">
+  <div class="meeting-evaluations-page__container">
 
-<section class="meeting-evaluations-section">
+    <section class="meeting-evaluations-page__block">
+      <app-meeting-evaluations-header
+        (createRequested)="openCreateEvaluationModal()">
+      </app-meeting-evaluations-header>
+    </section>
 
-  <!-- FILTERS -->
-  <div class="filters-wrapper">
-    <app-meeting-evaluations-filters
-      mode="evaluations"
-      (filtersSubmitted)="onFiltersSubmitted($event)">
-    </app-meeting-evaluations-filters>
+    <section class="meeting-evaluations-page__summary">
+      <app-meeting-evaluations-summary
+        [totalEvaluations]="totalEvaluations"
+        [averageRating]="averageRating"
+        [acceptedEvaluations]="acceptedEvaluations"
+        [acceptedPercentage]="acceptedPercentage"
+        [evaluationsWithObservation]="evaluationsWithObservation"
+        [observationPercentage]="observationPercentage"
+        [rejectedEvaluations]="rejectedEvaluations"
+        [rejectedPercentage]="rejectedPercentage">
+      </app-meeting-evaluations-summary>
+    </section>
+
+    <section class="meeting-evaluations-page__block">
+      <app-meeting-evaluations-filters
+        [sortBy]="sortBy"
+        [sortOrder]="sortOrder"
+
+        [filteredStudents]="filteredStudents"
+        [filteredInstructors]="filteredInstructors"
+
+        [showStudentDropdown]="showStudentDropdown"
+        [showInstructorDropdown]="showInstructorDropdown"
+
+        (studentInputChange)="onStudentSearchChange($event)"
+        (studentSelected)="onStudentSelected($event)"
+        (studentDropdownHidden)="hideStudentDropdown()"
+
+        (instructorInputChange)="onInstructorSearchChange($event)"
+        (instructorSelected)="onInstructorSelected($event)"
+        (instructorDropdownHidden)="hideInstructorDropdown()"
+
+        (filtersSubmitted)="onFiltersSubmitted($event)"
+        (sortRequested)="changeSort($event)">
+      </app-meeting-evaluations-filters>
+    </section>
+
+    <section
+      class="meeting-evaluations-page__results"
+      [class.meeting-evaluations-page__results--detail-open]="
+        showEvaluationModal && selectedEvaluation
+      ">
+
+      <div class="meeting-evaluations-page__table-card">
+        <app-meeting-evaluations-table
+          [evaluations]="pagedEvaluations"
+          [isLoading]="isLoading"
+          [showInstructorColumn]="showInstructorColumn"
+          [showStudentColumn]="showStudentColumn"
+          [updatingEvaluationId]="updatingEvaluationId"
+          (evaluationSelected)="onEvaluationSelected($event)"
+          (acceptanceToggled)="onAcceptanceToggled($event)">
+        </app-meeting-evaluations-table>
+
+        <app-meeting-evaluations-pagination
+          [page]="page"
+          [totalPages]="totalPages"
+          [total]="total"
+          [limit]="limit"
+          [limitOptions]="limitOptions"
+          [canPrev]="canPrev"
+          [canNext]="canNext"
+          [paginationLabel]="paginationLabel"
+          (pageChange)="onPageChange($event)"
+          (previousRequested)="onPrev()"
+          (nextRequested)="onNext()"
+          (limitChange)="onLimitChange($event)">
+        </app-meeting-evaluations-pagination>
+      </div>
+
+      <aside
+        *ngIf="showEvaluationModal && selectedEvaluation"
+        class="meeting-evaluations-page__detail">
+        <app-meeting-evaluation-detail-panel
+          [evaluation]="selectedEvaluation"
+          (closeRequested)="closeEvaluationModal()">
+        </app-meeting-evaluation-detail-panel>
+      </aside>
+
+    </section>
+
   </div>
+</main>
 
-  <!-- RESULTS -->
-  <div class="results-wrapper">
-
-    <!-- SORT BAR -->
-    <div class="sort-bar">
-      <button
-        class="sort-btn"
-        [class.active]="sortBy === 'createdAt'"
-        (click)="changeSort('createdAt')"
-      >
-        Fecha
-        <span *ngIf="sortBy === 'createdAt'">
-          {{ sortOrder === 'asc' ? '↑' : '↓' }}
-        </span>
-      </button>
-
-      <button
-        class="sort-btn"
-        [class.active]="sortBy === 'rating'"
-        (click)="changeSort('rating')"
-      >
-        Rating
-        <span *ngIf="sortBy === 'rating'">
-          {{ sortOrder === 'asc' ? '↑' : '↓' }}
-        </span>
-      </button>
-    </div>
-
-    <app-meeting-evaluations-table
-      [evaluations]="evaluations"
-      [searchAttempted]="searchAttempted"
-      [showInstructor]="showInstructorColumn"
-      [showStudent]="showStudentColumn"
-      (evaluationSelected)="onEvaluationSelected($event)"
-      (acceptanceToggled)="onAcceptanceToggled($event)">
-    </app-meeting-evaluations-table>
-
-  </div>
-
-</section>
-
-<!-- MODALES -->
- 
-<app-meeting-evaluation-detail-modal
-  [evaluation]="selectedEvaluation"
-  [show]="showEvaluationModal"
-  (close)="closeEvaluationModal()">
-</app-meeting-evaluation-detail-modal>
+<!-- <app-meeting-evaluation-form-modal
+  *ngIf="showCreateEvaluationModal"
+  [show]="showCreateEvaluationModal"
+  (closeRequested)="closeCreateEvaluationModal()">
+</app-meeting-evaluation-form-modal> -->
 
 <app-modal
   [showModal]="modal.show"

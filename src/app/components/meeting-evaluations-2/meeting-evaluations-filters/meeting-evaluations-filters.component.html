@@ -1,0 +1,494 @@
+<section class="meeting-evaluations-filters">
+
+  <div class="meeting-evaluations-filters__grid">
+
+   <div class="meeting-evaluations-filters__field">
+    <label
+        for="evaluation-student"
+        class="meeting-evaluations-filters__label"
+    >
+        Estudiante
+    </label>
+
+    <div class="meeting-evaluations-filters__autocomplete">
+
+        <div
+        class="meeting-evaluations-filters__input-wrapper"
+        [class.meeting-evaluations-filters__input-wrapper--invalid]="
+            isStudentFieldInvalid
+        "
+        >
+        <span
+            class="meeting-evaluations-filters__input-icon"
+            aria-hidden="true"
+        >
+            <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            >
+            <circle
+                cx="11"
+                cy="11"
+                r="6.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+            />
+
+            <path
+                d="M16 16L20 20"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+            />
+            </svg>
+        </span>
+
+        <input
+            id="evaluation-student"
+            type="text"
+            class="meeting-evaluations-filters__input"
+            placeholder="Buscar estudiante..."
+            autocomplete="off"
+            [ngModel]="studentSearch"
+            (ngModelChange)="onStudentInputChange($event)"
+            (blur)="onStudentInputBlur()"
+        />
+        </div>
+
+        <div
+        *ngIf="
+            showStudentDropdown &&
+            filteredStudents.length > 0
+        "
+        class="meeting-evaluations-filters__dropdown"
+        >
+        <button
+            *ngFor="let user of filteredStudents"
+            type="button"
+            class="meeting-evaluations-filters__dropdown-item"
+            (mousedown)="$event.preventDefault()"
+            (click)="onSelectStudent(user)"
+        >
+            <span
+            class="
+                meeting-evaluations-filters__avatar
+                meeting-evaluations-filters__avatar--student
+            "
+            >
+            {{ getStudentInitials(user) }}
+            </span>
+
+            <span class="meeting-evaluations-filters__user">
+            <strong>
+                {{ getStudentFullName(user) }}
+            </strong>
+
+            <small>
+                {{ getStudentIdentification(user) }}
+            </small>
+            </span>
+        </button>
+        </div>
+
+        <div
+        *ngIf="
+            showStudentDropdown &&
+            studentSearch.trim().length > 0 &&
+            filteredStudents.length === 0
+        "
+        class="
+            meeting-evaluations-filters__dropdown
+            meeting-evaluations-filters__dropdown--empty
+        "
+        >
+        No se encontraron estudiantes.
+        </div>
+
+    </div>
+    </div>
+
+    <div class="meeting-evaluations-filters__field">
+        <label
+            for="evaluation-instructor"
+            class="meeting-evaluations-filters__label"
+        >
+            Instructor
+        </label>
+
+        <div class="meeting-evaluations-filters__autocomplete">
+
+            <div
+            class="meeting-evaluations-filters__input-wrapper"
+            [class.meeting-evaluations-filters__input-wrapper--invalid]="
+                isInstructorFieldInvalid
+            "
+            >
+            <span
+                class="meeting-evaluations-filters__input-icon"
+                aria-hidden="true"
+            >
+                <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                >
+                <circle
+                    cx="11"
+                    cy="11"
+                    r="6.5"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                />
+
+                <path
+                    d="M16 16L20 20"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                />
+                </svg>
+            </span>
+
+            <input
+                id="evaluation-instructor"
+                type="text"
+                class="meeting-evaluations-filters__input"
+                placeholder="Buscar instructor..."
+                autocomplete="off"
+                [ngModel]="instructorSearch"
+                (ngModelChange)="onInstructorInputChange($event)"
+                (blur)="onInstructorInputBlur()"
+            />
+            </div>
+
+            <div
+            *ngIf="
+                showInstructorDropdown &&
+                filteredInstructors.length > 0
+            "
+            class="meeting-evaluations-filters__dropdown"
+            >
+            <button
+                *ngFor="let user of filteredInstructors"
+                type="button"
+                class="meeting-evaluations-filters__dropdown-item"
+                (mousedown)="$event.preventDefault()"
+                (click)="onSelectInstructor(user)"
+            >
+                <span
+                class="
+                    meeting-evaluations-filters__avatar
+                    meeting-evaluations-filters__avatar--instructor
+                "
+                >
+                {{ getInstructorInitials(user) }}
+                </span>
+
+                <span class="meeting-evaluations-filters__user">
+                <strong>
+                    {{ getInstructorFullName(user) }}
+                </strong>
+
+                <small>
+                    {{ getInstructorEmail(user) }}
+                </small>
+                </span>
+            </button>
+            </div>
+
+            <div
+            *ngIf="
+                showInstructorDropdown &&
+                instructorSearch.trim().length > 0 &&
+                filteredInstructors.length === 0
+            "
+            class="
+                meeting-evaluations-filters__dropdown
+                meeting-evaluations-filters__dropdown--empty
+            "
+            >
+            No se encontraron instructores.
+            </div>
+
+        </div>
+        </div>
+
+    <div class="meeting-evaluations-filters__field">
+      <label class="meeting-evaluations-filters__label">
+        Fecha desde
+      </label>
+
+      <div class="meeting-evaluations-filters__input-wrapper">
+        <span
+          class="meeting-evaluations-filters__input-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="5"
+              width="16"
+              height="15"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+            <path
+              d="M8 3v4M16 3v4M4 9h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <input
+          type="date"
+          class="
+            meeting-evaluations-filters__input
+            meeting-evaluations-filters__input--date
+          "
+          [(ngModel)]="from"
+        />
+      </div>
+    </div>
+
+    <div class="meeting-evaluations-filters__field">
+      <label class="meeting-evaluations-filters__label">
+        Fecha hasta
+      </label>
+
+      <div class="meeting-evaluations-filters__input-wrapper">
+        <span
+          class="meeting-evaluations-filters__input-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="5"
+              width="16"
+              height="15"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+            <path
+              d="M8 3v4M16 3v4M4 9h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <input
+          type="date"
+          class="
+            meeting-evaluations-filters__input
+            meeting-evaluations-filters__input--date
+          "
+          [(ngModel)]="to"
+        />
+      </div>
+    </div>
+
+    <div class="meeting-evaluations-filters__field">
+      <label class="meeting-evaluations-filters__label">
+        Estado
+      </label>
+
+      <div class="meeting-evaluations-filters__select-wrapper">
+        <select
+          class="meeting-evaluations-filters__select"
+          [(ngModel)]="accepted"
+        >
+          <option value="all">
+            Todos
+          </option>
+
+          <option value="accepted">
+            Aceptadas
+          </option>
+
+          <option value="rejected">
+            No aceptadas
+          </option>
+        </select>
+
+        <span
+          class="meeting-evaluations-filters__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M7 10L12 15L17 10"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="meeting-evaluations-filters__field">
+      <label class="meeting-evaluations-filters__label">
+        Ordenar por
+      </label>
+
+      <div class="meeting-evaluations-filters__select-wrapper">
+        <select
+          class="meeting-evaluations-filters__select"
+          [ngModel]="sortBy"
+          (ngModelChange)="onSortFieldChange($event)"
+        >
+          <option value="createdAt">
+            Fecha de evaluación
+          </option>
+
+          <option value="rating">
+            Puntuación
+          </option>
+        </select>
+
+        <span
+          class="meeting-evaluations-filters__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M7 10L12 15L17 10"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="meeting-evaluations-filters__field">
+      <label class="meeting-evaluations-filters__label">
+        Dirección
+      </label>
+
+      <div class="meeting-evaluations-filters__select-wrapper">
+        <select
+          class="meeting-evaluations-filters__select"
+          [ngModel]="sortOrder"
+          (ngModelChange)="onSortOrderChange($event)"
+        >
+          <option value="desc">
+            Descendente
+          </option>
+
+          <option value="asc">
+            Ascendente
+          </option>
+        </select>
+
+        <span
+          class="meeting-evaluations-filters__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M7 10L12 15L17 10"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="meeting-evaluations-filters__actions">
+      <button
+        type="button"
+        class="
+          meeting-evaluations-filters__button
+          meeting-evaluations-filters__button--clear
+        "
+        (click)="onClear()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M20 11a8 8 0 1 0-2.34 5.66"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+          <path
+            d="M20 5v6h-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        <span>
+          Limpiar
+        </span>
+      </button>
+
+      <button
+        type="button"
+        class="
+          meeting-evaluations-filters__button
+          meeting-evaluations-filters__button--search
+        "
+        (click)="onSearch()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+          <path
+            d="M16 16L20 20"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Buscar
+        </span>
+      </button>
+    </div>
+
+  </div>
+
+</section>

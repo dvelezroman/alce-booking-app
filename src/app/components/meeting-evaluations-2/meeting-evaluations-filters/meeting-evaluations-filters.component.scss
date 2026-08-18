@@ -1,0 +1,400 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.meeting-evaluations-filters {
+  width: 100%;
+  padding: 0.95rem 1.05rem;
+  box-sizing: border-box;
+}
+
+.meeting-evaluations-filters__grid {
+  display: grid;
+  grid-template-columns:
+    minmax(10rem, 1.15fr)
+    minmax(10rem, 1.15fr)
+    minmax(9rem, 0.95fr)
+    minmax(9rem, 0.95fr)
+    minmax(9rem, 0.9fr);
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.meeting-evaluations-filters__field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+
+.meeting-evaluations-filters__label {
+  color: #505166;
+  font-size: 0.69rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.meeting-evaluations-filters__input-wrapper,
+.meeting-evaluations-filters__select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.meeting-evaluations-filters__input-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.7rem;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #85869a;
+  pointer-events: none;
+}
+
+.meeting-evaluations-filters__input-icon svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.meeting-evaluations-filters__input,
+.meeting-evaluations-filters__select {
+  width: 100%;
+  height: 2.35rem;
+  color: #3a3b4f;
+  background: #ffffff;
+  border: 1px solid #e1e4ec;
+  border-radius: 0.48rem;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.72rem;
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* =========================
+   AUTOCOMPLETE
+========================= */
+
+.meeting-evaluations-filters__autocomplete {
+  position: relative;
+  width: 100%;
+}
+
+.meeting-evaluations-filters__input-wrapper--invalid
+.meeting-evaluations-filters__input {
+  border-color: #d95b68;
+  box-shadow:
+    0 0 0 3px rgba(217, 91, 104, 0.06);
+}
+
+
+/* =========================
+   DROPDOWN
+========================= */
+
+.meeting-evaluations-filters__dropdown {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  max-height: 15rem;
+  padding: 0.3rem;
+
+  overflow-y: auto;
+
+  background: #ffffff;
+
+  border: 1px solid #e4e6ed;
+  border-radius: 0.55rem;
+
+  box-shadow:
+    0 12px 28px rgba(27, 30, 60, 0.12),
+    0 3px 8px rgba(27, 30, 60, 0.04);
+}
+
+.meeting-evaluations-filters__dropdown-item {
+  width: 100%;
+  min-height: 3.1rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  padding: 0.45rem 0.5rem;
+
+  color: #37384d;
+  background: transparent;
+
+  border: 0;
+  border-radius: 0.42rem;
+
+  font-family: inherit;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    background-color 0.12s ease;
+}
+
+.meeting-evaluations-filters__dropdown-item:hover {
+  background: #f7f7fb;
+}
+
+.meeting-evaluations-filters__dropdown-item:active {
+  transform: scale(0.99);
+}
+
+.meeting-evaluations-filters__dropdown--empty {
+  padding: 0.7rem;
+
+  color: #858698;
+
+  font-size: 0.69rem;
+  text-align: center;
+}
+
+
+/* =========================
+   AVATAR
+========================= */
+
+.meeting-evaluations-filters__avatar {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.meeting-evaluations-filters__avatar--student {
+  color: #533bd7;
+  background: rgba(83, 59, 215, 0.1);
+}
+
+.meeting-evaluations-filters__avatar--instructor {
+  color: #176f55;
+  background: rgba(23, 145, 102, 0.1);
+}
+
+
+/* =========================
+   USER
+========================= */
+
+.meeting-evaluations-filters__user {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.08rem;
+}
+
+.meeting-evaluations-filters__user strong {
+  overflow: hidden;
+
+  color: #303144;
+
+  font-size: 0.7rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.meeting-evaluations-filters__user small {
+  overflow: hidden;
+
+  color: #858698;
+
+  font-size: 0.63rem;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.meeting-evaluations-filters__input {
+  padding: 0 0.75rem 0 2.1rem;
+}
+
+.meeting-evaluations-filters__input::placeholder {
+  color: #9b9cad;
+}
+
+.meeting-evaluations-filters__input--date {
+  padding-right: 0.65rem;
+}
+
+.meeting-evaluations-filters__input:hover,
+.meeting-evaluations-filters__select:hover {
+  border-color: #d2d5df;
+}
+
+.meeting-evaluations-filters__input:focus,
+.meeting-evaluations-filters__select:focus {
+  border-color: #7665e8;
+  box-shadow:
+    0 0 0 3px rgba(91, 70, 232, 0.07);
+}
+
+.meeting-evaluations-filters__select {
+  appearance: none;
+  padding: 0 2rem 0 0.7rem;
+  cursor: pointer;
+}
+
+.meeting-evaluations-filters__select-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.68rem;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6f7086;
+  pointer-events: none;
+}
+
+.meeting-evaluations-filters__select-icon svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.meeting-evaluations-filters__actions {
+  grid-column: 4 / 6;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.meeting-evaluations-filters__button {
+  min-width: 6.6rem;
+  height: 2.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0 0.85rem;
+  border-radius: 0.48rem;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.meeting-evaluations-filters__button:active {
+  transform: scale(0.98);
+}
+
+.meeting-evaluations-filters__button svg {
+  width: 0.92rem;
+  height: 0.92rem;
+}
+
+.meeting-evaluations-filters__button--clear {
+  color: #55566b;
+  background: #ffffff;
+  border: 1px solid #dfe2e9;
+}
+
+.meeting-evaluations-filters__button--clear:hover {
+  background: #f7f8fa;
+  border-color: #d1d4dd;
+}
+
+.meeting-evaluations-filters__button--search {
+  color: #ffffff;
+  background:
+    linear-gradient(
+      135deg,
+      #4b2ce8 0%,
+      #5e32e9 100%
+    );
+  border: 1px solid transparent;
+  box-shadow:
+    0 3px 8px rgba(76, 47, 220, 0.13);
+}
+
+.meeting-evaluations-filters__button--search:hover {
+  box-shadow:
+    0 5px 11px rgba(76, 47, 220, 0.18);
+}
+
+@media (max-width: 1200px) {
+  .meeting-evaluations-filters__grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .meeting-evaluations-filters__actions {
+    grid-column: 2 / 4;
+  }
+}
+
+@media (max-width: 800px) {
+  .meeting-evaluations-filters {
+    padding: 0.85rem;
+  }
+
+  .meeting-evaluations-filters__grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .meeting-evaluations-filters__actions {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .meeting-evaluations-filters {
+    padding: 0.75rem;
+  }
+
+  .meeting-evaluations-filters__grid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .meeting-evaluations-filters__actions {
+    grid-column: auto;
+    width: 100%;
+  }
+
+  .meeting-evaluations-filters__button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 400px) {
+  .meeting-evaluations-filters__actions {
+    flex-direction: column;
+  }
+
+  .meeting-evaluations-filters__button {
+    width: 100%;
+  }
+}

@@ -17,6 +17,7 @@ import { LinksPaginationComponent } from '../../../components/links/links-pagina
 import { LinksFormModalComponent } from '../../../components/links/links-form-modal/links-form-modal.component';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
+import { LinksSummaryComponent } from "../../../components/links/links-summary/links-summary.component";
 
 
 @Component({
@@ -31,7 +32,8 @@ import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto'
     LinksTableComponent,
     LinksPaginationComponent,
     LinksFormModalComponent,
-  ],
+    LinksSummaryComponent,
+],
   templateUrl: './links.component.html',
   styleUrls: ['./links.component.scss'],
 })
@@ -57,6 +59,120 @@ export class LinksComponent implements OnInit {
   };
 
   selectedLink: MeetingLinkDto | null = null;
+
+  /* =========================
+    SUMMARY
+  ========================= */
+
+  /**
+   * Total real de enlaces registrados.
+   * No depende de los filtros ni de la paginación.
+   */
+  get totalLinks(): number {
+    return this.links.length;
+  }
+
+
+  /**
+   * Enlaces que tienen una contraseña registrada.
+   */
+  get linksWithPassword(): number {
+    return this.links.filter(link => {
+      return !!link.password?.trim();
+    }).length;
+  }
+
+
+  /**
+   * Enlaces que no tienen contraseña.
+   */
+  get linksWithoutPassword(): number {
+    return this.links.filter(link => {
+      return !link.password?.trim();
+    }).length;
+  }
+
+
+  /**
+   * Porcentaje de enlaces protegidos.
+   */
+  get passwordCoveragePercentage(): number {
+    if (!this.totalLinks) {
+      return 0;
+    }
+
+    return Math.round(
+      (
+        this.linksWithPassword /
+        this.totalLinks
+      ) * 100
+    );
+  }
+
+
+  /**
+   * Último enlace registrado.
+   *
+   * Como no tengo aquí la estructura completa de MeetingLinkDto,
+   * buscamos createdAt / createdDate / created de forma segura.
+   */
+  get latestLink(): MeetingLinkDto | null {
+    if (!this.links.length) {
+      return null;
+    }
+
+    const linksWithDate = [...this.links].sort((a, b) => {
+      const dateA = this.getLinkTimestamp(a);
+      const dateB = this.getLinkTimestamp(b);
+
+      return dateB - dateA;
+    });
+
+    return linksWithDate[0] ?? null;
+  }
+
+
+  /**
+   * Descripción del último enlace registrado.
+   */
+  get latestLinkDescription(): string {
+    return (
+      this.latestLink?.description?.trim() ||
+      'Sin registros'
+    );
+  }
+
+
+  /**
+   * Obtiene un timestamp independientemente del nombre
+   * utilizado actualmente por el DTO.
+   */
+  private getLinkTimestamp(
+    link: MeetingLinkDto
+  ): number {
+
+    const item = link as MeetingLinkDto & {
+      createdAt?: string | Date;
+      createdDate?: string | Date;
+      created?: string | Date;
+    };
+
+    const value =
+      item.createdAt ??
+      item.createdDate ??
+      item.created;
+
+    if (!value) {
+      return 0;
+    }
+
+    const timestamp =
+      new Date(value).getTime();
+
+    return Number.isNaN(timestamp)
+      ? 0
+      : timestamp;
+  }
 
 
   /* =========================
