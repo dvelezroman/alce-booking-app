@@ -1,87 +1,217 @@
-/* ------------------------------ */
-/* TÍTULO SUPERIOR */
-/* ------------------------------ */
-
-.title {
-  position: fixed;
-  top: 0;
-  left: 0;
+:host {
+  display: block;
   width: 100%;
-  background-color: #f2f2f2;
-  color: #353535;
-  z-index: 10;
-  text-align: center;
 }
 
-.title.stage {
-  font-size: 1.5rem;
-  line-height: 75px;
-  font-weight: 700;
-}
+/* =========================
+   PAGE
+========================= */
 
-/* ------------------------------ */
-/* CONTENEDOR PRINCIPAL */
-/* ------------------------------ */
-
-.meeting-evaluations-section {
-  background-color: #f2f2f2;
+.statistics-page {
+  width: calc(100% - 76px);
   min-height: 100vh;
-  width: 100%;
-  padding: 1rem;
-  padding-top: 80px;
-  padding-bottom: 2rem;
+  margin-left: 64px;
+  padding: 1rem 1.2rem 1.6rem;
   box-sizing: border-box;
+}
+
+.statistics-page__container {
+  width: 100%;
+  max-width: 1750px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1.8rem;
+  gap: 0.85rem;
 }
 
-/* ------------------------------ */
-/* BLOQUE FILTROS */
-/* ------------------------------ */
+/* =========================
+   COMMON CARDS
+========================= */
 
-.filters-wrapper {
-  width: 100%;
-  max-width: 800px;
+.statistics-page__block,
+.statistics-page__chart-card,
+.statistics-page__detail {
+  background: #ffffff;
+  border: 1px solid #e8eaf2;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 16px rgba(31, 42, 89, 0.025);
+  box-sizing: border-box;
 }
 
-/* ------------------------------ */
-/* BLOQUE RESULTADOS */
-/* ------------------------------ */
+/* =========================
+   GENERAL SUMMARY
+========================= */
 
-.results-wrapper {
-  width: 100%;
-  max-width: 700px;
+.statistics-page__general {
+  padding: 0.85rem 0.95rem 0.95rem;
+}
+
+.statistics-page__section-header {
   display: flex;
-  justify-content: center;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-bottom: 0.7rem;
 }
 
+.statistics-page__section-header h2,
+.statistics-page__table-header h2 {
+  margin: 0;
+  color: #292a3e;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
 
-/* ------------------------------ */
-/* RESPONSIVE */
-/* ------------------------------ */
+.statistics-page__section-header span {
+  color: #7c7e91;
+  font-size: 0.66rem;
+  font-weight: 400;
+}
 
-@media (max-width: 768px) {
-  .title.stage {
-    font-size: 1.2rem;
-    line-height: 65px;
+.statistics-page__general-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 16rem;
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+.statistics-page__summary,
+.statistics-page__distribution {
+  min-width: 0;
+}
+
+/* =========================
+   INSTRUCTOR SECTION
+========================= */
+
+.statistics-page__instructors {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.statistics-page__instructors--detail-open {
+  grid-template-columns: minmax(0, 1fr) 20rem;
+}
+
+.statistics-page__table-card {
+  min-width: 0;
+  overflow: visible;
+}
+
+.statistics-page__table-header {
+  min-height: 2.8rem;
+  display: flex;
+  align-items: center;
+  padding: 0.65rem 0.95rem;
+  box-sizing: border-box;
+}
+
+.statistics-page__detail {
+  position: sticky;
+  top: 1rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* =========================
+   CHARTS
+========================= */
+
+.statistics-page__charts {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.15fr)
+    minmax(0, 0.85fr);
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+.statistics-page__chart-card {
+  min-width: 0;
+  min-height: 18rem;
+  overflow: hidden;
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media (max-width: 1200px) {
+  .statistics-page {
+    padding: 0.9rem 1rem 1.4rem;
   }
 
-  .meeting-evaluations-section {
-    padding: 1rem;
-    padding-top: 90px;
-    gap: 1.2rem;
+  .statistics-page__general-grid {
+    grid-template-columns: minmax(0, 1fr) 14rem;
   }
 
-  .filters-wrapper,
-  .results-wrapper {
+  .statistics-page__instructors--detail-open {
+    grid-template-columns: minmax(0, 1fr) 18rem;
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 991px) {
+  .statistics-page {
     width: 100%;
+    margin-left: 0;
+    padding: 0.8rem;
+  }
+
+  .statistics-page__general-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .statistics-page__instructors--detail-open {
+    grid-template-columns: 1fr;
+  }
+
+  .statistics-page__detail {
+    position: static;
+  }
+
+  .statistics-page__charts {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 480px) {
-  .title.stage {
-    font-size: 1.4rem;
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .statistics-page {
+    padding: 0.65rem;
+  }
+
+  .statistics-page__container {
+    gap: 0.7rem;
+  }
+
+  .statistics-page__block,
+  .statistics-page__general,
+  .statistics-page__table-card,
+  .statistics-page__chart-card,
+  .statistics-page__detail {
+    border-radius: 0.7rem;
+  }
+
+  .statistics-page__general {
+    padding: 0.75rem;
+  }
+
+  .statistics-page__section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.12rem;
+  }
+
+  .statistics-page__chart-card {
+    min-height: 15rem;
   }
 }

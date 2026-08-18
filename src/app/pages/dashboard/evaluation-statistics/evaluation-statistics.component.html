@@ -1,28 +1,122 @@
-<h2 class="title stage">Estadísticas</h2>
+<main class="statistics-page">
+  <div class="statistics-page__container">
 
-<section class="meeting-evaluations-section">
+    <!-- HEADER -->
+    <section class="statistics-page__general">
+      <app-statistics-header>
+      </app-statistics-header>
+    </section>
 
-  <!-- FILTERS -->
-  <div class="filters-wrapper">
-    <app-meeting-evaluations-filters
-      [mode]="'statistics'"
-      (filtersSubmitted)="onFiltersSubmitted($event)">
-    </app-meeting-evaluations-filters>
+    <!-- FILTERS -->
+    <section class="statistics-page__block">
+      <app-statistics-filters
+        [filteredInstructors]="filteredInstructors"
+        [showInstructorDropdown]="showInstructorDropdown"
+        [isInstructorFieldInvalid]="isInstructorFieldInvalid"
+
+        (instructorInputChange)="onInstructorSearchChange($event)"
+        (instructorSelected)="onInstructorSelected($event)"
+        (instructorDropdownHidden)="hideInstructorDropdown()"
+
+        (filtersSubmitted)="onFiltersSubmitted($event)">
+      </app-statistics-filters>
+    </section>
+
+    <!-- GENERAL SUMMARY -->
+    <section class="statistics-page__general">
+      <header class="statistics-page__section-header">
+        <h2>Resumen general</h2>
+        <span>Rango seleccionado</span>
+      </header>
+
+      <div class="statistics-page__general-grid">
+        <div class="statistics-page__summary">
+          <app-statistics-summary
+            [statistics]="statistics"
+            [loading]="loading">
+          </app-statistics-summary>
+        </div>
+
+        <div class="statistics-page__distribution">
+          <app-statistics-rating-distribution
+            [statistics]="statistics"
+            [loading]="loading">
+          </app-statistics-rating-distribution>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSTRUCTORS -->
+    <section
+      class="statistics-page__instructors"
+      [class.statistics-page__instructors--detail-open]="
+        showInstructorDetail && selectedInstructor
+      ">
+
+      <div class="statistics-page__table-card">
+
+        <header class="statistics-page__table-header">
+          <h2>Resumen por instructor</h2>
+        </header>
+
+        <app-statistics-instructor-table
+          [instructors]="paginatedInstructors"
+          [loading]="loading"
+          [startIndex]="startIndex"
+          (instructorSelected)="openInstructorDetail($event)">
+        </app-statistics-instructor-table>
+
+        <app-statistics-pagination
+          [page]="page"
+          [totalPages]="totalPages"
+          [total]="total"
+          [limit]="limit"
+          [limitOptions]="limitOptions"
+          [canPrev]="canPrev"
+          [canNext]="canNext"
+          [paginationLabel]="paginationLabel"
+          (pageChange)="onPageChange($event)"
+          (previousRequested)="onPrev()"
+          (nextRequested)="onNext()"
+          (limitChange)="onLimitChange($event)">
+        </app-statistics-pagination>
+
+      </div>
+
+      <aside
+        *ngIf="showInstructorDetail && selectedInstructor"
+        class="statistics-page__detail">
+
+        <app-statistics-instructor-detail-panel
+          [instructor]="selectedInstructor"
+          (closeRequested)="closeInstructorDetail()">
+        </app-statistics-instructor-detail-panel>
+
+      </aside>
+
+    </section>
+
+    <!-- CHARTS -->
+    <!-- <section class="statistics-page__charts">
+
+      <div class="statistics-page__chart-card">
+        <app-statistics-rating-bar-chart
+          [statistics]="statistics"
+          [loading]="loading">
+        </app-statistics-rating-bar-chart>
+      </div>
+
+      <div class="statistics-page__chart-card">
+        <app-statistics-rating-range-chart
+          [statistics]="statistics"
+          [loading]="loading">
+        </app-statistics-rating-range-chart>
+      </div>
+
+    </section> -->
+
   </div>
-
-  <!-- RESULTS -->
-  <div class="results-wrapper">
-
-    <!-- TABLE -->
-    <app-meeting-evaluation-statistics-table
-      *ngIf="statistics && statistics.instructors.length"
-      [statistics]="statistics"
-      [searchAttempted]="searchAttempted">
-    </app-meeting-evaluation-statistics-table>
-
-  </div>
-
-</section>
+</main>
 
 <app-modal
   [showModal]="modal.show"
@@ -30,5 +124,7 @@
   [isError]="modal.isError"
   [isSuccess]="modal.isSuccess"
   [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
   (close)="modal.close()">
 </app-modal>

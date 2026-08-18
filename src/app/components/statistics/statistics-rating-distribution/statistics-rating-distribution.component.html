@@ -1,0 +1,142 @@
+<section class="rating-distribution">
+
+  <header class="rating-distribution__header">
+    <div>
+      <h3>
+        Distribución de calificaciones
+      </h3>
+
+      <p>
+        Evaluaciones por rango
+      </p>
+    </div>
+
+    <span
+      *ngIf="!loading"
+      class="rating-distribution__total">
+      {{ totalEvaluations }}
+    </span>
+  </header>
+
+  <!-- LOADING -->
+  <div
+    *ngIf="loading"
+    class="rating-distribution__loading">
+
+    <div
+      *ngFor="let item of [1, 2, 3, 4]"
+      class="rating-distribution__loading-row">
+
+      <span
+        class="
+          rating-distribution__skeleton
+          rating-distribution__skeleton--label
+        ">
+      </span>
+
+      <span
+        class="
+          rating-distribution__skeleton
+          rating-distribution__skeleton--bar
+        ">
+      </span>
+
+      <span
+        class="
+          rating-distribution__skeleton
+          rating-distribution__skeleton--value
+        ">
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- DATA -->
+  <div
+    *ngIf="!loading"
+    class="rating-distribution__list">
+
+    <div
+      *ngFor="
+        let item of distribution;
+        trackBy: trackByLabel
+      "
+      class="rating-distribution__item">
+
+      <div class="rating-distribution__item-header">
+
+        <span class="rating-distribution__label">
+          {{ item.label }}
+        </span>
+
+        <div class="rating-distribution__numbers">
+          <strong>
+            {{ item.value }}
+          </strong>
+
+          <span>
+            {{ item.percentage }}%
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="rating-distribution__track">
+
+        <span
+          class="rating-distribution__bar"
+          [class.rating-distribution__bar--excellent]="
+            item.modifier === 'excellent'
+          "
+          [class.rating-distribution__bar--good]="
+            item.modifier === 'good'
+          "
+          [class.rating-distribution__bar--regular]="
+            item.modifier === 'regular'
+          "
+          [class.rating-distribution__bar--low]="
+            item.modifier === 'low'
+          "
+          [style.width]="
+            getBarWidth(
+              item.percentage
+            )
+          ">
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- EMPTY INFO -->
+  <div
+    *ngIf="
+      !loading &&
+      totalEvaluations === 0
+    "
+    class="rating-distribution__empty">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true">
+      <path
+        d="M5 19V9M12 19V5M19 19v-7"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"/>
+    </svg>
+
+    <span>
+      Sin datos disponibles
+    </span>
+
+  </div>
+
+</section>

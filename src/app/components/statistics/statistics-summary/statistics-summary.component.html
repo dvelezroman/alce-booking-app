@@ -1,0 +1,424 @@
+<section
+  class="statistics-summary"
+  aria-label="Resumen general de estadísticas">
+
+  <!-- =========================
+       INSTRUCTORES
+  ========================== -->
+
+  <article class="statistics-summary__card">
+
+    <ng-container *ngIf="!loading; else loadingCard">
+
+      <div class="statistics-summary__main">
+
+        <div
+          class="
+            statistics-summary__icon
+            statistics-summary__icon--instructors
+          ">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true">
+
+            <circle
+              cx="8"
+              cy="8"
+              r="3"
+              stroke="currentColor"
+              stroke-width="1.7"/>
+
+            <circle
+              cx="16"
+              cy="8"
+              r="3"
+              stroke="currentColor"
+              stroke-width="1.7"/>
+
+            <path
+              d="M2.5 19c0-3 2.4-5 5.5-5s5.5 2 5.5 5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"/>
+
+            <path
+              d="M11.5 16c1-.9 2.3-1.5 4-1.5 3 0 5.5 1.8 5.5 4.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"/>
+
+          </svg>
+
+        </div>
+
+
+        <div class="statistics-summary__content">
+
+          <span class="statistics-summary__value">
+            {{ totalInstructors }}
+          </span>
+
+          <strong class="statistics-summary__title">
+            Instructores evaluados
+          </strong>
+
+          <span class="statistics-summary__description">
+            Total en el rango
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- FOOTER DESKTOP -->
+
+      <div
+        class="
+          statistics-summary__footer
+          statistics-summary__footer--desktop
+        ">
+
+        <div class="statistics-summary__footer-info">
+
+          <span class="statistics-summary__footer-label">
+            Participación académica
+          </span>
+
+          <strong class="statistics-summary__footer-value">
+            {{ totalInstructors }}
+          </strong>
+
+        </div>
+
+        <p class="statistics-summary__footer-text">
+          Instructores con evaluaciones registradas
+        </p>
+
+      </div>
+
+    </ng-container>
+
+  </article>
+
+
+  <!-- =========================
+       PROMEDIO
+  ========================== -->
+
+  <article class="statistics-summary__card">
+
+    <ng-container *ngIf="!loading; else loadingCard">
+
+      <div class="statistics-summary__main">
+
+        <div
+          class="
+            statistics-summary__icon
+            statistics-summary__icon--average
+          ">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true">
+
+            <path
+              d="m12 3 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9L12 3Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"/>
+
+          </svg>
+
+        </div>
+
+
+        <div class="statistics-summary__content">
+
+          <span class="statistics-summary__value">
+            {{ averageRating | number:'1.1-1' }}
+          </span>
+
+          <strong class="statistics-summary__title">
+            Promedio general
+          </strong>
+
+          <span class="statistics-summary__description">
+            Calificación promedio
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- FOOTER DESKTOP -->
+
+      <div
+        class="
+          statistics-summary__footer
+          statistics-summary__footer--desktop
+        ">
+
+        <div class="statistics-summary__footer-info">
+
+          <span class="statistics-summary__footer-label">
+            Promedio sobre 10
+          </span>
+
+          <strong class="statistics-summary__footer-value">
+            {{ averageRating | number:'1.1-1' }}
+          </strong>
+
+        </div>
+
+
+        <div class="statistics-summary__progress">
+
+          <span
+            class="
+              statistics-summary__progress-bar
+              statistics-summary__progress-bar--green
+            "
+            [style.width.%]="averagePercentage">
+          </span>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+
+  </article>
+
+
+  <!-- =========================
+       EVALUACIONES
+  ========================== -->
+
+  <article class="statistics-summary__card">
+
+    <ng-container *ngIf="!loading; else loadingCard">
+
+      <div class="statistics-summary__main">
+
+        <div
+          class="
+            statistics-summary__icon
+            statistics-summary__icon--evaluations
+          ">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true">
+
+            <rect
+              x="5"
+              y="4"
+              width="14"
+              height="16"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"/>
+
+            <path
+              d="M9 4V2.8h6V4M8.5 9h7M8.5 13h7M8.5 17h4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"/>
+
+          </svg>
+
+        </div>
+
+
+        <div class="statistics-summary__content">
+
+          <span class="statistics-summary__value">
+            {{ totalEvaluations | number }}
+          </span>
+
+          <strong class="statistics-summary__title">
+            Evaluaciones totales
+          </strong>
+
+          <span class="statistics-summary__description">
+            En el rango seleccionado
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- FOOTER DESKTOP -->
+
+      <div
+        class="
+          statistics-summary__footer
+          statistics-summary__footer--desktop
+        ">
+
+        <div class="statistics-summary__footer-info">
+
+          <span class="statistics-summary__footer-label">
+            Registros procesados
+          </span>
+
+          <strong class="statistics-summary__footer-value">
+            {{ totalEvaluations | number }}
+          </strong>
+
+        </div>
+
+        <p class="statistics-summary__footer-text">
+          Evaluaciones incluidas en el análisis
+        </p>
+
+      </div>
+
+    </ng-container>
+
+  </article>
+
+
+  <!-- =========================
+       OBSERVACIONES
+  ========================== -->
+
+  <article class="statistics-summary__card">
+
+    <ng-container *ngIf="!loading; else loadingCard">
+
+      <div class="statistics-summary__main">
+
+        <div
+          class="
+            statistics-summary__icon
+            statistics-summary__icon--observations
+          ">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true">
+
+            <path
+              d="M5 5.5h14v10H11l-4.5 3v-3H5v-10Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"/>
+
+          </svg>
+
+        </div>
+
+
+        <div class="statistics-summary__content">
+
+          <span class="statistics-summary__value">
+            {{ evaluationsWithObservation | number }}
+          </span>
+
+          <strong class="statistics-summary__title">
+            Con observaciones
+          </strong>
+
+          <span class="statistics-summary__description">
+            {{ observationsPercentage }}% del total
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- FOOTER DESKTOP -->
+
+      <div
+        class="
+          statistics-summary__footer
+          statistics-summary__footer--desktop
+        ">
+
+        <div class="statistics-summary__footer-info">
+
+          <span class="statistics-summary__footer-label">
+            Incidencia
+          </span>
+
+          <strong class="statistics-summary__footer-value">
+            {{ observationsPercentage }}%
+          </strong>
+
+        </div>
+
+
+        <div class="statistics-summary__progress">
+
+          <span
+            class="
+              statistics-summary__progress-bar
+              statistics-summary__progress-bar--orange
+            "
+            [style.width.%]="observationsPercentage">
+          </span>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+
+  </article>
+
+
+  <!-- =========================
+       LOADING
+  ========================== -->
+
+  <ng-template #loadingCard>
+
+    <div class="statistics-summary__loading">
+
+      <div
+        class="
+          statistics-summary__skeleton
+          statistics-summary__skeleton--icon
+        ">
+      </div>
+
+      <div class="statistics-summary__skeleton-content">
+
+        <span
+          class="
+            statistics-summary__skeleton
+            statistics-summary__skeleton--value
+          ">
+        </span>
+
+        <span
+          class="
+            statistics-summary__skeleton
+            statistics-summary__skeleton--title
+          ">
+        </span>
+
+        <span
+          class="
+            statistics-summary__skeleton
+            statistics-summary__skeleton--description
+          ">
+        </span>
+
+      </div>
+
+    </div>
+
+  </ng-template>
+
+</section>

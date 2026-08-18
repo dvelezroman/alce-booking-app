@@ -1,0 +1,275 @@
+<section class="statistics-instructor-table">
+
+  <div class="statistics-instructor-table__wrapper">
+
+    <table class="statistics-instructor-table__table">
+
+      <thead>
+        <tr>
+          <th class="statistics-instructor-table__col-position">
+            #
+          </th>
+
+          <th class="statistics-instructor-table__col-instructor">
+            Instructor
+          </th>
+
+          <th class="statistics-instructor-table__col-evaluations">
+            Evaluaciones
+          </th>
+
+          <th class="statistics-instructor-table__col-average">
+            Promedio
+          </th>
+
+          <th class="statistics-instructor-table__col-observations">
+            Con observaciones
+          </th>
+
+          <th class="statistics-instructor-table__col-percentage">
+            % observaciones
+          </th>
+
+          <th class="statistics-instructor-table__col-actions">
+            Acciones
+          </th>
+        </tr>
+      </thead>
+
+      <!-- LOADING -->
+      <tbody *ngIf="loading">
+
+        <tr
+          *ngFor="let item of [1, 2, 3, 4, 5]"
+          class="statistics-instructor-table__row">
+
+          <td>
+            <span class="statistics-instructor-table__skeleton statistics-instructor-table__skeleton--position"></span>
+          </td>
+
+          <td>
+            <div class="statistics-instructor-table__instructor">
+              <span class="statistics-instructor-table__skeleton statistics-instructor-table__skeleton--avatar"></span>
+
+              <div class="statistics-instructor-table__skeleton-stack">
+                <span class="statistics-instructor-table__skeleton statistics-instructor-table__skeleton--name"></span>
+                <span class="statistics-instructor-table__skeleton statistics-instructor-table__skeleton--email"></span>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <span class="statistics-instructor-table__skeleton statistics-instructor-table__skeleton--small"></span>
+          </td>
+
+          <td>
+            <span class="statistics-instructor-table__skeleton statistics-instructor-table__skeleton--rating"></span>
+          </td>
+
+          <td>
+            <span class="statistics-instructor-table__skeleton statistics-instructor-table__skeleton--small"></span>
+          </td>
+
+          <td>
+            <span class="statistics-instructor-table__skeleton statistics-instructor-table__skeleton--percentage"></span>
+          </td>
+
+          <td>
+            <span class="statistics-instructor-table__skeleton statistics-instructor-table__skeleton--button"></span>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+      <!-- DATA -->
+      <tbody *ngIf="!loading">
+
+        <tr
+          *ngFor="
+            let instructor of instructors;
+            let i = index;
+            trackBy: trackByInstructor
+          "
+          class="statistics-instructor-table__row">
+
+          <!-- POSITION -->
+         <td class="statistics-instructor-table__position">
+            {{ startIndex + i }}
+            </td>
+
+          <!-- INSTRUCTOR -->
+          <td>
+            <div class="statistics-instructor-table__instructor">
+
+              <span class="statistics-instructor-table__avatar">
+                {{ getInitials(instructor) }}
+              </span>
+
+              <div class="statistics-instructor-table__person">
+
+                <strong
+                  [title]="getInstructorName(instructor)">
+                  {{ getInstructorName(instructor) }}
+                </strong>
+
+                <small
+                  *ngIf="getInstructorEmail(instructor)"
+                  [title]="getInstructorEmail(instructor)">
+                  {{ getInstructorEmail(instructor) }}
+                </small>
+
+              </div>
+
+            </div>
+          </td>
+
+          <!-- TOTAL -->
+          <td>
+            <span class="statistics-instructor-table__number">
+              {{ getTotalEvaluations(instructor) }}
+            </span>
+          </td>
+
+          <!-- AVERAGE -->
+          <td>
+
+            <div
+              class="statistics-instructor-table__rating"
+              [class.statistics-instructor-table__rating--excellent]="
+                getRatingClass(getAverageRating(instructor)) === 'excellent'
+              "
+              [class.statistics-instructor-table__rating--good]="
+                getRatingClass(getAverageRating(instructor)) === 'good'
+              "
+              [class.statistics-instructor-table__rating--regular]="
+                getRatingClass(getAverageRating(instructor)) === 'regular'
+              "
+              [class.statistics-instructor-table__rating--low]="
+                getRatingClass(getAverageRating(instructor)) === 'low'
+              ">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true">
+                <path
+                  d="m12 2.8 2.82 5.72 6.31.92-4.57 4.45 1.08 6.28L12 17.2l-5.64 2.97 1.08-6.28-4.57-4.45 6.31-.92L12 2.8Z"/>
+              </svg>
+
+              <strong>
+                {{ getAverageRating(instructor) | number:'1.1-1' }}
+              </strong>
+
+            </div>
+
+          </td>
+
+          <!-- OBSERVATIONS -->
+          <td>
+            <span class="statistics-instructor-table__number">
+              {{ getObservationCount(instructor) }}
+            </span>
+          </td>
+
+          <!-- PERCENTAGE -->
+          <td>
+
+            <div class="statistics-instructor-table__percentage">
+
+              <div class="statistics-instructor-table__percentage-track">
+                <span
+                  class="statistics-instructor-table__percentage-bar"
+                  [style.width.%]="getObservationPercentage(instructor)">
+                </span>
+              </div>
+
+              <span>
+                {{ getObservationPercentage(instructor) }}%
+              </span>
+
+            </div>
+
+          </td>
+
+          <!-- ACTION -->
+          <td class="statistics-instructor-table__actions-cell">
+
+            <button
+              type="button"
+              class="statistics-instructor-table__view"
+              aria-label="Ver detalle del instructor"
+              (click)="onViewInstructor(instructor)">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true">
+                <path
+                  d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="2.5"
+                  stroke="currentColor"
+                  stroke-width="1.7"/>
+              </svg>
+
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+
+    <!-- EMPTY -->
+    <div
+      *ngIf="
+        !loading &&
+        instructors.length === 0
+      "
+      class="statistics-instructor-table__empty">
+
+      <span class="statistics-instructor-table__empty-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true">
+          <circle
+            cx="12"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M5.5 19c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+        </svg>
+
+      </span>
+
+      <strong>
+        No hay instructores
+      </strong>
+
+      <span>
+        No se encontraron estadísticas para el rango seleccionado.
+      </span>
+
+    </div>
+
+  </div>
+
+</section>

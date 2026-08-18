@@ -1,0 +1,249 @@
+<aside
+  *ngIf="instructor"
+  class="statistics-detail">
+
+  <header class="statistics-detail__header">
+
+    <div class="statistics-detail__header-main">
+
+      <span
+        class="statistics-detail__header-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+          <circle
+            cx="12"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M5.5 19c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+        </svg>
+
+      </span>
+
+      <div>
+        <h3>
+          Detalle del instructor
+        </h3>
+
+        <p>
+          Resumen de evaluaciones
+        </p>
+      </div>
+
+    </div>
+
+    <button
+      type="button"
+      class="statistics-detail__close"
+      aria-label="Cerrar detalle"
+      (click)="onClose()">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+        <path
+          d="M6 6l12 12M18 6 6 18"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"/>
+      </svg>
+
+    </button>
+
+  </header>
+
+
+  <div class="statistics-detail__content">
+
+    <!-- PROFILE -->
+    <section class="statistics-detail__profile">
+
+      <span class="statistics-detail__avatar">
+        {{ getInitials() }}
+      </span>
+
+      <div class="statistics-detail__profile-info">
+
+        <strong>
+          {{ getInstructorName() }}
+        </strong>
+
+        <span *ngIf="getInstructorEmail()">
+          {{ getInstructorEmail() }}
+        </span>
+
+        <small>
+          ID {{ getInstructorId() }}
+        </small>
+
+      </div>
+
+    </section>
+
+
+    <!-- RATING -->
+    <section class="statistics-detail__rating-card">
+
+      <div class="statistics-detail__rating-main">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true">
+          <path
+            d="m12 2.8 2.82 5.72 6.31.92-4.57 4.45 1.08 6.28L12 17.2l-5.64 2.97 1.08-6.28-4.57-4.45 6.31-.92L12 2.8Z"/>
+        </svg>
+
+        <strong>
+          {{ getAverageRating() | number:'1.1-1' }}
+        </strong>
+
+        <span>
+          / 10
+        </span>
+
+      </div>
+
+      <span
+        class="statistics-detail__rating-label"
+        [class.statistics-detail__rating-label--excellent]="
+          getRatingModifier() === 'excellent'
+        "
+        [class.statistics-detail__rating-label--good]="
+          getRatingModifier() === 'good'
+        "
+        [class.statistics-detail__rating-label--regular]="
+          getRatingModifier() === 'regular'
+        "
+        [class.statistics-detail__rating-label--low]="
+          getRatingModifier() === 'low'
+        ">
+        {{ getRatingLabel() }}
+      </span>
+
+    </section>
+
+
+    <!-- SUMMARY -->
+    <section class="statistics-detail__metrics">
+
+      <article class="statistics-detail__metric">
+
+        <span class="statistics-detail__metric-label">
+          Evaluaciones
+        </span>
+
+        <strong>
+          {{ getTotalEvaluations() }}
+        </strong>
+
+      </article>
+
+
+      <article class="statistics-detail__metric">
+
+        <span class="statistics-detail__metric-label">
+          Con observaciones
+        </span>
+
+        <strong>
+          {{ getObservationCount() }}
+        </strong>
+
+      </article>
+
+    </section>
+
+
+    <!-- OBSERVATIONS -->
+    <section class="statistics-detail__section">
+
+      <header class="statistics-detail__section-header">
+        <h4>
+          Distribución de observaciones
+        </h4>
+      </header>
+
+      <div class="statistics-detail__progress-item">
+
+        <div class="statistics-detail__progress-header">
+
+          <span>
+            Con observaciones
+          </span>
+
+          <strong>
+            {{ getObservationCount() }}
+            ·
+            {{ getObservationPercentage() }}%
+          </strong>
+
+        </div>
+
+        <div class="statistics-detail__track">
+          <span
+            class="
+              statistics-detail__bar
+              statistics-detail__bar--observation
+            "
+            [style.width.%]="getObservationPercentage()">
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="statistics-detail__progress-item">
+
+        <div class="statistics-detail__progress-header">
+
+          <span>
+            Sin observaciones
+          </span>
+
+          <strong>
+            {{ getWithoutObservationCount() }}
+            ·
+            {{ getWithoutObservationPercentage() }}%
+          </strong>
+
+        </div>
+
+        <div class="statistics-detail__track">
+          <span
+            class="
+              statistics-detail__bar
+              statistics-detail__bar--without
+            "
+            [style.width.%]="getWithoutObservationPercentage()">
+          </span>
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <footer class="statistics-detail__footer">
+
+    <button
+      type="button"
+      class="statistics-detail__close-button"
+      (click)="onClose()">
+      Cerrar
+    </button>
+
+  </footer>
+
+</aside>

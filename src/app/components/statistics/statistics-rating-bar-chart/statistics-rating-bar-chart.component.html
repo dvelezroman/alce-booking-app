@@ -1,0 +1,265 @@
+<section class="rating-chart">
+
+  <!-- HEADER -->
+  <header class="rating-chart__header">
+
+    <div class="rating-chart__heading">
+
+      <span
+        class="rating-chart__heading-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <path
+            d="M5 19V11M12 19V5M19 19v-9"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+        <h3>
+          Calificación por instructor
+        </h3>
+
+        <p>
+          Comparativa del promedio obtenido
+        </p>
+      </div>
+
+    </div>
+
+
+    <div
+      *ngIf="
+        !loading &&
+        items.length > 0
+      "
+      class="rating-chart__header-summary">
+
+      <span>
+        Promedio
+      </span>
+
+      <strong>
+        {{ averageRating | number:'1.1-1' }}
+      </strong>
+
+      <small>
+        / 10
+      </small>
+
+    </div>
+
+  </header>
+
+
+  <!-- LOADING -->
+  <div
+    *ngIf="loading"
+    class="rating-chart__loading">
+
+    <div
+      *ngFor="
+        let item of [1, 2, 3, 4, 5]
+      "
+      class="rating-chart__loading-row">
+
+      <span
+        class="
+          rating-chart__skeleton
+          rating-chart__skeleton--avatar
+        ">
+      </span>
+
+      <div class="rating-chart__loading-content">
+
+        <span
+          class="
+            rating-chart__skeleton
+            rating-chart__skeleton--name
+          ">
+        </span>
+
+        <span
+          class="
+            rating-chart__skeleton
+            rating-chart__skeleton--bar
+          ">
+        </span>
+
+      </div>
+
+      <span
+        class="
+          rating-chart__skeleton
+          rating-chart__skeleton--value
+        ">
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- DATA -->
+  <div
+    *ngIf="
+      !loading &&
+      items.length > 0
+    "
+    class="rating-chart__list">
+
+    <article
+      *ngFor="
+        let item of items;
+        trackBy: trackByName
+      "
+      class="rating-chart__item">
+
+      <!-- PERSON -->
+      <div class="rating-chart__person">
+
+        <span class="rating-chart__avatar">
+          {{ item.initials }}
+        </span>
+
+        <div class="rating-chart__person-info">
+
+          <strong
+            [title]="item.name">
+            {{ item.name }}
+          </strong>
+
+          <small>
+            {{ item.evaluations }}
+            {{
+              item.evaluations === 1
+                ? 'evaluación'
+                : 'evaluaciones'
+            }}
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- BAR -->
+      <div class="rating-chart__bar-area">
+
+        <div class="rating-chart__track">
+
+          <span
+            class="rating-chart__bar"
+            [class.rating-chart__bar--excellent]="
+              item.modifier === 'excellent'
+            "
+            [class.rating-chart__bar--good]="
+              item.modifier === 'good'
+            "
+            [class.rating-chart__bar--regular]="
+              item.modifier === 'regular'
+            "
+            [class.rating-chart__bar--low]="
+              item.modifier === 'low'
+            "
+            [style.width.%]="item.percentage">
+          </span>
+
+        </div>
+
+        <div class="rating-chart__scale">
+          <span>0</span>
+          <span>5</span>
+          <span>10</span>
+        </div>
+
+      </div>
+
+
+      <!-- VALUE -->
+      <div class="rating-chart__value">
+
+        <div class="rating-chart__score">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true">
+            <path
+              d="m12 2.8 2.82 5.72 6.31.92-4.57 4.45 1.08 6.28L12 17.2l-5.64 2.97 1.08-6.28-4.57-4.45 6.31-.92L12 2.8Z"/>
+          </svg>
+
+          <strong>
+            {{ item.rating | number:'1.1-1' }}
+          </strong>
+
+        </div>
+
+        <span
+          class="rating-chart__badge"
+          [class.rating-chart__badge--excellent]="
+            item.modifier === 'excellent'
+          "
+          [class.rating-chart__badge--good]="
+            item.modifier === 'good'
+          "
+          [class.rating-chart__badge--regular]="
+            item.modifier === 'regular'
+          "
+          [class.rating-chart__badge--low]="
+            item.modifier === 'low'
+          ">
+          {{ getRatingLabel(item.rating) }}
+        </span>
+
+      </div>
+
+    </article>
+
+  </div>
+
+
+  <!-- EMPTY -->
+  <div
+    *ngIf="
+      !loading &&
+      items.length === 0
+    "
+    class="rating-chart__empty">
+
+    <span class="rating-chart__empty-icon">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true">
+
+        <path
+          d="M5 19V11M12 19V5M19 19v-9"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"/>
+
+      </svg>
+
+    </span>
+
+    <strong>
+      Sin datos de calificación
+    </strong>
+
+    <span>
+      No hay información disponible para el rango seleccionado.
+    </span>
+
+  </div>
+
+</section>

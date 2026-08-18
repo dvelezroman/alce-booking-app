@@ -1,0 +1,269 @@
+
+<section class="range-chart">
+
+  <header class="range-chart__header">
+
+    <div class="range-chart__heading">
+
+      <span
+        class="range-chart__heading-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <path
+            d="M5 19V13M10 19V8M15 19V5M20 19V10"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+        <h3>
+          Distribución por rango
+        </h3>
+
+        <p>
+          Evaluaciones agrupadas por calificación
+        </p>
+      </div>
+
+    </div>
+
+    <div
+      *ngIf="
+        !loading &&
+        dominantRange
+      "
+      class="range-chart__highlight">
+
+      <span>
+        Mayor frecuencia
+      </span>
+
+      <strong>
+        {{ dominantRange.label }}
+      </strong>
+
+    </div>
+
+  </header>
+
+
+  <!-- LOADING -->
+  <div
+    *ngIf="loading"
+    class="range-chart__loading">
+
+    <div
+      *ngFor="let item of [1, 2, 3, 4]"
+      class="range-chart__loading-item">
+
+      <span
+        class="
+          range-chart__skeleton
+          range-chart__skeleton--value
+        ">
+      </span>
+
+      <span
+        class="
+          range-chart__skeleton
+          range-chart__skeleton--column
+        ">
+      </span>
+
+      <span
+        class="
+          range-chart__skeleton
+          range-chart__skeleton--label
+        ">
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- CHART -->
+  <div
+    *ngIf="
+      !loading &&
+      totalEvaluations > 0
+    "
+    class="range-chart__body">
+
+    <!-- SCALE -->
+    <div class="range-chart__scale">
+
+      <span>100%</span>
+      <span>75%</span>
+      <span>50%</span>
+      <span>25%</span>
+      <span>0%</span>
+
+    </div>
+
+
+    <div class="range-chart__plot">
+
+      <!-- GRID -->
+      <div class="range-chart__grid">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+
+      <!-- COLUMNS -->
+      <div class="range-chart__columns">
+
+        <article
+          *ngFor="
+            let item of ranges;
+            trackBy: trackByRange
+          "
+          class="range-chart__column-item">
+
+          <div class="range-chart__column-area">
+
+            <div class="range-chart__tooltip">
+
+              <strong>
+                {{ item.value }}
+              </strong>
+
+              <span>
+                {{ item.percentage }}%
+              </span>
+
+            </div>
+
+            <div
+              class="range-chart__column"
+              [class.range-chart__column--excellent]="
+                item.modifier === 'excellent'
+              "
+              [class.range-chart__column--good]="
+                item.modifier === 'good'
+              "
+              [class.range-chart__column--regular]="
+                item.modifier === 'regular'
+              "
+              [class.range-chart__column--low]="
+                item.modifier === 'low'
+              "
+              [style.height.%]="item.height">
+            </div>
+
+          </div>
+
+
+          <div class="range-chart__column-label">
+
+            <strong>
+              {{ item.label }}
+            </strong>
+
+            <span>
+              {{ item.shortLabel }}
+            </span>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- LEGEND -->
+  <div
+    *ngIf="
+      !loading &&
+      totalEvaluations > 0
+    "
+    class="range-chart__legend">
+
+    <div
+      *ngFor="
+        let item of ranges;
+        trackBy: trackByRange
+      "
+      class="range-chart__legend-item">
+
+      <span
+        class="range-chart__legend-dot"
+        [class.range-chart__legend-dot--excellent]="
+          item.modifier === 'excellent'
+        "
+        [class.range-chart__legend-dot--good]="
+          item.modifier === 'good'
+        "
+        [class.range-chart__legend-dot--regular]="
+          item.modifier === 'regular'
+        "
+        [class.range-chart__legend-dot--low]="
+          item.modifier === 'low'
+        ">
+      </span>
+
+      <span>
+        {{ item.label }}
+      </span>
+
+      <strong>
+        {{ item.value }}
+      </strong>
+
+    </div>
+
+  </div>
+
+
+  <!-- EMPTY -->
+  <div
+    *ngIf="
+      !loading &&
+      totalEvaluations === 0
+    "
+    class="range-chart__empty">
+
+    <span class="range-chart__empty-icon">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true">
+
+        <path
+          d="M5 19V13M10 19V8M15 19V5M20 19V10"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"/>
+
+      </svg>
+
+    </span>
+
+    <strong>
+      Sin distribución disponible
+    </strong>
+
+    <span>
+      No existen evaluaciones para el rango seleccionado.
+    </span>
+
+  </div>
+
+</section>

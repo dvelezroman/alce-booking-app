@@ -1,0 +1,339 @@
+<section class="statistics-filters">
+
+  <div class="statistics-filters__grid">
+
+    <!-- INSTRUCTOR -->
+    <div class="statistics-filters__field">
+
+  <label
+    for="statistics-instructor"
+    class="statistics-filters__label">
+    Instructor
+        </label>
+
+        <div class="statistics-filters__autocomplete">
+
+            <div
+            class="statistics-filters__input-wrapper"
+            [class.statistics-filters__input-wrapper--invalid]="
+                isInstructorFieldInvalid
+            ">
+
+            <span
+                class="statistics-filters__field-icon"
+                aria-hidden="true">
+
+                <svg
+                viewBox="0 0 24 24"
+                fill="none">
+
+                <circle
+                    cx="11"
+                    cy="11"
+                    r="6.5"
+                    stroke="currentColor"
+                    stroke-width="1.8"/>
+
+                <path
+                    d="M16 16L20 20"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"/>
+
+                </svg>
+
+            </span>
+
+
+            <input
+                id="statistics-instructor"
+                type="text"
+                class="statistics-filters__input"
+                placeholder="Buscar instructor..."
+                autocomplete="off"
+
+                [ngModel]="instructorSearch"
+
+                (ngModelChange)="
+                onInstructorInputChange($event)
+                "
+
+                (blur)="
+                onInstructorInputBlur()
+                "/>
+
+            </div>
+
+
+            <!-- DROPDOWN -->
+            <div
+            *ngIf="
+                showInstructorDropdown &&
+                filteredInstructors.length > 0
+            "
+            class="statistics-filters__dropdown">
+
+            <button
+                *ngFor="
+                let instructor of filteredInstructors
+                "
+                type="button"
+                class="statistics-filters__dropdown-item"
+
+                (mousedown)="
+                $event.preventDefault()
+                "
+
+                (click)="
+                onSelectInstructor(
+                    instructor
+                )
+                ">
+
+                <span class="statistics-filters__avatar">
+                {{
+                    getInstructorInitials(
+                    instructor
+                    )
+                }}
+                </span>
+
+
+                <span class="statistics-filters__user">
+
+                <strong>
+                    {{
+                    getInstructorFullName(
+                        instructor
+                    )
+                    }}
+                </strong>
+
+                <small>
+                    {{
+                    getInstructorEmail(
+                        instructor
+                    )
+                    }}
+                </small>
+
+                </span>
+
+            </button>
+
+            </div>
+
+
+            <!-- EMPTY -->
+            <div
+            *ngIf="
+                showInstructorDropdown &&
+                instructorSearch.trim().length >= 2 &&
+                filteredInstructors.length === 0
+            "
+            class="
+                statistics-filters__dropdown
+                statistics-filters__dropdown--empty
+            ">
+
+            No se encontraron instructores.
+
+            </div>
+
+        </div>
+
+        </div>
+
+
+    <!-- FROM -->
+    <div class="statistics-filters__field">
+
+      <label
+        for="statistics-from"
+        class="statistics-filters__label">
+        Fecha desde
+      </label>
+
+      <div class="statistics-filters__input-wrapper">
+
+        <span
+          class="statistics-filters__field-icon"
+          aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+            <rect
+              x="4"
+              y="5"
+              width="16"
+              height="15"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"/>
+            <path
+              d="M8 3v4M16 3v4M4 9h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"/>
+          </svg>
+        </span>
+
+        <input
+          id="statistics-from"
+          type="date"
+          class="statistics-filters__input"
+          [(ngModel)]="from"/>
+
+      </div>
+
+    </div>
+
+
+    <!-- TO -->
+    <div class="statistics-filters__field">
+
+      <label
+        for="statistics-to"
+        class="statistics-filters__label">
+        Fecha hasta
+      </label>
+
+      <div class="statistics-filters__input-wrapper">
+
+        <span
+          class="statistics-filters__field-icon"
+          aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+            <rect
+              x="4"
+              y="5"
+              width="16"
+              height="15"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"/>
+            <path
+              d="M8 3v4M16 3v4M4 9h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"/>
+          </svg>
+        </span>
+
+        <input
+          id="statistics-to"
+          type="date"
+          class="statistics-filters__input"
+          [(ngModel)]="to"/>
+
+      </div>
+
+    </div>
+
+
+    <!-- MIN RATING -->
+    <div class="statistics-filters__field">
+
+      <label
+        for="statistics-min-rating"
+        class="statistics-filters__label">
+        Calificación mínima
+      </label>
+
+      <div class="statistics-filters__input-wrapper">
+
+        <span
+          class="statistics-filters__field-icon"
+          aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+            <path
+              d="m12 3 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9L12 3Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"/>
+          </svg>
+        </span>
+
+        <input
+          id="statistics-min-rating"
+          type="number"
+          class="statistics-filters__input"
+          placeholder="Ej. 7.0"
+          min="0"
+          max="10"
+          step="0.1"
+          [(ngModel)]="minAverageRating"/>
+
+      </div>
+
+    </div>
+
+
+    <!-- ACTIONS -->
+    <div class="statistics-filters__actions">
+
+      <button
+        type="button"
+        class="statistics-filters__button statistics-filters__button--clear"
+        (click)="onClear()">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true">
+          <path
+            d="M20 11a8 8 0 1 0-2.34 5.66"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+          <path
+            d="M20 5v6h-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+        </svg>
+
+        <span>
+          Limpiar
+        </span>
+
+      </button>
+
+      <button
+        type="button"
+        class="statistics-filters__button statistics-filters__button--search"
+        (click)="onSearch()">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true">
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.8"/>
+          <path
+            d="M16 16L20 20"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+        </svg>
+
+        <span>
+          Buscar
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>

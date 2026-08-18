@@ -1,0 +1,453 @@
+:host {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+.statistics-instructor-table {
+  position: relative;
+  width: 100%;
+
+  background: #ffffff;
+
+  overflow: visible;
+
+  box-sizing: border-box;
+}
+
+.statistics-instructor-table__wrapper {
+  width: 100%;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e4eb;
+  border-radius: 0.75rem;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+.statistics-instructor-table__table {
+  width: 100%;
+
+  table-layout: fixed;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  background: #ffffff;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.statistics-instructor-table__table thead tr {
+  height: 3rem;
+}
+
+.statistics-instructor-table__table th {
+  padding: 0.7rem 0.8rem;
+  color: #4932c9;
+  background: #fdfdff;
+  border-bottom: 1px solid #e9eaf1;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 0.69rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* =========================
+   COLUMNS
+========================= */
+
+.statistics-instructor-table__col-position {
+  width: 6%;
+}
+
+.statistics-instructor-table__col-instructor {
+  width: 29%;
+}
+
+.statistics-instructor-table__col-evaluations {
+  width: 12%;
+}
+
+.statistics-instructor-table__col-average {
+  width: 12%;
+}
+
+.statistics-instructor-table__col-observations {
+  width: 15%;
+}
+
+.statistics-instructor-table__col-percentage {
+  width: 18%;
+}
+
+.statistics-instructor-table__col-actions {
+  width: 8%;
+  text-align: center !important;
+}
+
+/* =========================
+   ROW
+========================= */
+
+.statistics-instructor-table__row td {
+  height: 4.3rem;
+  padding: 0.65rem 0.8rem;
+  color: #35364a;
+  background: #ffffff;
+  border-bottom: 1px solid #eceef4;
+  vertical-align: middle;
+  font-size: 0.71rem;
+  line-height: 1.4;
+  box-sizing: border-box;
+  transition: background-color 0.15s ease;
+}
+
+.statistics-instructor-table__row:hover td {
+  background: #fcfcff;
+}
+
+.statistics-instructor-table__row:last-child td {
+  border-bottom: 0;
+}
+
+/* =========================
+   POSITION
+========================= */
+
+.statistics-instructor-table__position {
+  color: #34354a !important;
+  font-size: 0.72rem !important;
+  font-weight: 600;
+}
+
+/* =========================
+   INSTRUCTOR
+========================= */
+
+.statistics-instructor-table__instructor {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.statistics-instructor-table__avatar {
+  width: 2.15rem;
+  height: 2.15rem;
+  flex: 0 0 2.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5037d9;
+  background: rgba(80, 55, 217, 0.1);
+  border-radius: 50%;
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+
+.statistics-instructor-table__person {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.16rem;
+}
+
+.statistics-instructor-table__person strong,
+.statistics-instructor-table__person small {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.statistics-instructor-table__person strong {
+  color: #28293d;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.statistics-instructor-table__person small {
+  color: #7d7e91;
+  font-size: 0.63rem;
+  font-weight: 400;
+}
+
+/* =========================
+   NUMBER
+========================= */
+
+.statistics-instructor-table__number {
+  color: #34354a;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* =========================
+   RATING
+========================= */
+
+.statistics-instructor-table__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.statistics-instructor-table__rating svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex: 0 0 0.95rem;
+}
+
+.statistics-instructor-table__rating strong {
+  color: #2c2d42;
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.statistics-instructor-table__rating--excellent svg {
+  color: #5238dd;
+}
+
+.statistics-instructor-table__rating--good svg {
+  color: #1ba365;
+}
+
+.statistics-instructor-table__rating--regular svg {
+  color: #e0a12a;
+}
+
+.statistics-instructor-table__rating--low svg {
+  color: #d94450;
+}
+
+/* =========================
+   PERCENTAGE
+========================= */
+
+.statistics-instructor-table__percentage {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statistics-instructor-table__percentage-track {
+  width: 100%;
+  max-width: 5rem;
+  height: 0.34rem;
+  overflow: hidden;
+  background: #eff0f4;
+  border-radius: 999px;
+}
+
+.statistics-instructor-table__percentage-bar {
+  display: block;
+  height: 100%;
+  background:
+    linear-gradient(
+      90deg,
+      #5a3cde 0%,
+      #7359e8 100%
+    );
+  border-radius: inherit;
+}
+
+.statistics-instructor-table__percentage > span {
+  flex-shrink: 0;
+  color: #67687c;
+  font-size: 0.65rem;
+}
+
+/* =========================
+   ACTION
+========================= */
+
+.statistics-instructor-table__actions-cell {
+  text-align: center;
+}
+
+.statistics-instructor-table__view {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #4e36ce;
+  background: #ffffff;
+  border: 1px solid #e3e5ec;
+  border-radius: 0.45rem;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.statistics-instructor-table__view:hover {
+  color: #422bc5;
+  background: #f8f7ff;
+  border-color: #d7d1f5;
+}
+
+.statistics-instructor-table__view:active {
+  transform: scale(0.95);
+}
+
+.statistics-instructor-table__view svg {
+  width: 0.92rem;
+  height: 0.92rem;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.statistics-instructor-table__empty {
+  min-height: 11rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 2rem;
+  color: #7c7d90;
+  text-align: center;
+}
+
+.statistics-instructor-table__empty-icon {
+  width: 2.7rem;
+  height: 2.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.3rem;
+  color: #5a42d9;
+  background: rgba(90, 66, 217, 0.08);
+  border-radius: 0.65rem;
+}
+
+.statistics-instructor-table__empty-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.statistics-instructor-table__empty strong {
+  color: #393a4e;
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.statistics-instructor-table__empty > span:last-child {
+  font-size: 0.68rem;
+}
+
+/* =========================
+   SKELETON
+========================= */
+
+.statistics-instructor-table__skeleton-stack {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.statistics-instructor-table__skeleton {
+  display: block;
+  height: 0.65rem;
+  background:
+    linear-gradient(
+      90deg,
+      #f0f1f5 25%,
+      #f7f7fa 50%,
+      #f0f1f5 75%
+    );
+  background-size: 200% 100%;
+  border-radius: 0.3rem;
+  animation: statistics-instructor-loading 1.3s infinite;
+}
+
+.statistics-instructor-table__skeleton--position {
+  width: 1rem;
+}
+
+.statistics-instructor-table__skeleton--avatar {
+  width: 2.15rem;
+  height: 2.15rem;
+  flex: 0 0 2.15rem;
+  border-radius: 50%;
+}
+
+.statistics-instructor-table__skeleton--name {
+  width: 65%;
+}
+
+.statistics-instructor-table__skeleton--email {
+  width: 82%;
+}
+
+.statistics-instructor-table__skeleton--small {
+  width: 2rem;
+}
+
+.statistics-instructor-table__skeleton--rating {
+  width: 3.2rem;
+}
+
+.statistics-instructor-table__skeleton--percentage {
+  width: 5rem;
+}
+
+.statistics-instructor-table__skeleton--button {
+  width: 2rem;
+  height: 2rem;
+  margin: 0 auto;
+  border-radius: 0.45rem;
+}
+
+@keyframes statistics-instructor-loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1050px) {
+  .statistics-instructor-table__wrapper {
+    overflow-x: auto;
+  }
+
+  .statistics-instructor-table__table {
+    min-width: 850px;
+  }
+}
+
+@media (max-width: 600px) {
+  .statistics-instructor-table__table {
+    min-width: 800px;
+  }
+
+  .statistics-instructor-table__row td {
+    height: 4rem;
+    font-size: 0.68rem;
+  }
+}
