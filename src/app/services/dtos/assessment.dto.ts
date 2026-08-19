@@ -42,8 +42,8 @@ export interface CreateAssessmentI {
   studentId: number;
   stageId: number;
   instructorId: number;
-  assessmentTypeId: number;
-  assessmentResourceIds: number[];
+  assessmentTypeId?: number;
+  assessmentResourceIds?: number[];
 }
 
 export interface UpdateAssessmentI {

@@ -441,18 +441,16 @@ export class AssessmentFormComponent {
 
       ...(this.notes.trim()
         ? {
-            notes:
-              this.notes.trim(),
+            note: this.notes.trim(),
           }
         : {}),
 
       ...(this.selectedResourceIds.length
         ? {
-            resources:
-              this.selectedResourceIds,
+            assessmentResourceIds: this.selectedResourceIds,
           }
         : {}),
-    } as CreateAssessmentI;
+    };
 
 
     this.assessmentCreated.emit(
