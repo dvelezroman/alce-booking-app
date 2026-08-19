@@ -1,0 +1,440 @@
+<section class="recent-reports">
+
+  <header class="recent-reports__header">
+
+    <span class="recent-reports__step">
+      3
+    </span>
+
+    <div>
+      <h2>
+        Reportes recientes
+      </h2>
+
+      <p>
+        Consulta el historial de reportes generados anteriormente.
+      </p>
+    </div>
+
+  </header>
+
+
+  @if (reports.length > 0) {
+
+    <div class="recent-reports__table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID del trabajo</th>
+            <th>Filtros aplicados</th>
+            <th>Estado</th>
+            <th>Filas</th>
+            <th>Fecha de creación</th>
+            <th>Fecha de finalización</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            report of reports;
+            track report.jobId
+          ) {
+
+            <tr>
+
+              <!-- JOB -->
+              <td>
+                <div class="recent-reports__job">
+
+                  <strong
+                    [title]="report.jobId"
+                  >
+                    {{ report.jobId }}
+                  </strong>
+
+                  <button
+                    type="button"
+                    title="Copiar ID"
+                    aria-label="Copiar ID"
+                    (click)="copyJobId(report.jobId)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <rect
+                        x="9"
+                        y="9"
+                        width="10"
+                        height="10"
+                        rx="2"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                      />
+
+                      <path
+                        d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </button>
+
+                </div>
+              </td>
+
+
+              <!-- FILTERS -->
+              <td>
+                <div class="recent-reports__filters">
+
+                  <span>
+                    Stage:
+                  </span>
+
+                  <strong>
+                    {{ getStageLabel(report) }}
+                  </strong>
+
+                  <i></i>
+
+                  <span>
+                    Sin clases:
+                  </span>
+
+                  <strong>
+                    {{ getNoClassesLabel(report) }}
+                  </strong>
+
+                </div>
+              </td>
+
+
+              <!-- STATUS -->
+              <td>
+                <span
+                  class="recent-status"
+                  [ngClass]="
+                    getStatusClass(
+                      report.status
+                    )
+                  "
+                >
+                  {{ getStatusLabel(report.status) }}
+                </span>
+              </td>
+
+
+              <!-- ROWS -->
+              <td>
+                <strong class="recent-reports__rows">
+                  {{ formatRows(report.rowCount) }}
+                </strong>
+              </td>
+
+
+              <!-- CREATED -->
+              <td>
+                <div class="recent-reports__date">
+
+                  <strong>
+                    {{ formatDate(report.createdAt) }}
+                  </strong>
+
+                  @if (
+                    formatTime(
+                      report.createdAt
+                    )
+                  ) {
+                    <span>
+                      {{
+                        formatTime(
+                          report.createdAt
+                        )
+                      }}
+                    </span>
+                  }
+
+                </div>
+              </td>
+
+
+              <!-- COMPLETED -->
+              <td>
+                <div class="recent-reports__date">
+
+                  <strong>
+                    {{ formatDate(report.completedAt) }}
+                  </strong>
+
+                  @if (
+                    formatTime(
+                      report.completedAt
+                    )
+                  ) {
+                    <span>
+                      {{
+                        formatTime(
+                          report.completedAt
+                        )
+                      }}
+                    </span>
+                  }
+
+                </div>
+              </td>
+
+
+              <!-- ACTIONS -->
+              <td>
+
+                <button
+                  type="button"
+                  class="recent-reports__action"
+                  [class.recent-reports__action--download]="
+                    report.status === 'completed'
+                  "
+                  [class.recent-reports__action--retry]="
+                    report.status === 'processing' ||
+                    report.status === 'queued'
+                  "
+                  [class.recent-reports__action--view]="
+                    report.status === 'failed' ||
+                    report.status === 'downloaded'
+                  "
+                  title="Ver acción"
+                  aria-label="Ver acción"
+                >
+
+                  @if (
+                    report.status === 'completed'
+                  ) {
+
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M12 4v11M8 11l4 4 4-4M5 19h14"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+
+                  } @else if (
+                    report.status === 'processing' ||
+                    report.status === 'queued'
+                  ) {
+
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M20 7v5h-5"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+
+                      <path
+                        d="M18.4 8.2A7.5 7.5 0 1 0 19 15"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+
+                  } @else {
+
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M3.5 12s3-5 8.5-5 8.5 5 8.5 5-3 5-8.5 5-8.5-5-8.5-5Z"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linejoin="round"
+                      />
+
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="2.3"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+                    </svg>
+
+                  }
+
+                </button>
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- PAGINATION -->
+    <footer class="recent-reports__pagination">
+
+      <span class="recent-reports__pagination-label">
+        {{ paginationLabel }}
+      </span>
+
+
+      <div class="recent-reports__pagination-controls">
+
+        <button
+          type="button"
+          [disabled]="!canPrev"
+          aria-label="Página anterior"
+          (click)="onPrevious()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m14 7-5 5 5 5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+
+
+        @for (
+          pageNumber of pages;
+          track pageNumber
+        ) {
+
+          <button
+            type="button"
+            [class.recent-reports__page--active]="
+              pageNumber === page
+            "
+            (click)="
+              onPageChange(
+                pageNumber
+              )
+            "
+          >
+            {{ pageNumber }}
+          </button>
+
+        }
+
+
+        <button
+          type="button"
+          [disabled]="!canNext"
+          aria-label="Página siguiente"
+          (click)="onNext()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m10 7 5 5-5 5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+
+      </div>
+
+
+      <div class="recent-reports__limit">
+
+        <span>
+          Filas por página
+        </span>
+
+        <select
+          [ngModel]="limit"
+          (ngModelChange)="
+            onLimitChange($event)
+          "
+        >
+          @for (
+            option of limitOptions;
+            track option
+          ) {
+            <option
+              [ngValue]="option"
+            >
+              {{ option }}
+            </option>
+          }
+        </select>
+
+      </div>
+
+    </footer>
+
+  } @else {
+
+    <div class="recent-reports__empty">
+
+      <span
+        class="recent-reports__empty-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M7 3.5h7l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 20V5A1.5 1.5 0 0 1 7.5 3.5Z"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M14 3.5V8h4M9 12h6M9 15h4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <strong>
+        No hay reportes recientes
+      </strong>
+
+      <span>
+        Los reportes generados aparecerán en esta sección.
+      </span>
+
+    </div>
+
+  }
+
+</section>

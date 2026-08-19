@@ -1,0 +1,537 @@
+<section class="active-status">
+
+  <header class="active-status__header">
+
+    <span class="active-status__step">
+      2
+    </span>
+
+    <div>
+      <h2>
+        Estado del reporte
+      </h2>
+
+      <p>
+        Monitorea el progreso y estado de tu reporte.
+      </p>
+    </div>
+
+  </header>
+
+
+  @if (hasStarted) {
+
+    <div class="active-status__content">
+
+      <!-- PROGRESS -->
+      <div class="active-status__progress-block">
+
+        <div class="active-status__progress-ring">
+
+          <svg
+            viewBox="0 0 100 100"
+            aria-hidden="true"
+          >
+            <circle
+              class="active-status__progress-track"
+              cx="50"
+              cy="50"
+              r="46"
+            />
+
+            <circle
+              class="active-status__progress-value"
+              cx="50"
+              cy="50"
+              r="46"
+              [attr.stroke-dasharray]="progressDashArray"
+            />
+          </svg>
+
+          <div class="active-status__progress-text">
+
+            <strong>
+              {{ normalizedProgress }}%
+            </strong>
+
+            <span>
+              Progreso estimado
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- STEPS -->
+      <div class="active-status__steps">
+
+        <!-- STEP 1 -->
+        <article
+          class="active-status__step-item"
+          [class.active-status__step-item--completed]="
+            receivedCompleted
+          "
+        >
+
+          <span class="active-status__step-marker">
+
+            @if (receivedCompleted) {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 12 3 3 7-7"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            }
+
+          </span>
+
+          <div>
+            <strong>
+              Reporte recibido
+            </strong>
+
+            <span>
+              Tu reporte ha sido registrado correctamente.
+            </span>
+          </div>
+
+        </article>
+
+
+        <span
+          class="active-status__line"
+          [class.active-status__line--active]="
+            receivedCompleted
+          "
+        ></span>
+
+
+        <!-- STEP 2 -->
+        <article
+          class="active-status__step-item"
+          [class.active-status__step-item--active]="
+            processingActive
+          "
+          [class.active-status__step-item--completed]="
+            processingCompleted
+          "
+        >
+
+          <span class="active-status__step-marker">
+
+            @if (processingCompleted) {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 12 3 3 7-7"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            }
+
+          </span>
+
+          <div>
+            <strong>
+              Procesando reporte
+            </strong>
+
+            <span>
+              El sistema está recopilando y procesando la información.
+            </span>
+          </div>
+
+          @if (processingActive) {
+            <small>
+              En progreso
+            </small>
+          }
+
+        </article>
+
+
+        <span
+          class="active-status__line"
+          [class.active-status__line--active]="
+            processingCompleted ||
+            finalizingActive
+          "
+        ></span>
+
+
+        <!-- STEP 3 -->
+        <article
+          class="active-status__step-item"
+          [class.active-status__step-item--active]="
+            finalizingActive
+          "
+          [class.active-status__step-item--completed]="
+            finalizingCompleted
+          "
+        >
+
+          <span class="active-status__step-marker">
+
+            @if (finalizingCompleted) {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 12 3 3 7-7"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            }
+
+          </span>
+
+          <div>
+            <strong>
+              Finalizando
+            </strong>
+
+            <span>
+              Estamos preparando tu archivo.
+            </span>
+          </div>
+
+          @if (
+            !finalizingCompleted
+          ) {
+            <small>
+              Pendiente
+            </small>
+          }
+
+        </article>
+
+
+        <span
+          class="active-status__line"
+          [class.active-status__line--active]="
+            readyCompleted
+          "
+        ></span>
+
+
+        <!-- STEP 4 -->
+        <article
+          class="active-status__step-item"
+          [class.active-status__step-item--completed]="
+            readyCompleted
+          "
+        >
+
+          <span class="active-status__step-marker">
+
+            @if (readyCompleted) {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 12 3 3 7-7"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            }
+
+          </span>
+
+          <div>
+            <strong>
+              Listo para descargar
+            </strong>
+
+            <span>
+              El reporte estará disponible para su descarga.
+            </span>
+          </div>
+
+          @if (
+            !readyCompleted
+          ) {
+            <small>
+              Pendiente
+            </small>
+          }
+
+        </article>
+
+      </div>
+
+
+      <!-- JOB INFO -->
+      <aside class="active-status__job">
+
+        <div class="active-status__job-item">
+
+          <span>
+            ID del trabajo
+          </span>
+
+          <div class="active-status__job-value">
+
+            <strong>
+              {{ jobId || '—' }}
+            </strong>
+
+            @if (jobId) {
+              <button
+                type="button"
+                title="Copiar ID"
+                aria-label="Copiar ID"
+                (click)="copyJobId()"
+                >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <rect
+                    x="9"
+                    y="9"
+                    width="10"
+                    height="10"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+
+                  <path
+                    d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+            }
+
+          </div>
+
+        </div>
+
+
+        <div class="active-status__job-item">
+
+          <span>
+            Estado actual
+          </span>
+
+          <strong
+            class="active-status__badge"
+            [ngClass]="statusClass"
+          >
+            {{ statusLabel }}
+          </strong>
+
+        </div>
+
+
+        <div class="active-status__job-item">
+
+          <span>
+            Filas estimadas
+          </span>
+
+          <strong>
+            {{ formattedRows }}
+          </strong>
+
+          <small>
+            Puede variar al finalizar
+          </small>
+
+        </div>
+
+
+        @if (fileName) {
+          <div class="active-status__job-item">
+
+            <span>
+              Archivo
+            </span>
+
+            <strong
+              class="active-status__file"
+              [title]="fileName"
+            >
+              {{ fileName }}
+            </strong>
+
+          </div>
+        }
+
+
+        @if (reportReady) {
+
+          <button
+            type="button"
+            class="active-status__download"
+            [disabled]="downloading"
+            (click)="onDownload()"
+          >
+
+            @if (downloading) {
+
+              <span
+                class="active-status__spinner"
+                aria-hidden="true"
+              ></span>
+
+              <span>
+                Descargando...
+              </span>
+
+            } @else {
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 4v11M8 11l4 4 4-4M5 19h14"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              <span>
+                Descargar reporte
+              </span>
+
+            }
+
+          </button>
+
+        }
+
+      </aside>
+
+    </div>
+
+
+    @if (error || serverError) {
+
+      <div class="active-status__error">
+
+        <span
+          class="active-status__error-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M12 8v5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <circle
+              cx="12"
+              cy="16.5"
+              r="1"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+
+        <div>
+
+          @if (error) {
+            <strong>
+              {{ error }}
+            </strong>
+          }
+
+          @if (serverError) {
+            <span>
+              {{ serverError }}
+            </span>
+          }
+
+        </div>
+
+      </div>
+
+    }
+
+  } @else {
+
+    <div class="active-status__empty">
+
+      <span
+        class="active-status__empty-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M7 3.5h7l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 20V5A1.5 1.5 0 0 1 7.5 3.5Z"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M14 3.5V8h4M9 12h6M9 15h4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <div>
+        <strong>
+          Aún no has generado un reporte
+        </strong>
+
+        <span>
+          Configura los filtros y genera un reporte para consultar su progreso.
+        </span>
+      </div>
+
+    </div>
+
+  }
+
+</section>

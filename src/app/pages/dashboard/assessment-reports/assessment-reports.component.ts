@@ -10,7 +10,7 @@ import { AssessmentReportsHeaderComponent } from '../../../components/assessment
 import { AssessmentReportsFiltersComponent } from '../../../components/assessment-reports-v2/assessment-reports-filters/assessment-reports-filters.component';
 import { AssessmentReportsStudentSummaryComponent } from '../../../components/assessment-reports-v2/assessment-reports-student-summary/assessment-reports-student-summary.component';
 import { AssessmentReportsSummaryCardsComponent } from '../../../components/assessment-reports-v2/assessment-reports-summary-cards/assessment-reports-summary-cards.component';
-import { AssessmentReportsTabsComponent } from '../../../components/assessment-reports-v2/assessment-reports-tabs/assessment-reports-tabs.component';
+
 import { AssessmentReportsInstructorTableComponent } from '../../../components/assessment-reports-v2/assessment-reports-instructor-table/assessment-reports-instructor-table.component';
 import { AssessmentReportsInstructorPaginationComponent } from '../../../components/assessment-reports-v2/assessment-reports-instructor-pagination/assessment-reports-instructor-pagination.component';
 import { AssessmentReportsPlatformTableComponent } from '../../../components/assessment-reports-v2/assessment-reports-platform-table/assessment-reports-platform-table.component';
@@ -43,7 +43,6 @@ import { UsersService } from '../../../services/users.service';
     AssessmentReportsFiltersComponent,
     AssessmentReportsStudentSummaryComponent,
     AssessmentReportsSummaryCardsComponent,
-    AssessmentReportsTabsComponent,
     AssessmentReportsInstructorTableComponent,
     AssessmentReportsInstructorPaginationComponent,
     AssessmentReportsPlatformTableComponent,
@@ -221,6 +220,8 @@ export class AssessmentReportsComponent {
       studentId: number | null;
       stageId?: number;
       type: AssessmentType | null;
+      from?: string;
+      to?: string;
     },
   ): void {
     const studentId =
@@ -249,6 +250,12 @@ export class AssessmentReportsComponent {
       }),
       ...(filters.type && {
         type: filters.type,
+      }),
+      ...(filters.from && {
+        from: filters.from,
+      }),
+      ...(filters.to && {
+        to: filters.to,
       }),
     };
 

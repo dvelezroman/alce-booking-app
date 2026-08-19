@@ -1,0 +1,256 @@
+<section class="active-students-filters">
+
+  <header class="active-students-filters__header">
+
+    <span class="active-students-filters__step">
+      1
+    </span>
+
+    <div>
+      <h2>
+        Configurar filtros
+      </h2>
+
+      <p>
+        Selecciona los filtros para generar el reporte de estudiantes activos.
+      </p>
+    </div>
+
+  </header>
+
+
+  <div class="active-students-filters__content">
+
+    <!-- STAGE -->
+    <div class="active-students-filters__field">
+
+      <label for="active-students-stage">
+        Stage (etapa)
+      </label>
+
+      <div class="active-students-filters__select-wrapper">
+
+        <span
+          class="active-students-filters__field-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="5.5"
+              width="16"
+              height="14.5"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M8 3.5v4M16 3.5v4M4 9.5h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <select
+          id="active-students-stage"
+          [ngModel]="stageId"
+          (ngModelChange)="onStageChange($event)"
+          [disabled]="loading"
+        >
+          <option [ngValue]="null">
+            Todos los stages (0 - 19)
+          </option>
+
+          @for (
+            stage of stages;
+            track stage.id
+          ) {
+            <option [ngValue]="stage.id">
+              {{ getStageLabel(stage) }}
+            </option>
+          }
+        </select>
+
+        <span
+          class="active-students-filters__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m8 10 4 4 4-4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- NO CLASSES -->
+    <div class="active-students-filters__field">
+
+      <div class="active-students-filters__toggle-label">
+
+        <label>
+          Estudiantes sin clases agendadas
+        </label>
+
+        <span
+          class="active-students-filters__help"
+          title="Incluye únicamente estudiantes que no tengan clases agendadas."
+          aria-label="Información"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M12 10.5V16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <circle
+              cx="12"
+              cy="7.5"
+              r="1"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+
+      <label class="active-students-filters__toggle">
+
+        <input
+          type="checkbox"
+          [ngModel]="noClasses"
+          (ngModelChange)="onNoClassesChange($event)"
+          [disabled]="loading"
+        />
+
+        <span class="active-students-filters__toggle-control">
+          <span></span>
+        </span>
+
+        <span class="active-students-filters__toggle-text">
+          Incluir solo estudiantes sin clases agendadas
+        </span>
+
+      </label>
+
+    </div>
+
+  </div>
+
+
+  <div class="active-students-filters__footer">
+
+    <div class="active-students-filters__info">
+
+      <span
+        class="active-students-filters__info-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 10.5V16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="12"
+            cy="7.5"
+            r="1"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+
+      <span>
+        Si no seleccionas un stage, el reporte incluirá estudiantes de todas las etapas activas.
+      </span>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="active-students-filters__generate"
+      [disabled]="loading"
+      (click)="onGenerate()"
+    >
+      @if (loading) {
+
+        <span
+          class="active-students-filters__spinner"
+          aria-hidden="true"
+        ></span>
+
+        <span>
+          Generando...
+        </span>
+
+      } @else {
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m8 5 10 7-10 7V5Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        <span>
+          Generar reporte
+        </span>
+
+      }
+    </button>
+
+  </div>
+
+</section>

@@ -62,6 +62,8 @@ export class AssessmentReportsFiltersComponent implements OnChanges {
       studentId: number | null;
       stageId?: number;
       type: AssessmentType | null;
+      from?: string;
+      to?: string;
     }>();
 
   @Output() studentInputChange =

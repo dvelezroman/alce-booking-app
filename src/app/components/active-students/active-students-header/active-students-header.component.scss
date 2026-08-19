@@ -1,0 +1,226 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.active-students-header {
+  width: 100%;
+  min-height: 82px;
+
+  padding: 0.95rem 1.1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #e8eaf2;
+  border-radius: 0.7rem;
+
+  box-shadow:
+    0 4px 16px rgba(31, 42, 89, 0.025);
+
+
+  /* =========================
+     LEFT
+  ========================= */
+
+  &__left {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+
+  /* =========================
+     ICON
+  ========================= */
+
+  &__icon {
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 3rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #4b20e6;
+    background: #f1edff;
+
+    border-radius: 0.7rem;
+
+    svg {
+      width: 1.55rem;
+      height: 1.55rem;
+    }
+  }
+
+
+  /* =========================
+     INFORMATION
+  ========================= */
+
+  &__information {
+    min-width: 0;
+
+    h1 {
+      margin: 0;
+
+      color: #17193f;
+
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    p {
+      margin: 0.28rem 0 0;
+
+      color: #6e7288;
+
+      font-size: 0.67rem;
+      line-height: 1.45;
+    }
+  }
+
+
+  /* =========================
+     HISTORY BUTTON
+  ========================= */
+
+  &__history {
+    min-width: 155px;
+    height: 38px;
+
+    padding: 0 0.9rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+
+    color: #353950;
+    background: #f8f7fd;
+
+    border: 1px solid #eceaf6;
+    border-radius: 0.42rem;
+
+    font-family: inherit;
+    font-size: 0.62rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      transform 0.15s ease;
+
+    svg {
+      width: 0.95rem;
+      height: 0.95rem;
+    }
+
+    &:hover {
+      color: #4b20e6;
+      background: #f3f0ff;
+      border-color: #ddd6fb;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 768px) {
+  .active-students-header {
+    padding: 0.85rem;
+
+    align-items: flex-start;
+
+    &__icon {
+      width: 2.7rem;
+      height: 2.7rem;
+      flex-basis: 2.7rem;
+
+      svg {
+        width: 1.35rem;
+        height: 1.35rem;
+      }
+    }
+
+    &__information {
+      h1 {
+        font-size: 1rem;
+      }
+
+      p {
+        font-size: 0.62rem;
+      }
+    }
+
+    &__history {
+      min-width: auto;
+
+      padding: 0 0.7rem;
+
+      span {
+        display: none;
+      }
+    }
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .active-students-header {
+    min-height: auto;
+
+    &__left {
+      align-items: flex-start;
+    }
+
+    &__information {
+      h1 {
+        font-size: 0.92rem;
+      }
+
+      p {
+        font-size: 0.59rem;
+      }
+    }
+
+    &__history {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+
+      padding: 0;
+
+      svg {
+        width: 0.9rem;
+        height: 0.9rem;
+      }
+    }
+  }
+}

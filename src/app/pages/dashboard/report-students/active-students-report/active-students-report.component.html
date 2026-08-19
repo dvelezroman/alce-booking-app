@@ -1,110 +1,103 @@
-<section class="section">
+<div class="active-students-page">
 
-  <div class="title-container">
-    <h1 class="title">Estudiantes activos</h1>
-  </div>
+  <main class="active-students-page__container">
 
-  <div class="container">
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-    <div class="card">
+    <app-active-students-header />
 
-      <p class="subtitle">
-        Genera un Excel con todos los estudiantes activos (incluye bloqueados para agendar).
-        Recibirás una notificación cuando esté listo.
-      </p>
 
-      <div class="form-group">
-        <label for="stageId">Etapa (opcional)</label>
-        <select
-          id="stageId"
-          class="stage-select"
-          [(ngModel)]="stageId"
-          [disabled]="loading"
-        >
-          <option [ngValue]="null">Todas las etapas</option>
-          <option *ngFor="let stage of stages" [ngValue]="stage.id">
-            Stage {{ stage.number }} — {{ stage.description }}
-          </option>
-        </select>
+    <!-- =========================
+         PAGE LAYOUT
+    ========================== -->
+
+    <section class="active-students-page__layout">
+
+
+      <!-- =========================
+           MAIN CONTENT
+      ========================== -->
+
+      <div class="active-students-page__main">
+
+
+        <!-- =========================
+             FILTERS
+        ========================== -->
+
+        <app-active-students-filters
+          [stages]="stages"
+          [stageId]="stageId"
+          [noClasses]="noClasses"
+          [loading]="loading"
+          (stageIdChange)="stageId = $event"
+          (noClassesChange)="noClasses = $event"
+          (generateRequested)="generateReport()"
+        />
+
+
+        <!-- =========================
+             REPORT STATUS
+        ========================== -->
+
+        <app-active-students-status
+          [jobId]="jobId"
+          [status]="status"
+          [rowCount]="rowCount"
+          [fileName]="fileName"
+          [loading]="loading"
+          [downloading]="downloading"
+          [reportReady]="reportReady"
+          [progress]="progress"
+          [error]="error"
+          [serverError]="serverError"
+          (downloadRequested)="downloadReport()"
+        />
+
+
+        <!-- =========================
+             RECENT REPORTS
+        ========================== -->
+
+        <app-active-students-recent-reports
+          [reports]="pagedRecentReports"
+          [page]="page"
+          [totalPages]="totalPages"
+          [total]="total"
+          [startIndex]="startIndex"
+          [endIndex]="endIndex"
+          [limit]="limit"
+          [limitOptions]="limitOptions"
+          [canPrev]="canPrev"
+          [canNext]="canNext"
+          [paginationLabel]="paginationLabel"
+          (pageChange)="onPageChange($event)"
+          (previousRequested)="onPrev()"
+          (nextRequested)="onNext()"
+          (limitChange)="onLimitChange($event)"
+        />
+
       </div>
 
-      <div class="form-group checkbox-row">
-        <label>
-          <input
-            type="checkbox"
-            [(ngModel)]="noClasses"
-            [disabled]="loading"
-          />
-          Solo estudiantes sin clases agendadas
-        </label>
-      </div>
 
-      <button
-        class="primary-btn"
-        [disabled]="loading"
-        (click)="generateReport()"
-      >
-        <span *ngIf="!loading">Generar reporte Excel</span>
-        <span *ngIf="loading">Generando reporte...</span>
-      </button>
+      <!-- =========================
+           SIDEBAR
+      ========================== -->
 
-      <div *ngIf="loading" class="status loading-status">
-        Generando reporte...
-      </div>
+      <aside class="active-students-page__sidebar">
 
-      <div *ngIf="jobId" class="progress-container">
-        <div class="progress-bar">
-          <div class="progress-fill" [style.width.%]="progress"></div>
-        </div>
-        <div class="progress-text">{{ progress }}%</div>
-      </div>
+        <app-active-students-how-it-works />
 
-      <div *ngIf="jobId" class="job-box">
-        <div class="job-row">
-          <span class="label">Estado</span>
-          <span
-            class="badge"
-            [ngClass]="{
-              'badge-pending': status === 'queued' || status === 'processing',
-              'badge-success': status === 'completed' || status === 'downloaded',
-              'badge-failed': status === 'failed'
-            }"
-          >
-            {{ status }}
-          </span>
-        </div>
-        <div class="job-row" *ngIf="rowCount != null">
-          <span class="label">Filas</span>
-          <span class="value">{{ rowCount }}</span>
-        </div>
-        <div class="job-row" *ngIf="fileName">
-          <span class="label">Archivo</span>
-          <span class="value">{{ fileName }}</span>
-        </div>
-      </div>
+        <app-active-students-important-info />
 
-      <button
-        *ngIf="reportReady"
-        class="download-btn"
-        [disabled]="downloading"
-        (click)="downloadReport()"
-      >
-        <span *ngIf="!downloading">Descargar Excel</span>
-        <span *ngIf="downloading">Descargando...</span>
-      </button>
+        <app-active-students-status-legend />
 
-      <p *ngIf="status === 'downloaded'" class="hint">
-        El archivo fue descargado y eliminado del servidor. Puedes generar uno nuevo si lo necesitas.
-      </p>
+      </aside>
 
-      <div *ngIf="serverError" class="error server-error">
-        {{ serverError }}
-      </div>
+    </section>
 
-      <div *ngIf="error" class="error">
-        {{ error }}
-      </div>
+  </main>
 
-    </div>
-  </div>
-</section>
+</div>
