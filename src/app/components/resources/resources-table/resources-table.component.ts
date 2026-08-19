@@ -3,13 +3,15 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  Output
+  OnChanges,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
 import {
-  AssessmentResourceI
+  AssessmentResourceI,
 } from '../../../services/dtos/assessment-resources.dto';
 
 
@@ -17,12 +19,12 @@ import {
   selector: 'app-resources-table',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
   ],
   templateUrl: './resources-table.component.html',
-  styleUrl: './resources-table.component.scss'
+  styleUrl: './resources-table.component.scss',
 })
-export class ResourcesTableComponent {
+export class ResourcesTableComponent implements OnChanges {
 
   /* =========================
      INPUTS
@@ -62,14 +64,30 @@ export class ResourcesTableComponent {
 
 
   /* =========================
+     CHANGES
+  ========================= */
+
+  ngOnChanges(
+    changes: SimpleChanges,
+  ): void {
+    if (
+      changes['resources'] &&
+      this.currentPage > this.totalPages
+    ) {
+      this.currentPage =
+        this.totalPages;
+    }
+  }
+
+
+  /* =========================
      MENU
   ========================= */
 
   toggleMenu(
     event: MouseEvent,
-    resourceId: number
+    resourceId: number,
   ): void {
-
     event.stopPropagation();
 
     this.openMenuId =
@@ -84,8 +102,12 @@ export class ResourcesTableComponent {
   }
 
 
-  isMenuOpen(resourceId: number): boolean {
-    return this.openMenuId === resourceId;
+  isMenuOpen(
+    resourceId: number,
+  ): boolean {
+    return (
+      this.openMenuId === resourceId
+    );
   }
 
 
@@ -101,37 +123,43 @@ export class ResourcesTableComponent {
 
   onView(
     event: MouseEvent,
-    resource: AssessmentResourceI
+    resource: AssessmentResourceI,
   ): void {
-
     event.stopPropagation();
 
     this.closeMenu();
-    this.viewResource.emit(resource);
+
+    this.viewResource.emit(
+      resource,
+    );
   }
 
 
   onEdit(
     event: MouseEvent,
-    resource: AssessmentResourceI
+    resource: AssessmentResourceI,
   ): void {
-
     event.stopPropagation();
 
     this.closeMenu();
-    this.editResource.emit(resource);
+
+    this.editResource.emit(
+      resource,
+    );
   }
 
 
   onDelete(
     event: MouseEvent,
-    resource: AssessmentResourceI
+    resource: AssessmentResourceI,
   ): void {
-
     event.stopPropagation();
 
     this.closeMenu();
-    this.deleteResource.emit(resource);
+
+    this.deleteResource.emit(
+      resource,
+    );
   }
 
 
@@ -143,34 +171,94 @@ export class ResourcesTableComponent {
     return Math.max(
       1,
       Math.ceil(
-        this.resources.length / this.pageSize
-      )
+        this.resources.length /
+        this.pageSize,
+      ),
     );
   }
 
 
-  get paginatedResources(): AssessmentResourceI[] {
+  get paginatedResources():
+    AssessmentResourceI[] {
 
-    if (this.currentPage > this.totalPages) {
-      this.currentPage = this.totalPages;
+    if (
+      this.currentPage >
+      this.totalPages
+    ) {
+      this.currentPage =
+        this.totalPages;
     }
 
     const start =
-      (this.currentPage - 1) * this.pageSize;
-
-    const end =
-      start + this.pageSize;
+      (this.currentPage - 1) *
+      this.pageSize;
 
     return this.resources.slice(
       start,
-      end
+      start + this.pageSize,
+    );
+  }
+
+
+  get visiblePages(): number[] {
+    const total =
+      this.totalPages;
+
+    const maxVisible = 5;
+
+    if (
+      total <=
+      maxVisible
+    ) {
+      return Array.from(
+        {
+          length: total,
+        },
+        (_, index) =>
+          index + 1,
+      );
+    }
+
+    let start =
+      this.currentPage - 2;
+
+    let end =
+      this.currentPage + 2;
+
+    if (
+      start < 1
+    ) {
+      start = 1;
+      end = maxVisible;
+    }
+
+    if (
+      end > total
+    ) {
+      end = total;
+      start =
+        total -
+        maxVisible +
+        1;
+    }
+
+    return Array.from(
+      {
+        length:
+          end -
+          start +
+          1,
+      },
+      (_, index) =>
+        start + index,
     );
   }
 
 
   get startItem(): number {
-
-    if (!this.resources.length) {
+    if (
+      !this.resources.length
+    ) {
       return 0;
     }
 
@@ -183,36 +271,41 @@ export class ResourcesTableComponent {
 
   get endItem(): number {
     return Math.min(
-      this.currentPage * this.pageSize,
-      this.resources.length
+      this.currentPage *
+      this.pageSize,
+      this.resources.length,
     );
   }
 
 
-  goToPage(page: number): void {
-
+  goToPage(
+    page: number,
+  ): void {
     if (
       page < 1 ||
-      page > this.totalPages
+      page > this.totalPages ||
+      page === this.currentPage
     ) {
       return;
     }
 
     this.closeMenu();
-    this.currentPage = page;
+
+    this.currentPage =
+      page;
   }
 
 
   previousPage(): void {
     this.goToPage(
-      this.currentPage - 1
+      this.currentPage - 1,
     );
   }
 
 
   nextPage(): void {
     this.goToPage(
-      this.currentPage + 1
+      this.currentPage + 1,
     );
   }
 
@@ -222,9 +315,8 @@ export class ResourcesTableComponent {
   ========================= */
 
   getResourceNote(
-    resource: AssessmentResourceI
+    resource: AssessmentResourceI,
   ): string {
-
     const resourceWithNote =
       resource as AssessmentResourceI & {
         note?: string;
@@ -237,8 +329,9 @@ export class ResourcesTableComponent {
   }
 
 
-  shouldOpenMenuUp(index: number): boolean {
-
+  shouldOpenMenuUp(
+    index: number,
+  ): boolean {
     const total =
       this.paginatedResources.length;
 
@@ -251,10 +344,16 @@ export class ResourcesTableComponent {
 
   trackByResourceId(
     _: number,
-    resource: AssessmentResourceI
+    resource: AssessmentResourceI,
   ): number {
-
     return resource.id;
   }
 
+
+  trackByPage(
+    _: number,
+    page: number,
+  ): number {
+    return page;
+  }
 }

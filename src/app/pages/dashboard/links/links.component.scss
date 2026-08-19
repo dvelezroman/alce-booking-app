@@ -20,7 +20,7 @@
 
 .links-page__container {
   width: 100%;
-  max-width: 1450px;
+  max-width: 1750px;
 
   margin: 0 auto;
 
@@ -364,6 +364,336 @@ app-links-pagination {
   display: block;
 }
 
+
+/* =========================
+   TABLE SKELETON
+========================= */
+
+.links-table-skeleton {
+  width: 100%;
+
+  overflow: hidden;
+
+  border: 1px solid #e8eaf0;
+  border-radius: 8px;
+
+  background: #fff;
+}
+
+.links-table-skeleton__wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+
+/* =========================
+   BASE BLOCK
+========================= */
+
+.links-table-skeleton__block {
+  position: relative;
+
+  display: block;
+
+  overflow: hidden;
+
+  background: #eef0f4;
+
+  border-radius: 0.3rem;
+}
+
+.links-table-skeleton__block::after {
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  transform: translateX(-100%);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.72) 50%,
+      transparent 100%
+    );
+
+  animation:
+    links-table-skeleton-shimmer
+    1.35s
+    ease-in-out
+    infinite;
+}
+
+@keyframes links-table-skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.links-table-skeleton__header {
+  width: 100%;
+  min-width: 760px;
+
+  min-height: 2.75rem;
+
+  padding:
+    0.55rem
+    1.15rem;
+
+  display: grid;
+
+  grid-template-columns:
+    25%
+    39%
+    18%
+    96px;
+
+  align-items: center;
+  gap: 1rem;
+
+  box-sizing: border-box;
+
+  background: #fafbfc;
+
+  border-bottom: 1px solid #e8eaf0;
+}
+
+.links-table-skeleton__block--header {
+  width: 5rem;
+  height: 0.58rem;
+}
+
+.links-table-skeleton__block--header-link {
+  width: 4rem;
+}
+
+.links-table-skeleton__block--header-password {
+  width: 4.5rem;
+}
+
+.links-table-skeleton__block--header-action {
+  width: 3.5rem;
+
+  justify-self: center;
+}
+
+
+/* =========================
+   ROW
+========================= */
+
+.links-table-skeleton__row {
+  width: 100%;
+  min-width: 760px;
+
+  min-height: 3.85rem;
+
+  padding:
+    0.65rem
+    1.15rem;
+
+  display: grid;
+
+  grid-template-columns:
+    25%
+    39%
+    18%
+    96px;
+
+  align-items: center;
+  gap: 1rem;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #eceef3;
+}
+
+.links-table-skeleton__row:last-child {
+  border-bottom: 0;
+}
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.links-table-skeleton__description {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.links-table-skeleton__block--name {
+  width: 8rem;
+  max-width: 80%;
+
+  height: 0.68rem;
+}
+
+.links-table-skeleton__block--secondary {
+  width: 5.5rem;
+  max-width: 65%;
+
+  height: 0.52rem;
+}
+
+
+/* =========================
+   LINK
+========================= */
+
+.links-table-skeleton__link {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.links-table-skeleton__block--url {
+  width: 15rem;
+  max-width: 80%;
+
+  height: 0.62rem;
+}
+
+.links-table-skeleton__block--link-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+
+  flex: 0 0 0.9rem;
+}
+
+
+/* =========================
+   PASSWORD
+========================= */
+
+.links-table-skeleton__block--password {
+  width: 3.1rem;
+  height: 1.35rem;
+
+  border-radius: 999px;
+}
+
+
+/* =========================
+   ACTION
+========================= */
+
+.links-table-skeleton__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.links-table-skeleton__block--menu {
+  width: 1.9rem;
+  height: 1.9rem;
+
+  border-radius: 0.42rem;
+}
+
+
+/* =========================
+   PAGINATION
+========================= */
+
+.links-table-skeleton__pagination {
+  min-height: 3.7rem;
+
+  padding:
+    0.65rem
+    1rem;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto
+    minmax(0, 1fr);
+
+  align-items: center;
+  gap: 0.8rem;
+
+  box-sizing: border-box;
+
+  border-top: 1px solid #eceef2;
+
+  background: #fff;
+}
+
+.links-table-skeleton__pagination-pages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.3rem;
+}
+
+.links-table-skeleton__block--pagination-label {
+  width: 8rem;
+  height: 0.55rem;
+}
+
+.links-table-skeleton__block--page {
+  width: 1.9rem;
+  height: 1.9rem;
+
+  border-radius: 0.35rem;
+}
+
+.links-table-skeleton__block--limit {
+  width: 7rem;
+  height: 1.9rem;
+
+  margin-left: auto;
+
+  border-radius: 0.35rem;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .links-table-skeleton__header,
+  .links-table-skeleton__row {
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+  .links-table-skeleton__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    gap: 0.65rem;
+  }
+
+  .links-table-skeleton__block--limit {
+    margin-left: 0;
+  }
+}
 /* =========================
    ADVICE
 ========================= */

@@ -118,13 +118,19 @@ export class AcademicResourcesComponent implements OnInit {
      FILTERS
   ========================= */
 
-  handleSearchTermChange(searchTerm: string): void {
+  handleSearchTermChange(
+    searchTerm: string,
+  ): void {
     this.searchTerm = searchTerm;
+    this.applyFilters();
   }
 
 
-  handleStatusChange(status: string): void {
+  handleStatusChange(
+    status: string,
+  ): void {
     this.selectedStatus = status;
+    this.applyFilters();
   }
 
 

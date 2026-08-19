@@ -95,6 +95,8 @@ export class ContentComponent implements OnInit {
       .subscribe(stages => {
         this.stages = stages;
       });
+
+    this.searchContent();
   }
 
   /* =========================
@@ -194,8 +196,9 @@ export class ContentComponent implements OnInit {
       unit: undefined,
     });
 
-    this.filteredContents = [];
     this.page = 1;
+
+    this.searchContent();
   }
 
   /* =========================

@@ -185,31 +185,84 @@
 
             <!-- SUBMENÚ -->
             <ng-container *ngIf="isSubGroup(item)">
-              <div class="sub-menu-wrapper">
+              <div
+                class="sub-menu-wrapper"
+                [class.sub-menu-wrapper--open]="
+                  subCategoryStates[item.title]
+                "
+              >
 
                 <!-- HEADER DEL SUBMENU -->
-                <div
+                <button
+                  type="button"
                   class="sub-category-header"
+                  [class.sub-category-header--open]="
+                    subCategoryStates[item.title]
+                  "
                   (click)="toggleSubCategory(item.title)"
-                  [class.collapsed]="!subCategoryStates[item.title]"
                 >
-                  <span>{{ item.title }}</span>
-                  <i class="fas fa-chevron-down chevron-icon"></i>
-                </div>
 
-                <!-- LISTA -->
+                  <span class="sub-category-header__content">
+
+                    <span
+                      class="sub-category-header__dot"
+                      aria-hidden="true"
+                    ></span>
+
+                    <span class="sub-category-header__title">
+                      {{ item.title }}
+                    </span>
+
+                  </span>
+
+
+                  <svg
+                    class="sub-category-header__chevron"
+                    [class.sub-category-header__chevron--open]="
+                      subCategoryStates[item.title]
+                    "
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="m9 7 5 5-5 5"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+
+                </button>
+
+
+                <!-- HIJOS -->
                 <ul
                   *ngIf="subCategoryStates[item.title]"
                   class="sub-list"
                 >
                   <li *ngFor="let child of item.children">
+
                     <a
                       [routerLink]="child.route"
                       routerLinkActive="active"
+                      [routerLinkActiveOptions]="{ exact: true }"
                       (click)="closeSidebar($event)"
+                      class="sub-list__link"
                     >
-                      <span class="link-text">{{ child.text }}</span>
+
+                      <span
+                        class="sub-list__indicator"
+                        aria-hidden="true"
+                      ></span>
+
+                      <span class="link-text">
+                        {{ child.text }}
+                      </span>
+
                     </a>
+
                   </li>
                 </ul>
 

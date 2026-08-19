@@ -1,11 +1,6 @@
 :host {
   display: block;
   width: 100%;
-
-  /*
-   * Muy importante:
-   * no colocar overflow:hidden aquí.
-   */
   overflow: visible;
 }
 
@@ -16,28 +11,16 @@
 
 .resources-table {
   position: relative;
-
   width: 100%;
 
   background: #ffffff;
 
-  /*
-   * Permite que el menú salga
-   * visualmente del bloque.
-   */
   overflow: visible;
-
   isolation: auto;
 
   box-sizing: border-box;
 }
 
-
-/*
- * Mientras exista un menú abierto,
- * toda la tabla queda por encima
- * de las secciones siguientes.
- */
 .resources-table--menu-open {
   z-index: 100;
 }
@@ -52,13 +35,6 @@
 
   width: 100%;
 
-  /*
-   * NO usar:
-   * overflow: hidden;
-   * overflow-y: auto;
-   *
-   * porque cortaría el dropdown.
-   */
   overflow: visible;
 }
 
@@ -85,7 +61,6 @@
 
 .resources-table__table thead {
   position: relative;
-
   z-index: 1;
 }
 
@@ -97,7 +72,6 @@
   padding: 0.7rem 0.9rem;
 
   color: #4f35cf;
-
   background: #fdfdff;
 
   border-bottom: 1px solid #e9eaf1;
@@ -144,10 +118,7 @@
 
 .resources-table__row {
   position: relative;
-
-  /*
-   * Mantener visible para dropdown.
-   */
+  z-index: 1;
   overflow: visible;
 }
 
@@ -157,7 +128,6 @@
   padding: 0.65rem 0.9rem;
 
   color: #35364a;
-
   background: #ffffff;
 
   border-bottom: 1px solid #eceef4;
@@ -177,18 +147,12 @@
   background: #fcfcff;
 }
 
-
-/*
- * Esta fila debe quedar encima de todas
- * las demás mientras su menú esté abierto.
- */
 .resources-table__row--menu-open {
   z-index: 200;
 }
 
 .resources-table__row--menu-open td {
   position: relative;
-
   z-index: 200;
 }
 
@@ -361,6 +325,7 @@
 
 .resources-table__menu-button:focus-visible {
   outline: 2px solid rgba(79, 59, 231, 0.16);
+
   outline-offset: 2px;
 }
 
@@ -398,11 +363,6 @@
   box-sizing: border-box;
 }
 
-
-/*
- * Para las últimas dos filas,
- * abrimos el menú hacia arriba.
- */
 .resources-table__menu--up {
   top: auto;
 
@@ -511,7 +471,8 @@
 
   color: #6351df;
 
-  background: rgba(99, 81, 223, 0.08);
+  background:
+    rgba(99, 81, 223, 0.08);
 
   border-radius: 0.7rem;
 }
@@ -554,8 +515,6 @@
 
   background: #ffffff;
 
-  border-top: 0;
-
   box-sizing: border-box;
 }
 
@@ -588,33 +547,33 @@
   display: flex;
   align-items: center;
 
-  gap: 0.35rem;
+  gap: 0.3rem;
 }
 
-.resources-table__pagination-button,
-.resources-table__current-page {
+
+/* PREVIOUS / NEXT */
+
+.resources-table__pagination-button {
   width: 2rem;
   height: 2rem;
+
+  padding: 0;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 0.45rem;
-}
-
-.resources-table__pagination-button {
-  padding: 0;
-
   color: #696a7c;
   background: #ffffff;
 
   border: 1px solid #e4e6ed;
+  border-radius: 0.45rem;
 
   cursor: pointer;
 
   transition:
     transform 0.15s ease,
+    color 0.15s ease,
     background-color 0.15s ease,
     border-color 0.15s ease;
 }
@@ -642,7 +601,54 @@
   height: 0.9rem;
 }
 
-.resources-table__current-page {
+
+/* PAGE NUMBERS */
+
+.resources-table__page-button {
+  min-width: 2rem;
+  height: 2rem;
+
+  padding: 0 0.45rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #626578;
+  background: #ffffff;
+
+  border: 1px solid #e4e6ed;
+  border-radius: 0.45rem;
+
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.resources-table__page-button:hover:not(
+  .resources-table__page-button--active
+) {
+  color: #4b35ce;
+
+  background: #f8f7ff;
+
+  border-color: #d8d2f5;
+}
+
+.resources-table__page-button:active {
+  transform: scale(0.95);
+}
+
+.resources-table__page-button--active {
   color: #ffffff;
 
   background:
@@ -652,11 +658,13 @@
       #5e32e9 100%
     );
 
-  font-size: 0.74rem;
-  font-weight: 600;
+  border-color: transparent;
 
   box-shadow:
-    0 3px 7px rgba(77, 48, 220, 0.15);
+    0 3px 7px
+    rgba(77, 48, 220, 0.15);
+
+  cursor: default;
 }
 
 
@@ -712,8 +720,8 @@
   border-radius: 0.45rem;
 }
 
-@keyframes resources-table-loading {
 
+@keyframes resources-table-loading {
   0% {
     background-position: 200% 0;
   }
@@ -758,12 +766,6 @@
 
 @media (max-width: 900px) {
 
-  /*
-   * Aquí permitimos desplazamiento horizontal,
-   * pero mantenemos vertical visible.
-   *
-   * El menú de las últimas filas abre hacia arriba.
-   */
   .resources-table__desktop {
     overflow-x: auto;
     overflow-y: visible;
@@ -807,5 +809,7 @@
     width: 100%;
 
     justify-content: flex-end;
+
+    overflow-x: auto;
   }
 }

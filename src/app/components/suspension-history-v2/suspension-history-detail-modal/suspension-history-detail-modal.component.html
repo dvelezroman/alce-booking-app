@@ -1,0 +1,431 @@
+@if (
+  show &&
+  item
+) {
+
+  <div
+    class="suspension-detail__backdrop"
+    (click)="onBackdropClick()"
+  >
+
+    <aside
+      class="suspension-detail"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="suspension-detail-title"
+      (click)="onPanelClick($event)"
+    >
+
+      <!-- =========================
+           HEADER
+      ========================== -->
+
+      <header class="suspension-detail__header">
+
+        <div class="suspension-detail__header-content">
+
+          <span
+            class="suspension-detail__header-icon"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M7 3.5h7l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 20V5A1.5 1.5 0 0 1 7.5 3.5Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M14 3.5V8h4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M9 12h6M9 15.5h4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <div>
+
+            <h2 id="suspension-detail-title">
+              Detalle de licencia
+            </h2>
+
+            <p>
+              Información completa del periodo de suspensión
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="suspension-detail__close"
+          aria-label="Cerrar detalle"
+          title="Cerrar"
+          (click)="onClose()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m7 7 10 10M17 7 7 17"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+      </header>
+
+
+      <!-- =========================
+           BODY
+      ========================== -->
+
+      <div class="suspension-detail__body">
+
+        <!-- STUDENT -->
+        <section class="suspension-detail__student">
+
+          <span class="suspension-detail__avatar">
+            {{ studentInitials }}
+          </span>
+
+          <div class="suspension-detail__student-content">
+
+            <strong>
+              {{ studentName }}
+            </strong>
+
+            <span>
+              {{ studentEmail }}
+            </span>
+
+            <small>
+              ID estudiante: {{ studentId }}
+            </small>
+
+          </div>
+
+          <span
+            class="suspension-detail__status"
+            [class.suspension-detail__status--active]="
+              status === 'active'
+            "
+            [class.suspension-detail__status--finished]="
+              status === 'finished'
+            "
+            [class.suspension-detail__status--upcoming]="
+              status === 'upcoming'
+            "
+          >
+            <span></span>
+
+            {{ statusLabel }}
+          </span>
+
+        </section>
+
+
+        <!-- =========================
+             SUMMARY
+        ========================== -->
+
+        <section class="suspension-detail__summary">
+
+          <article class="suspension-detail__summary-card">
+
+            <span
+              class="
+                suspension-detail__summary-icon
+                suspension-detail__summary-icon--calendar
+              "
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <rect
+                  x="4"
+                  y="5.5"
+                  width="16"
+                  height="14.5"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+
+                <path
+                  d="M8 3.5v4M16 3.5v4M4 9.5h16"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <div>
+              <strong>
+                {{ days }}
+              </strong>
+
+              <span>
+                Días de licencia
+              </span>
+            </div>
+
+          </article>
+
+
+          <article class="suspension-detail__summary-card">
+
+            <span
+              class="
+                suspension-detail__summary-icon
+                suspension-detail__summary-icon--stage
+              "
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m12 3 8 4.5-8 4.5-8-4.5L12 3Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="m4 12 8 4.5 8-4.5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <div>
+              <strong class="suspension-detail__stage-value">
+                {{ stageLabel }}
+              </strong>
+
+              <span>
+                Stage
+              </span>
+            </div>
+
+          </article>
+
+        </section>
+
+
+        <!-- =========================
+             PERIOD
+        ========================== -->
+
+        <section class="suspension-detail__section">
+
+          <header class="suspension-detail__section-header">
+            <h3>
+              Periodo de licencia
+            </h3>
+          </header>
+
+          <div class="suspension-detail__period">
+
+            <div class="suspension-detail__period-item">
+
+              <span class="suspension-detail__period-dot"></span>
+
+              <div>
+                <span>
+                  Fecha de inicio
+                </span>
+
+                <strong>
+                  {{ formatDate(startDate) }}
+                </strong>
+              </div>
+
+            </div>
+
+
+            <span class="suspension-detail__period-line"></span>
+
+
+            <div class="suspension-detail__period-item">
+
+              <span
+                class="
+                  suspension-detail__period-dot
+                  suspension-detail__period-dot--end
+                "
+              ></span>
+
+              <div>
+                <span>
+                  Fecha de finalización
+                </span>
+
+                <strong>
+                  {{ formatDate(endDate) }}
+                </strong>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- =========================
+             INFORMATION
+        ========================== -->
+
+        <section class="suspension-detail__section">
+
+          <header class="suspension-detail__section-header">
+            <h3>
+              Información
+            </h3>
+          </header>
+
+          <div class="suspension-detail__data">
+
+            <div class="suspension-detail__data-row">
+
+              <span>
+                Stage
+              </span>
+
+              <div>
+                <strong>
+                  {{ stageLabel }}
+                </strong>
+
+                <small>
+                  {{ stageDescription }}
+                </small>
+              </div>
+
+            </div>
+
+
+            <div class="suspension-detail__data-row">
+
+              <span>
+                Procesado por
+              </span>
+
+              <strong>
+                {{ processedByName }}
+              </strong>
+
+            </div>
+
+
+            <div class="suspension-detail__data-row">
+
+              <span>
+                Registrado
+              </span>
+
+              <strong>
+                {{ formatDateTime(createdAt) }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- =========================
+             REASON
+        ========================== -->
+
+        <section class="suspension-detail__section">
+
+          <header class="suspension-detail__section-header">
+            <h3>
+              Motivo
+            </h3>
+          </header>
+
+          <div class="suspension-detail__reason">
+
+            <span
+              class="suspension-detail__reason-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M6 4.5h12A1.5 1.5 0 0 1 19.5 6v9A1.5 1.5 0 0 1 18 16.5h-6l-4.5 3v-3H6A1.5 1.5 0 0 1 4.5 15V6A1.5 1.5 0 0 1 6 4.5Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M8 9h8M8 12h5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <p>
+              {{ reason }}
+            </p>
+
+          </div>
+
+        </section>
+
+      </div>
+
+
+      <!-- =========================
+           FOOTER
+      ========================== -->
+
+      <footer class="suspension-detail__footer">
+
+        <button
+          type="button"
+          class="suspension-detail__close-button"
+          (click)="onClose()"
+        >
+          Cerrar
+        </button>
+
+      </footer>
+
+    </aside>
+
+  </div>
+
+}

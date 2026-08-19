@@ -41,45 +41,135 @@
     <!-- STUDENT -->
     <div class="history-filters__field">
 
-      <label for="studentId">
+      <label for="student-search">
         Estudiante
       </label>
 
-      <div class="history-filters__control">
+      <div class="history-filters__autocomplete">
 
-        <span
-          class="history-filters__control-icon"
-          aria-hidden="true"
+        <div
+          class="history-filters__control"
+          [class.history-filters__control--invalid]="
+            isStudentFieldInvalid
+          "
         >
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
-            fill="none"
+
+          <span
+            class="history-filters__control-icon"
+            aria-hidden="true"
           >
-            <circle
-              cx="11"
-              cy="11"
-              r="6.5"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="6.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
 
-            <path
-              d="m16 16 4 4"
-              stroke="currentColor"
-              stroke-width="1.7"
-              stroke-linecap="round"
-            />
-          </svg>
-        </span>
+              <path
+                d="m16 16 4 4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
 
-        <input
-          id="studentId"
-          type="number"
-          [(ngModel)]="studentId"
-          placeholder="Buscar por ID del estudiante..."
-        />
+          <input
+            id="student-search"
+            type="text"
+            autocomplete="off"
+            [ngModel]="studentSearch"
+            (ngModelChange)="onStudentInputChange($event)"
+            (blur)="onStudentInputBlur()"
+            placeholder="Buscar estudiante..."
+          />
+
+          @if (studentSearch) {
+            <button
+              type="button"
+              class="history-filters__clear"
+              aria-label="Limpiar estudiante"
+              (mousedown)="$event.preventDefault()"
+              (click)="clearStudent()"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 7 10 10M17 7 7 17"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          }
+
+        </div>
+
+
+        @if (
+          showStudentDropdown &&
+          filteredStudents.length > 0
+        ) {
+          <div class="history-filters__dropdown">
+
+            @for (
+              user of filteredStudents;
+              track user.id
+            ) {
+              <button
+                type="button"
+                class="history-filters__dropdown-item"
+                (mousedown)="$event.preventDefault()"
+                (click)="onSelectStudent(user)"
+              >
+
+                <span class="history-filters__dropdown-avatar">
+                  {{ getStudentInitials(user) }}
+                </span>
+
+                <span class="history-filters__dropdown-content">
+
+                  <strong>
+                    {{ getStudentFullName(user) }}
+                  </strong>
+
+                  <small>
+                    {{ getStudentIdentification(user) }}
+                  </small>
+
+                </span>
+
+              </button>
+            }
+
+          </div>
+        }
+
+
+        @if (
+          showStudentDropdown &&
+          studentSearch.trim().length >= 2 &&
+          filteredStudents.length === 0
+        ) {
+          <div
+            class="
+              history-filters__dropdown
+              history-filters__dropdown--empty
+            "
+          >
+            No se encontraron estudiantes.
+          </div>
+        }
 
       </div>
 

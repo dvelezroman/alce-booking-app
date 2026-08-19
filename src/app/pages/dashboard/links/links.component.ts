@@ -45,6 +45,8 @@ export class LinksComponent implements OnInit {
 
   searchTerm = '';
 
+  loading = false;
+
   /* =========================
      DATA
   ========================= */
@@ -219,25 +221,33 @@ export class LinksComponent implements OnInit {
   ========================= */
 
   fetchLinks(): void {
-    this.linksService.getAll().subscribe({
-      next: (links) => {
-        this.links = links;
+    this.loading = true;
 
-        /*
-         * Si después de eliminar un registro
-         * la página actual deja de existir,
-         * regresamos a la última disponible.
-         */
-        if (this.page > this.totalPages) {
-          this.page = this.totalPages;
-        }
+    this.linksService
+      .getAll()
+      .subscribe({
+        next: (links) => {
+          this.links = links;
 
-        this.updatePagedLinks();
-      },
-      error: (err) => {
-        this.handleError(err);
-      }
-    });
+          if (this.page > this.totalPages) {
+            this.page = this.totalPages;
+          }
+
+          this.updatePagedLinks();
+
+          this.loading = false;
+        },
+
+        error: (err) => {
+          this.loading = false;
+
+          this.handleError(
+            typeof err === 'string'
+              ? err
+              : 'No se pudieron cargar los enlaces.',
+          );
+        },
+      });
   }
 
     /* =========================

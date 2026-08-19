@@ -43,36 +43,219 @@
       </app-links-filters>
 
 
-      <!-- TABLE -->
+      <!-- =========================
+           TABLE CARD
+      ========================== -->
 
       <div class="links-page__table-card">
 
-        <app-links-table
-          [links]="pagedLinks"
-          (editRequested)="openEditModal($event)"
-          (editPasswordRequested)="openEditPasswordModal($event)"
-          (deleteRequested)="openDeleteModal($event)"
-        >
-        </app-links-table>
+        @if (loading) {
+
+          <!-- =========================
+               TABLE SKELETON
+          ========================== -->
+
+          <div class="links-table-skeleton">
+
+            <div class="links-table-skeleton__wrapper">
+
+              <!-- HEADER -->
+              <div class="links-table-skeleton__header">
+
+                <span
+                  class="
+                    links-table-skeleton__block
+                    links-table-skeleton__block--header
+                  "
+                ></span>
+
+                <span
+                  class="
+                    links-table-skeleton__block
+                    links-table-skeleton__block--header
+                    links-table-skeleton__block--header-link
+                  "
+                ></span>
+
+                <span
+                  class="
+                    links-table-skeleton__block
+                    links-table-skeleton__block--header
+                    links-table-skeleton__block--header-password
+                  "
+                ></span>
+
+                <span
+                  class="
+                    links-table-skeleton__block
+                    links-table-skeleton__block--header
+                    links-table-skeleton__block--header-action
+                  "
+                ></span>
+
+              </div>
 
 
-        <!-- PAGINATION -->
+              <!-- ROWS -->
 
-        <app-links-pagination
-          [page]="page"
-          [totalPages]="totalPages"
-          [total]="total"
-          [limit]="limit"
-          [limitOptions]="limitOptions"
-          [canPrev]="canPrev"
-          [canNext]="canNext"
-          [paginationLabel]="paginationLabel"
-          (pageChange)="onPageChange($event)"
-          (previousRequested)="onPrev()"
-          (nextRequested)="onNext()"
-          (limitChange)="onLimitChange($event)"
-        >
-        </app-links-pagination>
+              @for (
+                row of [1, 2, 3, 4, 5];
+                track row
+              ) {
+
+                <div class="links-table-skeleton__row">
+
+                  <!-- DESCRIPTION -->
+                  <div class="links-table-skeleton__description">
+
+                    <span
+                      class="
+                        links-table-skeleton__block
+                        links-table-skeleton__block--name
+                      "
+                    ></span>
+
+                    <span
+                      class="
+                        links-table-skeleton__block
+                        links-table-skeleton__block--secondary
+                      "
+                    ></span>
+
+                  </div>
+
+
+                  <!-- LINK -->
+                  <div class="links-table-skeleton__link">
+
+                    <span
+                      class="
+                        links-table-skeleton__block
+                        links-table-skeleton__block--url
+                      "
+                    ></span>
+
+                    <span
+                      class="
+                        links-table-skeleton__block
+                        links-table-skeleton__block--link-icon
+                      "
+                    ></span>
+
+                  </div>
+
+
+                  <!-- PASSWORD -->
+                  <span
+                    class="
+                      links-table-skeleton__block
+                      links-table-skeleton__block--password
+                    "
+                  ></span>
+
+
+                  <!-- ACTION -->
+                  <div class="links-table-skeleton__action">
+
+                    <span
+                      class="
+                        links-table-skeleton__block
+                        links-table-skeleton__block--menu
+                      "
+                    ></span>
+
+                  </div>
+
+                </div>
+
+              }
+
+            </div>
+
+
+            <!-- PAGINATION SKELETON -->
+
+            <div class="links-table-skeleton__pagination">
+
+              <span
+                class="
+                  links-table-skeleton__block
+                  links-table-skeleton__block--pagination-label
+                "
+              ></span>
+
+              <div class="links-table-skeleton__pagination-pages">
+
+                <span
+                  class="
+                    links-table-skeleton__block
+                    links-table-skeleton__block--page
+                  "
+                ></span>
+
+                <span
+                  class="
+                    links-table-skeleton__block
+                    links-table-skeleton__block--page
+                  "
+                ></span>
+
+                <span
+                  class="
+                    links-table-skeleton__block
+                    links-table-skeleton__block--page
+                  "
+                ></span>
+
+              </div>
+
+              <span
+                class="
+                  links-table-skeleton__block
+                  links-table-skeleton__block--limit
+                "
+              ></span>
+
+            </div>
+
+          </div>
+
+        } @else {
+
+          <!-- =========================
+               TABLE
+          ========================== -->
+
+          <app-links-table
+            [links]="pagedLinks"
+            (editRequested)="openEditModal($event)"
+            (editPasswordRequested)="openEditPasswordModal($event)"
+            (deleteRequested)="openDeleteModal($event)"
+          >
+          </app-links-table>
+
+
+          <!-- =========================
+               PAGINATION
+          ========================== -->
+
+          <app-links-pagination
+            [page]="page"
+            [totalPages]="totalPages"
+            [total]="total"
+            [limit]="limit"
+            [limitOptions]="limitOptions"
+            [canPrev]="canPrev"
+            [canNext]="canNext"
+            [paginationLabel]="paginationLabel"
+            (pageChange)="onPageChange($event)"
+            (previousRequested)="onPrev()"
+            (nextRequested)="onNext()"
+            (limitChange)="onLimitChange($event)"
+          >
+          </app-links-pagination>
+
+        }
 
       </div>
 

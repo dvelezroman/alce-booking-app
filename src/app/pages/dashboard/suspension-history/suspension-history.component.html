@@ -13,6 +13,15 @@
       <div class="suspension-history-page__main">
 
         <app-suspension-history-filters
+          [filteredStudents]="filteredStudents"
+          [showStudentDropdown]="showStudentDropdown"
+          [isStudentFieldInvalid]="isStudentFieldInvalid"
+          [selectedStudentId]="selectedStudentId"
+
+          (studentInputChange)="onStudentSearchChange($event)"
+          (studentSelected)="onStudentSelected($event)"
+          (studentDropdownHidden)="hideStudentDropdown()"
+
           (filtersChange)="onFiltersChange($event)"
         />
 
@@ -31,6 +40,8 @@
           <app-suspension-history-table
             [history]="pagedSuspensionHistory"
             [loading]="loading"
+            (viewRequested)="onViewSuspension($event)"
+            (downloadRequested)="onDownloadSuspension($event)"
           />
 
           <app-suspension-history-pagination
@@ -68,6 +79,20 @@
       </aside>
 
     </section>
+
+    <!-- =========================
+      DETAIL MODAL
+  ========================== -->
+
+  <app-suspension-history-detail-modal
+    *ngIf="
+      showSuspensionDetailModal &&
+      selectedSuspension
+    "
+    [show]="showSuspensionDetailModal"
+    [item]="selectedSuspension"
+    (close)="closeSuspensionDetailModal()"
+  />
 
   </main>
 </div>

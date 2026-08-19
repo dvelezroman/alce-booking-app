@@ -69,7 +69,7 @@ export class ReportUserComponent {
 
   totalPages: number = 0;
   currentPage: number = 1;
-  itemsPerPage: number = 100;
+  itemsPerPage: number = 10;
   readonly apiPageSize: number = 100;
 
   readonly itemsPerPageOptions: number[] = [
@@ -104,6 +104,10 @@ export class ReportUserComponent {
   constructor(
     private reportsService: ReportsService,
   ) {}
+
+   ngOnInit(): void {
+    this.fetchUsers();
+  }
 
   /* =========================
      FILTER SUBMIT
@@ -178,11 +182,13 @@ export class ReportUserComponent {
           this.totalUsers =
             response.totalCount;
 
-          this.totalPages =
+          this.totalPages = Math.max(
+            1,
             Math.ceil(
               this.totalUsers /
-              this.itemsPerPage
-            );
+              this.itemsPerPage,
+            ),
+          );
 
           this.isLoading = false;
         },
@@ -492,7 +498,7 @@ export class ReportUserComponent {
   }
 
   handleItemsPerPageChange(
-    value: number
+    value: number,
   ): void {
     const limit = Number(value);
 
@@ -505,6 +511,16 @@ export class ReportUserComponent {
 
     this.itemsPerPage = limit;
     this.currentPage = 1;
+
+    this.totalPages = Math.max(
+      1,
+      Math.ceil(
+        this.totalUsers /
+        this.itemsPerPage,
+      ),
+    );
+
+    this.fetchUsers();
   }
 
 

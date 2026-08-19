@@ -140,16 +140,28 @@ export class ReportInstructorDetailComponent {
       return 'Sin fecha';
     }
 
-    const date =
-      new Date(this.selectedDate);
+    const [
+      year,
+      month,
+      day,
+    ] = this.selectedDate
+      .split('-')
+      .map(Number);
 
     if (
-      Number.isNaN(
-        date.getTime(),
-      )
+      !year ||
+      !month ||
+      !day
     ) {
       return this.selectedDate;
     }
+
+    const date =
+      new Date(
+        year,
+        month - 1,
+        day,
+      );
 
     return date.toLocaleDateString(
       'es-EC',

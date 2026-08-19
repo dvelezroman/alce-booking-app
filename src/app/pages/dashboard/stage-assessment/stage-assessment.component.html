@@ -1,85 +1,134 @@
-<h2 class="title stage">Asignación de Evaluación</h2>
+<section class="stage-assessment-page">
 
-<section class="stage-assessment-section">
+  <div class="stage-assessment-page__container">
 
-  <!-- FORMULARIO -->
-  <app-stage-assessment-filter
-    (stageSelected)="onStageSelected($event)">
-  </app-stage-assessment-filter>
+    <h2 class="title stage">
+      Asignación de Evaluación
+    </h2>
 
-  <!-- BOTÓN PARA ABRIR MODAL -->
-  <div class="top-actions" *ngIf="stageProgressList.length > 0">
-    <button
-      class="add-btn"
-      [disabled]="selectedStudentIds.length === 0"
-      (click)="openCreateAssessmentModal()"
-    >
-      Asignar evaluación
-    </button>
-    <button
-      class="refresh-btn"
-      (click)="confirmRecalculateProgress()"
-      [disabled]="isRecalculating"
-    >
-      Actualizar progreso
-    </button>
+    <section class="stage-assessment-section">
+
+      <!-- FORMULARIO -->
+      <app-stage-assessment-filter
+        (stageSelected)="onStageSelected($event)">
+      </app-stage-assessment-filter>
+
+
+      <!-- BOTONES -->
+      <div
+        class="top-actions"
+        *ngIf="stageProgressList.length > 0"
+      >
+        <button
+          class="add-btn"
+          [disabled]="selectedStudentIds.length === 0"
+          (click)="openCreateAssessmentModal()"
+        >
+          Asignar evaluación
+        </button>
+
+        <button
+          class="refresh-btn"
+          (click)="confirmRecalculateProgress()"
+          [disabled]="isRecalculating"
+        >
+          Actualizar progreso
+        </button>
+      </div>
+
+
+      <!-- BUSCADOR -->
+      <div
+        class="search-wrapper"
+        *ngIf="stageProgressList.length > 0"
+      >
+        <div class="search-box">
+
+          <i
+            class="fa-solid fa-magnifying-glass search-icon"
+          ></i>
+
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Buscar estudiante..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+          />
+
+        </div>
+      </div>
+
+
+      <!-- RESULTADOS -->
+      <div class="content-wrapper">
+
+        <app-stage-assessment-results
+          *ngIf="pagedList.length > 0"
+          [progressList]="pagedList"
+          [resetSelection]="resetSelectionFlag"
+          [selectedIds]="selectedStudentIds"
+          (selectionChange)="onStudentSelection($event)">
+        </app-stage-assessment-results>
+
+      </div>
+
+
+      <!-- PAGINATION -->
+      <div
+        class="pagination"
+        *ngIf="total > 0"
+      >
+
+        <button
+          class="pg-btn"
+          (click)="onPrev()"
+          [disabled]="page === 1"
+        >
+          ‹
+        </button>
+
+        <span class="pg-info">
+          Página {{ page }} · Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }}
+        </span>
+
+        <button
+          class="pg-btn"
+          (click)="onNext()"
+          [disabled]="page * limit >= total"
+        >
+          ›
+        </button>
+
+      </div>
+
+    </section>
+
   </div>
 
-  <!-- BUSCADOR -->
-  <div class="search-wrapper" *ngIf="stageProgressList.length > 0">
-    <div class="search-box">
-      <i class="fa-solid fa-magnifying-glass search-icon"></i>
 
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Buscar estudiante..."
-        [(ngModel)]="searchTerm"
-        (input)="onSearch()"
-      />
-    </div>
-  </div>
+  <!-- CREATE MODAL -->
+  <app-stage-assessment-create-modal
+    [isOpen]="isCreateModalOpen"
+    [stageId]="selectedStageId!"
+    [studentIds]="selectedStudentIds"
+    [resources]="resourcesList"
+    (closeModal)="isCreateModalOpen = false"
+    (submitForm)="onCreateAssessment($event)">
+  </app-stage-assessment-create-modal>
 
-  <!-- RESULTADO -->
-  <div class="content-wrapper">
-    <app-stage-assessment-results
-      *ngIf="pagedList.length > 0"
-      [progressList]="pagedList"
-      [resetSelection]="resetSelectionFlag"
-      [selectedIds]="selectedStudentIds"
-      (selectionChange)="onStudentSelection($event)">
-    </app-stage-assessment-results>
-  </div>
 
-  <!-- PAGINATION -->
-  <div class="pagination" *ngIf="total > 0">
-    <button class="pg-btn" (click)="onPrev()" [disabled]="page === 1">‹</button>
-
-    <span class="pg-info">
-      Página {{ page }} · Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }}
-    </span>
-
-    <button class="pg-btn" (click)="onNext()" [disabled]="page * limit >= total">›</button>
-  </div>
+  <!-- GLOBAL MODAL -->
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm?.()"
+    (close)="modal.close()"
+  >
+  </app-modal>
 
 </section>
-
-<app-stage-assessment-create-modal
-  [isOpen]="isCreateModalOpen"
-  [stageId]="selectedStageId!"
-  [studentIds]="selectedStudentIds"
-  [resources]="resourcesList"
-  (closeModal)="isCreateModalOpen = false"
-  (submitForm)="onCreateAssessment($event)">
-</app-stage-assessment-create-modal>
-
-<app-modal
-  [showModal]="modal.show"
-  [message]="modal.message"
-  [isError]="modal.isError"
-  [isSuccess]="modal.isSuccess"
-  [isInfo]="modal.isInfo"
-  [showButtons]="modal.showButtons ?? false"
-  (confirmAction)="modal.confirm?.()"
-  (close)="modal.close()"
-></app-modal>
