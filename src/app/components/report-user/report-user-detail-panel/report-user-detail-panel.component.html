@@ -1,0 +1,524 @@
+<div
+  *ngIf="user"
+  class="report-user-detail__backdrop"
+  (click)="onBackdropClick()">
+
+  <aside
+    class="report-user-detail"
+    (click)="$event.stopPropagation()">
+
+    <!-- HEADER -->
+    <header class="report-user-detail__header">
+
+      <div class="report-user-detail__header-content">
+
+        <h2>
+          Detalle del usuario
+        </h2>
+
+        <p>
+          Información general del usuario seleccionado.
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="report-user-detail__close"
+        aria-label="Cerrar detalle"
+        (click)="onClose()">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+          <path
+            d="M6 6l12 12M18 6 6 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+        </svg>
+
+      </button>
+
+    </header>
+
+
+    <!-- SCROLL CONTENT -->
+    <div class="report-user-detail__body">
+
+      <!-- PROFILE -->
+      <section class="report-user-detail__profile">
+
+        <span class="report-user-detail__avatar">
+          {{ initials }}
+        </span>
+
+        <div class="report-user-detail__profile-content">
+
+          <div class="report-user-detail__profile-top">
+
+            <strong
+              class="report-user-detail__name"
+              [title]="fullName">
+              {{ fullName }}
+            </strong>
+
+            <span
+              class="report-user-detail__status"
+              [class.report-user-detail__status--active]="
+                statusModifier === 'active'
+              "
+              [class.report-user-detail__status--inactive]="
+                statusModifier === 'inactive'
+              "
+              [class.report-user-detail__status--hold]="
+                statusModifier === 'hold'
+              "
+              [class.report-user-detail__status--block]="
+                statusModifier === 'block'
+              ">
+
+              <span class="report-user-detail__status-dot"></span>
+
+              {{ statusLabel }}
+
+            </span>
+
+          </div>
+
+          <span
+            class="report-user-detail__email"
+            [title]="email">
+            {{ email }}
+          </span>
+
+          <small>
+            ID {{ identification }}
+          </small>
+
+        </div>
+
+      </section>
+
+
+      <!-- SUMMARY -->
+      <section class="report-user-detail__summary">
+
+        <article class="report-user-detail__summary-card">
+
+          <span>
+            Rol
+          </span>
+
+          <strong
+            class="report-user-detail__role"
+            [class.report-user-detail__role--student]="
+              roleModifier === 'student'
+            "
+            [class.report-user-detail__role--instructor]="
+              roleModifier === 'instructor'
+            "
+            [class.report-user-detail__role--admin]="
+              roleModifier === 'admin'
+            ">
+            {{ roleLabel }}
+          </strong>
+
+        </article>
+
+
+        <article class="report-user-detail__summary-card">
+
+          <span>
+            Stage actual
+          </span>
+
+          <strong class="report-user-detail__stage-badge">
+            {{ stageLabel }}
+          </strong>
+
+        </article>
+
+      </section>
+
+
+      <!-- ACCOUNT -->
+      <section class="report-user-detail__section">
+
+        <header class="report-user-detail__section-header">
+          <h3>
+            Información de cuenta
+          </h3>
+        </header>
+
+        <div class="report-user-detail__data-list">
+
+          <!-- IDENTIFICATION -->
+          <div class="report-user-detail__data-row">
+
+            <div class="report-user-detail__data-label">
+
+              <span class="report-user-detail__data-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect
+                    x="4"
+                    y="6"
+                    width="16"
+                    height="12"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.7"/>
+                  <circle
+                    cx="9"
+                    cy="12"
+                    r="2"
+                    stroke="currentColor"
+                    stroke-width="1.5"/>
+                  <path
+                    d="M13 10h4M13 13h4"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"/>
+                </svg>
+              </span>
+
+              <span>
+                Identificación
+              </span>
+
+            </div>
+
+            <strong>
+              {{ identification }}
+            </strong>
+
+          </div>
+
+
+          <!-- EMAIL -->
+          <div class="report-user-detail__data-row">
+
+            <div class="report-user-detail__data-label">
+
+              <span class="report-user-detail__data-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect
+                    x="4"
+                    y="6"
+                    width="16"
+                    height="12"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.7"/>
+                  <path
+                    d="m5 8 7 5 7-5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"/>
+                </svg>
+              </span>
+
+              <span>
+                Correo electrónico
+              </span>
+
+            </div>
+
+            <strong [title]="email">
+              {{ email }}
+            </strong>
+
+          </div>
+
+
+          <!-- PHONE -->
+          <div class="report-user-detail__data-row">
+
+            <div class="report-user-detail__data-label">
+
+              <span class="report-user-detail__data-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M7 4 10 8 8 10c1.5 3 3.8 5.2 6.8 6.7l2-2 4.2 3c.3.2.4.6.2.9-.8 1.5-2.4 2.4-4.1 2.2C9.5 19.7 4.3 14.5 3.2 7c-.2-1.7.7-3.3 2.2-4.1.4-.2.8-.1 1 .2L7 4Z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linejoin="round"/>
+                </svg>
+              </span>
+
+              <span>
+                Teléfono
+              </span>
+
+            </div>
+
+            <strong>
+              {{ phone }}
+            </strong>
+
+          </div>
+
+
+          <!-- CITY -->
+          <div class="report-user-detail__data-row">
+
+            <div class="report-user-detail__data-label">
+
+              <span class="report-user-detail__data-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"/>
+                  <circle
+                    cx="12"
+                    cy="10"
+                    r="2"
+                    stroke="currentColor"
+                    stroke-width="1.7"/>
+                </svg>
+              </span>
+
+              <span>
+                Ciudad
+              </span>
+
+            </div>
+
+            <strong>
+              {{ city }}
+            </strong>
+
+          </div>
+
+
+          <!-- REGISTERED -->
+          <div class="report-user-detail__data-row">
+
+            <div class="report-user-detail__data-label">
+
+              <span class="report-user-detail__data-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect
+                    x="4"
+                    y="5"
+                    width="16"
+                    height="15"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.7"/>
+                  <path
+                    d="M8 3v4M16 3v4M4 9h16"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"/>
+                </svg>
+              </span>
+
+              <span>
+                Registrado
+              </span>
+
+            </div>
+
+            <strong>
+              {{ createdAt }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ACADEMIC -->
+      <section
+        *ngIf="isStudent"
+        class="report-user-detail__section">
+
+        <header class="report-user-detail__section-header">
+          <h3>
+            Información académica
+          </h3>
+        </header>
+
+        <div class="report-user-detail__data-list">
+
+          <div class="report-user-detail__data-row">
+
+            <span>
+              ID estudiante
+            </span>
+
+            <strong>
+              {{ studentId }}
+            </strong>
+
+          </div>
+
+          <div class="report-user-detail__data-row">
+
+            <span>
+              Stage actual
+            </span>
+
+            <strong>
+              {{ stageLabel }}
+            </strong>
+
+          </div>
+
+          <div class="report-user-detail__data-row">
+
+            <span>
+              Descripción del stage
+            </span>
+
+            <strong [title]="stageDescription">
+              {{ stageDescription }}
+            </strong>
+
+          </div>
+
+          <div class="report-user-detail__data-row">
+
+            <span>
+              Registro estudiante
+            </span>
+
+            <strong>
+              {{ studentCreatedAt }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ACTIVITY -->
+      <section class="report-user-detail__section">
+
+        <header class="report-user-detail__section-header">
+          <h3>
+            Resumen de actividad
+          </h3>
+        </header>
+
+        <div class="report-user-detail__activity">
+
+          <!-- COMMENTS -->
+          <article class="report-user-detail__activity-card">
+
+            <span
+              class="
+                report-user-detail__activity-icon
+                report-user-detail__activity-icon--comments
+              ">
+
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M5 5.5h14v10H11l-4.5 3v-3H5v-10Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"/>
+              </svg>
+
+            </span>
+
+            <div>
+              <span>
+                Comentarios
+              </span>
+
+              <strong>
+                {{ commentsCount }}
+              </strong>
+
+              <small>
+                En el sistema
+              </small>
+            </div>
+
+          </article>
+
+
+          <!-- ALERTS -->
+          <article class="report-user-detail__activity-card">
+
+            <span
+              class="
+                report-user-detail__activity-icon
+                report-user-detail__activity-icon--alerts
+              ">
+
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+                <path
+                  d="M10 20h4"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"/>
+              </svg>
+
+            </span>
+
+            <div>
+              <span>
+                Alertas
+              </span>
+
+              <strong>
+                {{ alertsCount }}
+              </strong>
+
+              <small>
+                En el sistema
+              </small>
+            </div>
+
+          </article>
+
+        </div>
+
+      </section>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer class="report-user-detail__footer">
+
+      <button
+        type="button"
+        class="report-user-detail__close-button"
+        (click)="onClose()">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+          <path
+            d="M6 6l12 12M18 6 6 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+        </svg>
+
+        <span>
+          Cerrar
+        </span>
+
+      </button>
+
+    </footer>
+
+  </aside>
+
+</div>

@@ -1,0 +1,339 @@
+<section class="report-excel-filters">
+
+  <!-- HEADER -->
+  <header class="report-excel-filters__header">
+
+    <div class="report-excel-filters__header-left">
+
+      <span
+        class="report-excel-filters__header-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <path
+            d="M4 5h16M7 12h10M10 19h4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+        <h3>
+          {{ sectionTitle }}
+        </h3>
+
+        <p>
+          {{ sectionDescription }}
+        </p>
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="report-excel-filters__clear"
+      (click)="onClear()">
+
+      Limpiar filtros
+
+    </button>
+
+  </header>
+
+
+  <!-- =====================
+       USERS
+  ====================== -->
+
+  <div
+    *ngIf="currentMode === 'users'"
+    class="report-excel-filters__body">
+
+    <div class="report-excel-filters__grid">
+
+      <!-- FROM -->
+      <div class="report-excel-filters__field">
+
+        <label for="users-from">
+          Fecha desde
+        </label>
+
+        <input
+          id="users-from"
+          type="date"
+          [(ngModel)]="fromDate"/>
+
+      </div>
+
+
+      <!-- TO -->
+      <div class="report-excel-filters__field">
+
+        <label for="users-to">
+          Fecha hasta
+        </label>
+
+        <input
+          id="users-to"
+          type="date"
+          [(ngModel)]="toDate"/>
+
+      </div>
+
+
+      <!-- STAGE -->
+      <div class="report-excel-filters__field">
+
+        <label for="users-stage">
+          Stage
+        </label>
+
+        <select
+          id="users-stage"
+          [(ngModel)]="selectedStageId">
+
+          <option [ngValue]="null">
+            Todos los Stages
+          </option>
+
+          <option
+            *ngFor="let stage of stages"
+            [ngValue]="stage.id">
+
+            {{ getStageLabel(stage) }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================
+       ABSENTS
+  ====================== -->
+
+  <div
+    *ngIf="currentMode === 'absents'"
+    class="report-excel-filters__body">
+
+    <div class="report-excel-filters__grid">
+
+      <div class="report-excel-filters__field">
+
+        <label for="absents-from">
+          Fecha desde
+        </label>
+
+        <input
+          id="absents-from"
+          type="date"
+          [(ngModel)]="fromDate"/>
+
+      </div>
+
+
+      <div class="report-excel-filters__field">
+
+        <label for="absents-to">
+          Fecha hasta
+        </label>
+
+        <input
+          id="absents-to"
+          type="date"
+          [(ngModel)]="toDate"/>
+
+      </div>
+
+
+      <div class="report-excel-filters__field">
+
+        <label for="absents-stage">
+          Stage
+        </label>
+
+        <select
+          id="absents-stage"
+          [(ngModel)]="selectedStageId">
+
+          <option [ngValue]="null">
+            Todos los Stages
+          </option>
+
+          <option
+            *ngFor="let stage of stages"
+            [ngValue]="stage.id">
+
+            {{ getStageLabel(stage) }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================
+       WITHOUT MEETINGS
+  ====================== -->
+
+  <div
+    *ngIf="currentMode === 'without-meetings'"
+    class="report-excel-filters__body">
+
+    <div class="report-excel-filters__grid">
+
+      <div class="report-excel-filters__field">
+
+        <label for="without-from">
+          Fecha desde
+        </label>
+
+        <input
+          id="without-from"
+          type="date"
+          [(ngModel)]="fromDate"/>
+
+      </div>
+
+
+      <div class="report-excel-filters__field">
+
+        <label for="without-to">
+          Fecha hasta
+        </label>
+
+        <input
+          id="without-to"
+          type="date"
+          [(ngModel)]="toDate"/>
+
+      </div>
+
+
+      <div class="report-excel-filters__field">
+
+        <label for="without-stage">
+          Stage
+        </label>
+
+        <select
+          id="without-stage"
+          [(ngModel)]="selectedStageId">
+
+          <option [ngValue]="null">
+            Todos los Stages
+          </option>
+
+          <option
+            *ngFor="let stage of stages"
+            [ngValue]="stage.id">
+
+            {{ getStageLabel(stage) }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================
+       ACTION
+  ====================== -->
+
+  <footer class="report-excel-filters__footer">
+
+    <div class="report-excel-filters__footer-info">
+
+      <span
+        class="report-excel-filters__footer-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.6"/>
+
+          <path
+            d="M12 10.5v5M12 7.5v.2"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <span>
+        El archivo se descargará automáticamente
+        en formato Excel.
+      </span>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="report-excel-filters__generate"
+      [disabled]="!canGenerate"
+      (click)="onGenerate()">
+
+      <svg
+        *ngIf="!loading"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true">
+
+        <path
+          d="M12 3v12M7.5 10.5 12 15l4.5-4.5M5 20h14"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+      </svg>
+
+
+      <span
+        *ngIf="loading"
+        class="report-excel-filters__spinner">
+      </span>
+
+      {{
+        loading
+          ? 'Generando...'
+          : 'Generar y descargar'
+      }}
+
+    </button>
+
+  </footer>
+
+</section>

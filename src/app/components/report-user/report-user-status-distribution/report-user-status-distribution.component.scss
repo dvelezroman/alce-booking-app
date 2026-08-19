@@ -1,0 +1,334 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.status-distribution {
+  width: 100%;
+
+  padding: 0.85rem;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e8eaf2;
+
+  border-radius: 0.75rem;
+
+  box-shadow:
+    0 4px 14px
+    rgba(31, 42, 89, 0.02);
+
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.status-distribution__header {
+  padding-bottom: 0.7rem;
+
+  border-bottom:
+    1px solid #eff0f4;
+}
+
+.status-distribution__heading {
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+}
+
+.status-distribution__heading-icon {
+  width: 1.9rem;
+  height: 1.9rem;
+
+  flex: 0 0 1.9rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #5339d8;
+
+  background:
+    rgba(83, 57, 216, 0.08);
+
+  border-radius: 0.45rem;
+}
+
+.status-distribution__heading-icon svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.status-distribution__heading > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.05rem;
+}
+
+.status-distribution__heading h3 {
+  margin: 0;
+
+  color: #292a3e;
+
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.status-distribution__heading p {
+  margin: 0;
+
+  color: #858698;
+
+  font-size: 0.58rem;
+  line-height: 1.3;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.status-distribution__content {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.85rem;
+
+  padding-top: 0.8rem;
+}
+
+
+/* =========================
+   ITEM
+========================= */
+
+.status-distribution__item {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.35rem;
+}
+
+.status-distribution__item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.5rem;
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+.status-distribution__label {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.4rem;
+
+  color: #595a6e;
+
+  font-size: 0.61rem;
+  font-weight: 500;
+}
+
+.status-distribution__label > span:last-child {
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   DOT
+========================= */
+
+.status-distribution__dot {
+  width: 0.42rem;
+  height: 0.42rem;
+
+  flex: 0 0 0.42rem;
+
+  border-radius: 50%;
+}
+
+.status-distribution__dot--active {
+  background: #26a96a;
+}
+
+.status-distribution__dot--inactive {
+  background: #999baa;
+}
+
+.status-distribution__dot--suspended {
+  background: #dc9b22;
+}
+
+
+/* =========================
+   VALUE
+========================= */
+
+.status-distribution__value {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: baseline;
+
+  gap: 0.25rem;
+}
+
+.status-distribution__value strong {
+  color: #3c3d51;
+
+  font-size: 0.63rem;
+  font-weight: 650;
+}
+
+.status-distribution__value span {
+  color: #9596a6;
+
+  font-size: 0.54rem;
+}
+
+
+/* =========================
+   TRACK
+========================= */
+
+.status-distribution__track {
+  width: 100%;
+  height: 0.38rem;
+
+  overflow: hidden;
+
+  background: #eff0f4;
+
+  border-radius: 999px;
+}
+
+.status-distribution__bar {
+  display: block;
+
+  height: 100%;
+
+  border-radius: inherit;
+
+  transition:
+    width 0.3s ease;
+}
+
+.status-distribution__bar--active {
+  background:
+    linear-gradient(
+      90deg,
+      #20a566,
+      #49bf83
+    );
+}
+
+.status-distribution__bar--inactive {
+  background:
+    linear-gradient(
+      90deg,
+      #8e90a0,
+      #b4b5c0
+    );
+}
+
+.status-distribution__bar--suspended {
+  background:
+    linear-gradient(
+      90deg,
+      #d99a1f,
+      #efbb4f
+    );
+}
+
+
+/* =========================
+   TOTAL
+========================= */
+
+.status-distribution__total {
+  min-height: 2.4rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.5rem;
+
+  margin-top: 0.1rem;
+
+  padding:
+    0.55rem
+    0.6rem;
+
+  background: #fafafe;
+
+  border:
+    1px solid #eeeff5;
+
+  border-radius: 0.45rem;
+
+  box-sizing: border-box;
+}
+
+.status-distribution__total span {
+  color: #737487;
+
+  font-size: 0.58rem;
+  font-weight: 500;
+}
+
+.status-distribution__total strong {
+  color: #34354a;
+
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1050px) {
+
+  .status-distribution {
+    height: 100%;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .status-distribution {
+    padding: 0.75rem;
+  }
+
+  .status-distribution__content {
+    gap: 0.75rem;
+  }
+
+}

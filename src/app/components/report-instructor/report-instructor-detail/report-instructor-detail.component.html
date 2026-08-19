@@ -1,0 +1,355 @@
+<section class="report-instructor-detail">
+
+  <!-- HEADER -->
+  <header class="report-instructor-detail__header">
+
+    <div>
+
+      <h2>
+        Detalle del instructor
+      </h2>
+
+      <p>
+        Información de la jornada seleccionada
+      </p>
+
+    </div>
+
+    <button
+      *ngIf="instructor"
+      type="button"
+      class="report-instructor-detail__close"
+      aria-label="Cerrar detalle"
+      (click)="onClose()">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true">
+
+        <path
+          d="M6 6l12 12M18 6 6 18"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"/>
+
+      </svg>
+
+    </button>
+
+  </header>
+
+
+  <!-- EMPTY -->
+  <div
+    *ngIf="!instructor"
+    class="report-instructor-detail__empty">
+
+    <span
+      class="report-instructor-detail__empty-icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <circle
+          cx="12"
+          cy="8"
+          r="3.5"
+          stroke="currentColor"
+          stroke-width="1.7"/>
+
+        <path
+          d="M5 20c0-4 3-6 7-6s7 2 7 6"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+      </svg>
+
+    </span>
+
+    <strong>
+      Selecciona un instructor
+    </strong>
+
+    <span>
+      Haz clic sobre un instructor para consultar el detalle de su jornada.
+    </span>
+
+  </div>
+
+
+  <!-- CONTENT -->
+  <ng-container *ngIf="instructor">
+
+    <!-- PROFILE -->
+    <div class="report-instructor-detail__profile">
+
+      <span class="report-instructor-detail__avatar">
+        {{ initials }}
+      </span>
+
+      <div class="report-instructor-detail__profile-content">
+
+        <strong
+          class="report-instructor-detail__name"
+          [title]="fullName">
+          {{ fullName }}
+        </strong>
+
+        <span
+          class="report-instructor-detail__email"
+          [title]="email">
+          {{ email }}
+        </span>
+
+        <span class="report-instructor-detail__date">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true">
+
+            <rect
+              x="4"
+              y="5"
+              width="16"
+              height="15"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.6"/>
+
+            <path
+              d="M8 3v4M16 3v4M4 9h16"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"/>
+
+          </svg>
+
+          {{ formattedDate }}
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+    <div class="report-instructor-detail__summary">
+
+      <!-- HOURS -->
+      <article class="report-instructor-detail__summary-card">
+
+        <span
+          class="
+            report-instructor-detail__summary-icon
+            report-instructor-detail__summary-icon--hours
+          ">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"/>
+
+            <path
+              d="M12 7.5V12l3 2"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+
+          </svg>
+
+        </span>
+
+        <div>
+
+          <strong>
+            {{ totalHours }}
+          </strong>
+
+          <span>
+            Horas registradas
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <!-- STAGES -->
+      <article class="report-instructor-detail__summary-card">
+
+        <span
+          class="
+            report-instructor-detail__summary-icon
+            report-instructor-detail__summary-icon--stages
+          ">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+
+            <path
+              d="m12 3 8 4.5-8 4.5-8-4.5L12 3Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"/>
+
+            <path
+              d="m4 12 8 4.5 8-4.5M4 16.5 12 21l8-4.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+
+          </svg>
+
+        </span>
+
+        <div>
+
+          <strong>
+            {{ totalStages }}
+          </strong>
+
+          <span>
+            Stages
+          </span>
+
+        </div>
+
+      </article>
+
+    </div>
+
+
+    <!-- SCHEDULE -->
+    <section class="report-instructor-detail__section">
+
+      <header class="report-instructor-detail__section-header">
+        <h3>
+          Jornada
+        </h3>
+      </header>
+
+      <div class="report-instructor-detail__data">
+
+        <div class="report-instructor-detail__data-row">
+
+          <span>
+            Primera clase
+          </span>
+
+          <strong>
+            {{ firstHour }}
+          </strong>
+
+        </div>
+
+        <div class="report-instructor-detail__data-row">
+
+          <span>
+            Última clase
+          </span>
+
+          <strong>
+            {{ lastHour }}
+          </strong>
+
+        </div>
+
+        <div class="report-instructor-detail__data-row">
+
+          <span>
+            Total de horas
+          </span>
+
+          <strong>
+            {{ totalHours }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- STAGES -->
+    <section
+      *ngIf="stageLabels.length > 0"
+      class="report-instructor-detail__section">
+
+      <header class="report-instructor-detail__section-header">
+
+        <h3>
+          Stages trabajados
+        </h3>
+
+        <span>
+          {{ stageLabels.length }}
+        </span>
+
+      </header>
+
+      <div class="report-instructor-detail__stages">
+
+        <span
+          *ngFor="
+            let stage of stageLabels;
+            trackBy: trackByStage
+          "
+          class="report-instructor-detail__stage">
+
+          {{ stage }}
+
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- ACTION -->
+    <footer class="report-instructor-detail__footer">
+
+      <button
+        type="button"
+        class="report-instructor-detail__summary-button"
+        (click)="onSummary()">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true">
+
+          <path
+            d="M4 19V9M10 19V5M16 19v-7M22 19V3"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+
+        </svg>
+
+        <span>
+          Ver resumen diario
+        </span>
+
+      </button>
+
+    </footer>
+
+  </ng-container>
+
+</section>

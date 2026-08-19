@@ -1,0 +1,345 @@
+<section class="report-instructor-filters">
+
+  <!-- HEADER -->
+  <header class="report-instructor-filters__header">
+
+    <span
+      class="report-instructor-filters__header-icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <path
+          d="M4 5h16l-6.5 7.3V19l-3 1.5v-8.2L4 5Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"/>
+
+      </svg>
+
+    </span>
+
+    <h2>
+      Filtros de búsqueda
+    </h2>
+
+  </header>
+
+
+  <!-- INSTRUCTOR -->
+  <div class="report-instructor-filters__field">
+
+    <label for="report-instructor-name">
+      Instructor
+    </label>
+
+    <div class="report-instructor-filters__autocomplete">
+
+      <div
+        class="report-instructor-filters__input-wrapper"
+        [class.report-instructor-filters__input-wrapper--invalid]="
+          isNameFieldInvalid
+        ">
+
+        <span
+          class="report-instructor-filters__field-icon"
+          aria-hidden="true">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+
+            <circle
+              cx="11"
+              cy="11"
+              r="6.5"
+              stroke="currentColor"
+              stroke-width="1.7"/>
+
+            <path
+              d="M16 16 20 20"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"/>
+
+          </svg>
+
+        </span>
+
+        <input
+          id="report-instructor-name"
+          type="text"
+          class="report-instructor-filters__input"
+          placeholder="Buscar instructor..."
+          autocomplete="off"
+          [(ngModel)]="filter.instructorName"
+          (ngModelChange)="onInstructorInputChange()"
+          (blur)="onBlur()"/>
+
+      </div>
+
+
+      <!-- DROPDOWN -->
+      <div
+        *ngIf="
+          showDropdown &&
+          filteredInstructors.length > 0
+        "
+        class="report-instructor-filters__dropdown">
+
+        <button
+          *ngFor="
+            let instructor of filteredInstructors
+          "
+          type="button"
+          class="report-instructor-filters__dropdown-item"
+          (mousedown)="$event.preventDefault()"
+          (click)="onSelectInstructor(instructor)">
+
+          <span class="report-instructor-filters__avatar">
+            {{
+              getInstructorInitials(
+                instructor
+              )
+            }}
+          </span>
+
+          <span class="report-instructor-filters__person">
+
+            <strong>
+              {{
+                getInstructorFullName(
+                  instructor
+                )
+              }}
+            </strong>
+
+            <small>
+              {{
+                getInstructorEmail(
+                  instructor
+                )
+              }}
+            </small>
+
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <span
+      *ngIf="isNameFieldInvalid"
+      class="report-instructor-filters__error">
+
+      Selecciona un instructor válido.
+
+    </span>
+
+  </div>
+
+
+  <!-- FROM -->
+  <div class="report-instructor-filters__field">
+
+    <label for="report-instructor-from">
+      Fecha desde
+    </label>
+
+    <div
+      class="report-instructor-filters__input-wrapper"
+      [class.report-instructor-filters__input-wrapper--invalid]="
+        showFromError
+      ">
+
+      <span
+        class="report-instructor-filters__field-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <input
+        id="report-instructor-from"
+        type="date"
+        class="report-instructor-filters__input"
+        [(ngModel)]="filter.from"/>
+
+    </div>
+
+    <span
+      *ngIf="showFromError"
+      class="report-instructor-filters__error">
+
+      Selecciona la fecha inicial.
+
+    </span>
+
+  </div>
+
+
+  <!-- TO -->
+  <div class="report-instructor-filters__field">
+
+    <label for="report-instructor-to">
+      Fecha hasta
+    </label>
+
+    <div
+      class="report-instructor-filters__input-wrapper"
+      [class.report-instructor-filters__input-wrapper--invalid]="
+        showToError
+      ">
+
+      <span
+        class="report-instructor-filters__field-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <input
+        id="report-instructor-to"
+        type="date"
+        class="report-instructor-filters__input"
+        [(ngModel)]="filter.to"/>
+
+    </div>
+
+    <span
+      *ngIf="showToError"
+      class="report-instructor-filters__error">
+
+      Selecciona la fecha final.
+
+    </span>
+
+  </div>
+
+
+  <!-- SEARCH -->
+  <button
+    type="button"
+    class="report-instructor-filters__search"
+    (click)="onSearch()">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true">
+
+      <circle
+        cx="11"
+        cy="11"
+        r="6.5"
+        stroke="currentColor"
+        stroke-width="1.8"/>
+
+      <path
+        d="M16 16 20 20"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"/>
+
+    </svg>
+
+    <span>
+      Buscar
+    </span>
+
+  </button>
+
+
+  <!-- INFO -->
+  <div class="report-instructor-filters__info">
+
+    <span
+      class="report-instructor-filters__info-icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="currentColor"
+          stroke-width="1.7"/>
+
+        <path
+          d="M12 10.5v5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+        <circle
+          cx="12"
+          cy="7.5"
+          r=".9"
+          fill="currentColor"/>
+
+      </svg>
+
+    </span>
+
+    <div>
+
+      <strong>
+        ¿Cómo funcionan los reportes?
+      </strong>
+
+      <p>
+        Selecciona un instructor y un rango de fechas para consultar el detalle de sus clases y asistencia. Luego puedes revisar los diferentes resúmenes disponibles.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>

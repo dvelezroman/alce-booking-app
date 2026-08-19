@@ -1,0 +1,373 @@
+<section class="report-class-detail">
+
+  <!-- HEADER -->
+  <header class="report-class-detail__header">
+
+    <div class="report-class-detail__heading">
+
+      <span
+        class="report-class-detail__heading-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+
+        <h2>
+          Detalle de clases
+        </h2>
+
+        <p>
+          Instructores con actividad registrada en la fecha seleccionada.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- DATE NAVIGATION -->
+    <div class="report-class-detail__date-navigation">
+
+      <button
+        type="button"
+        class="report-class-detail__date-button"
+        [disabled]="!hasPreviousDate"
+        aria-label="Fecha anterior"
+        (click)="onPreviousDate()">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <path
+            d="m15 6-6 6 6 6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+
+        </svg>
+
+      </button>
+
+      <div class="report-class-detail__date">
+
+        <span>
+          Fecha seleccionada
+        </span>
+
+        <strong>
+          {{ formattedDate }}
+        </strong>
+
+      </div>
+
+      <button
+        type="button"
+        class="report-class-detail__date-button"
+        [disabled]="!hasNextDate"
+        aria-label="Fecha siguiente"
+        (click)="onNextDate()">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <path
+            d="m9 6 6 6-6 6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+
+        </svg>
+
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- BEFORE SEARCH -->
+  <div
+    *ngIf="!searchAttempted"
+    class="report-class-detail__empty">
+
+    <span
+      class="report-class-detail__empty-icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <circle
+          cx="11"
+          cy="11"
+          r="6.5"
+          stroke="currentColor"
+          stroke-width="1.7"/>
+
+        <path
+          d="M16 16 20 20"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+      </svg>
+
+    </span>
+
+    <strong>
+      Realiza una búsqueda
+    </strong>
+
+    <span>
+      Selecciona un rango de fechas para consultar la actividad de los instructores.
+    </span>
+
+  </div>
+
+
+  <!-- EMPTY SEARCH -->
+  <div
+    *ngIf="
+      searchAttempted &&
+      instructors.length === 0
+    "
+    class="report-class-detail__empty">
+
+    <span
+      class="report-class-detail__empty-icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <rect
+          x="4"
+          y="5"
+          width="16"
+          height="15"
+          rx="2"
+          stroke="currentColor"
+          stroke-width="1.7"/>
+
+        <path
+          d="M8 3v4M16 3v4M4 9h16"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+        <path
+          d="M9 14h6"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+      </svg>
+
+    </span>
+
+    <strong>
+      Sin registros
+    </strong>
+
+    <span>
+      No se encontraron clases para la fecha seleccionada.
+    </span>
+
+  </div>
+
+
+  <!-- TABLE -->
+  <div
+    *ngIf="
+      searchAttempted &&
+      instructors.length > 0
+    "
+    class="report-class-detail__wrapper">
+
+    <table class="report-class-detail__table">
+
+      <thead>
+
+        <tr>
+
+          <th class="report-class-detail__col-instructor">
+            Instructor
+          </th>
+
+          <th class="report-class-detail__col-hours">
+            Horas
+          </th>
+
+          <th class="report-class-detail__col-stages">
+            Stages
+          </th>
+
+          <th class="report-class-detail__col-actions">
+            Acción
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr
+          *ngFor="
+            let instructor of instructors;
+            trackBy: trackByInstructor
+          "
+          class="report-class-detail__row"
+          (click)="onSelectInstructor(instructor)">
+
+          <!-- INSTRUCTOR -->
+          <td>
+
+            <div class="report-class-detail__instructor">
+
+              <span class="report-class-detail__avatar">
+
+                {{
+                  getInitials(
+                    instructor
+                  )
+                }}
+
+              </span>
+
+              <div class="report-class-detail__person">
+
+                <strong
+                  [title]="getFullName(instructor)">
+
+                  {{
+                    getFullName(
+                      instructor
+                    )
+                  }}
+
+                </strong>
+
+                <small
+                  [title]="getEmail(instructor)">
+
+                  {{
+                    getEmail(
+                      instructor
+                    )
+                  }}
+
+                </small>
+
+              </div>
+
+            </div>
+
+          </td>
+
+
+          <!-- HOURS -->
+          <td>
+
+            <span class="report-class-detail__number">
+
+              {{
+                getTotalHours(
+                  instructor
+                )
+              }}
+
+            </span>
+
+          </td>
+
+
+          <!-- STAGES -->
+          <td>
+
+            <span class="report-class-detail__stage">
+
+              {{
+                getUniqueStagesCount(
+                  instructor
+                )
+              }}
+
+            </span>
+
+          </td>
+
+
+          <!-- ACTION -->
+          <td class="report-class-detail__actions-cell">
+
+            <button
+              type="button"
+              class="report-class-detail__view"
+              aria-label="Ver detalle del instructor"
+              (click)="
+                $event.stopPropagation();
+                onSelectInstructor(instructor)
+              ">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none">
+
+                <path
+                  d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="2.5"
+                  stroke="currentColor"
+                  stroke-width="1.7"/>
+
+              </svg>
+
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>

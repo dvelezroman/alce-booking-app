@@ -1,0 +1,180 @@
+<section class="report-excel-summary">
+
+  <!-- HEADER -->
+  <header class="report-excel-summary__header">
+
+    <div class="report-excel-summary__heading">
+
+      <span
+        class="report-excel-summary__heading-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <circle
+            cx="12"
+            cy="12"
+            r="9"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M12 10.5v5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+          <circle
+            cx="12"
+            cy="7.5"
+            r=".9"
+            fill="currentColor"/>
+
+        </svg>
+
+      </span>
+
+      <div class="report-excel-summary__heading-content">
+
+        <div class="report-excel-summary__heading-top">
+
+          <h3>
+            {{ title }}
+          </h3>
+
+          <span class="report-excel-summary__columns">
+            {{ totalColumns }} columnas
+          </span>
+
+        </div>
+
+        <p>
+          {{ description }}
+        </p>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- REPORT LABEL -->
+  <div class="report-excel-summary__report">
+
+    <span>
+      Contenido del reporte
+    </span>
+
+    <strong>
+      {{ reportLabel }}
+    </strong>
+
+  </div>
+
+
+  <!-- GROUPS -->
+  <div class="report-excel-summary__groups">
+
+    <article
+      *ngFor="
+        let group of groups;
+        trackBy: trackByGroup
+      "
+      class="report-excel-summary__group">
+
+      <!-- GROUP HEADER -->
+      <header class="report-excel-summary__group-header">
+
+        <span class="report-excel-summary__group-icon">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true">
+
+            <path
+              d="M8 6h12M8 12h12M8 18h12"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"/>
+
+            <circle
+              cx="4"
+              cy="6"
+              r="1"
+              fill="currentColor"/>
+
+            <circle
+              cx="4"
+              cy="12"
+              r="1"
+              fill="currentColor"/>
+
+            <circle
+              cx="4"
+              cy="18"
+              r="1"
+              fill="currentColor"/>
+
+          </svg>
+
+        </span>
+
+        <div>
+
+          <strong>
+            {{ group.title }}
+          </strong>
+
+          <small>
+            {{ group.fields.length }}
+            {{
+              group.fields.length === 1
+                ? 'campo'
+                : 'campos'
+            }}
+          </small>
+
+        </div>
+
+      </header>
+
+
+      <!-- FIELDS -->
+      <div class="report-excel-summary__fields">
+
+        <span
+          *ngFor="
+            let field of group.fields;
+            trackBy: trackByField
+          "
+          class="report-excel-summary__field">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true">
+
+            <path
+              d="m7.5 12 3 3 6-6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+
+          </svg>
+
+          {{ field }}
+
+        </span>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>

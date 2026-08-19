@@ -1,132 +1,292 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
 import { ReportsService } from '../../../services/reports.service';
-import { UsersExcelFilterDto, AbsentStudentsExcelFilterDto } from '../../../services/dtos/reports.dto';
-import { Instructor } from '../../../services/dtos/instructor.dto';
+import {
+  UsersExcelFilterDto,
+  AbsentStudentsExcelFilterDto,
+} from '../../../services/dtos/reports.dto';
+
 import { InstructorsService } from '../../../services/instructors.service';
 import { StagesService } from '../../../services/stages.service';
 import { Stage } from '../../../services/dtos/student.dto';
-import { CommonModule } from '@angular/common';
-import { ReportsUsersExcelComponent } from '../../../components/reports-users-excel/reports-users-excel.component';
-import { FormsModule } from '@angular/forms';
+
+/* =========================
+   CHILD COMPONENTS
+========================= */
+
+import { ReportExcelHeaderComponent } from '../../../components/report-user-excel/report-excel-header/report-excel-header.component';
+import { ReportExcelTypeSelectorComponent } from '../../../components/report-user-excel/report-excel-type-selector/report-excel-type-selector.component';
+import { ReportExcelSelectedReportComponent } from '../../../components/report-user-excel/report-excel-selected-report/report-excel-selected-report.component';
+import { ReportExcelFiltersComponent } from '../../../components/report-user-excel/report-excel-filters/report-excel-filters.component';
+import { ReportExcelSummaryComponent } from '../../../components/report-user-excel/report-excel-summary/report-excel-summary.component';
+import { ReportExcelHistoryComponent } from '../../../components/report-user-excel/report-excel-history/report-excel-history.component';
+import { ReportExcelInfoComponent } from '../../../components/report-user-excel/report-excel-info/report-excel-info.component';
+
+export type ReportExcelMode =
+  | 'users'
+  | 'absents'
+  | 'without-meetings';
 
 @Component({
   selector: 'app-reports-excel-page',
   standalone: true,
-  imports: [ 
-      CommonModule,
-      FormsModule,
-      ReportsUsersExcelComponent,
-    ],
+  imports: [
+    CommonModule,
+    FormsModule,
+
+    ReportExcelHeaderComponent,
+    ReportExcelTypeSelectorComponent,
+    ReportExcelSelectedReportComponent,
+    ReportExcelFiltersComponent,
+    ReportExcelSummaryComponent,
+    ReportExcelHistoryComponent,
+    ReportExcelInfoComponent,
+  ],
   templateUrl: './reports-excel-page.component.html',
-  styleUrl: './reports-excel-page.component.scss'
+  styleUrl: './reports-excel-page.component.scss',
 })
 export class ReportsExcelPageComponent implements OnInit {
 
-  loading = false;
-  // instructors: Instructor[] = [];
-  stages: Stage[] = [];
-  currentMode: 'users' | 'absents' = 'users';
+  /* =========================
+     STATE
+  ========================= */
 
-  constructor(private reportsService: ReportsService,
-             private stagesService: StagesService,
-             private instructorsService: InstructorsService) {}
+  loading = false;
+
+  stages: Stage[] = [];
+
+  currentMode: ReportExcelMode =
+    'users';
+
+  /* =========================
+     CONSTRUCTOR
+  ========================= */
+
+  constructor(
+    private reportsService: ReportsService,
+    private stagesService: StagesService,
+    private instructorsService: InstructorsService,
+  ) {}
+
+  /* =========================
+     INIT
+  ========================= */
 
   ngOnInit(): void {
-    // this.fetchInstructors();
-    this.fetchStages()
+    this.fetchStages();
   }
 
-  /** Cambiar modo entre usuarios e inasistencias */
+  /* =========================
+     REPORT MODE
+  ========================= */
+
   toggleMode(): void {
-    this.currentMode = this.currentMode === 'users' ? 'absents' : 'users';
+    this.currentMode =
+      this.currentMode === 'users'
+        ? 'absents'
+        : 'users';
   }
 
-  /** Obtener instructores */
-  // private fetchInstructors(): void {
-  //   this.instructorsService.getAll().subscribe({
-  //     next: (data) => {
-  //       this.instructors = data;
-  //     },
-  //     error: (err) => {
-  //       console.error('Error al obtener instructores:', err);
-  //       this.instructors = [];
-  //     }
-  //   });
-  // }
+  onReportTypeSelected(
+    mode: ReportExcelMode,
+  ): void {
+    this.currentMode = mode;
+  }
 
-   /** Obtener stages (solo STAGE 0 a 19) */
+  /* =========================
+     STAGES
+  ========================= */
+
   private fetchStages(): void {
-    this.stagesService.getAll().subscribe({
-      next: (data) => {
-        this.stages = data.filter(stage => {
-          const match = stage.number.match(/^STG\s*(\d+)/i);
-          if (!match) return false;
-          const num = Number(match[1]);
-          return num >= 0 && num <= 19;
-        });
-      },
-      error: (err) => {
-        console.error(' Error al obtener stages:', err);
-        this.stages = [];
-      }
-    });
+    this.stagesService
+      .getAll()
+      .subscribe({
+        next: (data) => {
+          this.stages =
+            data.filter(stage => {
+              const match =
+                stage.number.match(
+                  /^STG\s*(\d+)/i,
+                );
+
+              if (!match) {
+                return false;
+              }
+
+              const num =
+                Number(match[1]);
+
+              return (
+                num >= 0 &&
+                num <= 19
+              );
+            });
+        },
+
+        error: (err) => {
+          console.error(
+            'Error al obtener stages:',
+            err,
+          );
+
+          this.stages = [];
+        },
+      });
   }
 
-  /** Descargar Excel general de usuarios */
-  handleDownloadUsersExcel(filters: UsersExcelFilterDto): void {
+  /* =========================
+     FILTER SUBMIT
+  ========================= */
+
+  handleUsersFilters(
+    filters: UsersExcelFilterDto,
+  ): void {
+    this.handleDownloadUsersExcel(
+      filters,
+    );
+  }
+
+  handleAbsentFilters(
+    filters: AbsentStudentsExcelFilterDto,
+  ): void {
+    this.handleDownloadAbsentExcel(
+      filters,
+    );
+  }
+
+  handleWithoutMeetingsFilters(
+    filters: AbsentStudentsExcelFilterDto,
+  ): void {
+    this.handleDownloadStudentsWithoutMeetingsExcel(
+      filters,
+    );
+  }
+
+  /* =========================
+     USERS EXCEL
+  ========================= */
+
+  handleDownloadUsersExcel(
+    filters: UsersExcelFilterDto,
+  ): void {
     this.loading = true;
 
-    this.reportsService.downloadUsersExcel(filters).subscribe({
-      next: (blob) => {
-        this.downloadFile(blob, 'reporte_usuarios.xlsx');
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error al descargar Excel de usuarios:', err);
-        this.loading = false;
-      }
-    });
+    this.reportsService
+      .downloadUsersExcel(filters)
+      .subscribe({
+        next: (blob) => {
+          this.downloadFile(
+            blob,
+            'reporte_usuarios.xlsx',
+          );
+
+          this.loading = false;
+        },
+
+        error: (err) => {
+          console.error(
+            'Error al descargar Excel de usuarios:',
+            err,
+          );
+
+          this.loading = false;
+        },
+      });
   }
 
-  /** Descargar Excel de estudiantes ausentes por instructor */
-  handleDownloadAbsentExcel(filters: AbsentStudentsExcelFilterDto): void {
+  /* =========================
+     ABSENT STUDENTS
+  ========================= */
+
+  handleDownloadAbsentExcel(
+    filters: AbsentStudentsExcelFilterDto,
+  ): void {
     this.loading = true;
 
-    this.reportsService.downloadAbsentStudentsExcel(filters).subscribe({
-      next: (blob) => {
-        this.downloadFile(blob, 'estudiantes_ausentes.xlsx');
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error al descargar Excel de ausentes:', err);
-        this.loading = false;
-      }
-    });
+    this.reportsService
+      .downloadAbsentStudentsExcel(
+        filters,
+      )
+      .subscribe({
+        next: (blob) => {
+          this.downloadFile(
+            blob,
+            'estudiantes_ausentes.xlsx',
+          );
+
+          this.loading = false;
+        },
+
+        error: (err) => {
+          console.error(
+            'Error al descargar Excel de ausentes:',
+            err,
+          );
+
+          this.loading = false;
+        },
+      });
   }
 
-  /** Descargar Excel de estudiantes sin reuniones */
-  handleDownloadStudentsWithoutMeetingsExcel(filters: AbsentStudentsExcelFilterDto): void {
+  /* =========================
+     WITHOUT MEETINGS
+  ========================= */
+
+  handleDownloadStudentsWithoutMeetingsExcel(
+    filters: AbsentStudentsExcelFilterDto,
+  ): void {
     this.loading = true;
 
-    this.reportsService.downloadStudentsWithoutMeetingsExcel(filters).subscribe({
-      next: (blob) => {
-        this.downloadFile(blob, 'estudiantes_sin_reuniones.xlsx');
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error al descargar Excel de estudiantes sin reuniones:', err);
-        this.loading = false;
-      }
-    });
+    this.reportsService
+      .downloadStudentsWithoutMeetingsExcel(
+        filters,
+      )
+      .subscribe({
+        next: (blob) => {
+          this.downloadFile(
+            blob,
+            'estudiantes_sin_reuniones.xlsx',
+          );
+
+          this.loading = false;
+        },
+
+        error: (err) => {
+          console.error(
+            'Error al descargar Excel de estudiantes sin reuniones:',
+            err,
+          );
+
+          this.loading = false;
+        },
+      });
   }
 
-  /** Utilidad para descarga */
-  private downloadFile(blob: Blob, filename: string): void {
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+  /* =========================
+     DOWNLOAD HELPER
+  ========================= */
+
+  private downloadFile(
+    blob: Blob,
+    filename: string,
+  ): void {
+    const url =
+      window.URL.createObjectURL(
+        blob,
+      );
+
+    const a =
+      document.createElement('a');
+
     a.href = url;
     a.download = filename;
+
     a.click();
-    window.URL.revokeObjectURL(url);
+
+    window.URL.revokeObjectURL(
+      url,
+    );
   }
 }

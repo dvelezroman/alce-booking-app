@@ -1,0 +1,226 @@
+<section class="role-distribution">
+
+  <!-- HEADER -->
+  <header class="role-distribution__header">
+
+    <div class="role-distribution__heading">
+
+      <span
+        class="role-distribution__heading-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <circle
+            cx="8"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <circle
+            cx="16"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M2.5 19c0-3 2.4-5 5.5-5s5.5 2 5.5 5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+          <path
+            d="M11.5 16c1-.9 2.3-1.5 4-1.5 3 0 5.5 1.8 5.5 4.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+        <h3>
+          Distribución por rol
+        </h3>
+
+        <p>
+          Usuarios según su perfil
+        </p>
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- CONTENT -->
+  <div class="role-distribution__content">
+
+    <!-- DONUT -->
+    <div class="role-distribution__chart-wrapper">
+
+      <div
+        class="role-distribution__chart"
+        [style.background]="donutBackground">
+
+        <div class="role-distribution__chart-center">
+
+          <strong>
+            {{ totalUsers | number }}
+          </strong>
+
+          <span>
+            usuarios
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- LEGEND -->
+    <div class="role-distribution__legend">
+
+      <!-- STUDENTS -->
+      <div class="role-distribution__legend-item">
+
+        <div class="role-distribution__legend-main">
+
+          <span
+            class="
+              role-distribution__dot
+              role-distribution__dot--students
+            ">
+          </span>
+
+          <span class="role-distribution__label">
+            Estudiantes
+          </span>
+
+        </div>
+
+        <div class="role-distribution__value">
+
+          <strong>
+            {{ students | number }}
+          </strong>
+
+          <span>
+            {{ studentsPercentage }}%
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- INSTRUCTORS -->
+      <div class="role-distribution__legend-item">
+
+        <div class="role-distribution__legend-main">
+
+          <span
+            class="
+              role-distribution__dot
+              role-distribution__dot--instructors
+            ">
+          </span>
+
+          <span class="role-distribution__label">
+            Instructores
+          </span>
+
+        </div>
+
+        <div class="role-distribution__value">
+
+          <strong>
+            {{ instructors | number }}
+          </strong>
+
+          <span>
+            {{ instructorsPercentage }}%
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- ADMINISTRATORS -->
+      <div class="role-distribution__legend-item">
+
+        <div class="role-distribution__legend-main">
+
+          <span
+            class="
+              role-distribution__dot
+              role-distribution__dot--administrators
+            ">
+          </span>
+
+          <span class="role-distribution__label">
+            Administradores
+          </span>
+
+        </div>
+
+        <div class="role-distribution__value">
+
+          <strong>
+            {{ administrators | number }}
+          </strong>
+
+          <span>
+            {{ administratorsPercentage }}%
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- OTHERS -->
+      <div class="role-distribution__legend-item">
+
+        <div class="role-distribution__legend-main">
+
+          <span
+            class="
+              role-distribution__dot
+              role-distribution__dot--others
+            ">
+          </span>
+
+          <span class="role-distribution__label">
+            Otros
+          </span>
+
+        </div>
+
+        <div class="role-distribution__value">
+
+          <strong>
+            {{ others | number }}
+          </strong>
+
+          <span>
+            {{ othersPercentage }}%
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

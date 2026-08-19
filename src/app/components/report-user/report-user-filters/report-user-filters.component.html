@@ -1,0 +1,443 @@
+<section class="report-user-filters">
+
+  <!-- HEADER -->
+  <header class="report-user-filters__header">
+
+    <span
+      class="report-user-filters__header-icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+        <path
+          d="M4 5h16l-6.2 7.1v5.3l-3.6 1.8v-7.1L4 5Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"/>
+      </svg>
+
+    </span>
+
+    <h2>
+      Filtros de búsqueda
+    </h2>
+
+  </header>
+
+
+  <!-- PRIMARY FILTERS -->
+  <div class="report-user-filters__grid">
+
+    <!-- USER -->
+    <div class="report-user-filters__field">
+
+      <label
+        for="report-user-search"
+        class="report-user-filters__label">
+        Buscar por usuario
+      </label>
+
+      <div class="report-user-filters__autocomplete">
+
+        <div
+          class="report-user-filters__control"
+          [class.report-user-filters__control--invalid]="
+            isUserFieldInvalid
+          ">
+
+          <span
+            class="report-user-filters__control-icon"
+            aria-hidden="true">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none">
+              <circle
+                cx="11"
+                cy="11"
+                r="6.5"
+                stroke="currentColor"
+                stroke-width="1.8"/>
+              <path
+                d="m16 16 4 4"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"/>
+            </svg>
+
+          </span>
+
+          <input
+            id="report-user-search"
+            type="text"
+            class="report-user-filters__input"
+            placeholder="Buscar por nombre, email o ID..."
+            autocomplete="off"
+            [ngModel]="userSearch"
+            (ngModelChange)="onUserInputChange($event)"
+            (blur)="hideUserDropdown()"/>
+
+        </div>
+
+
+        <!-- AUTOCOMPLETE -->
+        <div
+          *ngIf="
+            showUserDropdown &&
+            filteredUsers.length > 0
+          "
+          class="report-user-filters__dropdown">
+
+          <button
+            *ngFor="let user of filteredUsers"
+            type="button"
+            class="report-user-filters__dropdown-item"
+            (mousedown)="$event.preventDefault()"
+            (click)="selectUser(user)">
+
+            <span class="report-user-filters__avatar">
+              {{ getUserInitials(user) }}
+            </span>
+
+            <span class="report-user-filters__user-info">
+
+              <strong>
+                {{ getUserFullName(user) }}
+              </strong>
+
+              <small>
+                {{ getUserEmail(user) }}
+              </small>
+
+              <span>
+                ID: {{ getUserIdentifier(user) }}
+              </span>
+
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ROLE -->
+    <div class="report-user-filters__field">
+
+      <label
+        for="report-user-role"
+        class="report-user-filters__label">
+        Rol de usuario
+      </label>
+
+      <div class="report-user-filters__select-wrapper">
+
+        <select
+          id="report-user-role"
+          class="report-user-filters__select"
+          [(ngModel)]="selectedRole">
+
+          <option value="">
+            Todos los roles
+          </option>
+
+          <option
+            *ngFor="let role of roles"
+            [ngValue]="role">
+            {{ getRoleLabel(role) }}
+          </option>
+
+        </select>
+
+        <span
+          class="report-user-filters__select-icon"
+          aria-hidden="true">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+            <path
+              d="m7 10 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+          </svg>
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- STATUS -->
+    <div class="report-user-filters__field">
+
+      <label
+        for="report-user-status"
+        class="report-user-filters__label">
+        Estado
+      </label>
+
+      <div class="report-user-filters__select-wrapper">
+
+        <select
+          id="report-user-status"
+          class="report-user-filters__select"
+          [(ngModel)]="selectedStatus">
+
+          <option value="">
+            Todos los estados
+          </option>
+
+          <option
+            *ngFor="let status of statuses"
+            [ngValue]="status">
+            {{ getStatusLabel(status) }}
+          </option>
+
+        </select>
+
+        <span
+          class="report-user-filters__select-icon"
+          aria-hidden="true">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+            <path
+              d="m7 10 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+          </svg>
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- STAGE -->
+    <div class="report-user-filters__field">
+
+      <label
+        for="report-user-stage"
+        class="report-user-filters__label">
+        Stage
+      </label>
+
+      <div class="report-user-filters__select-wrapper">
+
+        <select
+          id="report-user-stage"
+          class="report-user-filters__select"
+          [(ngModel)]="selectedStageId"
+          [disabled]="isLoadingStages">
+
+          <option [ngValue]="null">
+            {{
+              isLoadingStages
+                ? 'Cargando stages...'
+                : 'Todos los stages'
+            }}
+          </option>
+
+          <option
+            *ngFor="let stage of stages"
+            [ngValue]="stage.id">
+            {{ getStageLabel(stage) }}
+          </option>
+
+        </select>
+
+        <span
+          class="report-user-filters__select-icon"
+          aria-hidden="true">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+            <path
+              d="m7 10 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+          </svg>
+
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- SECONDARY ROW -->
+  <div class="report-user-filters__bottom">
+
+    <div class="report-user-filters__toggles">
+
+      <!-- COMMENTS -->
+      <label class="report-user-filters__toggle-field">
+
+        <span class="report-user-filters__toggle-label">
+          Con comentarios
+        </span>
+
+        <span class="report-user-filters__toggle-line">
+
+          <input
+            type="checkbox"
+            class="report-user-filters__toggle-input"
+            [(ngModel)]="onlyWithComments"/>
+
+          <span class="report-user-filters__toggle">
+            <span></span>
+          </span>
+
+          <span class="report-user-filters__toggle-description">
+            Mostrar solo
+          </span>
+
+        </span>
+
+      </label>
+
+
+      <!-- ALERTS -->
+      <label class="report-user-filters__toggle-field">
+
+        <span class="report-user-filters__toggle-label">
+          Con alertas
+        </span>
+
+        <span class="report-user-filters__toggle-line">
+
+          <input
+            type="checkbox"
+            class="report-user-filters__toggle-input"
+            [(ngModel)]="onlyWithAlerts"/>
+
+          <span class="report-user-filters__toggle">
+            <span></span>
+          </span>
+
+          <span class="report-user-filters__toggle-description">
+            Mostrar solo
+          </span>
+
+        </span>
+
+      </label>
+
+
+      <!-- NEW -->
+      <label class="report-user-filters__toggle-field">
+
+        <span class="report-user-filters__toggle-label">
+          Nuevos estudiantes
+        </span>
+
+        <span class="report-user-filters__toggle-line">
+
+          <input
+            type="checkbox"
+            class="report-user-filters__toggle-input"
+            [(ngModel)]="onlyNewStudents"/>
+
+          <span class="report-user-filters__toggle">
+            <span></span>
+          </span>
+
+          <span class="report-user-filters__toggle-description">
+            Últimos 7 días
+          </span>
+
+        </span>
+
+      </label>
+
+    </div>
+
+
+    <!-- ACTIONS -->
+    <div class="report-user-filters__actions">
+
+      <button
+        type="button"
+        class="
+          report-user-filters__button
+          report-user-filters__button--clear
+        "
+        (click)="onClear()">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true">
+          <path
+            d="M20 11a8 8 0 1 0-2.34 5.66"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+          <path
+            d="M20 5v6h-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+        </svg>
+
+        <span>
+          Limpiar filtros
+        </span>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="
+          report-user-filters__button
+          report-user-filters__button--search
+        "
+        (click)="onSearch()">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true">
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.8"/>
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+        </svg>
+
+        <span>
+          Buscar
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>

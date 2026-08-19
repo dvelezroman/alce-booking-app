@@ -1,25 +1,62 @@
-<section class="section">
-  <h1 class="reports-excel-header reports-excel-title">Reportes</h1>
+<section class="reports-excel-page">
+  <div class="reports-excel-page__container">
 
-  <!-- Selector de tipo de reporte -->
-  <div class="mode-toggle">
-    <label for="report-mode" class="label">Seleccionar tipo de reporte:</label>
-    <select id="report-mode" class="input" [(ngModel)]="currentMode" name="reportMode">
-      <option value="users">Usuarios</option>
-      <option value="absents">Estudiantes ausentes</option>
-      <option value="noMeetings">Estudiantes sin clases agendadas</option>
-    </select>
-  </div>
+    <!-- HEADER -->
+    <div class="reports-excel-page__header">
+      <app-report-excel-header></app-report-excel-header>
+    </div>
 
-  <!-- Contenedor del formulario correspondiente -->
-  <div class="content-wrapper">
-    <app-reports-users-excel
-      [stages]="stages"
-      [mode]="currentMode"
-      (downloadExcel)="handleDownloadUsersExcel($event)"
-      (downloadAbsentExcel)="handleDownloadAbsentExcel($event)"
-      (downloadStudentsWithoutMeetingsExcel)="handleDownloadStudentsWithoutMeetingsExcel($event)"
-    >
-    </app-reports-users-excel>
+    <!-- CONTENT -->
+    <div class="reports-excel-page__layout">
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="reports-excel-page__sidebar">
+
+        <div class="reports-excel-page__sidebar-types">
+          <app-report-excel-type-selector
+            [currentMode]="currentMode"
+            (modeSelected)="onReportTypeSelected($event)">
+          </app-report-excel-type-selector>
+        </div>
+
+        <div class="reports-excel-page__sidebar-info">
+          <app-report-excel-info></app-report-excel-info>
+        </div>
+
+      </aside>
+
+      <!-- MAIN -->
+      <main class="reports-excel-page__main">
+
+        <!-- SELECTED REPORT -->
+        <div class="reports-excel-page__selected">
+          <app-report-excel-selected-report
+            [currentMode]="currentMode">
+          </app-report-excel-selected-report>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="reports-excel-page__filters">
+          <app-report-excel-filters
+            [currentMode]="currentMode"
+            [stages]="stages"
+            [loading]="loading"
+            (usersRequested)="handleUsersFilters($event)"
+            (absentsRequested)="handleAbsentFilters($event)"
+            (withoutMeetingsRequested)="handleWithoutMeetingsFilters($event)">
+          </app-report-excel-filters>
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="reports-excel-page__summary">
+          <app-report-excel-summary
+            [currentMode]="currentMode">
+          </app-report-excel-summary>
+        </div>
+
+      </main>
+
+    </div>
+
   </div>
 </section>

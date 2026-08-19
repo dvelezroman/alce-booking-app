@@ -1,0 +1,260 @@
+<section class="report-hour-detail">
+
+  <!-- HEADER -->
+  <header class="report-hour-detail__header">
+
+    <div class="report-hour-detail__heading">
+
+      <span
+        class="report-hour-detail__heading-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M12 7.5V12l3 2"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+
+        <h2>
+          Detalle de horas
+        </h2>
+
+        <p>
+          {{ instructorName }}
+        </p>
+
+      </div>
+
+    </div>
+
+    <span class="report-hour-detail__total">
+      {{ sortedHours.length }}
+      {{
+        sortedHours.length === 1
+          ? 'hora'
+          : 'horas'
+      }}
+    </span>
+
+  </header>
+
+
+  <!-- EMPTY -->
+  <div
+    *ngIf="sortedHours.length === 0"
+    class="report-hour-detail__empty">
+
+    <span
+      class="report-hour-detail__empty-icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <circle
+          cx="12"
+          cy="12"
+          r="8"
+          stroke="currentColor"
+          stroke-width="1.7"/>
+
+        <path
+          d="M12 8v4M12 16v.1"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+      </svg>
+
+    </span>
+
+    <strong>
+      Sin horas registradas
+    </strong>
+
+    <span>
+      No se encontraron horas para este instructor.
+    </span>
+
+  </div>
+
+
+  <!-- HOURS -->
+  <div
+    *ngIf="sortedHours.length > 0"
+    class="report-hour-detail__list">
+
+    <article
+      *ngFor="
+        let hour of sortedHours;
+        let i = index;
+        trackBy: trackByHour
+      "
+      class="report-hour-detail__item">
+
+      <!-- TIME -->
+      <div class="report-hour-detail__time">
+
+        <span class="report-hour-detail__time-index">
+          {{ i + 1 }}
+        </span>
+
+        <div>
+
+          <strong>
+            {{
+              formatHour(
+                hour.localhour ??
+                hour.hour
+              )
+            }}
+          </strong>
+
+          <span>
+            Hora local
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- STAGES -->
+      <div class="report-hour-detail__stages">
+
+        <span class="report-hour-detail__label">
+          Stages
+        </span>
+
+        <div class="report-hour-detail__stage-list">
+
+          <span
+            *ngFor="
+              let stage of getStages(hour);
+              trackBy: trackByStage
+            "
+            class="report-hour-detail__stage">
+
+            {{
+              getStageLabel(
+                stage
+              )
+            }}
+
+          </span>
+
+          <span
+            *ngIf="
+              getStages(hour).length === 0
+            "
+            class="report-hour-detail__empty-value">
+
+            Sin Stage
+
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- MEETINGS / CONTENT -->
+      <div class="report-hour-detail__actions">
+
+        <ng-container
+          *ngIf="
+            hasMeetings(hour);
+            else noContent
+          ">
+
+          <button
+            *ngFor="
+              let meeting of getMeetings(hour);
+              trackBy: trackByMeeting
+            "
+            type="button"
+            class="report-hour-detail__content-button"
+            (click)="onContent(meeting)">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true">
+
+              <path
+                d="M5 4h14v16H5V4Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"/>
+
+              <path
+                d="M8.5 9h7M8.5 13h7M8.5 17h4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"/>
+
+            </svg>
+
+            <span>
+              Ver contenido
+            </span>
+
+          </button>
+
+        </ng-container>
+
+
+        <ng-template #noContent>
+
+          <span class="report-hour-detail__no-content">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true">
+
+              <path
+                d="M5 4h14v16H5V4Z"
+                stroke="currentColor"
+                stroke-width="1.6"/>
+
+              <path
+                d="M9 12h6"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"/>
+
+            </svg>
+
+            Sin contenido
+
+          </span>
+
+        </ng-template>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>

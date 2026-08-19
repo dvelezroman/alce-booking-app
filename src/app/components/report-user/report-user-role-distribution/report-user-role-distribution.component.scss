@@ -1,0 +1,351 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.role-distribution {
+  width: 100%;
+
+  padding: 0.85rem;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e8eaf2;
+
+  border-radius: 0.75rem;
+
+  box-shadow:
+    0 4px 14px
+    rgba(31, 42, 89, 0.02);
+
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.role-distribution__header {
+  padding-bottom: 0.7rem;
+
+  border-bottom:
+    1px solid #eff0f4;
+}
+
+.role-distribution__heading {
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+}
+
+.role-distribution__heading-icon {
+  width: 1.9rem;
+  height: 1.9rem;
+
+  flex: 0 0 1.9rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #5339d8;
+
+  background:
+    rgba(83, 57, 216, 0.08);
+
+  border-radius: 0.45rem;
+}
+
+.role-distribution__heading-icon svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.role-distribution__heading > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.06rem;
+}
+
+.role-distribution__heading h3 {
+  margin: 0;
+
+  color: #292a3e;
+
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.role-distribution__heading p {
+  margin: 0;
+
+  color: #858698;
+
+  font-size: 0.58rem;
+  line-height: 1.3;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.role-distribution__content {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.85rem;
+
+  padding-top: 0.85rem;
+}
+
+
+/* =========================
+   CHART
+========================= */
+
+.role-distribution__chart-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-distribution__chart {
+  position: relative;
+
+  width: 7.4rem;
+  height: 7.4rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  transition:
+    background 0.3s ease;
+}
+
+.role-distribution__chart::before {
+  content: '';
+
+  position: absolute;
+
+  inset: 1.25rem;
+
+  background: #ffffff;
+
+  border-radius: 50%;
+
+  box-shadow:
+    inset 0 0 0 1px
+    rgba(230, 231, 237, 0.7);
+}
+
+.role-distribution__chart-center {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 0.04rem;
+}
+
+.role-distribution__chart-center strong {
+  color: #24253a;
+
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.1;
+}
+
+.role-distribution__chart-center span {
+  color: #898a9b;
+
+  font-size: 0.55rem;
+}
+
+
+/* =========================
+   LEGEND
+========================= */
+
+.role-distribution__legend {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.2rem;
+}
+
+.role-distribution__legend-item {
+  min-height: 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.5rem;
+
+  padding:
+    0.3rem
+    0.35rem;
+
+  border-radius: 0.4rem;
+
+  transition:
+    background-color 0.12s ease;
+}
+
+.role-distribution__legend-item:hover {
+  background: #fafafe;
+}
+
+.role-distribution__legend-main {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.4rem;
+}
+
+.role-distribution__dot {
+  width: 0.42rem;
+  height: 0.42rem;
+
+  flex: 0 0 0.42rem;
+
+  border-radius: 50%;
+}
+
+.role-distribution__dot--students {
+  background: #5639df;
+}
+
+.role-distribution__dot--instructors {
+  background: #2ca76a;
+}
+
+.role-distribution__dot--administrators {
+  background: #e0a02b;
+}
+
+.role-distribution__dot--others {
+  background: #8c8da0;
+}
+
+.role-distribution__label {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #5c5d70;
+
+  font-size: 0.6rem;
+  font-weight: 500;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.role-distribution__value {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: baseline;
+
+  gap: 0.25rem;
+}
+
+.role-distribution__value strong {
+  color: #3d3e52;
+
+  font-size: 0.62rem;
+  font-weight: 650;
+}
+
+.role-distribution__value span {
+  color: #9697a7;
+
+  font-size: 0.54rem;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1050px) {
+
+  .role-distribution {
+    height: 100%;
+  }
+
+  .role-distribution__content {
+    height: calc(100% - 2.7rem);
+
+    justify-content: center;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .role-distribution {
+    padding: 0.75rem;
+  }
+
+  .role-distribution__content {
+    display: grid;
+
+    grid-template-columns:
+      auto
+      minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 1rem;
+  }
+
+  .role-distribution__chart {
+    width: 6.3rem;
+    height: 6.3rem;
+  }
+
+  .role-distribution__chart::before {
+    inset: 1.05rem;
+  }
+
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+
+  .role-distribution__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .role-distribution__legend {
+    width: 100%;
+  }
+
+}

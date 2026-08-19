@@ -1,0 +1,322 @@
+<section class="report-excel-history">
+
+  <!-- HEADER -->
+  <header class="report-excel-history__header">
+
+    <div class="report-excel-history__heading">
+
+      <span
+        class="report-excel-history__heading-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <path
+            d="M12 8v4l2.5 1.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M5.5 5.5 3 6v-3"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+        <h3>
+          Reportes generados recientemente
+        </h3>
+
+        <p>
+          Consulta los últimos archivos generados desde esta sección.
+        </p>
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- TABLE -->
+  <div
+    *ngIf="reports.length > 0"
+    class="report-excel-history__wrapper">
+
+    <table class="report-excel-history__table">
+
+      <thead>
+        <tr>
+
+          <th class="report-excel-history__col-type">
+            Tipo de reporte
+          </th>
+
+          <th class="report-excel-history__col-file">
+            Archivo
+          </th>
+
+          <th class="report-excel-history__col-date">
+            Generado
+          </th>
+
+          <th class="report-excel-history__col-filters">
+            Filtros
+          </th>
+
+          <th class="report-excel-history__col-format">
+            Formato
+          </th>
+
+          <th class="report-excel-history__col-status">
+            Estado
+          </th>
+
+          <th class="report-excel-history__col-actions">
+            Acción
+          </th>
+
+        </tr>
+      </thead>
+
+
+      <tbody>
+
+        <tr
+          *ngFor="
+            let report of reports;
+            trackBy: trackByReportId
+          "
+          class="report-excel-history__row">
+
+          <!-- TYPE -->
+          <td>
+
+            <div class="report-excel-history__type">
+
+              <span
+                class="report-excel-history__type-icon"
+                [class.report-excel-history__type-icon--users]="
+                  getTypeModifier(report.type) === 'users'
+                "
+                [class.report-excel-history__type-icon--absents]="
+                  getTypeModifier(report.type) === 'absents'
+                "
+                [class.report-excel-history__type-icon--without]="
+                  getTypeModifier(report.type) === 'without'
+                ">
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true">
+
+                  <path
+                    d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"/>
+
+                  <path
+                    d="M14 3.5V8h4M9 12h6M9 15h5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"/>
+
+                </svg>
+
+              </span>
+
+              <strong>
+                {{ getTypeLabel(report.type) }}
+              </strong>
+
+            </div>
+
+          </td>
+
+
+          <!-- FILE -->
+          <td>
+
+            <span
+              class="report-excel-history__filename"
+              [title]="report.filename">
+
+              {{ report.filename }}
+
+            </span>
+
+          </td>
+
+
+          <!-- DATE -->
+          <td>
+
+            <div class="report-excel-history__date">
+
+              <span>
+                {{ formatDate(report.generatedAt) }}
+              </span>
+
+              <small>
+                {{ formatTime(report.generatedAt) }}
+              </small>
+
+            </div>
+
+          </td>
+
+
+          <!-- FILTERS -->
+          <td>
+
+            <span
+              class="report-excel-history__filters"
+              [title]="report.filters || 'Sin filtros'">
+
+              {{
+                report.filters ||
+                'Sin filtros'
+              }}
+
+            </span>
+
+          </td>
+
+
+          <!-- FORMAT -->
+          <td>
+
+            <span class="report-excel-history__format">
+              XLSX
+            </span>
+
+          </td>
+
+
+          <!-- STATUS -->
+          <td>
+
+            <span
+              class="report-excel-history__status"
+              [class.report-excel-history__status--completed]="
+                report.status !== 'error'
+              "
+              [class.report-excel-history__status--error]="
+                report.status === 'error'
+              ">
+
+              <span class="report-excel-history__status-dot">
+              </span>
+
+              {{ getStatusLabel(report.status) }}
+
+            </span>
+
+          </td>
+
+
+          <!-- ACTION -->
+          <td class="report-excel-history__actions-cell">
+
+            <button
+              type="button"
+              class="report-excel-history__download"
+              [disabled]="report.status === 'error'"
+              aria-label="Descargar reporte"
+              (click)="onDownload(report)">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true">
+
+                <path
+                  d="M12 3v12M7.5 10.5 12 15l4.5-4.5M5 20h14"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+
+              </svg>
+
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <!-- EMPTY -->
+  <div
+    *ngIf="reports.length === 0"
+    class="report-excel-history__empty">
+
+    <span
+      class="report-excel-history__empty-icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <path
+          d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"/>
+
+        <path
+          d="M14 3.5V8h4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"/>
+
+        <path
+          d="M9 13h6M9 16h4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+      </svg>
+
+    </span>
+
+    <div class="report-excel-history__empty-content">
+
+      <strong>
+        Aún no hay reportes recientes
+      </strong>
+
+      <span>
+        Los reportes que generes aparecerán aquí.
+      </span>
+
+    </div>
+
+  </div>
+
+</section>

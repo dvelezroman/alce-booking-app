@@ -1,104 +1,215 @@
-.section {
-  background-color: #f2f2f2;
-  min-height: 100vh;
+:host {
+  display: block;
   width: 100%;
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.reports-excel-page {
+  width: calc(100% - 76px);
+  min-height: 100vh;
+  margin-left: 64px;
+  padding: 1rem 1.15rem 1.5rem;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.reports-excel-page__container {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  box-sizing: border-box;
+  gap: 0.85rem;
 }
 
-.reports-excel-header {
-  position: fixed;
-  top: 0;
-  left: 0;
+/* =========================
+   HEADER
+========================= */
+
+.reports-excel-page__header {
   width: 100%;
-  background-color: #f2f2f2;
-  color: rgb(53, 53, 53);
-  z-index: 10;
-  text-align: center;
+  min-width: 0;
 }
 
-.reports-excel-title {
-  font-size: 1.5rem;
-  line-height: 75px;
-  color: #333;
-  font-weight: bold;
-}
+/* =========================
+   LAYOUT
+========================= */
 
-.content-wrapper {
+.reports-excel-page__layout {
   width: 100%;
-  margin-top: 0rem;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 19rem minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.reports-excel-page__sidebar {
+  min-width: 0;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  box-sizing: border-box;
+  flex-direction: column;
+  gap: 0.85rem;
+}
 
-  app-reports-users-excel {
-    width: 100%;
-    max-width: 600px;
+.reports-excel-page__sidebar-types {
+  flex: 1;
+  min-width: 0;
+}
+
+.reports-excel-page__sidebar-info {
+  min-width: 0;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.reports-excel-page__main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* =========================
+   BLOCKS
+========================= */
+
+.reports-excel-page__selected,
+.reports-excel-page__filters,
+.reports-excel-page__summary,
+.reports-excel-page__history {
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media (min-width: 1500px) {
+  .reports-excel-page {
+    padding: 1.15rem 1.35rem 1.8rem;
   }
 
-  @media (max-width: 768px) {
-    width: 100%;
-    app-reports-users-excel {
-      max-width: 100%;
-    }
+  .reports-excel-page__layout {
+    grid-template-columns: 19rem minmax(0, 1fr);
   }
 }
 
-.mode-toggle {
-  width: 400px;
-  display: row;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 3rem;
-  padding: 1rem 1.4rem;
-  background-color: transparent;
+/* =========================
+   MEDIUM DESKTOP
+========================= */
 
-  .label {
-    font-weight: 500;
-    color: #1f2937;
-    font-size: .9rem;
-    min-width: 220px;
+@media (max-width: 1200px) {
+  .reports-excel-page {
+    padding: 0.9rem 1rem 1.4rem;
   }
 
-  .input {
-    flex: 1;
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    height: 38px;
-    border: 1px solid #d1d5db;
-    background-color: #fff;
-    font-size: 0.85rem;
-    color: #111827;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  .reports-excel-page__container,
+  .reports-excel-page__layout,
+  .reports-excel-page__main,
+  .reports-excel-page__sidebar {
+    gap: 0.75rem;
+  }
 
-    &:focus {
-      outline: none;
-      border-color: #2563eb; /* azul */
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
-    }
+  .reports-excel-page__layout {
+    grid-template-columns: 16.5rem minmax(0, 1fr);
   }
 }
 
-/* Responsivo */
-@media (max-width: 600px) {
-  .mode-toggle {
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 991px) {
+  .reports-excel-page {
     width: 100%;
-    background-color: transparent;
+    margin-left: 0;
+    padding: 0.8rem;
+  }
+
+  .reports-excel-page__container {
+    max-width: 100%;
+  }
+
+  .reports-excel-page__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .reports-excel-page__sidebar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 0.55fr);
+    align-items: stretch;
+  }
+
+  .reports-excel-page__main {
+    min-width: 0;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+  .reports-excel-page {
+    padding: 0.65rem;
+  }
+
+  .reports-excel-page__container,
+  .reports-excel-page__layout,
+  .reports-excel-page__main,
+  .reports-excel-page__sidebar {
+    gap: 0.65rem;
+  }
+
+  .reports-excel-page__sidebar {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding: 1rem 1rem 1.2rem;
-    margin-top: 2rem;
+  }
 
-    .label {
-      margin-bottom: 0.5rem;
-      min-width: auto;
-    }
+  .reports-excel-page__selected {
+    order: 1;
+  }
 
-    .input {
-      width: 100%;
-    }
+  .reports-excel-page__filters {
+    order: 2;
+  }
+
+  .reports-excel-page__summary {
+    order: 3;
+  }
+
+  .reports-excel-page__history {
+    order: 4;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .reports-excel-page {
+    padding: 0.55rem;
+  }
+
+  .reports-excel-page__container,
+  .reports-excel-page__layout,
+  .reports-excel-page__main,
+  .reports-excel-page__sidebar {
+    gap: 0.55rem;
   }
 }

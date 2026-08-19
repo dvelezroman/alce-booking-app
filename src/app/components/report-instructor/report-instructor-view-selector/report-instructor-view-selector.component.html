@@ -1,0 +1,165 @@
+<nav
+  class="report-view-selector"
+  aria-label="Vistas del reporte">
+
+  <!-- VISTA PRINCIPAL -->
+  <button
+    type="button"
+    class="report-view-selector__item"
+    [class.report-view-selector__item--active]="
+      activeView === 'main'
+    "
+    [attr.aria-pressed]="activeView === 'main'"
+    (click)="selectMain()">
+
+    <span
+      class="report-view-selector__icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <rect
+          x="4"
+          y="5"
+          width="16"
+          height="15"
+          rx="2"
+          stroke="currentColor"
+          stroke-width="1.7"/>
+
+        <path
+          d="M8 3v4M16 3v4M4 9h16"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+      </svg>
+
+    </span>
+
+    <span class="report-view-selector__content">
+
+      <strong>
+        Vista principal
+      </strong>
+
+      <small>
+        Detalle de clases por instructor
+      </small>
+
+    </span>
+
+  </button>
+
+
+  <!-- RESUMEN DIARIO -->
+  <button
+    type="button"
+    class="report-view-selector__item"
+    [class.report-view-selector__item--active]="
+      activeView === 'summary'
+    "
+    [attr.aria-pressed]="activeView === 'summary'"
+    (click)="selectSummary()">
+
+    <span
+      class="report-view-selector__icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <path
+          d="M4 19V5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+        <path
+          d="M4 19h16"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+        <path
+          d="m7 15 4-5 3 2 5-6"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+      </svg>
+
+    </span>
+
+    <span class="report-view-selector__content">
+
+      <strong>
+        Resumen diario
+      </strong>
+
+      <small>
+        Total de clases por día
+      </small>
+
+    </span>
+
+  </button>
+
+
+  <!-- RESUMEN POR DÍA -->
+  <button
+    type="button"
+    class="report-view-selector__item"
+    [class.report-view-selector__item--active]="
+      activeView === 'summaryByDay'
+    "
+    [attr.aria-pressed]="
+      activeView === 'summaryByDay'
+    "
+    (click)="selectSummaryByDay()">
+
+    <span
+      class="report-view-selector__icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <circle
+          cx="12"
+          cy="12"
+          r="8"
+          stroke="currentColor"
+          stroke-width="1.7"/>
+
+        <path
+          d="M12 7.5V12l3 2"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+      </svg>
+
+    </span>
+
+    <span class="report-view-selector__content">
+
+      <strong>
+        Resumen por día
+      </strong>
+
+      <small>
+        Detalle de horas del día seleccionado
+      </small>
+
+    </span>
+
+  </button>
+
+</nav>

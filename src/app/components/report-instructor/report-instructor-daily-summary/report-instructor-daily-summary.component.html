@@ -1,0 +1,371 @@
+<section class="daily-summary">
+
+  <!-- HEADER -->
+  <header class="daily-summary__header">
+
+    <div class="daily-summary__heading">
+
+      <span
+        class="daily-summary__heading-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <path
+            d="M4 19V9M10 19V5M16 19v-7M22 19V3"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+
+        <h2>
+          Resumen diario
+        </h2>
+
+        <p>
+          Resumen de clases del instructor en el periodo seleccionado.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="daily-summary__range">
+
+      <span>
+        Rango consultado
+      </span>
+
+      <strong>
+        {{ rangeLabel }}
+      </strong>
+
+    </div>
+
+  </header>
+
+
+  <!-- INSTRUCTOR -->
+  <div class="daily-summary__instructor">
+
+    <div>
+
+      <span>
+        Instructor
+      </span>
+
+      <strong>
+        {{
+          instructorName ||
+          'Sin instructor'
+        }}
+      </strong>
+
+    </div>
+
+  </div>
+
+
+  <!-- METRICS -->
+  <div class="daily-summary__metrics">
+
+    <article class="daily-summary__metric">
+
+      <span
+        class="
+          daily-summary__metric-icon
+          daily-summary__metric-icon--classes
+        ">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+
+        <strong>
+          {{ totalClasses }}
+        </strong>
+
+        <span>
+          Clases totales
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <article class="daily-summary__metric">
+
+      <span
+        class="
+          daily-summary__metric-icon
+          daily-summary__metric-icon--days
+        ">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M12 7.5V12l3 2"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+
+        <strong>
+          {{ totalDays }}
+        </strong>
+
+        <span>
+          Días con actividad
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <article class="daily-summary__metric">
+
+      <span
+        class="
+          daily-summary__metric-icon
+          daily-summary__metric-icon--average
+        ">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <path
+            d="M5 18 10 13l3 3 6-8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+
+        <strong>
+          {{ averagePerDay }}
+        </strong>
+
+        <span>
+          Promedio por día
+        </span>
+
+      </div>
+
+    </article>
+
+  </div>
+
+
+  <!-- EMPTY -->
+  <div
+    *ngIf="sortedSummary.length === 0"
+    class="daily-summary__empty">
+
+    <span
+      class="daily-summary__empty-icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <path
+          d="M4 19V9M10 19V5M16 19v-7M22 19V3"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+      </svg>
+
+    </span>
+
+    <strong>
+      Sin información disponible
+    </strong>
+
+    <span>
+      No se encontraron registros para el instructor y rango seleccionados.
+    </span>
+
+  </div>
+
+
+  <!-- TABLE -->
+  <div
+    *ngIf="sortedSummary.length > 0"
+    class="daily-summary__wrapper">
+
+    <table class="daily-summary__table">
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Fecha
+          </th>
+
+          <th>
+            Hora
+          </th>
+
+          <th>
+            Clases
+          </th>
+
+          <th>
+            Actividad
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        <tr
+          *ngFor="
+            let item of sortedSummary;
+            trackBy: trackBySummary
+          "
+          class="daily-summary__row">
+
+          <!-- DATE -->
+          <td>
+
+            <div class="daily-summary__date">
+
+              <span
+                class="daily-summary__date-icon">
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none">
+
+                  <rect
+                    x="4"
+                    y="5"
+                    width="16"
+                    height="15"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.6"/>
+
+                  <path
+                    d="M8 3v4M16 3v4M4 9h16"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"/>
+
+                </svg>
+
+              </span>
+
+              <strong>
+                {{ formatDate(item.localdate) }}
+              </strong>
+
+            </div>
+
+          </td>
+
+
+          <!-- HOUR -->
+          <td>
+
+            <span class="daily-summary__hour">
+              {{ formatHour(item.localhour) }}
+            </span>
+
+          </td>
+
+
+          <!-- COUNT -->
+          <td>
+
+            <span class="daily-summary__count">
+              {{ item.count }}
+            </span>
+
+          </td>
+
+
+          <!-- ACTIVITY -->
+          <td>
+
+            <div class="daily-summary__activity">
+
+              <span
+                class="daily-summary__activity-bar"
+                [style.width.%]="
+                  totalClasses
+                    ? (item.count / totalClasses) * 100
+                    : 0
+                ">
+              </span>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>

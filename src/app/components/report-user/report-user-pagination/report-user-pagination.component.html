@@ -1,0 +1,150 @@
+<footer
+  *ngIf="total > 0"
+  class="report-user-pagination">
+
+  <!-- INFO -->
+  <div class="report-user-pagination__info">
+    {{ paginationLabel }}
+  </div>
+
+  <!-- PAGES -->
+  <div class="report-user-pagination__pages">
+
+    <!-- PREVIOUS -->
+    <button
+      type="button"
+      class="report-user-pagination__button"
+      [disabled]="!canPrev"
+      aria-label="Página anterior"
+      (click)="onPrevious()">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true">
+
+        <path
+          d="m15 18-6-6 6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+      </svg>
+
+    </button>
+
+
+    <!-- PAGE ITEMS -->
+    <ng-container
+      *ngFor="
+        let item of visiblePages
+      ">
+
+      <button
+        *ngIf="isPage(item)"
+        type="button"
+        class="report-user-pagination__page"
+        [class.report-user-pagination__page--active]="
+          item === page
+        "
+        (click)="
+          onPage(item)
+        ">
+
+        {{ item }}
+
+      </button>
+
+
+      <span
+        *ngIf="
+          item === 'ellipsis'
+        "
+        class="report-user-pagination__ellipsis">
+        ...
+      </span>
+
+    </ng-container>
+
+
+    <!-- NEXT -->
+    <button
+      type="button"
+      class="report-user-pagination__button"
+      [disabled]="!canNext"
+      aria-label="Página siguiente"
+      (click)="onNext()">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true">
+
+        <path
+          d="m9 18 6-6-6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+      </svg>
+
+    </button>
+
+  </div>
+
+
+  <!-- LIMIT -->
+  <div class="report-user-pagination__limit">
+
+    <label for="report-user-page-limit">
+      Filas por página
+    </label>
+
+    <div class="report-user-pagination__select-wrapper">
+
+      <select
+        id="report-user-page-limit"
+        class="report-user-pagination__select"
+        [ngModel]="limit"
+        (ngModelChange)="
+          onLimitChange($event)
+        ">
+
+        <option
+          *ngFor="
+            let option of limitOptions
+          "
+          [ngValue]="option">
+
+          {{ option }}
+
+        </option>
+
+      </select>
+
+      <span
+        class="report-user-pagination__select-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <path
+            d="m7 10 5 5 5-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+
+        </svg>
+
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>

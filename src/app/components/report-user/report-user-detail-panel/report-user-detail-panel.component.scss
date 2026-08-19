@@ -1,0 +1,923 @@
+:host {
+  display: contents;
+}
+
+
+/* =========================
+   BACKDROP
+========================= */
+
+.report-user-detail__backdrop {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 5000;
+
+  display: flex;
+  justify-content: flex-end;
+
+  background:
+    rgba(27, 29, 48, 0.32);
+
+  backdrop-filter:
+    blur(1px);
+
+  animation:
+    report-user-backdrop-in
+    0.18s ease;
+}
+
+
+/* =========================
+   DRAWER
+========================= */
+
+.report-user-detail {
+  width: min(
+    25rem,
+    92vw
+  );
+
+  height: 100dvh;
+  max-height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+
+  border-left:
+    1px solid #e5e7ef;
+
+  box-shadow:
+    -14px 0 35px
+    rgba(27, 30, 60, 0.12);
+
+  overflow: hidden;
+
+  animation:
+    report-user-detail-in
+    0.22s ease;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.report-user-detail__header {
+  flex-shrink: 0;
+
+  min-height: 4.7rem;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 0.8rem;
+
+  padding:
+    1rem
+    1.1rem
+    0.9rem;
+
+  border-bottom:
+    1px solid #eceef3;
+
+  box-sizing: border-box;
+}
+
+
+.report-user-detail__header-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.16rem;
+}
+
+
+.report-user-detail__header h2 {
+  margin: 0;
+
+  color: #202137;
+
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+
+.report-user-detail__header p {
+  margin: 0;
+
+  color: #858698;
+
+  font-size: 0.59rem;
+  line-height: 1.35;
+}
+
+
+/* =========================
+   CLOSE
+========================= */
+
+.report-user-detail__close {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  color: #525367;
+
+  background: transparent;
+
+  border: 0;
+  border-radius: 0.4rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease;
+}
+
+
+.report-user-detail__close:hover {
+  background: #f4f4f8;
+}
+
+
+.report-user-detail__close:active {
+  transform: scale(0.94);
+}
+
+
+.report-user-detail__close svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+
+/* =========================
+   BODY
+========================= */
+
+.report-user-detail__body {
+  width: 100%;
+
+  /*
+   * CLAVE:
+   * height: 0 obliga a este bloque a ocupar
+   * solamente el espacio disponible entre
+   * header y footer.
+   */
+  height: 0;
+  min-height: 0;
+
+  flex: 1 1 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.9rem;
+
+  padding: 1rem;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  overscroll-behavior-y: contain;
+
+  -webkit-overflow-scrolling: touch;
+
+  box-sizing: border-box;
+
+  scrollbar-width: thin;
+  scrollbar-color:
+    #c9cad5
+    transparent;
+}
+
+
+/* =========================
+   NO PERMITIR QUE EL
+   CONTENIDO SE COMPRIMA
+========================= */
+
+.report-user-detail__body > * {
+  flex: 0 0 auto;
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.report-user-detail__body::-webkit-scrollbar {
+  width: 0.38rem;
+}
+
+.report-user-detail__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.report-user-detail__body::-webkit-scrollbar-thumb {
+  background: #c9cad5;
+
+  border-radius: 999px;
+}
+
+.report-user-detail__body::-webkit-scrollbar-thumb:hover {
+  background: #aaadbb;
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+.report-user-detail__profile {
+  display: flex;
+  align-items: center;
+
+  gap: 0.8rem;
+
+  padding:
+    0.25rem
+    0.15rem
+    0.8rem;
+
+  border-bottom:
+    1px solid #eff0f4;
+}
+
+
+.report-user-detail__avatar {
+  width: 3.6rem;
+  height: 3.6rem;
+
+  flex: 0 0 3.6rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #4e32dc;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eeeaff,
+      #ddd7ff
+    );
+
+  border-radius: 50%;
+
+  font-size: 1rem;
+  font-weight: 750;
+}
+
+
+.report-user-detail__profile-content {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.1rem;
+}
+
+
+.report-user-detail__profile-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.5rem;
+}
+
+
+.report-user-detail__name {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #24253a;
+
+  font-size: 0.78rem;
+  font-weight: 700;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+.report-user-detail__email {
+  max-width: 100%;
+
+  overflow: hidden;
+
+  color: #686a7e;
+
+  font-size: 0.61rem;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+.report-user-detail__profile-content small {
+  color: #9495a5;
+
+  font-size: 0.56rem;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.report-user-detail__status {
+  min-height: 1.45rem;
+
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.28rem;
+
+  padding:
+    0.15rem
+    0.4rem;
+
+  border-radius: 0.35rem;
+
+  font-size: 0.54rem;
+  font-weight: 600;
+}
+
+
+.report-user-detail__status-dot {
+  width: 0.32rem;
+  height: 0.32rem;
+
+  border-radius: 50%;
+}
+
+
+.report-user-detail__status--active {
+  color: #177d4e;
+
+  background:
+    rgba(31, 171, 101, 0.1);
+}
+
+
+.report-user-detail__status--active
+.report-user-detail__status-dot {
+  background: #20aa66;
+}
+
+
+.report-user-detail__status--inactive {
+  color: #737487;
+
+  background: #eff0f3;
+}
+
+
+.report-user-detail__status--inactive
+.report-user-detail__status-dot {
+  background: #9698a7;
+}
+
+
+.report-user-detail__status--hold {
+  color: #ac7415;
+
+  background:
+    rgba(221, 153, 29, 0.11);
+}
+
+
+.report-user-detail__status--hold
+.report-user-detail__status-dot {
+  background: #df9e24;
+}
+
+
+.report-user-detail__status--block {
+  color: #bd3743;
+
+  background:
+    rgba(216, 61, 76, 0.1);
+}
+
+
+.report-user-detail__status--block
+.report-user-detail__status-dot {
+  background: #d83d4c;
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+.report-user-detail__summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 0.55rem;
+}
+
+
+.report-user-detail__summary-card {
+  min-height: 4.2rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.35rem;
+
+  padding: 0.6rem;
+
+  background: #ffffff;
+
+  border:
+    1px solid #eceef4;
+
+  border-radius: 0.55rem;
+
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+
+.report-user-detail__summary-card > span {
+  color: #77788c;
+
+  font-size: 0.55rem;
+  font-weight: 600;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================
+   ROLE / STAGE
+========================= */
+
+.report-user-detail__role,
+.report-user-detail__stage-badge {
+  min-height: 1.45rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    0.15rem
+    0.42rem;
+
+  border-radius: 0.32rem;
+
+  font-size: 0.55rem;
+  font-weight: 650;
+}
+
+
+.report-user-detail__role--student {
+  color: #5037d9;
+
+  background:
+    rgba(80, 55, 217, 0.09);
+}
+
+
+.report-user-detail__role--instructor {
+  color: #167e50;
+
+  background:
+    rgba(31, 168, 101, 0.1);
+}
+
+
+.report-user-detail__role--admin {
+  color: #b57912;
+
+  background:
+    rgba(221, 154, 34, 0.11);
+}
+
+
+.report-user-detail__stage-badge {
+  color: #5037d9;
+
+  background:
+    rgba(80, 55, 217, 0.08);
+}
+
+
+/* =========================
+   SECTION
+========================= */
+
+.report-user-detail__section {
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border:
+    1px solid #eceef4;
+
+  border-radius: 0.6rem;
+}
+
+
+.report-user-detail__section-header {
+  padding:
+    0.7rem
+    0.75rem;
+
+  border-bottom:
+    1px solid #eff0f4;
+}
+
+
+.report-user-detail__section-header h3 {
+  margin: 0;
+
+  color: #292a3e;
+
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
+
+/* =========================
+   DATA LIST
+========================= */
+
+.report-user-detail__data-list {
+  padding:
+    0.3rem
+    0.65rem;
+}
+
+
+.report-user-detail__data-row {
+  min-height: 2.45rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.8rem;
+
+  padding:
+    0.25rem
+    0.15rem;
+
+  border-bottom:
+    1px solid #f1f2f5;
+}
+
+
+.report-user-detail__data-row:last-child {
+  border-bottom: 0;
+}
+
+
+.report-user-detail__data-label {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.4rem;
+}
+
+
+.report-user-detail__data-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+
+  flex: 0 0 1.35rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #5c5d72;
+}
+
+
+.report-user-detail__data-icon svg {
+  width: 0.78rem;
+  height: 0.78rem;
+}
+
+
+.report-user-detail__data-row span {
+  color: #696a7f;
+
+  font-size: 0.58rem;
+}
+
+
+.report-user-detail__data-row strong {
+  min-width: 0;
+
+  max-width: 58%;
+
+  overflow: hidden;
+
+  color: #36374c;
+
+  font-size: 0.59rem;
+  font-weight: 600;
+
+  text-align: right;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   ACTIVITY
+========================= */
+
+.report-user-detail__activity {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 0.55rem;
+
+  padding: 0.65rem;
+}
+
+
+.report-user-detail__activity-card {
+  min-width: 0;
+  min-height: 5.5rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+
+  padding: 0.65rem;
+
+  background: #ffffff;
+
+  border:
+    1px solid #eceef4;
+
+  border-radius: 0.55rem;
+
+  box-sizing: border-box;
+}
+
+
+.report-user-detail__activity-icon {
+  width: 2.2rem;
+  height: 2.2rem;
+
+  flex: 0 0 2.2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+}
+
+
+.report-user-detail__activity-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+
+.report-user-detail__activity-icon--comments {
+  color: #4168d8;
+
+  background:
+    rgba(65, 104, 216, 0.09);
+}
+
+
+.report-user-detail__activity-icon--alerts {
+  color: #d84350;
+
+  background:
+    rgba(216, 67, 80, 0.09);
+}
+
+
+.report-user-detail__activity-card > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.06rem;
+}
+
+
+.report-user-detail__activity-card span {
+  color: #606175;
+
+  font-size: 0.55rem;
+  font-weight: 600;
+}
+
+
+.report-user-detail__activity-card strong {
+  color: #28293e;
+
+  font-size: 0.95rem;
+  font-weight: 750;
+}
+
+
+.report-user-detail__activity-card small {
+  color: #9697a6;
+
+  font-size: 0.52rem;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.report-user-detail__footer {
+  flex-shrink: 0;
+
+  padding:
+    0.7rem
+    1rem
+    0.85rem;
+
+  background: #ffffff;
+
+  border-top:
+    1px solid #eceef3;
+}
+
+
+.report-user-detail__close-button {
+  width: 100%;
+  height: 2.35rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.4rem;
+
+  padding: 0;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4828e4,
+      #5b31e9
+    );
+
+  border: 0;
+  border-radius: 0.45rem;
+
+  font-family: inherit;
+  font-size: 0.66rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 10px
+    rgba(74, 43, 220, 0.16);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.report-user-detail__close-button:hover {
+  box-shadow:
+    0 6px 13px
+    rgba(74, 43, 220, 0.22);
+}
+
+
+.report-user-detail__close-button:active {
+  transform: scale(0.98);
+}
+
+
+.report-user-detail__close-button svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes report-user-detail-in {
+
+  from {
+    transform:
+      translateX(100%);
+  }
+
+  to {
+    transform:
+      translateX(0);
+  }
+
+}
+
+
+@keyframes report-user-backdrop-in {
+
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .report-user-detail {
+    width: 100%;
+  }
+
+
+  .report-user-detail__header {
+    padding:
+      0.85rem
+      0.8rem;
+  }
+
+
+  .report-user-detail__body {
+    padding: 0.8rem;
+  }
+
+
+  .report-user-detail__avatar {
+    width: 3rem;
+    height: 3rem;
+
+    flex-basis: 3rem;
+  }
+
+
+  .report-user-detail__activity {
+    grid-template-columns: 1fr;
+  }
+
+
+  .report-user-detail__footer {
+    padding:
+      0.65rem
+      0.8rem
+      0.8rem;
+  }
+
+}

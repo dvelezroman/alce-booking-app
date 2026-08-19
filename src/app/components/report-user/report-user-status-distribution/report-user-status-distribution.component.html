@@ -1,0 +1,217 @@
+<section class="status-distribution">
+
+  <!-- HEADER -->
+  <header class="status-distribution__header">
+
+    <div class="status-distribution__heading">
+
+      <span
+        class="status-distribution__heading-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="m8.5 12 2.2 2.2 4.8-5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+        <h3>
+          Usuarios por estado
+        </h3>
+
+        <p>
+          Distribución según su estado
+        </p>
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- CONTENT -->
+  <div class="status-distribution__content">
+
+    <!-- ACTIVE -->
+    <article class="status-distribution__item">
+
+      <div class="status-distribution__item-header">
+
+        <div class="status-distribution__label">
+
+          <span
+            class="
+              status-distribution__dot
+              status-distribution__dot--active
+            ">
+          </span>
+
+          <span>
+            Activos
+          </span>
+
+        </div>
+
+        <div class="status-distribution__value">
+
+          <strong>
+            {{ activeUsers | number }}
+          </strong>
+
+          <span>
+            {{ activePercentage }}%
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="status-distribution__track">
+
+        <span
+          class="
+            status-distribution__bar
+            status-distribution__bar--active
+          "
+          [style.width.%]="activePercentage">
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <!-- INACTIVE -->
+    <article class="status-distribution__item">
+
+      <div class="status-distribution__item-header">
+
+        <div class="status-distribution__label">
+
+          <span
+            class="
+              status-distribution__dot
+              status-distribution__dot--inactive
+            ">
+          </span>
+
+          <span>
+            Inactivos
+          </span>
+
+        </div>
+
+        <div class="status-distribution__value">
+
+          <strong>
+            {{ inactiveUsers | number }}
+          </strong>
+
+          <span>
+            {{ inactivePercentage }}%
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="status-distribution__track">
+
+        <span
+          class="
+            status-distribution__bar
+            status-distribution__bar--inactive
+          "
+          [style.width.%]="inactivePercentage">
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <!-- SUSPENDED -->
+    <article class="status-distribution__item">
+
+      <div class="status-distribution__item-header">
+
+        <div class="status-distribution__label">
+
+          <span
+            class="
+              status-distribution__dot
+              status-distribution__dot--suspended
+            ">
+          </span>
+
+          <span>
+            Suspendidos
+          </span>
+
+        </div>
+
+        <div class="status-distribution__value">
+
+          <strong>
+            {{ suspendedUsers | number }}
+          </strong>
+
+          <span>
+            {{ suspendedPercentage }}%
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="status-distribution__track">
+
+        <span
+          class="
+            status-distribution__bar
+            status-distribution__bar--suspended
+          "
+          [style.width.%]="suspendedPercentage">
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <!-- TOTAL -->
+    <div class="status-distribution__total">
+
+      <span>
+        Total analizado
+      </span>
+
+      <strong>
+        {{ totalUsers | number }}
+      </strong>
+
+    </div>
+
+  </div>
+
+</section>

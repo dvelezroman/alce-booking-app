@@ -1,0 +1,409 @@
+<section class="day-summary">
+
+  <!-- HEADER -->
+  <header class="day-summary__header">
+
+    <div class="day-summary__heading">
+
+      <span
+        class="day-summary__heading-icon"
+        aria-hidden="true">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+
+        <h2>
+          Resumen por día
+        </h2>
+
+        <p>
+          Distribución de clases y horas registradas por fecha.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="day-summary__range">
+
+      <span>
+        Periodo
+      </span>
+
+      <strong>
+        {{ rangeLabel }}
+      </strong>
+
+    </div>
+
+  </header>
+
+
+  <!-- INSTRUCTOR -->
+  <div class="day-summary__instructor">
+
+    <span>
+      Instructor
+    </span>
+
+    <strong>
+      {{
+        instructorName ||
+        'Sin instructor'
+      }}
+    </strong>
+
+  </div>
+
+
+  <!-- SUMMARY -->
+  <div class="day-summary__metrics">
+
+    <article class="day-summary__metric">
+
+      <span
+        class="
+          day-summary__metric-icon
+          day-summary__metric-icon--classes
+        ">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <path
+            d="M5 4h14v16H5V4Z"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M8.5 9h7M8.5 13h7M8.5 17h4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+
+        <strong>
+          {{ totalClasses }}
+        </strong>
+
+        <span>
+          Clases totales
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <article class="day-summary__metric">
+
+      <span
+        class="
+          day-summary__metric-icon
+          day-summary__metric-icon--days
+        ">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+
+        <strong>
+          {{ totalDays }}
+        </strong>
+
+        <span>
+          Días con actividad
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <article class="day-summary__metric">
+
+      <span
+        class="
+          day-summary__metric-icon
+          day-summary__metric-icon--peak
+        ">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <path
+            d="m4 16 5-5 4 3 7-8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+
+        </svg>
+
+      </span>
+
+      <div>
+
+        <strong>
+          {{
+            busiestDay?.total ||
+            0
+          }}
+        </strong>
+
+        <span>
+          Máximo en un día
+        </span>
+
+      </div>
+
+    </article>
+
+  </div>
+
+
+  <!-- EMPTY -->
+  <div
+    *ngIf="groupedDays.length === 0"
+    class="day-summary__empty">
+
+    <span
+      class="day-summary__empty-icon"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none">
+
+        <rect
+          x="4"
+          y="5"
+          width="16"
+          height="15"
+          rx="2"
+          stroke="currentColor"
+          stroke-width="1.7"/>
+
+        <path
+          d="M8 3v4M16 3v4M4 9h16"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"/>
+
+      </svg>
+
+    </span>
+
+    <strong>
+      Sin información disponible
+    </strong>
+
+    <span>
+      No se encontraron días con actividad para los filtros seleccionados.
+    </span>
+
+  </div>
+
+
+  <!-- DAYS -->
+  <div
+    *ngIf="groupedDays.length > 0"
+    class="day-summary__days">
+
+    <article
+      *ngFor="
+        let day of groupedDays;
+        trackBy: trackByDay
+      "
+      class="day-summary__day">
+
+      <!-- DAY HEADER -->
+      <header class="day-summary__day-header">
+
+        <div class="day-summary__day-title">
+
+          <span class="day-summary__day-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none">
+
+              <rect
+                x="4"
+                y="5"
+                width="16"
+                height="15"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.6"/>
+
+              <path
+                d="M8 3v4M16 3v4M4 9h16"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"/>
+
+            </svg>
+
+          </span>
+
+          <div>
+
+            <strong>
+              {{ formatDate(day.date) }}
+            </strong>
+
+            <span>
+              {{ day.hours.length }}
+              {{
+                day.hours.length === 1
+                  ? 'horario'
+                  : 'horarios'
+              }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <span class="day-summary__day-total">
+
+          {{ day.total }}
+
+          {{
+            day.total === 1
+              ? 'clase'
+              : 'clases'
+          }}
+
+        </span>
+
+      </header>
+
+
+      <!-- ACTIVITY -->
+      <div class="day-summary__day-progress">
+
+        <span
+          [style.width.%]="
+            getDayPercentage(day)
+          ">
+        </span>
+
+      </div>
+
+
+      <!-- HOURS -->
+      <div class="day-summary__hours">
+
+        <div
+          *ngFor="
+            let item of day.hours;
+            trackBy: trackByHour
+          "
+          class="day-summary__hour">
+
+          <span class="day-summary__hour-time">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none">
+
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.6"/>
+
+              <path
+                d="M12 7.5V12l3 2"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+
+            </svg>
+
+            {{
+              formatHour(
+                item.localhour
+              )
+            }}
+
+          </span>
+
+
+          <span class="day-summary__hour-count">
+
+            {{ item.count }}
+
+            {{
+              item.count === 1
+                ? 'clase'
+                : 'clases'
+            }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>

@@ -1,26 +1,118 @@
-<section class="section">
-  <h1 class="reports-progress-header reports-progress-title">
-    Reportes de Usuario
-  </h1>
+<section class="report-user-page">
+  <div class="report-user-page__container">
 
-  <app-report-form 
-  (filtersSubmitted)="handleFormSubmit($event)" 
-  (downloadExcelRequested)="handleDownloadExcel($event)"
-  />
+    <!-- HEADER -->
+    <app-report-user-header
+      (exportRequested)="handleDownloadExcel()"
+      (generateRequested)="handleGenerateReport()">
+    </app-report-user-header>
 
-  <div class="report-table-wrapper">
-    <app-report-user-table
-      [users]="users"
-      [currentPage]="currentPage"
-      [itemsPerPage]="itemsPerPage"
-      [totalUsers]="totalUsers"
-      [totalPages]="totalPages"
-      (pageChanged)="handlePageChange($event)"
-      (stageClicked)="handleStageClick($event.studentId)"
-    />
+    <!-- MAIN LAYOUT -->
+    <div class="report-user-page__layout">
+
+      <!-- LEFT -->
+      <main class="report-user-page__main">
+
+        <!-- SUMMARY -->
+        <app-report-user-summary
+          [totalUsers]="totalUsers"
+          [activeUsers]="activeUsers"
+          [activeUsersPercentage]="activeUsersPercentage"
+          [newStudents]="newStudents"
+          [usersWithComments]="usersWithComments"
+          [usersWithCommentsPercentage]="usersWithCommentsPercentage"
+          [usersWithAlerts]="usersWithAlerts"
+          [usersWithAlertsPercentage]="usersWithAlertsPercentage"
+          [loading]="isLoading">
+        </app-report-user-summary>
+
+        <!-- FILTERS -->
+        <section class="report-user-page__filters">
+          <app-report-user-filters
+            (filtersSubmitted)="handleFormSubmit($event)">
+          </app-report-user-filters>
+        </section>
+
+        <!-- TABLE -->
+        <section class="report-user-page__table-card">
+
+          <header class="report-user-page__table-header">
+            <div class="report-user-page__table-title">
+              <h2>Lista de usuarios</h2>
+
+              <span>
+                {{ totalUsers | number }} resultados
+              </span>
+            </div>
+          </header>
+
+          <app-report-user-table
+            [users]="paginatedUsers"
+            [loading]="isLoading"
+            [startIndex]="startIndex"
+            (userSelected)="openUserDetail($event)"
+            (stageRequested)="handleStageClick($event)">
+          </app-report-user-table>
+
+          <app-report-user-pagination
+            [page]="currentPage"
+            [totalPages]="totalPages"
+            [total]="totalUsers"
+            [limit]="itemsPerPage"
+            [limitOptions]="itemsPerPageOptions"
+            [canPrev]="canPrev"
+            [canNext]="canNext"
+            [paginationLabel]="paginationLabel"
+            (pageChange)="handlePageChange($event)"
+            (previousRequested)="handlePreviousPage()"
+            (nextRequested)="handleNextPage()"
+            (limitChange)="handleItemsPerPageChange($event)">
+          </app-report-user-pagination>
+
+        </section>
+
+      </main>
+
+      <!-- RIGHT SIDEBAR -->
+      <aside class="report-user-page__sidebar">
+
+        <app-report-user-quick-actions>
+        </app-report-user-quick-actions>
+
+        <app-report-user-role-distribution
+          [totalUsers]="users.length"
+          [students]="studentsCount"
+          [instructors]="instructorsCount"
+          [administrators]="administratorsCount"
+          [others]="otherRolesCount">
+        </app-report-user-role-distribution>
+
+        <app-report-user-status-distribution
+          [totalUsers]="users.length"
+          [activeUsers]="activeUsers"
+          [inactiveUsers]="inactiveUsers"
+          [suspendedUsers]="suspendedUsers">
+        </app-report-user-status-distribution>
+
+      </aside>
+
+    </div>
+
   </div>
 </section>
 
+<!-- DETAIL PANEL -->
+@if (
+  showUserDetail &&
+  selectedUser
+) {
+  <app-report-user-detail-panel
+    [user]="selectedUser"
+    (closeRequested)="closeUserDetail()">
+  </app-report-user-detail-panel>
+}
+
+<!-- GLOBAL MODAL -->
 <app-modal
   [showModal]="modal.show"
   [message]="modal.message"

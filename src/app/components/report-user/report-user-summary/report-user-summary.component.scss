@@ -1,0 +1,401 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+.report-user-summary {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  gap: 0.7rem;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.report-user-summary__card {
+  position: relative;
+
+  min-width: 0;
+  min-height: 7.2rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.7rem;
+
+  padding:
+    0.8rem
+    0.85rem;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e8eaf2;
+
+  border-radius: 0.75rem;
+
+  box-shadow:
+    0 4px 14px
+    rgba(31, 42, 89, 0.02);
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================
+   ICON
+========================= */
+
+.report-user-summary__icon {
+  width: 2.75rem;
+  height: 2.75rem;
+
+  flex: 0 0 2.75rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+}
+
+.report-user-summary__icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+
+/* TOTAL */
+
+.report-user-summary__icon--total {
+  color: #5538d8;
+
+  background:
+    rgba(85, 56, 216, 0.09);
+}
+
+
+/* ACTIVE */
+
+.report-user-summary__icon--active {
+  color: #1a9d61;
+
+  background:
+    rgba(35, 174, 105, 0.1);
+}
+
+
+/* STUDENTS */
+
+.report-user-summary__icon--students {
+  color: #dc971d;
+
+  background:
+    rgba(225, 157, 35, 0.11);
+}
+
+
+/* COMMENTS */
+
+.report-user-summary__icon--comments {
+  color: #4167d8;
+
+  background:
+    rgba(65, 103, 216, 0.1);
+}
+
+
+/* ALERTS */
+
+.report-user-summary__icon--alerts {
+  color: #d83f4d;
+
+  background:
+    rgba(216, 63, 77, 0.1);
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.report-user-summary__content {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.1rem;
+}
+
+
+.report-user-summary__label {
+  display: block;
+
+  overflow: hidden;
+
+  color: #45465b;
+
+  font-size: 0.64rem;
+  font-weight: 600;
+  line-height: 1.3;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+.report-user-summary__value {
+  display: block;
+
+  margin-top: 0.15rem;
+
+  color: #191a31;
+
+  font-size: 1.05rem;
+  font-weight: 750;
+  line-height: 1.1;
+
+  letter-spacing: -0.02em;
+}
+
+
+.report-user-summary__description {
+  display: block;
+
+  margin-top: 0.12rem;
+
+  overflow: hidden;
+
+  color: #818295;
+
+  font-size: 0.59rem;
+  font-weight: 400;
+  line-height: 1.3;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   PROGRESS
+========================= */
+
+.report-user-summary__progress {
+  position: absolute;
+
+  right: 0.8rem;
+  bottom: 0.65rem;
+
+  width: 2.8rem;
+  height: 0.25rem;
+
+  overflow: hidden;
+
+  background: #eff0f4;
+
+  border-radius: 999px;
+}
+
+
+.report-user-summary__progress-bar {
+  display: block;
+
+  height: 100%;
+
+  border-radius: inherit;
+
+  transition:
+    width 0.3s ease;
+}
+
+
+.report-user-summary__progress-bar--active {
+  background: #28a96b;
+}
+
+
+.report-user-summary__progress-bar--comments {
+  background: #4772dc;
+}
+
+
+.report-user-summary__progress-bar--alerts {
+  background: #da4754;
+}
+
+
+/* =========================
+   SKELETON
+========================= */
+
+.report-user-summary__skeleton {
+  display: block;
+
+  background:
+    linear-gradient(
+      90deg,
+      #f0f1f5 25%,
+      #f7f7fa 50%,
+      #f0f1f5 75%
+    );
+
+  background-size:
+    200% 100%;
+
+  border-radius: 0.3rem;
+
+  animation:
+    report-user-summary-loading
+    1.3s infinite;
+}
+
+
+.report-user-summary__skeleton--icon {
+  width: 2.75rem;
+  height: 2.75rem;
+
+  flex: 0 0 2.75rem;
+
+  border-radius: 50%;
+}
+
+
+.report-user-summary__skeleton-content {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.32rem;
+}
+
+
+.report-user-summary__skeleton--label {
+  width: 70%;
+  height: 0.55rem;
+}
+
+
+.report-user-summary__skeleton--value {
+  width: 45%;
+  height: 1rem;
+}
+
+
+.report-user-summary__skeleton--description {
+  width: 60%;
+  height: 0.5rem;
+}
+
+
+@keyframes report-user-summary-loading {
+
+  0% {
+    background-position:
+      200% 0;
+  }
+
+  100% {
+    background-position:
+      -200% 0;
+  }
+}
+
+
+/* =========================
+   MEDIUM DESKTOP
+========================= */
+
+@media (max-width: 1200px) {
+
+  .report-user-summary {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 850px) {
+
+  .report-user-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .report-user-summary {
+    grid-template-columns: 1fr;
+
+    gap: 0.6rem;
+  }
+
+
+  .report-user-summary__card {
+    min-height: 5.2rem;
+
+    padding:
+      0.7rem
+      0.75rem;
+  }
+
+
+  .report-user-summary__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+
+    flex-basis: 2.5rem;
+  }
+
+
+  .report-user-summary__icon svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+
+  .report-user-summary__value {
+    font-size: 0.95rem;
+  }
+
+
+  .report-user-summary__progress {
+    right: 0.7rem;
+    bottom: 0.55rem;
+
+    width: 2.5rem;
+  }
+
+}

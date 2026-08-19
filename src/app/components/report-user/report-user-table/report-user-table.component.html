@@ -1,0 +1,565 @@
+<section
+  class="report-user-table"
+  [class.report-user-table--menu-open]="
+    openMenuId !== null
+  ">
+
+  <div class="report-user-table__wrapper">
+
+    <table class="report-user-table__table">
+
+      <thead>
+        <tr>
+
+          <th class="report-user-table__col-number">
+            #
+          </th>
+
+          <th class="report-user-table__col-user">
+            Usuario
+          </th>
+
+          <th class="report-user-table__col-role">
+            Rol
+          </th>
+
+          <th class="report-user-table__col-status">
+            Estado
+          </th>
+
+          <th class="report-user-table__col-stage">
+            Stage
+          </th>
+
+          <th class="report-user-table__col-comments">
+            Comentarios
+          </th>
+
+          <th class="report-user-table__col-alerts">
+            Alertas
+          </th>
+
+          <th class="report-user-table__col-date">
+            Registrado
+          </th>
+
+          <th class="report-user-table__col-actions">
+            Acciones
+          </th>
+
+        </tr>
+      </thead>
+
+
+      <!-- LOADING -->
+      <tbody *ngIf="loading">
+
+        <tr
+          *ngFor="
+            let item of [1, 2, 3, 4, 5, 6]
+          "
+          class="report-user-table__row">
+
+          <td>
+            <span
+              class="
+                report-user-table__skeleton
+                report-user-table__skeleton--small
+              ">
+            </span>
+          </td>
+
+          <td>
+
+            <div class="report-user-table__user">
+
+              <span
+                class="
+                  report-user-table__skeleton
+                  report-user-table__skeleton--avatar
+                ">
+              </span>
+
+              <div class="report-user-table__skeleton-stack">
+
+                <span
+                  class="
+                    report-user-table__skeleton
+                    report-user-table__skeleton--name
+                  ">
+                </span>
+
+                <span
+                  class="
+                    report-user-table__skeleton
+                    report-user-table__skeleton--email
+                  ">
+                </span>
+
+              </div>
+
+            </div>
+
+          </td>
+
+          <td>
+            <span
+              class="
+                report-user-table__skeleton
+                report-user-table__skeleton--badge
+              ">
+            </span>
+          </td>
+
+          <td>
+            <span
+              class="
+                report-user-table__skeleton
+                report-user-table__skeleton--badge
+              ">
+            </span>
+          </td>
+
+          <td>
+            <span
+              class="
+                report-user-table__skeleton
+                report-user-table__skeleton--stage
+              ">
+            </span>
+          </td>
+
+          <td>
+            <span
+              class="
+                report-user-table__skeleton
+                report-user-table__skeleton--count
+              ">
+            </span>
+          </td>
+
+          <td>
+            <span
+              class="
+                report-user-table__skeleton
+                report-user-table__skeleton--count
+              ">
+            </span>
+          </td>
+
+          <td>
+            <span
+              class="
+                report-user-table__skeleton
+                report-user-table__skeleton--date
+              ">
+            </span>
+          </td>
+
+          <td>
+            <span
+              class="
+                report-user-table__skeleton
+                report-user-table__skeleton--button
+              ">
+            </span>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+
+      <!-- DATA -->
+      <tbody *ngIf="!loading">
+
+        <tr
+          *ngFor="
+            let user of users;
+            let i = index;
+            trackBy: trackByUserId
+          "
+          class="report-user-table__row"
+          [class.report-user-table__row--menu-open]="
+            isMenuOpen(user.id)
+          ">
+
+          <!-- NUMBER -->
+          <td class="report-user-table__number">
+            {{ startIndex + i }}
+          </td>
+
+
+          <!-- USER -->
+          <td>
+
+            <div class="report-user-table__user">
+
+              <span class="report-user-table__avatar">
+                {{ getUserInitials(user) }}
+              </span>
+
+              <div class="report-user-table__person">
+
+                <strong
+                  [title]="
+                    getUserFullName(user)
+                  ">
+                  {{ getUserFullName(user) }}
+                </strong>
+
+                <small
+                  [title]="
+                    getUserEmail(user)
+                  ">
+                  {{ getUserEmail(user) }}
+                </small>
+
+                <span>
+                  ID:
+                  {{ getUserIdentifier(user) }}
+                </span>
+
+              </div>
+
+            </div>
+
+          </td>
+
+
+          <!-- ROLE -->
+          <td>
+
+            <span
+              class="report-user-table__role"
+              [class.report-user-table__role--student]="
+                getRoleModifier(user.role) === 'student'
+              "
+              [class.report-user-table__role--instructor]="
+                getRoleModifier(user.role) === 'instructor'
+              "
+              [class.report-user-table__role--admin]="
+                getRoleModifier(user.role) === 'admin'
+              "
+              [class.report-user-table__role--other]="
+                getRoleModifier(user.role) === 'other'
+              ">
+
+              {{ getRoleLabel(user.role) }}
+
+            </span>
+
+          </td>
+
+
+          <!-- STATUS -->
+          <td>
+
+            <span
+              class="report-user-table__status"
+              [class.report-user-table__status--active]="
+                getStatusModifier(user.status) === 'active'
+              "
+              [class.report-user-table__status--inactive]="
+                getStatusModifier(user.status) === 'inactive'
+              "
+              [class.report-user-table__status--hold]="
+                getStatusModifier(user.status) === 'hold'
+              "
+              [class.report-user-table__status--block]="
+                getStatusModifier(user.status) === 'block'
+              ">
+
+              <span class="report-user-table__status-dot">
+              </span>
+
+              {{ getStatusLabel(user.status) }}
+
+            </span>
+
+          </td>
+
+
+          <!-- STAGE -->
+          <td>
+
+            <button
+              *ngIf="hasStage(user); else noStage"
+              type="button"
+              class="report-user-table__stage"
+              (click)="
+                onStage(
+                  $event,
+                  user
+                )
+              ">
+
+              {{ getStageLabel(user) }}
+
+            </button>
+
+            <ng-template #noStage>
+              <span class="report-user-table__empty-value">
+                —
+              </span>
+            </ng-template>
+
+          </td>
+
+
+          <!-- COMMENTS -->
+          <td>
+
+            <span
+              class="report-user-table__counter"
+              [class.report-user-table__counter--active]="
+                getCommentsCount(user) > 0
+              ">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true">
+                <path
+                  d="M5 5.5h14v10H11l-4.5 3v-3H5v-10Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"/>
+              </svg>
+
+              {{ getCommentsCount(user) }}
+
+            </span>
+
+          </td>
+
+
+          <!-- ALERTS -->
+          <td>
+
+            <span
+              class="
+                report-user-table__counter
+                report-user-table__counter--alert
+              "
+              [class.report-user-table__counter--active]="
+                getAlertsCount(user) > 0
+              ">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true">
+                <path
+                  d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+                <path
+                  d="M10 20h4"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"/>
+              </svg>
+
+              {{ getAlertsCount(user) }}
+
+            </span>
+
+          </td>
+
+
+          <!-- CREATED -->
+          <td>
+            <span class="report-user-table__date">
+              {{
+                formatDate(
+                  getCreatedAt(user)
+                )
+              }}
+            </span>
+          </td>
+
+
+          <!-- ACTIONS -->
+          <td class="report-user-table__actions-cell">
+
+            <div
+              class="report-user-table__actions"
+              (click)="$event.stopPropagation()">
+
+              <button
+                type="button"
+                class="report-user-table__menu-button"
+                [class.report-user-table__menu-button--active]="
+                  isMenuOpen(user.id)
+                "
+                aria-label="Opciones del usuario"
+                [attr.aria-expanded]="
+                  isMenuOpen(user.id)
+                "
+                (click)="
+                  toggleMenu(
+                    $event,
+                    user.id
+                  )
+                ">
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true">
+                  <circle
+                    cx="12"
+                    cy="5"
+                    r="1.7"/>
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="1.7"/>
+                  <circle
+                    cx="12"
+                    cy="19"
+                    r="1.7"/>
+                </svg>
+
+              </button>
+
+
+              <!-- MENU -->
+              <div
+                *ngIf="
+                  isMenuOpen(user.id)
+                "
+                class="report-user-table__menu"
+                (click)="$event.stopPropagation()">
+
+                <!-- DETAIL -->
+                <button
+                  type="button"
+                  class="report-user-table__menu-item"
+                  (click)="
+                    onView(
+                      $event,
+                      user
+                    )
+                  ">
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true">
+                    <path
+                      d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="2.5"
+                      stroke="currentColor"
+                      stroke-width="1.7"/>
+                  </svg>
+
+                  <span>
+                    Ver detalles
+                  </span>
+
+                </button>
+
+
+                <!-- STAGE -->
+                <button
+                  *ngIf="
+                    user.student?.id
+                  "
+                  type="button"
+                  class="report-user-table__menu-item"
+                  (click)="
+                    onStage(
+                      $event,
+                      user
+                    )
+                  ">
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true">
+                    <path
+                      d="M5 7h14M5 12h14M5 17h9"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"/>
+                  </svg>
+
+                  <span>
+                    Historial de stages
+                  </span>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+
+    <!-- EMPTY -->
+    <div
+      *ngIf="
+        !loading &&
+        users.length === 0
+      "
+      class="report-user-table__empty">
+
+      <span class="report-user-table__empty-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true">
+          <circle
+            cx="8"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+          <circle
+            cx="16"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+          <path
+            d="M2.5 19c0-3 2.4-5 5.5-5s5.5 2 5.5 5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+        </svg>
+
+      </span>
+
+      <strong>
+        No hay usuarios
+      </strong>
+
+      <span>
+        No se encontraron usuarios con los filtros seleccionados.
+      </span>
+
+    </div>
+
+  </div>
+
+</section>

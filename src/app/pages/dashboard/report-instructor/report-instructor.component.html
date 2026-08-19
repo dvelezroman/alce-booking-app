@@ -1,191 +1,154 @@
-<div class="attendance-title">
-  <h1>Reporte del Instructor</h1>
-</div>
+<section class="report-instructor-page">
 
-<section class="attendance-section">
-  <div class="attendance-search">
-    <form>
-      <!-- Selección de instructor -->
-      <div class="field">
-        <div class="control">
-          <label class="label">Instructor</label>
-          <input
-            class="input"
-             [ngClass]="{ 'input-error': isNameFieldInvalid }"
-            type="text"
-            placeholder="Nombre del Instructor"
-            [(ngModel)]="filter.instructorName"
-            (input)="onInstructorInputChange()"
-            (blur)="hideDropdown()"
-            name="instructorName"
-            autocomplete="off"/>
-          <!-- Dropdown -->
-          <div *ngIf="showDropdown" class="dropdown">
-            <div *ngIf="filteredInstructors.length === 0" class="no-results1">
-              No se encontraron instructores
+  <div class="report-instructor-page__container">
+
+    <!-- HEADER -->
+    <app-report-instructor-header
+      (exportRequested)="downloadInstructorHoursCsv()"
+      (summaryRequested)="handleViewSummary()">
+    </app-report-instructor-header>
+
+
+    <!-- BODY -->
+    <div class="report-instructor-page__layout">
+
+      <!-- =========================
+           LEFT
+      ========================== -->
+
+      <aside class="report-instructor-page__sidebar">
+
+        <app-report-instructor-filters
+          [filter]="filter"
+          [filteredInstructors]="filteredInstructors"
+          [showDropdown]="showDropdown"
+          [isNameFieldInvalid]="isNameFieldInvalid"
+          [showFromError]="showFromError"
+          [showToError]="showToError"
+          (instructorInputChange)="onInstructorInputChange()"
+          (instructorSelected)="selectInstructor($event)"
+          (dropdownHidden)="hideDropdown()"
+          (searchRequested)="searchInstructorAttendance()">
+        </app-report-instructor-filters>
+
+      </aside>
+
+
+      <!-- =========================
+           RIGHT CONTENT
+      ========================== -->
+
+      <main class="report-instructor-page__main">
+
+        <!-- VIEW SELECTOR -->
+        <app-report-instructor-view-selector
+          [activeView]="activeView"
+          (mainRequested)="handleViewMeetings()"
+          (summaryRequested)="handleViewSummary()"
+          (summaryByDayRequested)="handleViewSummaryByDay()">
+        </app-report-instructor-view-selector>
+
+
+        <!-- =========================
+             MAIN VIEW
+        ========================== -->
+
+        <ng-container *ngIf="activeView === 'main'">
+
+          <div class="report-instructor-page__main-grid">
+
+            <!-- CENTER -->
+            <div class="report-instructor-page__content">
+
+              <!-- CLASS DETAIL -->
+              <app-report-instructor-class-detail
+                [date]="currentDate"
+                [instructors]="currentInstructors"
+                [searchAttempted]="searchAttempted"
+                [hasPreviousDate]="currentDateIndex > 0"
+                [hasNextDate]="currentDateIndex < availableDates.length - 1"
+                (previousDateRequested)="prevDate()"
+                (nextDateRequested)="nextDate()"
+                (instructorSelected)="selectInstructorDetail($event)">
+              </app-report-instructor-class-detail>
+
+
+              <!-- HOUR DETAIL -->
+              <app-report-instructor-hour-detail
+                *ngIf="selectedInstructorDetail"
+                [instructor]="selectedInstructorDetail"
+                (contentRequested)="showContent($event)">
+              </app-report-instructor-hour-detail>
+
             </div>
-            <ul *ngIf="filteredInstructors.length > 0">
-              <li *ngFor="let instructor of filteredInstructors" (mousedown)="selectInstructor(instructor)">
-                {{ instructor.firstName }} {{ instructor.lastName }}
-              </li>
-            </ul>
+
+
+            <!-- RIGHT -->
+            <aside class="report-instructor-page__right">
+
+              <app-report-instructor-detail
+                [instructor]="selectedInstructorDetail"
+                [selectedDate]="currentDate"
+                (summaryRequested)="handleViewSummary()"
+                (closeRequested)="clearInstructorDetail()">
+              </app-report-instructor-detail>
+
+
+              <app-report-instructor-quick-actions
+                (summaryRequested)="handleViewSummary()"
+                (summaryByDayRequested)="handleViewSummaryByDay()"
+                (exportRequested)="downloadInstructorHoursCsv()">
+              </app-report-instructor-quick-actions>
+
+            </aside>
+
           </div>
-        </div>
-        <p class="error-message" *ngIf="isNameFieldInvalid">
-          Campo requerido.
-        </p>
-      </div>
 
-      <!-- Fechas -->
-      <div class="columns is-mobile">
-        <div class="column">
-          <div class="field">
-            <label class="label">Fecha desde</label>
-            <div class="control date-input-container">
-              <input 
-                class="input" 
-                [ngClass]="{ 'input-error': showFromError }"
-                type="date" 
-                [(ngModel)]="filter.from" 
-                name="from">
-            </div>
-            <p class="error-message" *ngIf="showFromError">Campo requerido.</p>
-          </div>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label">Fecha hasta</label>
-            <div class="control date-input-container">
-              <input 
-                class="input" 
-                [ngClass]="{ 'input-error': showToError }"
-                type="date" 
-                [(ngModel)]="filter.to" 
-                name="to">
-            </div>
-            <p class="error-message" *ngIf="showToError">Campo requerido.</p>
-          </div>
-        </div>
-      </div>
+        </ng-container>
 
-      <!-- Asistidas / no asistidas -->
-      <!-- <div class="columns is-mobile">
-        <div class="column move-up">
-          <label class="label">Mostrar:</label>
-          <div class="select is-fullwidth">
-            <select [(ngModel)]="filter.present" name="present">
-              <option *ngFor="let option of [{ value: 'true', label: 'Asistidas' }, { value: 'false', label: 'No Asistidas'}]" [ngValue]="option.value">
-                {{ option.label }}
-              </option>
-            </select>
-          </div>
-        </div>
-      </div> -->
 
-     <div class="form-action-buttons">
-        <button
-          type="button"
-          class="toggle-button"
-          [ngClass]="{ 'active-button': activeView === 'main', 'inactive-button': activeView !== 'main' }"
-          (click)="handleViewMeetings()">
-          Ver Reporte
-        </button>
+        <!-- =========================
+             DAILY SUMMARY
+        ========================== -->
 
-        <button
-          type="button"
-          class="toggle-button"
-          [ngClass]="{ 'active-button': activeView === 'summary', 'inactive-button': activeView !== 'summary' }"
-          (click)="handleViewSummary()">
-          Resumen Diario
-        </button>
+        <app-report-instructor-daily-summary
+          *ngIf="activeView === 'summary'"
+          [summary]="attendanceSummary"
+          [instructorName]="filter.instructorName"
+          [from]="filter.from"
+          [to]="filter.to">
+        </app-report-instructor-daily-summary>
 
-        <button
-          type="button"
-          class="toggle-button"
-          [ngClass]="{ 'active-button': activeView === 'summaryByDay', 'inactive-button': activeView !== 'summaryByDay' }"
-          (click)="handleViewSummaryByDay()">
-          Resumen Por Día
-        </button>
 
-        <button
-          type="button"
-          class="toggle-button csv-download-button"
-          (click)="downloadInstructorHoursCsv()">
-          Descargar Reportes
-        </button>
-      </div>
-    </form>
+        <!-- =========================
+             SUMMARY BY DAY
+        ========================== -->
+
+        <app-report-instructor-day-summary
+          *ngIf="activeView === 'summaryByDay'"
+          [summary]="attendanceSummary"
+          [instructorName]="filter.instructorName"
+          [from]="filter.from"
+          [to]="filter.to">
+        </app-report-instructor-day-summary>
+
+      </main>
+
+    </div>
+
   </div>
+
+
+  <!-- MODAL EXISTENTE -->
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [isContentViewer]="!!modal.isContentViewer"
+    [title]="modal.title || ''"
+    (close)="modal.close()"
+  ></app-modal>
+
 </section>
-
-<!-- Tabla de reuniones por fecha con navegación -->
-<ng-container *ngIf="activeView === 'main' && availableDates.length > 0">
-  <div class="date-navigation my-4 is-flex is-align-items-center is-justify-content-center">
-  <button class="button is-white is-round is-small mx-4" (click)="prevDate()" [disabled]="currentDateIndex === 0">
-    <span class="material-icons">chevron_left</span>
-  </button>
-
-  <div class="has-text-centered">
-    <div class="has-text-weight-semibold is-size-6 date-label">
-      {{ availableDates[currentDateIndex] }}
-    </div>
-    <div class="is-size-7 has-text-grey mt-1">
-      ({{ currentDateIndex + 1 }}/{{ availableDates.length }})
-    </div>
-  </div>
-
-  <button class="button is-white is-round is-small mx-4" (click)="nextDate()" [disabled]="currentDateIndex === availableDates.length - 1">
-    <span class="material-icons">chevron_right</span>
-  </button>
-</div>
-
-  <div class="table-container">
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Instructor</th>
-          <th>Total de Horas</th>
-          <th>Total de Stages</th>
-          <th>Acciones</th> <!-- Nueva columna -->
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let instructor of groupedMeetingsByDate[availableDates[currentDateIndex]]">
-          <td>{{ instructor.user.firstName }} {{ instructor.user.lastName }}</td>
-          <td>{{ instructor._count }}</td>
-          <td>{{ getUniqueStagesCount(instructor) }}</td>
-          <td>
-            <button class="button is-small is-link is-light" (click)="showInstructorDetail(instructor)">
-              Ver detalle
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</ng-container>
-
-<!-- Mensaje si no hay reuniones -->
-<div *ngIf="activeView === 'main' && searchAttempted && isGroupedMeetingsEmpty()" class="no-results">
-  No se encontraron clases para los criterios seleccionados.
-</div>
-
-<div class="report-table-wrapper" *ngIf="activeView === 'summary' && attendanceSummary.length > 0">
-  <app-attendance-daily-summary [rawData]="attendanceSummary"></app-attendance-daily-summary>
-</div>
-
-<div class="report-table-wrapper" *ngIf="activeView === 'summaryByDay' && attendanceSummary.length > 0">
-  <app-attendance-summary-by-day [rawData]="attendanceSummary"></app-attendance-summary-by-day>
-</div>
-
-<!-- Modal -->
-<app-modal
-  [showModal]="modal.show"
-  [message]="modal.message"
-  [isError]="modal.isError"
-  [isSuccess]="modal.isSuccess"
-  [isInfo]="modal.isInfo"
-  [isContentViewer]="!!modal.isContentViewer"
-  [title]="modal.title || ''"
-  (close)="modal.close()"
-></app-modal>

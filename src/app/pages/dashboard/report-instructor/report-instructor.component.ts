@@ -1,6 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { InstructorAttendanceDto } from '../../../services/dtos/booking.dto';
 import { MeetingThemeDto } from '../../../services/dtos/meeting-theme.dto';
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
@@ -9,9 +10,25 @@ import { convertToLocalTimeZone } from '../../../shared/utils/dates.util';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ReportsService } from '../../../services/reports.service';
-import { AttendanceDailySummaryComponent } from '../../../components/attendance-instructor/attendance-daily-summary/attendance-daily-summary.component';
-import { AttendanceSummaryByDayComponent } from '../../../components/attendance-instructor/attendance-summary-by-day/attendance-summary-by-day.component';
-import { InstructorGroupedData, InstructorsGroupedByDate } from '../../../services/dtos/instructor-attendance-grouped.dto';
+
+import {
+  InstructorGroupedData,
+  InstructorsGroupedByDate,
+} from '../../../services/dtos/instructor-attendance-grouped.dto';
+
+/* =========================
+   NEW CHILD COMPONENTS
+========================= */
+
+import { ReportInstructorHeaderComponent } from '../../../components/report-instructor/report-instructor-header/report-instructor-header.component';
+import { ReportInstructorFiltersComponent } from '../../../components/report-instructor/report-instructor-filters/report-instructor-filters.component';
+import { ReportInstructorViewSelectorComponent } from '../../../components/report-instructor/report-instructor-view-selector/report-instructor-view-selector.component';
+import { ReportInstructorClassDetailComponent } from '../../../components/report-instructor/report-instructor-class-detail/report-instructor-class-detail.component';
+import { ReportInstructorDetailComponent } from '../../../components/report-instructor/report-instructor-detail/report-instructor-detail.component';
+import { ReportInstructorHourDetailComponent } from '../../../components/report-instructor/report-instructor-hour-detail/report-instructor-hour-detail.component';
+import { ReportInstructorQuickActionsComponent } from '../../../components/report-instructor/report-instructor-quick-actions/report-instructor-quick-actions.component';
+import { ReportInstructorDailySummaryComponent } from '../../../components/report-instructor/report-instructor-daily-summary/report-instructor-daily-summary.component';
+import { ReportInstructorDaySummaryComponent } from '../../../components/report-instructor/report-instructor-day-summary/report-instructor-day-summary.component';
 
 @Component({
   selector: 'app-report-instructor',
@@ -20,13 +37,22 @@ import { InstructorGroupedData, InstructorsGroupedByDate } from '../../../servic
     CommonModule,
     FormsModule,
     ModalComponent,
-    AttendanceDailySummaryComponent,
-    AttendanceSummaryByDayComponent
+
+    ReportInstructorHeaderComponent,
+    ReportInstructorFiltersComponent,
+    ReportInstructorViewSelectorComponent,
+    ReportInstructorClassDetailComponent,
+    ReportInstructorDetailComponent,
+    ReportInstructorHourDetailComponent,
+    ReportInstructorQuickActionsComponent,
+    ReportInstructorDailySummaryComponent,
+    ReportInstructorDaySummaryComponent,
   ],
   templateUrl: './report-instructor.component.html',
   styleUrl: './report-instructor.component.scss'
 })
 export class ReportInstructorComponent implements OnInit {
+
   instructors: UserDto[] = [];
   filteredInstructors: UserDto[] = [];
   meetings: InstructorAttendanceDto[] = [];
@@ -43,6 +69,12 @@ export class ReportInstructorComponent implements OnInit {
   currentDateIndex = 0;
   availableDates: string[] = [];
 
+  /* =========================
+     NEW UI STATE
+  ========================= */
+
+  selectedInstructorDetail: InstructorGroupedData | null = null;
+
   modal: ModalDto = modalInitializer();
 
   filter = {
@@ -51,10 +83,13 @@ export class ReportInstructorComponent implements OnInit {
     to: '',
     present: 'true',
   };
+
   showDropdown: boolean = false;
 
-  constructor(private usersService: UsersService,
-              private reportsService: ReportsService) {}
+  constructor(
+    private usersService: UsersService,
+    private reportsService: ReportsService
+  ) {}
 
   ngOnInit() {
     this.loadInstructors();
@@ -84,7 +119,15 @@ export class ReportInstructorComponent implements OnInit {
   }
 
   loadInstructors() {
-    this.usersService.searchUsers(0, 100, undefined, undefined, undefined, undefined, UserRole.INSTRUCTOR)
+    this.usersService.searchUsers(
+      0,
+      100,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      UserRole.INSTRUCTOR
+    )
       .subscribe({
         next: (result) => {
           this.instructors = result.users;
@@ -115,7 +158,7 @@ export class ReportInstructorComponent implements OnInit {
     this.reportsService.getInstructorsMeetingsGroupedByHour(from || '', to || '').subscribe({
       next: (response: InstructorsGroupedByDate) => {
         this.groupedMeetingsByDate = response;
-        this.availableDates = Object.keys(response).sort(); 
+        this.availableDates = Object.keys(response).sort();
         this.currentDateIndex = 0;
 
         this.isSearchSuccessful = true;
@@ -185,7 +228,10 @@ export class ReportInstructorComponent implements OnInit {
       return;
     }
 
-    this.reportsService.getInstructorsMeetingsGroupedByHourCsv(this.filter.from, this.filter.to).subscribe({
+    this.reportsService.getInstructorsMeetingsGroupedByHourCsv(
+      this.filter.from,
+      this.filter.to
+    ).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -238,22 +284,22 @@ export class ReportInstructorComponent implements OnInit {
     return Object.keys(this.groupedMeetingsByDate).length === 0;
   }
 
-showInstructorDetail(instructor: InstructorGroupedData): void {
-  const sortedHours = [...instructor.user.hours].sort((a, b) => a.localhour - b.localhour);
+  showInstructorDetail(instructor: InstructorGroupedData): void {
+    const sortedHours = [...instructor.user.hours].sort((a, b) => a.localhour - b.localhour);
 
-  const hourDetails = sortedHours
-    .map(h => ` <p>Hora: ${h.localhour}:00 - ${h.stages.map(s => s.description).join(', ')}</p>`)
-    .join('');
+    const hourDetails = sortedHours
+      .map(h => ` <p>Hora: ${h.localhour}:00 - ${h.stages.map(s => s.description).join(', ')}</p>`)
+      .join('');
 
-  this.modal = {
-    ...modalInitializer(),
-    show: true,
-    isContentViewer: true,
-    title: `Detalle de horas: ${instructor.user.firstName}`,
-    message: hourDetails,
-    close: () => this.closeModal()
-  };
-}
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      isContentViewer: true,
+      title: `Detalle de horas: ${instructor.user.firstName}`,
+      message: hourDetails,
+      close: () => this.closeModal()
+    };
+  }
 
   showContent(meeting: InstructorAttendanceDto): void {
     if (!meeting.meetings[0].studyContent || meeting.meetings[0].studyContent.length === 0) {
@@ -291,5 +337,39 @@ showInstructorDetail(instructor: InstructorGroupedData): void {
     const currentDate = convertToLocalTimeZone(new Date().toString());
 
     return meetingDate > currentDate;
+  }
+
+  /* =========================
+     NEW CHILD HELPERS
+  ========================= */
+
+  get currentDate(): string {
+    return this.availableDates[
+      this.currentDateIndex
+    ] || '';
+  }
+
+  get currentInstructors(): InstructorGroupedData[] {
+    if (!this.currentDate) {
+      return [];
+    }
+
+    return (
+      this.groupedMeetingsByDate[
+        this.currentDate
+      ] || []
+    );
+  }
+
+  selectInstructorDetail(
+    instructor: InstructorGroupedData,
+  ): void {
+    this.selectedInstructorDetail =
+      instructor;
+  }
+
+  clearInstructorDetail(): void {
+    this.selectedInstructorDetail =
+      null;
   }
 }
