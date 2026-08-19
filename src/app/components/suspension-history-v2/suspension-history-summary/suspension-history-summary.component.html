@@ -1,0 +1,237 @@
+<section class="history-summary">
+
+  <article class="summary-card summary-card--purple">
+
+    <div class="summary-card__icon">
+      <svg viewBox="0 0 24 24" fill="none">
+        <circle
+          cx="9"
+          cy="8"
+          r="3"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <circle
+          cx="16.5"
+          cy="9"
+          r="2.4"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M3.8 18c.6-3 2.6-4.7 5.2-4.7s4.6 1.7 5.2 4.7"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M14.5 14c2.8.1 4.8 1.5 5.4 4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+    <div class="summary-card__content">
+      <span class="summary-card__label">
+        Total de licencias
+      </span>
+
+      @if (loading) {
+        <span class="summary-card__skeleton summary-card__skeleton--value"></span>
+      } @else {
+        <strong class="summary-card__value">
+          {{ formatNumber(totalLicenses) }}
+        </strong>
+      }
+
+      <span class="summary-card__description">
+        En el sistema
+      </span>
+    </div>
+
+    <div class="summary-card__chart" aria-hidden="true">
+      <svg viewBox="0 0 100 45" fill="none">
+        <path
+          d="M2 40 13 31 23 34 34 22 46 27 58 19 70 21 82 14 92 3 98 10"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+  </article>
+
+
+  <article class="summary-card summary-card--green">
+
+    <div class="summary-card__icon">
+      <svg viewBox="0 0 24 24" fill="none">
+        <rect
+          x="4"
+          y="5.5"
+          width="16"
+          height="14.5"
+          rx="2.3"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M8 3.5v4M16 3.5v4M4 9.5h16"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+    <div class="summary-card__content">
+      <span class="summary-card__label">
+        Días de suspensión totales
+      </span>
+
+      @if (loading) {
+        <span class="summary-card__skeleton summary-card__skeleton--value"></span>
+      } @else {
+        <strong class="summary-card__value">
+          {{ formatNumber(totalSuspensionDays) }}
+        </strong>
+      }
+
+      <span class="summary-card__description">
+        En el rango seleccionado
+      </span>
+    </div>
+
+    <div class="summary-card__chart" aria-hidden="true">
+      <svg viewBox="0 0 100 45" fill="none">
+        <path
+          d="M2 38 13 33 23 25 34 27 45 16 57 11 69 15 81 10 92 13 98 3"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+  </article>
+
+
+  <article class="summary-card summary-card--orange">
+
+    <div class="summary-card__icon">
+      <svg viewBox="0 0 24 24" fill="none">
+        <circle
+          cx="12"
+          cy="12"
+          r="8"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M12 7.5V12l3 2"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+    <div class="summary-card__content">
+      <span class="summary-card__label">
+        Licencias activas
+      </span>
+
+      @if (loading) {
+        <span class="summary-card__skeleton summary-card__skeleton--value"></span>
+      } @else {
+        <strong class="summary-card__value">
+          {{ formatNumber(activeLicenses) }}
+        </strong>
+      }
+
+      <span class="summary-card__description">
+        Actualmente en curso
+      </span>
+    </div>
+
+    <div class="summary-card__chart" aria-hidden="true">
+      <svg viewBox="0 0 100 45" fill="none">
+        <path
+          d="M2 40 13 29 23 32 34 20 45 25 55 14 66 18 78 13 89 19 98 5"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+  </article>
+
+
+  <article class="summary-card summary-card--blue">
+
+    <div class="summary-card__icon">
+      <svg viewBox="0 0 24 24" fill="none">
+        <circle
+          cx="12"
+          cy="12"
+          r="8"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="m8.5 12 2.3 2.3 4.8-5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+    <div class="summary-card__content">
+      <span class="summary-card__label">
+        Horas de clase suspendidas
+      </span>
+
+      @if (loading) {
+        <span class="summary-card__skeleton summary-card__skeleton--value"></span>
+      } @else {
+        <strong class="summary-card__value">
+          {{ formatNumber(suspendedClassHours) }}
+        </strong>
+      }
+
+      <span class="summary-card__description">
+        Equivalente aprox.
+      </span>
+    </div>
+
+    <div class="summary-card__chart" aria-hidden="true">
+      <svg viewBox="0 0 100 45" fill="none">
+        <path
+          d="M2 40 12 35 22 36 31 27 42 19 52 23 61 15 72 20 82 14 91 16 98 4"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+  </article>
+
+</section>

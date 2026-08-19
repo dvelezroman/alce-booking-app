@@ -1,0 +1,184 @@
+<nav
+  class="assessment-pagination"
+  aria-label="Paginación de evaluaciones"
+>
+
+  <div class="assessment-pagination__left">
+
+    <span class="assessment-pagination__label">
+      {{ paginationLabel }}
+    </span>
+
+    <div class="assessment-pagination__limit">
+
+      <label for="assessment-report-limit">
+        Mostrar
+      </label>
+
+      <div class="assessment-pagination__select-wrapper">
+
+        <select
+          id="assessment-report-limit"
+          [ngModel]="limit"
+          (ngModelChange)="onLimitChange($event)"
+        >
+          @for (
+            option of limitOptions;
+            track option
+          ) {
+            <option [ngValue]="option">
+              {{ option }}
+            </option>
+          }
+        </select>
+
+        <span
+          class="assessment-pagination__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m7 10 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="assessment-pagination__controls">
+
+    <!-- PREVIOUS -->
+    <button
+      type="button"
+      class="assessment-pagination__navigation"
+      [disabled]="!canPrev"
+      aria-label="Página anterior"
+      (click)="onPrevious()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="m15 6-6 6 6 6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+
+    <div class="assessment-pagination__pages">
+
+      <!-- FIRST PAGE -->
+      @if (
+        pages.length &&
+        pages[0] > 1
+      ) {
+        <button
+          type="button"
+          class="assessment-pagination__page"
+          [class.assessment-pagination__page--active]="
+            page === 1
+          "
+          (click)="onPageChange(1)"
+        >
+          1
+        </button>
+
+        @if (pages[0] > 2) {
+          <span class="assessment-pagination__ellipsis">
+            ...
+          </span>
+        }
+      }
+
+
+      <!-- PAGE RANGE -->
+      @for (
+        item of pages;
+        track item
+      ) {
+        <button
+          type="button"
+          class="assessment-pagination__page"
+          [class.assessment-pagination__page--active]="
+            item === page
+          "
+          (click)="onPageChange(item)"
+        >
+          {{ item }}
+        </button>
+      }
+
+
+      <!-- LAST PAGE -->
+      @if (
+        pages.length &&
+        pages[pages.length - 1] <
+        totalPages
+      ) {
+
+        @if (
+          pages[pages.length - 1] <
+          totalPages - 1
+        ) {
+          <span class="assessment-pagination__ellipsis">
+            ...
+          </span>
+        }
+
+        <button
+          type="button"
+          class="assessment-pagination__page"
+          [class.assessment-pagination__page--active]="
+            page === totalPages
+          "
+          (click)="onPageChange(totalPages)"
+        >
+          {{ totalPages }}
+        </button>
+      }
+
+    </div>
+
+
+    <!-- NEXT -->
+    <button
+      type="button"
+      class="assessment-pagination__navigation"
+      [disabled]="!canNext"
+      aria-label="Página siguiente"
+      (click)="onNext()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="m9 6 6 6-6 6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+  </div>
+
+</nav>

@@ -1,0 +1,301 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.assessment-pagination {
+  width: 100%;
+  min-height: 54px;
+  padding: 0.62rem 0.75rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  box-sizing: border-box;
+
+  background: #fff;
+  border-top: 1px solid #edf0f4;
+
+
+  /* =========================
+     LEFT
+  ========================= */
+
+  &__left {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+
+  &__label {
+    color: #74788d;
+
+    font-size: 0.55rem;
+    line-height: 1.3;
+
+    white-space: nowrap;
+  }
+
+
+  /* =========================
+     LIMIT
+  ========================= */
+
+  &__limit {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    label {
+      color: #7d8194;
+
+      font-size: 0.54rem;
+
+      white-space: nowrap;
+    }
+  }
+
+
+  &__select-wrapper {
+    position: relative;
+
+    width: 66px;
+    height: 30px;
+
+    select {
+      width: 100%;
+      height: 100%;
+
+      padding: 0 1.7rem 0 0.55rem;
+
+      color: #45495f;
+      background: #fff;
+
+      border: 1px solid #dfe2e9;
+      border-radius: 0.36rem;
+      outline: none;
+
+      appearance: none;
+
+      font-family: inherit;
+      font-size: 0.54rem;
+      font-weight: 600;
+
+      cursor: pointer;
+
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+
+      &:focus {
+        border-color: #684de1;
+
+        box-shadow:
+          0 0 0 3px rgba(75, 32, 230, 0.06);
+      }
+    }
+  }
+
+
+  &__select-icon {
+    position: absolute;
+    top: 50%;
+    right: 0.48rem;
+
+    width: 0.75rem;
+    height: 0.75rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6f7387;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+
+  /* =========================
+     CONTROLS
+  ========================= */
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.32rem;
+  }
+
+
+  &__pages {
+    display: flex;
+    align-items: center;
+    gap: 0.22rem;
+  }
+
+
+  /* =========================
+     BUTTON BASE
+  ========================= */
+
+  &__navigation,
+  &__page {
+    min-width: 30px;
+    height: 30px;
+
+    padding: 0 0.42rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #55596e;
+    background: #fff;
+
+    border: 1px solid #e0e3ea;
+    border-radius: 0.36rem;
+
+    font-family: inherit;
+    font-size: 0.54rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+
+    &:hover:not(:disabled) {
+      color: #4b20e6;
+      background: #f6f3ff;
+      border-color: #dcd5fb;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    &:disabled {
+      color: #b7bac6;
+      background: #fafafb;
+      border-color: #eceef2;
+
+      cursor: not-allowed;
+    }
+  }
+
+
+  /* =========================
+     NAVIGATION
+  ========================= */
+
+  &__navigation {
+    width: 30px;
+    padding: 0;
+
+    svg {
+      width: 0.82rem;
+      height: 0.82rem;
+    }
+  }
+
+
+  /* =========================
+     PAGE
+  ========================= */
+
+  &__page {
+    &--active {
+      color: #fff;
+      background: #4b20e6;
+      border-color: #4b20e6;
+
+      box-shadow:
+        0 3px 7px rgba(75, 32, 230, 0.14);
+
+      &:hover {
+        color: #fff;
+        background: #4019d4;
+        border-color: #4019d4;
+      }
+    }
+  }
+
+
+  /* =========================
+     ELLIPSIS
+  ========================= */
+
+  &__ellipsis {
+    min-width: 18px;
+
+    color: #898d9f;
+
+    font-size: 0.56rem;
+    text-align: center;
+  }
+}
+
+
+@media (max-width: 700px) {
+  .assessment-pagination {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.65rem;
+
+    &__left {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    &__controls {
+      justify-content: center;
+    }
+  }
+}
+
+
+@media (max-width: 440px) {
+  .assessment-pagination {
+    padding: 0.6rem;
+
+    &__left {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    &__pages {
+      gap: 0.16rem;
+    }
+
+    &__navigation,
+    &__page {
+      min-width: 28px;
+      height: 28px;
+
+      padding: 0 0.34rem;
+
+      font-size: 0.51rem;
+    }
+
+    &__navigation {
+      width: 28px;
+      padding: 0;
+    }
+  }
+}

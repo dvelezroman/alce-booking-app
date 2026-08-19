@@ -1,0 +1,481 @@
+<div class="platform-table">
+
+  @if (assessments.length > 0) {
+
+    <div class="platform-table__scroll">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Evaluación</th>
+            <th>Stage</th>
+            <th>Tipo</th>
+            <th>Puntuación S2S</th>
+            <th>Writing aplicado</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th class="platform-table__actions-column">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (
+            assessment of assessments;
+            track assessment.id;
+            let index = $index
+          ) {
+
+            <tr>
+
+              <td class="platform-table__index">
+                {{ index + 1 }}
+              </td>
+
+              <!-- EVALUACIÓN -->
+              <td>
+                <div class="platform-assessment">
+
+                  <span class="platform-assessment__icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <rect
+                        x="4"
+                        y="5"
+                        width="16"
+                        height="14"
+                        rx="2"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                      />
+
+                      <path
+                        d="M8 9h8M8 13h5M8 16h7"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </span>
+
+                  <div>
+                    <strong>
+                      {{ getTitle(assessment) }}
+                    </strong>
+
+                    <span>
+                      ID: {{ assessment.id }}
+                    </span>
+                  </div>
+
+                </div>
+              </td>
+
+              <!-- STAGE -->
+              <td>
+                <span class="platform-table__stage">
+                  STG {{ getStage(assessment) }}
+                </span>
+              </td>
+
+              <!-- TYPE -->
+              <td>
+                <span
+                  class="platform-type"
+                  [ngClass]="getTypeClass(assessment)"
+                >
+                  {{ getType(assessment) }}
+                </span>
+              </td>
+
+              <!-- POINTS -->
+              <td>
+                <div class="platform-table__score">
+
+                  @if (getPoints(assessment) !== null) {
+                    <strong>
+                      {{ getPoints(assessment) }}
+                    </strong>
+
+                    <span>
+                      / 100
+                    </span>
+                  } @else {
+                    <span class="platform-table__empty-value">
+                      —
+                    </span>
+                  }
+
+                </div>
+              </td>
+
+              <!-- WRITING -->
+              <td>
+
+                @if (assessment.writingApplied) {
+
+                  <div class="platform-writing">
+
+                    <span
+                      class="
+                        platform-writing__badge
+                        platform-writing__badge--applied
+                      "
+                    >
+                      <span></span>
+
+                      Aplicado
+                    </span>
+
+                    @if (getWritingPoints(assessment) !== null) {
+                      <small>
+                        {{ getWritingPoints(assessment) }} pts.
+                      </small>
+                    }
+
+                  </div>
+
+                } @else {
+
+                  <span
+                    class="
+                      platform-writing__badge
+                      platform-writing__badge--pending
+                    "
+                  >
+                    <span></span>
+
+                    Sin aplicar
+                  </span>
+
+                }
+
+              </td>
+
+              <!-- STATUS -->
+              <td>
+                <span
+                  class="platform-status"
+                  [ngClass]="getStatusClass(assessment)"
+                >
+                  <span class="platform-status__dot"></span>
+
+                  {{ getStatus(assessment) }}
+                </span>
+              </td>
+
+              <!-- DATE -->
+              <td>
+                <div class="platform-table__date">
+
+                  <strong>
+                    {{ formatDate(getCreatedAt(assessment)) }}
+                  </strong>
+
+                  @if (
+                    formatTime(
+                      getCreatedAt(assessment)
+                    )
+                  ) {
+                    <span>
+                      {{
+                        formatTime(
+                          getCreatedAt(assessment)
+                        )
+                      }}
+                    </span>
+                  }
+
+                </div>
+              </td>
+
+              <!-- ACTIONS -->
+              <td class="platform-table__actions-cell">
+
+                @if (isApplying(assessment)) {
+
+                  <div class="platform-apply__inline">
+
+                    <div class="platform-apply__input">
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        [ngModel]="applyPointsOverride"
+                        (ngModelChange)="onPointsChange($event)"
+                      />
+
+                      <span>
+                        pts
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      class="platform-table__menu-trigger"
+                      [class.platform-table__menu-trigger--active]="
+                        isActionsMenuOpen(assessment)
+                      "
+                      aria-label="Opciones"
+                      title="Opciones"
+                      (click)="toggleActionsMenu($event, assessment)"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <circle
+                          cx="5"
+                          cy="12"
+                          r="1.7"
+                        />
+
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="1.7"
+                        />
+
+                        <circle
+                          cx="19"
+                          cy="12"
+                          r="1.7"
+                        />
+                      </svg>
+                    </button>
+
+                  </div>
+
+                } @else {
+
+                  <button
+                    type="button"
+                    class="platform-table__menu-trigger"
+                    [class.platform-table__menu-trigger--active]="
+                      isActionsMenuOpen(assessment)
+                    "
+                    aria-label="Opciones"
+                    title="Opciones"
+                    (click)="toggleActionsMenu($event, assessment)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <circle
+                        cx="5"
+                        cy="12"
+                        r="1.7"
+                      />
+
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="1.7"
+                      />
+
+                      <circle
+                        cx="19"
+                        cy="12"
+                        r="1.7"
+                      />
+                    </svg>
+                  </button>
+
+                }
+
+
+                <!-- MENU -->
+                @if (
+                  isActionsMenuOpen(
+                    assessment
+                  )
+                ) {
+
+                  <div
+                    class="platform-table__actions-menu"
+                    [style.top.px]="menuTop"
+                    [style.left.px]="menuLeft"
+                    (click)="$event.stopPropagation()"
+                  >
+
+                    @if (
+                      !isApplying(assessment)
+                    ) {
+
+                      <button
+                        type="button"
+                        class="platform-table__menu-item"
+                        (click)="onApply(assessment)"
+                      >
+                        <span class="platform-table__menu-icon">
+
+                          @if (
+                            assessment.writingApplied
+                          ) {
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                            >
+                              <path
+                                d="M5 18.5 6 14l9.8-9.8a1.5 1.5 0 0 1 2.1 0l1.9 1.9a1.5 1.5 0 0 1 0 2.1L10 18l-5 .5Z"
+                                stroke="currentColor"
+                                stroke-width="1.6"
+                                stroke-linejoin="round"
+                              />
+
+                              <path
+                                d="m14.5 5.5 4 4"
+                                stroke="currentColor"
+                                stroke-width="1.6"
+                              />
+                            </svg>
+                          } @else {
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                            >
+                              <path
+                                d="M12 5v14M5 12h14"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                              />
+                            </svg>
+                          }
+
+                        </span>
+
+                        <span>
+                          {{
+                            assessment.writingApplied
+                              ? 'Corregir Writing'
+                              : 'Aplicar Writing'
+                          }}
+                        </span>
+                      </button>
+
+                    } @else {
+
+                      <button
+                        type="button"
+                        class="
+                          platform-table__menu-item
+                          platform-table__menu-item--confirm
+                        "
+                        (click)="onConfirm(assessment)"
+                      >
+                        <span class="platform-table__menu-icon">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="m7 12 3 3 7-7"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </span>
+
+                        <span>
+                          Confirmar
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        class="
+                          platform-table__menu-item
+                          platform-table__menu-item--cancel
+                        "
+                        (click)="onCancel()"
+                      >
+                        <span class="platform-table__menu-icon">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="m7 7 10 10M17 7 7 17"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"
+                            />
+                          </svg>
+                        </span>
+
+                        <span>
+                          Cancelar
+                        </span>
+                      </button>
+
+                    }
+
+                  </div>
+
+                }
+
+              </td>
+
+            </tr>
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  } @else {
+
+    <div class="platform-table__empty">
+
+      <span
+        class="platform-table__empty-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="14"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M8 9h8M8 13h5M8 16h7"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <strong>
+        No hay evaluaciones de plataforma
+      </strong>
+
+      <span>
+        Los resultados S2S del estudiante aparecerán en esta sección cuando estén disponibles.
+      </span>
+
+    </div>
+
+  }
+
+</div>

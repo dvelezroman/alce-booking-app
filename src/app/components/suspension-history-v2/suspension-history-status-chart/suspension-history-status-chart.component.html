@@ -1,0 +1,236 @@
+<section class="status-chart">
+
+  <header class="status-chart__header">
+
+    <span
+      class="status-chart__header-icon"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M12 3.5v8.5h8.5A8.5 8.5 0 1 1 12 3.5Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M15 3.8a7.6 7.6 0 0 1 5.2 5.2H15V3.8Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+
+    <div>
+      <h2>
+        Distribución por estado
+      </h2>
+
+      <p>
+        Estado actual de las licencias.
+      </p>
+    </div>
+
+  </header>
+
+
+  @if (loading) {
+
+    <div class="status-chart__loading">
+
+      <span
+        class="
+          status-chart__skeleton
+          status-chart__skeleton--chart
+        "
+      ></span>
+
+      <div class="status-chart__loading-items">
+
+        @for (
+          item of [1, 2, 3];
+          track item
+        ) {
+          <div class="status-chart__loading-item">
+            <span
+              class="
+                status-chart__skeleton
+                status-chart__skeleton--dot
+              "
+            ></span>
+
+            <span
+              class="
+                status-chart__skeleton
+                status-chart__skeleton--text
+              "
+            ></span>
+
+            <span
+              class="
+                status-chart__skeleton
+                status-chart__skeleton--value
+              "
+            ></span>
+          </div>
+        }
+
+      </div>
+
+    </div>
+
+  } @else if (total > 0) {
+
+    <div class="status-chart__content">
+
+      <div class="status-chart__visual">
+
+        <div
+          class="status-chart__donut"
+          [style.background]="chartStyle"
+        >
+          <div class="status-chart__donut-center">
+
+            <strong>
+              {{ total }}
+            </strong>
+
+            <span>
+              Total
+            </span>
+
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="status-chart__legend">
+
+        <article class="status-chart__legend-item">
+
+          <span
+            class="
+              status-chart__dot
+              status-chart__dot--active
+            "
+          ></span>
+
+          <div class="status-chart__legend-information">
+            <span>
+              Activas
+            </span>
+
+            <strong>
+              {{ activeCount }}
+            </strong>
+          </div>
+
+          <span class="status-chart__percentage">
+            {{ activePercentage }}%
+          </span>
+
+        </article>
+
+
+        <article class="status-chart__legend-item">
+
+          <span
+            class="
+              status-chart__dot
+              status-chart__dot--finished
+            "
+          ></span>
+
+          <div class="status-chart__legend-information">
+            <span>
+              Finalizadas
+            </span>
+
+            <strong>
+              {{ finishedCount }}
+            </strong>
+          </div>
+
+          <span class="status-chart__percentage">
+            {{ finishedPercentage }}%
+          </span>
+
+        </article>
+
+
+        <article class="status-chart__legend-item">
+
+          <span
+            class="
+              status-chart__dot
+              status-chart__dot--upcoming
+            "
+          ></span>
+
+          <div class="status-chart__legend-information">
+            <span>
+              Próximas
+            </span>
+
+            <strong>
+              {{ upcomingCount }}
+            </strong>
+          </div>
+
+          <span class="status-chart__percentage">
+            {{ upcomingPercentage }}%
+          </span>
+
+        </article>
+
+      </div>
+
+    </div>
+
+  } @else {
+
+    <div class="status-chart__empty">
+
+      <span
+        class="status-chart__empty-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 3.5v8.5h8.5A8.5 8.5 0 1 1 12 3.5Z"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M15 3.8a7.6 7.6 0 0 1 5.2 5.2H15V3.8Z"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <strong>
+        Sin datos disponibles
+      </strong>
+
+      <span>
+        La distribución aparecerá cuando existan registros de licencias.
+      </span>
+
+    </div>
+
+  }
+
+</section>

@@ -1,161 +1,251 @@
-<section class="section">
-  <h1 class="reports-progress-header reports-progress-title">
-    Reportes de Evaluaciones
-  </h1>
+<div class="assessment-reports-page">
+  <main class="assessment-reports-page__container">
 
-  <app-assessment-report-form
-    (searchTriggered)="handleAssessmentSearch($event)"
-    (stageSelected)="handleStageSelected($event)"
-  >
-  </app-assessment-report-form>
+    <!-- HEADER -->
+    <app-assessment-reports-header />
 
-  <ng-container *ngIf="selectedStudentId !== null; else multiTable">
-    <div
-      class="platform-s2s-panel"
-      *ngIf="platformAssessments.length > 0"
-    >
-      <h3 class="platform-s2s-title">Resultados S2S (plataforma)</h3>
-      <p class="platform-s2s-hint">
-        PASSED aplica Writing automáticamente. Usa «Corregir Writing» solo para
-        ajustar puntos; «Aplicar Writing» queda para casos sin Writing en ALCE
-        (p. ej. FAILED o fallo del notify).
-      </p>
+    <!-- BODY -->
+    <section class="assessment-reports-page__workspace">
 
-      <div
-        class="platform-s2s-row"
-        *ngFor="let row of platformAssessments"
-      >
-        <div class="platform-s2s-meta">
-          <strong>{{ row.templateTitle }}</strong>
-          <span class="pill" [class.passed]="row.outcome === 'PASSED'" [class.failed]="row.outcome === 'FAILED'">
-            {{ row.outcome || row.status }}
-          </span>
-          <span *ngIf="row.studentStage != null">Stage exam {{ row.studentStage }}</span>
-          <span *ngIf="row.points != null">Puntos S2S: {{ row.points }}</span>
-          <span
-            class="pill writing"
-            *ngIf="row.writingApplied"
-            [class.mismatch]="writingPointsMismatch(row)"
-          >
-            Writing ALCE: {{ row.writingPoints ?? '—' }}
-          </span>
-          <span class="pill pending-writing" *ngIf="!row.writingApplied && row.points != null">
-            Writing pendiente
-          </span>
-          <a
-            *ngIf="row.resultsUrl"
-            [href]="row.resultsUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Ver resultado
-          </a>
-        </div>
+      <!-- =========================
+           SIDEBAR IZQUIERDO
+      ========================== -->
 
-        <div
-          class="platform-s2s-actions"
-          *ngIf="applyingPlatformId !== row.id"
-        >
-          <button
-            type="button"
-            class="button is-link is-small"
-            *ngIf="canShowWritingAction(row)"
-            (click)="startApplyPlatform(row)"
-          >
-            {{ writingActionLabel(row) }}
-          </button>
-        </div>
+      <aside class="assessment-reports-page__sidebar">
 
-        <div class="platform-s2s-edit" *ngIf="applyingPlatformId === row.id">
-          <label>
-            Nota
-            <input
-              type="number"
-              class="input is-small"
-              min="0"
-              max="100"
-              [(ngModel)]="applyPointsOverride"
-            />
-          </label>
-          <button
-            type="button"
-            class="button is-primary is-small"
-            (click)="confirmApplyPlatform(row)"
-          >
-            Confirmar
-          </button>
-          <button
-            type="button"
-            class="button is-light is-small"
-            (click)="cancelApplyPlatform()"
-          >
-            Cancelar
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="assessment-table-wrapper">
-      <app-assessment-table-reports
-        [assessments]="assessments"
-        [stagesWithContent]="stagesWithContent"
-        [maxPointsAssessment]="maxPointsAssessment"
-        [minPointsAssessment]="minPointsAssessment"
-        [currentStageId]="selectedStageId"
-        [highlightStageId]="highlightStageId"
-        (evaluationClicked)="showEvaluationDetails($event)"
-        (deleteRequested)="confirmDelete($event)"
-        (editRequested)="startEditScore($event)"
-      />
-    </div>
-
-    <div class="edit-score-panel" *ngIf="editingAssessment">
-      <h4>
-        Editar nota — {{ editingAssessment.type }}
-        <span *ngIf="isS2sAssessment(editingAssessment)">(S2S)</span>
-      </h4>
-      <label>
-        Nota (0–100)
-        <input
-          type="number"
-          class="input"
-          min="0"
-          max="100"
-          [(ngModel)]="editPoints"
+        <app-assessment-reports-filters
+          [stages]="stagesWithContent"
+          [selectedStageId]="selectedStageId"
+          [selectedStudentId]="selectedStudentId"
+          [filteredStudents]="filteredStudents"
+          [showStudentDropdown]="showStudentDropdown"
+          [isStudentFieldInvalid]="isStudentFieldInvalid"
+          (studentInputChange)="onStudentSearchChange($event)"
+          (studentSelected)="onStudentSelected($event)"
+          (studentDropdownHidden)="hideStudentDropdown()"
+          (stageSelected)="handleStageSelected($event)"
+          (searchRequested)="handleAssessmentSearch($event)"
         />
-      </label>
-      <div class="edit-score-actions">
-        <button type="button" class="button is-primary" (click)="saveEditScore()">
-          Guardar
-        </button>
-        <button type="button" class="button is-light" (click)="cancelEditScore()">
-          Cancelar
-        </button>
-      </div>
-    </div>
-  </ng-container>
 
-  <ng-template #multiTable>
-    <div class="assessment-wrapper-2">
-      <app-assessment-multi-table
-        [assessments]="assessments"
-        [maxPointsAssessment]="maxPointsAssessment"
-        [minPointsAssessment]="minPointsAssessment"
-        [stageTitle]="stageDescription"
-      />
-    </div>
-  </ng-template>
-</section>
+        <app-assessment-reports-info />
 
-<app-modal
-  [showModal]="modal.show"
-  [message]="modal.message"
-  [isError]="modal.isError"
-  [isSuccess]="modal.isSuccess"
-  [isInfo]="modal.isInfo"
-  [title]="modal.title ?? ''"
-  [isContentViewer]="modal.isContentViewer ?? false"
-  [showButtons]="modal.showButtons ?? false"
-  (confirmAction)="modal.confirm && modal.confirm()"
-  (close)="modal.close()"
-/>
+      </aside>
+
+
+      <!-- =========================
+           CONTENIDO DERECHO
+      ========================== -->
+
+      <section class="assessment-reports-page__main">
+
+        <!-- STUDENT -->
+        <app-assessment-reports-student-summary
+          [assessments]="assessments"
+          [studentId]="selectedStudentId"
+          [stageId]="highlightStageId"
+          [stageDescription]="stageDescription"
+        />
+
+
+        <!-- SUMMARY CARDS -->
+        <app-assessment-reports-summary-cards
+          [assessments]="assessments"
+          [platformAssessments]="platformAssessments"
+          [maxPointsAssessment]="maxPointsAssessment"
+          [minPointsAssessment]="minPointsAssessment"
+        />
+
+
+        <!-- =========================
+             REPORT PANEL
+        ========================== -->
+
+        <section class="assessment-reports-page__report-panel">
+
+          <!-- TABS -->
+          <!-- <app-assessment-reports-tabs /> -->
+
+
+          <!-- =========================
+               INSTRUCTOR REPORT
+          ========================== -->
+
+          <section class="assessment-reports-page__instructor-section">
+
+            <header class="assessment-reports-page__section-header">
+
+              <div class="assessment-reports-page__section-heading">
+                <h2>
+                  Evaluaciones realizadas por instructores
+                </h2>
+
+                <p>
+                  Lista de evaluaciones académicas registradas por los instructores.
+                </p>
+              </div>
+
+            </header>
+
+
+            <app-assessment-reports-instructor-table
+              [assessments]="pagedAssessments"
+              [editingAssessment]="editingAssessment"
+              [editPoints]="editPoints"
+              [maxPointsAssessment]="maxPointsAssessment"
+              [minPointsAssessment]="minPointsAssessment"
+              (viewRequested)="showEvaluationDetails($event)"
+              (editRequested)="startEditScore($event)"
+              (cancelEditRequested)="cancelEditScore()"
+              (deleteRequested)="confirmDelete($event)"
+            />
+
+
+            <app-assessment-reports-instructor-pagination
+              [page]="page"
+              [totalPages]="totalPages"
+              [total]="total"
+              [startIndex]="startIndex"
+              [endIndex]="endIndex"
+              [limit]="limit"
+              [limitOptions]="limitOptions"
+              [canPrev]="canPrev"
+              [canNext]="canNext"
+              [paginationLabel]="paginationLabel"
+              (pageChange)="onPageChange($event)"
+              (previousRequested)="onPrev()"
+              (nextRequested)="onNext()"
+              (limitChange)="onLimitChange($event)"
+            />
+
+          </section>
+
+
+          <!-- =========================
+               PLATFORM REPORT
+          ========================== -->
+
+          <section class="assessment-reports-page__platform-section">
+
+            <header class="assessment-reports-page__platform-header">
+
+              <div class="assessment-reports-page__section-heading">
+                <h2>
+                  Evaluaciones de plataforma (S2S)
+                </h2>
+
+                <p>
+                  Resultados obtenidos desde la plataforma de assessment.
+                </p>
+              </div>
+
+
+              <button
+                type="button"
+                class="assessment-reports-page__action-button"
+                (click)="refreshPlatformAssessments()"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M20 7v5h-5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+
+                  <path
+                    d="M18.4 8.2A7.5 7.5 0 1 0 19 15"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+
+                <span>
+                  Actualizar plataforma
+                </span>
+              </button>
+
+            </header>
+
+
+            <app-assessment-reports-platform-table
+              [assessments]="platformAssessments"
+              [applyingPlatformId]="applyingPlatformId"
+              [applyPointsOverride]="applyPointsOverride"
+              (applyRequested)="startApplyPlatform($event)"
+              (cancelRequested)="cancelApplyPlatform()"
+              (confirmRequested)="confirmApplyPlatform($event)"
+            />
+
+
+            <div class="assessment-reports-page__platform-info">
+
+              <span
+                class="assessment-reports-page__platform-info-icon"
+                aria-hidden="true"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="9"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M12 10.5v5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="7.2"
+                    r="1"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+
+              <span>
+                Las evaluaciones de plataforma con Writing aplicado se reflejan también
+                en la tabla de evaluaciones de instructores.
+              </span>
+
+            </div>
+
+          </section>
+
+        </section>
+
+      </section>
+
+    </section>
+
+  </main>
+
+
+  <!-- MODAL -->
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [title]="modal.title ?? ''"
+    [isContentViewer]="modal.isContentViewer ?? false"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm && modal.confirm()"
+    (close)="modal.close()"
+  />
+</div>

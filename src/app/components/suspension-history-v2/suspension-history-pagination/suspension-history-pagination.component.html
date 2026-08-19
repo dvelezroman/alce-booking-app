@@ -1,0 +1,160 @@
+<nav
+  class="history-pagination"
+  aria-label="Paginación del historial de licencias"
+>
+
+  <div class="history-pagination__information">
+    <span>
+      {{ paginationLabel }}
+    </span>
+
+    <div class="history-pagination__limit">
+      <label for="history-limit">
+        Mostrar
+      </label>
+
+      <div class="history-pagination__select-wrapper">
+        <select
+          id="history-limit"
+          [ngModel]="limit"
+          (ngModelChange)="onLimitChange($event)"
+        >
+          @for (
+            option of limitOptions;
+            track option
+          ) {
+            <option [ngValue]="option">
+              {{ option }}
+            </option>
+          }
+        </select>
+
+        <span
+          class="history-pagination__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m7 10 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="history-pagination__controls">
+
+    <button
+      type="button"
+      class="history-pagination__navigation"
+      [disabled]="!canPrev"
+      aria-label="Página anterior"
+      (click)="onPrevious()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="m15 6-6 6 6 6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+    <div class="history-pagination__pages">
+
+      @if (
+        pages.length &&
+        pages[0] > 1
+      ) {
+        <button
+          type="button"
+          class="history-pagination__page"
+          [class.history-pagination__page--active]="page === 1"
+          (click)="onPageChange(1)"
+        >
+          1
+        </button>
+
+        @if (pages[0] > 2) {
+          <span class="history-pagination__ellipsis">
+            ...
+          </span>
+        }
+      }
+
+      @for (
+        item of pages;
+        track item
+      ) {
+        <button
+          type="button"
+          class="history-pagination__page"
+          [class.history-pagination__page--active]="item === page"
+          (click)="onPageChange(item)"
+        >
+          {{ item }}
+        </button>
+      }
+
+      @if (
+        pages.length &&
+        pages[pages.length - 1] < totalPages
+      ) {
+        @if (
+          pages[pages.length - 1] <
+          totalPages - 1
+        ) {
+          <span class="history-pagination__ellipsis">
+            ...
+          </span>
+        }
+
+        <button
+          type="button"
+          class="history-pagination__page"
+          [class.history-pagination__page--active]="page === totalPages"
+          (click)="onPageChange(totalPages)"
+        >
+          {{ totalPages }}
+        </button>
+      }
+
+    </div>
+
+    <button
+      type="button"
+      class="history-pagination__navigation"
+      [disabled]="!canNext"
+      aria-label="Página siguiente"
+      (click)="onNext()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="m9 6 6 6-6 6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+  </div>
+
+</nav>

@@ -1,0 +1,390 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.student-summary {
+  width: 100%;
+  box-sizing: border-box;
+
+  &__main {
+    position: relative;
+
+    width: 100%;
+    min-height: 92px;
+
+    padding: 0.85rem 1rem;
+
+    display: grid;
+    grid-template-columns:
+      minmax(190px, 0.8fr)
+      minmax(0, 2fr);
+
+    align-items: center;
+    gap: 1rem;
+
+    box-sizing: border-box;
+
+    background: #fff;
+
+    border: 1px solid #cce9d7;
+    border-radius: 0.7rem;
+
+    box-shadow:
+      0 4px 16px rgba(31, 42, 89, 0.025);
+  }
+
+
+  /* =========================
+     IDENTITY
+  ========================= */
+
+  &__identity {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+
+  &__avatar {
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 3rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #fff;
+    background: #4b20e6;
+
+    border-radius: 50%;
+
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+
+  &__student {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+  }
+
+
+  &__eyebrow {
+    color: #8a8e9f;
+
+    font-size: 0.53rem;
+    font-weight: 500;
+  }
+
+
+  &__name {
+    overflow: hidden;
+
+    color: #242741;
+
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.3;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+
+  &__id {
+    color: #777b8e;
+
+    font-size: 0.55rem;
+  }
+
+
+  /* =========================
+     DETAILS
+  ========================= */
+
+  &__details {
+    min-width: 0;
+
+    display: grid;
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr));
+
+    gap: 0.6rem;
+  }
+
+
+  &__item {
+    min-width: 0;
+
+    padding: 0.58rem;
+
+    display: flex;
+    align-items: center;
+    gap: 0.48rem;
+
+    background: #fbfbfd;
+
+    border: 1px solid #eef0f4;
+    border-radius: 0.45rem;
+
+    > div {
+      min-width: 0;
+
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+
+      > span {
+        color: #898d9f;
+
+        font-size: 0.51rem;
+        line-height: 1.2;
+      }
+
+      > strong {
+        overflow: hidden;
+
+        color: #3b3e54;
+
+        font-size: 0.58rem;
+        font-weight: 600;
+        line-height: 1.3;
+
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      > small {
+        overflow: hidden;
+
+        color: #85899b;
+
+        font-size: 0.49rem;
+        line-height: 1.3;
+
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+
+  /* =========================
+     ITEM ICON
+  ========================= */
+
+  &__item-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+    flex: 0 0 1.8rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6350d2;
+    background: #f0edff;
+
+    border-radius: 0.42rem;
+
+    svg {
+      width: 0.9rem;
+      height: 0.9rem;
+    }
+
+    &--blue {
+      color: #337fc6;
+      background: #eaf4ff;
+    }
+
+    &--green {
+      color: #258957;
+      background: #e8f7ef;
+    }
+
+    &--orange {
+      color: #c67f20;
+      background: #fff3df;
+    }
+  }
+
+
+  &__truncate {
+    max-width: 100%;
+  }
+
+
+  /* =========================
+     STATUS
+  ========================= */
+
+  &__status {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.55rem;
+
+    width: 1.15rem;
+    height: 1.15rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #27a965;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+
+  /* =========================
+     EMPTY
+  ========================= */
+
+  &__empty {
+    min-height: 92px;
+
+    padding: 1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+
+    color: #85899b;
+    background: #fff;
+
+    border: 1px dashed #dfe2ea;
+    border-radius: 0.7rem;
+
+    box-sizing: border-box;
+
+    > div {
+      min-width: 0;
+
+      display: flex;
+      flex-direction: column;
+      gap: 0.18rem;
+
+      strong {
+        color: #393c53;
+
+        font-size: 0.67rem;
+        font-weight: 600;
+      }
+
+      span {
+        color: #85899b;
+
+        font-size: 0.56rem;
+        line-height: 1.4;
+      }
+    }
+  }
+
+
+  &__empty-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    flex: 0 0 2.6rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #7060cf;
+    background: #f1eeff;
+
+    border-radius: 50%;
+
+    svg {
+      width: 1.3rem;
+      height: 1.3rem;
+    }
+  }
+}
+
+
+/* =========================
+   1200
+========================= */
+
+@media (max-width: 1200px) {
+  .student-summary {
+
+    &__main {
+      grid-template-columns:
+        minmax(180px, 0.7fr)
+        minmax(0, 1.8fr);
+    }
+
+    &__details {
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    }
+  }
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 800px) {
+  .student-summary {
+
+    &__main {
+      grid-template-columns: 1fr;
+    }
+
+    &__details {
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    }
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 520px) {
+  .student-summary {
+
+    &__main {
+      padding: 0.8rem;
+    }
+
+    &__identity {
+      padding-right: 1.4rem;
+    }
+
+    &__avatar {
+      width: 2.65rem;
+      height: 2.65rem;
+      flex-basis: 2.65rem;
+
+      font-size: 0.72rem;
+    }
+
+    &__details {
+      grid-template-columns: 1fr;
+      gap: 0.45rem;
+    }
+
+    &__empty {
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+  }
+}

@@ -1,0 +1,219 @@
+<section class="summary-cards">
+
+  <!-- TOTAL -->
+  <article class="summary-card summary-card--purple">
+
+    <div class="summary-card__top">
+
+      <span class="summary-card__icon">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M7 3.5h7l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 20V5A1.5 1.5 0 0 1 7.5 3.5Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M14 3.5V8h4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M9 12h6M9 15h6M9 18h4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span class="summary-card__badge">
+        Total
+      </span>
+
+    </div>
+
+    <div class="summary-card__content">
+
+      <span class="summary-card__label">
+        Total de evaluaciones
+      </span>
+
+      <strong class="summary-card__value">
+        {{ formatNumber(totalAssessments) }}
+      </strong>
+
+      <span class="summary-card__description">
+        Instructores y plataforma
+      </span>
+
+    </div>
+
+  </article>
+
+
+  <!-- PROMEDIO -->
+  <article class="summary-card summary-card--blue">
+
+    <div class="summary-card__top">
+
+      <span class="summary-card__icon">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M5 19.5h14"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M7.5 17v-5M12 17V7M16.5 17v-8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span class="summary-card__badge">
+        {{ averagePercentage }}%
+      </span>
+
+    </div>
+
+    <div class="summary-card__content">
+
+      <span class="summary-card__label">
+        Promedio general
+      </span>
+
+      <strong class="summary-card__value">
+        {{ averageScore }}
+      </strong>
+
+      <span class="summary-card__description">
+        De {{ maxPointsAssessment || 100 }} puntos
+      </span>
+
+    </div>
+
+  </article>
+
+
+  <!-- APROBADAS -->
+  <article class="summary-card summary-card--green">
+
+    <div class="summary-card__top">
+
+      <span class="summary-card__icon">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="m8.5 12 2.3 2.3 4.8-5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <span class="summary-card__badge">
+        {{ passedPercentage }}%
+      </span>
+
+    </div>
+
+    <div class="summary-card__content">
+
+      <span class="summary-card__label">
+        Evaluaciones aprobadas
+      </span>
+
+      <strong class="summary-card__value">
+        {{ formatNumber(passedAssessments) }}
+      </strong>
+
+      <span class="summary-card__description">
+        Nota mínima:
+        {{ minPointsAssessment || 0 }}
+      </span>
+
+    </div>
+
+  </article>
+
+
+  <!-- PLATAFORMA -->
+  <article class="summary-card summary-card--orange">
+
+    <div class="summary-card__top">
+
+      <span class="summary-card__icon">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="14"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M8 9h8M8 13h5M8 16h7"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span class="summary-card__badge">
+        S2S
+      </span>
+
+    </div>
+
+    <div class="summary-card__content">
+
+      <span class="summary-card__label">
+        Evaluaciones de plataforma
+      </span>
+
+      <strong class="summary-card__value">
+        {{ formatNumber(platformAssessmentsCount) }}
+      </strong>
+
+      <span class="summary-card__description">
+        {{ instructorAssessments }} de instructores
+      </span>
+
+    </div>
+
+  </article>
+
+</section>

@@ -1,0 +1,267 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.assessment-header {
+  width: 100%;
+  min-height: 82px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+
+
+  /* =========================
+     INFORMATION
+  ========================= */
+
+  &__information {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+
+  /* =========================
+     ICON
+  ========================= */
+
+  &__icon {
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 3rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #4b20e6;
+    background: #f0edff;
+
+    border-radius: 0.65rem;
+
+    svg {
+      width: 1.65rem;
+      height: 1.65rem;
+    }
+  }
+
+
+  /* =========================
+     TEXT
+  ========================= */
+
+  &__text {
+    min-width: 0;
+
+    h1 {
+      margin: 0;
+
+      color: #181a40;
+
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+    }
+
+    p {
+      margin: 0.28rem 0 0;
+
+      color: #74788d;
+
+      font-size: 0.78rem;
+      font-weight: 400;
+      line-height: 1.45;
+    }
+  }
+
+
+  /* =========================
+     ACTIONS
+  ========================= */
+
+  &__actions {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+
+  /* =========================
+     BUTTON
+  ========================= */
+
+  &__button {
+    min-width: 145px;
+    height: 38px;
+
+    padding: 0 0.9rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+
+    border-radius: 0.42rem;
+
+    font-family: inherit;
+    font-size: 0.65rem;
+    font-weight: 600;
+    line-height: 1;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+      transform 0.15s ease,
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      flex: 0 0 1rem;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+
+    /* SECONDARY */
+
+    &--secondary {
+      color: #343750;
+      background: #fff;
+
+      border: 1px solid #dfe2ea;
+
+      &:hover {
+        color: #4b20e6;
+        background: #faf9ff;
+        border-color: #d9d2f8;
+      }
+    }
+
+
+    /* PRIMARY */
+
+    &--primary {
+      min-width: 155px;
+
+      color: #fff;
+      background: #4b20e6;
+
+      border: 1px solid #4b20e6;
+
+      box-shadow:
+        0 4px 10px rgba(75, 32, 230, 0.14);
+
+      &:hover {
+        background: #4019d4;
+        border-color: #4019d4;
+
+        box-shadow:
+          0 6px 14px rgba(75, 32, 230, 0.2);
+      }
+    }
+  }
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .assessment-header {
+    align-items: flex-start;
+    flex-direction: column;
+
+    &__actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .assessment-header {
+    min-height: auto;
+    padding: 0.9rem;
+
+    &__information {
+      align-items: flex-start;
+    }
+
+    &__icon {
+      width: 2.6rem;
+      height: 2.6rem;
+      flex-basis: 2.6rem;
+
+      svg {
+        width: 1.4rem;
+        height: 1.4rem;
+      }
+    }
+
+    &__text {
+      h1 {
+        font-size: 1rem;
+      }
+
+      p {
+        font-size: 0.62rem;
+      }
+    }
+
+    &__actions {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
+    }
+
+    &__button {
+      width: 100%;
+      min-width: 0;
+
+      &--primary {
+        min-width: 0;
+      }
+    }
+  }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+  .assessment-header {
+
+    &__actions {
+      grid-template-columns: 1fr;
+    }
+
+    &__button {
+      height: 36px;
+    }
+  }
+}

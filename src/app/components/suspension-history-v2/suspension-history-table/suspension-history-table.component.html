@@ -1,0 +1,320 @@
+<div class="history-table">
+
+  @if (loading) {
+
+    <div class="history-table__loading">
+
+      @for (
+        item of [1, 2, 3, 4, 5];
+        track item
+      ) {
+        <div class="history-table__skeleton-row">
+          <span class="history-table__skeleton history-table__skeleton--index"></span>
+
+          <div class="history-table__skeleton-student">
+            <span class="history-table__skeleton history-table__skeleton--avatar"></span>
+
+            <div>
+              <span class="history-table__skeleton history-table__skeleton--name"></span>
+              <span class="history-table__skeleton history-table__skeleton--text"></span>
+            </div>
+          </div>
+
+          <span class="history-table__skeleton history-table__skeleton--badge"></span>
+          <span class="history-table__skeleton history-table__skeleton--date"></span>
+          <span class="history-table__skeleton history-table__skeleton--date"></span>
+          <span class="history-table__skeleton history-table__skeleton--badge"></span>
+          <span class="history-table__skeleton history-table__skeleton--text"></span>
+          <span class="history-table__skeleton history-table__skeleton--name"></span>
+          <span class="history-table__skeleton history-table__skeleton--badge"></span>
+          <span class="history-table__skeleton history-table__skeleton--date"></span>
+          <span class="history-table__skeleton history-table__skeleton--actions"></span>
+        </div>
+      }
+
+    </div>
+
+  } @else if (history.length > 0) {
+
+    <div class="history-table__scroll">
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Estudiante</th>
+            <th>Stage</th>
+            <th>Inicio de suspensión</th>
+            <th>Fin de suspensión</th>
+            <th>Días</th>
+            <th>Motivo</th>
+            <th>Procesado por</th>
+            <th>Estado</th>
+            <th>Fecha de registro</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (
+            item of history;
+            track $index;
+            let index = $index
+          ) {
+            <tr>
+
+              <td class="history-table__index">
+                {{ index + 1 }}
+              </td>
+
+
+              <td>
+                <div class="history-student">
+
+                  <span
+                    class="history-student__avatar"
+                    [ngClass]="getAvatarClass(index)"
+                  >
+                    {{ getStudentInitials(item) }}
+                  </span>
+
+                  <div class="history-student__information">
+                    <strong>
+                      {{ getStudentName(item) }}
+                    </strong>
+
+                    <span>
+                      ID: {{ getStudentId(item) }}
+                    </span>
+
+                    <small>
+                      {{ getStudentEmail(item) }}
+                    </small>
+                  </div>
+
+                </div>
+              </td>
+
+
+              <td>
+                <span class="history-table__stage">
+                  {{ getStage(item) }}
+                </span>
+              </td>
+
+
+              <td>
+                <div class="history-table__date">
+                  <strong>
+                    {{ formatDate(getStartDate(item)) }}
+                  </strong>
+
+                  @if (formatTime(getStartDate(item))) {
+                    <span>
+                      {{ formatTime(getStartDate(item)) }}
+                    </span>
+                  }
+                </div>
+              </td>
+
+
+              <td>
+                <div class="history-table__date">
+                  <strong>
+                    {{ formatDate(getEndDate(item)) }}
+                  </strong>
+
+                  @if (formatTime(getEndDate(item))) {
+                    <span>
+                      {{ formatTime(getEndDate(item)) }}
+                    </span>
+                  }
+                </div>
+              </td>
+
+
+              <td>
+                <span class="history-table__days">
+                  {{ getDays(item) }} días
+                </span>
+              </td>
+
+
+              <td>
+                <span class="history-table__reason">
+                  {{ getReason(item) }}
+                </span>
+              </td>
+
+
+              <td>
+                <div class="history-processed">
+
+                  <span class="history-processed__avatar">
+                    {{ getProcessedByInitials(item) }}
+                  </span>
+
+                  <div>
+                    <strong>
+                      {{ getProcessedByName(item) }}
+                    </strong>
+                  </div>
+
+                </div>
+              </td>
+
+
+              <td>
+                <span
+                  class="history-table__status"
+                  [class.history-table__status--active]="
+                    getStatus(item) === 'active'
+                  "
+                  [class.history-table__status--finished]="
+                    getStatus(item) === 'finished'
+                  "
+                  [class.history-table__status--upcoming]="
+                    getStatus(item) === 'upcoming'
+                  "
+                >
+                  <span class="history-table__status-dot"></span>
+
+                  {{ getStatusLabel(item) }}
+                </span>
+              </td>
+
+
+              <td>
+                <div class="history-table__date">
+                  <strong>
+                    {{ formatDate(getCreatedAt(item)) }}
+                  </strong>
+
+                  @if (formatTime(getCreatedAt(item))) {
+                    <span>
+                      {{ formatTime(getCreatedAt(item)) }}
+                    </span>
+                  }
+                </div>
+              </td>
+
+
+              <td>
+                <div class="history-table__actions">
+
+                  <button
+                    type="button"
+                    class="history-table__action"
+                    aria-label="Ver detalle"
+                    title="Ver detalle"
+                    (click)="onView(item)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M3.5 12s3-5 8.5-5 8.5 5 8.5 5-3 5-8.5 5-8.5-5-8.5-5Z"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linejoin="round"
+                      />
+
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="2.3"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+                    </svg>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="history-table__action"
+                    aria-label="Descargar"
+                    title="Descargar"
+                    (click)="onDownload(item)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M12 4v10m0 0 4-4m-4 4-4-4"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+
+                      <path
+                        d="M5 18v1.2A1.8 1.8 0 0 0 6.8 21h10.4A1.8 1.8 0 0 0 19 19.2V18"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </button>
+
+                </div>
+              </td>
+
+            </tr>
+          }
+
+        </tbody>
+      </table>
+
+    </div>
+
+  } @else {
+
+    <div class="history-table__empty">
+
+      <span class="history-table__empty-icon">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M8 3.5v4M16 3.5v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M9 13h6M9 16h4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <strong>
+        No se encontraron licencias
+      </strong>
+
+      <span>
+        No existen registros que coincidan con los filtros seleccionados.
+      </span>
+
+    </div>
+
+  }
+
+</div>

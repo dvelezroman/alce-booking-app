@@ -1,0 +1,483 @@
+<div class="instructor-table">
+
+  @if (assessments.length > 0) {
+
+    <div class="instructor-table__scroll">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Estudiante</th>
+            <th>Stage</th>
+            <th>Tipo</th>
+            <th>Instructor</th>
+            <th>Nota</th>
+            <th>Estado</th>
+            <th>Comentario</th>
+            <th>Fecha</th>
+            <th class="instructor-table__actions-column">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (
+            assessment of assessments;
+            track assessment.id;
+            let index = $index
+          ) {
+
+            <tr>
+
+              <!-- INDEX -->
+              <td class="instructor-table__index">
+                {{ index + 1 }}
+              </td>
+
+
+              <!-- STUDENT -->
+              <td>
+                <div class="student-cell">
+
+                  <span class="student-cell__avatar">
+                    {{ getStudentInitials(assessment) }}
+                  </span>
+
+                  <div class="student-cell__content">
+                    <strong>
+                      {{ getStudentName(assessment) }}
+                    </strong>
+
+                    <span>
+                      ID: {{ getStudentId(assessment) }}
+                    </span>
+                  </div>
+
+                </div>
+              </td>
+
+
+              <!-- STAGE -->
+              <td>
+                <span class="instructor-table__stage">
+                  STG {{ getStage(assessment) }}
+                </span>
+              </td>
+
+
+              <!-- TYPE -->
+              <td>
+                <span
+                  class="assessment-type"
+                  [ngClass]="getTypeClass(assessment)"
+                >
+                  {{ getAssessmentType(assessment) }}
+                </span>
+              </td>
+
+
+              <!-- INSTRUCTOR -->
+              <td>
+                <div class="instructor-cell">
+
+                  <span class="instructor-cell__avatar">
+                    {{ getInstructorInitials(assessment) }}
+                  </span>
+
+                  <strong>
+                    {{ getInstructorName(assessment) }}
+                  </strong>
+
+                </div>
+              </td>
+
+
+              <!-- SCORE -->
+              <td>
+
+                @if (isEditing(assessment)) {
+
+                  <div class="score-edit">
+
+                    <input
+                      type="number"
+                      min="0"
+                      [max]="maxPointsAssessment || 100"
+                      [ngModel]="editPoints"
+                      (ngModelChange)="onEditPointsChange($event)"
+                    />
+
+                    <span>
+                      / {{ maxPointsAssessment || 100 }}
+                    </span>
+
+                  </div>
+
+                } @else {
+
+                  <div class="score-cell">
+
+                    <strong>
+                      {{ getPoints(assessment) }}
+                    </strong>
+
+                    <span>
+                      / {{ maxPointsAssessment || 100 }}
+                    </span>
+
+                    <div
+                      class="score-cell__progress"
+                      aria-hidden="true"
+                    >
+                      <span
+                        [style.width.%]="
+                          getScorePercentage(assessment)
+                        "
+                        [class.score-cell__progress-value--passed]="
+                          isPassed(assessment)
+                        "
+                        [class.score-cell__progress-value--failed]="
+                          !isPassed(assessment)
+                        "
+                      ></span>
+                    </div>
+
+                  </div>
+
+                }
+
+              </td>
+
+
+              <!-- STATUS -->
+              <td>
+                <span
+                  class="instructor-table__status"
+                  [class.instructor-table__status--passed]="
+                    isPassed(assessment)
+                  "
+                  [class.instructor-table__status--failed]="
+                    !isPassed(assessment)
+                  "
+                >
+                  <span class="instructor-table__status-dot"></span>
+
+                  {{ getStatusLabel(assessment) }}
+                </span>
+              </td>
+
+
+              <!-- COMMENT -->
+              <td>
+                <span
+                  class="instructor-table__comment"
+                  [title]="getNote(assessment)"
+                >
+                  {{ getNote(assessment) }}
+                </span>
+              </td>
+
+
+              <!-- DATE -->
+              <td>
+                <div class="instructor-table__date">
+
+                  <strong>
+                    {{ formatDate(assessment.createdAt) }}
+                  </strong>
+
+                  @if (
+                    formatTime(
+                      assessment.createdAt
+                    )
+                  ) {
+                    <span>
+                      {{
+                        formatTime(
+                          assessment.createdAt
+                        )
+                      }}
+                    </span>
+                  }
+
+                </div>
+              </td>
+
+
+              <!-- ACTIONS -->
+              <td class="instructor-table__actions-cell">
+
+                <button
+                  type="button"
+                  class="instructor-table__menu-trigger"
+                  [class.instructor-table__menu-trigger--active]="
+                    isActionsMenuOpen(assessment)
+                  "
+                  aria-label="Opciones"
+                  title="Opciones"
+                  (click)="
+                    toggleActionsMenu(
+                      $event,
+                      assessment
+                    )
+                  "
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <circle
+                      cx="5"
+                      cy="12"
+                      r="1.7"
+                    />
+
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="1.7"
+                    />
+
+                    <circle
+                      cx="19"
+                      cy="12"
+                      r="1.7"
+                    />
+                  </svg>
+                </button>
+
+
+                @if (
+                  isActionsMenuOpen(
+                    assessment
+                  )
+                ) {
+
+                  <div
+                    class="instructor-table__actions-menu"
+                    [style.top.px]="menuTop"
+                    [style.left.px]="menuLeft"
+                    (click)="$event.stopPropagation()"
+                  >
+
+                    @if (isEditing(assessment)) {
+
+                      <!-- SAVE -->
+                      <button
+                        type="button"
+                        class="
+                          instructor-table__menu-item
+                          instructor-table__menu-item--save
+                        "
+                        (click)="onSaveEdit()"
+                      >
+                        <span class="instructor-table__menu-icon">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="m7 12 3 3 7-7"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </span>
+
+                        <span>
+                          Guardar nota
+                        </span>
+                      </button>
+
+
+                      <!-- CANCEL -->
+                      <button
+                        type="button"
+                        class="
+                          instructor-table__menu-item
+                          instructor-table__menu-item--cancel
+                        "
+                        (click)="onCancelEdit()"
+                      >
+                        <span class="instructor-table__menu-icon">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="m7 7 10 10M17 7 7 17"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"
+                            />
+                          </svg>
+                        </span>
+
+                        <span>
+                          Cancelar edición
+                        </span>
+                      </button>
+
+                    } @else {
+
+                      <!-- VIEW -->
+                      <button
+                        type="button"
+                        class="instructor-table__menu-item"
+                        (click)="onView(assessment)"
+                      >
+                        <span class="instructor-table__menu-icon">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="M3.5 12s3-5 8.5-5 8.5 5 8.5 5-3 5-8.5 5-8.5-5-8.5-5Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"
+                            />
+
+                            <circle
+                              cx="12"
+                              cy="12"
+                              r="2.3"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                            />
+                          </svg>
+                        </span>
+
+                        <span>
+                          Ver detalle
+                        </span>
+                      </button>
+
+
+                      <!-- EDIT -->
+                      <button
+                        type="button"
+                        class="instructor-table__menu-item"
+                        (click)="onEdit(assessment)"
+                      >
+                        <span class="instructor-table__menu-icon">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="M4.5 19.5 5.4 15 15.8 4.6a1.5 1.5 0 0 1 2.1 0l1.5 1.5a1.5 1.5 0 0 1 0 2.1L9 18.6l-4.5.9Z"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                              stroke-linejoin="round"
+                            />
+
+                            <path
+                              d="m14.5 6 3.5 3.5"
+                              stroke="currentColor"
+                              stroke-width="1.7"
+                            />
+                          </svg>
+                        </span>
+
+                        <span>
+                          Editar nota
+                        </span>
+                      </button>
+
+
+                      <!-- DELETE -->
+                      <button
+                        type="button"
+                        class="
+                          instructor-table__menu-item
+                          instructor-table__menu-item--delete
+                        "
+                        (click)="onDelete(assessment)"
+                      >
+                        <span class="instructor-table__menu-icon">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="M5 7h14M9 7V4.5h6V7M8 10.5v7M12 10.5v7M16 10.5v7M7 7l.8 13h8.4L17 7"
+                              stroke="currentColor"
+                              stroke-width="1.6"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </span>
+
+                        <span>
+                          Eliminar evaluación
+                        </span>
+                      </button>
+
+                    }
+
+                  </div>
+
+                }
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  } @else {
+
+    <div class="instructor-table__empty">
+
+      <span
+        class="instructor-table__empty-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M7 3.5h7l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 20V5A1.5 1.5 0 0 1 7.5 3.5Z"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M14 3.5V8h4M9 12h6M9 15h4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <strong>
+        No hay evaluaciones registradas
+      </strong>
+
+      <span>
+        Selecciona un estudiante o modifica los filtros para consultar evaluaciones.
+      </span>
+
+    </div>
+
+  }
+
+</div>

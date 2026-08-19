@@ -1,19 +1,73 @@
-<h2 class="title stage">Historial de Licencias</h2>
+<div class="suspension-history-page">
+  <main class="suspension-history-page__container">
 
-<section class="suspension-history-section">
+    <app-suspension-history-header />
 
-  <!-- FILTROS -->
-  <app-suspension-history-filters
-    (filtersChange)="onFiltersChange($event)">
-  </app-suspension-history-filters>
+    <app-suspension-history-summary
+      [history]="suspensionHistory"
+      [loading]="loading"
+    />
 
-  <!-- CONTENIDO -->
-  <div class="content-wrapper">
+    <section class="suspension-history-page__layout">
 
-    <app-suspension-history-table
-      [data]="suspensionHistory">
-    </app-suspension-history-table>
+      <div class="suspension-history-page__main">
 
-  </div>
+        <app-suspension-history-filters
+          (filtersChange)="onFiltersChange($event)"
+        />
 
-</section>
+        <section class="suspension-history-page__table-card">
+
+          <div class="suspension-history-page__table-header">
+            <div class="suspension-history-page__table-title">
+              <h2>Historial de licencias</h2>
+
+              <span class="suspension-history-page__table-count">
+                {{ suspensionHistory.length }} registros encontrados
+              </span>
+            </div>
+          </div>
+
+          <app-suspension-history-table
+            [history]="pagedSuspensionHistory"
+            [loading]="loading"
+          />
+
+          <app-suspension-history-pagination
+            [page]="page"
+            [totalPages]="totalPages"
+            [total]="total"
+            [startIndex]="startIndex"
+            [endIndex]="endIndex"
+            [limit]="limit"
+            [limitOptions]="limitOptions"
+            [canPrev]="canPrev"
+            [canNext]="canNext"
+            [paginationLabel]="paginationLabel"
+            (pageChange)="onPageChange($event)"
+            (previousRequested)="onPrev()"
+            (nextRequested)="onNext()"
+            (limitChange)="onLimitChange($event)"
+          />
+
+        </section>
+
+      </div>
+
+      <aside class="suspension-history-page__sidebar">
+
+        <app-suspension-history-status-chart
+          [history]="suspensionHistory"
+          [loading]="loading"
+        />
+
+        <app-suspension-history-important-info />
+
+        <app-suspension-history-quick-actions />
+
+      </aside>
+
+    </section>
+
+  </main>
+</div>

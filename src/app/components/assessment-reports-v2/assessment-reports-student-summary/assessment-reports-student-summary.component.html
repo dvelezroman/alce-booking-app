@@ -1,0 +1,263 @@
+<section class="student-summary">
+
+  @if (hasStudent) {
+
+    <div class="student-summary__main">
+
+      <div class="student-summary__identity">
+
+        <span class="student-summary__avatar">
+          {{ initials }}
+        </span>
+
+        <div class="student-summary__student">
+
+          <span class="student-summary__eyebrow">
+            Estudiante seleccionado
+          </span>
+
+          <strong class="student-summary__name">
+            {{ fullName }}
+          </strong>
+
+          <span class="student-summary__id">
+            ID: {{ resolvedStudentId }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="student-summary__details">
+
+        <!-- MODALIDAD -->
+        <article class="student-summary__item">
+
+          <span class="student-summary__item-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="4"
+                y="5"
+                width="16"
+                height="12"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+
+              <path
+                d="M9 20h6M12 17v3"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <div>
+            <span>
+              Modalidad
+            </span>
+
+            <strong>
+              {{ modality }}
+            </strong>
+          </div>
+
+        </article>
+
+
+        <!-- EMAIL -->
+        <article class="student-summary__item">
+
+          <span class="student-summary__item-icon student-summary__item-icon--blue">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="4"
+                y="6"
+                width="16"
+                height="12"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+
+              <path
+                d="m5 8 7 5 7-5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <div>
+            <span>
+              Email
+            </span>
+
+            <strong
+              class="student-summary__truncate"
+              [title]="email"
+            >
+              {{ email }}
+            </strong>
+          </div>
+
+        </article>
+
+
+        <!-- STAGE -->
+        <article class="student-summary__item">
+
+          <span class="student-summary__item-icon student-summary__item-icon--green">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M5 19.5h14"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M7.5 17v-4M12 17V8M16.5 17v-7"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <div>
+            <span>
+              Stage actual
+            </span>
+
+            <strong>
+              {{ stageLabel }}
+            </strong>
+
+            @if (currentStageDescription) {
+              <small>
+                {{ currentStageDescription }}
+              </small>
+            }
+          </div>
+
+        </article>
+
+
+        <!-- CLASIFICACIÓN -->
+        <article class="student-summary__item">
+
+          <span class="student-summary__item-icon student-summary__item-icon--orange">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M12 3.5 14.5 8l5 .8-3.6 3.6.8 5-4.7-2.3-4.7 2.3.8-5-3.6-3.6 5-.8L12 3.5Z"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <div>
+            <span>
+              Clasificación
+            </span>
+
+            <strong>
+              {{ classification }}
+            </strong>
+          </div>
+
+        </article>
+
+      </div>
+
+
+      <span
+        class="student-summary__status"
+        aria-label="Estudiante seleccionado"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="9"
+            fill="currentColor"
+          />
+
+          <path
+            d="m8 12 2.5 2.5L16.5 8"
+            stroke="#fff"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+    </div>
+
+  } @else {
+
+    <div class="student-summary__empty">
+
+      <span
+        class="student-summary__empty-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="8"
+            r="3.5"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M5.5 19c.7-3.1 3.1-5 6.5-5s5.8 1.9 6.5 5"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <div>
+        <strong>
+          Selecciona un estudiante
+        </strong>
+
+        <span>
+          La información académica aparecerá después de realizar la búsqueda.
+        </span>
+      </div>
+
+    </div>
+
+  }
+
+</section>

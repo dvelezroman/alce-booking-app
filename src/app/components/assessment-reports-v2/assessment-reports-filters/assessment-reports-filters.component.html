@@ -1,0 +1,483 @@
+<section class="assessment-filters">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="assessment-filters__header">
+
+    <span
+      class="assessment-filters__header-icon"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M4 5h16l-6.5 7.2V18l-3 1.5v-7.3L4 5Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+
+    <h2>
+      Filtros de búsqueda
+    </h2>
+
+  </header>
+
+
+  <!-- =========================
+       FORM
+  ========================== -->
+
+  <div class="assessment-filters__form">
+
+    <!-- ESTUDIANTE -->
+    <div class="assessment-filters__field">
+
+      <label for="student-search">
+        Estudiante
+      </label>
+
+      <div class="assessment-filters__autocomplete">
+
+        <div
+          class="assessment-filters__input-wrapper"
+          [class.assessment-filters__input-wrapper--invalid]="
+            isStudentFieldInvalid
+          "
+        >
+
+          <span
+            class="assessment-filters__input-icon"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="6.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m16 16 4 4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <input
+            id="student-search"
+            type="text"
+            autocomplete="off"
+            [ngModel]="studentSearch"
+            (ngModelChange)="onStudentInputChange($event)"
+            (blur)="onStudentInputBlur()"
+            placeholder="Buscar estudiante..."
+          />
+
+          @if (studentSearch) {
+            <button
+              type="button"
+              class="assessment-filters__input-clear"
+              aria-label="Limpiar estudiante"
+              (mousedown)="$event.preventDefault()"
+              (click)="clearStudent()"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 7 10 10M17 7 7 17"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          }
+
+        </div>
+
+
+        @if (
+          showStudentDropdown &&
+          filteredStudents.length > 0
+        ) {
+          <div class="assessment-filters__dropdown">
+
+            @for (
+              user of filteredStudents;
+              track user.id
+            ) {
+              <button
+                type="button"
+                class="assessment-filters__dropdown-item"
+                (mousedown)="$event.preventDefault()"
+                (click)="onSelectStudent(user)"
+              >
+
+                <span class="assessment-filters__dropdown-avatar">
+                  {{ getStudentInitials(user) }}
+                </span>
+
+                <span class="assessment-filters__dropdown-user">
+
+                  <strong>
+                    {{ getStudentFullName(user) }}
+                  </strong>
+
+                  <small>
+                    {{ getStudentIdentification(user) }}
+                  </small>
+
+                </span>
+
+              </button>
+            }
+
+          </div>
+        }
+
+
+        @if (
+          showStudentDropdown &&
+          studentSearch.trim().length >= 2 &&
+          filteredStudents.length === 0
+        ) {
+          <div
+            class="
+              assessment-filters__dropdown
+              assessment-filters__dropdown--empty
+            "
+          >
+            No se encontraron estudiantes.
+          </div>
+        }
+
+      </div>
+
+    </div>
+
+
+    <!-- ESTUDIANTE SELECCIONADO -->
+    @if (studentId) {
+
+      <article class="assessment-filters__student">
+
+        <div class="assessment-filters__avatar">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="8"
+              r="3.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M5.5 19c.7-3.1 3.1-5 6.5-5s5.8 1.9 6.5 5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+        <div class="assessment-filters__student-info">
+
+          <strong>
+            Estudiante seleccionado
+          </strong>
+
+          <span>
+            ID: {{ studentId }}
+          </span>
+
+          @if (stageId) {
+            <div class="assessment-filters__student-stage">
+              <span>
+                Stage actual:
+              </span>
+
+              <strong>
+                STG {{ stageId }}
+              </strong>
+            </div>
+          }
+
+        </div>
+
+        <button
+          type="button"
+          class="assessment-filters__clear-student"
+          aria-label="Quitar estudiante"
+          (click)="clearStudent()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m7 7 10 10M17 7 7 17"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+      </article>
+
+    }
+
+
+    <!-- STAGE -->
+    <div class="assessment-filters__field">
+
+      <label for="assessment-stage">
+        Stage
+      </label>
+
+      <div class="assessment-filters__select-wrapper">
+
+        <select
+          id="assessment-stage"
+          [ngModel]="stageId"
+          (ngModelChange)="onStageChange($event)"
+        >
+          <option [ngValue]="null">
+            Todos los stages
+          </option>
+
+          @for (
+            stage of stages;
+            track stage.id
+          ) {
+            <option [ngValue]="stage.id">
+              {{ getStageLabel(stage) }}
+            </option>
+          }
+
+        </select>
+
+        <span
+          class="assessment-filters__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m8 10 4 4 4-4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- TIPO -->
+    <div class="assessment-filters__field">
+
+      <label for="assessment-type">
+        Tipo de evaluación
+      </label>
+
+      <div class="assessment-filters__select-wrapper">
+
+        <select
+          id="assessment-type"
+          [ngModel]="assessmentType"
+          (ngModelChange)="onAssessmentTypeChange($event)"
+        >
+          <option [ngValue]="null">
+            Todos los tipos
+          </option>
+
+          @for (
+            type of assessmentTypes;
+            track type.value
+          ) {
+            <option [ngValue]="type.value">
+              {{ type.label }}
+            </option>
+          }
+
+        </select>
+
+        <span
+          class="assessment-filters__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m8 10 4 4 4-4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- FECHA DESDE -->
+    <div class="assessment-filters__field">
+
+      <label for="assessment-from">
+        Fecha desde
+      </label>
+
+      <div class="assessment-filters__date-wrapper">
+
+        <span
+          class="assessment-filters__date-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="5.5"
+              width="16"
+              height="14.5"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M8 3.5v4M16 3.5v4M4 9.5h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <input
+          id="assessment-from"
+          type="date"
+          [(ngModel)]="from"
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- FECHA HASTA -->
+    <div class="assessment-filters__field">
+
+      <label for="assessment-to">
+        Fecha hasta
+      </label>
+
+      <div class="assessment-filters__date-wrapper">
+
+        <span
+          class="assessment-filters__date-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="5.5"
+              width="16"
+              height="14.5"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M8 3.5v4M16 3.5v4M4 9.5h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <input
+          id="assessment-to"
+          type="date"
+          [(ngModel)]="to"
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- BUSCAR -->
+    <button
+      type="button"
+      class="assessment-filters__search"
+      (click)="onSearch()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="11"
+          cy="11"
+          r="6.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="m16 16 4 4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <span>
+        Buscar evaluaciones
+      </span>
+    </button>
+
+  </div>
+
+</section>
