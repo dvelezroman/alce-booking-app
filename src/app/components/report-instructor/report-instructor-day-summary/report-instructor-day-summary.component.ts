@@ -1,6 +1,8 @@
 import {
   Component,
   Input,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 
 import {
@@ -28,7 +30,7 @@ interface DaySummaryGroup {
   templateUrl: './report-instructor-day-summary.component.html',
   styleUrl: './report-instructor-day-summary.component.scss',
 })
-export class ReportInstructorDaySummaryComponent {
+export class ReportInstructorDaySummaryComponent implements OnChanges {
 
   @Input() summary:
     DailySummaryItem[] = [];
@@ -38,6 +40,42 @@ export class ReportInstructorDaySummaryComponent {
   @Input() from = '';
 
   @Input() to = '';
+
+
+  /* =========================
+     PAGINATION
+  ========================= */
+
+  page = 1;
+
+  limit = 5;
+
+  readonly limitOptions:
+    number[] = [
+      5,
+      10,
+      20,
+      50,
+    ];
+
+
+  /* =========================
+     CHANGES
+  ========================= */
+
+  ngOnChanges(
+    changes: SimpleChanges,
+  ): void {
+
+    if (
+      changes['summary'] ||
+      changes['instructorName'] ||
+      changes['from'] ||
+      changes['to']
+    ) {
+      this.page = 1;
+    }
+  }
 
 
   /* =========================
@@ -77,7 +115,9 @@ export class ReportInstructorDaySummaryComponent {
     );
 
     return Array
-      .from(groups.entries())
+      .from(
+        groups.entries(),
+      )
       .map(
         ([date, hours]) => {
 
@@ -94,6 +134,7 @@ export class ReportInstructorDaySummaryComponent {
 
           return {
             date,
+
             total:
               sortedHours.reduce(
                 (sum, item) =>
@@ -103,6 +144,7 @@ export class ReportInstructorDaySummaryComponent {
                   ),
                 0,
               ),
+
             hours:
               sortedHours,
           };
@@ -111,12 +153,233 @@ export class ReportInstructorDaySummaryComponent {
       .sort(
         (a, b) =>
           new Date(
-            `${a.date}T00:00:00`,
+            a.date,
           ).getTime() -
           new Date(
-            `${b.date}T00:00:00`,
+            b.date,
           ).getTime(),
       );
+  }
+
+
+  /* =========================
+     PAGINATED DATA
+  ========================= */
+
+  get paginatedDays():
+    DaySummaryGroup[] {
+
+    const start =
+      (
+        this.page - 1
+      ) * this.limit;
+
+    return this.groupedDays.slice(
+      start,
+      start + this.limit,
+    );
+  }
+
+
+  get totalPages(): number {
+
+    if (
+      !this.groupedDays.length
+    ) {
+      return 1;
+    }
+
+    return Math.ceil(
+      this.groupedDays.length /
+      this.limit,
+    );
+  }
+
+
+  get canPreviousPage(): boolean {
+    return this.page > 1;
+  }
+
+
+  get canNextPage(): boolean {
+    return (
+      this.page <
+      this.totalPages
+    );
+  }
+
+
+  get startIndex(): number {
+
+    if (
+      !this.groupedDays.length
+    ) {
+      return 0;
+    }
+
+    return (
+      (
+        this.page - 1
+      ) *
+      this.limit
+    ) + 1;
+  }
+
+
+  get endIndex(): number {
+
+    return Math.min(
+      this.page *
+      this.limit,
+      this.groupedDays.length,
+    );
+  }
+
+
+  get paginationLabel(): string {
+
+    if (
+      !this.groupedDays.length
+    ) {
+      return '0 días';
+    }
+
+    return (
+      `Mostrando ${this.startIndex} a ${this.endIndex} ` +
+      `de ${this.groupedDays.length} días`
+    );
+  }
+
+
+  get visiblePages():
+    (number | 'ellipsis')[] {
+
+    if (
+      this.totalPages <= 7
+    ) {
+      return Array.from(
+        {
+          length:
+            this.totalPages,
+        },
+        (_, index) =>
+          index + 1,
+      );
+    }
+
+    if (
+      this.page <= 4
+    ) {
+      return [
+        1,
+        2,
+        3,
+        4,
+        5,
+        'ellipsis',
+        this.totalPages,
+      ];
+    }
+
+    if (
+      this.page >=
+      this.totalPages - 3
+    ) {
+      return [
+        1,
+        'ellipsis',
+        this.totalPages - 4,
+        this.totalPages - 3,
+        this.totalPages - 2,
+        this.totalPages - 1,
+        this.totalPages,
+      ];
+    }
+
+    return [
+      1,
+      'ellipsis',
+      this.page - 1,
+      this.page,
+      this.page + 1,
+      'ellipsis',
+      this.totalPages,
+    ];
+  }
+
+
+  /* =========================
+     PAGE ACTIONS
+  ========================= */
+
+  onPageChange(
+    page: number,
+  ): void {
+
+    if (
+      page < 1 ||
+      page > this.totalPages ||
+      page === this.page
+    ) {
+      return;
+    }
+
+    this.page = page;
+  }
+
+
+  onPreviousPage(): void {
+
+    if (
+      !this.canPreviousPage
+    ) {
+      return;
+    }
+
+    this.page--;
+  }
+
+
+  onNextPage(): void {
+
+    if (
+      !this.canNextPage
+    ) {
+      return;
+    }
+
+    this.page++;
+  }
+
+
+  onLimitChange(
+    value: number | string,
+  ): void {
+
+    const limit =
+      Number(value);
+
+    if (
+      !Number.isFinite(limit) ||
+      limit <= 0
+    ) {
+      return;
+    }
+
+    this.limit = limit;
+    this.page = 1;
+  }
+
+
+  isPage(
+    item:
+      number |
+      'ellipsis',
+  ): item is number {
+
+    return (
+      typeof item === 'number'
+    );
   }
 
 
@@ -125,6 +388,7 @@ export class ReportInstructorDaySummaryComponent {
   ========================= */
 
   get totalClasses(): number {
+
     return this.summary.reduce(
       (sum, item) =>
         sum +
@@ -135,9 +399,11 @@ export class ReportInstructorDaySummaryComponent {
     );
   }
 
+
   get totalDays(): number {
     return this.groupedDays.length;
   }
+
 
   get busiestDay():
     DaySummaryGroup | null {
@@ -171,9 +437,7 @@ export class ReportInstructorDaySummaryComponent {
     }
 
     const date =
-      new Date(
-        `${value}T00:00:00`,
-      );
+      new Date(value);
 
     if (
       Number.isNaN(
@@ -194,6 +458,7 @@ export class ReportInstructorDaySummaryComponent {
     );
   }
 
+
   formatShortDate(
     value: string,
   ): string {
@@ -203,9 +468,7 @@ export class ReportInstructorDaySummaryComponent {
     }
 
     const date =
-      new Date(
-        `${value}T00:00:00`,
-      );
+      new Date(value);
 
     if (
       Number.isNaN(
@@ -297,7 +560,9 @@ export class ReportInstructorDaySummaryComponent {
     day: DaySummaryGroup,
   ): number {
 
-    if (!this.totalClasses) {
+    if (
+      !this.totalClasses
+    ) {
       return 0;
     }
 
@@ -324,6 +589,7 @@ export class ReportInstructorDaySummaryComponent {
   ): string {
     return day.date;
   }
+
 
   trackByHour(
     index: number,

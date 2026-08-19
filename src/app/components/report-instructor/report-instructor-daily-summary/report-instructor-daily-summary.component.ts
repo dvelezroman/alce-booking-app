@@ -1,6 +1,8 @@
 import {
   Component,
   Input,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 
 import {
@@ -22,7 +24,7 @@ interface DailySummaryItem {
   templateUrl: './report-instructor-daily-summary.component.html',
   styleUrl: './report-instructor-daily-summary.component.scss',
 })
-export class ReportInstructorDailySummaryComponent {
+export class ReportInstructorDailySummaryComponent implements OnChanges {
 
   @Input() summary:
     DailySummaryItem[] = [];
@@ -32,6 +34,43 @@ export class ReportInstructorDailySummaryComponent {
   @Input() from = '';
 
   @Input() to = '';
+
+
+  /* =========================
+     PAGINATION
+  ========================= */
+
+  page = 1;
+
+  limit = 5;
+
+  readonly limitOptions:
+    number[] = [
+      5,
+      10,
+      20,
+      50,
+    ];
+
+
+  /* =========================
+     CHANGES
+  ========================= */
+
+  ngOnChanges(
+    changes: SimpleChanges,
+  ): void {
+
+    if (
+      changes['summary'] ||
+      changes['instructorName'] ||
+      changes['from'] ||
+      changes['to']
+    ) {
+      this.page = 1;
+    }
+  }
+
 
   /* =========================
      SORTED
@@ -46,12 +85,12 @@ export class ReportInstructorDailySummaryComponent {
 
       const dateA =
         new Date(
-          `${a.localdate}T00:00:00`,
+          a.localdate,
         ).getTime();
 
       const dateB =
         new Date(
-          `${b.localdate}T00:00:00`,
+          b.localdate,
         ).getTime();
 
       if (dateA !== dateB) {
@@ -65,28 +104,263 @@ export class ReportInstructorDailySummaryComponent {
     });
   }
 
+
+  /* =========================
+     PAGINATED DATA
+  ========================= */
+
+  get paginatedSummary():
+    DailySummaryItem[] {
+
+    const start =
+      (
+        this.page - 1
+      ) * this.limit;
+
+    return this.sortedSummary.slice(
+      start,
+      start + this.limit,
+    );
+  }
+
+
+  get totalPages(): number {
+
+    if (
+      !this.sortedSummary.length
+    ) {
+      return 1;
+    }
+
+    return Math.ceil(
+      this.sortedSummary.length /
+      this.limit,
+    );
+  }
+
+
+  get canPreviousPage(): boolean {
+    return this.page > 1;
+  }
+
+
+  get canNextPage(): boolean {
+    return (
+      this.page <
+      this.totalPages
+    );
+  }
+
+
+  get startIndex(): number {
+
+    if (
+      !this.sortedSummary.length
+    ) {
+      return 0;
+    }
+
+    return (
+      (
+        this.page - 1
+      ) *
+      this.limit
+    ) + 1;
+  }
+
+
+  get endIndex(): number {
+
+    return Math.min(
+      this.page *
+      this.limit,
+      this.sortedSummary.length,
+    );
+  }
+
+
+  get paginationLabel(): string {
+
+    if (
+      !this.sortedSummary.length
+    ) {
+      return '0 registros';
+    }
+
+    return (
+      `Mostrando ${this.startIndex} a ${this.endIndex} ` +
+      `de ${this.sortedSummary.length} registros`
+    );
+  }
+
+
+  get visiblePages():
+    (number | 'ellipsis')[] {
+
+    if (
+      this.totalPages <= 7
+    ) {
+      return Array.from(
+        {
+          length:
+            this.totalPages,
+        },
+        (_, index) =>
+          index + 1,
+      );
+    }
+
+    if (
+      this.page <= 4
+    ) {
+      return [
+        1,
+        2,
+        3,
+        4,
+        5,
+        'ellipsis',
+        this.totalPages,
+      ];
+    }
+
+    if (
+      this.page >=
+      this.totalPages - 3
+    ) {
+      return [
+        1,
+        'ellipsis',
+        this.totalPages - 4,
+        this.totalPages - 3,
+        this.totalPages - 2,
+        this.totalPages - 1,
+        this.totalPages,
+      ];
+    }
+
+    return [
+      1,
+      'ellipsis',
+      this.page - 1,
+      this.page,
+      this.page + 1,
+      'ellipsis',
+      this.totalPages,
+    ];
+  }
+
+
+  /* =========================
+     PAGE ACTIONS
+  ========================= */
+
+  onPageChange(
+    page: number,
+  ): void {
+
+    if (
+      page < 1 ||
+      page > this.totalPages ||
+      page === this.page
+    ) {
+      return;
+    }
+
+    this.page = page;
+  }
+
+
+  onPreviousPage(): void {
+
+    if (
+      !this.canPreviousPage
+    ) {
+      return;
+    }
+
+    this.page--;
+  }
+
+
+  onNextPage(): void {
+
+    if (
+      !this.canNextPage
+    ) {
+      return;
+    }
+
+    this.page++;
+  }
+
+
+  onLimitChange(
+    value: number | string,
+  ): void {
+
+    const limit =
+      Number(value);
+
+    if (
+      !Number.isFinite(limit) ||
+      limit <= 0
+    ) {
+      return;
+    }
+
+    this.limit = limit;
+    this.page = 1;
+  }
+
+
+  isPage(
+    item:
+      number |
+      'ellipsis',
+  ): item is number {
+
+    return (
+      typeof item === 'number'
+    );
+  }
+
+
   /* =========================
      TOTAL
   ========================= */
 
   get totalClasses(): number {
+
     return this.summary.reduce(
       (total, item) =>
-        total + Number(item.count || 0),
+        total +
+        Number(
+          item.count || 0,
+        ),
       0,
     );
   }
 
+
   get totalDays(): number {
+
     return new Set(
       this.summary
-        .map(item => item.localdate)
+        .map(
+          item =>
+            item.localdate,
+        )
         .filter(Boolean),
     ).size;
   }
 
+
   get averagePerDay(): number {
-    if (!this.totalDays) {
+
+    if (
+      !this.totalDays
+    ) {
       return 0;
     }
 
@@ -97,6 +371,7 @@ export class ReportInstructorDailySummaryComponent {
       ).toFixed(1),
     );
   }
+
 
   /* =========================
      DATE
@@ -111,9 +386,7 @@ export class ReportInstructorDailySummaryComponent {
     }
 
     const date =
-      new Date(
-        `${value}T00:00:00`,
-      );
+      new Date(value);
 
     if (
       Number.isNaN(
@@ -134,6 +407,7 @@ export class ReportInstructorDailySummaryComponent {
     );
   }
 
+
   formatShortDate(
     value: string,
   ): string {
@@ -143,9 +417,7 @@ export class ReportInstructorDailySummaryComponent {
     }
 
     const date =
-      new Date(
-        `${value}T00:00:00`,
-      );
+      new Date(value);
 
     if (
       Number.isNaN(
@@ -164,6 +436,7 @@ export class ReportInstructorDailySummaryComponent {
       },
     );
   }
+
 
   /* =========================
      HOUR
@@ -197,17 +470,24 @@ export class ReportInstructorDailySummaryComponent {
     return `${normalized}:00 ${period}`;
   }
 
+
   /* =========================
      RANGE
   ========================= */
 
   get rangeLabel(): string {
 
-    if (!this.from && !this.to) {
+    if (
+      !this.from &&
+      !this.to
+    ) {
       return 'Sin rango seleccionado';
     }
 
-    if (this.from && this.to) {
+    if (
+      this.from &&
+      this.to
+    ) {
       return (
         `${this.formatShortDate(this.from)} - ` +
         `${this.formatShortDate(this.to)}`
@@ -215,9 +495,11 @@ export class ReportInstructorDailySummaryComponent {
     }
 
     return this.formatShortDate(
-      this.from || this.to,
+      this.from ||
+      this.to,
     );
   }
+
 
   /* =========================
      TRACK

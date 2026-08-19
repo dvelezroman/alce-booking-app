@@ -27,8 +27,19 @@ export class ReportInstructorViewSelectorComponent {
      INPUTS
   ========================= */
 
-  @Input() activeView: ReportInstructorView =
+  private _activeView: ReportInstructorView =
     'main';
+
+  @Input()
+  set activeView(
+    value: ReportInstructorView,
+  ) {
+    this._activeView = value;
+  }
+
+  get activeView(): ReportInstructorView {
+    return this._activeView;
+  }
 
 
   /* =========================

@@ -97,11 +97,127 @@
 
 .report-class-detail__heading p {
   margin: 0;
-
   color: #858698;
-
   font-size: 0.56rem;
   line-height: 1.4;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.report-class-detail__search {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding:
+    0.65rem
+    0.8rem;
+  background: #ffffff;
+  border-bottom:
+    1px solid #eceef3;
+  box-sizing: border-box;
+}
+
+.report-class-detail__search-field {
+  position: relative;
+  width: 100%;
+  max-width: 18rem;
+  display: flex;
+  align-items: center;
+}
+
+.report-class-detail__search-field > svg {
+  position: absolute;
+  left: 0.65rem;
+  top: 50%;
+  width: 0.82rem;
+  height: 0.82rem;
+  color: #8b8c9d;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.report-class-detail__search-field input {
+  width: 100%;
+  height: 2.15rem;
+  padding:
+    0
+    2rem
+    0
+    2rem;
+  color: #37384c;
+  background: #ffffff;
+  border:
+    1px solid #dfe1e8;
+  border-radius: 0.42rem;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 0.58rem;
+  font-weight: 500;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.report-class-detail__search-field input::placeholder {
+  color: #a0a1af;
+  font-weight: 400;
+}
+
+.report-class-detail__search-field input:hover {
+  border-color: #d0d3dc;
+}
+
+.report-class-detail__search-field input:focus {
+  border-color: #7563e7;
+  box-shadow:
+    0 0 0 3px
+    rgba(91, 70, 232, 0.07);
+}
+
+/* =========================
+   CLEAR SEARCH
+========================= */
+
+.report-class-detail__search-clear {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  width: 1.45rem;
+  height: 1.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #8d8e9e;
+  background: transparent;
+  border: 0;
+  border-radius: 0.3rem;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.report-class-detail__search-clear:hover {
+  color: #5037d9;
+  background:
+    rgba(80, 55, 217, 0.07);
+}
+
+.report-class-detail__search-clear:active {
+  transform:
+    translateY(-50%)
+    scale(0.92);
+}
+
+.report-class-detail__search-clear svg {
+  width: 0.7rem;
+  height: 0.7rem;
 }
 
 /* =========================
@@ -510,6 +626,342 @@
 }
 
 /* =========================
+   PAGINATION
+========================= */
+
+.report-class-detail__pagination {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 0.8rem;
+
+  padding:
+    0.7rem
+    0.8rem;
+
+  background: #ffffff;
+
+  border-top:
+    1px solid #eceef3;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   LIMIT
+========================= */
+
+.report-class-detail__pagination-limit {
+  display: flex;
+  align-items: center;
+
+  gap: 0.35rem;
+
+  color: #77788c;
+
+  font-size: 0.55rem;
+
+  white-space: nowrap;
+}
+
+.report-class-detail__pagination-limit select {
+  height: 1.95rem;
+
+  min-width: 3.3rem;
+
+  padding:
+    0
+    1.4rem
+    0
+    0.5rem;
+
+  color: #3e3f54;
+
+  background: #ffffff;
+
+  border:
+    1px solid #dfe1e8;
+
+  border-radius: 0.38rem;
+
+  outline: none;
+
+  font-family: inherit;
+  font-size: 0.56rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.report-class-detail__pagination-limit select:hover {
+  border-color: #d0d3dc;
+}
+
+.report-class-detail__pagination-limit select:focus {
+  border-color: #7563e7;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(91, 70, 232, 0.07);
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+.report-class-detail__pagination-label {
+  min-width: 0;
+
+  color: #858698;
+
+  font-size: 0.54rem;
+
+  text-align: center;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   CONTROLS
+========================= */
+
+.report-class-detail__pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 0.28rem;
+}
+
+
+/* =========================
+   PREVIOUS / NEXT
+========================= */
+
+.report-class-detail__pagination-button {
+  width: 1.9rem;
+  height: 1.9rem;
+
+  flex: 0 0 1.9rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  color: #55566b;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e0e2e9;
+
+  border-radius: 0.38rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.report-class-detail__pagination-button:hover:not(:disabled) {
+  color: #5037d9;
+
+  background: #f8f7ff;
+
+  border-color: #d6cff4;
+}
+
+.report-class-detail__pagination-button:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.report-class-detail__pagination-button:disabled {
+  color: #b5b6c1;
+
+  background: #fafafa;
+
+  border-color: #ededf1;
+
+  cursor: not-allowed;
+
+  opacity: 0.7;
+}
+
+.report-class-detail__pagination-button svg {
+  width: 0.72rem;
+  height: 0.72rem;
+}
+
+
+/* =========================
+   PAGE
+========================= */
+
+.report-class-detail__pagination-page {
+  min-width: 1.9rem;
+  height: 1.9rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    0
+    0.35rem;
+
+  color: #606175;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e0e2e9;
+
+  border-radius: 0.38rem;
+
+  font-family: inherit;
+  font-size: 0.54rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.report-class-detail__pagination-page:hover {
+  color: #5037d9;
+
+  background: #f8f7ff;
+
+  border-color: #d6cff4;
+}
+
+.report-class-detail__pagination-page:active {
+  transform: scale(0.94);
+}
+
+
+/* =========================
+   ACTIVE PAGE
+========================= */
+
+.report-class-detail__pagination-page--active {
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4828e4,
+      #5b31e9
+    );
+
+  border-color: #5130df;
+
+  box-shadow:
+    0 3px 8px
+    rgba(74, 43, 220, 0.14);
+}
+
+.report-class-detail__pagination-page--active:hover {
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4828e4,
+      #5b31e9
+    );
+
+  border-color: #5130df;
+}
+
+
+/* =========================
+   ELLIPSIS
+========================= */
+
+.report-class-detail__pagination-ellipsis {
+  min-width: 1.4rem;
+  height: 1.9rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #9293a3;
+
+  font-size: 0.56rem;
+  font-weight: 600;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .report-class-detail__pagination {
+    grid-template-columns:
+      1fr
+      auto;
+
+    gap:
+      0.55rem
+      0.75rem;
+  }
+
+  .report-class-detail__pagination-label {
+    grid-column:
+      1 / -1;
+
+    grid-row: 1;
+
+    text-align: left;
+  }
+
+  .report-class-detail__pagination-limit {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .report-class-detail__pagination-controls {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+}
+
+
+
+/* =========================
    RESPONSIVE
 ========================= */
 
@@ -518,24 +970,87 @@
   .report-class-detail__header {
     align-items: flex-start;
     flex-direction: column;
-
     padding: 0.75rem;
   }
 
   .report-class-detail__date-navigation {
     width: 100%;
-
     justify-content: space-between;
   }
 
   .report-class-detail__date {
     flex: 1;
-
     min-width: 0;
   }
 
   .report-class-detail__table {
     min-width: 620px;
+  }
+
+   .report-class-detail__search {
+    padding:
+      0.6rem
+      0.7rem;
+  }
+
+  .report-class-detail__search-field {
+    max-width: 100%;
+  }
+
+  .report-class-detail__search-field input {
+    height: 2.1rem;
+    font-size: 0.58rem;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .report-class-detail__pagination {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 0.6rem;
+
+    padding: 0.7rem;
+  }
+
+  .report-class-detail__pagination-label {
+    order: 1;
+
+    width: 100%;
+
+    text-align: center;
+  }
+
+  .report-class-detail__pagination-limit {
+    order: 2;
+
+    width: 100%;
+
+    justify-content: center;
+  }
+
+  .report-class-detail__pagination-controls {
+    order: 3;
+
+    width: 100%;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+  }
+
+  .report-class-detail__pagination-button,
+  .report-class-detail__pagination-page {
+    min-width: 2rem;
+    height: 2rem;
   }
 
 }

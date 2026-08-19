@@ -241,131 +241,255 @@
   </div>
 
 
-  <!-- TABLE -->
-  <div
-    *ngIf="sortedSummary.length > 0"
-    class="daily-summary__wrapper">
+  <!-- RESULTS -->
+  <ng-container
+    *ngIf="sortedSummary.length > 0">
 
-    <table class="daily-summary__table">
+    <!-- TABLE -->
+    <div class="daily-summary__wrapper">
 
-      <thead>
+      <table class="daily-summary__table">
 
-        <tr>
+        <thead>
 
-          <th>
-            Fecha
-          </th>
+          <tr>
 
-          <th>
-            Hora
-          </th>
+            <th>
+              Fecha
+            </th>
 
-          <th>
-            Clases
-          </th>
+            <th>
+              Hora
+            </th>
 
-          <th>
-            Actividad
-          </th>
+            <th>
+              Clases
+            </th>
 
-        </tr>
+            <th>
+              Actividad
+            </th>
 
-      </thead>
+          </tr>
+
+        </thead>
 
 
-      <tbody>
+        <tbody>
 
-        <tr
-          *ngFor="
-            let item of sortedSummary;
-            trackBy: trackBySummary
-          "
-          class="daily-summary__row">
+          <tr
+            *ngFor="
+              let item of paginatedSummary;
+              trackBy: trackBySummary
+            "
+            class="daily-summary__row">
 
-          <!-- DATE -->
-          <td>
+            <!-- DATE -->
+            <td>
 
-            <div class="daily-summary__date">
+              <div class="daily-summary__date">
 
-              <span
-                class="daily-summary__date-icon">
+                <span
+                  class="daily-summary__date-icon">
 
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none">
 
-                  <rect
-                    x="4"
-                    y="5"
-                    width="16"
-                    height="15"
-                    rx="2"
-                    stroke="currentColor"
-                    stroke-width="1.6"/>
+                    <rect
+                      x="4"
+                      y="5"
+                      width="16"
+                      height="15"
+                      rx="2"
+                      stroke="currentColor"
+                      stroke-width="1.6"/>
 
-                  <path
-                    d="M8 3v4M16 3v4M4 9h16"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linecap="round"/>
+                    <path
+                      d="M8 3v4M16 3v4M4 9h16"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"/>
 
-                </svg>
+                  </svg>
 
+                </span>
+
+                <strong>
+                  {{ formatDate(item.localdate) }}
+                </strong>
+
+              </div>
+
+            </td>
+
+
+            <!-- HOUR -->
+            <td>
+
+              <span class="daily-summary__hour">
+                {{ formatHour(item.localhour) }}
               </span>
 
-              <strong>
-                {{ formatDate(item.localdate) }}
-              </strong>
-
-            </div>
-
-          </td>
+            </td>
 
 
-          <!-- HOUR -->
-          <td>
+            <!-- COUNT -->
+            <td>
 
-            <span class="daily-summary__hour">
-              {{ formatHour(item.localhour) }}
-            </span>
-
-          </td>
-
-
-          <!-- COUNT -->
-          <td>
-
-            <span class="daily-summary__count">
-              {{ item.count }}
-            </span>
-
-          </td>
-
-
-          <!-- ACTIVITY -->
-          <td>
-
-            <div class="daily-summary__activity">
-
-              <span
-                class="daily-summary__activity-bar"
-                [style.width.%]="
-                  totalClasses
-                    ? (item.count / totalClasses) * 100
-                    : 0
-                ">
+              <span class="daily-summary__count">
+                {{ item.count }}
               </span>
 
-            </div>
+            </td>
 
-          </td>
 
-        </tr>
+            <!-- ACTIVITY -->
+            <td>
 
-      </tbody>
+              <div class="daily-summary__activity">
 
-    </table>
+                <span
+                  class="daily-summary__activity-bar"
+                  [style.width.%]="
+                    totalClasses
+                      ? (item.count / totalClasses) * 100
+                      : 0
+                  ">
+                </span>
 
-  </div>
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- PAGINATION -->
+    <footer class="daily-summary__pagination">
+
+      <!-- LIMIT -->
+      <div class="daily-summary__pagination-limit">
+
+        <span>
+          Mostrar
+        </span>
+
+        <select
+          [value]="limit"
+          (change)="onLimitChange($any($event.target).value)">
+
+          <option
+            *ngFor="let option of limitOptions"
+            [value]="option">
+
+            {{ option }}
+
+          </option>
+
+        </select>
+
+        <span>
+          por página
+        </span>
+
+      </div>
+
+
+      <!-- LABEL -->
+      <span class="daily-summary__pagination-label">
+        {{ paginationLabel }}
+      </span>
+
+
+      <!-- CONTROLS -->
+      <div class="daily-summary__pagination-controls">
+
+        <!-- PREVIOUS -->
+        <button
+          type="button"
+          class="daily-summary__pagination-button"
+          [disabled]="!canPreviousPage"
+          aria-label="Página anterior"
+          (click)="onPreviousPage()">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+
+            <path
+              d="m15 6-6 6 6 6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+
+          </svg>
+
+        </button>
+
+
+        <!-- PAGES -->
+        <ng-container
+          *ngFor="let item of visiblePages">
+
+          <button
+            *ngIf="isPage(item); else ellipsis"
+            type="button"
+            class="daily-summary__pagination-page"
+            [class.daily-summary__pagination-page--active]="
+              item === page
+            "
+            (click)="onPageChange(item)">
+
+            {{ item }}
+
+          </button>
+
+          <ng-template #ellipsis>
+
+            <span class="daily-summary__pagination-ellipsis">
+              ...
+            </span>
+
+          </ng-template>
+
+        </ng-container>
+
+
+        <!-- NEXT -->
+        <button
+          type="button"
+          class="daily-summary__pagination-button"
+          [disabled]="!canNextPage"
+          aria-label="Página siguiente"
+          (click)="onNextPage()">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+
+            <path
+              d="m9 6 6 6-6 6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+
+          </svg>
+
+        </button>
+
+      </div>
+
+    </footer>
+
+  </ng-container>
 
 </section>

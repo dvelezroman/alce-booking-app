@@ -204,170 +204,409 @@
   </div>
 
 
-  <!-- TABLE -->
-  <div
+  <!-- RESULTS -->
+  <ng-container
     *ngIf="
       searchAttempted &&
       instructors.length > 0
-    "
-    class="report-class-detail__wrapper">
+    ">
 
-    <table class="report-class-detail__table">
+    <!-- SEARCH -->
+    <div class="report-class-detail__search">
 
-      <thead>
+      <div class="report-class-detail__search-field">
 
-        <tr>
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true">
 
-          <th class="report-class-detail__col-instructor">
-            Instructor
-          </th>
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.7"/>
 
-          <th class="report-class-detail__col-hours">
-            Horas
-          </th>
+          <path
+            d="M16 16 20 20"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
 
-          <th class="report-class-detail__col-stages">
-            Stages
-          </th>
+        </svg>
 
-          <th class="report-class-detail__col-actions">
-            Acción
-          </th>
+        <input
+          type="text"
+          [value]="searchTerm"
+          placeholder="Buscar instructor por nombre o correo..."
+          autocomplete="off"
+          (input)="onSearchChange($any($event.target).value)"
+        />
 
-        </tr>
+        <button
+          *ngIf="searchTerm"
+          type="button"
+          class="report-class-detail__search-clear"
+          aria-label="Limpiar búsqueda"
+          (click)="onSearchChange('')">
 
-      </thead>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
 
-      <tbody>
+            <path
+              d="M7 7l10 10M17 7 7 17"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"/>
 
-        <tr
-          *ngFor="
-            let instructor of instructors;
-            trackBy: trackByInstructor
-          "
-          class="report-class-detail__row"
-          (click)="onSelectInstructor(instructor)">
+          </svg>
 
-          <!-- INSTRUCTOR -->
-          <td>
+        </button>
 
-            <div class="report-class-detail__instructor">
+      </div>
 
-              <span class="report-class-detail__avatar">
+    </div>
 
-                {{
-                  getInitials(
-                    instructor
-                  )
-                }}
 
-              </span>
+    <!-- NO SEARCH RESULTS -->
+    <div
+      *ngIf="
+        searchTerm &&
+        filteredInstructors.length === 0
+      "
+      class="report-class-detail__empty">
 
-              <div class="report-class-detail__person">
+      <span
+        class="report-class-detail__empty-icon"
+        aria-hidden="true">
 
-                <strong
-                  [title]="getFullName(instructor)">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none">
+
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.7"/>
+
+          <path
+            d="M16 16 20 20"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"/>
+
+          <path
+            d="m8.5 8.5 5 5M13.5 8.5l-5 5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </span>
+
+      <strong>
+        Sin resultados
+      </strong>
+
+      <span>
+        No se encontraron instructores que coincidan con "{{ searchTerm }}".
+      </span>
+
+    </div>
+
+
+    <!-- TABLE + PAGINATION -->
+    <ng-container
+      *ngIf="filteredInstructors.length > 0">
+
+      <div class="report-class-detail__wrapper">
+
+        <table class="report-class-detail__table">
+
+          <thead>
+
+            <tr>
+
+              <th class="report-class-detail__col-instructor">
+                Instructor
+              </th>
+
+              <th class="report-class-detail__col-hours">
+                Horas
+              </th>
+
+              <th class="report-class-detail__col-stages">
+                Stages
+              </th>
+
+              <th class="report-class-detail__col-actions">
+                Acción
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <tr
+              *ngFor="
+                let instructor of paginatedInstructors;
+                trackBy: trackByInstructor
+              "
+              class="report-class-detail__row"
+              (click)="onSelectInstructor(instructor)">
+
+              <!-- INSTRUCTOR -->
+              <td>
+
+                <div class="report-class-detail__instructor">
+
+                  <span class="report-class-detail__avatar">
+
+                    {{
+                      getInitials(
+                        instructor
+                      )
+                    }}
+
+                  </span>
+
+                  <div class="report-class-detail__person">
+
+                    <strong
+                      [title]="getFullName(instructor)">
+
+                      {{
+                        getFullName(
+                          instructor
+                        )
+                      }}
+
+                    </strong>
+
+                    <small
+                      [title]="getEmail(instructor)">
+
+                      {{
+                        getEmail(
+                          instructor
+                        )
+                      }}
+
+                    </small>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <!-- HOURS -->
+              <td>
+
+                <span class="report-class-detail__number">
 
                   {{
-                    getFullName(
+                    getTotalHours(
                       instructor
                     )
                   }}
 
-                </strong>
+                </span>
 
-                <small
-                  [title]="getEmail(instructor)">
+              </td>
+
+
+              <!-- STAGES -->
+              <td>
+
+                <span class="report-class-detail__stage">
 
                   {{
-                    getEmail(
+                    getUniqueStagesCount(
                       instructor
                     )
                   }}
 
-                </small>
+                </span>
 
-              </div>
-
-            </div>
-
-          </td>
+              </td>
 
 
-          <!-- HOURS -->
-          <td>
+              <!-- ACTION -->
+              <td class="report-class-detail__actions-cell">
 
-            <span class="report-class-detail__number">
+                <button
+                  type="button"
+                  class="report-class-detail__view"
+                  aria-label="Ver detalle del instructor"
+                  (click)="
+                    $event.stopPropagation();
+                    onSelectInstructor(instructor)
+                  ">
 
-              {{
-                getTotalHours(
-                  instructor
-                )
-              }}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none">
 
-            </span>
+                    <path
+                      d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
 
-          </td>
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="2.5"
+                      stroke="currentColor"
+                      stroke-width="1.7"/>
+
+                  </svg>
+
+                </button>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
 
 
-          <!-- STAGES -->
-          <td>
+      <!-- PAGINATION -->
+      <footer class="report-class-detail__pagination">
 
-            <span class="report-class-detail__stage">
+        <!-- LIMIT -->
+        <div class="report-class-detail__pagination-limit">
 
-              {{
-                getUniqueStagesCount(
-                  instructor
-                )
-              }}
+          <span>
+            Mostrar
+          </span>
 
-            </span>
+          <select
+            [value]="limit"
+            (change)="onLimitChange($any($event.target).value)">
 
-          </td>
+            <option
+              *ngFor="let option of limitOptions"
+              [value]="option">
+
+              {{ option }}
+
+            </option>
+
+          </select>
+
+          <span>
+            por página
+          </span>
+
+        </div>
 
 
-          <!-- ACTION -->
-          <td class="report-class-detail__actions-cell">
+        <!-- LABEL -->
+        <span class="report-class-detail__pagination-label">
+          {{ paginationLabel }}
+        </span>
+
+
+        <!-- CONTROLS -->
+        <div class="report-class-detail__pagination-controls">
+
+          <!-- PREVIOUS -->
+          <button
+            type="button"
+            class="report-class-detail__pagination-button"
+            [disabled]="!canPreviousPage"
+            aria-label="Página anterior"
+            (click)="onPreviousPage()">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none">
+
+              <path
+                d="m15 6-6 6 6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+
+            </svg>
+
+          </button>
+
+
+          <!-- PAGES -->
+          <ng-container
+            *ngFor="let item of visiblePages">
 
             <button
+              *ngIf="isPage(item); else ellipsis"
               type="button"
-              class="report-class-detail__view"
-              aria-label="Ver detalle del instructor"
-              (click)="
-                $event.stopPropagation();
-                onSelectInstructor(instructor)
-              ">
+              class="report-class-detail__pagination-page"
+              [class.report-class-detail__pagination-page--active]="
+                item === page
+              "
+              (click)="onPageChange(item)">
 
-              <svg
-                viewBox="0 0 24 24"
-                fill="none">
-
-                <path
-                  d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"/>
-
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="2.5"
-                  stroke="currentColor"
-                  stroke-width="1.7"/>
-
-              </svg>
+              {{ item }}
 
             </button>
 
-          </td>
+            <ng-template #ellipsis>
 
-        </tr>
+              <span class="report-class-detail__pagination-ellipsis">
+                ...
+              </span>
 
-      </tbody>
+            </ng-template>
 
-    </table>
+          </ng-container>
 
-  </div>
+
+          <!-- NEXT -->
+          <button
+            type="button"
+            class="report-class-detail__pagination-button"
+            [disabled]="!canNextPage"
+            aria-label="Página siguiente"
+            (click)="onNextPage()">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none">
+
+              <path
+                d="m9 6 6 6-6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+
+            </svg>
+
+          </button>
+
+        </div>
+
+      </footer>
+
+    </ng-container>
+
+  </ng-container>
 
 </section>

@@ -39,7 +39,7 @@ export class ReportInstructorDetailComponent {
   ========================= */
 
   @Output() summaryRequested =
-    new EventEmitter<void>();
+    new EventEmitter<InstructorGroupedData>();
 
   @Output() closeRequested =
     new EventEmitter<void>();
@@ -50,8 +50,27 @@ export class ReportInstructorDetailComponent {
   ========================= */
 
   onSummary(): void {
-    this.summaryRequested.emit();
+  console.log(
+    'CLICK VER RESUMEN - instructor:',
+    this.instructor
+  );
+
+  if (!this.instructor) {
+    console.error(
+      'NO HAY INSTRUCTOR EN ReportInstructorDetailComponent'
+    );
+    return;
   }
+
+  console.log(
+    'EMITIENDO summaryRequested:',
+    this.instructor
+  );
+
+  this.summaryRequested.emit(
+    this.instructor
+  );
+}
 
   onClose(): void {
     this.closeRequested.emit();
@@ -122,9 +141,7 @@ export class ReportInstructorDetailComponent {
     }
 
     const date =
-      new Date(
-        `${this.selectedDate}T00:00:00`,
-      );
+      new Date(this.selectedDate);
 
     if (
       Number.isNaN(

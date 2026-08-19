@@ -138,6 +138,24 @@ export class ReportInstructorComponent implements OnInit {
       });
   }
 
+  handleSearchRequested(): void {
+    if (this.activeView === 'main') {
+      this.searchInstructorAttendance();
+      return;
+    }
+
+    if (
+      this.activeView === 'summary' ||
+      this.activeView === 'summaryByDay'
+    ) {
+      if (!this.validateInstructorSelected()) {
+        return;
+      }
+
+      this.loadInstructorDailySummary();
+    }
+  }
+
   searchInstructorAttendance(): void {
     this.isNameFieldInvalid = false;
     this.searchAttempted = false;
@@ -256,6 +274,95 @@ export class ReportInstructorComponent implements OnInit {
     }
 
     return true;
+  }
+
+
+  handleInstructorDetailSummary(
+    instructor: InstructorGroupedData,
+  ): void {
+
+    const firstName =
+      instructor.user.firstName
+        ?.trim()
+        .toLowerCase();
+
+    const lastName =
+      instructor.user.lastName
+        ?.trim()
+        .toLowerCase();
+
+    const selectedUser =
+      this.instructors.find(user => {
+
+        const userFirstName =
+          user.firstName
+            ?.trim()
+            .toLowerCase();
+
+        const userLastName =
+          user.lastName
+            ?.trim()
+            .toLowerCase();
+
+        return (
+          userFirstName === firstName &&
+          userLastName === lastName
+        );
+      });
+
+    if (!selectedUser) {
+      console.error(
+        'No se encontró el instructor por nombre:',
+        instructor.user.firstName,
+        instructor.user.lastName,
+      );
+
+      return;
+    }
+
+    if (!selectedUser.instructor?.id) {
+      console.error(
+        'El usuario encontrado no tiene instructorId:',
+        selectedUser,
+      );
+
+      return;
+    }
+
+    /* =========================
+      SELECCIONAR INSTRUCTOR
+    ========================= */
+
+    this.selectInstructor(
+      selectedUser,
+    );
+
+    /* =========================
+      LIMPIAR VALIDACIONES
+    ========================= */
+
+    this.isNameFieldInvalid = false;
+    this.showFromError = false;
+    this.showToError = false;
+    this.showDropdown = false;
+
+    /* SELECCIONAR RESUMEN DIARIO */
+
+    this.activeView = 'summary';
+
+    /* CARGAR RESUMEN */
+
+    this.loadInstructorDailySummary();
+
+    // console.log(
+    //   'INSTRUCTOR SELECCIONADO:',
+    //   {
+    //     name:
+    //       this.filter.instructorName,
+    //     instructorId:
+    //       this.selectedInstructorId,
+    //   }
+    // );
   }
 
   handleViewMeetings(): void {

@@ -28,7 +28,7 @@
           (instructorInputChange)="onInstructorInputChange()"
           (instructorSelected)="selectInstructor($event)"
           (dropdownHidden)="hideDropdown()"
-          (searchRequested)="searchInstructorAttendance()">
+          (searchRequested)="handleSearchRequested()">
         </app-report-instructor-filters>
 
       </aside>
@@ -89,7 +89,7 @@
               <app-report-instructor-detail
                 [instructor]="selectedInstructorDetail"
                 [selectedDate]="currentDate"
-                (summaryRequested)="handleViewSummary()"
+                (summaryRequested)="handleInstructorDetailSummary($event)"
                 (closeRequested)="clearInstructorDetail()">
               </app-report-instructor-detail>
 

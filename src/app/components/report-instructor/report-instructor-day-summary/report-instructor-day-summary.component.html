@@ -256,154 +256,278 @@
   </div>
 
 
-  <!-- DAYS -->
-  <div
-    *ngIf="groupedDays.length > 0"
-    class="day-summary__days">
+  <!-- RESULTS -->
+  <ng-container
+    *ngIf="groupedDays.length > 0">
 
-    <article
-      *ngFor="
-        let day of groupedDays;
-        trackBy: trackByDay
-      "
-      class="day-summary__day">
+    <!-- DAYS -->
+    <div class="day-summary__days">
 
-      <!-- DAY HEADER -->
-      <header class="day-summary__day-header">
+      <article
+        *ngFor="
+          let day of paginatedDays;
+          trackBy: trackByDay
+        "
+        class="day-summary__day">
 
-        <div class="day-summary__day-title">
+        <!-- DAY HEADER -->
+        <header class="day-summary__day-header">
 
-          <span class="day-summary__day-icon">
+          <div class="day-summary__day-title">
 
-            <svg
-              viewBox="0 0 24 24"
-              fill="none">
+            <span class="day-summary__day-icon">
 
-              <rect
-                x="4"
-                y="5"
-                width="16"
-                height="15"
-                rx="2"
-                stroke="currentColor"
-                stroke-width="1.6"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none">
 
-              <path
-                d="M8 3v4M16 3v4M4 9h16"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"/>
+                <rect
+                  x="4"
+                  y="5"
+                  width="16"
+                  height="15"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.6"/>
 
-            </svg>
+                <path
+                  d="M8 3v4M16 3v4M4 9h16"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"/>
 
-          </span>
+              </svg>
 
-          <div>
-
-            <strong>
-              {{ formatDate(day.date) }}
-            </strong>
-
-            <span>
-              {{ day.hours.length }}
-              {{
-                day.hours.length === 1
-                  ? 'horario'
-                  : 'horarios'
-              }}
             </span>
+
+            <div>
+
+              <strong>
+                {{ formatDate(day.date) }}
+              </strong>
+
+              <span>
+                {{ day.hours.length }}
+                {{
+                  day.hours.length === 1
+                    ? 'horario'
+                    : 'horarios'
+                }}
+              </span>
+
+            </div>
 
           </div>
 
-        </div>
 
+          <span class="day-summary__day-total">
 
-        <span class="day-summary__day-total">
-
-          {{ day.total }}
-
-          {{
-            day.total === 1
-              ? 'clase'
-              : 'clases'
-          }}
-
-        </span>
-
-      </header>
-
-
-      <!-- ACTIVITY -->
-      <div class="day-summary__day-progress">
-
-        <span
-          [style.width.%]="
-            getDayPercentage(day)
-          ">
-        </span>
-
-      </div>
-
-
-      <!-- HOURS -->
-      <div class="day-summary__hours">
-
-        <div
-          *ngFor="
-            let item of day.hours;
-            trackBy: trackByHour
-          "
-          class="day-summary__hour">
-
-          <span class="day-summary__hour-time">
-
-            <svg
-              viewBox="0 0 24 24"
-              fill="none">
-
-              <circle
-                cx="12"
-                cy="12"
-                r="8"
-                stroke="currentColor"
-                stroke-width="1.6"/>
-
-              <path
-                d="M12 7.5V12l3 2"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"
-                stroke-linejoin="round"/>
-
-            </svg>
+            {{ day.total }}
 
             {{
-              formatHour(
-                item.localhour
-              )
-            }}
-
-          </span>
-
-
-          <span class="day-summary__hour-count">
-
-            {{ item.count }}
-
-            {{
-              item.count === 1
+              day.total === 1
                 ? 'clase'
                 : 'clases'
             }}
 
           </span>
 
+        </header>
+
+
+        <!-- ACTIVITY -->
+        <div class="day-summary__day-progress">
+
+          <span
+            [style.width.%]="
+              getDayPercentage(day)
+            ">
+          </span>
+
         </div>
+
+
+        <!-- HOURS -->
+        <div class="day-summary__hours">
+
+          <div
+            *ngFor="
+              let item of day.hours;
+              trackBy: trackByHour
+            "
+            class="day-summary__hour">
+
+            <span class="day-summary__hour-time">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none">
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="8"
+                  stroke="currentColor"
+                  stroke-width="1.6"/>
+
+                <path
+                  d="M12 7.5V12l3 2"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+
+              </svg>
+
+              {{
+                formatHour(
+                  item.localhour
+                )
+              }}
+
+            </span>
+
+
+            <span class="day-summary__hour-count">
+
+              {{ item.count }}
+
+              {{
+                item.count === 1
+                  ? 'clase'
+                  : 'clases'
+              }}
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </div>
+
+
+    <!-- PAGINATION -->
+    <footer class="day-summary__pagination">
+
+      <!-- LIMIT -->
+      <div class="day-summary__pagination-limit">
+
+        <span>
+          Mostrar
+        </span>
+
+        <select
+          [value]="limit"
+          (change)="onLimitChange($any($event.target).value)">
+
+          <option
+            *ngFor="let option of limitOptions"
+            [value]="option">
+
+            {{ option }}
+
+          </option>
+
+        </select>
+
+        <span>
+          por página
+        </span>
 
       </div>
 
-    </article>
 
-  </div>
+      <!-- LABEL -->
+      <span class="day-summary__pagination-label">
+        {{ paginationLabel }}
+      </span>
+
+
+      <!-- CONTROLS -->
+      <div class="day-summary__pagination-controls">
+
+        <!-- PREVIOUS -->
+        <button
+          type="button"
+          class="day-summary__pagination-button"
+          [disabled]="!canPreviousPage"
+          aria-label="Página anterior"
+          (click)="onPreviousPage()">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+
+            <path
+              d="m15 6-6 6 6 6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+
+          </svg>
+
+        </button>
+
+
+        <!-- PAGES -->
+        <ng-container
+          *ngFor="let item of visiblePages">
+
+          <button
+            *ngIf="isPage(item); else ellipsis"
+            type="button"
+            class="day-summary__pagination-page"
+            [class.day-summary__pagination-page--active]="
+              item === page
+            "
+            (click)="onPageChange(item)">
+
+            {{ item }}
+
+          </button>
+
+          <ng-template #ellipsis>
+
+            <span class="day-summary__pagination-ellipsis">
+              ...
+            </span>
+
+          </ng-template>
+
+        </ng-container>
+
+
+        <!-- NEXT -->
+        <button
+          type="button"
+          class="day-summary__pagination-button"
+          [disabled]="!canNextPage"
+          aria-label="Página siguiente"
+          (click)="onNextPage()">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none">
+
+            <path
+              d="m9 6 6 6-6 6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+
+          </svg>
+
+        </button>
+
+      </div>
+
+    </footer>
+
+  </ng-container>
 
 </section>
