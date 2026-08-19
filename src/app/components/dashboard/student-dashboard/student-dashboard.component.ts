@@ -204,7 +204,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private loadPlatformAssessments(studentId: number): void {
-    this.platformAssessmentService.getAll(studentId).subscribe({
+    this.platformAssessmentService.syncFromRemote(studentId).subscribe({
       next: (list) => {
         const pending = (list ?? []).filter((a) => a.status === 'pending');
         this.platformAssessments = pending;
@@ -314,8 +314,12 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     return this.userData?.firstName || '';
   }
 
+  get currentStage() {
+    return this.userData?.stage ?? this.userData?.student?.stage ?? null;
+  }
+
   get studentStage(): string {
-    return this.userData?.stage?.description || 'Sin asignar';
+    return this.currentStage?.description || 'Sin asignar';
   }
 
   get isAgendaBlocked(): boolean {

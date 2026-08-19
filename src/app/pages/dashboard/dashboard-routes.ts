@@ -23,6 +23,7 @@ import { StageComponent } from './stage/stage.component';
 import { AcademicResourcesComponent } from './academic-resources/academic-resources.component';
 import { AssessmentTypesComponent } from './assessment-types/assessment-types.component';
 import { AssessmentConfigComponent } from './assessment-config/assessment-config.component';
+import { StagePromotionConfigComponent } from './stage-promotion-config/stage-promotion-config.component';
 import { ReportUserComponent } from './report-user/report-user.component';
 import { AttendanceInstructorComponent } from './attendance-instructor/attendance-instructor.component';
 import { BroadcastGroupsComponent } from './notifications/broadcast-groups/broadcast-groups.component';
@@ -53,6 +54,7 @@ import { MeetingEvaluationsComponent } from './meeting-evaluations/meeting-evalu
 import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluation-statistics.component';
 import { StudentHistoryReportComponent } from './report-students/student-history-report/student-history-report.component';
 import { ActiveStudentsReportComponent } from './report-students/active-students-report/active-students-report.component';
+import { InstructorCreatedMeetingsComponent } from './instructor-created-meetings/instructor-created-meetings.component';
 import { AnnouncementsComponent } from './announcements/announcements.component';
 import { adminOnlyGuard } from '../auth/admin-role.guard';
 import { instructorOnlyGuard } from '../auth/instructor-role.guard';
@@ -72,6 +74,7 @@ import { ReportsProgressV2Component } from './report-progress-v2/reports-progres
 import { BroadcastGroupsV2Component } from './notifications/broadcast-groups-v2/broadcast-groups-v2.component';
 import { NotificationsSentV2Component } from './notifications/notifications-sent-v2/notifications-sent-v2.component';
 import { NotificationsHistorialComponent } from './notifications/notifications-historial/notifications-historial.component';
+import { NotificationSettingsComponent } from '../../components/notification-settings/notification-settings.component';
 
 const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -136,6 +139,7 @@ const dashboardChildren: Routes = [
   { path: 'searching-students', component: SearchingStudentComponent },
   { path: 'attendance-student', component: AttendanceReportsComponent },
   { path: 'report-instructor', component: ReportInstructorComponent },
+  { path: 'instructor-created-meetings', component: InstructorCreatedMeetingsComponent },
   { path: 'attendance-instructor', component: AttendanceInstructorComponent },
   { path: 'instructor-evaluations', component: InstructorEvaluationsComponent },
   { path: 'feature-flag', component: FeatureFlagComponent },
@@ -155,6 +159,7 @@ const dashboardChildren: Routes = [
   { path: 'assessment', component: AssessmentComponent },
   { path: 'assessment-reports', component: AssessmentReportsComponent },
   { path: 'assessment-config', component: AssessmentConfigComponent },
+  { path: 'stage-promotion', component: StagePromotionConfigComponent },
   { path: 'stage-assessment', component: StageAssessmentComponent },
   { path: 'stage-assessment-list', component: StageAssessmentListComponent },
   { path: 'stage-assessment-student', component: StageAssessmentStudentComponent },
@@ -168,6 +173,8 @@ const dashboardChildren: Routes = [
   { path: 'notifications-historial', component: NotificationsHistorialComponent },
   { path: 'notifications-groups', component: GroupsComponent },
   { path: 'notifications-inbox', component: InboxComponent },
+  { path: 'notification-settings', component: NotificationSettingsComponent },
+  { path: 'notifications', component: NotificationSettingsComponent },
   { path: 'notifications-detail', component: NotificationDetailComponent },
   { path: 'notifications-detail-v2', component: NotificationDetailV2Component },
   { path: 'notifications-sent', component: NotificationsSentComponent },

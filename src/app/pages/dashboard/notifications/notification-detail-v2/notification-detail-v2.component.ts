@@ -1125,6 +1125,27 @@ export class NotificationDetailV2Component
       return false;
     }
 
+    if (
+      this.notification?.message?.kind ===
+      'assessment-assigned'
+    ) {
+      return false;
+    }
+
+    if (
+      this.notification?.message?.kind ===
+      'assessment-results-ready'
+    ) {
+      return false;
+    }
+
+    if (
+      this.notification?.message?.kind ===
+      'assessment-unassigned'
+    ) {
+      return false;
+    }
+
     return true;
   }
 

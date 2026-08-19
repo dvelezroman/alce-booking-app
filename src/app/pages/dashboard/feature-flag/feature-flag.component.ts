@@ -119,8 +119,11 @@ export class FeatureFlagComponent implements OnInit {
   private getAll() {
     this.ffService.getAll().subscribe(ffs => {
       //console.log(ffs)
+      const hidden = ['enable-stage-promotion-cron'];
       const orden = ['enable-login', 'enable-schedule'];
-      this.ffs = ffs.sort((a, b) => orden.indexOf(a.name) - orden.indexOf(b.name));
+      this.ffs = ffs
+        .filter((ff) => !hidden.includes(ff.name))
+        .sort((a, b) => orden.indexOf(a.name) - orden.indexOf(b.name));
     });
   }
 

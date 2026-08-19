@@ -72,3 +72,69 @@ export interface AssessmentConfigI {
   numberDaysNewStudent: number;
   minHoursScheduled: number;
 }
+
+export type AutomaticPromotionSource =
+  | 'live'
+  | 'backfill'
+  | 'manual'
+  | 'profile'
+  | 'unknown';
+
+export type StagePromotionReportCategory =
+  | 'automatic'
+  | 'live'
+  | 'backfill'
+  | 'manual'
+  | 'profile';
+
+export interface AutomaticPromotionRow {
+  id: number;
+  createdAt: string;
+  studentId: number | null;
+  studentFirstName: string | null;
+  studentLastName: string | null;
+  fromStage: string | null;
+  toStage: string | null;
+  source: AutomaticPromotionSource;
+  processedById: number | null;
+  processedByFirstName: string | null;
+  processedByLastName: string | null;
+  grammarPoints: number | null;
+  grammarAssessedAt: string | null;
+  speakingPoints: number | null;
+  speakingAssessedAt: string | null;
+}
+
+export interface AutomaticPromotionsReport {
+  data: AutomaticPromotionRow[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface PromotionCronStatus {
+  enabled: boolean;
+}
+
+export interface PromoteEligibleResult {
+  scanned: number;
+  promoted: number;
+  promotedStudentIds: number[];
+}
+
+export interface EligiblePromotionPreview {
+  studentId: number;
+  firstName: string;
+  lastName: string;
+  currentStageId: number;
+  currentStageNumber: string;
+  nextStageId: number;
+  nextStageNumber: string;
+  grammarPoints: number;
+  grammarAssessedAt: string;
+  speakingPoints: number;
+  speakingAssessedAt: string;
+}

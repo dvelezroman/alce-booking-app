@@ -15,6 +15,7 @@ import { PwaService } from './services/pwa.service';
 import { SwUpdate } from '@angular/service-worker';
 import   localeEs from '@angular/common/locales/es';
 import { SnowfallComponent } from "./shared/snowfall/snowfall.component";
+import { PwaUpdateBannerComponent } from './components/pwa-update-banner/pwa-update-banner.component';
 
 registerLocaleData(localeEs);
 
@@ -27,6 +28,7 @@ registerLocaleData(localeEs);
     ModalComponent,
     SpinnerComponent,
     OfflineIndicatorComponent,
+    PwaUpdateBannerComponent,
     // SnowfallComponent
 ],
   providers: [
@@ -52,8 +54,8 @@ export class AppComponent implements OnInit {
     // Initialize PWA service with service worker
     if (this.swUpdate) {
       this.pwaService.setSwUpdate(this.swUpdate);
-      // Set up stable periodic update checks
       this.pwaService.setupPeriodicUpdates();
+      void this.pwaService.checkForUpdates();
     }
   }
 

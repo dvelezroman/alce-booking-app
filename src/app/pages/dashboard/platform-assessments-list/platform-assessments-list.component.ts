@@ -2,11 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { PlatformAssessmentService } from '../../../services/platform-assessment.service';
 import {
   RemotePlatformAssessmentFilters,
   RemotePlatformAssessmentItem,
+  RemoteTemplateItem,
 } from '../../../services/dtos/platform-assessment.dto';
+import { StagesService } from '../../../services/stages.service';
+import { Stage } from '../../../services/dtos/student.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 
@@ -32,6 +36,13 @@ export class PlatformAssessmentsListComponent implements OnInit {
 
   modal: ModalDto = modalInitializer();
   applyTarget: RemotePlatformAssessmentItem | null = null;
+  extendTarget: RemotePlatformAssessmentItem | null = null;
+  extendDraft = '';
+  grantTarget: RemotePlatformAssessmentItem | null = null;
+  actionBusyId: string | null = null;
+
+  templates: RemoteTemplateItem[] = [];
+  stages: Stage[] = [];
 
   readonly statusOptions = [
     '',
@@ -48,9 +59,13 @@ export class PlatformAssessmentsListComponent implements OnInit {
     'NONE',
   ];
 
-  constructor(private platformAssessmentService: PlatformAssessmentService) {}
+  constructor(
+    private platformAssessmentService: PlatformAssessmentService,
+    private stagesService: StagesService,
+  ) {}
 
   ngOnInit(): void {
+    this.loadFilterOptions();
     this.fetch();
   }
 
@@ -93,6 +108,25 @@ export class PlatformAssessmentsListComponent implements OnInit {
     return 'badge-gray';
   }
 
+  statusLabel(row: RemotePlatformAssessmentItem): string {
+    if (row.submitReason === 'FOCUS_GUARD') {
+      return 'FOCUS_GUARD';
+    }
+    return row.status;
+  }
+
+  statusClass(row: RemotePlatformAssessmentItem): string {
+    if (row.submitReason === 'FOCUS_GUARD') {
+      return 'badge-orange';
+    }
+    return 'badge-blue';
+  }
+
+  stageLabel(stage: Stage): string {
+    const desc = stage.description?.trim();
+    return desc ? `${stage.number} — ${desc}` : stage.number;
+  }
+
   displayStudent(row: RemotePlatformAssessmentItem): string {
     return (
       row.studentDisplayName?.trim() ||
@@ -101,38 +135,32 @@ export class PlatformAssessmentsListComponent implements OnInit {
     );
   }
 
-  canApplyWriting(row: RemotePlatformAssessmentItem): boolean {
-    return (
-      row.mirrorId != null &&
-      row.points != null &&
-      !row.writingApplied
-    );
+  canShowWritingAction(row: RemotePlatformAssessmentItem): boolean {
+    return row.mirrorId != null && row.points != null;
   }
 
-  canCorrectWriting(row: RemotePlatformAssessmentItem): boolean {
-    return row.mirrorId != null && row.writingApplied === true;
+  isWritingLocked(row: RemotePlatformAssessmentItem): boolean {
+    return row.writingAccepted === true;
   }
 
   writingActionLabel(row: RemotePlatformAssessmentItem): string {
-    return this.canCorrectWriting(row) ? 'Corregir Writing' : 'Aplicar Writing';
+    return this.isWritingLocked(row) ? 'Aceptada' : 'Aceptar Evaluación';
   }
 
   startApplyWriting(row: RemotePlatformAssessmentItem): void {
     if (
-      (!this.canApplyWriting(row) && !this.canCorrectWriting(row)) ||
+      !this.canShowWritingAction(row) ||
+      this.isWritingLocked(row) ||
       row.mirrorId == null
     ) {
       return;
     }
     this.applyTarget = row;
-    const correcting = this.canCorrectWriting(row);
     const pts = row.points;
     this.modal = {
       ...modalInitializer(),
       show: true,
-      message: correcting
-        ? `¿Corregir Writing a ${pts} puntos para ${this.displayStudent(row)}? (ya aplicado vía S2S/admin)`
-        : `¿Aplicar Writing con ${pts} puntos para ${this.displayStudent(row)}?`,
+      message: `¿Aceptar evaluación con ${pts} puntos para ${this.displayStudent(row)}?`,
       isError: false,
       isSuccess: false,
       isInfo: true,
@@ -153,48 +181,209 @@ export class PlatformAssessmentsListComponent implements OnInit {
       return;
     }
 
-    const correcting = target.writingApplied === true;
-
+    this.modal.show = false;
     this.platformAssessmentService
       .applyWritingScore(target.mirrorId, target.points ?? undefined)
       .subscribe({
         next: (res) => {
           this.applyTarget = null;
-          const action = correcting ? 'corregido' : 'aplicado';
-          this.modal = {
-            ...modalInitializer(),
-            show: true,
-            message: res.updatedStage
-              ? `Writing ${action}. El estudiante fue promovido de stage.`
-              : `Writing ${action}. Stage no cambió (faltan otros skills o ya promovido).`,
-            isSuccess: true,
-            close: () => (this.modal.show = false),
-          };
+          this.showFeedback(
+            res.updatedStage
+              ? 'Evaluación aceptada. El estudiante fue promovido de stage.'
+              : 'Evaluación aceptada. Stage no cambió (faltan otros skills o ya promovido).',
+            'success',
+          );
           this.fetch();
         },
         error: () => {
           this.applyTarget = null;
-          this.modal = {
-            ...modalInitializer(),
-            show: true,
-            message: correcting
-              ? 'No se pudo corregir Writing.'
-              : 'No se pudo aplicar Writing.',
-            isError: true,
-            close: () => (this.modal.show = false),
-          };
+          this.showFeedback('No se pudo registrar Grammar.', 'error');
         },
       });
+  }
+
+  canGrantAttempt(row: RemotePlatformAssessmentItem): boolean {
+    return row.status !== 'REVOKED';
+  }
+
+  canExtend(row: RemotePlatformAssessmentItem): boolean {
+    return row.status !== 'REVOKED';
+  }
+
+  startExtend(row: RemotePlatformAssessmentItem): void {
+    if (!this.canExtend(row)) return;
+    const draft = window.prompt(
+      `Nueva fecha límite (local YYYY-MM-DDTHH:mm) para ${this.displayStudent(row)}`,
+      this.toDatetimeLocalValue(row.expiresAt),
+    );
+    if (!draft?.trim()) return;
+
+    const parsed = new Date(draft.trim());
+    if (Number.isNaN(parsed.getTime())) {
+      this.showFeedback('Fecha inválida.', 'error');
+      return;
+    }
+
+    this.extendTarget = row;
+    this.extendDraft = draft.trim();
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: `¿Extender fecha límite de ${this.displayStudent(row)} a ${parsed.toLocaleString()}?`,
+      isInfo: true,
+      showButtons: true,
+      confirm: () => this.confirmExtend(),
+      close: () => {
+        this.extendTarget = null;
+        this.modal.show = false;
+      },
+    };
+  }
+
+  confirmExtend(): void {
+    const target = this.extendTarget;
+    const draft = this.extendDraft?.trim();
+    if (!target || !draft) {
+      this.extendTarget = null;
+      this.modal.show = false;
+      return;
+    }
+
+    const expiresAt = new Date(draft).toISOString();
+    this.actionBusyId = target.assignmentId;
+    this.modal.show = false;
+    this.platformAssessmentService
+      .updateAssignment(target.assignmentId, expiresAt)
+      .subscribe({
+        next: () => {
+          this.actionBusyId = null;
+          this.extendTarget = null;
+          this.showFeedback('Fecha límite actualizada.', 'success');
+          this.fetch();
+        },
+        error: (err) => {
+          this.actionBusyId = null;
+          this.extendTarget = null;
+          this.showFeedback(
+            err?.error?.message ||
+              err?.message ||
+              'No se pudo actualizar la fecha límite.',
+            'error',
+          );
+        },
+      });
+  }
+
+  startGrantAttempt(row: RemotePlatformAssessmentItem): void {
+    if (!this.canGrantAttempt(row)) return;
+    this.grantTarget = row;
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message: `¿Otorgar otro intento a ${this.displayStudent(row)}? (maxAttempts ${row.maxAttempts} → al menos ${row.attemptCount + 1}). El estado en booking vuelve a pending.`,
+      isInfo: true,
+      showButtons: true,
+      confirm: () => this.confirmGrantAttempt(),
+      close: () => {
+        this.grantTarget = null;
+        this.modal.show = false;
+      },
+    };
+  }
+
+  confirmGrantAttempt(): void {
+    const target = this.grantTarget;
+    if (!target) {
+      this.modal.show = false;
+      return;
+    }
+
+    this.actionBusyId = target.assignmentId;
+    this.modal.show = false;
+    this.platformAssessmentService.grantAttempt(target.assignmentId).subscribe({
+      next: (res) => {
+        this.actionBusyId = null;
+        this.grantTarget = null;
+        this.showFeedback(
+          `Intento otorgado. maxAttempts=${res.maxAttempts}, status=${res.status}.`,
+          'success',
+        );
+        this.fetch();
+      },
+      error: (err) => {
+        this.actionBusyId = null;
+        this.grantTarget = null;
+        this.showFeedback(
+          err?.error?.message ||
+            err?.message ||
+            'No se pudo otorgar otro intento.',
+          'error',
+        );
+      },
+    });
+  }
+
+  private toDatetimeLocalValue(iso: string | null): string {
+    if (!iso) {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      d.setMinutes(0, 0, 0);
+      return this.formatDatetimeLocal(d);
+    }
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    return this.formatDatetimeLocal(d);
+  }
+
+  private formatDatetimeLocal(d: Date): string {
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  private showFeedback(
+    message: string,
+    kind: 'success' | 'error',
+    durationMs = 2500,
+  ): void {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      message,
+      isSuccess: kind === 'success',
+      isError: kind === 'error',
+      close: () => (this.modal.show = false),
+    };
+    setTimeout(() => (this.modal.show = false), durationMs);
   }
 
   private emptyFilters(): RemotePlatformAssessmentFilters {
     return {
       studentId: undefined,
+      templateId: '',
       templateTitle: '',
       status: '',
       outcome: '',
       studentStage: undefined,
     };
+  }
+
+  private loadFilterOptions(): void {
+    forkJoin({
+      templates: this.platformAssessmentService.getTemplates({
+        page: 1,
+        pageSize: 100,
+      }),
+      stages: this.stagesService.getAll(),
+    }).subscribe({
+      next: ({ templates, stages }) => {
+        this.templates = templates.data ?? [];
+        this.stages = stages ?? [];
+      },
+      error: () => {
+        this.templates = [];
+        this.stages = [];
+      },
+    });
   }
 
   private fetch(): void {

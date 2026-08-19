@@ -123,15 +123,30 @@ export class UsersService implements OnInit{
         }
 
         // Check if user already has an active subscription on the server
-        const hasActiveSubscription = await this.pushNotificationService.hasActiveSubscription();
+        const rebound = await this.pushNotificationService.ensureInstalledPwaPushSubscription();
+        const hasActiveSubscription =
+          !!rebound || (await this.pushNotificationService.hasActiveSubscription());
         if (hasActiveSubscription) {
           this.devLog('User already has an active push subscription on server');
-          // Start periodic notification checks even if already subscribed
           this.pushNotificationService.startPeriodicNotificationCheck(5);
           return;
         }
 
-        // Check if already subscribed locally
+        if (!this.pushNotificationService.isPreferenceEnabled()) {
+          this.devLog('Push preference is off, skipping banner');
+          return;
+        }
+
+        if (Notification.permission === 'denied') {
+          this.devLog('Notification permission denied, skipping banner');
+          return;
+        }
+
+        if (this.pushNotificationService.isBannerDismissed()) {
+          this.devLog('Push banner dismissed recently, skipping');
+          return;
+        }
+
         const isSubscribed = await firstValueFrom(this.pushNotificationService.isSubscribed());
         if (isSubscribed) {
           this.devLog('User already subscribed locally to push notifications');

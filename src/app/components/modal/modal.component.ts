@@ -39,6 +39,11 @@ export class ModalComponent {
     this.confirmAction.emit();
   }
 
+  onOverlayClick(): void {
+    if (this.showButtons) return;
+    this.closeModal();
+  }
+
   closeModal() {
     this.showModal = false;
     this.close.emit();  // Notify parent component to close the modal

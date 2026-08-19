@@ -22,25 +22,23 @@ export class PlatformAssessmentCardComponent {
   @Input({ required: true })
   assessment!: PlatformAssessmentAssignment;
 
-  openAssessment(): void {
+  get actionUrl(): string | null {
+    if (this.assessment.status === 'pending') {
+      return this.assessment.directAccessUrl?.trim() || null;
+    }
+
     if (
-      this.assessment.status !== 'pending'
+      this.assessment.status === 'completed' ||
+      this.assessment.status === 'focus_guard'
     ) {
-      return;
+      return this.assessment.resultsUrl?.trim() || null;
     }
 
-    const url =
-      this.assessment.directAccessUrl;
+    return null;
+  }
 
-    if (!url) {
-      return;
-    }
-
-    window.open(
-      url,
-      '_blank',
-      'noopener,noreferrer'
-    );
+  openUrl(url: string): void {
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   get statusLabel(): string {
@@ -50,6 +48,9 @@ export class PlatformAssessmentCardComponent {
 
       case 'expired':
         return 'Expirada';
+
+      case 'focus_guard':
+        return 'Cambio de pestaña';
 
       case 'completed':
         return this.assessment.outcome ===
@@ -70,32 +71,27 @@ export class PlatformAssessmentCardComponent {
       case 'expired':
         return 'Evaluación expirada';
 
+      case 'focus_guard':
       case 'completed':
-        return this.assessment.outcome ===
-          'PASSED'
-          ? 'Aprobado'
-          : this.assessment.outcome ===
-              'FAILED'
-            ? 'No aprobado'
-            : 'Completada';
+        return 'Ver resultados';
     }
   }
 
   get canAct(): boolean {
-    if (
-      this.assessment.status === 'pending'
-    ) {
-      return !!this.assessment.directAccessUrl;
-    }
-
-    return false;
+    return !!this.actionUrl;
   }
 
-  onAction(): void {
-    if (
-      this.assessment.status === 'pending'
-    ) {
-      this.openAssessment();
+  onAction(event?: Event): void {
+    event?.stopPropagation();
+    if (event instanceof KeyboardEvent) {
+      event.preventDefault();
     }
+
+    const url = this.actionUrl;
+    if (!url) {
+      return;
+    }
+
+    this.openUrl(url);
   }
 }

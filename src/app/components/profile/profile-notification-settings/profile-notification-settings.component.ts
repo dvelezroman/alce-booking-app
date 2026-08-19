@@ -40,7 +40,7 @@ export class ProfileNotificationSettingsComponent {
 
   manageNotifications(): void {
     this.router.navigate([
-      '/dashboard/notifications',
+      '/dashboard/notification-settings',
     ]);
   }
 }

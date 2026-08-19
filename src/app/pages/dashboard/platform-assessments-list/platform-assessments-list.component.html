@@ -14,6 +14,35 @@
     </a>
   </div>
 
+  <div class="quick-filters">
+    <div class="filter-item">
+      <label class="filter-label">Assessment</label>
+      <select
+        class="filter-select"
+        [(ngModel)]="draft.templateId"
+        (ngModelChange)="applyFilters()"
+      >
+        <option [ngValue]="''">Todos</option>
+        <option *ngFor="let t of templates" [ngValue]="t.id">
+          {{ t.title }}
+        </option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label class="filter-label">Stage</label>
+      <select
+        class="filter-select"
+        [(ngModel)]="draft.studentStage"
+        (ngModelChange)="applyFilters()"
+      >
+        <option [ngValue]="undefined">Todos</option>
+        <option *ngFor="let s of stages" [ngValue]="s.id">
+          {{ stageLabel(s) }}
+        </option>
+      </select>
+    </div>
+  </div>
+
   <div class="filters-container" *ngIf="showFilters">
     <div class="filters-grid">
       <div class="filter-item">
@@ -23,28 +52,6 @@
           type="number"
           [(ngModel)]="draft.studentId"
           placeholder="students.id"
-        />
-      </div>
-
-      <div class="filter-item">
-        <label class="filter-label">Título del examen</label>
-        <input
-          class="filter-input"
-          type="text"
-          [(ngModel)]="draft.templateTitle"
-          placeholder="Contiene…"
-        />
-      </div>
-
-      <div class="filter-item">
-        <label class="filter-label">Stage</label>
-        <input
-          class="filter-input"
-          type="number"
-          min="1"
-          max="19"
-          [(ngModel)]="draft.studentStage"
-          placeholder="1–19"
         />
       </div>
 
@@ -115,7 +122,11 @@
               <div class="cell-sub">{{ row.assignmentId }}</div>
             </td>
             <td>{{ row.studentStageSnapshot ?? '—' }}</td>
-            <td><span class="badge badge-blue">{{ row.status }}</span></td>
+            <td>
+              <span class="badge" [ngClass]="statusClass(row)">
+                {{ statusLabel(row) }}
+              </span>
+            </td>
             <td>
               <span class="badge" [ngClass]="outcomeClass(row.outcome)">
                 {{ row.outcome || 'NONE' }}
@@ -141,12 +152,31 @@
                 Resultados
               </button>
               <span class="writing-status" *ngIf="row.writingApplied">
-                Writing ALCE: {{ row.writingPoints ?? '—' }}
+                Grammar ALCE: {{ row.writingPoints ?? '—' }}
               </span>
               <button
                 type="button"
+                class="btn-link"
+                *ngIf="canExtend(row)"
+                [disabled]="actionBusyId === row.assignmentId"
+                (click)="startExtend(row)"
+              >
+                Extender
+              </button>
+              <button
+                type="button"
+                class="btn-link"
+                *ngIf="canGrantAttempt(row)"
+                [disabled]="actionBusyId === row.assignmentId"
+                (click)="startGrantAttempt(row)"
+              >
+                + Intento
+              </button>
+              <button
+                type="button"
                 class="btn-writing"
-                *ngIf="canApplyWriting(row) || canCorrectWriting(row)"
+                *ngIf="canShowWritingAction(row)"
+                [disabled]="isWritingLocked(row) || actionBusyId === row.assignmentId"
                 (click)="startApplyWriting(row)"
               >
                 {{ writingActionLabel(row) }}

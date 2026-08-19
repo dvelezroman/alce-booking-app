@@ -91,3 +91,40 @@ export const formatBirthday = (dateStr: string): string => {
 
   return date.setLocale("es").toFormat("dd 'de' LLLL 'de' yyyy"); 
 };
+
+export function formatRelativeDueDateEs(
+  iso: string | null | undefined,
+): { relativePhrase: string; display: string; isPast: boolean } | null {
+  if (iso == null || iso === '') {
+    return null;
+  }
+
+  const due = DateTime.fromISO(iso, { zone: 'utc' }).setZone('America/Guayaquil');
+  if (!due.isValid) {
+    return null;
+  }
+
+  const now = DateTime.now().setZone('America/Guayaquil');
+  const diffDays = Math.round(due.startOf('day').diff(now.startOf('day'), 'days').days);
+  const timeLabel = due.toFormat('HH:mm');
+  const longDate = due.setLocale('es').toFormat("cccc d 'de' LLLL 'de' yyyy");
+  const isPast = due.toMillis() <= now.toMillis();
+
+  let relativePhrase: string;
+  if (diffDays === 0) {
+    relativePhrase = isPast ? 'Hoy' : 'Hoy, más tarde';
+  } else if (diffDays === 1) {
+    relativePhrase = 'Mañana';
+  } else if (diffDays === 2) {
+    relativePhrase = 'Pasado mañana';
+  } else {
+    relativePhrase = longDate;
+  }
+
+  const display =
+    diffDays >= 0 && diffDays <= 2
+      ? `${relativePhrase} (${longDate}, ${timeLabel})`
+      : `${longDate}, ${timeLabel}`;
+
+  return { relativePhrase, display, isPast };
+}

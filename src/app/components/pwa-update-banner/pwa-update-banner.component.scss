@@ -1,5 +1,15 @@
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
 
-.notification-permission-banner {
+.pwa-update-banner {
   position: fixed;
   top: 15px;
   left: 50%;
@@ -10,12 +20,12 @@
   color: #2d3748;
   padding: 16px 20px;
   border-radius: 14px;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.15);
-  z-index: 99999;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  z-index: 100000;
   animation: slideDown 0.3s ease-out;
 }
 
-.notification-permission-content {
+.pwa-update-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -23,39 +33,30 @@
   width: 100%;
 }
 
-/* ICONO */
-.notification-permission-icon i {
+.pwa-update-icon i {
   font-size: 26px;
   color: #2d3748;
 }
 
-/* TEXTOS */
-.notification-permission-text h4 {
+.pwa-update-text h4 {
   margin: 0 0 4px;
   font-size: 14px;
   font-weight: 600;
 }
 
-.notification-permission-text p {
+.pwa-update-text p {
   margin: 0;
   font-size: 12px;
   opacity: 0.8;
 }
 
-.notification-permission-error {
-  margin-top: 6px !important;
-  color: #c53030;
-  opacity: 1 !important;
-}
-
-.notification-permission-actions {
+.pwa-update-actions {
   display: flex;
   flex-direction: row;
   gap: 10px;
   flex-shrink: 0;
 }
 
-/* Estilos de los botones */
 .btn-activate,
 .btn-dismiss {
   padding: 10px 24px;
@@ -69,7 +70,6 @@
   white-space: nowrap;
 }
 
-/* ACTIVAR */
 .btn-activate {
   background: #3d8bfd;
   color: white;
@@ -81,28 +81,41 @@
   transform: translateY(-1px);
 }
 
-/* AHORA NO */
 .btn-dismiss {
   background: transparent;
   border: 1px solid #2d3748;
   color: #2d3748;
 }
 
-.btn-dismiss:hover {
-  background: rgba(0,0,0,0.07);
+.btn-dismiss:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.07);
   transform: translateY(-1px);
 }
 
-/* RESPONSIVE */
+.loading-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 480px) {
-  .notification-permission-banner {
+  .pwa-update-banner {
     width: 92%;
     max-width: 92%;
     padding: 14px 16px;
   }
 
-  /* Mantener fila incluso en móvil */
-  .notification-permission-actions {
+  .pwa-update-actions {
     flex-direction: row;
     justify-content: center;
     width: 100%;
@@ -113,11 +126,11 @@
     min-width: 100px;
   }
 
-  .notification-permission-icon {
+  .pwa-update-icon {
     display: none;
   }
 
-  .notification-permission-content {
+  .pwa-update-content {
     flex-direction: column;
     text-align: center;
     gap: 12px;

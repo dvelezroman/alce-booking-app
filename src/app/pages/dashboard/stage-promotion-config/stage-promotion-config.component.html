@@ -1,0 +1,338 @@
+<section class="page-header">
+  <div class="page-header__inner">
+    <div class="page-header__text">
+      <p class="page-eyebrow">Configuración</p>
+      <h1 class="page-title">Promoción automática de stage</h1>
+      <p class="page-subtitle">
+        Grammar + Speaking aprobados en el stage actual promueven al siguiente nivel.
+      </p>
+    </div>
+    <div class="stat-pill" *ngIf="!reportLoading">
+      <span class="stat-pill__value">{{ total }}</span>
+      <span class="stat-pill__label">promociones registradas</span>
+    </div>
+  </div>
+</section>
+
+<div class="page-content">
+  <div class="card cron-card">
+    <div class="card__header">
+      <div class="card__icon card__icon--cron">
+        <span class="material-icons">schedule</span>
+      </div>
+      <div class="card__heading">
+        <h2>Cron diario</h2>
+        <p>
+          Cada día a las <strong>6:15</strong> (Ecuador) revisa alumnos elegibles
+          y aplica la promoción. El servidor debe tener
+          <code>ENABLE_CRONS=true</code>.
+        </p>
+      </div>
+    </div>
+
+    <div class="cron-panel">
+      <div class="cron-status">
+        <span
+          class="status-chip"
+          [class.status-chip--on]="cronEnabled"
+          [class.status-chip--off]="!cronEnabled"
+        >
+          {{ cronEnabled ? 'Activo' : 'Inactivo' }}
+        </span>
+        <label class="switch" [class.switch--disabled]="cronLoading">
+          <input
+            type="checkbox"
+            [checked]="cronEnabled"
+            [disabled]="cronLoading"
+            (change)="onCronToggle($any($event.target).checked)"
+          />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="previewLoading || promoteLoading || cronLoading"
+        (click)="openPreview()"
+      >
+        <span class="material-icons btn__icon" *ngIf="!previewLoading">play_arrow</span>
+        <span class="btn-spinner" *ngIf="previewLoading"></span>
+        {{ previewLoading ? 'Buscando…' : 'Ejecutar ahora' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="card report-card">
+    <div class="card__header">
+      <div class="card__icon card__icon--report">
+        <span class="material-icons">trending_up</span>
+      </div>
+      <div class="card__heading">
+        <h2>Reporte de promociones</h2>
+        <p>
+          Historial de promociones automáticas (Grammar + Speaking) y cambios
+          manuales de stage. Cada fila es un evento de auditoría
+          (<code>ProcessedEvent</code>).
+        </p>
+      </div>
+    </div>
+
+    <form class="filters" (ngSubmit)="applyFilters()">
+      <label class="filter-field filter-field--category">
+        <span class="filter-label">Tipo</span>
+        <select
+          [(ngModel)]="reportCategory"
+          name="reportCategory"
+          class="filter-input"
+        >
+          <option value="automatic">Automáticas (todas)</option>
+          <option value="live">En vivo</option>
+          <option value="backfill">Cron</option>
+          <option value="manual">Manual (Ejecutar ahora)</option>
+          <option value="profile">Manual (perfil de alumno)</option>
+        </select>
+      </label>
+      <label class="filter-field">
+        <span class="filter-label">Desde</span>
+        <input type="date" [(ngModel)]="from" name="from" class="filter-input" />
+      </label>
+      <label class="filter-field">
+        <span class="filter-label">Hasta</span>
+        <input type="date" [(ngModel)]="to" name="to" class="filter-input" />
+      </label>
+      <label class="filter-field filter-field--grow">
+        <span class="filter-label">Buscar</span>
+        <input
+          type="text"
+          [(ngModel)]="search"
+          name="search"
+          class="filter-input"
+          placeholder="Nombre del alumno o stage"
+        />
+      </label>
+      <button type="submit" class="btn btn-secondary" [disabled]="reportLoading">
+        <span class="material-icons btn__icon">search</span>
+        Filtrar
+      </button>
+    </form>
+
+    <div class="table-state" *ngIf="reportLoading">
+      <span class="table-state__spinner"></span>
+      <span>Cargando reporte…</span>
+    </div>
+
+    <div class="empty-state" *ngIf="!reportLoading && rows.length === 0">
+      <span class="material-icons empty-state__icon">inbox</span>
+      <p class="empty-state__title">Sin promociones en este rango</p>
+      <p class="empty-state__hint">
+        {{ emptyReportHint() }}
+      </p>
+    </div>
+
+    <div class="table-wrap" *ngIf="!reportLoading && rows.length > 0">
+      <table class="promo-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Alumno</th>
+            <th>Transición</th>
+            <th>Notas</th>
+            <th>Origen</th>
+            <th>Realizado por</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rows">
+            <td class="col-date">
+              <span class="date-main">{{ row.createdAt | date:'dd/MM/yyyy' }}</span>
+              <span class="date-time">{{ row.createdAt | date:'HH:mm' }}</span>
+            </td>
+            <td class="col-student">
+              <span class="student-name">{{ studentLabel(row) }}</span>
+              <span class="student-id" *ngIf="row.studentId">ID {{ row.studentId }}</span>
+            </td>
+            <td class="col-stage">
+              <div class="stage-flow">
+                <span class="stage-chip">{{ row.fromStage || '—' }}</span>
+                <span class="material-icons stage-arrow">arrow_forward</span>
+                <span class="stage-chip stage-chip--next">{{ row.toStage || '—' }}</span>
+              </div>
+            </td>
+            <td class="col-scores">
+              <div class="report-scores" *ngIf="hasPromotionScores(row); else noScores">
+                <div class="score-item score-item--compact">
+                  <span class="score-item__label">Grammar</span>
+                  <span class="score-item__value">{{ row.grammarPoints }} pts</span>
+                  <span class="score-item__date" *ngIf="row.grammarAssessedAt">
+                    {{ row.grammarAssessedAt | date:'dd/MM/yyyy' }}
+                  </span>
+                </div>
+                <div class="score-item score-item--compact">
+                  <span class="score-item__label">Speaking</span>
+                  <span class="score-item__value">{{ row.speakingPoints }} pts</span>
+                  <span class="score-item__date" *ngIf="row.speakingAssessedAt">
+                    {{ row.speakingAssessedAt | date:'dd/MM/yyyy' }}
+                  </span>
+                </div>
+              </div>
+              <ng-template #noScores>
+                <span class="scores-empty">—</span>
+              </ng-template>
+            </td>
+            <td class="col-source">
+              <span class="source-badge" [ngClass]="sourceBadgeClass(row.source)">
+                {{ sourceLabel(row.source) }}
+              </span>
+            </td>
+            <td class="col-audit">
+              <span class="audit-name">{{ processorLabel(row) }}</span>
+              <a
+                class="audit-link"
+                [routerLink]="['/dashboard/processed-events']"
+                [queryParams]="{ eventId: row.id }"
+              >
+                Evento #{{ row.id }}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pager" *ngIf="!reportLoading && totalPages > 1">
+      <button
+        type="button"
+        class="btn btn-ghost"
+        [disabled]="page <= 1"
+        (click)="prevPage()"
+      >
+        <span class="material-icons btn__icon">chevron_left</span>
+        Anterior
+      </button>
+      <span class="pager__meta">
+        Página <strong>{{ page }}</strong> de <strong>{{ totalPages }}</strong>
+        <span class="pager__total">({{ total }} registros)</span>
+      </span>
+      <button
+        type="button"
+        class="btn btn-ghost"
+        [disabled]="page >= totalPages"
+        (click)="nextPage()"
+      >
+        Siguiente
+        <span class="material-icons btn__icon">chevron_right</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="preview-backdrop" *ngIf="showPreviewPanel" (click)="closePreviewPanel()">
+  <div class="preview-panel" (click)="$event.stopPropagation()">
+    <div class="preview-panel__header">
+      <div>
+        <h2>Alumnos a promover</h2>
+        <p>Selecciona quiénes deben pasar al siguiente stage.</p>
+      </div>
+      <button
+        type="button"
+        class="btn btn-ghost btn-icon"
+        [disabled]="promoteLoading"
+        (click)="closePreviewPanel()"
+        aria-label="Cerrar"
+      >
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div class="preview-panel__toolbar">
+      <label class="select-all">
+        <input
+          type="checkbox"
+          [checked]="allPreviewSelected"
+          [disabled]="previewLoading || previewRows.length === 0"
+          (change)="toggleSelectAll($any($event.target).checked)"
+        />
+        <span>Seleccionar todos ({{ previewRows.length }})</span>
+      </label>
+      <span class="preview-panel__count">{{ selectedCount }} seleccionados</span>
+    </div>
+
+    <div class="preview-state" *ngIf="previewLoading">
+      <span class="table-state__spinner"></span>
+      <span>Buscando alumnos elegibles…</span>
+    </div>
+
+    <div class="preview-empty" *ngIf="!previewLoading && previewRows.length === 0">
+      <span class="material-icons">check_circle</span>
+      <p>No hay alumnos pendientes de promoción en este momento.</p>
+    </div>
+
+    <div class="preview-list" *ngIf="!previewLoading && previewRows.length > 0">
+      <label
+        class="preview-row"
+        *ngFor="let row of previewRows"
+        [class.preview-row--selected]="isStudentSelected(row.studentId)"
+      >
+        <input
+          type="checkbox"
+          [checked]="isStudentSelected(row.studentId)"
+          (change)="toggleStudent(row.studentId, $any($event.target).checked)"
+        />
+        <div class="preview-row__main">
+          <span class="preview-row__name">{{ previewStudentLabel(row) }}</span>
+          <span class="preview-row__id">ID {{ row.studentId }}</span>
+        </div>
+        <div class="preview-row__stage">
+          <span class="stage-chip">{{ row.currentStageNumber }}</span>
+          <span class="material-icons stage-arrow">arrow_forward</span>
+          <span class="stage-chip stage-chip--next">{{ row.nextStageNumber }}</span>
+        </div>
+        <div class="preview-row__scores">
+          <div class="score-item">
+            <span class="score-item__label">Grammar</span>
+            <span class="score-item__value">{{ row.grammarPoints }} pts</span>
+            <span class="score-item__date">{{ row.grammarAssessedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="score-item">
+            <span class="score-item__label">Speaking</span>
+            <span class="score-item__value">{{ row.speakingPoints }} pts</span>
+            <span class="score-item__date">{{ row.speakingAssessedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </label>
+    </div>
+
+    <div class="preview-panel__actions">
+      <button
+        type="button"
+        class="btn btn-ghost"
+        [disabled]="promoteLoading"
+        (click)="closePreviewPanel()"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="promoteLoading || selectedCount === 0"
+        (click)="promoteSelected()"
+      >
+        <span class="btn-spinner" *ngIf="promoteLoading"></span>
+        {{ promoteLoading ? 'Promoviendo…' : 'Promover seleccionados (' + selectedCount + ')' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-modal
+  [showModal]="modal.show"
+  [title]="modal.title || ''"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>

@@ -57,6 +57,41 @@
 
     <button
       type="button"
+      class="platform-assessment-header__refresh"
+      [disabled]="loading"
+      aria-label="Actualizar evaluaciones"
+      (click)="onRefresh()"
+    >
+      <svg
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        [class.platform-assessment-header__refresh-spin]="loading"
+      >
+        <path
+          d="M20 12a8 8 0 1 1-2.34-5.66"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+        <path
+          d="M20 4v5h-5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+      <span>
+        Actualizar estado
+      </span>
+    </button>
+
+    <button
+      type="button"
       class="platform-assessment-header__guide"
       aria-label="Guía de evaluaciones"
     >

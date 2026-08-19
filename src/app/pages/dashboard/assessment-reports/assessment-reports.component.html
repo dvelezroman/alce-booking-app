@@ -14,33 +14,85 @@
       class="platform-s2s-panel"
       *ngIf="platformAssessments.length > 0"
     >
-      <h3 class="platform-s2s-title">Resultados S2S (plataforma)</h3>
-      <p class="platform-s2s-hint">
-        PASSED aplica Writing automáticamente. Usa «Corregir Writing» solo para
-        ajustar puntos; «Aplicar Writing» queda para casos sin Writing en ALCE
-        (p. ej. FAILED o fallo del notify).
+      <button
+        type="button"
+        class="platform-s2s-toggle"
+        (click)="togglePlatformList()"
+        [attr.aria-expanded]="!platformListCollapsed"
+      >
+        <i
+          class="fas"
+          [class.fa-chevron-down]="!platformListCollapsed"
+          [class.fa-chevron-right]="platformListCollapsed"
+        ></i>
+        <h3 class="platform-s2s-title">
+          Resultados S2S (plataforma)
+          <span class="platform-s2s-count">
+            {{ filteredPlatformAssessments.length }}/{{ platformAssessments.length }}
+          </span>
+        </h3>
+      </button>
+
+      <div class="platform-s2s-filters">
+        <label class="platform-s2s-filter">
+          Stage
+          <select
+            class="platform-s2s-select"
+            [(ngModel)]="platformFilterStageId"
+          >
+            <option [ngValue]="undefined">Todos</option>
+            <option
+              *ngFor="let s of platformStageFilterOptions"
+              [ngValue]="s.id"
+            >
+              {{ stageLabelForId(s.id) }}
+            </option>
+          </select>
+        </label>
+        <label class="platform-s2s-filter">
+          Aceptación
+          <select
+            class="platform-s2s-select"
+            [(ngModel)]="platformFilterAccepted"
+          >
+            <option value="">Todas</option>
+            <option value="accepted">Aceptadas</option>
+            <option value="pending">Pendientes</option>
+          </select>
+        </label>
+      </div>
+
+      <p class="platform-s2s-hint" *ngIf="!platformListCollapsed">
+        PASSED aplica Grammar automáticamente. «Aceptar Evaluación» queda hasta que el admin acepte (PASSED o FAILED), aunque ya exista Grammar.
       </p>
 
+      <ng-container *ngIf="!platformListCollapsed">
+      <p
+        class="platform-s2s-empty"
+        *ngIf="filteredPlatformAssessments.length === 0"
+      >
+        Ningún resultado con esos filtros.
+      </p>
       <div
         class="platform-s2s-row"
-        *ngFor="let row of platformAssessments"
+        *ngFor="let row of filteredPlatformAssessments"
       >
         <div class="platform-s2s-meta">
           <strong>{{ row.templateTitle }}</strong>
           <span class="pill" [class.passed]="row.outcome === 'PASSED'" [class.failed]="row.outcome === 'FAILED'">
             {{ row.outcome || row.status }}
           </span>
-          <span *ngIf="row.studentStage != null">Stage exam {{ row.studentStage }}</span>
+          <span *ngIf="row.studentStage != null">{{ stageLabelForId(row.studentStage) }}</span>
           <span *ngIf="row.points != null">Puntos S2S: {{ row.points }}</span>
           <span
             class="pill writing"
             *ngIf="row.writingApplied"
             [class.mismatch]="writingPointsMismatch(row)"
           >
-            Writing ALCE: {{ row.writingPoints ?? '—' }}
+            Grammar ALCE: {{ row.writingPoints ?? '—' }}
           </span>
           <span class="pill pending-writing" *ngIf="!row.writingApplied && row.points != null">
-            Writing pendiente
+            Grammar pendiente
           </span>
           <a
             *ngIf="row.resultsUrl"
@@ -60,6 +112,7 @@
             type="button"
             class="button is-link is-small"
             *ngIf="canShowWritingAction(row)"
+            [disabled]="isWritingLocked(row)"
             (click)="startApplyPlatform(row)"
           >
             {{ writingActionLabel(row) }}
@@ -93,6 +146,7 @@
           </button>
         </div>
       </div>
+      </ng-container>
     </div>
 
     <div class="assessment-table-wrapper">
