@@ -1,0 +1,299 @@
+<section class="report-filter">
+  <div class="report-filter__header">
+    <span class="report-filter__header-icon" aria-hidden="true">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M4 5h16l-6.5 7.2V18l-3 1.5v-7.3L4 5Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+
+    <h2>Filtros de búsqueda</h2>
+  </div>
+
+  <div class="report-filter__grid">
+
+    <div class="report-filter__field report-filter__field--student">
+      <label for="student">
+        Estudiante
+        <span>*</span>
+      </label>
+
+      <div class="report-filter__autocomplete">
+
+        <div
+          class="report-filter__control"
+          [class.report-filter__control--invalid]="isStudentFieldInvalid"
+        >
+          <span class="report-filter__control-icon" aria-hidden="true">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="6.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+
+              <path
+                d="M16 16L20 20"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <input
+            id="student"
+            type="text"
+            placeholder="Buscar estudiante..."
+            autocomplete="off"
+            [ngModel]="studentName"
+            (ngModelChange)="onStudentInputChange($event)"
+            (blur)="onStudentInputBlur()"
+          />
+
+          @if (studentName) {
+            <button
+              type="button"
+              class="report-filter__clear"
+              aria-label="Limpiar estudiante"
+              (mousedown)="$event.preventDefault()"
+              (click)="clearStudent()"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m7 7 10 10M17 7 7 17"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          }
+        </div>
+
+        @if (
+          showStudentDropdown &&
+          filteredStudents.length > 0
+        ) {
+          <div class="report-filter__dropdown">
+            @for (user of filteredStudents; track user.id) {
+              <button
+                type="button"
+                class="report-filter__dropdown-item"
+                (mousedown)="$event.preventDefault()"
+                (click)="onSelectStudent(user)"
+              >
+                <span class="report-filter__avatar">
+                  {{ getStudentInitials(user) }}
+                </span>
+
+                <span class="report-filter__user">
+                  <strong>
+                    {{ getStudentFullName(user) }}
+                  </strong>
+
+                  <small>
+                    {{ getStudentIdentification(user) }}
+                  </small>
+                </span>
+              </button>
+            }
+          </div>
+        }
+
+        @if (
+          showStudentDropdown &&
+          studentName.trim().length > 0 &&
+          filteredStudents.length === 0
+        ) {
+          <div class="report-filter__dropdown report-filter__dropdown--empty">
+            No se encontraron estudiantes.
+          </div>
+        }
+
+      </div>
+    </div>
+
+    <div class="report-filter__field">
+      <label for="from">
+        Fecha desde
+      </label>
+
+      <div class="report-filter__control">
+        <span class="report-filter__control-icon" aria-hidden="true">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="5.5"
+              width="16"
+              height="14.5"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M8 3.5v4M16 3.5v4M4 9.5h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <input
+          id="from"
+          type="date"
+          [(ngModel)]="from"
+        />
+      </div>
+    </div>
+
+    <div class="report-filter__field">
+      <label for="to">
+        Fecha hasta
+      </label>
+
+      <div class="report-filter__control">
+        <span class="report-filter__control-icon" aria-hidden="true">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="5.5"
+              width="16"
+              height="14.5"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M8 3.5v4M16 3.5v4M4 9.5h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <input
+          id="to"
+          type="date"
+          [(ngModel)]="to"
+        />
+      </div>
+    </div>
+
+    <div class="report-filter__field">
+      <label for="stage">
+        Stage
+        <span class="optional">
+          (opcional)
+        </span>
+      </label>
+
+      <div class="report-filter__control report-filter__control--select">
+        <select
+          id="stage"
+          [(ngModel)]="stageId"
+        >
+          <option [ngValue]="null">
+            Todos los stages
+          </option>
+
+          <option [ngValue]="1">
+            Stage 1
+          </option>
+
+          <option [ngValue]="2">
+            Stage 2
+          </option>
+
+          <option [ngValue]="3">
+            Stage 3
+          </option>
+
+          <option [ngValue]="4">
+            Stage 4
+          </option>
+
+          <option [ngValue]="5">
+            Stage 5
+          </option>
+
+          <option [ngValue]="6">
+            Stage 6
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="report-filter__action">
+      <button
+        type="button"
+        class="report-filter__search"
+        [disabled]="!studentId"
+        (click)="submitFilters()"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Buscar reporte
+        </span>
+      </button>
+    </div>
+
+  </div>
+</section>

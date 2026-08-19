@@ -1,0 +1,191 @@
+<section class="detailed-report">
+  <header class="detailed-report__header">
+    <div class="detailed-report__header-left">
+      <span class="detailed-report__icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect
+            x="4"
+            y="3.5"
+            width="16"
+            height="17"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+          <path
+            d="M8 8h3M8 12h3M8 16h3M14 8h2M14 12h2M14 16h2"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <div>
+        <div class="detailed-report__title-row">
+          <h2>Reporte detallado</h2>
+
+          @if (reportData.length > 0) {
+            <span class="detailed-report__count">
+              {{ reportData.length }} registros
+            </span>
+          }
+        </div>
+
+        <p>
+          Detalle de asistencia por instructor, stage y datos del estudiante.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  @if (reportData.length > 0) {
+    <div class="detailed-report__table-wrapper">
+      <table class="detailed-report__table">
+        <thead>
+          <tr>
+            <th>Instructor</th>
+            <th>Stage</th>
+            <th>Reuniones</th>
+            <th>Presentes</th>
+            <th>Ausentes</th>
+            <th>Canceladas</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (item of paginatedData; track $index) {
+            <tr>
+              <td>
+                <div class="instructor">
+                    <strong>
+                    {{ item.instructor_name || 'Sin instructor asignado' }}
+                    </strong>
+
+                    @if (item.username) {
+                    <span>
+                        {{ item.username }}
+                    </span>
+                    }
+                </div>
+                </td>
+
+                <td>
+                <div class="stage">
+                    <span class="stage__badge">
+                    {{ item.stage_description || 'Sin stage' }}
+                    </span>
+                </div>
+                </td>
+
+                <td>
+                <span class="metric">
+                    {{ item.total_meetings || 0 }}
+                </span>
+                </td>
+
+                <td>
+                <span class="metric metric--present">
+                    {{ item.total_present || 0 }}
+                </span>
+                </td>
+
+                <td>
+                <span class="metric metric--absent">
+                    {{ item.total_absent || 0 }}
+                </span>
+                </td>
+
+                <td>
+                <span class="metric">
+                    {{ (item.total_meetings || 0) - (item.total_present || 0) - (item.total_absent || 0) }}
+                </span>
+                </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="detailed-report__footer">
+      <span class="detailed-report__pagination-label">
+        Mostrando {{ startIndex }} a {{ endIndex }} de {{ total }} registros
+      </span>
+
+      <div class="detailed-report__pagination">
+        <button
+          type="button"
+          [disabled]="!canPrev"
+          (click)="goToPage(1)"
+          aria-label="Primera página"
+        >
+          «
+        </button>
+
+        <button
+          type="button"
+          [disabled]="!canPrev"
+          (click)="previousPage()"
+          aria-label="Página anterior"
+        >
+          ‹
+        </button>
+
+        <button
+          type="button"
+          class="detailed-report__pagination-page detailed-report__pagination-page--active"
+        >
+          {{ page }}
+        </button>
+
+        <button
+          type="button"
+          [disabled]="!canNext"
+          (click)="nextPage()"
+          aria-label="Página siguiente"
+        >
+          ›
+        </button>
+
+        <button
+          type="button"
+          [disabled]="!canNext"
+          (click)="goToPage(totalPages)"
+          aria-label="Última página"
+        >
+          »
+        </button>
+      </div>
+    </footer>
+  } @else {
+    <div class="detailed-report__empty">
+      <span class="detailed-report__empty-icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <rect
+            x="4"
+            y="3.5"
+            width="16"
+            height="17"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+          <path
+            d="M8 9h8M8 13h8M8 17h5"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <strong>
+        {{ isReportGenerated ? 'Sin registros disponibles' : 'Genera un reporte para visualizar los resultados' }}
+      </strong>
+
+      <span>
+        La información detallada aparecerá aquí.
+      </span>
+    </div>
+  }
+</section>

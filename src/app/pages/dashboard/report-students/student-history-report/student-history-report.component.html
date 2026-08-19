@@ -1,136 +1,99 @@
-<section class="section">
+<div class="student-history-page">
+  <main class="student-history-page__container">
 
-  <!-- TÍTULO FIJO ARRIBA -->
-  <div class="title-container">
-    <h1 class="title">Historial del Estudiante</h1>
-  </div>
+    <app-student-history-header />
 
-  <div class="container">
+    <section class="student-history-page__layout">
 
-    <div class="card">
+      <div class="student-history-page__main">
 
-      <!-- <p class="subtitle">
-        Genera un reporte PDF completo del historial académico.
-      </p> -->
+        <section class="student-history-page__block">
+          <div class="student-history-page__step-header">
+            <span class="student-history-page__step-number">
+              1
+            </span>
 
-      <!-- ========================= -->
-      <!-- BUSCADOR -->
-      <!-- ========================= -->
-
-      <div class="form-group">
-        <label>Buscar estudiante</label>
-
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          (ngModelChange)="onSearchChange($event)"
-          placeholder="Escribe nombre o apellido..."
-          class="input"
-          (focus)="showDropdown = true"
-        />
-
-        <!-- DROPDOWN -->
-        <div *ngIf="showDropdown && filteredUsers.length" class="dropdown">
-          <div
-            class="dropdown-item"
-            *ngFor="let user of filteredUsers"
-            (click)="selectUser(user)"
-          >
-            {{ user.firstName }} {{ user.lastName }}
+            <div>
+              <h2>Seleccionar estudiante</h2>
+              <p>
+                Busca y selecciona el estudiante para generar su historial completo.
+              </p>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <!-- ========================= -->
-      <!-- ESTUDIANTE SELECCIONADO -->
-      <!-- ========================= -->
+          <app-student-history-student-selector
+            [searchTerm]="searchTerm"
+            [filteredUsers]="filteredUsers"
+            [showDropdown]="showDropdown"
+            (searchChange)="onSearchChange($event)"
+            (studentSelected)="selectUser($event)"
+            (dropdownHidden)="hideDropdown()"
+          />
 
-      <div *ngIf="selectedStudent" class="selected-user">
-        <span class="selected-label">Seleccionado:</span>
-        <strong class="selected-name">
-          {{ selectedStudent.firstName }} {{ selectedStudent.lastName }}
-        </strong>
-      </div>
+          @if (selectedStudent) {
+            <app-student-history-selected-student
+              [student]="selectedStudent"
+            />
+          }
+        </section>
 
-      <!-- ========================= -->
-      <!-- BOTÓN GENERAR -->
-      <!-- ========================= -->
+        <section class="student-history-page__block">
+          <div class="student-history-page__step-header">
+            <span class="student-history-page__step-number">
+              2
+            </span>
 
-      <button
-        class="primary-btn"
-        [disabled]="loading"
-        (click)="generateReport()"
-      >
-        <span *ngIf="!loading">Generar Reporte</span>
-        <span *ngIf="loading">Generando reporte...</span>
-      </button>
+            <div>
+              <h2>Generar reporte</h2>
+              <p>
+                Haz clic en el botón para iniciar la generación del historial del estudiante.
+              </p>
+            </div>
+          </div>
 
-      <!-- ========================= -->
-      <!-- ESTADO -->
-      <!-- ========================= -->
+          <app-student-history-generate-report
+            [student]="selectedStudent"
+            [loading]="loading"
+            (generateRequested)="generateReport()"
+          />
+        </section>
 
-      <div *ngIf="loading" class="status loading-status">
-        ⏳ Generando reporte...
-      </div>
+        <section class="student-history-page__block">
+          <div class="student-history-page__step-header">
+            <span class="student-history-page__step-number">
+              3
+            </span>
 
-      <!-- ========================= -->
-      <!-- PROGRESS BAR -->
-      <!-- ========================= -->
+            <div>
+              <h2>Estado del reporte</h2>
+            </div>
+          </div>
 
-      <div *ngIf="jobId" class="progress-container">
-        <div class="progress-bar">
-          <div
-            class="progress-fill"
-            [style.width.%]="progress"
-          ></div>
-        </div>
-        <div class="progress-text">
-          {{ progress }}%
-        </div>
-      </div>
-
-      <!-- ========================= -->
-      <!-- INFORMACIÓN DEL JOB -->
-      <!-- ========================= -->
-
-      <div *ngIf="jobId" class="job-box">
-
-        <div class="job-row">
-          <span class="label">Estado</span>
-          <span 
-            class="badge"
-            [ngClass]="{
-              'badge-pending': status === 'queued' || status === 'processing',
-              'badge-success': status === 'completed',
-              'badge-failed': status === 'failed'
-            }"
-          >
-            {{ status }}
-          </span>
-        </div>
+          <app-student-history-report-status
+            [jobId]="jobId"
+            [status]="status"
+            [loading]="loading"
+            [progress]="progress"
+            [reportReady]="reportReady"
+            [error]="error"
+            [serverError]="serverError"
+            (downloadRequested)="downloadReport()"
+          />
+        </section>
 
       </div>
 
-      <!-- ========================= -->
-      <!-- BOTÓN DESCARGAR -->
-      <!-- ========================= -->
+      <aside class="student-history-page__sidebar">
 
-      <button
-        *ngIf="reportReady"
-        class="download-btn"
-        (click)="downloadReport()"
-      >
-        Descargar Reporte PDF
-      </button>
+        <app-student-history-quick-guide />
 
-      <!-- ========================= -->
-      <!-- ERROR -->
-      <!-- ========================= -->
+        <app-student-history-recent-reports />
 
-      <div *ngIf="error" class="error">
-        {{ error }}
-      </div>
+        <app-student-history-important-info />
 
-    </div>
-  </div>
-</section>
+      </aside>
+
+    </section>
+
+  </main>
+</div>

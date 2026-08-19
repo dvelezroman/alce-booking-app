@@ -1,0 +1,244 @@
+<section class="generate-report">
+
+  <div class="generate-report__content">
+
+    <div class="generate-report__information">
+
+      <div class="generate-report__icon" aria-hidden="true">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M7 3.5h7l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 20V5A1.5 1.5 0 0 1 7.5 3.5Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M14 3.5V8h4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M9 12h6M9 15h3"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <div class="generate-report__description">
+        <strong>
+          Genera un archivo con el historial completo que incluye:
+        </strong>
+
+        <div class="generate-report__features">
+
+          <div class="generate-report__feature">
+            <span class="generate-report__check">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  fill="currentColor"
+                />
+
+                <path
+                  d="m8 12 2.5 2.5L16.5 8"
+                  stroke="#fff"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span>
+              Historial de clases y asistencia
+            </span>
+          </div>
+
+          <div class="generate-report__feature">
+            <span class="generate-report__check">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  fill="currentColor"
+                />
+
+                <path
+                  d="m8 12 2.5 2.5L16.5 8"
+                  stroke="#fff"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span>
+              Notas y comentarios de instructores
+            </span>
+          </div>
+
+          <div class="generate-report__feature">
+            <span class="generate-report__check">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  fill="currentColor"
+                />
+
+                <path
+                  d="m8 12 2.5 2.5L16.5 8"
+                  stroke="#fff"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span>
+              Resultados de evaluaciones
+            </span>
+          </div>
+
+          <div class="generate-report__feature">
+            <span class="generate-report__check">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  fill="currentColor"
+                />
+
+                <path
+                  d="m8 12 2.5 2.5L16.5 8"
+                  stroke="#fff"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span>
+              Fechas de suspensión
+            </span>
+          </div>
+
+          <div class="generate-report__feature">
+            <span class="generate-report__check">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  fill="currentColor"
+                />
+
+                <path
+                  d="m8 12 2.5 2.5L16.5 8"
+                  stroke="#fff"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span>
+              Cambios de stage
+            </span>
+          </div>
+
+          <div class="generate-report__feature">
+            <span class="generate-report__check">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  fill="currentColor"
+                />
+
+                <path
+                  d="m8 12 2.5 2.5L16.5 8"
+                  stroke="#fff"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span>
+              Resumen estadístico
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="generate-report__action">
+
+      <button
+        type="button"
+        class="generate-report__button"
+        [disabled]="!canGenerate"
+        (click)="onGenerate()"
+      >
+
+        @if (loading) {
+          <span
+            class="generate-report__spinner"
+            aria-hidden="true"
+          ></span>
+
+          <span>
+            Generando...
+          </span>
+        } @else {
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m8 5 10 7-10 7V5Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <span>
+            Generar reporte
+          </span>
+        }
+
+      </button>
+
+      <small>
+        Este proceso puede tardar unos minutos.
+      </small>
+
+    </div>
+
+  </div>
+
+</section>

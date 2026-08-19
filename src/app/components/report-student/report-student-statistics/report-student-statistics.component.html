@@ -1,0 +1,243 @@
+<section class="statistics-card">
+
+  <header class="statistics-card__header">
+    <div class="statistics-card__header-left">
+      <span class="statistics-card__icon" aria-hidden="true">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M5 19.5h14"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M7.5 17V11.5M12 17V6M16.5 17V9"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <div>
+        <h2>Resumen estadístico</h2>
+        <p>Indicadores generales de asistencia del estudiante.</p>
+      </div>
+    </div>
+  </header>
+
+  @if (statisticalData) {
+    <div class="statistics-card__content">
+
+      <div class="statistics-card__metrics">
+
+        <article class="stat-card">
+          <span class="stat-card__icon stat-card__icon--purple">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="4"
+                y="5.5"
+                width="16"
+                height="14.5"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 3.5v4M16 3.5v4M4 9.5h16"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <div class="stat-card__data">
+            <span>Total clases</span>
+            <strong>{{ totalMeetings }}</strong>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-card__icon stat-card__icon--green">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m8.5 12 2.2 2.2 4.8-5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <div class="stat-card__data">
+            <span>Presentes</span>
+            <strong>{{ presentCount }}</strong>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-card__icon stat-card__icon--red">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m9 9 6 6M15 9l-6 6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <div class="stat-card__data">
+            <span>Ausentes</span>
+            <strong>{{ absentCount }}</strong>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-card__icon stat-card__icon--gray">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M9 12h6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <div class="stat-card__data">
+            <span>Canceladas</span>
+            <strong>{{ cancelledCount }}</strong>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="statistics-card__chart">
+        <div
+          class="attendance-chart"
+          [style.background]="progressStyle"
+        >
+          <div class="attendance-chart__inner">
+            <strong>{{ attendancePercentage }}%</strong>
+            <span>Asistencia</span>
+          </div>
+        </div>
+
+        <div class="statistics-card__legend">
+
+          <div class="legend-item">
+            <span class="legend-item__dot legend-item__dot--present"></span>
+
+            <div class="legend-item__information">
+              <span>Asistencia</span>
+              <strong>{{ attendancePercentage }}%</strong>
+            </div>
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-item__dot legend-item__dot--absent"></span>
+
+            <div class="legend-item__information">
+              <span>Ausencias</span>
+              <strong>{{ absencePercentage }}%</strong>
+            </div>
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-item__dot legend-item__dot--cancelled"></span>
+
+            <div class="legend-item__information">
+              <span>Canceladas</span>
+              <strong>{{ cancelledPercentage }}%</strong>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  } @else {
+    <div class="statistics-card__empty">
+      <span class="statistics-card__empty-icon" aria-hidden="true">
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M5 19.5h14"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M7.5 17V11.5M12 17V6M16.5 17V9"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <strong>Sin estadísticas disponibles</strong>
+      <span>Selecciona el reporte estadístico para visualizar la información.</span>
+    </div>
+  }
+
+</section>

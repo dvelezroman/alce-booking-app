@@ -1,0 +1,234 @@
+<section class="classes-report">
+  <header class="classes-report__header">
+    <div class="classes-report__header-left">
+      <span class="classes-report__icon" aria-hidden="true">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="4"
+            y="5.5"
+            width="16"
+            height="14.5"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M8 3.5v4M16 3.5v4M4 9.5h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <div>
+        <div class="classes-report__title-row">
+          <h2>Clases agendadas</h2>
+
+          @if (meetingsData.length > 0) {
+            <span class="classes-report__count">
+              {{ meetingsData.length }} clases
+            </span>
+          }
+        </div>
+
+        <p>
+          Historial de clases del estudiante durante el período seleccionado.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  @if (meetingsData.length > 0) {
+    <div class="classes-report__table-wrapper">
+      <table class="classes-report__table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Instructor</th>
+            <th>Stage</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (meeting of paginatedMeetings; track $index) {
+            <tr>
+              <td>
+                <div class="date-cell">
+                  <span class="date-cell__icon">
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <rect
+                        x="4"
+                        y="5.5"
+                        width="16"
+                        height="14.5"
+                        rx="2"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                      />
+
+                      <path
+                        d="M8 3.5v4M16 3.5v4M4 9.5h16"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </span>
+
+                  <span>
+                    {{ formatDate($any(meeting).date || $any(meeting).startDate || $any(meeting).startAt) }}
+                  </span>
+                </div>
+              </td>
+
+              <td>
+                <span class="time">
+                  {{ formatTime($any(meeting).startTime || $any(meeting).startDate || $any(meeting).startAt) }}
+                </span>
+              </td>
+
+              <td>
+                <div class="instructor-cell">
+                  <strong>
+                    {{
+                      $any(meeting).instructorName ||
+                      $any(meeting).instructor?.name ||
+                      'Sin instructor'
+                    }}
+                  </strong>
+
+                  @if ($any(meeting).instructorId) {
+                    <span>
+                      ID {{ $any(meeting).instructorId }}
+                    </span>
+                  }
+                </div>
+              </td>
+
+              <td>
+                <div class="stage-cell">
+                  <span class="stage-cell__badge">
+                    Stage {{
+                      $any(meeting).stageNumber ||
+                      $any(meeting).stage?.number ||
+                      $any(meeting).stageId ||
+                      '-'
+                    }}
+                  </span>
+                </div>
+              </td>
+
+              <td>
+                <span
+                  class="status"
+                  [ngClass]="getStatusClass($any(meeting).status)"
+                >
+                  {{ getStatusLabel($any(meeting).status) }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="classes-report__footer">
+      <span class="classes-report__pagination-label">
+        Mostrando {{ startIndex }} a {{ endIndex }} de {{ total }} clases
+      </span>
+
+      <div class="classes-report__pagination">
+        <button
+          type="button"
+          [disabled]="!canPrev"
+          (click)="goToPage(1)"
+          aria-label="Primera página"
+        >
+          «
+        </button>
+
+        <button
+          type="button"
+          [disabled]="!canPrev"
+          (click)="previousPage()"
+          aria-label="Página anterior"
+        >
+          ‹
+        </button>
+
+        <button
+          type="button"
+          class="classes-report__pagination-page classes-report__pagination-page--active"
+        >
+          {{ page }}
+        </button>
+
+        <button
+          type="button"
+          [disabled]="!canNext"
+          (click)="nextPage()"
+          aria-label="Página siguiente"
+        >
+          ›
+        </button>
+
+        <button
+          type="button"
+          [disabled]="!canNext"
+          (click)="goToPage(totalPages)"
+          aria-label="Última página"
+        >
+          »
+        </button>
+      </div>
+    </footer>
+  } @else {
+    <div class="classes-report__empty">
+      <span class="classes-report__empty-icon" aria-hidden="true">
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="4"
+            y="5.5"
+            width="16"
+            height="14.5"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M8 3.5v4M16 3.5v4M4 9.5h16"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <strong>Sin clases disponibles</strong>
+
+      <span>
+        Las clases del estudiante aparecerán aquí.
+      </span>
+    </div>
+  }
+</section>

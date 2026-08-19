@@ -1,0 +1,186 @@
+<section class="recent-reports">
+
+  <header class="recent-reports__header">
+    <div class="recent-reports__header-left">
+
+      <span
+        class="recent-reports__icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M4 12a8 8 0 1 0 2.3-5.6"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M4 5.5V11h5.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M12 8v4l2.8 1.8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <div>
+        <h2>
+          Reportes recientes
+        </h2>
+
+        <p>
+          Últimos historiales generados.
+        </p>
+      </div>
+
+    </div>
+  </header>
+
+  @if (reports.length > 0) {
+
+    <div class="recent-reports__list">
+
+      @for (
+        report of reports;
+        track report.id
+      ) {
+        <article class="recent-report">
+
+          <div class="recent-report__top">
+
+            <span class="recent-report__file-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M7 3.5h7l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 20V5A1.5 1.5 0 0 1 7.5 3.5Z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M14 3.5V8h4"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <div class="recent-report__information">
+              <strong>
+                {{ report.studentName }}
+              </strong>
+
+              <span>
+                {{ formatDate(report.createdAt) }}
+              </span>
+            </div>
+
+            <span
+              class="recent-report__status"
+              [ngClass]="getStatusClass(report.status)"
+            >
+              {{ getStatusLabel(report.status) }}
+            </span>
+
+          </div>
+
+          @if (
+            report.status === 'completed' &&
+            report.url
+          ) {
+            <button
+              type="button"
+              class="recent-report__download"
+              (click)="onDownload(report)"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 4v10m0 0 4-4m-4 4-4-4"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M5 18v1.2A1.8 1.8 0 0 0 6.8 21h10.4A1.8 1.8 0 0 0 19 19.2V18"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+
+              <span>
+                Descargar
+              </span>
+            </button>
+          }
+
+        </article>
+      }
+
+    </div>
+
+  } @else {
+
+    <div class="recent-reports__empty">
+
+      <span
+        class="recent-reports__empty-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M7 3.5h7l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 20V5A1.5 1.5 0 0 1 7.5 3.5Z"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M14 3.5V8h4M9 12h6M9 15h4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <strong>
+        Sin reportes recientes
+      </strong>
+
+      <span>
+        Los historiales generados aparecerán aquí.
+      </span>
+
+    </div>
+
+  }
+
+</section>

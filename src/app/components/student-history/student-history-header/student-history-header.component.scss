@@ -1,0 +1,295 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.student-history-header {
+  width: 100%;
+  min-height: 86px;
+  padding: 1rem 1.15rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  background: #ffffff;
+
+  border: 1px solid #e8eaf2;
+  border-radius: 0.7rem;
+
+  box-shadow:
+    0 4px 16px rgba(31, 42, 89, 0.025);
+
+  box-sizing: border-box;
+
+  /* =========================
+     INFORMATION
+  ========================= */
+
+  &__information {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  /* =========================
+     ICON
+  ========================= */
+
+  &__icon {
+    width: 3rem;
+    height: 3rem;
+
+    flex: 0 0 3rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #4b20e6;
+    background: #f0ecff;
+
+    border-radius: 0.65rem;
+
+    svg {
+      width: 1.65rem;
+      height: 1.65rem;
+    }
+  }
+
+  /* =========================
+     TEXT
+  ========================= */
+
+  &__text {
+    min-width: 0;
+
+    h1 {
+      margin: 0;
+
+      color: #15173f;
+
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+    }
+
+    p {
+      max-width: 720px;
+
+      margin: 0.3rem 0 0;
+
+      color: #6d7187;
+
+      font-size: 0.69rem;
+      font-weight: 400;
+      line-height: 1.45;
+    }
+  }
+
+  /* =========================
+     ACTIONS
+  ========================= */
+
+  &__actions {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  /* =========================
+     HISTORY BUTTON
+  ========================= */
+
+  &__history {
+    min-width: 150px;
+    height: 38px;
+
+    padding: 0 0.9rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.48rem;
+
+    color: #363851;
+    background: #f8f7fc;
+
+    border: 1px solid #eeecf5;
+    border-radius: 0.45rem;
+
+    font-family: inherit;
+    font-size: 0.68rem;
+    font-weight: 600;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease,
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+
+      flex: 0 0 1rem;
+
+      color: #4b20e6;
+    }
+
+    &:hover {
+      color: #32235f;
+      background: #f3f0ff;
+      border-color: #e4defc;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &:focus-visible {
+      outline: none;
+
+      box-shadow:
+        0 0 0 3px rgba(75, 32, 230, 0.1);
+    }
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 768px) {
+  .student-history-header {
+    min-height: auto;
+
+    padding: 0.9rem;
+
+    &__information {
+      gap: 0.7rem;
+    }
+
+    &__icon {
+      width: 2.7rem;
+      height: 2.7rem;
+
+      flex-basis: 2.7rem;
+
+      svg {
+        width: 1.45rem;
+        height: 1.45rem;
+      }
+    }
+
+    &__text {
+      h1 {
+        font-size: 1rem;
+      }
+
+      p {
+        font-size: 0.65rem;
+      }
+    }
+
+    &__history {
+      min-width: 38px;
+      width: 38px;
+
+      padding: 0;
+
+      span {
+        display: none;
+      }
+    }
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 520px) {
+  .student-history-header {
+    align-items: flex-start;
+
+    &__information {
+      align-items: flex-start;
+    }
+
+    &__icon {
+      width: 2.5rem;
+      height: 2.5rem;
+
+      flex-basis: 2.5rem;
+    }
+
+    &__text {
+      h1 {
+        font-size: 0.9rem;
+        line-height: 1.3;
+      }
+
+      p {
+        margin-top: 0.22rem;
+
+        font-size: 0.62rem;
+        line-height: 1.4;
+      }
+    }
+
+    &__history {
+      width: 34px;
+      min-width: 34px;
+      height: 34px;
+    }
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 400px) {
+  .student-history-header {
+    padding: 0.8rem;
+
+    gap: 0.65rem;
+
+    &__information {
+      gap: 0.55rem;
+    }
+
+    &__icon {
+      width: 2.3rem;
+      height: 2.3rem;
+
+      flex-basis: 2.3rem;
+
+      svg {
+        width: 1.3rem;
+        height: 1.3rem;
+      }
+    }
+
+    &__text {
+      h1 {
+        font-size: 0.84rem;
+      }
+
+      p {
+        font-size: 0.59rem;
+      }
+    }
+  }
+}

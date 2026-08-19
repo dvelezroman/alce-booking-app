@@ -1,0 +1,248 @@
+<section class="student-selector">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="student-selector__header">
+
+    <span
+      class="student-selector__step"
+      aria-hidden="true"
+    >
+      1
+    </span>
+
+    <div class="student-selector__heading">
+      <h2>
+        Seleccionar estudiante
+      </h2>
+
+      <p>
+        Busca y selecciona el estudiante para generar su historial completo.
+      </p>
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       SEARCH
+  ========================== -->
+
+  <div class="student-selector__search-wrapper">
+
+    <div
+      class="student-selector__search"
+      [class.student-selector__search--active]="showDropdown"
+    >
+
+      <span
+        class="student-selector__search-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <input
+        type="text"
+        [ngModel]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
+        placeholder="Buscar por nombre, email o ID del usuario..."
+        autocomplete="off"
+        aria-label="Buscar estudiante"
+      />
+
+      @if (searchTerm) {
+        <button
+          type="button"
+          class="student-selector__clear"
+          aria-label="Limpiar búsqueda"
+          (mousedown)="$event.preventDefault()"
+          (click)="onSearchChange('')"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m7 7 10 10M17 7 7 17"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+      }
+
+    </div>
+
+
+    <!-- =========================
+         DROPDOWN
+    ========================== -->
+
+    @if (showDropdown) {
+
+      <div class="student-selector__dropdown">
+
+        @if (filteredUsers.length) {
+
+          @for (
+            user of filteredUsers;
+            track user.id;
+            let index = $index
+          ) {
+
+            <button
+              type="button"
+              class="student-result"
+              (mousedown)="$event.preventDefault()"
+              (click)="selectStudent(user)"
+            >
+
+              <!-- AVATAR -->
+
+              <span
+                class="student-result__avatar"
+                [ngClass]="getAvatarClass(index)"
+              >
+                {{ getInitials(user) }}
+              </span>
+
+
+              <!-- INFORMATION -->
+
+              <div class="student-result__information">
+
+                <strong class="student-result__name">
+                  {{ getUserName(user) }}
+                </strong>
+
+                <div class="student-result__metadata">
+
+                  <span class="student-result__email">
+                    {{ getUserEmail(user) }}
+                  </span>
+
+                  <span
+                    class="student-result__separator"
+                    aria-hidden="true"
+                  ></span>
+
+                  <span>
+                    ID Estudiante:
+                    <strong>
+                      {{ getStudentId(user) }}
+                    </strong>
+                  </span>
+
+                  @if (getStage(user)) {
+
+                    <span
+                      class="student-result__separator"
+                      aria-hidden="true"
+                    ></span>
+
+                    <span class="student-result__stage">
+                      {{ getStage(user) }}
+                    </span>
+
+                  }
+
+                </div>
+
+              </div>
+
+
+              <!-- ARROW -->
+
+              <span
+                class="student-result__arrow"
+                aria-hidden="true"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="m9 6 6 6-6 6"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+
+            </button>
+
+          }
+
+        } @else {
+
+          <div class="student-selector__empty">
+
+            <span class="student-selector__empty-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="6.5"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+
+                <path
+                  d="m16 16 4 4"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <div>
+              <strong>
+                No se encontraron estudiantes
+              </strong>
+
+              <span>
+                Intenta buscar con otro nombre, correo o identificador.
+              </span>
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+  </div>
+
+</section>

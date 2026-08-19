@@ -1,53 +1,323 @@
-<section class="section">
-  <div class="container">
-    <div class="title-container">
-        <h1 class="title">Reportes del Estudiante</h1>
-    </div>
-   
-    <app-reports-student-filter 
+<div class="reports-page">
+  <main class="reports-page__container">
+
+    <app-report-student-header
       [isReportGenerated]="isReportGenerated"
+      (downloadRequested)="openDownloadModal()"
+      (refreshRequested)="onFiltersSubmitted(lastFilters!)"
+    />
+
+    <app-report-student-filter
+      [filteredStudents]="filteredStudents"
+      [showStudentDropdown]="showStudentDropdown"
+      [isStudentFieldInvalid]="isStudentFieldInvalid"
+      (studentInputChange)="onStudentSearchChange($event)"
+      (studentSelected)="onStudentSelected($event)"
+      (studentDropdownHidden)="hideStudentDropdown()"
       (filtersSubmitted)="onFiltersSubmitted($event)"
-      (downloadRequested)="openDownloadModal()">
-    </app-reports-student-filter>
+    />
 
-    <div class="button-block-reports">
-      <button class="custom-button"
-              [class.active]="activeReport === 'detailed'"
-              [disabled]="!isReportGenerated"
-              (click)="fetchDetailedReport()">Detallado</button>
+    @if (!showReportButtons) {
+      <section class="reports-page__preview-layout">
 
-      <button class="custom-button"
-              [class.active]="activeReport === 'statistical'"
-              [disabled]="!isReportGenerated"
-              (click)="fetchStatisticalReport()">Estadístico</button>
+        <div class="reports-page__preview-main">
 
-      <button class="custom-button"
-              [class.active]="activeReport === 'meetings'"
-              [disabled]="!isReportGenerated"
-              (click)="fetchMeetingsReport()">Clases</button>
+          <article class="reports-page__preview-selector">
+            <div class="reports-page__preview-header">
+              <span class="reports-page__preview-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <rect
+                    x="4"
+                    y="4"
+                    width="16"
+                    height="16"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
 
-    </div>
+                  <path
+                    d="M8 9h8M8 13h5M8 17h7"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
 
-    <app-reports-results
-      [activeReport]="activeReport"
-      [reportData]="reportData"
-      [statisticalData]="statisticalData"
-      [meetingsData]="meetingsData"
-      [isReportGenerated]="isReportGenerated">
-    </app-reports-results>
+              <div>
+                <h3>Tipo de reporte</h3>
+                <p>Aquí podrás seleccionar el reporte que deseas consultar.</p>
+              </div>
+            </div>
 
-    <div *ngIf="searchAttempted && activeReport === 'detailed' && reportData.length === 0" class="no-results">
-      <p>No hay datos detallados disponibles en este periodo.</p>
-    </div>
-  </div>
-</section>
+            <div class="reports-page__preview-selector-options">
+              <div class="reports-page__preview-option">
+                <span class="reports-page__preview-option-icon">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M7 3.5h7l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 20V5A1.5 1.5 0 0 1 7.5 3.5Z"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    />
+                  </svg>
+                </span>
 
-<app-modal
-  [showModal]="modalData.show"
-  [message]="modalData.message"
-  [isError]="modalData.isError"
-  [isSuccess]="modalData.isSuccess"
-  [showButtons]="true"
-  (close)="closeModal()"
-  (confirmAction)="confirmDownload()">
-</app-modal>
+                <div>
+                  <strong>Detallado</strong>
+                  <span>Asistencia por instructor y stage</span>
+                </div>
+              </div>
+
+              <div class="reports-page__preview-option">
+                <span class="reports-page__preview-option-icon">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M5 19.5h14M7.5 17V11.5M12 17V6M16.5 17V9"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </span>
+
+                <div>
+                  <strong>Estadístico</strong>
+                  <span>Resumen de asistencia y porcentajes</span>
+                </div>
+              </div>
+
+              <div class="reports-page__preview-option">
+                <span class="reports-page__preview-option-icon">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                    <rect
+                      x="4"
+                      y="5.5"
+                      width="16"
+                      height="14.5"
+                      rx="2"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    />
+
+                    <path
+                      d="M8 3.5v4M16 3.5v4M4 9.5h16"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </span>
+
+                <div>
+                  <strong>Clases</strong>
+                  <span>Listado de clases del período</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="reports-page__preview-results">
+            <div class="reports-page__preview-results-icon">
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="6.5"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+
+                <path
+                  d="M16 16L20 20"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+
+            <div class="reports-page__preview-results-content">
+              <h3>Los resultados aparecerán aquí</h3>
+
+              <p>
+                Selecciona un estudiante, define el rango de fechas y presiona
+                Buscar reporte para consultar la información.
+              </p>
+
+              <div class="reports-page__preview-steps">
+                <span>
+                  <strong>1</strong>
+                  Selecciona estudiante
+                </span>
+
+                <span>
+                  <strong>2</strong>
+                  Define fechas
+                </span>
+
+                <span>
+                  <strong>3</strong>
+                  Genera el reporte
+                </span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <aside class="reports-page__preview-sidebar">
+          <article class="reports-page__preview-student">
+            <div class="reports-page__preview-header">
+              <span class="reports-page__preview-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="8"
+                    r="3.5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M5.5 19c.7-3.1 3.1-5 6.5-5s5.8 1.9 6.5 5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+              <div>
+                <h3>Información del estudiante</h3>
+                <p>Resumen del estudiante seleccionado.</p>
+              </div>
+            </div>
+
+            <div class="reports-page__preview-student-body">
+              <div class="reports-page__preview-avatar">
+                <svg
+                  width="30"
+                  height="30"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="8"
+                    r="3.5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+
+                  <path
+                    d="M5.5 19c.7-3.1 3.1-5 6.5-5s5.8 1.9 6.5 5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
+
+              <strong>Sin estudiante seleccionado</strong>
+
+              <span>
+                Aquí se mostrará la información general del estudiante
+                después de realizar la búsqueda.
+              </span>
+            </div>
+
+            <div class="reports-page__preview-student-items">
+              <div class="reports-page__preview-student-item">
+                <span>Estudiante</span>
+                <strong>Por seleccionar</strong>
+              </div>
+
+              <div class="reports-page__preview-student-item">
+                <span>Período</span>
+                <strong>Sin definir</strong>
+              </div>
+
+              <div class="reports-page__preview-student-item">
+                <span>Reporte</span>
+                <strong>Sin seleccionar</strong>
+              </div>
+            </div>
+          </article>
+        </aside>
+
+      </section>
+    }
+
+    @if (showReportButtons) {
+      <section class="reports-page__report-layout">
+
+        <div class="reports-page__report-main">
+
+          <app-report-student-type-selector
+            [activeReport]="activeReport"
+            (detailedRequested)="fetchDetailedReport()"
+            (statisticalRequested)="fetchStatisticalReport()"
+            (meetingsRequested)="fetchMeetingsReport()"
+          />
+
+          <section class="reports-page__content">
+            @if (activeReport === 'detailed') {
+              <app-report-student-detailed
+                [reportData]="reportData"
+                [isReportGenerated]="isReportGenerated"
+              />
+            }
+
+            @if (activeReport === 'statistical') {
+              <app-report-student-statistics
+                [statisticalData]="statisticalData"
+              />
+            }
+
+            @if (activeReport === 'meetings') {
+              <app-report-student-classes
+                [meetingsData]="meetingsData"
+              />
+            }
+          </section>
+
+        </div>
+
+        <aside class="reports-page__report-sidebar">
+          <app-report-student-summary
+            [studentId]="selectedStudentId"
+          />
+        </aside>
+
+      </section>
+    }
+
+  </main>
+
+  <app-modal
+    [showModal]="modalData.show"
+    [message]="modalData.message"
+    [isError]="modalData.isError"
+    [isSuccess]="modalData.isSuccess"
+    [showButtons]="true"
+    (close)="closeModal()"
+    (confirmAction)="confirmDownload()"
+  >
+  </app-modal>
+</div>
