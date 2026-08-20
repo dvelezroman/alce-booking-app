@@ -194,7 +194,7 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
 
   currentPage: number = 1;
 
-  pageSize: number = 7;
+  pageSize: number = 20;
 
   /* =========================
      EVALUACIONES
