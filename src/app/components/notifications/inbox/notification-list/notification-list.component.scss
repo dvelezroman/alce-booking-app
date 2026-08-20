@@ -139,8 +139,20 @@
     box-shadow 150ms ease;
 }
 
+.notification-list__row--unread {
+  background: #f4f8ff;
+}
+
+.notification-list__row--unread .notification-list__notification-title {
+  font-weight: 800;
+}
+
 .notification-list__row:hover {
   background: #fafbfe;
+}
+
+.notification-list__row--unread:hover {
+  background: #ebf3ff;
 }
 
 .notification-list__row:focus-visible {
@@ -255,6 +267,10 @@
 .notification-list__notification-title {
   margin: 0;
 
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+
   overflow: hidden;
 
   color: #171d32;
@@ -265,6 +281,14 @@
 
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.notification-list__unread-dot {
+  width: .45rem;
+  height: .45rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #1768df;
 }
 
 .notification-list__notification-description {

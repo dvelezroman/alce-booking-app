@@ -4,38 +4,6 @@
     <h2 class="student-summary__title">
       Estudiante y etapa actual
     </h2>
-
-    <button
-      *ngIf="!isSearchingStudent"
-      type="button"
-      class="student-summary__change-button"
-      (click)="handleChangeStudent()"
-    >
-      <svg
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
-          stroke="currentColor"
-          stroke-width="1.8"
-        />
-
-        <path
-          d="M5 20c0-3.1 2.7-5.5 7-5.5s7 2.4 7 5.5"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-        />
-      </svg>
-
-      <span>
-        {{ selectedStudent ? 'Cambiar estudiante' : 'Seleccionar estudiante' }}
-      </span>
-    </button>
   </div>
 
 
@@ -43,10 +11,7 @@
        BUSCADOR
   ========================== -->
 
-  <div
-    *ngIf="isSearchingStudent"
-    class="student-summary__search"
-  >
+  <div class="student-summary__search">
 
     <div class="student-summary__search-wrapper">
 
@@ -89,10 +54,11 @@
       />
 
       <button
+        *ngIf="searchTerm"
         type="button"
         class="student-summary__search-cancel"
-        aria-label="Cancelar búsqueda"
-        title="Cancelar"
+        aria-label="Limpiar búsqueda"
+        title="Limpiar búsqueda"
         (mousedown)="$event.preventDefault()"
         (click)="cancelStudentSearch()"
       >
@@ -113,6 +79,7 @@
 
 
       <!-- RESULTADOS -->
+
       <div
         *ngIf="showUserDropdown"
         class="student-summary__students-dropdown"
@@ -182,10 +149,11 @@
 
   <div
     class="student-summary__content"
-    *ngIf="selectedStudent && !isSearchingStudent; else emptyStudent"
+    *ngIf="selectedStudent"
   >
 
     <!-- ESTUDIANTE -->
+
     <div class="student-summary__student">
 
       <div class="student-summary__avatar">
@@ -193,6 +161,7 @@
       </div>
 
       <div class="student-summary__student-info">
+
         <h3 class="student-summary__student-name">
           {{ studentFullName }}
         </h3>
@@ -204,15 +173,18 @@
         <p class="student-summary__student-id">
           ID: {{ studentId }}
         </p>
+
       </div>
 
     </div>
 
 
-    <div class="student-summary__divider"></div>
+    <div class="student-summary__divider">
+    </div>
 
 
     <!-- ETAPA -->
+
     <div class="student-summary__detail">
 
       <span class="student-summary__detail-label">
@@ -220,6 +192,7 @@
       </span>
 
       <div class="student-summary__stage-row">
+
         <strong class="student-summary__detail-value">
           {{ currentStageLabel }}
         </strong>
@@ -230,15 +203,18 @@
         >
           Actual
         </span>
+
       </div>
 
     </div>
 
 
-    <div class="student-summary__divider"></div>
+    <div class="student-summary__divider">
+    </div>
 
 
     <!-- INSTRUCTOR -->
+
     <div class="student-summary__detail">
 
       <span class="student-summary__detail-label">
@@ -252,68 +228,5 @@
     </div>
 
   </div>
-
-
-  <!-- =========================
-     EMPTY
-========================== -->
-
-<ng-template #emptyStudent>
-
-  <div
-    *ngIf="!isSearchingStudent"
-    class="student-summary__empty"
-  >
-
-    <div
-      class="student-summary__empty-icon"
-      aria-hidden="true"
-    >
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-      >
-        <circle
-          cx="12"
-          cy="8"
-          r="3.5"
-          stroke="currentColor"
-          stroke-width="1.7"
-        />
-
-        <path
-          d="M5.5 19c0-3.2 2.8-5.5 6.5-5.5s6.5 2.3 6.5 5.5"
-          stroke="currentColor"
-          stroke-width="1.7"
-          stroke-linecap="round"
-        />
-
-        <path
-          d="M18.5 7.5h3M20 6v3"
-          stroke="currentColor"
-          stroke-width="1.7"
-          stroke-linecap="round"
-        />
-      </svg>
-    </div>
-
-
-    <div class="student-summary__empty-content">
-
-      <p class="student-summary__empty-title">
-        No hay estudiante seleccionado
-      </p>
-
-      <p class="student-summary__empty-description">
-        Selecciona un estudiante para comenzar.
-      </p>
-
-    </div>
-
-  </div>
-
-</ng-template>
 
 </section>

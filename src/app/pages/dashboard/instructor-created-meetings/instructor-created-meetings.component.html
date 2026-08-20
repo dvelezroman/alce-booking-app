@@ -1,0 +1,116 @@
+<div class="report-title">
+  <h1>Clases creadas por instructor</h1>
+</div>
+
+<section class="report-section">
+  <div class="report-search">
+    <form (ngSubmit)="searchMeetings()">
+      <div class="field">
+        <label class="label">Instructor (opcional)</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Nombre del instructor"
+            [(ngModel)]="filter.instructorName"
+            (input)="onInstructorInputChange()"
+            (blur)="hideDropdown()"
+            name="instructorName"
+            autocomplete="off"
+          />
+          <div *ngIf="showDropdown" class="dropdown">
+            <div *ngIf="filteredInstructors.length === 0" class="no-results">
+              No se encontraron instructores
+            </div>
+            <ul *ngIf="filteredInstructors.length > 0">
+              <li
+                *ngFor="let instructor of filteredInstructors"
+                (mousedown)="selectInstructor(instructor)"
+              >
+                {{ instructor.firstName }} {{ instructor.lastName }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-mobile">
+        <div class="column">
+          <div class="field">
+            <label class="label">Fecha desde</label>
+            <div class="control">
+              <input
+                class="input"
+                [ngClass]="{ 'input-error': showFromError }"
+                type="date"
+                [(ngModel)]="filter.from"
+                name="from"
+              />
+            </div>
+            <p class="error-message" *ngIf="showFromError">Campo requerido.</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <label class="label">Fecha hasta</label>
+            <div class="control">
+              <input
+                class="input"
+                [ngClass]="{ 'input-error': showToError }"
+                type="date"
+                [(ngModel)]="filter.to"
+                name="to"
+              />
+            </div>
+            <p class="error-message" *ngIf="showToError">Campo requerido.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <button type="submit" class="button is-primary is-fullwidth" [disabled]="isLoading">
+          {{ isLoading ? 'Buscando...' : 'Buscar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="results-section" *ngIf="searchAttempted">
+  <div class="results-summary">
+    <span>{{ meetings.length }} clase(s) encontrada(s)</span>
+  </div>
+
+  <div class="table-container" *ngIf="meetings.length > 0; else noResults">
+    <table class="table is-fullwidth is-striped">
+      <thead>
+        <tr>
+          <th>Instructor</th>
+          <th>Estudiante</th>
+          <th>Fecha clase</th>
+          <th>Hora</th>
+          <th>Modo</th>
+          <th>Estado</th>
+          <th>Creado el</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let meeting of meetings">
+          <td>{{ getInstructorName(meeting) }}</td>
+          <td>{{ getStudentName(meeting) }}</td>
+          <td>{{ formatMeetingDate(meeting) }}</td>
+          <td>{{ getMeetingHour(meeting) }}</td>
+          <td>{{ meeting.mode }}</td>
+          <td>{{ meeting.status }}</td>
+          <td>{{ formatCreatedAt(meeting) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noResults>
+    <p class="no-results-message" *ngIf="!isLoading">
+      No se encontraron clases creadas por instructores en el rango seleccionado.
+    </p>
+  </ng-template>
+</section>

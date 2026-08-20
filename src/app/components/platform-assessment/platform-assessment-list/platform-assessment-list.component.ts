@@ -54,6 +54,7 @@ export class PlatformAssessmentListComponent {
       pending: 'Pendiente',
       expired: 'Vencida',
       completed: 'Completada',
+      focus_guard: 'Cambio de pestaña',
     };
 
     return (

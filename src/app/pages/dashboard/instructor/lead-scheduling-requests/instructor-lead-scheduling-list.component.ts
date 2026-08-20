@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { InstructorSchedulingRequestHeaderComponent } from '../../../../components/instructor-scheduling-request/instructor-scheduling-request-header/instructor-scheduling-request-header.component';
 import { InstructorSchedulingRequestFiltersComponent } from '../../../../components/instructor-scheduling-request/instructor-scheduling-request-filters/instructor-scheduling-request-filters.component';
@@ -125,6 +125,7 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
   constructor(
     private readonly leadScheduling: LeadSchedulingRequestService,
     private readonly route: ActivatedRoute,
+    private router: Router,
     private readonly leadSchedulingPending: LeadSchedulingPendingCountService,
   ) {}
 
@@ -442,5 +443,14 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
     }
 
     return `${iso}T12:00:00`;
+  }
+
+  goToRequestDetail(
+    requestId: number,
+  ): void {
+    this.router.navigate([
+      '/dashboard/instructor/lead-scheduling-requests',
+      requestId,
+    ]);
   }
 }

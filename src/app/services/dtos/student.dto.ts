@@ -76,7 +76,8 @@ export enum StudentClassification {
 
 export enum Mode {
   PRESENCIAL = 'PRESENCIAL',
-  ONLINE = 'ONLINE'
+  ONLINE = 'ONLINE',
+  SEMIPRESENCIAL = 'SEMIPRESENCIAL',
 }
 
 export interface RegisterStudentResponseDto {

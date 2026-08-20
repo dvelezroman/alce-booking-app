@@ -61,7 +61,7 @@
           <th>Outcome</th>
           <th>Puntos</th>
           <th>Completado</th>
-          <th>Writing ALCE</th>
+          <th>Grammar ALCE</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -77,7 +77,11 @@
             <div class="cell-main">{{ displayStudent(row) }}</div>
             <div class="cell-sub">ID {{ row.studentId ?? row.externalStudentId }}</div>
           </td>
-          <td><span class="badge badge-blue">{{ row.status }}</span></td>
+          <td>
+            <span class="badge" [ngClass]="statusClass(row)">
+              {{ statusLabel(row) }}
+            </span>
+          </td>
           <td>{{ row.attemptCount }} / {{ row.maxAttempts }}</td>
           <td>
             <span class="badge" [ngClass]="outcomeClass(row.outcome)">
@@ -110,7 +114,8 @@
             <button
               type="button"
               class="btn-writing"
-              *ngIf="canApplyWriting(row) || canCorrectWriting(row)"
+              *ngIf="canShowWritingAction(row)"
+              [disabled]="isWritingLocked(row)"
               (click)="startApplyWriting(row)"
             >
               {{ writingActionLabel(row) }}

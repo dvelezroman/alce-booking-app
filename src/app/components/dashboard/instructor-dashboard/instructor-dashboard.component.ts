@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 
 import { UserDto, UserRole } from '../../../services/dtos/user.dto';
+import { Router } from '@angular/router';
 import { StudentClassification } from '../../../services/dtos/student.dto';
 import { InstructorCalendarComponent } from '../../../components/home/instructor-calendar/instructor-calendar.component';
 import { AnnouncementViewerComponent } from '../../announcements/announcement-viewer/announcement-viewer.component';
@@ -59,7 +60,8 @@ export class InstructorDashboardComponent implements OnInit, OnChanges {
   announcements: Announcement[] = [];
 
   constructor(
-    private readonly announcementService: AnnouncementService
+    private readonly announcementService: AnnouncementService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +72,12 @@ export class InstructorDashboardComponent implements OnInit, OnChanges {
     if (changes['userData']) {
       this.resolveInstructor();
     }
+  }
+
+  goToInstructorAgenda(): void {
+    this.router.navigate([
+      '/dashboard/searching-meeting-instructor-v2',
+    ]);
   }
 
   private resolveInstructor(): void {

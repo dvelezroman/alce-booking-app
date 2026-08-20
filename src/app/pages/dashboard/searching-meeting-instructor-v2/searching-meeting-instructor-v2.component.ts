@@ -242,6 +242,7 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
     hour: '',
     assigned: true,
     category: undefined,
+    mode: undefined,
   };
 
   constructor(
@@ -260,6 +261,7 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
 
   ngOnInit(): void {
     this.filter.category = undefined;
+    this.filter.mode = undefined;
 
     /*
      * La página V2 inicia mostrando únicamente
@@ -523,6 +525,9 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
       category:
         this.filter.category || undefined,
 
+      mode:
+        this.filter.mode || undefined,
+
       stageId:
         this.filter.stageId || undefined,
     };
@@ -554,6 +559,8 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
     this.filter.stageId = '';
 
     this.filter.category = undefined;
+
+    this.filter.mode = undefined;
 
     this.filter.assigned = true;
 

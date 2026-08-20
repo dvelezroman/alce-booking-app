@@ -2,14 +2,72 @@
   class="progress-card"
   aria-labelledby="student-progress-title"
 >
-  <ng-container *ngIf="!isLoading; else loadingState">
-
+  <header class="progress-card__header">
     <h2
       id="student-progress-title"
       class="progress-card__title"
     >
       Tu progreso general
     </h2>
+
+    <div
+      class="progress-card__stage"
+      [class.progress-card__stage--empty]="!hasAssignedStage"
+      role="status"
+      [attr.aria-label]="stageAriaLabel"
+    >
+      <span class="progress-card__stage-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path
+            d="m12 2 2.15 3.2 3.75.4.4 3.75L21.5 12l-3.2 2.65-.4 3.75-3.75.4L12 22l-2.15-3.2-3.75-.4-.4-3.75L2.5 12l3.2-2.65.4-3.75 3.75-.4L12 2Z"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+        </svg>
+      </span>
+
+      <span class="progress-card__stage-copy">
+        <span class="progress-card__stage-kicker">
+          Stage actual
+        </span>
+
+        <strong class="progress-card__stage-value">
+          <ng-container *ngIf="hasAssignedStage; else unassignedStage">
+            <span *ngIf="stageNumber">
+              {{ stageNumber }}
+            </span>
+            <span
+              *ngIf="stageNumber && stageDescription"
+              class="progress-card__stage-sep"
+              aria-hidden="true"
+            >
+              ·
+            </span>
+            <span
+              *ngIf="stageDescription"
+              class="progress-card__stage-desc"
+            >
+              {{ stageDescription }}
+            </span>
+          </ng-container>
+
+          <ng-template #unassignedStage>
+            Sin asignar
+          </ng-template>
+        </strong>
+      </span>
+    </div>
+  </header>
+
+  <ng-container *ngIf="!isLoading; else loadingState">
 
     <div class="progress-card__content">
 

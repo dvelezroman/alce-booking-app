@@ -28,6 +28,7 @@ import { StagesService } from '../../../../services/stages.service';
 import { StudentsService } from '../../../../services/students.service';
 import { sanitizeNotificationBody } from '../../../../shared/utils/notification-message.util';
 import { isPlacementTestExam } from '../../../../shared/utils/lead-scheduling-request.util';
+import { formatRelativeDueDateEs } from '../../../../shared/utils/dates.util';
 
 @Component({
   selector: 'app-notification-detail',
@@ -284,8 +285,16 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.notification?.message?.kind === 'assessment-assigned';
   }
 
+  get isAssessmentRetake(): boolean {
+    return this.assessmentMessage?.reason === 'RETAKE';
+  }
+
   get isAssessmentResultsReadyNotification(): boolean {
     return this.notification?.message?.kind === 'assessment-results-ready';
+  }
+
+  get isAssessmentUnassignedNotification(): boolean {
+    return this.notification?.message?.kind === 'assessment-unassigned';
   }
 
   get assessmentMessage() {
@@ -323,9 +332,26 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return ms <= Date.now();
   }
 
+  get assessmentDueLabel(): string {
+    const formatted = formatRelativeDueDateEs(this.assessmentMessage?.expiresAt ?? null);
+    if (formatted) return formatted.display;
+    if (this.assessmentMessage?.expiresAt == null) return 'Sin vencimiento';
+    return this.assessmentMessage.expiresAtLabel || 'Fecha no disponible';
+  }
+
+  get assessmentDueRelative(): string | null {
+    return formatRelativeDueDateEs(this.assessmentMessage?.expiresAt ?? null)?.relativePhrase ?? null;
+  }
+
   openAssessmentDirectAccess(): void {
     if (this.isAssessmentExpired) return;
     const url = this.assessmentMessage?.directAccessUrl?.trim();
+    if (!url) return;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  openAssessmentResults(): void {
+    const url = this.assessmentResultsMessage?.resultsUrl?.trim();
     if (!url) return;
     window.open(url, '_blank', 'noopener,noreferrer');
   }
@@ -536,6 +562,15 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     if (this.isActiveStudentsReportNotification) return false;
     if (this.isLeadRequestNotification && this.requestLead) return false;
     if (this.isLeadSchedulingInstructorCard) {
+      return false;
+    }
+    if (this.notification?.message?.kind === 'assessment-assigned') {
+      return false;
+    }
+    if (this.notification?.message?.kind === 'assessment-results-ready') {
+      return false;
+    }
+    if (this.notification?.message?.kind === 'assessment-unassigned') {
       return false;
     }
     return true;

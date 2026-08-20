@@ -1,0 +1,373 @@
+<section class="notifications-details">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="notifications-details__header">
+
+    <h2 class="notifications-details__title">
+      Estado detallado
+    </h2>
+
+  </header>
+
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  <div class="notifications-details__list">
+
+    <!-- =========================
+         BROWSER
+    ========================== -->
+
+    <div class="notifications-details__item">
+
+      <span
+        class="notifications-details__icon"
+        [class.notifications-details__icon--success]="isSupported"
+        [class.notifications-details__icon--danger]="!isSupported"
+      >
+
+        @if (isSupported) {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m8.5 12 2.2 2.2 4.8-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        } @else {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m9 9 6 6M15 9l-6 6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        }
+
+      </span>
+
+
+      <div class="notifications-details__content">
+
+        <strong>
+          Soporte del navegador
+        </strong>
+
+        <span
+          [class.notifications-details__text--success]="isSupported"
+          [class.notifications-details__text--danger]="!isSupported"
+        >
+          {{
+            isSupported
+              ? 'Tu navegador soporta notificaciones push'
+              : 'Tu navegador no soporta notificaciones push'
+          }}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         PERMISSION
+    ========================== -->
+
+    <div class="notifications-details__item">
+
+      <span
+        class="notifications-details__icon"
+        [class.notifications-details__icon--success]="
+          permission === 'granted'
+        "
+        [class.notifications-details__icon--warning]="
+          permission === 'default'
+        "
+        [class.notifications-details__icon--danger]="
+          permission === 'denied'
+        "
+      >
+
+        @if (permission === 'granted') {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m8.5 12 2.2 2.2 4.8-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        } @else if (permission === 'denied') {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m9 9 6 6M15 9l-6 6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        } @else {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M12 3 21 19H3L12 3Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M12 9v4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <circle
+              cx="12"
+              cy="16"
+              r="0.9"
+              fill="currentColor"
+            />
+          </svg>
+
+        }
+
+      </span>
+
+
+      <div class="notifications-details__content">
+
+        <strong>
+          Permiso del sistema
+        </strong>
+
+        <span
+          [class.notifications-details__text--success]="
+            permission === 'granted'
+          "
+          [class.notifications-details__text--warning]="
+            permission === 'default'
+          "
+          [class.notifications-details__text--danger]="
+            permission === 'denied'
+          "
+        >
+          {{ permissionTitle }}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         SUBSCRIPTION
+    ========================== -->
+
+    <div class="notifications-details__item">
+
+      <span
+        class="notifications-details__icon"
+        [class.notifications-details__icon--success]="isSubscribed"
+        [class.notifications-details__icon--neutral]="!isSubscribed"
+      >
+
+        @if (isSubscribed) {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m8.5 12 2.2 2.2 4.8-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        } @else {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+          </svg>
+
+        }
+
+      </span>
+
+
+      <div class="notifications-details__content">
+
+        <strong>
+          Suscripción push
+        </strong>
+
+        <span
+          [class.notifications-details__text--success]="isSubscribed"
+        >
+          {{ subscriptionTitle }}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         PREFERENCE
+    ========================== -->
+
+    <div class="notifications-details__item">
+
+      <span
+        class="notifications-details__icon"
+        [class.notifications-details__icon--success]="isSubscribed"
+        [class.notifications-details__icon--neutral]="!isSubscribed"
+      >
+
+        @if (isSubscribed) {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m8.5 12 2.2 2.2 4.8-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        } @else {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+          </svg>
+
+        }
+
+      </span>
+
+
+      <div class="notifications-details__content">
+
+        <strong>
+          Preferencia en el sistema
+        </strong>
+
+        <span
+          [class.notifications-details__text--success]="isSubscribed"
+        >
+          {{ preferenceTitle }}
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

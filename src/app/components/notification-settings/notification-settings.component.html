@@ -1,0 +1,88 @@
+<main class="notifications-page">
+
+  <div class="notifications-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <app-notifications-config-header>
+    </app-notifications-config-header>
+
+
+    <!-- =========================
+         CONTENT
+    ========================== -->
+
+    <div class="notifications-page__layout">
+
+      <!-- =========================
+           LEFT COLUMN
+      ========================== -->
+
+      <div class="notifications-page__main">
+
+        <!-- STATUS -->
+
+        <app-notifications-status
+          [isSupported]="isSupported"
+          [permission]="permission"
+          [isSubscribed]="isSubscribed"
+          [statusClass]="getStatusClass()"
+          [statusText]="getStatusText()"
+        >
+        </app-notifications-status>
+
+
+        <!-- MANAGEMENT -->
+
+        <app-notifications-management
+          [isSupported]="isSupported"
+          [permission]="permission"
+          [isSubscribed]="isSubscribed"
+          [isLoading]="isLoading"
+          (enableRequested)="enableNotifications()"
+          (disableRequested)="disableNotifications()"
+        >
+        </app-notifications-management>
+
+      </div>
+
+
+      <!-- =========================
+           RIGHT COLUMN
+      ========================== -->
+
+      <aside class="notifications-page__aside">
+
+        <!-- DETAILED STATUS -->
+
+        <app-notifications-details
+          [isSupported]="isSupported"
+          [permission]="permission"
+          [isSubscribed]="isSubscribed"
+        >
+        </app-notifications-details>
+
+
+        <!-- HELP -->
+
+        <app-notifications-help>
+        </app-notifications-help>
+
+
+        <!-- IMPORTANT -->
+
+        <app-notifications-important-info
+          [permission]="permission"
+          [errorMessage]="errorMessage"
+        >
+        </app-notifications-important-info>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+</main>

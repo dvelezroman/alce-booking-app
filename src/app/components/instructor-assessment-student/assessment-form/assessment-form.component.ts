@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import {
@@ -14,13 +9,11 @@ import {
 
 import { UserDto } from '../../../services/dtos/user.dto';
 
-
 interface AssessmentFormResource {
   id: number;
   name: string;
   content: string;
 }
-
 
 @Component({
   selector: 'app-assessment-form',
@@ -37,6 +30,7 @@ export class AssessmentFormComponent {
   /* =========================
      INPUTS
   ========================= */
+
   @Input() selectedStudent: UserDto | null = null;
   @Input() currentStageId: number | null = null;
   @Input() instructorId: number | null = null;
@@ -44,29 +38,28 @@ export class AssessmentFormComponent {
   @Input() blockedTypes: AssessmentType[] = [];
   @Input() resources: AssessmentFormResource[] = [];
 
-
   /* =========================
      OUTPUT
   ========================= */
+
   @Output() assessmentCreated =
     new EventEmitter<CreateAssessmentI>();
-
 
   /* =========================
      FORM
   ========================= */
+
   selectedType: AssessmentType | null = null;
   points: number | null = null;
   notes: string = '';
   selectedResourceIds: number[] = [];
 
-
   /* =========================
      UI
   ========================= */
+
   showTypeDropdown: boolean = false;
   showResourcesDropdown: boolean = false;
-
 
   /* =========================
      TYPES
@@ -75,14 +68,11 @@ export class AssessmentFormComponent {
   assessmentTypes: AssessmentType[] =
     Object.values(AssessmentType);
 
-
   get availableAssessmentTypes(): AssessmentType[] {
     return this.assessmentTypes.filter(
-      type =>
-        !this.blockedTypes.includes(type)
+      type => !this.blockedTypes.includes(type)
     );
   }
-
 
   get selectedTypeLabel(): string {
     if (!this.selectedType) {
@@ -94,11 +84,9 @@ export class AssessmentFormComponent {
     );
   }
 
-
   getTypeLabel(
     type: AssessmentType,
   ): string {
-
     const normalized =
       String(type)
         .trim()
@@ -111,9 +99,6 @@ export class AssessmentFormComponent {
       case 'grammar':
         return 'Grammar';
 
-      // case 'writing':
-      //   return 'Writing';
-
       default:
         return this.formatLabel(
           String(type)
@@ -121,30 +106,24 @@ export class AssessmentFormComponent {
     }
   }
 
-
   isTypeBlocked(
     type: AssessmentType,
   ): boolean {
-
     return this.blockedTypes.includes(
       type
     );
   }
 
-
   selectAssessmentType(
     type: AssessmentType,
   ): void {
-
     if (this.isTypeBlocked(type)) {
       return;
     }
 
     this.selectedType = type;
-
     this.showTypeDropdown = false;
   }
-
 
   toggleTypeDropdown(): void {
     if (!this.selectedStudent) {
@@ -157,13 +136,11 @@ export class AssessmentFormComponent {
     this.showResourcesDropdown = false;
   }
 
-
   /* =========================
      POINTS
   ========================= */
 
   decreasePoints(): void {
-
     const current =
       this.points ?? 0;
 
@@ -174,9 +151,7 @@ export class AssessmentFormComponent {
       );
   }
 
-
   increasePoints(): void {
-
     const current =
       this.points ?? 0;
 
@@ -187,11 +162,9 @@ export class AssessmentFormComponent {
       );
   }
 
-
   onPointsChange(
     value: number | null,
   ): void {
-
     if (value == null) {
       this.points = null;
       return;
@@ -207,11 +180,9 @@ export class AssessmentFormComponent {
       );
   }
 
-
   get pointsValue(): number {
     return this.points ?? 0;
   }
-
 
   get isPassingScore(): boolean {
     if (
@@ -235,19 +206,19 @@ export class AssessmentFormComponent {
       return false;
     }
 
-    return this.points < this.minPointsAssessment;
+    return (
+      this.points <
+      this.minPointsAssessment
+    );
   }
-
 
   get hasRequiredNotes(): boolean {
     return this.notes.trim().length > 0;
   }
 
-
   get hasRequiredResources(): boolean {
     return this.selectedResourceIds.length > 0;
   }
-
 
   /* =========================
      RESOURCES
@@ -264,18 +235,15 @@ export class AssessmentFormComponent {
     this.showTypeDropdown = false;
   }
 
-
   toggleResource(
     resourceId: number,
   ): void {
-
     const exists =
       this.selectedResourceIds.includes(
         resourceId
       );
 
     if (exists) {
-
       this.selectedResourceIds =
         this.selectedResourceIds.filter(
           id => id !== resourceId
@@ -290,19 +258,15 @@ export class AssessmentFormComponent {
     ];
   }
 
-
   isResourceSelected(
     resourceId: number,
   ): boolean {
-
     return this.selectedResourceIds.includes(
       resourceId
     );
   }
 
-
   get selectedResourcesLabel(): string {
-
     if (
       this.selectedResourceIds.length === 0
     ) {
@@ -312,7 +276,6 @@ export class AssessmentFormComponent {
     if (
       this.selectedResourceIds.length === 1
     ) {
-
       const selectedResource =
         this.resources.find(
           resource =>
@@ -331,13 +294,11 @@ export class AssessmentFormComponent {
     );
   }
 
-
   /* =========================
      STUDENT
   ========================= */
 
   get studentId(): number | null {
-
     return (
       this.selectedStudent
         ?.student
@@ -345,7 +306,6 @@ export class AssessmentFormComponent {
       null
     );
   }
-
 
   /* =========================
      VALIDATION
@@ -383,9 +343,7 @@ export class AssessmentFormComponent {
     return true;
   }
 
-
   get validationMessage(): string | null {
-
     if (!this.selectedStudent) {
       return 'Selecciona un estudiante.';
     }
@@ -423,7 +381,6 @@ export class AssessmentFormComponent {
     return null;
   }
 
-
   /* =========================
      SUBMIT
   ========================= */
@@ -443,30 +400,20 @@ export class AssessmentFormComponent {
     }
 
     const payload: CreateAssessmentI = {
-      studentId:
-        this.studentId!,
-
-      stageId:
-        this.currentStageId!,
-
-      instructorId:
-        this.instructorId!,
-
-      type:
-        this.selectedType!,
-
-      points:
-        this.points!,
-
-      assessmentTypeId:
-        assessmentTypeId,
-
+      type: this.selectedType!,
+      points: this.points!,
+      studentId: this.studentId!,
+      stageId: this.currentStageId!,
+      instructorId: this.instructorId!,
+      assessmentTypeId,
       assessmentResourceIds: [
         ...this.selectedResourceIds,
       ],
-
-      note:
-        this.notes.trim(),
+      ...(this.notes.trim()
+        ? {
+            note: this.notes.trim(),
+          }
+        : {}),
     };
 
     console.log(
@@ -481,26 +428,18 @@ export class AssessmentFormComponent {
     this.resetForm();
   }
 
-
   /* =========================
      RESET
   ========================= */
 
   resetForm(): void {
-
     this.selectedType = null;
-
     this.points = null;
-
     this.notes = '';
-
     this.selectedResourceIds = [];
-
     this.showTypeDropdown = false;
-
     this.showResourcesDropdown = false;
   }
-
 
   /* =========================
      TRACK BY
@@ -510,19 +449,15 @@ export class AssessmentFormComponent {
     index: number,
     type: AssessmentType,
   ): string {
-
     return String(type);
   }
-
 
   trackByResourceId(
     index: number,
     resource: AssessmentFormResource,
   ): number {
-
     return resource.id;
   }
-
 
   /* =========================
      HELPERS
@@ -531,7 +466,6 @@ export class AssessmentFormComponent {
   private formatLabel(
     value: string,
   ): string {
-
     if (!value) {
       return '';
     }
@@ -549,7 +483,7 @@ export class AssessmentFormComponent {
   }
 
   /* =========================
-    ASSESSMENT TYPE ID
+     ASSESSMENT TYPE ID
   ========================= */
 
   getAssessmentTypeId(

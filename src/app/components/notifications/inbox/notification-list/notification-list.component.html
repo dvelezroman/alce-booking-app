@@ -61,6 +61,7 @@
             trackBy: trackByNotificationId
           "
           class="notification-list__row"
+          [class.notification-list__row--unread]="!notification.isRead"
           tabindex="0"
           role="button"
           (click)="onNotificationClick(notification)"
@@ -251,6 +252,11 @@
               <div class="notification-list__notification-content">
 
                 <p class="notification-list__notification-title">
+                  <span
+                    *ngIf="!notification.isRead"
+                    class="notification-list__unread-dot"
+                    aria-hidden="true"
+                  ></span>
                   {{ notification.title }}
                 </p>
 

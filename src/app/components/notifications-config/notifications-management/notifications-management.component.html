@@ -1,0 +1,403 @@
+<section class="notifications-management">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="notifications-management__header">
+
+    <h2 class="notifications-management__title">
+      Gestión de notificaciones
+    </h2>
+
+    <p class="notifications-management__description">
+      Habilita o deshabilita las notificaciones push en tu dispositivo.
+    </p>
+
+  </header>
+
+
+  <!-- =========================
+       CARDS
+  ========================== -->
+
+  <div class="notifications-management__grid">
+
+    <!-- =========================
+         ENABLE
+    ========================== -->
+
+    <article
+      class="
+        notifications-management__card
+        notifications-management__card--enable
+      "
+    >
+
+      <div class="notifications-management__card-top">
+
+        <div class="notifications-management__card-heading">
+
+          <span
+            class="
+              notifications-management__icon
+              notifications-management__icon--enable
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M18 8A6 6 0 0 0 6 8c0 7-3 7-3 9h18c0-2-3-2-3-9"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M13.73 21a2 2 0 0 1-3.46 0"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+
+          <div>
+
+            <h3>
+              Habilitar notificaciones
+            </h3>
+
+            <p>
+              Recibe notificaciones push en tu navegador
+              sobre clases, evaluaciones y anuncios.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="
+            notifications-management__button
+            notifications-management__button--enable
+          "
+          [disabled]="!canEnable"
+          (click)="enable()"
+        >
+
+          <span
+            class="notifications-management__button-icon"
+          >
+            @if (isLoading) {
+
+              <span
+                class="notifications-management__spinner"
+              >
+              </span>
+
+            } @else {
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M18 8A6 6 0 0 0 6 8c0 7-3 7-3 9h18c0-2-3-2-3-9"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+            }
+          </span>
+
+          <span>
+            {{
+              isLoading
+                ? 'Procesando...'
+                : 'Habilitar'
+            }}
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <div class="notifications-management__card-body">
+
+        <div class="notifications-management__benefits">
+
+          <span class="notifications-management__benefits-title">
+            Al habilitar recibirás:
+          </span>
+
+
+          <ul>
+
+            <li>
+              <span>✓</span>
+              Recordatorios de clases programadas
+            </li>
+
+            <li>
+              <span>✓</span>
+              Notificaciones de nuevas evaluaciones
+            </li>
+
+            <li>
+              <span>✓</span>
+              Anuncios importantes del sistema
+            </li>
+
+            <li>
+              <span>✓</span>
+              Información sobre tu progreso
+            </li>
+
+          </ul>
+
+        </div>
+
+
+        <span
+          class="notifications-management__state"
+          [class.notifications-management__state--success]="
+            isSubscribed
+          "
+        >
+          <span class="notifications-management__state-dot">
+          </span>
+
+          {{ subscriptionLabel }}
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <!-- =========================
+         DISABLE
+    ========================== -->
+
+    <article
+      class="
+        notifications-management__card
+        notifications-management__card--disable
+      "
+    >
+
+      <div class="notifications-management__card-top">
+
+        <div class="notifications-management__card-heading">
+
+          <span
+            class="
+              notifications-management__icon
+              notifications-management__icon--disable
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M18 8A6 6 0 0 0 6 8c0 7-3 7-3 9h18c0-2-3-2-3-9"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="m4 4 16 16"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+
+          <div>
+
+            <h3>
+              Deshabilitar notificaciones
+            </h3>
+
+            <p>
+              Dejarás de recibir notificaciones push
+              en este dispositivo.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="
+            notifications-management__button
+            notifications-management__button--disable
+          "
+          [disabled]="!canDisable"
+          (click)="disable()"
+        >
+
+          <span
+            class="notifications-management__button-icon"
+          >
+            @if (isLoading) {
+
+              <span
+                class="notifications-management__spinner"
+              >
+              </span>
+
+            } @else {
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M18 8A6 6 0 0 0 6 8c0 7-3 7-3 9h18c0-2-3-2-3-9"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="m4 4 16 16"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+
+            }
+          </span>
+
+          <span>
+            {{
+              isLoading
+                ? 'Procesando...'
+                : 'Deshabilitar'
+            }}
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <div class="notifications-management__card-body">
+
+        <div class="notifications-management__benefits">
+
+          <span class="notifications-management__benefits-title">
+            Al deshabilitar:
+          </span>
+
+
+          <ul class="notifications-management__danger-list">
+
+            <li>
+              <span>×</span>
+              No recibirás recordatorios de clases
+            </li>
+
+            <li>
+              <span>×</span>
+              No recibirás notificaciones de evaluaciones
+            </li>
+
+            <li>
+              <span>×</span>
+              Podrías perder información importante
+            </li>
+
+            <li>
+              <span>×</span>
+              Deberás habilitarlas nuevamente
+            </li>
+
+          </ul>
+
+        </div>
+
+
+        <span
+          class="notifications-management__state"
+          [class.notifications-management__state--danger]="
+            !isSubscribed
+          "
+        >
+          <span class="notifications-management__state-dot">
+          </span>
+
+          {{ disabledLabel }}
+        </span>
+
+      </div>
+
+    </article>
+
+  </div>
+
+
+  <!-- =========================
+       PRIVACY
+  ========================== -->
+
+  <div class="notifications-management__privacy">
+
+    <span class="notifications-management__privacy-icon">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M12 3 5.5 5.7v5.2c0 4.2 2.7 7.8 6.5 9.1 3.8-1.3 6.5-4.9 6.5-9.1V5.7L12 3Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="m9 12 2 2 4-4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+    </span>
+
+
+    <p>
+      <strong>
+        Tu privacidad es importante.
+      </strong>
+
+      No compartimos tu información con terceros.
+      Las notificaciones solo se usan para información relevante del sistema.
+    </p>
+
+  </div>
+
+</section>

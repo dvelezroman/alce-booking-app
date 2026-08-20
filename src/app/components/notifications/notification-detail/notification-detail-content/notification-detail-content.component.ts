@@ -20,6 +20,7 @@ import {
 import {
   SafeNoteHtmlPipe,
 } from '../../../../pipes/safe-note-html.pipe';
+import { formatRelativeDueDateEs } from '../../../../shared/utils/dates.util';
 
 @Component({
   selector: 'app-notification-detail-content',
@@ -166,6 +167,50 @@ export class NotificationDetailContentComponent {
     student: NewStudentRow,
   ): void {
     this.editStudent.emit(student);
+  }
+
+  get isAssessmentAssignedNotification(): boolean {
+    return this.notification?.message?.kind === 'assessment-assigned';
+  }
+
+  get isAssessmentUnassignedNotification(): boolean {
+    return this.notification?.message?.kind === 'assessment-unassigned';
+  }
+
+  get isAssessmentRetake(): boolean {
+    return this.notification?.message?.reason === 'RETAKE';
+  }
+
+  get assessmentDirectUrl(): string | null {
+    const url = this.notification?.message?.directAccessUrl?.trim();
+    return url || null;
+  }
+
+  get isAssessmentExpired(): boolean {
+    const raw = this.notification?.message?.expiresAt;
+    if (raw == null || raw === '') return false;
+    const ms = Date.parse(raw);
+    if (!Number.isFinite(ms)) return false;
+    return ms <= Date.now();
+  }
+
+  get assessmentDueFormatted() {
+    return formatRelativeDueDateEs(
+      this.notification?.message?.expiresAt ?? null,
+    );
+  }
+
+  get assessmentDueLabel(): string {
+    const formatted = this.assessmentDueFormatted;
+    if (formatted) return formatted.display;
+    if (this.notification?.message?.expiresAt == null) {
+      return 'Sin vencimiento';
+    }
+    return this.notification.message.expiresAtLabel || 'Fecha no disponible';
+  }
+
+  get assessmentDueRelative(): string {
+    return this.assessmentDueFormatted?.relativePhrase || 'Pendiente';
   }
 
   trackByRecipientId(

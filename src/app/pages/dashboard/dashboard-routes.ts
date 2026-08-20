@@ -23,6 +23,7 @@ import { StageComponent } from './stage/stage.component';
 import { AcademicResourcesComponent } from './academic-resources/academic-resources.component';
 import { AssessmentTypesComponent } from './assessment-types/assessment-types.component';
 import { AssessmentConfigComponent } from './assessment-config/assessment-config.component';
+import { StagePromotionConfigComponent } from './stage-promotion-config/stage-promotion-config.component';
 import { ReportUserComponent } from './report-user/report-user.component';
 import { AttendanceInstructorComponent } from './attendance-instructor/attendance-instructor.component';
 import { BroadcastGroupsComponent } from './notifications/broadcast-groups/broadcast-groups.component';
@@ -33,6 +34,7 @@ import { NotificationDetailComponent } from './notifications/notification-detail
 import { NotificationsSentComponent } from './notifications/notifications-sent/notifications-sent.component';
 import { SendEmailsComponent } from './emails/send-emails/send-emails.component';
 import { HistorialEmailComponent } from './emails/historial-email/historial-email.component';
+import { SuppressedEmailsComponent } from './emails/suppressed-emails/suppressed-emails.component';
 import { InboxEmailComponent } from './emails/inbox-email/inbox-email.component';
 import { SentEmailComponent } from './emails/sent-email/sent-email.component';
 import { EmailDetailComponent } from './emails/email-detail/email-detail.component';
@@ -53,6 +55,7 @@ import { MeetingEvaluationsComponent } from './meeting-evaluations/meeting-evalu
 import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluation-statistics.component';
 import { StudentHistoryReportComponent } from './report-students/student-history-report/student-history-report.component';
 import { ActiveStudentsReportComponent } from './report-students/active-students-report/active-students-report.component';
+import { InstructorCreatedMeetingsComponent } from './instructor-created-meetings/instructor-created-meetings.component';
 import { AnnouncementsComponent } from './announcements/announcements.component';
 import { adminOnlyGuard } from '../auth/admin-role.guard';
 import { instructorOnlyGuard } from '../auth/instructor-role.guard';
@@ -79,6 +82,7 @@ import { AttendanceInstructorV2Component } from './attendance-instructor-v2/atte
 import { RegisterStudentV2Component } from './register-student-v2/register-student-v2.component';
 import { RegisterStaffComponent } from './register-staff/register-staff.component';
 import { StageAssessmentV2Component } from './stage-assessment-v2/stage-assessment-v2.component';
+import { NotificationSettingsComponent } from '../../components/notification-settings/notification-settings.component';
 
 const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -146,6 +150,7 @@ const dashboardChildren: Routes = [
   // { path: 'attendance-student', component: AttendanceReportsComponent },
   { path: 'attendance-student', component: AttendanceStudentComponent },
   { path: 'report-instructor', component: ReportInstructorComponent },
+  { path: 'instructor-created-meetings', component: InstructorCreatedMeetingsComponent },
   { path: 'attendance-instructor', component: AttendanceInstructorComponent },
   { path: 'attendance-instructor-v2', component: AttendanceInstructorV2Component },
   { path: 'instructor-evaluations', component: InstructorEvaluationsComponent },
@@ -182,6 +187,8 @@ const dashboardChildren: Routes = [
   { path: 'notifications-historial', component: NotificationsHistorialComponent },
   { path: 'notifications-groups', component: GroupsComponent },
   { path: 'notifications-inbox', component: InboxComponent },
+  { path: 'notification-settings', component: NotificationSettingsComponent },
+  { path: 'notifications', component: NotificationSettingsComponent },
   { path: 'notifications-detail', component: NotificationDetailComponent },
   { path: 'notifications-detail-v2', component: NotificationDetailV2Component },
   { path: 'notifications-sent', component: NotificationsSentComponent },
@@ -190,6 +197,7 @@ const dashboardChildren: Routes = [
   { path: 'sent-email', component: SentEmailComponent },
   { path: 'inbox-email', component: InboxEmailComponent },
   { path: 'historial-email', component: HistorialEmailComponent },
+  { path: 'suppressed-emails', component: SuppressedEmailsComponent },
   { path: 'email-detail', component: EmailDetailComponent },
 ];
 

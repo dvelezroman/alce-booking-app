@@ -95,6 +95,7 @@ navItems: SidebarNavItem[] = [
   { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/dashboard/feature-flag', roles: [UserRole.ADMIN] },
   { icon: 'config', text: 'Anuncios', route: '/dashboard/announcements', roles: [UserRole.ADMIN] },
   { icon: 'reporte', text: 'Instructores', route: '/dashboard/report-instructor', roles: [UserRole.ADMIN] },
+  { icon: 'video_call', text: 'Clases creadas por instructor', route: '/dashboard/instructor-created-meetings', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Estudiante', route: '/dashboard/reports-detailed', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Historial Completo', route: '/dashboard/student-history-report', roles: [UserRole.ADMIN] },
   { icon: 'excel', text: 'Estudiantes activos', route: '/dashboard/active-students-report', roles: [UserRole.ADMIN] },
@@ -119,6 +120,7 @@ navItems: SidebarNavItem[] = [
   { icon: 'book-open', text: 'Recursos Stages', route: '/dashboard/stage-assessment-resources', roles: [UserRole.ADMIN]},
   { icon: 'book-type', text: 'Tipos de Evaluación',  route: '/dashboard/assessment-types', roles: [UserRole.ADMIN]},
   { icon: 'settings', text: 'Configuración de Evaluación', route: '/dashboard/assessment-config', roles: [UserRole.ADMIN] },
+  { icon: 'reportes', text: 'Promoción automática de stage', route: '/dashboard/stage-promotion', roles: [UserRole.ADMIN] },
   // { icon: 'notifications', text: 'Enviar', route: '/dashboard/broadcast-groups', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR], },
   { icon: 'notifications', text: 'Enviar', route: '/dashboard/broadcast-groups-v2', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR], },
   // { icon: 'notifications', text: 'Historial', route: '/dashboard/notifications-status', roles: [UserRole.ADMIN] },
@@ -132,6 +134,7 @@ navItems: SidebarNavItem[] = [
   { icon: 'email', text: 'Enviar Email', route: '/dashboard/send-emails', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'inbox', text: 'Inbox Emails', route: '/dashboard/inbox-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'history', text: 'Historial Emails', route: '/dashboard/historial-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
+  { icon: 'block', text: 'Emails baneados', route: '/dashboard/suppressed-emails', roles: [UserRole.ADMIN] },
   { icon: 'send', text: 'Enviados', route: '/dashboard/sent-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
 ];
 
@@ -277,6 +280,7 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/report-user'),
         this.findNavItemByRoute('/dashboard/report-excel'),
         this.findNavItemByRoute('/dashboard/report-instructor'),
+        this.findNavItemByRoute('/dashboard/instructor-created-meetings'),
 
         {
           title: 'Estudiante',
@@ -291,6 +295,7 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/reports-progress-v2'),
         this.findNavItemByRoute('/dashboard/assessment-reports'),
         this.findNavItemByRoute('/dashboard/suspension-history'),
+        this.findNavItemByRoute('/dashboard/stage-promotion'),
       ].filter(entry => {
         if (this.isSubGroup(entry)) return entry.children.length > 0;
         return entry.roles.includes(role);
@@ -325,6 +330,7 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/send-emails'),
         // this.findNavItemByRoute('/dashboard/inbox-email'),
         this.findNavItemByRoute('/dashboard/historial-email'),
+        this.findNavItemByRoute('/dashboard/suppressed-emails'),
         // this.findNavItemByRoute('/dashboard/sent-email'),
       ].filter(item => item.roles.includes(role))
     },
@@ -387,6 +393,12 @@ navItems: SidebarNavItem[] = [
 
     return allRoutes.some(route =>
       this.currentRoute === route || this.currentRoute.startsWith(route + '/')
+    );
+  }
+
+  isSubGroupActive(group: SidebarNavSubGroup): boolean {
+    return group.children.some(child =>
+      this.currentRoute === child.route || this.currentRoute.startsWith(child.route + '/')
     );
   }
 

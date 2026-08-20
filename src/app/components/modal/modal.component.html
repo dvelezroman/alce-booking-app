@@ -1,5 +1,5 @@
-<div *ngIf="showModal" class="modal-overlay">
-  <div class="modal-content" [ngClass]="{
+<div *ngIf="showModal" class="modal-overlay" (click)="onOverlayClick()">
+  <div class="modal-content" (click)="$event.stopPropagation()" [ngClass]="{
     'error-modal': isError && !isMetadataViewer,
     'shake-animation': shake && isError && !isMetadataViewer,
     'pop-up-animation': (!isError || isContentViewer) && !isMetadataViewer,
@@ -38,6 +38,9 @@
         <div class="modal-buttons" *ngIf="showButtons">
           <button class="button confirm-button" (click)="confirm()">Aceptar</button>
           <button class="button cancel-button" (click)="close.emit()">Cancelar</button>
+        </div>
+        <div class="modal-buttons" *ngIf="!showButtons">
+          <button class="button close-button" (click)="closeModal()">Cerrar</button>
         </div>
       </ng-template>
     </ng-template>

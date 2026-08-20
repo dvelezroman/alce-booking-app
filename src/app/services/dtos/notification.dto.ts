@@ -38,6 +38,7 @@ export interface NotificationMessage {
     | 'placement-exam'
     | 'assessment-assigned'
     | 'assessment-results-ready'
+    | 'assessment-unassigned'
     | 'S2S_NEW_STUDENTS_TO_CREATE'
     | 'lead-scheduling-assigned'
     | 'lead-scheduling-cancelled'
@@ -53,16 +54,18 @@ export interface NotificationMessage {
   outcome?: 'PASSED' | 'FAILED';
   points?: number;
   studentStage?: number | null;
-  /** Shared classroom / QR landing */
+  /** Shared classroom landing (legacy payloads may still include this). */
   shareUrl?: string;
   studentAccessCode?: string;
   assignmentId?: string;
   templateId?: string;
   templateTitle?: string;
   expiresAt?: string | null;
+  expiresAtLabel?: string | null;
   maxAttempts?: number;
   batchId?: string | null;
   eventId?: string;
+  reason?: 'ASSIGNED' | 'RETAKE' | 'MANUAL_NOTIFY' | 'ACCESS_CODE_RESET' | string;
   [key: string]: any;
 }
 
@@ -308,6 +311,7 @@ export interface NotificationListResponse {
   page: number;
   limit: number;
   totalPages: number;
+  unreadCount?: number;
 }
 
 // bandeja de entrada

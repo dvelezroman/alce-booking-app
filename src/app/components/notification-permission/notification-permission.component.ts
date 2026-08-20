@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { PushNotificationService } from '../../services/push-notification.service';
@@ -12,16 +12,19 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./notification-permission.component.scss']
 })
 export class NotificationPermissionComponent implements OnInit, OnDestroy {
-  showPermissionBanner = false;
+  showPermissionBanner = true;
   showSuccessMessage = false;
   isLoading = false;
+  errorMessage: string | null = null;
   private subscriptions: Subscription[] = [];
+  private readonly onSwMessage = (event: MessageEvent) => {
+    if (event.data?.type === 'PUSH_SUBSCRIPTION_CHANGED') {
+      void this.pushNotificationService.ensureInstalledPwaPushSubscription();
+    }
+  };
 
   constructor(private pushNotificationService: PushNotificationService) {}
 
-  /**
-   * Log only in development mode
-   */
   private devLog(message: string, ...args: any[]): void {
     if (!environment.production) {
       console.log(`[NotificationPermission] ${message}`, ...args);
@@ -29,27 +32,26 @@ export class NotificationPermissionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Verificar si las notificaciones están soportadas
     if (!this.pushNotificationService.isSupported()) {
+      this.showPermissionBanner = false;
       return;
     }
 
-    // Listen for custom event to show banner after login
-    window.addEventListener('show-push-notification-banner', this.handleShowBannerEvent.bind(this) as EventListener);
+    window.addEventListener(
+      'show-push-notification-banner',
+      this.handleShowBannerEvent.bind(this) as EventListener
+    );
+    navigator.serviceWorker?.addEventListener('message', this.onSwMessage);
 
-    // Estado del permiso
     this.subscriptions.push(
       this.pushNotificationService.permission$.subscribe(permission => {
         this.devLog('Permission status changed:', permission);
-        if (permission === 'default') {
-          this.showPermissionBanner = true;
-        } else if (permission === 'granted') {
+        if (permission === 'denied') {
           this.showPermissionBanner = false;
         }
       })
     );
 
-    // Estado de suscripción
     this.subscriptions.push(
       this.pushNotificationService.isSubscribed().subscribe(isSubscribed => {
         this.devLog('Subscription status changed:', isSubscribed);
@@ -58,19 +60,32 @@ export class NotificationPermissionComponent implements OnInit, OnDestroy {
         }
       })
     );
+
+    this.subscriptions.push(
+      this.pushNotificationService.lastError$.subscribe(message => {
+        this.errorMessage = message;
+      })
+    );
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
-    window.removeEventListener('show-push-notification-banner', this.handleShowBannerEvent.bind(this) as EventListener);
+    window.removeEventListener(
+      'show-push-notification-banner',
+      this.handleShowBannerEvent.bind(this) as EventListener
+    );
+    navigator.serviceWorker?.removeEventListener('message', this.onSwMessage);
   }
 
-  /**
-   * Handle the custom event to show push notification banner
-   */
   private handleShowBannerEvent(event: Event): void {
     const customEvent = event as CustomEvent;
     this.devLog('Received show banner event:', customEvent.detail);
+    if (Notification.permission === 'denied') {
+      return;
+    }
+    if (this.pushNotificationService.isBannerDismissed()) {
+      return;
+    }
     this.showPermissionBanner = true;
   }
 
@@ -79,21 +94,18 @@ export class NotificationPermissionComponent implements OnInit, OnDestroy {
 
     try {
       this.devLog('User clicked enable notifications');
-      const subscription = await this.pushNotificationService.subscribeToPush();
+      this.pushNotificationService.setPreferenceEnabled(true);
+      const subscription = await this.pushNotificationService.subscribeToPush({
+        ignorePreference: true,
+      });
 
       if (subscription) {
         this.showPermissionBanner = false;
         this.showSuccessMessage = true;
-
-        // Inicia chequeo periódico
         this.pushNotificationService.startPeriodicNotificationCheck(5);
-
-        // Ocultar mensaje de éxito tras 5s
         setTimeout(() => {
           this.dismissSuccess();
         }, 5000);
-      } else {
-        this.devLog('No se pudo suscribir a notificaciones push');
       }
     } catch (error) {
       console.error('Error al habilitar notificaciones:', error);
@@ -104,7 +116,7 @@ export class NotificationPermissionComponent implements OnInit, OnDestroy {
 
   dismissBanner() {
     this.showPermissionBanner = false;
-    localStorage.setItem('notification-permission-dismissed', Date.now().toString());
+    this.pushNotificationService.dismissBanner();
   }
 
   dismissSuccess() {

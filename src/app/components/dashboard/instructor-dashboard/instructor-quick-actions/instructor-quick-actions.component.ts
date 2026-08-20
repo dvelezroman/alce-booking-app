@@ -40,7 +40,7 @@ export class InstructorQuickActionsComponent {
     {
       title: 'Mi calendario',
       description: 'Ver todas mis clases asignadas',
-      route: '/dashboard/searching-meeting-instructor',
+      route: '/dashboard/searching-meeting-instructor-v2',
       tone: 'purple',
       icon: 'calendar',
       ariaLabel: 'Ir al calendario de clases asignadas',
@@ -48,7 +48,7 @@ export class InstructorQuickActionsComponent {
     {
       title: 'Evaluar estudiantes',
       description: 'Evaluar clases finalizadas',
-      route: '/dashboard/instructor-assessments',
+      route: '/dashboard/assessment',
       tone: 'blue',
       icon: 'evaluation',
       ariaLabel: 'Ir a evaluar estudiantes',
@@ -56,7 +56,7 @@ export class InstructorQuickActionsComponent {
     {
       title: 'Progreso estudiantes',
       description: 'Buscar y ver progreso de estudiantes',
-      route: '/dashboard/student-progress',
+      route: '/dashboard/reports-progress-v2',
       tone: 'green',
       icon: 'progress',
       ariaLabel: 'Ir al progreso de estudiantes',
@@ -64,7 +64,7 @@ export class InstructorQuickActionsComponent {
     {
       title: 'Notificaciones',
       description: 'Revisa tus notificaciones',
-      route: '/dashboard/notifications',
+      route: '/dashboard/notifications-inbox',
       tone: 'yellow',
       icon: 'notification',
       ariaLabel: 'Ir a notificaciones',
@@ -72,7 +72,7 @@ export class InstructorQuickActionsComponent {
     {
       title: 'Emails',
       description: 'Ver y responder mensajes',
-      route: '/dashboard/emails',
+      route: '/dashboard/historial-email',
       tone: 'red',
       icon: 'email',
       ariaLabel: 'Ir a emails',

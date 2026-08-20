@@ -1,7 +1,12 @@
-import { Injectable, Optional } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
-import { filter, map } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { UsersService } from './users.service';
+import { environment } from '../../environments/environment';
+
+const PROMPT_PUSH_AFTER_UPDATE_KEY = 'alce.push.prompt-after-update';
+const UPDATE_DISMISS_SESSION_KEY = 'alce.pwa.update-dismissed';
 
 @Injectable({
   providedIn: 'root'
@@ -9,76 +14,131 @@ import { UsersService } from './users.service';
 export class PwaService {
   private promptEvent: any;
   private swUpdate?: SwUpdate;
+  private readonly updateAvailableSubject = new BehaviorSubject(false);
+  readonly updateAvailable$ = this.updateAvailableSubject.asObservable();
 
-  constructor(private usersService: UsersService) {
-    // Service worker will be injected when available
-  }
+  constructor(private usersService: UsersService) {}
 
   setSwUpdate(swUpdate: SwUpdate) {
     this.swUpdate = swUpdate;
     if (swUpdate && swUpdate.isEnabled) {
       swUpdate.versionUpdates
-        .pipe(
-          filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'),
-          map((evt: VersionReadyEvent) => ({
-            type: 'UPDATE_AVAILABLE',
-            current: evt.currentVersion,
-            available: evt.latestVersion,
-          }))
-        )
+        .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
         .subscribe(() => {
-          // Automatically activate the new version without user confirmation
-          console.log('New version available, activating automatically...');
-          swUpdate.activateUpdate().then(() => {
-            window.location.reload();
-          });
+          this.updateAvailableSubject.next(true);
         });
+
+      swUpdate.unrecoverable.subscribe(() => {
+        this.updateAvailableSubject.next(true);
+      });
     }
+
+    void this.detectLegacyServiceWorker();
   }
 
   /**
-   * Check for updates in a stable way (no infinite loops)
+   * Old PWAs may still be controlled by custom-sw.js (dual-SW era).
+   * New push needs ngsw (or a fresh custom-sw). Ask user to update.
    */
+  private async detectLegacyServiceWorker(): Promise<void> {
+    if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) {
+      return;
+    }
+    if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem(UPDATE_DISMISS_SESSION_KEY)) {
+      return;
+    }
+
+    try {
+      const registration = await navigator.serviceWorker.getRegistration('/');
+      const script = registration?.active?.scriptURL || '';
+      const legacyCustomSw =
+        environment.production && script.includes('custom-sw.js');
+      if (legacyCustomSw) {
+        this.updateAvailableSubject.next(true);
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  isUpdateAvailable(): boolean {
+    return this.updateAvailableSubject.value;
+  }
+
+  dismissUpdateBanner(): void {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem(UPDATE_DISMISS_SESSION_KEY, '1');
+    }
+    this.updateAvailableSubject.next(false);
+  }
+
+  markPromptPushAfterUpdate(): void {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem(PROMPT_PUSH_AFTER_UPDATE_KEY, 'true');
+    }
+  }
+
+  consumePromptPushAfterUpdate(): boolean {
+    if (typeof sessionStorage === 'undefined') {
+      return false;
+    }
+    const flagged = sessionStorage.getItem(PROMPT_PUSH_AFTER_UPDATE_KEY) === 'true';
+    sessionStorage.removeItem(PROMPT_PUSH_AFTER_UPDATE_KEY);
+    return flagged;
+  }
+
+  async applyPendingUpdate(): Promise<void> {
+    this.markPromptPushAfterUpdate();
+
+    if (this.swUpdate?.isEnabled) {
+      try {
+        await this.swUpdate.activateUpdate();
+      } catch (error) {
+        console.error('Error activating PWA update:', error);
+      }
+    }
+
+    await this.unregisterLegacyCustomSw();
+    window.location.reload();
+  }
+
+  private async unregisterLegacyCustomSw(): Promise<void> {
+    if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) {
+      return;
+    }
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(
+      registrations
+        .filter((reg) => reg.active?.scriptURL.includes('custom-sw.js'))
+        .map((reg) => reg.unregister()),
+    );
+  }
+
   public async checkForUpdates(): Promise<void> {
     if (!this.swUpdate || !this.swUpdate.isEnabled) {
       return;
     }
 
     try {
-      // Only check if we haven't checked recently
-      const lastCheck = localStorage.getItem('lastUpdateCheck');
-      const now = Date.now();
-      const oneHourAgo = now - (60 * 60 * 1000);
-
-      if (!lastCheck || parseInt(lastCheck) < oneHourAgo) {
-        console.log('Checking for updates...');
-        await this.swUpdate.checkForUpdate();
-        localStorage.setItem('lastUpdateCheck', now.toString());
-      }
+      await this.swUpdate.checkForUpdate();
     } catch (error) {
       console.error('Error checking for updates:', error);
     }
   }
 
-  /**
-   * Set up stable periodic update checks (no infinite loops)
-   */
   public setupPeriodicUpdates(): void {
-    // Check for updates when the page becomes visible (but not too often)
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
-        // Add a small delay to prevent rapid checks
         setTimeout(() => {
-          this.checkForUpdates();
-        }, 5000); // 5 second delay
+          void this.checkForUpdates();
+        }, 2000);
       }
     });
 
-    // Check for updates when the app comes back online
     window.addEventListener('online', () => {
       setTimeout(() => {
-        this.checkForUpdates();
-      }, 2000); // 2 second delay
+        void this.checkForUpdates();
+      }, 2000);
     });
   }
 

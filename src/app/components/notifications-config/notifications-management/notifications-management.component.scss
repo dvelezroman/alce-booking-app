@@ -1,0 +1,636 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.notifications-management {
+  width: 100%;
+
+  padding:
+    1.1rem
+    1.2rem
+    1rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #eceef4;
+  border-radius: 0.7rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 16px
+    rgba(31, 42, 89, 0.025);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.notifications-management__header {
+  margin-bottom: 0.9rem;
+}
+
+
+.notifications-management__title {
+  margin: 0;
+
+  color: #20243a;
+
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+
+.notifications-management__description {
+  margin:
+    0.25rem
+    0
+    0;
+
+  color: #777d8c;
+
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.notifications-management__grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 1rem;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.notifications-management__card {
+  min-width: 0;
+
+  padding: 1rem;
+
+  box-sizing: border-box;
+
+  border-radius: 0.65rem;
+
+  transition:
+    box-shadow 0.15s ease,
+    transform 0.1s ease;
+}
+
+
+.notifications-management__card--enable {
+  border:
+    1px solid
+    #bfe6ce;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fbfffc 0%,
+      #f6fcf8 100%
+    );
+}
+
+
+.notifications-management__card--disable {
+  border:
+    1px solid
+    #f0c8cc;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fffdfd 0%,
+      #fff8f8 100%
+    );
+}
+
+
+/* =========================================================
+   TOP
+========================================================= */
+
+.notifications-management__card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 1rem;
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.notifications-management__card-heading {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0.75rem;
+
+  min-width: 0;
+}
+
+
+.notifications-management__card-heading h3 {
+  margin: 0;
+
+  color: #292e44;
+
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+
+.notifications-management__card-heading p {
+  max-width: 15rem;
+
+  margin:
+    0.22rem
+    0
+    0;
+
+  color: #777d8b;
+
+  font-size: 0.65rem;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.notifications-management__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 2.45rem;
+  height: 2.45rem;
+
+  border-radius: 50%;
+
+
+  svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+}
+
+
+.notifications-management__icon--enable {
+  background: #e5f8ec;
+
+  color: #17a357;
+}
+
+
+.notifications-management__icon--disable {
+  background: #ffe8ea;
+
+  color: #e23d47;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.notifications-management__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  gap: 0.45rem;
+
+  min-width: 8rem;
+  height: 2.3rem;
+
+  padding:
+    0
+    0.9rem;
+
+  border-radius: 0.45rem;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    box-shadow 0.15s ease,
+    opacity 0.15s ease,
+    transform 0.1s ease;
+
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+
+  &:disabled {
+    opacity: 0.46;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+  }
+}
+
+
+.notifications-management__button--enable {
+  border: 1px solid #18a858;
+
+  background:
+    linear-gradient(
+      135deg,
+      #23b866 0%,
+      #139d50 100%
+    );
+
+  box-shadow:
+    0 3px 8px
+    rgba(26, 157, 82, 0.18);
+
+
+  &:hover:not(:disabled) {
+    box-shadow:
+      0 5px 12px
+      rgba(26, 157, 82, 0.24);
+  }
+}
+
+
+.notifications-management__button--disable {
+  border: 1px solid #e1303a;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f03c46 0%,
+      #dc202b 100%
+    );
+
+  box-shadow:
+    0 3px 8px
+    rgba(220, 32, 43, 0.16);
+
+
+  &:hover:not(:disabled) {
+    box-shadow:
+      0 5px 12px
+      rgba(220, 32, 43, 0.22);
+  }
+}
+
+
+/* =========================================================
+   BUTTON ICON
+========================================================= */
+
+.notifications-management__button-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 0.95rem;
+  height: 0.95rem;
+
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+
+/* =========================================================
+   SPINNER
+========================================================= */
+
+.notifications-management__spinner {
+  width: 0.8rem;
+  height: 0.8rem;
+
+  box-sizing: border-box;
+
+  border:
+    2px solid
+    rgba(255, 255, 255, 0.4);
+
+  border-top-color: #ffffff;
+
+  border-radius: 50%;
+
+  animation:
+    notificationsManagementSpin
+    0.7s linear infinite;
+}
+
+
+@keyframes notificationsManagementSpin {
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.notifications-management__card-body {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-top: 1rem;
+}
+
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+
+.notifications-management__benefits {
+  min-width: 0;
+}
+
+
+.notifications-management__benefits-title {
+  display: block;
+
+  margin-bottom: 0.45rem;
+
+  color: #303546;
+
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+
+.notifications-management__benefits ul {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.35rem;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+
+.notifications-management__benefits li {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0.35rem;
+
+  color: #5e6575;
+
+  font-size: 0.64rem;
+  line-height: 1.4;
+}
+
+
+.notifications-management__benefits li span {
+  color: #19a75a;
+
+  font-weight: 700;
+}
+
+
+.notifications-management__danger-list li span {
+  color: #e23640;
+}
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+.notifications-management__state {
+  display: inline-flex;
+  align-items: center;
+
+  flex: 0 0 auto;
+
+  gap: 0.3rem;
+
+  color: #7b808e;
+
+  font-size: 0.61rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+
+.notifications-management__state-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+
+  border-radius: 50%;
+
+  background: currentColor;
+}
+
+
+.notifications-management__state--success {
+  color: #188e4a;
+}
+
+
+.notifications-management__state--danger {
+  color: #df3741;
+}
+
+
+/* =========================================================
+   PRIVACY
+========================================================= */
+
+.notifications-management__privacy {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0.7rem;
+
+  margin-top: 1rem;
+
+  padding:
+    0.75rem
+    0.9rem;
+
+  border:
+    1px solid
+    #d8e5fa;
+
+  border-radius: 0.45rem;
+
+  background: #f4f7ff;
+}
+
+
+.notifications-management__privacy-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 1.25rem;
+  height: 1.25rem;
+
+  color: #4f58dd;
+
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+
+.notifications-management__privacy p {
+  margin: 0;
+
+  color: #53627e;
+
+  font-size: 0.64rem;
+  line-height: 1.45;
+}
+
+
+.notifications-management__privacy strong {
+  display: block;
+
+  margin-bottom: 0.05rem;
+
+  color: #414f70;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1250px) {
+
+  .notifications-management__card-top,
+  .notifications-management__card-body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+
+  .notifications-management__button {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .notifications-management__grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .notifications-management__card-top {
+    flex-direction: row;
+  }
+
+
+  .notifications-management__card-body {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+
+
+  .notifications-management__button {
+    width: auto;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .notifications-management {
+    padding:
+      0.9rem
+      0.85rem;
+  }
+
+
+  .notifications-management__grid {
+    gap: 0.75rem;
+  }
+
+
+  .notifications-management__card {
+    padding: 0.85rem;
+  }
+
+
+  .notifications-management__card-top,
+  .notifications-management__card-body {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+
+  .notifications-management__button {
+    width: 100%;
+  }
+
+
+  .notifications-management__state {
+    align-self: flex-start;
+  }
+}

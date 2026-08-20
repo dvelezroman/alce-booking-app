@@ -56,6 +56,10 @@ export class AssessmentReportsComponent {
   instructorId: number | null = null;
   assessments: AssessementI[] = [];
   platformAssessments: PlatformAssessmentAssignment[] = [];
+  allStages: Stage[] = [];
+  platformListCollapsed = false;
+  platformFilterStageId: number | undefined;
+  platformFilterAccepted: '' | 'accepted' | 'pending' = '';
   maxPointsAssessment: number | null = null;
   minPointsAssessment: number | null = null;
   isStudentSelected = false;
@@ -118,6 +122,7 @@ export class AssessmentReportsComponent {
 
   loadStagesWithContent(): void {
     this.stagesService.getAll().subscribe((allStages) => {
+      this.allStages = allStages;
       const stagesWithContent: Stage[] = [];
       let processedCount = 0;
 
@@ -238,6 +243,8 @@ export class AssessmentReportsComponent {
       filters.stageId ?? null;
 
     this.platformAssessments = [];
+    this.platformFilterStageId = undefined;
+    this.platformFilterAccepted = '';
     this.editingAssessment = null;
     this.page = 1;
 
@@ -319,24 +326,17 @@ export class AssessmentReportsComponent {
     }
   }
 
-  private loadPlatformAssessments(
-    studentId: number,
-  ): void {
-    this.platformAssessmentService
-      .getAll(studentId)
-      .subscribe({
-        next: (list) => {
-          this.platformAssessments =
-            (list ?? []).filter(
-              (a) =>
-                a.status === 'completed' ||
-                a.points != null,
-            );
-        },
-        error: () => {
-          this.platformAssessments = [];
-        },
-      });
+  private loadPlatformAssessments(studentId: number): void {
+    this.platformAssessmentService.syncFromRemote(studentId).subscribe({
+      next: (list) => {
+        this.platformAssessments = (list ?? []).filter(
+          (a) => a.status === 'completed' || a.points != null,
+        );
+      },
+      error: () => {
+        this.platformAssessments = [];
+      },
+    });
   }
 
   refreshPlatformAssessments(): void {
@@ -347,13 +347,56 @@ export class AssessmentReportsComponent {
           'Selecciona un estudiante para actualizar las evaluaciones de plataforma.',
         ),
       );
-
       return;
     }
 
     this.loadPlatformAssessments(
       this.selectedStudentId,
     );
+  }
+
+  togglePlatformList(): void {
+    this.platformListCollapsed = !this.platformListCollapsed;
+  }
+
+  get platformStageFilterOptions(): Stage[] {
+    const ids = new Set(
+      this.platformAssessments
+        .map((r) => r.studentStage)
+        .filter((id): id is number => id != null),
+    );
+    return this.allStages
+      .filter((s) => ids.has(s.id))
+      .sort(
+        (a, b) =>
+          this.extractStageNumber(a.number) - this.extractStageNumber(b.number),
+      );
+  }
+
+  get filteredPlatformAssessments(): PlatformAssessmentAssignment[] {
+    return this.platformAssessments.filter((row) => {
+      if (
+        this.platformFilterStageId != null &&
+        row.studentStage !== this.platformFilterStageId
+      ) {
+        return false;
+      }
+      if (this.platformFilterAccepted === 'accepted' && !row.writingAccepted) {
+        return false;
+      }
+      if (this.platformFilterAccepted === 'pending' && row.writingAccepted) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  stageLabelForId(stageId: number | null | undefined): string {
+    if (stageId == null) return '—';
+    const stage = this.allStages.find((s) => s.id === stageId);
+    if (!stage) return `Stage ${stageId}`;
+    const desc = stage.description?.trim();
+    return desc ? `${stage.number} — ${desc}` : stage.number;
   }
 
   showModal(params: ModalDto): void {
@@ -613,22 +656,12 @@ export class AssessmentReportsComponent {
       });
   }
 
-  startApplyPlatform(
-    row: PlatformAssessmentAssignment,
-  ): void {
+  startApplyPlatform(row: PlatformAssessmentAssignment): void {
+    if (!this.canShowWritingAction(row) || this.isWritingLocked(row)) {
+      return;
+    }
     this.applyingPlatformId = row.id;
-
-    this.applyPointsOverride =
-      row.writingApplied
-        ? (
-            row.writingPoints ??
-            row.points ??
-            null
-          )
-        : (
-            row.points ??
-            null
-          );
+    this.applyPointsOverride = row.points ?? null;
   }
 
   cancelApplyPlatform(): void {
@@ -636,21 +669,16 @@ export class AssessmentReportsComponent {
     this.applyPointsOverride = null;
   }
 
-  canShowWritingAction(
-    row: PlatformAssessmentAssignment,
-  ): boolean {
-    return (
-      row.points != null ||
-      row.writingApplied === true
-    );
+  canShowWritingAction(row: PlatformAssessmentAssignment): boolean {
+    return row.points != null;
   }
 
-  writingActionLabel(
-    row: PlatformAssessmentAssignment,
-  ): string {
-    return row.writingApplied
-      ? 'Corregir Writing'
-      : 'Aplicar Writing';
+  isWritingLocked(row: PlatformAssessmentAssignment): boolean {
+    return row.writingAccepted === true;
+  }
+
+  writingActionLabel(row: PlatformAssessmentAssignment): string {
+    return this.isWritingLocked(row) ? 'Aceptada' : 'Aceptar Evaluación';
   }
 
   writingPointsMismatch(
@@ -689,21 +717,15 @@ export class AssessmentReportsComponent {
       return;
     }
 
-    const correcting =
-      row.writingApplied === true;
-
+    if (this.isWritingLocked(row)) {
+      return;
+    }
     this.modal = {
       ...modalInitializer(),
       show: true,
       isInfo: true,
-      title:
-        correcting
-          ? '¿Corregir Writing?'
-          : '¿Aplicar Writing?',
-      message:
-        correcting
-          ? `Se actualizará la Writing existente a ${override ?? row.points ?? '—'} puntos (corrección admin).`
-          : `Se creará Writing con ${override ?? row.points ?? '—'} puntos desde el resultado S2S.`,
+      title: '¿Aceptar Evaluación?',
+      message: `Se creará Grammar con ${override ?? row.points ?? '—'} puntos desde el resultado S2S.`,
       showButtons: true,
       confirm: () =>
         this.applyPlatformWriting(
@@ -718,52 +740,31 @@ export class AssessmentReportsComponent {
     row: PlatformAssessmentAssignment,
     points?: number,
   ): void {
-    this.platformAssessmentService
-      .applyWritingScore(
-        row.id,
-        points,
-      )
-      .subscribe({
-        next: (res) => {
-          this.closeModal();
-          this.cancelApplyPlatform();
-
-          const action =
-            res.created
-              ? 'creada'
-              : 'corregida';
-
-          const promo =
-            res.updatedStage
-              ? ' Stage promovido.'
-              : ' Stage sin cambio.';
-
-          this.showModal(
-            this.createModalParams(
-              false,
-              `Writing ${action} con ${res.points} puntos.${promo}`,
-            ),
-          );
-
-          this.refreshStudentData();
-        },
-        error: (err) => {
-          this.closeModal();
-
-          const msg =
-            err?.error?.message ||
-            'Error al aplicar/corregir Writing desde la plataforma.';
-
-          setTimeout(() => {
-            this.showModal(
-              this.createModalParams(
-                true,
-                msg,
-              ),
-            );
-          }, 200);
-        },
-      });
+    this.platformAssessmentService.applyWritingScore(row.id, points).subscribe({
+      next: (res) => {
+        this.closeModal();
+        this.cancelApplyPlatform();
+        const promo = res.updatedStage
+          ? ' Stage promovido.'
+          : ' Stage sin cambio.';
+        this.showModal(
+          this.createModalParams(
+            false,
+            `Grammar creada con ${res.points} puntos.${promo}`,
+          ),
+        );
+        this.refreshStudentData();
+      },
+      error: (err) => {
+        this.closeModal();
+        const msg =
+          err?.error?.message ||
+          'Error al registrar Grammar desde la plataforma.';
+        setTimeout(() => {
+          this.showModal(this.createModalParams(true, msg));
+        }, 200);
+      },
+    });
   }
 
   private refreshStudentData(): void {

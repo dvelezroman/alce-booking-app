@@ -100,6 +100,20 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
     return 'badge-gray';
   }
 
+  statusLabel(row: RemotePlatformAssessmentItem): string {
+    if (row.submitReason === 'FOCUS_GUARD') {
+      return 'FOCUS_GUARD';
+    }
+    return row.status;
+  }
+
+  statusClass(row: RemotePlatformAssessmentItem): string {
+    if (row.submitReason === 'FOCUS_GUARD') {
+      return 'badge-orange';
+    }
+    return 'badge-blue';
+  }
+
   displayStudent(row: RemotePlatformAssessmentItem): string {
     return (
       row.studentDisplayName?.trim() ||
@@ -108,33 +122,31 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
     );
   }
 
-  canApplyWriting(row: RemotePlatformAssessmentItem): boolean {
-    return row.mirrorId != null && row.points != null && !row.writingApplied;
+  canShowWritingAction(row: RemotePlatformAssessmentItem): boolean {
+    return row.mirrorId != null && row.points != null;
   }
 
-  canCorrectWriting(row: RemotePlatformAssessmentItem): boolean {
-    return row.mirrorId != null && row.writingApplied === true;
+  isWritingLocked(row: RemotePlatformAssessmentItem): boolean {
+    return row.writingAccepted === true;
   }
 
   writingActionLabel(row: RemotePlatformAssessmentItem): string {
-    return this.canCorrectWriting(row) ? 'Corregir Writing' : 'Aplicar Writing';
+    return this.isWritingLocked(row) ? 'Aceptada' : 'Aceptar Evaluación';
   }
 
   startApplyWriting(row: RemotePlatformAssessmentItem): void {
     if (
-      (!this.canApplyWriting(row) && !this.canCorrectWriting(row)) ||
+      !this.canShowWritingAction(row) ||
+      this.isWritingLocked(row) ||
       row.mirrorId == null
     ) {
       return;
     }
     this.applyTarget = row;
-    const correcting = this.canCorrectWriting(row);
     this.modal = {
       ...modalInitializer(),
       show: true,
-      message: correcting
-        ? `¿Corregir Writing a ${row.points} puntos para ${this.displayStudent(row)}?`
-        : `¿Aplicar Writing con ${row.points} puntos para ${this.displayStudent(row)}?`,
+      message: `¿Aceptar evaluación con ${row.points} puntos para ${this.displayStudent(row)}?`,
       isInfo: true,
       showButtons: true,
       confirm: () => this.confirmApplyWriting(),
@@ -152,7 +164,6 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
       this.modal.show = false;
       return;
     }
-    const correcting = target.writingApplied === true;
     this.platformAssessmentService
       .applyWritingScore(target.mirrorId, target.points ?? undefined)
       .subscribe({
@@ -163,8 +174,8 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
             show: true,
             isSuccess: true,
             message: res.updatedStage
-              ? `Writing ${correcting ? 'corregido' : 'aplicado'}. Stage promovido.`
-              : `Writing ${correcting ? 'corregido' : 'aplicado'}. Stage sin cambio.`,
+              ? 'Grammar registrado. Stage promovido.'
+              : 'Grammar registrado. Stage sin cambio.',
             close: () => (this.modal.show = false),
           };
           this.fetchAssignments();
@@ -175,7 +186,7 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
             ...modalInitializer(),
             show: true,
             isError: true,
-            message: 'No se pudo aplicar/corregir Writing.',
+            message: 'No se pudo registrar Grammar.',
             close: () => (this.modal.show = false),
           };
         },

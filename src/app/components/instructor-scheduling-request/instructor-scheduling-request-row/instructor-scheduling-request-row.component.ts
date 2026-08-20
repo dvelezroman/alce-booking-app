@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import {
   LeadSchedulingRequestRow,
@@ -31,6 +31,20 @@ export class InstructorSchedulingRequestRowComponent {
   @Input() notesPreview!: (
     row: LeadSchedulingRequestRow,
   ) => string | null;
+
+  @Output()
+  detailsRequested =
+    new EventEmitter<number>();
+
+    openDetails(): void {
+    if (!this.item?.id) {
+      return;
+    }
+
+    this.detailsRequested.emit(
+      this.item.id,
+    );
+  }
 
   get studentName(): string {
     const firstName = this.item.firstName?.trim() ?? '';

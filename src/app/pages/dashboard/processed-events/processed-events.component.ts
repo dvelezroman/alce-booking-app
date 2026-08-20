@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DateTime } from 'luxon';
 
 import { Subject } from 'rxjs';
@@ -42,6 +42,7 @@ import { EventsPaginationComponent } from '../../../components/events/events-pag
     FormsModule,
     EnumLabelPipe,
     ModalComponent,
+    RouterLink,
 
     EventsHeaderComponent,
     EventsFiltersComponent,
@@ -103,6 +104,8 @@ export class ProcessedEventsComponent implements OnInit {
   showFromError = false;
 
   showToError = false;
+  highlightEventId: number | null = null;
+  eventIdFilterActive = false;
 
   loading = false;
 
@@ -139,6 +142,7 @@ export class ProcessedEventsComponent implements OnInit {
   constructor(
     private processedEventService: ProcessedEventsService,
     private usersService: UsersService,
+    private route: ActivatedRoute,
   ) {}
 
 
@@ -156,6 +160,37 @@ export class ProcessedEventsComponent implements OnInit {
       });
 
     this.loadEventTypes();
+    this.route.queryParams.subscribe((params) => {
+      const rawId = params['eventId'];
+      const eventId = rawId != null ? Number(rawId) : NaN;
+      if (Number.isFinite(eventId) && eventId > 0) {
+        this.loadEventById(eventId);
+        return;
+      }
+      this.eventIdFilterActive = false;
+      this.highlightEventId = null;
+    });
+  }
+
+  loadEventById(id: number): void {
+    this.formSubmitted = true;
+    this.eventIdFilterActive = true;
+    this.highlightEventId = id;
+    this.processedEventService.getProcessedEventById(id).subscribe({
+      next: (event) => {
+        this.events = event ? [event] : [];
+      },
+      error: () => {
+        this.events = [];
+      },
+    });
+  }
+
+  clearEventIdFilter(): void {
+    this.eventIdFilterActive = false;
+    this.highlightEventId = null;
+    this.events = [];
+    this.formSubmitted = false;
   }
 
 

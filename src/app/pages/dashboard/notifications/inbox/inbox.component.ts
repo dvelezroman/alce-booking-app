@@ -3,10 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Store } from '@ngrx/store';
-import {
-  Observable,
-  take,
-} from 'rxjs';
+import { take } from 'rxjs';
 
 import {
   InboxFilters,
@@ -90,11 +87,10 @@ export class InboxComponent implements OnInit {
   notifications: Notification[] = [];
   showMobileFilters = false;
 
-  unreadCount$!: Observable<number>;
-
   page = 1;
   limit = 20;
   total = 0;
+  inboxUnreadCount = 0;
 
   readDays = 30;
 
@@ -120,8 +116,8 @@ export class InboxComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.unreadCount$ =
-      this.notificationService.unreadCount$;
+    this.inboxUnreadCount =
+      this.notificationService.currentUnreadCount;
 
     this.store
       .select(selectUserData)
@@ -169,6 +165,10 @@ export class InboxComponent implements OnInit {
             response.total ||
             this.notifications.length ||
             0;
+
+          if (typeof response.unreadCount === 'number') {
+            this.inboxUnreadCount = response.unreadCount;
+          }
 
           this.loading = false;
         },
@@ -298,6 +298,13 @@ export class InboxComponent implements OnInit {
         next: () => {
           this.markNotificationLocallyAsRead(
             notification.id
+          );
+          this.inboxUnreadCount = Math.max(
+            0,
+            this.inboxUnreadCount - 1
+          );
+          this.notificationService.setUnreadCount(
+            this.inboxUnreadCount
           );
 
           this.usersService
@@ -468,17 +475,14 @@ export class InboxComponent implements OnInit {
   }
 
   get unreadNotificationsCount(): number {
-    return this.notifications.filter(
-      (notification) =>
-        !notification.isRead
-    ).length;
+    return this.inboxUnreadCount;
   }
 
   get readNotificationsCount(): number {
-    return this.notifications.filter(
-      (notification) =>
-        notification.isRead
-    ).length;
+    return Math.max(
+      0,
+      this.total - this.inboxUnreadCount
+    );
   }
 
   get todayNotificationsCount(): number {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { filter, take } from 'rxjs';
@@ -71,11 +71,14 @@ export type PlatformAssessmentTab =
   ],
 })
 export class PlatformAssessmentsStudentComponent
-  implements OnInit
+  implements OnInit, OnDestroy
 {
   studentId: number | null = null;
 
   loading = true;
+
+  private notificationTimer: ReturnType<typeof setTimeout> | null =
+    null;
 
   /* ================================
      ASSESSMENTS
@@ -177,7 +180,7 @@ export class PlatformAssessmentsStudentComponent
     this.loading = true;
 
     this.platformAssessmentService
-      .getAll(this.studentId)
+      .syncFromRemote(this.studentId)
       .subscribe({
         next: (
           list:
@@ -204,7 +207,9 @@ export class PlatformAssessmentsStudentComponent
             items.filter(
               (assessment) =>
                 assessment.status ===
-                'completed'
+                  'completed' ||
+                assessment.status ===
+                  'focus_guard'
             );
 
           this.updateAssessmentCounters();
@@ -214,14 +219,18 @@ export class PlatformAssessmentsStudentComponent
 
         error: (error) => {
           console.error(
-            'Error al obtener assessments de plataforma:',
+            'Error al sincronizar assessments de plataforma:',
             error
           );
 
+          this.pendingAssessments = [];
+          this.expiredAssessments = [];
+          this.completedAssessments = [];
+          this.updateAssessmentCounters();
           this.loading = false;
 
           this.showNotification(
-            'Error al obtener assessments de plataforma.',
+            'No disponible por el momento. Intente más tarde.',
             true,
           );
         },
@@ -300,11 +309,18 @@ export class PlatformAssessmentsStudentComponent
     assessment:
       PlatformAssessmentAssignment
   ): void {
-    if (
-      !assessment?.directAccessUrl
-    ) {
+    const url =
+      assessment.status === 'completed' ||
+      assessment.status === 'focus_guard'
+        ? assessment.resultsUrl?.trim()
+        : assessment.directAccessUrl?.trim();
+
+    if (!url) {
       this.showNotification(
-        'Este examen no tiene un enlace disponible.',
+        assessment.status === 'completed' ||
+        assessment.status === 'focus_guard'
+          ? 'Este examen no tiene resultados disponibles.'
+          : 'Este examen no tiene un enlace disponible.',
         true,
       );
 
@@ -312,7 +328,7 @@ export class PlatformAssessmentsStudentComponent
     }
 
     window.open(
-      assessment.directAccessUrl,
+      url,
       '_blank',
       'noopener,noreferrer',
     );
@@ -360,6 +376,11 @@ export class PlatformAssessmentsStudentComponent
     isError = false,
     isSuccess = false,
   ): void {
+    if (this.notificationTimer) {
+      clearTimeout(this.notificationTimer);
+      this.notificationTimer = null;
+    }
+
     this.modal = {
       ...modalInitializer(),
       show: true,
@@ -370,5 +391,17 @@ export class PlatformAssessmentsStudentComponent
         !isError &&
         !isSuccess,
     };
+
+    this.notificationTimer = setTimeout(() => {
+      this.modal.show = false;
+      this.notificationTimer = null;
+    }, 3000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.notificationTimer) {
+      clearTimeout(this.notificationTimer);
+      this.notificationTimer = null;
+    }
   }
 }

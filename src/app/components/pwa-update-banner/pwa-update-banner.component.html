@@ -1,0 +1,29 @@
+<div *ngIf="showBanner" class="pwa-update-banner">
+  <div class="pwa-update-content">
+    <div class="pwa-update-icon">
+      <i class="material-icons">system_update</i>
+    </div>
+
+    <div class="pwa-update-text">
+      <h4>Actualiza la app</h4>
+      <p>
+        Esta versión es antigua. Actualiza para activar las notificaciones push
+        y seguir recibiendo avisos de clases.
+      </p>
+    </div>
+
+    <div class="pwa-update-actions">
+      <button
+        class="btn-activate"
+        (click)="acceptUpdate()"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">Actualizar</span>
+        <span *ngIf="isLoading" class="loading-spinner"></span>
+      </button>
+      <button class="btn-dismiss" (click)="dismiss()" [disabled]="isLoading">
+        Ahora no
+      </button>
+    </div>
+  </div>
+</div>
