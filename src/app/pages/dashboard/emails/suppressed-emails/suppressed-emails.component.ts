@@ -90,6 +90,12 @@ export class SuppressedEmailsComponent implements OnInit {
     this.fetch();
   }
 
+  clearSearch(): void {
+    this.search = '';
+    this.page = 1;
+    this.fetch();
+  }
+
   onFilterChange(): void {
     this.page = 1;
     this.fetch();
@@ -279,13 +285,39 @@ export class SuppressedEmailsComponent implements OnInit {
   matchFieldLabel(field: string): string {
     switch (field) {
       case 'email':
-        return 'login';
+        return 'Login';
       case 'emailAddress':
-        return 'emailAddress';
+        return 'Email contacto';
       case 'tutorEmail':
-        return 'tutor';
+        return 'Tutor';
       default:
         return field;
+    }
+  }
+
+  roleLabel(role?: string | null): string {
+    switch (role) {
+      case 'STUDENT':
+        return 'Estudiante';
+      case 'INSTRUCTOR':
+        return 'Instructor';
+      case 'ADMIN':
+        return 'Admin';
+      default:
+        return role || '—';
+    }
+  }
+
+  sourceLabel(source: string): string {
+    switch (source) {
+      case 'SEND_FAILURE':
+        return 'Fallo de envío';
+      case 'MANUAL':
+        return 'Manual';
+      case 'INVALID_ADDRESS':
+        return 'Dirección inválida';
+      default:
+        return source;
     }
   }
 
