@@ -1382,9 +1382,8 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
     },
   ): void {
     const comment =
-      event.meeting
-        .user
-        ?.temporaryComment ||
+      event.meeting.student?.user?.temporaryComment ||
+      event.meeting.user?.temporaryComment ||
       'Sin comentario temporal';
 
     const message = `

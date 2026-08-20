@@ -8,6 +8,19 @@
 ========================= */
 
 .meetings-list {
+  --meetings-table-columns:
+    minmax(7.25rem, 1fr)
+    minmax(5.5rem, .75fr)
+    minmax(12rem, 1.65fr)
+    minmax(7.25rem, 1.05fr)
+    minmax(5.75rem, .85fr)
+    minmax(7.5rem, .95fr)
+    minmax(9.5rem, 1.5fr)
+    minmax(7.5rem, 1.1fr)
+    minmax(8rem, 1.15fr)
+    minmax(6.5rem, 1fr)
+    minmax(5.5rem, .75fr);
+
   width: 100%;
   background: #ffffff;
 }
@@ -155,8 +168,8 @@
 }
 
 .meetings-list__table {
-  width: 100%;
-  min-width: 1280px;
+  width: max-content;
+  min-width: 100%;
 }
 
 /* =========================
@@ -167,19 +180,7 @@
   min-height: 2.9rem;
 
   display: grid;
-
-  grid-template-columns:
-     1fr
-    .75fr
-    1.65fr
-    1.05fr
-    .85fr
-    .95fr
-    1.5fr
-    1.1fr
-    1.15fr
-    1fr
-    .75fr;
+  grid-template-columns: var(--meetings-table-columns);
 
   align-items: center;
 
@@ -219,8 +220,7 @@
 ========================= */
 
 app-instructor-meeting-row {
-  display: block;
-  width: 100%;
+  display: contents;
 }
 
 /* =========================
@@ -236,17 +236,7 @@ app-instructor-meeting-row {
   min-height: 6.2rem;
 
   display: grid;
-  grid-template-columns:
-    1.05fr
-    .75fr
-    1.65fr
-    1.05fr
-    1.15fr
-    1.75fr
-    1.25fr
-    1.15fr
-    1fr
-    .65fr;
+  grid-template-columns: var(--meetings-table-columns);
 
   align-items: center;
 
@@ -390,10 +380,6 @@ app-instructor-meeting-row {
   .meetings-list__title {
     font-size: .82rem;
   }
-
-  .meetings-list__table {
-    min-width: 1100px;
-  }
 }
 
 /* =========================
@@ -428,10 +414,6 @@ app-instructor-meeting-row {
   .meetings-list__refresh svg {
     width: 14px;
     height: 14px;
-  }
-
-  .meetings-list__table {
-    min-width: 1050px;
   }
 
   .meetings-list__column {
