@@ -127,6 +127,7 @@ navItems: SidebarNavItem[] = [
   { icon: 'email', text: 'Enviar Email', route: '/dashboard/send-emails', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'inbox', text: 'Inbox Emails', route: '/dashboard/inbox-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
   { icon: 'history', text: 'Historial Emails', route: '/dashboard/historial-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
+  { icon: 'block', text: 'Emails baneados', route: '/dashboard/suppressed-emails', roles: [UserRole.ADMIN] },
   { icon: 'send', text: 'Enviados', route: '/dashboard/sent-email', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR] },
 ];
 
@@ -318,6 +319,7 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/send-emails'),
         // this.findNavItemByRoute('/dashboard/inbox-email'),
         this.findNavItemByRoute('/dashboard/historial-email'),
+        this.findNavItemByRoute('/dashboard/suppressed-emails'),
         // this.findNavItemByRoute('/dashboard/sent-email'),
       ].filter(item => item.roles.includes(role))
     },

@@ -34,6 +34,7 @@ import { NotificationDetailComponent } from './notifications/notification-detail
 import { NotificationsSentComponent } from './notifications/notifications-sent/notifications-sent.component';
 import { SendEmailsComponent } from './emails/send-emails/send-emails.component';
 import { HistorialEmailComponent } from './emails/historial-email/historial-email.component';
+import { SuppressedEmailsComponent } from './emails/suppressed-emails/suppressed-emails.component';
 import { InboxEmailComponent } from './emails/inbox-email/inbox-email.component';
 import { SentEmailComponent } from './emails/sent-email/sent-email.component';
 import { EmailDetailComponent } from './emails/email-detail/email-detail.component';
@@ -183,6 +184,7 @@ const dashboardChildren: Routes = [
   { path: 'sent-email', component: SentEmailComponent },
   { path: 'inbox-email', component: InboxEmailComponent },
   { path: 'historial-email', component: HistorialEmailComponent },
+  { path: 'suppressed-emails', component: SuppressedEmailsComponent },
   { path: 'email-detail', component: EmailDetailComponent },
 ];
 

@@ -1,0 +1,210 @@
+<section class="inbox-root">
+  <div class="inbox-page">
+    <h1 class="inbox-page-title">Emails baneados</h1>
+
+    <div class="toolbar">
+      <div class="filters">
+        <input
+          class="input"
+          type="search"
+          placeholder="Buscar email…"
+          [(ngModel)]="search"
+          (keyup.enter)="onSearch()"
+        />
+        <select class="select" [(ngModel)]="activeFilter" (change)="onFilterChange()">
+          <option value="true">Activos</option>
+          <option value="false">Levantados</option>
+          <option value="all">Todos</option>
+        </select>
+        <button class="button is-link is-light" type="button" (click)="onSearch()">
+          Buscar
+        </button>
+      </div>
+      <button class="button is-primary" type="button" (click)="openCreate()">
+        Agregar email
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div *ngIf="loading" class="placeholder">Cargando…</div>
+    <div *ngIf="!loading && errorMsg" class="error">{{ errorMsg }}</div>
+    <div *ngIf="!loading && !errorMsg && items.length === 0" class="placeholder">
+      No hay emails baneados con estos filtros.
+    </div>
+
+    <div *ngIf="!loading && items.length > 0" class="table-wrapper">
+      <div class="table-header">
+        <div class="col-email">Email</div>
+        <div class="col-users">Usuario(s)</div>
+        <div class="col-reason">Motivo</div>
+        <div class="col-meta">Estado</div>
+        <div class="col-actions">Acciones</div>
+      </div>
+
+      <div class="table-row" *ngFor="let item of items">
+        <div class="col-email">
+          <div class="email-main">{{ item.email }}</div>
+          <div class="email-sub">{{ item.source }} · {{ formatDate(item.suppressedAt) }}</div>
+        </div>
+
+        <div class="col-users">
+          <ng-container *ngIf="item.matchedUsers?.length; else noUser">
+            <div class="user-chip" *ngFor="let u of item.matchedUsers">
+              <span>{{ userDisplayName(u) }}</span>
+              <span class="badge">{{ u.role || '—' }}</span>
+              <span class="badge light">{{ matchFieldLabel(u.matchField) }}</span>
+              <a
+                *ngIf="u.role === 'STUDENT'"
+                class="link-user"
+                [routerLink]="['/dashboard/searching-students']"
+              >
+                ver
+              </a>
+            </div>
+          </ng-container>
+          <ng-template #noUser>
+            <span class="badge warn">Sin usuario vinculado</span>
+          </ng-template>
+        </div>
+
+        <div class="col-reason" [title]="item.reason || ''">
+          {{ item.reason || '—' }}
+        </div>
+
+        <div class="col-meta">
+          <span class="badge" [class.ok]="item.active" [class.off]="!item.active">
+            {{ item.active ? 'Activo' : 'Levantado' }}
+          </span>
+          <div class="email-sub" *ngIf="item.lastNotifiedAt">
+            Notificado: {{ formatDate(item.lastNotifiedAt) }}
+          </div>
+        </div>
+
+        <div class="col-actions">
+          <button class="button is-small" type="button" (click)="openEdit(item)">
+            Editar
+          </button>
+          <button
+            class="button is-small is-info is-light"
+            type="button"
+            [disabled]="!item.matchedUsers.length"
+            (click)="openNotify(item)"
+          >
+            Notificar
+          </button>
+          <button
+            class="button is-small is-warning is-light"
+            type="button"
+            *ngIf="item.active"
+            (click)="requestLift(item)"
+          >
+            Desbanear
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pager" *ngIf="total > 0">
+      <button class="button is-small" type="button" [disabled]="page <= 1" (click)="onPrev()">
+        Anterior
+      </button>
+      <span>{{ startIndex }}–{{ endIndex }} de {{ total }}</span>
+      <button
+        class="button is-small"
+        type="button"
+        [disabled]="page * limit >= total"
+        (click)="onNext()"
+      >
+        Siguiente
+      </button>
+    </div>
+  </div>
+
+  <!-- Edit / Create modal -->
+  <div class="modal" [class.is-active]="showEditModal">
+    <div class="modal-background" (click)="closeEditModal()"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">
+          {{ isCreate ? 'Agregar email baneado' : 'Editar email baneado' }}
+        </p>
+        <button class="delete" aria-label="close" type="button" (click)="closeEditModal()"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="field">
+          <label class="label">Email</label>
+          <input class="input" type="email" [(ngModel)]="formEmail" />
+        </div>
+        <div class="field">
+          <label class="label">Motivo</label>
+          <textarea class="textarea" rows="3" [(ngModel)]="formReason"></textarea>
+        </div>
+        <div class="field" *ngIf="!isCreate">
+          <label class="checkbox">
+            <input type="checkbox" [(ngModel)]="formActive" />
+            Ban activo
+          </label>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-primary" type="button" (click)="saveForm()">Guardar</button>
+        <button class="button" type="button" (click)="closeEditModal()">Cancelar</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Notify modal -->
+  <div class="modal" [class.is-active]="showNotifyModal">
+    <div class="modal-background" (click)="closeNotifyModal()"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Notificar in-app</p>
+        <button class="delete" aria-label="close" type="button" (click)="closeNotifyModal()"></button>
+      </header>
+      <section class="modal-card-body" *ngIf="notifyTarget">
+        <p class="mb-3">
+          Email: <strong>{{ notifyTarget.email }}</strong>
+        </p>
+        <div class="field">
+          <label class="label">Destinatarios</label>
+          <label
+            class="checkbox user-check"
+            *ngFor="let u of notifyTarget.matchedUsers"
+          >
+            <input
+              type="checkbox"
+              [checked]="isUserSelected(u.id)"
+              (change)="toggleUser(u.id)"
+            />
+            {{ userDisplayName(u) }} ({{ u.role || '—' }} · {{ matchFieldLabel(u.matchField) }})
+          </label>
+        </div>
+        <div class="field">
+          <label class="label">Título</label>
+          <input class="input" type="text" [(ngModel)]="notifyTitle" />
+        </div>
+        <div class="field">
+          <label class="label">Mensaje</label>
+          <textarea class="textarea" rows="4" [(ngModel)]="notifyMessage"></textarea>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-primary" type="button" (click)="sendNotify()">Enviar</button>
+        <button class="button" type="button" (click)="closeNotifyModal()">Cancelar</button>
+      </footer>
+    </div>
+  </div>
+
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [title]="modal.title || ''"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm && modal.confirm()"
+    (close)="modal.close()"
+  ></app-modal>
+</section>
