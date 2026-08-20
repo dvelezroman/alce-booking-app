@@ -1,6 +1,9 @@
 :host {
   display: block;
   width: 100%;
+
+  container-type: inline-size;
+  container-name: meetings-table;
 }
 
 /* =========================
@@ -11,15 +14,15 @@
   --meetings-table-columns:
     minmax(7.25rem, 1fr)
     minmax(5.5rem, .75fr)
-    minmax(12rem, 1.65fr)
+    minmax(13rem, 1.85fr)
     minmax(7.25rem, 1.05fr)
     minmax(5.75rem, .85fr)
     minmax(7.5rem, .95fr)
-    minmax(9.5rem, 1.5fr)
+    minmax(10rem, 1.55fr)
     minmax(7.5rem, 1.1fr)
     minmax(8rem, 1.15fr)
     minmax(6.5rem, 1fr)
-    minmax(5.5rem, .75fr);
+    minmax(5.75rem, .8fr);
 
   width: 100%;
   background: #ffffff;
@@ -369,6 +372,70 @@ app-instructor-meeting-row {
 }
 
 /* =========================
+   CONTAINER: COMPACT TABLE
+   hide secondary columns so
+   asistencia / nombre stay in view
+========================= */
+
+@container meetings-table (max-width: 1240px) {
+  .meetings-list {
+    --meetings-table-columns:
+      minmax(7rem, 1fr)
+      minmax(5.25rem, .7fr)
+      minmax(12.5rem, 2fr)
+      minmax(7rem, 1.1fr)
+      minmax(5.5rem, .9fr)
+      minmax(7rem, .95fr)
+      minmax(7.5rem, 1.2fr)
+      minmax(5.5rem, .8fr);
+  }
+
+  .meetings-list__column--content,
+  .meetings-list__column--reinforcement,
+  .meetings-list__column--notes,
+  .meeting-row-skeleton__block--content,
+  .meeting-row-skeleton__block--reinforcement,
+  .meeting-row-skeleton__block--notes {
+    display: none;
+  }
+}
+
+@container meetings-table (max-width: 920px) {
+  .meetings-list {
+    --meetings-table-columns:
+      minmax(6.75rem, 1fr)
+      minmax(5.15rem, .7fr)
+      minmax(12rem, 2.2fr)
+      minmax(6.75rem, 1.1fr)
+      minmax(7.25rem, 1.15fr)
+      minmax(5.5rem, .8fr);
+  }
+
+  .meetings-list__column--progress,
+  .meetings-list__column--mode,
+  .meeting-row-skeleton__block--progress,
+  .meeting-row-skeleton__block--mode {
+    display: none;
+  }
+}
+
+/* =========================
+   LARGE DESKTOP
+========================= */
+
+@media (min-width: 1600px) {
+  .meetings-list__header {
+    padding: .9rem 1.15rem;
+  }
+
+  .meetings-list__column {
+    padding: .75rem .9rem;
+
+    font-size: .66rem;
+  }
+}
+
+/* =========================
    TABLET
 ========================= */
 
@@ -383,7 +450,7 @@ app-instructor-meeting-row {
 }
 
 /* =========================
-   MOBILE
+   MOBILE CARDS
 ========================= */
 
 @media (max-width: 767px) {
@@ -416,14 +483,69 @@ app-instructor-meeting-row {
     height: 14px;
   }
 
-  .meetings-list__column {
-    padding: .65rem .7rem;
+  .meetings-list__table-wrapper {
+    overflow: visible;
+  }
 
-    font-size: .6rem;
+  .meetings-list__table {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .meetings-list__table-header {
+    display: none;
+  }
+
+  .meetings-list__loading {
+    padding: .65rem .7rem .85rem;
+
+    gap: .65rem;
   }
 
   .meeting-row-skeleton {
-    min-height: 5.6rem;
+    min-height: 0;
+    padding: .85rem .9rem;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: .55rem .7rem;
+
+    border: 1px solid #eceef4;
+    border-radius: .85rem;
+  }
+
+  .meeting-row-skeleton__block {
+    width: 100%;
+    margin: 0;
+  }
+
+  .meeting-row-skeleton__block--date,
+  .meeting-row-skeleton__block--hour,
+  .meeting-row-skeleton__block--stage,
+  .meeting-row-skeleton__block--progress,
+  .meeting-row-skeleton__block--mode,
+  .meeting-row-skeleton__block--content,
+  .meeting-row-skeleton__block--assistance,
+  .meeting-row-skeleton__block--reinforcement,
+  .meeting-row-skeleton__block--notes {
+    display: none;
+  }
+
+  .meeting-row-skeleton__block--student {
+    width: 70%;
+    height: .8rem;
+
+    grid-column: 1 / -1;
+  }
+
+  .meeting-row-skeleton__block--action {
+    width: 40%;
+    height: .7rem;
+
+    justify-self: end;
+
+    grid-column: 1 / -1;
   }
 
   .meetings-list__empty {
@@ -448,5 +570,10 @@ app-instructor-meeting-row {
     width: 2rem;
     height: 2rem;
     padding: 0;
+  }
+
+  .meeting-row-skeleton {
+    margin: 0;
+    padding: .75rem;
   }
 }

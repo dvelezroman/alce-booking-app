@@ -7,19 +7,6 @@
 ========================= */
 
 .meeting-row {
-  --meetings-table-columns:
-    minmax(7.25rem, 1fr)
-    minmax(5.5rem, .75fr)
-    minmax(12rem, 1.65fr)
-    minmax(7.25rem, 1.05fr)
-    minmax(5.75rem, .85fr)
-    minmax(7.5rem, .95fr)
-    minmax(9.5rem, 1.5fr)
-    minmax(7.5rem, 1.1fr)
-    minmax(8rem, 1.15fr)
-    minmax(6.5rem, 1fr)
-    minmax(5.5rem, .75fr);
-
   position: relative;
 
   width: 100%;
@@ -164,6 +151,34 @@
   gap: .65rem;
 }
 
+.meeting-row__student-trigger {
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+
+  border: 0;
+  background: transparent;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.meeting-row__student-trigger:hover .meeting-row__student-name,
+.meeting-row__student-trigger:focus-visible .meeting-row__student-name {
+  color: #342cca;
+  text-decoration: underline;
+  text-underline-offset: .12em;
+}
+
+.meeting-row__student-trigger:active {
+  transform: scale(.99);
+}
+
 .meeting-row__avatar {
   width: 2.4rem;
   height: 2.4rem;
@@ -204,7 +219,7 @@
 
   overflow: hidden;
 
-  color: #111735;
+  color: #3e39d7;
 
   font-size: .69rem;
   font-weight: 800;
@@ -712,24 +727,46 @@
 }
 
 /* =========================
-   WHEN PREPARATION PANEL
-   REDUCES AVAILABLE WIDTH
+   CONTAINER: HIDE SECONDARY COLS
 ========================= */
 
-@media (max-width: 1250px) {
+@container meetings-table (max-width: 1240px) {
+  .meeting-row__cell--content,
+  .meeting-row__cell--reinforcement,
+  .meeting-row__cell--notes {
+    display: none;
+  }
+}
+
+@container meetings-table (max-width: 920px) {
+  .meeting-row__cell--progress,
+  .meeting-row__cell--mode {
+    display: none;
+  }
+}
+
+/* =========================
+   LARGE DESKTOP
+========================= */
+
+@media (min-width: 1600px) {
   .meeting-row {
-    min-height: 5.9rem;
+    min-height: 5.1rem;
   }
 
   .meeting-row__cell {
-    padding: .7rem;
+    padding: 0 .9rem;
+  }
+
+  .meeting-row__student-name {
+    font-size: .72rem;
   }
 
   .meeting-row__avatar {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 2.55rem;
+    height: 2.55rem;
 
-    font-size: .68rem;
+    font-size: .74rem;
   }
 }
 
@@ -739,7 +776,7 @@
 
 @media (max-width: 900px) {
   .meeting-row {
-    min-height: 5.7rem;
+    min-height: 5.2rem;
   }
 
   .meeting-row__cell {
@@ -748,20 +785,151 @@
 }
 
 /* =========================
-   MOBILE
+   MOBILE CARDS
 ========================= */
 
 @media (max-width: 767px) {
   .meeting-row {
-    min-height: 5.4rem;
+    min-height: 0;
+    margin: .65rem .7rem 0;
+    padding: .85rem .9rem .75rem;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "student student"
+      "date hour"
+      "stage progress"
+      "mode assistance"
+      "content content"
+      "reinforcement notes"
+      "actions actions";
+
+    gap: .7rem .75rem;
+    align-items: start;
+
+    border: 1px solid #eceef4;
+    border-bottom-color: #eceef4;
+    border-radius: .85rem;
+
+    background: #ffffff;
   }
 
-  .meeting-row__cell {
-    padding: .6rem .65rem;
+  .meeting-row:last-child,
+  :host:last-child .meeting-row {
+    margin-bottom: .7rem;
+  }
+
+  .meeting-row--today {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(91, 75, 231, .04),
+        #ffffff 28%
+      );
+  }
+
+  .meeting-row__cell,
+  .meeting-row__cell--content,
+  .meeting-row__cell--reinforcement,
+  .meeting-row__cell--notes,
+  .meeting-row__cell--progress,
+  .meeting-row__cell--mode {
+    min-width: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    overflow: visible;
+
+    border-right: 0;
+    gap: .3rem;
+  }
+
+  .meeting-row__cell::before {
+    color: #6b7285;
+
+    font-size: .58rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: .04em;
+
+    text-transform: uppercase;
+
+    content: attr(data-label);
+  }
+
+  .meeting-row__cell--student {
+    grid-area: student;
+  }
+
+  .meeting-row__cell--student::before {
+    display: none;
+  }
+
+  .meeting-row__cell--date {
+    grid-area: date;
+  }
+
+  .meeting-row__cell--hour {
+    grid-area: hour;
+  }
+
+  .meeting-row__cell--stage {
+    grid-area: stage;
+  }
+
+  .meeting-row__cell--progress {
+    grid-area: progress;
+    justify-content: flex-start;
+  }
+
+  .meeting-row__cell--mode {
+    grid-area: mode;
+  }
+
+  .meeting-row__cell--content {
+    grid-area: content;
+  }
+
+  .meeting-row__cell--assistance {
+    grid-area: assistance;
+  }
+
+  .meeting-row__cell--reinforcement {
+    grid-area: reinforcement;
+  }
+
+  .meeting-row__cell--notes {
+    grid-area: notes;
+  }
+
+  .meeting-row__cell--actions {
+    grid-area: actions;
+
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+
+    padding-top: .45rem;
+
+    border-top: 1px solid #eef0f5;
+  }
+
+  .meeting-row__cell--actions::before {
+    margin-right: auto;
+  }
+
+  .meeting-row__student-trigger {
+    width: 100%;
   }
 
   .meeting-row__student-name {
-    font-size: .65rem;
+    font-size: .78rem;
+    white-space: normal;
   }
 
   .meeting-row__student-meta,
@@ -772,13 +940,71 @@
   .meeting-row__attendance,
   .meeting-row__reinforcement,
   .meeting-row__note {
-    font-size: .57rem;
+    font-size: .62rem;
   }
 
   .meeting-row__avatar {
-    width: 2rem;
-    height: 2rem;
+    width: 2.35rem;
+    height: 2.35rem;
 
-    font-size: .62rem;
+    font-size: .68rem;
+  }
+
+  .meeting-row__progress {
+    max-width: 100%;
+  }
+
+  .meeting-row__content-list {
+    padding-left: .2rem;
+  }
+
+  .meeting-row__actions {
+    justify-content: flex-end;
+    gap: .25rem;
+  }
+
+  .meeting-row__action-button {
+    width: 2.1rem;
+    height: 2.1rem;
+
+    background: #f4f5f9;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .meeting-row {
+    margin: .55rem .55rem 0;
+    padding: .75rem .7rem .65rem;
+
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "student"
+      "date"
+      "hour"
+      "stage"
+      "progress"
+      "mode"
+      "assistance"
+      "content"
+      "reinforcement"
+      "notes"
+      "actions";
+
+    gap: .55rem;
+
+    border-radius: .75rem;
+  }
+
+  .meeting-row__cell--actions {
+    justify-content: stretch;
+  }
+
+  .meeting-row__actions {
+    width: 100%;
+    justify-content: flex-end;
   }
 }

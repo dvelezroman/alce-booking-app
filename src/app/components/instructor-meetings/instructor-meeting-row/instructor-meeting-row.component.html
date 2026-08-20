@@ -1,6 +1,6 @@
 <div class="meeting-row" [class.meeting-row--today]="isMeetingToday">
   <!-- FECHA -->
-  <div class="meeting-row__cell meeting-row__cell--date">
+  <div class="meeting-row__cell meeting-row__cell--date" data-label="Fecha">
     <span class="meeting-row__date-icon" aria-hidden="true">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
         <rect x="3.5" y="5.5" width="17" height="15" rx="2.2" stroke="currentColor" stroke-width="1.7" />
@@ -16,7 +16,7 @@
   </div>
 
   <!-- HORA -->
-  <div class="meeting-row__cell meeting-row__cell--hour">
+  <div class="meeting-row__cell meeting-row__cell--hour" data-label="Hora">
     <span class="meeting-row__hour-icon" aria-hidden="true">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
         <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7" />
@@ -28,27 +28,35 @@
   </div>
 
   <!-- ESTUDIANTE -->
-  <div class="meeting-row__cell meeting-row__cell--student">
-    <div class="meeting-row__avatar" aria-hidden="true">{{ studentInitials }}</div>
+  <div class="meeting-row__cell meeting-row__cell--student" data-label="Estudiante">
+    <button
+      type="button"
+      class="meeting-row__student-trigger"
+      title="Ver historial de contenidos"
+      [attr.aria-label]="'Ver historial de contenidos de ' + studentName"
+      (click)="onStudentContentHistory()"
+    >
+      <span class="meeting-row__avatar" aria-hidden="true">{{ studentInitials }}</span>
 
-    <div class="meeting-row__student-information">
-      <span class="meeting-row__student-name">{{ studentName }}</span>
+      <span class="meeting-row__student-information">
+        <span class="meeting-row__student-name">{{ studentName }}</span>
 
-      <span class="meeting-row__student-meta">
-        ID: {{ meeting.studentId }}
-        <ng-container *ngIf="studentCategory"> • {{ studentCategory }}</ng-container>
+        <span class="meeting-row__student-meta">
+          ID: {{ meeting.studentId }}
+          <ng-container *ngIf="studentCategory"> • {{ studentCategory }}</ng-container>
+        </span>
       </span>
-    </div>
+    </button>
   </div>
 
   <!-- STAGE -->
-  <div class="meeting-row__cell meeting-row__cell--stage">
+  <div class="meeting-row__cell meeting-row__cell--stage" data-label="Stage">
     <span class="meeting-row__stage-badge" *ngIf="stageNumber">Stage {{ stageNumber }}</span>
     <span class="meeting-row__stage-description">{{ stageDescription || 'Sin stage' }}</span>
   </div>
 
   <!-- PROGRESO -->
-  <div class="meeting-row__cell meeting-row__cell--progress">
+  <div class="meeting-row__cell meeting-row__cell--progress" data-label="Progreso">
     <div class="meeting-row__progress">
       <span class="meeting-row__progress-value" [ngClass]="studentProgressClass">
         {{ formattedStudentProgress }}
@@ -65,7 +73,7 @@
   </div>
 
   <!-- MODALIDAD -->
-  <div class="meeting-row__cell meeting-row__cell--mode">
+  <div class="meeting-row__cell meeting-row__cell--mode" data-label="Modalidad">
     <span class="meeting-row__mode-icon" aria-hidden="true">
       <svg *ngIf="isOnline" width="17" height="17" viewBox="0 0 24 24" fill="none">
         <rect x="3" y="4.5" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7" />
@@ -82,7 +90,7 @@
   </div>
 
   <!-- CONTENIDO -->
-  <div class="meeting-row__cell meeting-row__cell--content">
+  <div class="meeting-row__cell meeting-row__cell--content" data-label="Contenido">
     <ng-container *ngIf="hasStudyContent; else noContent">
       <ul class="meeting-row__content-list">
         <li *ngFor="let content of visibleStudyContent">{{ content.title }}</li>
@@ -100,7 +108,7 @@
   </div>
 
   <!-- ASISTENCIA -->
-  <div class="meeting-row__cell meeting-row__cell--assistance">
+  <div class="meeting-row__cell meeting-row__cell--assistance" data-label="Asistencia">
     <button
       type="button"
       class="meeting-row__attendance"
@@ -126,7 +134,7 @@
   </div>
 
   <!-- REFUERZOS -->
-  <div class="meeting-row__cell meeting-row__cell--reinforcement">
+  <div class="meeting-row__cell meeting-row__cell--reinforcement" data-label="Refuerzos">
     <button *ngIf="hasReinforcement; else reinforcementActions" type="button" class="meeting-row__reinforcement meeting-row__reinforcement--active" (click)="onCommentView()">
       <span class="meeting-row__reinforcement-icon" aria-hidden="true">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
@@ -152,7 +160,7 @@
   </div>
 
   <!-- NOTAS -->
-  <div class="meeting-row__cell meeting-row__cell--notes">
+  <div class="meeting-row__cell meeting-row__cell--notes" data-label="Notas">
     <button *ngIf="hasInstructorNote; else noInstructorNote" type="button" class="meeting-row__note" (click)="onTemporaryCommentView()">
       <span class="meeting-row__note-icon" aria-hidden="true">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
@@ -173,7 +181,7 @@
   </div>
 
   <!-- ACCIONES -->
-  <div class="meeting-row__cell meeting-row__cell--actions">
+  <div class="meeting-row__cell meeting-row__cell--actions" data-label="Acciones">
     <div class="meeting-row__actions">
       <button type="button" class="meeting-row__action-button" title="Historial de contenidos" aria-label="Ver historial de contenidos" (click)="onStudentContentHistory()">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
