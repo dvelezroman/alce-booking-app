@@ -101,12 +101,16 @@ export class CreateMeetingModalComponent implements OnInit {
   private isHourAvailable(hour: number): boolean {
     const now = this.today;
 
-    /*
-     * Conservamos el comportamiento que ya tenías:
-     * permite seleccionar horas desde dos horas antes
-     * de la hora actual.
-     */
-    return hour >= now.hour - 2;
+    const minimumDateTime = now.plus({ hours: 2 });
+
+    const hourDateTime = now.set({
+      hour,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    });
+
+    return hourDateTime >= minimumDateTime;
   }
 
   selectHour(hour: number): void {
