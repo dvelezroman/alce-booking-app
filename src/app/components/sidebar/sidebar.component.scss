@@ -3,9 +3,45 @@
 }
 
 
-/* =========================
-   SIDEBAR
-========================= */
+/* =========================================================
+   01. VARIABLES
+   =========================================================
+   Configuración general del sidebar.
+
+   IMPORTANTE:
+   --sidebar-icon-size controla TODOS los iconos principales.
+
+   Abierto  = 18px
+   Cerrado  = 18px
+
+   No existe otro tamaño para el estado cerrado.
+========================================================= */
+
+.sidebar {
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 60px;
+
+  --sidebar-icon-size: 18px;
+
+  --sidebar-bg: #ffffff;
+  --sidebar-border: #eaeaec;
+
+  --sidebar-text: #66666d;
+  --sidebar-text-strong: #27272a;
+  --sidebar-text-muted: #8a8a91;
+
+  --sidebar-hover: #f5f5f5;
+  --sidebar-active: #eeeeef;
+
+  --sidebar-radius: 6px;
+
+  --sidebar-transition: 180ms ease;
+}
+
+
+/* =========================================================
+   02. CONTENEDOR PRINCIPAL
+========================================================= */
 
 .sidebar {
   position: fixed;
@@ -14,61 +50,48 @@
 
   z-index: 9999;
 
-  width: 280px;
+  width: var(--sidebar-width);
   height: 100dvh;
 
   display: flex;
   flex-direction: column;
 
-  color: #313338;
-  background: #ffffff;
+  box-sizing: border-box;
 
-  border-right: 1px solid #e9e9ec;
+  color: var(--sidebar-text);
+  background: var(--sidebar-bg);
 
-  box-shadow:
-    2px 0 10px rgba(15, 23, 42, 0.025);
+  border-right: 1px solid var(--sidebar-border);
 
   overflow: hidden;
 
   transition:
-    width 0.25s ease,
-    transform 0.25s ease;
+    width var(--sidebar-transition);
 }
 
 
-/* =========================
-   CLOSED
-========================= */
+/* =========================================================
+   03. SIDEBAR CERRADO
 
-.sidebar.closed {
-  width: 60px;
-}
+   Solamente cambia el ancho.
 
-.sidebar.closed .nav-section {
-  overflow: hidden;
-}
+   NO modificamos:
+   - tamaño iconos
+   - padding base
+   - altura de elementos
+========================================================= */
 
-.sidebar.closed .category-header span,
-.sidebar.closed .link-text {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.sidebar.closed .category-header svg {
-  opacity: 1;
-  visibility: visible;
-}
-
-.sidebar.closed .sub-menu-wrapper {
-  display: none;
+.sidebar--closed {
+  width: var(--sidebar-collapsed-width);
 }
 
 
-/* =========================
-   USER / LOGO
-========================= */
+/* =========================================================
+   04. HEADER
+   Logo + usuario
+========================================================= */
 
-.logo-user-container {
+.sidebar__header {
   width: 100%;
   min-height: 76px;
 
@@ -83,11 +106,17 @@
 
   box-sizing: border-box;
 
-  border-bottom: 1px solid #ededf0;
+  flex-shrink: 0;
+
+  border-bottom: 1px solid var(--sidebar-border);
 }
 
 
-.logo-container {
+/* =========================================================
+   05. LOGO
+========================================================= */
+
+.sidebar__logo {
   width: 40px;
   height: 40px;
 
@@ -96,78 +125,67 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  img {
-    width: 40px;
-    height: 40px;
-
-    object-fit: contain;
-  }
 }
 
 
-.user-info {
+.sidebar__logo-image {
+  width: 40px;
+  height: 40px;
+
+  display: block;
+
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   06. INFORMACIÓN DEL USUARIO
+========================================================= */
+
+.sidebar__user {
   min-width: 0;
 
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
 
   gap: 0.08rem;
 
   overflow: hidden;
 
   white-space: nowrap;
-
-  transition:
-    opacity 0.2s ease;
-
-  .hello-text {
-    margin: 0;
-
-    color: #77777d;
-
-    font-size: 0.72rem;
-    font-weight: 400;
-  }
-
-  .user-name {
-    margin: 0;
-
-    color: #303035;
-
-    font-size: 0.78rem;
-    font-weight: 650;
-  }
-
-  .welcome-message {
-    margin: 0;
-
-    color: #55555c;
-
-    font-size: 0.72rem;
-    font-weight: 400;
-  }
-
-  .college-name {
-    display: block;
-
-    color: #303035;
-
-    font-weight: 650;
-  }
-}
-
-.sidebar.closed .user-info {
-  opacity: 0;
 }
 
 
-/* =========================
-   NAV AREA
-========================= */
+.sidebar__user-greeting {
+  color: #7a7a80;
 
-.nav-section {
+  font-size: 0.7rem;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+
+.sidebar__user-name {
+  overflow: hidden;
+
+  color: #303035;
+
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.3;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   07. ÁREA DE NAVEGACIÓN
+
+   Todo el contenido central puede hacer scroll.
+========================================================= */
+
+.sidebar__nav {
   min-height: 0;
 
   flex: 1;
@@ -175,6 +193,8 @@
   padding:
     0.65rem
     0.55rem;
+
+  box-sizing: border-box;
 
   overflow-y: auto;
   overflow-x: hidden;
@@ -186,41 +206,38 @@
 }
 
 
-.nav-section::-webkit-scrollbar {
+.sidebar__nav::-webkit-scrollbar {
   width: 5px;
 }
 
-.nav-section::-webkit-scrollbar-thumb {
+
+.sidebar__nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.sidebar__nav::-webkit-scrollbar-thumb {
   background: #dddddf;
 
   border-radius: 999px;
 }
 
 
-/* =========================
-   HOME / PROFILE
-========================= */
+/* =========================================================
+   08. ITEM PRINCIPAL
+   Inicio / Perfil
+========================================================= */
 
-.nav-item {
+.sidebar__item {
   width: 100%;
 
-  padding: 0;
-
-  color: #66666d;
-
-  border-radius: 0.5rem;
+  margin: 0;
 
   box-sizing: border-box;
-
-  font-size: 0.76rem;
-
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
 }
 
 
-.nav-item a {
+.sidebar__item-link {
   width: 100%;
   min-height: 40px;
 
@@ -235,19 +252,97 @@
 
   box-sizing: border-box;
 
-  color: inherit;
+  color: var(--sidebar-text);
+  background: transparent;
+
+  border-radius: var(--sidebar-radius);
 
   text-decoration: none;
 
-  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 450;
+
+  cursor: pointer;
+
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    transform 100ms ease;
 }
 
 
-.nav-item svg {
-  width: 18px;
-  height: 18px;
+.sidebar__item-link:hover {
+  color: var(--sidebar-text-strong);
 
-  flex: 0 0 18px;
+  background: var(--sidebar-hover);
+}
+
+
+.sidebar__item-link:active {
+  transform: scale(0.99);
+}
+
+
+/* =========================================================
+   09. ITEM PRINCIPAL ACTIVO
+========================================================= */
+
+.sidebar__item--active
+.sidebar__item-link {
+  color: var(--sidebar-text-strong);
+
+  background: var(--sidebar-active);
+
+  font-weight: 550;
+}
+
+
+/* =========================================================
+   10. CONTENEDOR UNIVERSAL DE ICONOS
+
+   ESTA ES LA REGLA IMPORTANTE.
+
+   Todos los iconos principales viven dentro de:
+   .sidebar__icon
+
+   Siempre:
+   18px × 18px
+
+   No importa si sidebar está:
+   - abierto
+   - cerrado
+========================================================= */
+
+.sidebar__icon {
+  width: var(--sidebar-icon-size);
+  height: var(--sidebar-icon-size);
+
+  min-width: var(--sidebar-icon-size);
+
+  flex:
+    0
+    0
+    var(--sidebar-icon-size);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   11. SVG DENTRO DEL ICONO
+========================================================= */
+
+.sidebar__icon > svg {
+  width: var(--sidebar-icon-size);
+  height: var(--sidebar-icon-size);
+
+  display: block;
 
   margin: 0;
 
@@ -255,53 +350,113 @@
 }
 
 
-.nav-item:hover {
-  color: #343439;
+/* =========================================================
+   12. TEXTO DE ITEMS PRINCIPALES
+========================================================= */
 
-  background: #f5f5f6;
+.sidebar__label {
+  min-width: 0;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 
-.nav-item.active {
-  color: #27272a;
+/* =========================================================
+   13. GRUPOS
 
-  background: #f0f0f2;
+   Cada categoría dinámica:
+   - Clases
+   - Evaluaciones
+   - Estudiantes
+   - Reportes
+   - Notificaciones
+   - etc.
 
-  font-weight: 600;
-}
+   Separamos visualmente los grupos sin meter cards,
+   fondos ni bloques pesados.
+========================================================= */
 
-
-/* =========================
-   GROUP
-========================= */
-
-.nav-group {
-  width: 100%;
-
-  margin-top: 0.15rem;
-}
-
-
-/* =========================
-   GROUP HEADER
-========================= */
-
-.category-header {
+.sidebar__group {
   position: relative;
 
+  width: 100%;
+
+  margin-top: 0.3rem;
+
+  padding-top: 0.3rem;
+
+  box-sizing: border-box;
+  border: none;
+}
+
+
+
+/* =========================================================
+   14. PRIMER GRUPO
+
+   Evitamos línea innecesaria demasiado cerca de Inicio /
+   Perfil.
+========================================================= */
+
+.sidebar__group:first-of-type {
+  margin-top: 0.45rem;
+}
+
+
+.sidebar__group:first-of-type::before {
+  background: #ededee;
+}
+
+/* =========================
+   PADRE ACTIVO
+========================= */
+
+.sidebar__group-trigger--active {
+  color: #27272a;
+  background: #f0f0f2;
+  font-weight: 550;
+}
+
+/* =========================================================
+   HIJO ACTIVO
+   Mismo estilo visual que Home activo
+========================================================= */
+
+.sidebar__child-link--active {
+  color: #27272a;
+
+  background: #eeeeef;
+
+  font-weight: 550;
+}
+
+.sidebar__child-link--active
+.sidebar__child-dot {
+  background: #55555b;
+}
+
+
+/* =========================================================
+   15. HEADER / TRIGGER DEL GRUPO
+========================================================= */
+
+.sidebar__group-trigger {
   width: 100%;
   min-height: 40px;
 
   display: grid;
 
   grid-template-columns:
-    20px
+    var(--sidebar-icon-size)
     minmax(0, 1fr)
-    16px;
+    14px;
 
   align-items: center;
 
-  gap: 0.6rem;
+  column-gap: 0.65rem;
 
   padding:
     0
@@ -312,504 +467,168 @@
   color: #696970;
   background: transparent;
 
-  border-radius: 0.5rem;
+  border: 0;
+  border-radius: var(--sidebar-radius);
 
-  cursor: pointer;
-  user-select: none;
-
-  font-size: 0.76rem;
+  font-family: inherit;
+  font-size: 0.75rem;
   font-weight: 450;
 
-  white-space: nowrap;
+  text-align: left;
+
+  cursor: pointer;
 
   transition:
-    color 0.15s ease,
-    background-color 0.15s ease;
+    color 140ms ease,
+    background-color 140ms ease,
+    transform 100ms ease;
 }
 
 
-.category-header:hover {
-  color: #303035;
+.sidebar__group-trigger:hover {
+  color: var(--sidebar-text-strong);
 
-  background: #f5f5f6;
+  background: var(--sidebar-hover);
 }
 
 
-.category-header.active {
-  color: #303035;
+.sidebar__group-trigger:active {
+  transform: scale(0.99);
+}
+
+
+/* =========================================================
+   16. GRUPO ACTIVO
+========================================================= */
+
+.sidebar__group-trigger--active {
+
+  color: var(--sidebar-text-strong);
+
+  background: var(--sidebar-active);
 
   font-weight: 550;
+
 }
 
 
-.category-header svg {
-  width: 18px;
-  height: 18px;
+/* =========================================================
+   17. NOMBRE DEL GRUPO
+========================================================= */
 
-  margin: 0;
-
-  fill: currentColor;
-
-  flex-shrink: 0;
-}
-
-
-.category-header > span {
+.sidebar__group-label {
   min-width: 0;
 
   overflow: hidden;
-
-  text-align: left;
 
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 
-.category-header .chevron-icon {
-  color: #94949a;
+/* =========================================================
+   18. CHEVRON DEL GRUPO
+========================================================= */
 
-  font-size: 0.66rem;
+.sidebar__group-chevron {
+  width: 14px;
+  height: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #a0a0a6;
 
   transition:
-    transform 0.18s ease;
+    transform var(--sidebar-transition),
+    color var(--sidebar-transition);
 }
 
 
-.category-header:not(.collapsed)
-.chevron-icon {
+.sidebar__group-chevron svg {
+  width: 14px;
+  height: 14px;
+
+  display: block;
+}
+
+
+/* Rotación cuando está abierto */
+
+.sidebar__group-trigger--expanded
+.sidebar__group-chevron {
   transform: rotate(180deg);
+
+  color: #68686e;
 }
 
 
-/* =========================
-   WHATSAPP ICON
-========================= */
+/* =========================================================
+   19. WHATSAPP
 
-.category-header__whatsapp-icon {
-  width: 18px;
+   Sigue ocupando EXACTAMENTE el mismo contenedor 18x18.
+========================================================= */
+
+.sidebar__whatsapp-icon {
+  width: var(--sidebar-icon-size);
+  height: var(--sidebar-icon-size);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   margin: 0;
 
   color: #25b861;
 
   font-size: 1rem;
+  line-height: 1;
 }
 
 
-/* =========================
-   GROUP LIST
-========================= */
+/* =========================================================
+   20. NOTIFICACIONES
+========================================================= */
 
-.sidebar ul {
-  margin: 0;
-  padding: 0;
-
-  list-style: none;
-}
-
-
-.group-list {
-  padding:
-    0.2rem
-    0
-    0.35rem !important;
-}
-
-
-.group-list > li {
-  width: 100%;
-
-  display: block !important;
-}
-
-
-/* =========================
-   NORMAL CHILD
-========================= */
-
-.nav-link-row {
+.sidebar__notification {
   position: relative;
 
-  width: 100%;
-  min-height: 38px;
+  width: var(--sidebar-icon-size);
+  height: var(--sidebar-icon-size);
 
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 0.5rem;
-
-  padding:
-    0
-    0.75rem
-    0
-    2.45rem !important;
-
-  box-sizing: border-box;
-
-  color: #707077 !important;
-  background: transparent;
-
-  border-radius: 0.48rem;
-
-  text-decoration: none;
-
-  font-size: 0.72rem !important;
-  font-weight: 400;
-
-  transition:
-    color 0.15s ease,
-    background-color 0.15s ease,
-    transform 0.15s ease;
-}
-
-
-.nav-link-row::before {
-  content: '';
-
-  position: absolute;
-
-  left: 1.5rem;
-
-  width: 4px;
-  height: 4px;
-
-  background: #c6c6ca;
-
-  border-radius: 50%;
-}
-
-
-.nav-link-row:hover {
-  color: #303035 !important;
-
-  background: #f6f6f7;
-}
-
-
-.nav-link-row:active {
-  transform: scale(0.99);
-}
-
-
-/* =========================
-   REMOVE OLD BLUE BLOCKS
-========================= */
-
-.nav-item.active::before,
-.category-header.active::before,
-.nav-item:hover:not(.active)::before,
-.category-header:hover:not(.active)::before,
-.sidebar ul li a:hover:not(.active)::before {
-  display: none;
-}
-
-
-/* =========================
-   SUB MENU
-========================= */
-
-.sub-menu-wrapper {
-  position: relative;
-
-  width: 100%;
-
-  margin:
-    0.1rem
-    0
-    0.2rem;
-
-  box-sizing: border-box;
-}
-
-
-/* =========================
-   SUB MENU HEADER
-========================= */
-
-.sub-category-header {
-  width: 100%;
-  min-height: 38px;
-
-  padding:
-    0
-    0.75rem
-    0
-    2.45rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 0.5rem;
-
-  box-sizing: border-box;
-
-  color: #63636a;
-  background: transparent;
-
-  border: 0;
-  border-radius: 0.48rem;
-
-  font-family: inherit;
-  font-size: 0.72rem;
-  font-weight: 500;
-
-  text-align: left;
-
-  cursor: pointer;
-
-  transition:
-    color 0.15s ease,
-    background-color 0.15s ease,
-    transform 0.15s ease;
-}
-
-
-.sub-category-header:hover {
-  color: #26262b;
-
-  background: #f5f5f6;
-}
-
-
-.sub-category-header:active {
-  transform: scale(0.99);
-}
-
-
-.sub-category-header--open {
-  color: #27272a;
-}
-
-
-.sub-category-header__content {
-  min-width: 0;
-
-  display: flex;
-  align-items: center;
-
-  gap: 0.6rem;
-}
-
-
-.sub-category-header__dot {
-  width: 5px;
-  height: 5px;
-
-  flex: 0 0 5px;
-
-  background: #a7a7ad;
-
-  border-radius: 50%;
-}
-
-
-.sub-category-header--open
-.sub-category-header__dot {
-  background: #59595f;
-}
-
-
-.sub-category-header__title {
-  min-width: 0;
-
-  overflow: hidden;
-
-  color: inherit !important;
-
-  white-space: nowrap;
-  text-overflow: ellipsis;
-
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-
-/* =========================
-   SUB CHEVRON
-========================= */
-
-.sub-category-header__chevron {
-  width: 14px;
-  height: 14px;
-
-  flex: 0 0 14px;
-
-  color: #94949a;
-
-  transition:
-    transform 0.18s ease;
-}
-
-
-.sub-category-header__chevron--open {
-  transform: rotate(90deg);
-
-  color: #55555b;
-}
-
-
-/* =========================
-   SUB LIST
-========================= */
-
-.sub-list {
-  position: relative;
-
-  margin:
-    0.15rem
-    0
-    0.35rem
-    2.55rem !important;
-
-  padding:
-    0.1rem
-    0
-    0.1rem
-    0.8rem !important;
-
-  border-left:
-    1px solid
-    #e0e0e3;
-
-  border-bottom: 0 !important;
-}
-
-
-.sub-list li {
-  width: 100%;
-
-  display: block !important;
-}
-
-
-/* =========================
-   SUB CHILD
-========================= */
-
-.sub-list__link {
-  position: relative;
-
-  width: calc(100% - 0.25rem);
-  min-height: 36px;
-
-  display: flex !important;
-  align-items: center;
-
-  gap: 0.55rem;
-
-  padding:
-    0
-    0.65rem !important;
-
-  box-sizing: border-box;
-
-  color: #77777e !important;
-  background: transparent;
-
-  border-radius: 0.45rem;
-
-  text-decoration: none;
-
-  font-size: 0.7rem !important;
-  font-weight: 400;
-
-  transition:
-    color 0.15s ease,
-    background-color 0.15s ease,
-    transform 0.15s ease;
-}
-
-
-.sub-list__link:hover {
-  color: #333338 !important;
-
-  background: #f5f5f6;
-}
-
-
-.sub-list__link:active {
-  transform: scale(0.99);
-}
-
-
-.sub-list__link.active {
-  color: #222226 !important;
-
-  background: #eeeeF0;
-
-  font-weight: 550;
-}
-
-
-/* =========================
-   CHILD INDICATOR
-========================= */
-
-.sub-list__indicator {
-  width: 4px;
-  height: 4px;
-
-  flex: 0 0 4px;
-
-  background: #c4c4c9;
-
-  border-radius: 50%;
-}
-
-
-.sub-list__link.active
-.sub-list__indicator {
-  background: #55555b;
-}
-
-
-/* =========================
-   LINK TEXT
-========================= */
-
-.sidebar .link-text {
-  min-width: 0;
-
-  color: inherit;
-
-  opacity: 1;
-
-  white-space: nowrap;
-
-  transition:
-    opacity 0.2s ease;
-}
-
-
-/* =========================
-   NOTIFICATION
-========================= */
-
-.notification-icon-wrapper {
-  position: relative;
-
-  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 
-.notification-icon-wrapper
-.notification-badge {
+.sidebar__notification svg {
+  width: var(--sidebar-icon-size);
+  height: var(--sidebar-icon-size);
+
+  display: block;
+
+  fill: currentColor;
+}
+
+
+/* =========================================================
+   21. BADGE DE NOTIFICACIONES
+========================================================= */
+
+.sidebar__notification-badge {
   position: absolute;
 
-  top: -8px;
-  right: -7px;
+  top: -7px;
+  right: -8px;
 
-  min-width: 16px;
-  height: 16px;
+  min-width: 15px;
+  height: 15px;
 
   padding:
     0
-    4px;
+    3px;
 
   display: inline-flex;
   align-items: center;
@@ -826,24 +645,21 @@
 
   border-radius: 999px;
 
-  font-size: 8px;
-  font-weight: 600;
+  font-size: 7px;
+  font-weight: 650;
   line-height: 1;
 }
 
 
-.nav-link-badge {
-  flex-shrink: 0;
+/* =========================================================
+   22. CAMPANA CON NOTIFICACIONES
+========================================================= */
 
-  margin-left: auto;
-}
-
-
-.notification-icon-wrapper.has-unread svg {
-  fill: #e9ad25;
+.sidebar__notification--unread svg {
+  color: #dca321;
 
   animation:
-    bell-ring
+    sidebar-bell-ring
     1.2s
     ease-in-out
     infinite;
@@ -852,22 +668,503 @@
 }
 
 
-.sidebar.closed
-.notification-icon-wrapper
-.notification-badge {
-  opacity: 1 !important;
-  visibility: visible !important;
+/* =========================================================
+   23. LISTA INTERNA DE CADA GRUPO
+========================================================= */
+
+.sidebar__group-list {
+  width: 100%;
+
+  margin: 0;
+
+  padding:
+    0.15rem
+    0
+    0.25rem;
+
+  box-sizing: border-box;
+
+  list-style: none;
 }
 
 
-/* =========================
-   LOGOUT
-========================= */
-
-.logout {
+.sidebar__group-list-item {
   width: 100%;
 
-  margin-top: auto;
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+
+/* =========================================================
+   24. LINK HIJO NORMAL
+
+   Ejemplo:
+   Reportes
+      • Reporte estudiantes
+      • Reporte instructores
+========================================================= */
+
+.sidebar__child-link {
+  position: relative;
+
+  width: 100%;
+  min-height: 36px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.6rem;
+
+  padding:
+    0
+    0.75rem
+    0
+    2.45rem;
+
+  box-sizing: border-box;
+
+  color: #74747b;
+  background: transparent;
+
+  border-radius: 5px;
+
+  text-decoration: none;
+
+  font-size: 0.71rem;
+  font-weight: 400;
+
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    transform 100ms ease;
+}
+
+
+.sidebar__child-link:hover {
+  color: #303035;
+
+  background: #f6f6f7;
+}
+
+
+.sidebar__child-link:active {
+  transform: scale(0.99);
+}
+
+
+/* =========================================================
+   25. LINK HIJO ACTIVO
+========================================================= */
+
+.sidebar__child-link--active {
+  color: #27272a;
+
+  background: #f1f1f2;
+
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   26. PUNTO DE LOS HIJOS
+========================================================= */
+
+.sidebar__child-dot {
+  width: 4px;
+  height: 4px;
+
+  flex: 0 0 4px;
+
+  background: #c1c1c6;
+
+  border-radius: 50%;
+}
+
+
+.sidebar__child-link--active
+.sidebar__child-dot {
+  background: #55555b;
+}
+
+
+/* =========================================================
+   27. TEXTO DEL HIJO
+========================================================= */
+
+.sidebar__child-label {
+  min-width: 0;
+
+  flex: 1;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   28. NOTIFICACIÓN EN ITEM HIJO
+========================================================= */
+
+.sidebar__child-notification {
+  position: relative;
+
+  width: 16px;
+  height: 16px;
+
+  flex: 0 0 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-left: auto;
+
+  color: #dca321;
+}
+
+
+.sidebar__child-notification svg {
+  width: 15px;
+  height: 15px;
+
+  display: block;
+
+  fill: currentColor;
+}
+
+
+/* =========================================================
+   29. BADGE DEL ITEM HIJO
+========================================================= */
+
+.sidebar__child-badge {
+  position: absolute;
+
+  top: -7px;
+  right: -8px;
+
+  min-width: 14px;
+  height: 14px;
+
+  padding:
+    0
+    3px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  color: #ffffff;
+  background: #7c3aed;
+
+  border:
+    2px solid
+    #ffffff;
+
+  border-radius: 999px;
+
+  font-size: 7px;
+  font-weight: 650;
+}
+
+
+/* =========================================================
+   30. SUBGRUPO
+
+   Ejemplo:
+
+   Evaluaciones
+      • Evaluaciones por etapa >
+           ├─ Crear
+           └─ Historial
+========================================================= */
+
+.sidebar__subgroup {
+  width: 100%;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   31. HEADER DEL SUBGRUPO
+========================================================= */
+
+.sidebar__subgroup-trigger {
+  width: 100%;
+  min-height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.5rem;
+
+  padding:
+    0
+    0.75rem
+    0
+    2.45rem;
+
+  box-sizing: border-box;
+
+  color: #6d6d74;
+  background: transparent;
+
+  border: 0;
+  border-radius: 5px;
+
+  font-family: inherit;
+  font-size: 0.71rem;
+  font-weight: 450;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    transform 100ms ease;
+}
+
+
+.sidebar__subgroup-trigger:hover {
+  color: #303035;
+
+  background: #f6f6f7;
+}
+
+
+.sidebar__subgroup-trigger:active {
+  transform: scale(0.99);
+}
+
+
+.sidebar__subgroup-trigger--expanded {
+  color: #303035;
+
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   32. CONTENIDO DEL SUBGRUPO
+========================================================= */
+
+.sidebar__subgroup-content {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.6rem;
+}
+
+
+.sidebar__subgroup-label {
+  min-width: 0;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   33. CHEVRON DEL SUBGRUPO
+========================================================= */
+
+.sidebar__subgroup-chevron {
+  width: 13px;
+  height: 13px;
+
+  flex: 0 0 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #9a9aa0;
+
+  transition:
+    transform var(--sidebar-transition),
+    color var(--sidebar-transition);
+}
+
+
+.sidebar__subgroup-chevron svg {
+  width: 13px;
+  height: 13px;
+
+  display: block;
+}
+
+
+.sidebar__subgroup-trigger--expanded
+.sidebar__subgroup-chevron {
+  transform: rotate(90deg);
+
+  color: #55555b;
+}
+
+
+/* =========================================================
+   34. LISTA DEL SUBGRUPO
+
+   Línea vertical sutil tipo navegación SaaS moderna.
+========================================================= */
+
+.sidebar__subgroup-list {
+  position: relative;
+
+  margin:
+    0.1rem
+    0
+    0.25rem
+    2.55rem;
+
+  padding:
+    0.1rem
+    0
+    0.1rem
+    0.75rem;
+
+  box-sizing: border-box;
+
+  border-left:
+    1px solid
+    #e3e3e5;
+
+  list-style: none;
+}
+
+
+.sidebar__subgroup-item {
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+
+/* =========================================================
+   35. LINK DEL SUBGRUPO
+========================================================= */
+
+.sidebar__subgroup-link {
+  width: calc(100% - 0.2rem);
+  min-height: 34px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+
+  padding:
+    0
+    0.65rem;
+
+  box-sizing: border-box;
+
+  color: #7b7b82;
+  background: transparent;
+
+  border-radius: 5px;
+
+  text-decoration: none;
+
+  font-size: 0.69rem;
+  font-weight: 400;
+
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    transform 100ms ease;
+}
+
+
+.sidebar__subgroup-link:hover {
+  color: #303035;
+
+  background: #f5f5f6;
+}
+
+
+.sidebar__subgroup-link:active {
+  transform: scale(0.99);
+}
+
+
+/* =========================================================
+   36. SUBGRUPO ACTIVO
+========================================================= */
+
+.sidebar__subgroup-link--active {
+  color: #252529;
+
+  background: #eeeeef;
+
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   37. INDICADOR DEL SUBGRUPO
+========================================================= */
+
+.sidebar__subgroup-dot {
+  width: 3px;
+  height: 3px;
+
+  flex: 0 0 3px;
+
+  background: #c5c5ca;
+
+  border-radius: 50%;
+}
+
+
+.sidebar__subgroup-link--active
+.sidebar__subgroup-dot {
+  background: #55555b;
+}
+
+
+/* =========================================================
+   38. TEXTO DEL SUBGRUPO
+========================================================= */
+
+.sidebar__subgroup-link-label {
+  min-width: 0;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   39. FOOTER
+
+   Se mantiene fijo abajo.
+========================================================= */
+
+.sidebar__footer {
+  width: 100%;
+
+  flex-shrink: 0;
 
   padding:
     0.65rem
@@ -875,13 +1172,19 @@
 
   box-sizing: border-box;
 
+  background: #ffffff;
+
   border-top:
     1px solid
-    #ededf0;
+    var(--sidebar-border);
 }
 
 
-.logout a {
+/* =========================================================
+   40. BOTÓN SALIR
+========================================================= */
+
+.sidebar__logout {
   width: 100%;
   min-height: 40px;
 
@@ -896,106 +1199,272 @@
 
   box-sizing: border-box;
 
-  color: #66666d;
+  color: var(--sidebar-text);
+  background: transparent;
 
-  border-radius: 0.5rem;
+  border: 0;
+  border-radius: var(--sidebar-radius);
 
-  text-decoration: none;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 450;
+
+  text-align: left;
 
   cursor: pointer;
 
-  font-size: 0.72rem;
-
   transition:
-    color 0.15s ease,
-    background-color 0.15s ease,
-    transform 0.15s ease;
+    color 140ms ease,
+    background-color 140ms ease,
+    transform 100ms ease;
 }
 
 
-.logout a:hover {
-  color: #2f3035;
+.sidebar__logout:hover {
+  color: #27272a;
 
-  background: #f4f4f5;
+  background: var(--sidebar-hover);
 }
 
 
-.logout a:active {
+.sidebar__logout:active {
   transform: scale(0.98);
 }
 
 
-.logout svg {
-  width: 18px;
-  height: 18px;
+/* =========================================================
+   41. SIDEBAR CERRADO
+   =========================================================
 
-  flex: 0 0 18px;
+   Aquí está la parte importante.
 
-  margin: 0;
+   Cuando cerramos:
 
-  fill: currentColor;
-}
+   - ancho sidebar: 60px
+   - icono: SIGUE 18px
+   - no aumentamos iconos
+   - ocultamos textos
+   - ocultamos submenús
+   - centramos el contenido
 
+========================================================= */
 
-.logout .link-text {
-  font-size: 0.72rem;
-}
+.sidebar--closed {
 
+  /* =======================================================
+     HEADER CERRADO
+  ======================================================= */
 
-/* =========================
-   CLOSED SIDEBAR
-========================= */
-
-.sidebar.closed {
-
-  .logo-user-container {
+  .sidebar__header {
     justify-content: center;
-
-    padding:
-      0.8rem
-      0.5rem;
   }
 
-  .nav-item a,
-  .category-header {
+
+  .sidebar__user {
+    display: none;
+  }
+
+
+  /* =======================================================
+     LOGO CERRADO
+
+     MISMO tamaño.
+  ======================================================= */
+
+  .sidebar__logo {
+    margin: 0;
+  }
+
+
+  /* =======================================================
+     TEXTO GENERAL
+  ======================================================= */
+
+  .sidebar__label,
+  .sidebar__group-label {
+    display: none;
+  }
+
+
+  /* =======================================================
+     INICIO / PERFIL
+
+     No cambiamos el icono.
+
+     Solamente centramos el contenido dentro del mismo item.
+  ======================================================= */
+
+  .sidebar__item-link {
     justify-content: center;
 
-    grid-template-columns: 20px;
+    gap: 0;
+  }
 
-    padding:
+
+  /* =======================================================
+     GRUPOS CERRADOS
+  ======================================================= */
+
+  .sidebar__group-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0;
+  }
+
+
+  /* =======================================================
+     CHEVRON
+
+     No tiene utilidad visual cuando está cerrado.
+  ======================================================= */
+
+  .sidebar__group-chevron {
+    display: none;
+  }
+
+
+  /* =======================================================
+     LISTAS
+
+     No mostramos hijos mientras está cerrado.
+  ======================================================= */
+
+  .sidebar__group-list {
+    display: none;
+  }
+
+
+  /* =======================================================
+     ICONOS
+
+     IMPORTANTE:
+
+     NO hay width: 20px
+     NO hay height: 20px
+     NO hay font-size mayor.
+
+     Continúa usando:
+
+     --sidebar-icon-size: 18px
+  ======================================================= */
+
+  .sidebar__icon {
+    width: var(--sidebar-icon-size);
+    height: var(--sidebar-icon-size);
+
+    min-width: var(--sidebar-icon-size);
+
+    flex:
       0
-      0.65rem;
+      0
+      var(--sidebar-icon-size);
   }
 
-  .nav-item svg,
-  .category-header svg {
-    margin: 0;
+
+  .sidebar__icon > svg {
+    width: var(--sidebar-icon-size);
+    height: var(--sidebar-icon-size);
   }
 
-  .category-header
-  .chevron-icon {
-    display: none;
+
+  /* =======================================================
+     WHATSAPP CERRADO
+
+     Mismo tamaño.
+  ======================================================= */
+
+  .sidebar__whatsapp-icon {
+    width: var(--sidebar-icon-size);
+    height: var(--sidebar-icon-size);
+
+    font-size: 1rem;
   }
 
-  .group-list {
-    display: none;
+
+  /* =======================================================
+     NOTIFICACIÓN CERRADA
+
+     Mismo tamaño.
+  ======================================================= */
+
+  .sidebar__notification,
+  .sidebar__notification svg {
+    width: var(--sidebar-icon-size);
+    height: var(--sidebar-icon-size);
   }
 
-  .logout a {
+
+  /* =======================================================
+     FOOTER CERRADO
+  ======================================================= */
+
+  .sidebar__logout {
     justify-content: center;
 
-    padding: 0;
-  }
-
-  .logout svg {
-    margin: 0;
+    gap: 0;
   }
 }
 
 
-/* =========================
-   SIDEBAR TOGGLE
-========================= */
+/* =========================================================
+   42. ANIMACIÓN CAMPANA
+========================================================= */
+
+@keyframes sidebar-bell-ring {
+
+  0% {
+    transform: rotate(0);
+  }
+
+  15% {
+    transform: rotate(11deg);
+  }
+
+  30% {
+    transform: rotate(-9deg);
+  }
+
+  45% {
+    transform: rotate(6deg);
+  }
+
+  60% {
+    transform: rotate(-4deg);
+  }
+
+  75%,
+  100% {
+    transform: rotate(0);
+  }
+}
+
+
+/* =========================================================
+   43. ACCESIBILIDAD
+   Reducir animaciones si el sistema lo solicita.
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .sidebar,
+  .sidebar *,
+  .sidebar *::before,
+  .sidebar *::after {
+    transition-duration: 0.01ms !important;
+  }
+
+
+  .sidebar__notification--unread svg {
+    animation: none !important;
+  }
+}
+
+
+/* =========================================================
+   44. BOTÓN MOBILE
+========================================================= */
 
 .sidebar-toggle {
   position: fixed;
@@ -1012,20 +1481,23 @@
   align-items: center;
   justify-content: center;
 
-  color: #ffffff;
-  background: #26262b;
+  padding: 0;
 
-  border-radius: 0.6rem;
+  color: #ffffff;
+  background: #27272a;
+
+  border: 0;
+  border-radius: 7px;
 
   cursor: pointer;
 
   box-shadow:
     0 6px 18px
-    rgba(15, 23, 42, 0.15);
+    rgba(15, 23, 42, 0.14);
 
   transition:
-    transform 0.15s ease,
-    background-color 0.15s ease;
+    background-color 140ms ease,
+    transform 100ms ease;
 }
 
 
@@ -1044,54 +1516,15 @@
 }
 
 
-/* =========================
-   ANIMATION
-========================= */
-
-@keyframes bell-ring {
-  0% {
-    transform: rotate(0);
-  }
-
-  15% {
-    transform: rotate(12deg);
-  }
-
-  30% {
-    transform: rotate(-10deg);
-  }
-
-  45% {
-    transform: rotate(7deg);
-  }
-
-  60% {
-    transform: rotate(-5deg);
-  }
-
-  75%,
-  100% {
-    transform: rotate(0);
-  }
-}
-
-
-@media (
-  prefers-reduced-motion:
-  reduce
-) {
-  .notification-icon-wrapper.has-unread
-  svg {
-    animation: none !important;
-  }
-}
-
-
-/* =========================
-   MOBILE
-========================= */
+/* =========================================================
+   45. MOBILE
+========================================================= */
 
 @media (max-width: 768px) {
+
+  /* =======================================================
+     SIDEBAR MOBILE ABIERTO
+  ======================================================= */
 
   .sidebar {
     width:
@@ -1101,40 +1534,55 @@
       );
 
     box-shadow:
-      10px 0 35px
+      10px
+      0
+      35px
       rgba(15, 23, 42, 0.12);
   }
 
 
-  .sidebar.closed {
+  /* =======================================================
+     SIDEBAR MOBILE CERRADO
+  ======================================================= */
+
+  .sidebar--closed {
     width: 0;
 
     border-right: 0;
+
+    box-shadow: none;
   }
 
+
+  /* =======================================================
+     BOTÓN HAMBURGUESA
+  ======================================================= */
 
   .sidebar-toggle {
     display: flex;
   }
 
 
-  .category-header,
-  .nav-item a {
+  /* =======================================================
+     ÁREAS TÁCTILES MOBILE
+
+     El icono sigue siendo 18px.
+     Solo aumenta ligeramente el área clickeable.
+  ======================================================= */
+
+  .sidebar__item-link,
+  .sidebar__group-trigger {
     min-height: 44px;
   }
 
 
-  .nav-link-row {
-    min-height: 42px;
-  }
-
-
-  .sub-category-header {
-    min-height: 42px;
-  }
-
-
-  .sub-list__link {
+  .sidebar__child-link,
+  .sidebar__subgroup-trigger {
     min-height: 40px;
+  }
+
+
+  .sidebar__subgroup-link {
+    min-height: 38px;
   }
 }
