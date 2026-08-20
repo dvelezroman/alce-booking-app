@@ -336,6 +336,16 @@
    MEDIUM DESKTOP
 ========================= */
 
+@media (min-width: 1600px) {
+  .meeting-filters {
+    padding: 1.25rem 1.35rem 1.2rem;
+  }
+
+  .meeting-filters__grid {
+    gap: .95rem;
+  }
+}
+
 @media (max-width: 1250px) {
   .meeting-filters__grid {
     grid-template-columns:
@@ -397,8 +407,14 @@
   }
 
   .meeting-filters__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: .65rem;
+  }
+
+  .meeting-filters__actions {
+    grid-column: 1 / -1;
+
+    flex-direction: row;
   }
 
   .meeting-filter-field__label {
@@ -412,12 +428,6 @@
     height: 2.45rem;
 
     font-size: .68rem;
-  }
-
-  .meeting-filters__actions {
-    grid-column: auto;
-
-    flex-direction: row;
   }
 
   .meeting-filters__search-button {
@@ -436,6 +446,10 @@
 ========================= */
 
 @media (max-width: 480px) {
+  .meeting-filters__grid {
+    grid-template-columns: 1fr;
+  }
+
   .meeting-filters__actions {
     flex-direction: column;
     align-items: stretch;

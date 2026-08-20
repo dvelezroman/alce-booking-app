@@ -140,33 +140,40 @@ export class InstructorMeetingRowComponent {
   }
 
   get hasTemporaryComment(): boolean {
-    return !!this.meeting.user?.temporaryComment?.trim();
+    return !!this.studentUser?.temporaryComment?.trim();
   }
 
   get studentName(): string {
-    const user = this.meeting.user;
-
-    if (!user) return 'Estudiante';
-
-    const firstName = user.firstName?.trim() ?? '';
-    const lastName = user.lastName?.trim() ?? '';
-
+    const user = this.studentUser;
+    const firstName = user?.firstName?.trim() ?? '';
+    const lastName = user?.lastName?.trim() ?? '';
     const fullName = `${firstName} ${lastName}`.trim();
 
-    return fullName || 'Estudiante';
+    if (fullName) return fullName;
+
+    const fallbackName = this.meeting.student?.name?.trim();
+
+    return fallbackName || 'Estudiante';
   }
 
   get studentInitials(): string {
-    const user = this.meeting.user;
-
-    if (!user) return 'ES';
-
-    const firstName = user.firstName?.trim()?.charAt(0) ?? '';
-    const lastName = user.lastName?.trim()?.charAt(0) ?? '';
-
+    const user = this.studentUser;
+    const firstName = user?.firstName?.trim()?.charAt(0) ?? '';
+    const lastName = user?.lastName?.trim()?.charAt(0) ?? '';
     const initials = `${firstName}${lastName}`.toUpperCase();
 
-    return initials || 'ES';
+    if (initials) return initials;
+
+    const fallbackName = this.studentName;
+
+    if (!fallbackName || fallbackName === 'Estudiante') return 'ES';
+
+    return fallbackName
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part.charAt(0))
+      .join('')
+      .toUpperCase() || 'ES';
   }
 
   get studentCategory(): string {
@@ -299,6 +306,10 @@ export class InstructorMeetingRowComponent {
     if (progress <= 75) return 'meeting-row__progress--good';
 
     return 'meeting-row__progress--high';
+  }
+
+  private get studentUser() {
+    return this.meeting.student?.user ?? this.meeting.user;
   }
 
   private capitalize(value: string): string {
