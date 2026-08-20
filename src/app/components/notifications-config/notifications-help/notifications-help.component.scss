@@ -1,0 +1,203 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.notifications-help {
+  width: 100%;
+
+  padding:
+    1rem
+    1.05rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #eceef4;
+  border-radius: 0.7rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 16px
+    rgba(31, 42, 89, 0.025);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.notifications-help__header {
+  margin-bottom: 0.85rem;
+}
+
+
+.notifications-help__title {
+  margin: 0;
+
+  color: #20243a;
+
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+
+/* =========================================================
+   STEPS
+========================================================= */
+
+.notifications-help__steps {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1.1rem;
+}
+
+
+/* =========================================================
+   STEP
+========================================================= */
+
+.notifications-help__step {
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns:
+    2rem
+    minmax(0, 1fr);
+
+  align-items: flex-start;
+
+  gap: 0.7rem;
+}
+
+
+/* vertical line */
+
+.notifications-help__step:not(:last-child)::after {
+  content: '';
+
+  position: absolute;
+
+  top: 2rem;
+  left: 0.95rem;
+
+  width: 1px;
+  height: calc(100% + 0.35rem);
+
+  background: #e6e3fb;
+}
+
+
+/* =========================================================
+   NUMBER
+========================================================= */
+
+.notifications-help__number {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 1.85rem;
+  height: 1.85rem;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  background: #f0edff;
+
+  color: #5142d8;
+
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.notifications-help__content {
+  min-width: 0;
+
+  padding-top: 0.15rem;
+}
+
+
+.notifications-help__content strong {
+  display: block;
+
+  color: #292e44;
+
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+
+.notifications-help__content p {
+  margin:
+    0.18rem
+    0
+    0;
+
+  color: #7b8190;
+
+  font-size: 0.64rem;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+  .notifications-help {
+    padding:
+      0.9rem
+      0.85rem;
+  }
+
+
+  .notifications-help__steps {
+    gap: 0.95rem;
+  }
+
+
+  .notifications-help__step {
+    grid-template-columns:
+      1.85rem
+      minmax(0, 1fr);
+
+    gap: 0.6rem;
+  }
+
+
+  .notifications-help__number {
+    width: 1.7rem;
+    height: 1.7rem;
+
+    font-size: 0.64rem;
+  }
+
+
+  .notifications-help__step:not(:last-child)::after {
+    top: 1.8rem;
+    left: 0.84rem;
+  }
+}

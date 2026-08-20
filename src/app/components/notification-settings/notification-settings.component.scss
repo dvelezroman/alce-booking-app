@@ -1,0 +1,276 @@
+:host {
+  display: block;
+
+  width: 100%;
+  min-height: 100%;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.notifications-page {
+  width: calc(100% - 76px);
+  min-height: 100vh;
+
+  margin-left: 64px;
+
+  padding:
+    1.15rem
+    1.4rem
+    2rem;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.notifications-page__container {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+
+  width: 100%;
+  max-width: 1450px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   CHILD HOSTS
+========================================================= */
+
+app-notifications-config-header,
+app-notifications-status,
+app-notifications-management,
+app-notifications-details,
+app-notifications-help,
+app-notifications-important-info {
+  display: block;
+
+  width: 100%;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.notifications-page__layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(18rem, 24rem);
+
+  align-items: start;
+
+  gap: 1rem;
+
+  width: 100%;
+}
+
+
+/* =========================================================
+   LEFT COLUMN
+========================================================= */
+
+.notifications-page__main {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+
+  min-width: 0;
+}
+
+
+/* =========================================================
+   RIGHT COLUMN
+========================================================= */
+
+.notifications-page__aside {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+
+  min-width: 0;
+}
+
+
+/* =========================================================
+   DESKTOP LARGE
+========================================================= */
+
+@media (min-width: 1550px) {
+
+  .notifications-page {
+    padding-left: 1.8rem;
+    padding-right: 1.8rem;
+  }
+
+
+  .notifications-page__layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      24rem;
+  }
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1250px) {
+
+  .notifications-page {
+    padding:
+      1rem
+      1.1rem
+      1.75rem;
+  }
+
+
+  .notifications-page__layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      19rem;
+
+    gap: 0.85rem;
+  }
+
+
+  .notifications-page__main,
+  .notifications-page__aside {
+    gap: 0.85rem;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .notifications-page {
+    width: 100%;
+
+    margin-left: 0;
+  }
+
+
+  .notifications-page__layout {
+    grid-template-columns: 1fr;
+  }
+
+
+  /*
+   * En tablet primero mostramos configuración
+   * y luego los bloques informativos.
+   */
+  .notifications-page__main {
+    order: 1;
+  }
+
+
+  .notifications-page__aside {
+    order: 2;
+
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+
+    align-items: start;
+  }
+
+
+  app-notifications-details {
+    grid-column: 1 / -1;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+  .notifications-page {
+    width: 100%;
+    min-height: 100dvh;
+
+    margin-left: 0;
+
+    padding:
+      0.75rem
+      0.7rem
+      1.25rem;
+  }
+
+
+  .notifications-page__container {
+    gap: 0.75rem;
+  }
+
+
+  .notifications-page__layout {
+    gap: 0.75rem;
+  }
+
+
+  .notifications-page__main {
+    gap: 0.75rem;
+  }
+
+
+  .notifications-page__aside {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.75rem;
+  }
+
+
+  app-notifications-details,
+  app-notifications-help,
+  app-notifications-important-info {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .notifications-page {
+    padding:
+      0.6rem
+      0.55rem
+      1rem;
+  }
+
+
+  .notifications-page__container,
+  .notifications-page__layout,
+  .notifications-page__main,
+  .notifications-page__aside {
+    gap: 0.65rem;
+  }
+}

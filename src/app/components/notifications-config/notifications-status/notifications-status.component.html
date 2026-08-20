@@ -1,0 +1,444 @@
+<section class="notifications-status">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="notifications-status__header">
+
+    <h2 class="notifications-status__title">
+      Estado de las notificaciones
+    </h2>
+
+    <p class="notifications-status__description">
+      Aquí puedes ver el estado actual de tus notificaciones push
+      y configurar tus preferencias.
+    </p>
+
+  </header>
+
+
+  <!-- =========================
+       BODY
+  ========================== -->
+
+  <div class="notifications-status__body">
+
+    <!-- =========================
+         VISUAL
+    ========================== -->
+
+    <div class="notifications-status__visual">
+
+      <div class="notifications-status__phone">
+
+        <div class="notifications-status__phone-notch">
+        </div>
+
+        <div class="notifications-status__phone-screen">
+
+          <span class="notifications-status__bell">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M18 8A6 6 0 0 0 6 8c0 7-3 7-3 9h18c0-2-3-2-3-9"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M13.73 21a2 2 0 0 1-3.46 0"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+
+          <span class="notifications-status__notification-count">
+            1
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="notifications-status__visual-card">
+
+        <span class="notifications-status__visual-card-icon">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M18 8A6 6 0 0 0 6 8c0 7-3 7-3 9h18c0-2-3-2-3-9"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </span>
+
+        <span class="notifications-status__visual-line">
+        </span>
+
+        <span class="notifications-status__visual-line notifications-status__visual-line--short">
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         STATES
+    ========================== -->
+
+    <div class="notifications-status__states">
+
+      <!-- BROWSER -->
+
+      <div class="notifications-status__row">
+
+        <div class="notifications-status__row-main">
+
+          <span
+            class="
+              notifications-status__row-icon
+              notifications-status__row-icon--success
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M12 3 5.5 5.7v5.2c0 4.2 2.7 7.8 6.5 9.1 3.8-1.3 6.5-4.9 6.5-9.1V5.7L12 3Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="m9 12 2 2 4-4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+
+          <div class="notifications-status__row-content">
+
+            <strong>
+              Estado del navegador
+            </strong>
+
+            <span>
+              {{
+                isSupported
+                  ? 'Las notificaciones push están soportadas'
+                  : 'Este navegador no soporta notificaciones push'
+              }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <span
+          class="notifications-status__badge"
+          [class.notifications-status__badge--success]="isSupported"
+          [class.notifications-status__badge--danger]="!isSupported"
+        >
+          <span class="notifications-status__badge-dot">
+          </span>
+
+          {{ supportText }}
+        </span>
+
+      </div>
+
+
+      <!-- PERMISSION -->
+
+      <div class="notifications-status__row">
+
+        <div class="notifications-status__row-main">
+
+          <span
+            class="
+              notifications-status__row-icon
+              notifications-status__row-icon--purple
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M18 8A6 6 0 0 0 6 8c0 7-3 7-3 9h18c0-2-3-2-3-9"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M13.7 21a2 2 0 0 1-3.4 0"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+
+          <div class="notifications-status__row-content">
+
+            <strong>
+              Permiso actual
+            </strong>
+
+            <span>
+              Estado del permiso de notificaciones
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <span
+          class="notifications-status__badge"
+          [ngClass]="{
+            'notifications-status__badge--success':
+              permission === 'granted',
+
+            'notifications-status__badge--danger':
+              permission === 'denied',
+
+            'notifications-status__badge--warning':
+              permission === 'default'
+          }"
+        >
+          <span class="notifications-status__badge-dot">
+          </span>
+
+          {{ statusText }}
+        </span>
+
+      </div>
+
+
+      <!-- SUBSCRIPTION -->
+
+      <div class="notifications-status__row">
+
+        <div class="notifications-status__row-main">
+
+          <span
+            class="
+              notifications-status__row-icon
+              notifications-status__row-icon--blue
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M8.5 8.5a5 5 0 0 0 0 7"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M5.5 5.5a9 9 0 0 0 0 13"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M15.5 8.5a5 5 0 0 1 0 7"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M18.5 5.5a9 9 0 0 1 0 13"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <circle
+                cx="12"
+                cy="12"
+                r="1.5"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+
+
+          <div class="notifications-status__row-content">
+
+            <strong>
+              Suscripción activa
+            </strong>
+
+            <span>
+              Estado de tu suscripción a notificaciones
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <span
+          class="notifications-status__badge"
+          [class.notifications-status__badge--success]="isSubscribed"
+          [class.notifications-status__badge--neutral]="!isSubscribed"
+        >
+          <span class="notifications-status__badge-dot">
+          </span>
+
+          {{ subscriptionText }}
+        </span>
+
+      </div>
+
+
+      <!-- PREFERENCE -->
+
+      <div class="notifications-status__row">
+
+        <div class="notifications-status__row-main">
+
+          <span
+            class="
+              notifications-status__row-icon
+              notifications-status__row-icon--purple
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M19 13.5v-3l-2-.7a6 6 0 0 0-.5-1.2l.9-1.9-2.1-2.1-1.9.9a6 6 0 0 0-1.2-.5L11.5 3h-3l-.7 2a6 6 0 0 0-1.2.5l-1.9-.9-2.1 2.1.9 1.9A6 6 0 0 0 3 9.8l-2 .7v3l2 .7c.1.4.3.8.5 1.2l-.9 1.9 2.1 2.1 1.9-.9c.4.2.8.4 1.2.5l.7 2h3l.7-2c.4-.1.8-.3 1.2-.5l1.9.9 2.1-2.1-.9-1.9c.2-.4.4-.8.5-1.2l2-.7Z"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+
+          <div class="notifications-status__row-content">
+
+            <strong>
+              Preferencia guardada
+            </strong>
+
+            <span>
+              Tu preferencia en el sistema
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <span
+          class="notifications-status__badge"
+          [class.notifications-status__badge--success]="isSubscribed"
+          [class.notifications-status__badge--neutral]="!isSubscribed"
+        >
+          <span class="notifications-status__badge-dot">
+          </span>
+
+          {{ preferenceText }}
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       INFORMATION
+  ========================== -->
+
+  <div class="notifications-status__info">
+
+    <span class="notifications-status__info-icon">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M12 11v5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <circle
+          cx="12"
+          cy="7.5"
+          r="1"
+          fill="currentColor"
+        />
+      </svg>
+
+    </span>
+
+    <p>
+      Para recibir notificaciones en tiempo real sobre clases,
+      evaluaciones y anuncios importantes, asegúrate de habilitar
+      las notificaciones push.
+    </p>
+
+  </div>
+
+</section>

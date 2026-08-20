@@ -40,7 +40,9 @@
     <!-- COLUMNA IZQUIERDA -->
     <main class="dashboard-main">
 
-      <app-instructor-summary-card></app-instructor-summary-card>
+      <app-instructor-summary-card
+       (calendarClick)="goToInstructorAgenda()"
+      ></app-instructor-summary-card>
       <app-instructor-quick-actions></app-instructor-quick-actions>
       <!-- SIGUIENTE FILA -->
 
@@ -48,13 +50,13 @@
 
         <!-- BLOQUE IZQUIERDO -->
 
-        <app-instructor-upcoming-classes>
-        </app-instructor-upcoming-classes>
+        <!-- <app-instructor-upcoming-classes>
+        </app-instructor-upcoming-classes> -->
 
        <!-- BLOQUE DERECHO -->
 
-        <app-instructor-day-summary>
-        </app-instructor-day-summary>
+        <!-- <app-instructor-day-summary>
+        </app-instructor-day-summary> -->
       </section>
 
       <!-- AQUÍ IRÁN DESPUÉS:
@@ -62,8 +64,8 @@
            - Progreso de estudiantes
       -->
 
-      <app-instructor-weekly-overview>
-      </app-instructor-weekly-overview>
+      <!-- <app-instructor-weekly-overview>
+      </app-instructor-weekly-overview> -->
 
       <!-- AQUÍ IRÁN DESPUÉS:
            - Evaluaciones pendientes
@@ -75,14 +77,14 @@
   <!-- COLUMNA DERECHA -->
     <aside class="dashboard-sidebar">
 
-      <app-instructor-important-notices>
-      </app-instructor-important-notices>
+      <!-- <app-instructor-important-notices>
+      </app-instructor-important-notices> -->
 
-      <app-instructor-recent-emails>
-      </app-instructor-recent-emails>
+      <!-- <app-instructor-recent-emails>
+      </app-instructor-recent-emails> -->
 
-      <app-instructor-monthly-performance>
-      </app-instructor-monthly-performance>
+      <!-- <app-instructor-monthly-performance>
+      </app-instructor-monthly-performance> -->
 
     </aside>
 
@@ -90,10 +92,10 @@
 
 </div>
 
-<!-- <app-announcement-viewer
+<app-announcement-viewer
   *ngIf="announcementUser && visibleAnnouncements.length > 0"
   [announcements]="visibleAnnouncements"
   [user]="announcementUser"
   (closed)="onCustomAnnouncementClosed($event)"
 >
-</app-announcement-viewer> -->
+</app-announcement-viewer>

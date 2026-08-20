@@ -1,0 +1,148 @@
+<section
+  class="notifications-important"
+  [class.notifications-important--danger]="
+    stateClass === 'danger'
+  "
+  [class.notifications-important--success]="
+    stateClass === 'success'
+  "
+  [class.notifications-important--warning]="
+    stateClass === 'warning'
+  "
+>
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="notifications-important__header">
+
+    <span class="notifications-important__icon">
+
+      @if (
+        stateClass === 'success'
+      ) {
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="m8.5 12 2.2 2.2 4.8-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      } @else {
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 3 21 19H3L12 3Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M12 9v4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="12"
+            cy="16"
+            r="0.9"
+            fill="currentColor"
+          />
+        </svg>
+
+      }
+
+    </span>
+
+
+    <h2 class="notifications-important__title">
+      {{ title }}
+    </h2>
+
+  </header>
+
+
+  <!-- =========================
+       MESSAGE
+  ========================== -->
+
+  <p class="notifications-important__message">
+    {{ message }}
+  </p>
+
+
+  <!-- =========================
+       GUIDE BUTTON
+  ========================== -->
+
+  @if (
+    permission !== 'granted'
+  ) {
+
+    <a
+      class="notifications-important__button"
+      href="https://support.google.com/chrome/answer/3220216"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+
+      <span>
+        Ver guía de configuración
+      </span>
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M14 5h5v5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="m13 11 6-6"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+    </a>
+
+  }
+
+</section>
