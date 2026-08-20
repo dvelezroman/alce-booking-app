@@ -1,13 +1,23 @@
 <section class="meetings-list">
-  <!-- HEADER -->
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
   <header class="meetings-list__header">
+
     <div class="meetings-list__heading">
-      <h2 class="meetings-list__title">Clases encontradas</h2>
+
+      <h2 class="meetings-list__title">
+        Clases encontradas
+      </h2>
 
       <span class="meetings-list__count">
         {{ meetingsCountLabel }}
       </span>
+
     </div>
+
 
     <button
       type="button"
@@ -15,13 +25,16 @@
       [disabled]="isLoading"
       (click)="onRefresh()"
     >
+
       <svg
         width="17"
         height="17"
         viewBox="0 0 24 24"
         fill="none"
         aria-hidden="true"
-        [class.meetings-list__refresh-icon--loading]="isLoading"
+        [class.meetings-list__refresh-icon--loading]="
+          isLoading
+        "
       >
         <path
           d="M20 6v5h-5"
@@ -47,77 +60,517 @@
         />
       </svg>
 
-      <span>{{ isLoading ? 'Actualizando...' : 'Actualizar' }}</span>
+
+      <span>
+        {{
+          isLoading
+            ? 'Actualizando...'
+            : 'Actualizar'
+        }}
+      </span>
+
     </button>
+
   </header>
 
-  <!-- TABLE -->
-  <div class="meetings-list__table-wrapper">
+
+  <!-- =====================================================
+       TABLE WRAPPER
+       Este es el contenedor que maneja el scroll horizontal
+  ====================================================== -->
+
+  <div
+    #tableWrapper
+    class="meetings-list__table-wrapper"
+  >
+
     <div class="meetings-list__table">
 
-      <!-- TABLE HEADER -->
-      <div class="meetings-list__table-header">
-        <div class="meetings-list__column meetings-list__column--date">Fecha</div>
-        <div class="meetings-list__column meetings-list__column--hour">Hora</div>
-        <div class="meetings-list__column meetings-list__column--student">Estudiante</div>
-        <div class="meetings-list__column meetings-list__column--stage">Stage</div>
-        <div class="meetings-list__column meetings-list__column--progress">Progreso</div>
-        <div class="meetings-list__column meetings-list__column--mode">Modalidad</div>
-        <div class="meetings-list__column meetings-list__column--content">Contenido</div>
-        <div class="meetings-list__column meetings-list__column--assistance">Asistencia</div>
-        <div class="meetings-list__column meetings-list__column--reinforcement">Refuerzos</div>
-        <div class="meetings-list__column meetings-list__column--notes">Notas</div>
-        <div class="meetings-list__column meetings-list__column--actions">Acciones</div>
-      </div>
 
-      <!-- LOADING -->
-      <div *ngIf="isLoading" class="meetings-list__loading">
-        <div class="meeting-row-skeleton" *ngFor="let item of [1, 2, 3, 4, 5]">
-          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--date"></span>
-          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--hour"></span>
-          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--student"></span>
-          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--stage"></span>
-          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--progress"></span>
-          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--mode"></span>
-          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--content"></span>
-          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--assistance"></span>
-          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--reinforcement"></span>
-          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--notes"></span>
-          <span class="meeting-row-skeleton__block meeting-row-skeleton__block--action"></span>
+      <!-- =================================================
+           TABLE HEADER
+      ================================================== -->
+
+      <div
+        *ngIf="
+          isLoading ||
+          hasMeetings
+        "
+        class="meetings-list__table-header"
+      >
+
+        <!-- FECHA -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--date
+          "
+        >
+          Fecha
         </div>
+
+
+        <!-- HORA -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--hour
+          "
+        >
+          Hora
+        </div>
+
+
+        <!-- ESTUDIANTE -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--student
+          "
+        >
+          Estudiante
+        </div>
+
+
+        <!-- STAGE -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--stage
+          "
+        >
+          Stage
+        </div>
+
+
+        <!-- CATEGORÍA -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--category
+          "
+        >
+          Categoría
+        </div>
+
+
+        <!-- PROGRESO -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--progress
+          "
+        >
+          Progreso
+        </div>
+
+
+        <!-- MODALIDAD -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--mode
+          "
+        >
+          Modalidad
+        </div>
+
+
+        <!-- CONTENIDO -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--content
+          "
+        >
+          Contenido
+        </div>
+
+
+        <!-- COMENTARIO -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--comment
+          "
+        >
+          Comentario
+        </div>
+
+
+        <!-- OBSERVACIÓN -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--observation
+          "
+        >
+          Observación
+        </div>
+
+
+        <!-- EVALUACIONES -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--evaluation
+          "
+        >
+          Evaluaciones
+        </div>
+
+
+        <!-- ABRIÓ ENLACE -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--opened
+          "
+        >
+          Abrió enlace
+        </div>
+
+
+        <!-- NOTA -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--note
+          "
+        >
+          Nota
+        </div>
+
+
+        <!-- ASISTENCIA -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--assistance
+          "
+        >
+          Asistencia
+        </div>
+
+
+        <!-- REFUERZOS -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--reinforcement
+          "
+        >
+          Refuerzos
+        </div>
+
+
+        <!-- ACCIONES -->
+        <div
+          class="
+            meetings-list__column
+            meetings-list__column--actions
+          "
+        >
+          Acciones
+        </div>
+
       </div>
 
-      <!-- ROWS -->
-      <ng-container *ngIf="!isLoading && hasMeetings">
+
+      <!-- =================================================
+           LOADING / SKELETON
+      ================================================== -->
+
+      <div
+        *ngIf="isLoading"
+        class="meetings-list__loading"
+      >
+
+        <div
+          class="meeting-row-skeleton"
+          *ngFor="
+            let item of [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          "
+        >
+
+          <!-- FECHA -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--date
+            "
+          ></span>
+
+
+          <!-- HORA -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--hour
+            "
+          ></span>
+
+
+          <!-- ESTUDIANTE -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--student
+            "
+          ></span>
+
+
+          <!-- STAGE -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--stage
+            "
+          ></span>
+
+
+          <!-- CATEGORÍA -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--category
+            "
+          ></span>
+
+
+          <!-- PROGRESO -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--progress
+            "
+          ></span>
+
+
+          <!-- MODALIDAD -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--mode
+            "
+          ></span>
+
+
+          <!-- CONTENIDO -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--content
+            "
+          ></span>
+
+
+          <!-- COMENTARIO -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--comment
+            "
+          ></span>
+
+
+          <!-- OBSERVACIÓN -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--observation
+            "
+          ></span>
+
+
+          <!-- EVALUACIONES -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--evaluation
+            "
+          ></span>
+
+
+          <!-- ABRIÓ ENLACE -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--opened
+            "
+          ></span>
+
+
+          <!-- NOTA -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--note
+            "
+          ></span>
+
+
+          <!-- ASISTENCIA -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--assistance
+            "
+          ></span>
+
+
+          <!-- REFUERZOS -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--reinforcement
+            "
+          ></span>
+
+
+          <!-- ACCIONES -->
+          <span
+            class="
+              meeting-row-skeleton__block
+              meeting-row-skeleton__block--action
+            "
+          ></span>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           DATA
+      ================================================== -->
+
+      <ng-container
+        *ngIf="
+          !isLoading &&
+          hasMeetings
+        "
+      >
+
         <app-instructor-meeting-row
-          *ngFor="let meeting of meetings; trackBy: trackByMeetingId"
+          *ngFor="
+            let meeting of meetings;
+            trackBy: trackByMeetingId
+          "
+
           [meeting]="meeting"
+
           [isToday]="isToday"
-          [hasMeetingPassed]="hasMeetingPassed"
-          [formatStudyContent]="formatStudyContent"
-          (contentViewRequested)="onContentViewRequested($event)"
-          (temporaryCommentRequested)="onTemporaryCommentRequested($event)"
-          (commentViewRequested)="onCommentViewRequested($event)"
-          (studentContentHistoryRequested)="onStudentContentHistoryRequested($event)"
-          (assistanceCheckboxClicked)="onAssistanceCheckboxClicked($event)"
-          (evaluationRequested)="onEvaluationRequested($event)"
-          (noteSaved)="onNoteSaved($event)">
+
+          [hasMeetingPassed]="
+            hasMeetingPassed
+          "
+
+          [formatStudyContent]="
+            formatStudyContent
+          "
+
+          (contentViewRequested)="
+            onContentViewRequested($event)
+          "
+
+          (temporaryCommentRequested)="
+            onTemporaryCommentRequested($event)
+          "
+
+          (commentViewRequested)="
+            onCommentViewRequested($event)
+          "
+
+          (studentContentHistoryRequested)="
+            onStudentContentHistoryRequested($event)
+          "
+
+          (assistanceCheckboxClicked)="
+            onAssistanceCheckboxClicked($event)
+          "
+
+          (evaluationRequested)="
+            onEvaluationRequested($event)
+          "
+
+          (noteSaved)="
+            onNoteSaved($event)
+          "
+        >
         </app-instructor-meeting-row>
+
       </ng-container>
 
-      <!-- EMPTY -->
-      <div *ngIf="!isLoading && !hasMeetings" class="meetings-list__empty">
+
+      <!-- =================================================
+           EMPTY
+      ================================================== -->
+
+      <div
+        *ngIf="
+          !isLoading &&
+          !hasMeetings
+        "
+        class="meetings-list__empty"
+      >
+
         <div class="meetings-list__empty-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <rect x="3" y="5" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.7" />
-            <path d="M7 3v4M17 3v4M3 9h18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-            <path d="M8.5 14.5h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="16"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M7 3v4M17 3v4M3 9h18"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M8.5 14.5h7"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
           </svg>
+
         </div>
 
-        <h3 class="meetings-list__empty-title">No hay clases para mostrar</h3>
-        <p class="meetings-list__empty-description">Prueba modificando los filtros de búsqueda.</p>
+
+        <h3 class="meetings-list__empty-title">
+          No hay clases para mostrar
+        </h3>
+
+
+        <p class="meetings-list__empty-description">
+          Prueba modificando los filtros de búsqueda.
+        </p>
+
       </div>
+
     </div>
+
   </div>
+
 </section>
