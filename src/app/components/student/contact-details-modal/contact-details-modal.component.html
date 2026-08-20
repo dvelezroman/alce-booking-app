@@ -171,8 +171,57 @@
 
                 <div class="contact-details-modal__details-grid">
 
+                  <!-- =================================================
+                      COLUMNA IZQUIERDA
+                  ================================================== -->
+
                   <div class="contact-details-modal__details-column">
 
+                    <!-- NOMBRES -->
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.7" />
+                          <path d="M6 20a6 6 0 0 1 12 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">
+                        Nombres:
+                      </span>
+
+                      <strong>
+                        {{ user.firstName || 'No registrado' }}
+                      </strong>
+                    </div>
+
+
+                    <!-- APELLIDOS -->
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <circle cx="8" cy="8" r="2.7" stroke="currentColor" stroke-width="1.7" />
+                          <circle cx="16" cy="8" r="2.7" stroke="currentColor" stroke-width="1.7" />
+                          <path
+                            d="M3.5 20a4.5 4.5 0 0 1 9 0M11.5 20a4.5 4.5 0 0 1 9 0"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">
+                        Apellidos:
+                      </span>
+
+                      <strong>
+                        {{ user.lastName || 'No registrado' }}
+                      </strong>
+                    </div>
+
+
+                    <!-- USUARIO -->
                     <div class="contact-details-modal__detail">
                       <span class="contact-details-modal__detail-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -181,11 +230,17 @@
                         </svg>
                       </span>
 
-                      <span class="contact-details-modal__detail-label">Usuario:</span>
-                      <strong>{{ user.email || 'No registrado' }}</strong>
+                      <span class="contact-details-modal__detail-label">
+                        Usuario:
+                      </span>
+
+                      <strong>
+                        {{ user.email || 'No registrado' }}
+                      </strong>
                     </div>
 
 
+                    <!-- EMAIL -->
                     <div class="contact-details-modal__detail">
                       <span class="contact-details-modal__detail-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -194,49 +249,94 @@
                         </svg>
                       </span>
 
-                      <span class="contact-details-modal__detail-label">Email:</span>
-                      <strong>{{ user.emailAddress || 'No registrado' }}</strong>
+                      <span class="contact-details-modal__detail-label">
+                        Email:
+                      </span>
+
+                      <strong>
+                        {{ user.emailAddress || 'No registrado' }}
+                      </strong>
                     </div>
 
 
+                    <!-- TELÉFONO -->
                     <div class="contact-details-modal__detail">
                       <span class="contact-details-modal__detail-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                          <path d="M6.5 3.5 9 8l-2 2c1.5 3 4 5.5 7 7l2-2 4.5 2.5c.4.2.6.6.5 1-.4 2-2 3.5-4 3.5C9.8 22 2 14.2 2 7c0-2 1.5-3.6 3.5-4 .4-.1.8.1 1 .5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                          <path
+                            d="M6.5 3.5 9 8l-2 2c1.5 3 4 5.5 7 7l2-2 4.5 2.5c.4.2.6.6.5 1-.4 2-2 3.5-4 3.5C9.8 22 2 14.2 2 7c0-2 1.5-3.6 3.5-4 .4-.1.8.1 1 .5Z"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linejoin="round"
+                          />
                         </svg>
                       </span>
 
-                      <span class="contact-details-modal__detail-label">Teléfono:</span>
-                      <strong>{{ user.contact || 'No registrado' }}</strong>
+                      <span class="contact-details-modal__detail-label">
+                        Teléfono:
+                      </span>
+
+                      <strong>
+                        {{ user.contact || 'No registrado' }}
+                      </strong>
                     </div>
 
 
+                    <!-- PAÍS -->
                     <div class="contact-details-modal__detail">
                       <span class="contact-details-modal__detail-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                           <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7" />
-                          <path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9S9.5 5.5 12 3Z" stroke="currentColor" stroke-width="1.5" />
+                          <path
+                            d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9S9.5 5.5 12 3Z"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                          />
                         </svg>
                       </span>
 
-                      <span class="contact-details-modal__detail-label">País:</span>
-                      <strong>{{ user.country || 'No registrado' }}</strong>
+                      <span class="contact-details-modal__detail-label">
+                        País:
+                      </span>
+
+                      <strong>
+                        {{ user.country || 'No registrado' }}
+                      </strong>
                     </div>
 
 
+                    <!-- CIUDAD -->
                     <div class="contact-details-modal__detail">
                       <span class="contact-details-modal__detail-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                          <path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z" stroke="currentColor" stroke-width="1.7" />
+                          <path
+                            d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                          />
                           <circle cx="12" cy="10" r="2" stroke="currentColor" stroke-width="1.7" />
                         </svg>
                       </span>
 
-                      <span class="contact-details-modal__detail-label">Ciudad:</span>
-                      <strong>{{ user.city || 'No registrado' }}</strong>
+                      <span class="contact-details-modal__detail-label">
+                        Ciudad:
+                      </span>
+
+                      <strong>
+                        {{ user.city || 'No registrado' }}
+                      </strong>
                     </div>
 
+                  </div>
 
+
+                  <!-- =================================================
+                      COLUMNA DERECHA
+                  ================================================== -->
+
+                  <div class="contact-details-modal__details-column">
+
+                    <!-- OCUPACIÓN -->
                     <div class="contact-details-modal__detail">
                       <span class="contact-details-modal__detail-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -245,15 +345,17 @@
                         </svg>
                       </span>
 
-                      <span class="contact-details-modal__detail-label">Ocupación:</span>
-                      <strong>{{ user.occupation || 'No especificada' }}</strong>
+                      <span class="contact-details-modal__detail-label">
+                        Ocupación:
+                      </span>
+
+                      <strong>
+                        {{ user.occupation || 'No especificada' }}
+                      </strong>
                     </div>
 
-                  </div>
 
-
-                  <div class="contact-details-modal__details-column">
-
+                    <!-- FECHA DE NACIMIENTO -->
                     <div class="contact-details-modal__detail">
                       <span class="contact-details-modal__detail-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -262,54 +364,73 @@
                         </svg>
                       </span>
 
-                      <span class="contact-details-modal__detail-label">Fecha de nacimiento:</span>
+                      <span class="contact-details-modal__detail-label">
+                        Fecha de nacimiento:
+                      </span>
 
                       <strong>
-                        {{ user.birthday ? (user.birthday | date: 'dd/MM/yyyy') : 'No disponible' }}
+                        {{
+                          user.birthday
+                            ? (user.birthday | date: 'dd/MM/yyyy')
+                            : 'No disponible'
+                        }}
                       </strong>
                     </div>
 
 
+                    <!-- ID / IDENTIFICACIÓN -->
                     <div class="contact-details-modal__detail">
                       <span class="contact-details-modal__detail-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                          <rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.7" />
-                          <path d="M8 3v4M16 3v4M4 10h16" stroke="currentColor" stroke-width="1.7" />
+                          <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7" />
+                          <circle cx="8" cy="10" r="2" stroke="currentColor" stroke-width="1.5" />
+                          <path d="M6 16a3 3 0 0 1 4 0M13 9h5M13 13h5" stroke="currentColor" stroke-width="1.5" />
                         </svg>
                       </span>
 
-                      <span class="contact-details-modal__detail-label">Creado el:</span>
+                      <span class="contact-details-modal__detail-label">
+                        Código del estudiante:
+                      </span>
 
                       <strong>
-                        {{ user.createdAt ? (user.createdAt | date: 'dd/MM/yyyy') : 'No disponible' }}
+                        {{ user.idNumber || 'No disponible' }}
                       </strong>
                     </div>
 
 
+                    <!-- ROL -->
                     <div class="contact-details-modal__detail">
                       <span class="contact-details-modal__detail-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                          <path d="M20 7v5h-5M4 17v-5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
-                          <path d="M6 9a7 7 0 0 1 12-2l2 5M18 15a7 7 0 0 1-12 2l-2-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                          <path d="m3 10 9-5 9 5-9 5-9-5Z" stroke="currentColor" stroke-width="1.7" />
                         </svg>
                       </span>
 
-                      <span class="contact-details-modal__detail-label">Actualizado el:</span>
+                      <span class="contact-details-modal__detail-label">
+                        Rol:
+                      </span>
 
-                      <strong>
-                        {{ user.updatedAt ? (user.updatedAt | date: 'dd/MM/yyyy') : 'No disponible' }}
+                      <strong class="contact-details-modal__role">
+                        {{ user.role || 'No definido' }}
                       </strong>
                     </div>
 
 
+                    <!-- ESTADO -->
                     <div class="contact-details-modal__detail">
                       <span class="contact-details-modal__detail-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                          <path d="M12 3 5.5 6v5c0 4.2 2.7 8 6.5 10 3.8-2 6.5-5.8 6.5-10V6L12 3Z" stroke="currentColor" stroke-width="1.7" />
+                          <path
+                            d="M12 3 5.5 6v5c0 4.2 2.7 8 6.5 10 3.8-2 6.5-5.8 6.5-10V6L12 3Z"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                          />
                         </svg>
                       </span>
 
-                      <span class="contact-details-modal__detail-label">Estado de la cuenta:</span>
+                      <span class="contact-details-modal__detail-label">
+                        Estado de la cuenta:
+                      </span>
 
                       <strong
                         class="contact-details-modal__badge"
@@ -321,35 +442,49 @@
                     </div>
 
 
+                    <!-- CREADO -->
                     <div class="contact-details-modal__detail">
                       <span class="contact-details-modal__detail-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                          <path d="m3 10 9-5 9 5-9 5-9-5Z" stroke="currentColor" stroke-width="1.7" />
-                        </svg>
-                      </span>
-
-                      <span class="contact-details-modal__detail-label">Rol:</span>
-
-                      <strong class="contact-details-modal__role">
-                        {{ user.role || 'No definido' }}
-                      </strong>
-                    </div>
-
-
-                    <div class="contact-details-modal__detail">
-                      <span class="contact-details-modal__detail-icon">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                          <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7" />
-                          <circle cx="8" cy="10" r="2" stroke="currentColor" stroke-width="1.5" />
-                          <path d="M6 16a3 3 0 0 1 4 0M13 9h5M13 13h5" stroke="currentColor" stroke-width="1.5" />
+                          <rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.7" />
+                          <path d="M8 3v4M16 3v4M4 10h16" stroke="currentColor" stroke-width="1.7" />
                         </svg>
                       </span>
 
                       <span class="contact-details-modal__detail-label">
-                        ID / Número de identificación:
+                        Creado el:
                       </span>
 
-                      <strong>{{ user.idNumber || 'No disponible' }}</strong>
+                      <strong>
+                        {{
+                          user.createdAt
+                            ? (user.createdAt | date: 'dd/MM/yyyy')
+                            : 'No disponible'
+                        }}
+                      </strong>
+                    </div>
+
+
+                    <!-- ACTUALIZADO -->
+                    <div class="contact-details-modal__detail">
+                      <span class="contact-details-modal__detail-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                          <path d="M20 7v5h-5M4 17v-5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M6 9a7 7 0 0 1 12-2l2 5M18 15a7 7 0 0 1-12 2l-2-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                        </svg>
+                      </span>
+
+                      <span class="contact-details-modal__detail-label">
+                        Actualizado el:
+                      </span>
+
+                      <strong>
+                        {{
+                          user.updatedAt
+                            ? (user.updatedAt | date: 'dd/MM/yyyy')
+                            : 'No disponible'
+                        }}
+                      </strong>
                     </div>
 
                   </div>
@@ -400,8 +535,8 @@
                   </div>
 
                   <div class="contact-details-modal__academic-card">
-                    <span>ID de estudiante</span>
-                    <strong>{{ user.student?.id || '—' }}</strong>
+                    <span>Código del estudiante</span>
+                    <strong>{{ user.idNumber || '—' }}</strong>
                   </div>
 
                 </div>

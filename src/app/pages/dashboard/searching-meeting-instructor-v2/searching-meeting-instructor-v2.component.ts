@@ -23,17 +23,11 @@ import {
 ========================= */
 
 import { InstructorMeetingsHeaderComponent } from '../../../components/instructor-meetings/instructor-meetings-header/instructor-meetings-header.component';
-
 import { InstructorMeetingsFiltersComponent } from '../../../components/instructor-meetings/instructor-meetings-filters/instructor-meetings-filters.component';
-
 import { InstructorMeetingsListComponent } from '../../../components/instructor-meetings/instructor-meetings-list/instructor-meetings-list.component';
-
 import { InstructorMeetingRowComponent } from '../../../components/instructor-meetings/instructor-meeting-row/instructor-meeting-row.component';
-
 import { InstructorMeetingsPaginationComponent } from '../../../components/instructor-meetings/instructor-meetings-pagination/instructor-meetings-pagination.component';
-
 import { InstructorMeetingsIconGuideComponent } from '../../../components/instructor-meetings/instructor-meetings-icon-guide/instructor-meetings-icon-guide.component';
-
 import { InstructorContentPreparationPanelComponent } from '../../../components/instructor-meetings/instructor-content-preparation-panel/instructor-content-preparation-panel.component';
 
 /* =========================
@@ -55,18 +49,13 @@ import {
   FilterMeetingsDto,
   CreateMeetingDto,
 } from '../../../services/dtos/booking.dto';
-
 import { Stage } from '../../../services/dtos/student.dto';
-
 import {
   StudyContentDto,
   StudyContentPayloadI,
 } from '../../../services/dtos/study-content.dto';
-
 import { UserDto } from '../../../services/dtos/user.dto';
-
 import { AssessmentResourceI } from '../../../services/dtos/assessment-resources.dto';
-
 import { AssessementI } from '../../../services/dtos/assessment.dto';
 
 /* =========================
@@ -116,27 +105,18 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
   /* =========================
      MEETING SELECCIONADA
   ========================= */
-
   selectedMeeting?: MeetingDTO;
 
   /* =========================
      DATA PRINCIPAL
   ========================= */
-
   stages: Stage[] = [];
-
   meetings: MeetingDTO[] = [];
-
   filteredStages: Stage[] = [];
-
   availableHours: number[] = [];
-
   studyContentIds: number[] = [];
-
   studentStageContents: StudyContentDto[] = [];
-
   studentContentHistory: StudyContentPayloadI[] = [];
-
   ageGroupOptions: string[] = [
     'KIDS',
     'TEENS',
@@ -151,31 +131,22 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
   /* =========================
      STAGES / ASSESSMENTS
   ========================= */
-
   currentStageIndex: number = 0;
-
   minPoints: number = 0;
 
   /* =========================
      USUARIO / INSTRUCTOR
   ========================= */
-
   userId: number | null = null;
-
   instructorId: number | null = null;
-
   instructorLink: string | null = null;
 
   /* =========================
      UI
   ========================= */
-
   showForm: boolean = true;
-
   showCreateModal: boolean = false;
-
   isLoadingContentHistory: boolean = false;
-
   isStudentContentHistoryModalVisible: boolean = false;
 
   /* =========================
@@ -183,43 +154,32 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
   ========================= */
 
   isLoadingMeetings: boolean = false;
-
   showContentPreparationPanel: boolean = false;
-
   private initialMeetingsLoaded: boolean = false;
 
   /* =========================
      PAGINACIÓN FRONTEND
   ========================= */
-
   currentPage: number = 1;
-
   pageSize: number = 20;
 
   /* =========================
      EVALUACIONES
   ========================= */
-
   assessmentsByStudent: AssessementI[] = [];
-
   showEvaluationModal: boolean = false;
-
   highlightStageId: number | null = null;
 
   /* =========================
      MODALES
   ========================= */
-
   modal: ModalDto = modalInitializer();
-
   confirmationModal: ModalDto = modalInitializer();
 
   /* =========================
      ASISTENCIA
   ========================= */
-
   showAssistanceNoteModal = false;
-
   selectedMeetingForAssistance?: MeetingDTO;
 
   /* =========================
@@ -553,21 +513,13 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
 
   clearFilters(): void {
     this.initializeCurrentWeekFilter();
-
     this.filter.hour = '';
-
     this.filter.stageId = '';
-
     this.filter.category = undefined;
-
     this.filter.mode = undefined;
-
     this.filter.assigned = true;
-
     this.clearSelectedContents();
-
     this.currentPage = 1;
-
     this.fetchMeetings(this.filter);
   }
 

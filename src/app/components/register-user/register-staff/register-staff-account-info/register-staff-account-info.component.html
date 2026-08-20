@@ -64,31 +64,28 @@
         Rol
         <span>*</span>
       </label>
-
       <div class="register-staff-account__select-wrapper">
 
         <select
-            id="role"
-            formControlName="role"
-            class="register-staff-account__control register-staff-account__select"
-            [class.register-staff-account__control--invalid]="
-                isInvalid('role')
-            "
-            (change)="onRoleChange()"
-            >
-            <option value="">
-                Selecciona el rol
-            </option>
+          id="role"
+          formControlName="role"
+          class="register-staff-account__control register-staff-account__select"
+          [class.register-staff-account__control--invalid]="
+            isInvalid('role')
+          "
+          (change)="onRoleChange()"
+        >
 
-            @for (role of roles; track role) {
-                <option
-                [value]="role"
-                [disabled]="isRoleDisabled(role)"
-                >
-                {{ getRoleLabel(role) }}
-                </option>
-            }
-            </select>
+          <option value="">
+            Selecciona el rol
+          </option>
+
+          @for (role of roles; track role) {
+            <option [value]="role">
+              {{ getRoleLabel(role) }}
+            </option>
+          }
+        </select>
 
         <svg
           class="register-staff-account__select-icon"
@@ -141,22 +138,22 @@
       <div class="register-staff-account__select-wrapper">
 
         <select
-            id="instructorLink"
-            formControlName="instructorLink"
-            class="register-staff-account__control register-staff-account__select"
-            [disabled]="isInstructorLinkDisabled"
-            (change)="onInstructorLinkChange()"
-            >
-            <option value="">
-                Selecciona el enlace
-            </option>
+          id="instructorLink"
+          formControlName="instructorLink"
+          class="register-staff-account__control register-staff-account__select"
+          [disabled]="isInstructorLinkDisabled"
+          (change)="onInstructorLinkChange()"
+        >
+          <option [ngValue]="null">
+            Selecciona el enlace
+          </option>
 
-            @for (link of links; track link.id) {
-                <option [value]="link.id">
-                {{ getLinkLabel(link) }}
-                </option>
-            }
-            </select>
+          @for (link of links; track link.id) {
+            <option [ngValue]="link">
+              {{ getLinkLabel(link) }}
+            </option>
+          }
+        </select>
 
         <svg
           class="register-staff-account__select-icon"

@@ -109,102 +109,127 @@ export class RegisterStudentComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.registerForm.invalid) {
-      this.markFormGroupTouched(this.registerForm);
-      this.showModal(this.createModalParams(true, 'El formulario debe ser completado.'));
-      return;
-    }
+  if (this.registerForm.invalid) {
+    this.markFormGroupTouched(this.registerForm);
 
-    const { stageId, mode, studentClassification } = this.registerForm.value;
-    if (!stageId || !mode || !studentClassification) {
-      this.showModal(
-        this.createModalParams(true, 'Debe completar todos los datos académicos antes de continuar.')
-      );
-      return;
-    }
+    this.showModal(
+      this.createModalParams(
+        true,
+        'El formulario debe ser completado.',
+      ),
+    );
 
-    if (this.isMinor) {
-      const { tutorName, tutorEmail, tutorPhone } = this.registerForm.value;
-
-      if (!tutorName?.trim() || !tutorEmail?.trim() || !tutorPhone?.trim()) {
-        this.showModal(
-          this.createModalParams(true, 'Debe completar los datos del tutor antes de continuar.')
-        );
-        return;
-      }
-    }
-
-    const userData: Omit<UserDto, 'id'> = {
-      firstName: this.registerForm.value.firstName,
-      lastName: this.registerForm.value.lastName,
-      email: this.registerForm.value.email,
-      password: this.registerForm.value.password,
-      idNumber: this.registerForm.value.idNumber.toString(),
-      birthday: this.registerForm.value.birthday,
-      role: UserRole.STUDENT,
-      emailAddress: this.registerForm.value.emailAddress
-    };
-
-     const startClassDate = this.registerForm.value.startClassDate
-        ? new Date(this.registerForm.value.startClassDate).toISOString()
-        : null;
-
-      const endClassDate = this.registerForm.value.endClassDate
-        ? new Date(this.registerForm.value.endClassDate).toISOString()
-        : null;
-
-    this.usersService.create(userData).subscribe({
-      next: (userResponse) => {
-        const studentData: any = {
-          userId: userResponse.user.id,
-          stageId: parseInt(this.registerForm.value.stageId, 10),
-          mode: this.registerForm.value.mode,
-          studentClassification: this.registerForm.value.studentClassification,
-        };
-
-        if (this.registerForm.value.startClassDate) {
-          studentData.startClassDate = new Date(this.registerForm.value.startClassDate).toISOString();
-        }
-        if (this.registerForm.value.endClassDate) {
-          studentData.endClassDate = new Date(this.registerForm.value.endClassDate).toISOString();
-        }
-
-        if (this.isMinor) {
-          studentData.tutorName = this.registerForm.value.tutorName;
-          studentData.tutorEmail = this.registerForm.value.tutorEmail;
-          studentData.tutorPhone = this.registerForm.value.tutorPhone;
-        }
-
-        this.studentsService.registerStudent(studentData).subscribe({
-          next: () => {
-            this.showModal(this.createModalParams(false, 'Registro exitoso.'));
-            setTimeout(() => {
-              this.router.navigate(['/students']);
-            }, 2000);
-          },
-          error: (error) => {
-            console.error('Error al registrar estudiante:', error);
-            this.showModal(this.createModalParams(true, 'No se pudo registrar el estudiante.'));
-          },
-        });
-      },
-      error: (error) => {
-        console.error('Error al crear usuario:', error);
-
-        if (error?.error?.code === 422) {
-          // Muestra mensaje específico del backend
-          this.showModal(
-            this.createModalParams(true, 'Ya existe un usuario registrado con esos datos.')
-          );
-        } else {
-          // Mensaje genérico
-          this.showModal(
-            this.createModalParams(true, 'No se pudo registrar el usuario.')
-          );
-        }
-      },
-    });
+    return;
   }
+
+  const {
+    stageId,
+    mode,
+    studentClassification,
+  } = this.registerForm.value;
+
+  if (
+    !stageId ||
+    !mode ||
+    !studentClassification
+  ) {
+    this.showModal(
+      this.createModalParams(
+        true,
+        'Debe completar todos los datos académicos antes de continuar.',
+      ),
+    );
+
+    return;
+  }
+
+  if (this.isMinor) {
+    const {
+      tutorName,
+      tutorEmail,
+      tutorPhone,
+    } = this.registerForm.value;
+
+    if (
+      !tutorName?.trim() ||
+      !tutorEmail?.trim() ||
+      !tutorPhone?.trim()
+    ) {
+      this.showModal(
+        this.createModalParams(
+          true,
+          'Debe completar los datos del tutor antes de continuar.',
+        ),
+      );
+
+      return;
+    }
+  }
+
+  const userData: Omit<UserDto, 'id'> = {
+    firstName: this.registerForm.value.firstName,
+    lastName: this.registerForm.value.lastName,
+    email: this.registerForm.value.email,
+    password: this.registerForm.value.password,
+    idNumber: this.registerForm.value.idNumber.toString(),
+    birthday: this.registerForm.value.birthday,
+    role: UserRole.STUDENT,
+    emailAddress: this.registerForm.value.emailAddress,
+  };
+
+  const studentData: any = {
+    stageId: parseInt(
+      this.registerForm.value.stageId,
+      10,
+    ),
+    mode: this.registerForm.value.mode,
+    studentClassification:
+      this.registerForm.value.studentClassification,
+  };
+
+  if (this.registerForm.value.startClassDate) {
+    studentData.startClassDate =
+      new Date(
+        this.registerForm.value.startClassDate,
+      ).toISOString();
+  }
+
+  if (this.registerForm.value.endClassDate) {
+    studentData.endClassDate =
+      new Date(
+        this.registerForm.value.endClassDate,
+      ).toISOString();
+  }
+
+  if (this.isMinor) {
+    studentData.tutorName =
+      this.registerForm.value.tutorName;
+
+    studentData.tutorEmail =
+      this.registerForm.value.tutorEmail;
+
+    studentData.tutorPhone =
+      this.registerForm.value.tutorPhone;
+  }
+
+  console.log('USER DATA:', userData);
+
+  console.log('STUDENT DATA:', studentData);
+
+  console.log('PAYLOAD COMPLETO:', {
+    user: userData,
+    student: studentData,
+  });
+
+  return;
+
+  /*
+   * TEMPORALMENTE NO SE ENVÍA NADA AL BACKEND.
+   *
+   * this.usersService.create(...)
+   * this.studentsService.registerStudent(...)
+   */
+}
 
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach((key) => {

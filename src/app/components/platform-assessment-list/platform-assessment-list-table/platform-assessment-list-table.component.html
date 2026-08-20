@@ -3,7 +3,10 @@
   (click)="closeMenu()"
 >
 
-  <!-- HEADER -->
+  <!-- =========================
+       HEADER
+  ========================== -->
+
   <header class="platform-table__header">
 
     <div class="platform-table__title-group">
@@ -13,6 +16,7 @@
         aria-hidden="true"
       >
         <svg viewBox="0 0 24 24" fill="none">
+
           <rect
             x="5"
             y="4"
@@ -36,6 +40,7 @@
             stroke-width="1.6"
             stroke-linecap="round"
           />
+
         </svg>
       </span>
 
@@ -56,7 +61,9 @@
         type="button"
         class="platform-table__export"
       >
+
         <svg viewBox="0 0 24 24" fill="none">
+
           <path
             d="M12 3v11"
             stroke="currentColor"
@@ -78,17 +85,20 @@
             stroke-width="1.7"
             stroke-linecap="round"
           />
+
         </svg>
 
         <span>
           Exportar
         </span>
+
       </button>
 
 
       <div class="platform-table__updated">
 
         <svg viewBox="0 0 24 24" fill="none">
+
           <path
             d="M20 7v5h-5"
             stroke="currentColor"
@@ -102,6 +112,7 @@
             stroke-width="1.6"
             stroke-linecap="round"
           />
+
         </svg>
 
         <span>
@@ -115,12 +126,16 @@
   </header>
 
 
-  <!-- TABLE -->
+  <!-- =========================
+       TABLE
+  ========================== -->
+
   <div class="platform-table__wrapper">
 
     <table class="platform-table__table">
 
       <thead>
+
         <tr>
 
           <th>
@@ -148,10 +163,13 @@
           </th>
 
           <th>
+
             <span class="platform-table__heading-inline">
+
               Puntos
 
               <svg viewBox="0 0 24 24" fill="none">
+
                 <circle
                   cx="12"
                   cy="12"
@@ -166,8 +184,11 @@
                   stroke-width="1.7"
                   stroke-linecap="round"
                 />
+
               </svg>
+
             </span>
+
           </th>
 
           <th>
@@ -187,6 +208,7 @@
           </th>
 
         </tr>
+
       </thead>
 
 
@@ -199,8 +221,12 @@
 
           <tr>
 
-            <!-- STUDENT -->
+            <!-- =========================
+                 STUDENT
+            ========================== -->
+
             <td>
+
               <div class="platform-table__primary-cell">
 
                 <strong>
@@ -212,11 +238,16 @@
                 </span>
 
               </div>
+
             </td>
 
 
-            <!-- EXAM -->
+            <!-- =========================
+                 EXAM
+            ========================== -->
+
             <td>
+
               <div class="platform-table__primary-cell">
 
                 <strong>
@@ -228,19 +259,29 @@
                 </span>
 
               </div>
+
             </td>
 
 
-            <!-- STAGE -->
+            <!-- =========================
+                 STAGE
+            ========================== -->
+
             <td>
+
               <span class="platform-table__stage">
                 {{ getStageLabel(row) }}
               </span>
+
             </td>
 
 
-            <!-- STATUS -->
+            <!-- =========================
+                 STATUS
+            ========================== -->
+
             <td>
+
               <span
                 class="platform-table__status"
                 [class.platform-table__status--active]="
@@ -261,10 +302,14 @@
               >
                 {{ getStatusLabel(row.status) }}
               </span>
+
             </td>
 
 
-            <!-- OUTCOME -->
+            <!-- =========================
+                 OUTCOME
+            ========================== -->
+
             <td>
 
               @if (row.outcome) {
@@ -292,24 +337,38 @@
             </td>
 
 
-            <!-- ATTEMPTS -->
+            <!-- =========================
+                 ATTEMPTS
+            ========================== -->
+
             <td>
+
               <span class="platform-table__value">
                 {{ getAttemptsLabel(row) }}
               </span>
+
             </td>
 
 
-            <!-- POINTS -->
+            <!-- =========================
+                 POINTS
+            ========================== -->
+
             <td>
+
               <span class="platform-table__value">
                 {{ getPointsLabel(row) }}
               </span>
+
             </td>
 
 
-            <!-- ASSIGNED -->
+            <!-- =========================
+                 ASSIGNED
+            ========================== -->
+
             <td>
+
               <div class="platform-table__date">
 
                 <span>
@@ -321,11 +380,16 @@
                 </small>
 
               </div>
+
             </td>
 
 
-            <!-- EXPIRES -->
+            <!-- =========================
+                 EXPIRES
+            ========================== -->
+
             <td>
+
               <div
                 class="platform-table__date"
                 [class.platform-table__date--expired]="
@@ -338,16 +402,22 @@
                 </span>
 
                 @if (row.expiresAt) {
+
                   <small>
                     {{ formatTime(row.expiresAt) }}
                   </small>
+
                 }
 
               </div>
+
             </td>
 
 
-            <!-- COMPLETED -->
+            <!-- =========================
+                 COMPLETED
+            ========================== -->
+
             <td>
 
               @if (row.completedAt) {
@@ -375,13 +445,18 @@
             </td>
 
 
-            <!-- ACTIONS -->
+            <!-- =========================
+                 ACTIONS
+            ========================== -->
+
             <td class="platform-table__actions-column">
 
               <div
                 class="platform-table__menu-wrapper"
                 (click)="$event.stopPropagation()"
               >
+
+                <!-- MENU TRIGGER -->
 
                 <button
                   type="button"
@@ -393,6 +468,7 @@
                   title="Opciones"
                   (click)="toggleMenu(row.assignmentId, $event)"
                 >
+
                   <svg
                     viewBox="0 0 24 24"
                     fill="currentColor"
@@ -401,118 +477,87 @@
                     <circle cx="12" cy="12" r="1.4" />
                     <circle cx="12" cy="19" r="1.4" />
                   </svg>
+
                 </button>
 
+
+                <!-- MENU -->
 
                 @if (
                   isMenuOpen(row.assignmentId)
                 ) {
 
-                 <div
+                  <div
                     class="platform-table__menu"
                     [style.top.px]="menuPosition.top"
                     [style.left.px]="menuPosition.left"
                     (click)="$event.stopPropagation()"
-                    >
+                  >
 
-                    <!-- RESULTS -->
-                    <button
-                      type="button"
+
+                    <!-- =========================
+                         VIEW DETAIL
+                    ========================== -->
+
+                    <a
                       class="platform-table__menu-item"
-                      [disabled]="!hasResultsUrl(row)"
-                      (click)="onOpenUrl(row.resultsUrl)"
+                      [routerLink]="[
+                        '/dashboard/platform-assessments-templates',
+                        row.templateId
+                      ]"
+                      (click)="closeMenu()"
                     >
 
                       <span class="platform-table__menu-icon">
-                        <svg viewBox="0 0 24 24" fill="none">
+
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
 
                           <path
-                            d="M14 5h5v5"
+                            d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
                             stroke="currentColor"
                             stroke-width="1.7"
-                            stroke-linecap="round"
                             stroke-linejoin="round"
                           />
 
-                          <path
-                            d="m12 12 7-7"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            stroke-linecap="round"
-                          />
-
-                          <path
-                            d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="2.5"
                             stroke="currentColor"
                             stroke-width="1.7"
                           />
 
                         </svg>
+
                       </span>
+
 
                       <div class="platform-table__menu-content">
 
                         <span>
-                          Abrir resultados
+                          Ver detalle
                         </span>
 
                         <small>
-                          Ver resultados del examen
+                          Ver assessment y estudiantes
                         </small>
 
                       </div>
 
-                    </button>
-
-
-                    <!-- ASSESSMENT -->
-                    <button
-                      type="button"
-                      class="platform-table__menu-item"
-                      [disabled]="!hasAccessUrl(row)"
-                      (click)="onOpenUrl(getAccessUrl(row))"
-                    >
-
-                      <span class="platform-table__menu-icon">
-                        <svg viewBox="0 0 24 24" fill="none">
-
-                          <path
-                            d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            stroke-linecap="round"
-                          />
-
-                          <path
-                            d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            stroke-linecap="round"
-                          />
-
-                        </svg>
-                      </span>
-
-                      <div class="platform-table__menu-content">
-
-                        <span>
-                          Ver evaluación
-                        </span>
-
-                        <small>
-                          Abrir evaluación asignada
-                        </small>
-
-                      </div>
-
-                    </button>
+                    </a>
 
 
                     <div class="platform-table__menu-divider">
                     </div>
 
 
-                    <!-- WRITING -->
+                    <!-- =========================
+                         WRITING
+                    ========================== -->
+
                     <button
                       type="button"
                       class="
@@ -526,7 +571,11 @@
                     >
 
                       <span class="platform-table__menu-icon">
-                        <svg viewBox="0 0 24 24" fill="none">
+
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
 
                           <path
                             d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z"
@@ -542,7 +591,9 @@
                           />
 
                         </svg>
+
                       </span>
+
 
                       <div class="platform-table__menu-content">
 

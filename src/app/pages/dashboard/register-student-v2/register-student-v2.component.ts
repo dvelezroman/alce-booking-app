@@ -187,13 +187,26 @@ export class RegisterStudentV2Component implements OnInit {
       ?.valueChanges
       .subscribe(
         (birthday: string) => {
+
+          if (!birthday) {
+            this.isMinor = false;
+            return;
+          }
+
           this.isMinor =
             this.calculateAge(birthday) < 18;
 
           if (!this.isMinor) {
-            this.registerForm
-              .get('tutorId')
-              ?.setValue('');
+            this.registerForm.patchValue(
+              {
+                tutorName: '',
+                tutorEmail: '',
+                tutorPhone: '',
+              },
+              {
+                emitEvent: false,
+              },
+            );
           }
         },
       );

@@ -91,37 +91,47 @@ export class EditUserModalComponent {
   }
 
   /** Pasa los valores del usuario al formulario */
-  private patchForm(user: UserDto) {
+  private patchForm(user: UserDto): void {
+    const student = user.student;
+
     this.form.patchValue({
-      idNumber: user.idNumber,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      emailAddress: user.emailAddress,
-      contact: user.contact,
-      country: user.country,
-      city: user.city,
-      role: user.role,
-      occupation: user.occupation,
+      idNumber: user.idNumber ?? '',
+      firstName: user.firstName ?? '',
+      lastName: user.lastName ?? '',
+      role: user.role ?? '',
+      email: user.email ?? '',
+      emailAddress: user.emailAddress ?? '',
+      contact: user.contact ?? '',
+      country: user.country ?? '',
+      city: user.city ?? '',
       birthday: user.birthday ? this.formatLocalDate(user.birthday) : '',
+      occupation: user.occupation ?? '',
       status: user.status === UserStatus.ACTIVE || user.status === UserStatus.BLOCK,
-      comment: user.comment,
-      temporaryComment: user.temporaryComment,
-      stageId: user.student?.stage?.id || '',
-      ageGroup: user.student?.studentClassification || '',
-      studentId: user.student?.id || '',
-      startClassDate: user.student?.startClassDate ? new Date(user.student.startClassDate).toISOString().split('T')[0] : '',
-      endClassDate: user.student?.endClassDate ? new Date(user.student.endClassDate).toISOString().split('T')[0] : '',
-      createdAt: user.createdAt ? new Date(user.createdAt).toISOString().split('T')[0] : '',
-      updatedAt: user.updatedAt ? new Date(user.updatedAt).toISOString().split('T')[0] : '',
-      linkId: user.instructor?.meetingLink?.id || '',
-      tutorName: user.student?.tutorName || (user as any).tutorName || '',
-      tutorEmail: user.student?.tutorEmail || (user as any).tutorEmail || '',
-      tutorPhone: user.student?.tutorPhone || (user as any).tutorPhone || '',
-      suspensionDays: user.student?.suspensionDays ?? null,
+      register: user.register ?? '',
+      comment: user.comment ?? '',
+      temporaryComment: user.temporaryComment ?? '',
+
+      studentId: student?.id ?? '',
+      stageId: student?.stageId ?? student?.stage?.id ?? '',
+      ageGroup: student?.studentClassification ?? '',
+      startClassDate: student?.startClassDate ? this.formatLocalDate(student.startClassDate) : '',
+      endClassDate: student?.endClassDate ? this.formatLocalDate(student.endClassDate) : '',
+
+      tutorName: student?.tutorName ?? '',
+      tutorEmail: student?.tutorEmail ?? '',
+      tutorPhone: student?.tutorPhone ?? '',
+
+      suspensionDays: student?.suspensionDays ?? null,
+
+      linkId: user.instructor?.meetingLink?.id ?? '',
+
+      createdAt: user.createdAt ? this.formatLocalDate(user.createdAt) : '',
+      updatedAt: user.updatedAt ? this.formatLocalDate(user.updatedAt) : '',
     });
 
-    if (user.birthday) this.checkIfMinor(user.birthday);
+    if (user.birthday) {
+      this.checkIfMinor(user.birthday);
+    }
   }
 
   /** Convierte fecha a formato local YYYY-MM-DD */

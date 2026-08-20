@@ -59,50 +59,31 @@ export class AttendanceInstructorTableComponent {
   ========================= */
 
   get groupedMeetings(): AttendanceDayGroup[] {
-    const groups =
-      new Map<string, AttendanceDayGroup>();
+    const groups = new Map<string, AttendanceDayGroup>();
 
     this.meetings.forEach((item) => {
-      const key =
-        this.getDateKey(
-          item.localdate ||
-          item.date,
-        );
+      const key = this.getDateKey(item.localdate || item.date);
 
       if (!groups.has(key)) {
         groups.set(key, {
           key,
-          date:
-            item.localdate ||
-            item.date,
+          date: item.localdate || item.date,
           items: [],
         });
       }
 
-      groups
-        .get(key)!
-        .items
-        .push(item);
+      groups.get(key)!.items.push(item);
     });
 
     return Array
       .from(groups.values())
       .map(group => ({
         ...group,
-
-        items:
-          [...group.items]
-            .sort(
-              (a, b) =>
-                Number(
-                  a.localhour ??
-                  a.hour,
-                ) -
-                Number(
-                  b.localhour ??
-                  b.hour,
-                ),
-            ),
+        items: [...group.items].sort(
+          (a, b) =>
+            Number(b.localhour ?? b.hour) -
+            Number(a.localhour ?? a.hour),
+        ),
       }))
       .sort(
         (a, b) =>

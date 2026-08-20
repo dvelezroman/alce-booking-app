@@ -108,7 +108,7 @@ export class SearchingUserTableComponent {
   }
 
   getUserEmail(user: UserDto): string {
-    return user.emailAddress || user.email || '—';
+    return user.email || user.emailAddress || '—';
   }
 
 

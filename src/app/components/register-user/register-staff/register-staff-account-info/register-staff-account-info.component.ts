@@ -25,10 +25,6 @@ import {
 })
 export class RegisterStaffAccountInfoComponent {
 
-  /* =========================
-     INPUTS
-  ========================= */
-
   @Input({ required: true })
   registerForm!: FormGroup;
 
@@ -46,13 +42,9 @@ export class RegisterStaffAccountInfoComponent {
      VALIDATION
   ========================= */
 
-  isInvalid(
-    controlName: string,
-  ): boolean {
+  isInvalid(controlName: string): boolean {
     const control =
-      this.registerForm?.get(
-        controlName,
-      );
+      this.registerForm?.get(controlName);
 
     return !!(
       control &&
@@ -65,13 +57,9 @@ export class RegisterStaffAccountInfoComponent {
   }
 
 
-  hasRequiredError(
-    controlName: string,
-  ): boolean {
+  hasRequiredError(controlName: string): boolean {
     const control =
-      this.registerForm?.get(
-        controlName,
-      );
+      this.registerForm?.get(controlName);
 
     return !!(
       control &&
@@ -88,9 +76,7 @@ export class RegisterStaffAccountInfoComponent {
      ROLE
   ========================= */
 
-  getRoleLabel(
-    role: string,
-  ): string {
+  getRoleLabel(role: string): string {
     switch (role) {
       case 'INSTRUCTOR':
         return 'Instructor';
@@ -115,18 +101,12 @@ export class RegisterStaffAccountInfoComponent {
 
 
   get isAdminSelected(): boolean {
-    return (
-      this.selectedRole ===
-      'ADMIN'
-    );
+    return this.selectedRole === 'ADMIN';
   }
 
 
   get isInstructorSelected(): boolean {
-    return (
-      this.selectedRole ===
-      'INSTRUCTOR'
-    );
+    return this.selectedRole === 'INSTRUCTOR';
   }
 
 
@@ -134,9 +114,7 @@ export class RegisterStaffAccountInfoComponent {
      LINK
   ========================= */
 
-  getLinkLabel(
-    link: MeetingLinkDto,
-  ): string {
+  getLinkLabel(link: MeetingLinkDto): string {
     return (
       link.description ||
       link.link ||
@@ -145,7 +123,7 @@ export class RegisterStaffAccountInfoComponent {
   }
 
 
-  get selectedInstructorLink(): string | number | null {
+  get selectedInstructorLink(): MeetingLinkDto | null {
     return (
       this.registerForm
         ?.get('instructorLink')
@@ -156,39 +134,12 @@ export class RegisterStaffAccountInfoComponent {
 
 
   get hasInstructorLinkSelected(): boolean {
-    const value =
-      this.selectedInstructorLink;
-
-    return (
-      value !== null &&
-      value !== undefined &&
-      value !== ''
-    );
+    return this.selectedInstructorLink !== null;
   }
 
 
   get isInstructorLinkDisabled(): boolean {
-    return (
-      !this.isInstructorSelected
-    );
-  }
-
-
-  /* =========================
-     OPTION STATES
-  ========================= */
-
-  isRoleDisabled(
-    role: string,
-  ): boolean {
-    if (
-      role === 'ADMIN' &&
-      this.hasInstructorLinkSelected
-    ) {
-      return true;
-    }
-
-    return false;
+    return !this.isInstructorSelected;
   }
 
 
@@ -197,15 +148,10 @@ export class RegisterStaffAccountInfoComponent {
   ========================= */
 
   onRoleChange(): void {
-    const role =
-      this.selectedRole;
-
-    if (
-      role !== 'INSTRUCTOR'
-    ) {
+    if (!this.isInstructorSelected) {
       this.registerForm
         .get('instructorLink')
-        ?.reset('');
+        ?.setValue(null);
     }
   }
 
@@ -217,13 +163,11 @@ export class RegisterStaffAccountInfoComponent {
   onInstructorLinkChange(): void {
     if (
       this.hasInstructorLinkSelected &&
-      this.selectedRole !== 'INSTRUCTOR'
+      !this.isInstructorSelected
     ) {
       this.registerForm
         .get('role')
-        ?.setValue(
-          'INSTRUCTOR',
-        );
+        ?.setValue('INSTRUCTOR');
     }
   }
 }

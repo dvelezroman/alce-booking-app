@@ -263,17 +263,10 @@ export class RegisterStaffComponent implements OnInit {
   /* =========================
      SUBMIT
   ========================= */
+  onSubmit(): void {
+    this.registerForm.markAllAsTouched();
 
-  onSubmit() {
-
-    this.registerForm
-      .markAllAsTouched();
-
-
-    if (
-      this.registerForm.invalid
-    ) {
-
+    if (this.registerForm.invalid) {
       this.showModal(
         'Formulario inválido. Por favor revise los campos.',
         true,
@@ -281,7 +274,6 @@ export class RegisterStaffComponent implements OnInit {
 
       return;
     }
-
 
     const {
       idNumber,
@@ -292,129 +284,77 @@ export class RegisterStaffComponent implements OnInit {
       birthDate,
       role,
       instructorLink,
-    } =
-      this.registerForm.value;
+    } = this.registerForm.value;
 
-
-    const newUser:
-      Partial<UserDto> = {
-
-      idNumber:
-        idNumber.toString(),
-
+    const newUser: Partial<UserDto> = {
+      idNumber: idNumber.toString(),
       email,
-
       password,
-
       firstName,
-
       lastName,
-
-      birthday:
-        birthDate,
-
+      birthday: birthDate,
       role,
     };
 
-
     this.usersService
-      .create(
-        newUser,
-      )
+      .create(newUser)
       .subscribe({
+        next: (response) => {
+          const createdUserId =
+            response.user.id;
 
-        next:
-          (
-            response,
-          ) => {
+          if (role === UserRole.INSTRUCTOR) {
+            const instructorData: RegisterInstructorDto = {
+              userId: createdUserId,
+              stageId: undefined,
+              meetingLink: instructorLink,
+            };
 
-            const createdUserId =
-              response.user.id;
+            this.instructorsService
+              .registerInstructor(instructorData)
+              .subscribe({
+                next: () => {
+                  this.showModal(
+                    'Instructor registrado correctamente',
+                    false,
+                    true,
+                  );
 
+                  this.resetForm();
+                },
 
-            if (
-              role ===
-              UserRole.INSTRUCTOR
-            ) {
+                error: (err) => {
+                  console.error(err);
 
-              const instructorData:
-                RegisterInstructorDto = {
+                  this.showModal(
+                    'Error al registrar el instructor',
+                    true,
+                  );
+                },
+              });
 
-                userId:
-                  createdUserId,
+            return;
+          }
 
-                stageId:
-                  undefined,
-
-                meetingLink:
-                  instructorLink,
-              };
-
-
-              this.instructorsService
-                .registerInstructor(
-                  instructorData,
-                )
-                .subscribe({
-
-                  next:
-                    () => {
-
-                      this.showModal(
-                        'Instructor registrado correctamente',
-                        false,
-                        true,
-                      );
-
-                      this.resetForm();
-                    },
-
-                  error:
-                    (
-                      err,
-                    ) => {
-
-                      console.error(
-                        err,
-                      );
-
-                      this.showModal(
-                        'Error al registrar el instructor',
-                        true,
-                      );
-                    },
-                });
-
-            } else if (
-              role ===
-              UserRole.ADMIN
-            ) {
-
-              this.showModal(
-                'Administrador registrado correctamente',
-                false,
-                true,
-              );
-
-              this.resetForm();
-            }
-          },
-
-
-        error:
-          (
-            err,
-          ) => {
-
-            console.error(
-              err,
-            );
-
+          if (role === UserRole.ADMIN) {
             this.showModal(
-              'Error al crear el usuario',
+              'Administrador registrado correctamente',
+              false,
               true,
             );
-          },
+
+            this.resetForm();
+          }
+        },
+
+        error: (err) => {
+          console.error(err);
+
+          this.showModal(
+            'Error al crear el usuario',
+            true,
+          );
+        },
       });
   }
 

@@ -10,13 +10,14 @@ import { CommonModule } from '@angular/common';
 import {
   RemotePlatformAssessmentItem,
 } from '../../../services/dtos/platform-assessment.dto';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-platform-assessment-list-table',
   standalone: true,
   imports: [
-    CommonModule,
+    CommonModule, RouterLink,
   ],
   templateUrl: './platform-assessment-list-table.component.html',
   styleUrl: './platform-assessment-list-table.component.scss',
