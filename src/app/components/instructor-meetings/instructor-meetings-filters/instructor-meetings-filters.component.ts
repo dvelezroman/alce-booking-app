@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { FilterMeetingsDto } from '../../../services/dtos/booking.dto';
-import { Stage } from '../../../services/dtos/student.dto';
+import { Mode, Stage } from '../../../services/dtos/student.dto';
 
 @Component({
   selector: 'app-instructor-meetings-filters',
@@ -21,6 +21,12 @@ export class InstructorMeetingsFiltersComponent {
   @Input() availableHours: number[] = [];
   @Input() ageGroupOptions: string[] = [];
   @Input() isLoading: boolean = false;
+
+  readonly modeOptions: { value: Mode; label: string }[] = [
+    { value: Mode.ONLINE, label: 'Online' },
+    { value: Mode.PRESENCIAL, label: 'Presencial' },
+    { value: Mode.SEMIPRESENCIAL, label: 'Semipresencial' },
+  ];
 
   @Output() filterChange = new EventEmitter<void>();
 
@@ -59,6 +65,10 @@ export class InstructorMeetingsFiltersComponent {
 
   trackByAgeGroup(index: number, ageGroup: string): string {
     return ageGroup;
+  }
+
+  trackByMode(index: number, modeOption: { value: Mode; label: string }): Mode {
+    return modeOption.value;
   }
 
   formatHour(hour: number): string {

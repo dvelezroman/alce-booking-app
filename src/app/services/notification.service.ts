@@ -17,6 +17,14 @@ export class NotificationService {
   private unreadCountSubject = new BehaviorSubject<number>(0);
   unreadCount$ = this.unreadCountSubject.asObservable();
 
+  setUnreadCount(count: number): void {
+    this.unreadCountSubject.next(Math.max(0, count));
+  }
+
+  get currentUnreadCount(): number {
+    return this.unreadCountSubject.value;
+  }
+
   constructor(private http: HttpClient) {}
 
   create(createData: CreateNotificationDto): Observable<Notification> {
@@ -75,6 +83,11 @@ export class NotificationService {
             this.normalizeNotification(n),
           ),
         })),
+        tap((res) => {
+          if (typeof res.unreadCount === 'number') {
+            this.setUnreadCount(res.unreadCount);
+          }
+        }),
       );
   }
 

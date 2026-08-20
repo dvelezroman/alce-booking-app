@@ -311,6 +311,7 @@ export interface NotificationListResponse {
   page: number;
   limit: number;
   totalPages: number;
+  unreadCount?: number;
 }
 
 // bandeja de entrada

@@ -81,7 +81,7 @@
     </div>
 
     <div class="meeting-filter-field">
-      <label class="meeting-filter-field__label" for="filter-category">Categoría / Modalidad</label>
+      <label class="meeting-filter-field__label" for="filter-category">Categoría</label>
 
       <div class="meeting-filter-field__control">
         <select id="filter-category" class="meeting-filter-field__select" [(ngModel)]="filter.category" [disabled]="isLoading">
@@ -90,9 +90,26 @@
           <option *ngFor="let ageGroup of ageGroupOptions; trackBy: trackByAgeGroup" [ngValue]="ageGroup">
             {{ ageGroup }}
           </option>
+        </select>
 
-          <option value="ONLINE">Online</option>
-          <option value="PRESENTIAL">Presencial</option>
+        <span class="meeting-filter-field__chevron" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="meeting-filter-field">
+      <label class="meeting-filter-field__label" for="filter-mode">Modalidad</label>
+
+      <div class="meeting-filter-field__control">
+        <select id="filter-mode" class="meeting-filter-field__select" [(ngModel)]="filter.mode" [disabled]="isLoading">
+          <option [ngValue]="undefined">Todas</option>
+
+          <option *ngFor="let modeOption of modeOptions; trackBy: trackByMode" [ngValue]="modeOption.value">
+            {{ modeOption.label }}
+          </option>
         </select>
 
         <span class="meeting-filter-field__chevron" aria-hidden="true">
