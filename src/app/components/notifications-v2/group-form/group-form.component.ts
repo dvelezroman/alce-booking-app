@@ -74,7 +74,7 @@ export class GroupFormComponent
   ngOnInit(): void {
     this.searchSubject
       .pipe(
-        debounceTime(500),
+        debounceTime(100),
         distinctUntilChanged(),
       )
       .subscribe((query) => {

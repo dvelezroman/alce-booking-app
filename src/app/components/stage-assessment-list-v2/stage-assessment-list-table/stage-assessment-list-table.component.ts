@@ -111,15 +111,19 @@ export class StageAssessmentListTableComponent {
   shouldOpenMenuUp(
     assessment: StageAssessment,
   ): boolean {
+    const total =
+      this.filteredAssessments.length;
+
+    if (total <= 2) {
+      return false;
+    }
+
     const index =
       this.filteredAssessments.findIndex(
         item => item.id === assessment.id,
       );
 
-    return (
-      index >=
-      this.filteredAssessments.length - 2
-    );
+    return index >= total - 2;
   }
 
 
