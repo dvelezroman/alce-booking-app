@@ -1,116 +1,782 @@
-<div class="report-title">
-  <h1>Clases creadas por instructor</h1>
-</div>
+<section class="instructor-meetings-page">
 
-<section class="report-section">
-  <div class="report-search">
-    <form (ngSubmit)="searchMeetings()">
-      <div class="field">
-        <label class="label">Instructor (opcional)</label>
-        <div class="control">
-          <input
-            class="input"
-            type="text"
-            placeholder="Nombre del instructor"
-            [(ngModel)]="filter.instructorName"
-            (input)="onInstructorInputChange()"
-            (blur)="hideDropdown()"
-            name="instructorName"
-            autocomplete="off"
+  <div class="instructor-meetings-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="instructor-meetings-page__header">
+
+      <div class="instructor-meetings-page__header-content">
+
+        <div>
+          <h1 class="instructor-meetings-page__title">
+            Meetings creados por instructor
+          </h1>
+
+          <p class="instructor-meetings-page__description">
+            Consulta los meetings que han sido creados directamente por los instructores.
+          </p>
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="instructor-meetings-page__clear-button"
+        (click)="
+          filter.instructorName = '';
+          selectedInstructorId = undefined;
+          filter.from = '';
+          filter.to = '';
+          meetings = [];
+          searchAttempted = false
+        "
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M20 11a8 8 0 1 0-2.34 5.66"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
           />
-          <div *ngIf="showDropdown" class="dropdown">
-            <div *ngIf="filteredInstructors.length === 0" class="no-results">
-              No se encontraron instructores
-            </div>
-            <ul *ngIf="filteredInstructors.length > 0">
-              <li
-                *ngFor="let instructor of filteredInstructors"
-                (mousedown)="selectInstructor(instructor)"
+
+          <path
+            d="M20 5v6h-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        <span>
+          Limpiar filtros
+        </span>
+      </button>
+
+    </header>
+
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+
+    <section class="instructor-meetings-page__filters">
+
+      <!-- INSTRUCTOR -->
+
+      <div class="instructor-meetings-page__field instructor-meetings-page__field--instructor">
+
+        <label
+          for="instructorName"
+          class="instructor-meetings-page__label"
+        >
+          Instructor
+        </label>
+
+        <div class="instructor-meetings-page__autocomplete">
+
+          <div class="instructor-meetings-page__input-wrapper">
+
+            <span class="instructor-meetings-page__input-icon">
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
               >
-                {{ instructor.firstName }} {{ instructor.lastName }}
-              </li>
-            </ul>
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="6.5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+
+                <path
+                  d="m16 16 4 4"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <input
+              id="instructorName"
+              type="text"
+              class="instructor-meetings-page__input instructor-meetings-page__input--search"
+              placeholder="Buscar instructor..."
+              autocomplete="off"
+              [(ngModel)]="filter.instructorName"
+              (input)="onInstructorInputChange()"
+              (focus)="filterInstructors()"
+              (blur)="hideDropdown()"
+            />
+
           </div>
+
+
+          <!-- DROPDOWN -->
+
+          <div
+            *ngIf="showDropdown"
+            class="instructor-meetings-page__dropdown"
+          >
+
+            <button
+              *ngFor="let instructor of filteredInstructors"
+              type="button"
+              class="instructor-meetings-page__dropdown-item"
+              (mousedown)="$event.preventDefault()"
+              (click)="selectInstructor(instructor)"
+            >
+
+              <span class="instructor-meetings-page__dropdown-avatar">
+                {{
+                  (instructor.firstName?.charAt(0) || '') +
+                  (instructor.lastName?.charAt(0) || '')
+                }}
+              </span>
+
+              <span class="instructor-meetings-page__dropdown-information">
+                <strong>
+                  {{ instructor.firstName }}
+                  {{ instructor.lastName }}
+                </strong>
+
+                <span>
+                  Instructor
+                </span>
+              </span>
+
+            </button>
+
+
+            <div
+              *ngIf="filteredInstructors.length === 0"
+              class="instructor-meetings-page__dropdown-empty"
+            >
+              No se encontraron instructores.
+            </div>
+
+          </div>
+
         </div>
+
       </div>
 
-      <div class="columns is-mobile">
-        <div class="column">
-          <div class="field">
-            <label class="label">Fecha desde</label>
-            <div class="control">
-              <input
-                class="input"
-                [ngClass]="{ 'input-error': showFromError }"
-                type="date"
-                [(ngModel)]="filter.from"
-                name="from"
-              />
-            </div>
-            <p class="error-message" *ngIf="showFromError">Campo requerido.</p>
-          </div>
-        </div>
-        <div class="column">
-          <div class="field">
-            <label class="label">Fecha hasta</label>
-            <div class="control">
-              <input
-                class="input"
-                [ngClass]="{ 'input-error': showToError }"
-                type="date"
-                [(ngModel)]="filter.to"
-                name="to"
-              />
-            </div>
-            <p class="error-message" *ngIf="showToError">Campo requerido.</p>
-          </div>
-        </div>
+
+      <!-- FROM -->
+
+      <div class="instructor-meetings-page__field">
+
+        <label
+          for="from"
+          class="instructor-meetings-page__label"
+        >
+          Fecha desde
+        </label>
+
+        <input
+          id="from"
+          type="date"
+          class="instructor-meetings-page__input"
+          [class.instructor-meetings-page__input--error]="showFromError"
+          [(ngModel)]="filter.from"
+          (ngModelChange)="showFromError = false"
+        />
+
+        <span
+          *ngIf="showFromError"
+          class="instructor-meetings-page__error"
+        >
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M12 7.5V13"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <circle
+              cx="12"
+              cy="16.5"
+              r="1"
+              fill="currentColor"
+            />
+          </svg>
+
+          Este campo es requerido
+        </span>
+
       </div>
 
-      <div class="field">
-        <button type="submit" class="button is-primary is-fullwidth" [disabled]="isLoading">
-          {{ isLoading ? 'Buscando...' : 'Buscar' }}
+
+      <!-- TO -->
+
+      <div class="instructor-meetings-page__field">
+
+        <label
+          for="to"
+          class="instructor-meetings-page__label"
+        >
+          Fecha hasta
+        </label>
+
+        <input
+          id="to"
+          type="date"
+          class="instructor-meetings-page__input"
+          [class.instructor-meetings-page__input--error]="showToError"
+          [(ngModel)]="filter.to"
+          (ngModelChange)="showToError = false"
+        />
+
+        <span
+          *ngIf="showToError"
+          class="instructor-meetings-page__error"
+        >
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M12 7.5V13"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <circle
+              cx="12"
+              cy="16.5"
+              r="1"
+              fill="currentColor"
+            />
+          </svg>
+
+          Este campo es requerido
+        </span>
+
+      </div>
+
+
+      <!-- SEARCH -->
+
+      <div class="instructor-meetings-page__search-action">
+
+        <button
+          type="button"
+          class="instructor-meetings-page__search-button"
+          [disabled]="isLoading"
+          (click)="searchMeetings()"
+        >
+
+          <svg
+            *ngIf="!isLoading"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span
+            *ngIf="isLoading"
+            class="instructor-meetings-page__spinner"
+          ></span>
+
+          <span>
+            {{ isLoading ? 'Buscando...' : 'Buscar meetings' }}
+          </span>
+
         </button>
+
       </div>
-    </form>
-  </div>
-</section>
 
-<section class="results-section" *ngIf="searchAttempted">
-  <div class="results-summary">
-    <span>{{ meetings.length }} clase(s) encontrada(s)</span>
+    </section>
+
+
+    <!-- =========================
+         RESULTS
+    ========================== -->
+
+    <section class="instructor-meetings-page__results">
+
+      <div class="instructor-meetings-page__results-header">
+
+        <div>
+          <div class="instructor-meetings-page__results-title-row">
+
+            <h2 class="instructor-meetings-page__results-title">
+              Resultados
+            </h2>
+
+            <span
+              *ngIf="searchAttempted && !isLoading"
+              class="instructor-meetings-page__results-count"
+            >
+              {{ meetings.length }}
+            </span>
+
+          </div>
+
+          <p class="instructor-meetings-page__results-description">
+            {{
+              searchAttempted
+                ? meetings.length + ' meetings encontrados'
+                : 'Realiza una búsqueda para consultar los meetings'
+            }}
+          </p>
+        </div>
+
+        <span
+          *ngIf="meetings.length > 0"
+          class="instructor-meetings-page__sort"
+        >
+          <span>
+            Ordenados por: más recientes
+          </span>
+
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M4 7h10M4 12h7M4 17h4M17 5v14M14 16l3 3 3-3"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </div>
+
+
+      <!-- =========================
+           LOADING
+      ========================== -->
+
+      <div
+        *ngIf="isLoading"
+        class="instructor-meetings-page__loading"
+      >
+
+        <div
+          *ngFor="let row of [1,2,3,4,5]"
+          class="instructor-meetings-page__skeleton-row"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           TABLE
+      ========================== -->
+
+      <div
+        *ngIf="!isLoading && meetings.length > 0"
+        class="instructor-meetings-page__table-wrapper"
+      >
+
+        <table class="instructor-meetings-page__table">
+
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Instructor</th>
+              <th>Estudiante</th>
+              <th>Creado el</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let meeting of pagedMeetings">
+
+              <!-- DATE -->
+
+              <td data-label="Fecha">
+
+                <div class="instructor-meetings-page__date">
+                  <strong>
+                    {{ formatMeetingDate(meeting) }}
+                  </strong>
+                </div>
+
+              </td>
+
+
+              <!-- HOUR -->
+
+              <td data-label="Hora">
+
+                <span class="instructor-meetings-page__hour">
+                  {{
+                    getMeetingHour(meeting)
+                      .toString()
+                      .padStart(2, '0')
+                  }}:00
+                </span>
+
+              </td>
+
+
+              <!-- INSTRUCTOR -->
+
+              <td data-label="Instructor">
+
+                <div class="instructor-meetings-page__person">
+
+                  <span class="instructor-meetings-page__avatar instructor-meetings-page__avatar--instructor">
+                    {{
+                      getInstructorName(meeting)
+                        .charAt(0)
+                    }}
+                  </span>
+
+                  <span class="instructor-meetings-page__person-name">
+                    {{ getInstructorName(meeting) }}
+                  </span>
+
+                </div>
+
+              </td>
+
+
+              <!-- STUDENT -->
+
+              <td data-label="Estudiante">
+
+                <div class="instructor-meetings-page__person">
+
+                  <span class="instructor-meetings-page__avatar instructor-meetings-page__avatar--student">
+                    {{
+                      getStudentName(meeting)
+                        .charAt(0)
+                    }}
+                  </span>
+
+                  <span class="instructor-meetings-page__person-name">
+                    {{ getStudentName(meeting) }}
+                  </span>
+
+                </div>
+
+              </td>
+
+
+              <!-- CREATED AT -->
+
+              <td data-label="Creado el">
+
+                <span class="instructor-meetings-page__created-at">
+                  {{ formatCreatedAt(meeting) }}
+                </span>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+
+        <!-- =========================
+            PAGINATION FOOTER
+        ========================== -->
+
+        <div
+          *ngIf="meetings.length > 0"
+          class="instructor-meetings-page__table-footer"
+        >
+          <div class="instructor-meetings-page__pagination-info">
+            <span>
+              {{ paginationLabel }}
+            </span>
+
+            <div class="instructor-meetings-page__page-size">
+              <span>Mostrar</span>
+
+              <select
+                class="instructor-meetings-page__page-size-select"
+                [ngModel]="limit"
+                (ngModelChange)="onLimitChange($event)"
+              >
+                <option
+                  *ngFor="let option of limitOptions"
+                  [ngValue]="option"
+                >
+                  {{ option }}
+                </option>
+              </select>
+
+              <span>por página</span>
+            </div>
+          </div>
+
+          <div class="instructor-meetings-page__pagination">
+            <button
+              type="button"
+              class="instructor-meetings-page__pagination-button"
+              [disabled]="!canPrev"
+              (click)="onPageChange(1)"
+              aria-label="Primera página"
+              title="Primera página"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M11 7l-5 5 5 5M18 7l-5 5 5 5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+
+            <button
+              type="button"
+              class="instructor-meetings-page__pagination-button"
+              [disabled]="!canPrev"
+              (click)="onPrev()"
+              aria-label="Página anterior"
+              title="Página anterior"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="m15 6-6 6 6 6"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+
+            <span class="instructor-meetings-page__pagination-current">
+              Página
+              <strong>{{ page }}</strong>
+              de
+              <strong>{{ totalPages }}</strong>
+            </span>
+
+            <button
+              type="button"
+              class="instructor-meetings-page__pagination-button"
+              [disabled]="!canNext"
+              (click)="onNext()"
+              aria-label="Página siguiente"
+              title="Página siguiente"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="m9 6 6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+
+            <button
+              type="button"
+              class="instructor-meetings-page__pagination-button"
+              [disabled]="!canNext"
+              (click)="onPageChange(totalPages)"
+              aria-label="Última página"
+              title="Última página"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="m6 7 5 5-5 5M13 7l5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           EMPTY INITIAL
+      ========================== -->
+
+      <div
+        *ngIf="!isLoading && !searchAttempted"
+        class="instructor-meetings-page__empty"
+      >
+
+        <div class="instructor-meetings-page__empty-icon">
+
+          <svg
+            width="25"
+            height="25"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="3.5"
+              y="5"
+              width="17"
+              height="15.5"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="M7 3.5v3M17 3.5v3M3.5 9h17"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+
+            <circle
+              cx="12"
+              cy="14.5"
+              r="2.3"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+          </svg>
+
+        </div>
+
+        <strong>
+          Consulta meetings creados por instructores
+        </strong>
+
+        <span>
+          Selecciona un rango de fechas y presiona Buscar meetings.
+        </span>
+
+      </div>
+
+
+      <!-- =========================
+           EMPTY RESULTS
+      ========================== -->
+
+      <div
+        *ngIf="
+          !isLoading &&
+          searchAttempted &&
+          meetings.length === 0
+        "
+        class="instructor-meetings-page__empty"
+      >
+
+        <div class="instructor-meetings-page__empty-icon">
+
+          <svg
+            width="25"
+            height="25"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M8.7 11h4.6"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        </div>
+
+        <strong>
+          No se encontraron meetings
+        </strong>
+
+        <span>
+          Intenta modificar el instructor o el rango de fechas.
+        </span>
+
+      </div>
+
+    </section>
+
   </div>
 
-  <div class="table-container" *ngIf="meetings.length > 0; else noResults">
-    <table class="table is-fullwidth is-striped">
-      <thead>
-        <tr>
-          <th>Instructor</th>
-          <th>Estudiante</th>
-          <th>Fecha clase</th>
-          <th>Hora</th>
-          <th>Modo</th>
-          <th>Estado</th>
-          <th>Creado el</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let meeting of meetings">
-          <td>{{ getInstructorName(meeting) }}</td>
-          <td>{{ getStudentName(meeting) }}</td>
-          <td>{{ formatMeetingDate(meeting) }}</td>
-          <td>{{ getMeetingHour(meeting) }}</td>
-          <td>{{ meeting.mode }}</td>
-          <td>{{ meeting.status }}</td>
-          <td>{{ formatCreatedAt(meeting) }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <ng-template #noResults>
-    <p class="no-results-message" *ngIf="!isLoading">
-      No se encontraron clases creadas por instructores en el rango seleccionado.
-    </p>
-  </ng-template>
 </section>

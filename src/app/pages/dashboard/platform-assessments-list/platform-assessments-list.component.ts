@@ -25,6 +25,7 @@ import { PlatformAssessmentListFiltersComponent } from '../../../components/plat
 import { PlatformAssessmentListTableComponent } from '../../../components/platform-assessment-list/platform-assessment-list-table/platform-assessment-list-table.component';
 import { PlatformAssessmentListPaginationComponent } from '../../../components/platform-assessment-list/platform-assessment-list-pagination/platform-assessment-list-pagination.component';
 import { PlatformAssessmentListEmptyStateComponent } from '../../../components/platform-assessment-list/platform-assessment-list-empty-state/platform-assessment-list-empty-state.component';
+import { PlatformAssessmentWritingModalComponent } from "../../../components/platform-assessment-list/platform-assessment-writing-modal/platform-assessment-writing-modal.component";
 
 @Component({
   selector: 'app-platform-assessments-list',
@@ -39,7 +40,8 @@ import { PlatformAssessmentListEmptyStateComponent } from '../../../components/p
     PlatformAssessmentListTableComponent,
     PlatformAssessmentListPaginationComponent,
     PlatformAssessmentListEmptyStateComponent,
-  ],
+    PlatformAssessmentWritingModalComponent
+],
   templateUrl: './platform-assessments-list-2.component.html',
   styleUrls: ['./platform-assessments-list-2.component.scss'],
 })

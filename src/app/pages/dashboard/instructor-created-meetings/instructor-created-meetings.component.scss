@@ -1,154 +1,1283 @@
 :host {
   display: block;
-  padding-bottom: 4rem;
-  background-color: #f2f2f2;
+  width: 100%;
+}
+
+
+/* =========================
+   PAGE
+========================= */
+
+.instructor-meetings-page {
+   width: calc(100% - 76px);
   min-height: 100vh;
+
+  margin-left: 64px;
+
+  padding:
+    1rem
+    1.25rem
+    2rem;
+
+  overflow-x: hidden;
 }
 
-.report-title {
-  position: fixed;
-  top: 0;
-  left: 0;
+
+.instructor-meetings-page__container {
   width: 100%;
-  background-color: #f2f2f2;
-  z-index: 10;
-  text-align: center;
-  padding: 1.35rem 0;
-}
+  max-width: 1750px;
 
-.report-title h1 {
-  font-size: 1.5rem;
-  line-height: 1.3;
-  color: #282828;
-  font-weight: bold;
-}
-
-.report-section {
-  padding: 1rem;
-  padding-top: 8rem;
-  max-width: 700px;
   margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
 }
 
-.report-search {
-  background-color: #fff;
-  padding: 2rem 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
 
-.results-section {
-  max-width: 1200px;
-  margin: 1.5rem auto 0;
-  padding: 0 1rem;
-}
+/* =========================
+   HEADER
+========================= */
 
-.results-summary {
-  margin-bottom: 1rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.table-container {
-  background: #fff;
-  border-radius: 8px;
-  overflow-x: auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.table {
-  margin-bottom: 0;
-  font-size: 0.85rem;
-}
-
-.table th {
-  background-color: #f5f5f5;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.label {
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-left: 5px;
-  margin-bottom: 5px;
-  color: #333;
-}
-
-.field {
-  margin-bottom: 1.2rem;
-}
-
-.input {
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
-  padding: 0.5rem;
-  height: 35px;
-  font-size: 0.85rem;
+.instructor-meetings-page__header {
   width: 100%;
+
+  padding:
+    1.25rem
+    1.35rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  box-sizing: border-box;
 }
 
-.input-error {
-  border-color: #e74c3c;
+
+.instructor-meetings-page__header-content {
+  min-width: 0;
 }
 
-.error-message {
-  color: #e74c3c;
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
-}
 
-.dropdown {
-  position: absolute;
-  z-index: 20;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  width: calc(100% - 2rem);
-  max-height: 200px;
-  overflow-y: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+/* =========================
+   TITLE
+========================= */
 
-.dropdown ul {
-  list-style: none;
+.instructor-meetings-page__title {
   margin: 0;
-  padding: 0;
+
+  color: #182033;
+
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+
+  letter-spacing: -0.02em;
 }
 
-.dropdown li {
-  padding: 0.5rem 0.75rem;
+
+.instructor-meetings-page__description {
+  margin:
+    0.35rem
+    0
+    0;
+
+  color: #737b8f;
+
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+
+/* =========================
+   CLEAR
+========================= */
+
+.instructor-meetings-page__clear-button {
+  min-height: 2.45rem;
+
+  padding:
+    0.55rem
+    0.9rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.45rem;
+
+  border: 1px solid #cfc7f8;
+  border-radius: 0.5rem;
+
+  background: #ffffff;
+
+  color: #5b43d6;
+
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+
   cursor: pointer;
+
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 100ms ease;
 }
 
-.dropdown li:hover {
-  background-color: #f0f0f0;
+
+.instructor-meetings-page__clear-button:hover {
+  background: #f8f7ff;
+
+  border-color: #bdb2f3;
 }
 
-.no-results,
-.no-results-message {
-  padding: 1rem;
-  color: #666;
-  text-align: center;
+
+.instructor-meetings-page__clear-button:active {
+  transform: scale(0.98);
 }
 
-.control {
+
+/* =========================
+   FILTERS
+========================= */
+
+.instructor-meetings-page__filters {
+  position: relative;
+
+  width: 100%;
+
+  padding: 1.15rem;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(250px, 1.25fr)
+    minmax(190px, 0.8fr)
+    minmax(190px, 0.8fr)
+    auto;
+
+  align-items: end;
+
+  gap: 1rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e5e7ee;
+  border-radius: 0.8rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 14px
+    rgba(31, 42, 89, 0.025);
+}
+
+
+/* =========================
+   FIELD
+========================= */
+
+.instructor-meetings-page__field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.4rem;
+}
+
+
+.instructor-meetings-page__field--instructor {
   position: relative;
 }
 
-.button.is-primary {
-  background-color: #3273dc;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 0.75rem;
+
+.instructor-meetings-page__label {
+  color: #353b4e;
+
+  font-size: 0.69rem;
   font-weight: 600;
-  cursor: pointer;
 }
 
-.button.is-primary:disabled {
-  opacity: 0.6;
+
+/* =========================
+   INPUT
+========================= */
+
+.instructor-meetings-page__input-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+
+.instructor-meetings-page__input {
+  width: 100%;
+  height: 2.55rem;
+
+  padding:
+    0
+    0.75rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dce0e8;
+  border-radius: 0.48rem;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #262d40;
+
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 500;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+
+.instructor-meetings-page__input:focus {
+  border-color: #7057e8;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(104, 81, 220, 0.08);
+}
+
+
+.instructor-meetings-page__input--search {
+  padding-left: 2.25rem;
+}
+
+
+.instructor-meetings-page__input::placeholder {
+  color: #a0a6b4;
+}
+
+
+/* =========================
+   INPUT ICON
+========================= */
+
+.instructor-meetings-page__input-icon {
+  position: absolute;
+
+  top: 50%;
+  left: 0.75rem;
+
+  z-index: 2;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #858c9d;
+
+  transform: translateY(-50%);
+
+  pointer-events: none;
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+.instructor-meetings-page__input--error {
+  border-color: #ef6262;
+}
+
+
+.instructor-meetings-page__input--error:focus {
+  border-color: #e34f4f;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(229, 72, 72, 0.08);
+}
+
+
+.instructor-meetings-page__error {
+  min-height: 1rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.3rem;
+
+  color: #db3e48;
+
+  font-size: 0.63rem;
+  font-weight: 500;
+}
+
+
+/* =========================
+   AUTOCOMPLETE
+========================= */
+
+.instructor-meetings-page__autocomplete {
+  position: relative;
+
+  width: 100%;
+}
+
+
+.instructor-meetings-page__dropdown {
+  position: absolute;
+
+  top: calc(100% + 0.35rem);
+  left: 0;
+
+  z-index: 100;
+
+  width: 100%;
+  max-height: 17rem;
+
+  overflow-y: auto;
+
+  border: 1px solid #e0e3eb;
+  border-radius: 0.55rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 14px 32px
+    rgba(27, 31, 48, 0.14);
+}
+
+
+.instructor-meetings-page__dropdown-item {
+  width: 100%;
+  min-height: 3.6rem;
+
+  padding:
+    0.55rem
+    0.75rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  border: 0;
+  border-bottom: 1px solid #eef0f4;
+
+  background: #ffffff;
+
+  font-family: inherit;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color 150ms ease,
+    transform 100ms ease;
+}
+
+
+.instructor-meetings-page__dropdown-item:hover {
+  background: #f7f5ff;
+}
+
+
+.instructor-meetings-page__dropdown-item:active {
+  transform: scale(0.995);
+}
+
+
+.instructor-meetings-page__dropdown-avatar {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ede9ff;
+
+  color: #6247d8;
+
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+
+.instructor-meetings-page__dropdown-information {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.15rem;
+}
+
+
+.instructor-meetings-page__dropdown-information strong {
+  overflow: hidden;
+
+  color: #242b3e;
+
+  font-size: 0.72rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+.instructor-meetings-page__dropdown-information span {
+  color: #8a91a2;
+
+  font-size: 0.62rem;
+}
+
+
+.instructor-meetings-page__dropdown-empty {
+  padding: 1rem;
+
+  color: #8a91a2;
+
+  font-size: 0.68rem;
+
+  text-align: center;
+}
+
+
+/* =========================
+   SEARCH BUTTON
+========================= */
+
+.instructor-meetings-page__search-action {
+  display: flex;
+  align-items: flex-end;
+
+  padding-bottom: 0.02rem;
+}
+
+
+.instructor-meetings-page__search-button {
+  min-width: 10rem;
+  height: 2.55rem;
+
+  padding:
+    0
+    1rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.5rem;
+
+  border: 0;
+  border-radius: 0.48rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #694bd9,
+      #4c35dc
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 6px 14px
+    rgba(78, 55, 209, 0.18);
+
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 100ms ease,
+    box-shadow 150ms ease,
+    opacity 150ms ease;
+}
+
+
+.instructor-meetings-page__search-button:hover:not(:disabled) {
+  box-shadow:
+    0 8px 18px
+    rgba(78, 55, 209, 0.24);
+}
+
+
+.instructor-meetings-page__search-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+
+.instructor-meetings-page__search-button:disabled {
   cursor: not-allowed;
+
+  opacity: 0.65;
+}
+
+
+/* =========================
+   SPINNER
+========================= */
+
+.instructor-meetings-page__spinner {
+  width: 14px;
+  height: 14px;
+
+  border:
+    2px solid
+    rgba(255, 255, 255, 0.35);
+
+  border-top-color: #ffffff;
+
+  border-radius: 50%;
+
+  animation:
+    instructorMeetingsSpin
+    0.7s linear infinite;
+}
+
+
+@keyframes instructorMeetingsSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================
+   RESULTS
+========================= */
+
+.instructor-meetings-page__results {
+  width: 100%;
+
+  overflow: hidden;
+
+  border: 1px solid #e5e7ee;
+  border-radius: 0.8rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 14px
+    rgba(31, 42, 89, 0.025);
+}
+
+
+.instructor-meetings-page__results-header {
+  min-height: 4.4rem;
+
+  padding:
+    0.9rem
+    1.15rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #eceef3;
+}
+
+
+/* =========================
+   RESULT TITLE
+========================= */
+
+.instructor-meetings-page__results-title-row {
+  display: flex;
+  align-items: center;
+
+  gap: 0.4rem;
+}
+
+
+.instructor-meetings-page__results-title {
+  margin: 0;
+
+  color: #21283a;
+
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+
+.instructor-meetings-page__results-count {
+  min-width: 1.25rem;
+  height: 1.25rem;
+
+  padding:
+    0
+    0.35rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border-radius: 999px;
+
+  background: #6b4de2;
+
+  color: #ffffff;
+
+  font-size: 0.58rem;
+  font-weight: 700;
+}
+
+
+.instructor-meetings-page__results-description {
+  margin:
+    0.2rem
+    0
+    0;
+
+  color: #81889a;
+
+  font-size: 0.66rem;
+}
+
+
+/* =========================
+   SORT
+========================= */
+
+.instructor-meetings-page__sort {
+  min-height: 2rem;
+
+  padding:
+    0
+    0.65rem;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.45rem;
+
+  border: 1px solid #e0e3ea;
+  border-radius: 0.45rem;
+
+  color: #6f7789;
+
+  background: #ffffff;
+
+  font-size: 0.64rem;
+  font-weight: 500;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.instructor-meetings-page__table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+
+.instructor-meetings-page__table {
+  width: 100%;
+  min-width: 850px;
+
+  border-collapse: collapse;
+
+  table-layout: fixed;
+
+  color: #2c3345;
+}
+
+
+.instructor-meetings-page__table th {
+  height: 3rem;
+
+  padding:
+    0
+    1rem;
+
+  border-bottom: 1px solid #e8eaf0;
+
+  background: #fbfbfd;
+
+  color: #5d6476;
+
+  font-size: 0.66rem;
+  font-weight: 600;
+
+  text-align: left;
+
+  vertical-align: middle;
+
+  white-space: nowrap;
+}
+
+
+.instructor-meetings-page__table td {
+  min-height: 4rem;
+
+  padding:
+    0.7rem
+    1rem;
+
+  border-bottom: 1px solid #eceef3;
+
+  color: #343b4d;
+
+  font-size: 0.7rem;
+
+  vertical-align: middle;
+}
+
+
+.instructor-meetings-page__table tbody tr {
+  transition:
+    background-color
+    150ms ease;
+}
+
+
+.instructor-meetings-page__table tbody tr:hover {
+  background: #fcfcfe;
+}
+
+
+.instructor-meetings-page__table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+
+/* =========================
+   WIDTHS
+========================= */
+
+.instructor-meetings-page__table th:nth-child(1),
+.instructor-meetings-page__table td:nth-child(1) {
+  width: 15%;
+}
+
+
+.instructor-meetings-page__table th:nth-child(2),
+.instructor-meetings-page__table td:nth-child(2) {
+  width: 10%;
+}
+
+
+.instructor-meetings-page__table th:nth-child(3),
+.instructor-meetings-page__table td:nth-child(3) {
+  width: 25%;
+}
+
+
+.instructor-meetings-page__table th:nth-child(4),
+.instructor-meetings-page__table td:nth-child(4) {
+  width: 25%;
+}
+
+
+.instructor-meetings-page__table th:nth-child(5),
+.instructor-meetings-page__table td:nth-child(5) {
+  width: 20%;
+}
+
+
+
+/* =========================
+   DATE / HOUR
+========================= */
+
+.instructor-meetings-page__date {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.instructor-meetings-page__date strong {
+  color: #30374a;
+
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+
+.instructor-meetings-page__hour {
+  color: #485064;
+
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+
+/* =========================
+   PERSON
+========================= */
+
+.instructor-meetings-page__person {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+}
+
+
+.instructor-meetings-page__avatar {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+
+.instructor-meetings-page__avatar--instructor {
+  background: #ebe6ff;
+
+  color: #5e43cc;
+}
+
+
+.instructor-meetings-page__avatar--student {
+  background: #e7f2ff;
+
+  color: #3d78bb;
+}
+
+
+.instructor-meetings-page__person-name {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #343b4e;
+
+  font-size: 0.69rem;
+  font-weight: 500;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   CREATED
+========================= */
+
+.instructor-meetings-page__created-at {
+  color: #596174;
+
+  font-size: 0.67rem;
+  line-height: 1.4;
+}
+
+
+
+.instructor-meetings-page__table-footer {
+  min-height: 3.6rem;
+  padding: 0.65rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-sizing: border-box;
+  border-top: 1px solid #e8eaf0;
+  background: #fff;
+}
+
+.instructor-meetings-page__pagination-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #74798a;
+  font-size: 0.7rem;
+}
+
+.instructor-meetings-page__page-size {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.instructor-meetings-page__page-size-select {
+  height: 1.9rem;
+  padding: 0 1.6rem 0 0.55rem;
+  color: #414554;
+  background: #fff;
+  border: 1px solid #dfe2e9;
+  border-radius: 0.35rem;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.68rem;
+  cursor: pointer;
+
+  &:focus {
+    border-color: #aeb5c3;
+  }
+}
+
+.instructor-meetings-page__pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.instructor-meetings-page__pagination-button {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #555a69;
+  background: #fff;
+  border: 1px solid #dfe2e9;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, transform 100ms ease;
+
+  &:hover:not(:disabled) {
+    background: #f5f6f8;
+    border-color: #cdd1da;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+
+  &:disabled {
+    color: #c5c8d0;
+    background: #fafafa;
+    cursor: not-allowed;
+  }
+}
+
+.instructor-meetings-page__pagination-current {
+  min-width: 7.5rem;
+  padding: 0 0.45rem;
+  color: #777c8b;
+  font-size: 0.7rem;
+  text-align: center;
+
+  strong {
+    color: #303442;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 767px) {
+  .instructor-meetings-page__table-footer {
+    min-width: 700px;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .instructor-meetings-page__pagination-info {
+    gap: 0.6rem;
+  }
+}
+
+
+/* =========================
+   EMPTY
+========================= */
+
+.instructor-meetings-page__empty {
+  min-height: 22rem;
+
+  padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  text-align: center;
+}
+
+
+.instructor-meetings-page__empty-icon {
+  width: 3.2rem;
+  height: 3.2rem;
+
+  margin-bottom: 0.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f1effd;
+
+  color: #6851d8;
+}
+
+
+.instructor-meetings-page__empty strong {
+  color: #2f3648;
+
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+
+.instructor-meetings-page__empty > span {
+  max-width: 25rem;
+
+  margin-top: 0.35rem;
+
+  color: #8a91a2;
+
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+.instructor-meetings-page__loading {
+  width: 100%;
+
+  padding:
+    0.5rem
+    1rem
+    1rem;
+
+  box-sizing: border-box;
+}
+
+
+.instructor-meetings-page__skeleton-row {
+  min-height: 4rem;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    0.65fr
+    1.5fr
+    1.5fr
+    1.2fr;
+
+  align-items: center;
+
+  gap: 1rem;
+
+  border-bottom: 1px solid #eff0f4;
+}
+
+
+.instructor-meetings-page__skeleton-row span {
+  height: 0.7rem;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #f0f1f4,
+      #f7f7f9,
+      #f0f1f4
+    );
+
+  background-size: 200% 100%;
+
+  animation:
+    instructorMeetingSkeleton
+    1.2s ease infinite;
+}
+
+
+@keyframes instructorMeetingSkeleton {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1050px) {
+
+  .instructor-meetings-page__filters {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+
+  .instructor-meetings-page__search-action {
+    align-self: end;
+  }
+
+
+  .instructor-meetings-page__search-button {
+    width: 100%;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+  .instructor-meetings-page {
+    width: 100%;
+    min-height: 100dvh;
+    margin-left: 0;
+    padding: 0.8rem;
+  }
+
+  .instructor-meetings-page__container {
+    width: 100%;
+    max-width: 100%;
+    gap: 0.75rem;
+  }
+
+  .instructor-meetings-page__header {
+    padding: 1rem;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .instructor-meetings-page__breadcrumb {
+    display: none;
+  }
+
+  .instructor-meetings-page__title {
+    font-size: 1.15rem;
+  }
+
+  .instructor-meetings-page__description {
+    font-size: 0.7rem;
+  }
+
+  .instructor-meetings-page__clear-button {
+    min-height: 2.2rem;
+  }
+
+  .instructor-meetings-page__filters {
+    padding: 0.9rem;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .instructor-meetings-page__search-button {
+    width: 100%;
+  }
+
+  .instructor-meetings-page__results-header {
+    padding: 0.9rem 1rem;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .instructor-meetings-page__sort {
+    width: 100%;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+
+  /* =========================
+     TABLA MOBILE
+     Se mantiene como tabla
+  ========================= */
+
+  .instructor-meetings-page__table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .instructor-meetings-page__table {
+    width: 100%;
+    min-width: 850px;
+  }
+
+  .instructor-meetings-page__table th,
+  .instructor-meetings-page__table td {
+    white-space: nowrap;
+  }
+
+  .instructor-meetings-page__table-footer {
+    min-height: 3rem;
+  }
+
+  .instructor-meetings-page__empty {
+    min-height: 14rem;
+    padding: 1.5rem 1rem;
+  }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .instructor-meetings-page {
+    padding: 0.6rem;
+  }
+
+  .instructor-meetings-page__header,
+  .instructor-meetings-page__filters {
+    border-radius: 0.65rem;
+  }
+
+  .instructor-meetings-page__title {
+    font-size: 1.05rem;
+  }
+
+  .instructor-meetings-page__dropdown {
+    max-height: 14rem;
+  }
+
+  .instructor-meetings-page__table {
+    min-width: 850px;
+  }
 }

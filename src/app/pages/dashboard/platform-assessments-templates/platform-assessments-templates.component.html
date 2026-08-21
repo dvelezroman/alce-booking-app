@@ -1,103 +1,426 @@
-<h2 class="title stage">Assessments plataforma</h2>
+<section class="templates-page">
 
-<section class="templates-section">
-  <div class="toolbar">
-    <a routerLink="/dashboard/platform-assessments-list" class="link-muted">
-      Ver assignments planos
-    </a>
-    <a routerLink="/dashboard/platform-assessments-assign" class="btn-primary-link">
-      Asignar examen
-    </a>
-  </div>
+  <!-- =========================
+       HEADER
+  ========================== -->
 
-  <div class="filters">
-    <input
-      class="input"
-      type="text"
-      [(ngModel)]="search"
-      placeholder="Buscar por título…"
-      (keyup.enter)="applyFilters()"
-    />
-    <input
-      class="input stage"
-      type="number"
-      min="1"
-      max="19"
-      [(ngModel)]="stage"
-      placeholder="Stage"
-    />
-    <select class="select" [(ngModel)]="activeOnly">
-      <option [ngValue]="true">Activos</option>
-      <option [ngValue]="false">Inactivos</option>
-      <option [ngValue]="null">Todos</option>
-    </select>
-    <button type="button" class="btn-primary" (click)="applyFilters()">Filtrar</button>
-    <button type="button" class="btn-clear" (click)="clearFilters()">Limpiar</button>
-  </div>
+  <header class="templates-page__header">
 
-  <p class="error-banner" *ngIf="errorMessage">{{ errorMessage }}</p>
-  <p class="meta" *ngIf="!loading">{{ total }} assessment(s) · pág. {{ page }} / {{ totalPages }}</p>
+    <div class="templates-page__heading">
+      <h1>Assessments plataforma</h1>
 
-  <div class="table-scroll">
-    <table class="templates-table">
-      <thead>
-        <tr>
-          <th>Título</th>
-          <th>Stage</th>
-          <th>Rules</th>
-          <th>Tiempo</th>
-          <th>Aprobar %</th>
-          <th>Release</th>
-          <th>Estado</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngIf="loading">
-          <td colspan="8" class="empty">Cargando…</td>
-        </tr>
-        <tr *ngIf="!loading && rows.length === 0">
-          <td colspan="8" class="empty">Sin templates</td>
-        </tr>
-        <tr *ngFor="let row of rows">
-          <td>
-            <div class="cell-main">{{ row.title }}</div>
-            <div class="cell-sub" *ngIf="row.description">{{ row.description }}</div>
-          </td>
-          <td>{{ row.targetStage }}</td>
-          <td>{{ row.stages.length ? row.stages.join(', ') : '—' }}</td>
-          <td>{{ row.timeLimitMinutes }} min</td>
-          <td>{{ row.passingScorePercent }}%</td>
-          <td>{{ row.resultReleasePolicy }}</td>
-          <td>
-            <span class="badge" [class.on]="row.isActive" [class.off]="!row.isActive">
-              {{ row.isActive ? 'Activo' : 'Inactivo' }}
-            </span>
-          </td>
-          <td class="actions">
-            <a
-              class="btn-link"
-              [routerLink]="['/dashboard/platform-assessments-templates', row.id]"
-            >
-              Ver estudiantes
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+      <p>
+        Gestiona los templates de exámenes de la plataforma externa.
+      </p>
+    </div>
 
-  <div class="pager" *ngIf="totalPages > 1">
-    <button type="button" class="btn-clear" [disabled]="page <= 1" (click)="goToPage(page - 1)">
-      Anterior
-    </button>
+    <div class="templates-page__header-actions">
+
+      <a
+        routerLink="/dashboard/platform-assessments-list"
+        class="templates-page__assignments-link"
+      >
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M8 6h12M8 12h12M8 18h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="4" cy="6" r="1.2" fill="currentColor"/>
+          <circle cx="4" cy="12" r="1.2" fill="currentColor"/>
+          <circle cx="4" cy="18" r="1.2" fill="currentColor"/>
+        </svg>
+
+        <span>Ver assignments planos</span>
+      </a>
+
+      <a
+        routerLink="/dashboard/platform-assessments-assign"
+        class="templates-page__assign-button"
+      >
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7"/>
+          <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+
+        <span>Asignar examen</span>
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       FILTERS
+  ========================== -->
+
+  <section class="templates-filters">
+
+    <!-- SEARCH -->
+
+    <div class="templates-filters__field templates-filters__field--search">
+
+      <div class="templates-filters__input-wrapper">
+
+        <svg
+          class="templates-filters__search-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.7"/>
+          <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+
+        <input
+          class="templates-filters__input templates-filters__input--search"
+          type="text"
+          [(ngModel)]="search"
+          placeholder="Buscar por título..."
+          (keyup.enter)="applyFilters()"
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- STAGE -->
+
+    <div class="templates-filters__field">
+
+      <input
+        class="templates-filters__input"
+        type="number"
+        min="1"
+        max="19"
+        [(ngModel)]="stage"
+        placeholder="Stage"
+      />
+
+      <span class="templates-filters__hint">
+        min 1&nbsp;&nbsp;–&nbsp;&nbsp;max 19
+      </span>
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="templates-filters__field">
+
+      <div class="templates-filters__select-wrapper">
+
+        <select
+          class="templates-filters__select"
+          [(ngModel)]="activeOnly"
+        >
+          <option [ngValue]="true">Activos</option>
+          <option [ngValue]="false">Inactivos</option>
+          <option [ngValue]="null">Todos</option>
+        </select>
+
+        <svg
+          class="templates-filters__select-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path d="m8 10 4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+      </div>
+
+    </div>
+
+
+    <!-- FILTER BUTTON -->
+
     <button
       type="button"
-      class="btn-clear"
+      class="templates-filters__apply"
+      (click)="applyFilters()"
+    >
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 5h16l-6.3 7.1v5.2l-3.4 1.7v-6.9L4 5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+
+      <span>Filtrar</span>
+    </button>
+
+
+    <!-- CLEAR BUTTON -->
+
+    <button
+      type="button"
+      class="templates-filters__clear"
+      (click)="clearFilters()"
+    >
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M19 7v5h-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18.2 12a6.5 6.5 0 1 1-1.8-4.5L19 10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+
+      <span>Limpiar</span>
+    </button>
+
+  </section>
+
+
+  <!-- =========================
+       ERROR
+  ========================== -->
+
+  <div
+    *ngIf="errorMessage"
+    class="templates-page__error"
+  >
+
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7"/>
+      <path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+  </div>
+
+
+  <!-- =========================
+       META
+  ========================== -->
+
+  <div
+    *ngIf="!loading"
+    class="templates-page__meta"
+  >
+
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="6" y="4" width="12" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M9 9h6M9 13h6M9 17h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+
+    <span>
+      {{ total }} assessment(s) · pág. {{ page }} / {{ totalPages }}
+    </span>
+
+  </div>
+
+
+  <!-- =========================
+       TABLE
+  ========================== -->
+
+  <section class="templates-table-card">
+
+    <div class="templates-table-card__scroll">
+
+      <table class="templates-table">
+
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Stage</th>
+            <th>Rules</th>
+            <th>Tiempo</th>
+            <th>Aprobar %</th>
+            <th>Release</th>
+            <th>Estado</th>
+            <th class="templates-table__actions-heading"></th>
+          </tr>
+        </thead>
+
+
+        <tbody>
+
+          <!-- LOADING -->
+
+          <tr *ngIf="loading">
+            <td
+              colspan="8"
+              class="templates-table__empty"
+            >
+              Cargando...
+            </td>
+          </tr>
+
+
+          <!-- EMPTY -->
+
+          <tr *ngIf="!loading && rows.length === 0">
+            <td
+              colspan="8"
+              class="templates-table__empty"
+            >
+              Sin templates
+            </td>
+          </tr>
+
+
+          <!-- ROWS -->
+
+          <tr *ngFor="let row of rows">
+
+            <!-- TITLE -->
+
+            <td>
+
+              <div class="templates-table__template">
+
+                <strong>
+                  {{ row.title }}
+                </strong>
+
+                <span *ngIf="row.description">
+                  {{ row.description }}
+                </span>
+
+              </div>
+
+            </td>
+
+
+            <!-- STAGE -->
+
+            <td>
+              <span class="templates-table__stage">
+                {{ row.targetStage }}
+              </span>
+            </td>
+
+
+            <!-- RULES -->
+
+            <td>
+              <span class="templates-table__value">
+                {{ row.stages.length ? row.stages.join(', ') : '—' }}
+              </span>
+            </td>
+
+
+            <!-- TIME -->
+
+            <td>
+              <span class="templates-table__value">
+                {{ row.timeLimitMinutes }} min
+              </span>
+            </td>
+
+
+            <!-- PASS -->
+
+            <td>
+              <span class="templates-table__value">
+                {{ row.passingScorePercent }}%
+              </span>
+            </td>
+
+
+            <!-- RELEASE -->
+
+            <td>
+              <span class="templates-table__release">
+                {{ row.resultReleasePolicy }}
+              </span>
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="templates-table__status"
+                [class.templates-table__status--active]="row.isActive"
+                [class.templates-table__status--inactive]="!row.isActive"
+              >
+                <span class="templates-table__status-dot"></span>
+
+                {{ row.isActive ? 'Activo' : 'Inactivo' }}
+              </span>
+
+            </td>
+
+
+            <!-- ACTION -->
+
+            <td class="templates-table__actions">
+
+              <a
+                class="templates-table__view"
+                [routerLink]="[
+                  '/dashboard/platform-assessments-templates',
+                  row.id
+                ]"
+              >
+                Ver estudiantes
+              </a>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       PAGINATION
+  ========================== -->
+
+  <footer
+    *ngIf="totalPages > 1"
+    class="templates-pagination"
+  >
+
+    <button
+      type="button"
+      class="templates-pagination__button"
+      [disabled]="page <= 1"
+      (click)="goToPage(page - 1)"
+    >
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="m14 8-4 4 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+
+      Anterior
+    </button>
+
+
+    <div class="templates-pagination__pages">
+
+      <span class="templates-pagination__current">
+        {{ page }}
+      </span>
+
+      <span class="templates-pagination__separator">
+        /
+      </span>
+
+      <span>
+        {{ totalPages }}
+      </span>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="templates-pagination__button"
       [disabled]="page >= totalPages"
       (click)="goToPage(page + 1)"
     >
       Siguiente
+
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="m10 8 4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </button>
-  </div>
+
+  </footer>
+
 </section>

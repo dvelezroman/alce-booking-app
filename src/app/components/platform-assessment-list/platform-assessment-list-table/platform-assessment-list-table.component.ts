@@ -271,9 +271,8 @@ export class PlatformAssessmentListTableComponent {
     return !!this.getAccessUrl(row);
   }
 
-
   /* =========================
-     WRITING
+    WRITING
   ========================= */
 
   canApplyWritingAction(
@@ -281,10 +280,16 @@ export class PlatformAssessmentListTableComponent {
   ): boolean {
     return (
       row.mirrorId != null &&
-      (
-        row.writingApplied === true ||
-        row.points != null
-      )
+      row.points != null
+    );
+  }
+
+
+  isWritingLocked(
+    row: RemotePlatformAssessmentItem,
+  ): boolean {
+    return (
+      row.writingAccepted === true
     );
   }
 
@@ -292,15 +297,9 @@ export class PlatformAssessmentListTableComponent {
   getWritingActionLabel(
     row: RemotePlatformAssessmentItem,
   ): string {
-    if (
-      !this.canApplyWritingAction(row)
-    ) {
-      return 'Writing no disponible';
-    }
-
-    return row.writingApplied
-      ? 'Corregir Writing'
-      : 'Aplicar Writing';
+    return this.isWritingLocked(row)
+      ? 'Aceptada'
+      : 'Aceptar Evaluación';
   }
 
 
@@ -308,7 +307,8 @@ export class PlatformAssessmentListTableComponent {
     row: RemotePlatformAssessmentItem,
   ): void {
     if (
-      !this.canApplyWritingAction(row)
+      !this.canApplyWritingAction(row) ||
+      this.isWritingLocked(row)
     ) {
       return;
     }

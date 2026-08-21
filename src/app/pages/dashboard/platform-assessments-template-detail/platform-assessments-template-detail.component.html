@@ -1,145 +1,852 @@
-<h2 class="title stage">Detalle assessment</h2>
+<section class="assessment-detail-page">
 
-<section class="detail-section">
-  <div class="toolbar">
-    <a routerLink="/dashboard/platform-assessments-templates" class="back-link">
-      ← Assessments
-    </a>
-    <a
-      class="btn-primary-link"
-      [routerLink]="['/dashboard/platform-assessments-assign']"
-      [queryParams]="{ templateId: templateId }"
+  <div class="assessment-detail-page__container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="page-header">
+
+      <div class="page-header__content">
+
+        <h1 class="page-header__title">
+          Detalle assessment
+        </h1>
+
+        <a
+          routerLink="/dashboard/platform-assessments-templates"
+          class="page-header__back"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M19 12H5M11 18l-6-6 6-6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          Assessments
+        </a>
+
+      </div>
+
+      <a
+        class="page-header__assign"
+        [routerLink]="['/dashboard/platform-assessments-assign']"
+        [queryParams]="{ templateId: templateId }"
+      >
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 8v8M8 12h8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        Asignar más
+      </a>
+
+    </header>
+
+
+    <!-- =========================
+         ERROR
+    ========================== -->
+
+    <div
+      class="error-banner"
+      *ngIf="errorMessage"
     >
-      Asignar más
-    </a>
-  </div>
+      {{ errorMessage }}
+    </div>
 
-  <p class="error-banner" *ngIf="errorMessage">{{ errorMessage }}</p>
 
-  <div class="card header-card" *ngIf="templateLoading">Cargando meta…</div>
-  <div class="card header-card" *ngIf="!templateLoading && template as t">
-    <h3>{{ t.title }}</h3>
-    <p class="desc" *ngIf="t.description">{{ t.description }}</p>
-    <div class="meta-row">
-      <span>{{ t.timeLimitMinutes }} min</span>
-      <span>Aprobar {{ t.passingScorePercent }}%</span>
-      <span>Stage {{ t.targetStage }}</span>
-      <span *ngIf="t.stages.length">Rules: {{ t.stages.join(', ') }}</span>
-      <span>{{ t.resultReleasePolicy }}</span>
-      <span class="badge" [class.on]="t.isActive" [class.off]="!t.isActive">
+    <!-- =========================
+         TEMPLATE LOADING
+    ========================== -->
+
+    <section
+      class="assessment-card assessment-card--loading"
+      *ngIf="templateLoading"
+    >
+      Cargando información del assessment...
+    </section>
+
+
+    <!-- =========================
+         ASSESSMENT INFO
+    ========================== -->
+
+    <section
+      class="assessment-card"
+      *ngIf="!templateLoading && template as t"
+    >
+
+      <div class="assessment-card__icon">
+
+        <svg viewBox="0 0 24 24" fill="none">
+
+          <rect
+            x="6"
+            y="4"
+            width="12"
+            height="17"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M9 4V2.8h6V4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M9 10h6M9 14h6M9 18h3"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+        </svg>
+
+      </div>
+
+
+      <div class="assessment-card__content">
+
+        <h2 class="assessment-card__title">
+          {{ t.title }}
+        </h2>
+
+        <p
+          class="assessment-card__description"
+          *ngIf="t.description"
+        >
+          {{ t.description }}
+        </p>
+
+
+        <div class="assessment-card__meta">
+
+          <!-- TIME -->
+
+          <span class="assessment-meta">
+
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M12 8v4l3 2"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            {{ t.timeLimitMinutes }} min
+
+          </span>
+
+
+          <!-- PASS -->
+
+          <span class="assessment-meta">
+
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <circle
+                cx="12"
+                cy="12"
+                r="4"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m12 12 5-5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            Aprobar {{ t.passingScorePercent }}%
+
+          </span>
+
+
+          <!-- STAGE -->
+
+          <span class="assessment-meta">
+
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 7h10l6 5-6 5H4V7Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <circle
+                cx="8"
+                cy="12"
+                r="1"
+                fill="currentColor"
+              />
+            </svg>
+
+            Stage {{ t.targetStage }}
+
+          </span>
+
+
+          <!-- RULES -->
+
+          <span
+            class="assessment-meta"
+            *ngIf="t.stages.length"
+          >
+
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M8 7h12M8 12h12M8 17h12"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <circle cx="4" cy="7" r="1" fill="currentColor" />
+              <circle cx="4" cy="12" r="1" fill="currentColor" />
+              <circle cx="4" cy="17" r="1" fill="currentColor" />
+            </svg>
+
+            Rules: {{ t.stages.join(', ') }}
+
+          </span>
+
+
+          <!-- RELEASE -->
+
+          <span class="assessment-meta">
+
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect
+                x="5"
+                y="10"
+                width="14"
+                height="10"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 10V7a4 4 0 0 1 8 0v3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+            </svg>
+
+            {{ t.resultReleasePolicy }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <span
+        class="assessment-status"
+        [class.assessment-status--active]="t.isActive"
+        [class.assessment-status--inactive]="!t.isActive"
+      >
+        <span class="assessment-status__dot"></span>
+
         {{ t.isActive ? 'Activo' : 'Inactivo' }}
       </span>
-    </div>
-  </div>
 
-  <div class="filters">
-    <select class="select" [(ngModel)]="statusFilter">
-      <option *ngFor="let s of statusOptions" [ngValue]="s">
-        {{ s || 'Status: todos' }}
-      </option>
-    </select>
-    <select class="select" [(ngModel)]="outcomeFilter">
-      <option *ngFor="let o of outcomeOptions" [ngValue]="o">
-        {{ o || 'Outcome: todos' }}
-      </option>
-    </select>
-    <button type="button" class="btn-primary" (click)="applyFilters()">Filtrar</button>
-    <button type="button" class="btn-clear" (click)="clearFilters()">Limpiar</button>
-  </div>
+    </section>
 
-  <p class="meta" *ngIf="!loading">
-    {{ total }} estudiante(s) · pág. {{ page }} / {{ totalPages }}
-  </p>
 
-  <div class="table-scroll">
-    <table class="students-table">
-      <thead>
-        <tr>
-          <th>Estudiante</th>
-          <th>Status</th>
-          <th>Intentos</th>
-          <th>Outcome</th>
-          <th>Puntos</th>
-          <th>Completado</th>
-          <th>Grammar ALCE</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngIf="loading">
-          <td colspan="8" class="empty">Cargando…</td>
-        </tr>
-        <tr *ngIf="!loading && rows.length === 0">
-          <td colspan="8" class="empty">Sin assignments</td>
-        </tr>
-        <tr *ngFor="let row of rows">
-          <td>
-            <div class="cell-main">{{ displayStudent(row) }}</div>
-            <div class="cell-sub">ID {{ row.studentId ?? row.externalStudentId }}</div>
-          </td>
-          <td>
-            <span class="badge" [ngClass]="statusClass(row)">
-              {{ statusLabel(row) }}
-            </span>
-          </td>
-          <td>{{ row.attemptCount }} / {{ row.maxAttempts }}</td>
-          <td>
-            <span class="badge" [ngClass]="outcomeClass(row.outcome)">
-              {{ row.outcome || 'NONE' }}
-            </span>
-          </td>
-          <td>{{ row.points != null ? row.points : '—' }}</td>
-          <td>{{ row.completedAt ? (row.completedAt | date: 'short') : '—' }}</td>
-          <td>
-            <span *ngIf="row.writingApplied">{{ row.writingPoints ?? '—' }}</span>
-            <span *ngIf="!row.writingApplied" class="muted">—</span>
-          </td>
-          <td class="actions">
-            <button
-              type="button"
-              class="btn-link"
-              *ngIf="row.directAccessUrl"
-              (click)="openUrl(row.directAccessUrl)"
-            >
-              Abrir
-            </button>
-            <button
-              type="button"
-              class="btn-link"
-              *ngIf="row.resultsUrl"
-              (click)="openUrl(row.resultsUrl)"
-            >
-              Resultados
-            </button>
-            <button
-              type="button"
-              class="btn-writing"
-              *ngIf="canShowWritingAction(row)"
-              [disabled]="isWritingLocked(row)"
-              (click)="startApplyWriting(row)"
-            >
-              {{ writingActionLabel(row) }}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <!-- =========================
+         FILTERS
+    ========================== -->
 
-  <div class="pager" *ngIf="totalPages > 1">
-    <button type="button" class="btn-clear" [disabled]="page <= 1" (click)="goToPage(page - 1)">
-      Anterior
-    </button>
-    <button
-      type="button"
-      class="btn-clear"
-      [disabled]="page >= totalPages"
-      (click)="goToPage(page + 1)"
+    <section class="filters-card">
+
+      <div class="filter-field">
+
+        <label>
+          Status
+        </label>
+
+        <select
+          [(ngModel)]="statusFilter"
+        >
+          <option
+            *ngFor="let s of statusOptions"
+            [ngValue]="s"
+          >
+            {{ s || 'Status: todos' }}
+          </option>
+        </select>
+
+      </div>
+
+
+      <div class="filter-field">
+
+        <label>
+          Outcome
+        </label>
+
+        <select
+          [(ngModel)]="outcomeFilter"
+        >
+          <option
+            *ngFor="let o of outcomeOptions"
+            [ngValue]="o"
+          >
+            {{ o || 'Outcome: todos' }}
+          </option>
+        </select>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="filters-card__apply"
+        (click)="applyFilters()"
+      >
+        <svg viewBox="0 0 24 24" fill="none">
+          <path
+            d="M4 5h16l-6 7v5l-4 2v-7L4 5Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        Filtrar
+      </button>
+
+
+      <button
+        type="button"
+        class="filters-card__clear"
+        (click)="clearFilters()"
+      >
+        <svg viewBox="0 0 24 24" fill="none">
+          <path
+            d="M20 11a8 8 0 1 0-2.3 5.7"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M20 5v6h-6"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        Limpiar
+      </button>
+
+    </section>
+
+
+    <!-- =========================
+         RESULT INFO
+    ========================== -->
+
+    <div
+      class="results-meta"
+      *ngIf="!loading"
     >
-      Siguiente
-    </button>
+
+      <svg viewBox="0 0 24 24" fill="none">
+        <rect
+          x="6"
+          y="4"
+          width="12"
+          height="16"
+          rx="2"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M9 9h6M9 13h6M9 17h4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <span>
+        {{ total }} estudiante(s)
+      </span>
+
+      <span class="results-meta__separator">
+        ·
+      </span>
+
+      <span>
+        pág. {{ page }} / {{ totalPages }}
+      </span>
+
+    </div>
+
+
+
+    <!-- =========================
+        TABLE
+    ========================== -->
+
+    <section
+      class="students-card"
+      *ngIf="!loading"
+    >
+
+      <div class="students-card__scroll">
+
+        <table class="students-table">
+
+          <thead>
+            <tr>
+              <th>Estudiante</th>
+              <th>Status</th>
+              <th>Intentos</th>
+              <th>Outcome</th>
+              <th>Puntos</th>
+              <th>Completado</th>
+              <th>Grammar ALCE</th>
+              <th class="students-table__actions">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+
+
+          <tbody>
+
+            <!-- =========================
+                EMPTY
+            ========================== -->
+
+            <tr *ngIf="rows.length === 0">
+              <td
+                colspan="8"
+                class="students-table__empty"
+              >
+                Sin assignments
+              </td>
+            </tr>
+
+
+            <!-- =========================
+                ROWS
+            ========================== -->
+
+            <tr *ngFor="let row of rows">
+
+              <!-- STUDENT -->
+
+              <td>
+                <div class="student-cell">
+                  <strong>
+                    {{ displayStudent(row) }}
+                  </strong>
+
+                  <span>
+                    ID {{ row.studentId ?? row.externalStudentId }}
+                  </span>
+                </div>
+              </td>
+
+
+              <!-- STATUS -->
+
+              <td>
+                <span
+                  class="table-badge"
+                  [ngClass]="statusClass(row)"
+                >
+                  <span class="table-badge__dot"></span>
+                  {{ statusLabel(row) }}
+                </span>
+              </td>
+
+
+              <!-- ATTEMPTS -->
+
+              <td>
+                <span class="table-value">
+                  {{ row.attemptCount }} / {{ row.maxAttempts }}
+                </span>
+              </td>
+
+
+              <!-- OUTCOME -->
+
+              <td>
+                <span
+                  class="table-badge"
+                  [ngClass]="outcomeClass(row.outcome)"
+                >
+                  {{ row.outcome || 'NONE' }}
+                </span>
+              </td>
+
+
+              <!-- POINTS -->
+
+              <td>
+                <span class="table-value">
+                  {{ row.points != null ? row.points : '—' }}
+                </span>
+              </td>
+
+
+              <!-- COMPLETED -->
+
+              <td>
+                <span class="table-value">
+                  {{
+                    row.completedAt
+                      ? (row.completedAt | date: 'dd/MM/yyyy HH:mm')
+                      : '—'
+                  }}
+                </span>
+              </td>
+
+
+              <!-- GRAMMAR -->
+
+              <td>
+                <span
+                  class="table-value"
+                  *ngIf="row.writingApplied"
+                >
+                  {{ row.writingPoints ?? '—' }}
+                </span>
+
+                <span
+                  class="table-muted"
+                  *ngIf="!row.writingApplied"
+                >
+                  —
+                </span>
+              </td>
+
+
+              <!-- =========================
+                  ACTIONS
+              ========================== -->
+
+              <td class="students-table__actions">
+
+                <div
+                  class="row-actions"
+                  (click)="$event.stopPropagation()"
+                >
+
+                  <!-- TRIGGER -->
+
+                  <button
+                    type="button"
+                    class="row-actions__trigger"
+                    [class.row-actions__trigger--active]="isMenuOpen(row.assignmentId)"
+                    aria-label="Opciones"
+                    title="Opciones"
+                    (click)="toggleMenu(row.assignmentId, $event)"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <circle cx="12" cy="5" r="1.5" />
+                      <circle cx="12" cy="12" r="1.5" />
+                      <circle cx="12" cy="19" r="1.5" />
+                    </svg>
+                  </button>
+
+
+                  <!-- MENU -->
+
+                  <div
+                    *ngIf="isMenuOpen(row.assignmentId)"
+                    class="row-actions__menu"
+                    [style.top.px]="menuPosition.top"
+                    [style.left.px]="menuPosition.left"
+                    (click)="$event.stopPropagation()"
+                  >
+
+                    <!-- ABRIR -->
+
+                    <button
+                      type="button"
+                      class="row-actions__item"
+                      *ngIf="row.directAccessUrl"
+                      (click)="openUrl(row.directAccessUrl); closeMenu()"
+                    >
+                      <span class="row-actions__icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <path
+                            d="M14 5h5v5"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+
+                          <path
+                            d="m19 5-8 8"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                          />
+
+                          <path
+                            d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </span>
+
+                      <div class="row-actions__content">
+                        <span>Abrir</span>
+                        <small>Abrir evaluación</small>
+                      </div>
+                    </button>
+
+
+                    <!-- RESULTADOS -->
+
+                    <button
+                      type="button"
+                      class="row-actions__item"
+                      *ngIf="row.resultsUrl"
+                      (click)="openUrl(row.resultsUrl); closeMenu()"
+                    >
+                      <span class="row-actions__icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <path
+                            d="M5 19V9M10 19V5M15 19v-7M20 19V8"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </span>
+
+                      <div class="row-actions__content">
+                        <span>Resultados</span>
+                        <small>Ver resultados del examen</small>
+                      </div>
+                    </button>
+
+
+                    <!-- ACEPTAR EVALUACIÓN -->
+
+                    <button
+                      type="button"
+                      class="row-actions__item row-actions__item--writing"
+                      *ngIf="canShowWritingAction(row)"
+                      [disabled]="isWritingLocked(row)"
+                      (click)="startApplyWriting(row); closeMenu()"
+                    >
+                      <span class="row-actions__icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <path
+                            d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linejoin="round"
+                          />
+
+                          <path
+                            d="m14 8 3 3"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                          />
+                        </svg>
+                      </span>
+
+                      <div class="row-actions__content">
+                        <span>
+                          {{ writingActionLabel(row) }}
+                        </span>
+
+                        <small>
+                          {{
+                            isWritingLocked(row)
+                              ? 'Evaluación ya aceptada'
+                              : 'Aplicar puntaje de Writing'
+                          }}
+                        </small>
+                      </div>
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         PAGINATION
+    ========================== -->
+
+    <div
+      class="pagination"
+      *ngIf="totalPages > 1"
+    >
+
+      <button
+        type="button"
+        class="pagination__navigation"
+        [disabled]="page <= 1"
+        (click)="goToPage(page - 1)"
+      >
+
+        <svg viewBox="0 0 24 24" fill="none">
+          <path
+            d="m15 18-6-6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        Anterior
+
+      </button>
+
+
+      <div class="pagination__pages">
+
+        <button
+          type="button"
+          class="pagination__page"
+          [class.pagination__page--active]="page === 1"
+          (click)="goToPage(1)"
+        >
+          1
+        </button>
+
+
+        <button
+          *ngIf="totalPages >= 2"
+          type="button"
+          class="pagination__page"
+          [class.pagination__page--active]="page === 2"
+          (click)="goToPage(2)"
+        >
+          2
+        </button>
+
+
+        <button
+          *ngIf="totalPages >= 3"
+          type="button"
+          class="pagination__page"
+          [class.pagination__page--active]="page === 3"
+          (click)="goToPage(3)"
+        >
+          3
+        </button>
+
+
+        <button
+          *ngIf="totalPages >= 4"
+          type="button"
+          class="pagination__page"
+          [class.pagination__page--active]="page === 4"
+          (click)="goToPage(4)"
+        >
+          4
+        </button>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="pagination__navigation"
+        [disabled]="page >= totalPages"
+        (click)="goToPage(page + 1)"
+      >
+
+        Siguiente
+
+        <svg viewBox="0 0 24 24" fill="none">
+          <path
+            d="m9 18 6-6-6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </button>
+
+    </div>
+
   </div>
+
 </section>
+
+
+<!-- =========================
+     MODAL
+========================== -->
 
 <app-modal
   [showModal]="modal.show"
@@ -150,4 +857,5 @@
   [showButtons]="modal.showButtons ?? false"
   (confirmAction)="modal.confirm?.()"
   (close)="modal.close()"
-></app-modal>
+>
+</app-modal>

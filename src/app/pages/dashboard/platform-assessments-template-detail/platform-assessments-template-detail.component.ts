@@ -239,4 +239,148 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
         },
       });
   }
+
+  /* =========================
+    ACTIONS MENU
+  ========================= */
+
+  openedMenuId: string | null = null;
+
+  menuPosition = {
+    top: 0,
+    left: 0,
+  };
+
+
+  toggleMenu(
+    assignmentId: string,
+    event: MouseEvent,
+  ): void {
+    event.stopPropagation();
+
+    if (
+      this.openedMenuId ===
+      assignmentId
+    ) {
+      this.closeMenu();
+      return;
+    }
+
+    const button =
+      event.currentTarget as HTMLElement;
+
+    const rect =
+      button.getBoundingClientRect();
+
+    const menuWidth = 245;
+    const menuHeight = 205;
+
+    const gap = 8;
+    const viewportPadding = 12;
+
+
+    /* =========================
+      HORIZONTAL
+    ========================= */
+
+    let left =
+      rect.right -
+      menuWidth;
+
+    if (
+      left <
+      viewportPadding
+    ) {
+      left =
+        viewportPadding;
+    }
+
+    const maxLeft =
+      window.innerWidth -
+      menuWidth -
+      viewportPadding;
+
+    if (
+      left >
+      maxLeft
+    ) {
+      left =
+        maxLeft;
+    }
+
+
+    /* =========================
+      VERTICAL
+    ========================= */
+
+    const spaceBelow =
+      window.innerHeight -
+      rect.bottom -
+      viewportPadding;
+
+    const spaceAbove =
+      rect.top -
+      viewportPadding;
+
+    let top: number;
+
+
+    if (
+      spaceBelow >=
+      menuHeight + gap
+    ) {
+      top =
+        rect.bottom +
+        gap;
+    }
+
+    else if (
+      spaceAbove >=
+      menuHeight + gap
+    ) {
+      top =
+        rect.top -
+        menuHeight -
+        gap;
+    }
+
+    else {
+      top =
+        window.innerHeight -
+        menuHeight -
+        viewportPadding;
+
+      if (
+        top <
+        viewportPadding
+      ) {
+        top =
+          viewportPadding;
+      }
+    }
+
+
+    this.menuPosition = {
+      top,
+      left,
+    };
+
+    this.openedMenuId =
+      assignmentId;
+  }
+
+
+  isMenuOpen(
+    assignmentId: string,
+  ): boolean {
+    return (
+      this.openedMenuId ===
+      assignmentId
+    );
+  }
+
+
+  closeMenu(): void {
+    this.openedMenuId = null;
+  }
 }
