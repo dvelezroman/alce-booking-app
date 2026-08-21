@@ -1,0 +1,645 @@
+<section class="group-form">
+
+  <!-- =====================================================
+       BODY
+  ====================================================== -->
+
+  <div class="group-form__body">
+
+    <!-- =====================================================
+         MEMBERS SECTION
+    ====================================================== -->
+
+    <section class="group-form__section">
+
+      <div class="group-form__section-header">
+
+        <div class="group-form__section-heading">
+
+          <span
+            class="group-form__section-icon"
+            aria-hidden="true"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="9"
+                cy="8"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M16 6.5a2.4 2.4 0 1 1 0 4.8M16 14.5c2.6.2 4.5 1.9 4.5 4.2"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+
+          <div>
+            <h3 class="group-form__section-title">
+              Integrantes
+            </h3>
+
+            <p class="group-form__section-description">
+              Busca los usuarios que formarán parte de este grupo.
+            </p>
+          </div>
+
+        </div>
+
+
+        <span
+          *ngIf="selectedUsers.length > 0"
+          class="group-form__members-count"
+        >
+          {{ selectedUsers.length }}
+          {{
+            selectedUsers.length === 1
+              ? 'seleccionado'
+              : 'seleccionados'
+          }}
+        </span>
+
+      </div>
+
+
+      <!-- ===================================================
+           USER SEARCH
+      ==================================================== -->
+
+      <div class="group-form__search">
+
+        <span
+          class="group-form__search-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+
+        <input
+          id="groupUsers"
+          type="text"
+          class="group-form__input group-form__input--search"
+          placeholder="Buscar usuario por nombre o correo..."
+          autocomplete="off"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange($event)"
+          (focus)="
+            searchTerm.length >= 2 &&
+            (showDropdown = true)
+          "
+          (blur)="hideDropdown()"
+        />
+
+
+        <!-- =================================================
+             USER DROPDOWN
+        ================================================== -->
+
+        <div
+          *ngIf="showDropdown"
+          class="group-form__dropdown"
+        >
+
+          <!-- LOADING -->
+
+          <div
+            *ngIf="loadingUsers"
+            class="group-form__dropdown-loading"
+          >
+
+            <span class="group-form__dropdown-spinner">
+            </span>
+
+            <span>
+              Buscando usuarios...
+            </span>
+
+          </div>
+
+
+          <!-- RESULTS -->
+
+          <button
+            *ngFor="
+              let user of filteredUsers;
+              trackBy: trackByUserId
+            "
+            type="button"
+            class="group-form__user-option"
+            (mousedown)="$event.preventDefault()"
+            (click)="addUser(user)"
+          >
+
+            <span
+              class="group-form__avatar"
+              aria-hidden="true"
+            >
+              {{ getUserInitials(user) }}
+            </span>
+
+
+            <span class="group-form__user-information">
+
+              <strong>
+                {{ getUserName(user) }}
+              </strong>
+
+              <span>
+                {{ user.email || 'Sin correo registrado' }}
+              </span>
+
+            </span>
+
+
+            <span
+              class="group-form__user-add"
+              aria-hidden="true"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M12 5v14M5 12h14"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+          </button>
+
+
+          <!-- EMPTY -->
+
+          <div
+            *ngIf="
+              !loadingUsers &&
+              filteredUsers.length === 0
+            "
+            class="group-form__dropdown-empty"
+          >
+
+            <span
+              class="group-form__dropdown-empty-icon"
+              aria-hidden="true"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="6"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+
+                <path
+                  d="m16 16 4 4"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <span>
+              No se encontraron usuarios.
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- SEARCH HELP -->
+
+      <p
+        *ngIf="
+          searchTerm.length > 0 &&
+          searchTerm.length < 2
+        "
+        class="group-form__search-help"
+      >
+        Escribe al menos 2 caracteres para buscar.
+      </p>
+
+
+      <!-- ===================================================
+           SELECTED USERS
+      ==================================================== -->
+
+      <div
+        *ngIf="selectedUsers.length > 0"
+        class="group-form__selected"
+      >
+
+        <div class="group-form__selected-header">
+
+          <div>
+            <strong>
+              Integrantes seleccionados
+            </strong>
+
+            <span>
+              Puedes quitar usuarios antes de guardar.
+            </span>
+          </div>
+
+          <span class="group-form__selected-counter">
+            {{ selectedUsers.length }}
+          </span>
+
+        </div>
+
+
+        <div class="group-form__selected-list">
+
+          <article
+            *ngFor="
+              let user of selectedUsers;
+              trackBy: trackByUserId
+            "
+            class="group-form__selected-user"
+          >
+
+            <span
+              class="group-form__avatar"
+              aria-hidden="true"
+            >
+              {{ getUserInitials(user) }}
+            </span>
+
+
+            <div class="group-form__user-information">
+
+              <strong>
+                {{ getUserName(user) }}
+              </strong>
+
+              <span>
+                {{ user.email || 'Sin correo registrado' }}
+              </span>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="group-form__remove"
+              title="Quitar integrante"
+              aria-label="Quitar integrante"
+              (click)="removeUser(user.id)"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M7 7l10 10M17 7 7 17"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+
+          </article>
+
+        </div>
+
+      </div>
+
+
+      <!-- NO USERS YET -->
+
+      <div
+        *ngIf="selectedUsers.length === 0"
+        class="group-form__selected-empty"
+      >
+
+        <span
+          class="group-form__selected-empty-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="9"
+              cy="8"
+              r="3"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M17 8v6M14 11h6"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <div>
+          <strong>
+            Sin integrantes seleccionados
+          </strong>
+
+          <span>
+            Utiliza el buscador para agregar usuarios.
+          </span>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         GROUP INFORMATION
+    ====================================================== -->
+
+    <section class="group-form__section">
+
+      <div class="group-form__section-header">
+
+        <div class="group-form__section-heading">
+
+          <span
+            class="group-form__section-icon group-form__section-icon--information"
+            aria-hidden="true"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="4"
+                y="4"
+                width="16"
+                height="16"
+                rx="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 9h8M8 13h8M8 17h5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+
+          <div>
+
+            <h3 class="group-form__section-title">
+              Información del grupo
+            </h3>
+
+            <p class="group-form__section-description">
+              Define un nombre y una descripción para identificarlo.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ===================================================
+           NAME
+      ==================================================== -->
+
+      <div class="group-form__field">
+
+        <label
+          for="groupName"
+          class="group-form__label"
+        >
+          Nombre del grupo
+
+          <span class="group-form__required">
+            *
+          </span>
+        </label>
+
+
+        <input
+          id="groupName"
+          type="text"
+          class="group-form__input"
+          placeholder="Ej. Estudiantes Stage 5"
+          maxlength="120"
+          [(ngModel)]="name"
+        />
+
+
+        <div class="group-form__field-meta">
+
+          <span>
+            Usa un nombre corto y fácil de identificar.
+          </span>
+
+          <span>
+            {{ name.length }}/120
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- ===================================================
+           DESCRIPTION
+      ==================================================== -->
+
+      <div class="group-form__field">
+
+        <label
+          for="groupDescription"
+          class="group-form__label"
+        >
+          Descripción
+
+          <span class="group-form__required">
+            *
+          </span>
+        </label>
+
+
+        <textarea
+          id="groupDescription"
+          class="group-form__textarea"
+          placeholder="Describe el propósito de este grupo..."
+          maxlength="500"
+          rows="4"
+          [(ngModel)]="description"
+        ></textarea>
+
+
+        <div class="group-form__field-meta">
+
+          <span>
+            Explica brevemente para qué se utilizará este grupo.
+          </span>
+
+          <span>
+            {{ description.length }}/500
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer class="group-form__footer">
+
+    <button
+      type="button"
+      class="
+        group-form__button
+        group-form__button--secondary
+      "
+      (click)="onCancel()"
+    >
+      Cancelar
+    </button>
+
+
+    <button
+      type="button"
+      class="
+        group-form__button
+        group-form__button--primary
+      "
+      [disabled]="!canSubmit"
+      (click)="onSubmit()"
+    >
+
+      <!-- CREATE ICON -->
+
+      <svg
+        *ngIf="!groupToEdit"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M12 5v14M5 12h14"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+        />
+      </svg>
+
+
+      <!-- EDIT ICON -->
+
+      <svg
+        *ngIf="groupToEdit"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m5 12 4 4 10-10"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+
+      <span>
+        {{
+          groupToEdit
+            ? 'Guardar cambios'
+            : 'Crear grupo'
+        }}
+      </span>
+
+    </button>
+
+  </footer>
+
+</section>

@@ -1,0 +1,181 @@
+<section class="groups-pagination">
+
+  <!-- =========================
+       INFORMATION
+  ========================== -->
+
+  <div class="groups-pagination__information">
+
+    <span class="groups-pagination__label">
+      {{ paginationLabel }}
+    </span>
+
+    <div class="groups-pagination__limit">
+
+      <span>
+        Mostrar
+      </span>
+
+      <select
+        class="groups-pagination__limit-select"
+        [ngModel]="limit"
+        (ngModelChange)="onLimit($event)"
+      >
+        <option
+          *ngFor="let option of limitOptions"
+          [ngValue]="option"
+        >
+          {{ option }}
+        </option>
+      </select>
+
+      <span>
+        por página
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       CONTROLS
+  ========================== -->
+
+  <nav
+    class="groups-pagination__controls"
+    aria-label="Paginación de grupos"
+  >
+
+    <!-- FIRST -->
+
+    <button
+      type="button"
+      class="groups-pagination__button"
+      [disabled]="!canPrev"
+      aria-label="Primera página"
+      title="Primera página"
+      (click)="onFirst()"
+    >
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M11 7l-5 5 5 5M18 7l-5 5 5 5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+
+    <!-- PREVIOUS -->
+
+    <button
+      type="button"
+      class="groups-pagination__button"
+      [disabled]="!canPrev"
+      aria-label="Página anterior"
+      title="Página anterior"
+      (click)="onPrevious()"
+    >
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="m15 6-6 6 6 6"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+
+    <!-- PAGES -->
+
+    <button
+      *ngFor="
+        let pageNumber of visiblePages
+      "
+      type="button"
+      class="groups-pagination__page"
+      [class.groups-pagination__page--active]="
+        pageNumber === page
+      "
+      [attr.aria-current]="
+        pageNumber === page
+          ? 'page'
+          : null
+      "
+      (click)="onPage(pageNumber)"
+    >
+      {{ pageNumber }}
+    </button>
+
+
+    <!-- NEXT -->
+
+    <button
+      type="button"
+      class="groups-pagination__button"
+      [disabled]="!canNext"
+      aria-label="Página siguiente"
+      title="Página siguiente"
+      (click)="onNext()"
+    >
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="m9 6 6 6-6 6"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+
+    <!-- LAST -->
+
+    <button
+      type="button"
+      class="groups-pagination__button"
+      [disabled]="!canNext"
+      aria-label="Última página"
+      title="Última página"
+      (click)="onLast()"
+    >
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="m6 7 5 5-5 5M13 7l5 5-5 5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+  </nav>
+
+</section>

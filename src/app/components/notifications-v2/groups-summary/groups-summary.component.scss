@@ -1,0 +1,362 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+.groups-summary {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap: 0.85rem;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.groups-summary__card {
+  min-width: 0;
+  min-height: 6.4rem;
+
+  padding:
+    1rem
+    1.05rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.9rem;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    #e3e6ee;
+
+  border-radius:
+    0.75rem;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0
+    5px
+    16px
+    rgba(
+      26,
+      35,
+      67,
+      0.025
+    );
+}
+
+
+/* =========================
+   ICON
+========================= */
+
+.groups-summary__icon {
+  width: 2.8rem;
+  height: 2.8rem;
+
+  flex:
+    0
+    0
+    2.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius:
+    0.75rem;
+}
+
+
+.groups-summary__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* PURPLE */
+
+.groups-summary__icon--purple {
+  color: #6047e8;
+
+  background:
+    #eeeaff;
+}
+
+
+/* GREEN */
+
+.groups-summary__icon--green {
+  color: #159957;
+
+  background:
+    #e8f8ee;
+}
+
+
+/* BLUE */
+
+.groups-summary__icon--blue {
+  color: #2878d7;
+
+  background:
+    #e9f3ff;
+}
+
+
+/* YELLOW */
+
+.groups-summary__icon--yellow {
+  color: #d68a00;
+
+  background:
+    #fff3d4;
+}
+
+
+/* =========================
+   INFORMATION
+========================= */
+
+.groups-summary__information {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 0.15rem;
+}
+
+
+/* =========================
+   VALUE
+========================= */
+
+.groups-summary__value {
+  color: #161d31;
+
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+
+  letter-spacing:
+    -0.03em;
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+.groups-summary__label {
+  margin-top:
+    0.12rem;
+
+  color: #262d40;
+
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.groups-summary__description {
+  max-width: 100%;
+
+  margin-top:
+    0.05rem;
+
+  overflow: hidden;
+
+  color: #7a8295;
+
+  font-size: 0.61rem;
+  font-weight: 400;
+  line-height: 1.35;
+
+  text-overflow:
+    ellipsis;
+
+  white-space:
+    nowrap;
+}
+
+
+/* =========================
+   SKELETON
+========================= */
+
+.groups-summary__value-skeleton {
+  position: relative;
+
+  width: 3rem;
+  height: 1.3rem;
+
+  overflow: hidden;
+
+  border-radius:
+    0.3rem;
+
+  background:
+    #eceef3;
+}
+
+
+.groups-summary__value-skeleton::after {
+  position: absolute;
+
+  inset: 0;
+
+  content: '';
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(
+        255,
+        255,
+        255,
+        0.8
+      ),
+      transparent
+    );
+
+  transform:
+    translateX(-100%);
+
+  animation:
+    groups-summary-loading
+    1.2s
+    infinite;
+}
+
+
+@keyframes groups-summary-loading {
+  to {
+    transform:
+      translateX(100%);
+  }
+}
+
+
+/* =========================
+   LARGE TABLET
+========================= */
+
+@media (max-width: 1100px) {
+
+  .groups-summary {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 767px) {
+
+  .groups-summary {
+    gap: 0.65rem;
+  }
+
+
+  .groups-summary__card {
+    min-height: 5.6rem;
+
+    padding:
+      0.8rem;
+
+    gap:
+      0.7rem;
+  }
+
+
+  .groups-summary__icon {
+    width: 2.4rem;
+    height: 2.4rem;
+
+    flex:
+      0
+      0
+      2.4rem;
+  }
+
+
+  .groups-summary__icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+
+  .groups-summary__value {
+    font-size:
+      1.15rem;
+  }
+
+
+  .groups-summary__label {
+    font-size:
+      0.66rem;
+  }
+
+
+  .groups-summary__description {
+    font-size:
+      0.57rem;
+  }
+
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .groups-summary {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .groups-summary__card {
+    min-height: 5rem;
+  }
+
+}

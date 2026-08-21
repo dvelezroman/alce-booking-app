@@ -1,0 +1,261 @@
+<section class="groups-summary">
+
+  <!-- =========================
+       TOTAL GROUPS
+  ========================== -->
+
+  <article class="groups-summary__card">
+
+    <div
+      class="
+        groups-summary__icon
+        groups-summary__icon--purple
+      "
+      aria-hidden="true"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M16 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM8 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M2.5 20c0-3.1 2.5-5.3 5.5-5.3s5.5 2.2 5.5 5.3M12.5 14.8c1-.7 2.1-1.1 3.5-1.1 3 0 5.5 2.2 5.5 5.3"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+    <div class="groups-summary__information">
+
+      <ng-container *ngIf="!loading; else valueSkeleton">
+
+        <strong class="groups-summary__value">
+          {{ totalGroups }}
+        </strong>
+
+      </ng-container>
+
+      <span class="groups-summary__label">
+        Grupos totales
+      </span>
+
+      <span class="groups-summary__description">
+        Todos los grupos creados
+      </span>
+
+    </div>
+
+  </article>
+
+
+  <!-- =========================
+       USERS
+  ========================== -->
+
+  <article class="groups-summary__card">
+
+    <div
+      class="
+        groups-summary__icon
+        groups-summary__icon--green
+      "
+      aria-hidden="true"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <circle
+          cx="12"
+          cy="8"
+          r="3.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M5.5 20c0-3.3 2.8-5.7 6.5-5.7s6.5 2.4 6.5 5.7"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+    <div class="groups-summary__information">
+
+      <ng-container *ngIf="!loading; else valueSkeleton">
+
+        <strong class="groups-summary__value">
+          {{ totalUsers }}
+        </strong>
+
+      </ng-container>
+
+      <span class="groups-summary__label">
+        Usuarios en grupos
+      </span>
+
+      <span class="groups-summary__description">
+        Usuarios agrupados
+      </span>
+
+    </div>
+
+  </article>
+
+
+  <!-- =========================
+       GROUPS WITH USERS
+  ========================== -->
+
+  <article class="groups-summary__card">
+
+    <div
+      class="
+        groups-summary__icon
+        groups-summary__icon--blue
+      "
+      aria-hidden="true"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M4 6.5h16v11H4v-11Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M7 9.5h4M7 13h7"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <circle
+          cx="17"
+          cy="13"
+          r="1.8"
+          stroke="currentColor"
+          stroke-width="1.5"
+        />
+      </svg>
+    </div>
+
+    <div class="groups-summary__information">
+
+      <ng-container *ngIf="!loading; else valueSkeleton">
+
+        <strong class="groups-summary__value">
+          {{ groupsWithUsers }}
+        </strong>
+
+      </ng-container>
+
+      <span class="groups-summary__label">
+        Grupos con usuarios
+      </span>
+
+      <span class="groups-summary__description">
+        Grupos actualmente utilizados
+      </span>
+
+    </div>
+
+  </article>
+
+
+  <!-- =========================
+       EMPTY GROUPS
+  ========================== -->
+
+  <article class="groups-summary__card">
+
+    <div
+      class="
+        groups-summary__icon
+        groups-summary__icon--yellow
+      "
+      aria-hidden="true"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <rect
+          x="4"
+          y="5"
+          width="16"
+          height="15"
+          rx="2.2"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M8 3v4M16 3v4M4 9h16"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M8.5 13.5h7"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+    <div class="groups-summary__information">
+
+      <ng-container *ngIf="!loading; else valueSkeleton">
+
+        <strong class="groups-summary__value">
+          {{ emptyGroups }}
+        </strong>
+
+      </ng-container>
+
+      <span class="groups-summary__label">
+        Grupos vacíos
+      </span>
+
+      <span class="groups-summary__description">
+        Sin usuarios asignados
+      </span>
+
+    </div>
+
+  </article>
+
+
+  <!-- =========================
+       VALUE SKELETON
+  ========================== -->
+
+  <ng-template #valueSkeleton>
+    <span class="groups-summary__value-skeleton"></span>
+  </ng-template>
+
+</section>

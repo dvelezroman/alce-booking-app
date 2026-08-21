@@ -1,50 +1,1159 @@
-<section class="notifications-section">
-  <h1 class="reports-progress-header reports-progress-title">Grupos</h1>
+<section class="groups-page">
+  <div class="groups-page__container">
 
-  <div class="notification-container">
-    <!-- Botón en modo lista -->
-    <div class="button-center-wrapper" *ngIf="groups.length > 0">
-      <button class="add-btn" (click)="openCreateGroup()">Agregar Grupo</button>
-    </div>
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-    <!-- Estado vacío -->
-    <div *ngIf="groups.length === 0" class="empty-state">
-      <svg xmlns="http://www.w3.org/2000/svg" height="50" viewBox="0 -960 960 960" width="50" fill="#9ca3af">
-        <path
-          d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z" />
-      </svg>
-      <p class="empty-text">Aún no has creado ningún grupo de notificación.</p>
-      <button class="add-btn" (click)="openCreateGroup()">Agregar Grupo</button>
-    </div>
-  </div>
+    <header class="groups-page__header">
 
-  <div class="group-list-wrapper">
-    <app-group-list
-      [groups]="groups"
-      (editGroup)="openEditGroup($event)"
-      (viewGroupMembers)="openGroupMembersModal($event)"
-      (deleteGroup)="onRequestDelete($event)"
-    ></app-group-list>
-  </div>
+      <div class="groups-page__header-content">
+        <span class="groups-page__eyebrow">
+          Notificaciones
+        </span>
 
-  <!-- MODAL GRUPO -->
-  <div class="modal" [ngClass]="{ 'is-active': showModal }">
-    <div class="modal-background" (click)="closeModal()"></div>
-    <div class="modal-card">
-      <header class="modal-card-head">
-        <p class="modal-card-title">
-          {{ groupToEdit ? 'Editar Grupo de Notificación' : 'Nuevo Grupo de Notificación' }}
+        <h1 class="groups-page__title">
+          Grupos de notificaciones
+        </h1>
+
+        <p class="groups-page__description">
+          Organiza usuarios en grupos para administrar y enviar
+          notificaciones de forma más rápida.
         </p>
-        <button class="delete" aria-label="close" (click)="closeModal()"></button>
-      </header>
-      <section class="modal-card-body">
-        <app-group-form
-          [groupToEdit]="groupToEdit"
-          (formSubmitted)="handleFormSubmit($event)"
-        ></app-group-form>
-      </section>
-    </div>
+      </div>
+
+
+      <div class="groups-page__header-actions">
+
+        <button
+          type="button"
+          class="groups-page__refresh-header"
+          [disabled]="loading"
+          title="Actualizar grupos"
+          aria-label="Actualizar grupos"
+          (click)="loadGroups()"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            [class.groups-page__refresh-icon--loading]="loading"
+          >
+            <path
+              d="M20 6v5h-5M4 18v-5h5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M5.8 9A7 7 0 0 1 18.5 6M18.2 15A7 7 0 0 1 5.5 18"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            Actualizar
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          class="groups-page__create-button"
+          [class.groups-page__create-button--active]="
+            activeSidePanel === 'create'
+          "
+          (click)="openCreateGroup()"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 5v14M5 12h14"
+              stroke="currentColor"
+              stroke-width="1.9"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            Nuevo grupo
+          </span>
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         SUMMARY
+    ====================================================== -->
+
+    <app-groups-summary
+      [groups]="groups"
+      [loading]="loading"
+    >
+    </app-groups-summary>
+
+
+    <!-- =====================================================
+         WORKSPACE
+    ====================================================== -->
+
+    <section
+      class="groups-page__workspace"
+      [class.groups-page__workspace--with-panel]="
+        activeSidePanel
+      "
+    >
+
+      <!-- ===================================================
+           MAIN CONTENT
+      ==================================================== -->
+
+      <main class="groups-page__main">
+
+        <!-- =================================================
+             GROUPS TABLE CARD
+        ================================================== -->
+
+        <section class="groups-page__content">
+
+          <!-- ===============================================
+               CONTENT HEADER
+          ================================================ -->
+
+          <div class="groups-page__content-header">
+
+            <div>
+              <h2 class="groups-page__content-title">
+                Grupos registrados
+              </h2>
+
+              <p class="groups-page__content-description">
+                Consulta, administra y revisa los integrantes de cada grupo.
+              </p>
+            </div>
+
+            <span
+              *ngIf="!loading"
+              class="groups-page__total-badge"
+            >
+              {{ filteredGroups.length }}
+              {{
+                filteredGroups.length === 1
+                  ? 'grupo'
+                  : 'grupos'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- ===============================================
+               FILTER BAR
+          ================================================ -->
+
+          <div class="groups-page__toolbar">
+
+            <div class="groups-page__search">
+
+              <span
+                class="groups-page__search-icon"
+                aria-hidden="true"
+              >
+                <svg
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="11"
+                    cy="11"
+                    r="6.5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="m16 16 4 4"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+              <input
+                type="text"
+                class="groups-page__search-input"
+                placeholder="Buscar por nombre o descripción..."
+                [(ngModel)]="searchTerm"
+                autocomplete="off"
+                (ngModelChange)="onSearchChange($event)"
+              />
+
+              <button
+                *ngIf="searchTerm"
+                type="button"
+                class="groups-page__search-clear"
+                title="Limpiar búsqueda"
+                aria-label="Limpiar búsqueda"
+                (click)="clearSearch()"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M7 7l10 10M17 7 7 17"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="groups-page__refresh"
+              [disabled]="loading"
+              title="Actualizar"
+              aria-label="Actualizar grupos"
+              (click)="loadGroups()"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                [class.groups-page__refresh-icon--loading]="loading"
+              >
+                <path
+                  d="M20 6v5h-5M4 18v-5h5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M5.8 9A7 7 0 0 1 18.5 6M18.2 15A7 7 0 0 1 5.5 18"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+
+          </div>
+
+
+          <!-- ===============================================
+               TABLE
+          ================================================ -->
+
+          <div class="groups-page__table-area">
+
+            <app-groups-table
+              [groups]="pagedGroups"
+              [loading]="loading"
+              (membersRequested)="openGroupMembersModal($event)"
+              (editRequested)="openEditGroup($event)"
+              (deleteRequested)="onRequestDelete($event)"
+            >
+            </app-groups-table>
+
+          </div>
+
+
+          <!-- ===============================================
+               PAGINATION
+          ================================================ -->
+
+          <app-groups-pagination
+            *ngIf="
+              !loading &&
+              filteredGroups.length > 0
+            "
+            [page]="page"
+            [totalPages]="totalPages"
+            [total]="filteredGroups.length"
+            [startIndex]="startIndex"
+            [endIndex]="endIndex"
+            [limit]="limit"
+            [limitOptions]="limitOptions"
+            [canPrev]="canPrev"
+            [canNext]="canNext"
+            (pageChange)="onPageChange($event)"
+            (previousRequested)="onPrev()"
+            (nextRequested)="onNext()"
+            (limitChange)="onLimitChange($event)"
+          >
+          </app-groups-pagination>
+
+        </section>
+
+
+        <!-- =================================================
+             SELECTED MEMBERS / CREATE + EDIT
+        ================================================== -->
+
+        <section
+          *ngIf="showFormMembersBlock"
+          class="groups-page__form-members"
+        >
+
+          <!-- HEADER -->
+
+          <header class="groups-page__form-members-header">
+
+            <div class="groups-page__form-members-heading">
+
+              <span
+                class="groups-page__form-members-heading-icon"
+                aria-hidden="true"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="9"
+                    cy="8"
+                    r="3"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+
+                  <path
+                    d="M16 6.5a2.4 2.4 0 1 1 0 4.8M16 14.5c2.6.2 4.5 1.9 4.5 4.2"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+
+              <div class="groups-page__form-members-title-content">
+
+                <h3 class="groups-page__form-members-title">
+                  Integrantes del grupo
+                </h3>
+
+                <p class="groups-page__form-members-description">
+                  Los usuarios que selecciones en el formulario
+                  aparecerán aquí.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="groups-page__form-members-header-actions">
+
+              <span class="groups-page__form-members-count">
+                {{ formSelectedUsersCount }}
+                {{
+                  formSelectedUsersCount === 1
+                    ? 'integrante'
+                    : 'integrantes'
+                }}
+              </span>
+
+            </div>
+
+          </header>
+
+
+          <!-- GROUP SUMMARY -->
+
+          <div class="groups-page__form-members-summary">
+
+            <span
+              class="groups-page__form-members-group-avatar"
+              aria-hidden="true"
+            >
+              {{
+                activeSidePanel === 'edit' && groupToEdit?.name
+                  ? groupToEdit!.name.substring(0, 2).toUpperCase()
+                  : 'NG'
+              }}
+            </span>
+
+
+            <div class="groups-page__form-members-group-information">
+
+              <strong>
+                {{ formGroupName }}
+              </strong>
+
+              <span>
+                {{
+                  activeSidePanel === 'create'
+                    ? 'Integrantes seleccionados para el nuevo grupo'
+                    : 'Integrantes seleccionados para este grupo'
+                }}
+              </span>
+
+            </div>
+
+
+            <span class="groups-page__form-members-status">
+              {{
+                activeSidePanel === 'create'
+                  ? 'Creando'
+                  : 'Editando'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- =================================================
+               MEMBERS TABLE
+          ================================================== -->
+
+          <div
+            *ngIf="
+              displayedFormMembers.length > 0;
+              else noFormMembers
+            "
+            class="groups-page__form-members-table-wrapper"
+          >
+
+            <table class="groups-page__form-members-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Usuario
+                  </th>
+
+                  <th>
+                    Correo electrónico
+                  </th>
+
+                  <th>
+                    Estado
+                  </th>
+
+                  <th class="groups-page__form-members-action-heading">
+                    Acción
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                <tr
+                  *ngFor="
+                    let member of displayedFormMembers;
+                    trackBy: trackByFormUserId
+                  "
+                  [class.groups-page__form-member-row--existing]="
+                    isOriginalGroupMember(member.id)
+                  "
+                  [class.groups-page__form-member-row--new]="
+                    isNewGroupMember(member.id)
+                  "
+                >
+
+                  <!-- USER -->
+
+                  <td>
+
+                    <div class="groups-page__form-member-user">
+
+                      <span
+                        class="groups-page__form-member-avatar"
+                        aria-hidden="true"
+                      >
+                        {{ getUserInitials(member) }}
+                      </span>
+
+
+                      <div class="groups-page__form-member-information">
+
+                        <strong>
+                          {{ getUserFullName(member) }}
+                        </strong>
+
+                        <span>
+                          Usuario seleccionado
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                  </td>
+
+
+                  <!-- EMAIL -->
+
+                  <td>
+
+                    <span class="groups-page__form-member-email">
+                      {{
+                        member.email ||
+                        'Sin correo registrado'
+                      }}
+                    </span>
+
+                  </td>
+
+
+                  <!-- STATUS -->
+
+                  <td>
+
+                    <span
+                      class="groups-page__form-member-status"
+                      [class.groups-page__form-member-status--existing]="
+                        isOriginalGroupMember(member.id)
+                      "
+                      [class.groups-page__form-member-status--new]="
+                        isNewGroupMember(member.id)
+                      "
+                    >
+
+                      <span
+                        class="groups-page__form-member-status-dot"
+                        aria-hidden="true"
+                      >
+                      </span>
+
+                      {{
+                        isNewGroupMember(member.id)
+                          ? 'Nuevo'
+                          : 'Integrante'
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- REMOVE -->
+
+                  <td class="groups-page__form-member-action-cell">
+
+                    <button
+                      type="button"
+                      class="groups-page__form-member-remove"
+                      title="Quitar integrante"
+                      aria-label="Quitar integrante"
+                      (click)="removeFormSelectedUser(member.id)"
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M7 7l10 10M17 7 7 17"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- =================================================
+               EMPTY
+          ================================================== -->
+
+          <ng-template #noFormMembers>
+
+            <div class="groups-page__form-members-empty">
+
+              <span
+                class="groups-page__form-members-empty-icon"
+                aria-hidden="true"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="9"
+                    cy="8"
+                    r="3"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+
+                  <path
+                    d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+
+                  <path
+                    d="M17 8v6M14 11h6"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+
+              <div>
+
+                <strong>
+                  Aún no hay integrantes seleccionados
+                </strong>
+
+                <span>
+                  Utiliza el buscador del formulario lateral para
+                  agregar usuarios al grupo.
+                </span>
+
+              </div>
+
+            </div>
+
+          </ng-template>
+
+
+          <!-- FOOTER -->
+
+          <footer class="groups-page__form-members-footer">
+
+            <span>
+              Los cambios se aplicarán al guardar el grupo.
+            </span>
+
+            <span>
+              {{ formSelectedUsersCount }}
+              {{
+                formSelectedUsersCount === 1
+                  ? 'usuario seleccionado'
+                  : 'usuarios seleccionados'
+              }}
+            </span>
+
+          </footer>
+
+        </section>
+
+      </main>
+
+
+      <!-- ===================================================
+           RIGHT PANEL
+      ==================================================== -->
+
+      <aside
+        *ngIf="activeSidePanel"
+        class="groups-page__panel"
+      >
+
+        <!-- ===============================================
+             PANEL TOP
+        ================================================ -->
+
+        <header class="groups-page__panel-header">
+
+          <div class="groups-page__panel-heading">
+
+            <div
+              class="groups-page__panel-icon"
+              [class.groups-page__panel-icon--members]="
+                activeSidePanel === 'members'
+              "
+              [class.groups-page__panel-icon--edit]="
+                activeSidePanel === 'edit'
+              "
+            >
+
+              <!-- CREATE -->
+
+              <svg
+                *ngIf="activeSidePanel === 'create'"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M12 5v14M5 12h14"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+
+
+              <!-- EDIT -->
+
+              <svg
+                *ngIf="activeSidePanel === 'edit'"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="m14.5 7.5 3 3"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+              </svg>
+
+
+              <!-- MEMBERS -->
+
+              <svg
+                *ngIf="activeSidePanel === 'members'"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="9"
+                  cy="8"
+                  r="3"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+
+                <path
+                  d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+
+                <path
+                  d="M16 6.5a2.4 2.4 0 1 1 0 4.8M16 14.5c2.6.2 4.5 1.9 4.5 4.2"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+
+            </div>
+
+
+            <div class="groups-page__panel-title-content">
+
+              <span class="groups-page__panel-eyebrow">
+                {{
+                  activeSidePanel === 'create'
+                    ? 'Crear'
+                    : activeSidePanel === 'edit'
+                      ? 'Administrar'
+                      : 'Usuarios'
+                }}
+              </span>
+
+              <h2 class="groups-page__panel-title">
+
+                <ng-container [ngSwitch]="activeSidePanel">
+
+                  <span *ngSwitchCase="'create'">
+                    Nuevo grupo
+                  </span>
+
+                  <span *ngSwitchCase="'edit'">
+                    Editar grupo
+                  </span>
+
+                  <span *ngSwitchCase="'members'">
+                    Integrantes
+                  </span>
+
+                </ng-container>
+
+              </h2>
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="groups-page__panel-close"
+            title="Cerrar panel"
+            aria-label="Cerrar panel"
+            (click)="closeSidePanel()"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M7 7l10 10M17 7 7 17"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+
+        </header>
+
+
+        <!-- ===============================================
+             CREATE PANEL
+        ================================================ -->
+
+        <div
+          *ngIf="activeSidePanel === 'create'"
+          class="groups-page__panel-body"
+        >
+
+          <div class="groups-page__panel-intro">
+
+            <strong>
+              Configura tu nuevo grupo
+            </strong>
+
+            <span>
+              Selecciona los integrantes y completa la información
+              que permitirá identificarlo.
+            </span>
+
+          </div>
+
+
+          <app-group-form
+            [groupToEdit]="undefined"
+            (formSubmit)="handleFormSubmit($event)"
+            (cancel)="closeSidePanel()"
+          >
+          </app-group-form>
+
+        </div>
+
+
+        <!-- ===============================================
+             EDIT PANEL
+        ================================================ -->
+
+        <div
+          *ngIf="activeSidePanel === 'edit'"
+          class="groups-page__panel-body"
+        >
+
+          <div class="groups-page__panel-intro">
+
+            <strong>
+              Actualiza este grupo
+            </strong>
+
+            <span>
+              Modifica sus integrantes, nombre o descripción.
+            </span>
+
+          </div>
+
+
+          <app-group-form
+            [groupToEdit]="groupToEdit"
+            [existingUserIds]="originalGroupMemberIdsArray"
+            (formSubmit)="handleFormSubmit($event)"
+            (cancel)="closeSidePanel()"
+          >
+          </app-group-form>
+
+        </div>
+
+
+        <!-- ===============================================
+             MEMBERS PANEL
+        ================================================ -->
+
+        <div
+          *ngIf="
+            activeSidePanel === 'members' &&
+            selectedGroup
+          "
+          class="groups-page__members"
+        >
+
+          <section class="groups-page__members-card">
+
+            <div class="groups-page__members-avatar">
+              {{
+                selectedGroup.name
+                  .substring(0, 2)
+                  .toUpperCase()
+              }}
+            </div>
+
+
+            <div class="groups-page__members-card-information">
+
+              <strong>
+                {{ selectedGroup.name }}
+              </strong>
+
+              <span>
+                {{
+                  selectedGroup.description ||
+                  'Sin descripción'
+                }}
+              </span>
+
+            </div>
+
+
+            <span class="groups-page__members-count">
+
+              {{ groupMembers.length }}
+
+              {{
+                groupMembers.length === 1
+                  ? 'usuario'
+                  : 'usuarios'
+              }}
+
+            </span>
+
+          </section>
+
+
+          <!-- MEMBERS LIST -->
+
+          <div
+            *ngIf="
+              groupMembers.length > 0;
+              else noMembers
+            "
+            class="groups-page__members-list"
+          >
+
+            <article
+              *ngFor="let member of groupMembers"
+              class="groups-page__member"
+            >
+
+              <div
+                class="groups-page__member-avatar"
+                aria-hidden="true"
+              >
+                {{
+                  (member.firstName?.charAt(0) || '') +
+                  (member.lastName?.charAt(0) || '')
+                }}
+              </div>
+
+
+              <div class="groups-page__member-information">
+
+                <strong class="groups-page__member-name">
+                  {{ member.firstName }}
+                  {{ member.lastName }}
+                </strong>
+
+                <span class="groups-page__member-email">
+                  {{
+                    member.email ||
+                    'Sin correo registrado'
+                  }}
+                </span>
+
+              </div>
+
+
+              <span class="groups-page__member-status">
+                Integrante
+              </span>
+
+            </article>
+
+          </div>
+
+
+          <!-- EMPTY -->
+
+          <ng-template #noMembers>
+
+            <div class="groups-page__members-empty">
+
+              <div
+                class="groups-page__members-empty-icon"
+                aria-hidden="true"
+              >
+                <svg
+                  width="23"
+                  height="23"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="9"
+                    cy="8"
+                    r="3"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+
+                  <path
+                    d="M16 8h5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
+
+
+              <strong>
+                Este grupo no tiene integrantes
+              </strong>
+
+              <span>
+                Agrega usuarios editando la información del grupo.
+              </span>
+
+
+              <button
+                type="button"
+                class="groups-page__members-edit-button"
+                (click)="openEditGroup(selectedGroup)"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+                Editar grupo
+              </button>
+
+            </div>
+
+          </ng-template>
+
+
+          <!-- MEMBERS FOOTER -->
+
+          <footer
+            *ngIf="groupMembers.length > 0"
+            class="groups-page__members-footer"
+          >
+
+            <span>
+              {{ groupMembers.length }}
+              integrantes registrados
+            </span>
+
+
+            <button
+              type="button"
+              class="groups-page__members-manage"
+              (click)="openEditGroup(selectedGroup)"
+            >
+              Administrar integrantes
+
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m9 6 6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+
+          </footer>
+
+        </div>
+
+      </aside>
+
+    </section>
+
   </div>
+
+
+  <!-- =====================================================
+       FEEDBACK / CONFIRMATION
+  ====================================================== -->
 
   <app-modal
     [showModal]="modal.show"
@@ -56,14 +1165,7 @@
     [showButtons]="modal.showButtons ?? false"
     (confirmAction)="modal.confirm && modal.confirm()"
     (close)="modal.close()"
-  ></app-modal>
+  >
+  </app-modal>
 
-  <app-group-members-modal
-    *ngIf="selectedGroup"
-    [group]="selectedGroup"
-    [members]="groupMembers"
-    [show]="showMembersModal"
-    (addUsers)="onAddUsers($event)"
-    (close)="closeMembersModal()"
-  />
 </section>

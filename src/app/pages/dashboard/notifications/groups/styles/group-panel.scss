@@ -1,0 +1,591 @@
+/* =========================================================
+   PANEL
+========================================================= */
+
+.groups-page__panel {
+  position: sticky;
+  top: .75rem;
+
+  margin-top: -6.1rem;
+
+  width: 100%;
+  min-width: 0;
+
+  height: auto;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+
+  overflow: visible;
+
+  border: 1px solid #dfe2e9;
+  border-radius: 1rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 14px 38px
+    rgba(25, 32, 61, .065);
+}
+
+/* =========================================================
+   PANEL HEADER
+========================================================= */
+
+.groups-page__panel-header {
+  min-height: 6.25rem;
+
+  padding:
+    1.05rem
+    1rem
+    .9rem;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: .8rem;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #eceef3;
+  border-radius: 1rem;
+
+  background: #ffffff;
+}
+
+.groups-page__panel-heading {
+  min-width: 0;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0;
+}
+
+.groups-page__panel-icon {
+  display: none;
+}
+
+.groups-page__panel-title-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .15rem;
+}
+
+.groups-page__panel-eyebrow {
+  display: none;
+}
+
+.groups-page__panel-title {
+  margin: 0;
+
+  color: #171d31;
+
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
+.groups-page__panel-close {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e0e3e9;
+  border-radius: .45rem;
+
+  background: #ffffff;
+  color: #6d7588;
+
+  cursor: pointer;
+
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    transform 100ms ease;
+}
+
+.groups-page__panel-close:hover {
+  border-color: #d1d5de;
+
+  background: #f6f7f9;
+  color: #343c50;
+}
+
+.groups-page__panel-close:active {
+  transform: scale(.94);
+}
+
+/* =========================================================
+   PANEL BODY
+========================================================= */
+
+.groups-page__panel-body {
+  min-height: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: auto;
+  overflow-x: visible;
+
+  background: #ffffff;
+
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    #d8dbe4
+    transparent;
+}
+
+.groups-page__panel-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.groups-page__panel-body::-webkit-scrollbar-thumb {
+  background: #d8dbe4;
+  border-radius: 999px;
+}
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.groups-page__panel-intro {
+  padding:
+    .9rem
+    1rem
+    .3rem;
+
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .15rem;
+
+  border: 0;
+
+  background: transparent;
+}
+
+.groups-page__panel-intro strong {
+  display: none;
+}
+
+.groups-page__panel-intro span {
+  max-width: 20rem;
+
+  color: #6e768a;
+
+  font-size: .62rem;
+  font-weight: 450;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   GROUP FORM
+========================================================= */
+
+.groups-page__panel-body app-group-form {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+
+  flex: 1;
+}
+
+/* =========================================================
+   HIDE INTERNAL SELECTED
+========================================================= */
+
+:host ::ng-deep app-group-form .group-form__selected,
+:host ::ng-deep app-group-form .group-form__selected-empty {
+  display: none !important;
+}
+
+/* =========================================================
+   MEMBERS PANEL
+========================================================= */
+
+.groups-page__members {
+  min-height: 0;
+
+  flex: 1;
+
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .75rem;
+
+  box-sizing: border-box;
+
+  overflow-y: auto;
+
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    #d8dbe4
+    transparent;
+}
+
+.groups-page__members::-webkit-scrollbar {
+  width: 5px;
+}
+
+.groups-page__members::-webkit-scrollbar-thumb {
+  background: #d8dbe4;
+  border-radius: 999px;
+}
+
+.groups-page__members-card {
+  width: 100%;
+  min-width: 0;
+
+  padding: .65rem;
+
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: .55rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e5e7ee;
+  border-radius: .55rem;
+
+  background: #fafaff;
+}
+
+.groups-page__members-avatar {
+  width: 2.15rem;
+  height: 2.15rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ece9ff;
+  color: #5943d5;
+
+  font-size: .58rem;
+  font-weight: 800;
+}
+
+.groups-page__members-card-information {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .1rem;
+}
+
+.groups-page__members-card-information strong {
+  overflow: hidden;
+
+  color: #252c40;
+
+  font-size: .65rem;
+  font-weight: 750;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.groups-page__members-card-information span {
+  overflow: hidden;
+
+  color: #8a91a2;
+
+  font-size: .52rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.groups-page__members-count {
+  min-height: 1.4rem;
+
+  padding: 0 .45rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  background: #eeeaff;
+  color: #5945d4;
+
+  font-size: .51rem;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+/* =========================================================
+   MEMBERS LIST
+========================================================= */
+
+.groups-page__members-list {
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .1rem;
+}
+
+.groups-page__member {
+  min-height: 3.15rem;
+
+  padding: .4rem .35rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: .5rem;
+
+  border-radius: .45rem;
+}
+
+.groups-page__member:hover {
+  background: #f7f8fa;
+}
+
+.groups-page__member-avatar {
+  width: 1.95rem;
+  height: 1.95rem;
+
+  flex: 0 0 1.95rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: linear-gradient(
+    135deg,
+    #eeeaff,
+    #ddd7ff
+  );
+
+  color: #5842d8;
+
+  font-size: .54rem;
+  font-weight: 800;
+}
+
+.groups-page__member-information {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .07rem;
+}
+
+.groups-page__member-name {
+  overflow: hidden;
+
+  color: #2c3346;
+
+  font-size: .62rem;
+  font-weight: 700;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.groups-page__member-email {
+  overflow: hidden;
+
+  color: #8a91a2;
+
+  font-size: .51rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.groups-page__member-status {
+  min-height: 1.3rem;
+
+  padding: 0 .38rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  background: #f0f1f4;
+  color: #6a7181;
+
+  font-size: .48rem;
+  font-weight: 650;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.groups-page__members-empty {
+  min-height: 12rem;
+
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: .3rem;
+
+  text-align: center;
+}
+
+.groups-page__members-empty-icon {
+  width: 2.7rem;
+  height: 2.7rem;
+
+  margin-bottom: .25rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: .65rem;
+
+  background: #f0eeff;
+  color: #5b46df;
+}
+
+.groups-page__members-empty strong {
+  color: #343b4f;
+
+  font-size: .66rem;
+  font-weight: 750;
+}
+
+.groups-page__members-empty span {
+  max-width: 15rem;
+
+  color: #8a91a2;
+
+  font-size: .54rem;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   MEMBER ACTIONS
+========================================================= */
+
+.groups-page__members-edit-button {
+  min-height: 2rem;
+
+  margin-top: .4rem;
+
+  padding: 0 .65rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .3rem;
+
+  border: 1px solid #dedfea;
+  border-radius: .44rem;
+
+  background: #ffffff;
+  color: #5546ca;
+
+  font-family: inherit;
+  font-size: .55rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.groups-page__members-edit-button:active {
+  transform: scale(.97);
+}
+
+.groups-page__members-footer {
+  margin-top: auto;
+
+  padding-top: .7rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: .6rem;
+
+  border-top: 1px solid #eceef3;
+}
+
+.groups-page__members-footer > span {
+  color: #8a91a2;
+
+  font-size: .51rem;
+}
+
+.groups-page__members-manage {
+  padding: .2rem 0;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: .25rem;
+
+  border: 0;
+
+  background: transparent;
+  color: #5a47d3;
+
+  font-family: inherit;
+  font-size: .53rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.groups-page__members-manage:active {
+  transform: scale(.98);
+}
