@@ -1,0 +1,407 @@
+<section class="assign-students">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="assign-students__header">
+
+    <span class="assign-students__step">
+      2
+    </span>
+
+    <h2 class="assign-students__title">
+      Estudiantes
+    </h2>
+
+  </header>
+
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  <div class="assign-students__content">
+
+    <!-- =========================
+         SEARCH
+    ========================== -->
+
+    <div class="assign-students__search">
+
+      <!-- ID NUMBER -->
+      <div class="assign-students__search-row">
+
+        <div class="assign-students__input-wrapper">
+
+          <svg
+            class="assign-students__input-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="4"
+              y="6"
+              width="16"
+              height="12"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <circle
+              cx="9"
+              cy="11"
+              r="1.5"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+
+            <path
+              d="M7 15c.6-1.3 1.3-2 2-2s1.4.7 2 2M14 10h3M14 14h3"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+
+
+          <input
+            type="text"
+            class="assign-students__input"
+            [ngModel]="idNumberSearch"
+            (ngModelChange)="onIdNumberChange($event)"
+            (keyup.enter)="onAddByIdNumber()"
+            placeholder="Cédula / idNumber"
+          />
+
+        </div>
+
+
+        <button
+          type="button"
+          class="assign-students__add"
+          [disabled]="!idNumberSearch.trim()"
+          (click)="onAddByIdNumber()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M12 8v8M8 12h8"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            Agregar
+          </span>
+        </button>
+
+      </div>
+
+
+      <!-- STUDENT ID -->
+      <div class="assign-students__search-row">
+
+        <div class="assign-students__input-wrapper">
+
+          <svg
+            class="assign-students__input-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="12"
+              cy="8"
+              r="3"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M5 20a7 7 0 0 1 14 0"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+
+          <input
+            type="number"
+            class="assign-students__input"
+            [ngModel]="studentIdSearch"
+            (ngModelChange)="onStudentIdChange($event)"
+            (keyup.enter)="onAddByStudentId()"
+            placeholder="students.id"
+          />
+
+        </div>
+
+
+        <button
+          type="button"
+          class="assign-students__add"
+          [disabled]="!studentIdSearch"
+          (click)="onAddByStudentId()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M12 8v8M8 12h8"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            Agregar
+          </span>
+        </button>
+
+      </div>
+
+
+      <!-- INFO -->
+      <div class="assign-students__hint">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M12 11v5M12 8h.01"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Puedes agregar por cédula o por students.id.
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         SELECTED STUDENTS
+    ========================== -->
+
+    <div class="assign-students__selected">
+
+      <header class="assign-students__selected-header">
+
+        <strong>
+          Estudiantes seleccionados
+        </strong>
+
+        <span>
+          {{ selected.length }}
+        </span>
+
+      </header>
+
+
+      @if (selected.length > 0) {
+
+        <div class="assign-students__list">
+
+          @for (
+            student of selected;
+            track student.studentId
+          ) {
+
+            <article class="assign-students__student">
+
+              <!-- AVATAR -->
+              <span
+                class="assign-students__avatar"
+                aria-hidden="true"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="8"
+                    r="3"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+
+                  <path
+                    d="M5 20a7 7 0 0 1 14 0"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+
+              <!-- NAME -->
+              <strong
+                class="assign-students__student-name"
+                [title]="student.name"
+              >
+                {{ student.name }}
+              </strong>
+
+
+              <!-- ID -->
+              <span class="assign-students__student-id">
+                ID {{ student.studentId }}
+              </span>
+
+
+              <!-- STAGE -->
+              <span class="assign-students__stage">
+                {{ getStageLabel(student) }}
+              </span>
+
+
+              <!-- EMAIL -->
+              <span
+                class="assign-students__email"
+                [title]="student.email || 'Sin correo'"
+              >
+                {{ student.email || 'Sin correo' }}
+              </span>
+
+
+              <!-- REMOVE -->
+              <button
+                type="button"
+                class="assign-students__remove"
+                aria-label="Quitar estudiante"
+                title="Quitar estudiante"
+                (click)="onRemoveStudent(student.studentId)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M4 7h16"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+
+                  <path
+                    d="M9 3h6l1 4H8l1-4Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+
+                  <path
+                    d="M7 7l1 13h8l1-13"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+
+            </article>
+
+          }
+
+        </div>
+
+      } @else {
+
+        <div class="assign-students__empty">
+
+          <span class="assign-students__empty-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="8"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+
+              <path
+                d="M5 20a7 7 0 0 1 14 0"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M18 6v6M15 9h6"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+          <div>
+            <strong>
+              Ningún estudiante seleccionado
+            </strong>
+
+            <span>
+              Busca y agrega estudiantes para continuar.
+            </span>
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>

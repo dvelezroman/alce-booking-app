@@ -54,6 +54,10 @@ export class PlatformAssessmentsListComponent implements OnInit {
   errorMessage = '';
   showFilters = true;
 
+  showWritingModal = false;
+  writingSubmitting = false;
+  writingCurrentPoints: number | null = null;
+
   /* =========================
      PAGINATION
   ========================= */

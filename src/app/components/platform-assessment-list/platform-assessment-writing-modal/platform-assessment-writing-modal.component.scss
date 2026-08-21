@@ -1,0 +1,480 @@
+:host {
+  display: block;
+}
+
+
+/* =========================
+   OVERLAY
+========================= */
+
+.writing-modal__overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 1500;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+
+  background:
+    rgba(21, 27, 45, .42);
+
+  backdrop-filter:
+    blur(2px);
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+.writing-modal {
+  width: min(100%, 28rem);
+
+  overflow: hidden;
+
+  border: 1px solid #e1e4ec;
+  border-radius: .7rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 1rem 3rem
+    rgba(26, 34, 60, .18);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.writing-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding:
+    1rem
+    1rem
+    .9rem;
+
+  border-bottom:
+    1px solid #eceef3;
+}
+
+
+.writing-modal__header-info {
+  min-width: 0;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: .65rem;
+}
+
+
+.writing-modal__header-icon {
+  width: 2.2rem;
+  height: 2.2rem;
+
+  flex: 0 0 2.2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: .5rem;
+
+  background: #f0eeff;
+  color: #4a39df;
+}
+
+
+.writing-modal__header-icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+
+.writing-modal__title {
+  margin: 0;
+
+  color: #252c40;
+
+  font-size: .9rem;
+  font-weight: 750;
+}
+
+
+.writing-modal__subtitle {
+  margin: .2rem 0 0;
+
+  color: #7a8294;
+
+  font-size: .63rem;
+  line-height: 1.4;
+}
+
+
+.writing-modal__close {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: .4rem;
+
+  background: transparent;
+  color: #687186;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    color .15s ease,
+    transform .1s ease;
+}
+
+
+.writing-modal__close:hover:not(:disabled) {
+  background: #f4f5f8;
+  color: #30384d;
+}
+
+
+.writing-modal__close:active:not(:disabled) {
+  transform: scale(.95);
+}
+
+
+.writing-modal__close svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.writing-modal__content {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+
+  padding: 1rem;
+}
+
+
+/* =========================
+   STUDENT
+========================= */
+
+.writing-modal__student {
+  display: flex;
+  flex-direction: column;
+
+  gap: .2rem;
+
+  padding:
+    .7rem
+    .8rem;
+
+  border-radius: .5rem;
+
+  background: #f7f8fb;
+}
+
+
+.writing-modal__student span {
+  color: #7a8294;
+
+  font-size: .58rem;
+  font-weight: 600;
+}
+
+
+.writing-modal__student strong {
+  color: #30384d;
+
+  font-size: .72rem;
+  font-weight: 650;
+}
+
+
+/* =========================
+   FIELD
+========================= */
+
+.writing-modal__field {
+  display: flex;
+  flex-direction: column;
+
+  gap: .4rem;
+}
+
+
+.writing-modal__label {
+  color: #3e475b;
+
+  font-size: .65rem;
+  font-weight: 650;
+}
+
+
+.writing-modal__input-wrapper {
+  position: relative;
+}
+
+
+.writing-modal__input {
+  width: 100%;
+  height: 2.6rem;
+
+  padding:
+    0
+    3rem
+    0
+    .85rem;
+
+  border: 1px solid #dce1eb;
+  border-radius: .45rem;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #283149;
+
+  font-family: inherit;
+  font-size: .74rem;
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease;
+}
+
+
+.writing-modal__input:focus {
+  border-color: #6551e8;
+
+  box-shadow:
+    0 0 0 .15rem
+    rgba(101, 81, 232, .08);
+}
+
+
+.writing-modal__input-suffix {
+  position: absolute;
+
+  top: 50%;
+  right: .8rem;
+
+  color: #838b9c;
+
+  font-size: .6rem;
+  font-weight: 600;
+
+  transform:
+    translateY(-50%);
+}
+
+
+/* =========================
+   INFO
+========================= */
+
+.writing-modal__info {
+  display: flex;
+  align-items: flex-start;
+
+  gap: .45rem;
+
+  padding:
+    .65rem
+    .7rem;
+
+  border-radius: .45rem;
+
+  background: #f5f5ff;
+  color: #68708a;
+
+  font-size: .6rem;
+  line-height: 1.45;
+}
+
+
+.writing-modal__info svg {
+  width: .9rem;
+  height: .9rem;
+
+  flex: 0 0 .9rem;
+
+  margin-top: .02rem;
+
+  color: #5960aa;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.writing-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: .6rem;
+
+  padding:
+    .85rem
+    1rem;
+
+  border-top:
+    1px solid #eceef3;
+
+  background: #fbfbfd;
+}
+
+
+.writing-modal__button {
+  height: 2.35rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .4rem;
+
+  padding:
+    0
+    .9rem;
+
+  border-radius: .45rem;
+
+  font-family: inherit;
+  font-size: .67rem;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    border-color .15s ease,
+    transform .1s ease,
+    opacity .15s ease;
+}
+
+
+.writing-modal__button:active:not(:disabled) {
+  transform: scale(.98);
+}
+
+
+.writing-modal__button:disabled {
+  opacity: .55;
+
+  cursor: not-allowed;
+}
+
+
+.writing-modal__button--secondary {
+  border: 1px solid #dfe2ea;
+
+  background: #ffffff;
+  color: #4c5569;
+}
+
+
+.writing-modal__button--secondary:hover:not(:disabled) {
+  background: #f7f8fa;
+}
+
+
+.writing-modal__button--primary {
+  border: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4030e7,
+      #5540e8
+    );
+
+  color: #ffffff;
+}
+
+
+.writing-modal__button--primary svg {
+  width: .9rem;
+  height: .9rem;
+}
+
+
+/* =========================
+   SPINNER
+========================= */
+
+.writing-modal__spinner {
+  width: .85rem;
+  height: .85rem;
+
+  border: 2px solid
+    rgba(255, 255, 255, .42);
+
+  border-top-color: #ffffff;
+  border-radius: 50%;
+
+  animation:
+    writing-modal-spin
+    .7s
+    linear
+    infinite;
+}
+
+
+@keyframes writing-modal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 640px) {
+
+  .writing-modal__overlay {
+    padding: .7rem;
+  }
+
+
+  .writing-modal {
+    width: 100%;
+  }
+
+
+  .writing-modal__footer {
+    flex-direction: column-reverse;
+  }
+
+
+  .writing-modal__button {
+    width: 100%;
+  }
+
+}

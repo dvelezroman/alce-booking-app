@@ -1,0 +1,353 @@
+<section class="assign-template">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="assign-template__header">
+
+    <span class="assign-template__step">
+      1
+    </span>
+
+    <h2 class="assign-template__title">
+      Template
+    </h2>
+
+  </header>
+
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  <div class="assign-template__content">
+
+    <!-- =========================
+         LEFT
+    ========================== -->
+
+    <div class="assign-template__selection">
+
+      <!-- SEARCH -->
+
+      <div class="assign-template__search">
+
+        <div class="assign-template__input-wrapper">
+
+          <svg
+            class="assign-template__input-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <input
+            type="text"
+            class="assign-template__input"
+            [ngModel]="templateSearch"
+            (ngModelChange)="onTemplateSearchChange($event)"
+            (keyup.enter)="onSearch()"
+            placeholder="Buscar por título..."
+          />
+
+        </div>
+
+
+        <button
+          type="button"
+          class="assign-template__search-button"
+          [disabled]="templatesLoading"
+          (click)="onSearch()"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            {{
+              templatesLoading
+                ? 'Buscando...'
+                : 'Buscar'
+            }}
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <!-- TEMPLATE SELECT -->
+
+      <div class="assign-template__select-wrapper">
+
+        <select
+          class="assign-template__select"
+          [ngModel]="selectedTemplateId"
+          (ngModelChange)="onTemplateSelected($event)"
+          [disabled]="templatesLoading"
+        >
+
+          <option value="">
+            {{
+              templatesLoading
+                ? 'Cargando templates...'
+                : 'Seleccionar template'
+            }}
+          </option>
+
+
+          @for (
+            template of templates;
+            track template.id
+          ) {
+
+            <option [value]="template.id">
+              {{ getTemplateLabel(template) }}
+            </option>
+
+          }
+
+        </select>
+
+
+        <svg
+          class="assign-template__select-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         RIGHT / SUMMARY
+    ========================== -->
+
+    <div class="assign-template__summary">
+
+      @if (selectedTemplate) {
+
+        <div class="assign-template__summary-icon">
+
+          <span>
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="5"
+                y="4"
+                width="14"
+                height="17"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M9 4V3h6v1"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M9 9h6M9 13h6M9 17h4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+        </div>
+
+
+        <div class="assign-template__summary-data">
+
+          <!-- STAGE -->
+          <div class="assign-template__summary-row">
+
+            <span class="assign-template__summary-label">
+              Stage canónico:
+            </span>
+
+            <strong class="assign-template__stage">
+              Stage {{ selectedTemplate.targetStage }}
+            </strong>
+
+          </div>
+
+
+          <!-- RULES -->
+          <div class="assign-template__summary-row">
+
+            <span class="assign-template__summary-label">
+              Rules:
+            </span>
+
+            <div class="assign-template__rules">
+
+              @if (hasRules) {
+
+                @for (
+                  rule of selectedTemplate.stages;
+                  track rule
+                ) {
+
+                  <span class="assign-template__rule">
+                    {{ rule }}
+                  </span>
+
+                }
+
+              } @else {
+
+                <strong>
+                  —
+                </strong>
+
+              }
+
+            </div>
+
+          </div>
+
+
+          <!-- DURATION -->
+          <div class="assign-template__summary-row">
+
+            <span class="assign-template__summary-label">
+              Duración:
+            </span>
+
+            <strong>
+              {{ selectedTemplate.timeLimitMinutes }} min
+            </strong>
+
+          </div>
+
+
+          <!-- PASS -->
+          <div class="assign-template__summary-row">
+
+            <span class="assign-template__summary-label">
+              Puntaje de aprobación:
+            </span>
+
+            <strong>
+              {{ selectedTemplate.passingScorePercent }}%
+            </strong>
+
+          </div>
+
+
+          <!-- RELEASE -->
+          <div class="assign-template__summary-row">
+
+            <span class="assign-template__summary-label">
+              Política de resultados:
+            </span>
+
+            <strong class="assign-template__policy">
+              {{ selectedTemplate.resultReleasePolicy }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      } @else {
+
+        <div class="assign-template__summary-empty">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="5"
+              y="4"
+              width="14"
+              height="17"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M9 9h6M9 13h6M9 17h4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <div>
+            <strong>
+              Selecciona un template
+            </strong>
+
+            <span>
+              Aquí podrás visualizar su configuración.
+            </span>
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>

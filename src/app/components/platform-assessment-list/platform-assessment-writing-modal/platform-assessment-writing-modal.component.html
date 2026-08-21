@@ -1,0 +1,240 @@
+@if (show) {
+
+  <div
+    class="writing-modal__overlay"
+    (click)="onClose()"
+  >
+
+    <section
+      class="writing-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="writing-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- =========================
+           HEADER
+      ========================== -->
+
+      <header class="writing-modal__header">
+
+        <div class="writing-modal__header-info">
+
+          <span class="writing-modal__header-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="m14 8 3 3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <h2
+              id="writing-modal-title"
+              class="writing-modal__title"
+            >
+              Corregir Writing
+            </h2>
+
+            <p class="writing-modal__subtitle">
+              Actualiza el puntaje de Writing del estudiante.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="writing-modal__close"
+          aria-label="Cerrar"
+          [disabled]="submitting"
+          (click)="onClose()"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m6 6 12 12M18 6 6 18"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        </button>
+
+      </header>
+
+
+      <!-- =========================
+           CONTENT
+      ========================== -->
+
+      <div class="writing-modal__content">
+
+        <div class="writing-modal__student">
+
+          <span>
+            Estudiante
+          </span>
+
+          <strong>
+            {{ studentName || 'Estudiante' }}
+          </strong>
+
+        </div>
+
+
+        <div class="writing-modal__field">
+
+          <label
+            for="writingPoints"
+            class="writing-modal__label"
+          >
+            Puntaje de Writing
+          </label>
+
+
+          <div class="writing-modal__input-wrapper">
+
+            <input
+              id="writingPoints"
+              type="number"
+              min="0"
+              class="writing-modal__input"
+              [ngModel]="points"
+              (ngModelChange)="onPointsChange($event)"
+              [disabled]="submitting"
+              placeholder="Ingrese el puntaje"
+            />
+
+            <span class="writing-modal__input-suffix">
+              pts
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="writing-modal__info">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="M12 11v5M12 8h.01"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            Este valor reemplazará el puntaje de Writing actualmente registrado.
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           FOOTER
+      ========================== -->
+
+      <footer class="writing-modal__footer">
+
+        <button
+          type="button"
+          class="writing-modal__button writing-modal__button--secondary"
+          [disabled]="submitting"
+          (click)="onClose()"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="button"
+          class="writing-modal__button writing-modal__button--primary"
+          [disabled]="
+            submitting ||
+            points === null ||
+            points < 0
+          "
+          (click)="onConfirm()"
+        >
+
+          @if (submitting) {
+
+            <span class="writing-modal__spinner">
+            </span>
+
+            <span>
+              Guardando...
+            </span>
+
+          } @else {
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 12.5 9.2 17 19 7"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <span>
+              Guardar puntaje
+            </span>
+
+          }
+
+        </button>
+
+      </footer>
+
+    </section>
+
+  </div>
+
+}

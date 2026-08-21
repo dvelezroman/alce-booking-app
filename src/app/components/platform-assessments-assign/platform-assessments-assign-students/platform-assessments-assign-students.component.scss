@@ -1,0 +1,636 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.assign-students {
+  width: 100%;
+
+  padding: 1rem 1.1rem;
+
+  border: 1px solid #e2e5ec;
+  border-radius: .65rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 .15rem .65rem
+    rgba(31, 42, 89, .025);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.assign-students__header {
+  display: flex;
+  align-items: center;
+
+  gap: .65rem;
+
+  margin-bottom: .9rem;
+}
+
+
+.assign-students__step {
+  width: 1.55rem;
+  height: 1.55rem;
+
+  flex: 0 0 1.55rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4030e7,
+      #5740e8
+    );
+
+  color: #ffffff;
+
+  font-size: .7rem;
+  font-weight: 750;
+}
+
+
+.assign-students__title {
+  margin: 0;
+
+  color: #252c40;
+
+  font-size: .9rem;
+  font-weight: 750;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.assign-students__content {
+  display: grid;
+
+  grid-template-columns:
+    minmax(20rem, .72fr)
+    minmax(0, 1.35fr);
+
+  gap: 2rem;
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+.assign-students__search {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .75rem;
+}
+
+
+.assign-students__search-row {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    7.3rem;
+
+  gap: .65rem;
+}
+
+
+/* =========================
+   INPUT
+========================= */
+
+.assign-students__input-wrapper {
+  position: relative;
+
+  min-width: 0;
+}
+
+
+.assign-students__input-icon {
+  position: absolute;
+
+  top: 50%;
+  left: .8rem;
+
+  width: .95rem;
+  height: .95rem;
+
+  color: #717b90;
+
+  transform: translateY(-50%);
+
+  pointer-events: none;
+}
+
+
+.assign-students__input {
+  width: 100%;
+  height: 2.55rem;
+
+  padding:
+    0
+    .85rem
+    0
+    2.35rem;
+
+  border: 1px solid #dfe2ea;
+  border-radius: .45rem;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #30384d;
+
+  font-family: inherit;
+  font-size: .72rem;
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease;
+}
+
+
+.assign-students__input::placeholder {
+  color: #9198a8;
+}
+
+
+.assign-students__input:focus {
+  border-color: #6551e8;
+
+  box-shadow:
+    0 0 0 .15rem
+    rgba(101, 81, 232, .08);
+}
+
+
+/* Quita spinners propios del number en webkit */
+
+.assign-students__input[type='number']::-webkit-inner-spin-button,
+.assign-students__input[type='number']::-webkit-outer-spin-button {
+  margin: 0;
+
+  appearance: none;
+}
+
+
+/* =========================
+   ADD BUTTON
+========================= */
+
+.assign-students__add {
+  width: 100%;
+  height: 2.55rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .4rem;
+
+  padding: 0 .8rem;
+
+  border: 0;
+  border-radius: .45rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4030e7,
+      #5740e8
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: .7rem;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    filter .15s ease,
+    transform .1s ease,
+    opacity .15s ease;
+}
+
+
+.assign-students__add svg {
+  width: .95rem;
+  height: .95rem;
+}
+
+
+.assign-students__add:hover:not(:disabled) {
+  filter: brightness(1.04);
+}
+
+
+.assign-students__add:active:not(:disabled) {
+  transform: scale(.98);
+}
+
+
+.assign-students__add:disabled {
+  opacity: .45;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================
+   HINT
+========================= */
+
+.assign-students__hint {
+  display: flex;
+  align-items: center;
+
+  gap: .4rem;
+
+  color: #737c8f;
+
+  font-size: .63rem;
+}
+
+
+.assign-students__hint svg {
+  width: .9rem;
+  height: .9rem;
+
+  flex: 0 0 .9rem;
+
+  color: #6257b9;
+}
+
+
+/* =========================
+   SELECTED
+========================= */
+
+.assign-students__selected {
+  min-width: 0;
+
+  overflow: hidden;
+
+  border: 1px solid #e1e4eb;
+  border-radius: .5rem;
+
+  background: #ffffff;
+}
+
+
+/* =========================
+   SELECTED HEADER
+========================= */
+
+.assign-students__selected-header {
+  min-height: 2.45rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: .45rem;
+
+  padding:
+    .55rem
+    .85rem;
+
+  border-bottom: 1px solid #e8eaf0;
+
+  background: #ffffff;
+}
+
+
+.assign-students__selected-header strong {
+  color: #262d40;
+
+  font-size: .74rem;
+  font-weight: 700;
+}
+
+
+.assign-students__selected-header > span {
+  min-width: 1.25rem;
+  height: 1.25rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 .35rem;
+
+  border-radius: 999px;
+
+  background: #eeeff4;
+  color: #656d80;
+
+  font-size: .57rem;
+  font-weight: 650;
+}
+
+
+/* =========================
+   LIST
+========================= */
+
+.assign-students__list {
+  width: 100%;
+}
+
+
+/* =========================
+   STUDENT ROW
+========================= */
+
+.assign-students__student {
+  min-height: 3.25rem;
+
+  display: grid;
+
+  grid-template-columns:
+    1.8rem
+    minmax(8rem, 1.15fr)
+    5.8rem
+    5.8rem
+    minmax(9rem, 1.25fr)
+    2rem;
+
+  align-items: center;
+
+  gap: .65rem;
+
+  padding:
+    .48rem
+    .75rem;
+
+  border-bottom: 1px solid #eceef3;
+}
+
+
+.assign-students__student:last-child {
+  border-bottom: 0;
+}
+
+
+/* =========================
+   AVATAR
+========================= */
+
+.assign-students__avatar {
+  width: 1.65rem;
+  height: 1.65rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #aeb4c0;
+  border-radius: 50%;
+
+  color: #70798c;
+}
+
+
+.assign-students__avatar svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+
+/* =========================
+   STUDENT DATA
+========================= */
+
+.assign-students__student-name {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #252c40;
+
+  font-size: .69rem;
+  font-weight: 650;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.assign-students__student-id {
+  color: #4d566b;
+
+  font-size: .64rem;
+
+  white-space: nowrap;
+}
+
+
+.assign-students__stage {
+  width: fit-content;
+
+  padding:
+    .2rem
+    .48rem;
+
+  border-radius: 999px;
+
+  background: #e7efff;
+  color: #3e74cd;
+
+  font-size: .57rem;
+  font-weight: 650;
+
+  white-space: nowrap;
+}
+
+
+.assign-students__email {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #535c70;
+
+  font-size: .63rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================
+   REMOVE
+========================= */
+
+.assign-students__remove {
+  width: 1.8rem;
+  height: 1.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid #f1c4c4;
+  border-radius: .4rem;
+
+  background: #ffffff;
+  color: #df4c4c;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    border-color .15s ease,
+    transform .1s ease;
+}
+
+
+.assign-students__remove:hover {
+  border-color: #ecabab;
+
+  background: #fff5f5;
+}
+
+
+.assign-students__remove:active {
+  transform: scale(.95);
+}
+
+
+.assign-students__remove svg {
+  width: .9rem;
+  height: .9rem;
+}
+
+
+/* =========================
+   EMPTY
+========================= */
+
+.assign-students__empty {
+  min-height: 8rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .65rem;
+
+  padding: 1rem;
+
+  color: #858d9e;
+}
+
+
+.assign-students__empty-icon {
+  width: 2.3rem;
+  height: 2.3rem;
+
+  flex: 0 0 2.3rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f0efff;
+  color: #5b49d5;
+}
+
+
+.assign-students__empty-icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+
+.assign-students__empty > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: .15rem;
+}
+
+
+.assign-students__empty strong {
+  color: #51596c;
+
+  font-size: .68rem;
+  font-weight: 650;
+}
+
+
+.assign-students__empty span {
+  font-size: .61rem;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px) {
+
+  .assign-students__content {
+    grid-template-columns: 1fr;
+
+    gap: 1rem;
+  }
+
+}
+
+
+@media (max-width: 760px) {
+
+  .assign-students__selected {
+    overflow-x: auto;
+  }
+
+
+  .assign-students__student {
+    min-width: 44rem;
+  }
+
+}
+
+
+@media (max-width: 640px) {
+
+  .assign-students {
+    padding: .8rem;
+  }
+
+
+  .assign-students__search-row {
+    grid-template-columns: 1fr;
+  }
+
+
+  .assign-students__add {
+    width: 100%;
+  }
+
+}

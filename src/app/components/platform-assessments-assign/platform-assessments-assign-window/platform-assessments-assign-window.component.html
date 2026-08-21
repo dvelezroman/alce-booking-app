@@ -1,0 +1,195 @@
+<section class="assign-window">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="assign-window__header">
+
+    <span class="assign-window__step">
+      3
+    </span>
+
+    <h2 class="assign-window__title">
+      Ventana
+    </h2>
+
+  </header>
+
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  <div class="assign-window__content">
+
+    <!-- =========================
+         FIELDS
+    ========================== -->
+
+    <div class="assign-window__fields">
+
+      <!-- EXPIRES -->
+      <div class="assign-window__field">
+
+        <label
+          for="expiresLocal"
+          class="assign-window__label"
+        >
+          Vence (fecha límite)
+        </label>
+
+
+        <div class="assign-window__input-wrapper">
+
+          <svg
+            class="assign-window__input-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="4"
+              y="5"
+              width="16"
+              height="15"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M8 3v4M16 3v4M4 10h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+
+          <input
+            id="expiresLocal"
+            type="datetime-local"
+            class="assign-window__input assign-window__input--date"
+            [ngModel]="expiresLocal"
+            (ngModelChange)="onExpiresLocalChange($event)"
+          />
+
+        </div>
+
+      </div>
+
+
+      <!-- MAX ATTEMPTS -->
+      <div class="assign-window__field">
+
+        <label
+          for="maxAttempts"
+          class="assign-window__label"
+        >
+          Intentos máx.
+        </label>
+
+
+        <input
+          id="maxAttempts"
+          type="number"
+          min="1"
+          class="assign-window__input"
+          [ngModel]="maxAttempts"
+          (ngModelChange)="onMaxAttemptsChange($event)"
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         ACTION
+    ========================== -->
+
+    <div class="assign-window__action">
+
+      <button
+        type="button"
+        class="assign-window__submit"
+        [disabled]="submitting"
+        (click)="onSubmit()"
+      >
+
+        @if (submitting) {
+
+          <span class="assign-window__spinner">
+          </span>
+
+        } @else {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M21 3 3.8 10.2c-.9.4-.9 1.7.1 2l6.2 2.1 2.1 6.2c.3 1 1.6 1 2 0L21 3Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="m10.2 14.2 4.3-4.3"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        }
+
+
+        <span>
+          {{
+            submitting
+              ? 'Asignando...'
+              : 'Asignar examen'
+          }}
+        </span>
+
+      </button>
+
+
+      <div class="assign-window__notice">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M12 11v5M12 8h.01"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Se notificará a los estudiantes con el enlace de acceso.
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

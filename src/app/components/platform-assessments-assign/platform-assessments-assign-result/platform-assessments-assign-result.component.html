@@ -1,0 +1,467 @@
+<section class="assign-result">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="assign-result__header">
+
+    <div class="assign-result__heading">
+
+      <span
+        class="assign-result__heading-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="5"
+            y="4"
+            width="14"
+            height="17"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M9 4V3h6v1"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M9 9h6M9 13h6M9 17h4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <div class="assign-result__heading-content">
+
+        <div class="assign-result__title-row">
+
+          <h2 class="assign-result__title">
+            Resultado de la asignación
+          </h2>
+
+          <span class="assign-result__batch">
+            Batch {{ result.batchId }}
+          </span>
+
+        </div>
+
+        <p class="assign-result__description">
+          Resumen del proceso de asignación realizado.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="assign-result__summary">
+
+      <div
+        class="
+          assign-result__summary-item
+          assign-result__summary-item--success
+        "
+      >
+        <span>
+          Creados
+        </span>
+
+        <strong>
+          {{ createdCount }}
+        </strong>
+      </div>
+
+
+      <div
+        class="
+          assign-result__summary-item
+          assign-result__summary-item--error
+        "
+      >
+        <span>
+          Fallidos
+        </span>
+
+        <strong>
+          {{ failedCount }}
+        </strong>
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  <div class="assign-result__content">
+
+
+    <!-- =========================
+         CREATED
+    ========================== -->
+
+    <section
+      class="
+        assign-result__group
+        assign-result__group--success
+      "
+    >
+
+      <header class="assign-result__group-header">
+
+        <div>
+
+          <span class="assign-result__group-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m8.5 12 2.3 2.3 4.7-5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+
+          <strong>
+            Asignaciones creadas
+          </strong>
+
+        </div>
+
+
+        <span class="assign-result__group-count">
+          {{ createdCount }}
+        </span>
+
+      </header>
+
+
+      @if (hasCreated) {
+
+        <div class="assign-result__table-wrapper">
+
+          <table class="assign-result__table">
+
+            <thead>
+
+              <tr>
+                <th>Estudiante</th>
+                <th>ID</th>
+                <th>Estado</th>
+                <th>Código</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                item of result.created;
+                track item.studentId
+              ) {
+
+                <tr>
+
+                  <td>
+
+                    <div class="assign-result__student">
+
+                      <span
+                        class="assign-result__student-icon"
+                        aria-hidden="true"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <circle
+                            cx="12"
+                            cy="8"
+                            r="3"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                          />
+
+                          <path
+                            d="M5 20a7 7 0 0 1 14 0"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </span>
+
+
+                      <strong>
+                        {{
+                          item.studentName ||
+                          ('Estudiante ' + item.studentId)
+                        }}
+                      </strong>
+
+                    </div>
+
+                  </td>
+
+
+                  <td>
+                    <span class="assign-result__value">
+                      {{ item.studentId }}
+                    </span>
+                  </td>
+
+
+                  <td>
+
+                    <span class="assign-result__status">
+                      {{ item.status }}
+                    </span>
+
+                  </td>
+
+
+                  <td>
+
+                    <span class="assign-result__code">
+                      ***{{ item.accessCodeLast4 }}
+                    </span>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      } @else {
+
+        <div class="assign-result__empty">
+          No se crearon asignaciones.
+        </div>
+
+      }
+
+    </section>
+
+
+    <!-- =========================
+         FAILED
+    ========================== -->
+
+    <section
+      class="
+        assign-result__group
+        assign-result__group--error
+      "
+    >
+
+      <header class="assign-result__group-header">
+
+        <div>
+
+          <span class="assign-result__group-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m9 9 6 6M15 9l-6 6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+          <strong>
+            Asignaciones fallidas
+          </strong>
+
+        </div>
+
+
+        <span class="assign-result__group-count">
+          {{ failedCount }}
+        </span>
+
+      </header>
+
+
+      @if (hasFailed) {
+
+        <div class="assign-result__failed-list">
+
+          @for (
+            item of result.failed;
+            track $index
+          ) {
+
+            <article class="assign-result__failed-row">
+
+              <span class="assign-result__failed-icon">
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="8"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="m9 9 6 6M15 9l-6 6"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+
+              </span>
+
+
+              <div class="assign-result__failed-content">
+
+                <strong>
+                  Estudiante {{ item.externalStudentId }}
+                </strong>
+
+                <span>
+                  {{ item.reason }}
+                </span>
+
+              </div>
+
+            </article>
+
+          }
+
+        </div>
+
+      } @else {
+
+        <div class="assign-result__empty assign-result__empty--success">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m8.5 12 2.3 2.3 4.7-5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <span>
+            No hubo asignaciones fallidas.
+          </span>
+
+        </div>
+
+      }
+
+    </section>
+
+  </div>
+
+
+  <!-- =========================
+       FOOTER INFO
+  ========================== -->
+
+  <footer class="assign-result__footer">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="8"
+        stroke="currentColor"
+        stroke-width="1.6"
+      />
+
+      <path
+        d="M12 11v5M12 8h.01"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+      />
+    </svg>
+
+
+    <span>
+      Los estudiantes con asignación creada recibirán la notificación con su enlace de acceso.
+    </span>
+
+  </footer>
+
+</section>

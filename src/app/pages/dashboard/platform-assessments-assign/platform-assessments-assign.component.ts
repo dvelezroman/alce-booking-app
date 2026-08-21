@@ -11,6 +11,11 @@ import {
 import { Student } from '../../../services/dtos/student.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
+import { PlatformAssessmentsAssignHeaderComponent } from '../../../components/platform-assessments-assign/platform-assessments-assign-header/platform-assessments-assign-header.component';
+import { PlatformAssessmentsAssignResultComponent } from '../../../components/platform-assessments-assign/platform-assessments-assign-result/platform-assessments-assign-result.component';
+import { PlatformAssessmentsAssignStudentsComponent } from '../../../components/platform-assessments-assign/platform-assessments-assign-students/platform-assessments-assign-students.component';
+import { PlatformAssessmentsAssignTemplateComponent } from '../../../components/platform-assessments-assign/platform-assessments-assign-template/platform-assessments-assign-template.component';
+import { PlatformAssessmentsAssignWindowComponent } from '../../../components/platform-assessments-assign/platform-assessments-assign-window/platform-assessments-assign-window.component';
 
 type SelectedStudent = {
   studentId: number;
@@ -22,7 +27,13 @@ type SelectedStudent = {
 @Component({
   selector: 'app-platform-assessments-assign',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ModalComponent],
+  imports: [CommonModule, FormsModule, RouterLink, ModalComponent,
+    PlatformAssessmentsAssignHeaderComponent,
+    PlatformAssessmentsAssignTemplateComponent,
+    PlatformAssessmentsAssignStudentsComponent,
+    PlatformAssessmentsAssignWindowComponent,
+    PlatformAssessmentsAssignResultComponent,
+  ],
   templateUrl: './platform-assessments-assign.component.html',
   styleUrls: ['./platform-assessments-assign.component.scss'],
 })
@@ -67,6 +78,10 @@ export class PlatformAssessmentsAssignComponent implements OnInit {
 
   get selectedTemplate(): RemoteTemplateItem | null {
     return this.templates.find((t) => t.id === this.selectedTemplateId) ?? null;
+  }
+
+  onTemplateSelected(templateId: string): void {
+    this.selectedTemplateId = templateId;
   }
 
   loadTemplates(): void {
@@ -118,6 +133,8 @@ export class PlatformAssessmentsAssignComponent implements OnInit {
       },
     });
   }
+
+  
 
   addByIdNumber(): void {
     const idNumber = this.idNumberSearch.trim();
@@ -258,4 +275,6 @@ export class PlatformAssessmentsAssignComponent implements OnInit {
     if (Number.isNaN(d.getTime())) return null;
     return d.toISOString();
   }
+
+  
 }
