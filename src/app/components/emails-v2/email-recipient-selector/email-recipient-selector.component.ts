@@ -29,32 +29,19 @@ export type EmailRecipientOption =
 })
 export class EmailRecipientSelectorComponent {
 
-  /* =========================
-     INPUTS
-  ========================= */
-
   @Input()
   selectedOption:
     EmailRecipientOption | '' = 'user';
 
   @Input()
-  userRole: UserRole | null = null;
-
-
-  /* =========================
-     OUTPUTS
-  ========================= */
+  userRole:
+    UserRole | null = null;
 
   @Output()
   optionSelected =
     new EventEmitter<EmailRecipientOption>();
 
-
-  /* =========================
-     OPTIONS
-  ========================= */
-
-  readonly options: {
+  private readonly allOptions: {
     value: EmailRecipientOption;
     title: string;
     description: string;
@@ -85,14 +72,46 @@ export class EmailRecipientSelectorComponent {
     },
   ];
 
+  get options(): {
+    value: EmailRecipientOption;
+    title: string;
+    description: string;
+  }[] {
 
-  /* =========================
-     SELECT
-  ========================= */
+    if (
+      this.userRole ===
+      UserRole.ADMIN
+    ) {
+      return this.allOptions;
+    }
+
+    if (
+      this.userRole ===
+      UserRole.INSTRUCTOR
+    ) {
+      return this.allOptions.filter(
+        option =>
+          option.value === 'user',
+      );
+    }
+
+    return [];
+  }
 
   selectOption(
     option: EmailRecipientOption,
   ): void {
+
+    const allowed =
+      this.options.some(
+        item =>
+          item.value === option,
+      );
+
+    if (!allowed) {
+      return;
+    }
+
     if (
       this.selectedOption === option
     ) {
@@ -104,23 +123,14 @@ export class EmailRecipientSelectorComponent {
     );
   }
 
-
-  /* =========================
-     ACTIVE
-  ========================= */
-
   isSelected(
     option: EmailRecipientOption,
   ): boolean {
+
     return (
       this.selectedOption === option
     );
   }
-
-
-  /* =========================
-     TRACK
-  ========================= */
 
   trackByOption(
     index: number,
@@ -128,6 +138,7 @@ export class EmailRecipientSelectorComponent {
       value: EmailRecipientOption;
     },
   ): EmailRecipientOption {
+
     return option.value;
   }
 }

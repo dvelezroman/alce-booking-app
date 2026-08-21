@@ -1,26 +1,31 @@
-
 <section class="recipient-selector">
 
   <div class="recipient-selector__grid">
 
-    <!-- =====================================================
-         USER
-    ====================================================== -->
-
     <button
+      *ngFor="
+        let option of options;
+        trackBy: trackByOption
+      "
       type="button"
       class="recipient-selector__option"
       [class.recipient-selector__option--active]="
-        isSelected('user')
+        isSelected(option.value)
       "
-      (click)="selectOption('user')"
+      (click)="selectOption(option.value)"
     >
+
+      <!-- ICON -->
 
       <span
         class="recipient-selector__icon"
         aria-hidden="true"
       >
+
+        <!-- USER -->
+
         <svg
+          *ngIf="option.value === 'user'"
           width="20"
           height="20"
           viewBox="0 0 24 24"
@@ -41,64 +46,12 @@
             stroke-linecap="round"
           />
         </svg>
-      </span>
 
 
-      <span class="recipient-selector__content">
+        <!-- STAGE -->
 
-        <strong class="recipient-selector__title">
-          Usuario individual
-        </strong>
-
-        <span class="recipient-selector__description">
-          Envía un email a un usuario específico.
-        </span>
-
-      </span>
-
-
-      <span
-        *ngIf="isSelected('user')"
-        class="recipient-selector__check"
-        aria-hidden="true"
-      >
         <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path
-            d="m6 12 4 4 8-9"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </span>
-
-    </button>
-
-
-    <!-- =====================================================
-         STAGE
-    ====================================================== -->
-
-    <button
-      type="button"
-      class="recipient-selector__option"
-      [class.recipient-selector__option--active]="
-        isSelected('stage')
-      "
-      (click)="selectOption('stage')"
-    >
-
-      <span
-        class="recipient-selector__icon"
-        aria-hidden="true"
-      >
-        <svg
+          *ngIf="option.value === 'stage'"
           width="20"
           height="20"
           viewBox="0 0 24 24"
@@ -125,64 +78,12 @@
             stroke-linecap="round"
           />
         </svg>
-      </span>
 
 
-      <span class="recipient-selector__content">
+        <!-- GROUP -->
 
-        <strong class="recipient-selector__title">
-          Por etapa (Stage)
-        </strong>
-
-        <span class="recipient-selector__description">
-          Envía a todos los usuarios de una etapa académica.
-        </span>
-
-      </span>
-
-
-      <span
-        *ngIf="isSelected('stage')"
-        class="recipient-selector__check"
-        aria-hidden="true"
-      >
         <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path
-            d="m6 12 4 4 8-9"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </span>
-
-    </button>
-
-
-    <!-- =====================================================
-         GROUP
-    ====================================================== -->
-
-    <button
-      type="button"
-      class="recipient-selector__option"
-      [class.recipient-selector__option--active]="
-        isSelected('group')
-      "
-      (click)="selectOption('group')"
-    >
-
-      <span
-        class="recipient-selector__icon"
-        aria-hidden="true"
-      >
-        <svg
+          *ngIf="option.value === 'group'"
           width="20"
           height="20"
           viewBox="0 0 24 24"
@@ -210,64 +111,12 @@
             stroke-linecap="round"
           />
         </svg>
-      </span>
 
 
-      <span class="recipient-selector__content">
+        <!-- ROLE -->
 
-        <strong class="recipient-selector__title">
-          Por grupo
-        </strong>
-
-        <span class="recipient-selector__description">
-          Envía a todos los integrantes de un grupo.
-        </span>
-
-      </span>
-
-
-      <span
-        *ngIf="isSelected('group')"
-        class="recipient-selector__check"
-        aria-hidden="true"
-      >
         <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path
-            d="m6 12 4 4 8-9"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </span>
-
-    </button>
-
-
-    <!-- =====================================================
-         ROLE
-    ====================================================== -->
-
-    <button
-      type="button"
-      class="recipient-selector__option"
-      [class.recipient-selector__option--active]="
-        isSelected('role')
-      "
-      (click)="selectOption('role')"
-    >
-
-      <span
-        class="recipient-selector__icon"
-        aria-hidden="true"
-      >
-        <svg
+          *ngIf="option.value === 'role'"
           width="20"
           height="20"
           viewBox="0 0 24 24"
@@ -298,24 +147,29 @@
             stroke-linecap="round"
           />
         </svg>
+
       </span>
 
+
+      <!-- CONTENT -->
 
       <span class="recipient-selector__content">
 
         <strong class="recipient-selector__title">
-          Por rol
+          {{ option.title }}
         </strong>
 
         <span class="recipient-selector__description">
-          Envía a todos los usuarios según su rol.
+          {{ option.description }}
         </span>
 
       </span>
 
 
+      <!-- CHECK -->
+
       <span
-        *ngIf="isSelected('role')"
+        *ngIf="isSelected(option.value)"
         class="recipient-selector__check"
         aria-hidden="true"
       >
@@ -337,6 +191,19 @@
 
     </button>
 
+  </div>
+
+
+  <!-- SIN PERMISOS -->
+
+  <div
+    *ngIf="
+      userRole !== null &&
+      options.length === 0
+    "
+    class="recipient-selector__empty"
+  >
+    No tienes permisos para enviar emails.
   </div>
 
 </section>

@@ -1165,6 +1165,24 @@ export class EmailRecipientFormComponent
     );
   }
 
+  getUserRoleLabel(
+    user: UserDto,
+  ): string {
+    switch (user.role) {
+      case UserRole.STUDENT:
+        return 'Estudiante';
+
+      case UserRole.INSTRUCTOR:
+        return 'Instructor';
+
+      case UserRole.ADMIN:
+        return 'Administrador';
+
+      default:
+        return 'Usuario';
+    }
+  }
+
 
   getStageLabel(
     stage: Stage,
