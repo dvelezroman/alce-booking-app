@@ -1,0 +1,325 @@
+<section class="email-preview">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="email-preview__header">
+
+    <div class="email-preview__heading">
+
+      <span
+        class="email-preview__icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M4 6.5 12 12l8-5.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="14"
+            rx="2.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+        </svg>
+      </span>
+
+
+      <div class="email-preview__heading-content">
+
+        <h3 class="email-preview__title">
+          Vista previa
+        </h3>
+
+        <p class="email-preview__description">
+          Así visualizará el destinatario el email.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <span class="email-preview__badge">
+      Email
+    </span>
+
+  </header>
+
+
+  <!-- =====================================================
+       BODY
+  ====================================================== -->
+
+  <div class="email-preview__body">
+
+    <!-- ===================================================
+         EMAIL WINDOW
+    ==================================================== -->
+
+    <article class="email-preview__window">
+
+      <!-- WINDOW TOP -->
+
+      <header class="email-preview__window-header">
+
+        <div class="email-preview__window-dots">
+
+          <span></span>
+          <span></span>
+          <span></span>
+
+        </div>
+
+
+        <span class="email-preview__window-label">
+          Vista del mensaje
+        </span>
+
+      </header>
+
+
+      <!-- EMAIL INFORMATION -->
+
+      <div class="email-preview__mail-header">
+
+        <span
+          class="email-preview__avatar"
+          aria-hidden="true"
+        >
+          {{ userInitials }}
+        </span>
+
+
+        <div class="email-preview__mail-information">
+
+          <strong>
+            Alce College
+          </strong>
+
+          <span>
+            para {{ userEmail }}
+          </span>
+
+        </div>
+
+
+        <span class="email-preview__mail-time">
+          Ahora
+        </span>
+
+      </div>
+
+
+      <!-- =================================================
+           SUBJECT
+      ================================================== -->
+
+      <div class="email-preview__subject">
+
+        <span>
+          Asunto
+        </span>
+
+        <strong>
+          Tu mensaje aparecerá aquí
+        </strong>
+
+      </div>
+
+
+      <!-- =================================================
+           MESSAGE
+      ================================================== -->
+
+      <div class="email-preview__message">
+
+        <p class="email-preview__greeting">
+          Hola
+          <strong>
+            {{ userName }}
+          </strong>,
+        </p>
+
+
+        <div class="email-preview__placeholder">
+
+          <span
+            class="
+              email-preview__placeholder-line
+              email-preview__placeholder-line--large
+            "
+          >
+          </span>
+
+          <span
+            class="
+              email-preview__placeholder-line
+              email-preview__placeholder-line--medium
+            "
+          >
+          </span>
+
+          <span
+            class="
+              email-preview__placeholder-line
+              email-preview__placeholder-line--small
+            "
+          >
+          </span>
+
+        </div>
+
+
+        <div class="email-preview__message-note">
+
+          <span
+            class="email-preview__message-note-icon"
+            aria-hidden="true"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+
+              <path
+                d="M12 11v5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+
+              <circle
+                cx="12"
+                cy="8"
+                r=".8"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+
+
+          <span>
+            El asunto y contenido aparecerán aquí
+            cuando conectemos los datos del formulario
+            de mensaje.
+          </span>
+
+        </div>
+
+
+        <!-- SIGNATURE -->
+
+        <div class="email-preview__signature">
+
+          <span>
+            Saludos,
+          </span>
+
+          <strong>
+            Alce College
+          </strong>
+
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <!-- ===================================================
+         RECIPIENT
+    ==================================================== -->
+
+    <div
+      class="email-preview__recipient"
+      [class.email-preview__recipient--selected]="
+        hasSelectedUser
+      "
+    >
+
+      <span
+        class="email-preview__recipient-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M5.5 19c0-3.1 2.5-5 6.5-5s6.5 1.9 6.5 5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <div class="email-preview__recipient-content">
+
+        <span>
+          Destinatario de prueba
+        </span>
+
+        <strong>
+          {{
+            hasSelectedUser
+              ? userName
+              : 'Selecciona un usuario'
+          }}
+        </strong>
+
+      </div>
+
+
+      <span
+        class="email-preview__recipient-status"
+        [class.email-preview__recipient-status--ready]="
+          hasSelectedUser
+        "
+      >
+        {{
+          hasSelectedUser
+            ? 'Seleccionado'
+            : 'Pendiente'
+        }}
+      </span>
+
+    </div>
+
+  </div>
+
+</section>

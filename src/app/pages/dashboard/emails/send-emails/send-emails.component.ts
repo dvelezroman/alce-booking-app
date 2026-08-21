@@ -26,6 +26,12 @@ import {
   SendTemplateEmailRequest,
 } from '../../../../services/dtos/email.dto';
 import { EmailService } from '../../../../services/email.service';
+import { EmailRecipientSelectorComponent } from "../../../../components/emails-v2/email-recipient-selector/email-recipient-selector.component";
+import { EmailRecipientFormComponent } from "../../../../components/emails-v2/email-recipient-form/email-recipient-form.component";
+import { EmailMessageFormComponent } from "../../../../components/emails-v2/email-message-form/email-message-form.component";
+import { EmailSendSummaryComponent } from "../../../../components/emails-v2/email-send-summary/email-send-summary.component";
+import { EmailPreviewComponent } from "../../../../components/emails-v2/email-preview/email-preview.component";
+import { EmailSendOptionsComponent } from "../../../../components/emails-v2/email-send-options/email-send-options.component";
 
 @Component({
   selector: 'app-send-emails',
@@ -36,9 +42,15 @@ import { EmailService } from '../../../../services/email.service';
     ModalComponent,
     EmailPanelComponent,
     EmailFormWrapperComponent,
-  ],
-  templateUrl: './send-emails.component.html',
-  styleUrl: './send-emails.component.scss',
+    EmailRecipientSelectorComponent,
+    EmailRecipientFormComponent,
+    EmailMessageFormComponent,
+    EmailSendSummaryComponent,
+    EmailPreviewComponent,
+    EmailSendOptionsComponent
+],
+  templateUrl: './send-emails-v2.component.html',
+  styleUrl: './send-emails-v2.component.scss',
 })
 export class SendEmailsComponent implements OnInit {
   protected readonly UserRole = UserRole;
@@ -52,6 +64,7 @@ export class SendEmailsComponent implements OnInit {
   selectedStage: Stage | null = null;
 
   groups: NotificationGroupDto[] = [];
+  selectedGroup: NotificationGroupDto | null = null;
   loadingGroups = false;
 
   modal: ModalDto = modalInitializer();
@@ -128,29 +141,47 @@ export class SendEmailsComponent implements OnInit {
   handleUserSelect(user: UserDto | null) {
     this.selectedUser = user;
   }
+
   handleStageSelect(stage: Stage | null) {
     this.selectedStage = stage;
   }
+
+  handleRoleSelect(
+    role:
+      'student'
+      | 'instructor'
+      | 'admin'
+      | null,
+  ): void {
+    this.selectedRole = role;
+  }
+
+  handleGroupSelect( group: NotificationGroupDto | null ): void {
+    this.selectedGroup = group;
+  }
+  
 
   private clearSelection(): void {
     this.selectedAction = '';
     this.selectedUser = null;
     this.selectedStage = null;
     this.selectedRole = null;
+    this.selectedGroup = null;
+
     this.resetChildren = true;
+    
     setTimeout(() => {
       this.resetChildren = false;
     }, 0);
   }
 
-  onSendOptionSelected(option: 'user' | 'stage' | 'group' | 'role') {
+  onSendOptionSelected(option: 'user' | 'stage' | 'group' | 'role'): void {
     this.selectedAction = option;
     if (option !== 'user') this.selectedUser = null;
     if (option !== 'stage') this.selectedStage = null;
     if (option !== 'role') this.selectedRole = null;
-    if (option === 'group') {
-      this.loadGroups();
-    }
+    if (option !== 'group') this.selectedGroup = null;
+    if (option === 'group') this.loadGroups()
   }
 
   // Stage, Role, Group (bulk)

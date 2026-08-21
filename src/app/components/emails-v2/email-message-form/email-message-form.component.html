@@ -1,0 +1,612 @@
+<section class="message-form">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="message-form__header">
+
+    <div class="message-form__heading">
+
+      <span
+        class="message-form__step"
+        aria-hidden="true"
+      >
+        2
+      </span>
+
+
+      <div class="message-form__heading-content">
+
+        <h3 class="message-form__title">
+          Mensaje
+        </h3>
+
+        <p class="message-form__description">
+          Redacta el contenido de tu email
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="message-form__modes">
+
+      <button
+        type="button"
+        class="message-form__mode"
+        [class.message-form__mode--active]="
+          mode === 'manual'
+        "
+        (click)="selectMode('manual')"
+      >
+        Manual
+      </button>
+
+
+      <button
+        type="button"
+        class="message-form__mode"
+        [class.message-form__mode--active]="
+          mode === 'template'
+        "
+        (click)="selectMode('template')"
+      >
+        Plantilla
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       BODY
+  ====================================================== -->
+
+  <div class="message-form__body">
+
+
+    <!-- ===================================================
+         GROUP SELECTOR
+    ==================================================== -->
+
+    <div
+      *ngIf="selectedType === 'group'"
+      class="message-form__field"
+    >
+
+      <label
+        for="messageGroup"
+        class="message-form__label"
+      >
+        Grupo destinatario
+
+        <span class="message-form__required">
+          *
+        </span>
+      </label>
+
+    </div>
+
+
+    <!-- ===================================================
+         RECIPIENT SUMMARY
+    ==================================================== -->
+
+    <div class="message-form__recipient">
+
+      <div class="message-form__recipient-icon">
+
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M5.5 19c0-3.1 2.5-5 6.5-5s6.5 1.9 6.5 5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </div>
+
+
+      <div class="message-form__recipient-content">
+
+        <span>
+          Destinatario
+        </span>
+
+        <strong>
+          {{ recipientLabel }}
+        </strong>
+
+      </div>
+
+
+      <span class="message-form__recipient-type">
+        {{ recipientTypeLabel }}
+      </span>
+
+    </div>
+
+
+    <!-- ===================================================
+         MANUAL
+    ==================================================== -->
+
+    <ng-container
+      *ngIf="mode === 'manual'"
+    >
+
+      <!-- SUBJECT -->
+
+      <div class="message-form__field">
+
+        <label
+          for="emailSubject"
+          class="message-form__label"
+        >
+          Asunto
+
+          <span class="message-form__required">
+            *
+          </span>
+        </label>
+
+
+        <input
+          id="emailSubject"
+          type="text"
+          class="message-form__input"
+          placeholder="Escribe el asunto del email..."
+          maxlength="120"
+          [(ngModel)]="subject"
+        />
+
+
+        <div class="message-form__meta">
+
+          <span>
+            Un asunto breve mejora la lectura del mensaje.
+          </span>
+
+          <span>
+            {{ subject.length }}/120
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- CONTENT -->
+
+      <div class="message-form__field">
+
+        <label
+          for="emailContent"
+          class="message-form__label"
+        >
+          Contenido
+
+          <span class="message-form__required">
+            *
+          </span>
+        </label>
+
+
+        <!-- EDITOR -->
+
+        <div class="message-form__editor">
+
+          <div
+            class="message-form__editor-toolbar"
+            role="toolbar"
+            aria-label="Formato del mensaje"
+          >
+
+            <button
+              type="button"
+              class="message-form__editor-tool"
+              [class.message-form__editor-tool--active]="isBoldActive"
+              title="Negrita"
+              (mousedown)="$event.preventDefault()"
+              (click)="formatText('bold')"
+            >
+              <strong>B</strong>
+            </button>
+
+
+            <button
+              type="button"
+              class="message-form__editor-tool"
+              [class.message-form__editor-tool--active]="isItalicActive"
+              title="Cursiva"
+              (mousedown)="$event.preventDefault()"
+              (click)="formatText('italic')"
+            >
+              <em>I</em>
+            </button>
+
+
+            <button
+              type="button"
+              class="message-form__editor-tool"
+              [class.message-form__editor-tool--active]="isUnderlineActive"
+              title="Subrayado"
+              (mousedown)="$event.preventDefault()"
+              (click)="formatText('underline')"
+            >
+              <u>U</u>
+            </button>
+
+
+            <span class="message-form__editor-divider">
+            </span>
+
+
+            <button
+              type="button"
+              class="message-form__editor-tool"
+              [class.message-form__editor-tool--active]="isListActive"
+              title="Lista"
+              (mousedown)="$event.preventDefault()"
+              (click)="toggleBulletList()"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+
+
+            <button
+              type="button"
+              class="message-form__editor-tool"
+              title="Agregar enlace"
+              (mousedown)="$event.preventDefault()"
+              (click)="insertLink()"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.1 1.1M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.1-1.1"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+
+          </div>
+
+
+          <div
+            #emailEditor
+            class="
+              message-form__textarea
+              message-form__textarea--editor
+            "
+            contenteditable="true"
+            role="textbox"
+            aria-multiline="true"
+            data-placeholder="Escribe tu mensaje aquí..."
+            (input)="onEditorInput()"
+            (keyup)="onEditorSelectionChange()"
+            (mouseup)="onEditorSelectionChange()"
+            (focus)="onEditorSelectionChange()"
+          >
+          </div>
+
+        </div>
+
+
+        <div class="message-form__meta">
+
+          <span>
+            Escribe el contenido que recibirá el destinatario.
+          </span>
+
+          <span>
+            {{ content.length }}/5000
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- VARIABLES -->
+
+      <div class="message-form__variables">
+
+        <span
+          class="message-form__variables-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M9 18h6M10 21h4"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M8.5 14.5C7.6 13.7 7 12.5 7 11a5 5 0 0 1 10 0c0 1.5-.6 2.7-1.5 3.5-.7.6-1.2 1.3-1.3 2H9.8c-.1-.7-.6-1.4-1.3-2Z"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+
+        <div class="message-form__variables-content">
+
+          <span>
+            Personaliza el mensaje con datos del destinatario
+          </span>
+
+          <div class="message-form__variables-list">
+
+            <code ngNonBindable>
+              {{firstName}}
+            </code>
+
+            <code ngNonBindable>
+              {{lastName}}
+            </code>
+
+            <code ngNonBindable>
+              {{email}}
+            </code>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+
+
+    <!-- ===================================================
+         TEMPLATE
+    ==================================================== -->
+
+    <ng-container
+      *ngIf="mode === 'template'"
+    >
+
+      <div class="message-form__field">
+
+        <label
+          for="emailTemplate"
+          class="message-form__label"
+        >
+          Plantilla
+
+          <span class="message-form__required">
+            *
+          </span>
+        </label>
+
+
+        <div class="message-form__select-wrapper">
+
+          <span
+            class="message-form__select-icon"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="5"
+                y="4"
+                width="14"
+                height="16"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 9h8M8 13h8M8 17h5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+
+          <select
+            id="emailTemplate"
+            class="message-form__select"
+            [(ngModel)]="templateName"
+          >
+
+            <option value="">
+              Selecciona una plantilla
+            </option>
+
+
+            <option
+              *ngFor="
+                let template of templateNames
+              "
+              [value]="template"
+            >
+              {{ template }}
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <span class="message-form__hint">
+          Selecciona una plantilla configurada para enviar el email.
+        </span>
+
+      </div>
+
+
+      <div class="message-form__template-preview">
+
+        <span
+          class="message-form__template-preview-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M3 6.5 12 13l9-6.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="14"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+          </svg>
+        </span>
+
+
+        <div>
+
+          <strong>
+            {{
+              templateName ||
+              'Sin plantilla seleccionada'
+            }}
+          </strong>
+
+          <span>
+            La plantilla utilizará su contenido y formato configurados.
+          </span>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+
+
+    <!-- ===================================================
+         ACTIONS
+    ==================================================== -->
+
+    <footer class="message-form__actions">
+
+      <button
+        type="button"
+        class="
+          message-form__button
+          message-form__button--secondary
+        "
+        (click)="clearContent()"
+      >
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M7 7l10 10M17 7 7 17"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        Limpiar campos
+      </button>
+
+
+      <button
+        type="button"
+        class="
+          message-form__button
+          message-form__button--primary
+        "
+        [disabled]="!canSubmit"
+        (click)="onSubmit()"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m21 3-7.5 18-3.7-7.8L3 9.5 21 3Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m9.8 13.2 4.2-4.1"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        {{
+          mode === 'template'
+            ? 'Enviar plantilla'
+            : 'Enviar email'
+        }}
+      </button>
+
+    </footer>
+
+  </div>
+
+</section>

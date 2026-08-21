@@ -1,170 +1,939 @@
 <section class="wa-campaign-detail">
-  <nav class="wa-campaign-detail__nav">
-    <a routerLink="/dashboard/admin/whatsapp-campaigns" class="wa-back">
-      <i class="fas fa-arrow-left" aria-hidden="true"></i>
-      Historial de campañas
-    </a>
-  </nav>
 
-  <div *ngIf="loading" class="wa-campaign-detail__state">Cargando campaña…</div>
-  <div *ngIf="error" class="wa-campaign-detail__error" role="alert">{{ error }}</div>
+  <div class="wa-campaign-detail__container">
 
-  <ng-container *ngIf="campaign && !loading">
-    <header class="wa-campaign-detail__hero">
-      <div class="wa-campaign-detail__hero-icon" aria-hidden="true">
-        <i class="fas fa-chart-line"></i>
-      </div>
+    <!-- =====================================================
+         BACK
+    ====================================================== -->
 
-      <div class="wa-campaign-detail__hero-content">
-        <div class="wa-campaign-detail__hero-top">
-          <span class="wa-campaign-badge" [ngClass]="statusClass(campaign.overallStatus)">
-            {{ statusLabel[campaign.overallStatus] }}
-          </span>
-          <time [attr.datetime]="campaign.lastActivityAt">
-            Última actividad: {{ formatDate(campaign.lastActivityAt) }}
-          </time>
-        </div>
+    <nav class="wa-campaign-detail__nav">
 
-        <h1>Detalle de campaña</h1>
+      <a
+        routerLink="/dashboard/admin/whatsapp-campaigns"
+        class="wa-campaign-detail__back"
+      >
+        <i
+          class="fas fa-chevron-left"
+          aria-hidden="true"
+        ></i>
 
-        <p *ngIf="campaign.messagePreview" class="wa-campaign-detail__preview">
-          {{ campaign.messagePreview }}
-        </p>
-      </div>
+        <span>
+          Historial de campañas
+        </span>
+      </a>
 
-      <dl class="wa-campaign-detail__summary">
-        <div>
-          <dt>Envíos (jobs)</dt>
-          <dd>{{ campaign.jobCount }}</dd>
-        </div>
-        <div>
-          <dt>Mensajes OK</dt>
-          <dd>{{ campaign.totalSent }}</dd>
-        </div>
-        <div>
-          <dt>Fallidos</dt>
-          <dd [class.text-fail]="campaign.totalFailed > 0">{{ campaign.totalFailed }}</dd>
-        </div>
-        <div>
-          <dt>Cupo del lote</dt>
-          <dd>{{ campaign.sentInBatch }}/10 · {{ campaign.remainingInBatch }} restantes</dd>
-        </div>
-        <div *ngIf="campaign.createdByName">
-          <dt>Administrador</dt>
-          <dd>{{ campaign.createdByName }}</dd>
-        </div>
-        <div>
-          <dt>Inicio</dt>
-          <dd>{{ formatDate(campaign.startedAt) }}</dd>
-        </div>
-      </dl>
+    </nav>
 
-      <div class="wa-campaign-detail__actions">
-        <button type="button" class="wa-btn wa-btn--soft" (click)="copyBatchId()">
-          <i class="fas fa-copy" aria-hidden="true"></i>
-          Copiar ID de campaña
-        </button>
-        <a
-          *ngIf="canContinueCampaign"
-          class="wa-btn wa-btn--whatsapp"
-          [routerLink]="['/dashboard/admin/whatsapp-notificador']"
-          [queryParams]="{ batchId: campaign.batchId }"
-        >
-          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-          Continuar esta campaña
-        </a>
-      </div>
-    </header>
 
-    <section class="wa-panel">
-      <h2 class="wa-panel__title">
-        <i class="fas fa-list" aria-hidden="true"></i>
-        Envíos de la campaña
-      </h2>
+    <!-- =====================================================
+         STATES
+    ====================================================== -->
 
-      <div class="wa-table-wrap">
-        <table class="wa-table">
-          <thead>
-            <tr>
-              <th>Contacto</th>
-              <th>Estado</th>
-              <th>Resultado</th>
-              <th>Fecha</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-container *ngFor="let job of campaign.jobs; trackBy: trackByJobId">
-              <tr>
-                <td class="wa-table__contact">
-                  <strong class="wa-table__contact-name">{{ job.contact }}</strong>
-                  <span *ngIf="job.contentPreview" class="wa-table__sub">
-                    {{ job.contentPreview }}
+    <div
+      *ngIf="loading"
+      class="wa-campaign-detail__state"
+    >
+      <i
+        class="fas fa-circle-notch fa-spin"
+        aria-hidden="true"
+      ></i>
+
+      <span>
+        Cargando campaña...
+      </span>
+    </div>
+
+
+    <div
+      *ngIf="error"
+      class="wa-campaign-detail__error"
+      role="alert"
+    >
+      <i
+        class="fas fa-circle-exclamation"
+        aria-hidden="true"
+      ></i>
+
+      <span>
+        {{ error }}
+      </span>
+    </div>
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+    <ng-container
+      *ngIf="
+        campaign &&
+        !loading
+      "
+    >
+
+      <!-- ===================================================
+           CAMPAIGN CARD
+      ==================================================== -->
+
+      <section class="wa-campaign-detail__card">
+
+        <!-- =================================================
+             TOP AREA
+        ================================================== -->
+
+        <div class="wa-campaign-detail__card-top">
+
+          <!-- ===============================================
+               MAIN INFO
+          ================================================ -->
+
+          <div class="wa-campaign-detail__main-info">
+
+            <div
+              class="wa-campaign-detail__main-icon"
+              aria-hidden="true"
+            >
+              <i class="fas fa-arrow-trend-up"></i>
+            </div>
+
+
+            <div class="wa-campaign-detail__main-content">
+
+              <span
+                class="wa-campaign-badge"
+                [ngClass]="statusClass(campaign.overallStatus)"
+              >
+                <span class="wa-campaign-badge__dot"></span>
+
+                {{ statusLabel[campaign.overallStatus] }}
+              </span>
+
+
+              <h1 class="wa-campaign-detail__title">
+                Detalle de campaña
+              </h1>
+
+
+              <p
+                *ngIf="campaign.messagePreview"
+                class="wa-campaign-detail__message"
+              >
+                {{ campaign.messagePreview }}
+              </p>
+
+
+              <button
+                type="button"
+                class="wa-campaign-detail__batch-id"
+                title="Copiar ID de campaña"
+                (click)="copyBatchId()"
+              >
+                <span>
+                  ID de campaña:
+                </span>
+
+                <strong>
+                  {{ campaign.batchId }}
+                </strong>
+
+                <i
+                  class="far fa-copy"
+                  aria-hidden="true"
+                ></i>
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- ===============================================
+               RIGHT AREA
+          ================================================ -->
+
+          <div class="wa-campaign-detail__right">
+
+            <!-- LAST ACTIVITY -->
+
+            <div class="wa-campaign-detail__activity">
+
+              <i
+                class="far fa-clock"
+                aria-hidden="true"
+              ></i>
+
+              <div>
+
+                <span>
+                  Última actividad
+                </span>
+
+                <strong>
+                  {{ formatDate(campaign.lastActivityAt) }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- =============================================
+                 METRICS
+            ============================================== -->
+
+            <div class="wa-campaign-detail__metrics">
+
+              <!-- JOBS -->
+
+              <article class="wa-campaign-detail__metric">
+
+                <div
+                  class="
+                    wa-campaign-detail__metric-icon
+                    wa-campaign-detail__metric-icon--purple
+                  "
+                >
+                  <i
+                    class="far fa-paper-plane"
+                    aria-hidden="true"
+                  ></i>
+                </div>
+
+
+                <div class="wa-campaign-detail__metric-content">
+
+                  <span>
+                    Envíos (jobs)
                   </span>
-                </td>
-                <td>
-                  <span class="wa-badge" [ngClass]="jobBadgeClass(job.status)">
-                    {{ jobStatusLabel[job.status] }}
+
+                  <strong>
+                    {{ campaign.jobCount }}
+                  </strong>
+
+                </div>
+
+              </article>
+
+
+              <!-- SUCCESS -->
+
+              <article class="wa-campaign-detail__metric">
+
+                <div
+                  class="
+                    wa-campaign-detail__metric-icon
+                    wa-campaign-detail__metric-icon--success
+                  "
+                >
+                  <i
+                    class="far fa-circle-check"
+                    aria-hidden="true"
+                  ></i>
+                </div>
+
+
+                <div class="wa-campaign-detail__metric-content">
+
+                  <span>
+                    Mensajes OK
                   </span>
-                </td>
-                <td>
-                  {{ job.sentCount }} enviados · {{ job.failedCount }} fallidos
-                  <span *ngIf="job.errorMessage" class="wa-table__error-inline">{{ job.errorMessage }}</span>
-                </td>
-                <td>{{ formatDate(job.createdAt) }}</td>
-                <td>
-                  <button
-                    type="button"
-                    class="wa-btn wa-btn--ghost wa-btn--sm"
-                    (click)="toggleJobDetail(job.jobId)"
+
+                  <strong>
+                    {{ campaign.totalSent }}
+                  </strong>
+
+                </div>
+
+              </article>
+
+
+              <!-- FAILED -->
+
+              <article class="wa-campaign-detail__metric">
+
+                <div
+                  class="
+                    wa-campaign-detail__metric-icon
+                    wa-campaign-detail__metric-icon--danger
+                  "
+                >
+                  <i
+                    class="fas fa-triangle-exclamation"
+                    aria-hidden="true"
+                  ></i>
+                </div>
+
+
+                <div class="wa-campaign-detail__metric-content">
+
+                  <span>
+                    Fallidos
+                  </span>
+
+                  <strong
+                    [class.wa-campaign-detail__metric-value--danger]="
+                      campaign.totalFailed > 0
+                    "
                   >
-                    {{ expandedJobId === job.jobId ? 'Ocultar' : 'Ver detalle' }}
-                  </button>
-                </td>
+                    {{ campaign.totalFailed }}
+                  </strong>
+
+                </div>
+
+              </article>
+
+
+              <!-- BATCH -->
+
+              <article class="wa-campaign-detail__metric">
+
+                <div
+                  class="
+                    wa-campaign-detail__metric-icon
+                    wa-campaign-detail__metric-icon--batch
+                  "
+                >
+                  <i
+                    class="fas fa-layer-group"
+                    aria-hidden="true"
+                  ></i>
+                </div>
+
+
+                <div class="wa-campaign-detail__metric-content">
+
+                  <span>
+                    Cupo del lote
+                  </span>
+
+                  <strong>
+                    {{ campaign.sentInBatch }}/10
+                  </strong>
+
+                  <small>
+                    {{ campaign.remainingInBatch }}
+                    restantes
+                  </small>
+
+                </div>
+
+              </article>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             BOTTOM AREA
+        ================================================== -->
+
+        <div class="wa-campaign-detail__card-bottom">
+
+          <!-- ===============================================
+               META
+          ================================================ -->
+
+          <div class="wa-campaign-detail__meta">
+
+            <!-- ADMIN -->
+
+            <div class="wa-campaign-detail__meta-item">
+
+              <span class="wa-campaign-detail__meta-icon">
+
+                <i
+                  class="far fa-user"
+                  aria-hidden="true"
+                ></i>
+
+              </span>
+
+
+              <div>
+
+                <span>
+                  Administrador
+                </span>
+
+                <strong>
+                  {{
+                    campaign.createdByName ||
+                    'Admin'
+                  }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- DIVIDER -->
+
+            <span
+              class="wa-campaign-detail__meta-divider"
+              aria-hidden="true"
+            ></span>
+
+
+            <!-- START -->
+
+            <div class="wa-campaign-detail__meta-item">
+
+              <span class="wa-campaign-detail__meta-icon">
+
+                <i
+                  class="far fa-calendar"
+                  aria-hidden="true"
+                ></i>
+
+              </span>
+
+
+              <div>
+
+                <span>
+                  Inicio de campaña
+                </span>
+
+                <strong>
+                  {{ formatDate(campaign.startedAt) }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- DIVIDER -->
+
+            <span
+              class="wa-campaign-detail__meta-divider"
+              aria-hidden="true"
+            ></span>
+
+
+            <!-- CREATED BY -->
+
+            <div class="wa-campaign-detail__meta-item">
+
+              <span class="wa-campaign-detail__meta-icon">
+
+                <i
+                  class="far fa-user-circle"
+                  aria-hidden="true"
+                ></i>
+
+              </span>
+
+
+              <div>
+
+                <span>
+                  Creada por
+                </span>
+
+                <strong>
+                  {{
+                    campaign.createdByName ||
+                    'Sin información'
+                  }}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ===============================================
+               ACTIONS
+          ================================================ -->
+
+          <div class="wa-campaign-detail__actions">
+
+            <button
+              type="button"
+              class="
+                wa-campaign-detail__button
+                wa-campaign-detail__button--copy
+              "
+              (click)="copyBatchId()"
+            >
+
+              <i
+                class="far fa-copy"
+                aria-hidden="true"
+              ></i>
+
+              <span>
+                Copiar ID de campaña
+              </span>
+
+            </button>
+
+
+            <a
+              *ngIf="canContinueCampaign"
+              class="
+                wa-campaign-detail__button
+                wa-campaign-detail__button--whatsapp
+              "
+              [routerLink]="[
+                '/dashboard/admin/whatsapp-notificador'
+              ]"
+              [queryParams]="{
+                batchId: campaign.batchId
+              }"
+            >
+
+              <i
+                class="fab fa-whatsapp"
+                aria-hidden="true"
+              ></i>
+
+              <span>
+                Continuar esta campaña
+              </span>
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===================================================
+           JOBS PANEL
+      ==================================================== -->
+
+      <section class="wa-campaign-detail__jobs">
+
+        <!-- ===============================================
+             JOBS HEADER
+        ================================================ -->
+
+        <header class="wa-campaign-detail__jobs-header">
+
+          <div class="wa-campaign-detail__jobs-title">
+
+            <i
+              class="fas fa-list"
+              aria-hidden="true"
+            ></i>
+
+            <h2>
+              Envíos de la campaña
+              <span>
+                ({{ campaign.jobCount }})
+              </span>
+            </h2>
+
+          </div>
+
+        </header>
+
+
+        <!-- ===============================================
+             TABLE
+        ================================================ -->
+
+        <div class="wa-campaign-detail__table-wrapper">
+
+          <table class="wa-campaign-detail__table">
+
+            <thead>
+
+              <tr>
+
+                <th class="wa-campaign-detail__contact-column">
+                  Contacto
+                </th>
+
+                <th>
+                  Estado
+                </th>
+
+                <th>
+                  Resultado
+                </th>
+
+                <th>
+                  Fecha
+                </th>
+
+                <th class="wa-campaign-detail__actions-column">
+                  Acciones
+                </th>
+
               </tr>
-              <tr *ngIf="expandedJobId === job.jobId" class="wa-table__expand-row">
-                <td colspan="5">
-                  <div *ngIf="loadingJob" class="wa-table__expand-loading">Cargando detalle…</div>
-                  <div *ngIf="!loadingJob && expandedJob" class="wa-table__expand-body">
-                    <p *ngIf="expandedJob.errorMessage" class="wa-table__expand-error">
-                      {{ expandedJob.errorMessage }}
-                    </p>
-                    <table *ngIf="expandedJob.results?.length" class="wa-table wa-table--nested">
-                      <thead>
-                        <tr>
-                          <th>Teléfono</th>
-                          <th>Estado</th>
-                          <th>Motivo</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let row of expandedJob.results">
-                          <td class="wa-table__mono">{{ row.phone }}</td>
-                          <td>
-                            <span
-                              class="wa-badge"
-                              [class.wa-badge--ok]="row.status === 'sent'"
-                              [class.wa-badge--bad]="row.status === 'failed'"
-                            >
-                              {{ resultStatusLabel(row.status) }}
-                            </span>
-                          </td>
-                          <td [class.wa-table__detail--error]="row.status === 'failed'">
-                            {{ getResultDetail(row) }}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <p *ngIf="!expandedJob.results?.length" class="wa-table__expand-empty">
-                      Sin detalle por teléfono.
-                    </p>
-                  </div>
-                </td>
-              </tr>
-            </ng-container>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </ng-container>
+
+            </thead>
+
+
+            <tbody>
+
+              <ng-container
+                *ngFor="
+                  let job of campaign.jobs;
+                  trackBy: trackByJobId
+                "
+              >
+
+                <!-- =========================================
+                     MAIN ROW
+                ========================================== -->
+
+                <tr class="wa-campaign-detail__job-row">
+
+                  <!-- CONTACT -->
+
+                  <td>
+
+                    <div class="wa-campaign-detail__contact">
+
+                      <span
+                        class="wa-campaign-detail__avatar"
+                        aria-hidden="true"
+                      >
+                        {{
+                          job.contact
+                            ? job.contact
+                                .substring(0, 2)
+                                .toUpperCase()
+                            : 'WA'
+                        }}
+                      </span>
+
+
+                      <div class="wa-campaign-detail__contact-info">
+
+                        <strong>
+                          {{ job.contact }}
+                        </strong>
+
+
+                        <span *ngIf="job.contentPreview">
+                          {{ job.contentPreview }}
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                  </td>
+
+
+                  <!-- STATUS -->
+
+                  <td>
+
+                    <span
+                      class="wa-badge"
+                      [ngClass]="jobBadgeClass(job.status)"
+                    >
+                      {{ jobStatusLabel[job.status] }}
+                    </span>
+
+                  </td>
+
+
+                  <!-- RESULT -->
+
+                  <td>
+
+                    <div class="wa-campaign-detail__result">
+
+                      <span
+                        class="wa-campaign-detail__result-dot"
+                        [class.wa-campaign-detail__result-dot--danger]="
+                          job.failedCount > 0 &&
+                          job.sentCount === 0
+                        "
+                      ></span>
+
+
+                      <span>
+                        {{ job.sentCount }}
+                        enviado{{
+                          job.sentCount === 1
+                            ? ''
+                            : 's'
+                        }}
+                      </span>
+
+
+                      <span class="wa-campaign-detail__result-separator">
+                        •
+                      </span>
+
+
+                      <span>
+                        {{ job.failedCount }}
+                        fallido{{
+                          job.failedCount === 1
+                            ? ''
+                            : 's'
+                        }}
+                      </span>
+
+                    </div>
+
+
+                    <span
+                      *ngIf="job.errorMessage"
+                      class="wa-campaign-detail__result-error"
+                    >
+                      {{ job.errorMessage }}
+                    </span>
+
+                  </td>
+
+
+                  <!-- DATE -->
+
+                  <td>
+
+                    <span class="wa-campaign-detail__date">
+                      {{ formatDate(job.createdAt) }}
+                    </span>
+
+                  </td>
+
+
+                  <!-- ACTION -->
+
+                  <td class="wa-campaign-detail__job-action">
+
+                    <button
+                      type="button"
+                      class="wa-campaign-detail__detail-button"
+                      [class.wa-campaign-detail__detail-button--open]="
+                        expandedJobId === job.jobId
+                      "
+                      (click)="toggleJobDetail(job.jobId)"
+                    >
+
+                      <span>
+                        {{
+                          expandedJobId === job.jobId
+                            ? 'Ocultar'
+                            : 'Ver detalle'
+                        }}
+                      </span>
+
+
+                      <i
+                        class="fas fa-chevron-down"
+                        [class.wa-campaign-detail__detail-chevron--open]="
+                          expandedJobId === job.jobId
+                        "
+                        aria-hidden="true"
+                      ></i>
+
+                    </button>
+
+                  </td>
+
+                </tr>
+
+
+                <!-- =========================================
+                     EXPANDED DETAIL
+                ========================================== -->
+
+                <tr
+                  *ngIf="
+                    expandedJobId === job.jobId
+                  "
+                  class="wa-campaign-detail__expanded-row"
+                >
+
+                  <td colspan="5">
+
+                    <div class="wa-campaign-detail__expanded">
+
+                      <!-- LOADING -->
+
+                      <div
+                        *ngIf="loadingJob"
+                        class="wa-campaign-detail__expanded-loading"
+                      >
+                        <i
+                          class="fas fa-circle-notch fa-spin"
+                          aria-hidden="true"
+                        ></i>
+
+                        <span>
+                          Cargando detalle...
+                        </span>
+                      </div>
+
+
+                      <!-- DETAIL -->
+
+                      <div
+                        *ngIf="
+                          !loadingJob &&
+                          expandedJob
+                        "
+                        class="wa-campaign-detail__expanded-content"
+                      >
+
+                        <header class="wa-campaign-detail__expanded-header">
+
+                          <span>
+                            Detalle por teléfono
+                          </span>
+
+                        </header>
+
+
+                        <p
+                          *ngIf="expandedJob.errorMessage"
+                          class="wa-campaign-detail__expanded-error"
+                        >
+                          <i
+                            class="fas fa-triangle-exclamation"
+                            aria-hidden="true"
+                          ></i>
+
+                          {{ expandedJob.errorMessage }}
+                        </p>
+
+
+                        <div
+                          *ngIf="
+                            expandedJob.results?.length
+                          "
+                          class="wa-campaign-detail__nested-wrapper"
+                        >
+
+                          <table class="wa-campaign-detail__nested-table">
+
+                            <thead>
+
+                              <tr>
+
+                                <th>
+                                  Teléfono
+                                </th>
+
+                                <th>
+                                  Estado
+                                </th>
+
+                                <th>
+                                  Motivo / Detalle
+                                </th>
+
+                              </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                              <tr
+                                *ngFor="
+                                  let row of expandedJob.results
+                                "
+                              >
+
+                                <td class="wa-campaign-detail__phone">
+                                  {{ row.phone }}
+                                </td>
+
+
+                                <td>
+
+                                  <span
+                                    class="wa-badge"
+                                    [class.wa-badge--ok]="
+                                      row.status === 'sent'
+                                    "
+                                    [class.wa-badge--bad]="
+                                      row.status === 'failed'
+                                    "
+                                    [class.wa-badge--muted]="
+                                      row.status !== 'sent' &&
+                                      row.status !== 'failed'
+                                    "
+                                  >
+                                    {{ resultStatusLabel(row.status) }}
+                                  </span>
+
+                                </td>
+
+
+                                <td
+                                  [class.wa-campaign-detail__detail-error]="
+                                    row.status === 'failed'
+                                  "
+                                >
+                                  {{ getResultDetail(row) }}
+                                </td>
+
+                              </tr>
+
+                            </tbody>
+
+                          </table>
+
+                        </div>
+
+
+                        <p
+                          *ngIf="
+                            !expandedJob.results?.length
+                          "
+                          class="wa-campaign-detail__expanded-empty"
+                        >
+                          Sin detalle por teléfono.
+                        </p>
+
+                      </div>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              </ng-container>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <!-- ===============================================
+             FOOTER
+        ================================================ -->
+
+        <footer class="wa-campaign-detail__jobs-footer">
+
+          <span>
+            Mostrando
+            {{ campaign.jobs.length }}
+            de
+            {{ campaign.jobCount }}
+            envíos
+          </span>
+
+        </footer>
+
+      </section>
+
+    </ng-container>
+
+  </div>
+
 </section>

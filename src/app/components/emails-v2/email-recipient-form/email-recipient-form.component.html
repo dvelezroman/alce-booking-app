@@ -1,0 +1,1732 @@
+<section class="recipient-form">
+
+  <!-- =====================================================
+       USER
+  ====================================================== -->
+
+  <ng-container *ngIf="selectedType === 'user'">
+
+    <div class="recipient-form__field">
+
+      <label
+        for="recipientUser"
+        class="recipient-form__label"
+      >
+        Seleccionar usuario
+      </label>
+
+
+      <div class="recipient-form__search">
+
+        <span
+          class="recipient-form__search-icon"
+          aria-hidden="true"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+
+        <input
+          id="recipientUser"
+          type="text"
+          class="recipient-form__input recipient-form__input--search"
+          placeholder="Buscar usuario por nombre o email..."
+          autocomplete="off"
+          [(ngModel)]="userSearch"
+          (ngModelChange)="onUserSearchChange($event)"
+          (focus)="
+            userSearch.length >= 2 &&
+            (showUserDropdown = true)
+          "
+          (blur)="hideUserDropdown()"
+        />
+
+
+        <button
+          *ngIf="selectedUser"
+          type="button"
+          class="recipient-form__clear"
+          title="Quitar usuario"
+          aria-label="Quitar usuario"
+          (mousedown)="$event.preventDefault()"
+          (click)="clearSelectedUser()"
+        >
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M7 7l10 10M17 7 7 17"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+
+        <!-- DROPDOWN -->
+
+        <div
+          *ngIf="showUserDropdown"
+          class="recipient-form__dropdown"
+        >
+
+          <div
+            *ngIf="loadingUsers"
+            class="recipient-form__loading"
+          >
+            <span class="recipient-form__spinner">
+            </span>
+
+            Buscando usuarios...
+          </div>
+
+
+          <button
+            *ngFor="
+              let user of users;
+              trackBy: trackByUserId
+            "
+            type="button"
+            class="recipient-form__user-option"
+            (mousedown)="$event.preventDefault()"
+            (click)="selectUser(user)"
+          >
+
+            <span
+              class="recipient-form__avatar"
+              aria-hidden="true"
+            >
+              {{ getUserInitials(user) }}
+            </span>
+
+
+            <span class="recipient-form__user-info">
+
+              <strong>
+                {{ getUserName(user) }}
+              </strong>
+
+              <span>
+                {{
+                  user.email ||
+                  'Sin email registrado'
+                }}
+              </span>
+
+            </span>
+
+
+            <span
+              class="recipient-form__add"
+              aria-hidden="true"
+            >
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M12 5v14M5 12h14"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+          </button>
+
+
+          <div
+            *ngIf="
+              !loadingUsers &&
+              users.length === 0
+            "
+            class="recipient-form__empty"
+          >
+            No se encontraron usuarios.
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- =====================================================
+          SELECTED USER
+      ====================================================== -->
+
+      <div
+        *ngIf="selectedUser"
+        class="recipient-form__selected-user"
+        [class.recipient-form__selected-user--valid]="
+          selectedUserEmailStatus === 'valid'
+        "
+        [class.recipient-form__selected-user--invalid]="
+          selectedUserEmailStatus === 'invalid'
+        "
+        [class.recipient-form__selected-user--missing]="
+          selectedUserEmailStatus === 'missing'
+        "
+      >
+
+        <!-- AVATAR -->
+
+        <span
+          class="recipient-form__selected-avatar"
+          aria-hidden="true"
+        >
+          {{ getUserInitials(selectedUser) }}
+        </span>
+
+
+        <!-- INFO -->
+
+        <div class="recipient-form__selected-info">
+
+          <strong class="recipient-form__selected-name">
+            {{ getUserName(selectedUser) }}
+          </strong>
+
+          <span class="recipient-form__selected-email">
+
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+
+              <path
+                d="m4 7 8 6 8-6"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            {{
+              selectedUserEmail ||
+              'Sin email registrado'
+            }}
+
+          </span>
+
+
+          <span class="recipient-form__selected-message">
+
+            <svg
+              *ngIf="
+                selectedUserEmailStatus === 'valid'
+              "
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m8.5 12 2.2 2.2 4.8-5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+
+            <svg
+              *ngIf="
+                selectedUserEmailStatus !== 'valid'
+              "
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 4 21 20H3L12 4Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M12 9v5M12 17h.01"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            {{ selectedUserEmailMessage }}
+
+          </span>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <span
+          class="recipient-form__email-status"
+          [class.recipient-form__email-status--valid]="
+            selectedUserEmailStatus === 'valid'
+          "
+          [class.recipient-form__email-status--invalid]="
+            selectedUserEmailStatus === 'invalid'
+          "
+          [class.recipient-form__email-status--missing]="
+            selectedUserEmailStatus === 'missing'
+          "
+        >
+
+          <svg
+            *ngIf="
+              selectedUserEmailStatus === 'valid'
+            "
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6 12 4 4 8-8"
+              stroke="currentColor"
+              stroke-width="1.9"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+
+          <svg
+            *ngIf="
+              selectedUserEmailStatus !== 'valid'
+            "
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 8v5M12 16h.01"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+          </svg>
+
+          {{ selectedUserEmailStatusLabel }}
+
+        </span>
+
+      </div>
+
+
+      <span class="recipient-form__hint">
+        Busca por nombre, apellido o correo electrónico.
+      </span>
+
+    </div>
+
+  </ng-container>
+
+
+  <!-- =====================================================
+      STAGE
+  ====================================================== -->
+
+  <ng-container *ngIf="selectedType === 'stage'">
+
+    <!-- SELECTOR -->
+
+    <div class="recipient-form__field">
+
+      <label
+        for="recipientStage"
+        class="recipient-form__label"
+      >
+        Seleccionar etapa
+      </label>
+
+
+      <div class="recipient-form__select-wrapper">
+
+        <span
+          class="recipient-form__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m3.5 8.5 8.5-4 8.5 4-8.5 4-8.5-4Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M6.5 10v5c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+          </svg>
+
+        </span>
+
+
+        <select
+          id="recipientStage"
+          class="recipient-form__select"
+          [(ngModel)]="selectedStageId"
+          (ngModelChange)="onStageChange($event)"
+        >
+
+          <option [ngValue]="null">
+            Selecciona un stage
+          </option>
+
+          <option
+            *ngFor="
+              let stage of stages;
+              trackBy: trackByStageId
+            "
+            [ngValue]="stage.id"
+          >
+            {{ getStageLabel(stage) }}
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <span class="recipient-form__hint">
+        El email se enviará a los usuarios que pertenezcan
+        a la etapa seleccionada.
+      </span>
+
+    </div>
+
+
+    <!-- =====================================================
+        LOADING STAGE USERS
+    ====================================================== -->
+
+    <div
+      *ngIf="
+        selectedStageId !== null &&
+        loadingStageUsers
+      "
+      class="recipient-form__stage-loading"
+    >
+
+      <span class="recipient-form__spinner">
+      </span>
+
+      <span>
+        Analizando emails de los usuarios del Stage...
+      </span>
+
+    </div>
+
+
+    <!-- =====================================================
+        STAGE SUMMARY
+    ====================================================== -->
+
+    <section
+      *ngIf="
+        selectedStageId !== null &&
+        !loadingStageUsers
+      "
+      class="recipient-form__stage-summary"
+    >
+
+      <!-- HEADER -->
+
+      <header class="recipient-form__stage-summary-header">
+
+        <h3>
+          Resumen de usuarios en
+          {{ selectedStageLabel }}
+        </h3>
+
+        <p>
+          Se encontraron
+          <strong>
+            {{ stageUsersTotal }}
+          </strong>
+          usuarios en esta etapa.
+        </p>
+
+      </header>
+
+
+      <!-- ===================================================
+          STATS
+      ==================================================== -->
+
+      <div class="recipient-form__stage-stats">
+
+        <!-- VALID -->
+
+        <article
+          class="
+            recipient-form__stage-stat
+            recipient-form__stage-stat--valid
+          "
+        >
+
+          <span class="recipient-form__stage-stat-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m4 7 8 6 8-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="m15.5 16 1.6 1.6 3-3"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <strong>
+              {{ stageUsersValidEmailCount }}
+            </strong>
+
+            <span>
+              con email válido
+            </span>
+
+            <small>
+              {{
+                stageValidEmailPercentage
+                  | number:'1.0-2'
+              }}%
+            </small>
+
+          </div>
+
+        </article>
+
+
+        <!-- INVALID -->
+
+        <article
+          class="
+            recipient-form__stage-stat
+            recipient-form__stage-stat--invalid
+          "
+        >
+
+          <span class="recipient-form__stage-stat-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M12 4 21 20H3L12 4Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M12 9v5M12 17h.01"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <strong>
+              {{ stageUsersInvalidEmailCount }}
+            </strong>
+
+            <span>
+              con email inválido
+            </span>
+
+            <small>
+              {{
+                stageInvalidEmailPercentage
+                  | number:'1.0-2'
+              }}%
+            </small>
+
+          </div>
+
+        </article>
+
+
+        <!-- WITHOUT EMAIL -->
+
+        <article
+          class="
+            recipient-form__stage-stat
+            recipient-form__stage-stat--missing
+          "
+        >
+
+          <span class="recipient-form__stage-stat-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m4 7 8 6 8-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M16 15l4 4M20 15l-4 4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <strong>
+              {{ stageUsersWithoutEmailCount }}
+            </strong>
+
+            <span>
+              sin email registrado
+            </span>
+
+            <small>
+              {{
+                stageWithoutEmailPercentage
+                  | number:'1.0-2'
+              }}%
+            </small>
+
+          </div>
+
+        </article>
+
+      </div>
+
+
+      <!-- ===================================================
+          FILTER
+      ==================================================== -->
+
+      <div class="recipient-form__stage-filter">
+
+        <div class="recipient-form__stage-filter-heading">
+
+          <strong>
+            Filtro de destinatarios
+          </strong>
+
+          <span>
+            Elige a qué usuarios deseas enviarles el email.
+          </span>
+
+        </div>
+
+
+        <select
+          class="recipient-form__stage-filter-select"
+          [(ngModel)]="stageRecipientFilter"
+        >
+
+          <option value="valid">
+            Solo a usuarios con email válido
+          </option>
+
+          <option value="with-email">
+            A usuarios con email válido e inválido
+          </option>
+
+          <option value="all">
+            A todos los usuarios
+          </option>
+
+        </select>
+
+
+        <!-- FILTER INFO -->
+
+        <div
+          class="recipient-form__stage-filter-info"
+          [class.recipient-form__stage-filter-info--valid]="
+            stageRecipientFilter === 'valid'
+          "
+          [class.recipient-form__stage-filter-info--warning]="
+            stageRecipientFilter === 'with-email'
+          "
+          [class.recipient-form__stage-filter-info--danger]="
+            stageRecipientFilter === 'all'
+          "
+        >
+
+          <span class="recipient-form__stage-filter-dot">
+          </span>
+
+
+          <div>
+
+            <strong>
+
+              <ng-container [ngSwitch]="stageRecipientFilter">
+
+                <span *ngSwitchCase="'valid'">
+                  Solo a usuarios con email válido
+                </span>
+
+                <span *ngSwitchCase="'with-email'">
+                  A usuarios con email válido e inválido
+                </span>
+
+                <span *ngSwitchDefault>
+                  A todos los usuarios
+                </span>
+
+              </ng-container>
+
+            </strong>
+
+
+            <span>
+
+              <ng-container [ngSwitch]="stageRecipientFilter">
+
+                <span *ngSwitchCase="'valid'">
+                  Se enviará únicamente a los
+                  {{ stageUsersValidEmailCount }}
+                  usuarios con email válido.
+                </span>
+
+                <span *ngSwitchCase="'with-email'">
+                  Se consideran
+                  {{
+                    stageUsersValidEmailCount +
+                    stageUsersInvalidEmailCount
+                  }}
+                  usuarios que tienen algún email registrado.
+                </span>
+
+                <span *ngSwitchDefault>
+                  Se consideran los
+                  {{ stageUsersTotal }}
+                  usuarios encontrados en esta etapa.
+                </span>
+
+              </ng-container>
+
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- NOTE -->
+
+        <div class="recipient-form__stage-note">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="M12 11v5M12 8h.01"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            El sistema solo podrá enviar realmente a direcciones
+            de correo válidas.
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+
+  <!-- =====================================================
+      GROUP
+  ====================================================== -->
+
+  <ng-container *ngIf="selectedType === 'group'">
+
+    <!-- ===================================================
+        GROUP SELECTOR
+    ==================================================== -->
+
+    <div class="recipient-form__field">
+
+      <label
+        for="recipientGroup"
+        class="recipient-form__label"
+      >
+        Seleccionar grupo
+      </label>
+
+
+      <div class="recipient-form__select-wrapper">
+
+        <span
+          class="recipient-form__select-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="9"
+              cy="8"
+              r="3"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M16 6.5a2.4 2.4 0 1 1 0 4.8M16 14.5c2.6.2 4.5 1.9 4.5 4.2"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+
+        <select
+          id="recipientGroup"
+          class="recipient-form__select"
+          [(ngModel)]="selectedGroupId"
+          (ngModelChange)="onGroupChange($event)"
+        >
+
+          <option [ngValue]="null">
+            Selecciona un grupo
+          </option>
+
+          <option
+            *ngFor="
+              let group of groups;
+              trackBy: trackByGroupId
+            "
+            [ngValue]="group.id"
+          >
+            {{ getGroupLabel(group) }}
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <span
+        *ngIf="groups.length > 0"
+        class="recipient-form__hint"
+      >
+        {{ groups.length }}
+        {{
+          groups.length === 1
+            ? 'grupo disponible'
+            : 'grupos disponibles'
+        }}.
+      </span>
+
+
+      <div
+        *ngIf="groups.length === 0"
+        class="recipient-form__notice"
+      >
+        No hay grupos disponibles para seleccionar.
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+        GROUP SUMMARY
+    ==================================================== -->
+
+    <section
+      *ngIf="selectedGroupId !== null"
+      class="recipient-form__group-summary"
+    >
+
+      <!-- HEADER -->
+
+      <header class="recipient-form__group-summary-header">
+
+        <h3>
+          Resumen del grupo:
+          {{ selectedGroup?.name || 'Grupo seleccionado' }}
+        </h3>
+
+        <p>
+          Se encontraron
+          <strong>
+            {{ groupUsersTotal }}
+          </strong>
+          usuarios en este grupo.
+        </p>
+
+      </header>
+
+
+      <!-- =================================================
+          STATS
+      ================================================== -->
+
+      <div class="recipient-form__group-stats">
+
+        <!-- VALID -->
+
+        <article
+          class="
+            recipient-form__group-stat
+            recipient-form__group-stat--valid
+          "
+        >
+
+          <span class="recipient-form__group-stat-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m4 7 8 6 8-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="m15.5 16 1.6 1.6 3-3"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <strong>
+              {{ groupUsersValidEmailCount }}
+            </strong>
+
+            <span>
+              con email válido
+            </span>
+
+            <small>
+              {{
+                groupValidEmailPercentage
+                  | number:'1.0-2'
+              }}%
+            </small>
+
+          </div>
+
+        </article>
+
+
+        <!-- INVALID -->
+
+        <article
+          class="
+            recipient-form__group-stat
+            recipient-form__group-stat--invalid
+          "
+        >
+
+          <span class="recipient-form__group-stat-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M12 4 21 20H3L12 4Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M12 9v5M12 17h.01"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <strong>
+              {{ groupUsersInvalidEmailCount }}
+            </strong>
+
+            <span>
+              con email inválido
+            </span>
+
+            <small>
+              {{
+                groupInvalidEmailPercentage
+                  | number:'1.0-2'
+              }}%
+            </small>
+
+          </div>
+
+        </article>
+
+
+        <!-- WITHOUT EMAIL -->
+
+        <article
+          class="
+            recipient-form__group-stat
+            recipient-form__group-stat--missing
+          "
+        >
+
+          <span class="recipient-form__group-stat-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m4 7 8 6 8-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M16 15l4 4M20 15l-4 4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <strong>
+              {{ groupUsersWithoutEmailCount }}
+            </strong>
+
+            <span>
+              sin email registrado
+            </span>
+
+            <small>
+              {{
+                groupWithoutEmailPercentage
+                  | number:'1.0-2'
+              }}%
+            </small>
+
+          </div>
+
+        </article>
+
+      </div>
+
+
+      <!-- =================================================
+          SEND INFORMATION
+      ================================================== -->
+
+      <div class="recipient-form__group-send-info">
+
+        <span class="recipient-form__group-send-info-icon">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="M12 11v5M12 8h.01"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        </span>
+
+
+        <div>
+
+          <strong>
+            {{ groupUsersValidEmailCount }}
+            usuarios podrán recibir el email
+          </strong>
+
+          <span>
+            {{
+              groupUsersInvalidEmailCount +
+              groupUsersWithoutEmailCount
+            }}
+            usuarios serán excluidos porque no tienen
+            una dirección de correo válida.
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+
+  <!-- =====================================================
+      ROLE
+  ====================================================== -->
+
+  <ng-container *ngIf="selectedType === 'role'">
+
+    <!-- ===================================================
+        ROLE SELECTOR
+    ==================================================== -->
+
+    <div class="recipient-form__field">
+
+      <label class="recipient-form__label">
+        Seleccionar rol
+      </label>
+
+
+      <div class="recipient-form__roles">
+
+        <!-- STUDENT -->
+
+        <button
+          type="button"
+          class="recipient-form__role"
+          [class.recipient-form__role--active]="
+            selectedRole === 'student'
+          "
+          (click)="selectRole('student')"
+        >
+
+          <span class="recipient-form__role-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="m3.5 8.5 8.5-4 8.5 4-8.5 4-8.5-4Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M6.5 10v5c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+            </svg>
+          </span>
+
+          <span>
+            <strong>
+              Estudiantes
+            </strong>
+
+            <small>
+              Todos los estudiantes
+            </small>
+          </span>
+
+        </button>
+
+
+        <!-- INSTRUCTOR -->
+
+        <button
+          type="button"
+          class="recipient-form__role"
+          [class.recipient-form__role--active]="
+            selectedRole === 'instructor'
+          "
+          (click)="selectRole('instructor')"
+        >
+
+          <span class="recipient-form__role-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="8"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M5.5 19c0-3.1 2.5-5 6.5-5s6.5 1.9 6.5 5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <span>
+            <strong>
+              Instructores
+            </strong>
+
+            <small>
+              Todos los instructores
+            </small>
+          </span>
+
+        </button>
+
+
+        <!-- ADMIN -->
+
+        <button
+          type="button"
+          class="recipient-form__role"
+          [class.recipient-form__role--active]="
+            selectedRole === 'admin'
+          "
+          (click)="selectRole('admin')"
+        >
+
+          <span class="recipient-form__role-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="5"
+                y="4"
+                width="14"
+                height="16"
+                rx="2.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <circle
+                cx="12"
+                cy="9"
+                r="2"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+
+              <path
+                d="M8.5 16c.4-2 1.6-3 3.5-3s3.1 1 3.5 3"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <span>
+            <strong>
+              Administradores
+            </strong>
+
+            <small>
+              Todos los administradores
+            </small>
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+        ROLE LOADING
+    ==================================================== -->
+
+    <div
+      *ngIf="
+        selectedRole &&
+        loadingRoleUsers
+      "
+      class="recipient-form__role-loading"
+    >
+
+      <span class="recipient-form__spinner">
+      </span>
+
+      <span>
+        Analizando usuarios del rol
+        {{ selectedRoleLabel }}...
+      </span>
+
+    </div>
+
+
+    <!-- ===================================================
+        ROLE SUMMARY
+    ==================================================== -->
+
+    <section
+      *ngIf="
+        selectedRole &&
+        !loadingRoleUsers
+      "
+      class="recipient-form__role-summary"
+    >
+
+      <!-- HEADER -->
+
+      <header class="recipient-form__role-summary-header">
+
+        <h3>
+          Resumen de usuarios:
+          {{ selectedRoleLabel }}
+        </h3>
+
+        <p>
+          Se encontraron
+          <strong>
+            {{ roleUsersTotal }}
+          </strong>
+          usuarios con este rol.
+        </p>
+
+      </header>
+
+
+      <!-- =================================================
+          STATS
+      ================================================== -->
+
+      <div class="recipient-form__role-stats">
+
+        <!-- VALID -->
+
+        <article
+          class="
+            recipient-form__role-stat
+            recipient-form__role-stat--valid
+          "
+        >
+
+          <span class="recipient-form__role-stat-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m4 7 8 6 8-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="m15.5 16 1.6 1.6 3-3"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <strong>
+              {{ roleUsersValidEmailCount }}
+            </strong>
+
+            <span>
+              con email válido
+            </span>
+
+            <small>
+              {{
+                roleValidEmailPercentage
+                  | number:'1.0-2'
+              }}%
+            </small>
+
+          </div>
+
+        </article>
+
+
+        <!-- INVALID -->
+
+        <article
+          class="
+            recipient-form__role-stat
+            recipient-form__role-stat--invalid
+          "
+        >
+
+          <span class="recipient-form__role-stat-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M12 4 21 20H3L12 4Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M12 9v5M12 17h.01"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <strong>
+              {{ roleUsersInvalidEmailCount }}
+            </strong>
+
+            <span>
+              con email inválido
+            </span>
+
+            <small>
+              {{
+                roleInvalidEmailPercentage
+                  | number:'1.0-2'
+              }}%
+            </small>
+
+          </div>
+
+        </article>
+
+
+        <!-- WITHOUT EMAIL -->
+
+        <article
+          class="
+            recipient-form__role-stat
+            recipient-form__role-stat--missing
+          "
+        >
+
+          <span class="recipient-form__role-stat-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m4 7 8 6 8-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M16 15l4 4M20 15l-4 4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <strong>
+              {{ roleUsersWithoutEmailCount }}
+            </strong>
+
+            <span>
+              sin email registrado
+            </span>
+
+            <small>
+              {{
+                roleWithoutEmailPercentage
+                  | number:'1.0-2'
+              }}%
+            </small>
+
+          </div>
+
+        </article>
+
+      </div>
+
+
+      <!-- =================================================
+          INFO ENVÍO
+      ================================================== -->
+
+      <div class="recipient-form__role-send-info">
+
+        <span class="recipient-form__role-send-info-icon">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="M12 11v5M12 8h.01"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        </span>
+
+
+        <div>
+
+          <strong>
+            {{ roleUsersValidEmailCount }}
+            usuarios podrán recibir el email
+          </strong>
+
+          <span>
+            {{
+              roleUsersInvalidEmailCount +
+              roleUsersWithoutEmailCount
+            }}
+            usuarios serán excluidos porque no tienen
+            una dirección de correo válida.
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+</section>

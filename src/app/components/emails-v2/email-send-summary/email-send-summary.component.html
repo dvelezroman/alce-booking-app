@@ -1,0 +1,310 @@
+<section class="send-summary">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="send-summary__header">
+
+    <div class="send-summary__heading">
+
+      <span
+        class="send-summary__step"
+        aria-hidden="true"
+      >
+        3
+      </span>
+
+
+      <div class="send-summary__heading-content">
+
+        <h3 class="send-summary__title">
+          Resumen del envío
+        </h3>
+
+        <p class="send-summary__description">
+          Revisa el destinatario antes de enviar.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <span
+      class="send-summary__status"
+      [class.send-summary__status--ready]="
+        hasRecipient
+      "
+      [class.send-summary__status--pending]="
+        !hasRecipient
+      "
+    >
+
+      <span
+        class="send-summary__status-dot"
+        aria-hidden="true"
+      >
+      </span>
+
+      {{ statusLabel }}
+
+    </span>
+
+  </header>
+
+
+  <!-- =====================================================
+       BODY
+  ====================================================== -->
+
+  <div class="send-summary__body">
+
+    <!-- TYPE -->
+
+    <div class="send-summary__row">
+
+      <span class="send-summary__row-icon">
+
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M4 6.5 12 12l8-5.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="14"
+            rx="2.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+        </svg>
+
+      </span>
+
+
+      <div class="send-summary__row-content">
+
+        <span>
+          Tipo de destinatario
+        </span>
+
+        <strong>
+          {{ recipientTypeLabel }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- RECIPIENT -->
+
+    <div class="send-summary__row">
+
+      <span class="send-summary__row-icon">
+
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M5.5 19c0-3.1 2.5-5 6.5-5s6.5 1.9 6.5 5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </span>
+
+
+      <div class="send-summary__row-content">
+
+        <span>
+          Destinatario
+        </span>
+
+        <strong>
+          {{ recipientLabel }}
+        </strong>
+
+        <small>
+          {{ recipientDescription }}
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <!-- USER CARD -->
+
+    <div
+      *ngIf="
+        selectedType === 'user' &&
+        selectedUser
+      "
+      class="send-summary__recipient-card"
+    >
+
+      <span
+        class="send-summary__avatar"
+        aria-hidden="true"
+      >
+        {{ getUserInitials(selectedUser) }}
+      </span>
+
+
+      <div class="send-summary__recipient-info">
+
+        <strong>
+          {{ getUserName(selectedUser) }}
+        </strong>
+
+        <span>
+          {{
+            selectedUser.email ||
+            'Sin email registrado'
+          }}
+        </span>
+
+      </div>
+
+
+      <span class="send-summary__recipient-badge">
+        Individual
+      </span>
+
+    </div>
+
+
+    <!-- EMPTY -->
+
+    <div
+      *ngIf="!hasRecipient"
+      class="send-summary__empty"
+    >
+
+      <span
+        class="send-summary__empty-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M12 8v5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="12"
+            cy="16.5"
+            r=".8"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+
+
+      <div>
+
+        <strong>
+          Falta seleccionar destinatario
+        </strong>
+
+        <span>
+          Completa el primer bloque antes de realizar el envío.
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- INFO -->
+
+    <div
+      *ngIf="hasRecipient"
+      class="send-summary__notice"
+    >
+
+      <span
+        class="send-summary__notice-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M12 11v5"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="12"
+            cy="8"
+            r=".8"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+
+
+      <span>
+        Verifica la información del destinatario y el contenido
+        del mensaje antes de confirmar el envío.
+      </span>
+
+    </div>
+
+  </div>
+
+</section>

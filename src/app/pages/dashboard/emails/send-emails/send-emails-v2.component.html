@@ -1,0 +1,306 @@
+<section class="emails-page">
+
+  <div class="emails-page__container">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="emails-page__header">
+
+      <div class="emails-page__header-content">
+
+        <div class="emails-page__header-text">
+
+          <h1 class="emails-page__title">
+            Envío de Emails
+          </h1>
+
+          <p class="emails-page__description">
+            Selecciona el tipo de destinatario y redacta tu mensaje.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="emails-page__header-illustration"
+        aria-hidden="true"
+      >
+
+        <div class="emails-page__header-envelope">
+
+          <svg
+            viewBox="0 0 64 64"
+            fill="none"
+          >
+            <path
+              d="M10 21h44v30H10V21Z"
+              fill="#ebe8ff"
+              stroke="#7666e9"
+              stroke-width="2"
+            />
+
+            <path
+              d="M10 23l22 18 22-18"
+              stroke="#7666e9"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M22 10h24v25H22V10Z"
+              fill="#ffffff"
+              stroke="#8f82eb"
+              stroke-width="2"
+            />
+
+            <path
+              d="M27 17h14M27 22h14M27 27h9"
+              stroke="#8f82eb"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M49 12l8-5-2 9"
+              fill="#7666e9"
+            />
+          </svg>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         RECIPIENT TYPE
+    ====================================================== -->
+
+    <section class="emails-page__recipient-selector">
+
+      <div class="emails-page__recipient-title">
+        ¿A quién deseas enviar el email?
+      </div>
+
+      <app-email-recipient-selector
+        [selectedOption]="selectedAction"
+        [userRole]="userRole"
+        (optionSelected)="onSendOptionSelected($event)"
+      >
+      </app-email-recipient-selector>
+
+    </section>
+
+
+    <!-- =====================================================
+         INFO
+    ====================================================== -->
+
+    <div class="emails-page__info">
+
+      <span
+        class="emails-page__info-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 10v6M12 7.5h.01"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span>
+        <strong>
+          Importante:
+        </strong>
+
+        Verifica los destinatarios y el contenido antes de realizar el envío.
+      </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         WORKSPACE
+    ====================================================== -->
+
+    <section class="emails-page__workspace">
+
+      <!-- ===================================================
+           LEFT
+      ==================================================== -->
+
+      <main class="emails-page__main">
+
+        <!-- ===============================================
+             RECIPIENT
+        ================================================ -->
+
+        <section class="emails-page__card">
+
+          <header class="emails-page__card-header">
+
+            <span class="emails-page__step">
+              1
+            </span>
+
+
+            <div>
+
+              <h2 class="emails-page__card-title">
+                Destinatario
+              </h2>
+
+              <p class="emails-page__card-description">
+                Selecciona a quién deseas enviar el email.
+              </p>
+
+            </div>
+
+          </header>
+
+
+          <div class="emails-page__card-body">
+
+            <app-email-recipient-form
+              *ngIf="selectedAction"
+              [selectedType]="selectedAction"
+              [stages]="stages"
+              [groups]="groups"
+              [userRole]="userRole"
+              [reset]="resetChildren"
+              (userSelected)="handleUserSelect($event)"
+              (stageSelected)="handleStageSelect($event)"
+              (roleSelected)="handleRoleSelect($event)"
+              (groupSelected)="handleGroupSelect($event)"
+            >
+            </app-email-recipient-form>
+
+          </div>
+
+        </section>
+
+
+        <!-- ===============================================
+             MESSAGE
+        ================================================ -->
+
+        <section class="emails-page__card">
+
+          <header class="emails-page__card-header">
+
+            <span class="emails-page__step">
+              2
+            </span>
+
+
+            <div>
+
+              <h2 class="emails-page__card-title">
+                Mensaje
+              </h2>
+
+              <p class="emails-page__card-description">
+                Redacta el contenido de tu email.
+              </p>
+
+            </div>
+
+          </header>
+
+
+          <div class="emails-page__card-body">
+
+            <app-email-message-form
+              [selectedType]="selectedAction"
+              [selectedUser]="selectedUser"
+              [selectedStage]="selectedStage"
+              [selectedGroup]="selectedGroup"
+              [selectedRole]="selectedRole"
+              [groups]="groups"
+              [reset]="resetChildren"
+              (submitBulkEmail)="handleEmailSubmit($event)"
+              (submitSingleEmail)="handleSingleEmailSubmit($event)"
+              (submitTemplateEmail)="handleTemplateEmailSubmit($event)"
+              (invalidSingleEmail)="handleInvalidSingleEmail($event)"
+            >
+            </app-email-message-form>
+
+          </div>
+
+        </section>
+
+      </main>
+
+
+      <!-- ===================================================
+           RIGHT
+      ==================================================== -->
+
+      <aside class="emails-page__sidebar">
+
+        <!-- SUMMARY -->
+
+        <app-email-send-summary
+          [selectedType]="selectedAction"
+          [selectedUser]="selectedUser"
+          [selectedStage]="selectedStage"
+          [selectedRole]="selectedRole"
+        >
+        </app-email-send-summary>
+
+
+        <!-- PREVIEW -->
+
+        <app-email-preview
+          [selectedUser]="selectedUser"
+        >
+        </app-email-preview>
+
+
+        <!-- SEND OPTIONS -->
+
+        <app-email-send-options>
+        </app-email-send-options>
+
+      </aside>
+
+    </section>
+
+  </div>
+
+
+  <!-- =====================================================
+       MODAL
+  ====================================================== -->
+
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [title]="modal.title || ''"
+    (close)="modal.close()"
+  >
+  </app-modal>
+
+</section>

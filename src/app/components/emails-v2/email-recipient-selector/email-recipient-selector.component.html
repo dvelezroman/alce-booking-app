@@ -1,0 +1,342 @@
+
+<section class="recipient-selector">
+
+  <div class="recipient-selector__grid">
+
+    <!-- =====================================================
+         USER
+    ====================================================== -->
+
+    <button
+      type="button"
+      class="recipient-selector__option"
+      [class.recipient-selector__option--active]="
+        isSelected('user')
+      "
+      (click)="selectOption('user')"
+    >
+
+      <span
+        class="recipient-selector__icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="8"
+            r="3.2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M5.5 19c0-3.3 2.7-5.3 6.5-5.3s6.5 2 6.5 5.3"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <span class="recipient-selector__content">
+
+        <strong class="recipient-selector__title">
+          Usuario individual
+        </strong>
+
+        <span class="recipient-selector__description">
+          Envía un email a un usuario específico.
+        </span>
+
+      </span>
+
+
+      <span
+        *ngIf="isSelected('user')"
+        class="recipient-selector__check"
+        aria-hidden="true"
+      >
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m6 12 4 4 8-9"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+    </button>
+
+
+    <!-- =====================================================
+         STAGE
+    ====================================================== -->
+
+    <button
+      type="button"
+      class="recipient-selector__option"
+      [class.recipient-selector__option--active]="
+        isSelected('stage')
+      "
+      (click)="selectOption('stage')"
+    >
+
+      <span
+        class="recipient-selector__icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m3.5 8.5 8.5-4 8.5 4-8.5 4-8.5-4Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M6.5 10v5c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M20.5 8.5V14"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <span class="recipient-selector__content">
+
+        <strong class="recipient-selector__title">
+          Por etapa (Stage)
+        </strong>
+
+        <span class="recipient-selector__description">
+          Envía a todos los usuarios de una etapa académica.
+        </span>
+
+      </span>
+
+
+      <span
+        *ngIf="isSelected('stage')"
+        class="recipient-selector__check"
+        aria-hidden="true"
+      >
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m6 12 4 4 8-9"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+    </button>
+
+
+    <!-- =====================================================
+         GROUP
+    ====================================================== -->
+
+    <button
+      type="button"
+      class="recipient-selector__option"
+      [class.recipient-selector__option--active]="
+        isSelected('group')
+      "
+      (click)="selectOption('group')"
+    >
+
+      <span
+        class="recipient-selector__icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="9"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M16 6.5a2.4 2.4 0 1 1 0 4.8M16 14.5c2.6.2 4.5 1.9 4.5 4.2"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <span class="recipient-selector__content">
+
+        <strong class="recipient-selector__title">
+          Por grupo
+        </strong>
+
+        <span class="recipient-selector__description">
+          Envía a todos los integrantes de un grupo.
+        </span>
+
+      </span>
+
+
+      <span
+        *ngIf="isSelected('group')"
+        class="recipient-selector__check"
+        aria-hidden="true"
+      >
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m6 12 4 4 8-9"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+    </button>
+
+
+    <!-- =====================================================
+         ROLE
+    ====================================================== -->
+
+    <button
+      type="button"
+      class="recipient-selector__option"
+      [class.recipient-selector__option--active]="
+        isSelected('role')
+      "
+      (click)="selectOption('role')"
+    >
+
+      <span
+        class="recipient-selector__icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="14"
+            rx="2.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <circle
+            cx="9"
+            cy="10"
+            r="2"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+
+          <path
+            d="M6.5 15c.4-1.8 1.3-2.7 2.5-2.7s2.1.9 2.5 2.7M14 9h3M14 13h3"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <span class="recipient-selector__content">
+
+        <strong class="recipient-selector__title">
+          Por rol
+        </strong>
+
+        <span class="recipient-selector__description">
+          Envía a todos los usuarios según su rol.
+        </span>
+
+      </span>
+
+
+      <span
+        *ngIf="isSelected('role')"
+        class="recipient-selector__check"
+        aria-hidden="true"
+      >
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m6 12 4 4 8-9"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+    </button>
+
+  </div>
+
+</section>

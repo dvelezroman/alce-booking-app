@@ -1,0 +1,450 @@
+<section class="send-options">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="send-options__header">
+
+    <div class="send-options__heading">
+
+      <span
+        class="send-options__icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M4 7h10M18 7h2M4 12h3M11 12h9M4 17h8M16 17h4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="16"
+            cy="7"
+            r="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <circle
+            cx="9"
+            cy="12"
+            r="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <circle
+            cx="14"
+            cy="17"
+            r="2"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+        </svg>
+      </span>
+
+
+      <div class="send-options__heading-content">
+
+        <h3 class="send-options__title">
+          Opciones de envío
+        </h3>
+
+        <p class="send-options__description">
+          Configura preferencias adicionales antes de enviar.
+        </p>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       BODY
+  ====================================================== -->
+
+  <div class="send-options__body">
+
+    <!-- COPY -->
+
+    <label class="send-options__option">
+
+      <span class="send-options__option-icon">
+
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="7"
+            y="7"
+            width="11"
+            height="11"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M15 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </span>
+
+
+      <span class="send-options__option-content">
+
+        <strong>
+          Enviar una copia
+        </strong>
+
+        <span>
+          Conserva una copia del mensaje enviado.
+        </span>
+
+      </span>
+
+
+      <span class="send-options__switch">
+
+        <input
+          type="checkbox"
+          [(ngModel)]="sendCopy"
+        />
+
+        <span class="send-options__switch-track">
+          <span class="send-options__switch-thumb">
+          </span>
+        </span>
+
+      </span>
+
+    </label>
+
+
+    <!-- CONFIRMATION -->
+
+    <label class="send-options__option">
+
+      <span class="send-options__option-icon">
+
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="m8.5 12 2.3 2.3 4.8-5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+      </span>
+
+
+      <span class="send-options__option-content">
+
+        <strong>
+          Solicitar confirmación
+        </strong>
+
+        <span>
+          Marca el envío para seguimiento posterior.
+        </span>
+
+      </span>
+
+
+      <span class="send-options__switch">
+
+        <input
+          type="checkbox"
+          [(ngModel)]="requestConfirmation"
+        />
+
+        <span class="send-options__switch-track">
+          <span class="send-options__switch-thumb">
+          </span>
+        </span>
+
+      </span>
+
+    </label>
+
+
+    <!-- PRIORITY -->
+
+    <label class="send-options__option">
+
+      <span class="send-options__option-icon">
+
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 4v10"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="m8 8 4-4 4 4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <circle
+            cx="12"
+            cy="18"
+            r="1"
+            fill="currentColor"
+          />
+        </svg>
+
+      </span>
+
+
+      <span class="send-options__option-content">
+
+        <strong>
+          Prioridad alta
+        </strong>
+
+        <span>
+          Identifica el mensaje como prioritario.
+        </span>
+
+      </span>
+
+
+      <span class="send-options__switch">
+
+        <input
+          type="checkbox"
+          [(ngModel)]="highPriority"
+        />
+
+        <span class="send-options__switch-track">
+          <span class="send-options__switch-thumb">
+          </span>
+        </span>
+
+      </span>
+
+    </label>
+
+
+    <!-- ===================================================
+         SCHEDULE
+    ==================================================== -->
+
+    <section class="send-options__schedule">
+
+      <button
+        type="button"
+        class="send-options__schedule-toggle"
+        [class.send-options__schedule-toggle--active]="
+          scheduled
+        "
+        (click)="toggleScheduled()"
+      >
+
+        <span class="send-options__schedule-icon">
+
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="5"
+              width="16"
+              height="15"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="M8 3v4M16 3v4M4 9h16"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M12 12v3l2 1"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </span>
+
+
+        <span class="send-options__schedule-content">
+
+          <strong>
+            Programar envío
+          </strong>
+
+          <span>
+            Define una fecha y hora para enviar después.
+          </span>
+
+        </span>
+
+
+        <span
+          class="send-options__schedule-chevron"
+          [class.send-options__schedule-chevron--open]="
+            scheduled
+          "
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+      </button>
+
+
+      <div
+        *ngIf="scheduled"
+        class="send-options__schedule-fields"
+      >
+
+        <div class="send-options__field">
+
+          <label for="sendDate">
+            Fecha
+          </label>
+
+          <input
+            id="sendDate"
+            type="date"
+            [(ngModel)]="scheduledDate"
+          />
+
+        </div>
+
+
+        <div class="send-options__field">
+
+          <label for="sendTime">
+            Hora
+          </label>
+
+          <input
+            id="sendTime"
+            type="time"
+            [(ngModel)]="scheduledTime"
+          />
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         NOTE
+    ==================================================== -->
+
+    <div class="send-options__note">
+
+      <span
+        class="send-options__note-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <path
+            d="M12 11v5"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="12"
+            cy="8"
+            r=".8"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+
+
+      <span>
+        Estas opciones complementan la configuración del envío.
+        El mensaje no será enviado desde este bloque.
+      </span>
+
+    </div>
+
+  </div>
+
+</section>
