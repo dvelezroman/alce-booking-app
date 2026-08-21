@@ -55,27 +55,25 @@ export class EmailMessageFormComponent implements OnChanges {
      INPUTS
   ========================= */
 
-  @Input()
-  selectedType: EmailMessageRecipientType | '' = 'user';
+  @Input() selectedType: EmailMessageRecipientType | '' = 'user';
 
-  @Input()
-  selectedUser: UserDto | null = null;
+  @Input() selectedUser: UserDto | null = null;
 
-  @Input()
-  selectedStage: Stage | null = null;
+  @Input() selectedStage: Stage | null = null;
 
-  @Input()
-  selectedRole:
+  @Input() stageUsers: UserDto[] = [];
+
+  @Input() selectedRole:
     | 'student'
     | 'instructor'
     | 'admin'
     | null = null;
 
-  @Input()
-  selectedGroup: NotificationGroupDto | null = null;
+  @Input() roleUsers: UserDto[] = [];
 
-  @Input()
-  reset = false;
+  @Input() selectedGroup: NotificationGroupDto | null = null;
+
+  @Input() reset = false;
 
   /* =========================
      OUTPUTS
@@ -350,35 +348,38 @@ export class EmailMessageFormComponent implements OnChanges {
      SUBMIT
   ========================= */
 
-  onSubmit(): void {
+onSubmit(): void {
+  this.syncEditorContent();
 
-    this.syncEditorContent();
+  console.log('EMAIL FORM SUBMIT:', {
+    selectedType: this.selectedType,
+    selectedRole: this.selectedRole,
+    roleUsers: this.roleUsers.length,
+    stageUsers: this.stageUsers.length,
+    groupUsers: this.selectedGroup?.users?.length ?? 0,
+    subject: this.subject,
+    content: this.content,
+    hasEditorContent: this.hasEditorContent,
+    canSubmit: this.canSubmit,
+    mode: this.mode,
+  });
 
-    if (!this.canSubmit) {
-      return;
-    }
-
-    if (
-      this.selectedType ===
-      'user'
-    ) {
-      this.submitUserEmail();
-      return;
-    }
-
-    if (
-      this.mode ===
-      'template'
-    ) {
-      /*
-       * Las plantillas actuales
-       * son individuales.
-       */
-      return;
-    }
-
-    this.submitBulk();
+  if (!this.canSubmit) {
+    console.warn('El formulario no puede enviarse porque canSubmit = false');
+    return;
   }
+
+  if (this.selectedType === 'user') {
+    this.submitUserEmail();
+    return;
+  }
+
+  if (this.mode === 'template') {
+    return;
+  }
+
+  this.submitBulk();
+}
 
   /* =========================
      SINGLE USER
@@ -473,71 +474,66 @@ export class EmailMessageFormComponent implements OnChanges {
   ========================= */
 
   private submitBulk(): void {
-
     const recipients =
       this.getBulkRecipients();
 
-    const payload:
-      SendBulkEmailRequest = {
+    // console.log('BULK GENERADO:', {
+    //   selectedType: this.selectedType,
+    //   roleUsers: this.roleUsers.length,
+    //   stageUsers: this.stageUsers.length,
+    //   recipients: recipients.length,
+    //   recipientsData: recipients,
+    // });
 
+    if (!recipients.length) {
+      console.warn(
+        'No existen destinatarios válidos para el bulk.',
+      );
+      return;
+    }
+
+    const payload: SendBulkEmailRequest = {
       recipients,
-
-      subject:
-        this.subject
-          .trim(),
-
-      content:
-        this.content
-          .trim(),
-
-      contentType:
-        'html',
-
-      fromName:
-        'Alce College',
-
-      ...(
-        this.selectedType ===
-          'group' &&
-        this.selectedGroup?.id != null && {
-
-          notificationGroupId:
-            this.selectedGroup.id,
-        }
-      ),
+      subject: this.subject.trim(),
+      content: this.content.trim(),
+      contentType: 'html',
+      fromName: 'Alce College',
     };
 
-    this.submitBulkEmail.emit(
+    console.log(
+      'BULK PAYLOAD EMITIDO:',
       payload,
     );
+
+    this.submitBulkEmail.emit(payload);
   }
 
   /* =========================
      BULK RECIPIENTS
   ========================= */
 
-  private getBulkRecipients():
-    BulkEmailRecipient[] {
+  private getBulkRecipients(): BulkEmailRecipient[] {
 
-    if (
-      this.selectedType ===
-      'group'
-    ) {
-
+    if (this.selectedType === 'group') {
       const users =
-        this.selectedGroup
-          ?.users ?? [];
+        this.selectedGroup?.users ?? [];
 
       return this.mapUsersToRecipients(
         users,
       );
     }
 
-    /*
-     * Stage y Role se conectarán
-     * con sus listas de usuarios
-     * en el siguiente ajuste.
-     */
+    if (this.selectedType === 'stage') {
+      return this.mapUsersToRecipients(
+        this.stageUsers,
+      );
+    }
+
+    if (this.selectedType === 'role') {
+      return this.mapUsersToRecipients(
+        this.roleUsers,
+      );
+    }
 
     return [];
   }

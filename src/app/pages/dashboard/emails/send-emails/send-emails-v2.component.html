@@ -190,7 +190,9 @@
               [reset]="resetChildren"
               (userSelected)="handleUserSelect($event)"
               (stageSelected)="handleStageSelect($event)"
+              (stageUsersLoaded)="handleStageUsersLoaded($event)"
               (roleSelected)="handleRoleSelect($event)"
+              (roleUsersLoaded)="handleRoleUsersLoaded($event)"
               (groupSelected)="handleGroupSelect($event)"
             >
             </app-email-recipient-form>
@@ -234,9 +236,10 @@
               [selectedType]="selectedAction"
               [selectedUser]="selectedUser"
               [selectedStage]="selectedStage"
+              [stageUsers]="stageUsers"
               [selectedGroup]="selectedGroup"
               [selectedRole]="selectedRole"
-              [groups]="groups"
+              [roleUsers]="roleUsers"
               [reset]="resetChildren"
               (submitBulkEmail)="handleEmailSubmit($event)"
               (submitSingleEmail)="handleSingleEmailSubmit($event)"

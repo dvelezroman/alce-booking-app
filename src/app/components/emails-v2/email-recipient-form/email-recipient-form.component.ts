@@ -84,7 +84,11 @@ export class EmailRecipientFormComponent
 
   @Output() stageSelected = new EventEmitter<Stage | null>();
 
+  @Output() stageUsersLoaded = new EventEmitter<UserDto[]>();
+
   @Output() groupSelected = new EventEmitter<NotificationGroupDto | null>();
+
+  @Output() roleUsersLoaded = new EventEmitter<UserDto[]>();
 
   @Output() roleSelected = new EventEmitter<
     'student'
@@ -502,8 +506,15 @@ export class EmailRecipientFormComponent
 
     this.stageUsers = [];
 
+    this.stageUsersLoaded.emit(
+      [],
+    );
+
     if (value === null) {
-      this.stageSelected.emit(null);
+      this.stageSelected.emit(
+        null,
+      );
+
       return;
     }
 
@@ -513,7 +524,9 @@ export class EmailRecipientFormComponent
           item.id === Number(value),
       ) ?? null;
 
-    this.stageSelected.emit(stage);
+    this.stageSelected.emit(
+      stage,
+    );
 
     this.loadStageUsers(
       Number(value),
@@ -528,34 +541,60 @@ export class EmailRecipientFormComponent
 
     this.usersService
       .searchUsers(
-        0,
-        1000,
         undefined,
         undefined,
         undefined,
+        '',
+        '',
         undefined,
         UserRole.STUDENT,
-        undefined,
+        true,
         stageId,
       )
       .subscribe({
         next: (response) => {
+
           this.stageUsers =
             response.users ?? [];
 
           this.loadingStageUsers =
             false;
+
+          this.stageUsersLoaded.emit(
+            this.stageUsers,
+          );
+
+          console.log(
+            'STAGE USERS:',
+            {
+              stageId,
+              totalBackend: response.total,
+              recibidos: this.stageUsers.length,
+              validos:
+                this.stageUsersValidEmailCount,
+              invalidos:
+                this.stageUsersInvalidEmailCount,
+              sinEmail:
+                this.stageUsersWithoutEmailCount,
+            },
+          );
         },
 
         error: (error) => {
+
           console.error(
             'Error al obtener usuarios del Stage:',
             error,
           );
 
           this.stageUsers = [];
+
           this.loadingStageUsers =
             false;
+
+          this.stageUsersLoaded.emit(
+            [],
+          );
         },
       });
   }
@@ -838,6 +877,10 @@ export class EmailRecipientFormComponent
 
     this.roleUsers = [];
 
+    this.roleUsersLoaded.emit(
+      [],
+    );
+
     this.loadRoleUsers(
       role,
     );
@@ -859,15 +902,15 @@ export class EmailRecipientFormComponent
 
     this.usersService
       .searchUsers(
-        undefined, // page
-        undefined, // limit
-        undefined, // email
-        '',        // firstName
-        '',        // lastName
-        undefined, // status
-        userRole,  // role
-        true,      // register
-        undefined, // stageId
+        undefined,
+        undefined,
+        undefined,
+        '',
+        '',
+        undefined,
+        userRole,
+        true,
+        undefined,
       )
       .subscribe({
         next: (response) => {
@@ -878,13 +921,20 @@ export class EmailRecipientFormComponent
           this.loadingRoleUsers =
             false;
 
+          /* ENVIAR USUARIOS AL PADRE */
+          this.roleUsersLoaded.emit(
+            this.roleUsers,
+          );
+
           console.log(
             'ROLE USERS:',
             {
-              totalBackend:
-                response.total,
-              recibidos:
-                this.roleUsers.length,
+              role,
+              totalBackend: response.total,
+              recibidos: this.roleUsers.length,
+              validos: this.roleUsersValidEmailCount,
+              invalidos: this.roleUsersInvalidEmailCount,
+              sinEmail: this.roleUsersWithoutEmailCount,
             },
           );
         },
@@ -897,9 +947,12 @@ export class EmailRecipientFormComponent
           );
 
           this.roleUsers = [];
+          this.loadingRoleUsers = false;
 
-          this.loadingRoleUsers =
-            false;
+          /* LIMPIAR TAMBIÉN EN EL PADRE */
+          this.roleUsersLoaded.emit(
+            [],
+          );
         },
       });
   }
@@ -1178,14 +1231,16 @@ export class EmailRecipientFormComponent
     this.loadingStageUsers = false;
 
     this.selectedGroupId = null;
-    
+
     this.selectedRole = null;
     this.roleUsers = [];
     this.loadingRoleUsers = false;
 
     this.userSelected.emit(null);
     this.stageSelected.emit(null);
+    this.stageUsersLoaded.emit([]);
     this.roleSelected.emit(null);
+    this.roleUsersLoaded.emit([]);
     this.groupSelected.emit(null);
   }
 

@@ -59,9 +59,11 @@ export class SendEmailsComponent implements OnInit {
   selectedUser: UserDto | null = null;
   selectedRole: 'student' | 'instructor' | 'admin' | null = null;
   userRole: UserRole | null = null;
+  roleUsers: UserDto[] = [];
 
   stages: Stage[] = [];
   selectedStage: Stage | null = null;
+  stageUsers: UserDto[] = [];
 
   groups: NotificationGroupDto[] = [];
   selectedGroup: NotificationGroupDto | null = null;
@@ -146,6 +148,18 @@ export class SendEmailsComponent implements OnInit {
     this.selectedStage = stage;
   }
 
+  handleStageUsersLoaded( users: UserDto[] ): void {
+    this.stageUsers = users;
+
+    console.log(
+      'STAGE USERS RECIBIDOS EN PADRE:',
+      {
+        cantidad: this.stageUsers.length,
+        users: this.stageUsers,
+      },
+    );
+  }
+
   handleRoleSelect(
     role:
       'student'
@@ -154,6 +168,20 @@ export class SendEmailsComponent implements OnInit {
       | null,
   ): void {
     this.selectedRole = role;
+  }
+
+  handleRoleUsersLoaded(
+    users: UserDto[],
+  ): void {
+    this.roleUsers = users;
+
+    // console.log(
+    //   'ROLE USERS RECIBIDOS EN PADRE:',
+    //   {
+    //     cantidad: this.roleUsers.length,
+    //     users: this.roleUsers,
+    //   },
+    // );
   }
 
   handleGroupSelect( group: NotificationGroupDto | null ): void {
@@ -169,7 +197,7 @@ export class SendEmailsComponent implements OnInit {
     this.selectedGroup = null;
 
     this.resetChildren = true;
-    
+
     setTimeout(() => {
       this.resetChildren = false;
     }, 0);
@@ -185,34 +213,48 @@ export class SendEmailsComponent implements OnInit {
   }
 
   // Stage, Role, Group (bulk)
-  handleEmailSubmit(payload: SendBulkEmailRequest): void {
+  handleEmailSubmit(
+    payload: SendBulkEmailRequest,
+  ): void {
+
     if (!payload.recipients.length) {
       this.showModal({
         isError: true,
         title: 'Sin destinatarios',
         message: 'Debes seleccionar al menos un destinatario.',
       });
+
       return;
     }
 
-    this.emailService.sendBulkEmail(payload).subscribe({
-      next: (res) => {
-        this.showModal({
-          isSuccess: true,
-          title: 'Emails enviados',
-          message: `Se enviaron ${res.length} emails correctamente.`,
-        });
-        this.clearSelection();
-      },
-      error: (err) => {
-        console.error('Error al enviar bulk email:', err);
-        this.showModal({
-          isError: true,
-          title: 'Error al enviar',
-          message: 'Hubo un problema enviando los emails. Intenta nuevamente.',
-        });
-      },
-    });
+    this.emailService
+      .sendBulkEmail(payload)
+      .subscribe({
+        next: (res) => {
+          this.showModal({
+            isSuccess: true,
+            title: 'Emails enviados',
+            message:
+              `Se enviaron ${res.length} emails correctamente.`,
+          });
+
+          this.clearSelection();
+        },
+
+        error: (err) => {
+          console.error(
+            'Error al enviar bulk email:',
+            err,
+          );
+
+          this.showModal({
+            isError: true,
+            title: 'Error al enviar',
+            message:
+              'Hubo un problema enviando los emails. Intenta nuevamente.',
+          });
+        },
+      });
   }
 
   // Individual manual
