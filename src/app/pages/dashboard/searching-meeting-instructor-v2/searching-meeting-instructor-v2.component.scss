@@ -53,6 +53,16 @@
     minmax(280px, 340px);
 }
 
+/* Orden normal en desktop */
+
+.instructor-meetings-page__meetings {
+  order: 1;
+}
+
+.instructor-meetings-page__preparation {
+  order: 2;
+}
+
 /* =========================
    MEETINGS
 ========================= */
@@ -253,12 +263,22 @@ app-instructor-meetings-icon-guide {
    MOBILE
 ========================= */
 
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 767px) {
   .instructor-meetings-page {
+    width: 100%;
+    margin-left: 0;
+    padding: .5rem;
+
     background: #ffffff;
   }
 
   .instructor-meetings-page__container {
+    width: 100%;
+
     padding:
       .85rem
       .65rem
@@ -269,9 +289,42 @@ app-instructor-meetings-icon-guide {
     margin-bottom: .8rem;
   }
 
-  .instructor-meetings-page__workspace {
+  /*
+   * En mobile el workspace pasa a una sola columna.
+   * Usamos flex para poder cambiar fácilmente
+   * el orden de los bloques.
+   */
+  .instructor-meetings-page__workspace,
+  .instructor-meetings-page__workspace--with-panel {
+    width: 100%;
     margin-top: .8rem;
+
+    display: flex;
+    flex-direction: column;
+
     gap: .7rem;
+  }
+
+  /*
+   * Preparar asistencia aparece PRIMERO
+   */
+  .instructor-meetings-page__preparation {
+    order: 1;
+
+    position: static;
+
+    width: 100%;
+    min-width: 0;
+  }
+
+  /*
+   * Listado de clases aparece DESPUÉS
+   */
+  .instructor-meetings-page__meetings {
+    order: 2;
+
+    width: 100%;
+    min-width: 0;
   }
 
   .instructor-meetings-page__meetings,
@@ -321,16 +374,27 @@ app-instructor-meetings-icon-guide {
 ========================= */
 
 @media (max-width: 480px) {
-  .instructor-meetings-page__container {
-    padding-inline: .5rem;
+  .instructor-meetings-page {
+    padding: .4rem;
   }
 
-  .instructor-meetings-page__workspace {
+  .instructor-meetings-page__container {
+    padding:
+      .75rem
+      .5rem
+      1.15rem;
+  }
+
+  .instructor-meetings-page__workspace,
+  .instructor-meetings-page__workspace--with-panel {
     gap: .6rem;
   }
 
   .instructor-meetings-page__meetings,
   .instructor-meetings-page__preparation {
+    width: 100%;
+    min-width: 0;
+
     border-radius: .7rem;
   }
 }
