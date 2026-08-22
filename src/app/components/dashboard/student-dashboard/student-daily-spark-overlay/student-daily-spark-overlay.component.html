@@ -1,0 +1,71 @@
+<div
+  class="spark-overlay"
+  *ngIf="open && spark as item"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-labelledby]="'spark-overlay-title'"
+  (click)="onBackdropClick($event)"
+>
+  <div class="spark-overlay__card" (click)="$event.stopPropagation()">
+    <button
+      type="button"
+      class="spark-overlay__close"
+      aria-label="Close"
+      (click)="close()"
+    >
+      ×
+    </button>
+
+    <p class="spark-overlay__eyebrow" id="spark-overlay-title">
+      {{ label }}
+    </p>
+
+    <!-- Quote -->
+    <ng-container *ngIf="!isTrivia">
+      <blockquote class="spark-overlay__quote">
+        <p class="spark-overlay__text">“{{ item.text }}”</p>
+        <footer *ngIf="item.author" class="spark-overlay__author">
+          — {{ item.author }}
+        </footer>
+      </blockquote>
+    </ng-container>
+
+    <!-- Trivia flip card -->
+    <button
+      *ngIf="isTrivia"
+      type="button"
+      class="spark-overlay__flip"
+      [class.spark-overlay__flip--revealed]="revealed"
+      [attr.aria-expanded]="revealed"
+      aria-label="Tap to reveal the answer"
+      (click)="flip()"
+    >
+      <div class="spark-overlay__flip-inner">
+        <div class="spark-overlay__face spark-overlay__face--front">
+          <p class="spark-overlay__text">{{ item.text }}</p>
+          <span class="spark-overlay__tap-hint" *ngIf="!revealed">
+            Tap to reveal
+          </span>
+        </div>
+        <div class="spark-overlay__face spark-overlay__face--back">
+          <p class="spark-overlay__text spark-overlay__text--reveal">
+            {{ item.reveal }}
+          </p>
+        </div>
+      </div>
+    </button>
+
+    <p class="spark-overlay__hint" *ngIf="item.hintEs">
+      <span class="spark-overlay__hint-label">Hint</span>
+      {{ item.hintEs }}
+    </p>
+
+    <button
+      type="button"
+      class="spark-overlay__cta"
+      (click)="close()"
+    >
+      Let's go!
+    </button>
+  </div>
+</div>

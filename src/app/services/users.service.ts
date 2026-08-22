@@ -201,6 +201,16 @@ export class UsersService implements OnInit{
         }
       });
 
+      // Daily Spark: avoid leaking seen/history across users on same browser
+      Object.keys(localStorage).forEach((key) => {
+        if (
+          key.startsWith('alce.spark.seen.') ||
+          key.startsWith('alce.spark.history.')
+        ) {
+          localStorage.removeItem(key);
+        }
+      });
+
       // sessionStorage.removeItem('intro-video-shown-session');
       this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
       this.store.dispatch(setAdminStatus({ isAdmin: false }));

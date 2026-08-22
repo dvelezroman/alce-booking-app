@@ -38,8 +38,11 @@ import { takeUntil } from 'rxjs';
 import { StudentProgressCardComponent } from './student-progress-card/student-progress-card.component';
 import { StudentImportantNoticesComponent } from "./student-important-notices/student-important-notices.component";
 import { StudentDailyQuoteComponent } from "./student-daily-quote/student-daily-quote.component";
+import { StudentDailySparkOverlayComponent } from "./student-daily-spark-overlay/student-daily-spark-overlay.component";
 import { StudentStudyStreakComponent } from "./student-study-streak/student-study-streak.component";
 import { MeetingDetailModalComponent } from '../../scheduled-meetings/meeting-detail-modal/meeting-detail-modal.component';
+import { DailySparkService } from '../../../services/daily-spark.service';
+import { DailySpark } from '../../../services/dtos/daily-spark.dto';
 
 type AnnouncementViewerUser = {
   role?: UserRole;
@@ -70,6 +73,7 @@ type AnnouncementViewerUser = {
     StudentProgressCardComponent,
     StudentImportantNoticesComponent,
     StudentDailyQuoteComponent,
+    StudentDailySparkOverlayComponent,
     StudentStudyStreakComponent,
     MeetingDetailModalComponent,
 ],
@@ -135,6 +139,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     private announcementService: AnnouncementService,
     private readonly bookingService: BookingService,
     private readonly platformAssessmentService: PlatformAssessmentService,
+    private readonly dailySparkService: DailySparkService,
   ) {}
 
   ngOnInit(): void {
@@ -358,6 +363,40 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   get visibleAnnouncements(): Announcement[] {
     return this.filterByDisplayMode(this.announcements);
+  }
+
+  get todaySpark(): DailySpark | null {
+    if (!this.userData?.id) {
+      return null;
+    }
+
+    return this.dailySparkService.getTodaySpark(
+      this.userData.id,
+      this.userData.student?.studentClassification
+    );
+  }
+
+  /** Daily Spark overlay waits behind blocking modals; card still shows. */
+  get canShowSpark(): boolean {
+    return (
+      !!this.userData?.id &&
+      !this.showSuspensionModal &&
+      !this.showUserInfoForm &&
+      this.visibleAnnouncements.length === 0 &&
+      !this.showAssessmentAnnouncement &&
+      this.dailySparkService.shouldShowOverlay(this.userData.id)
+    );
+  }
+
+  onDailySparkClosed(): void {
+    if (!this.userData?.id) {
+      return;
+    }
+
+    this.dailySparkService.markSeen(
+      this.userData.id,
+      this.todaySpark?.id
+    );
   }
 
   /* ============================

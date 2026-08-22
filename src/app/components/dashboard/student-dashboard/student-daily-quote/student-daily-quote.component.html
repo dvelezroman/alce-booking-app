@@ -1,14 +1,15 @@
 <section
   class="daily-quote"
-  *ngIf="currentQuote as quote"
+  *ngIf="spark as item"
 >
   <header class="daily-quote__header">
     <h3 class="daily-quote__title">
-      Frase del día
+      {{ title }}
     </h3>
   </header>
 
-  <div class="daily-quote__content">
+  <!-- Quote -->
+  <div class="daily-quote__content" *ngIf="!isTrivia">
     <span
       class="daily-quote__quotation daily-quote__quotation--opening"
       aria-hidden="true"
@@ -18,12 +19,17 @@
 
     <blockquote class="daily-quote__blockquote">
       <p class="daily-quote__text">
-        “{{ quote.text }}”
+        “{{ item.text }}”
       </p>
 
-      <footer class="daily-quote__author">
-        — {{ quote.author }}
+      <footer class="daily-quote__author" *ngIf="item.author">
+        — {{ item.author }}
       </footer>
+
+      <p class="daily-quote__hint" *ngIf="item.hintEs">
+        <span class="daily-quote__hint-label">Hint</span>
+        {{ item.hintEs }}
+      </p>
     </blockquote>
 
     <span
@@ -34,78 +40,30 @@
     </span>
   </div>
 
-  <!-- <div
-    class="daily-quote__controls"
-    *ngIf="quotes.length > 1"
+  <!-- Trivia compact flip -->
+  <button
+    *ngIf="isTrivia"
+    type="button"
+    class="daily-quote__trivia"
+    [class.daily-quote__trivia--revealed]="revealed"
+    [attr.aria-expanded]="revealed"
+    aria-label="Toca para revelar la respuesta"
+    (click)="flip()"
   >
-    <button
-      type="button"
-      class="daily-quote__arrow"
-      aria-label="Mostrar frase anterior"
-      (click)="showPreviousQuote()"
-    >
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M19 12H5M11 6l-6 6 6 6"
-          stroke="currentColor"
-          stroke-width="1.9"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    </button>
-
-    <div class="daily-quote__indicators">
-      <button
-        type="button"
-        class="daily-quote__indicator"
-        *ngFor="
-          let quoteItem of quotes;
-          let index = index
-        "
-        [class.daily-quote__indicator--active]="
-          index === currentQuoteIndex
-        "
-        [attr.aria-label]="
-          'Mostrar frase ' + (index + 1)
-        "
-        [attr.aria-current]="
-          index === currentQuoteIndex
-            ? 'true'
-            : null
-        "
-        (click)="selectQuote(index)"
-      >
-      </button>
+    <div class="daily-quote__trivia-inner">
+      <div class="daily-quote__trivia-face daily-quote__trivia-face--front">
+        <p class="daily-quote__text">{{ item.text }}</p>
+        <span class="daily-quote__tap" *ngIf="!revealed">Toca para revelar</span>
+      </div>
+      <div class="daily-quote__trivia-face daily-quote__trivia-face--back">
+        <p class="daily-quote__text daily-quote__text--reveal">
+          {{ item.reveal }}
+        </p>
+        <p class="daily-quote__hint" *ngIf="item.hintEs">
+          <span class="daily-quote__hint-label">Hint</span>
+          {{ item.hintEs }}
+        </p>
+      </div>
     </div>
-
-    <button
-      type="button"
-      class="daily-quote__arrow"
-      aria-label="Mostrar siguiente frase"
-      (click)="showNextQuote()"
-    >
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M5 12h14M13 6l6 6-6 6"
-          stroke="currentColor"
-          stroke-width="1.9"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    </button>
-  </div> -->
+  </button>
 </section>

@@ -429,12 +429,22 @@
         [isLoading]="isLoadingMeetings"
       >
       </app-student-study-streak>
-      <app-student-daily-quote/>
+      <app-student-daily-quote
+        [userId]="userData?.id ?? null"
+        [classification]="userData?.student?.studentClassification ?? null"
+      />
     </aside>
 
   </div>
 
 </div>
+
+  <app-student-daily-spark-overlay
+    *ngIf="canShowSpark && todaySpark"
+    [open]="true"
+    [spark]="todaySpark"
+    (closed)="onDailySparkClosed()"
+  ></app-student-daily-spark-overlay>
 
   <app-meeting-detail-modal
     [selectedMeeting]="selectedMeeting"
