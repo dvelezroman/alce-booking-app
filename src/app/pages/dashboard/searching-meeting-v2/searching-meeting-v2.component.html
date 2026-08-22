@@ -97,11 +97,14 @@
           <app-searching-meeting-table
             [meetings]="paginatedMeetings"
             [selectedMeetingIds]="selectedMeetingIds"
+            [limit]="limit"
+            [limitOptions]="[10, 20, 50]"
             [getStudentDisplayName]="getStudentDisplayName"
             [getInstructorDisplayName]="getInstructorDisplayName"
             [isNewUser]="isNewUser"
             (selectionChange)="toggleSelection($event)"
-            (selectAllChange)="onSelectAllVisible($event)"
+            (selectAllChange)="onSelectAllMeetings($event)"
+            (limitChange)="onLimitChange($event)"
           ></app-searching-meeting-table>
 
           <app-searching-meeting-pagination

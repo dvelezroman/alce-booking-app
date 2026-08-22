@@ -1,0 +1,318 @@
+<section class="admin-dashboard-shortcuts">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="admin-dashboard-shortcuts__header">
+
+    <div>
+
+      <h2 class="admin-dashboard-shortcuts__title">
+        Atajos principales
+      </h2>
+
+      <p class="admin-dashboard-shortcuts__description">
+        Accede rápidamente a las principales secciones administrativas.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       GRID
+  ====================================================== -->
+
+  <div class="admin-dashboard-shortcuts__grid">
+
+    <a
+      *ngFor="let shortcut of shortcuts"
+      [routerLink]="shortcut.route"
+      class="admin-dashboard-shortcuts__item"
+    >
+
+      <!-- ===============================================
+           ICON
+      ================================================ -->
+
+      <span
+        class="admin-dashboard-shortcuts__icon"
+        [ngClass]="
+          'admin-dashboard-shortcuts__icon--' +
+          shortcut.type
+        "
+        aria-hidden="true"
+      >
+
+        <!-- =============================================
+             AGENDA
+        ============================================== -->
+
+        <svg
+          *ngIf="shortcut.type === 'agenda'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M8 13h3M8 16h5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+
+        </svg>
+
+
+        <!-- =============================================
+             ASSIGN ASSESSMENT
+        ============================================== -->
+
+        <svg
+          *ngIf="shortcut.type === 'assessment'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+
+          <rect
+            x="5"
+            y="4"
+            width="14"
+            height="16"
+            rx="2.4"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M9 9h6M9 13h6"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M12 16v4M10 18h4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+
+        </svg>
+
+
+        <!-- =============================================
+             STUDENT REPORTS
+        ============================================== -->
+
+        <svg
+          *ngIf="shortcut.type === 'reports'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+
+          <path
+            d="M5 20V10"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M12 20V4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M19 20v-7"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+        </svg>
+
+
+        <!-- =============================================
+             STUDENT PROGRESS
+        ============================================== -->
+
+        <svg
+          *ngIf="shortcut.type === 'progress'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+
+          <path
+            d="M4 18 9 13l3 3 7-8"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M15 8h4v4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+        </svg>
+
+
+        <!-- =============================================
+             ASSESSMENT REPORTS
+        ============================================== -->
+
+        <svg
+          *ngIf="shortcut.type === 'assessment-reports'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+
+          <rect
+            x="5"
+            y="4"
+            width="14"
+            height="16"
+            rx="2.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M9 9h6M9 13h4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="m9 17 1.5 1.5 3-3"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+        </svg>
+
+
+        <!-- =============================================
+             LICENSES
+        ============================================== -->
+
+        <svg
+          *ngIf="shortcut.type === 'licenses'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="14"
+            rx="2.4"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <circle
+            cx="9"
+            cy="11"
+            r="2"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+
+          <path
+            d="M6.5 16c.4-1.8 1.3-2.7 2.5-2.7s2.1.9 2.5 2.7"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M14 10h3M14 14h3"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+
+        </svg>
+
+      </span>
+
+
+      <!-- ===============================================
+           CONTENT
+      ================================================ -->
+
+      <div class="admin-dashboard-shortcuts__content">
+
+        <strong class="admin-dashboard-shortcuts__item-title">
+          {{ shortcut.title }}
+        </strong>
+
+        <span class="admin-dashboard-shortcuts__item-description">
+          {{ shortcut.description }}
+        </span>
+
+      </div>
+
+
+      <!-- ===============================================
+           ARROW
+      ================================================ -->
+
+      <span
+        class="admin-dashboard-shortcuts__arrow"
+        aria-hidden="true"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+
+          <path
+            d="m9 6 6 6-6 6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+        </svg>
+
+      </span>
+
+    </a>
+
+  </div>
+
+</section>

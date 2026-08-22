@@ -1,0 +1,402 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.admin-dashboard-day-summary {
+  width: 100%;
+
+  padding:
+    .95rem
+    .9rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e7e9ef;
+  border-radius: .75rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 8px rgba(25, 32, 51, .02);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.admin-dashboard-day-summary__header {
+  margin-bottom: .75rem;
+}
+
+.admin-dashboard-day-summary__title {
+  margin: 0;
+
+  color: #20263a;
+
+  font-size: .84rem;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.admin-dashboard-day-summary__description {
+  margin:
+    .22rem
+    0
+    0;
+
+  color: #858d9d;
+
+  font-size: .59rem;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   LIST
+========================================================= */
+
+.admin-dashboard-day-summary__list {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: .5rem;
+}
+
+
+/* =========================================================
+   ITEM
+========================================================= */
+
+.admin-dashboard-day-summary__item {
+  min-width: 0;
+  min-height: 4.5rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: .55rem;
+
+  padding:
+    .6rem
+    .6rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e8eaf0;
+  border-radius: .55rem;
+
+  background: #fbfbfd;
+
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    transform 120ms ease;
+}
+
+.admin-dashboard-day-summary__item:hover {
+  border-color: #dde1e9;
+
+  background: #ffffff;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.admin-dashboard-day-summary__icon {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: .48rem;
+}
+
+.admin-dashboard-day-summary__icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+
+/* USERS */
+
+.admin-dashboard-day-summary__icon--users {
+  background: #edf2ff;
+  color: #5571df;
+}
+
+
+/* SCHEDULED */
+
+.admin-dashboard-day-summary__icon--scheduled {
+  background: #eef6ff;
+  color: #4587c7;
+}
+
+
+/* ASSESSMENTS */
+
+.admin-dashboard-day-summary__icon--completed {
+  background: #ebf8f0;
+  color: #3ba267;
+}
+
+
+/* DEMOS */
+
+.admin-dashboard-day-summary__icon--demos {
+  background: #fff3df;
+  color: #da9029;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.admin-dashboard-day-summary__content {
+  min-width: 0;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .18rem;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.admin-dashboard-day-summary__label {
+  display: -webkit-box;
+
+  overflow: hidden;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+
+  line-clamp: 3;
+
+  color: #777f91;
+
+  font-size: .64rem;
+  font-weight: 500;
+  line-height: 1.35;
+
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   VALUE
+========================================================= */
+
+.admin-dashboard-day-summary__value {
+  display: block;
+
+  min-height: 1rem;
+
+  color: #20263a;
+
+  font-size: .85rem;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+
+/* =========================================================
+   SKELETON
+========================================================= */
+
+.admin-dashboard-day-summary__skeleton {
+  position: relative;
+
+  width: 2.8rem;
+  height: .95rem;
+
+  display: block;
+
+  overflow: hidden;
+
+  margin-top: .03rem;
+
+  border-radius: .26rem;
+
+  background:
+    linear-gradient(
+      90deg,
+      #eceef3 0%,
+      #f6f7f9 45%,
+      #eceef3 100%
+    );
+
+  background-size: 220% 100%;
+
+  animation:
+    admin-dashboard-day-summary-loading
+    1.15s
+    linear
+    infinite;
+}
+
+@keyframes admin-dashboard-day-summary-loading {
+
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+
+}
+
+
+/* =========================================================
+   MEDIUM DESKTOP
+========================================================= */
+
+@media (max-width: 1250px) {
+
+  .admin-dashboard-day-summary {
+    padding:
+      .9rem
+      .85rem;
+  }
+
+  .admin-dashboard-day-summary__item {
+    min-height: 4.4rem;
+
+    padding:
+      .58rem
+      .55rem;
+  }
+
+  .admin-dashboard-day-summary__label {
+    font-size: .61rem;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .admin-dashboard-day-summary {
+    padding:
+      .85rem
+      .8rem;
+  }
+
+  .admin-dashboard-day-summary__list {
+    gap: .45rem;
+  }
+
+  .admin-dashboard-day-summary__item {
+    min-height: 4.25rem;
+  }
+
+  .admin-dashboard-day-summary__icon {
+    width: 1.95rem;
+    height: 1.95rem;
+  }
+
+  .admin-dashboard-day-summary__icon svg {
+    width: .95rem;
+    height: .95rem;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+  .admin-dashboard-day-summary {
+    padding:
+      .8rem
+      .75rem;
+  }
+
+  .admin-dashboard-day-summary__title {
+    font-size: .8rem;
+  }
+
+  .admin-dashboard-day-summary__description {
+    font-size: .57rem;
+  }
+
+  .admin-dashboard-day-summary__item {
+    min-height: 4.2rem;
+
+    padding:
+      .55rem
+      .55rem;
+  }
+
+  .admin-dashboard-day-summary__label {
+    font-size: .59rem;
+  }
+
+  .admin-dashboard-day-summary__value {
+    font-size: .8rem;
+  }
+
+  .admin-dashboard-day-summary__skeleton {
+    width: 2.55rem;
+    height: .86rem;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .admin-dashboard-day-summary__list {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-dashboard-day-summary__item {
+    min-height: 4rem;
+  }
+
+  .admin-dashboard-day-summary__label {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+}

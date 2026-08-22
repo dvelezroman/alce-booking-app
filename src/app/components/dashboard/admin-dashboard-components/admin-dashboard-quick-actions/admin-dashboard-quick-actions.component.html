@@ -1,0 +1,170 @@
+<section class="admin-dashboard-quick-actions">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="admin-dashboard-quick-actions__header">
+
+    <div>
+
+      <h2 class="admin-dashboard-quick-actions__title">
+        Actividad rápida
+      </h2>
+
+      <p class="admin-dashboard-quick-actions__description">
+        Acciones frecuentes del panel.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       ACTIONS
+  ====================================================== -->
+
+  <div class="admin-dashboard-quick-actions__list">
+
+    <a
+      *ngFor="let action of actions"
+      [routerLink]="action.route"
+      class="admin-dashboard-quick-actions__item"
+    >
+
+      <!-- ===============================================
+           ICON
+      ================================================ -->
+
+      <span
+        class="admin-dashboard-quick-actions__icon"
+        [ngClass]="
+          'admin-dashboard-quick-actions__icon--' +
+          action.type
+        "
+        aria-hidden="true"
+      >
+
+        <!-- ANNOUNCEMENT -->
+
+        <svg
+          *ngIf="action.type === 'announcement'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M4 11v2a2 2 0 0 0 2 2h2l2 4h3l-1.5-4H13l6 3V6l-6 3H6a2 2 0 0 0-2 2Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M19 9.5c1 .6 1.5 1.4 1.5 2.5S20 13.9 19 14.5"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+
+
+        <!-- NOTIFICATION -->
+
+        <svg
+          *ngIf="action.type === 'notification'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M6.5 10a5.5 5.5 0 0 1 11 0v3.5l1.5 2.5H5l1.5-2.5V10Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M10 19h4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+
+        <!-- REPORT -->
+
+        <svg
+          *ngIf="action.type === 'report'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M5 20V10"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M12 20V4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M19 20v-7"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </span>
+
+
+      <!-- ===============================================
+           CONTENT
+      ================================================ -->
+
+      <div class="admin-dashboard-quick-actions__content">
+
+        <strong>
+          {{ action.title }}
+        </strong>
+
+        <span>
+          {{ action.description }}
+        </span>
+
+      </div>
+
+
+      <!-- ===============================================
+           ARROW
+      ================================================ -->
+
+      <span
+        class="admin-dashboard-quick-actions__arrow"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m9 6 6 6-6 6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+    </a>
+
+  </div>
+
+</section>

@@ -41,15 +41,58 @@ import {
   AnnouncementService,
 } from '../../../services/announcement.service';
 
+
+/* =========================
+   DASHBOARD COMPONENTS
+========================= */
+
+
+import {
+  AdminDashboardShortcutsComponent,
+} from '../../../components/dashboard/admin-dashboard-components/admin-dashboard-shortcuts/admin-dashboard-shortcuts.component';
+
+import {
+  AdminDashboardPendingDemosComponent,
+} from '../../../components/dashboard/admin-dashboard-components/admin-dashboard-pending-demos/admin-dashboard-pending-demos.component';
+
+import {
+  AdminDashboardQuickActionsComponent,
+} from '../../../components/dashboard/admin-dashboard-components/admin-dashboard-quick-actions/admin-dashboard-quick-actions.component';
+
+import {
+  AdminDashboardDaySummaryComponent,
+} from '../../../components/dashboard/admin-dashboard-components/admin-dashboard-day-summary/admin-dashboard-day-summary.component';
+
+import {
+  AdminDashboardNotificationsComponent,
+} from '../../../components/dashboard/admin-dashboard-components/admin-dashboard-notifications/admin-dashboard-notifications.component';
+
+import {
+  AdminDashboardTipComponent,
+} from '../../../components/dashboard/admin-dashboard-components/admin-dashboard-tip/admin-dashboard-tip.component';
+import { AdminDashboardStatsComponent } from '../admin-dashboard-components/admin-dashboard-stats/admin-dashboard-stats.component';
+import { BookingService } from '../../../services/booking.service';
+import { FilterMeetingsDto } from '../../../services/dtos/booking.dto';
+
+
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
   imports: [
     CommonModule,
     RouterModule,
+
     DashboardNotificationsWidgetComponent,
     DashboardSettingsWidgetComponent,
     AnnouncementViewerComponent,
+
+    AdminDashboardStatsComponent,
+    AdminDashboardShortcutsComponent,
+    AdminDashboardPendingDemosComponent,
+    AdminDashboardQuickActionsComponent,
+    AdminDashboardDaySummaryComponent,
+    AdminDashboardNotificationsComponent,
+    AdminDashboardTipComponent,
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss',
@@ -80,15 +123,16 @@ export class AdminDashboardComponent
   ========================= */
 
   totalUsers = 0;
-
   totalStudents = 0;
-
   totalInstructors = 0;
-
   totalAdmins = 0;
-
   loadingUserStats = false;
 
+  /* =========================
+    MEETING STATS
+  ========================= */
+  pendingClassesToAssign = 0;
+  loadingPendingClasses = false;
 
   /* =========================
      MODULES
@@ -108,12 +152,14 @@ export class AdminDashboardComponent
      CONSTRUCTOR
   ========================= */
 
-  constructor(
-    private announcementService:
+  constructor( private announcementService:
       AnnouncementService,
 
     private usersService:
       UsersService,
+
+    private bookingService:
+      BookingService,
   ) {}
 
 
@@ -122,10 +168,9 @@ export class AdminDashboardComponent
   ========================= */
 
   ngOnInit(): void {
-
     this.resolveAdmin();
-
     this.loadUserStats();
+    this.loadPendingMeetings();
   }
 
 
@@ -142,6 +187,50 @@ export class AdminDashboardComponent
     ) {
       this.resolveAdmin();
     }
+  }
+
+  /* =========================
+    PENDING MEETINGS
+  ========================= */
+
+  private loadPendingMeetings(): void {
+
+    this.loadingPendingClasses = true;
+
+    const today =
+      this.getTodayDate();
+
+    const filter:
+      FilterMeetingsDto = {
+        from: today,
+        to: today,
+        assigned: false,
+      };
+
+    this.bookingService
+      .searchMeetings(filter)
+      .subscribe({
+
+        next: (meetings) => {
+
+          this.pendingClassesToAssign =
+            meetings.length;
+
+          this.loadingPendingClasses =
+            false;
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Error al obtener clases pendientes de asignación:',
+            error,
+          );
+
+          this.pendingClassesToAssign = 0;
+          this.loadingPendingClasses = false;
+        },
+      });
   }
 
 
@@ -454,5 +543,12 @@ export class AdminDashboardComponent
     this.markAsSeen(
       announcement,
     );
+  }
+
+  private getTodayDate(): string {
+
+    return new Date()
+      .toISOString()
+      .split('T')[0];
   }
 }

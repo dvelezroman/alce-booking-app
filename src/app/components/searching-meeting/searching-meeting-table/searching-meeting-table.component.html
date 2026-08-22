@@ -5,47 +5,39 @@
     ========================== -->
     <header class="searching-meeting-table__header">
       <div class="searching-meeting-table__heading">
-        <h2 class="searching-meeting-table__title">Reuniones encontradas</h2>
-
+        <h2 class="searching-meeting-table__title">
+          Reuniones encontradas
+        </h2>
         <span class="searching-meeting-table__count">
           {{ meetings.length }}
         </span>
       </div>
 
-      <!-- <button type="button" class="searching-meeting-table__export">
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
+      <div class="searching-meeting-table__page-size">
+        <span class="searching-meeting-table__page-size-label">
+          Mostrar
+        </span>
+        <select
+          class="searching-meeting-table__page-size-select"
+          [value]="limit"
+          (change)="onLimitSelected($any($event.target).value)"
         >
-          <path
-            d="M12 3v12"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-          />
-
-          <path
-            d="m7.5 10.5 4.5 4.5 4.5-4.5"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-
-          <path
-            d="M5 18v2h14v-2"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-
-        <span> Exportar </span>
-      </button> -->
+          @for (
+            option of limitOptions;
+            track option
+          ) {
+            <option
+              [value]="option"
+              [selected]="option === limit"
+            >
+              {{ option }}
+            </option>
+          }
+        </select>
+        <span class="searching-meeting-table__page-size-label">
+          por página
+        </span>
+      </div>
     </header>
 
     <!-- =========================
@@ -64,10 +56,10 @@
               <label class="searching-meeting-table__checkbox-control">
                 <input
                   type="checkbox"
-                  [checked]="allVisibleSelected"
-                  [indeterminate]="someVisibleSelected"
+                  [checked]="allMeetingsSelected"
+                  [indeterminate]="someMeetingsSelected"
                   (change)="onToggleSelectAll($any($event.target).checked)"
-                  aria-label="Seleccionar todas las reuniones de esta página"
+                  aria-label="Seleccionar todas las reuniones"
                 />
 
                 <span
@@ -141,6 +133,11 @@
               class="searching-meeting-table__column searching-meeting-table__column--comment"
             >
               Comentario
+            </th>
+            <th
+              class="searching-meeting-table__column searching-meeting-table__column--observation"
+            >
+              Observación
             </th>
           </tr>
         </thead>
@@ -354,6 +351,57 @@
                 </div>
               } @else {
                 <span class="searching-meeting-table__comment-empty">
+                  —
+                </span>
+              }
+            </td>
+
+            <td class="searching-meeting-table__observation-cell">
+              @if (meeting.student?.user?.comment) {
+                <div
+                  class="searching-meeting-table__observation"
+                  [attr.data-tooltip]="meeting.student?.user?.comment"
+                >
+                  <span
+                    class="searching-meeting-table__observation-icon"
+                    aria-hidden="true"
+                  >
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="8.5"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+
+                      <path
+                        d="M12 10.5v5"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                      />
+
+                      <circle
+                        cx="12"
+                        cy="7.5"
+                        r="1"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+
+                  <span class="searching-meeting-table__observation-text">
+                    {{ meeting.student?.user?.comment }}
+                  </span>
+                </div>
+              } @else {
+                <span class="searching-meeting-table__observation-empty">
                   —
                 </span>
               }

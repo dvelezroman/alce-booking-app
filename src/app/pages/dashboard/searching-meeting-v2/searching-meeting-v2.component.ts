@@ -59,7 +59,7 @@ export class SearchingMeetingV2Component implements OnInit {
   isLoadingMeetings = false;
 
   page = 1;
-  limit = 10;
+  limit = 20;
 
   stages: Stage[] = [];
 
@@ -244,8 +244,19 @@ export class SearchingMeetingV2Component implements OnInit {
   onLimitChange(
     limit: number,
   ): void {
+    console.log('==============================');
+    console.log('LIMIT RECIBIDO:', limit);
+    console.log('TOTAL MEETINGS:', this.meetings.length);
+
     this.limit = limit;
     this.page = 1;
+
+    console.log('LIMIT ACTUAL:', this.limit);
+    console.log(
+      'PAGINATED MEETINGS:',
+      this.paginatedMeetings.length,
+    );
+    console.log('==============================');
   }
 
   openModal(): void {
@@ -404,33 +415,22 @@ export class SearchingMeetingV2Component implements OnInit {
     }
   }
 
-  onSelectAllVisible(
+  onSelectAllMeetings(
     checked: boolean,
   ): void {
-    const visibleIds =
-      this.paginatedMeetings
-        .map(meeting => meeting.id)
-        .filter(
-          (id): id is number =>
-            id !== undefined,
-        );
-
     if (checked) {
-      this.selectedMeetingIds = Array.from(
-        new Set([
-          ...this.selectedMeetingIds,
-          ...visibleIds,
-        ]),
-      );
+      this.selectedMeetingIds =
+        this.meetings
+          .map(meeting => meeting.id)
+          .filter(
+            (id): id is number =>
+              id !== undefined,
+          );
 
       return;
     }
 
-    this.selectedMeetingIds =
-      this.selectedMeetingIds.filter(
-        id =>
-          !visibleIds.includes(id),
-      );
+    this.selectedMeetingIds = [];
   }
 
   assignLink(): void {

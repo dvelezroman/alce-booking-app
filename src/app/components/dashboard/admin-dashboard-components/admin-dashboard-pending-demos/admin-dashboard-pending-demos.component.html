@@ -1,0 +1,344 @@
+<section class="admin-dashboard-pending-demos">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="admin-dashboard-pending-demos__header">
+
+    <div>
+
+      <div class="admin-dashboard-pending-demos__heading">
+
+        <h2 class="admin-dashboard-pending-demos__title">
+          Solicitudes de demos pendientes
+        </h2>
+
+        <span
+          *ngIf="!loading && totalPending > 0"
+          class="admin-dashboard-pending-demos__counter"
+        >
+          {{ totalPending }}
+        </span>
+
+      </div>
+
+      <p class="admin-dashboard-pending-demos__description">
+        Solicitudes que requieren revisión y respuesta.
+      </p>
+
+    </div>
+
+    <a
+      routerLink="/dashboard/admin/lead-scheduling-requests"
+      class="admin-dashboard-pending-demos__view-all"
+    >
+      Ver todas
+    </a>
+
+  </header>
+
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  <div
+    *ngIf="loading"
+    class="admin-dashboard-pending-demos__loading"
+  >
+
+    <div
+      *ngFor="let item of [1, 2, 3, 4, 5]"
+      class="admin-dashboard-pending-demos__loading-row"
+    >
+
+      <span
+        class="
+          admin-dashboard-pending-demos__skeleton
+          admin-dashboard-pending-demos__skeleton--avatar
+        "
+      ></span>
+
+      <div class="admin-dashboard-pending-demos__loading-content">
+
+        <span
+          class="
+            admin-dashboard-pending-demos__skeleton
+            admin-dashboard-pending-demos__skeleton--name
+          "
+        ></span>
+
+        <span
+          class="
+            admin-dashboard-pending-demos__skeleton
+            admin-dashboard-pending-demos__skeleton--email
+          "
+        ></span>
+
+      </div>
+
+      <span
+        class="
+          admin-dashboard-pending-demos__skeleton
+          admin-dashboard-pending-demos__skeleton--date
+        "
+      ></span>
+
+      <span
+        class="
+          admin-dashboard-pending-demos__skeleton
+          admin-dashboard-pending-demos__skeleton--status
+        "
+      ></span>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       TABLE
+  ====================================================== -->
+
+  <div
+    *ngIf="
+      !loading &&
+      requests.length > 0
+    "
+    class="admin-dashboard-pending-demos__table-wrapper"
+  >
+
+    <table class="admin-dashboard-pending-demos__table">
+
+      <thead>
+
+        <tr>
+          <th>Solicitante</th>
+          <th>Email</th>
+          <th>Fecha de solicitud</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        <tr
+          *ngFor="
+            let request of requests;
+            trackBy: trackByRequestId
+          "
+        >
+
+          <!-- ============================================
+               SOLICITANTE
+          ============================================= -->
+
+          <td>
+
+            <div class="admin-dashboard-pending-demos__person">
+
+              <span class="admin-dashboard-pending-demos__avatar">
+                {{ getInitials(request) }}
+              </span>
+
+              <strong
+                [title]="getFullName(request)"
+              >
+                {{ getFullName(request) }}
+              </strong>
+
+            </div>
+
+          </td>
+
+
+          <!-- ============================================
+               EMAIL
+          ============================================= -->
+
+          <td>
+
+            <span
+              class="admin-dashboard-pending-demos__email"
+              [title]="getEmail(request)"
+            >
+              {{ getEmail(request) }}
+            </span>
+
+          </td>
+
+
+          <!-- ============================================
+               DATE
+          ============================================= -->
+
+          <td>
+
+            <span class="admin-dashboard-pending-demos__date">
+              {{ getRequestedAt(request) }}
+            </span>
+
+          </td>
+
+
+          <!-- ============================================
+               STATUS
+          ============================================= -->
+
+          <td>
+
+            <span
+              class="admin-dashboard-pending-demos__status"
+              [class.admin-dashboard-pending-demos__status--pending]="
+                request.status === 'PENDING'
+              "
+              [class.admin-dashboard-pending-demos__status--scheduled]="
+                request.status === 'SCHEDULED'
+              "
+            >
+              {{ getStatusLabel(request) }}
+            </span>
+
+          </td>
+
+
+          <!-- ============================================
+               ACTION
+          ============================================= -->
+
+          <td class="admin-dashboard-pending-demos__action-cell">
+
+            <a
+              [routerLink]="[
+                '/dashboard/admin/lead-scheduling-requests',
+                request.id
+              ]"
+              class="admin-dashboard-pending-demos__detail-button"
+            >
+              Ver detalle
+            </a>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <!-- =====================================================
+       EMPTY
+  ====================================================== -->
+
+  <div
+    *ngIf="
+      !loading &&
+      requests.length === 0
+    "
+    class="admin-dashboard-pending-demos__empty"
+  >
+
+    <div
+      class="admin-dashboard-pending-demos__empty-icon"
+      aria-hidden="true"
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <rect
+          x="4"
+          y="5"
+          width="16"
+          height="15"
+          rx="2.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M8 3v4M16 3v4M4 9h16"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="m8.5 14 2.2 2.2 4.8-5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+    </div>
+
+    <h3>
+      No hay solicitudes pendientes
+    </h3>
+
+    <p>
+      Las nuevas solicitudes de demos aparecerán aquí.
+    </p>
+
+  </div>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer
+    *ngIf="
+      !loading &&
+      requests.length > 0
+    "
+    class="admin-dashboard-pending-demos__footer"
+  >
+
+    <a
+      routerLink="/dashboard/admin/lead-scheduling-requests"
+      class="admin-dashboard-pending-demos__footer-button"
+    >
+
+      <span>
+        Ver todas las solicitudes
+      </span>
+
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M5 12h14"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="m14 7 5 5-5 5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+    </a>
+
+  </footer>
+
+</section>

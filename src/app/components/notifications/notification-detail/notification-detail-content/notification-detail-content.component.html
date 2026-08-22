@@ -551,7 +551,7 @@
       </div>
 
       <button
-        *ngIf="recipients.length > 3"
+        *ngIf="recipients.length > 10"
         type="button"
         class="notification-detail-content__text-button"
         (click)="onToggleRecipients()"
@@ -572,7 +572,7 @@
           let recipient of (
             showAllRecipients
               ? recipients
-              : recipients.slice(0, 3)
+              : recipients.slice(0, 10)
           );
           trackBy: trackByRecipientId
         "

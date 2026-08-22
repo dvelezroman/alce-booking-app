@@ -42,13 +42,17 @@ export class SearchingMeetingTableComponent {
     meeting: MeetingDTO,
   ) => boolean;
 
-  @Output()
-  selectionChange =
-    new EventEmitter<number | undefined>();
+  @Input() totalMeetings: number = 0;
 
-  @Output()
-  commentRequested =
-    new EventEmitter<string>();
+  @Input() limit: number = 20;
+
+  @Input() limitOptions: number[] = [ 10, 20, 50 ];
+
+  @Output() limitChange = new EventEmitter<number>();
+
+  @Output() selectionChange = new EventEmitter<number | undefined>();
+
+  @Output() commentRequested = new EventEmitter<string>();
 
   @Output() selectAllChange = new EventEmitter<boolean>();
 
@@ -60,35 +64,30 @@ export class SearchingMeetingTableComponent {
     );
   }
 
-  get allVisibleSelected(): boolean {
-    if (this.meetings.length === 0) {
-      return false;
-    }
-
-    return this.meetings.every(
-      meeting =>
-        meeting.id !== undefined &&
-        this.selectedMeetingIds.includes(
-          meeting.id,
-        ),
+  get allMeetingsSelected(): boolean {
+    return (
+      this.totalMeetings > 0 &&
+      this.selectedMeetingIds.length ===
+        this.totalMeetings
     );
   }
 
-  get someVisibleSelected(): boolean {
-    if (
-      this.meetings.length === 0 ||
-      this.allVisibleSelected
-    ) {
-      return false;
+  get someMeetingsSelected(): boolean {
+    return (
+      this.selectedMeetingIds.length > 0 &&
+      this.selectedMeetingIds.length <
+        this.totalMeetings
+    );
+  }
+
+  onLimitSelected( value: string ): void {
+    const limit = Number(value);
+
+    if (!this.limitOptions.includes(limit)) {
+      return;
     }
 
-    return this.meetings.some(
-      meeting =>
-        meeting.id !== undefined &&
-        this.selectedMeetingIds.includes(
-          meeting.id,
-        ),
-    );
+    this.limitChange.emit(limit);
   }
 
   onToggleSelectAll(

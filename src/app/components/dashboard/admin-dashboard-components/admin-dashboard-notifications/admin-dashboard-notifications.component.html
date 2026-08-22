@@ -1,0 +1,462 @@
+<section class="admin-dashboard-notifications">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="admin-dashboard-notifications__header">
+
+    <div class="admin-dashboard-notifications__heading">
+
+      <div>
+
+        <h2 class="admin-dashboard-notifications__title">
+          Notificaciones
+        </h2>
+
+        <p class="admin-dashboard-notifications__description">
+          Actividad pendiente de revisar.
+        </p>
+
+      </div>
+
+
+      <span
+        *ngIf="!loading && unreadCount > 0"
+        class="admin-dashboard-notifications__counter"
+      >
+        {{ unreadCount }}
+      </span>
+
+    </div>
+
+
+    <a
+      routerLink="/dashboard/notifications-inbox"
+      class="admin-dashboard-notifications__view-all"
+    >
+      Ver todas
+    </a>
+
+  </header>
+
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  <div
+    *ngIf="loading"
+    class="admin-dashboard-notifications__loading"
+  >
+
+    <article
+      *ngFor="let item of [1, 2, 3, 4]"
+      class="
+        admin-dashboard-notifications__item
+        admin-dashboard-notifications__item--loading
+      "
+    >
+
+      <span
+        class="
+          admin-dashboard-notifications__skeleton
+          admin-dashboard-notifications__skeleton--icon
+        "
+      ></span>
+
+
+      <div class="admin-dashboard-notifications__loading-content">
+
+        <span
+          class="
+            admin-dashboard-notifications__skeleton
+            admin-dashboard-notifications__skeleton--title
+          "
+        ></span>
+
+        <span
+          class="
+            admin-dashboard-notifications__skeleton
+            admin-dashboard-notifications__skeleton--text
+          "
+        ></span>
+
+        <span
+          class="
+            admin-dashboard-notifications__skeleton
+            admin-dashboard-notifications__skeleton--time
+          "
+        ></span>
+
+      </div>
+
+    </article>
+
+  </div>
+
+
+  <!-- =====================================================
+       NOTIFICATIONS
+  ====================================================== -->
+
+  <div
+    *ngIf="
+      !loading &&
+      notifications.length > 0
+    "
+    class="admin-dashboard-notifications__list"
+  >
+
+    <article
+      *ngFor="
+        let notification of notifications;
+        trackBy: trackByNotificationId
+      "
+      class="admin-dashboard-notifications__item"
+    >
+
+      <!-- ===============================================
+           ICON
+      ================================================ -->
+
+      <span
+        class="admin-dashboard-notifications__icon"
+        [ngClass]="
+          'admin-dashboard-notifications__icon--' +
+          getNotificationType(notification)
+        "
+        aria-hidden="true"
+      >
+
+        <!-- DEMO -->
+
+        <svg
+          *ngIf="
+            getNotificationType(notification) ===
+            'demo'
+          "
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2.4"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M12 12v5M9.5 14.5h5"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+
+
+        <!-- MEETING -->
+
+        <svg
+          *ngIf="
+            getNotificationType(notification) ===
+            'meeting'
+          "
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 8v4l2.5 1.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+
+        <!-- USER -->
+
+        <svg
+          *ngIf="
+            getNotificationType(notification) ===
+            'user'
+          "
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="9"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M17 8v6M14 11h6"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+
+
+        <!-- ANNOUNCEMENT -->
+
+        <svg
+          *ngIf="
+            getNotificationType(notification) ===
+            'announcement'
+          "
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M4 11v2a2 2 0 0 0 2 2h2l2 4h3l-1.5-4H13l6 3V6l-6 3H6a2 2 0 0 0-2 2Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M19 9.5c1 .6 1.5 1.4 1.5 2.5S20 13.9 19 14.5"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+
+
+        <!-- REPORT -->
+
+        <svg
+          *ngIf="
+            getNotificationType(notification) ===
+            'report'
+          "
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M5 20V10"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M12 20V4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M19 20v-7"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </span>
+
+
+      <!-- ===============================================
+           CONTENT
+      ================================================ -->
+
+      <div class="admin-dashboard-notifications__content">
+
+        <div class="admin-dashboard-notifications__title-row">
+
+          <strong>
+            {{
+              notification.title ||
+              'Nueva notificación'
+            }}
+          </strong>
+
+          <span
+            class="admin-dashboard-notifications__unread-dot"
+            aria-label="No leída"
+          ></span>
+
+        </div>
+
+
+        <p>
+          {{ getDescription(notification) }}
+        </p>
+
+
+        <small>
+          {{ getRelativeTime(notification) }}
+        </small>
+
+      </div>
+
+    </article>
+
+  </div>
+
+
+  <!-- =====================================================
+       EMPTY
+  ====================================================== -->
+
+  <div
+    *ngIf="
+      !loading &&
+      notifications.length === 0
+    "
+    class="admin-dashboard-notifications__empty"
+  >
+
+    <div
+      class="admin-dashboard-notifications__empty-illustration"
+      aria-hidden="true"
+    >
+
+      <svg
+        viewBox="0 0 120 100"
+        fill="none"
+      >
+
+        <circle
+          cx="60"
+          cy="49"
+          r="35"
+          fill="currentColor"
+          opacity=".07"
+        />
+
+        <path
+          d="M41 47c0-10.5 8.5-19 19-19s19 8.5 19 19v12l6 9H35l6-9V47Z"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M53 74c1.8 4 4 6 7 6s5.2-2 7-6"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
+
+        <circle
+          cx="85"
+          cy="26"
+          r="10"
+          fill="currentColor"
+          opacity=".12"
+        />
+
+        <path
+          d="m81 26 2.5 2.5 5-5"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M22 79h14M84 79h14"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          opacity=".22"
+        />
+
+      </svg>
+
+    </div>
+
+
+    <h3>
+      Todo está al día
+    </h3>
+
+    <p>
+      No tienes notificaciones pendientes de revisar.
+    </p>
+
+  </div>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer
+    *ngIf="
+      !loading &&
+      notifications.length > 0
+    "
+    class="admin-dashboard-notifications__footer"
+  >
+
+    <a
+      routerLink="/dashboard/notifications-inbox"
+      class="admin-dashboard-notifications__footer-link"
+    >
+
+      <span>
+        Ver todas las notificaciones
+      </span>
+
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M5 12h14"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="m14 7 5 5-5 5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+    </a>
+
+  </footer>
+
+</section>

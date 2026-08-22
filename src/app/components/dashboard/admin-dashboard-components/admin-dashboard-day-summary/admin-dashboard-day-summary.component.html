@@ -1,0 +1,209 @@
+<section class="admin-dashboard-day-summary">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="admin-dashboard-day-summary__header">
+
+    <div>
+
+      <h2 class="admin-dashboard-day-summary__title">
+        Resumen del día
+      </h2>
+
+      <p class="admin-dashboard-day-summary__description">
+        Actividad registrada durante la jornada.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       ITEMS
+  ====================================================== -->
+
+  <div class="admin-dashboard-day-summary__list">
+
+    <article
+      *ngFor="let item of summaryItems"
+      class="admin-dashboard-day-summary__item"
+    >
+
+      <!-- =================================================
+           ICON
+      ================================================== -->
+
+      <span
+        class="admin-dashboard-day-summary__icon"
+        [ngClass]="
+          'admin-dashboard-day-summary__icon--' +
+          item.type
+        "
+        aria-hidden="true"
+      >
+
+        <!-- USERS -->
+
+        <svg
+          *ngIf="item.type === 'users'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="9"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M17 8v6M14 11h6"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+
+
+        <!-- SCHEDULED -->
+
+        <svg
+          *ngIf="item.type === 'scheduled'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2.4"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M8 13h3M8 16h5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+
+
+        <!-- ASSESSMENTS -->
+
+        <svg
+          *ngIf="item.type === 'completed'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="5"
+            y="4"
+            width="14"
+            height="16"
+            rx="2.4"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M9 4V3.5A1.5 1.5 0 0 1 10.5 2h3A1.5 1.5 0 0 1 15 3.5V4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M9 9h6M9 13h3"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="m13 16 1.5 1.5 3-3"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+
+        <!-- DEMOS -->
+
+        <svg
+          *ngIf="item.type === 'demos'"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M6 5h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-5l-4 3v-3H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M9 9h6M9 12h4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </span>
+
+
+      <!-- =================================================
+           CONTENT
+      ================================================== -->
+
+      <div class="admin-dashboard-day-summary__content">
+
+        <span class="admin-dashboard-day-summary__label">
+          {{ item.label }}
+        </span>
+
+        <ng-container
+          *ngIf="!item.loading; else loadingSummary"
+        >
+          <strong class="admin-dashboard-day-summary__value">
+            {{ item.value | number }}
+          </strong>
+        </ng-container>
+
+        <ng-template #loadingSummary>
+          <span
+            class="admin-dashboard-day-summary__skeleton"
+            aria-hidden="true"
+          ></span>
+        </ng-template>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>

@@ -1,0 +1,363 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.admin-dashboard-stats {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      5,
+      minmax(0, 1fr)
+    );
+
+  gap: .7rem;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.admin-dashboard-stats__card {
+  min-width: 0;
+  min-height: 10.3rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: .7rem;
+
+  padding:
+    .95rem
+    .85rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e7eaf0;
+  border-radius: .7rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 7px
+    rgba(26, 33, 52, .018);
+
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease;
+}
+
+.admin-dashboard-stats__card:hover {
+  transform: translateY(-1px);
+
+  border-color: #dfe3eb;
+
+  box-shadow:
+    0 5px 14px
+    rgba(27, 34, 54, .045);
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.admin-dashboard-stats__icon {
+  width: 2.2rem;
+  height: 2.2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  border-radius: .52rem;
+}
+
+.admin-dashboard-stats__icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+
+/* USERS */
+
+.admin-dashboard-stats__icon--users {
+  background: #edf2ff;
+  color: #5271e8;
+}
+
+
+/* STUDENTS */
+
+.admin-dashboard-stats__icon--students {
+  background: #ebf9f1;
+  color: #38a767;
+}
+
+
+/* INSTRUCTORS */
+
+.admin-dashboard-stats__icon--instructors {
+  background: #f2edff;
+  color: #7650e5;
+}
+
+
+/* ADMINS */
+
+.admin-dashboard-stats__icon--admins {
+  background: #fff5df;
+  color: #e4a22d;
+}
+
+
+/* PENDING */
+
+.admin-dashboard-stats__icon--pending {
+  background: #fff0f1;
+  color: #e25b67;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.admin-dashboard-stats__content {
+  min-width: 0;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.admin-dashboard-stats__label {
+  display: block;
+
+  margin-bottom: .3rem;
+
+  color: #747d90;
+
+  font-size: .63rem;
+  font-weight: 550;
+  line-height: 1.3;
+}
+
+
+/* =========================================================
+   VALUE
+========================================================= */
+
+.admin-dashboard-stats__value {
+  display: block;
+
+  margin-bottom: .4rem;
+
+  color: #171d31;
+
+  font-size: 1.35rem;
+  font-weight: 780;
+  line-height: 1.1;
+
+  letter-spacing: -.02em;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.admin-dashboard-stats__content small {
+  display: block;
+
+  margin-top: auto;
+
+  color: #8991a1;
+
+  font-size: .57rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   SKELETON
+========================================================= */
+
+.admin-dashboard-stats__skeleton {
+  width: 4rem;
+  height: 1.45rem;
+
+  display: block;
+
+  margin-bottom: .45rem;
+
+  border-radius: .3rem;
+
+  background:
+    linear-gradient(
+      90deg,
+      #f0f1f5 0%,
+      #f7f8fa 50%,
+      #f0f1f5 100%
+    );
+
+  background-size: 200% 100%;
+
+  animation:
+    admin-dashboard-stat-loading
+    1.15s
+    linear
+    infinite;
+}
+
+@keyframes admin-dashboard-stat-loading {
+
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+
+}
+
+
+/* =========================================================
+   MEDIUM DESKTOP
+========================================================= */
+
+@media (max-width: 1250px) {
+
+  .admin-dashboard-stats {
+    gap: .55rem;
+  }
+
+  .admin-dashboard-stats__card {
+    min-height: 9.7rem;
+
+    padding:
+      .8rem
+      .7rem;
+  }
+
+  .admin-dashboard-stats__value {
+    font-size: 1.2rem;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .admin-dashboard-stats {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+  .admin-dashboard-stats {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+
+    gap: .55rem;
+  }
+
+  .admin-dashboard-stats__card {
+    min-height: 8.8rem;
+
+    padding:
+      .75rem
+      .7rem;
+  }
+
+  .admin-dashboard-stats__icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .admin-dashboard-stats__value {
+    font-size: 1.1rem;
+  }
+
+  .admin-dashboard-stats__label {
+    font-size: .6rem;
+  }
+
+  .admin-dashboard-stats__content small {
+    font-size: .54rem;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .admin-dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-dashboard-stats__card {
+    min-height: auto;
+
+    display: grid;
+
+    grid-template-columns:
+      auto
+      minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: .7rem;
+
+    padding:
+      .7rem
+      .75rem;
+  }
+
+  .admin-dashboard-stats__content small {
+    margin-top: 0;
+  }
+
+}
