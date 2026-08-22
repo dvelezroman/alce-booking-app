@@ -16,6 +16,18 @@ export interface MatchedUser {
   role?: string | null;
   status?: string | null;
   matchField: EmailMatchField;
+  email?: string | null;
+  emailAddress?: string | null;
+  idNumber?: string | null;
+  contact?: string | null;
+  city?: string | null;
+  country?: string | null;
+  tutorName?: string | null;
+  tutorEmail?: string | null;
+  tutorPhone?: string | null;
+  studentClassification?: string | null;
+  contractNumber?: string | null;
+  stage?: string | null;
 }
 
 export interface EmailSuppression {

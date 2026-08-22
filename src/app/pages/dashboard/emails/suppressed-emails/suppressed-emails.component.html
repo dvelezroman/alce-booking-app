@@ -5,13 +5,13 @@
     <div class="toolbar">
       <div class="email-filters">
         <div class="filter-item filter-item--grow">
-          <label for="suppressedSearch">Email</label>
+          <label for="suppressedSearch">Buscar</label>
           <input
             id="suppressedSearch"
             type="text"
             [(ngModel)]="search"
             (keyup.enter)="onSearch()"
-            placeholder="usuario@correo.com"
+            placeholder="Email, nombre, cédula o teléfono"
           />
         </div>
 
@@ -59,8 +59,9 @@
 
       <div *ngIf="!loading && items.length > 0" class="table-wrapper">
         <div class="table-header">
-          <div class="col-email">Email</div>
-          <div class="col-users">Usuario(s)</div>
+          <div class="col-email">Email baneado</div>
+          <div class="col-users">Usuario</div>
+          <div class="col-contact">Contacto / emails</div>
           <div class="col-reason">Motivo</div>
           <div class="col-meta">Estado</div>
           <div class="col-actions">Acciones</div>
@@ -76,21 +77,70 @@
 
           <div class="col-users">
             <ng-container *ngIf="item.matchedUsers?.length; else noUser">
-              <div class="user-chip" *ngFor="let u of item.matchedUsers">
-                <span class="user-name">{{ userDisplayName(u) }}</span>
-                <span class="badge">{{ roleLabel(u.role) }}</span>
-                <span class="badge light">{{ matchFieldLabel(u.matchField) }}</span>
-                <a
-                  *ngIf="u.role === 'STUDENT'"
+              <div class="user-card" *ngFor="let u of item.matchedUsers">
+                <div class="user-name">{{ userDisplayName(u) }}</div>
+                <div class="user-meta">
+                  <span *ngIf="u.idNumber">ID {{ u.idNumber }}</span>
+                  <span class="badge">{{ roleLabel(u.role) }}</span>
+                  <span
+                    class="badge"
+                    [class.ok]="u.status === 'ACTIVE'"
+                    [class.warn]="u.status !== 'ACTIVE'"
+                  >
+                    {{ statusLabel(u.status) }}
+                  </span>
+                </div>
+                <div class="email-sub" *ngIf="u.stage || u.studentClassification">
+                  <span *ngIf="u.studentClassification">{{ u.studentClassification }}</span>
+                  <span *ngIf="u.stage"> · {{ u.stage }}</span>
+                </div>
+                <button
                   class="link-user"
-                  [routerLink]="['/dashboard/searching-students']"
+                  type="button"
+                  (click)="openUserDetail(u, item.email)"
                 >
-                  ver
-                </a>
+                  Ver datos
+                </button>
               </div>
             </ng-container>
             <ng-template #noUser>
               <span class="badge warn">Sin usuario vinculado</span>
+            </ng-template>
+          </div>
+
+          <div class="col-contact">
+            <ng-container *ngIf="item.matchedUsers?.length; else noContact">
+              <div class="contact-block" *ngFor="let u of item.matchedUsers">
+                <div
+                  class="contact-line"
+                  [class.is-banned]="u.matchField === 'email'"
+                >
+                  <span class="contact-label">Login</span>
+                  <span>{{ u.email || '—' }}</span>
+                </div>
+                <div
+                  class="contact-line"
+                  [class.is-banned]="u.matchField === 'emailAddress'"
+                >
+                  <span class="contact-label">Email</span>
+                  <span>{{ u.emailAddress || '—' }}</span>
+                </div>
+                <div class="contact-line">
+                  <span class="contact-label">Tel</span>
+                  <span>{{ u.contact || '—' }}</span>
+                </div>
+                <div
+                  class="contact-line"
+                  *ngIf="u.tutorEmail || u.matchField === 'tutorEmail'"
+                  [class.is-banned]="u.matchField === 'tutorEmail'"
+                >
+                  <span class="contact-label">Tutor</span>
+                  <span>{{ u.tutorEmail || '—' }}</span>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noContact>
+              <span class="email-sub">Sin datos de usuario</span>
             </ng-template>
           </div>
 
@@ -247,6 +297,8 @@
                 {{ userDisplayName(u) }}
                 <span class="badge">{{ roleLabel(u.role) }}</span>
                 <span class="badge light">{{ matchFieldLabel(u.matchField) }}</span>
+                <span class="recipient-extra" *ngIf="u.idNumber">ID {{ u.idNumber }}</span>
+                <span class="recipient-extra" *ngIf="u.contact"> · {{ u.contact }}</span>
               </span>
             </label>
           </div>
@@ -271,6 +323,105 @@
         </button>
         <button class="btn btn-secondary" type="button" (click)="closeNotifyModal()">
           Cancelar
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- User detail modal -->
+  <div class="modal" [class.is-active]="showUserModal">
+    <div class="modal-background" (click)="closeUserDetail()"></div>
+    <div class="modal-card modal-card--wide">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Datos del usuario</p>
+        <button
+          class="delete"
+          aria-label="close"
+          type="button"
+          (click)="closeUserDetail()"
+        ></button>
+      </header>
+      <section class="modal-card-body" *ngIf="selectedUser">
+        <p class="notify-email" *ngIf="selectedBannedEmail">
+          Email baneado: <strong>{{ selectedBannedEmail }}</strong>
+          <span class="badge light">{{ matchFieldLabel(selectedUser.matchField) }}</span>
+        </p>
+
+        <div class="user-detail-grid">
+          <div class="info-row">
+            <label>Nombre</label>
+            <span>{{ userDisplayName(selectedUser) }}</span>
+          </div>
+          <div class="info-row">
+            <label>Identificación</label>
+            <span>{{ selectedUser.idNumber || '—' }}</span>
+          </div>
+          <div class="info-row">
+            <label>Rol</label>
+            <span>{{ roleLabel(selectedUser.role) }}</span>
+          </div>
+          <div class="info-row">
+            <label>Estado</label>
+            <span>{{ statusLabel(selectedUser.status) }}</span>
+          </div>
+          <div class="info-row" [class.is-banned]="selectedUser.matchField === 'email'">
+            <label>Usuario (login)</label>
+            <span>{{ selectedUser.email || '—' }}</span>
+          </div>
+          <div class="info-row" [class.is-banned]="selectedUser.matchField === 'emailAddress'">
+            <label>Email de contacto</label>
+            <span>{{ selectedUser.emailAddress || '—' }}</span>
+          </div>
+          <div class="info-row">
+            <label>Teléfono</label>
+            <span>{{ selectedUser.contact || '—' }}</span>
+          </div>
+          <div class="info-row">
+            <label>Ciudad</label>
+            <span>{{ selectedUser.city || '—' }}</span>
+          </div>
+          <div class="info-row">
+            <label>País</label>
+            <span>{{ selectedUser.country || '—' }}</span>
+          </div>
+          <div class="info-row" *ngIf="selectedUser.stage">
+            <label>Stage</label>
+            <span>{{ selectedUser.stage }}</span>
+          </div>
+          <div class="info-row" *ngIf="selectedUser.studentClassification">
+            <label>Clasificación</label>
+            <span>{{ selectedUser.studentClassification }}</span>
+          </div>
+          <div class="info-row" *ngIf="selectedUser.contractNumber">
+            <label>Contrato</label>
+            <span>{{ selectedUser.contractNumber }}</span>
+          </div>
+        </div>
+
+        <div
+          class="tutor-block"
+          *ngIf="selectedUser.tutorName || selectedUser.tutorEmail || selectedUser.tutorPhone"
+        >
+          <h3>Representante</h3>
+          <div class="user-detail-grid">
+            <div class="info-row">
+              <label>Nombre</label>
+              <span>{{ selectedUser.tutorName || '—' }}</span>
+            </div>
+            <div class="info-row" [class.is-banned]="selectedUser.matchField === 'tutorEmail'">
+              <label>Email</label>
+              <span>{{ selectedUser.tutorEmail || '—' }}</span>
+            </div>
+            <div class="info-row">
+              <label>Teléfono</label>
+              <span>{{ selectedUser.tutorPhone || '—' }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="btn btn-secondary" type="button" (click)="closeUserDetail()">
+          Cerrar
         </button>
       </footer>
     </div>
