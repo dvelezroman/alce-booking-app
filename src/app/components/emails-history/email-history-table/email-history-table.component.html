@@ -1,0 +1,379 @@
+<section class="history-table">
+
+  <!-- LOADING -->
+
+  <div
+    *ngIf="loading"
+    class="history-table__state"
+  >
+    <span class="history-table__spinner">
+    </span>
+
+    <span>
+      Cargando historial de emails...
+    </span>
+  </div>
+
+
+  <!-- ERROR -->
+
+  <div
+    *ngIf="
+      !loading &&
+      errorMsg
+    "
+    class="
+      history-table__state
+      history-table__state--error
+    "
+  >
+    <span class="history-table__state-icon">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="8.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M12 8v5M12 16h.01"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+
+    <span>
+      {{ errorMsg }}
+    </span>
+  </div>
+
+
+  <!-- EMPTY -->
+
+  <div
+    *ngIf="
+      !loading &&
+      !errorMsg &&
+      emails.length === 0
+    "
+    class="history-table__state"
+  >
+    <span class="history-table__state-icon">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <rect
+          x="3"
+          y="5"
+          width="18"
+          height="14"
+          rx="2.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="m4 7 8 6 8-6"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+
+    <div>
+      <strong>
+        No hay emails para mostrar
+      </strong>
+
+      <span>
+        Ajusta los filtros para consultar otros resultados.
+      </span>
+    </div>
+  </div>
+
+
+  <!-- TABLE -->
+
+  <div
+    *ngIf="
+      !loading &&
+      !errorMsg &&
+      emails.length > 0
+    "
+    class="history-table__scroll"
+  >
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>
+            Asunto
+          </th>
+
+          <th>
+            Destinatario
+          </th>
+
+          <th>
+            Tipo destinatario
+          </th>
+
+          <th>
+            Estado
+          </th>
+
+          <th class="history-table__quantity">
+            Cantidad
+          </th>
+
+          <th>
+            Enviado el
+          </th>
+
+          <th class="history-table__actions-column">
+            Acciones
+          </th>
+        </tr>
+      </thead>
+
+
+      <tbody>
+
+        <tr
+          *ngFor="
+            let email of emails;
+            trackBy: trackById
+          "
+          tabindex="0"
+          (click)="onRowClick(email)"
+          (keydown.enter)="onRowClick(email)"
+        >
+
+          <!-- SUBJECT -->
+
+          <td>
+
+            <div class="history-table__subject">
+
+              <span
+                class="history-table__email-icon"
+                aria-hidden="true"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <rect
+                    x="3"
+                    y="5"
+                    width="18"
+                    height="14"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="m4 7 8 6 8-6"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+
+
+              <div class="history-table__subject-content">
+
+                <strong>
+                  {{
+                    email.subject ||
+                    'Sin asunto'
+                  }}
+                </strong>
+
+                <span>
+                  {{
+                    getContentPreview(
+                      email.content
+                    )
+                  }}
+                </span>
+
+              </div>
+
+            </div>
+
+          </td>
+
+
+          <!-- RECIPIENT -->
+
+          <td>
+
+            <div class="history-table__recipient">
+
+              <strong>
+                {{
+                  getRecipientLabel(
+                    email
+                  )
+                }}
+              </strong>
+
+              <span>
+                {{
+                  getRecipientDetail(
+                    email
+                  )
+                }}
+              </span>
+
+            </div>
+
+          </td>
+
+
+          <!-- TYPE -->
+
+          <td>
+
+            <span class="history-table__type">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="12"
+                  cy="8"
+                  r="3"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+
+                <path
+                  d="M5.5 19c0-3.1 2.5-5 6.5-5s6.5 1.9 6.5 5"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+
+              {{
+                getRecipientTypeLabel(
+                  email.recipientType
+                )
+              }}
+
+            </span>
+
+          </td>
+
+
+          <!-- STATUS -->
+
+          <td>
+
+            <span
+              class="history-table__status"
+              [class.history-table__status--sent]="
+                email.status === 'SENT'
+              "
+              [class.history-table__status--failed]="
+                email.status === 'FAILED'
+              "
+              [class.history-table__status--queued]="
+                email.status === 'QUEUED'
+              "
+            >
+
+              <span class="history-table__status-dot">
+              </span>
+
+              {{
+                getStatusLabel(
+                  email.status
+                )
+              }}
+
+            </span>
+
+          </td>
+
+
+          <!-- QUANTITY -->
+
+          <td class="history-table__quantity">
+            {{ email.quantity || 0 }}
+          </td>
+
+
+          <!-- DATE -->
+
+          <td>
+
+            <span class="history-table__date">
+              {{
+                formatDate(
+                  email.sentAt ||
+                  email.createdAt
+                )
+              }}
+            </span>
+
+          </td>
+
+
+          <!-- ACTION -->
+
+          <td class="history-table__actions-column">
+
+            <button
+              type="button"
+              class="history-table__action"
+              title="Ver detalle"
+              aria-label="Ver detalle"
+              (click)="
+                $event.stopPropagation();
+                onRowClick(email)
+              "
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m9 6 6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>

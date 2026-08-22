@@ -1,0 +1,354 @@
+<section class="history-filters">
+
+  <!-- HEADER -->
+
+  <header class="history-filters__header">
+
+    <span
+      class="history-filters__header-icon"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M4 6h16M7 12h10M10 18h4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+
+    <div>
+      <h2>
+        Filtros
+      </h2>
+
+      <p>
+        Filtra el historial por destinatario,
+        estado o fecha.
+      </p>
+    </div>
+
+  </header>
+
+
+  <!-- FILTER GRID -->
+
+  <div class="history-filters__grid">
+
+    <!-- TYPE -->
+
+    <div class="history-filters__field">
+
+      <label
+        for="historyRecipientType"
+        class="history-filters__label"
+      >
+        Tipo de destinatario
+      </label>
+
+      <div class="history-filters__control">
+
+        <span
+          class="history-filters__control-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="9"
+              cy="8"
+              r="3"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M16 6.5a2.4 2.4 0 1 1 0 4.8M16 14.5c2.6.2 4.5 1.9 4.5 4.2"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <select
+          id="historyRecipientType"
+          class="history-filters__select"
+          [(ngModel)]="
+            localFilters.recipientType
+          "
+        >
+          <option value="">
+            Todos
+          </option>
+
+          <option value="INDIVIDUAL">
+            Individual
+          </option>
+
+          <option value="GROUP">
+            Grupo
+          </option>
+
+          <option value="STAGE">
+            Stage
+          </option>
+
+          <option value="ROLE">
+            Rol
+          </option>
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <!-- EMAIL -->
+
+    <div class="history-filters__field">
+
+      <label
+        for="historyRecipientEmail"
+        class="history-filters__label"
+      >
+        Email del destinatario
+      </label>
+
+      <div class="history-filters__control">
+
+        <span
+          class="history-filters__control-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <input
+          id="historyRecipientEmail"
+          type="text"
+          class="history-filters__input"
+          placeholder="Buscar email..."
+          autocomplete="off"
+          [(ngModel)]="
+            localFilters.recipientEmail
+          "
+          (keyup.enter)="onEmailEnter()"
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="history-filters__field">
+
+      <label
+        for="historyStatus"
+        class="history-filters__label"
+      >
+        Estado
+      </label>
+
+      <div class="history-filters__control">
+
+        <span
+          class="history-filters__control-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="m8.5 12 2.2 2.2 4.8-5"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+        <select
+          id="historyStatus"
+          class="history-filters__select"
+          [(ngModel)]="
+            localFilters.status
+          "
+        >
+          <option value="">
+            Todos
+          </option>
+
+          <option value="SENT">
+            Enviado
+          </option>
+
+          <option value="FAILED">
+            Fallido
+          </option>
+
+          <option value="QUEUED">
+            En cola
+          </option>
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <!-- FROM -->
+
+    <div class="history-filters__field">
+
+      <label
+        for="historyCreatedFrom"
+        class="history-filters__label"
+      >
+        Fecha creación desde
+      </label>
+
+      <input
+        id="historyCreatedFrom"
+        type="date"
+        class="history-filters__date"
+        [(ngModel)]="
+          localFilters.createdAtFrom
+        "
+      />
+
+    </div>
+
+
+    <!-- TO -->
+
+    <div class="history-filters__field">
+
+      <label
+        for="historyCreatedTo"
+        class="history-filters__label"
+      >
+        Fecha creación hasta
+      </label>
+
+      <input
+        id="historyCreatedTo"
+        type="date"
+        class="history-filters__date"
+        [(ngModel)]="
+          localFilters.createdAtTo
+        "
+      />
+
+    </div>
+
+  </div>
+
+
+  <!-- ACTIONS -->
+
+  <div class="history-filters__actions">
+
+    <button
+      type="button"
+      class="
+        history-filters__button
+        history-filters__button--clear
+      "
+      (click)="clearFilters()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M7 7l10 10M17 7 7 17"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      Limpiar filtros
+    </button>
+
+
+    <button
+      type="button"
+      class="
+        history-filters__button
+        history-filters__button--apply
+      "
+      (click)="applyFilters()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="11"
+          cy="11"
+          r="6.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="m16 16 4 4"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      Aplicar filtros
+    </button>
+
+  </div>
+
+</section>

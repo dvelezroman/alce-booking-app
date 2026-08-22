@@ -1,93 +1,229 @@
-<section class="inbox-root">
-  <div class="inbox-page">
-    <!-- Header -->
-    <h1 class="inbox-page-title">
-      Historial Emails Enviados
-    </h1>
+<section class="email-history-page">
 
-    <!-- Filtros -->
-    <app-email-filters
-      [filters]="filters"
-      (filtersChange)="onFiltersChange($event)">
-    </app-email-filters>
+  <div class="email-history-page__container">
 
-    <!-- Separador -->
-    <div class="divider"></div>
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-    <!-- Lista de emails -->
-    <section class="emails-list">
-      <!-- Error -->
-      <div *ngIf="!loading && errorMsg" class="error">
-        {{ errorMsg }}
-      </div>
+    <header class="email-history-page__header">
 
-      <!-- Sin resultados -->
-      <div *ngIf="!loading && !errorMsg && emails.length === 0" class="placeholder">
-        No hay correos enviados que coincidan con los filtros seleccionados.
-      </div>
+      <div class="email-history-page__header-content">
 
-      <!-- Tabla -->
-      <div *ngIf="!loading && emails.length > 0" class="table-wrapper">
-        <div class="table-header">
-          <div class="col-to">Para</div>
-          <div class="col-subject">Asunto</div>
-          <div class="col-status">Estado</div>
-          <div class="col-date">Fecha</div>
+        <div class="email-history-page__header-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="14"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m4 7 8 6 8-6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M17 3.5v4M15 5.5h4"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
         </div>
 
-        <div
-          class="table-row"
-          *ngFor="let e of emails; trackBy: trackById"
-          (click)="onRowClick(e)"
-          role="button"
-          tabindex="0"
+
+        <div class="email-history-page__header-text">
+
+          <span class="email-history-page__eyebrow">
+            Emails
+          </span>
+
+          <h1 class="email-history-page__title">
+            Historial de emails enviados
+          </h1>
+
+          <p class="email-history-page__description">
+            Consulta y revisa los emails enviados desde la plataforma.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="email-history-page__illustration"
+        aria-hidden="true"
+      >
+
+        <svg
+          viewBox="0 0 120 90"
+          fill="none"
         >
-          <!-- Para -->
-          <div class="col-to">
-            {{ e.recipientName || e.recipientEmail || '—' }}
-          </div>
 
-          <!-- Asunto -->
-          <div class="col-subject">
-            {{ e.subject }}
-          </div>
+          <circle
+            cx="60"
+            cy="45"
+            r="39"
+            fill="#f5f3ff"
+          />
 
-          <!-- Estado -->
-          <div class="col-status">
-              {{ getStatusLabel(e.status) }}
-          </div>
+          <rect
+            x="29"
+            y="27"
+            width="62"
+            height="43"
+            rx="8"
+            fill="#ebe8ff"
+          />
 
-          <!-- Fecha -->
-          <div class="col-date">
-            {{ e.createdAt | date: 'short' }}
-          </div>
-        </div>
+          <path
+            d="M33 33 60 52 87 33"
+            stroke="#7968df"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m34 65 19-17M86 65 67 48"
+            stroke="#9a8eed"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="90"
+            cy="25"
+            r="10"
+            fill="#7260df"
+          />
+
+          <path
+            d="m85.5 25 3 3 5.5-6"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+        </svg>
+
       </div>
 
-      <!-- Paginación -->
-      <div class="pagination" *ngIf="total > 0">
-        <button
-          class="pg-btn"
-          (click)="onPrev()"
-          [disabled]="page === 1"
-          aria-label="Página anterior">
-          ‹
-        </button>
+    </header>
 
-        <span class="pg-info">
-          Página {{ page }}
-          <span class="sep">·</span>
-          Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }}
-        </span>
 
-        <button
-          class="pg-btn"
-          (click)="onNext()"
-          [disabled]="page * limit >= total"
-          aria-label="Página siguiente">
-          ›
-        </button>
-      </div>
-    </section>
+    <!-- =====================================================
+         INFORMATION
+    ====================================================== -->
+
+    <div class="email-history-page__info">
+
+      <span
+        class="email-history-page__info-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 10.5v5M12 7.5h.01"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span>
+        <strong>
+          Historial de actividad:
+        </strong>
+
+        Consulta los emails enviados, su destinatario,
+        estado y fecha de envío.
+      </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         FILTERS
+    ====================================================== -->
+
+    <app-email-history-filters
+      [filters]="filters"
+      (filtersChange)="onFiltersChange($event)"
+    >
+    </app-email-history-filters>
+
+
+    <!-- =====================================================
+         SUMMARY
+    ====================================================== -->
+
+    <app-email-history-summary
+      [total]="total"
+      [startIndex]="startIndex"
+      [endIndex]="endIndex"
+    >
+    </app-email-history-summary>
+
+
+    <!-- =====================================================
+         TABLE
+    ====================================================== -->
+
+    <div class="email-history-page__table-section">
+
+      <app-email-history-table
+        [emails]="emails"
+        [loading]="loading"
+        [errorMsg]="errorMsg"
+        (rowSelected)="onRowClick($event)"
+      >
+      </app-email-history-table>
+
+
+      <!-- ===================================================
+           PAGINATION
+      ==================================================== -->
+
+      <app-email-history-pagination
+        [page]="page"
+        [limit]="limit"
+        [total]="total"
+        [startIndex]="startIndex"
+        [endIndex]="endIndex"
+        (previousRequested)="onPrev()"
+        (nextRequested)="onNext()"
+      >
+      </app-email-history-pagination>
+
+    </div>
+
   </div>
+
 </section>

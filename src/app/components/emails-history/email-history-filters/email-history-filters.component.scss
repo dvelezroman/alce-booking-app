@@ -1,0 +1,239 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.history-filters {
+  width: 100%;
+  padding: .8rem .9rem;
+  box-sizing: border-box;
+  border: 1px solid #e4e7ed;
+  border-radius: .75rem;
+  background: #fff;
+  box-shadow: 0 5px 16px rgba(24, 32, 61, .025);
+}
+
+/* HEADER */
+
+.history-filters__header {
+  margin-bottom: .7rem;
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+
+  h2 {
+    margin: 0;
+    color: #272e42;
+    font-size: .72rem;
+    font-weight: 800;
+  }
+
+  p {
+    margin: .08rem 0 0;
+    color: #8a91a2;
+    font-size: .5rem;
+    line-height: 1.35;
+  }
+}
+
+.history-filters__header-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+  flex: 0 0 1.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .5rem;
+  background: #f1efff;
+  color: #6654df;
+
+  svg {
+    width: .95rem;
+    height: .95rem;
+  }
+}
+
+/* GRID */
+
+.history-filters__grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1.15fr)
+    minmax(0, .9fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+  gap: .6rem;
+}
+
+.history-filters__field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .28rem;
+}
+
+.history-filters__label {
+  color: #343b4f;
+  font-size: .56rem;
+  font-weight: 700;
+}
+
+/* CONTROLS */
+
+.history-filters__control {
+  position: relative;
+  width: 100%;
+}
+
+.history-filters__control-icon {
+  position: absolute;
+  top: 50%;
+  left: .65rem;
+  z-index: 2;
+  width: .9rem;
+  height: .9rem;
+  display: inline-flex;
+  color: #7c84a0;
+  transform: translateY(-50%);
+  pointer-events: none;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.history-filters__input,
+.history-filters__select,
+.history-filters__date {
+  width: 100%;
+  height: 2.35rem;
+  box-sizing: border-box;
+  border: 1px solid #dfe3eb;
+  border-radius: .5rem;
+  outline: none;
+  background: #fff;
+  color: #343b4f;
+  font-family: inherit;
+  font-size: .58rem;
+  font-weight: 500;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+
+  &:focus {
+    border-color: #8172e4;
+    box-shadow: 0 0 0 3px rgba(102, 84, 223, .07);
+  }
+}
+
+.history-filters__input,
+.history-filters__select {
+  padding: 0 2rem 0 2rem;
+}
+
+.history-filters__input::placeholder {
+  color: #a1a7b5;
+}
+
+.history-filters__select {
+  appearance: none;
+  cursor: pointer;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237b8293' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .7rem center;
+}
+
+.history-filters__date {
+  padding: 0 .7rem;
+  cursor: pointer;
+}
+
+/* ACTIONS */
+
+.history-filters__actions {
+  margin-top: .75rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .45rem;
+}
+
+.history-filters__button {
+  min-height: 2.15rem;
+  padding: 0 .75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .3rem;
+  border-radius: .48rem;
+  font-family: inherit;
+  font-size: .55rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+
+  svg {
+    width: .85rem;
+    height: .85rem;
+  }
+}
+
+.history-filters__button--clear {
+  border: 1px solid transparent;
+  background: transparent;
+  color: #6654df;
+
+  &:hover {
+    background: #f7f5ff;
+  }
+}
+
+.history-filters__button--apply {
+  border: 1px solid #5c47d4;
+  background:
+    linear-gradient(
+      135deg,
+      #715ce9,
+      #5943d4
+    );
+  color: #fff;
+  box-shadow: 0 5px 12px rgba(89, 67, 212, .14);
+
+  &:hover {
+    box-shadow: 0 7px 15px rgba(89, 67, 212, .2);
+  }
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+  .history-filters__grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .history-filters {
+    padding: .7rem;
+  }
+
+  .history-filters__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .history-filters__actions {
+    flex-direction: column-reverse;
+  }
+
+  .history-filters__button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,119 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.history-pagination {
+  width: 100%;
+  min-height: 3.7rem;
+  padding: .6rem .8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.history-pagination__summary {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  color: #8a91a2;
+  font-size: .5rem;
+
+  strong {
+    color: #4a5265;
+    font-size: .52rem;
+    font-weight: 700;
+  }
+}
+
+.history-pagination__controls {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+.history-pagination__button {
+  min-height: 2rem;
+  padding: 0 .6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .28rem;
+  border: 1px solid #dfe3eb;
+  border-radius: .45rem;
+  background: #fff;
+  color: #60687a;
+  font-family: inherit;
+  font-size: .52rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+
+  svg {
+    width: .8rem;
+    height: .8rem;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: #d3cef4;
+    background: #faf9ff;
+    color: #604bd7;
+  }
+
+  &:disabled {
+    border-color: #eceef2;
+    background: #fafbfc;
+    color: #b4b9c4;
+    cursor: not-allowed;
+  }
+}
+
+.history-pagination__button--next {
+  border-color: #d9d3ff;
+  color: #604bd7;
+}
+
+.history-pagination__page {
+  min-height: 2rem;
+  padding: 0 .55rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .2rem;
+  border-radius: .42rem;
+  background: #f7f5ff;
+  color: #858c9d;
+  font-size: .49rem;
+
+  strong {
+    color: #5f4bd0;
+    font-size: .53rem;
+    font-weight: 750;
+  }
+}
+
+@media (max-width: 600px) {
+  .history-pagination {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .history-pagination__summary {
+    justify-content: center;
+  }
+
+  .history-pagination__controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .history-pagination__button {
+    flex: 1;
+  }
+}

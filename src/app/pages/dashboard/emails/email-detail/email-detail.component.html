@@ -1,95 +1,1081 @@
-<section class="email-detail-root">
-  <!-- Top bar / acciones -->
-  <header class="topbar">
-    <div class="left">
-      <a class="btn back" (click)="goBack()" aria-label="Volver"> ← </a>
-    </div>
+<section
+  *ngIf="email"
+  class="email-detail-page"
+>
 
-    <div class="right">
-      <div class="actions">
-        <button class="icon-btn" title="Más">⋮</button>
+  <div class="email-detail-page__container">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="email-detail-page__header">
+
+      <div class="email-detail-page__header-content">
+
+        <span class="email-detail-page__eyebrow">
+          Emails / Historial
+        </span>
+
+        <h1 class="email-detail-page__title">
+          Detalle del email
+        </h1>
+
+        <p class="email-detail-page__description">
+          Consulta la información completa del email seleccionado.
+        </p>
+
       </div>
-    </div>
-  </header>
 
-  <!-- Layout principal -->
-  <div class="layout single" *ngIf="email">
-    <article class="message-col">
-      <!-- From / To -->
-      <div class="from-row">
-        <div class="avatar">
-          <span>{{ (email.recipientEmail || "E")[0] | uppercase }}</span>
+
+      <div
+        class="email-detail-page__header-illustration"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 120 90"
+          fill="none"
+        >
+          <circle
+            cx="60"
+            cy="45"
+            r="38"
+            fill="#f4f2ff"
+          />
+
+          <rect
+            x="28"
+            y="27"
+            width="64"
+            height="43"
+            rx="8"
+            fill="#e8e4ff"
+          />
+
+          <path
+            d="M33 33 60 52 87 33"
+            stroke="#7968df"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m34 65 19-17M86 65 67 48"
+            stroke="#9a8eed"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="89"
+            cy="25"
+            r="10"
+            fill="#7060dd"
+          />
+
+          <path
+            d="m84.5 25 3 3 5.5-6"
+            stroke="#fff"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         BACK
+    ====================================================== -->
+
+    <div class="email-detail-page__back-row">
+
+      <button
+        type="button"
+        class="email-detail-page__back"
+        (click)="goBack()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m15 6-6 6 6 6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        Volver al historial
+      </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         INFO
+    ====================================================== -->
+
+    <div class="email-detail-page__info">
+
+      <span
+        class="email-detail-page__info-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 10.5v5M12 7.5h.01"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span>
+        <strong>
+          Información detallada:
+        </strong>
+
+        Revisa el estado, destinatario, contenido y fechas
+        relacionadas con este email.
+      </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUMMARY
+    ====================================================== -->
+
+    <section class="email-detail-summary">
+
+      <!-- STATUS -->
+
+      <article class="email-detail-summary__card">
+
+        <span
+          class="
+            email-detail-summary__icon
+            email-detail-summary__icon--status
+          "
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              *ngIf="email.status === 'SENT'"
+              d="m8.5 12 2.2 2.2 4.8-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <path
+              *ngIf="email.status !== 'SENT'"
+              d="M12 8v5M12 16h.01"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+
+        <div class="email-detail-summary__content">
+
+          <span class="email-detail-summary__label">
+            Estado del email
+          </span>
+
+          <span
+            class="email-detail-summary__status"
+            [class.email-detail-summary__status--sent]="
+              email.status === 'SENT'
+            "
+            [class.email-detail-summary__status--failed]="
+              email.status === 'FAILED'
+            "
+            [class.email-detail-summary__status--queued]="
+              email.status === 'QUEUED'
+            "
+          >
+
+            <span class="email-detail-summary__status-dot">
+            </span>
+
+            <ng-container [ngSwitch]="email.status">
+
+              <span *ngSwitchCase="'SENT'">
+                Enviado
+              </span>
+
+              <span *ngSwitchCase="'FAILED'">
+                Fallido
+              </span>
+
+              <span *ngSwitchCase="'QUEUED'">
+                En cola
+              </span>
+
+              <span *ngSwitchDefault>
+                {{ email.status }}
+              </span>
+
+            </ng-container>
+
+          </span>
+
+
+          <small>
+
+            <ng-container [ngSwitch]="email.status">
+
+              <span *ngSwitchCase="'SENT'">
+                El email fue enviado correctamente.
+              </span>
+
+              <span *ngSwitchCase="'FAILED'">
+                El envío presentó un error.
+              </span>
+
+              <span *ngSwitchCase="'QUEUED'">
+                El email está pendiente de envío.
+              </span>
+
+              <span *ngSwitchDefault>
+                Estado registrado del mensaje.
+              </span>
+
+            </ng-container>
+
+          </small>
+
         </div>
 
-        <div class="from-meta">
-          <div class="from-line">
-            <strong class="name">
-              {{ email.recipientName || email.recipientEmail }}
+      </article>
+
+
+      <!-- SENT AT -->
+
+      <article class="email-detail-summary__card">
+
+        <span
+          class="
+            email-detail-summary__icon
+            email-detail-summary__icon--date
+          "
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="5"
+              width="16"
+              height="15"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M8 3v4M16 3v4M4 9h16"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <circle
+              cx="16.5"
+              cy="16.5"
+              r="3.5"
+              fill="#fff"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+
+            <path
+              d="M16.5 14.5v2l1.4 1"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+
+        <div class="email-detail-summary__content">
+
+          <span class="email-detail-summary__label">
+            Fecha de envío
+          </span>
+
+          <strong>
+            {{
+              (email.sentAt || email.createdAt)
+                | date:'dd/MM/yyyy'
+            }}
+          </strong>
+
+          <small>
+            {{
+              (email.sentAt || email.createdAt)
+                | date:'HH:mm'
+            }}
+          </small>
+
+        </div>
+
+      </article>
+
+
+      <!-- RECIPIENT TYPE -->
+
+      <article class="email-detail-summary__card">
+
+        <span
+          class="
+            email-detail-summary__icon
+            email-detail-summary__icon--recipient
+          "
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="9"
+              cy="8"
+              r="3"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M16 6.5a2.4 2.4 0 1 1 0 4.8M16 14.5c2.6.2 4.5 1.9 4.5 4.2"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+
+        <div class="email-detail-summary__content">
+
+          <span class="email-detail-summary__label">
+            Tipo de destinatario
+          </span>
+
+          <strong>
+
+            <ng-container [ngSwitch]="email.recipientType">
+
+              <span *ngSwitchCase="'INDIVIDUAL'">
+                Individual
+              </span>
+
+              <span *ngSwitchCase="'GROUP'">
+                Grupo
+              </span>
+
+              <span *ngSwitchCase="'STAGE'">
+                Stage
+              </span>
+
+              <span *ngSwitchCase="'ROLE'">
+                Rol
+              </span>
+
+              <span *ngSwitchDefault>
+                {{ email.recipientType }}
+              </span>
+
+            </ng-container>
+
+          </strong>
+
+          <small>
+            {{ email.quantity || 1 }}
+            {{
+              (email.quantity || 1) === 1
+                ? 'destinatario'
+                : 'destinatarios'
+            }}
+          </small>
+
+        </div>
+
+      </article>
+
+
+      <!-- MESSAGE ID -->
+
+      <article class="email-detail-summary__card">
+
+        <span
+          class="
+            email-detail-summary__icon
+            email-detail-summary__icon--message
+          "
+        >
+          #
+        </span>
+
+
+        <div class="email-detail-summary__content">
+
+          <span class="email-detail-summary__label">
+            ID del mensaje
+          </span>
+
+          <strong class="email-detail-summary__message-id">
+            {{ email.messageId || '—' }}
+          </strong>
+
+          <small>
+            Registro #{{ email.id }}
+          </small>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         INFORMATION GRID
+    ====================================================== -->
+
+    <section class="email-detail-information">
+
+      <!-- RECIPIENT -->
+
+      <article class="email-detail-card">
+
+        <header class="email-detail-card__header">
+
+          <span class="email-detail-card__icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="8"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M5.5 19c0-3.1 2.5-5 6.5-5s6.5 1.9 6.5 5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <h2>
+            Información del destinatario
+          </h2>
+
+        </header>
+
+
+        <div class="email-detail-card__body">
+
+          <div class="email-detail-card__field">
+
+            <span>
+              Nombre
+            </span>
+
+            <strong>
+              {{
+                email.recipientName ||
+                'Sin nombre registrado'
+              }}
             </strong>
-            <span class="dot">·</span>
-            <span class="time">
-              {{ email.createdAt | date : "EEE d MMM y, HH:mm" }}
+
+          </div>
+
+
+          <div class="email-detail-card__field">
+
+            <span>
+              Email
+            </span>
+
+            <strong>
+              {{
+                email.recipientEmail ||
+                'No disponible'
+              }}
+            </strong>
+
+          </div>
+
+
+          <div class="email-detail-card__field">
+
+            <span>
+              Tipo
+            </span>
+
+            <span class="email-detail-card__badge">
+
+              <ng-container [ngSwitch]="email.recipientType">
+
+                <span *ngSwitchCase="'INDIVIDUAL'">
+                  Individual
+                </span>
+
+                <span *ngSwitchCase="'GROUP'">
+                  Grupo
+                </span>
+
+                <span *ngSwitchCase="'STAGE'">
+                  Stage
+                </span>
+
+                <span *ngSwitchCase="'ROLE'">
+                  Rol
+                </span>
+
+                <span *ngSwitchDefault>
+                  {{ email.recipientType }}
+                </span>
+
+              </ng-container>
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- DETAILS -->
+
+      <article
+        class="
+          email-detail-card
+          email-detail-card--large
+        "
+      >
+
+        <header class="email-detail-card__header">
+
+          <span class="email-detail-card__icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m4 7 8 6 8-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <h2>
+            Detalles del email
+          </h2>
+
+        </header>
+
+
+        <div class="email-detail-card__details-grid">
+
+          <div class="email-detail-card__field">
+
+            <span>
+              Asunto
+            </span>
+
+            <strong>
+              {{
+                email.subject ||
+                'Sin asunto'
+              }}
+            </strong>
+
+          </div>
+
+
+          <div class="email-detail-card__field">
+
+            <span>
+              Cantidad de destinatarios
+            </span>
+
+            <strong>
+              {{ email.quantity || 1 }}
+            </strong>
+
+          </div>
+
+
+          <div class="email-detail-card__field">
+
+            <span>
+              Tipo de contenido
+            </span>
+
+            <span class="email-detail-card__badge">
+              {{
+                email.contentType
+                  | uppercase
+              }}
+            </span>
+
+          </div>
+
+
+          <div class="email-detail-card__field">
+
+            <span>
+              Creado el
+            </span>
+
+            <strong>
+              {{
+                email.createdAt
+                  | date:'dd/MM/yyyy HH:mm'
+              }}
+            </strong>
+
+          </div>
+
+
+          <div class="email-detail-card__field">
+
+            <span>
+              Actualizado el
+            </span>
+
+            <strong>
+              {{
+                email.updatedAt
+                  | date:'dd/MM/yyyy HH:mm'
+              }}
+            </strong>
+
+          </div>
+
+
+          <div
+            *ngIf="email.deliveredAt"
+            class="email-detail-card__field"
+          >
+
+            <span>
+              Entregado el
+            </span>
+
+            <strong>
+              {{
+                email.deliveredAt
+                  | date:'dd/MM/yyyy HH:mm'
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div
+          *ngIf="email.errorMessage"
+          class="email-detail-card__error"
+        >
+
+          <strong>
+            Error de envío
+          </strong>
+
+          <span>
+            {{ email.errorMessage }}
+          </span>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         EMAIL CONTENT
+    ====================================================== -->
+
+    <section class="email-detail-content">
+
+      <header class="email-detail-content__header">
+
+        <div class="email-detail-content__heading">
+
+          <span class="email-detail-content__icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M7 3.5h7l4 4V20H7V3.5Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M14 3.5V8h4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <h2>
+            Contenido del email
+          </h2>
+
+        </div>
+
+
+        <span class="email-detail-content__type">
+          {{ email.contentType | uppercase }}
+        </span>
+
+      </header>
+
+
+      <div class="email-detail-content__toolbar">
+
+        <span class="email-detail-content__tab">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M3 12s3.5-5 9-5 9 5 9 5-3.5 5-9 5-9-5-9-5Z"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <circle
+              cx="12"
+              cy="12"
+              r="2"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+          </svg>
+
+          Vista previa
+
+        </span>
+
+      </div>
+
+
+      <div class="email-detail-content__preview">
+
+        <div class="email-detail-content__brand">
+
+          <span class="email-detail-content__brand-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="m3.5 8.5 8.5-4 8.5 4-8.5 4-8.5-4Z"
+                fill="currentColor"
+              />
+
+              <path
+                d="M6.5 10v5c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+            </svg>
+          </span>
+
+          <strong>
+            Alce College
+          </strong>
+
+        </div>
+
+
+        <div
+          *ngIf="email.contentType === 'html'; else textContent"
+          class="email-detail-content__html"
+          [innerHTML]="email.content"
+        >
+        </div>
+
+
+        <ng-template #textContent>
+
+          <div class="email-detail-content__text">
+            {{ email.content }}
+          </div>
+
+        </ng-template>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         STATUS HISTORY
+    ====================================================== -->
+
+    <section class="email-detail-timeline">
+
+      <header class="email-detail-timeline__header">
+
+        <span class="email-detail-timeline__header-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M7 3.5h7l4 4V20H7V3.5Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M10 12h5M10 16h5"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <h2>
+          Historial de estado
+        </h2>
+
+      </header>
+
+
+      <div class="email-detail-timeline__steps">
+
+        <!-- CREATED -->
+
+        <div class="email-detail-timeline__step">
+
+          <span
+            class="
+              email-detail-timeline__point
+              email-detail-timeline__point--complete
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="m7.5 12 3 3 6-6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <div>
+            <strong>
+              Creado
+            </strong>
+
+            <span>
+              {{
+                email.createdAt
+                  | date:'dd/MM/yyyy HH:mm'
+              }}
             </span>
           </div>
 
-          <div class="to-line">
-            Asunto: <span class="audience">{{ email.subject }}</span>
-          </div>
-          <div class="from-email">
-            De: <strong>ALCE College</strong> &lt;noreply&#64;alce-college.com&gt;
-          </div>
         </div>
-      </div>
 
-      <!-- Detalles -->
-      <details class="meta-disclosure">
-        <summary>
-          <span>Detalles</span>
-          <span class="chev" aria-hidden="true">▾</span>
-        </summary>
 
-        <div class="card details-card">
-          <dl class="meta-list">
-            <div class="row">
-              <dt>Estado</dt>
-              <dd>{{ email.status }}</dd>
-            </div>
-            <div class="row">
-              <dt>Enviado</dt>
-              <dd>{{ email.sentAt | date : "short" }}</dd>
-            </div>
-            <div class="row">
-              <dt>Actualizado</dt>
-              <dd>{{ email.updatedAt | date : "short" }}</dd>
-            </div>
-            <div class="row">
-              <dt>Tipo destinatario</dt>
-              <dd>{{ email.recipientType }}</dd>
-            </div>
-            <div class="row">
-              <dt>Message ID</dt>
-              <dd>{{ email.messageId }}</dd>
-            </div>
-          </dl>
+        <span class="email-detail-timeline__line">
+        </span>
+
+
+        <!-- SENT -->
+
+        <div class="email-detail-timeline__step">
+
+          <span
+            class="email-detail-timeline__point"
+            [class.email-detail-timeline__point--complete]="
+              !!email.sentAt
+            "
+            [class.email-detail-timeline__point--error]="
+              email.status === 'FAILED'
+            "
+          >
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                *ngIf="email.status !== 'FAILED'"
+                d="m7.5 12 3 3 6-6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                *ngIf="email.status === 'FAILED'"
+                d="M8 8l8 8M16 8l-8 8"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+          <div>
+
+            <strong>
+              {{
+                email.status === 'FAILED'
+                  ? 'Fallido'
+                  : 'Enviado'
+              }}
+            </strong>
+
+            <span>
+              {{
+                email.sentAt
+                  ? (email.sentAt | date:'dd/MM/yyyy HH:mm')
+                  : 'Pendiente'
+              }}
+            </span>
+
+          </div>
+
         </div>
-      </details>
 
-      <!-- Contenido -->
-      <div class="content">
-        <div
-          *ngIf="email.contentType === 'html'; else plainText"
-          class="body-text"
-          [innerHTML]="email.content"
-        ></div>
-        <ng-template #plainText>
-          <pre class="body-text">{{ email.content }}</pre>
-        </ng-template>
+
+        <span class="email-detail-timeline__line">
+        </span>
+
+
+        <!-- DELIVERED -->
+
+        <div class="email-detail-timeline__step">
+
+          <span
+            class="email-detail-timeline__point"
+            [class.email-detail-timeline__point--complete]="
+              !!email.deliveredAt
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="m7.5 12 3 3 6-6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <div>
+
+            <strong>
+              Entregado
+            </strong>
+
+            <span>
+              {{
+                email.deliveredAt
+                  ? (email.deliveredAt | date:'dd/MM/yyyy HH:mm')
+                  : 'Sin confirmación'
+              }}
+            </span>
+
+          </div>
+
+        </div>
+
       </div>
 
-      <!-- Alertas -->
-      <div class="alert danger" *ngIf="email.status === 'FAILED'">
-        {{ email.errorMessage || "No se pudo entregar." }}
-      </div>
-    </article>
+    </section>
+
   </div>
+
 </section>

@@ -1,105 +1,742 @@
-<div class="dashboard-layout">
+<section class="admin-dashboard">
 
-  <!-- LEFT CONTENT -->
-  <div class="dashboard-content">
+  <div class="admin-dashboard__container">
 
-    <div class="dashboard-header">
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-      <div class="welcome-block">
-        <h1 class="dashboard-title">
+    <header class="admin-dashboard__header">
+
+      <div>
+
+        <span class="admin-dashboard__eyebrow">
+          Panel administrativo
+        </span>
+
+        <h1 class="admin-dashboard__title">
           Bienvenido, {{ adminName }}
         </h1>
 
-        <p class="dashboard-subtitle">
-          Aquí tienes un resumen rápido de la actividad del sistema.
+        <p class="admin-dashboard__description">
+          Consulta un resumen general de los usuarios registrados
+          en la plataforma.
         </p>
+
       </div>
 
-    </div>
+    </header>
 
-    <!-- STATS -->
-    <div class="stats-grid">
 
-      <div class="stat-card" *ngFor="let stat of stats">
+    <!-- =====================================================
+         USER STATS
+    ====================================================== -->
 
-        <div class="stat-icon">
-          <i class="fa-solid fa-{{ stat.icon }}"></i>
-        </div>
+    <section class="admin-dashboard__stats">
 
-        <div class="stat-info">
-          <span class="stat-label">
-            {{ stat.label }}
+      <!-- TOTAL USERS -->
+
+      <article class="admin-dashboard__stat">
+
+        <span
+          class="
+            admin-dashboard__stat-icon
+            admin-dashboard__stat-icon--users
+          "
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle
+              cx="9"
+              cy="8"
+              r="3"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M16 6.5a2.4 2.4 0 1 1 0 4.8M16 14.5c2.6.2 4.5 1.9 4.5 4.2"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <div class="admin-dashboard__stat-content">
+
+          <span class="admin-dashboard__stat-label">
+            Usuarios registrados
           </span>
 
-          <div class="stat-value-row">
-            <span class="stat-value">
-              {{ stat.value }}
-            </span>
+          <ng-container *ngIf="!loadingUserStats; else loadingTotal">
 
-            <span class="stat-trend">
-              {{ stat.trend }}
-            </span>
-          </div>
+            <strong class="admin-dashboard__stat-value">
+              {{ totalUsers | number }}
+            </strong>
+
+          </ng-container>
+
+          <ng-template #loadingTotal>
+            <span class="admin-dashboard__stat-skeleton"></span>
+          </ng-template>
+
+          <small>
+            Total de usuarios en la plataforma.
+          </small>
+
         </div>
 
+      </article>
+
+
+      <!-- STUDENTS -->
+
+      <article class="admin-dashboard__stat">
+
+        <span
+          class="
+            admin-dashboard__stat-icon
+            admin-dashboard__stat-icon--students
+          "
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+
+            <path
+              d="m3.5 8.5 8.5-4 8.5 4-8.5 4-8.5-4Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M6.5 10v5c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+          </svg>
+        </span>
+
+        <div class="admin-dashboard__stat-content">
+
+          <span class="admin-dashboard__stat-label">
+            Estudiantes
+          </span>
+
+          <ng-container *ngIf="!loadingUserStats; else loadingStudents">
+
+            <strong class="admin-dashboard__stat-value">
+              {{ totalStudents | number }}
+            </strong>
+
+          </ng-container>
+
+          <ng-template #loadingStudents>
+            <span class="admin-dashboard__stat-skeleton"></span>
+          </ng-template>
+
+          <small>
+            Estudiantes registrados actualmente.
+          </small>
+
+        </div>
+
+      </article>
+
+
+      <!-- INSTRUCTORS -->
+
+      <article class="admin-dashboard__stat">
+
+        <span
+          class="
+            admin-dashboard__stat-icon
+            admin-dashboard__stat-icon--instructors
+          "
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+
+            <circle
+              cx="12"
+              cy="8"
+              r="3"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M5.5 19c0-3.1 2.5-5 6.5-5s6.5 1.9 6.5 5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M16.5 6.5 19 9l-2.5 2.5"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+          </svg>
+        </span>
+
+        <div class="admin-dashboard__stat-content">
+
+          <span class="admin-dashboard__stat-label">
+            Instructores
+          </span>
+
+          <ng-container *ngIf="!loadingUserStats; else loadingInstructors">
+
+            <strong class="admin-dashboard__stat-value">
+              {{ totalInstructors | number }}
+            </strong>
+
+          </ng-container>
+
+          <ng-template #loadingInstructors>
+            <span class="admin-dashboard__stat-skeleton"></span>
+          </ng-template>
+
+          <small>
+            Instructores registrados en la plataforma.
+          </small>
+
+        </div>
+
+      </article>
+
+
+      <!-- ADMINS -->
+
+      <article class="admin-dashboard__stat">
+
+        <span
+          class="
+            admin-dashboard__stat-icon
+            admin-dashboard__stat-icon--admins
+          "
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+
+            <rect
+              x="5"
+              y="4"
+              width="14"
+              height="16"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <circle
+              cx="12"
+              cy="9"
+              r="2"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+
+            <path
+              d="M8.5 16c.4-2 1.6-3 3.5-3s3.1 1 3.5 3"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+
+          </svg>
+        </span>
+
+        <div class="admin-dashboard__stat-content">
+
+          <span class="admin-dashboard__stat-label">
+            Administradores
+          </span>
+
+          <ng-container *ngIf="!loadingUserStats; else loadingAdmins">
+
+            <strong class="admin-dashboard__stat-value">
+              {{ totalAdmins | number }}
+            </strong>
+
+          </ng-container>
+
+          <ng-template #loadingAdmins>
+            <span class="admin-dashboard__stat-skeleton"></span>
+          </ng-template>
+
+          <small>
+            Usuarios con rol administrativo.
+          </small>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         SHORTCUTS
+    ====================================================== -->
+
+    <section class="admin-dashboard__shortcuts">
+
+      <header class="admin-dashboard__shortcuts-header">
+
+        <div>
+
+          <h2>
+            Atajos
+          </h2>
+
+          <p>
+            Accede rápidamente a las principales secciones administrativas.
+          </p>
+
+        </div>
+
+      </header>
+
+
+      <div class="admin-dashboard__shortcuts-grid">
+
+        <!-- GESTIONAR USUARIOS -->
+
+        <a
+          routerLink="/dashboard/searching-user"
+          class="admin-dashboard__shortcut"
+        >
+
+          <span
+            class="
+              admin-dashboard__shortcut-icon
+              admin-dashboard__shortcut-icon--users
+            "
+          >
+            <svg viewBox="0 0 24 24" fill="none">
+
+              <circle
+                cx="9"
+                cy="8"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M16 6.5a2.4 2.4 0 1 1 0 4.8M16 14.5c2.6.2 4.5 1.9 4.5 4.2"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+
+            </svg>
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-content">
+
+            <strong>
+              Gestionar usuarios
+            </strong>
+
+            <small>
+              Consulta y administra usuarios.
+            </small>
+
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-arrow">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="m9 6 6 6-6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+        </a>
+
+
+        <!-- INSTRUCTORES -->
+
+        <a
+          routerLink="/dashboard/attendance-instructor-v2"
+          class="admin-dashboard__shortcut"
+        >
+
+          <span
+            class="
+              admin-dashboard__shortcut-icon
+              admin-dashboard__shortcut-icon--instructors
+            "
+          >
+            <svg viewBox="0 0 24 24" fill="none">
+
+              <circle
+                cx="12"
+                cy="8"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M5.5 19c0-3.1 2.5-5 6.5-5s6.5 1.9 6.5 5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+            </svg>
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-content">
+
+            <strong>
+              Asistencia de instructores
+            </strong>
+
+            <small>
+              Consulta y gestiona la asistencia de instructores.
+            </small>
+
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-arrow">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="m9 6 6 6-6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+        </a>
+
+
+        <!-- ENVIAR EMAIL -->
+
+        <a
+          routerLink="/dashboard/send-emails"
+          class="admin-dashboard__shortcut"
+        >
+
+          <span
+            class="
+              admin-dashboard__shortcut-icon
+              admin-dashboard__shortcut-icon--email
+            "
+          >
+            <svg viewBox="0 0 24 24" fill="none">
+
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m4 7 8 6 8-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+            </svg>
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-content">
+
+            <strong>
+              Enviar email
+            </strong>
+
+            <small>
+              Envía correos a usuarios, stages, grupos o roles.
+            </small>
+
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-arrow">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="m9 6 6 6-6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+        </a>
+
+
+        <!-- GESTIONAR AGENDA -->
+
+        <a
+          routerLink="/dashboard/searching-meeting-v2"
+          class="admin-dashboard__shortcut"
+        >
+
+          <span
+            class="
+              admin-dashboard__shortcut-icon
+              admin-dashboard__shortcut-icon--history
+            "
+          >
+            <svg viewBox="0 0 24 24" fill="none">
+
+              <rect
+                x="4"
+                y="5"
+                width="16"
+                height="15"
+                rx="2.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 3v4M16 3v4M4 9h16"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M8 13h3M8 16h5"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+
+            </svg>
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-content">
+
+            <strong>
+              Gestionar agenda
+            </strong>
+
+            <small>
+              Consulta y administra las clases agendadas.
+            </small>
+
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-arrow">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="m9 6 6 6-6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+        </a>
+
+
+        <!-- ASISTENCIA ESTUDIANTES -->
+
+        <a
+          routerLink="/dashboard/attendance-student"
+          class="admin-dashboard__shortcut"
+        >
+
+          <span
+            class="
+              admin-dashboard__shortcut-icon
+              admin-dashboard__shortcut-icon--groups
+            "
+          >
+            <svg viewBox="0 0 24 24" fill="none">
+
+              <path
+                d="m3.5 8.5 8.5-4 8.5 4-8.5 4-8.5-4Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M6.5 10v5c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m15.5 16.5 1.5 1.5 3-3"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+            </svg>
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-content">
+
+            <strong>
+              Asistencia de estudiantes
+            </strong>
+
+            <small>
+              Consulta la asistencia y seguimiento estudiantil.
+            </small>
+
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-arrow">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="m9 6 6 6-6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+        </a>
+
+
+        <!-- EVALUACIONES -->
+
+        <a
+          routerLink="/dashboard/stage-assessment"
+          class="admin-dashboard__shortcut"
+        >
+
+          <span
+            class="
+              admin-dashboard__shortcut-icon
+              admin-dashboard__shortcut-icon--suppressed
+            "
+          >
+            <svg viewBox="0 0 24 24" fill="none">
+
+              <rect
+                x="5"
+                y="4.5"
+                width="14"
+                height="16"
+                rx="2.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M9 9h6M9 13h6"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="m9 17 1.5 1.5 3-3"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+            </svg>
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-content">
+
+            <strong>
+              Asignación de evaluaciones
+            </strong>
+
+            <small>
+              Gestiona evaluaciones académicas por Stage.
+            </small>
+
+          </span>
+
+
+          <span class="admin-dashboard__shortcut-arrow">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="m9 6 6 6-6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+        </a>
+
       </div>
 
-    </div>
-
-    <!-- WIDGETS ADMIN -->
-    <div class="dashboard-widgets">
-
-      <app-dashboard-settings-widget></app-dashboard-settings-widget>
-
-      <!-- FILA DE WIDGETS -->
-      <div class="widgets-row">
-
-        <app-dashboard-notifications-widget></app-dashboard-notifications-widget>
+    </section>
 
 
-      </div>
+    <!-- =====================================================
+         ANNOUNCEMENTS
+    ====================================================== -->
 
-      <!-- <app-dashboard-emails-widget></app-dashboard-emails-widget> -->
+    <app-announcement-viewer
+      *ngIf="announcementUser && visibleAnnouncements.length > 0"
+      [announcements]="visibleAnnouncements"
+      [user]="announcementUser"
+      (closed)="onCustomAnnouncementClosed($event)"
+    >
+    </app-announcement-viewer>
 
-    </div>
   </div>
 
-
-  <!-- RIGHT PANEL -->
-    <aside class="dashboard-sidebar">
-
-      <div class="sidebar-header">
-        <h2>Resumen del sistema</h2>
-      </div>
-
-    <!-- MODULOS IMPORTANTES DEL MOCK -->
-    <div
-      class="sidebar-section"
-      *ngFor="let module of modules"
-      [hidden]="module.title !== 'Agenda'
-                && module.title !== 'Evaluaciones'
-                && module.title !== 'Notificaciones'"
-    >
-
-      <h3>{{ module.title }}</h3>
-
-      <div class="sidebar-row" *ngFor="let item of module.items">
-
-        <span>{{ item.label }}</span>
-
-        <strong>{{ item.value }}</strong>
-
-      </div>
-
-    </div>
-
-  </aside>
-
-</div>
-
-<app-announcement-viewer
-  *ngIf="announcementUser && visibleAnnouncements.length > 0"
-  [announcements]="visibleAnnouncements"
-  [user]="announcementUser"
-  (closed)="onCustomAnnouncementClosed($event)"
-></app-announcement-viewer>
+</section>

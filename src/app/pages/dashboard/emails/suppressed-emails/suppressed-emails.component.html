@@ -1,282 +1,1358 @@
-<section class="inbox-root">
-  <div class="inbox-page">
-    <h1 class="inbox-page-title">Emails baneados</h1>
+<section class="suppressed-page">
 
-    <div class="toolbar">
-      <div class="email-filters">
-        <div class="filter-item filter-item--grow">
-          <label for="suppressedSearch">Email</label>
+  <div class="suppressed-page__container">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="suppressed-page__header">
+
+      <div class="suppressed-page__header-content">
+
+        <div class="suppressed-page__header-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="14"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m4 7 8 6 8-6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <circle
+              cx="18"
+              cy="17"
+              r="4"
+              fill="#fff"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+
+            <path
+              d="m15.7 14.7 4.6 4.6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+        <div>
+
+          <span class="suppressed-page__eyebrow">
+            Emails
+          </span>
+
+          <h1 class="suppressed-page__title">
+            Emails bloqueados
+          </h1>
+
+          <p class="suppressed-page__description">
+            Administra las direcciones que no pueden recibir
+            notificaciones por correo electrónico.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="suppressed-page__header-actions">
+
+        <button
+          type="button"
+          class="suppressed-page__create"
+          (click)="openCreate()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 5v14M5 12h14"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          Agregar email
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         INFO
+    ====================================================== -->
+
+    <div class="suppressed-page__info">
+
+      <span
+        class="suppressed-page__info-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="8.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M12 10.5v5M12 7.5h.01"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span>
+        <strong>
+          Importante:
+        </strong>
+
+        Los emails activos en esta lista no podrán recibir
+        nuevos envíos hasta que se levante su bloqueo.
+      </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUMMARY
+    ====================================================== -->
+
+    <section class="suppressed-summary">
+
+      <article class="suppressed-summary__card">
+
+        <span
+          class="
+            suppressed-summary__icon
+            suppressed-summary__icon--total
+          "
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="14"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m4 7 8 6 8-6"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+          </svg>
+        </span>
+
+        <div>
+          <span>
+            Registros encontrados
+          </span>
+
+          <strong>
+            {{ total }}
+          </strong>
+
+          <small>
+            Según los filtros aplicados.
+          </small>
+        </div>
+
+      </article>
+
+
+      <article class="suppressed-summary__card">
+
+        <span
+          class="
+            suppressed-summary__icon
+            suppressed-summary__icon--status
+          "
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M8 8l8 8M16 8l-8 8"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <div>
+          <span>
+            Estado consultado
+          </span>
+
+          <strong>
+            {{
+              activeFilter === 'true'
+                ? 'Bloqueados'
+                : activeFilter === 'false'
+                  ? 'Levantados'
+                  : 'Todos'
+            }}
+          </strong>
+
+          <small>
+            Estado actual del filtro.
+          </small>
+        </div>
+
+      </article>
+
+
+      <article class="suppressed-summary__card">
+
+        <span
+          class="
+            suppressed-summary__icon
+            suppressed-summary__icon--range
+          "
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M5 5h14v14H5V5Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="M8 9h8M8 12h8M8 15h5"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <div>
+          <span>
+            Mostrando
+          </span>
+
+          <strong>
+            {{ startIndex }} - {{ endIndex }}
+          </strong>
+
+          <small>
+            de {{ total }} registros.
+          </small>
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         FILTERS
+    ====================================================== -->
+
+    <section class="suppressed-filters">
+
+      <header class="suppressed-filters__header">
+
+        <span class="suppressed-filters__header-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M4 6h16M7 12h10M10 18h4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <div>
+          <h2>
+            Filtros
+          </h2>
+
+          <p>
+            Busca por email o filtra según el estado del bloqueo.
+          </p>
+        </div>
+
+      </header>
+
+
+      <div class="suppressed-filters__controls">
+
+        <!-- SEARCH -->
+
+        <div class="suppressed-filters__search">
+
+          <span class="suppressed-filters__search-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="6.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m16 16 4 4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
           <input
-            id="suppressedSearch"
             type="text"
+            class="suppressed-filters__input"
+            placeholder="Buscar email..."
+            autocomplete="off"
             [(ngModel)]="search"
             (keyup.enter)="onSearch()"
-            placeholder="usuario@correo.com"
           />
-        </div>
 
-        <div class="filter-item">
-          <label for="suppressedActive">Estado</label>
-          <select
-            id="suppressedActive"
-            [(ngModel)]="activeFilter"
-            (change)="onFilterChange()"
-          >
-            <option value="true">Activos</option>
-            <option value="false">Levantados</option>
-            <option value="all">Todos</option>
-          </select>
-        </div>
-
-        <div class="filter-actions">
-          <button class="btn btn-secondary" type="button" (click)="onSearch()">
-            Buscar
-          </button>
           <button
-            class="btn btn-ghost"
-            type="button"
             *ngIf="search"
+            type="button"
+            class="suppressed-filters__clear-search"
+            title="Limpiar búsqueda"
             (click)="clearSearch()"
           >
-            Limpiar
-          </button>
-        </div>
-      </div>
-
-      <button class="add-btn" type="button" (click)="openCreate()">
-        + Agregar email
-      </button>
-    </div>
-
-    <div class="divider"></div>
-
-    <section class="emails-list">
-      <div *ngIf="loading" class="placeholder">Cargando…</div>
-      <div *ngIf="!loading && errorMsg" class="error">{{ errorMsg }}</div>
-      <div *ngIf="!loading && !errorMsg && items.length === 0" class="placeholder">
-        No hay emails baneados que coincidan con los filtros seleccionados.
-      </div>
-
-      <div *ngIf="!loading && items.length > 0" class="table-wrapper">
-        <div class="table-header">
-          <div class="col-email">Email</div>
-          <div class="col-users">Usuario(s)</div>
-          <div class="col-reason">Motivo</div>
-          <div class="col-meta">Estado</div>
-          <div class="col-actions">Acciones</div>
-        </div>
-
-        <div class="table-row" *ngFor="let item of items">
-          <div class="col-email">
-            <div class="email-main">{{ item.email }}</div>
-            <div class="email-sub">
-              {{ sourceLabel(item.source) }} · {{ formatDate(item.suppressedAt) }}
-            </div>
-          </div>
-
-          <div class="col-users">
-            <ng-container *ngIf="item.matchedUsers?.length; else noUser">
-              <div class="user-chip" *ngFor="let u of item.matchedUsers">
-                <span class="user-name">{{ userDisplayName(u) }}</span>
-                <span class="badge">{{ roleLabel(u.role) }}</span>
-                <span class="badge light">{{ matchFieldLabel(u.matchField) }}</span>
-                <a
-                  *ngIf="u.role === 'STUDENT'"
-                  class="link-user"
-                  [routerLink]="['/dashboard/searching-students']"
-                >
-                  ver
-                </a>
-              </div>
-            </ng-container>
-            <ng-template #noUser>
-              <span class="badge warn">Sin usuario vinculado</span>
-            </ng-template>
-          </div>
-
-          <div class="col-reason" [title]="item.reason || ''">
-            {{ item.reason || '—' }}
-          </div>
-
-          <div class="col-meta">
-            <span
-              class="status-pill"
-              [class.active]="item.active"
-              [class.lifted]="!item.active"
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
             >
-              {{ item.active ? 'Activo' : 'Levantado' }}
-            </span>
-            <div class="email-sub" *ngIf="item.lastNotifiedAt">
-              Notificado: {{ formatDate(item.lastNotifiedAt) }}
-            </div>
-          </div>
-
-          <div class="col-actions">
-            <button class="action-btn" type="button" (click)="openEdit(item)">
-              Editar
-            </button>
-            <button
-              class="action-btn action-btn--info"
-              type="button"
-              [disabled]="!item.matchedUsers.length"
-              (click)="openNotify(item)"
-            >
-              Notificar
-            </button>
-            <button
-              class="action-btn action-btn--warn"
-              type="button"
-              *ngIf="item.active"
-              (click)="requestLift(item)"
-            >
-              Desbanear
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="pagination" *ngIf="total > 0">
-        <button
-          class="pg-btn"
-          type="button"
-          (click)="onPrev()"
-          [disabled]="page <= 1"
-          aria-label="Página anterior"
-        >
-          ‹
-        </button>
-        <span class="pg-info">
-          Página {{ page }}
-          <span class="sep">·</span>
-          Mostrando {{ startIndex }} – {{ endIndex }} de {{ total }}
-        </span>
-        <button
-          class="pg-btn"
-          type="button"
-          (click)="onNext()"
-          [disabled]="page * limit >= total"
-          aria-label="Página siguiente"
-        >
-          ›
-        </button>
-      </div>
-    </section>
-  </div>
-
-  <!-- Edit / Create modal -->
-  <div class="modal" [class.is-active]="showEditModal">
-    <div class="modal-background" (click)="closeEditModal()"></div>
-    <div class="modal-card">
-      <header class="modal-card-head">
-        <p class="modal-card-title">
-          {{ isCreate ? 'Agregar email baneado' : 'Editar email baneado' }}
-        </p>
-        <button
-          class="delete"
-          aria-label="close"
-          type="button"
-          (click)="closeEditModal()"
-        ></button>
-      </header>
-      <section class="modal-card-body">
-        <div class="form-field">
-          <label for="formEmail">Email</label>
-          <input
-            id="formEmail"
-            type="email"
-            [(ngModel)]="formEmail"
-            placeholder="usuario@correo.com"
-          />
-        </div>
-        <div class="form-field">
-          <label for="formReason">Motivo</label>
-          <textarea
-            id="formReason"
-            rows="3"
-            [(ngModel)]="formReason"
-            placeholder="Motivo del ban (opcional)"
-          ></textarea>
-        </div>
-        <label class="form-check" *ngIf="!isCreate">
-          <input type="checkbox" [(ngModel)]="formActive" />
-          <span>Ban activo</span>
-        </label>
-      </section>
-      <footer class="modal-card-foot">
-        <button class="btn btn-primary" type="button" (click)="saveForm()">
-          Guardar
-        </button>
-        <button class="btn btn-secondary" type="button" (click)="closeEditModal()">
-          Cancelar
-        </button>
-      </footer>
-    </div>
-  </div>
-
-  <!-- Notify modal -->
-  <div class="modal" [class.is-active]="showNotifyModal">
-    <div class="modal-background" (click)="closeNotifyModal()"></div>
-    <div class="modal-card modal-card--wide">
-      <header class="modal-card-head">
-        <p class="modal-card-title">Notificar in-app</p>
-        <button
-          class="delete"
-          aria-label="close"
-          type="button"
-          (click)="closeNotifyModal()"
-        ></button>
-      </header>
-      <section class="modal-card-body" *ngIf="notifyTarget">
-        <p class="notify-email">
-          Email: <strong>{{ notifyTarget.email }}</strong>
-        </p>
-
-        <div class="form-field">
-          <span class="field-label">Destinatarios</span>
-          <div class="recipient-list">
-            <label
-              class="form-check"
-              *ngFor="let u of notifyTarget.matchedUsers"
-            >
-              <input
-                type="checkbox"
-                [checked]="isUserSelected(u.id)"
-                (change)="toggleUser(u.id)"
+              <path
+                d="M7 7l10 10M17 7 7 17"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
               />
-              <span>
-                {{ userDisplayName(u) }}
-                <span class="badge">{{ roleLabel(u.role) }}</span>
-                <span class="badge light">{{ matchFieldLabel(u.matchField) }}</span>
-              </span>
-            </label>
-          </div>
+            </svg>
+          </button>
+
         </div>
 
-        <div class="form-field">
-          <label for="notifyTitle">Título</label>
-          <input id="notifyTitle" type="text" [(ngModel)]="notifyTitle" />
+
+        <!-- STATUS -->
+
+        <div class="suppressed-filters__select-wrapper">
+
+          <span class="suppressed-filters__select-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 8l8 8M16 8l-8 8"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <select
+            class="suppressed-filters__select"
+            [(ngModel)]="activeFilter"
+            (ngModelChange)="onFilterChange()"
+          >
+            <option value="true">
+              Bloqueados
+            </option>
+
+            <option value="false">
+              Ban levantado
+            </option>
+
+            <option value="all">
+              Todos
+            </option>
+          </select>
+
         </div>
-        <div class="form-field">
-          <label for="notifyMessage">Mensaje</label>
-          <textarea
-            id="notifyMessage"
-            rows="4"
-            [(ngModel)]="notifyMessage"
-          ></textarea>
+
+
+        <!-- SEARCH BUTTON -->
+
+        <button
+          type="button"
+          class="suppressed-filters__button"
+          (click)="onSearch()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          Buscar
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TABLE
+    ====================================================== -->
+
+    <section class="suppressed-table-card">
+
+      <!-- LOADING -->
+
+      <div
+        *ngIf="loading"
+        class="suppressed-table__state"
+      >
+        <span class="suppressed-table__spinner">
+        </span>
+
+        Cargando emails bloqueados...
+      </div>
+
+
+      <!-- ERROR -->
+
+      <div
+        *ngIf="!loading && errorMsg"
+        class="
+          suppressed-table__state
+          suppressed-table__state--error
+        "
+      >
+        {{ errorMsg }}
+      </div>
+
+
+      <!-- EMPTY -->
+
+      <div
+        *ngIf="
+          !loading &&
+          !errorMsg &&
+          items.length === 0
+        "
+        class="suppressed-table__empty"
+      >
+
+        <span class="suppressed-table__empty-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="14"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m4 7 8 6 8-6"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+          </svg>
+        </span>
+
+        <strong>
+          No se encontraron emails bloqueados
+        </strong>
+
+        <span>
+          Prueba modificando los filtros o agrega un nuevo registro.
+        </span>
+
+      </div>
+
+
+      <!-- TABLE -->
+
+      <div
+        *ngIf="
+          !loading &&
+          !errorMsg &&
+          items.length > 0
+        "
+        class="suppressed-table__scroll"
+      >
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>
+                Email
+              </th>
+
+              <th>
+                Usuario vinculado
+              </th>
+
+              <th>
+                Motivo
+              </th>
+
+              <th>
+                Origen
+              </th>
+
+              <th>
+                Estado
+              </th>
+
+              <th>
+                Bloqueado el
+              </th>
+
+              <th>
+                Última notificación
+              </th>
+
+              <th class="suppressed-table__actions-heading">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+
+
+          <tbody>
+
+            <tr *ngFor="let item of items">
+
+              <!-- EMAIL -->
+
+              <td>
+
+                <div class="suppressed-table__email">
+
+                  <span class="suppressed-table__email-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <rect
+                        x="3"
+                        y="5"
+                        width="18"
+                        height="14"
+                        rx="2"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+
+                      <path
+                        d="m4 7 8 6 8-6"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+                    </svg>
+                  </span>
+
+                  <div>
+
+                    <strong>
+                      {{ item.email }}
+                    </strong>
+
+                    <span>
+                      Registro #{{ item.id }}
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <!-- MATCHED USERS -->
+
+              <td>
+
+                <div
+                  *ngIf="
+                    item.matchedUsers?.length;
+                    else noMatchedUsers
+                  "
+                  class="suppressed-table__users"
+                >
+
+                  <div
+                    *ngFor="
+                      let user of item.matchedUsers;
+                      let last = last
+                    "
+                    class="suppressed-table__user"
+                  >
+
+                    <div class="suppressed-table__user-main">
+
+                      <strong>
+                        {{ userDisplayName(user) }}
+                      </strong>
+
+                      <span class="suppressed-table__role">
+                        {{ roleLabel(user.role) }}
+                      </span>
+
+                    </div>
+
+                    <small>
+                      Coincidencia:
+                      {{ matchFieldLabel(user.matchField) }}
+                    </small>
+
+                  </div>
+
+                </div>
+
+
+                <ng-template #noMatchedUsers>
+
+                  <span class="suppressed-table__no-user">
+                    Sin usuario vinculado
+                  </span>
+
+                </ng-template>
+
+              </td>
+
+
+              <!-- REASON -->
+
+              <td>
+
+                <span class="suppressed-table__reason">
+                  {{
+                    item.reason ||
+                    'Sin motivo registrado'
+                  }}
+                </span>
+
+              </td>
+
+
+              <!-- SOURCE -->
+
+              <td>
+
+                <span
+                  class="suppressed-table__source"
+                  [class.suppressed-table__source--failure]="
+                    item.source === 'SEND_FAILURE'
+                  "
+                  [class.suppressed-table__source--manual]="
+                    item.source === 'MANUAL'
+                  "
+                  [class.suppressed-table__source--invalid]="
+                    item.source === 'INVALID_ADDRESS'
+                  "
+                >
+                  {{ sourceLabel(item.source) }}
+                </span>
+
+              </td>
+
+
+              <!-- ACTIVE -->
+
+              <td>
+
+                <span
+                  class="suppressed-table__status"
+                  [class.suppressed-table__status--active]="
+                    item.active
+                  "
+                  [class.suppressed-table__status--lifted]="
+                    !item.active
+                  "
+                >
+                  <span class="suppressed-table__status-dot">
+                  </span>
+
+                  {{
+                    item.active
+                      ? 'Bloqueado'
+                      : 'Levantado'
+                  }}
+                </span>
+
+              </td>
+
+
+              <!-- SUPPRESSED -->
+
+              <td>
+
+                <span class="suppressed-table__date">
+                  {{ formatDate(item.suppressedAt) }}
+                </span>
+
+              </td>
+
+
+              <!-- NOTIFIED -->
+
+              <td>
+
+                <span class="suppressed-table__date">
+                  {{
+                    item.lastNotifiedAt
+                      ? formatDate(item.lastNotifiedAt)
+                      : 'Nunca'
+                  }}
+                </span>
+
+              </td>
+
+
+              <!-- ACTIONS -->
+
+              <td>
+
+                <div class="suppressed-table__actions">
+
+                  <button
+                    type="button"
+                    class="suppressed-table__action"
+                    title="Editar"
+                    (click)="openEdit(item)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M4 20h4l11-11-4-4L4 16v4Z"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linejoin="round"
+                      />
+
+                      <path
+                        d="m13.5 6.5 4 4"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                      />
+                    </svg>
+                  </button>
+
+
+                  <button
+                    *ngIf="item.matchedUsers?.length"
+                    type="button"
+                    class="
+                      suppressed-table__action
+                      suppressed-table__action--notify
+                    "
+                    title="Notificar usuario"
+                    (click)="openNotify(item)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linejoin="round"
+                      />
+
+                      <path
+                        d="M10 20h4"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </button>
+
+
+                  <button
+                    *ngIf="item.active"
+                    type="button"
+                    class="
+                      suppressed-table__action
+                      suppressed-table__action--lift
+                    "
+                    title="Levantar ban"
+                    (click)="requestLift(item)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M7 11V8a5 5 0 0 1 9.5-2"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                      />
+
+                      <rect
+                        x="5"
+                        y="11"
+                        width="14"
+                        height="9"
+                        rx="2"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+                    </svg>
+                  </button>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <!-- ===================================================
+           PAGINATION
+      ==================================================== -->
+
+      <footer
+        *ngIf="
+          !loading &&
+          !errorMsg &&
+          total > 0
+        "
+        class="suppressed-pagination"
+      >
+
+        <div class="suppressed-pagination__summary">
+          Mostrando
+          <strong>
+            {{ startIndex }} - {{ endIndex }}
+          </strong>
+          de
+          <strong>
+            {{ total }}
+          </strong>
         </div>
-      </section>
-      <footer class="modal-card-foot">
-        <button class="btn btn-primary" type="button" (click)="sendNotify()">
-          Enviar
-        </button>
-        <button class="btn btn-secondary" type="button" (click)="closeNotifyModal()">
-          Cancelar
-        </button>
+
+
+        <div class="suppressed-pagination__controls">
+
+          <button
+            type="button"
+            class="suppressed-pagination__button"
+            [disabled]="page <= 1"
+            (click)="onPrev()"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="m15 6-6 6 6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            Anterior
+          </button>
+
+
+          <span class="suppressed-pagination__page">
+            Página
+            <strong>
+              {{ page }}
+            </strong>
+          </span>
+
+
+          <button
+            type="button"
+            class="suppressed-pagination__button"
+            [disabled]="page * limit >= total"
+            (click)="onNext()"
+          >
+            Siguiente
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="m9 6 6 6-6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+
+        </div>
+
       </footer>
-    </div>
+
+    </section>
+
   </div>
 
-  <app-modal
+
+  <!-- =====================================================
+       CREATE / EDIT MODAL
+  ====================================================== -->
+
+  <div
+    *ngIf="showEditModal"
+    class="suppressed-modal"
+  >
+
+    <button
+      type="button"
+      class="suppressed-modal__backdrop"
+      aria-label="Cerrar modal"
+      (click)="closeEditModal()"
+    >
+    </button>
+
+
+    <section class="suppressed-modal__panel">
+
+      <header class="suppressed-modal__header">
+
+        <div>
+
+          <span class="suppressed-modal__eyebrow">
+            Gestión de bloqueo
+          </span>
+
+          <h2>
+            {{
+              isCreate
+                ? 'Agregar email bloqueado'
+                : 'Editar email bloqueado'
+            }}
+          </h2>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="suppressed-modal__close"
+          (click)="closeEditModal()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M7 7l10 10M17 7 7 17"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+      </header>
+
+
+      <div class="suppressed-modal__body">
+
+        <!-- EMAIL -->
+
+        <div class="suppressed-modal__field">
+
+          <label for="suppressedEmail">
+            Email
+          </label>
+
+          <input
+            id="suppressedEmail"
+            type="email"
+            placeholder="usuario@email.com"
+            [(ngModel)]="formEmail"
+          />
+
+        </div>
+
+
+        <!-- REASON -->
+
+        <div class="suppressed-modal__field">
+
+          <label for="suppressedReason">
+            Motivo
+          </label>
+
+          <textarea
+            id="suppressedReason"
+            rows="4"
+            placeholder="Describe el motivo del bloqueo..."
+            [(ngModel)]="formReason"
+          >
+          </textarea>
+
+        </div>
+
+
+        <!-- ACTIVE -->
+
+        <label
+          *ngIf="!isCreate"
+          class="suppressed-modal__switch-row"
+        >
+
+          <span>
+
+            <strong>
+              Bloqueo activo
+            </strong>
+
+            <small>
+              Define si este email debe continuar bloqueado.
+            </small>
+
+          </span>
+
+
+          <input
+            type="checkbox"
+            [(ngModel)]="formActive"
+          />
+
+          <span class="suppressed-modal__switch">
+          </span>
+
+        </label>
+
+      </div>
+
+
+      <footer class="suppressed-modal__footer">
+
+        <button
+          type="button"
+          class="suppressed-modal__button"
+          (click)="closeEditModal()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="
+            suppressed-modal__button
+            suppressed-modal__button--primary
+          "
+          (click)="saveForm()"
+        >
+          {{
+            isCreate
+              ? 'Agregar email'
+              : 'Guardar cambios'
+          }}
+        </button>
+
+      </footer>
+
+    </section>
+
+  </div>
+
+
+  <!-- =====================================================
+       NOTIFY MODAL
+  ====================================================== -->
+
+  <div
+    *ngIf="
+      showNotifyModal &&
+      notifyTarget
+    "
+    class="suppressed-modal"
+  >
+
+    <button
+      type="button"
+      class="suppressed-modal__backdrop"
+      aria-label="Cerrar"
+      (click)="closeNotifyModal()"
+    >
+    </button>
+
+
+    <section
+      class="
+        suppressed-modal__panel
+        suppressed-modal__panel--notify
+      "
+    >
+
+      <header class="suppressed-modal__header">
+
+        <div>
+
+          <span class="suppressed-modal__eyebrow">
+            Notificación interna
+          </span>
+
+          <h2>
+            Notificar actualización de email
+          </h2>
+
+          <p>
+            Email bloqueado:
+            <strong>
+              {{ notifyTarget.email }}
+            </strong>
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="suppressed-modal__close"
+          (click)="closeNotifyModal()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M7 7l10 10M17 7 7 17"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+      </header>
+
+
+      <div class="suppressed-modal__body">
+
+        <div class="suppressed-modal__field">
+
+          <label>
+            Título
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="notifyTitle"
+          />
+
+        </div>
+
+
+        <div class="suppressed-modal__field">
+
+          <label>
+            Mensaje
+          </label>
+
+          <textarea
+            rows="5"
+            [(ngModel)]="notifyMessage"
+          >
+          </textarea>
+
+        </div>
+
+
+        <!-- USERS -->
+
+        <div class="suppressed-modal__users">
+
+          <div class="suppressed-modal__users-header">
+
+            <strong>
+              Usuarios vinculados
+            </strong>
+
+            <span>
+              Selecciona quién recibirá la notificación.
+            </span>
+
+          </div>
+
+
+          <label
+            *ngFor="
+              let user of notifyTarget.matchedUsers
+            "
+            class="suppressed-modal__user"
+          >
+
+            <input
+              type="checkbox"
+              [checked]="isUserSelected(user.id)"
+              (change)="toggleUser(user.id)"
+            />
+
+            <span class="suppressed-modal__user-check">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="m6 12 4 4 8-8"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+
+            <span class="suppressed-modal__user-info">
+
+              <strong>
+                {{ userDisplayName(user) }}
+              </strong>
+
+              <span>
+                {{ roleLabel(user.role) }}
+                ·
+                {{ matchFieldLabel(user.matchField) }}
+              </span>
+
+            </span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <footer class="suppressed-modal__footer">
+
+        <button
+          type="button"
+          class="suppressed-modal__button"
+          (click)="closeNotifyModal()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="
+            suppressed-modal__button
+            suppressed-modal__button--primary
+          "
+          (click)="sendNotify()"
+        >
+          Enviar notificación
+        </button>
+
+      </footer>
+
+    </section>
+
+  </div>
+
+
+  <!-- =====================================================
+       GENERIC MODAL
+  ====================================================== -->
+
+ <app-modal
     [showModal]="modal.show"
     [message]="modal.message"
     [isError]="modal.isError"
@@ -287,4 +1363,5 @@
     (confirmAction)="modal.confirm && modal.confirm()"
     (close)="modal.close()"
   ></app-modal>
+
 </section>

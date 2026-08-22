@@ -8,16 +8,38 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
-import { UserDto, UserRole } from '../../../services/dtos/user.dto';
+import {
+  UserDto,
+  UserRole,
+} from '../../../services/dtos/user.dto';
 
-/* IMPORTAMOS LOS MOCKS */
-import { ADMIN_STATS, ADMIN_MODULES, ADMIN_ANNOUNCEMENTS } from './admin-dashboard.mock';
-import { DashboardNotificationsWidgetComponent } from "../../widgets-admin/dashboard-notifications-widget/dashboard-notifications-widget.component";
-import { DashboardEmailsWidgetComponent } from "../../widgets-admin/dashboard-emails-widget/dashboard-emails-widget.component";
-import { DashboardSettingsWidgetComponent } from "../../widgets-admin/dashboard-settings-widget/dashboard-settings-widget.component";
-import { AnnouncementViewerComponent } from '../../announcements/announcement-viewer/announcement-viewer.component';
-import { Announcement } from '../../../services/dtos/announcement.dto';
-import { AnnouncementService } from '../../../services/announcement.service';
+import {
+  UsersService,
+} from '../../../services/users.service';
+
+import {
+  ADMIN_MODULES,
+} from './admin-dashboard.mock';
+
+import {
+  DashboardNotificationsWidgetComponent,
+} from '../../widgets-admin/dashboard-notifications-widget/dashboard-notifications-widget.component';
+
+import {
+  DashboardSettingsWidgetComponent,
+} from '../../widgets-admin/dashboard-settings-widget/dashboard-settings-widget.component';
+
+import {
+  AnnouncementViewerComponent,
+} from '../../announcements/announcement-viewer/announcement-viewer.component';
+
+import {
+  Announcement,
+} from '../../../services/dtos/announcement.dto';
+
+import {
+  AnnouncementService,
+} from '../../../services/announcement.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -26,111 +48,411 @@ import { AnnouncementService } from '../../../services/announcement.service';
     CommonModule,
     RouterModule,
     DashboardNotificationsWidgetComponent,
-    // DashboardEmailsWidgetComponent,
     DashboardSettingsWidgetComponent,
     AnnouncementViewerComponent,
-    
-],
+  ],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss',
 })
-export class AdminDashboardComponent implements OnInit, OnChanges {
+export class AdminDashboardComponent
+  implements OnInit, OnChanges {
 
-  @Input() userData: UserDto | null = null;
-  @Input() isLoggedIn = false;
+  /* =========================
+     INPUTS
+  ========================= */
+
+  @Input()
+  userData: UserDto | null = null;
+
+  @Input()
+  isLoggedIn = false;
+
+
+  /* =========================
+     ADMIN
+  ========================= */
 
   adminName = '';
 
-  /* DATOS MOCK */
-  stats = ADMIN_STATS;
+
+  /* =========================
+     USER STATS
+  ========================= */
+
+  totalUsers = 0;
+
+  totalStudents = 0;
+
+  totalInstructors = 0;
+
+  totalAdmins = 0;
+
+  loadingUserStats = false;
+
+
+  /* =========================
+     MODULES
+  ========================= */
+
   modules = ADMIN_MODULES;
+
+
+  /* =========================
+     ANNOUNCEMENTS
+  ========================= */
 
   announcements: Announcement[] = [];
 
-  constructor(private announcementService: AnnouncementService) {}
+
+  /* =========================
+     CONSTRUCTOR
+  ========================= */
+
+  constructor(
+    private announcementService:
+      AnnouncementService,
+
+    private usersService:
+      UsersService,
+  ) {}
+
+
+  /* =========================
+     INIT
+  ========================= */
 
   ngOnInit(): void {
+
     this.resolveAdmin();
+
+    this.loadUserStats();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['userData']) {
+
+  /* =========================
+     CHANGES
+  ========================= */
+
+  ngOnChanges(
+    changes: SimpleChanges,
+  ): void {
+
+    if (
+      changes['userData']
+    ) {
       this.resolveAdmin();
     }
   }
 
-  loadAnnouncements() {
-    this.announcementService.getAnnouncementsForMe().subscribe({
-      next: (data) => {
-        this.announcements = data;
-      },
-      error: (err) => {
-        console.error('Error cargando anuncios admin', err);
-      }
-    });
+
+  /* =========================
+     USER STATS
+  ========================= */
+
+  private loadUserStats(): void {
+
+    this.loadingUserStats = true;
+
+    this.loadTotalUsers();
+
+    this.loadUsersByRole(
+      UserRole.STUDENT,
+      'student',
+    );
+
+    this.loadUsersByRole(
+      UserRole.INSTRUCTOR,
+      'instructor',
+    );
+
+    this.loadUsersByRole(
+      UserRole.ADMIN,
+      'admin',
+    );
   }
 
-  private resolveAdmin(): void {
-    if (!this.userData) return;
-    if (this.userData.role !== UserRole.ADMIN) return;
 
-    this.adminName = this.userData.firstName ?? 'Administrador';
+  private loadTotalUsers(): void {
+
+    this.usersService
+      .searchUsers(
+        undefined,
+        1,
+      )
+      .subscribe({
+        next: (response) => {
+
+          this.totalUsers =
+            response.total ?? 0;
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Error al obtener total de usuarios:',
+            error,
+          );
+
+          this.totalUsers = 0;
+        },
+      });
+  }
+
+
+  private loadUsersByRole(
+    role: UserRole,
+    type:
+      | 'student'
+      | 'instructor'
+      | 'admin',
+  ): void {
+
+    this.usersService
+      .searchUsers(
+        undefined, // page
+        1,         // limit
+        undefined, // email
+        '',        // firstName
+        '',        // lastName
+        undefined, // status
+        role,      // role
+        true,      // register
+        undefined, // stageId
+      )
+      .subscribe({
+        next: (response) => {
+
+          const total =
+            response.total ?? 0;
+
+          switch (type) {
+
+            case 'student':
+              this.totalStudents =
+                total;
+              break;
+
+            case 'instructor':
+              this.totalInstructors =
+                total;
+              break;
+
+            case 'admin':
+              this.totalAdmins =
+                total;
+              break;
+          }
+
+          this.updateUserStatsLoading();
+        },
+
+        error: (error) => {
+
+          console.error(
+            `Error al obtener usuarios por rol ${role}:`,
+            error,
+          );
+
+          switch (type) {
+
+            case 'student':
+              this.totalStudents = 0;
+              break;
+
+            case 'instructor':
+              this.totalInstructors = 0;
+              break;
+
+            case 'admin':
+              this.totalAdmins = 0;
+              break;
+          }
+
+          this.updateUserStatsLoading();
+        },
+      });
+  }
+
+
+  private updateUserStatsLoading(): void {
+
+    this.loadingUserStats =
+      false;
+  }
+
+
+  /* =========================
+     ANNOUNCEMENTS
+  ========================= */
+
+  loadAnnouncements(): void {
+
+    this.announcementService
+      .getAnnouncementsForMe()
+      .subscribe({
+        next: (data) => {
+
+          this.announcements =
+            data;
+        },
+
+        error: (err) => {
+
+          console.error(
+            'Error cargando anuncios admin',
+            err,
+          );
+        },
+      });
+  }
+
+
+  /* =========================
+     ADMIN
+  ========================= */
+
+  private resolveAdmin(): void {
+
+    if (!this.userData) {
+      return;
+    }
+
+    if (
+      this.userData.role !==
+      UserRole.ADMIN
+    ) {
+      return;
+    }
+
+    this.adminName =
+      this.userData.firstName ??
+      'Administrador';
 
     this.loadAnnouncements();
   }
 
-  get visibleAnnouncements(): Announcement[] {
-    return this.filterByDisplayMode(this.announcements);
+
+  /* =========================
+     VISIBLE ANNOUNCEMENTS
+  ========================= */
+
+  get visibleAnnouncements():
+    Announcement[] {
+
+    return this.filterByDisplayMode(
+      this.announcements,
+    );
   }
 
+
+  /* =========================
+     ANNOUNCEMENT USER
+  ========================= */
+
   get announcementUser() {
-    if (!this.userData) return null;
 
-    let city: 'Portoviejo' | 'Cuenca' | null = null;
+    if (!this.userData) {
+      return null;
+    }
 
-    if (this.userData.city === 'Portoviejo') {
+    let city:
+      | 'Portoviejo'
+      | 'Cuenca'
+      | null = null;
+
+    if (
+      this.userData.city ===
+      'Portoviejo'
+    ) {
       city = 'Portoviejo';
-    } else if (this.userData.city === 'Cuenca') {
+    }
+
+    else if (
+      this.userData.city ===
+      'Cuenca'
+    ) {
       city = 'Cuenca';
     }
 
     return {
-      role: this.userData.role,
-      classification: null,
-      city
+      role:
+        this.userData.role,
+
+      classification:
+        null,
+
+      city,
     };
   }
 
-  filterByDisplayMode(list: Announcement[]): Announcement[] {
-    return list.filter(a => {
 
-      const key = `announcement_seen_${a.id}`;
+  /* =========================
+     DISPLAY MODE
+  ========================= */
 
-      // SIEMPRE
-      if (a.showMode === 'always' || !a.showMode) {
+  filterByDisplayMode(
+    list: Announcement[],
+  ): Announcement[] {
+
+    return list.filter(
+      announcement => {
+
+        const key =
+          `announcement_seen_${announcement.id}`;
+
+        if (
+          announcement.showMode ===
+            'always' ||
+          !announcement.showMode
+        ) {
+          return true;
+        }
+
+        if (
+          announcement.showMode ===
+          'once_session'
+        ) {
+          return (
+            !sessionStorage
+              .getItem(key)
+          );
+        }
+
         return true;
-      }
-
-      // UNA VEZ POR SESIÓN
-      if (a.showMode === 'once_session') {
-        return !sessionStorage.getItem(key);
-      }
-
-      return true;
-    });
+      },
+    );
   }
 
-  markAsSeen(a: Announcement) {
-    const key = `announcement_seen_${a.id}`;
 
-    if (a.showMode === 'once_session') {
-      sessionStorage.setItem(key, 'true');
+  /* =========================
+     SEEN
+  ========================= */
+
+  markAsSeen(
+    announcement: Announcement,
+  ): void {
+
+    const key =
+      `announcement_seen_${announcement.id}`;
+
+    if (
+      announcement.showMode ===
+      'once_session'
+    ) {
+      sessionStorage.setItem(
+        key,
+        'true',
+      );
     }
-
   }
 
-  onCustomAnnouncementClosed(a: Announcement) {
-    this.markAsSeen(a);
-  }
 
+  onCustomAnnouncementClosed(
+    announcement: Announcement,
+  ): void {
+
+    this.markAsSeen(
+      announcement,
+    );
+  }
 }

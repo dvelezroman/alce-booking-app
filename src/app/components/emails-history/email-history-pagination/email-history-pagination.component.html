@@ -1,0 +1,89 @@
+<section class="history-pagination">
+
+  <div class="history-pagination__summary">
+
+    <span>
+      Mostrando
+    </span>
+
+    <strong>
+      {{ startIndex }} - {{ endIndex }}
+      de {{ total }}
+    </strong>
+
+  </div>
+
+
+  <div class="history-pagination__controls">
+
+    <button
+      type="button"
+      class="history-pagination__button"
+      [disabled]="!canPrevious"
+      (click)="onPrevious()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m15 6-6 6 6 6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+      Anterior
+    </button>
+
+
+    <div class="history-pagination__page">
+
+      <span>
+        Página
+      </span>
+
+      <strong>
+        {{ page }}
+      </strong>
+
+      <span>
+        de
+      </span>
+
+      <strong>
+        {{ totalPages || 1 }}
+      </strong>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="history-pagination__button history-pagination__button--next"
+      [disabled]="!canNext"
+      (click)="onNext()"
+    >
+      Siguiente
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m9 6 6 6-6 6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+  </div>
+
+</section>
