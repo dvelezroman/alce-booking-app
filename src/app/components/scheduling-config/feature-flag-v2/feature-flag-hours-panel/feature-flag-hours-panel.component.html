@@ -20,7 +20,10 @@
       <p class="feature-flag-hours-panel__description">
 
         <ng-container
-          *ngIf="isDaySelectedForHours; else selectDayHint"
+          *ngIf="
+            isDaySelectedForHours;
+            else selectDayHint
+          "
         >
           Selecciona las horas que deseas restringir
           para el día elegido.
@@ -61,36 +64,47 @@
   <div class="feature-flag-hours-panel__legend">
 
     <span class="feature-flag-hours-panel__legend-item">
+
       <span
         class="
           feature-flag-hours-panel__legend-dot
           feature-flag-hours-panel__legend-dot--available
         "
-      ></span>
+      >
+      </span>
 
       Disponible
+
     </span>
 
+
     <span class="feature-flag-hours-panel__legend-item">
+
       <span
         class="
           feature-flag-hours-panel__legend-dot
           feature-flag-hours-panel__legend-dot--selected
         "
-      ></span>
+      >
+      </span>
 
       Seleccionada
+
     </span>
 
+
     <span class="feature-flag-hours-panel__legend-item">
+
       <span
         class="
           feature-flag-hours-panel__legend-dot
           feature-flag-hours-panel__legend-dot--disabled
         "
-      ></span>
+      >
+      </span>
 
       No disponible
+
     </span>
 
   </div>
@@ -112,7 +126,7 @@
       "
 
       [class.feature-flag-hours-panel__slot--disabled]="
-        time.isDisabled
+        !!time.isDisabled
       "
 
       [class.feature-flag-hours-panel__slot--inactive]="
@@ -121,13 +135,13 @@
 
       [disabled]="
         !isDaySelectedForHours ||
-        time.isDisabled
+        !!time.isDisabled
       "
 
       (click)="
         onHourSelected(
           time.value,
-          time.isDisabled ?? false
+          !!time.isDisabled
         )
       "
     >
@@ -163,7 +177,7 @@
 
 
   <!-- =====================================================
-       EMPTY / DISABLED HINT
+       DISABLED HINT
   ====================================================== -->
 
   <div
@@ -214,14 +228,15 @@
     <div class="feature-flag-hours-panel__footer-info">
 
       <span>
+
+        {{ selectedHoursCount }}
+
         {{
-          selectedDays?.[0]?.hours?.length || 0
-        }}
-        {{
-          (selectedDays?.[0]?.hours?.length || 0) === 1
+          selectedHoursCount === 1
             ? 'hora seleccionada'
             : 'horas seleccionadas'
         }}
+
       </span>
 
     </div>

@@ -54,7 +54,7 @@ export class FeatureFlagHoursPanelComponent {
     new EventEmitter<void>();
 
 
-  isSelected(
+ isSelected(
     hour: number,
   ): boolean {
 
@@ -63,6 +63,17 @@ export class FeatureFlagHoursPanelComponent {
         ?.hours
         ?.includes(hour) ??
       false
+    );
+  }
+
+
+  get selectedHoursCount(): number {
+
+    return (
+      this.selectedDays[0]
+        ?.hours
+        ?.length ??
+      0
     );
   }
 
