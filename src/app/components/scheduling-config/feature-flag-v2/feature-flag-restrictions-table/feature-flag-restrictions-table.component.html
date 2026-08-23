@@ -1,0 +1,346 @@
+<section class="feature-flag-restrictions-table">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="feature-flag-restrictions-table__header">
+
+    <div class="feature-flag-restrictions-table__heading">
+
+      <h3 class="feature-flag-restrictions-table__title">
+        Restricciones aplicadas
+      </h3>
+
+      <span
+        *ngIf="restrictions.length > 0"
+        class="feature-flag-restrictions-table__counter"
+      >
+        {{ restrictions.length }}
+        {{
+          restrictions.length === 1
+            ? 'registro'
+            : 'registros'
+        }}
+      </span>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       EMPTY
+  ====================================================== -->
+
+  <div
+    *ngIf="restrictions.length === 0"
+    class="feature-flag-restrictions-table__empty"
+  >
+
+    <span
+      class="feature-flag-restrictions-table__empty-icon"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <rect
+          x="4"
+          y="5"
+          width="16"
+          height="15"
+          rx="2.4"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M8 3v4M16 3v4M4 9h16"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <path
+          d="M8 13h8M8 16h5"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+
+    <strong>
+      Sin restricciones
+    </strong>
+
+    <p>
+      No existen restricciones registradas
+      para este mes.
+    </p>
+
+  </div>
+
+
+  <!-- =====================================================
+       TABLE
+  ====================================================== -->
+
+  <div
+    *ngIf="restrictions.length > 0"
+    class="feature-flag-restrictions-table__wrapper"
+  >
+
+    <table class="feature-flag-restrictions-table__table">
+
+      <thead>
+
+        <tr>
+          <th>
+            Fecha
+          </th>
+
+          <th>
+            Tipo
+          </th>
+
+          <th>
+            Detalle
+          </th>
+
+          <th>
+            Acciones
+          </th>
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        <ng-container
+          *ngFor="let restrictionDay of restrictions"
+        >
+
+          <tr
+            *ngFor="
+              let entry of restrictionDay.entries
+            "
+          >
+
+            <!-- =========================================
+                 DATE
+            ========================================== -->
+
+            <td>
+
+              <div class="feature-flag-restrictions-table__date">
+
+                <span
+                  class="feature-flag-restrictions-table__date-icon"
+                  aria-hidden="true"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <rect
+                      x="4"
+                      y="5"
+                      width="16"
+                      height="15"
+                      rx="2.4"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                    />
+
+                    <path
+                      d="M8 3v4M16 3v4M4 9h16"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </span>
+
+
+                <span>
+                  {{
+                    restrictionDay.day
+                      | number:'2.0-0'
+                  }}/{{ getMonthIndex(restrictionDay.month) + 1 | number:'2.0-0' }}/{{ year }}
+                </span>
+
+              </div>
+
+            </td>
+
+
+            <!-- =========================================
+                 TYPE
+            ========================================== -->
+
+            <td>
+
+              <span
+                class="feature-flag-restrictions-table__type"
+                [class.feature-flag-restrictions-table__type--full]="
+                  !entry.hours ||
+                  entry.hours.length === 0
+                "
+                [class.feature-flag-restrictions-table__type--hours]="
+                  entry.hours &&
+                  entry.hours.length > 0
+                "
+              >
+
+                {{
+                  !entry.hours ||
+                  entry.hours.length === 0
+                    ? 'Día completo'
+                    : 'Hora específica'
+                }}
+
+              </span>
+
+            </td>
+
+
+            <!-- =========================================
+                 DETAIL
+            ========================================== -->
+
+            <td>
+
+              <div class="feature-flag-restrictions-table__detail">
+
+                <strong
+                  *ngIf="
+                    entry.hours &&
+                    entry.hours.length > 0
+                  "
+                >
+                  {{ formatHours(entry.hours) }}
+                </strong>
+
+
+                <span>
+                  {{
+                    formatRestrictionLabel(
+                      entry.studentClassification,
+                      entry.mode,
+                      entry.city
+                    )
+                  }}
+                </span>
+
+              </div>
+
+            </td>
+
+
+            <!-- =========================================
+                 ACTION
+            ========================================== -->
+
+            <td class="feature-flag-restrictions-table__action-cell">
+
+              <button
+                type="button"
+                class="feature-flag-restrictions-table__delete"
+                aria-label="Eliminar restricción"
+                title="Eliminar restricción"
+                (click)="
+                  onDelete(
+                    restrictionDay.day,
+                    entry
+                  )
+                "
+              >
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M4 7h16"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+
+                  <path
+                    d="M9 4h6l1 3H8l1-3Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+
+                  <path
+                    d="m7 7 .7 13h8.6L17 7"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+
+                  <path
+                    d="M10 11v5M14 11v5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </ng-container>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer
+    *ngIf="restrictions.length > 0"
+    class="feature-flag-restrictions-table__footer"
+  >
+
+    <button
+      type="button"
+      class="feature-flag-restrictions-table__view-all"
+    >
+      <span>
+        Ver todas las restricciones
+      </span>
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m7 9 5 5 5-5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+  </footer>
+
+</section>

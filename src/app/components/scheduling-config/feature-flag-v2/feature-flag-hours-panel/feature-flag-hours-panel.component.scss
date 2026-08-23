@@ -1,0 +1,634 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================================================
+   PANEL
+========================================================= */
+
+.feature-flag-hours-panel {
+  width: 100%;
+
+  padding:
+    .75rem
+    .8rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e5e8ef;
+  border-radius: .55rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 7px
+    rgba(25, 32, 51, .018);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.feature-flag-hours-panel__header {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: .7rem;
+
+  margin-bottom: .55rem;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.feature-flag-hours-panel__title {
+  margin: 0;
+
+  color: #283147;
+
+  font-size: .64rem;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.feature-flag-hours-panel__description {
+  max-width: 34rem;
+
+  margin:
+    .17rem
+    0
+    0;
+
+  color: #7d8597;
+
+  font-size: .51rem;
+  font-weight: 400;
+  line-height: 1.42;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.feature-flag-hours-panel__status {
+  min-height: 1.35rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .3rem;
+
+  padding:
+    0
+    .45rem;
+
+  border-radius: 999px;
+
+  background: #f2f3f6;
+  color: #818999;
+
+  font-size: .46rem;
+  font-weight: 650;
+
+  white-space: nowrap;
+}
+
+.feature-flag-hours-panel__status > span {
+  width: .32rem;
+  height: .32rem;
+
+  border-radius: 50%;
+
+  background: currentColor;
+}
+
+.feature-flag-hours-panel__status--active {
+  background: #ebf8f0;
+  color: #26905a;
+}
+
+
+/* =========================================================
+   LEGEND
+========================================================= */
+
+.feature-flag-hours-panel__legend {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap:
+    .45rem
+    .8rem;
+
+  margin-bottom: .55rem;
+
+  padding:
+    .42rem
+    .5rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #edf0f4;
+  border-radius: .4rem;
+
+  background: #fafbfc;
+}
+
+
+/* =========================================================
+   LEGEND ITEM
+========================================================= */
+
+.feature-flag-hours-panel__legend-item {
+  display: inline-flex;
+  align-items: center;
+
+  gap: .3rem;
+
+  color: #667085;
+
+  font-size: .47rem;
+  font-weight: 550;
+}
+
+
+/* =========================================================
+   LEGEND DOT
+========================================================= */
+
+.feature-flag-hours-panel__legend-dot {
+  width: .4rem;
+  height: .4rem;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+}
+
+.feature-flag-hours-panel__legend-dot--available {
+  border: 1px solid #cfd5df;
+
+  background: #ffffff;
+}
+
+.feature-flag-hours-panel__legend-dot--selected {
+  background: #5a3ed3;
+}
+
+.feature-flag-hours-panel__legend-dot--disabled {
+  background: #e45c68;
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.feature-flag-hours-panel__grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      7,
+      minmax(0, 1fr)
+    );
+
+  gap: .4rem;
+}
+
+
+/* =========================================================
+   SLOT
+========================================================= */
+
+.feature-flag-hours-panel__slot {
+  min-width: 0;
+  min-height: 2.35rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .3rem;
+
+  padding:
+    .35rem
+    .4rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dfe3ea;
+  border-radius: .4rem;
+
+  background: #ffffff;
+  color: #4e586d;
+
+  font-family: inherit;
+  font-size: .49rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease,
+    transform 100ms ease;
+}
+
+.feature-flag-hours-panel__slot:hover:not(
+  :disabled
+) {
+  border-color: #c6bdf1;
+
+  background: #faf8ff;
+  color: #563bd0;
+}
+
+.feature-flag-hours-panel__slot:active:not(
+  :disabled
+) {
+  transform: scale(.98);
+}
+
+.feature-flag-hours-panel__slot svg {
+  width: .78rem;
+  height: .78rem;
+
+  flex: 0 0 auto;
+}
+
+
+/* =========================================================
+   SELECTED
+========================================================= */
+
+.feature-flag-hours-panel__slot--selected {
+  border-color: #7157df;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f1edff 0%,
+      #e8e2ff 100%
+    );
+
+  color: #5235cd;
+
+  box-shadow:
+    inset 0 0 0 1px
+    rgba(82, 53, 205, .03);
+}
+
+
+/* =========================================================
+   DISABLED
+========================================================= */
+
+.feature-flag-hours-panel__slot--disabled {
+  border-color: #f0cdd2;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fff5f6 0%,
+      #ffecef 100%
+    );
+
+  color: #d34e5c;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   INACTIVE
+========================================================= */
+
+.feature-flag-hours-panel__slot--inactive {
+  border-color: #e7e9ee;
+
+  background: #f8f9fb;
+  color: #b0b5c0;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   HINT
+========================================================= */
+
+.feature-flag-hours-panel__hint {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: .4rem;
+
+  margin-top: .55rem;
+
+  padding:
+    .45rem
+    .5rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e1e6ef;
+  border-radius: .4rem;
+
+  background: #f8fafd;
+  color: #69758b;
+
+  font-size: .48rem;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   HINT ICON
+========================================================= */
+
+.feature-flag-hours-panel__hint-icon {
+  width: 1rem;
+  height: 1rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #5971a9;
+}
+
+.feature-flag-hours-panel__hint-icon svg {
+  width: .8rem;
+  height: .8rem;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.feature-flag-hours-panel__footer {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: .65rem;
+
+  margin-top: .65rem;
+
+  padding-top: .6rem;
+
+  border-top: 1px solid #edf0f4;
+}
+
+
+/* =========================================================
+   FOOTER INFO
+========================================================= */
+
+.feature-flag-hours-panel__footer-info {
+  min-width: 0;
+}
+
+.feature-flag-hours-panel__footer-info span {
+  color: #727b8e;
+
+  font-size: .48rem;
+  font-weight: 550;
+}
+
+
+/* =========================================================
+   DISABLE BUTTON
+========================================================= */
+
+.feature-flag-hours-panel__disable-button {
+  min-height: 2rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .32rem;
+
+  padding:
+    0
+    .65rem;
+
+  border: 1px solid #d64b59;
+  border-radius: .4rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e55764 0%,
+      #d84553 100%
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: .5rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 100ms ease,
+    opacity 150ms ease;
+}
+
+.feature-flag-hours-panel__disable-button:hover:not(
+  :disabled
+) {
+  background:
+    linear-gradient(
+      135deg,
+      #d84c59 0%,
+      #ca3948 100%
+    );
+}
+
+.feature-flag-hours-panel__disable-button:active:not(
+  :disabled
+) {
+  transform: scale(.98);
+}
+
+.feature-flag-hours-panel__disable-button:disabled {
+  border-color: #dedfe5;
+
+  background: #eceef2;
+  color: #a5abb6;
+
+  cursor: not-allowed;
+}
+
+.feature-flag-hours-panel__disable-button svg {
+  width: .8rem;
+  height: .8rem;
+}
+
+
+/* =========================================================
+   DISABLED PANEL
+========================================================= */
+
+.feature-flag-hours-panel--disabled {
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #fbfbfc 100%
+    );
+}
+
+
+/* =========================================================
+   MEDIUM DESKTOP
+========================================================= */
+
+@media (max-width: 1250px) {
+
+  .feature-flag-hours-panel__grid {
+    grid-template-columns:
+      repeat(
+        6,
+        minmax(0, 1fr)
+      );
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .feature-flag-hours-panel {
+    padding:
+      .7rem;
+  }
+
+  .feature-flag-hours-panel__grid {
+    grid-template-columns:
+      repeat(
+        5,
+        minmax(0, 1fr)
+      );
+  }
+
+  .feature-flag-hours-panel__title {
+    font-size: .66rem;
+  }
+
+  .feature-flag-hours-panel__description {
+    font-size: .53rem;
+  }
+
+  .feature-flag-hours-panel__slot {
+    min-height: 2.45rem;
+
+    font-size: .52rem;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+  .feature-flag-hours-panel__header {
+    flex-direction: column;
+
+    gap: .45rem;
+  }
+
+  .feature-flag-hours-panel__status {
+    align-self: flex-start;
+  }
+
+  .feature-flag-hours-panel__grid {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
+  }
+
+  .feature-flag-hours-panel__slot {
+    min-height: 2.6rem;
+
+    font-size: .55rem;
+  }
+
+  .feature-flag-hours-panel__footer {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .feature-flag-hours-panel__disable-button {
+    width: 100%;
+
+    min-height: 2.3rem;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .feature-flag-hours-panel__grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+}

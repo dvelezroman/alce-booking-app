@@ -1,0 +1,444 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+.feature-flag-calendar {
+  width: 100%;
+  height: 100%;
+
+  padding:
+    .7rem
+    .65rem
+    .65rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e5e8ef;
+  border-radius: .55rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 7px
+    rgba(25, 32, 51, .018);
+}
+
+
+/* =========================================================
+   WEEKDAYS
+========================================================= */
+
+.feature-flag-calendar__weekdays {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      7,
+      minmax(0, 1fr)
+    );
+
+  margin-bottom: .3rem;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.feature-flag-calendar__weekdays span {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding-bottom: .45rem;
+
+  color: #515a70;
+
+  font-size: .51rem;
+  font-weight: 700;
+  line-height: 1;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.feature-flag-calendar__grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      7,
+      minmax(0, 1fr)
+    );
+
+  border-top: 1px solid #e9ecf1;
+  border-left: 1px solid #e9ecf1;
+}
+
+
+/* =========================================================
+   DAY
+========================================================= */
+
+.feature-flag-calendar__day {
+  position: relative;
+
+  min-width: 0;
+  min-height: 3rem;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  padding:
+    .48rem
+    .25rem;
+
+  box-sizing: border-box;
+
+  border: 0;
+  border-right: 1px solid #e9ecf1;
+  border-bottom: 1px solid #e9ecf1;
+
+  background: #ffffff;
+  color: #273049;
+
+  font-family: inherit;
+
+  cursor: pointer;
+
+  transition:
+    background-color 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.feature-flag-calendar__day:hover:not(
+  .feature-flag-calendar__day--empty
+) {
+  z-index: 1;
+
+  background: #f8f9fd;
+
+  box-shadow:
+    inset 0 0 0 1px
+    #dce2ee;
+}
+
+
+/* =========================================================
+   DAY NUMBER
+========================================================= */
+
+.feature-flag-calendar__day-number {
+  position: relative;
+
+  z-index: 2;
+
+  display: block;
+
+  color: inherit;
+
+  font-size: .56rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.feature-flag-calendar__day--empty {
+  background: #fafbfc;
+
+  cursor: default;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   DISABLED FULL DAY
+========================================================= */
+
+.feature-flag-calendar__day--disabled {
+  background:
+    linear-gradient(
+      145deg,
+      #fff7f8 0%,
+      #ffedef 100%
+    );
+
+  color: #a33c48;
+}
+
+.feature-flag-calendar__day--disabled:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #fff2f4 0%,
+      #ffe7ea 100%
+    );
+}
+
+
+/* =========================================================
+   HOURS DISABLED
+========================================================= */
+
+.feature-flag-calendar__day--hours-disabled {
+  background:
+    linear-gradient(
+      145deg,
+      #fffaf2 0%,
+      #fff4e1 100%
+    );
+
+  color: #9e650d;
+}
+
+.feature-flag-calendar__day--hours-disabled:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #fff7ea 0%,
+      #ffefd4 100%
+    );
+}
+
+
+/* =========================================================
+   SELECTED
+========================================================= */
+
+.feature-flag-calendar__day--selected {
+  z-index: 2;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f0f5ff 0%,
+      #e8f0ff 100%
+    );
+
+  color: #315fc7;
+
+  box-shadow:
+    inset 0 0 0 1px
+    #b9ccf3;
+}
+
+.feature-flag-calendar__day--selected:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #eaf1ff 0%,
+      #e1ebff 100%
+    );
+}
+
+
+/* =========================================================
+   SELECTED + DISABLED
+========================================================= */
+
+.feature-flag-calendar__day--selected
+.feature-flag-calendar__day-number {
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   INDICATOR
+========================================================= */
+
+.feature-flag-calendar__indicator {
+  position: absolute;
+
+  left: 50%;
+  bottom: .42rem;
+
+  width: .28rem;
+  height: .28rem;
+
+  border-radius: 50%;
+
+  transform: translateX(-50%);
+}
+
+
+/* FULL DISABLED */
+
+.feature-flag-calendar__indicator--disabled {
+  background: #e24d59;
+
+  box-shadow:
+    0 0 0 .12rem
+    rgba(226, 77, 89, .08);
+}
+
+
+/* HOURS */
+
+.feature-flag-calendar__indicator--hours {
+  background: #f19a23;
+
+  box-shadow:
+    0 0 0 .12rem
+    rgba(241, 154, 35, .08);
+}
+
+
+/* SELECTED */
+
+.feature-flag-calendar__indicator--selected {
+  background: #3476df;
+
+  box-shadow:
+    0 0 0 .12rem
+    rgba(52, 118, 223, .08);
+}
+
+
+/* =========================================================
+   DISABLED BUTTON STATE
+========================================================= */
+
+.feature-flag-calendar__day:disabled {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   MEDIUM DESKTOP
+========================================================= */
+
+@media (max-width: 1250px) {
+
+  .feature-flag-calendar {
+    padding:
+      .6rem
+      .55rem
+      .55rem;
+  }
+
+  .feature-flag-calendar__day {
+    min-height: 2.75rem;
+  }
+
+  .feature-flag-calendar__day-number {
+    font-size: .54rem;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .feature-flag-calendar__day {
+    min-height: 3.15rem;
+  }
+
+  .feature-flag-calendar__weekdays span {
+    font-size: .53rem;
+  }
+
+  .feature-flag-calendar__day-number {
+    font-size: .57rem;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+  .feature-flag-calendar {
+    padding:
+      .6rem
+      .5rem
+      .5rem;
+
+    border-radius: .6rem;
+  }
+
+  .feature-flag-calendar__weekdays {
+    margin-bottom: .25rem;
+  }
+
+  .feature-flag-calendar__weekdays span {
+    padding-bottom: .4rem;
+
+    font-size: .56rem;
+  }
+
+  .feature-flag-calendar__day {
+    min-height: 3.2rem;
+
+    padding:
+      .5rem
+      .15rem;
+  }
+
+  .feature-flag-calendar__day-number {
+    font-size: .6rem;
+  }
+
+  .feature-flag-calendar__indicator {
+    bottom: .4rem;
+
+    width: .3rem;
+    height: .3rem;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .feature-flag-calendar {
+    padding:
+      .5rem
+      .4rem
+      .4rem;
+  }
+
+  .feature-flag-calendar__day {
+    min-height: 2.75rem;
+  }
+
+  .feature-flag-calendar__weekdays span {
+    font-size: .52rem;
+  }
+
+  .feature-flag-calendar__day-number {
+    font-size: .56rem;
+  }
+
+}

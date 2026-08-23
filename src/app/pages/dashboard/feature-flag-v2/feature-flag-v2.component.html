@@ -1,0 +1,670 @@
+<section class="feature-flag-v2">
+
+  <div class="feature-flag-v2__container">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="feature-flag-v2__header">
+
+      <span
+        class="feature-flag-v2__header-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M9.2 3.6 10 2h4l.8 1.6 1.8.8 1.7-.5 2 3.4-1.2 1.3.2 2 1.4 1.2v4l-1.4 1.2-.2 2 1.2 1.3-2 3.4-1.7-.5-1.8.8L14 22h-4l-.8-1.6-1.8-.8-1.7.5-2-3.4 1.2-1.3-.2-2L3.3 12V8l1.4-1.2.2-2-1.2-1.3 2-3.4 1.7.5 1.8-.8Z"
+            stroke="currentColor"
+            stroke-width="1.55"
+            stroke-linejoin="round"
+          />
+
+          <circle
+            cx="12"
+            cy="12"
+            r="3.2"
+            stroke="currentColor"
+            stroke-width="1.55"
+          />
+        </svg>
+      </span>
+
+
+      <div class="feature-flag-v2__header-content">
+
+        <h1 class="feature-flag-v2__title">
+          Configuraciones del sistema
+        </h1>
+
+        <p class="feature-flag-v2__description">
+          Administra las opciones generales y restricciones
+          de agendamiento del sistema.
+        </p>
+
+      </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         PAGE LAYOUT
+    ====================================================== -->
+
+    <div class="feature-flag-v2__layout">
+
+      <!-- ===================================================
+           SIDEBAR
+      ==================================================== -->
+
+      <aside class="feature-flag-v2__sidebar">
+
+        <div class="feature-flag-v2__sidebar-inner">
+
+          <span class="feature-flag-v2__sidebar-label">
+            Módulos de configuración
+          </span>
+
+          <!-- GENERAL -->
+
+          <button
+            type="button"
+            class="
+              feature-flag-v2__sidebar-option
+              feature-flag-v2__sidebar-option--active
+            "
+          >
+
+            <span
+              class="feature-flag-v2__sidebar-option-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M4 7h10M18 7h2M4 17h2M10 17h10M8 4v6M16 14v6"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+
+                <circle
+                  cx="8"
+                  cy="7"
+                  r="2"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+
+                <circle
+                  cx="8"
+                  cy="17"
+                  r="2"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+              </svg>
+            </span>
+
+
+            <span class="feature-flag-v2__sidebar-option-content">
+
+              <strong>
+                Configuración general
+              </strong>
+
+              <small>
+                Feature flags y opciones del sistema
+              </small>
+
+            </span>
+
+          </button>
+
+
+          <!-- RESTRICTIONS -->
+
+          <button
+            type="button"
+            class="feature-flag-v2__sidebar-option"
+          >
+
+            <span
+              class="feature-flag-v2__sidebar-option-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <rect
+                  x="4"
+                  y="5"
+                  width="16"
+                  height="15"
+                  rx="2.3"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+
+                <path
+                  d="M8 3v4M16 3v4M4 9h16"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+
+            <span class="feature-flag-v2__sidebar-option-content">
+
+              <strong>
+                Restricciones de agendamiento
+              </strong>
+
+              <small>
+                Fechas y horarios no disponibles
+              </small>
+
+            </span>
+
+          </button>
+
+
+          <!-- INFO -->
+
+          <aside class="feature-flag-v2__sidebar-info">
+
+            <span
+              class="feature-flag-v2__sidebar-info-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="8"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+
+                <path
+                  d="M12 10v5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+
+                <circle
+                  cx="12"
+                  cy="7"
+                  r=".9"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+
+
+            <div>
+
+              <strong>
+                Información
+              </strong>
+
+              <p>
+                Configura las opciones del sistema y define las
+                restricciones de fechas y horarios para el
+                agendamiento de clases.
+              </p>
+
+            </div>
+
+          </aside>
+
+        </div>
+
+      </aside>
+
+
+      <!-- ===================================================
+           MAIN
+      ==================================================== -->
+
+      <main class="feature-flag-v2__main">
+
+        <!-- =================================================
+             GENERAL SETTINGS
+        ================================================== -->
+
+        <section
+          id="feature-flag-general"
+          class="feature-flag-v2__section"
+        >
+
+          <app-feature-flag-general-settings
+            [ffs]="ffs"
+            [getFlagLabel]="getFlagLabel.bind(this)"
+            (toggleRequested)="toggle($event)"
+            (refreshRequested)="getAll()"
+          >
+          </app-feature-flag-general-settings>
+
+        </section>
+
+
+        <!-- =================================================
+             SCHEDULING RESTRICTIONS
+        ================================================== -->
+
+        <section
+          id="feature-flag-restrictions"
+          class="
+            feature-flag-v2__section
+            feature-flag-v2__section--restrictions
+          "
+        >
+
+          <!-- HEADER -->
+
+          <header class="feature-flag-v2__section-header">
+
+            <div class="feature-flag-v2__section-heading">
+
+              <span
+                class="feature-flag-v2__section-icon"
+                aria-hidden="true"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M12 3 19 6v5.7c0 4.2-2.8 7.1-7 8.8-4.2-1.7-7-4.6-7-8.8V6L12 3Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+
+                  <path
+                    d="M12 8v4"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="15"
+                    r=".9"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+
+
+              <div>
+
+                <h2>
+                  Restricciones de agendamiento
+                </h2>
+
+                <p>
+                  Define los días completos y horarios no disponibles
+                  para agendamiento de clases.
+                </p>
+
+              </div>
+
+            </div>
+
+          </header>
+
+
+          <!-- =================================================
+               FILTERS + MONTH NAVIGATION
+          ================================================== -->
+
+          <div class="feature-flag-v2__restriction-toolbar">
+
+            <app-feature-flag-restriction-filters
+              class="feature-flag-v2__filters"
+              [selectedStudentClassification]="selectedStudentClassification"
+              [selectedMode]="selectedMode"
+              [selectedCity]="selectedCity"
+              (classificationChange)="selectedStudentClassification = $event"
+              (modeChange)="selectedMode = $event"
+              (cityChange)="selectedCity = $event"
+              (refreshRequested)="refreshCalendar()"
+            >
+            </app-feature-flag-restriction-filters>
+
+
+            <div class="feature-flag-v2__month-navigation">
+
+              <button
+                type="button"
+                class="feature-flag-v2__month-button"
+                [disabled]="!canGoBack"
+                (click)="prevMonth()"
+                aria-label="Mes anterior"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="m15 6-6 6 6 6"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+
+
+              <div class="feature-flag-v2__month-current">
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <rect
+                    x="4"
+                    y="5"
+                    width="16"
+                    height="15"
+                    rx="2.3"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M8 3v4M16 3v4M4 9h16"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+
+                <span>
+                  {{ selectedMonth | titlecase }}
+                  {{ selectedYear }}
+                </span>
+
+              </div>
+
+
+              <button
+                type="button"
+                class="feature-flag-v2__month-button"
+                [disabled]="!canGoForward"
+                (click)="nextMonth()"
+                aria-label="Mes siguiente"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="m9 6 6 6-6 6"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="feature-flag-v2__refresh-button"
+              (click)="refreshCalendar()"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M20 7v5h-5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M18.2 8A7 7 0 1 0 19 15"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+
+              <span>
+                Actualizar calendario
+              </span>
+
+            </button>
+
+          </div>
+
+
+          <!-- =================================================
+               RESTRICTION CONTENT
+          ================================================== -->
+
+          <div class="feature-flag-v2__restriction-grid">
+
+            <!-- CALENDAR -->
+
+            <div class="feature-flag-v2__calendar-column">
+
+              <app-feature-flag-calendar
+                [selectedMonth]="selectedMonth"
+                [selectedYear]="selectedYear"
+                [currentMonthDays]="currentMonthDays"
+                [selectedDays]="selectedDays"
+                [canGoBack]="canGoBack"
+                [canGoForward]="canGoForward"
+                (previousRequested)="prevMonth()"
+                (nextRequested)="nextMonth()"
+                (daySelected)="selectDay($event)"
+              >
+              </app-feature-flag-calendar>
+
+            </div>
+
+
+            <!-- LEGEND -->
+
+            <!-- <div class="feature-flag-v2__legend-column">
+
+              <app-feature-flag-restrictions-legend>
+              </app-feature-flag-restrictions-legend>
+
+            </div> -->
+
+
+            <!-- TABLE -->
+
+            <div class="feature-flag-v2__table-column">
+
+              <app-feature-flag-restrictions-table
+                [data]="disabledDatesAndHours"
+                [month]="selectedMonth"
+                [year]="selectedYear"
+                (deleteRequested)="
+                  openDeleteModal(
+                    $event.day,
+                    $event.entry
+                  )
+                "
+              >
+              </app-feature-flag-restrictions-table>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               HOURS PANEL
+          ================================================== -->
+
+          <app-feature-flag-hours-panel
+            *ngIf="selectedDays.length === 1"
+            class="feature-flag-v2__hours"
+            [timeSlots]="timeSlots"
+            [selectedDays]="selectedDays"
+            [isDaySelectedForHours]="isDaySelectedForHours"
+            [hasSelectedEnabledHours]="hasSelectedEnabledHours"
+            (hourSelected)="
+              toggleHourSelection(
+                $event.hour,
+                $event.disabled
+              )
+            "
+            (disableHoursRequested)="blockHours()"
+          >
+          </app-feature-flag-hours-panel>
+
+
+          <!-- =================================================
+               SELECTED DAY ACTION
+          ================================================== -->
+
+          <div
+            *ngIf="selectedDays.length > 0"
+            class="feature-flag-v2__selected-actions"
+          >
+
+            <div>
+
+              <strong>
+                {{ selectedDays.length }}
+                {{
+                  selectedDays.length === 1
+                    ? 'día seleccionado'
+                    : 'días seleccionados'
+                }}
+              </strong>
+
+              <span>
+                Puedes aplicar una restricción de día completo
+                a la selección actual.
+              </span>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="feature-flag-v2__disable-days-button"
+              [disabled]="!hasEnabledSelectedDays()"
+              (click)="blockDate('disable')"
+            >
+              Deshabilitar día(s)
+            </button>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer class="feature-flag-v2__footer">
+
+          <div class="feature-flag-v2__support">
+
+            <span
+              class="feature-flag-v2__support-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="8"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+
+                <path
+                  d="M9.8 9.5a2.3 2.3 0 0 1 4.4 1c0 1.7-2.2 2-2.2 3.5"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+
+                <circle
+                  cx="12"
+                  cy="17"
+                  r=".85"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+
+
+            <div>
+
+              <strong>
+                ¿Necesitas ayuda?
+              </strong>
+
+              <span>
+                Consulta la documentación o contacta al soporte técnico.
+              </span>
+
+            </div>
+
+          </div>
+
+        </footer>
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       MODAL
+  ====================================================== -->
+
+  <app-modal
+  [showModal]="modal.show"
+  [message]="modal.message"
+  [isError]="modal.isError"
+  [isSuccess]="modal.isSuccess"
+  [isInfo]="modal.isInfo"
+  [showButtons]="modal.showButtons ?? false"
+  [title]="modal.title ?? '' "
+  (confirmAction)="modal.confirm?.()"
+  (close)="modal.close()"
+></app-modal>
+
+</section>

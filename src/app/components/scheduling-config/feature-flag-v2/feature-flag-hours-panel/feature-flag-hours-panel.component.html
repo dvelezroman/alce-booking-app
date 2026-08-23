@@ -1,0 +1,269 @@
+<section
+  class="feature-flag-hours-panel"
+  [class.feature-flag-hours-panel--disabled]="
+    !isDaySelectedForHours
+  "
+>
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="feature-flag-hours-panel__header">
+
+    <div>
+
+      <h3 class="feature-flag-hours-panel__title">
+        Gestión de horas
+      </h3>
+
+      <p class="feature-flag-hours-panel__description">
+
+        <ng-container
+          *ngIf="isDaySelectedForHours; else selectDayHint"
+        >
+          Selecciona las horas que deseas restringir
+          para el día elegido.
+        </ng-container>
+
+        <ng-template #selectDayHint>
+          Selecciona un solo día del calendario para
+          administrar sus horarios.
+        </ng-template>
+
+      </p>
+
+    </div>
+
+
+    <span
+      class="feature-flag-hours-panel__status"
+      [class.feature-flag-hours-panel__status--active]="
+        isDaySelectedForHours
+      "
+    >
+      <span></span>
+
+      {{
+        isDaySelectedForHours
+          ? 'Día seleccionado'
+          : 'Sin día seleccionado'
+      }}
+    </span>
+
+  </header>
+
+
+  <!-- =====================================================
+       LEGEND
+  ====================================================== -->
+
+  <div class="feature-flag-hours-panel__legend">
+
+    <span class="feature-flag-hours-panel__legend-item">
+      <span
+        class="
+          feature-flag-hours-panel__legend-dot
+          feature-flag-hours-panel__legend-dot--available
+        "
+      ></span>
+
+      Disponible
+    </span>
+
+    <span class="feature-flag-hours-panel__legend-item">
+      <span
+        class="
+          feature-flag-hours-panel__legend-dot
+          feature-flag-hours-panel__legend-dot--selected
+        "
+      ></span>
+
+      Seleccionada
+    </span>
+
+    <span class="feature-flag-hours-panel__legend-item">
+      <span
+        class="
+          feature-flag-hours-panel__legend-dot
+          feature-flag-hours-panel__legend-dot--disabled
+        "
+      ></span>
+
+      No disponible
+    </span>
+
+  </div>
+
+
+  <!-- =====================================================
+       HOURS
+  ====================================================== -->
+
+  <div class="feature-flag-hours-panel__grid">
+
+    <button
+      *ngFor="let time of timeSlots"
+      type="button"
+      class="feature-flag-hours-panel__slot"
+
+      [class.feature-flag-hours-panel__slot--selected]="
+        isSelected(time.value)
+      "
+
+      [class.feature-flag-hours-panel__slot--disabled]="
+        time.isDisabled
+      "
+
+      [class.feature-flag-hours-panel__slot--inactive]="
+        !isDaySelectedForHours
+      "
+
+      [disabled]="
+        !isDaySelectedForHours ||
+        time.isDisabled
+      "
+
+      (click)="
+        onHourSelected(
+          time.value,
+          time.isDisabled ?? false
+        )
+      "
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="8"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M12 8v4l2.5 1.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <span>
+        {{ time.label }}
+      </span>
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       EMPTY / DISABLED HINT
+  ====================================================== -->
+
+  <div
+    *ngIf="!isDaySelectedForHours"
+    class="feature-flag-hours-panel__hint"
+  >
+
+    <span
+      class="feature-flag-hours-panel__hint-icon"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <rect
+          x="4"
+          y="5"
+          width="16"
+          height="15"
+          rx="2.4"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M8 3v4M16 3v4M4 9h16"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+
+    <span>
+      Selecciona un día para habilitar la gestión de horas.
+    </span>
+
+  </div>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer class="feature-flag-hours-panel__footer">
+
+    <div class="feature-flag-hours-panel__footer-info">
+
+      <span>
+        {{
+          selectedDays?.[0]?.hours?.length || 0
+        }}
+        {{
+          (selectedDays?.[0]?.hours?.length || 0) === 1
+            ? 'hora seleccionada'
+            : 'horas seleccionadas'
+        }}
+      </span>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="feature-flag-hours-panel__disable-button"
+      [disabled]="
+        !isDaySelectedForHours ||
+        !hasSelectedEnabledHours
+      "
+      (click)="onDisableHours()"
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="8"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M8.5 12h7"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <span>
+        Deshabilitar hora(s)
+      </span>
+
+    </button>
+
+  </footer>
+
+</section>

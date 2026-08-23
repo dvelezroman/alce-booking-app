@@ -92,7 +92,8 @@ navItems: SidebarNavItem[] = [
   { icon: 'video_call', text: 'Clases asignadas', route: '/dashboard/searching-meeting-instructor-v2', roles: [UserRole.INSTRUCTOR] },
   { icon: 'reportes', text: 'Solicitudes de agendamiento', route: '/dashboard/instructor/lead-scheduling-requests', roles: [UserRole.INSTRUCTOR] },
   { icon: 'history', text: 'Eventos', route: '/dashboard/processed-events', roles: [UserRole.ADMIN] },
-  { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/dashboard/feature-flag', roles: [UserRole.ADMIN] },
+  // { icon: 'config', text: 'Habilitar/Deshabilitar Agendamiento', route: '/dashboard/feature-flag', roles: [UserRole.ADMIN] },
+  { icon: 'config', text: 'configuraciones de plataforma', route: '/dashboard/feature-flag-v2', roles: [UserRole.ADMIN] },
   { icon: 'config', text: 'Anuncios', route: '/dashboard/announcements', roles: [UserRole.ADMIN] },
   { icon: 'reporte', text: 'Instructores', route: '/dashboard/report-instructor', roles: [UserRole.ADMIN] },
   { icon: 'video_call', text: 'Clases creadas por instructor', route: '/dashboard/instructor-created-meetings', roles: [UserRole.ADMIN] },
@@ -339,7 +340,7 @@ navItems: SidebarNavItem[] = [
       title: 'Configuración',
       icon: 'config',
       items: [
-        this.findNavItemByRoute('/dashboard/feature-flag'),
+        this.findNavItemByRoute('/dashboard/feature-flag-v2'),
         this.findNavItemByRoute('/dashboard/assessment-config'),
         this.findNavItemByRoute('/dashboard/announcements'),
       ].filter(item => item.roles.includes(role))

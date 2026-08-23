@@ -83,6 +83,7 @@ import { RegisterStudentV2Component } from './register-student-v2/register-stude
 import { RegisterStaffComponent } from './register-staff/register-staff.component';
 import { StageAssessmentV2Component } from './stage-assessment-v2/stage-assessment-v2.component';
 import { NotificationSettingsComponent } from '../../components/notification-settings/notification-settings.component';
+import { FeatureFlagV2Component } from './feature-flag-v2/feature-flag-v2.component';
 
 const dashboardChildren: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -154,7 +155,8 @@ const dashboardChildren: Routes = [
   { path: 'attendance-instructor', component: AttendanceInstructorComponent },
   { path: 'attendance-instructor-v2', component: AttendanceInstructorV2Component },
   { path: 'instructor-evaluations', component: InstructorEvaluationsComponent },
-  { path: 'feature-flag', component: FeatureFlagComponent },
+  // { path: 'feature-flag', component: FeatureFlagComponent },
+  { path: 'feature-flag-v2', component: FeatureFlagV2Component },
   { path: 'announcements', component: AnnouncementsComponent },
   // { path: 'create-students', component: RegisterStudentComponent },
   { path: 'create-students', component: RegisterStudentV2Component },

@@ -1,0 +1,246 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.feature-flag-restriction-filters {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  align-items: end;
+
+  gap: .65rem;
+}
+
+
+/* =========================================================
+   FIELD
+========================================================= */
+
+.feature-flag-restriction-filters__field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .3rem;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.feature-flag-restriction-filters__label {
+  display: block;
+
+  margin: 0;
+
+  color: #555f75;
+
+  font-size: .54rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+
+/* =========================================================
+   SELECT WRAPPER
+========================================================= */
+
+.feature-flag-restriction-filters__select-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+
+/* =========================================================
+   SELECT
+========================================================= */
+
+.feature-flag-restriction-filters__select {
+  width: 100%;
+  height: 2.05rem;
+
+  padding:
+    0
+    2rem
+    0
+    .65rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dfe3ea;
+  border-radius: .42rem;
+  outline: none;
+
+  appearance: none;
+
+  background: #ffffff;
+  color: #303a53;
+
+  font-family: inherit;
+  font-size: .55rem;
+  font-weight: 550;
+
+  cursor: pointer;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+}
+
+.feature-flag-restriction-filters__select:hover {
+  border-color: #ccd2dc;
+}
+
+.feature-flag-restriction-filters__select:focus {
+  border-color: #7458df;
+
+  box-shadow:
+    0 0 0 .14rem
+    rgba(102, 76, 211, .08);
+}
+
+.feature-flag-restriction-filters__select:disabled {
+  cursor: not-allowed;
+
+  background: #f5f6f8;
+  color: #9aa1ae;
+
+  opacity: .7;
+}
+
+
+/* =========================================================
+   CHEVRON
+========================================================= */
+
+.feature-flag-restriction-filters__chevron {
+  position: absolute;
+
+  top: 50%;
+  right: .62rem;
+
+  width: .72rem;
+  height: .72rem;
+
+  color: #747d91;
+
+  pointer-events: none;
+
+  transform: translateY(-50%);
+}
+
+
+/* =========================================================
+   MEDIUM DESKTOP
+========================================================= */
+
+@media (max-width: 1250px) {
+
+  .feature-flag-restriction-filters {
+    gap: .55rem;
+  }
+
+  .feature-flag-restriction-filters__select {
+    padding-left: .58rem;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .feature-flag-restriction-filters {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
+
+    gap: .6rem;
+  }
+
+  .feature-flag-restriction-filters__label {
+    font-size: .56rem;
+  }
+
+  .feature-flag-restriction-filters__select {
+    height: 2.15rem;
+
+    font-size: .57rem;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+  .feature-flag-restriction-filters {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .feature-flag-restriction-filters__field:last-child {
+    grid-column:
+      1 / -1;
+  }
+
+  .feature-flag-restriction-filters__label {
+    font-size: .58rem;
+  }
+
+  .feature-flag-restriction-filters__select {
+    height: 2.3rem;
+
+    font-size: .6rem;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .feature-flag-restriction-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-flag-restriction-filters__field:last-child {
+    grid-column: auto;
+  }
+
+  .feature-flag-restriction-filters__select {
+    height: 2.4rem;
+  }
+
+}

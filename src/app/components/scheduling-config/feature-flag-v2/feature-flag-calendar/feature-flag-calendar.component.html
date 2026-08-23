@@ -1,0 +1,119 @@
+<section class="feature-flag-calendar">
+
+  <!-- =====================================================
+       WEEK DAYS
+  ====================================================== -->
+
+  <div class="feature-flag-calendar__weekdays">
+
+    <span>Dom</span>
+    <span>Lun</span>
+    <span>Mar</span>
+    <span>Mié</span>
+    <span>Jue</span>
+    <span>Vie</span>
+    <span>Sáb</span>
+
+  </div>
+
+
+  <!-- =====================================================
+       DAYS
+  ====================================================== -->
+
+  <div class="feature-flag-calendar__grid">
+
+    <button
+      *ngFor="let day of currentMonthDays"
+      type="button"
+      class="feature-flag-calendar__day"
+      [class.feature-flag-calendar__day--empty]="!day.day"
+      [class.feature-flag-calendar__day--selected]="
+        day.day &&
+        isDaySelected(day)
+      "
+      [class.feature-flag-calendar__day--disabled]="
+        day.day &&
+        day.isDisabled
+      "
+      [class.feature-flag-calendar__day--hours-disabled]="
+        day.day &&
+        day.isHoursDisabled &&
+        !day.isDisabled
+      "
+      [disabled]="!day.day"
+      (click)="
+        day.day &&
+        onSelectDay(day)
+      "
+    >
+
+      <span
+        *ngIf="day.day"
+        class="feature-flag-calendar__day-number"
+      >
+        {{ day.day }}
+      </span>
+
+
+      <!-- ===============================================
+           FULL DAY DISABLED
+      ================================================ -->
+
+      <span
+        *ngIf="
+          day.day &&
+          day.isDisabled
+        "
+        class="
+          feature-flag-calendar__indicator
+          feature-flag-calendar__indicator--disabled
+        "
+        aria-label="Día completo no disponible"
+      >
+      </span>
+
+
+      <!-- ===============================================
+           HOURS DISABLED
+      ================================================ -->
+
+      <span
+        *ngIf="
+          day.day &&
+          day.isHoursDisabled &&
+          !day.isDisabled
+        "
+        class="
+          feature-flag-calendar__indicator
+          feature-flag-calendar__indicator--hours
+        "
+        aria-label="Horas parcialmente no disponibles"
+      >
+      </span>
+
+
+      <!-- ===============================================
+           SELECTED
+      ================================================ -->
+
+      <span
+        *ngIf="
+          day.day &&
+          isDaySelected(day) &&
+          !day.isDisabled &&
+          !day.isHoursDisabled
+        "
+        class="
+          feature-flag-calendar__indicator
+          feature-flag-calendar__indicator--selected
+        "
+        aria-label="Día seleccionado"
+      >
+      </span>
+
+    </button>
+
+  </div>
+
+</section>

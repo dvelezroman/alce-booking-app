@@ -1,0 +1,413 @@
+<section class="feature-flag-general-settings">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="feature-flag-general-settings__header">
+
+    <div class="feature-flag-general-settings__heading">
+
+      <span
+        class="feature-flag-general-settings__header-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M5 4v6M5 14v6M12 4v3M12 11v9M19 4v9M19 17v3"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <circle
+            cx="5"
+            cy="12"
+            r="2"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <circle
+            cx="12"
+            cy="9"
+            r="2"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+
+          <circle
+            cx="19"
+            cy="15"
+            r="2"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+        </svg>
+      </span>
+
+
+      <div>
+
+        <h2 class="feature-flag-general-settings__title">
+          Configuración general
+          <span>
+            (Feature Flags)
+          </span>
+        </h2>
+
+        <p class="feature-flag-general-settings__description">
+          Activa o desactiva funcionalidades del sistema.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="feature-flag-general-settings__refresh"
+      (click)="onRefresh()"
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M20 7v5h-5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M18.2 8A7 7 0 1 0 19 15"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <span>
+        Actualizar estados
+      </span>
+
+    </button>
+
+  </header>
+
+
+  <!-- =====================================================
+       TABLE
+  ====================================================== -->
+
+  <div class="feature-flag-general-settings__table-wrapper">
+
+    <table class="feature-flag-general-settings__table">
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Funcionalidad
+          </th>
+
+          <th>
+            Descripción
+          </th>
+
+          <th>
+            Estado
+          </th>
+
+          <th>
+            Acciones
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        <tr
+          *ngFor="let ff of ffs; let index = index"
+        >
+
+          <!-- =============================================
+               FEATURE
+          ============================================== -->
+
+          <td>
+
+            <div class="feature-flag-general-settings__feature">
+
+              <span
+                class="feature-flag-general-settings__feature-icon"
+                [ngClass]="{
+                  'feature-flag-general-settings__feature-icon--login':
+                    ff.name === 'enable-login',
+
+                  'feature-flag-general-settings__feature-icon--schedule':
+                    ff.name === 'enable-schedule',
+
+                  'feature-flag-general-settings__feature-icon--default':
+                    ff.name !== 'enable-login' &&
+                    ff.name !== 'enable-schedule'
+                }"
+                aria-hidden="true"
+              >
+
+                <!-- LOGIN -->
+
+                <svg
+                  *ngIf="ff.name === 'enable-login'"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M10 4h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+
+                  <path
+                    d="M4 12h10M10 8l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+
+                <!-- SCHEDULE -->
+
+                <svg
+                  *ngIf="ff.name === 'enable-schedule'"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <rect
+                    x="4"
+                    y="5"
+                    width="16"
+                    height="15"
+                    rx="2.4"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M8 3v4M16 3v4M4 9h16"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+
+                  <path
+                    d="M8 13h3M8 16h5"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+
+
+                <!-- DEFAULT -->
+
+                <svg
+                  *ngIf="
+                    ff.name !== 'enable-login' &&
+                    ff.name !== 'enable-schedule'
+                  "
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M4 18V6M4 18h16"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+
+                  <path
+                    d="m8 14 3-3 2 2 4-5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+              </span>
+
+
+              <strong>
+                {{ getFlagLabel(ff.name) }}
+              </strong>
+
+            </div>
+
+          </td>
+
+
+          <!-- =============================================
+               DESCRIPTION
+          ============================================== -->
+
+          <td>
+
+            <p class="feature-flag-general-settings__feature-description">
+
+              <ng-container [ngSwitch]="ff.name">
+
+                <span *ngSwitchCase="'enable-login'">
+                  Permite a los usuarios acceder al sistema
+                  con sus credenciales.
+                </span>
+
+                <span *ngSwitchCase="'enable-schedule'">
+                  Permite a los estudiantes agendar sus clases
+                  según disponibilidad.
+                </span>
+
+                <span *ngSwitchDefault>
+                  Controla la disponibilidad de esta funcionalidad
+                  dentro del sistema.
+                </span>
+
+              </ng-container>
+
+            </p>
+
+          </td>
+
+
+          <!-- =============================================
+               STATUS
+          ============================================== -->
+
+          <td>
+
+            <span
+              class="feature-flag-general-settings__status"
+              [class.feature-flag-general-settings__status--enabled]="
+                ff.status
+              "
+              [class.feature-flag-general-settings__status--disabled]="
+                !ff.status
+              "
+            >
+
+              <span
+                class="feature-flag-general-settings__status-dot"
+              ></span>
+
+              {{
+                ff.status
+                  ? 'Habilitado'
+                  : 'Deshabilitado'
+              }}
+
+            </span>
+
+          </td>
+
+
+          <!-- =============================================
+               SWITCH
+          ============================================== -->
+
+          <td>
+
+            <button
+              type="button"
+              class="feature-flag-general-settings__switch"
+              [class.feature-flag-general-settings__switch--active]="
+                ff.status
+              "
+              [attr.aria-pressed]="ff.status"
+              [attr.aria-label]="
+                ff.status
+                  ? 'Deshabilitar ' + getFlagLabel(ff.name)
+                  : 'Habilitar ' + getFlagLabel(ff.name)
+              "
+              (click)="onToggle(ff)"
+            >
+
+              <span
+                class="feature-flag-general-settings__switch-thumb"
+              ></span>
+
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <!-- =====================================================
+       NOTICE
+  ====================================================== -->
+
+  <div class="feature-flag-general-settings__notice">
+
+    <span
+      class="feature-flag-general-settings__notice-icon"
+      aria-hidden="true"
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="8"
+          stroke="currentColor"
+          stroke-width="1.7"
+        />
+
+        <path
+          d="M12 10v5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+
+        <circle
+          cx="12"
+          cy="7"
+          r=".9"
+          fill="currentColor"
+        />
+      </svg>
+
+    </span>
+
+    <span>
+      Los cambios en estas configuraciones se aplican
+      inmediatamente en todo el sistema.
+    </span>
+
+  </div>
+
+</section>
