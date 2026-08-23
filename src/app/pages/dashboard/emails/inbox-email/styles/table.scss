@@ -1,0 +1,416 @@
+.inbox-email__table-wrapper {
+  width: 100%;
+  min-width: 0;
+
+  overflow-x: auto;
+}
+
+.inbox-email__table {
+  width: 100%;
+  min-width: 1050px;
+
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.inbox-email__table th {
+  height: 2.75rem;
+
+  padding:
+    .5rem
+    .6rem;
+
+  border-bottom: 1px solid #e7e9ef;
+
+  background: #fafbfc;
+  color: #566074;
+
+  font-size: .52rem;
+  font-weight: 700;
+
+  text-align: left;
+  vertical-align: middle;
+
+  white-space: nowrap;
+}
+
+.inbox-email__table th:nth-child(3) {
+  width: 18%;
+}
+
+.inbox-email__table th:nth-child(4) {
+  width: 9%;
+}
+
+.inbox-email__table th:nth-child(5) {
+  width: 26%;
+}
+
+.inbox-email__table th:nth-child(6) {
+  width: 10%;
+}
+
+.inbox-email__table th:nth-child(7),
+.inbox-email__table th:nth-child(8) {
+  width: 13%;
+}
+
+.inbox-email__table td {
+  height: 3.7rem;
+
+  padding:
+    .5rem
+    .6rem;
+
+  border-bottom: 1px solid #edf0f4;
+
+  color: #3d4558;
+
+  font-size: .55rem;
+
+  vertical-align: middle;
+}
+
+.inbox-email__table tbody tr {
+  background: #ffffff;
+
+  transition:
+    background-color 150ms ease;
+}
+
+.inbox-email__table tbody tr:hover {
+  background: #f8fafd;
+}
+
+.inbox-email__table tbody tr.inbox-email__row--selected {
+  background: #f3f6ff;
+}
+
+
+/* COLUMNS */
+
+.inbox-email__column--check {
+  width: 2.8rem;
+}
+
+.inbox-email__column--star {
+  width: 2.5rem;
+}
+
+.inbox-email__column--actions {
+  width: 2.8rem;
+}
+
+
+/* CHECKBOX */
+
+.inbox-email__checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.inbox-email__checkbox input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
+}
+
+.inbox-email__checkbox span {
+  width: .9rem;
+  height: .9rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #b5bdca;
+  border-radius: .22rem;
+
+  background: #ffffff;
+}
+
+.inbox-email__checkbox
+input:checked
++
+span {
+  border-color: #5376e3;
+
+  background: #5376e3;
+}
+
+.inbox-email__checkbox
+input:checked
++
+span::after {
+  content: '';
+
+  width: .25rem;
+  height: .48rem;
+
+  border-right: 1.5px solid #ffffff;
+  border-bottom: 1.5px solid #ffffff;
+
+  transform:
+    rotate(45deg)
+    translate(-.02rem, -.05rem);
+}
+
+
+/* STAR */
+
+.inbox-email__star {
+  width: 1.7rem;
+  height: 1.7rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+  color: #9199aa;
+
+  cursor: pointer;
+}
+
+.inbox-email__star svg {
+  width: .9rem;
+  height: .9rem;
+}
+
+
+/* RECIPIENT */
+
+.inbox-email__recipient {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: .55rem;
+}
+
+.inbox-email__avatar {
+  width: 1.8rem;
+  height: 1.8rem;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #e9efff;
+  color: #5574db;
+
+  font-size: .49rem;
+  font-weight: 750;
+}
+
+.inbox-email__recipient-content {
+  min-width: 0;
+}
+
+.inbox-email__recipient-content strong,
+.inbox-email__recipient-content span {
+  display: block;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inbox-email__recipient-content strong {
+  color: #293145;
+
+  font-size: .57rem;
+  font-weight: 650;
+}
+
+.inbox-email__recipient-content span {
+  margin-top: .08rem;
+
+  color: #7f8798;
+
+  font-size: .49rem;
+}
+
+
+/* SUBJECT */
+
+.inbox-email__subject {
+  min-width: 0;
+}
+
+.inbox-email__subject strong,
+.inbox-email__subject span {
+  display: block;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inbox-email__subject strong {
+  color: #343c50;
+
+  font-size: .56rem;
+  font-weight: 600;
+}
+
+.inbox-email__subject span {
+  margin-top: .12rem;
+
+  color: #8a92a1;
+
+  font-size: .49rem;
+}
+
+
+/* DATE */
+
+.inbox-email__date {
+  color: #616a7e;
+
+  font-size: .52rem;
+
+  white-space: nowrap;
+}
+
+
+/* ACTION */
+
+.inbox-email__actions {
+  width: 1.8rem;
+  height: 1.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+  color: #798296;
+
+  cursor: pointer;
+}
+
+.inbox-email__actions:hover {
+  background: #eef1f6;
+}
+
+.inbox-email__actions svg {
+  width: .9rem;
+  height: .9rem;
+}
+
+
+/* LOADING */
+
+.inbox-email__loading {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.inbox-email__loading-row {
+  min-height: 3.7rem;
+
+  display: grid;
+
+  grid-template-columns:
+    2rem
+    2rem
+    15%
+    8%
+    1fr
+    8%
+    12%;
+
+  align-items: center;
+
+  gap: .7rem;
+
+  padding:
+    .5rem
+    .7rem;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.inbox-email__skeleton {
+  display: block;
+
+  border-radius: .25rem;
+
+  background:
+    linear-gradient(
+      90deg,
+      #eceef3 0%,
+      #f8f9fb 50%,
+      #eceef3 100%
+    );
+
+  background-size: 220% 100%;
+
+  animation:
+    inbox-email-skeleton
+    1.15s
+    linear
+    infinite;
+}
+
+.inbox-email__skeleton--check {
+  width: .9rem;
+  height: .9rem;
+}
+
+.inbox-email__skeleton--avatar {
+  width: 1.8rem;
+  height: 1.8rem;
+
+  border-radius: 50%;
+}
+
+.inbox-email__skeleton--recipient,
+.inbox-email__skeleton--subject,
+.inbox-email__skeleton--date {
+  height: .5rem;
+}
+
+.inbox-email__skeleton--type,
+.inbox-email__skeleton--status {
+  width: 3.5rem;
+  height: 1rem;
+
+  border-radius: 999px;
+}
+
+@keyframes inbox-email-skeleton {
+
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}

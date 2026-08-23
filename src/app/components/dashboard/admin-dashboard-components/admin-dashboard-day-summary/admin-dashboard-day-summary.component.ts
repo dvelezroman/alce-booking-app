@@ -33,6 +33,7 @@ interface DaySummaryItem {
   label: string;
   value: number;
   loading?: boolean;
+  comingSoon?: boolean;
 
   type:
     | 'users'
@@ -74,7 +75,8 @@ export class AdminDashboardDaySummaryComponent
     {
       label: 'Evaluaciones asignadas hoy',
       value: 0,
-      loading: true,
+      loading: false,
+      comingSoon: true,
       type: 'completed',
     },
     {
@@ -120,7 +122,7 @@ export class AdminDashboardDaySummaryComponent
   ngOnInit(): void {
     this.loadNewStudentsToday();
     this.loadScheduledMeetingsToday();
-    this.loadAssignedAssessmentsToday();
+    // this.loadAssignedAssessmentsToday();
     this.loadDemoRequestsToday();
   }
 

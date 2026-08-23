@@ -1,36 +1,836 @@
-<section class="class-booking-header">
-  <h1 class="title is-3">Configuración Académica</h1>
+<section class="assessment-config">
+
+  <div class="assessment-config__container">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="assessment-config__header">
+
+      <div>
+
+        <span class="assessment-config__eyebrow">
+          Configuración académica
+        </span>
+
+        <h1 class="assessment-config__title">
+          Configuración de Normas Académicas
+        </h1>
+
+        <p class="assessment-config__description">
+          Define los parámetros académicos que se aplicarán
+          a los estudiantes dentro de la plataforma.
+        </p>
+
+      </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         LAYOUT
+    ====================================================== -->
+
+    <div class="assessment-config__layout">
+
+      <!-- ===================================================
+           MAIN
+      ==================================================== -->
+
+      <main class="assessment-config__main">
+
+        <!-- ===============================================
+             MAX POINTS
+        ================================================ -->
+
+        <article
+          class="
+            assessment-config__card
+            assessment-config__card--maximum
+          "
+        >
+
+          <div class="assessment-config__card-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M8 5H5a2 2 0 0 0-2 2v1a4 4 0 0 0 4 4h1"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M16 5h3a2 2 0 0 1 2 2v1a4 4 0 0 1-4 4h-1"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M8 4h8v6a4 4 0 0 1-8 0V4Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M12 14v4M9 20h6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </div>
+
+
+          <div class="assessment-config__card-content">
+
+            <div class="assessment-config__card-heading">
+
+              <div>
+
+                <h2>
+                  Puntaje máximo de evaluación
+                </h2>
+
+                <p>
+                  Valor máximo que puede obtener una evaluación.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="assessment-config__card-body">
+
+              <div class="assessment-config__value">
+
+                <strong>
+                  {{ maxPoints ?? '—' }}
+                </strong>
+
+                <span>
+                  puntos
+                </span>
+
+              </div>
+
+
+              <p class="assessment-config__helper">
+                Este es el puntaje máximo que el sistema
+                permitirá registrar en cualquier evaluación.
+              </p>
+
+
+              <div class="assessment-config__form">
+
+                <app-assessment-config-form
+                  [maxPoints]="maxPoints"
+                  (maxPointsChange)="updateMaxPoints($event)"
+                >
+                </app-assessment-config-form>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- ===============================================
+             MIN POINTS
+        ================================================ -->
+
+        <article
+          class="
+            assessment-config__card
+            assessment-config__card--minimum
+          "
+        >
+
+          <div class="assessment-config__card-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="9"
+                r="5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m9.8 9 1.5 1.5L14.5 7"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="m9 14-1 6 4-2 4 2-1-6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </div>
+
+
+          <div class="assessment-config__card-content">
+
+            <div class="assessment-config__card-heading">
+
+              <div>
+
+                <h2>
+                  Puntaje mínimo de aprobación
+                </h2>
+
+                <p>
+                  Puntaje mínimo requerido para aprobar.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="assessment-config__card-body">
+
+              <div class="assessment-config__value">
+
+                <strong>
+                  {{ minPoints ?? '—' }}
+                </strong>
+
+                <span>
+                  puntos
+                </span>
+
+              </div>
+
+
+              <p class="assessment-config__helper">
+                Puntaje mínimo que un estudiante debe obtener
+                para considerar una evaluación como aprobada.
+              </p>
+
+
+              <div class="assessment-config__form">
+
+                <app-assessment-min-config
+                  [minPoints]="minPoints"
+                  (minPointsChange)="updateMinPoints($event)"
+                >
+                </app-assessment-min-config>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- ===============================================
+             NEW STUDENT DAYS
+        ================================================ -->
+
+        <article
+          class="
+            assessment-config__card
+            assessment-config__card--days
+          "
+        >
+
+          <div class="assessment-config__card-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="4"
+                y="5"
+                width="16"
+                height="15"
+                rx="2.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 3v4M16 3v4M4 9h16"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M8 13h2M12 13h2M16 13h1M8 16h2M12 16h2"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </div>
+
+
+          <div class="assessment-config__card-content">
+
+            <div class="assessment-config__card-heading">
+
+              <div>
+
+                <h2>
+                  Días como estudiante nuevo
+                </h2>
+
+                <p>
+                  Período para considerar a un estudiante como nuevo.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="assessment-config__card-body">
+
+              <div class="assessment-config__value">
+
+                <strong>
+                  {{ daysAsNewStudent ?? '—' }}
+                </strong>
+
+                <span>
+                  días
+                </span>
+
+              </div>
+
+
+              <p class="assessment-config__helper">
+                Cantidad de días desde el registro en los que
+                un estudiante será considerado como nuevo.
+              </p>
+
+
+              <div class="assessment-config__form">
+
+                <app-assessment-days-config-form
+                  [daysAsNewStudent]="daysAsNewStudent"
+                  (daysChange)="updateDays($event)"
+                >
+                </app-assessment-days-config-form>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- ===============================================
+             HOURS
+        ================================================ -->
+
+        <article
+          class="
+            assessment-config__card
+            assessment-config__card--hours
+          "
+        >
+
+          <div class="assessment-config__card-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M12 8v4l2.5 1.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </div>
+
+
+          <div class="assessment-config__card-content">
+
+            <div class="assessment-config__card-heading">
+
+              <div>
+
+                <h2>
+                  Horas mínimas por semana
+                </h2>
+
+                <p>
+                  Carga mínima de clases recomendada.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="assessment-config__card-body">
+
+              <div class="assessment-config__value">
+
+                <strong>
+                  {{ minHoursScheduled ?? '—' }}
+                </strong>
+
+                <span>
+                  horas
+                </span>
+
+              </div>
+
+
+              <p class="assessment-config__helper">
+                Cantidad mínima de horas que un estudiante debe
+                tomar por semana para cumplir con la carga académica.
+              </p>
+
+
+              <div class="assessment-config__form">
+
+                <app-assessment-hours-config
+                  [minHoursScheduled]="minHoursScheduled"
+                  (hoursChange)="updateMinHoursScheduled($event)"
+                >
+                </app-assessment-hours-config>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- ===============================================
+             NOTICE
+        ================================================ -->
+
+        <aside class="assessment-config__notice">
+
+          <span
+            class="assessment-config__notice-icon"
+            aria-hidden="true"
+          >
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M12 3 2.8 19h18.4L12 3Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M12 9v4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <circle
+                cx="12"
+                cy="16"
+                r=".85"
+                fill="currentColor"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <strong>
+              Ten en cuenta
+            </strong>
+
+            <p>
+              Los cambios realizados en esta configuración
+              afectarán las reglas académicas de la plataforma.
+            </p>
+
+          </div>
+
+        </aside>
+
+      </main>
+
+
+      <!-- ===================================================
+           SIDEBAR
+      ==================================================== -->
+
+      <aside class="assessment-config__sidebar">
+
+        <section class="assessment-config__info-card">
+
+          <header class="assessment-config__info-header">
+
+            <span
+              class="assessment-config__info-header-icon"
+              aria-hidden="true"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+
+                <path
+                  d="M12 10v6"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+
+                <circle
+                  cx="12"
+                  cy="7"
+                  r=".9"
+                  fill="currentColor"
+                />
+              </svg>
+
+            </span>
+
+
+            <div>
+
+              <h2>
+                Sobre esta configuración
+              </h2>
+
+              <p>
+                Estos valores forman parte de las reglas académicas
+                utilizadas para el seguimiento de los estudiantes.
+              </p>
+
+            </div>
+
+          </header>
+
+
+          <div class="assessment-config__divider"></div>
+
+
+          <h3 class="assessment-config__info-title">
+            Qué controla cada parámetro
+          </h3>
+
+
+          <div class="assessment-config__rules">
+
+            <!-- MAX -->
+
+            <article class="assessment-config__rule">
+
+              <span
+                class="
+                  assessment-config__rule-icon
+                  assessment-config__rule-icon--maximum
+                "
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M8 4h8v6a4 4 0 0 1-8 0V4Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M12 14v4M9 20h6"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+              <div>
+
+                <strong>
+                  Puntaje máximo de evaluación
+                </strong>
+
+                <p>
+                  Define el valor máximo que puede obtener
+                  una evaluación.
+                </p>
+
+              </div>
+
+            </article>
+
+
+            <!-- MIN -->
+
+            <article class="assessment-config__rule">
+
+              <span
+                class="
+                  assessment-config__rule-icon
+                  assessment-config__rule-icon--minimum
+                "
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="10"
+                    r="5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="m9.8 10 1.5 1.5 3.2-3.5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+
+              <div>
+
+                <strong>
+                  Puntaje mínimo de aprobación
+                </strong>
+
+                <p>
+                  Establece el valor requerido para considerar
+                  aprobada una evaluación.
+                </p>
+
+              </div>
+
+            </article>
+
+
+            <!-- DAYS -->
+
+            <article class="assessment-config__rule">
+
+              <span
+                class="
+                  assessment-config__rule-icon
+                  assessment-config__rule-icon--days
+                "
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <rect
+                    x="4"
+                    y="5"
+                    width="16"
+                    height="15"
+                    rx="2.4"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M8 3v4M16 3v4M4 9h16"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+              <div>
+
+                <strong>
+                  Días como estudiante nuevo
+                </strong>
+
+                <p>
+                  Determina durante cuánto tiempo se identifica
+                  al estudiante como nuevo.
+                </p>
+
+              </div>
+
+            </article>
+
+
+            <!-- HOURS -->
+
+            <article class="assessment-config__rule">
+
+              <span
+                class="
+                  assessment-config__rule-icon
+                  assessment-config__rule-icon--hours
+                "
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="8"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M12 8v4l2.5 1.5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+              <div>
+
+                <strong>
+                  Horas mínimas por semana
+                </strong>
+
+                <p>
+                  Indican la carga mínima de clases recomendada
+                  para el estudiante cada semana.
+                </p>
+
+              </div>
+
+            </article>
+
+          </div>
+
+
+          <aside class="assessment-config__important">
+
+            <span
+              class="assessment-config__important-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M12 3 19 6v5.7c0 4.2-2.8 7.1-7 8.8-4.2-1.7-7-4.6-7-8.8V6L12 3Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="m9.5 12 1.5 1.5 3.5-4"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+
+            <div>
+
+              <strong>
+                Importante
+              </strong>
+
+              <p>
+                Verifica los valores antes de modificarlos, ya que
+                pueden afectar procesos académicos existentes.
+              </p>
+
+            </div>
+
+          </aside>
+
+        </section>
+
+      </aside>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL
+    ====================================================== -->
+
+   <app-modal
+      [showModal]="modal.show"
+      [message]="modal.message"
+      [isError]="modal.isError"
+      [isSuccess]="modal.isSuccess"
+      [isInfo]="modal.isInfo"
+      [showButtons]="modal.showButtons ?? false"
+      (confirmAction)="modal.confirm?.()"
+      (close)="modal.close()"
+    ></app-modal>
+
+  </div>
+
 </section>
-
-<div class="page-wrapper">
-    <app-assessment-config-form
-      [maxPoints]="maxPoints"
-      (maxPointsChanged)="updateMaxPoints($event)"
-    ></app-assessment-config-form>
-
-    <app-assessment-min-config
-      [minPoints]="minPoints"
-      (minPointsChanged)="updateMinPoints($event)"
-    ></app-assessment-min-config>
-
-    <app-assessment-days-config-form
-      [daysAsNewStudent]="daysAsNewStudent"
-      (daysChanged)="updateDays($event)"
-    ></app-assessment-days-config-form>
-
-    <app-assessment-hours-config
-      [minHoursScheduled]="minHoursScheduled"
-      (minHoursChanged)="updateMinHoursScheduled($event)"
-    ></app-assessment-hours-config>
-</div>
-
-<app-modal
-  [showModal]="modal.show"
-  [message]="modal.message"
-  [isError]="modal.isError"
-  [isSuccess]="modal.isSuccess"
-  [isInfo]="modal.isInfo"
-  [showButtons]="modal.showButtons ?? false"
-  (confirmAction)="modal.confirm?.()"
-  (close)="modal.close()"
-></app-modal>

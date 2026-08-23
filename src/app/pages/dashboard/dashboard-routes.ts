@@ -159,7 +159,7 @@ const dashboardChildren: Routes = [
   // { path: 'create-students', component: RegisterStudentComponent },
   { path: 'create-students', component: RegisterStudentV2Component },
   // { path: 'create-instructors', component: RegisterInstructorAdminComponent },
-   { path: 'create-staff', component: RegisterStaffComponent },
+  { path: 'create-staff', component: RegisterStaffComponent },
   { path: 'reports-detailed', component: ReportsDetailedComponent },
   { path: 'student-history-report', component: StudentHistoryReportComponent },
   { path: 'active-students-report', component: ActiveStudentsReportComponent },

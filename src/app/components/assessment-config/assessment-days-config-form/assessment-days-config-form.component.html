@@ -1,31 +1,86 @@
-<div class="dropdown-toggle-container">
-  <div class="dropdown-toggle" (click)="showConfigForm = !showConfigForm">
-    <span>Configurar días como estudiante nuevo</span>
-    <span class="icon is-small">
-      <i class="material-icons">{{ showConfigForm ? 'expand_less' : 'expand_more' }}</i>
+<section class="assessment-days-config">
+
+  <div class="assessment-days-config__field">
+
+    <label
+      class="assessment-days-config__label"
+      for="assessment-new-student-days"
+    >
+      Nuevo número de días
+    </label>
+
+    <div class="assessment-days-config__control">
+
+      <input
+        id="assessment-new-student-days"
+        type="number"
+        min="1"
+        step="1"
+        class="assessment-days-config__input"
+        [class.assessment-days-config__input--error]="
+          value !== null &&
+          isInvalid
+        "
+        [(ngModel)]="value"
+        placeholder="Ej. 15"
+      />
+
+      <span class="assessment-days-config__suffix">
+        días
+      </span>
+
+    </div>
+
+    <span
+      *ngIf="
+        value !== null &&
+        isInvalid
+      "
+      class="assessment-days-config__error"
+    >
+      Ingresa al menos 1 día.
     </span>
+
   </div>
 
-  <div [ngClass]="showConfigForm ? 'dropdown-body' : 'dropdown-body-hidden'">
-    <form class="search-form" (ngSubmit)="save()">
-      <div class="field">
-        <label class="label">Días como estudiante nuevo</label>
-        <div class="control">
-          <input
-            type="number"
-            class="input"
-            [(ngModel)]="daysAsNewStudent"
-            name="daysAsNewStudent"
-            required
-          />
-        </div>
-      </div>
 
-      <div class="button-wrapper">
-        <button class="button is-blue" type="submit">
-          Guardar
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+  <button
+    type="button"
+    class="assessment-days-config__button"
+    [disabled]="
+      isInvalid ||
+      !hasChanges ||
+      isSaving
+    "
+    (click)="save()"
+  >
+
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M5 4h11l3 3v13H5V4Z"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linejoin="round"
+      />
+
+      <path
+        d="M8 4v6h8V4M8 20v-6h8v6"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linejoin="round"
+      />
+    </svg>
+
+    <span>
+      Guardar
+    </span>
+
+  </button>
+
+</section>

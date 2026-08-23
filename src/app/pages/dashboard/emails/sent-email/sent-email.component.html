@@ -1,1 +1,1042 @@
-<p>sent-email works!</p>
+<section class="sent-email">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="sent-email__header">
+
+    <div class="sent-email__header-main">
+
+      <span
+        class="sent-email__header-icon"
+        aria-hidden="true"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m3 11 18-7-7 18-3-8-8-3Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m11 14 4-4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </span>
+
+
+      <div>
+
+        <h1 class="sent-email__title">
+          Emails enviados
+        </h1>
+
+        <p class="sent-email__description">
+          Consulta los correos que has enviado y revisa su estado.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="sent-email__header-actions">
+
+      <button
+        type="button"
+        class="
+          sent-email__button
+          sent-email__button--secondary
+        "
+        [disabled]="loading"
+        (click)="loadMessages()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M20 7v5h-5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M18.3 8A7 7 0 1 0 19 15"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Actualizar
+        </span>
+
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       FILTERS
+  ====================================================== -->
+
+  <section class="sent-email__filters">
+
+    <div class="sent-email__filters-grid">
+
+      <!-- SEARCH -->
+
+      <div class="sent-email__search">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <input
+          type="search"
+          placeholder="Buscar por asunto o destinatario..."
+          [(ngModel)]="filters.search"
+        />
+
+      </div>
+
+
+      <!-- STATUS -->
+
+      <div class="sent-email__field">
+
+        <label>
+          Estado
+        </label>
+
+        <select
+          [(ngModel)]="filters.status"
+        >
+          <option
+            *ngFor="let option of statusOptions"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+
+      </div>
+
+
+      <!-- RECIPIENT TYPE -->
+
+      <div class="sent-email__field">
+
+        <label>
+          Tipo de destinatario
+        </label>
+
+        <select
+          [(ngModel)]="filters.recipientType"
+        >
+          <option
+            *ngFor="let option of recipientTypeOptions"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+
+      </div>
+
+
+      <!-- EMAIL -->
+
+      <div class="sent-email__field">
+
+        <label>
+          Destinatario
+        </label>
+
+        <input
+          type="email"
+          placeholder="usuario@email.com"
+          [(ngModel)]="filters.recipientEmail"
+        />
+
+      </div>
+
+
+      <!-- CREATED FROM -->
+
+      <div class="sent-email__field">
+
+        <label>
+          Desde (creado)
+        </label>
+
+        <input
+          type="date"
+          [(ngModel)]="filters.createdAtFrom"
+        />
+
+      </div>
+
+
+      <!-- CREATED TO -->
+
+      <div class="sent-email__field">
+
+        <label>
+          Hasta (creado)
+        </label>
+
+        <input
+          type="date"
+          [(ngModel)]="filters.createdAtTo"
+        />
+
+      </div>
+
+
+      <!-- SENT FROM -->
+
+      <div class="sent-email__field">
+
+        <label>
+          Desde (enviado)
+        </label>
+
+        <input
+          type="date"
+          [(ngModel)]="filters.sentAtFrom"
+        />
+
+      </div>
+
+
+      <!-- SENT TO -->
+
+      <div class="sent-email__field">
+
+        <label>
+          Hasta (enviado)
+        </label>
+
+        <input
+          type="date"
+          [(ngModel)]="filters.sentAtTo"
+        />
+
+      </div>
+
+
+      <!-- ACTIONS -->
+
+      <div class="sent-email__filter-actions">
+
+        <button
+          type="button"
+          class="
+            sent-email__button
+            sent-email__button--secondary
+          "
+          (click)="clearFilters()"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M4 5h16l-6 7v5l-4 2v-7L4 5Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="m17 16 4 4M21 16l-4 4"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            Limpiar filtros
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="
+            sent-email__button
+            sent-email__button--primary
+          "
+          (click)="applyFilters()"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>
+            Aplicar filtros
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       CONTENT
+  ====================================================== -->
+
+  <div class="sent-email__content-grid">
+
+
+    <!-- ===================================================
+         MAIN
+    ==================================================== -->
+
+    <section class="sent-email__messages">
+
+      <!-- HEADER -->
+
+      <header class="sent-email__messages-header">
+
+        <h2>
+          Listado de emails enviados
+        </h2>
+
+
+        <div class="sent-email__messages-tools">
+
+          <select
+            [value]="limit"
+            (change)="
+              onLimitChange(
+                $any($event.target).value
+              )
+            "
+          >
+            <option
+              *ngFor="let option of limitOptions"
+              [value]="option"
+            >
+              {{ option }} por página
+            </option>
+          </select>
+
+
+          <span>
+            {{ startIndex }} - {{ endIndex }}
+            de {{ totalMessages | number }}
+          </span>
+
+
+          <button
+            type="button"
+            [disabled]="page <= 1 || loading"
+            (click)="previousPage()"
+            aria-label="Página anterior"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="m15 6-6 6 6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+
+
+          <button
+            type="button"
+            [disabled]="
+              page >= totalPages ||
+              loading
+            "
+            (click)="nextPage()"
+            aria-label="Página siguiente"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="m9 6 6 6-6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <!-- =================================================
+           LOADING
+      ================================================== -->
+
+      <div
+        *ngIf="loading"
+        class="sent-email__loading"
+      >
+
+        <div
+          *ngFor="
+            let item of [1,2,3,4,5,6,7,8]
+          "
+          class="sent-email__loading-row"
+        >
+
+          <span
+            class="
+              sent-email__skeleton
+              sent-email__skeleton--avatar
+            "
+          ></span>
+
+          <span
+            class="
+              sent-email__skeleton
+              sent-email__skeleton--recipient
+            "
+          ></span>
+
+          <span
+            class="
+              sent-email__skeleton
+              sent-email__skeleton--subject
+            "
+          ></span>
+
+          <span
+            class="
+              sent-email__skeleton
+              sent-email__skeleton--status
+            "
+          ></span>
+
+          <span
+            class="
+              sent-email__skeleton
+              sent-email__skeleton--date
+            "
+          ></span>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           TABLE
+      ================================================== -->
+
+      <div
+        *ngIf="
+          !loading &&
+          visibleMessages.length > 0
+        "
+        class="sent-email__table-wrapper"
+      >
+
+        <table class="sent-email__table">
+
+          <thead>
+
+            <tr>
+              <th>Destinatario</th>
+              <th>Tipo</th>
+              <th>Asunto</th>
+              <th>Estado</th>
+              <th>Enviado</th>
+              <th>Creado</th>
+              <th></th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <tr
+              *ngFor="
+                let message of visibleMessages;
+                trackBy: trackByMessageId
+              "
+            >
+
+              <!-- RECIPIENT -->
+
+              <td>
+
+                <div class="sent-email__recipient">
+
+                  <span class="sent-email__avatar">
+                    {{ getRecipientInitials(message) }}
+                  </span>
+
+                  <div class="sent-email__recipient-content">
+
+                    <strong
+                      [title]="getRecipientName(message)"
+                    >
+                      {{ getRecipientName(message) }}
+                    </strong>
+
+                    <span
+                      [title]="message.recipientEmail"
+                    >
+                      {{ message.recipientEmail }}
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <!-- TYPE -->
+
+              <td>
+
+                <span
+                  class="sent-email__recipient-type"
+                  [class.sent-email__recipient-type--group]="
+                    message.recipientType === 'GROUP'
+                  "
+                >
+                  {{
+                    getRecipientTypeLabel(
+                      message.recipientType
+                    )
+                  }}
+                </span>
+
+              </td>
+
+
+              <!-- SUBJECT -->
+
+              <td>
+
+                <div class="sent-email__subject">
+
+                  <strong
+                    [title]="message.subject"
+                  >
+                    {{ message.subject }}
+                  </strong>
+
+                  <span
+                    [title]="getContentPreview(message)"
+                  >
+                    {{ getContentPreview(message) }}
+                  </span>
+
+                </div>
+
+              </td>
+
+
+              <!-- STATUS -->
+
+              <td>
+
+                <span
+                  class="sent-email__status"
+                  [class.sent-email__status--sent]="
+                    message.status === 'SENT'
+                  "
+                  [class.sent-email__status--failed]="
+                    message.status === 'FAILED'
+                  "
+                  [class.sent-email__status--queued]="
+                    message.status === 'QUEUED'
+                  "
+                >
+
+                  <span class="sent-email__status-dot"></span>
+
+                  {{ getStatusLabel(message.status) }}
+
+                </span>
+
+              </td>
+
+
+              <!-- SENT -->
+
+              <td>
+
+                <span class="sent-email__date">
+                  {{ formatDate(message.sentAt) }}
+                </span>
+
+              </td>
+
+
+              <!-- CREATED -->
+
+              <td>
+
+                <span class="sent-email__date">
+                  {{ formatDate(message.createdAt) }}
+                </span>
+
+              </td>
+
+
+              <!-- ACTION -->
+
+              <td class="sent-email__action-cell">
+
+                <button
+                  type="button"
+                  class="sent-email__more"
+                  aria-label="Más opciones"
+                >
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <circle
+                      cx="12"
+                      cy="5"
+                      r="1.5"
+                    />
+
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="1.5"
+                    />
+
+                    <circle
+                      cx="12"
+                      cy="19"
+                      r="1.5"
+                    />
+                  </svg>
+
+                </button>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <!-- =================================================
+           EMPTY
+      ================================================== -->
+
+      <div
+        *ngIf="
+          !loading &&
+          visibleMessages.length === 0
+        "
+        class="sent-email__empty"
+      >
+
+        <span
+          class="sent-email__empty-icon"
+          aria-hidden="true"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m3 11 18-7-7 18-3-8-8-3Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="m11 14 4-4"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+
+        </span>
+
+
+        <h3>
+          No hay emails enviados
+        </h3>
+
+        <p>
+          Modifica los filtros o actualiza el listado.
+        </p>
+
+      </div>
+
+
+      <!-- =================================================
+           PAGINATION
+      ================================================== -->
+
+      <footer
+        *ngIf="
+          !loading &&
+          totalMessages > 0
+        "
+        class="sent-email__pagination"
+      >
+
+        <span>
+          Página {{ page }} de {{ totalPages }}
+        </span>
+
+
+        <div>
+
+          <button
+            type="button"
+            [disabled]="page <= 1"
+            (click)="previousPage()"
+          >
+            Anterior
+          </button>
+
+
+          <strong>
+            {{ page }}
+          </strong>
+
+
+          <button
+            type="button"
+            [disabled]="page >= totalPages"
+            (click)="nextPage()"
+          >
+            Siguiente
+          </button>
+
+        </div>
+
+      </footer>
+
+    </section>
+
+
+    <!-- ===================================================
+         SIDEBAR
+    ==================================================== -->
+
+    <aside class="sent-email__sidebar">
+
+      <!-- SUMMARY -->
+
+      <section class="sent-email__summary">
+
+        <header>
+
+          <h2>
+            Resumen de envíos
+          </h2>
+
+          <p>
+            Estado general de tus correos.
+          </p>
+
+        </header>
+
+
+        <!-- TOTAL -->
+
+        <article class="sent-email__summary-item">
+
+          <span
+            class="
+              sent-email__summary-icon
+              sent-email__summary-icon--total
+            "
+          >
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="m3 11 18-7-7 18-3-8-8-3Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <span>
+              Total enviados
+            </span>
+
+            <strong>
+              {{ totalMessages | number }}
+            </strong>
+
+            <small>
+              Todos los correos enviados.
+            </small>
+
+          </div>
+
+        </article>
+
+
+        <!-- SENT -->
+
+        <article class="sent-email__summary-item">
+
+          <span
+            class="
+              sent-email__summary-icon
+              sent-email__summary-icon--success
+            "
+          >
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m8.5 12 2.3 2.3 4.8-5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <span>
+              Enviados exitosamente
+            </span>
+
+            <strong>
+              {{ sentCount | number }}
+            </strong>
+
+            <small>
+              {{
+                sentPercentage
+                  | number:'1.0-1'
+              }}% del total
+            </small>
+
+          </div>
+
+        </article>
+
+
+        <!-- FAILED -->
+
+        <article class="sent-email__summary-item">
+
+          <span
+            class="
+              sent-email__summary-icon
+              sent-email__summary-icon--failed
+            "
+          >
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m9 9 6 6M15 9l-6 6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <span>
+              Fallidos
+            </span>
+
+            <strong>
+              {{ failedCount | number }}
+            </strong>
+
+            <small>
+              {{
+                failedPercentage
+                  | number:'1.0-1'
+              }}% del total
+            </small>
+
+          </div>
+
+        </article>
+
+
+        <!-- QUEUED -->
+
+        <article class="sent-email__summary-item">
+
+          <span
+            class="
+              sent-email__summary-icon
+              sent-email__summary-icon--queued
+            "
+          >
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M12 8v4l2.5 1.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </span>
+
+
+          <div>
+
+            <span>
+              En cola
+            </span>
+
+            <strong>
+              {{ queuedCount | number }}
+            </strong>
+
+            <small>
+              {{
+                queuedPercentage
+                  | number:'1.0-1'
+              }}% del total
+            </small>
+
+          </div>
+
+        </article>
+
+      </section>
+
+    </aside>
+
+  </div>
+
+</section>

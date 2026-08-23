@@ -1,31 +1,86 @@
-<div class="dropdown-toggle-container">
-  <div class="dropdown-toggle" (click)="showConfigForm = !showConfigForm">
-    <span>Configurar nota máxima</span>
-    <span class="icon is-small">
-      <i class="material-icons">{{ showConfigForm ? 'expand_less' : 'expand_more' }}</i>
+<section class="assessment-max-config">
+
+  <div class="assessment-max-config__field">
+
+    <label
+      class="assessment-max-config__label"
+      for="assessment-max-points"
+    >
+      Nuevo puntaje máximo
+    </label>
+
+    <div class="assessment-max-config__control">
+
+      <input
+        id="assessment-max-points"
+        type="number"
+        min="1"
+        step="1"
+        class="assessment-max-config__input"
+        [class.assessment-max-config__input--error]="
+          value !== null &&
+          isInvalid
+        "
+        [(ngModel)]="value"
+        placeholder="Ej. 100"
+      />
+
+      <span class="assessment-max-config__suffix">
+        pts
+      </span>
+
+    </div>
+
+    <span
+      *ngIf="
+        value !== null &&
+        isInvalid
+      "
+      class="assessment-max-config__error"
+    >
+      Ingresa un puntaje mayor a 0.
     </span>
+
   </div>
 
-  <div [ngClass]="showConfigForm ? 'dropdown-body' : 'dropdown-body-hidden'">
-    <form class="search-form" (ngSubmit)="save()">
-      <div class="field">
-        <label class="label">Nota máxima</label>
-        <div class="control">
-          <input
-            type="number"
-            class="input"
-            [(ngModel)]="maxPoints"
-            name="maxPoints"
-            required
-          />
-        </div>
-      </div>
 
-      <div class="button-wrapper">
-        <button class="button is-blue" type="submit">
-          Guardar
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+  <button
+    type="button"
+    class="assessment-max-config__button"
+    [disabled]="
+      isInvalid ||
+      !hasChanges ||
+      isSaving
+    "
+    (click)="save()"
+  >
+
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M5 4h11l3 3v13H5V4Z"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linejoin="round"
+      />
+
+      <path
+        d="M8 4v6h8V4M8 20v-6h8v6"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linejoin="round"
+      />
+    </svg>
+
+    <span>
+      Guardar
+    </span>
+
+  </button>
+
+</section>

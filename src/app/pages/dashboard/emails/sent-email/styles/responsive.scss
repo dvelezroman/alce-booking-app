@@ -1,0 +1,501 @@
+/* =========================================================
+   MEDIUM DESKTOP
+========================================================= */
+
+@media (max-width: 1250px) {
+
+  .sent-email__content-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      14rem;
+  }
+
+  .sent-email__filters-grid {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
+  }
+
+  .sent-email__search {
+    grid-column:
+      span 2;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .sent-email {
+    padding:
+      .8rem
+      .75rem
+      1.2rem;
+  }
+
+  .sent-email__content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sent-email__sidebar {
+    order: -1;
+  }
+
+  .sent-email__summary {
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        4,
+        minmax(0, 1fr)
+      );
+  }
+
+  .sent-email__summary > header {
+    grid-column:
+      1 / -1;
+  }
+
+  .sent-email__summary-item {
+    border-right: 1px solid #edf0f4;
+    border-bottom: 0;
+  }
+
+  .sent-email__summary-item:last-child {
+    border-right: 0;
+  }
+
+  .sent-email__filters-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .sent-email__search {
+    grid-column:
+      1 / -1;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+  .sent-email {
+    padding:
+      .55rem
+      .5rem
+      1rem;
+
+    background: #ffffff;
+  }
+
+
+  /* =========================
+     HEADER
+  ========================= */
+
+  .sent-email__header {
+    min-height: auto;
+
+    padding:
+      .7rem
+      .6rem;
+
+    border: 0;
+    border-radius: 0;
+
+    box-shadow: none;
+  }
+
+  .sent-email__header-icon {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+
+  .sent-email__title {
+    font-size: .93rem;
+  }
+
+  .sent-email__description {
+    font-size: .58rem;
+  }
+
+  .sent-email__header-actions
+  .sent-email__button span {
+    display: none;
+  }
+
+  .sent-email__header-actions
+  .sent-email__button {
+    width: 2.2rem;
+
+    padding: 0;
+  }
+
+
+  /* =========================
+     FILTERS
+  ========================= */
+
+  .sent-email__filters {
+    margin-top: .4rem;
+
+    padding:
+      .65rem;
+
+    border-radius: .75rem;
+  }
+
+  .sent-email__filters-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+
+    gap: .5rem;
+  }
+
+  .sent-email__search {
+    grid-column:
+      1 / -1;
+  }
+
+  .sent-email__filter-actions {
+    grid-column:
+      1 / -1;
+  }
+
+
+  /* =========================
+     CONTENT
+  ========================= */
+
+  .sent-email__content-grid {
+    margin-top: .6rem;
+  }
+
+
+  /* =========================
+     SUMMARY
+  ========================= */
+
+  .sent-email__summary {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .sent-email__summary-item {
+    min-height: 4.2rem;
+
+    padding:
+      .55rem
+      .6rem;
+
+    border-bottom: 1px solid #edf0f4;
+  }
+
+  .sent-email__summary-item:nth-child(2n + 1) {
+    border-right: 0;
+  }
+
+  .sent-email__summary-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+
+  /* =========================
+     MESSAGES
+  ========================= */
+
+  .sent-email__messages {
+    border: 0;
+    border-radius: 0;
+
+    box-shadow: none;
+  }
+
+  .sent-email__messages-header {
+    padding:
+      .55rem
+      .35rem;
+  }
+
+  .sent-email__messages-header h2 {
+    font-size: .7rem;
+  }
+
+  .sent-email__messages-tools select {
+    max-width: 6.8rem;
+  }
+
+  .sent-email__messages-tools > span {
+    font-size: .48rem;
+  }
+
+
+  /* =========================
+     REMOVE TABLE
+  ========================= */
+
+  .sent-email__table-wrapper {
+    overflow: visible;
+  }
+
+  .sent-email__table {
+    width: 100%;
+    min-width: 0;
+
+    display: block;
+  }
+
+  .sent-email__table thead {
+    display: none;
+  }
+
+  .sent-email__table tbody {
+    width: 100%;
+
+    display: block;
+  }
+
+
+  /* =========================
+     GMAIL ROW
+  ========================= */
+
+  .sent-email__table tbody tr {
+    position: relative;
+
+    width: 100%;
+    min-height: 5.1rem;
+
+    display: grid;
+
+    grid-template-columns:
+      2.1rem
+      minmax(0, 1fr)
+      auto;
+
+    grid-template-rows:
+      auto
+      auto
+      auto;
+
+    column-gap: .5rem;
+
+    padding:
+      .6rem
+      .4rem;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid #edf0f4;
+  }
+
+  .sent-email__table td {
+    width: auto;
+    height: auto;
+
+    display: block;
+
+    padding: 0;
+
+    border: 0;
+  }
+
+
+  /* RECIPIENT */
+
+  .sent-email__table td:nth-child(1) {
+    grid-column: 1 / 3;
+    grid-row: 1;
+  }
+
+  .sent-email__avatar {
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+
+  .sent-email__recipient-content strong {
+    font-size: .66rem;
+  }
+
+  .sent-email__recipient-content span {
+    font-size: .53rem;
+  }
+
+
+  /* TYPE */
+
+  .sent-email__table td:nth-child(2) {
+    display: none;
+  }
+
+
+  /* SUBJECT */
+
+  .sent-email__table td:nth-child(3) {
+    grid-column: 2 / 4;
+    grid-row: 2;
+
+    margin-top: .18rem;
+  }
+
+  .sent-email__subject {
+    display: flex;
+    align-items: baseline;
+
+    gap: .3rem;
+  }
+
+  .sent-email__subject strong {
+    max-width: 45%;
+
+    flex: 0 0 auto;
+
+    font-size: .61rem;
+  }
+
+  .sent-email__subject span {
+    min-width: 0;
+
+    flex: 1;
+
+    margin: 0;
+
+    font-size: .56rem;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+
+  /* STATUS */
+
+  .sent-email__table td:nth-child(4) {
+    grid-column: 2;
+    grid-row: 3;
+
+    margin-top: .3rem;
+  }
+
+  .sent-email__status {
+    padding:
+      .12rem
+      .32rem;
+
+    font-size: .43rem;
+  }
+
+
+  /* SENT */
+
+  .sent-email__table td:nth-child(5) {
+    grid-column: 3;
+    grid-row: 1;
+
+    align-self: start;
+
+    text-align: right;
+  }
+
+  .sent-email__table td:nth-child(5)
+  .sent-email__date {
+    font-size: .47rem;
+  }
+
+
+  /* CREATED */
+
+  .sent-email__table td:nth-child(6) {
+    display: none;
+  }
+
+
+  /* ACTION */
+
+  .sent-email__table td:nth-child(7) {
+    grid-column: 3;
+    grid-row: 3;
+
+    align-self: end;
+
+    text-align: right;
+  }
+
+
+  /* =========================
+     PAGINATION
+  ========================= */
+
+  .sent-email__pagination {
+    padding:
+      .55rem
+      .4rem;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .sent-email__filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sent-email__search,
+  .sent-email__filter-actions {
+    grid-column: auto;
+  }
+
+  .sent-email__filter-actions {
+    flex-direction: column;
+  }
+
+  .sent-email__filter-actions
+  .sent-email__button {
+    width: 100%;
+  }
+
+  .sent-email__summary {
+    grid-template-columns: 1fr;
+  }
+
+  .sent-email__summary-item {
+    border-right: 0;
+  }
+
+  .sent-email__messages-tools > span {
+    display: none;
+  }
+
+  .sent-email__table tbody tr {
+    grid-template-columns:
+      1.9rem
+      minmax(0, 1fr)
+      auto;
+  }
+
+}

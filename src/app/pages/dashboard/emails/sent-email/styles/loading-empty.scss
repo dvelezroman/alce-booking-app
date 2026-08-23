@@ -1,0 +1,169 @@
+/* =========================================================
+   LOADING
+========================================================= */
+
+.sent-email__loading {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.sent-email__loading-row {
+  min-height: 3.65rem;
+
+  display: grid;
+
+  grid-template-columns:
+    2rem
+    18%
+    minmax(0, 1fr)
+    8%
+    12%;
+
+  align-items: center;
+
+  gap: .7rem;
+
+  padding:
+    .5rem
+    .7rem;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.sent-email__loading-row:last-child {
+  border-bottom: 0;
+}
+
+
+/* =========================================================
+   SKELETON
+========================================================= */
+
+.sent-email__skeleton {
+  display: block;
+
+  border-radius: .25rem;
+
+  background:
+    linear-gradient(
+      90deg,
+      #eceef3 0%,
+      #f8f9fb 48%,
+      #eceef3 100%
+    );
+
+  background-size: 220% 100%;
+
+  animation:
+    sent-email-loading
+    1.15s
+    linear
+    infinite;
+}
+
+.sent-email__skeleton--avatar {
+  width: 1.8rem;
+  height: 1.8rem;
+
+  border-radius: 50%;
+}
+
+.sent-email__skeleton--recipient {
+  width: 80%;
+  height: .5rem;
+}
+
+.sent-email__skeleton--subject {
+  width: 85%;
+  height: .5rem;
+}
+
+.sent-email__skeleton--status {
+  width: 3.7rem;
+  height: 1rem;
+
+  border-radius: 999px;
+}
+
+.sent-email__skeleton--date {
+  width: 75%;
+  height: .45rem;
+}
+
+@keyframes sent-email-loading {
+
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.sent-email__empty {
+  width: 100%;
+  min-height: 25rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 2rem;
+
+  box-sizing: border-box;
+
+  text-align: center;
+}
+
+.sent-email__empty-icon {
+  width: 3.8rem;
+  height: 3.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: .8rem;
+
+  border-radius: 50%;
+
+  background: #edf3ff;
+  color: #3f70dc;
+}
+
+.sent-email__empty-icon svg {
+  width: 1.7rem;
+  height: 1.7rem;
+}
+
+.sent-email__empty h3 {
+  margin: 0;
+
+  color: #273146;
+
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.sent-email__empty p {
+  margin:
+    .3rem
+    0
+    0;
+
+  color: #8991a1;
+
+  font-size: .56rem;
+}

@@ -1,0 +1,955 @@
+<section class="inbox-email">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="inbox-email__header">
+
+    <div class="inbox-email__header-main">
+
+      <span
+        class="inbox-email__header-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="3"
+            y="5"
+            width="18"
+            height="14"
+            rx="2.4"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="m4 7 8 6 8-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      <div>
+
+        <h1 class="inbox-email__title">
+          Mensajes de Email
+        </h1>
+
+        <p class="inbox-email__description">
+          Consulta y gestiona todos los correos enviados.
+        </p>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       FILTERS
+  ====================================================== -->
+
+  <section class="inbox-email__filters">
+
+    <div class="inbox-email__filters-grid">
+
+      <!-- SEARCH -->
+
+      <div class="inbox-email__search">
+
+        <input
+          type="search"
+          placeholder="Buscar por asunto, destinatario o ID..."
+          [(ngModel)]="filters.search"
+        />
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </div>
+
+
+      <!-- RECIPIENT TYPE -->
+
+      <div class="inbox-email__field">
+
+        <label>
+          Tipo destinatario
+        </label>
+
+        <select
+          [(ngModel)]="filters.recipientType"
+          (change)="onFilterChange()"
+        >
+          <option
+            *ngFor="let option of recipientTypeOptions"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+
+      </div>
+
+
+      <!-- STATUS -->
+
+      <div class="inbox-email__field">
+
+        <label>
+          Estado
+        </label>
+
+        <select
+          [(ngModel)]="filters.status"
+          (change)="onFilterChange()"
+        >
+          <option
+            *ngFor="let option of statusOptions"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+
+      </div>
+
+
+      <!-- CREATED FROM -->
+
+      <div class="inbox-email__field">
+
+        <label>
+          Desde (creación)
+        </label>
+
+        <input
+          type="date"
+          [(ngModel)]="filters.createdAtFrom"
+          (change)="onFilterChange()"
+        />
+
+      </div>
+
+
+      <!-- CREATED TO -->
+
+      <div class="inbox-email__field">
+
+        <label>
+          Hasta (creación)
+        </label>
+
+        <input
+          type="date"
+          [(ngModel)]="filters.createdAtTo"
+          (change)="onFilterChange()"
+        />
+
+      </div>
+
+
+      <!-- SENT FROM -->
+
+      <div class="inbox-email__field">
+
+        <label>
+          Desde (envío)
+        </label>
+
+        <input
+          type="date"
+          [(ngModel)]="filters.sentAtFrom"
+          (change)="onFilterChange()"
+        />
+
+      </div>
+
+
+      <!-- SENT TO -->
+
+      <div class="inbox-email__field">
+
+        <label>
+          Hasta (envío)
+        </label>
+
+        <input
+          type="date"
+          [(ngModel)]="filters.sentAtTo"
+          (change)="onFilterChange()"
+        />
+
+      </div>
+
+
+      <!-- EMAIL -->
+
+      <div
+        class="
+          inbox-email__field
+          inbox-email__field--email
+        "
+      >
+
+        <label>
+          Email destinatario
+        </label>
+
+        <input
+          type="email"
+          placeholder="ej: usuario@email.com"
+          [(ngModel)]="filters.recipientEmail"
+        />
+
+      </div>
+
+
+      <!-- SEARCH BUTTON -->
+
+      <button
+        type="button"
+        class="
+          inbox-email__button
+          inbox-email__button--primary
+        "
+        (click)="onSearch()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Buscar
+        </span>
+
+      </button>
+
+
+      <!-- CLEAR -->
+
+      <button
+        type="button"
+        class="
+          inbox-email__button
+          inbox-email__button--secondary
+        "
+        (click)="clearFilters()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M4 5h16l-6 7v5l-4 2v-7L4 5Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m17 16 4 4M21 16l-4 4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Limpiar filtros
+        </span>
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       MESSAGES PANEL
+  ====================================================== -->
+
+  <section class="inbox-email__panel">
+
+    <!-- ===================================================
+         TOOLBAR
+    ==================================================== -->
+
+    <header class="inbox-email__toolbar">
+
+      <button
+        type="button"
+        class="inbox-email__toolbar-button"
+        [disabled]="loading"
+        (click)="loadMessages()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M20 7v5h-5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M18.3 8A7 7 0 1 0 19 15"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Actualizar
+        </span>
+
+      </button>
+
+
+      <div class="inbox-email__toolbar-spacer"></div>
+
+
+      <select
+        class="inbox-email__page-size"
+        [value]="limit"
+        (change)="
+          onLimitChange(
+            $any($event.target).value
+          )
+        "
+      >
+        <option
+          *ngFor="let option of limitOptions"
+          [value]="option"
+        >
+          {{ option }} por página
+        </option>
+      </select>
+
+
+      <span class="inbox-email__range">
+        {{ startIndex }} - {{ endIndex }}
+        de {{ totalMessages | number }} mensajes
+      </span>
+
+
+      <div class="inbox-email__toolbar-pagination">
+
+        <button
+          type="button"
+          [disabled]="page <= 1 || loading"
+          (click)="previousPage()"
+          aria-label="Página anterior"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m15 6-6 6 6 6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          [disabled]="page >= totalPages || loading"
+          (click)="nextPage()"
+          aria-label="Página siguiente"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="m9 6 6 6-6 6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- ===================================================
+         LOADING
+    ==================================================== -->
+
+    <div
+      *ngIf="loading"
+      class="inbox-email__loading"
+    >
+
+      <div
+        *ngFor="let row of [1,2,3,4,5,6,7]"
+        class="inbox-email__loading-row"
+      >
+
+        <span class="inbox-email__skeleton inbox-email__skeleton--check"></span>
+
+        <span class="inbox-email__skeleton inbox-email__skeleton--avatar"></span>
+
+        <span class="inbox-email__skeleton inbox-email__skeleton--recipient"></span>
+
+        <span class="inbox-email__skeleton inbox-email__skeleton--type"></span>
+
+        <span class="inbox-email__skeleton inbox-email__skeleton--subject"></span>
+
+        <span class="inbox-email__skeleton inbox-email__skeleton--status"></span>
+
+        <span class="inbox-email__skeleton inbox-email__skeleton--date"></span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         TABLE
+    ==================================================== -->
+
+    <div
+      *ngIf="
+        !loading &&
+        visibleMessages.length > 0
+      "
+      class="inbox-email__table-wrapper"
+    >
+
+      <table class="inbox-email__table">
+
+        <thead>
+
+          <tr>
+
+            <th class="inbox-email__column--check">
+
+              <label class="inbox-email__checkbox">
+
+                <input
+                  type="checkbox"
+                  [checked]="allSelected"
+                  [indeterminate]="someSelected"
+                  (change)="
+                    toggleAll(
+                      $any($event.target).checked
+                    )
+                  "
+                />
+
+                <span></span>
+
+              </label>
+
+            </th>
+
+            <th class="inbox-email__column--star"></th>
+
+            <th>Destinatario</th>
+
+            <th>Tipo</th>
+
+            <th>Asunto</th>
+
+            <th>Estado</th>
+
+            <th>Enviado</th>
+
+            <th>Creado</th>
+
+            <th class="inbox-email__column--actions"></th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let message of visibleMessages;
+              trackBy: trackByMessageId
+            "
+            [class.inbox-email__row--selected]="
+              selectedMessageIds.includes(
+                message.id
+              )
+            "
+          >
+
+            <!-- CHECK -->
+
+            <td>
+
+              <label class="inbox-email__checkbox">
+
+                <input
+                  type="checkbox"
+                  [checked]="
+                    selectedMessageIds.includes(
+                      message.id
+                    )
+                  "
+                  (change)="
+                    toggleMessage(
+                      message.id
+                    )
+                  "
+                />
+
+                <span></span>
+
+              </label>
+
+            </td>
+
+
+            <!-- STAR -->
+
+            <td>
+
+              <button
+                type="button"
+                class="inbox-email__star"
+                aria-label="Destacar mensaje"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+
+            </td>
+
+
+            <!-- RECIPIENT -->
+
+            <td>
+
+              <div class="inbox-email__recipient">
+
+                <span class="inbox-email__avatar">
+                  {{ getRecipientInitials(message) }}
+                </span>
+
+                <div class="inbox-email__recipient-content">
+
+                  <strong>
+                    {{ getRecipientName(message) }}
+                  </strong>
+
+                  <span>
+                    {{ message.recipientEmail }}
+                  </span>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- TYPE -->
+
+            <td>
+
+              <span
+                class="inbox-email__type"
+                [class.inbox-email__type--group]="
+                  message.recipientType === 'GROUP'
+                "
+              >
+                {{ getTypeLabel(message.recipientType) }}
+              </span>
+
+            </td>
+
+
+            <!-- SUBJECT -->
+
+            <td>
+
+              <div class="inbox-email__subject">
+
+                <strong>
+                  {{ message.subject }}
+                </strong>
+
+                <span>
+                  {{ getContentPreview(message) }}
+                </span>
+
+              </div>
+
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="inbox-email__status"
+                [class.inbox-email__status--sent]="
+                  message.status === 'SENT'
+                "
+                [class.inbox-email__status--failed]="
+                  message.status === 'FAILED'
+                "
+                [class.inbox-email__status--queued]="
+                  message.status === 'QUEUED'
+                "
+              >
+
+                <span class="inbox-email__status-dot"></span>
+
+                {{ getStatusLabel(message.status) }}
+
+              </span>
+
+            </td>
+
+
+            <!-- SENT -->
+
+            <td>
+
+              <span class="inbox-email__date">
+                {{ formatDate(message.sentAt) }}
+              </span>
+
+            </td>
+
+
+            <!-- CREATED -->
+
+            <td>
+
+              <span class="inbox-email__date">
+                {{ formatDate(message.createdAt) }}
+              </span>
+
+            </td>
+
+
+            <!-- ACTION -->
+
+            <td>
+
+              <button
+                type="button"
+                class="inbox-email__actions"
+                aria-label="Más opciones"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <circle cx="12" cy="5" r="1.5" />
+                  <circle cx="12" cy="12" r="1.5" />
+                  <circle cx="12" cy="19" r="1.5" />
+                </svg>
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- ===================================================
+         EMPTY
+    ==================================================== -->
+
+    <div
+      *ngIf="
+        !loading &&
+        visibleMessages.length === 0
+      "
+      class="inbox-email__empty"
+    >
+
+      <span class="inbox-email__empty-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="3"
+            y="5"
+            width="18"
+            height="14"
+            rx="2.5"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="m4 7 8 6 8-6"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="m16.5 17.5 4-4M20.5 17.5l-4-4"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </span>
+
+      <h3>
+        No hay mensajes para mostrar
+      </h3>
+
+      <p>
+        Modifica los filtros o realiza una nueva búsqueda.
+      </p>
+
+    </div>
+
+
+    <!-- ===================================================
+         BOTTOM
+    ==================================================== -->
+
+    <footer class="inbox-email__bottom">
+
+      <div class="inbox-email__bottom-pagination">
+
+        <button
+          type="button"
+          [disabled]="page <= 1"
+          (click)="previousPage()"
+        >
+          ‹
+        </button>
+
+        <span class="inbox-email__current-page">
+          {{ page }}
+        </span>
+
+        <button
+          type="button"
+          [disabled]="page >= totalPages"
+          (click)="nextPage()"
+        >
+          ›
+        </button>
+
+        <span class="inbox-email__page-label">
+          Página {{ page }} de {{ totalPages }}
+        </span>
+
+      </div>
+
+
+      <!-- SUMMARY -->
+
+      <div class="inbox-email__summary">
+
+        <div class="inbox-email__summary-item">
+
+          <span class="inbox-email__summary-icon inbox-email__summary-icon--total">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect
+                x="4"
+                y="5"
+                width="16"
+                height="15"
+                rx="2.2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 3v4M16 3v4M4 9h16"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <div>
+            <span>Total</span>
+
+            <strong>
+              {{ totalMessages | number }}
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div class="inbox-email__summary-item">
+
+          <span class="inbox-email__summary-icon inbox-email__summary-icon--sent">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="m3 11 18-7-7 18-3-8-8-3Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <div>
+            <span>Enviados</span>
+
+            <strong>
+              {{ sentCount | number }}
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div class="inbox-email__summary-item">
+
+          <span class="inbox-email__summary-icon inbox-email__summary-icon--failed">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m9 9 6 6M15 9l-6 6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <div>
+            <span>Fallidos</span>
+
+            <strong>
+              {{ failedCount | number }}
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div class="inbox-email__summary-item">
+
+          <span class="inbox-email__summary-icon inbox-email__summary-icon--queued">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M12 8v4l2.5 1.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <div>
+            <span>En cola</span>
+
+            <strong>
+              {{ queuedCount | number }}
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+
+  </section>
+
+</section>

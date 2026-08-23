@@ -188,9 +188,21 @@
         <ng-container
           *ngIf="!item.loading; else loadingSummary"
         >
-          <strong class="admin-dashboard-day-summary__value">
-            {{ item.value | number }}
-          </strong>
+
+          <ng-container
+            *ngIf="!item.comingSoon; else comingSoon"
+          >
+            <strong class="admin-dashboard-day-summary__value">
+              {{ item.value | number }}
+            </strong>
+          </ng-container>
+
+          <ng-template #comingSoon>
+            <span class="admin-dashboard-day-summary__coming-soon">
+              Próximamente
+            </span>
+          </ng-template>
+
         </ng-container>
 
         <ng-template #loadingSummary>
