@@ -48,6 +48,9 @@ export class AnnouncementViewerComponent
   @Output() closed =
     new EventEmitter<Announcement>();
 
+  /** Fires when queue empty or user finished all items (modal closed). */
+  @Output() finished = new EventEmitter<void>();
+
   filtered: Announcement[] = [];
   currentIndex = 0;
   showModal = false;
@@ -95,6 +98,7 @@ export class AnnouncementViewerComponent
       });
 
     if (this.filtered.length === 0) {
+      this.finished.emit();
       return;
     }
 
@@ -713,6 +717,7 @@ export class AnnouncementViewerComponent
       this.filtered.length
     ) {
       this.showModal = false;
+      this.finished.emit();
       return;
     }
 

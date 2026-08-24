@@ -101,6 +101,9 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   showAssessmentAnnouncement = false;
   showSuspensionModal = false;
   showPortoviejoNotice = false;
+  /** True while admin announcement modal still in queue (not just list length). */
+  announcementQueueActive = false;
+  private announcementQueueSettled = false;
 
   /* DATA */
   pendingAssessmentsCount = 0;
@@ -241,11 +244,32 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     this.announcementService.getAnnouncementsForMe().subscribe({
       next: (data) => {
         this.announcements = data;
+        this.announcementQueueSettled = false;
+        this.syncAnnouncementQueueFlag();
       },
       error: (err) => {
         console.error('Error cargando anuncios', err);
+        this.announcementQueueSettled = true;
+        this.announcementQueueActive = false;
       }
     });
+  }
+
+  private syncAnnouncementQueueFlag(): void {
+    if (this.announcementQueueSettled) {
+      this.announcementQueueActive = false;
+      return;
+    }
+
+    const hasVisible = this.visibleAnnouncements.length > 0;
+    if (!hasVisible) {
+      this.announcementQueueSettled = true;
+      this.announcementQueueActive = false;
+      return;
+    }
+
+    // Block spark until viewer mounts and emits finished (or filters to empty).
+    this.announcementQueueActive = true;
   }
 
   private loadMinHoursRequired(): void {
@@ -376,14 +400,25 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  /** Daily Spark overlay waits behind blocking modals; card still shows. */
+  /** Assessment modal only mounts when there are pending assessments. */
+  get isAssessmentModalVisible(): boolean {
+    return (
+      this.showAssessmentAnnouncement &&
+      this.pendingAssessmentsCount > 0
+    );
+  }
+
+  /**
+   * Daily Spark overlay waits behind blocking modals that are actually visible.
+   * Card in sidebar still shows regardless.
+   */
   get canShowSpark(): boolean {
     return (
       !!this.userData?.id &&
-      !this.showSuspensionModal &&
+      !(this.showSuspensionModal && !!this.suspensionInfo) &&
       !this.showUserInfoForm &&
-      this.visibleAnnouncements.length === 0 &&
-      !this.showAssessmentAnnouncement &&
+      !this.announcementQueueActive &&
+      !this.isAssessmentModalVisible &&
       this.dailySparkService.shouldShowOverlay(this.userData.id)
     );
   }
@@ -713,6 +748,10 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   onCustomAnnouncementClosed(a: Announcement) {
     this.markAsSeen(a);
   }
-  
+
+  onAnnouncementQueueFinished(): void {
+    this.announcementQueueSettled = true;
+    this.announcementQueueActive = false;
+  }
 
 }
