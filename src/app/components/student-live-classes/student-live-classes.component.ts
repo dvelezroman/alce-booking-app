@@ -89,6 +89,25 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
     return this.meetings.length > 1;
   }
 
+  isPresentialPortoviejo(meeting: MeetingDTO): boolean {
+    const modality = this.getMeetingModality(meeting);
+
+    const city = (
+      (meeting as any).city ??
+      (meeting as any).student?.user?.city ??
+      this.userData?.city ??
+      ''
+    )
+      .toString()
+      .trim()
+      .toLowerCase();
+
+    return (
+      modality === 'Presencial' &&
+      city === 'portoviejo'
+    );
+  }
+
   // ================================
   // Cargar TODAS las clases agendadas
   // ================================
