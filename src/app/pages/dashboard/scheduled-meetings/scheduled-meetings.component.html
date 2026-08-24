@@ -28,6 +28,7 @@
       <app-scheduled-meetings-list
         [meetings]="paginatedMeetings"
         [isLoading]="isLoadingMeetings"
+        [studentCity]="userData?.city"
         (viewDetails)="onViewMeetingDetails($event)"
         (openOptions)="onOpenMeetingOptions($event)"
         (deleteMeeting)="openDeleteModal($event)"
@@ -60,6 +61,7 @@
 
   <app-meeting-detail-modal
     [selectedMeeting]="selectedMeeting"
+    [studentCity]="userData?.city"
     [isActive]="isMeetingDetailModalActive"
     (modalClose)="onCloseMeetingDetailModal()"
   ></app-meeting-detail-modal>

@@ -21,6 +21,9 @@ export class ScheduledMeetingCardComponent {
   @Input({ required: true })
   meeting!: MeetingDTO
 
+  @Input()
+  studentCity: string | null | undefined = null
+
   @Output()
   viewDetails = new EventEmitter<MeetingDTO>()
 
@@ -572,5 +575,33 @@ export class ScheduledMeetingCardComponent {
       }).format(new Date())
 
     return meetingDateKey === todayDateKey
+  }
+
+  get shouldShowInstructor(): boolean {
+    const city = String(
+      this.studentCity ?? ''
+    )
+      .trim()
+      .toUpperCase()
+
+    const mode = String(
+      this.meeting?.mode ?? ''
+    )
+      .trim()
+      .toUpperCase()
+
+    const isPortoviejo =
+      city === 'PORTOVIEJO'
+
+    const isPresential = [
+      'PRESENCIAL',
+      'PRESENTIAL',
+      'IN_PERSON',
+    ].includes(mode)
+
+    return !(
+      isPortoviejo &&
+      isPresential
+    )
   }
 }

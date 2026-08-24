@@ -448,6 +448,7 @@
 
   <app-meeting-detail-modal
     [selectedMeeting]="selectedMeeting"
+    [studentCity]="userData?.city"
     [isActive]="isMeetingDetailModalActive"
     (modalClose)="onCloseMeetingDetailModal()"
   ></app-meeting-detail-modal>
@@ -457,10 +458,11 @@
     [announcements]="visibleAnnouncements"
     [user]="announcementUser"
     (closed)="onCustomAnnouncementClosed($event)"
+    (finished)="onAnnouncementQueueFinished()"
   ></app-announcement-viewer>
 
   <app-assessment-announcement
-    *ngIf="showAssessmentAnnouncement && pendingAssessmentsCount > 0"
+    *ngIf="isAssessmentModalVisible"
     [show]="showAssessmentAnnouncement"
     [count]="pendingAssessmentsCount"
     (closed)="onAnnouncementClosed()">

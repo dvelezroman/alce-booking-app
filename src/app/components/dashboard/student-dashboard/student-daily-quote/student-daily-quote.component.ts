@@ -2,6 +2,7 @@ import {
   Component,
   Input,
   OnChanges,
+  OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -16,7 +17,7 @@ import { StudentClassification } from '../../../../services/dtos/student.dto';
   templateUrl: './student-daily-quote.component.html',
   styleUrl: './student-daily-quote.component.scss',
 })
-export class StudentDailyQuoteComponent implements OnChanges {
+export class StudentDailyQuoteComponent implements OnInit, OnChanges {
   @Input() userId: number | null = null;
   @Input() classification: StudentClassification | string | null = null;
 
@@ -24,6 +25,10 @@ export class StudentDailyQuoteComponent implements OnChanges {
   revealed = false;
 
   constructor(private readonly dailySparkService: DailySparkService) {}
+
+  ngOnInit(): void {
+    this.loadSpark();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['userId'] || changes['classification']) {
