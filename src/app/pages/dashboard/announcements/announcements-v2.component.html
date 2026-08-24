@@ -1,0 +1,491 @@
+<section class="announcements-v2">
+
+  <div class="announcements-v2__container">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="announcements-v2__header">
+
+      <div class="announcements-v2__header-main">
+
+        <span
+          class="announcements-v2__header-icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M9.7 3.2h4.6l.6 2a7.7 7.7 0 0 1 1.5.9l2-.5 2.3 4-1.5 1.5c.1.6.1 1.2 0 1.8l1.5 1.5-2.3 4-2-.5a7.7 7.7 0 0 1-1.5.9l-.6 2H9.7l-.6-2a7.7 7.7 0 0 1-1.5-.9l-2 .5-2.3-4 1.5-1.5a8.1 8.1 0 0 1 0-1.8L3.3 9.6l2.3-4 2 .5a7.7 7.7 0 0 1 1.5-.9l.6-2Z"
+              stroke="currentColor"
+              stroke-width="1.55"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <circle
+              cx="12"
+              cy="12"
+              r="3.25"
+              stroke="currentColor"
+              stroke-width="1.55"
+            />
+          </svg>
+        </span>
+
+
+        <div class="announcements-v2__header-content">
+
+          <div class="announcements-v2__breadcrumb">
+
+            <span>
+              Comunicación
+            </span>
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="m9 6 6 6-6 6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <strong>
+              Anuncios
+            </strong>
+
+          </div>
+
+
+          <h1 class="announcements-v2__title">
+            Anuncios
+          </h1>
+
+          <p class="announcements-v2__description">
+            Crea y gestiona anuncios para diferentes roles y audiencias.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="announcements-v2__new-button"
+        (click)="resetForm()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M12 5v14M5 12h14"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Nuevo anuncio
+        </span>
+      </button>
+
+    </header>
+
+
+    <!-- =====================================================
+         WORKSPACE
+    ====================================================== -->
+
+    <div class="announcements-v2__workspace">
+
+      <!-- ===================================================
+           EDITOR
+      ==================================================== -->
+
+      <section class="announcements-v2__editor">
+
+        <header class="announcements-v2__panel-header">
+
+          <div class="announcements-v2__panel-heading">
+
+            <span
+              class="announcements-v2__panel-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M6 4h8l4 4v12H6V4Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M14 4v5h5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="M9 13h6M12 10v6"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <h2>
+              Crear / Editar anuncio
+            </h2>
+
+          </div>
+
+
+          <div class="announcements-v2__editor-mode">
+
+            <span
+              class="announcements-v2__editor-mode-item"
+              [class.announcements-v2__editor-mode-item--active]="
+                !editingAnnouncement
+              "
+            >
+              Crear nuevo
+            </span>
+
+            <span
+              class="announcements-v2__editor-mode-item"
+              [class.announcements-v2__editor-mode-item--active]="
+                !!editingAnnouncement
+              "
+            >
+              Editar anuncio
+            </span>
+
+          </div>
+
+        </header>
+
+
+        <!-- =================================================
+             FORM
+        ================================================== -->
+
+        <app-announcement-v2-form
+          [title]="formTitle"
+          [type]="formType"
+          [role]="formRole"
+          [classification]="formClassification"
+          [city]="formCity"
+          [isActive]="formIsActive"
+          [startDate]="formStartDate"
+          [endDate]="formEndDate"
+          [showMode]="formShowMode"
+          [aspectRatio]="formAspectRatio"
+
+          (titleChange)="formTitle = $event"
+          (typeChange)="formType = $event"
+          (roleChange)="formRole = $event"
+          (classificationChange)="formClassification = $event"
+          (cityChange)="formCity = $event"
+          (isActiveChange)="formIsActive = $event"
+          (startDateChange)="formStartDate = $event"
+          (endDateChange)="formEndDate = $event"
+          (showModeChange)="formShowMode = $event"
+          (aspectRatioChange)="formAspectRatio = $event"
+        >
+        </app-announcement-v2-form>
+
+
+        <!-- =================================================
+             MEDIA + ACTIONS
+        ================================================== -->
+
+        <div class="announcements-v2__builder-grid">
+
+          <!-- MEDIA -->
+
+          <app-announcement-v2-media
+            [media]="formMedia"
+            [originalMedia]="originalMedia"
+            [mediaType]="formMediaType"
+
+            (mediaChange)="formMedia = $event"
+            (mediaTypeChange)="formMediaType = $event"
+            (error)="showError($event)"
+            >
+            </app-announcement-v2-media>
+
+
+          <!-- ACTIONS -->
+
+          <app-announcement-v2-actions
+            class="announcements-v2__actions"
+            [actions]="formActions"
+
+            (add)="addAction($event)"
+            (update)="updateAction($event)"
+            (remove)="removeAction($event)"
+            (error)="showError($event)"
+          >
+          </app-announcement-v2-actions>
+
+        </div>
+
+
+        <!-- =================================================
+             EDITOR FOOTER
+        ================================================== -->
+
+        <footer class="announcements-v2__editor-footer">
+
+          <div class="announcements-v2__editor-footer-spacer">
+          </div>
+
+
+          <div class="announcements-v2__editor-footer-actions">
+
+            <button
+              *ngIf="editingAnnouncement"
+              type="button"
+              class="
+                announcements-v2__footer-button
+                announcements-v2__footer-button--cancel
+              "
+              (click)="cancelEdit()"
+            >
+              Cancelar edición
+            </button>
+
+
+            <button
+              type="button"
+              class="
+                announcements-v2__footer-button
+                announcements-v2__footer-button--clear
+              "
+              (click)="resetForm()"
+            >
+              Limpiar formulario
+            </button>
+
+
+            <button
+              type="button"
+              class="
+                announcements-v2__footer-button
+                announcements-v2__footer-button--save
+              "
+              (click)="
+                editingAnnouncement
+                  ? updateAnnouncement()
+                  : submitAnnouncement()
+              "
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="m21 3-7.5 18-4-7-7-4L21 3Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"
+                />
+
+                <path
+                  d="m9.5 14 4-4"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+
+              <span>
+                {{
+                  editingAnnouncement
+                    ? 'Actualizar anuncio'
+                    : 'Guardar anuncio'
+                }}
+              </span>
+            </button>
+
+          </div>
+
+        </footer>
+
+      </section>
+
+
+      <!-- ===================================================
+           PREVIEW
+      ==================================================== -->
+
+      <section class="announcements-v2__preview">
+
+        <header class="announcements-v2__side-header">
+
+          <span
+            class="announcements-v2__side-header-icon"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M3 12s3.4-6 9-6 9 6 9 6-3.4 6-9 6-9-6-9-6Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <circle
+                cx="12"
+                cy="12"
+                r="2.7"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+            </svg>
+          </span>
+
+          <h2>
+            Vista previa del anuncio
+          </h2>
+
+        </header>
+
+
+        <div class="announcements-v2__preview-content">
+
+          <app-announcement-v2-preview
+            [title]="formTitle"
+            [type]="formType || ''"
+            [media]="formMedia || originalMedia"
+            [role]="formRole"
+            [studentClassification]="formClassification"
+            [city]="formCity"
+            [isActive]="formIsActive"
+            [actions]="formActions"
+            [aspectRatio]="formAspectRatio"
+            [startDate]="formStartDate"
+            [endDate]="formEndDate"
+            >
+            </app-announcement-v2-preview>
+
+
+          <p class="announcements-v2__preview-note">
+            La vista previa es referencial. El resultado puede variar
+            en la aplicación.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===================================================
+           EXISTING ANNOUNCEMENTS
+      ==================================================== -->
+
+      <section class="announcements-v2__list">
+
+        <header class="announcements-v2__side-header">
+
+          <span
+            class="announcements-v2__side-header-icon"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M5 11v-1a2 2 0 0 1 2-2h2l7-3v14l-7-3H7a2 2 0 0 1-2-2v-1"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M9 16v3"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M19 9v6"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <h2>
+            Anuncios existentes
+          </h2>
+
+        </header>
+
+
+        <div class="announcements-v2__list-content">
+
+          <app-announcement-v2-list
+            [announcements]="announcements"
+            [filterTab]="filterTab"
+
+            (filterChange)="filterTab = $event"
+            (toggle)="toggleAnnouncement($event)"
+            (edit)="editAnnouncement($event)"
+            (delete)="confirmDelete($event)"
+          >
+          </app-announcement-v2-list>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       MODAL
+  ====================================================== -->
+
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [showButtons]="modal.showButtons ?? false"
+    [title]="modal.title ?? ''"
+    (confirmAction)="modal.confirm?.()"
+    (close)="modal.close()"
+  >
+  </app-modal>
+
+</section>

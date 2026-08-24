@@ -42,29 +42,21 @@ interface RestrictionRow {
 export class FeatureFlagRestrictionsTableComponent
   implements OnChanges {
 
-  @Input()
-  data: any = {};
+  @Input() data: any = {};
+  @Input() month = '';
+  @Input() year = 0;
 
-  @Input()
-  month = '';
-
-  @Input()
-  year = 0;
-
-  @Output()
-  deleteRequested =
+  @Output() deleteRequested =
     new EventEmitter<{
       day: number;
       entry: RestrictionEntry;
     }>();
 
-  restrictions:
-    RestrictionRow[] = [];
+  restrictions: RestrictionRow[] = [];
+  expanded = false;
 
 
-  ngOnChanges(
-    changes: SimpleChanges,
-  ): void {
+  ngOnChanges( changes: SimpleChanges ): void {
 
     if (
       changes['data'] ||
@@ -245,4 +237,6 @@ export class FeatureFlagRestrictionsTableComponent
       entry,
     });
   }
+
+   toggleExpanded(): void { this.expanded = !this.expanded }
 }

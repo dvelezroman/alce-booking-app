@@ -1,0 +1,840 @@
+<section class="announcement-v2-list">
+
+  <!-- =====================================================
+       FILTERS
+  ====================================================== -->
+
+  <div class="announcement-v2-list__filters">
+
+    <button
+      type="button"
+      class="announcement-v2-list__filter"
+      [class.announcement-v2-list__filter--active]="
+        filterTab === 'all'
+      "
+      (click)="setFilter('all')"
+    >
+      <span>
+        Todos
+      </span>
+
+      <strong>
+        {{ allCount }}
+      </strong>
+    </button>
+
+
+    <button
+      type="button"
+      class="announcement-v2-list__filter"
+      [class.announcement-v2-list__filter--active]="
+        filterTab === 'active'
+      "
+      (click)="setFilter('active')"
+    >
+      <span>
+        Activos
+      </span>
+
+      <strong>
+        {{ activeCount }}
+      </strong>
+    </button>
+
+
+    <button
+      type="button"
+      class="announcement-v2-list__filter"
+      [class.announcement-v2-list__filter--active]="
+        filterTab === 'inactive'
+      "
+      (click)="setFilter('inactive')"
+    >
+      <span>
+        Inactivos
+      </span>
+
+      <strong>
+        {{ inactiveCount }}
+      </strong>
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       LIST
+  ====================================================== -->
+
+  <div
+    *ngIf="
+      filteredAnnouncements.length > 0;
+      else emptyAnnouncements
+    "
+    class="announcement-v2-list__content"
+  >
+
+    <article
+      *ngFor="
+        let announcement of filteredAnnouncements;
+        trackBy: trackByAnnouncementId
+      "
+      class="announcement-v2-list__item"
+    >
+
+      <!-- =================================================
+           TOP
+      ================================================== -->
+
+      <div class="announcement-v2-list__item-top">
+
+        <!-- =================================================
+            MEDIA
+        ================================================== -->
+
+        <div class="announcement-v2-list__media">
+
+          <!-- =================================================
+              IMAGE NORMAL / S3
+          ================================================== -->
+
+          <ng-container
+            *ngIf="
+              announcement.mediaUrl &&
+              isImageMedia(announcement.mediaUrl)
+            "
+          >
+
+            <!-- LOADING -->
+
+            <div
+              *ngIf="isImageLoading(announcement.id)"
+              class="announcement-v2-list__media-loading"
+            >
+              <span class="announcement-v2-list__media-spinner"></span>
+            </div>
+
+
+            <!-- IMAGE -->
+
+            <img
+              *ngIf="!hasImageError(announcement.id)"
+              [src]="announcement.mediaUrl"
+              [alt]="announcement.title || 'Anuncio'"
+              class="announcement-v2-list__media-element"
+              [class.announcement-v2-list__media-element--loading]="
+                isImageLoading(announcement.id)
+              "
+              (load)="onImageLoad(announcement.id)"
+              (error)="onImageError(announcement.id)"
+            />
+
+
+            <!-- ERROR -->
+
+            <div
+              *ngIf="hasImageError(announcement.id)"
+              class="
+                announcement-v2-list__media-placeholder
+                announcement-v2-list__media-placeholder--image-error
+              "
+            >
+
+              <span
+                class="announcement-v2-list__media-placeholder-icon"
+                aria-hidden="true"
+              >
+                <svg viewBox="0 0 24 24" fill="none">
+
+                  <rect
+                    x="4"
+                    y="5"
+                    width="16"
+                    height="14"
+                    rx="2.3"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <circle
+                    cx="9"
+                    cy="10"
+                    r="1.4"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  />
+
+                  <path
+                    d="m6.5 16 3.3-3.2 2.4 2.1 2.5-2.6 2.8 3.7"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+
+                </svg>
+              </span>
+
+              <small>
+                Imagen no disponible
+              </small>
+
+            </div>
+
+          </ng-container>
+
+
+          <!-- =================================================
+              YOUTUBE THUMBNAIL
+          ================================================== -->
+
+          <ng-container
+            *ngIf="
+              announcement.mediaUrl &&
+              isYoutubeMedia(announcement.mediaUrl)
+            "
+          >
+
+            <ng-container
+              *ngIf="
+                getYoutubeThumbnail(
+                  announcement.mediaUrl
+                ) as thumbnail
+              "
+            >
+
+              <!-- LOADING -->
+
+              <div
+                *ngIf="isImageLoading(announcement.id)"
+                class="announcement-v2-list__media-loading"
+              >
+                <span class="announcement-v2-list__media-spinner"></span>
+              </div>
+
+
+              <!-- THUMBNAIL -->
+
+              <img
+                *ngIf="!hasImageError(announcement.id)"
+                [src]="thumbnail"
+                [alt]="announcement.title || 'Video de YouTube'"
+                class="announcement-v2-list__media-element"
+                [class.announcement-v2-list__media-element--loading]="
+                  isImageLoading(announcement.id)
+                "
+                (load)="onImageLoad(announcement.id)"
+                (error)="onImageError(announcement.id)"
+              />
+
+
+              <!-- PLAY -->
+
+              <span
+                *ngIf="
+                  !isImageLoading(announcement.id) &&
+                  !hasImageError(announcement.id)
+                "
+                class="announcement-v2-list__media-play"
+                aria-hidden="true"
+              >
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="m9 7 8 5-8 5V7Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+
+            </ng-container>
+
+          </ng-container>
+
+
+          <!-- =================================================
+              DIRECT VIDEO
+          ================================================== -->
+
+          <div
+            *ngIf="
+              announcement.mediaUrl &&
+              isVideoMedia(announcement.mediaUrl)
+            "
+            class="announcement-v2-list__media-placeholder"
+          >
+
+            <span
+              class="announcement-v2-list__media-placeholder-icon"
+              aria-hidden="true"
+            >
+              <svg viewBox="0 0 24 24" fill="none">
+
+                <rect
+                  x="4"
+                  y="5"
+                  width="16"
+                  height="14"
+                  rx="2.3"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+
+                <path
+                  d="m10 9 5 3-5 3V9Z"
+                  fill="currentColor"
+                />
+
+              </svg>
+            </span>
+
+            <small>
+              Video
+            </small>
+
+          </div>
+
+
+          <!-- =================================================
+              GOOGLE DRIVE
+          ================================================== -->
+
+          <ng-container
+            *ngIf="
+              announcement.mediaUrl &&
+              isGoogleDriveMedia(announcement.mediaUrl)
+            "
+          >
+
+            <ng-container
+              *ngIf="
+                getGoogleDriveThumbnail(
+                  announcement.mediaUrl
+                ) as driveThumbnail;
+                else driveFallback
+              "
+            >
+
+              <!-- LOADING -->
+
+              <div
+                *ngIf="isImageLoading(announcement.id)"
+                class="announcement-v2-list__media-loading"
+              >
+                <span class="announcement-v2-list__media-spinner"></span>
+              </div>
+
+
+              <!-- DRIVE IMAGE -->
+
+              <img
+                *ngIf="!hasImageError(announcement.id)"
+                [src]="driveThumbnail"
+                [alt]="announcement.title || 'Imagen de Google Drive'"
+                class="announcement-v2-list__media-element"
+                [class.announcement-v2-list__media-element--loading]="
+                  isImageLoading(announcement.id)
+                "
+                (load)="onImageLoad(announcement.id)"
+                (error)="onImageError(announcement.id)"
+              />
+
+
+              <!-- DRIVE ERROR -->
+
+              <div
+                *ngIf="hasImageError(announcement.id)"
+                class="
+                  announcement-v2-list__media-placeholder
+                  announcement-v2-list__media-placeholder--drive
+                "
+              >
+
+                <span
+                  class="announcement-v2-list__media-placeholder-icon"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 24 24" fill="none">
+
+                    <path
+                      d="M7 4h7l4 4v12H7V4Z"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linejoin="round"
+                    />
+
+                    <path
+                      d="M14 4v5h5"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linejoin="round"
+                    />
+
+                  </svg>
+                </span>
+
+                <small>
+                  Google Drive
+                </small>
+
+              </div>
+
+            </ng-container>
+
+
+            <!-- DRIVE FALLBACK -->
+
+            <ng-template #driveFallback>
+
+              <div
+                class="
+                  announcement-v2-list__media-placeholder
+                  announcement-v2-list__media-placeholder--drive
+                "
+              >
+
+                <span
+                  class="announcement-v2-list__media-placeholder-icon"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 24 24" fill="none">
+
+                    <path
+                      d="M7 4h7l4 4v12H7V4Z"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linejoin="round"
+                    />
+
+                    <path
+                      d="M14 4v5h5"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linejoin="round"
+                    />
+
+                  </svg>
+                </span>
+
+                <small>
+                  Google Drive
+                </small>
+
+              </div>
+
+            </ng-template>
+
+          </ng-container>
+
+
+          <!-- =================================================
+              EMPTY
+          ================================================== -->
+
+          <span
+            *ngIf="!announcement.mediaUrl"
+            class="announcement-v2-list__media-empty"
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 24 24" fill="none">
+
+              <rect
+                x="4"
+                y="5"
+                width="16"
+                height="14"
+                rx="2.3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <circle
+                cx="9"
+                cy="10"
+                r="1.4"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+
+              <path
+                d="m6.5 16 3.3-3.2 2.4 2.1 2.5-2.6 2.8 3.7"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+            </svg>
+          </span>
+
+        </div>
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
+
+        <div class="announcement-v2-list__item-content">
+
+          <div class="announcement-v2-list__badges">
+
+            <span class="announcement-v2-list__type">
+              {{
+                getTypeLabel(
+                  announcement.type
+                )
+              }}
+            </span>
+
+
+            <span
+              class="announcement-v2-list__status"
+              [class.announcement-v2-list__status--active]="
+                announcement.isActive
+              "
+              [class.announcement-v2-list__status--inactive]="
+                !announcement.isActive
+              "
+            >
+              <span></span>
+
+              {{
+                announcement.isActive
+                  ? 'Activo'
+                  : 'Inactivo'
+              }}
+            </span>
+
+          </div>
+
+
+          <h3>
+            {{
+              announcement.title ||
+              'Anuncio sin título'
+            }}
+          </h3>
+
+
+          <p>
+            {{
+              getAudienceLabel(
+                announcement
+              )
+            }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           DETAILS
+      ================================================== -->
+
+      <div class="announcement-v2-list__details">
+
+        <!-- AUDIENCE -->
+
+        <div class="announcement-v2-list__detail">
+
+          <span
+            class="announcement-v2-list__detail-icon"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="9"
+                cy="8"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M16 7a2.5 2.5 0 1 1 0 5M16 15c2.5.2 4.2 1.7 4.2 3.8"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+
+          <div>
+
+            <span>
+              Audiencia
+            </span>
+
+            <strong>
+              {{
+                getAudienceLabel(
+                  announcement
+                )
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- VALIDITY -->
+
+        <div class="announcement-v2-list__detail">
+
+          <span
+            class="announcement-v2-list__detail-icon"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="4"
+                y="5"
+                width="16"
+                height="15"
+                rx="2.3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 3v4M16 3v4M4 9h16"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+
+          <div>
+
+            <span>
+              Vigencia
+            </span>
+
+            <strong>
+              {{
+                getValidityLabel(
+                  announcement
+                )
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           FOOTER
+      ================================================== -->
+
+      <footer class="announcement-v2-list__footer">
+
+        <!-- TOGGLE -->
+
+        <label class="announcement-v2-list__switch">
+
+          <input
+            type="checkbox"
+            [checked]="announcement.isActive"
+            (change)="
+              onToggle(
+                announcement.id
+              )
+            "
+          />
+
+          <span class="announcement-v2-list__switch-track">
+
+            <span class="announcement-v2-list__switch-thumb">
+            </span>
+
+          </span>
+
+
+          <span class="announcement-v2-list__switch-label">
+            {{
+              announcement.isActive
+                ? 'Activo'
+                : 'Inactivo'
+            }}
+          </span>
+
+        </label>
+
+
+        <!-- ACTIONS -->
+
+        <div class="announcement-v2-list__actions">
+
+          <!-- EDIT -->
+
+          <button
+            type="button"
+            class="
+              announcement-v2-list__action
+              announcement-v2-list__action--edit
+            "
+            title="Editar anuncio"
+            aria-label="Editar anuncio"
+            (click)="
+              onEdit(
+                announcement
+              )
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="m5 16-.8 3.8L8 19l9.7-9.7-3-3L5 16Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="m13.8 7.2 3 3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+            </svg>
+
+            <span>
+              Editar
+            </span>
+          </button>
+
+
+          <!-- DELETE -->
+
+          <button
+            type="button"
+            class="
+              announcement-v2-list__action
+              announcement-v2-list__action--delete
+            "
+            title="Eliminar anuncio"
+            aria-label="Eliminar anuncio"
+            (click)="
+              onDelete(
+                announcement.id
+              )
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 7h16"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M9 4h6l1 3H8l1-3Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="m7 7 .7 13h8.6L17 7"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M10 11v5M14 11v5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            <span>
+              Eliminar
+            </span>
+          </button>
+
+        </div>
+
+      </footer>
+
+    </article>
+
+  </div>
+
+
+  <!-- =====================================================
+       EMPTY
+  ====================================================== -->
+
+  <ng-template #emptyAnnouncements>
+
+    <div class="announcement-v2-list__empty">
+
+      <span
+        class="announcement-v2-list__empty-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M5 11v-1a2 2 0 0 1 2-2h2l7-3v14l-7-3H7a2 2 0 0 1-2-2v-1"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M9 16v3"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <strong>
+        No hay anuncios
+      </strong>
+
+
+      <p>
+        No existen anuncios para el filtro seleccionado.
+      </p>
+
+    </div>
+
+  </ng-template>
+
+</section>

@@ -89,16 +89,13 @@ import {
 } from '../../../components/scheduling-config/feature-flag-v2/feature-flag-calendar/feature-flag-calendar.component';
 
 import {
-  FeatureFlagRestrictionsLegendComponent,
-} from '../../../components/scheduling-config/feature-flag-v2/feature-flag-restrictions-legend/feature-flag-restrictions-legend.component';
-
-import {
   FeatureFlagRestrictionsTableComponent,
 } from '../../../components/scheduling-config/feature-flag-v2/feature-flag-restrictions-table/feature-flag-restrictions-table.component';
 
 import {
   FeatureFlagHoursPanelComponent,
 } from '../../../components/scheduling-config/feature-flag-v2/feature-flag-hours-panel/feature-flag-hours-panel.component';
+import { FeatureFlagSection, FeatureFlagSidebarComponent } from "../../../components/scheduling-config/feature-flag-v2/feature-flag-sidebar/feature-flag-sidebar.component";
 
 
 /* =========================================================
@@ -137,16 +134,14 @@ interface DayRestrictionInfo {
     CommonModule,
     RouterModule,
     FormsModule,
-
     ModalComponent,
-
     FeatureFlagGeneralSettingsComponent,
     FeatureFlagRestrictionFiltersComponent,
     FeatureFlagCalendarComponent,
-    FeatureFlagRestrictionsLegendComponent,
     FeatureFlagRestrictionsTableComponent,
     FeatureFlagHoursPanelComponent,
-  ],
+    FeatureFlagSidebarComponent
+],
 
   templateUrl:
     './feature-flag-v2.component.html',
@@ -162,6 +157,12 @@ export class FeatureFlagV2Component
   ======================================================= */
 
   ffs: FeatureFlagDto[] = [];
+
+  /* =======================================================
+   ACTIVE SECTION
+  ======================================================= */
+
+  activeSection: FeatureFlagSection = 'general';
 
 
   /* =======================================================

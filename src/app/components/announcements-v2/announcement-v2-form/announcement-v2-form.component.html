@@ -1,0 +1,732 @@
+<section class="announcement-v2-form">
+
+  <!-- =====================================================
+       1. CONTENT
+  ====================================================== -->
+
+  <section class="announcement-v2-form__group">
+
+    <header class="announcement-v2-form__group-header">
+
+      <span
+        class="announcement-v2-form__group-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M6 4h8l4 4v12H6V4Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M14 4v5h5"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M9 13h6M9 16h4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <h3>
+        1. Contenido
+      </h3>
+
+    </header>
+
+
+    <div
+      class="
+        announcement-v2-form__grid
+        announcement-v2-form__grid--two
+      "
+    >
+
+      <!-- TITLE -->
+
+      <div class="announcement-v2-form__field">
+
+        <label
+          class="announcement-v2-form__label"
+          for="announcement-v2-title"
+        >
+          Título del anuncio
+
+          <span>
+            *
+          </span>
+        </label>
+
+
+        <input
+          #titleInput
+          id="announcement-v2-title"
+          type="text"
+          class="announcement-v2-form__control"
+          placeholder="Escribe un título atractivo"
+          autocomplete="off"
+          [value]="title"
+          (input)="
+            onTitleChange(
+              titleInput.value
+            )
+          "
+        />
+
+      </div>
+
+
+      <!-- TYPE -->
+
+      <div class="announcement-v2-form__field">
+
+        <label
+          class="announcement-v2-form__label"
+          for="announcement-v2-type"
+        >
+          Tipo de anuncio
+
+          <span>
+            *
+          </span>
+        </label>
+
+
+        <div class="announcement-v2-form__select-wrapper">
+
+          <select
+            #typeSelect
+            id="announcement-v2-type"
+            class="announcement-v2-form__control"
+            [value]="type || ''"
+            (change)="
+              onTypeChange(
+                typeSelect.value
+              )
+            "
+          >
+
+            <option value="">
+              Selecciona un tipo
+            </option>
+
+            <option
+              *ngFor="
+                let option of typeOptions
+              "
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </option>
+
+          </select>
+
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m7 9 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       2. AUDIENCE
+  ====================================================== -->
+
+  <section class="announcement-v2-form__group">
+
+    <header class="announcement-v2-form__group-header">
+
+      <span
+        class="announcement-v2-form__group-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="9"
+            cy="8"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M16 6.5a2.4 2.4 0 1 1 0 4.8M16 14.5c2.6.2 4.5 1.9 4.5 4.2"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <h3>
+        2. Audiencia objetivo
+      </h3>
+
+    </header>
+
+
+    <div
+      class="
+        announcement-v2-form__grid
+        announcement-v2-form__grid--two
+      "
+    >
+
+      <!-- ROLE -->
+
+      <div class="announcement-v2-form__field">
+
+        <label
+          class="announcement-v2-form__label"
+          for="announcement-v2-role"
+        >
+          Rol
+
+          <span>
+            *
+          </span>
+        </label>
+
+
+        <div class="announcement-v2-form__select-wrapper">
+
+          <select
+            #roleSelect
+            id="announcement-v2-role"
+            class="announcement-v2-form__control"
+            [value]="role || ''"
+            (change)="
+              onRoleChange(
+                roleSelect.value
+              )
+            "
+          >
+
+            <option value="">
+              Selecciona un rol
+            </option>
+
+            <option
+              *ngFor="
+                let option of roleOptions
+              "
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </option>
+
+          </select>
+
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m7 9 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </div>
+
+      </div>
+
+
+      <!-- CLASSIFICATION -->
+
+      <div class="announcement-v2-form__field">
+
+        <div class="announcement-v2-form__label-row">
+
+          <label
+            class="announcement-v2-form__label"
+            for="announcement-v2-classification"
+          >
+            Clasificación estudiantil
+          </label>
+
+
+          <span
+            class="announcement-v2-form__help"
+            title="Disponible para anuncios dirigidos a estudiantes."
+          >
+            i
+          </span>
+
+        </div>
+
+
+        <div class="announcement-v2-form__select-wrapper">
+
+          <select
+            #classificationSelect
+            id="announcement-v2-classification"
+            class="announcement-v2-form__control"
+            [disabled]="disableStudentFilters"
+            [value]="classification || ''"
+            (change)="
+              onClassificationChange(
+                classificationSelect.value
+              )
+            "
+          >
+
+            <option value="">
+              Selecciona una clasificación
+            </option>
+
+            <option
+              *ngFor="
+                let option of classificationOptions
+              "
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </option>
+
+          </select>
+
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m7 9 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </div>
+
+      </div>
+
+
+      <!-- CITY -->
+
+      <div class="announcement-v2-form__field">
+
+        <label
+          class="announcement-v2-form__label"
+          for="announcement-v2-city"
+        >
+          Ciudad
+
+          <span>
+            *
+          </span>
+        </label>
+
+
+        <div class="announcement-v2-form__select-wrapper">
+
+          <select
+            #citySelect
+            id="announcement-v2-city"
+            class="announcement-v2-form__control"
+            [value]="city || ''"
+            (change)="
+              onCityChange(
+                citySelect.value
+              )
+            "
+          >
+
+            <option value="">
+              Selecciona una ciudad
+            </option>
+
+            <option
+              *ngFor="
+                let option of cityOptions
+              "
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </option>
+
+          </select>
+
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m7 9 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </div>
+
+      </div>
+
+
+      <!-- ACTIVE -->
+
+      <div
+        class="
+          announcement-v2-form__field
+          announcement-v2-form__status-card
+        "
+      >
+
+        <span class="announcement-v2-form__status-label">
+          Estado del anuncio
+        </span>
+
+
+        <label class="announcement-v2-form__switch">
+
+          <input
+            #activeInput
+            type="checkbox"
+            [checked]="isActive"
+            (change)="
+              onActiveChange(
+                activeInput.checked
+              )
+            "
+          />
+
+
+          <span class="announcement-v2-form__switch-track">
+
+            <span class="announcement-v2-form__switch-thumb">
+            </span>
+
+          </span>
+
+
+          <strong>
+            {{
+              isActive
+                ? 'Activo'
+                : 'Inactivo'
+            }}
+          </strong>
+
+        </label>
+
+
+        <small>
+          El anuncio estará visible para la audiencia seleccionada.
+        </small>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       3. VALIDITY AND DISPLAY
+  ====================================================== -->
+
+  <section class="announcement-v2-form__group">
+
+    <header class="announcement-v2-form__group-header">
+
+      <span
+        class="announcement-v2-form__group-icon"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2.3"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+
+      <h3>
+        3. Vigencia y visualización
+      </h3>
+
+    </header>
+
+
+    <div
+      class="
+        announcement-v2-form__grid
+        announcement-v2-form__grid--validity
+      "
+    >
+
+      <!-- START -->
+
+      <div class="announcement-v2-form__field">
+
+        <label
+          class="announcement-v2-form__label"
+          for="announcement-v2-start-date"
+        >
+          Fecha de inicio
+        </label>
+
+
+        <input
+          #startDateInput
+          id="announcement-v2-start-date"
+          type="date"
+          class="
+            announcement-v2-form__control
+            announcement-v2-form__control--date
+          "
+          [value]="startDate || ''"
+          [max]="endDate || null"
+          (change)="
+            onStartDateChange(
+              startDateInput.value
+            )
+          "
+        />
+
+      </div>
+
+
+      <!-- END -->
+
+      <div class="announcement-v2-form__field">
+
+        <label
+          class="announcement-v2-form__label"
+          for="announcement-v2-end-date"
+        >
+          Fecha de fin
+        </label>
+
+
+        <input
+          #endDateInput
+          id="announcement-v2-end-date"
+          type="date"
+          class="
+            announcement-v2-form__control
+            announcement-v2-form__control--date
+          "
+          [value]="endDate || ''"
+          [min]="startDate || null"
+          (change)="
+            onEndDateChange(
+              endDateInput.value
+            )
+          "
+        />
+
+      </div>
+
+
+      <!-- SHOW MODE -->
+
+      <div class="announcement-v2-form__field">
+
+        <div class="announcement-v2-form__label-row">
+
+          <label
+            class="announcement-v2-form__label"
+            for="announcement-v2-show-mode"
+          >
+            Mostrar anuncio
+          </label>
+
+
+          <span
+            class="announcement-v2-form__help"
+            title="Define la frecuencia con la que se mostrará el anuncio."
+          >
+            i
+          </span>
+
+        </div>
+
+
+        <div class="announcement-v2-form__select-wrapper">
+
+          <select
+            #showModeSelect
+            id="announcement-v2-show-mode"
+            class="announcement-v2-form__control"
+            [value]="showMode"
+            (change)="
+              onShowModeChange(
+                showModeSelect.value
+              )
+            "
+          >
+
+            <option
+              *ngFor="
+                let option of showModeOptions
+              "
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </option>
+
+          </select>
+
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m7 9 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </div>
+
+      </div>
+
+
+      <!-- ASPECT -->
+
+      <div class="announcement-v2-form__field">
+
+        <div class="announcement-v2-form__label-row">
+
+          <label
+            class="announcement-v2-form__label"
+            for="announcement-v2-aspect"
+          >
+            Relación de aspecto
+          </label>
+
+
+          <span
+            class="announcement-v2-form__help"
+            title="Define el formato visual del anuncio."
+          >
+            i
+          </span>
+
+        </div>
+
+
+        <div class="announcement-v2-form__select-wrapper">
+
+          <select
+            #aspectSelect
+            id="announcement-v2-aspect"
+            class="announcement-v2-form__control"
+            [value]="aspectRatio"
+            (change)="
+              onAspectRatioChange(
+                aspectSelect.value
+              )
+            "
+          >
+
+            <option
+              *ngFor="
+                let option of aspectRatioOptions
+              "
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </option>
+
+          </select>
+
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m7 9 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</section>

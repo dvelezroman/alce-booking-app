@@ -1,7 +1,6 @@
 :host {
   display: block;
   width: 100%;
-  height: 100%;
 }
 
 
@@ -11,20 +10,12 @@
 
 .feature-flag-restrictions-table {
   width: 100%;
-  height: 100%;
-
   display: flex;
   flex-direction: column;
-
-  overflow: hidden;
-
   box-sizing: border-box;
-
   border: 1px solid #e5e8ef;
   border-radius: .55rem;
-
   background: #ffffff;
-
   box-shadow:
     0 2px 7px
     rgba(25, 32, 51, .018);
@@ -113,13 +104,11 @@
 
 
 /* =========================================================
-   WRAPPER / BODY SCROLL
+   WRAPPER / BODY
 ========================================================= */
 
 .feature-flag-restrictions-table__wrapper {
   width: 100%;
-
-  flex: 1;
 
   max-height: 17rem;
 
@@ -130,6 +119,17 @@
   scrollbar-color:
     #cfd4df
     transparent;
+}
+
+
+/* =========================================================
+   EXPANDED
+========================================================= */
+
+.feature-flag-restrictions-table__wrapper--expanded {
+  max-height: none;
+
+  overflow-y: visible;
 }
 
 
@@ -574,6 +574,28 @@
 
   font-size: .5rem;
   line-height: 1.45;
+}
+
+/* =========================================================
+   EXPANDED
+========================================================= */
+
+.feature-flag-restrictions-table__wrapper--expanded {
+  max-height: none;
+
+  overflow-y: visible;
+}
+
+.feature-flag-restrictions-table__view-all svg {
+  width: .7rem;
+  height: .7rem;
+
+  transition:
+    transform 180ms ease;
+}
+
+.feature-flag-restrictions-table__view-all-icon--expanded {
+  transform: rotate(180deg);
 }
 
 

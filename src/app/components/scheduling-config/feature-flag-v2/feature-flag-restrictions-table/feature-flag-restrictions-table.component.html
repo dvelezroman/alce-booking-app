@@ -91,6 +91,9 @@
   <div
     *ngIf="restrictions.length > 0"
     class="feature-flag-restrictions-table__wrapper"
+    [class.feature-flag-restrictions-table__wrapper--expanded]="
+    expanded
+  "
   >
 
     <table class="feature-flag-restrictions-table__table">
@@ -321,15 +324,24 @@
     <button
       type="button"
       class="feature-flag-restrictions-table__view-all"
+      (click)="toggleExpanded()"
     >
+
       <span>
-        Ver todas las restricciones
+        {{
+          expanded
+            ? 'Mostrar menos restricciones'
+            : 'Ver todas las restricciones'
+        }}
       </span>
 
       <svg
         viewBox="0 0 24 24"
         fill="none"
         aria-hidden="true"
+        [class.feature-flag-restrictions-table__view-all-icon--expanded]="
+          expanded
+        "
       >
         <path
           d="m7 9 5 5 5-5"
@@ -339,6 +351,7 @@
           stroke-linejoin="round"
         />
       </svg>
+
     </button>
 
   </footer>

@@ -1,0 +1,574 @@
+<section class="announcement-v2-preview">
+
+  <div class="announcement-v2-preview__card">
+
+    <!-- =====================================================
+         STATUS
+    ====================================================== -->
+
+    <div class="announcement-v2-preview__status-row">
+
+      <span
+        class="announcement-v2-preview__status"
+        [class.announcement-v2-preview__status--active]="isActive"
+        [class.announcement-v2-preview__status--inactive]="!isActive"
+      >
+
+        <span></span>
+
+        {{
+          isActive
+            ? 'ACTIVO'
+            : 'INACTIVO'
+        }}
+
+      </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         MEDIA
+    ====================================================== -->
+
+    <div
+      class="announcement-v2-preview__media"
+      [ngClass]="aspectClass"
+    >
+
+      <!-- IMAGE -->
+
+      <img
+        *ngIf="
+          media &&
+          isImageMedia
+        "
+        [src]="media"
+        [alt]="title || 'Anuncio'"
+        class="announcement-v2-preview__media-element"
+      />
+
+
+      <!-- YOUTUBE -->
+
+      <div
+        *ngIf="
+          media &&
+          isYoutubeMedia &&
+          safeEmbedUrl
+        "
+        class="
+          announcement-v2-preview__video-wrapper
+          announcement-v2-preview__video-wrapper--youtube
+        "
+      >
+
+        <iframe
+          [src]="safeEmbedUrl"
+          class="announcement-v2-preview__media-element"
+          title="Video de YouTube"
+          allow="
+            autoplay;
+            encrypted-media;
+            picture-in-picture;
+            fullscreen
+          "
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        >
+        </iframe>
+
+      </div>
+
+
+      <!-- GOOGLE DRIVE -->
+
+      <div
+        *ngIf="
+          media &&
+          isGoogleDriveMedia &&
+          safeEmbedUrl
+        "
+        class="
+          announcement-v2-preview__video-wrapper
+          announcement-v2-preview__video-wrapper--drive
+        "
+      >
+
+        <iframe
+          [src]="safeEmbedUrl"
+          class="announcement-v2-preview__media-element"
+          title="Video de Google Drive"
+          allow="
+            autoplay;
+            fullscreen
+          "
+          allowfullscreen
+        >
+        </iframe>
+
+      </div>
+
+
+      <!-- DIRECT VIDEO -->
+
+      <div
+        *ngIf="
+          media &&
+          isDirectVideoMedia
+        "
+        class="
+          announcement-v2-preview__video-wrapper
+          announcement-v2-preview__video-wrapper--direct
+        "
+      >
+
+        <video
+          [src]="media"
+          class="announcement-v2-preview__media-element"
+          controls
+          playsinline
+          preload="metadata"
+        >
+          Tu navegador no permite reproducir este video.
+        </video>
+
+      </div>
+
+
+      <!-- INVALID EMBED -->
+
+      <div
+        *ngIf="
+          media &&
+          (
+            (isYoutubeMedia || isGoogleDriveMedia) &&
+            !safeEmbedUrl
+          )
+        "
+        class="announcement-v2-preview__media-empty"
+      >
+
+        <span
+          class="announcement-v2-preview__media-empty-icon"
+          aria-hidden="true"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+
+            <path
+              d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.1 1.1"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.1-1.1"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+          </svg>
+
+        </span>
+
+
+        <span>
+          No se pudo cargar la vista previa del medio.
+        </span>
+
+      </div>
+
+
+      <!-- EMPTY -->
+
+      <div
+        *ngIf="
+          !media ||
+          mediaType === 'none'
+        "
+        class="announcement-v2-preview__media-empty"
+      >
+
+        <span
+          class="announcement-v2-preview__media-empty-icon"
+          aria-hidden="true"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+
+            <rect
+              x="4"
+              y="5"
+              width="16"
+              height="14"
+              rx="2.3"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <circle
+              cx="9"
+              cy="10"
+              r="1.4"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+
+            <path
+              d="m6.5 16 3.3-3.2 2.4 2.1 2.5-2.6 2.8 3.7"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+          </svg>
+
+        </span>
+
+
+        <span>
+          El medio del anuncio aparecerá aquí
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+    <div class="announcement-v2-preview__content">
+
+      <!-- TYPE -->
+
+      <span class="announcement-v2-preview__type">
+        {{ typeLabel }}
+      </span>
+
+
+      <!-- TITLE -->
+
+      <h3 class="announcement-v2-preview__title">
+
+        {{
+          title ||
+          'Título del anuncio de ejemplo'
+        }}
+
+      </h3>
+
+
+      <!-- DESCRIPTION -->
+
+      <p class="announcement-v2-preview__description">
+
+        Este es un texto descriptivo que será visible para los
+        usuarios seleccionados según los filtros aplicados.
+
+      </p>
+
+
+      <!-- =================================================
+           META
+      ================================================== -->
+
+      <div class="announcement-v2-preview__meta">
+
+        <!-- ROLE -->
+
+        <div class="announcement-v2-preview__meta-row">
+
+          <span
+            class="announcement-v2-preview__meta-icon"
+            aria-hidden="true"
+          >
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+
+              <circle
+                cx="9"
+                cy="8"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M3.5 19c0-2.8 2.3-4.8 5.5-4.8s5.5 2 5.5 4.8"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M16 7a2.5 2.5 0 1 1 0 5M16 15c2.5.2 4.2 1.7 4.2 3.8"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+
+            </svg>
+
+          </span>
+
+
+          <span class="announcement-v2-preview__meta-label">
+            Para:
+          </span>
+
+
+          <strong>
+
+            {{ roleLabel }}
+
+            <ng-container
+              *ngIf="
+                role === 'STUDENT' &&
+                studentClassification
+              "
+            >
+              · {{ classificationLabel }}
+            </ng-container>
+
+          </strong>
+
+        </div>
+
+
+        <!-- CITY -->
+
+        <div class="announcement-v2-preview__meta-row">
+
+          <span
+            class="announcement-v2-preview__meta-icon"
+            aria-hidden="true"
+          >
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+
+              <path
+                d="M12 21s6-5.1 6-11a6 6 0 1 0-12 0c0 5.9 6 11 6 11Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <circle
+                cx="12"
+                cy="10"
+                r="2"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+
+            </svg>
+
+          </span>
+
+
+          <span class="announcement-v2-preview__meta-label">
+            Ciudad:
+          </span>
+
+
+          <strong>
+            {{ cityLabel }}
+          </strong>
+
+        </div>
+
+
+        <!-- VALIDITY -->
+
+        <div class="announcement-v2-preview__meta-row">
+
+          <span
+            class="announcement-v2-preview__meta-icon"
+            aria-hidden="true"
+          >
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+
+              <rect
+                x="4"
+                y="5"
+                width="16"
+                height="15"
+                rx="2.3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 3v4M16 3v4M4 9h16"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+            </svg>
+
+          </span>
+
+
+          <span class="announcement-v2-preview__meta-label">
+            Vigencia:
+          </span>
+
+
+          <strong>
+            {{ validityLabel }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           ACTIONS
+      ================================================== -->
+
+      <div
+        *ngIf="
+          actionButtons.length > 0 ||
+          hasClose
+        "
+        class="announcement-v2-preview__actions"
+      >
+
+        <button
+          *ngFor="
+            let action of actionButtons
+          "
+          type="button"
+          class="announcement-v2-preview__action-button"
+          [class.announcement-v2-preview__action-button--whatsapp]="
+            action.type === 'whatsapp'
+          "
+          [ngStyle]="
+            getButtonStyle(
+              action
+            )
+          "
+        >
+
+          <!-- WHATSAPP -->
+
+          <svg
+            *ngIf="
+              action.type === 'whatsapp'
+            "
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+
+            <path
+              d="M19.7 11.8a7.7 7.7 0 0 1-11.4 6.8L4 20l1.4-4.1A7.7 7.7 0 1 1 19.7 11.8Z"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M9 8.5c.3 2.9 2.3 4.9 5.2 5.2"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+
+          </svg>
+
+
+          <span>
+
+            {{
+              action.label ||
+              (
+                action.type === 'whatsapp'
+                  ? 'WhatsApp'
+                  : 'Más información'
+              )
+            }}
+
+          </span>
+
+
+          <!-- ARROW -->
+
+          <svg
+            *ngIf="
+              action.type === 'action'
+            "
+            class="announcement-v2-preview__action-arrow"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+
+            <path
+              d="M5 12h14"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="m14 7 5 5-5 5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+          </svg>
+
+        </button>
+
+
+        <!-- CLOSE -->
+
+        <button
+          *ngIf="
+            hasClose
+          "
+          type="button"
+          class="announcement-v2-preview__close"
+        >
+
+          {{
+            closeAction?.label ||
+            'Cerrar'
+          }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
