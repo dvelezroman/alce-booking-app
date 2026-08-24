@@ -11,11 +11,7 @@
       <div class="suppressed-page__header-content">
 
         <div class="suppressed-page__header-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <rect
               x="3"
               y="5"
@@ -79,11 +75,7 @@
           class="suppressed-page__create"
           (click)="openCreate()"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
               d="M12 5v14M5 12h14"
               stroke="currentColor"
@@ -110,10 +102,7 @@
         class="suppressed-page__info-icon"
         aria-hidden="true"
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-        >
+        <svg viewBox="0 0 24 24" fill="none">
           <circle
             cx="12"
             cy="12"
@@ -149,6 +138,8 @@
 
     <section class="suppressed-summary">
 
+      <!-- TOTAL -->
+
       <article class="suppressed-summary__card">
 
         <span
@@ -157,10 +148,7 @@
             suppressed-summary__icon--total
           "
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-          >
+          <svg viewBox="0 0 24 24" fill="none">
             <rect
               x="3"
               y="5"
@@ -196,6 +184,8 @@
       </article>
 
 
+      <!-- STATUS -->
+
       <article class="suppressed-summary__card">
 
         <span
@@ -204,10 +194,7 @@
             suppressed-summary__icon--status
           "
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-          >
+          <svg viewBox="0 0 24 24" fill="none">
             <circle
               cx="12"
               cy="12"
@@ -248,6 +235,8 @@
       </article>
 
 
+      <!-- RANGE -->
+
       <article class="suppressed-summary__card">
 
         <span
@@ -256,10 +245,7 @@
             suppressed-summary__icon--range
           "
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-          >
+          <svg viewBox="0 0 24 24" fill="none">
             <path
               d="M5 5h14v14H5V5Z"
               stroke="currentColor"
@@ -303,10 +289,7 @@
       <header class="suppressed-filters__header">
 
         <span class="suppressed-filters__header-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-          >
+          <svg viewBox="0 0 24 24" fill="none">
             <path
               d="M4 6h16M7 12h10M10 18h4"
               stroke="currentColor"
@@ -322,7 +305,8 @@
           </h2>
 
           <p>
-            Busca por email o filtra según el estado del bloqueo.
+            Busca por email, nombre, cédula o teléfono y filtra
+            según el estado del bloqueo.
           </p>
         </div>
 
@@ -336,10 +320,7 @@
         <div class="suppressed-filters__search">
 
           <span class="suppressed-filters__search-icon">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-            >
+            <svg viewBox="0 0 24 24" fill="none">
               <circle
                 cx="11"
                 cy="11"
@@ -360,7 +341,7 @@
           <input
             type="text"
             class="suppressed-filters__input"
-            placeholder="Buscar email..."
+            placeholder="Email, nombre, cédula o teléfono..."
             autocomplete="off"
             [(ngModel)]="search"
             (keyup.enter)="onSearch()"
@@ -373,10 +354,7 @@
             title="Limpiar búsqueda"
             (click)="clearSearch()"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-            >
+            <svg viewBox="0 0 24 24" fill="none">
               <path
                 d="M7 7l10 10M17 7 7 17"
                 stroke="currentColor"
@@ -394,10 +372,7 @@
         <div class="suppressed-filters__select-wrapper">
 
           <span class="suppressed-filters__select-icon">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-            >
+            <svg viewBox="0 0 24 24" fill="none">
               <circle
                 cx="12"
                 cy="12"
@@ -443,10 +418,7 @@
           class="suppressed-filters__button"
           (click)="onSearch()"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-          >
+          <svg viewBox="0 0 24 24" fill="none">
             <circle
               cx="11"
               cy="11"
@@ -515,10 +487,7 @@
       >
 
         <span class="suppressed-table__empty-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-          >
+          <svg viewBox="0 0 24 24" fill="none">
             <rect
               x="3"
               y="5"
@@ -563,12 +532,17 @@
 
           <thead>
             <tr>
+
               <th>
-                Email
+                Email baneado
               </th>
 
               <th>
-                Usuario vinculado
+                Usuario
+              </th>
+
+              <th>
+                Contacto / emails
               </th>
 
               <th>
@@ -576,24 +550,13 @@
               </th>
 
               <th>
-                Origen
-              </th>
-
-              <th>
                 Estado
-              </th>
-
-              <th>
-                Bloqueado el
-              </th>
-
-              <th>
-                Última notificación
               </th>
 
               <th class="suppressed-table__actions-heading">
                 Acciones
               </th>
+
             </tr>
           </thead>
 
@@ -602,17 +565,16 @@
 
             <tr *ngFor="let item of items">
 
-              <!-- EMAIL -->
+              <!-- =================================================
+                   EMAIL BANEADO
+              ================================================== -->
 
               <td>
 
                 <div class="suppressed-table__email">
 
                   <span class="suppressed-table__email-icon">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
+                    <svg viewBox="0 0 24 24" fill="none">
                       <rect
                         x="3"
                         y="5"
@@ -631,6 +593,7 @@
                     </svg>
                   </span>
 
+
                   <div>
 
                     <strong>
@@ -638,7 +601,9 @@
                     </strong>
 
                     <span>
-                      Registro #{{ item.id }}
+                      {{ sourceLabel(item.source) }}
+                      ·
+                      {{ formatDate(item.suppressedAt) }}
                     </span>
 
                   </div>
@@ -648,7 +613,9 @@
               </td>
 
 
-              <!-- MATCHED USERS -->
+              <!-- =================================================
+                   USUARIO
+              ================================================== -->
 
               <td>
 
@@ -661,10 +628,7 @@
                 >
 
                   <div
-                    *ngFor="
-                      let user of item.matchedUsers;
-                      let last = last
-                    "
+                    *ngFor="let user of item.matchedUsers"
                     class="suppressed-table__user"
                   >
 
@@ -680,10 +644,50 @@
 
                     </div>
 
+
+                    <small *ngIf="user.idNumber">
+                      ID {{ user.idNumber }}
+                    </small>
+
+
+                    <small>
+                      {{ statusLabel(user.status) }}
+                    </small>
+
+
+                    <small
+                      *ngIf="
+                        user.studentClassification ||
+                        user.stage
+                      "
+                    >
+                      <ng-container *ngIf="user.studentClassification">
+                        {{ user.studentClassification }}
+                      </ng-container>
+
+                      <ng-container *ngIf="user.stage">
+                        · {{ user.stage }}
+                      </ng-container>
+                    </small>
+
+
                     <small>
                       Coincidencia:
                       {{ matchFieldLabel(user.matchField) }}
                     </small>
+
+
+                    <button
+                      type="button"
+                      class="
+                        suppressed-table__action
+                        suppressed-table__action--user-detail
+                      "
+                      title="Ver datos del usuario"
+                      (click)="openUserDetail(user, item.email)"
+                    >
+                      Ver datos
+                    </button>
 
                   </div>
 
@@ -701,11 +705,99 @@
               </td>
 
 
-              <!-- REASON -->
+              <!-- =================================================
+                   CONTACTO / EMAILS
+              ================================================== -->
 
               <td>
 
-                <span class="suppressed-table__reason">
+                <div
+                  *ngIf="
+                    item.matchedUsers?.length;
+                    else noContact
+                  "
+                  class="suppressed-table__users"
+                >
+
+                  <div
+                    *ngFor="let user of item.matchedUsers"
+                    class="suppressed-table__user"
+                  >
+
+                    <!-- LOGIN -->
+
+                    <small>
+                      <strong>
+                        Login:
+                      </strong>
+
+                      {{ user.email || '—' }}
+                    </small>
+
+
+                    <!-- EMAIL -->
+
+                    <small>
+                      <strong>
+                        Email:
+                      </strong>
+
+                      {{ user.emailAddress || '—' }}
+                    </small>
+
+
+                    <!-- PHONE -->
+
+                    <small>
+                      <strong>
+                        Tel:
+                      </strong>
+
+                      {{ user.contact || '—' }}
+                    </small>
+
+
+                    <!-- TUTOR -->
+
+                    <small
+                      *ngIf="
+                        user.tutorEmail ||
+                        user.matchField === 'tutorEmail'
+                      "
+                    >
+                      <strong>
+                        Tutor:
+                      </strong>
+
+                      {{ user.tutorEmail || '—' }}
+                    </small>
+
+                  </div>
+
+                </div>
+
+
+                <ng-template #noContact>
+
+                  <span class="suppressed-table__no-user">
+                    Sin datos de usuario
+                  </span>
+
+                </ng-template>
+
+              </td>
+
+
+              <!-- =================================================
+                   REASON
+              ================================================== -->
+
+              <td>
+
+                <span
+                  class="suppressed-table__reason"
+                  [title]="item.reason || ''"
+                >
                   {{
                     item.reason ||
                     'Sin motivo registrado'
@@ -715,29 +807,9 @@
               </td>
 
 
-              <!-- SOURCE -->
-
-              <td>
-
-                <span
-                  class="suppressed-table__source"
-                  [class.suppressed-table__source--failure]="
-                    item.source === 'SEND_FAILURE'
-                  "
-                  [class.suppressed-table__source--manual]="
-                    item.source === 'MANUAL'
-                  "
-                  [class.suppressed-table__source--invalid]="
-                    item.source === 'INVALID_ADDRESS'
-                  "
-                >
-                  {{ sourceLabel(item.source) }}
-                </span>
-
-              </td>
-
-
-              <!-- ACTIVE -->
+              <!-- =================================================
+                   STATUS
+              ================================================== -->
 
               <td>
 
@@ -760,40 +832,27 @@
                   }}
                 </span>
 
-              </td>
 
-
-              <!-- SUPPRESSED -->
-
-              <td>
-
-                <span class="suppressed-table__date">
-                  {{ formatDate(item.suppressedAt) }}
-                </span>
+                <div
+                  *ngIf="item.lastNotifiedAt"
+                  class="suppressed-table__date"
+                >
+                  Notificado:
+                  {{ formatDate(item.lastNotifiedAt) }}
+                </div>
 
               </td>
 
 
-              <!-- NOTIFIED -->
-
-              <td>
-
-                <span class="suppressed-table__date">
-                  {{
-                    item.lastNotifiedAt
-                      ? formatDate(item.lastNotifiedAt)
-                      : 'Nunca'
-                  }}
-                </span>
-
-              </td>
-
-
-              <!-- ACTIONS -->
+              <!-- =================================================
+                   ACTIONS
+              ================================================== -->
 
               <td>
 
                 <div class="suppressed-table__actions">
+
+                  <!-- EDIT -->
 
                   <button
                     type="button"
@@ -801,10 +860,7 @@
                     title="Editar"
                     (click)="openEdit(item)"
                   >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
+                    <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M4 20h4l11-11-4-4L4 16v4Z"
                         stroke="currentColor"
@@ -821,20 +877,19 @@
                   </button>
 
 
+                  <!-- NOTIFY -->
+
                   <button
-                    *ngIf="item.matchedUsers?.length"
                     type="button"
                     class="
                       suppressed-table__action
                       suppressed-table__action--notify
                     "
                     title="Notificar usuario"
+                    [disabled]="!item.matchedUsers.length"
                     (click)="openNotify(item)"
                   >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
+                    <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"
                         stroke="currentColor"
@@ -852,6 +907,8 @@
                   </button>
 
 
+                  <!-- LIFT -->
+
                   <button
                     *ngIf="item.active"
                     type="button"
@@ -862,10 +919,7 @@
                     title="Levantar ban"
                     (click)="requestLift(item)"
                   >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
+                    <svg viewBox="0 0 24 24" fill="none">
                       <path
                         d="M7 11V8a5 5 0 0 1 9.5-2"
                         stroke="currentColor"
@@ -931,10 +985,7 @@
             [disabled]="page <= 1"
             (click)="onPrev()"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-            >
+            <svg viewBox="0 0 24 24" fill="none">
               <path
                 d="m15 6-6 6 6 6"
                 stroke="currentColor"
@@ -964,10 +1015,7 @@
           >
             Siguiente
 
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-            >
+            <svg viewBox="0 0 24 24" fill="none">
               <path
                 d="m9 6 6 6-6 6"
                 stroke="currentColor"
@@ -1031,10 +1079,7 @@
           class="suppressed-modal__close"
           (click)="closeEditModal()"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-          >
+          <svg viewBox="0 0 24 24" fill="none">
             <path
               d="M7 7l10 10M17 7 7 17"
               stroke="currentColor"
@@ -1048,8 +1093,6 @@
 
 
       <div class="suppressed-modal__body">
-
-        <!-- EMAIL -->
 
         <div class="suppressed-modal__field">
 
@@ -1067,8 +1110,6 @@
         </div>
 
 
-        <!-- REASON -->
-
         <div class="suppressed-modal__field">
 
           <label for="suppressedReason">
@@ -1080,13 +1121,10 @@
             rows="4"
             placeholder="Describe el motivo del bloqueo..."
             [(ngModel)]="formReason"
-          >
-          </textarea>
+          ></textarea>
 
         </div>
 
-
-        <!-- ACTIVE -->
 
         <label
           *ngIf="!isCreate"
@@ -1206,10 +1244,7 @@
           class="suppressed-modal__close"
           (click)="closeNotifyModal()"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-          >
+          <svg viewBox="0 0 24 24" fill="none">
             <path
               d="M7 7l10 10M17 7 7 17"
               stroke="currentColor"
@@ -1224,36 +1259,7 @@
 
       <div class="suppressed-modal__body">
 
-        <div class="suppressed-modal__field">
-
-          <label>
-            Título
-          </label>
-
-          <input
-            type="text"
-            [(ngModel)]="notifyTitle"
-          />
-
-        </div>
-
-
-        <div class="suppressed-modal__field">
-
-          <label>
-            Mensaje
-          </label>
-
-          <textarea
-            rows="5"
-            [(ngModel)]="notifyMessage"
-          >
-          </textarea>
-
-        </div>
-
-
-        <!-- USERS -->
+        <!-- RECIPIENTS -->
 
         <div class="suppressed-modal__users">
 
@@ -1271,9 +1277,7 @@
 
 
           <label
-            *ngFor="
-              let user of notifyTarget.matchedUsers
-            "
+            *ngFor="let user of notifyTarget.matchedUsers"
             class="suppressed-modal__user"
           >
 
@@ -1284,10 +1288,7 @@
             />
 
             <span class="suppressed-modal__user-check">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-              >
+              <svg viewBox="0 0 24 24" fill="none">
                 <path
                   d="m6 12 4 4 8-8"
                   stroke="currentColor"
@@ -1309,11 +1310,51 @@
                 {{ roleLabel(user.role) }}
                 ·
                 {{ matchFieldLabel(user.matchField) }}
+
+                <ng-container *ngIf="user.idNumber">
+                  · ID {{ user.idNumber }}
+                </ng-container>
+
+                <ng-container *ngIf="user.contact">
+                  · {{ user.contact }}
+                </ng-container>
               </span>
 
             </span>
 
           </label>
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <div class="suppressed-modal__field">
+
+          <label>
+            Título
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="notifyTitle"
+          />
+
+        </div>
+
+
+        <!-- MESSAGE -->
+
+        <div class="suppressed-modal__field">
+
+          <label>
+            Mensaje
+          </label>
+
+          <textarea
+            rows="5"
+            [(ngModel)]="notifyMessage"
+          ></textarea>
 
         </div>
 
@@ -1349,10 +1390,334 @@
 
 
   <!-- =====================================================
+       USER DETAIL MODAL
+  ====================================================== -->
+
+  <div
+    *ngIf="
+      showUserModal &&
+      selectedUser
+    "
+    class="suppressed-modal"
+  >
+
+    <button
+      type="button"
+      class="suppressed-modal__backdrop"
+      aria-label="Cerrar"
+      (click)="closeUserDetail()"
+    >
+    </button>
+
+
+    <section
+      class="
+        suppressed-modal__panel
+        suppressed-modal__panel--user-detail
+      "
+    >
+
+      <header class="suppressed-modal__header">
+
+        <div>
+
+          <span class="suppressed-modal__eyebrow">
+            Usuario vinculado
+          </span>
+
+          <h2>
+            Datos del usuario
+          </h2>
+
+          <p *ngIf="selectedBannedEmail">
+            Email bloqueado:
+
+            <strong>
+              {{ selectedBannedEmail }}
+            </strong>
+
+            ·
+
+            {{ matchFieldLabel(selectedUser.matchField) }}
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="suppressed-modal__close"
+          (click)="closeUserDetail()"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M7 7l10 10M17 7 7 17"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+      </header>
+
+
+      <div class="suppressed-modal__body">
+
+        <!-- NAME -->
+
+        <div class="suppressed-modal__field">
+          <label>
+            Nombre
+          </label>
+
+          <span>
+            {{ userDisplayName(selectedUser) }}
+          </span>
+        </div>
+
+
+        <!-- ID -->
+
+        <div class="suppressed-modal__field">
+          <label>
+            Identificación
+          </label>
+
+          <span>
+            {{ selectedUser.idNumber || '—' }}
+          </span>
+        </div>
+
+
+        <!-- ROLE -->
+
+        <div class="suppressed-modal__field">
+          <label>
+            Rol
+          </label>
+
+          <span>
+            {{ roleLabel(selectedUser.role) }}
+          </span>
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="suppressed-modal__field">
+          <label>
+            Estado
+          </label>
+
+          <span>
+            {{ statusLabel(selectedUser.status) }}
+          </span>
+        </div>
+
+
+        <!-- LOGIN -->
+
+        <div class="suppressed-modal__field">
+          <label>
+            Usuario / login
+          </label>
+
+          <span>
+            {{ selectedUser.email || '—' }}
+          </span>
+        </div>
+
+
+        <!-- CONTACT EMAIL -->
+
+        <div class="suppressed-modal__field">
+          <label>
+            Email de contacto
+          </label>
+
+          <span>
+            {{ selectedUser.emailAddress || '—' }}
+          </span>
+        </div>
+
+
+        <!-- PHONE -->
+
+        <div class="suppressed-modal__field">
+          <label>
+            Teléfono
+          </label>
+
+          <span>
+            {{ selectedUser.contact || '—' }}
+          </span>
+        </div>
+
+
+        <!-- CITY -->
+
+        <div class="suppressed-modal__field">
+          <label>
+            Ciudad
+          </label>
+
+          <span>
+            {{ selectedUser.city || '—' }}
+          </span>
+        </div>
+
+
+        <!-- COUNTRY -->
+
+        <div class="suppressed-modal__field">
+          <label>
+            País
+          </label>
+
+          <span>
+            {{ selectedUser.country || '—' }}
+          </span>
+        </div>
+
+
+        <!-- STAGE -->
+
+        <div
+          *ngIf="selectedUser.stage"
+          class="suppressed-modal__field"
+        >
+          <label>
+            Stage
+          </label>
+
+          <span>
+            {{ selectedUser.stage }}
+          </span>
+        </div>
+
+
+        <!-- CLASSIFICATION -->
+
+        <div
+          *ngIf="selectedUser.studentClassification"
+          class="suppressed-modal__field"
+        >
+          <label>
+            Clasificación
+          </label>
+
+          <span>
+            {{ selectedUser.studentClassification }}
+          </span>
+        </div>
+
+
+        <!-- CONTRACT -->
+
+        <div
+          *ngIf="selectedUser.contractNumber"
+          class="suppressed-modal__field"
+        >
+          <label>
+            Contrato
+          </label>
+
+          <span>
+            {{ selectedUser.contractNumber }}
+          </span>
+        </div>
+
+
+        <!-- REPRESENTATIVE -->
+
+        <div
+          *ngIf="
+            selectedUser.tutorName ||
+            selectedUser.tutorEmail ||
+            selectedUser.tutorPhone
+          "
+          class="suppressed-modal__users"
+        >
+
+          <div class="suppressed-modal__users-header">
+
+            <strong>
+              Representante
+            </strong>
+
+            <span>
+              Datos de contacto del representante.
+            </span>
+
+          </div>
+
+
+          <div class="suppressed-modal__field">
+
+            <label>
+              Nombre
+            </label>
+
+            <span>
+              {{ selectedUser.tutorName || '—' }}
+            </span>
+
+          </div>
+
+
+          <div class="suppressed-modal__field">
+
+            <label>
+              Email
+            </label>
+
+            <span>
+              {{ selectedUser.tutorEmail || '—' }}
+            </span>
+
+          </div>
+
+
+          <div class="suppressed-modal__field">
+
+            <label>
+              Teléfono
+            </label>
+
+            <span>
+              {{ selectedUser.tutorPhone || '—' }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <footer class="suppressed-modal__footer">
+
+        <button
+          type="button"
+          class="suppressed-modal__button"
+          (click)="closeUserDetail()"
+        >
+          Cerrar
+        </button>
+
+      </footer>
+
+    </section>
+
+  </div>
+
+
+  <!-- =====================================================
        GENERIC MODAL
   ====================================================== -->
 
- <app-modal
+  <app-modal
     [showModal]="modal.show"
     [message]="modal.message"
     [isError]="modal.isError"
@@ -1362,6 +1727,7 @@
     [showButtons]="modal.showButtons ?? false"
     (confirmAction)="modal.confirm && modal.confirm()"
     (close)="modal.close()"
-  ></app-modal>
+  >
+  </app-modal>
 
 </section>

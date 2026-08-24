@@ -22,6 +22,12 @@ export class InstructorMeetingsFiltersComponent {
   @Input() ageGroupOptions: string[] = [];
   @Input() isLoading: boolean = false;
 
+  /* =========================
+     MOBILE FILTERS
+  ========================= */
+
+  isFiltersExpanded: boolean = false;
+
   readonly modeOptions: { value: Mode; label: string }[] = [
     { value: Mode.ONLINE, label: 'Online' },
     { value: Mode.PRESENCIAL, label: 'Presencial' },
@@ -31,6 +37,18 @@ export class InstructorMeetingsFiltersComponent {
   @Output() filterChange = new EventEmitter<void>();
 
   @Output() clearFilters = new EventEmitter<void>();
+
+  /* =========================
+     MOBILE FILTERS
+  ========================= */
+
+  toggleFilters(): void {
+    this.isFiltersExpanded = !this.isFiltersExpanded;
+  }
+
+  /* =========================
+     SEARCH
+  ========================= */
 
   onSearch(): void {
     if (this.isLoading) return;
@@ -51,9 +69,17 @@ export class InstructorMeetingsFiltersComponent {
     this.onSearch();
   }
 
+  /* =========================
+     GETTERS
+  ========================= */
+
   get isSearchDisabled(): boolean {
     return this.isLoading;
   }
+
+  /* =========================
+     TRACK BY
+  ========================= */
 
   trackByStageId(index: number, stage: Stage): number {
     return stage.id;
@@ -67,9 +93,16 @@ export class InstructorMeetingsFiltersComponent {
     return ageGroup;
   }
 
-  trackByMode(index: number, modeOption: { value: Mode; label: string }): Mode {
+  trackByMode(
+    index: number,
+    modeOption: { value: Mode; label: string },
+  ): Mode {
     return modeOption.value;
   }
+
+  /* =========================
+     FORMATTERS
+  ========================= */
 
   formatHour(hour: number): string {
     const period = hour >= 12 ? 'PM' : 'AM';
@@ -79,8 +112,13 @@ export class InstructorMeetingsFiltersComponent {
   }
 
   formatStageLabel(stage: Stage): string {
-    const number = stage.number ? `Stage ${stage.number}` : 'Stage';
-    const description = stage.description ? ` - ${stage.description}` : '';
+    const number = stage.number
+      ? `Stage ${stage.number}`
+      : 'Stage';
+
+    const description = stage.description
+      ? ` - ${stage.description}`
+      : '';
 
     return `${number}${description}`;
   }

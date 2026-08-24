@@ -1,15 +1,13 @@
 import {
   Component,
-  OnDestroy,
-  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { interval, Subscription } from 'rxjs';
-
-type DailyQuote = {
-  text: string;
-  author: string;
-};
+import { DailySparkService } from '../../../../services/daily-spark.service';
+import { DailySpark } from '../../../../services/dtos/daily-spark.dto';
+import { StudentClassification } from '../../../../services/dtos/student.dto';
 
 @Component({
   selector: 'app-student-daily-quote',
@@ -18,110 +16,47 @@ type DailyQuote = {
   templateUrl: './student-daily-quote.component.html',
   styleUrl: './student-daily-quote.component.scss',
 })
-export class StudentDailyQuoteComponent
-  implements OnInit, OnDestroy
-{
-  quotes: DailyQuote[] = [
-    {
-      text: 'The limits of my language mean the limits of my world.',
-      author: 'Ludwig Wittgenstein',
-    },
-    {
-      text: 'A different language is a different vision of life.',
-      author: 'Federico Fellini',
-    },
-    {
-      text: 'Language is the road map of a culture.',
-      author: 'Rita Mae Brown',
-    },
-    {
-      text: 'To have another language is to possess a second soul.',
-      author: 'Charlemagne',
-    },
-    {
-      text: 'Learning another language is like becoming another person.',
-      author: 'Haruki Murakami',
-    },
-  ];
+export class StudentDailyQuoteComponent implements OnChanges {
+  @Input() userId: number | null = null;
+  @Input() classification: StudentClassification | string | null = null;
 
-  currentQuoteIndex = 0;
+  spark: DailySpark | null = null;
+  revealed = false;
 
-  private quoteInterval?: Subscription;
+  constructor(private readonly dailySparkService: DailySparkService) {}
 
-  get currentQuote(): DailyQuote {
-    return this.quotes[this.currentQuoteIndex];
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['userId'] || changes['classification']) {
+      this.loadSpark();
+    }
   }
 
-  ngOnInit(): void {
-    this.selectDailyQuote();
-
-    this.quoteInterval = interval(
-      15000
-    ).subscribe(() => {
-      this.showNextQuote();
-    });
+  get isTrivia(): boolean {
+    return this.spark?.kind === 'trivia';
   }
 
-  ngOnDestroy(): void {
-    this.quoteInterval?.unsubscribe();
+  get title(): string {
+    return this.isTrivia ? 'Trivia del día' : 'Frase del día';
   }
 
-  showNextQuote(): void {
-    if (this.quotes.length <= 1) {
+  flip(): void {
+    if (!this.isTrivia || this.revealed) {
+      return;
+    }
+    this.revealed = true;
+  }
+
+  private loadSpark(): void {
+    this.revealed = false;
+
+    if (!this.userId) {
+      this.spark = null;
       return;
     }
 
-    this.currentQuoteIndex =
-      (this.currentQuoteIndex + 1) %
-      this.quotes.length;
-  }
-
-  showPreviousQuote(): void {
-    if (this.quotes.length <= 1) {
-      return;
-    }
-
-    this.currentQuoteIndex =
-      (
-        this.currentQuoteIndex -
-        1 +
-        this.quotes.length
-      ) % this.quotes.length;
-  }
-
-  selectQuote(index: number): void {
-    if (
-      index < 0 ||
-      index >= this.quotes.length
-    ) {
-      return;
-    }
-
-    this.currentQuoteIndex = index;
-  }
-
-  private selectDailyQuote(): void {
-    if (this.quotes.length === 0) {
-      return;
-    }
-
-    const today = new Date();
-
-    const startOfYear = new Date(
-      today.getFullYear(),
-      0,
-      0
+    this.spark = this.dailySparkService.getTodaySpark(
+      this.userId,
+      this.classification
     );
-
-    const difference =
-      today.getTime() -
-      startOfYear.getTime();
-
-    const dayOfYear = Math.floor(
-      difference / 86400000
-    );
-
-    this.currentQuoteIndex =
-      dayOfYear % this.quotes.length;
   }
 }

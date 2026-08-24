@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import {
   EmailSuppression,
   EmailSuppressionService,
@@ -16,7 +15,7 @@ import { ModalComponent } from '../../../../components/modal/modal.component';
 @Component({
   selector: 'app-suppressed-emails',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ModalComponent],
+  imports: [CommonModule, FormsModule, ModalComponent],
   templateUrl: './suppressed-emails.component.html',
   styleUrl: './suppressed-emails.component.scss',
 })
@@ -33,6 +32,7 @@ export class SuppressedEmailsComponent implements OnInit {
 
   showEditModal = false;
   showNotifyModal = false;
+  showUserModal = false;
   editing: EmailSuppression | null = null;
   isCreate = false;
 
@@ -44,6 +44,8 @@ export class SuppressedEmailsComponent implements OnInit {
   notifyTitle = 'Actualiza tu correo electrónico';
   notifyMessage = '';
   selectedUserIds = new Set<number>();
+  selectedUser: MatchedUser | null = null;
+  selectedBannedEmail = '';
 
   modal: ModalDto = modalInitializer();
 
@@ -277,6 +279,18 @@ export class SuppressedEmailsComponent implements OnInit {
       });
   }
 
+  openUserDetail(user: MatchedUser, bannedEmail: string): void {
+    this.selectedUser = user;
+    this.selectedBannedEmail = bannedEmail;
+    this.showUserModal = true;
+  }
+
+  closeUserDetail(): void {
+    this.showUserModal = false;
+    this.selectedUser = null;
+    this.selectedBannedEmail = '';
+  }
+
   userDisplayName(user: MatchedUser): string {
     const name = [user.firstName, user.lastName].filter(Boolean).join(' ');
     return name || `Usuario #${user.id}`;
@@ -305,6 +319,21 @@ export class SuppressedEmailsComponent implements OnInit {
         return 'Admin';
       default:
         return role || '—';
+    }
+  }
+
+  statusLabel(status?: string | null): string {
+    switch (status) {
+      case 'ACTIVE':
+        return 'Activo';
+      case 'INACTIVE':
+        return 'Inactivo';
+      case 'HOLD':
+        return 'Hold';
+      case 'BLOCK':
+        return 'Bloqueado';
+      default:
+        return status || '—';
     }
   }
 

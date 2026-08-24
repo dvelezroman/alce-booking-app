@@ -152,97 +152,100 @@
   bottom: .6rem;
 }
 
+.daily-quote__hint {
+  margin: 0.65rem 0 0;
+
+  color: rgba(255, 255, 255, 0.78);
+
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.daily-quote__hint-label {
+  display: inline-block;
+  margin-right: 0.3rem;
+
+  color: rgba(196, 208, 255, 0.95);
+
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.daily-quote__text--reveal {
+  font-size: clamp(0.78rem, 1.3vw, 0.92rem);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
 /* ================================
-   CONTROLES
+   TRIVIA FLIP
 ================================ */
 
-.daily-quote__controls {
-  margin-top: .65rem;
+.daily-quote__trivia {
+  position: relative;
+  z-index: 1;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .55rem;
-}
-
-.daily-quote__arrow {
-  width: 1.55rem;
-  height: 1.55rem;
-  padding: 0;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 50%;
-
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.9);
-
-  cursor: pointer;
-
-  transition:
-    background-color 160ms ease,
-    border-color 160ms ease,
-    transform 160ms ease;
-}
-
-.daily-quote__arrow:hover {
-  border-color:
-    rgba(255, 255, 255, 0.32);
-
-  background:
-    rgba(255, 255, 255, 0.15);
-}
-
-.daily-quote__arrow:active {
-  transform: scale(0.94);
-}
-
-.daily-quote__arrow svg {
   display: block;
-  width: 12px;
-  height: 12px;
-}
-
-.daily-quote__indicators {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .26rem;
-}
-
-.daily-quote__indicator {
-  width: .3rem;
-  height: .3rem;
+  flex: 1;
+  width: 100%;
+  min-height: 6.5rem;
   padding: 0;
 
   border: 0;
-  border-radius: 999px;
+  border-radius: 0.7rem;
 
-  background:
-    rgba(255, 255, 255, 0.32);
+  background: transparent;
+  color: inherit;
 
   cursor: pointer;
-
-  transition:
-    width 180ms ease,
-    background-color 180ms ease,
-    transform 180ms ease;
+  perspective: 900px;
+  text-align: left;
 }
 
-.daily-quote__indicator:hover {
-  transform: scale(1.15);
+.daily-quote__trivia-inner {
+  position: relative;
 
-  background:
-    rgba(255, 255, 255, 0.55);
+  width: 100%;
+  min-height: 6.5rem;
+
+  transform-style: preserve-3d;
+  transition: transform 420ms ease;
 }
 
-.daily-quote__indicator--active {
-  width: .8rem;
+.daily-quote__trivia--revealed .daily-quote__trivia-inner {
+  transform: rotateY(180deg);
+}
 
-  background: #ffffff;
+.daily-quote__trivia-face {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 0.15rem 0.35rem;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.daily-quote__trivia-face--back {
+  transform: rotateY(180deg);
+}
+
+.daily-quote__tap {
+  margin-top: 0.55rem;
+
+  color: rgba(196, 208, 255, 0.9);
+
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 /* ================================
@@ -314,8 +317,20 @@
 @media (
   prefers-reduced-motion: reduce
 ) {
-  .daily-quote__arrow,
-  .daily-quote__indicator {
+  .daily-quote__trivia-inner {
     transition: none;
+  }
+
+  .daily-quote__trivia--revealed .daily-quote__trivia-inner {
+    transform: none;
+  }
+
+  .daily-quote__trivia--revealed .daily-quote__trivia-face--front {
+    display: none;
+  }
+
+  .daily-quote__trivia--revealed .daily-quote__trivia-face--back {
+    position: relative;
+    transform: none;
   }
 }
