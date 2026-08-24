@@ -35,6 +35,9 @@ export class MeetingDetailModalComponent
   @Input()
   selectedMeeting: MeetingDTO | null = null
 
+  @Input()
+  studentCity: string | null | undefined = null
+
   /**
    * Determina si el modal está abierto.
    */
@@ -330,5 +333,32 @@ export class MeetingDetailModalComponent
 
   private enableBodyScroll(): void {
     document.body.classList.remove('no-scroll')
+  }
+
+  shouldShowInstructor(
+    meeting: MeetingDTO
+  ): boolean {
+    const mode = String(
+      meeting.mode ?? ''
+    )
+      .trim()
+      .toUpperCase()
+
+    const city = String(
+      this.studentCity ?? ''
+    )
+      .trim()
+      .toUpperCase()
+
+    const isPortoviejo =
+      city === 'PORTOVIEJO'
+
+    const isPresential =
+      mode === 'PRESENCIAL'
+
+    return !(
+      isPortoviejo &&
+      isPresential
+    )
   }
 }

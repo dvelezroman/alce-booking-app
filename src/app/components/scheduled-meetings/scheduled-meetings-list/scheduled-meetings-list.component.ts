@@ -31,6 +31,9 @@ export class ScheduledMeetingsListComponent {
   @Input()
   isLoading = false
 
+  @Input()
+  studentCity: string | null | undefined = null
+
   @Output()
   viewDetails = new EventEmitter<MeetingDTO>()
 
