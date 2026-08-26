@@ -578,30 +578,12 @@ export class ScheduledMeetingCardComponent {
   }
 
   get shouldShowInstructor(): boolean {
-    const city = String(
-      this.studentCity ?? ''
-    )
-      .trim()
-      .toUpperCase()
-
     const mode = String(
       this.meeting?.mode ?? ''
     )
       .trim()
       .toUpperCase()
 
-    const isPortoviejo =
-      city === 'PORTOVIEJO'
-
-    const isPresential = [
-      'PRESENCIAL',
-      'PRESENTIAL',
-      'IN_PERSON',
-    ].includes(mode)
-
-    return !(
-      isPortoviejo &&
-      isPresential
-    )
+    return mode === 'ONLINE'
   }
 }
