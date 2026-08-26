@@ -113,6 +113,7 @@ navItems: SidebarNavItem[] = [
   { icon: 'book-open', text: 'Recursos Stages', route: '/dashboard/stage-assessment-resources', roles: [UserRole.ADMIN]},
   { icon: 'book-type', text: 'Tipos de Evaluación',  route: '/dashboard/assessment-types', roles: [UserRole.ADMIN]},
   { icon: 'settings', text: 'Configuración de Evaluación', route: '/dashboard/assessment-config', roles: [UserRole.ADMIN] },
+  { icon: 'email', text: 'Destinatarios de reportes', route: '/dashboard/admin-report-recipients', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Promoción automática de stage', route: '/dashboard/stage-promotion', roles: [UserRole.ADMIN] },
   // { icon: 'notifications', text: 'Enviar', route: '/dashboard/broadcast-groups', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR], },
   { icon: 'notifications', text: 'Enviar', route: '/dashboard/broadcast-groups-v2', roles: [UserRole.ADMIN, UserRole.INSTRUCTOR], },
@@ -330,6 +331,7 @@ navItems: SidebarNavItem[] = [
       items: [
         this.findNavItemByRoute('/dashboard/feature-flag'),
         this.findNavItemByRoute('/dashboard/assessment-config'),
+        this.findNavItemByRoute('/dashboard/admin-report-recipients'),
         this.findNavItemByRoute('/dashboard/announcements'),
       ].filter(item => item.roles.includes(role))
     }
