@@ -223,6 +223,36 @@
 
   </div>
 
+   <!-- =====================================================
+       ABRIÓ ENLACE
+  ====================================================== -->
+
+  <div
+    class="meeting-row__cell meeting-row__cell--opened"
+    data-label="Abrió enlace"
+  >
+
+    <span
+      class="meeting-row__opened"
+      [class.meeting-row__opened--yes]="didOpenMeetingLink"
+      [class.meeting-row__opened--no]="!didOpenMeetingLink"
+    >
+
+      <span
+        class="meeting-row__opened-dot"
+        aria-hidden="true"
+      ></span>
+
+      {{
+        didOpenMeetingLink
+          ? 'Sí'
+          : 'No'
+      }}
+
+    </span>
+
+  </div>
+
 
   <!-- =====================================================
        MODALIDAD
@@ -286,95 +316,7 @@
 
   </div>
 
-
-  <!-- =====================================================
-       CONTENIDO
-  ====================================================== -->
-
-  <div
-    class="meeting-row__cell meeting-row__cell--content"
-    data-label="Contenido"
-  >
-
-    <ng-container
-      *ngIf="
-        hasStudyContent;
-        else noContent
-      "
-    >
-
-      <span
-        class="meeting-row__content-preview"
-        [title]="firstStudyContentTitle"
-      >
-        {{ firstStudyContentTitle }}
-      </span>
-
-      <button
-        type="button"
-        class="meeting-row__text-action"
-        (click)="onContentView()"
-      >
-        Ver
-        <span *ngIf="remainingStudyContentCount > 0">
-          +{{ remainingStudyContentCount }}
-        </span>
-      </button>
-
-    </ng-container>
-
-
-    <ng-template #noContent>
-
-      <span class="meeting-row__empty-value">
-        Sin contenido
-      </span>
-
-    </ng-template>
-
-  </div>
-
-
-  <!-- =====================================================
-       COMENTARIO
-  ====================================================== -->
-
-  <div
-    class="meeting-row__cell meeting-row__cell--comment"
-    data-label="Comentario"
-  >
-
-    <ng-container
-      *ngIf="
-        temporaryComment;
-        else noTemporaryComment
-      "
-    >
-
-      <button
-        type="button"
-        class="meeting-row__compact-text"
-        [title]="temporaryComment"
-        (click)="onTemporaryCommentView()"
-      >
-        {{ temporaryComment }}
-      </button>
-
-    </ng-container>
-
-
-    <ng-template #noTemporaryComment>
-
-      <span class="meeting-row__empty-value">
-        —
-      </span>
-
-    </ng-template>
-
-  </div>
-
-
-  <!-- =====================================================
+    <!-- =====================================================
        ASISTENCIA
   ====================================================== -->
 
@@ -466,6 +408,94 @@
 
 
   <!-- =====================================================
+       CONTENIDO
+  ====================================================== -->
+
+  <div
+    class="meeting-row__cell meeting-row__cell--content"
+    data-label="Contenido"
+  >
+
+    <ng-container
+      *ngIf="
+        hasStudyContent;
+        else noContent
+      "
+    >
+
+      <span
+        class="meeting-row__content-preview"
+        [title]="firstStudyContentTitle"
+      >
+        {{ firstStudyContentTitle }}
+      </span>
+
+      <button
+        type="button"
+        class="meeting-row__text-action"
+        (click)="onContentView()"
+      >
+        Ver
+        <span *ngIf="remainingStudyContentCount > 0">
+          +{{ remainingStudyContentCount }}
+        </span>
+      </button>
+
+    </ng-container>
+
+
+    <ng-template #noContent>
+
+      <span class="meeting-row__empty-value">
+        Sin contenido
+      </span>
+
+    </ng-template>
+
+  </div>
+
+
+  <!-- =====================================================
+       COMENTARIO
+  ====================================================== -->
+
+  <div
+    class="meeting-row__cell meeting-row__cell--comment"
+    data-label="Comentario"
+  >
+
+    <ng-container
+      *ngIf="
+        temporaryComment;
+        else noTemporaryComment
+      "
+    >
+
+      <button
+        type="button"
+        class="meeting-row__compact-text"
+        [title]="temporaryComment"
+        (click)="onTemporaryCommentView()"
+      >
+        {{ temporaryComment }}
+      </button>
+
+    </ng-container>
+
+
+    <ng-template #noTemporaryComment>
+
+      <span class="meeting-row__empty-value">
+        —
+      </span>
+
+    </ng-template>
+
+  </div>
+
+
+
+  <!-- =====================================================
        EVALUACIONES
   ====================================================== -->
 
@@ -503,37 +533,6 @@
       </svg>
 
     </button>
-
-  </div>
-
-
-  <!-- =====================================================
-       ABRIÓ ENLACE
-  ====================================================== -->
-
-  <div
-    class="meeting-row__cell meeting-row__cell--opened"
-    data-label="Abrió enlace"
-  >
-
-    <span
-      class="meeting-row__opened"
-      [class.meeting-row__opened--yes]="didOpenMeetingLink"
-      [class.meeting-row__opened--no]="!didOpenMeetingLink"
-    >
-
-      <span
-        class="meeting-row__opened-dot"
-        aria-hidden="true"
-      ></span>
-
-      {{
-        didOpenMeetingLink
-          ? 'Sí'
-          : 'No'
-      }}
-
-    </span>
 
   </div>
 
