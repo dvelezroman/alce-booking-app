@@ -223,6 +223,126 @@
 
   </div>
 
+   <!-- =====================================================
+       ABRIÓ ENLACE
+  ====================================================== -->
+
+  <div
+    class="meeting-row__cell meeting-row__cell--opened"
+    data-label="Abrió enlace"
+  >
+
+    <span
+      class="meeting-row__opened"
+      [class.meeting-row__opened--yes]="didOpenMeetingLink"
+      [class.meeting-row__opened--no]="!didOpenMeetingLink"
+    >
+
+      <span
+        class="meeting-row__opened-dot"
+        aria-hidden="true"
+      ></span>
+
+      {{
+        didOpenMeetingLink
+          ? 'Sí'
+          : 'No'
+      }}
+
+    </span>
+
+  </div>
+
+   <!-- =====================================================
+       ASISTENCIA
+  ====================================================== -->
+
+  <div
+    class="meeting-row__cell meeting-row__cell--assistance"
+    data-label="Asistencia"
+  >
+
+    <button
+      type="button"
+      class="meeting-row__attendance"
+
+      [class.meeting-row__attendance--present]="
+        assistanceState === 'present'
+      "
+
+      [class.meeting-row__attendance--absent]="
+        assistanceState === 'absent'
+      "
+
+      [class.meeting-row__attendance--pending]="
+        assistanceState === 'pending'
+      "
+
+      [class.meeting-row__attendance--disabled]="
+        !canMarkAssistance
+      "
+
+      [attr.aria-disabled]="
+        !canMarkAssistance
+      "
+
+      (click)="
+        canMarkAssistance &&
+        onAssistanceClick($event)
+      "
+    >
+
+      <span
+        class="meeting-row__attendance-box"
+        aria-hidden="true"
+      >
+
+        <svg
+          *ngIf="
+            assistanceState === 'present'
+          "
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="m5 12 4 4 10-10"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+
+        <svg
+          *ngIf="
+            assistanceState === 'absent'
+          "
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M7 7l10 10M17 7 7 17"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+          />
+        </svg>
+
+      </span>
+
+      <span>
+        {{ assistanceLabel }}
+      </span>
+
+    </button>
+
+  </div>
+
 
   <!-- =====================================================
        MODALIDAD
@@ -374,96 +494,6 @@
   </div>
 
 
-  <!-- =====================================================
-       ASISTENCIA
-  ====================================================== -->
-
-  <div
-    class="meeting-row__cell meeting-row__cell--assistance"
-    data-label="Asistencia"
-  >
-
-    <button
-      type="button"
-      class="meeting-row__attendance"
-
-      [class.meeting-row__attendance--present]="
-        assistanceState === 'present'
-      "
-
-      [class.meeting-row__attendance--absent]="
-        assistanceState === 'absent'
-      "
-
-      [class.meeting-row__attendance--pending]="
-        assistanceState === 'pending'
-      "
-
-      [class.meeting-row__attendance--disabled]="
-        !canMarkAssistance
-      "
-
-      [attr.aria-disabled]="
-        !canMarkAssistance
-      "
-
-      (click)="
-        canMarkAssistance &&
-        onAssistanceClick($event)
-      "
-    >
-
-      <span
-        class="meeting-row__attendance-box"
-        aria-hidden="true"
-      >
-
-        <svg
-          *ngIf="
-            assistanceState === 'present'
-          "
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path
-            d="m5 12 4 4 10-10"
-            stroke="currentColor"
-            stroke-width="2.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-
-
-        <svg
-          *ngIf="
-            assistanceState === 'absent'
-          "
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path
-            d="M7 7l10 10M17 7 7 17"
-            stroke="currentColor"
-            stroke-width="2.2"
-            stroke-linecap="round"
-          />
-        </svg>
-
-      </span>
-
-      <span>
-        {{ assistanceLabel }}
-      </span>
-
-    </button>
-
-  </div>
-
 
   <!-- =====================================================
        EVALUACIONES
@@ -503,37 +533,6 @@
       </svg>
 
     </button>
-
-  </div>
-
-
-  <!-- =====================================================
-       ABRIÓ ENLACE
-  ====================================================== -->
-
-  <div
-    class="meeting-row__cell meeting-row__cell--opened"
-    data-label="Abrió enlace"
-  >
-
-    <span
-      class="meeting-row__opened"
-      [class.meeting-row__opened--yes]="didOpenMeetingLink"
-      [class.meeting-row__opened--no]="!didOpenMeetingLink"
-    >
-
-      <span
-        class="meeting-row__opened-dot"
-        aria-hidden="true"
-      ></span>
-
-      {{
-        didOpenMeetingLink
-          ? 'Sí'
-          : 'No'
-      }}
-
-    </span>
 
   </div>
 

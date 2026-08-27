@@ -344,21 +344,6 @@ export class MeetingDetailModalComponent
       .trim()
       .toUpperCase()
 
-    const city = String(
-      this.studentCity ?? ''
-    )
-      .trim()
-      .toUpperCase()
-
-    const isPortoviejo =
-      city === 'PORTOVIEJO'
-
-    const isPresential =
-      mode === 'PRESENCIAL'
-
-    return !(
-      isPortoviejo &&
-      isPresential
-    )
+    return mode === 'ONLINE'
   }
 }

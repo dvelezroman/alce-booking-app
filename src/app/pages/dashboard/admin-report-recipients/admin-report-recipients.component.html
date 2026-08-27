@@ -1,0 +1,120 @@
+<section class="page-root">
+  <div class="page-card">
+    <h1 class="page-title">Destinatarios de reportes</h1>
+    <p class="page-subtitle">
+      Lista global para reportes diarios, semanales, mensuales y notificaciones
+      admin por email. Solo se envía a quienes estén aquí.
+    </p>
+
+    <section class="panel">
+      <h2>Añadir administradores</h2>
+      <p class="hint">Solo usuarios con rol ADMIN activos en ALCE.</p>
+      <app-user-selector
+        role="admin"
+        [resetTrigger]="userSelectorReset"
+        (usersSelected)="onUsersSelected($event)"
+      ></app-user-selector>
+      <button
+        class="btn btn-primary"
+        type="button"
+        [disabled]="!selectedAdmins.length || saving"
+        (click)="addSelectedAdmins()"
+      >
+        Añadir seleccionados
+      </button>
+    </section>
+
+    <section class="panel">
+      <h2>Añadir correo externo</h2>
+      <p class="hint">
+        Para personas que no tienen cuenta en ALCE (p. ej. gerencia).
+      </p>
+      <div class="external-form">
+        <div class="field">
+          <label for="externalEmail">Email</label>
+          <input
+            id="externalEmail"
+            type="email"
+            [(ngModel)]="externalEmail"
+            placeholder="correo@ejemplo.com"
+          />
+        </div>
+        <div class="field">
+          <label for="externalName">Nombre (opcional)</label>
+          <input
+            id="externalName"
+            type="text"
+            [(ngModel)]="externalDisplayName"
+            placeholder="Nombre"
+          />
+        </div>
+        <button
+          class="btn btn-primary"
+          type="button"
+          [disabled]="!isValidEmail(externalEmail) || saving"
+          (click)="addExternal()"
+        >
+          Añadir correo
+        </button>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="list-section">
+      <h2>Destinatarios actuales ({{ items.length }})</h2>
+      <div *ngIf="loading" class="placeholder">Cargando…</div>
+      <div *ngIf="!loading && errorMsg" class="error">{{ errorMsg }}</div>
+      <div
+        *ngIf="!loading && !errorMsg && items.length === 0"
+        class="placeholder"
+      >
+        No hay destinatarios configurados. Añade administradores o correos
+        externos.
+      </div>
+
+      <div *ngIf="!loading && items.length > 0" class="table-wrapper">
+        <div class="table-header">
+          <div class="col-name">Nombre</div>
+          <div class="col-email">Email</div>
+          <div class="col-source">Origen</div>
+          <div class="col-actions">Acciones</div>
+        </div>
+        <div class="table-row" *ngFor="let item of items">
+          <div class="col-name">{{ displayName(item) }}</div>
+          <div class="col-email">{{ item.email }}</div>
+          <div class="col-source">
+            <span
+              class="badge"
+              [class.badge-user]="item.source === 'USER'"
+              [class.badge-external]="item.source === 'EXTERNAL'"
+            >
+              {{ sourceLabel(item.source) }}
+            </span>
+          </div>
+          <div class="col-actions">
+            <button
+              class="btn btn-danger"
+              type="button"
+              (click)="confirmRemove(item)"
+            >
+              Quitar
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [title]="modal.title || ''"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm && modal.confirm()"
+    (close)="modal.close()"
+  ></app-modal>
+</section>
