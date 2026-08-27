@@ -59,6 +59,9 @@
             id="notification-title"
             type="text"
             class="broadcast-notification-content__input"
+            [class.broadcast-notification-content__input--error]="
+              showValidationErrors && !title.trim()
+            "
             placeholder="Ej: Recordatorio de clase"
             [disabled]="!isFormEnabled"
             [maxlength]="titleMaxLength"
@@ -71,6 +74,13 @@
           </span>
 
         </div>
+
+        <p
+          *ngIf="showValidationErrors && !title.trim()"
+          class="broadcast-notification-content__error"
+        >
+          El título es obligatorio.
+        </p>
 
       </div>
 
@@ -98,6 +108,9 @@
           <textarea
             id="notification-message"
             class="broadcast-notification-content__textarea"
+            [class.broadcast-notification-content__textarea--error]="
+              showValidationErrors && !message.trim()
+            "
             rows="5"
             placeholder="Escribe tu mensaje aquí..."
             [disabled]="!isFormEnabled"
@@ -111,6 +124,13 @@
           </span>
 
         </div>
+
+        <p
+          *ngIf="showValidationErrors && !message.trim()"
+          class="broadcast-notification-content__error"
+        >
+          El mensaje es obligatorio.
+        </p>
 
       </div>
 
@@ -143,6 +163,9 @@
           <button
             type="button"
             class="broadcast-notification-content__select"
+            [class.broadcast-notification-content__select--error]="
+              showValidationErrors && !selectedNotificationType
+            "
             [disabled]="!isFormEnabled"
             (click)="toggleTypeDropdown()"
           >
@@ -259,6 +282,13 @@
           </div>
 
         </div>
+
+        <p
+          *ngIf="showValidationErrors && !selectedNotificationType"
+          class="broadcast-notification-content__error"
+        >
+          El tipo de notificación es obligatorio.
+        </p>
 
       </div>
 

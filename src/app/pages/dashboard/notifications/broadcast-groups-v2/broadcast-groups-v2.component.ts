@@ -39,6 +39,7 @@ import { StagesService } from '../../../../services/stages.service';
 import { UsersService } from '../../../../services/users.service';
 
 import { selectUserData } from '../../../../store/user.selector';
+import { StudentsService } from '../../../../services/students.service';
 
 
 @Component({
@@ -62,6 +63,9 @@ export class BroadcastGroupsV2Component implements OnInit {
 
   protected readonly UserRole = UserRole;
 
+  showValidationErrors = false;
+  submitFinished = 0;
+
   /* =========================
      SELECTION
   ========================= */
@@ -70,6 +74,10 @@ export class BroadcastGroupsV2Component implements OnInit {
   selectedUser: UserDto | null = null;
   selectedRole: 'student' | 'instructor' | 'admin' | null = null;
   selectedStage: Stage | null = null;
+  selectedStageUsers: UserDto[] = [];
+  selectedSegment: | 'kids' | 'teens' | 'adults' | 'city' | null = null;
+  selectedSegmentUsers: UserDto[] = [];
+  selectedCity: | 'Cuenca' | 'Portoviejo' | null = null;
 
   /* =========================
      STAGES
@@ -130,6 +138,7 @@ export class BroadcastGroupsV2Component implements OnInit {
     private router: Router,
     private stagesService: StagesService,
     private usersService: UsersService,
+    private studentsService: StudentsService,
     private notificationService: NotificationService,
     private notificationGroupService: NotificationGroupService,
   ) {}
@@ -237,10 +246,219 @@ export class BroadcastGroupsV2Component implements OnInit {
 
   handleStageSelect(stage: Stage | null): void {
     this.selectedStage = stage;
+    this.selectedStageUsers = [];
+
+    if (!stage?.id) {
+      return;
+    }
+
+    this.usersService
+      .searchUsers(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        'STUDENT',
+        undefined,
+        stage.id,
+      )
+      .subscribe({
+        next: (response) => {
+          this.selectedStageUsers =
+            response.users ?? [];
+
+          // console.log(
+          //   'USUARIOS DEL STAGE:',
+          //   this.selectedStageUsers,
+          // );
+
+          // console.log(
+          //   'IDS DEL STAGE:',
+          //   this.selectedStageUsers.map(
+          //     user => user.id,
+          //   ),
+          // );
+        },
+
+        error: (error) => {
+          console.error(
+            'Error al obtener usuarios del stage:',
+            error,
+          );
+
+          this.selectedStageUsers = [];
+        },
+      });
   }
 
-  handleRoleSelect(role: 'student' | 'instructor' | 'admin' | null): void {
+  selectedRoleUsers: UserDto[] = [];
+
+  handleRoleSelect(
+    role: 'student' | 'instructor' | 'admin' | null,
+  ): void {
     this.selectedRole = role;
+    this.selectedRoleUsers = [];
+
+    if (!role) {
+      return;
+    }
+
+    this.usersService
+      .searchUsers(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        role.toUpperCase(),
+      )
+      .subscribe({
+        next: (response) => {
+          this.selectedRoleUsers =
+            response.users ?? [];
+
+          // console.log(
+          //   'USUARIOS DEL ROL:',
+          //   this.selectedRoleUsers,
+          // );
+
+          // console.log(
+          //   'IDS DEL ROL:',
+          //   this.selectedRoleUsers.map(
+          //     user => user.id,
+          //   ),
+          // );
+        },
+
+        error: (error) => {
+          console.error(
+            'Error al obtener usuarios por rol:',
+            error,
+          );
+
+          this.selectedRoleUsers = [];
+        },
+      });
+  }
+
+  handleSegmentSelect(
+    segment:
+      | 'kids'
+      | 'teens'
+      | 'adults'
+      | 'city'
+      | null,
+  ): void {
+    this.selectedSegment = segment;
+    this.selectedSegmentUsers = [];
+
+    if (!segment) {
+      return;
+    }
+
+    if (
+      segment === 'kids' ||
+      segment === 'teens' ||
+      segment === 'adults'
+    ) {
+      const classification =
+        segment.toUpperCase();
+
+      this.studentsService
+        .findStudents({
+          classification,
+        })
+        .subscribe({
+          next: (students) => {
+            this.selectedSegmentUsers =
+              students
+                .map(student => student.user)
+                .filter(
+                  (user): user is UserDto =>
+                    !!user?.id,
+                );
+
+            // console.log(
+            //   'ESTUDIANTES DEL SEGMENTO:',
+            //   students,
+            // );
+
+            // console.log(
+            //   'USUARIOS DEL SEGMENTO:',
+            //   this.selectedSegmentUsers,
+            // );
+
+            // console.log(
+            //   'IDS DEL SEGMENTO:',
+            //   this.selectedSegmentUsers.map(
+            //     user => user.id,
+            //   ),
+            // );
+          },
+
+          error: (error) => {
+            console.error(
+              'Error al obtener estudiantes por segmento:',
+              error,
+            );
+
+            this.selectedSegmentUsers = [];
+          },
+        });
+
+      return;
+    }
+  }
+
+  handleCitySelect(
+    city: 'Cuenca' | 'Portoviejo' | null,
+  ): void {
+    this.selectedCity = city;
+    this.selectedSegmentUsers = [];
+
+    if (!city) {
+      return;
+    }
+
+    this.studentsService
+      .findStudents({
+        city,
+      })
+      .subscribe({
+        next: (students) => {
+          this.selectedSegmentUsers =
+            students
+              .map(student => student.user)
+              .filter(
+                (user): user is UserDto =>
+                  !!user?.id,
+              );
+
+          console.log(
+            'USUARIOS DE LA CIUDAD:',
+            this.selectedSegmentUsers,
+          );
+
+          console.log(
+            'IDS DE LA CIUDAD:',
+            this.selectedSegmentUsers.map(
+              user => user.id,
+            ),
+          );
+        },
+
+        error: (error) => {
+          console.error(
+            'Error al obtener estudiantes por ciudad:',
+            error,
+          );
+
+          this.selectedSegmentUsers = [];
+        },
+      });
   }
 
 
@@ -270,7 +488,12 @@ export class BroadcastGroupsV2Component implements OnInit {
     this.selectedAction = '';
     this.selectedUser = null;
     this.selectedStage = null;
+    this.selectedStageUsers = [];
     this.selectedRole = null;
+    this.selectedRoleUsers = [];
+    this.selectedSegment = null;
+    this.selectedSegmentUsers = [];
+    this.selectedCity = null;
 
     this.notificationContent = {
       title: '',
@@ -310,10 +533,12 @@ export class BroadcastGroupsV2Component implements OnInit {
 
     if (option !== 'stage') {
       this.selectedStage = null;
+      this.selectedStageUsers = [];
     }
 
     if (option !== 'role') {
       this.selectedRole = null;
+      this.selectedRoleUsers = [];
     }
 
     if (option !== 'group') {
@@ -323,97 +548,238 @@ export class BroadcastGroupsV2Component implements OnInit {
     if (option === 'group') {
       this.loadGroups();
     }
+
+    if (option !== 'segment') {
+      this.selectedSegment = null;
+      this.selectedSegmentUsers = [];
+      this.selectedCity = null;
+    }
   }
 
+
+
+  /* =========================
+     Validations
+  ========================= */
+  handleValidationRequested(): void {
+    this.showValidationErrors = true;
+  }
+
+  private getSelectedRecipientIds(): number[] {
+    switch (this.selectedAction) {
+
+      case 'user':
+        return this.selectedUser?.id
+          ? [this.selectedUser.id]
+          : [];
+
+      case 'stage':
+        return this.selectedStageUsers
+          .map(user => user.id)
+          .filter(
+            (id): id is number =>
+              typeof id === 'number',
+          );
+
+      case 'role':
+        return this.selectedRoleUsers
+          .map(user => user.id)
+          .filter(
+            (id): id is number =>
+              typeof id === 'number',
+          );
+
+      case 'segment':
+        return this.selectedSegmentUsers
+          .map(user => user.id)
+          .filter(
+            (id): id is number =>
+              typeof id === 'number',
+          );
+
+      default:
+        return [];
+    }
+  }
 
   /* =========================
      SUBMIT
   ========================= */
 
-  handleNotificationSubmit(payload: CreateNotificationDto): void {
+ handleNotificationSubmit(
+    payload: CreateNotificationDto,
+  ): void {
 
-    /* =========================
-       SEGMENT → BULK
-    ========================= */
+    const recipientIds =
+      Array.from(
+        new Set(
+          this.getSelectedRecipientIds(),
+        ),
+      );
 
-    if (this.selectedAction === 'segment') {
-      const bulkPayload: CreateNotificationsBulkDto = {
-        notifications: [payload],
-      };
-
-      this.notificationService.createBulk(bulkPayload).subscribe({
-        next: () => {
-          this.showModal({
-            isSuccess: true,
-            title: 'Notificación enviada',
-            message: 'La notificación por segmento fue enviada con éxito.',
-          });
-
-          this.clearSelection();
-        },
-        error: (err) => {
-          console.error('Error al enviar notificación bulk:', err);
-
-          this.showModal({
-            isError: true,
-            title: 'Error al enviar',
-            message: 'Ocurrió un error al enviar la notificación por segmento.',
-          });
-        },
-      });
-
-      return;
-    }
+    console.log(
+      'DESTINATARIOS A ENVIAR:',
+      recipientIds,
+    );
 
 
     /* =========================
-       NORMAL → CREATE
+      VALIDAR DESTINATARIOS
     ========================= */
 
-    const ids = Array.isArray(payload.to)
-      ? Array.from(
-          new Set(
-            payload.to.filter(
-              (id): id is number => typeof id === 'number',
-            ),
-          ),
-        )
-      : [];
+    if (recipientIds.length === 0) {
+      this.submitFinished++;
 
-    if (ids.length === 0) {
       this.showModal({
         isError: true,
         title: 'Sin destinatarios',
-        message: 'No se encontró ningún usuario para enviar la notificación.',
+        message:
+          'No se encontró ningún usuario para enviar la notificación.',
       });
 
       return;
     }
 
+
+    /* =========================
+      PAYLOAD CON USUARIOS
+    ========================= */
+
     const finalPayload: CreateNotificationDto = {
       ...payload,
-      to: ids,
+      to: recipientIds,
+      ...(this.selectedAction === 'segment' &&
+      this.selectedSegment === 'city' &&
+      this.selectedCity
+        ? {
+            city: this.selectedCity,
+          }
+        : {}),
     };
 
-    this.notificationService.create(finalPayload).subscribe({
-      next: () => {
-        this.showModal({
-          isSuccess: true,
-          title: 'Notificación enviada',
-          message: 'La notificación ha sido enviada con éxito.',
+    // console.log(
+    //   'PAYLOAD FINAL:',
+    //   finalPayload,
+    // );
+
+    /* =========================
+      STAGE / GROUP / ROLE /
+      SEGMENT → BULK
+    ========================= */
+
+    if (
+      this.selectedAction === 'stage' ||
+      this.selectedAction === 'group' ||
+      this.selectedAction === 'role' ||
+      this.selectedAction === 'segment'
+    ) {
+
+      const bulkPayload: CreateNotificationsBulkDto = {
+        notifications: [
+          finalPayload,
+        ],
+      };
+
+      console.log(
+        'PAYLOAD BULK:',
+        bulkPayload,
+      );
+
+      this.notificationService
+        .createBulk(bulkPayload)
+        .subscribe({
+
+          next: () => {
+            this.showValidationErrors = false;
+
+            this.showModal({
+              isSuccess: true,
+              title: 'Notificación enviada',
+              message:
+                'La notificación fue enviada con éxito.',
+            });
+
+            this.clearSelection();
+          },
+
+          error: (err) => {
+            console.error(
+              'Error al enviar notificación bulk:',
+              err,
+            );
+
+            this.submitFinished++;
+
+            this.showModal({
+              isError: true,
+              title: 'Error al enviar',
+              message:
+                'Ocurrió un error al enviar la notificación.',
+            });
+          },
+
         });
 
-        this.clearSelection();
-      },
-      error: (err) => {
-        console.error('Error al crear notificación:', err);
+      return;
+    }
 
-        this.showModal({
-          isError: true,
-          title: 'Error al enviar',
-          message: 'Ocurrió un error al enviar la notificación.',
+
+    /* =========================
+      USER → CREATE
+    ========================= */
+
+    if (this.selectedAction === 'user') {
+
+      this.notificationService
+        .create(finalPayload)
+        .subscribe({
+
+          next: () => {
+            this.showValidationErrors = false;
+
+            this.showModal({
+              isSuccess: true,
+              title: 'Notificación enviada',
+              message:
+                'La notificación ha sido enviada con éxito.',
+            });
+
+            this.clearSelection();
+          },
+
+          error: (err) => {
+            console.error(
+              'Error al crear notificación:',
+              err,
+            );
+
+            this.submitFinished++;
+
+            this.showModal({
+              isError: true,
+              title: 'Error al enviar',
+              message:
+                'Ocurrió un error al enviar la notificación.',
+            });
+          },
+
         });
-      },
+
+      return;
+    }
+
+
+    /* =========================
+      FALLBACK
+    ========================= */
+
+    this.submitFinished++;
+
+    this.showModal({
+      isError: true,
+      title: 'Error al enviar',
+      message:
+        'No se pudo determinar el tipo de envío de la notificación.',
     });
   }
 

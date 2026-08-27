@@ -240,6 +240,8 @@
           (userSelected)="handleUserSelect($event)"
           (stageSelected)="handleStageSelect($event)"
           (roleSelected)="handleRoleSelect($event)"
+          (segmentSelected)="handleSegmentSelect($event)"
+          (citySelected)="handleCitySelect($event)"
         />
 
 
@@ -253,6 +255,7 @@
         [selectedStage]="selectedStage"
         [selectedRole]="selectedRole"
         [reset]="resetChildren"
+        [showValidationErrors]="showValidationErrors"
         (contentChanged)="handleNotificationContentChange($event)"
         />
 
@@ -320,10 +323,13 @@
             [selectedUser]="selectedUser"
             [selectedStage]="selectedStage"
             [selectedRole]="selectedRole"
+            [selectedSegment]="selectedSegment"
             [notificationContent]="notificationContent"
             [deliveryOptions]="deliveryOptions"
             [senderId]="senderId"
             [reset]="resetChildren"
+            [submitFinished]="submitFinished"
+            (validationRequested)="handleValidationRequested()"
             (notificationSubmitted)="handleNotificationSubmit($event)"
             />
 

@@ -682,7 +682,7 @@
 
 
   <!-- =====================================================
-       SEGMENT
+      SEGMENT
   ====================================================== -->
 
   <ng-container *ngIf="selectedAction === 'segment'">
@@ -698,7 +698,13 @@
       </label>
 
 
+      <!-- =========================
+          SEGMENT OPTIONS
+      ========================== -->
+
       <div class="broadcast-recipient-selector__segment-grid">
+
+        <!-- KIDS -->
 
         <button
           type="button"
@@ -718,6 +724,8 @@
         </button>
 
 
+        <!-- TEENS -->
+
         <button
           type="button"
           class="broadcast-recipient-selector__segment-option"
@@ -735,6 +743,8 @@
           </span>
         </button>
 
+
+        <!-- ADULTS -->
 
         <button
           type="button"
@@ -754,6 +764,8 @@
         </button>
 
 
+        <!-- CITY -->
+
         <button
           type="button"
           class="broadcast-recipient-selector__segment-option"
@@ -770,6 +782,193 @@
             Segmentación por ciudad
           </span>
         </button>
+
+      </div>
+
+
+      <!-- =========================
+          CITY SELECTOR
+          SOLO CUANDO SELECCIONA CITY
+      ========================== -->
+
+      <div
+        *ngIf="selectedSegment === 'city'"
+        class="broadcast-recipient-selector__city"
+      >
+
+        <div class="broadcast-recipient-selector__city-heading">
+
+          <span
+            class="broadcast-recipient-selector__city-icon"
+            aria-hidden="true"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+
+              <circle
+                cx="12"
+                cy="10"
+                r="2.2"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+            </svg>
+          </span>
+
+
+          <div class="broadcast-recipient-selector__city-title-group">
+
+            <label class="broadcast-recipient-selector__label">
+              Seleccionar ciudad
+
+              <span class="broadcast-recipient-selector__required">
+                *
+              </span>
+            </label>
+
+            <span class="broadcast-recipient-selector__city-description">
+              Selecciona la ciudad de los estudiantes destinatarios.
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+            CITY SELECT
+        ========================== -->
+
+        <div class="broadcast-recipient-selector__select-wrapper">
+
+          <button
+            type="button"
+            class="broadcast-recipient-selector__select"
+            [class.broadcast-recipient-selector__select--selected]="
+              !!selectedCity
+            "
+            (click)="toggleCityDropdown()"
+          >
+
+            <span
+              [class.broadcast-recipient-selector__placeholder]="
+                !selectedCity
+              "
+            >
+              {{ selectedCityLabel }}
+            </span>
+
+
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="m7 10 5 5 5-5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </button>
+
+
+          <!-- =========================
+              CITY DROPDOWN
+          ========================== -->
+
+          <div
+            *ngIf="showCityDropdown"
+            class="
+              broadcast-recipient-selector__dropdown
+              broadcast-recipient-selector__city-dropdown
+            "
+          >
+
+            <button
+              *ngFor="let city of cityOptions"
+              type="button"
+              class="broadcast-recipient-selector__city-option"
+              [class.broadcast-recipient-selector__city-option--selected]="
+                isCitySelected(city)
+              "
+              (click)="selectCity(city)"
+            >
+
+              <span
+                class="broadcast-recipient-selector__city-option-icon"
+                aria-hidden="true"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linejoin="round"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="10"
+                    r="2"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+                </svg>
+              </span>
+
+
+              <span class="broadcast-recipient-selector__city-option-text">
+                {{ city }}
+              </span>
+
+
+              <span
+                *ngIf="isCitySelected(city)"
+                class="broadcast-recipient-selector__city-option-check"
+                aria-hidden="true"
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="m5 12 4 4L19 6"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+
+            </button>
+
+          </div>
+
+        </div>
 
       </div>
 

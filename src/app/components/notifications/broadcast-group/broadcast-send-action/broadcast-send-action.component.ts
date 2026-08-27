@@ -64,12 +64,10 @@ export class BroadcastSendActionComponent implements OnChanges {
   ========================= */
 
   @Input() selectedAction: SelectedAction = '';
-
   @Input() selectedUser: UserDto | null = null;
-
   @Input() selectedStage: Stage | null = null;
-
   @Input() selectedRole: RecipientRole | null = null;
+  @Input() submitFinished = 0;
 
 
   /* =========================
@@ -83,7 +81,7 @@ export class BroadcastSendActionComponent implements OnChanges {
      SEGMENT
   ========================= */
 
-  @Input() selectedSegment: BroadcastSegmentValue | null = null;
+  @Input() selectedSegment: | 'kids' | 'teens' | 'adults' | 'city' | null = null;
 
 
   /* =========================
@@ -130,6 +128,9 @@ export class BroadcastSendActionComponent implements OnChanges {
   @Output() notificationSubmitted =
     new EventEmitter<CreateNotificationDto>();
 
+  @Output() validationRequested =
+    new EventEmitter<void>();
+
 
   /* =========================
      UI
@@ -146,6 +147,13 @@ export class BroadcastSendActionComponent implements OnChanges {
     if (
       changes['reset'] &&
       this.reset
+    ) {
+      this.isSubmitting = false;
+    }
+
+    if (
+      changes['submitFinished'] &&
+      !changes['submitFinished'].firstChange
     ) {
       this.isSubmitting = false;
     }
@@ -297,13 +305,27 @@ export class BroadcastSendActionComponent implements OnChanges {
     return null;
   }
 
+  get isSubmitDisabled(): boolean {
+    return this.isSubmitting;
+  }
+
 
   /* =========================
      SUBMIT
   ========================= */
 
   submit(): void {
+    if (this.isSubmitting) {
+      return;
+    }
+
+    /*
+    * El usuario intentó enviar.
+    * Avisamos al padre para que los componentes
+    * muestren sus validaciones visuales.
+    */
     if (!this.canSubmit) {
+      this.validationRequested.emit();
       return;
     }
 
@@ -311,6 +333,7 @@ export class BroadcastSendActionComponent implements OnChanges {
       this.buildPayload();
 
     if (!payload) {
+      this.validationRequested.emit();
       return;
     }
 
@@ -319,13 +342,6 @@ export class BroadcastSendActionComponent implements OnChanges {
     this.notificationSubmitted.emit(
       payload,
     );
-
-    /*
-     * El padre controla la petición HTTP.
-     * Cuando resetChildren cambie a true
-     * después del éxito, isSubmitting
-     * volverá a false.
-     */
   }
 
 
@@ -604,23 +620,7 @@ export class BroadcastSendActionComponent implements OnChanges {
 
         return {
           to: [],
-
-          scope:
-            'ALL_STUDENTS',
-
-          ...(this.selectedSegment.studentClassification
-            ? {
-                studentClassification:
-                  this.selectedSegment.studentClassification,
-              }
-            : {}),
-
-          ...(this.selectedSegment.city
-            ? {
-                city:
-                  this.selectedSegment.city,
-              }
-            : {}),
+          scope: 'INDIVIDUAL',
         };
       }
 

@@ -29,6 +29,10 @@ type RecipientRole =
   | 'instructor'
   | 'admin';
 
+type RecipientCity =
+  | 'Cuenca'
+  | 'Portoviejo';
+
 
 @Component({
   selector: 'app-broadcast-recipient-selector',
@@ -65,6 +69,7 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   @Output() sendOptionSelected = new EventEmitter<SendOption>();
   @Output() userSelected = new EventEmitter<UserDto | null>();
   @Output() stageSelected = new EventEmitter<Stage | null>();
+  @Output() stageUsersSelected = new EventEmitter<UserDto[]>();
 
 
   /*
@@ -72,6 +77,9 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
    * Rol necesitaremos comunicarlo al padre.
    */
   @Output() roleSelected = new EventEmitter<RecipientRole | null>();
+  @Output() roleUsersSelected = new EventEmitter<UserDto[]>();
+  @Output() segmentSelected = new EventEmitter<'kids' | 'teens' | 'adults' | 'city' | null >();
+  @Output() citySelected = new EventEmitter<'Cuenca' | 'Portoviejo' | null>();
 
 
   /* =========================
@@ -122,6 +130,14 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     | 'adults'
     | 'city'
     | null = null;
+
+    /* =========================
+    CITY
+  ========================= */
+
+  selectedCity: RecipientCity | null = null;
+  showCityDropdown = false;
+  readonly cityOptions: RecipientCity[] = [ 'Cuenca', 'Portoviejo' ];
 
 
   constructor(
@@ -535,43 +551,32 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
       return;
     }
 
-    this.showStageDropdown =
-      !this.showStageDropdown;
-
-    this.showUserDropdown =
-      false;
-
-    this.showGroupDropdown =
-      false;
-
+    this.showStageDropdown = !this.showStageDropdown;
+    this.showUserDropdown = false;
+    this.showGroupDropdown = false;
   }
 
 
-  selectStage(
-    stage: Stage,
-  ): void {
+  selectStage( stage: Stage ): void {
 
     this.stageSelected.emit(
       stage,
     );
 
-    this.showStageDropdown =
-      false;
-
+    this.showStageDropdown = false;
     this.stageSearchTerm = '';
-
   }
 
 
   clearSelectedStage(): void {
 
-    this.stageSelected.emit(
-      null,
+    this.stageSelected.emit( null,
     );
-
+    this.stageUsersSelected.emit(
+      [],
+    );
     this.showStageDropdown =
       false;
-
   }
 
 
@@ -774,7 +779,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   /* =========================
      SEGMENT
   ========================= */
-
   selectSegment(
     segment:
       | 'kids'
@@ -792,7 +796,25 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     this.selectedSegment =
       segment;
 
+    /*
+    * Si dejamos el segmento Ciudad,
+    * limpiamos la ciudad seleccionada.
+    */
+    if (segment !== 'city') {
+      this.selectedCity = null;
+      this.showCityDropdown = false;
+
+      this.citySelected.emit(
+        null,
+      );
+    }
+
+    this.segmentSelected.emit(
+      segment,
+    );
   }
+
+  
 
 
   isSegmentSelected(
@@ -809,6 +831,79 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     );
   }
 
+
+  /* =========================
+    CITY
+  ========================= */
+
+  toggleCityDropdown(): void {
+
+    if (
+      this.selectedAction !== 'segment' ||
+      this.selectedSegment !== 'city'
+    ) {
+      return;
+    }
+
+    this.showCityDropdown =
+      !this.showCityDropdown;
+  }
+
+
+  selectCity(
+    city: RecipientCity,
+  ): void {
+
+    if (
+      this.selectedAction !== 'segment' ||
+      this.selectedSegment !== 'city'
+    ) {
+      return;
+    }
+
+    this.selectedCity =
+      city;
+
+    this.showCityDropdown =
+      false;
+
+    this.citySelected.emit(
+      city,
+    );
+  }
+
+
+  clearSelectedCity(): void {
+
+    this.selectedCity =
+      null;
+
+    this.showCityDropdown =
+      false;
+
+    this.citySelected.emit(
+      null,
+    );
+  }
+
+
+  isCitySelected(
+    city: RecipientCity,
+  ): boolean {
+
+    return (
+      this.selectedCity === city
+    );
+  }
+
+
+  get selectedCityLabel(): string {
+
+    return (
+      this.selectedCity ??
+      'Selecciona una ciudad'
+    );
+  }
 
   /* =========================
      RESET
@@ -844,6 +939,14 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
 
     this.selectedSegment =
       null;
+
+      this.selectedCity = null;
+
+    this.showCityDropdown = false;
+
+    this.citySelected.emit(
+      null,
+    );
 
   }
 
