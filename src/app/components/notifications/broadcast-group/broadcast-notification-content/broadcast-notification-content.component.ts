@@ -56,6 +56,7 @@ export class BroadcastNotificationContentComponent implements OnChanges {
   @Input() selectedStage: Stage | null = null;
   @Input() selectedRole: RecipientRole | null = null;
   @Input() reset = false;
+  @Input() showValidationErrors = false;
 
 
   /* =========================
