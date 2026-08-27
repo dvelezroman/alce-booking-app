@@ -9,12 +9,29 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import {
+  Subject,
+  debounceTime,
+  distinctUntilChanged,
+  takeUntil,
+} from 'rxjs';
 
-import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
-import { Stage } from '../../../../services/dtos/student.dto';
-import { NotificationGroupDto } from '../../../../services/dtos/notification.dto';
-import { UsersService } from '../../../../services/users.service';
+import {
+  UserDto,
+  UserRole,
+} from '../../../../services/dtos/user.dto';
+
+import {
+  Stage,
+} from '../../../../services/dtos/student.dto';
+
+import {
+  NotificationGroupDto,
+} from '../../../../services/dtos/notification.dto';
+
+import {
+  UsersService,
+} from '../../../../services/users.service';
 
 
 type SendOption =
@@ -28,6 +45,11 @@ type RecipientRole =
   | 'student'
   | 'instructor'
   | 'admin';
+
+type RecipientSegment =
+  | 'kids'
+  | 'teens'
+  | 'adults';
 
 type RecipientCity =
   | 'Cuenca'
@@ -52,9 +74,10 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   /* =========================
      INPUTS
   ========================= */
+
   @Input() userRole: UserRole | null = null;
-  @Input() selectedAction: | SendOption | '' = '';
-  @Input() selectedUser: UserDto | null = null;
+  @Input() selectedAction: SendOption | '' = '';
+  @Input() selectedUsers: UserDto[] = [];
   @Input() selectedStage: Stage | null = null;
   @Input() selectedRole: RecipientRole | null = null;
   @Input() stages: Stage[] = [];
@@ -66,31 +89,49 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   /* =========================
      OUTPUTS
   ========================= */
-  @Output() sendOptionSelected = new EventEmitter<SendOption>();
-  @Output() userSelected = new EventEmitter<UserDto | null>();
-  @Output() stageSelected = new EventEmitter<Stage | null>();
-  @Output() stageUsersSelected = new EventEmitter<UserDto[]>();
 
+  @Output() sendOptionSelected =
+    new EventEmitter<SendOption>();
 
-  /*
-   * Lo dejamos preparado porque cuando hagamos
-   * Rol necesitaremos comunicarlo al padre.
-   */
-  @Output() roleSelected = new EventEmitter<RecipientRole | null>();
-  @Output() roleUsersSelected = new EventEmitter<UserDto[]>();
-  @Output() segmentSelected = new EventEmitter<'kids' | 'teens' | 'adults' | 'city' | null >();
-  @Output() citySelected = new EventEmitter<'Cuenca' | 'Portoviejo' | null>();
+  @Output() usersSelected =
+    new EventEmitter<UserDto[]>();
+
+  @Output() stageSelected =
+    new EventEmitter<Stage | null>();
+
+  @Output() stageUsersSelected =
+    new EventEmitter<UserDto[]>();
+
+  @Output() groupSelected =
+    new EventEmitter<NotificationGroupDto | null>();
+
+  @Output() roleSelected =
+    new EventEmitter<RecipientRole | null>();
+
+  @Output() roleUsersSelected =
+    new EventEmitter<UserDto[]>();
+
+  @Output() segmentSelected =
+    new EventEmitter<RecipientSegment | null>();
+
+  @Output() citySelected =
+    new EventEmitter<RecipientCity | null>();
 
 
   /* =========================
      USER SEARCH
   ========================= */
+
   searchTerm = '';
   filteredUsers: UserDto[] = [];
   showUserDropdown = false;
   isSearchingUsers = false;
-  private searchInput$ = new Subject<string>();
-  private destroy$ = new Subject<void>();
+
+  private searchInput$ =
+    new Subject<string>();
+
+  private destroy$ =
+    new Subject<void>();
 
 
   /* =========================
@@ -98,7 +139,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   ========================= */
 
   showStageDropdown = false;
-
   stageSearchTerm = '';
 
 
@@ -107,9 +147,7 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   ========================= */
 
   showGroupDropdown = false;
-
   selectedGroup: NotificationGroupDto | null = null;
-
   groupSearchTerm = '';
 
 
@@ -117,7 +155,8 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
      ROLE
   ========================= */
 
-  selectedRoleValue: RecipientRole | null = null;
+  selectedRoleValue:
+    RecipientRole | null = null;
 
 
   /* =========================
@@ -125,25 +164,28 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   ========================= */
 
   selectedSegment:
-    | 'kids'
-    | 'teens'
-    | 'adults'
-    | 'city'
-    | null = null;
+    RecipientSegment | null = null;
 
-    /* =========================
-    CITY
+
+  /* =========================
+     CITY
   ========================= */
 
-  selectedCity: RecipientCity | null = null;
+  selectedCity:
+    RecipientCity | null = null;
+
   showCityDropdown = false;
-  readonly cityOptions: RecipientCity[] = [ 'Cuenca', 'Portoviejo' ];
+
+  readonly cityOptions:
+    RecipientCity[] = [
+      'Cuenca',
+      'Portoviejo',
+    ];
 
 
   constructor(
     private usersService: UsersService,
   ) {
-
     this.searchInput$
       .pipe(
         debounceTime(300),
@@ -153,7 +195,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
       .subscribe((term: string) => {
         this.filterUsers(term);
       });
-
   }
 
 
@@ -164,27 +205,9 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   ngOnChanges(
     changes: SimpleChanges,
   ): void {
-
     if (changes['selectedRole']) {
       this.selectedRoleValue =
         this.selectedRole;
-    }
-
-    if (
-      changes['selectedUser'] &&
-      this.selectedUser
-    ) {
-      this.searchTerm =
-        this.getUserFullName(
-          this.selectedUser,
-        );
-    }
-
-    if (
-      changes['selectedUser'] &&
-      !this.selectedUser
-    ) {
-      this.searchTerm = '';
     }
 
     if (
@@ -193,7 +216,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     ) {
       this.resetSelector();
     }
-
   }
 
 
@@ -219,15 +241,7 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   }
 
 
-  /*
-   * Instructor:
-   * solamente Usuario.
-   *
-   * Admin:
-   * todas las opciones.
-   */
   get availableOptions(): SendOption[] {
-
     if (this.isInstructor) {
       return [
         'user',
@@ -251,7 +265,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   canUseOption(
     option: SendOption,
   ): boolean {
-
     return this.availableOptions.includes(
       option,
     );
@@ -265,7 +278,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   selectSendOption(
     option: SendOption,
   ): void {
-
     if (
       !this.canUseOption(option)
     ) {
@@ -283,14 +295,12 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     this.sendOptionSelected.emit(
       option,
     );
-
   }
 
 
   isOptionSelected(
     option: SendOption,
   ): boolean {
-
     return (
       this.selectedAction === option
     );
@@ -304,7 +314,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   getOptionTitle(
     option: SendOption,
   ): string {
-
     switch (option) {
       case 'user':
         return 'Usuario';
@@ -324,17 +333,15 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
       default:
         return '';
     }
-
   }
 
 
   getOptionDescription(
     option: SendOption,
   ): string {
-
     switch (option) {
       case 'user':
-        return 'Enviar a un usuario específico';
+        return 'Enviar a uno o varios usuarios';
 
       case 'stage':
         return 'Enviar a estudiantes de un stage';
@@ -346,12 +353,11 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
         return 'Enviar por rol de usuario';
 
       case 'segment':
-        return 'Enviar a un segmento personalizado';
+        return 'Enviar por clasificación y ciudad';
 
       default:
         return '';
     }
-
   }
 
 
@@ -362,30 +368,17 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   onSearchChange(
     term: string,
   ): void {
-
     this.searchTerm = term;
-
-    if (
-      this.selectedUser &&
-      term !==
-        this.getUserFullName(
-          this.selectedUser,
-        )
-    ) {
-      this.userSelected.emit(null);
-    }
 
     this.searchInput$.next(
       term,
     );
-
   }
 
 
   filterUsers(
     term: string,
   ): void {
-
     const normalizedTerm =
       term?.trim() ?? '';
 
@@ -411,9 +404,7 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
         undefined,
       )
       .subscribe({
-
         next: (result) => {
-
           this.filteredUsers =
             result.users ?? [];
 
@@ -422,11 +413,9 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
 
           this.isSearchingUsers =
             false;
-
         },
 
         error: () => {
-
           this.filteredUsers = [];
 
           this.showUserDropdown =
@@ -434,107 +423,140 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
 
           this.isSearchingUsers =
             false;
-
         },
-
       });
-
   }
 
 
   selectUser(
     user: UserDto,
   ): void {
+    const exists =
+      this.selectedUsers.some(
+        selected =>
+          selected.id === user.id,
+      );
 
-    this.searchTerm =
-      this.getUserFullName(user);
+    if (!exists) {
+      this.selectedUsers = [
+        ...this.selectedUsers,
+        user,
+      ];
+    }
 
-    this.filteredUsers = [];
-
-    this.showUserDropdown =
-      false;
-
-    this.userSelected.emit(
-      user,
+    this.usersSelected.emit(
+      this.selectedUsers,
     );
 
+    this.showUserDropdown = true;
   }
 
 
-  clearSelectedUser(): void {
+  onUserMouseDown(
+    event: MouseEvent,
+  ): void {
+    event.preventDefault();
+  }
 
-    this.searchTerm = '';
 
-    this.filteredUsers = [];
+  onUserOptionClick(
+    user: UserDto,
+    event: MouseEvent,
+  ): void {
+    event.preventDefault();
+    event.stopPropagation();
 
-    this.showUserDropdown =
-      false;
+    if (
+      this.isUserSelected(user)
+    ) {
+      this.removeSelectedUser(
+        user.id,
+      );
 
-    this.userSelected.emit(
-      null,
+      this.showUserDropdown =
+        true;
+
+      return;
+    }
+
+    this.selectUser(
+      user,
     );
 
+    this.showUserDropdown =
+      true;
+  }
+
+
+  removeSelectedUser(
+    userId: number,
+  ): void {
+    this.selectedUsers =
+      this.selectedUsers.filter(
+        user =>
+          user.id !== userId,
+      );
+
+    this.usersSelected.emit(
+      this.selectedUsers,
+    );
+
+    this.showUserDropdown =
+      true;
+  }
+
+
+  clearSelectedUsers(): void {
+    this.selectedUsers = [];
+
+    this.usersSelected.emit(
+      [],
+    );
+  }
+
+
+  isUserSelected(
+    user: UserDto,
+  ): boolean {
+    return this.selectedUsers.some(
+      selected =>
+        selected.id === user.id,
+    );
   }
 
 
   showUsers(): void {
-
     if (
-      this.searchTerm.trim().length >= 2
+      this.searchTerm
+        .trim()
+        .length >= 2
     ) {
       this.showUserDropdown =
         true;
     }
-
   }
 
 
   hideUsers(): void {
-
     setTimeout(() => {
-
       this.showUserDropdown =
         false;
-
     }, 180);
-
   }
 
 
   /* =========================
-     SELECTED USER
+     SELECTED USERS
   ========================= */
 
-  get selectedUserName(): string {
-
-    if (!this.selectedUser) {
-      return '';
-    }
-
-    return this.getUserFullName(
-      this.selectedUser,
-    );
+  get selectedUsersCount(): number {
+    return this.selectedUsers.length;
   }
 
 
-  get selectedUserEmail(): string {
-
+  get hasSelectedUsers(): boolean {
     return (
-      this.selectedUser?.email ??
-      this.selectedUser?.emailAddress ??
-      ''
-    );
-  }
-
-
-  get selectedUserInitials(): string {
-
-    if (!this.selectedUser) {
-      return 'US';
-    }
-
-    return this.getUserInitials(
-      this.selectedUser,
+      this.selectedUsers.length > 0
     );
   }
 
@@ -544,44 +566,55 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   ========================= */
 
   toggleStageDropdown(): void {
-
     if (
       this.selectedAction !== 'stage'
     ) {
       return;
     }
 
-    this.showStageDropdown = !this.showStageDropdown;
-    this.showUserDropdown = false;
-    this.showGroupDropdown = false;
+    this.showStageDropdown =
+      !this.showStageDropdown;
+
+    this.showUserDropdown =
+      false;
+
+    this.showGroupDropdown =
+      false;
+
+    this.showCityDropdown =
+      false;
   }
 
 
-  selectStage( stage: Stage ): void {
-
+  selectStage(
+    stage: Stage,
+  ): void {
     this.stageSelected.emit(
       stage,
     );
 
-    this.showStageDropdown = false;
+    this.showStageDropdown =
+      false;
+
     this.stageSearchTerm = '';
   }
 
 
   clearSelectedStage(): void {
-
-    this.stageSelected.emit( null,
+    this.stageSelected.emit(
+      null,
     );
+
     this.stageUsersSelected.emit(
       [],
     );
+
     this.showStageDropdown =
       false;
   }
 
 
   get selectedStageLabel(): string {
-
     if (!this.selectedStage) {
       return 'Selecciona un stage';
     }
@@ -593,7 +626,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
 
 
   get filteredStages(): Stage[] {
-
     const term =
       this.stageSearchTerm
         .trim()
@@ -605,10 +637,10 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
 
     return this.stages.filter(
       stage => {
-
         const label =
-          this.getStageLabel(stage)
-            .toLowerCase();
+          this.getStageLabel(
+            stage,
+          ).toLowerCase();
 
         const description =
           stage.description
@@ -619,7 +651,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
           label.includes(term) ||
           description.includes(term)
         );
-
       },
     );
   }
@@ -630,7 +661,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   ========================= */
 
   toggleGroupDropdown(): void {
-
     if (
       this.selectedAction !== 'group'
     ) {
@@ -646,32 +676,31 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     this.showStageDropdown =
       false;
 
+    this.showCityDropdown =
+      false;
   }
 
 
   selectGroup(
     group: NotificationGroupDto,
   ): void {
-
-    this.selectedGroup =
-      group;
-
-    this.showGroupDropdown =
-      false;
-
+    this.selectedGroup = group;
+    this.showGroupDropdown = false;
     this.groupSearchTerm = '';
 
+    this.groupSelected.emit(
+      group,
+    );
   }
 
 
   clearSelectedGroup(): void {
+    this.selectedGroup = null;
+    this.showGroupDropdown = false;
 
-    this.selectedGroup =
-      null;
-
-    this.showGroupDropdown =
-      false;
-
+    this.groupSelected.emit(
+      null,
+    );
   }
 
 
@@ -689,7 +718,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
 
     return this.groups.filter(
       group => {
-
         const name =
           group.name
             ?.toLowerCase() ??
@@ -704,14 +732,12 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
           name.includes(term) ||
           description.includes(term)
         );
-
       },
     );
   }
 
 
   get selectedGroupLabel(): string {
-
     return (
       this.selectedGroup?.name ??
       'Selecciona un grupo'
@@ -723,25 +749,30 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
      ROLE
   ========================= */
 
- selectRole(
-  role: RecipientRole,
-): void {
-  if (this.selectedAction !== 'role') {
-    return;
+  selectRole(
+    role: RecipientRole,
+  ): void {
+    if (
+      this.selectedAction !== 'role'
+    ) {
+      return;
+    }
+
+    this.selectedRoleValue =
+      role;
+
+    this.roleSelected.emit(
+      role,
+    );
   }
-
-  this.selectedRoleValue = role;
-
-  this.roleSelected.emit(role);
-}
 
 
   isRoleSelected(
     role: RecipientRole,
   ): boolean {
-
     return (
-      this.selectedRoleValue === role
+      this.selectedRoleValue ===
+      role
     );
   }
 
@@ -751,7 +782,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     label: string;
     description: string;
   }[] {
-
     return [
       {
         value: 'student',
@@ -772,21 +802,16 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
           'Todos los administradores',
       },
     ];
-
   }
 
 
   /* =========================
      SEGMENT
   ========================= */
-  selectSegment(
-    segment:
-      | 'kids'
-      | 'teens'
-      | 'adults'
-      | 'city',
-  ): void {
 
+  selectSegment(
+    segment: RecipientSegment,
+  ): void {
     if (
       this.selectedAction !== 'segment'
     ) {
@@ -796,35 +821,15 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     this.selectedSegment =
       segment;
 
-    /*
-    * Si dejamos el segmento Ciudad,
-    * limpiamos la ciudad seleccionada.
-    */
-    if (segment !== 'city') {
-      this.selectedCity = null;
-      this.showCityDropdown = false;
-
-      this.citySelected.emit(
-        null,
-      );
-    }
-
     this.segmentSelected.emit(
       segment,
     );
   }
 
-  
-
 
   isSegmentSelected(
-    segment:
-      | 'kids'
-      | 'teens'
-      | 'adults'
-      | 'city',
+    segment: RecipientSegment,
   ): boolean {
-
     return (
       this.selectedSegment ===
       segment
@@ -833,53 +838,51 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
 
 
   /* =========================
-    CITY
+     CITY
   ========================= */
 
   toggleCityDropdown(): void {
-
     if (
       this.selectedAction !== 'segment' ||
-      this.selectedSegment !== 'city'
+      !this.selectedSegment
     ) {
       return;
     }
 
     this.showCityDropdown =
       !this.showCityDropdown;
+
+    this.showUserDropdown =
+      false;
+
+    this.showStageDropdown =
+      false;
+
+    this.showGroupDropdown =
+      false;
   }
 
 
   selectCity(
     city: RecipientCity,
   ): void {
-
     if (
       this.selectedAction !== 'segment' ||
-      this.selectedSegment !== 'city'
+      !this.selectedSegment
     ) {
       return;
     }
 
-    this.selectedCity =
-      city;
+    this.selectedCity = city;
+    this.showCityDropdown = false;
 
-    this.showCityDropdown =
-      false;
-
-    this.citySelected.emit(
-      city,
-    );
+    this.citySelected.emit( city );
   }
 
 
   clearSelectedCity(): void {
-
-    this.selectedCity =
-      null;
-
-    this.showCityDropdown =
-      false;
+    this.selectedCity = null;
+    this.showCityDropdown = false;
 
     this.citySelected.emit(
       null,
@@ -890,7 +893,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   isCitySelected(
     city: RecipientCity,
   ): boolean {
-
     return (
       this.selectedCity === city
     );
@@ -898,56 +900,37 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
 
 
   get selectedCityLabel(): string {
-
     return (
       this.selectedCity ??
-      'Selecciona una ciudad'
+      'Todas las ciudades'
     );
   }
+
 
   /* =========================
      RESET
   ========================= */
 
   private resetSelector(): void {
-
     this.searchTerm = '';
-
     this.filteredUsers = [];
+    this.showUserDropdown = false;
+    this.isSearchingUsers = false;
+    this.selectedUsers = [];
 
-    this.showUserDropdown =
-      false;
-
-    this.isSearchingUsers =
-      false;
-
-    this.showStageDropdown =
-      false;
-
+    this.showStageDropdown = false;
     this.stageSearchTerm = '';
 
-    this.showGroupDropdown =
-      false;
-
+    this.showGroupDropdown = false;
     this.groupSearchTerm = '';
+    this.selectedGroup = null;
 
-    this.selectedGroup =
-      null;
+    this.selectedRoleValue = null;
 
-    this.selectedRoleValue =
-      null;
+    this.selectedSegment = null;
 
-    this.selectedSegment =
-      null;
-
-      this.selectedCity = null;
-
+    this.selectedCity = null;
     this.showCityDropdown = false;
-
-    this.citySelected.emit(
-      null,
-    );
-
   }
 
 
@@ -956,16 +939,10 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   ========================= */
 
   private closeDropdowns(): void {
-
-    this.showUserDropdown =
-      false;
-
-    this.showStageDropdown =
-      false;
-
-    this.showGroupDropdown =
-      false;
-
+    this.showUserDropdown = false;
+    this.showStageDropdown = false;
+    this.showGroupDropdown = false;
+    this.showCityDropdown = false;
   }
 
 
@@ -976,7 +953,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   getUserFullName(
     user: UserDto,
   ): string {
-
     const firstName =
       user.firstName
         ?.trim() ??
@@ -993,14 +969,12 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
       user.email ||
       'Usuario'
     );
-
   }
 
 
   getUserInitials(
     user: UserDto,
   ): string {
-
     const firstName =
       user.firstName
         ?.trim()
@@ -1018,14 +992,12 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
         .toUpperCase() ||
       'US'
     );
-
   }
 
 
   getStageLabel(
     stage: Stage,
   ): string {
-
     const number =
       String(
         stage.number ?? '',
@@ -1041,7 +1013,6 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
       stage.description ??
       'Stage'
     );
-
   }
 
 
@@ -1053,9 +1024,7 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     index: number,
     user: UserDto,
   ): number {
-
     return user.id;
-
   }
 
 
@@ -1063,9 +1032,7 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     index: number,
     stage: Stage,
   ): number {
-
     return stage.id;
-
   }
 
 
@@ -1073,9 +1040,7 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     index: number,
     group: NotificationGroupDto,
   ): number {
-
     return group.id;
-
   }
 
 
@@ -1083,9 +1048,7 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
     index: number,
     option: SendOption,
   ): string {
-
     return option;
-
   }
 
 
@@ -1095,9 +1058,7 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
       value: RecipientRole;
     },
   ): string {
-
     return option.value;
-
   }
 
 
@@ -1106,11 +1067,7 @@ export class BroadcastRecipientSelectorComponent implements OnChanges, OnDestroy
   ========================= */
 
   ngOnDestroy(): void {
-
     this.destroy$.next();
-
     this.destroy$.complete();
-
   }
-
 }

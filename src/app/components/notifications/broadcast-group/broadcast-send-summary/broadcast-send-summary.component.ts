@@ -1,17 +1,8 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  Input,
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 
-import {
-  UserDto,
-} from '../../../../services/dtos/user.dto';
-
-import {
-  Stage,
-} from '../../../../services/dtos/student.dto';
-
+import { UserDto } from '../../../../services/dtos/user.dto';
+import { Stage } from '../../../../services/dtos/student.dto';
 import {
   NotificationGroupDto,
   NotificationTypeEnum,
@@ -48,24 +39,18 @@ export class BroadcastSendSummaryComponent {
   ========================= */
 
   @Input() selectedAction: SelectedAction = '';
-
-  @Input() selectedUser: UserDto | null = null;
-
+  @Input() selectedUsers: UserDto[] = [];
   @Input() selectedStage: Stage | null = null;
-
   @Input() selectedRole: RecipientRole | null = null;
-
   @Input() groups: NotificationGroupDto[] = [];
 
 
   /* =========================
      CONTENT INPUTS
-     Se conectarán desde el padre
   ========================= */
 
   @Input() notificationType: NotificationTypeEnum | null = null;
-
-  @Input() priority: number = 1;
+  @Input() priority = 1;
 
 
   /* =========================
@@ -73,7 +58,6 @@ export class BroadcastSendSummaryComponent {
   ========================= */
 
   @Input() scheduledAt: string | null = null;
-
   @Input() expiresAt: string | null = null;
 
 
@@ -82,11 +66,9 @@ export class BroadcastSendSummaryComponent {
   ========================= */
 
   get recipientTitle(): string {
-
     switch (this.selectedAction) {
-
       case 'user':
-        return this.selectedUserName;
+        return this.selectedUsersTitle;
 
       case 'stage':
         return this.selectedStageLabel;
@@ -102,18 +84,14 @@ export class BroadcastSendSummaryComponent {
 
       default:
         return 'Sin destinatario';
-
     }
-
   }
 
 
   get recipientDescription(): string {
-
     switch (this.selectedAction) {
-
       case 'user':
-        return this.selectedUserEmail;
+        return this.selectedUsersDescription;
 
       case 'stage':
         return 'Estudiantes del stage';
@@ -129,20 +107,18 @@ export class BroadcastSendSummaryComponent {
 
       default:
         return 'Selecciona un destinatario';
-
     }
-
   }
 
 
   get recipientCountLabel(): string {
-
     switch (this.selectedAction) {
-
       case 'user':
-        return this.selectedUser
-          ? '1 usuario'
-          : '0 usuarios';
+        return `${this.selectedUsers.length} ${
+          this.selectedUsers.length === 1
+            ? 'usuario'
+            : 'usuarios'
+        }`;
 
       case 'stage':
         return this.selectedStage
@@ -162,76 +138,62 @@ export class BroadcastSendSummaryComponent {
 
       default:
         return '0 usuarios';
-
     }
-
   }
 
 
   /* =========================
-     USER
+     USERS
   ========================= */
 
-  get selectedUserName(): string {
-
-    if (!this.selectedUser) {
+  get selectedUsersTitle(): string {
+    if (this.selectedUsers.length === 0) {
       return 'Sin usuario';
     }
 
-    const firstName =
-      this.selectedUser.firstName
-        ?.trim() ??
-      '';
+    if (this.selectedUsers.length === 1) {
+      return this.getUserFullName(
+        this.selectedUsers[0],
+      );
+    }
 
-    const lastName =
-      this.selectedUser.lastName
-        ?.trim() ??
-      '';
-
-    return (
-      `${firstName} ${lastName}`
-        .trim() ||
-      'Usuario'
-    );
-
+    return `${this.selectedUsers.length} usuarios seleccionados`;
   }
 
 
-  get selectedUserEmail(): string {
+  get selectedUsersDescription(): string {
+    if (this.selectedUsers.length === 0) {
+      return 'Sin correo';
+    }
 
-    return (
-      this.selectedUser?.email ??
-      this.selectedUser?.emailAddress ??
-      'Sin correo'
-    );
+    if (this.selectedUsers.length === 1) {
+      const user = this.selectedUsers[0];
 
+      return (
+        user.email ??
+        user.emailAddress ??
+        'Sin correo'
+      );
+    }
+
+    return 'Destinatarios seleccionados';
   }
 
 
   get selectedUserInitials(): string {
-
-    if (!this.selectedUser) {
+    if (this.selectedUsers.length === 0) {
       return 'US';
     }
 
-    const firstName =
-      this.selectedUser.firstName
-        ?.trim()
-        ?.charAt(0) ??
-      '';
+    if (this.selectedUsers.length > 1) {
+      return String(
+        this.selectedUsers.length,
+      );
+    }
 
-    const lastName =
-      this.selectedUser.lastName
-        ?.trim()
-        ?.charAt(0) ??
-      '';
-
-    return (
-      `${firstName}${lastName}`
-        .toUpperCase() ||
-      'US'
+    return this.getUserInitials(
+      this.selectedUsers[0],
     );
-
   }
 
 
@@ -240,17 +202,15 @@ export class BroadcastSendSummaryComponent {
   ========================= */
 
   get selectedStageLabel(): string {
-
     if (!this.selectedStage) {
       return 'Sin stage';
     }
 
-    const number =
-      String(
-        this.selectedStage.number ?? '',
-      )
-        .replace(/[^0-9.]/g, '')
-        .trim();
+    const number = String(
+      this.selectedStage.number ?? '',
+    )
+      .replace(/[^0-9.]/g, '')
+      .trim();
 
     if (number) {
       return `Stage ${number}`;
@@ -260,7 +220,6 @@ export class BroadcastSendSummaryComponent {
       this.selectedStage.description ??
       'Stage'
     );
-
   }
 
 
@@ -269,9 +228,7 @@ export class BroadcastSendSummaryComponent {
   ========================= */
 
   get selectedRoleLabel(): string {
-
     switch (this.selectedRole) {
-
       case 'student':
         return 'Estudiantes';
 
@@ -283,9 +240,7 @@ export class BroadcastSendSummaryComponent {
 
       default:
         return 'Sin rol';
-
     }
-
   }
 
 
@@ -294,13 +249,11 @@ export class BroadcastSendSummaryComponent {
   ========================= */
 
   get notificationTypeLabel(): string {
-
     if (!this.notificationType) {
       return '--';
     }
 
     switch (this.notificationType) {
-
       case NotificationTypeEnum.Announce:
         return 'Anuncio';
 
@@ -326,9 +279,7 @@ export class BroadcastSendSummaryComponent {
         return String(
           this.notificationType,
         );
-
     }
-
   }
 
 
@@ -337,9 +288,7 @@ export class BroadcastSendSummaryComponent {
   ========================= */
 
   get priorityLabel(): string {
-
     switch (this.priority) {
-
       case 0:
         return 'Baja';
 
@@ -354,16 +303,12 @@ export class BroadcastSendSummaryComponent {
 
       default:
         return 'Normal';
-
     }
-
   }
 
 
   get priorityClass(): string {
-
     switch (this.priority) {
-
       case 0:
         return 'low';
 
@@ -378,9 +323,7 @@ export class BroadcastSendSummaryComponent {
 
       default:
         return 'normal';
-
     }
-
   }
 
 
@@ -389,7 +332,6 @@ export class BroadcastSendSummaryComponent {
   ========================= */
 
   get scheduledLabel(): string {
-
     if (!this.scheduledAt) {
       return 'No programado';
     }
@@ -397,7 +339,6 @@ export class BroadcastSendSummaryComponent {
     return this.formatDateTime(
       this.scheduledAt,
     );
-
   }
 
 
@@ -406,7 +347,6 @@ export class BroadcastSendSummaryComponent {
   ========================= */
 
   get expirationLabel(): string {
-
     if (!this.expiresAt) {
       return 'Sin expiración';
     }
@@ -414,7 +354,51 @@ export class BroadcastSendSummaryComponent {
     return this.formatDateTime(
       this.expiresAt,
     );
+  }
 
+
+  /* =========================
+     USER HELPERS
+  ========================= */
+
+  private getUserFullName(
+    user: UserDto,
+  ): string {
+    const firstName =
+      user.firstName?.trim() ?? '';
+
+    const lastName =
+      user.lastName?.trim() ?? '';
+
+    return (
+      `${firstName} ${lastName}`.trim() ||
+      user.email ||
+      user.emailAddress ||
+      'Usuario'
+    );
+  }
+
+
+  private getUserInitials(
+    user: UserDto,
+  ): string {
+    const firstName =
+      user.firstName
+        ?.trim()
+        ?.charAt(0) ??
+      '';
+
+    const lastName =
+      user.lastName
+        ?.trim()
+        ?.charAt(0) ??
+      '';
+
+    return (
+      `${firstName}${lastName}`
+        .toUpperCase() ||
+      'US'
+    );
   }
 
 
@@ -425,9 +409,7 @@ export class BroadcastSendSummaryComponent {
   private formatDateTime(
     value: string,
   ): string {
-
-    const date =
-      new Date(value);
+    const date = new Date(value);
 
     if (
       Number.isNaN(
@@ -450,7 +432,5 @@ export class BroadcastSendSummaryComponent {
           'America/Guayaquil',
       },
     ).format(date);
-
   }
-
 }

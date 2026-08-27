@@ -250,7 +250,7 @@
 
 
   <!-- =====================================================
-       USER
+      USER
   ====================================================== -->
 
   <ng-container *ngIf="selectedAction === 'user'">
@@ -330,8 +330,12 @@
             "
             type="button"
             class="broadcast-recipient-selector__user-option"
-            (mousedown)="$event.preventDefault()"
-            (click)="selectUser(user)"
+            [class.broadcast-recipient-selector__user-option--selected]="
+              isUserSelected(user)
+            "
+            [attr.aria-disabled]="isUserSelected(user)"
+            (mousedown)="onUserMouseDown($event)"
+            (click)="onUserOptionClick(user, $event)"
           >
 
             <span
@@ -341,17 +345,32 @@
               {{ getUserInitials(user) }}
             </span>
 
-
             <span class="broadcast-recipient-selector__user-info">
 
               <strong>
                 {{ getUserFullName(user) }}
               </strong>
 
-              <small>
-                {{ user.email || user.emailAddress || 'Sin correo' }}
+              <small class="broadcast-recipient-selector__user-meta">
+                <span>
+                  {{ user.email || user.emailAddress || 'Sin correo' }}
+                </span>
+
+                <span
+                  *ngIf="user.student?.stage"
+                  class="broadcast-recipient-selector__user-stage-inline"
+                >
+                  • Stage {{ user.student?.stage?.number }}
+                </span>
               </small>
 
+            </span>
+
+            <span
+              *ngIf="isUserSelected(user)"
+              class="broadcast-recipient-selector__user-selected-state"
+            >
+              Seleccionado
             </span>
 
           </button>
@@ -374,55 +393,102 @@
     </div>
 
 
-    <!-- SELECTED USER -->
+    <!-- =========================
+        SELECTED USERS
+    ========================== -->
 
     <div
-      *ngIf="selectedUser"
-      class="broadcast-recipient-selector__selected"
+      *ngIf="selectedUsers.length > 0"
+      class="broadcast-recipient-selector__selected-users"
     >
 
-      <span
-        class="broadcast-recipient-selector__selected-avatar"
-        aria-hidden="true"
-      >
-        {{ selectedUserInitials }}
-      </span>
+      <div class="broadcast-recipient-selector__selected-users-header">
+
+        <div class="broadcast-recipient-selector__selected-users-title">
+
+          <strong>
+            Usuarios seleccionados
+          </strong>
+
+          <span class="broadcast-recipient-selector__selected-users-count">
+            {{ selectedUsers.length }}
+          </span>
+
+        </div>
 
 
-      <div class="broadcast-recipient-selector__selected-info">
-
-        <strong>
-          {{ selectedUserName }}
-        </strong>
-
-        <span>
-          {{ selectedUserEmail || 'Sin correo registrado' }}
-        </span>
+        <button
+          type="button"
+          class="broadcast-recipient-selector__selected-users-clear"
+          (click)="clearSelectedUsers()"
+        >
+          Limpiar todo
+        </button>
 
       </div>
 
 
-      <button
-        type="button"
-        class="broadcast-recipient-selector__selected-remove"
-        aria-label="Quitar usuario seleccionado"
-        title="Quitar usuario"
-        (click)="clearSelectedUser()"
-      >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
+      <div class="broadcast-recipient-selector__selected-users-list">
+
+        <div
+          *ngFor="
+            let user of selectedUsers;
+            trackBy: trackByUserId
+          "
+          class="broadcast-recipient-selector__selected-user"
         >
-          <path
-            d="M6 6l12 12M18 6 6 18"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-          />
-        </svg>
-      </button>
+
+          <span
+            class="broadcast-recipient-selector__selected-avatar"
+            aria-hidden="true"
+          >
+            {{ getUserInitials(user) }}
+          </span>
+
+          <div class="broadcast-recipient-selector__selected-info">
+
+            <strong>
+              {{ getUserFullName(user) }}
+            </strong>
+
+            <span>
+              {{ user.email || user.emailAddress || 'Sin correo registrado' }}
+            </span>
+
+          </div>
+
+          <span
+            *ngIf="user.student?.stage"
+            class="broadcast-recipient-selector__selected-stage"
+          >
+            Stage {{ user.student?.stage?.number }}
+          </span>
+
+          <button
+            type="button"
+            class="broadcast-recipient-selector__selected-remove"
+            aria-label="Quitar usuario seleccionado"
+            title="Quitar usuario"
+            (click)="removeSelectedUser(user.id)"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M6 6l12 12M18 6 6 18"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+
+        </div>
+
+      </div>
 
     </div>
 
@@ -682,7 +748,7 @@
 
 
   <!-- =====================================================
-      SEGMENT
+       SEGMENT
   ====================================================== -->
 
   <ng-container *ngIf="selectedAction === 'segment'">
@@ -690,7 +756,7 @@
     <div class="broadcast-recipient-selector__field">
 
       <label class="broadcast-recipient-selector__label">
-        Seleccionar segmento
+        Seleccionar clasificación
 
         <span class="broadcast-recipient-selector__required">
           *
@@ -699,7 +765,7 @@
 
 
       <!-- =========================
-          SEGMENT OPTIONS
+           SEGMENT OPTIONS
       ========================== -->
 
       <div class="broadcast-recipient-selector__segment-grid">
@@ -763,36 +829,16 @@
           </span>
         </button>
 
-
-        <!-- CITY -->
-
-        <button
-          type="button"
-          class="broadcast-recipient-selector__segment-option"
-          [class.broadcast-recipient-selector__segment-option--selected]="
-            isSegmentSelected('city')
-          "
-          (click)="selectSegment('city')"
-        >
-          <strong>
-            Ciudad
-          </strong>
-
-          <span>
-            Segmentación por ciudad
-          </span>
-        </button>
-
       </div>
 
 
       <!-- =========================
-          CITY SELECTOR
-          SOLO CUANDO SELECCIONA CITY
+           CITY FILTER
+           OPCIONAL
       ========================== -->
 
       <div
-        *ngIf="selectedSegment === 'city'"
+        *ngIf="selectedSegment"
         class="broadcast-recipient-selector__city"
       >
 
@@ -829,15 +875,11 @@
           <div class="broadcast-recipient-selector__city-title-group">
 
             <label class="broadcast-recipient-selector__label">
-              Seleccionar ciudad
-
-              <span class="broadcast-recipient-selector__required">
-                *
-              </span>
+              Ciudad
             </label>
 
             <span class="broadcast-recipient-selector__city-description">
-              Selecciona la ciudad de los estudiantes destinatarios.
+              Opcional. Filtra la clasificación seleccionada por ciudad.
             </span>
 
           </div>
@@ -846,7 +888,7 @@
 
 
         <!-- =========================
-            CITY SELECT
+             CITY SELECT
         ========================== -->
 
         <div class="broadcast-recipient-selector__select-wrapper">
@@ -889,7 +931,7 @@
 
 
           <!-- =========================
-              CITY DROPDOWN
+               CITY DROPDOWN
           ========================== -->
 
           <div
@@ -899,6 +941,76 @@
               broadcast-recipient-selector__city-dropdown
             "
           >
+
+            <!-- TODAS -->
+
+            <button
+              type="button"
+              class="broadcast-recipient-selector__city-option"
+              [class.broadcast-recipient-selector__city-option--selected]="
+                !selectedCity
+              "
+              (click)="clearSelectedCity()"
+            >
+
+              <span
+                class="broadcast-recipient-selector__city-option-icon"
+                aria-hidden="true"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="8"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M4 12h16M12 4c2.2 2.2 3.4 4.9 3.4 8S14.2 17.8 12 20M12 4c-2.2 2.2-3.4 4.9-3.4 8s1.2 5.8 3.4 8"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+
+              <span class="broadcast-recipient-selector__city-option-text">
+                Todas las ciudades
+              </span>
+
+
+              <span
+                *ngIf="!selectedCity"
+                class="broadcast-recipient-selector__city-option-check"
+                aria-hidden="true"
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="m5 12 4 4L19 6"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+
+            </button>
+
+
+            <!-- CITIES -->
 
             <button
               *ngFor="let city of cityOptions"

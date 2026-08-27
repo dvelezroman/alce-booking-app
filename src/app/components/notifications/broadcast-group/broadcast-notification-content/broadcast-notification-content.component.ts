@@ -52,7 +52,7 @@ export class BroadcastNotificationContentComponent implements OnChanges {
   ========================= */
 
   @Input() selectedAction: SelectedAction = '';
-  @Input() selectedUser: UserDto | null = null;
+  @Input() selectedUsers: UserDto[] = [];
   @Input() selectedStage: Stage | null = null;
   @Input() selectedRole: RecipientRole | null = null;
   @Input() reset = false;
@@ -293,7 +293,7 @@ export class BroadcastNotificationContentComponent implements OnChanges {
   get hasRecipientSelected(): boolean {
     switch (this.selectedAction) {
       case 'user':
-        return !!this.selectedUser;
+        return this.selectedUsers.length > 0;
 
       case 'stage':
         return !!this.selectedStage;

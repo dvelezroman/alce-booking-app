@@ -229,7 +229,7 @@
         <app-broadcast-recipient-selector
           [userRole]="userRole"
           [selectedAction]="selectedAction"
-          [selectedUser]="selectedUser"
+          [selectedUsers]="selectedUsers"
           [selectedStage]="selectedStage"
           [selectedRole]="selectedRole"
           [stages]="stages"
@@ -237,8 +237,9 @@
           [loadingGroups]="loadingGroups"
           [reset]="resetChildren"
           (sendOptionSelected)="onSendOptionSelected($event)"
-          (userSelected)="handleUserSelect($event)"
+          (usersSelected)="handleUsersSelect($event)"
           (stageSelected)="handleStageSelect($event)"
+          (groupSelected)="handleGroupSelect($event)"
           (roleSelected)="handleRoleSelect($event)"
           (segmentSelected)="handleSegmentSelect($event)"
           (citySelected)="handleCitySelect($event)"
@@ -251,7 +252,7 @@
 
        <app-broadcast-notification-content
         [selectedAction]="selectedAction"
-        [selectedUser]="selectedUser"
+        [selectedUsers]="selectedUsers"
         [selectedStage]="selectedStage"
         [selectedRole]="selectedRole"
         [reset]="resetChildren"
@@ -287,7 +288,7 @@
 
         <app-broadcast-send-summary
             [selectedAction]="selectedAction"
-            [selectedUser]="selectedUser"
+            [selectedUsers]="selectedUsers"
             [selectedStage]="selectedStage"
             [selectedRole]="selectedRole"
             [groups]="groups"
@@ -304,7 +305,7 @@
 
         <app-broadcast-notification-preview
             [selectedAction]="selectedAction"
-            [selectedUser]="selectedUser"
+            [selectedUsers]="selectedUsers"
             [selectedStage]="selectedStage"
             [selectedRole]="selectedRole"
             [title]="notificationContent.title"
@@ -320,10 +321,11 @@
 
         <app-broadcast-send-action
             [selectedAction]="selectedAction"
-            [selectedUser]="selectedUser"
+            [selectedUsers]="selectedUsers"
             [selectedStage]="selectedStage"
             [selectedRole]="selectedRole"
             [selectedSegment]="selectedSegment"
+            [selectedGroupUserIds]="selectedGroupUserIds"
             [notificationContent]="notificationContent"
             [deliveryOptions]="deliveryOptions"
             [senderId]="senderId"

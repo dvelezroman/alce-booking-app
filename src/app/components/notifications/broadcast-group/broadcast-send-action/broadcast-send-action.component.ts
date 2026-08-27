@@ -9,23 +9,10 @@ import {
 } from '@angular/core';
 
 import { UserDto } from '../../../../services/dtos/user.dto';
-import {
-  Stage,
-  StudentClassification,
-} from '../../../../services/dtos/student.dto';
-
-import {
-  CreateNotificationDto,
-  NotificationTypeEnum,
-} from '../../../../services/dtos/notification.dto';
-
-import {
-  BroadcastNotificationContentValue,
-} from '../broadcast-notification-content/broadcast-notification-content.component';
-
-import {
-  BroadcastDeliveryOptionsValue,
-} from '../broadcast-delivery-options/broadcast-delivery-options.component';
+import { Stage, StudentClassification } from '../../../../services/dtos/student.dto';
+import { CreateNotificationDto } from '../../../../services/dtos/notification.dto';
+import { BroadcastNotificationContentValue } from '../broadcast-notification-content/broadcast-notification-content.component';
+import { BroadcastDeliveryOptionsValue } from '../broadcast-delivery-options/broadcast-delivery-options.component';
 
 
 type SelectedAction =
@@ -64,7 +51,7 @@ export class BroadcastSendActionComponent implements OnChanges {
   ========================= */
 
   @Input() selectedAction: SelectedAction = '';
-  @Input() selectedUser: UserDto | null = null;
+  @Input() selectedUsers: UserDto[] = [];
   @Input() selectedStage: Stage | null = null;
   @Input() selectedRole: RecipientRole | null = null;
   @Input() submitFinished = 0;
@@ -81,7 +68,12 @@ export class BroadcastSendActionComponent implements OnChanges {
      SEGMENT
   ========================= */
 
-  @Input() selectedSegment: | 'kids' | 'teens' | 'adults' | 'city' | null = null;
+  @Input() selectedSegment:
+    | 'kids'
+    | 'teens'
+    | 'adults'
+    | 'city'
+    | null = null;
 
 
   /* =========================
@@ -122,7 +114,7 @@ export class BroadcastSendActionComponent implements OnChanges {
 
 
   /* =========================
-     OUTPUT
+     OUTPUTS
   ========================= */
 
   @Output() notificationSubmitted =
@@ -144,10 +136,7 @@ export class BroadcastSendActionComponent implements OnChanges {
   ========================= */
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes['reset'] &&
-      this.reset
-    ) {
+    if (changes['reset'] && this.reset) {
       this.isSubmitting = false;
     }
 
@@ -167,7 +156,7 @@ export class BroadcastSendActionComponent implements OnChanges {
   get hasRecipient(): boolean {
     switch (this.selectedAction) {
       case 'user':
-        return !!this.selectedUser?.id;
+        return this.selectedUsers.length > 0;
 
       case 'stage':
         return !!this.selectedStage?.id;
@@ -207,18 +196,14 @@ export class BroadcastSendActionComponent implements OnChanges {
   get hasValidDelivery(): boolean {
     if (
       this.deliveryOptions.scheduledAt &&
-      !this.isValidDate(
-        this.deliveryOptions.scheduledAt,
-      )
+      !this.isValidDate(this.deliveryOptions.scheduledAt)
     ) {
       return false;
     }
 
     if (
       this.deliveryOptions.expiresAt &&
-      !this.isValidDate(
-        this.deliveryOptions.expiresAt,
-      )
+      !this.isValidDate(this.deliveryOptions.expiresAt)
     ) {
       return false;
     }
@@ -228,18 +213,12 @@ export class BroadcastSendActionComponent implements OnChanges {
       this.deliveryOptions.expiresAt
     ) {
       const scheduledAt =
-        new Date(
-          this.deliveryOptions.scheduledAt,
-        ).getTime();
+        new Date(this.deliveryOptions.scheduledAt).getTime();
 
       const expiresAt =
-        new Date(
-          this.deliveryOptions.expiresAt,
-        ).getTime();
+        new Date(this.deliveryOptions.expiresAt).getTime();
 
-      if (
-        expiresAt <= scheduledAt
-      ) {
+      if (expiresAt <= scheduledAt) {
         return false;
       }
     }
@@ -280,21 +259,15 @@ export class BroadcastSendActionComponent implements OnChanges {
       return 'Selecciona al menos un destinatario.';
     }
 
-    if (
-      !this.notificationContent.title.trim()
-    ) {
+    if (!this.notificationContent.title.trim()) {
       return 'Ingresa el título de la notificación.';
     }
 
-    if (
-      !this.notificationContent.message.trim()
-    ) {
+    if (!this.notificationContent.message.trim()) {
       return 'Ingresa el mensaje de la notificación.';
     }
 
-    if (
-      !this.notificationContent.notificationType
-    ) {
+    if (!this.notificationContent.notificationType) {
       return 'Selecciona el tipo de notificación.';
     }
 
@@ -304,6 +277,7 @@ export class BroadcastSendActionComponent implements OnChanges {
 
     return null;
   }
+
 
   get isSubmitDisabled(): boolean {
     return this.isSubmitting;
@@ -319,18 +293,12 @@ export class BroadcastSendActionComponent implements OnChanges {
       return;
     }
 
-    /*
-    * El usuario intentó enviar.
-    * Avisamos al padre para que los componentes
-    * muestren sus validaciones visuales.
-    */
     if (!this.canSubmit) {
       this.validationRequested.emit();
       return;
     }
 
-    const payload =
-      this.buildPayload();
+    const payload = this.buildPayload();
 
     if (!payload) {
       this.validationRequested.emit();
@@ -338,10 +306,7 @@ export class BroadcastSendActionComponent implements OnChanges {
     }
 
     this.isSubmitting = true;
-
-    this.notificationSubmitted.emit(
-      payload,
-    );
+    this.notificationSubmitted.emit(payload);
   }
 
 
@@ -349,125 +314,97 @@ export class BroadcastSendActionComponent implements OnChanges {
      BUILD PAYLOAD
   ========================= */
 
-  private buildPayload():
-    CreateNotificationDto | null {
-
-    if (
-      !this.senderId ||
-      !this.notificationContent.notificationType
-    ) {
+  private buildPayload(): CreateNotificationDto | null {
+    if (!this.senderId || !this.notificationContent.notificationType) {
       return null;
     }
 
-    const recipientData =
-      this.buildRecipientData();
+    const recipientData = this.buildRecipientData();
 
     if (!recipientData) {
       return null;
     }
 
+    /*
+     * Comportamiento anterior:
+     * si no se selecciona una fecha de envío,
+     * se utiliza el momento actual.
+     */
+    const scheduledAt =
+      this.deliveryOptions.scheduledAt ||
+      new Date().toISOString();
+
+    /*
+     * Si no existe expiración configurada,
+     * se establece 24 horas después del envío.
+     */
+    const expiresAt =
+      this.deliveryOptions.expiresAt ||
+      new Date(
+        new Date(scheduledAt).getTime() +
+        24 * 60 * 60 * 1000,
+      ).toISOString();
+
+    /*
+     * Igual que antes:
+     * la ventana temporal termina 6 días
+     * después de expiresAt.
+     */
+    const temporalWindowEnd =
+      new Date(
+        new Date(expiresAt).getTime() +
+        6 * 24 * 60 * 60 * 1000,
+      ).toISOString();
+
     const payload: CreateNotificationDto = {
-      from:
-        this.senderId,
-
-      to:
-        recipientData.to,
-
-      scope:
-        recipientData.scope,
+      from: this.senderId,
+      to: recipientData.to,
+      scope: recipientData.scope,
 
       ...(recipientData.stageId != null
-        ? {
-            stageId:
-              recipientData.stageId,
-          }
+        ? { stageId: recipientData.stageId }
         : {}),
 
       ...(recipientData.studentClassification
-        ? {
-            studentClassification:
-              recipientData.studentClassification,
-          }
+        ? { studentClassification: recipientData.studentClassification }
         : {}),
 
       ...(recipientData.city
-        ? {
-            city:
-              recipientData.city,
-          }
+        ? { city: recipientData.city }
         : {}),
 
-      title:
-        this.notificationContent.title.trim(),
+      title: this.notificationContent.title.trim(),
 
       message: {
-        body:
-          this.notificationContent.message.trim(),
+        body: this.notificationContent.message.trim(),
+        action: 'join_meeting',
       },
 
-      notificationType:
-        this.notificationContent.notificationType,
+      notificationType: this.notificationContent.notificationType,
+      priority: this.notificationContent.priority,
 
-      priority:
-        this.notificationContent.priority,
+      scheduledAt,
+      expiresAt,
 
-      ...(this.deliveryOptions.scheduledAt
-        ? {
-            scheduledAt:
-              this.deliveryOptions.scheduledAt,
-          }
+      metadata: {
+        source: 'meeting_system',
+        category: 'reminder',
+      },
+
+      maxRetries: 3,
+
+      isTemporal: false,
+      temporalWindowType: 'FIXED_DAYS',
+      temporalWindowValue: 7,
+      temporalWindowStart: scheduledAt,
+      temporalWindowEnd,
+
+      ...(recipientData.stageId != null
+        ? { temporalStageId: recipientData.stageId }
         : {}),
 
-      ...(this.deliveryOptions.expiresAt
-        ? {
-            expiresAt:
-              this.deliveryOptions.expiresAt,
-          }
-        : {}),
-
-      isPersistent:
-        this.deliveryOptions.isPersistent,
-
-      isDeletable:
-        this.deliveryOptions.isDeletable,
-
-      isTemporal:
-        this.deliveryOptions.isTemporal,
-
-      ...(this.deliveryOptions.temporalWindowType
-        ? {
-            temporalWindowType:
-              this.deliveryOptions.temporalWindowType,
-          }
-        : {}),
-
-      ...(this.deliveryOptions.temporalWindowValue != null
-        ? {
-            temporalWindowValue:
-              this.deliveryOptions.temporalWindowValue,
-          }
-        : {}),
-
-      ...(this.deliveryOptions.temporalWindowStart
-        ? {
-            temporalWindowStart:
-              this.deliveryOptions.temporalWindowStart,
-          }
-        : {}),
-
-      ...(this.deliveryOptions.temporalWindowEnd
-        ? {
-            temporalWindowEnd:
-              this.deliveryOptions.temporalWindowEnd,
-          }
-        : {}),
-
-      ...(this.deliveryOptions.temporalStageId != null
-        ? {
-            temporalStageId:
-              this.deliveryOptions.temporalStageId,
-          }
-        : {}),
+      isPersistent: this.deliveryOptions.isPersistent,
+      isDeletable: this.deliveryOptions.isDeletable,
     };
 
     return payload;
@@ -493,114 +430,75 @@ export class BroadcastSendActionComponent implements OnChanges {
 
     switch (this.selectedAction) {
 
-      /* =========================
-         USER
-      ========================= */
-
       case 'user': {
-        const userId =
-          this.selectedUser?.id;
+        const ids = this.selectedUsers
+          .map(user => user.id)
+          .filter(
+            (id): id is number =>
+              typeof id === 'number',
+          );
 
-        if (!userId) {
+        if (ids.length === 0) {
           return null;
         }
 
         return {
-          to: [
-            userId,
-          ],
-
-          scope:
-            'INDIVIDUAL',
+          to: Array.from(new Set(ids)),
+          scope: 'INDIVIDUAL',
         };
       }
 
 
-      /* =========================
-         STAGE
-      ========================= */
-
       case 'stage': {
-        const stageId =
-          this.selectedStage?.id;
+        const stageId = this.selectedStage?.id;
 
         if (!stageId) {
           return null;
         }
 
         return {
-          /*
-           * El backend determina los usuarios
-           * mediante el stageId.
-           */
           to: [],
-
-          scope:
-            'STAGE_STUDENTS',
-
+          scope: 'STAGE_STUDENTS',
           stageId,
         };
       }
 
 
-      /* =========================
-         GROUP
-      ========================= */
-
       case 'group': {
-        const ids =
-          Array.from(
-            new Set(
-              this.selectedGroupUserIds.filter(
-                id =>
-                  typeof id === 'number',
-              ),
+        const ids = Array.from(
+          new Set(
+            this.selectedGroupUserIds.filter(
+              id => typeof id === 'number',
             ),
-          );
+          ),
+        );
 
-        if (
-          ids.length === 0
-        ) {
+        if (ids.length === 0) {
           return null;
         }
 
         return {
           to: ids,
-
-          scope:
-            'INDIVIDUAL',
+          scope: 'INDIVIDUAL',
         };
       }
 
-
-      /* =========================
-         ROLE
-      ========================= */
 
       case 'role': {
         switch (this.selectedRole) {
           case 'student':
             return {
               to: [],
-              scope:
-                'ALL_STUDENTS',
+              scope: 'ALL_STUDENTS',
             };
 
           case 'instructor':
             return {
               to: [],
-              scope:
-                'ALL_INSTRUCTORS',
+              scope: 'ALL_INSTRUCTORS',
             };
 
           case 'admin':
-            /*
-             * Tu CreateNotificationDto actualmente
-             * no permite ALL_ADMINS.
-             *
-             * Por eso no construimos un payload
-             * incorrecto aquí.
-             */
             return null;
 
           default:
@@ -608,10 +506,6 @@ export class BroadcastSendActionComponent implements OnChanges {
         }
       }
 
-
-      /* =========================
-         SEGMENT
-      ========================= */
 
       case 'segment': {
         if (!this.selectedSegment) {
@@ -635,16 +529,11 @@ export class BroadcastSendActionComponent implements OnChanges {
      HELPERS
   ========================= */
 
-  private isValidDate(
-    value: string,
-  ): boolean {
-
-    const date =
-      new Date(value);
+  private isValidDate(value: string): boolean {
+    const date = new Date(value);
 
     return !Number.isNaN(
       date.getTime(),
     );
   }
-
 }
