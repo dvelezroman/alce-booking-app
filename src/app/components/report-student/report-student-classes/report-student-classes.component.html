@@ -170,12 +170,21 @@
           ‹
         </button>
 
-        <button
-          type="button"
-          class="classes-report__pagination-page classes-report__pagination-page--active"
-        >
-          {{ page }}
-        </button>
+        @for (
+          pageNumber of visiblePages;
+          track pageNumber
+        ) {
+          <button
+            type="button"
+            class="classes-report__pagination-page"
+            [class.classes-report__pagination-page--active]="
+              pageNumber === page
+            "
+            (click)="goToPage(pageNumber)"
+          >
+            {{ pageNumber }}
+          </button>
+        }
 
         <button
           type="button"

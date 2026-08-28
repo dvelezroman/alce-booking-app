@@ -46,15 +46,16 @@ export class ReportInstructorFiltersComponent {
   };
 
   @Input() filteredInstructors: UserDto[] = [];
-
+  
   @Input() showDropdown = false;
-
+  
   @Input() isNameFieldInvalid = false;
-
+  
   @Input() showFromError = false;
-
+  
   @Input() showToError = false;
-
+  
+  @Input() isMainView = false;
 
   /* =========================
      OUTPUTS

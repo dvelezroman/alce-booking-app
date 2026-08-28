@@ -45,6 +45,35 @@ export class ReportStudentDetailedComponent {
     return this.page < this.totalPages;
   }
 
+  get visiblePages(): number[] {
+    const total = this.totalPages;
+
+    if (total <= 3) {
+      return Array.from(
+        { length: total },
+        (_, index) => index + 1
+      );
+    }
+
+    if (this.page <= 2) {
+      return [1, 2, 3];
+    }
+
+    if (this.page >= total - 1) {
+      return [
+        total - 2,
+        total - 1,
+        total
+      ];
+    }
+
+    return [
+      this.page - 1,
+      this.page,
+      this.page + 1
+    ];
+  }
+
   previousPage(): void {
     if (!this.canPrev) return;
     this.page--;
