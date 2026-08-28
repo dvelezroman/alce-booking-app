@@ -524,10 +524,22 @@ export class ReportUserComponent {
   }
 
 
-    get paginatedUsers(): UserDto[] {
+  get paginatedUsers(): UserDto[] {
+    const globalStart =
+      (this.currentPage - 1) *
+      this.itemsPerPage;
+
+    const localStart =
+      globalStart %
+      this.apiPageSize;
+
+    const localEnd =
+      localStart +
+      this.itemsPerPage;
+
     return this.users.slice(
-      0,
-      this.itemsPerPage
+      localStart,
+      localEnd
     );
   }
 

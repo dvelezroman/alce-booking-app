@@ -36,20 +36,19 @@ export class BroadcastNotificationPreviewComponent {
   ========================= */
 
   @Input() selectedAction: SelectedAction = '';
-  @Input() selectedUser: UserDto | null = null;
+  @Input() selectedUsers: UserDto[] = [];
   @Input() selectedStage: Stage | null = null;
   @Input() selectedRole: RecipientRole | null = null;
 
 
   /* =========================
      CONTENT INPUTS
-     Se conectarán desde el padre
   ========================= */
 
-  @Input() title: string = '';
-  @Input() message: string = '';
+  @Input() title = '';
+  @Input() message = '';
   @Input() notificationType: NotificationTypeEnum | null = null;
-  @Input() priority: number = 1;
+  @Input() priority = 1;
 
 
   /* =========================
@@ -82,7 +81,7 @@ export class BroadcastNotificationPreviewComponent {
   get recipientLabel(): string {
     switch (this.selectedAction) {
       case 'user':
-        return this.selectedUserName;
+        return this.selectedUsersLabel;
 
       case 'stage':
         return this.selectedStageLabel;
@@ -103,18 +102,21 @@ export class BroadcastNotificationPreviewComponent {
 
 
   /* =========================
-     USER
+     USERS
   ========================= */
 
-  get selectedUserName(): string {
-    if (!this.selectedUser) {
+  get selectedUsersLabel(): string {
+    if (this.selectedUsers.length === 0) {
       return 'Sin usuario';
     }
 
-    const firstName = this.selectedUser.firstName?.trim() ?? '';
-    const lastName = this.selectedUser.lastName?.trim() ?? '';
+    if (this.selectedUsers.length === 1) {
+      return this.getUserFullName(
+        this.selectedUsers[0],
+      );
+    }
 
-    return `${firstName} ${lastName}`.trim() || 'Usuario';
+    return `${this.selectedUsers.length} usuarios seleccionados`;
   }
 
 
@@ -240,6 +242,28 @@ export class BroadcastNotificationPreviewComponent {
       default:
         return 'normal';
     }
+  }
+
+
+  /* =========================
+     USER HELPER
+  ========================= */
+
+  private getUserFullName(
+    user: UserDto,
+  ): string {
+    const firstName =
+      user.firstName?.trim() ?? '';
+
+    const lastName =
+      user.lastName?.trim() ?? '';
+
+    return (
+      `${firstName} ${lastName}`.trim() ||
+      user.email ||
+      user.emailAddress ||
+      'Usuario'
+    );
   }
 
 

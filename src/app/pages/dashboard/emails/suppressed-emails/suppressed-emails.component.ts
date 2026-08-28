@@ -32,6 +32,7 @@ export class SuppressedEmailsComponent implements OnInit {
 
   showEditModal = false;
   showNotifyModal = false;
+  showBulkNotifyModal = false;
   showUserModal = false;
   editing: EmailSuppression | null = null;
   isCreate = false;
@@ -44,6 +45,17 @@ export class SuppressedEmailsComponent implements OnInit {
   notifyTitle = 'Actualiza tu correo electrónico';
   notifyMessage = '';
   selectedUserIds = new Set<number>();
+
+  bulkNotifyTitle = 'Actualiza tu correo electrónico';
+  bulkNotifyMessage = '';
+  bulkNotifyPreview: {
+    totalSuppressions: number;
+    withUsersCount: number;
+    uniqueUserCount: number;
+    withoutUsersCount: number;
+  } | null = null;
+  bulkNotifyLoading = false;
+  bulkNotifySending = false;
   selectedUser: MatchedUser | null = null;
   selectedBannedEmail = '';
 
@@ -220,6 +232,87 @@ export class SuppressedEmailsComponent implements OnInit {
         this.modal.show = false;
       },
     };
+  }
+
+  private currentListFilters(): { search?: string; active?: boolean } {
+    const active =
+      this.activeFilter === 'all'
+        ? undefined
+        : this.activeFilter === 'true';
+    return {
+      search: this.search.trim() || undefined,
+      active,
+    };
+  }
+
+  openBulkNotify(): void {
+    this.bulkNotifyTitle = 'Actualiza tu correo electrónico';
+    this.bulkNotifyMessage = '';
+    this.bulkNotifyPreview = null;
+    this.bulkNotifyLoading = true;
+    this.showBulkNotifyModal = true;
+
+    this.emailSuppressionService
+      .previewBulkNotify(this.currentListFilters())
+      .subscribe({
+        next: (preview) => {
+          this.bulkNotifyPreview = preview;
+          this.bulkNotifyLoading = false;
+        },
+        error: (err) => {
+          this.bulkNotifyLoading = false;
+          this.showBulkNotifyModal = false;
+          this.showError(
+            err?.error?.message ||
+              'No se pudo cargar el resumen de notificaciones.',
+          );
+        },
+      });
+  }
+
+  closeBulkNotifyModal(): void {
+    this.showBulkNotifyModal = false;
+    this.bulkNotifyPreview = null;
+    this.bulkNotifySending = false;
+  }
+
+  sendBulkNotify(): void {
+    if (!this.bulkNotifyPreview?.withUsersCount) {
+      this.showError('No hay usuarios vinculados para notificar.');
+      return;
+    }
+
+    this.bulkNotifySending = true;
+    this.emailSuppressionService
+      .bulkNotify({
+        ...this.currentListFilters(),
+        title: this.bulkNotifyTitle.trim() || undefined,
+        message: this.bulkNotifyMessage.trim() || undefined,
+      })
+      .subscribe({
+        next: (result) => {
+          this.closeBulkNotifyModal();
+          const parts = [
+            `${result.uniqueUsersNotified} usuario(s) notificado(s)`,
+            `${result.notifiedSuppressions} email(s) baneado(s) procesado(s)`,
+          ];
+          if (result.skippedNoUsers) {
+            parts.push(`${result.skippedNoUsers} sin usuario vinculado`);
+          }
+          if (result.failed) {
+            parts.push(`${result.failed} fallido(s)`);
+          }
+          this.showSuccess(`Notificación in-app enviada: ${parts.join(', ')}.`);
+          this.fetch();
+        },
+        error: (err) => {
+          this.bulkNotifySending = false;
+          this.showError(
+            err?.error?.message ||
+              'No se pudo enviar las notificaciones masivas.',
+          );
+        },
+      });
   }
 
   openNotify(item: EmailSuppression): void {

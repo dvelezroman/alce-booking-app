@@ -57,6 +57,24 @@
   line-height: 1.4;
 }
 
+
+/* =========================================================
+   HEADER ACTIONS
+========================================================= */
+
+.suppressed-page__header-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .55rem;
+}
+
+
+/* =========================================================
+   HEADER BUTTON
+========================================================= */
+
 .suppressed-page__create {
   min-height: 2.3rem;
   padding: 0 .75rem;
@@ -71,11 +89,46 @@
   font-family: inherit;
   font-size: .56rem;
   font-weight: 700;
+  white-space: nowrap;
   cursor: pointer;
   box-shadow: 0 5px 12px rgba(89, 67, 212, .14);
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    background 150ms ease;
 
   svg {
     width: .85rem;
     height: .85rem;
+    flex: 0 0 .85rem;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 7px 16px rgba(89, 67, 212, .18);
+  }
+
+  &:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+
+/* =========================================================
+   BULK NOTIFY BUTTON
+========================================================= */
+
+.suppressed-page__create--notify {
+  border-color: #dcd8f5;
+  background: #f7f5ff;
+  color: #5d4bc7;
+  box-shadow: none;
+
+  &:hover:not(:disabled) {
+    border-color: #cfc8f3;
+    background: #f0edff;
+    box-shadow: none;
   }
 }

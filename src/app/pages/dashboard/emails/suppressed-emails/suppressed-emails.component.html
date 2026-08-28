@@ -73,6 +73,31 @@
         <button
           type="button"
           class="suppressed-page__create"
+          [disabled]="loading || bulkNotifyLoading"
+          (click)="openBulkNotify()"
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M10 20h4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          Notificar a todos
+        </button>
+
+        <button
+          type="button"
+          class="suppressed-page__create"
           (click)="openCreate()"
         >
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -1380,6 +1405,248 @@
           (click)="sendNotify()"
         >
           Enviar notificación
+        </button>
+
+      </footer>
+
+    </section>
+
+  </div>
+
+  <!-- =====================================================
+      BULK NOTIFY MODAL
+  ====================================================== -->
+
+  <div
+    *ngIf="showBulkNotifyModal"
+    class="suppressed-modal"
+  >
+
+    <button
+      type="button"
+      class="suppressed-modal__backdrop"
+      aria-label="Cerrar"
+      (click)="closeBulkNotifyModal()"
+    >
+    </button>
+
+
+    <section
+      class="
+        suppressed-modal__panel
+        suppressed-modal__panel--notify
+        suppressed-modal__panel--bulk-notify
+      "
+    >
+
+      <header class="suppressed-modal__header">
+
+        <div>
+
+          <span class="suppressed-modal__eyebrow">
+            Notificación interna
+          </span>
+
+          <h2>
+            Notificar in-app a todos
+          </h2>
+
+          <p>
+            Envía una notificación a los usuarios vinculados
+            con los emails bloqueados de la lista actual.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="suppressed-modal__close"
+          aria-label="Cerrar"
+          (click)="closeBulkNotifyModal()"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M7 7l10 10M17 7 7 17"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+      </header>
+
+
+      <div class="suppressed-modal__body">
+
+        <!-- LOADING -->
+
+        <div
+          *ngIf="bulkNotifyLoading"
+          class="suppressed-table__state"
+        >
+          <span class="suppressed-table__spinner">
+          </span>
+
+          Calculando destinatarios...
+        </div>
+
+
+        <ng-container
+          *ngIf="
+            !bulkNotifyLoading &&
+            bulkNotifyPreview
+          "
+        >
+
+          <!-- SUMMARY -->
+
+          <div class="suppressed-page__info">
+
+            <span
+              class="suppressed-page__info-icon"
+              aria-hidden="true"
+            >
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="8.5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+
+                <path
+                  d="M12 10.5v5M12 7.5h.01"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <span>
+              Se enviará una notificación a
+
+              <strong>
+                {{ bulkNotifyPreview.uniqueUserCount }}
+              </strong>
+
+              usuario(s) vinculados a
+
+              <strong>
+                {{ bulkNotifyPreview.withUsersCount }}
+              </strong>
+
+              email(s) bloqueado(s).
+
+              <ng-container
+                *ngIf="bulkNotifyPreview.withoutUsersCount"
+              >
+                {{ bulkNotifyPreview.withoutUsersCount }}
+                email(s) sin usuario serán omitidos.
+              </ng-container>
+            </span>
+
+          </div>
+
+
+          <!-- DEFAULT MESSAGE INFO -->
+
+          <div
+            *ngIf="!bulkNotifyMessage.trim()"
+            class="suppressed-page__info"
+          >
+            <span>
+              Si dejas el mensaje vacío, cada usuario recibirá
+              un mensaje personalizado con su email bloqueado.
+            </span>
+          </div>
+
+
+          <!-- NO USERS -->
+
+          <div
+            *ngIf="!bulkNotifyPreview.withUsersCount"
+            class="
+              suppressed-table__state
+              suppressed-table__state--error
+            "
+          >
+            No hay usuarios vinculados en la lista filtrada actual.
+          </div>
+
+
+          <!-- TITLE -->
+
+          <div class="suppressed-modal__field">
+
+            <label for="bulkNotifyTitle">
+              Título
+            </label>
+
+            <input
+              id="bulkNotifyTitle"
+              type="text"
+              [(ngModel)]="bulkNotifyTitle"
+            />
+
+          </div>
+
+
+          <!-- MESSAGE -->
+
+          <div class="suppressed-modal__field">
+
+            <label for="bulkNotifyMessage">
+              Mensaje (opcional)
+            </label>
+
+            <textarea
+              id="bulkNotifyMessage"
+              rows="4"
+              [(ngModel)]="bulkNotifyMessage"
+              placeholder="Vacío = mensaje personalizado por email bloqueado"
+            ></textarea>
+
+          </div>
+
+        </ng-container>
+
+      </div>
+
+
+      <footer class="suppressed-modal__footer">
+
+        <button
+          type="button"
+          class="suppressed-modal__button"
+          [disabled]="bulkNotifySending"
+          (click)="closeBulkNotifyModal()"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="button"
+          class="
+            suppressed-modal__button
+            suppressed-modal__button--primary
+          "
+          [disabled]="
+            bulkNotifyLoading ||
+            bulkNotifySending ||
+            !bulkNotifyPreview?.withUsersCount
+          "
+          (click)="sendBulkNotify()"
+        >
+          {{
+            bulkNotifySending
+              ? 'Enviando...'
+              : 'Enviar a todos'
+          }}
         </button>
 
       </footer>
