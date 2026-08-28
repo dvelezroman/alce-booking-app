@@ -76,6 +76,27 @@ export interface NotifyEmailSuppressionPayload {
   message?: string;
 }
 
+export interface BulkNotifyEmailSuppressionsPayload {
+  search?: string;
+  active?: boolean;
+  title?: string;
+  message?: string;
+}
+
+export interface BulkNotifyPreviewResponse {
+  totalSuppressions: number;
+  withUsersCount: number;
+  uniqueUserCount: number;
+  withoutUsersCount: number;
+}
+
+export interface BulkNotifyResultResponse {
+  notifiedSuppressions: number;
+  skippedNoUsers: number;
+  uniqueUsersNotified: number;
+  failed: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class EmailSuppressionService {
   private apiUrl = `${environment.apiUrl}/email-suppressions`;
@@ -132,5 +153,28 @@ export class EmailSuppressionService {
       notificationId: number;
       lastNotifiedAt: string;
     }>(`${this.apiUrl}/${id}/notify`, payload);
+  }
+
+  previewBulkNotify(
+    filters: BulkNotifyEmailSuppressionsPayload = {},
+  ): Observable<BulkNotifyPreviewResponse> {
+    let params = new HttpParams();
+    if (filters.search) params = params.set('search', filters.search);
+    if (filters.active !== undefined && filters.active !== null) {
+      params = params.set('active', String(filters.active));
+    }
+    return this.http.get<BulkNotifyPreviewResponse>(
+      `${this.apiUrl}/bulk-notify/preview`,
+      { params },
+    );
+  }
+
+  bulkNotify(
+    payload: BulkNotifyEmailSuppressionsPayload,
+  ): Observable<BulkNotifyResultResponse> {
+    return this.http.post<BulkNotifyResultResponse>(
+      `${this.apiUrl}/bulk-notify`,
+      payload,
+    );
   }
 }

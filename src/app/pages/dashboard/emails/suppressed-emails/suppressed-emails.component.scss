@@ -57,6 +57,13 @@
   align-items: flex-end;
 }
 
+.toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .email-filters {
   display: flex;
   flex-wrap: wrap;
@@ -130,6 +137,37 @@
 
   &:hover {
     background-color: #1d4ed8;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--secondary {
+    background-color: #ffffff;
+    color: #1d4ed8;
+    border: 1px solid #93c5fd;
+
+    &:hover:not(:disabled) {
+      background-color: #eff6ff;
+    }
+  }
+}
+
+.bulk-summary {
+  margin: 0 0 0.75rem;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.bulk-hint {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+
+  &.warn {
+    color: #b45309;
   }
 }
 

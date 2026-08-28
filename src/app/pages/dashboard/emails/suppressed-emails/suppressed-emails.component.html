@@ -43,9 +43,19 @@
         </div>
       </div>
 
-      <button class="add-btn" type="button" (click)="openCreate()">
-        + Agregar email
-      </button>
+      <div class="toolbar-actions">
+        <button class="add-btn" type="button" (click)="openCreate()">
+          + Agregar email
+        </button>
+        <button
+          class="add-btn add-btn--secondary"
+          type="button"
+          [disabled]="loading || bulkNotifyLoading"
+          (click)="openBulkNotify()"
+        >
+          Notificar a todos
+        </button>
+      </div>
     </div>
 
     <div class="divider"></div>
@@ -322,6 +332,76 @@
           Enviar
         </button>
         <button class="btn btn-secondary" type="button" (click)="closeNotifyModal()">
+          Cancelar
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Bulk notify modal -->
+  <div class="modal" [class.is-active]="showBulkNotifyModal">
+    <div class="modal-background" (click)="closeBulkNotifyModal()"></div>
+    <div class="modal-card modal-card--wide">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Notificar in-app a todos</p>
+        <button
+          class="delete"
+          aria-label="close"
+          type="button"
+          (click)="closeBulkNotifyModal()"
+        ></button>
+      </header>
+      <section class="modal-card-body">
+        <div *ngIf="bulkNotifyLoading" class="placeholder">Calculando destinatarios…</div>
+
+        <ng-container *ngIf="!bulkNotifyLoading && bulkNotifyPreview">
+          <p class="bulk-summary">
+            Se enviará notificación a
+            <strong>{{ bulkNotifyPreview.uniqueUserCount }}</strong>
+            usuario(s) de plataforma vinculados a
+            <strong>{{ bulkNotifyPreview.withUsersCount }}</strong>
+            email(s) baneado(s)
+            <span *ngIf="bulkNotifyPreview.withoutUsersCount">
+              ({{ bulkNotifyPreview.withoutUsersCount }} sin usuario se omitirán)
+            </span>.
+          </p>
+          <p class="bulk-hint" *ngIf="!bulkNotifyMessage.trim()">
+            Si dejas el mensaje vacío, cada usuario recibirá un texto con su email baneado específico.
+          </p>
+          <p class="bulk-hint warn" *ngIf="!bulkNotifyPreview.withUsersCount">
+            No hay usuarios vinculados en la lista filtrada actual.
+          </p>
+
+          <div class="form-field">
+            <label for="bulkNotifyTitle">Título</label>
+            <input id="bulkNotifyTitle" type="text" [(ngModel)]="bulkNotifyTitle" />
+          </div>
+          <div class="form-field">
+            <label for="bulkNotifyMessage">Mensaje (opcional)</label>
+            <textarea
+              id="bulkNotifyMessage"
+              rows="4"
+              [(ngModel)]="bulkNotifyMessage"
+              placeholder="Vacío = mensaje personalizado por email baneado"
+            ></textarea>
+          </div>
+        </ng-container>
+      </section>
+      <footer class="modal-card-foot">
+        <button
+          class="btn btn-primary"
+          type="button"
+          [disabled]="bulkNotifyLoading || bulkNotifySending || !bulkNotifyPreview?.withUsersCount"
+          (click)="sendBulkNotify()"
+        >
+          {{ bulkNotifySending ? 'Enviando…' : 'Enviar a todos' }}
+        </button>
+        <button
+          class="btn btn-secondary"
+          type="button"
+          [disabled]="bulkNotifySending"
+          (click)="closeBulkNotifyModal()"
+        >
           Cancelar
         </button>
       </footer>
