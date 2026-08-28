@@ -322,7 +322,7 @@
           <label for="notifyMessage">Mensaje</label>
           <textarea
             id="notifyMessage"
-            rows="4"
+            rows="12"
             [(ngModel)]="notifyMessage"
           ></textarea>
         </div>
@@ -365,8 +365,9 @@
               ({{ bulkNotifyPreview.withoutUsersCount }} sin usuario se omitirán)
             </span>.
           </p>
-          <p class="bulk-hint" *ngIf="!bulkNotifyMessage.trim()">
-            Si dejas el mensaje vacío, cada usuario recibirá un texto con su email baneado específico.
+          <p class="bulk-hint">
+            Cada usuario recibirá una notificación clara: qué pasó con su correo
+            y los pasos para corregirlo en Perfil.
           </p>
           <p class="bulk-hint warn" *ngIf="!bulkNotifyPreview.withUsersCount">
             No hay usuarios vinculados en la lista filtrada actual.
@@ -376,13 +377,19 @@
             <label for="bulkNotifyTitle">Título</label>
             <input id="bulkNotifyTitle" type="text" [(ngModel)]="bulkNotifyTitle" />
           </div>
+
+          <div class="message-preview" *ngIf="!bulkNotifyMessage.trim()">
+            <div class="message-preview__label">Vista previa del mensaje (automático)</div>
+            <pre class="message-preview__body">{{ defaultBulkMessagePreview }}</pre>
+          </div>
+
           <div class="form-field">
-            <label for="bulkNotifyMessage">Mensaje (opcional)</label>
+            <label for="bulkNotifyMessage">Mensaje personalizado (opcional)</label>
             <textarea
               id="bulkNotifyMessage"
-              rows="4"
+              rows="6"
               [(ngModel)]="bulkNotifyMessage"
-              placeholder="Vacío = mensaje personalizado por email baneado"
+              placeholder="Déjalo vacío para usar el mensaje automático con el email de cada usuario"
             ></textarea>
           </div>
         </ng-container>
