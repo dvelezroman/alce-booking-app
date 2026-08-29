@@ -58,6 +58,7 @@ export class EmailMessageFormComponent implements OnChanges {
   @Input() selectedType: EmailMessageRecipientType | '' = 'user';
 
   @Input() selectedUser: UserDto | null = null;
+  @Input() externalEmail: string | null = null;
 
   @Input() selectedStage: Stage | null = null;
 
@@ -306,6 +307,13 @@ export class EmailMessageFormComponent implements OnChanges {
     }
 
     if (
+      this.selectedType === 'user' &&
+      !this.hasValidSingleRecipient
+    ) {
+      return false;
+    }
+
+    if (
       this.mode === 'template'
     ) {
       return (
@@ -320,6 +328,28 @@ export class EmailMessageFormComponent implements OnChanges {
         .trim()
         .length > 0 &&
       this.hasEditorContent
+    );
+  }
+
+  get hasValidSingleRecipient(): boolean {
+
+    if (
+      this.externalEmail &&
+      this.isValidEmail(
+        this.externalEmail,
+      )
+    ) {
+      return true;
+    }
+
+    if (!this.selectedUser) {
+      return false;
+    }
+
+    return Boolean(
+      this.getUserValidEmail(
+        this.selectedUser,
+      ),
     );
   }
 
@@ -387,6 +417,87 @@ onSubmit(): void {
 
   private submitUserEmail(): void {
 
+    const externalEmail =
+      this.externalEmail
+        ?.trim() ?? '';
+
+    const isExternalRecipient =
+      this.isValidEmail(
+        externalEmail,
+      );
+
+
+    /* =========================
+      EXTERNAL EMAIL
+    ========================= */
+
+    if (isExternalRecipient) {
+
+      if (
+        this.mode ===
+        'template'
+      ) {
+
+        const payload:
+          SendTemplateEmailRequest = {
+
+          to: externalEmail,
+
+          templateName:
+            this.templateName
+              .trim(),
+
+          variables: {
+            firstName: '',
+            lastName: '',
+            email:
+              externalEmail,
+          },
+
+          fromName:
+            'Alce College',
+        };
+
+        this.submitTemplateEmail.emit(
+          payload,
+        );
+
+        return;
+      }
+
+
+      const payload:
+        SendEmailRequest = {
+
+        to: externalEmail,
+
+        subject:
+          this.subject
+            .trim(),
+
+        content:
+          this.content
+            .trim(),
+
+        contentType:
+          'html',
+
+        fromName:
+          'Alce College',
+      };
+
+      this.submitSingleEmail.emit(
+        payload,
+      );
+
+      return;
+    }
+
+
+    /* =========================
+      PLATFORM USER
+    ========================= */
+
     if (!this.selectedUser) {
       return;
     }
@@ -397,11 +508,14 @@ onSubmit(): void {
       );
 
     if (!email) {
+
       this.invalidSingleEmail.emit(
         this.selectedUser,
       );
+
       return;
     }
+
 
     /* TEMPLATE */
 
@@ -441,6 +555,7 @@ onSubmit(): void {
 
       return;
     }
+
 
     /* MANUAL */
 
@@ -650,6 +765,15 @@ onSubmit(): void {
     ) {
 
       case 'user':
+        if (
+          this.externalEmail &&
+          this.isValidEmail(
+            this.externalEmail,
+          )
+        ) {
+          return this.externalEmail;
+        }
+
         return this.selectedUser
           ? this.getUserName(
               this.selectedUser,
@@ -685,7 +809,14 @@ onSubmit(): void {
     ) {
 
       case 'user':
-        return 'Usuario individual';
+      return (
+        this.externalEmail &&
+        this.isValidEmail(
+          this.externalEmail,
+        )
+      )
+        ? 'Correo externo'
+        : 'Usuario individual';
 
       case 'stage':
         return 'Stage';

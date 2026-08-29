@@ -8,222 +8,69 @@
 
     <div class="recipient-form__field">
 
-      <label
-        for="recipientUser"
-        class="recipient-form__label"
-      >
-        Seleccionar usuario
-      </label>
+      <!-- ===================================================
+          RECIPIENT SOURCE
+      ==================================================== -->
 
-
-      <div class="recipient-form__search">
-
-        <span
-          class="recipient-form__search-icon"
-          aria-hidden="true"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <circle
-              cx="11"
-              cy="11"
-              r="6.5"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-
-            <path
-              d="m16 16 4 4"
-              stroke="currentColor"
-              stroke-width="1.7"
-              stroke-linecap="round"
-            />
-          </svg>
-        </span>
-
-
-        <input
-          id="recipientUser"
-          type="text"
-          class="recipient-form__input recipient-form__input--search"
-          placeholder="Buscar usuario por nombre o email..."
-          autocomplete="off"
-          [(ngModel)]="userSearch"
-          (ngModelChange)="onUserSearchChange($event)"
-          (focus)="
-            userSearch.length >= 2 &&
-            (showUserDropdown = true)
-          "
-          (blur)="hideUserDropdown()"
-        />
-
+      <div class="recipient-form__source-selector">
 
         <button
-          *ngIf="selectedUser"
           type="button"
-          class="recipient-form__clear"
-          title="Quitar usuario"
-          aria-label="Quitar usuario"
-          (mousedown)="$event.preventDefault()"
-          (click)="clearSelectedUser()"
+          class="recipient-form__source-option"
+          [class.recipient-form__source-option--active]="
+            userRecipientSource === 'platform'
+          "
+          (click)="selectUserRecipientSource('platform')"
         >
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M7 7l10 10M17 7 7 17"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            />
-          </svg>
+
+          <span class="recipient-form__source-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="8"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M5.5 19c0-3.1 2.5-5 6.5-5s6.5 1.9 6.5 5"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <span>
+            <strong>
+              Usuario de la plataforma
+            </strong>
+
+            <small>
+              Buscar un usuario registrado
+            </small>
+          </span>
+
         </button>
 
 
-        <!-- DROPDOWN -->
-
-        <div
-          *ngIf="showUserDropdown"
-          class="recipient-form__dropdown"
+        <button
+          type="button"
+          class="recipient-form__source-option"
+          [class.recipient-form__source-option--active]="
+            userRecipientSource === 'external'
+          "
+          (click)="selectUserRecipientSource('external')"
         >
 
-          <div
-            *ngIf="loadingUsers"
-            class="recipient-form__loading"
-          >
-            <span class="recipient-form__spinner">
-            </span>
-
-            Buscando usuarios...
-          </div>
-
-
-          <button
-            *ngFor="
-              let user of users;
-              trackBy: trackByUserId
-            "
-            type="button"
-            class="recipient-form__user-option"
-            (mousedown)="$event.preventDefault()"
-            (click)="selectUser(user)"
-          >
-
-            <span
-              class="recipient-form__avatar"
-              aria-hidden="true"
-            >
-              {{ getUserInitials(user) }}
-            </span>
-
-
-            <span class="recipient-form__user-info">
-
-              <strong>
-                {{ getUserName(user) }}
-              </strong>
-
-              <span>
-                {{
-                  user.email ||
-                  'Sin email registrado'
-                }}
-              </span>
-              
-              <span class="recipient-form__user-role">
-                {{ getUserRoleLabel(user) }}
-              </span>
-
-            </span>
-
-
-            <span
-              class="recipient-form__add"
-              aria-hidden="true"
-            >
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M12 5v14M5 12h14"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </span>
-
-          </button>
-
-
-          <div
-            *ngIf="
-              !loadingUsers &&
-              users.length === 0
-            "
-            class="recipient-form__empty"
-          >
-            No se encontraron usuarios.
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- =====================================================
-          SELECTED USER
-      ====================================================== -->
-
-      <div
-        *ngIf="selectedUser"
-        class="recipient-form__selected-user"
-        [class.recipient-form__selected-user--valid]="
-          selectedUserEmailStatus === 'valid'
-        "
-        [class.recipient-form__selected-user--invalid]="
-          selectedUserEmailStatus === 'invalid'
-        "
-        [class.recipient-form__selected-user--missing]="
-          selectedUserEmailStatus === 'missing'
-        "
-      >
-
-        <!-- AVATAR -->
-
-        <span
-          class="recipient-form__selected-avatar"
-          aria-hidden="true"
-        >
-          {{ getUserInitials(selectedUser) }}
-        </span>
-
-
-        <!-- INFO -->
-
-        <div class="recipient-form__selected-info">
-
-          <strong class="recipient-form__selected-name">
-            {{ getUserName(selectedUser) }}
-          </strong>
-
-          <span class="recipient-form__selected-email">
-
+          <span class="recipient-form__source-icon">
             <svg
-              width="13"
-              height="13"
               viewBox="0 0 24 24"
               fill="none"
-              aria-hidden="true"
             >
               <rect
                 x="3"
@@ -232,37 +79,497 @@
                 height="14"
                 rx="2"
                 stroke="currentColor"
-                stroke-width="1.6"
+                stroke-width="1.7"
               />
 
               <path
                 d="m4 7 8 6 8-6"
                 stroke="currentColor"
-                stroke-width="1.6"
+                stroke-width="1.7"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
             </svg>
+          </span>
 
-            {{
-              selectedUserEmail ||
-              'Sin email registrado'
-            }}
+          <span>
+            <strong>
+              Correo electrónico externo
+            </strong>
 
+            <small>
+              Enviar a un email no registrado
+            </small>
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <!-- ===================================================
+          PLATFORM USER
+      ==================================================== -->
+
+      <ng-container
+        *ngIf="
+          userRecipientSource === 'platform'
+        "
+      >
+
+        <label
+          for="recipientUser"
+          class="recipient-form__label"
+        >
+          Seleccionar usuario
+        </label>
+
+
+        <div class="recipient-form__search">
+
+          <span
+            class="recipient-form__search-icon"
+            aria-hidden="true"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="6.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="m16 16 4 4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
           </span>
 
 
-          <span class="recipient-form__selected-message">
+          <input
+            id="recipientUser"
+            type="text"
+            class="
+              recipient-form__input
+              recipient-form__input--search
+            "
+            placeholder="Buscar usuario por nombre o email..."
+            autocomplete="off"
+            [(ngModel)]="userSearch"
+            (ngModelChange)="
+              onUserSearchChange($event)
+            "
+            (focus)="
+              userSearch.length >= 2 &&
+              (showUserDropdown = true)
+            "
+            (blur)="hideUserDropdown()"
+          />
 
+
+          <button
+            *ngIf="selectedUser"
+            type="button"
+            class="recipient-form__clear"
+            title="Quitar usuario"
+            aria-label="Quitar usuario"
+            (mousedown)="
+              $event.preventDefault()
+            "
+            (click)="clearSelectedUser()"
+          >
             <svg
-              *ngIf="
-                selectedUserEmailStatus === 'valid'
-              "
-              width="12"
-              height="12"
+              width="13"
+              height="13"
               viewBox="0 0 24 24"
               fill="none"
+            >
+              <path
+                d="M7 7l10 10M17 7 7 17"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+
+
+          <!-- DROPDOWN -->
+
+          <div
+            *ngIf="showUserDropdown"
+            class="recipient-form__dropdown"
+          >
+
+            <div
+              *ngIf="loadingUsers"
+              class="recipient-form__loading"
+            >
+              <span
+                class="recipient-form__spinner"
+              >
+              </span>
+
+              Buscando usuarios...
+            </div>
+
+
+            <button
+              *ngFor="
+                let user of users;
+                trackBy: trackByUserId
+              "
+              type="button"
+              class="recipient-form__user-option"
+              (mousedown)="
+                $event.preventDefault()
+              "
+              (click)="selectUser(user)"
+            >
+
+              <span
+                class="recipient-form__avatar"
+                aria-hidden="true"
+              >
+                {{ getUserInitials(user) }}
+              </span>
+
+
+              <span class="recipient-form__user-info">
+
+                <strong>
+                  {{ getUserName(user) }}
+                </strong>
+
+                <span>
+                  {{
+                    getUserValidEmail(user) ||
+                    'Sin email registrado'
+                  }}
+                </span>
+
+                <span
+                  class="recipient-form__user-role"
+                >
+                  {{ getUserRoleLabel(user) }}
+                </span>
+
+              </span>
+
+
+              <span
+                class="recipient-form__add"
+                aria-hidden="true"
+              >
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M12 5v14M5 12h14"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+            </button>
+
+
+            <div
+              *ngIf="
+                !loadingUsers &&
+                users.length === 0
+              "
+              class="recipient-form__empty"
+            >
+              No se encontraron usuarios.
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- SELECTED USER -->
+
+        <div
+          *ngIf="selectedUser"
+          class="recipient-form__selected-user"
+          [class.recipient-form__selected-user--valid]="
+            selectedUserEmailStatus === 'valid'
+          "
+          [class.recipient-form__selected-user--invalid]="
+            selectedUserEmailStatus === 'invalid'
+          "
+          [class.recipient-form__selected-user--missing]="
+            selectedUserEmailStatus === 'missing'
+          "
+        >
+
+          <span
+            class="recipient-form__selected-avatar"
+            aria-hidden="true"
+          >
+            {{ getUserInitials(selectedUser) }}
+          </span>
+
+
+          <div class="recipient-form__selected-info">
+
+            <strong
+              class="recipient-form__selected-name"
+            >
+              {{ getUserName(selectedUser) }}
+            </strong>
+
+
+            <span
+              class="recipient-form__selected-email"
+            >
+
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <rect
+                  x="3"
+                  y="5"
+                  width="18"
+                  height="14"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+
+                <path
+                  d="m4 7 8 6 8-6"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              {{
+                selectedUserEmail ||
+                'Sin email registrado'
+              }}
+
+            </span>
+
+
+            <span
+              class="recipient-form__selected-message"
+            >
+              {{ selectedUserEmailMessage }}
+            </span>
+
+          </div>
+
+
+          <span
+            class="recipient-form__email-status"
+            [class.recipient-form__email-status--valid]="
+              selectedUserEmailStatus === 'valid'
+            "
+            [class.recipient-form__email-status--invalid]="
+              selectedUserEmailStatus === 'invalid'
+            "
+            [class.recipient-form__email-status--missing]="
+              selectedUserEmailStatus === 'missing'
+            "
+          >
+            {{ selectedUserEmailStatusLabel }}
+          </span>
+
+        </div>
+
+
+        <span class="recipient-form__hint">
+          Busca por nombre, apellido o correo electrónico.
+        </span>
+
+      </ng-container>
+
+
+      <!-- ===================================================
+          EXTERNAL EMAIL
+      ==================================================== -->
+
+      <ng-container
+        *ngIf="
+          userRecipientSource === 'external'
+        "
+      >
+
+        <div class="recipient-form__external">
+
+          <div class="recipient-form__external-heading">
+
+            <span
+              class="recipient-form__external-icon"
               aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <rect
+                  x="3"
+                  y="5"
+                  width="18"
+                  height="14"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+
+                <path
+                  d="m4 7 8 6 8-6"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+
+            <div>
+
+              <strong>
+                Enviar a un correo electrónico externo
+              </strong>
+
+              <span>
+                Puedes escribir una dirección que no pertenezca
+                a ningún usuario registrado en la plataforma.
+              </span>
+
+            </div>
+
+            <small>
+              Externo
+            </small>
+
+          </div>
+
+
+          <label
+            for="externalRecipientEmail"
+            class="recipient-form__label"
+          >
+            Correo electrónico
+          </label>
+
+
+          <div
+            class="recipient-form__external-control"
+          >
+
+            <span
+              class="recipient-form__external-input-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <rect
+                  x="3"
+                  y="5"
+                  width="18"
+                  height="14"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+
+                <path
+                  d="m4 7 8 6 8-6"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+
+            <input
+              id="externalRecipientEmail"
+              type="email"
+              class="
+                recipient-form__input
+                recipient-form__input--external
+              "
+              [class.recipient-form__input--valid]="
+                externalEmailStatus === 'valid'
+              "
+              [class.recipient-form__input--invalid]="
+                externalEmailStatus === 'invalid'
+              "
+              placeholder="ejemplo@correo.com"
+              autocomplete="email"
+              [(ngModel)]="externalEmail"
+              (ngModelChange)="
+                onExternalEmailChange($event)
+              "
+            />
+
+
+            <button
+              *ngIf="externalEmailHasValue"
+              type="button"
+              class="recipient-form__clear"
+              title="Limpiar correo"
+              aria-label="Limpiar correo"
+              (click)="clearExternalEmail()"
+            >
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M7 7l10 10M17 7 7 17"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+
+          </div>
+
+
+          <div
+            *ngIf="externalEmailStatus === 'valid'"
+            class="
+              recipient-form__external-message
+              recipient-form__external-message--valid
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
             >
               <circle
                 cx="12"
@@ -281,110 +588,58 @@
               />
             </svg>
 
+            <span>
+              Correo electrónico válido. El mensaje se enviará
+              directamente a esta dirección.
+            </span>
 
+          </div>
+
+
+          <div
+            *ngIf="externalEmailStatus === 'invalid'"
+            class="
+              recipient-form__external-message
+              recipient-form__external-message--invalid
+            "
+          >
             <svg
-              *ngIf="
-                selectedUserEmailStatus !== 'valid'
-              "
-              width="12"
-              height="12"
               viewBox="0 0 24 24"
               fill="none"
-              aria-hidden="true"
             >
-              <path
-                d="M12 4 21 20H3L12 4Z"
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
                 stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linejoin="round"
+                stroke-width="1.7"
               />
 
               <path
-                d="M12 9v5M12 17h.01"
+                d="M12 8v5M12 16h.01"
                 stroke="currentColor"
-                stroke-width="1.7"
+                stroke-width="1.8"
                 stroke-linecap="round"
               />
             </svg>
 
-            {{ selectedUserEmailMessage }}
+            <span>
+              Ingresa una dirección de correo electrónico válida.
+            </span>
 
+          </div>
+
+
+          <span
+            *ngIf="!externalEmailHasValue"
+            class="recipient-form__hint"
+          >
+            Ingresa la dirección exacta del destinatario.
           </span>
 
         </div>
 
-
-        <!-- STATUS -->
-
-        <span
-          class="recipient-form__email-status"
-          [class.recipient-form__email-status--valid]="
-            selectedUserEmailStatus === 'valid'
-          "
-          [class.recipient-form__email-status--invalid]="
-            selectedUserEmailStatus === 'invalid'
-          "
-          [class.recipient-form__email-status--missing]="
-            selectedUserEmailStatus === 'missing'
-          "
-        >
-
-          <svg
-            *ngIf="
-              selectedUserEmailStatus === 'valid'
-            "
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="m6 12 4 4 8-8"
-              stroke="currentColor"
-              stroke-width="1.9"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-
-
-          <svg
-            *ngIf="
-              selectedUserEmailStatus !== 'valid'
-            "
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M12 8v5M12 16h.01"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            />
-
-            <circle
-              cx="12"
-              cy="12"
-              r="9"
-              stroke="currentColor"
-              stroke-width="1.6"
-            />
-          </svg>
-
-          {{ selectedUserEmailStatusLabel }}
-
-        </span>
-
-      </div>
-
-
-      <span class="recipient-form__hint">
-        Busca por nombre, apellido o correo electrónico.
-      </span>
+      </ng-container>
 
     </div>
 

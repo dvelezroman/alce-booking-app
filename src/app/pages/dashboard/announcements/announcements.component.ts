@@ -56,10 +56,6 @@ import {
    ANNOUNCEMENTS V2 COMPONENTS
 ========================================================= */
 
-import {
-  AnnouncementV2HeaderComponent,
-} from '../../../components/announcements-v2/announcement-v2-header/announcement-v2-header.component';
-
 
 import {
   AnnouncementV2MediaComponent,

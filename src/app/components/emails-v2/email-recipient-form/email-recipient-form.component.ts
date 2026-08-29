@@ -38,6 +38,10 @@ export type EmailRecipientType =
   | 'with-email'
   | 'all';
 
+  type UserRecipientSource =
+  | 'platform'
+  | 'external';
+
 
 @Component({
   selector: 'app-email-recipient-form',
@@ -82,6 +86,8 @@ export class EmailRecipientFormComponent
 
   @Output() userSelected = new EventEmitter<UserDto | null>();
 
+  @Output() externalEmailSelected = new EventEmitter<string | null>();
+
   @Output() stageSelected = new EventEmitter<Stage | null>();
 
   @Output() stageUsersLoaded = new EventEmitter<UserDto[]>();
@@ -102,19 +108,16 @@ export class EmailRecipientFormComponent
      USER
   ========================= */
 
+  userRecipientSource:
+  UserRecipientSource = 'platform';
+  externalEmail = '';
   userSearch = '';
-
   users: UserDto[] = [];
-
   loadingUsers = false;
-
   showUserDropdown = false;
+  selectedUser: UserDto | null = null;
 
-  selectedUser:
-    UserDto | null = null;
-
-  private searchTimer:
-    ReturnType<typeof setTimeout> | null = null;
+  private searchTimer: ReturnType<typeof setTimeout> | null = null;
 
 
   /* =========================
@@ -181,6 +184,147 @@ export class EmailRecipientFormComponent
       !changes['selectedType'].firstChange
     ) {
       this.clearCurrentSelection();
+    }
+  }
+
+  /* =========================
+   USER RECIPIENT SOURCE
+========================= */
+
+selectUserRecipientSource(
+  source: UserRecipientSource,
+): void {
+
+  if (
+    this.userRecipientSource === source
+  ) {
+    return;
+  }
+
+  this.userRecipientSource =
+    source;
+
+  if (
+    source === 'platform'
+  ) {
+
+    this.externalEmail = '';
+
+    this.externalEmailSelected.emit(
+      null,
+    );
+
+    return;
+  }
+
+  this.selectedUser =
+    null;
+
+  this.userSearch =
+    '';
+
+  this.users =
+    [];
+
+  this.showUserDropdown =
+    false;
+
+  this.userSelected.emit(
+    null,
+  );
+}
+
+
+  /* =========================
+    EXTERNAL EMAIL
+  ========================= */
+
+  onExternalEmailChange(
+    value: string,
+  ): void {
+
+    this.externalEmail =
+      value;
+
+    const email =
+      value.trim();
+
+    if (
+      !this.isValidEmail(email)
+    ) {
+      this.externalEmailSelected.emit(
+        null,
+      );
+
+      return;
+    }
+
+    this.externalEmailSelected.emit(
+      email,
+    );
+  }
+
+
+  clearExternalEmail(): void {
+
+    this.externalEmail =
+      '';
+
+    this.externalEmailSelected.emit(
+      null,
+    );
+  }
+
+
+  get externalEmailHasValue(): boolean {
+
+    return (
+      this.externalEmail
+        .trim()
+        .length > 0
+    );
+  }
+
+
+  get externalEmailIsValid(): boolean {
+
+    return this.isValidEmail(
+      this.externalEmail,
+    );
+  }
+
+
+  get externalEmailStatus():
+    'valid'
+    | 'invalid'
+    | 'empty' {
+
+    if (
+      !this.externalEmailHasValue
+    ) {
+      return 'empty';
+    }
+
+    return this.externalEmailIsValid
+      ? 'valid'
+      : 'invalid';
+  }
+
+
+  get externalEmailStatusLabel(): string {
+
+    switch (
+      this.externalEmailStatus
+    ) {
+
+      case 'valid':
+        return 'Email válido';
+
+      case 'invalid':
+        return 'Email inválido';
+
+      default:
+        return '';
     }
   }
 
@@ -1238,6 +1382,9 @@ export class EmailRecipientFormComponent
   ========================= */
 
   private clearCurrentSelection(): void {
+
+    this.userRecipientSource = 'platform';
+    this.externalEmail = '';
 
     this.selectedUser = null;
     this.userSearch = '';

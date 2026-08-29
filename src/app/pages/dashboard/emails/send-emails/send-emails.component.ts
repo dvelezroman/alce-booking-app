@@ -57,6 +57,7 @@ export class SendEmailsComponent implements OnInit {
 
   selectedAction: 'user' | 'stage' | 'group' | 'role' | '' = 'user';
   selectedUser: UserDto | null = null;
+  externalEmail: string | null = null;
   selectedRole: 'student' | 'instructor' | 'admin' | null = null;
   userRole: UserRole | null = null;
   roleUsers: UserDto[] = [];
@@ -142,6 +143,16 @@ export class SendEmailsComponent implements OnInit {
 
   handleUserSelect(user: UserDto | null) {
     this.selectedUser = user;
+      if (user) {
+      this.externalEmail = null;
+    }
+  }
+
+  handleExternalEmailSelect( email: string | null ): void {
+    this.externalEmail = email;
+    if (email) {
+      this.selectedUser = null;
+    }
   }
 
   handleStageSelect(stage: Stage | null) {

@@ -189,6 +189,7 @@
               [userRole]="userRole"
               [reset]="resetChildren"
               (userSelected)="handleUserSelect($event)"
+              (externalEmailSelected)="handleExternalEmailSelect($event)"
               (stageSelected)="handleStageSelect($event)"
               (stageUsersLoaded)="handleStageUsersLoaded($event)"
               (roleSelected)="handleRoleSelect($event)"
@@ -235,6 +236,7 @@
             <app-email-message-form
               [selectedType]="selectedAction"
               [selectedUser]="selectedUser"
+              [externalEmail]="externalEmail"
               [selectedStage]="selectedStage"
               [stageUsers]="stageUsers"
               [selectedGroup]="selectedGroup"
@@ -266,6 +268,7 @@
         <app-email-send-summary
           [selectedType]="selectedAction"
           [selectedUser]="selectedUser"
+          [externalEmail]="externalEmail"
           [selectedStage]="selectedStage"
           [selectedRole]="selectedRole"
         >
@@ -276,6 +279,7 @@
 
         <app-email-preview
           [selectedUser]="selectedUser"
+          [externalEmail]="externalEmail"
         >
         </app-email-preview>
 

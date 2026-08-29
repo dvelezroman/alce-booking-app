@@ -27,12 +27,21 @@ export class EmailPreviewComponent {
   selectedUser:
     UserDto | null = null;
 
+  @Input()
+  externalEmail:
+   string | null = null;
+
 
   /* =========================
      USER NAME
   ========================= */
 
   get userName(): string {
+
+    if (this.externalEmail) {
+      return 'Destinatario externo';
+    }
+
     if (!this.selectedUser) {
       return 'Destinatario';
     }
@@ -48,6 +57,7 @@ export class EmailPreviewComponent {
     return (
       name ||
       this.selectedUser.email ||
+      this.selectedUser.emailAddress ||
       'Destinatario'
     );
   }
@@ -58,7 +68,13 @@ export class EmailPreviewComponent {
   ========================= */
 
   get userEmail(): string {
+
+    if (this.externalEmail) {
+      return this.externalEmail;
+    }
+
     return (
+      this.selectedUser?.emailAddress ||
       this.selectedUser?.email ||
       'correo@ejemplo.com'
     );
@@ -70,6 +86,11 @@ export class EmailPreviewComponent {
   ========================= */
 
   get userInitials(): string {
+
+    if (this.externalEmail) {
+      return 'EX';
+    }
+
     if (!this.selectedUser) {
       return 'DE';
     }
@@ -90,6 +111,9 @@ export class EmailPreviewComponent {
 
     return (
       initials ||
+      this.selectedUser.emailAddress
+        ?.charAt(0)
+        .toUpperCase() ||
       this.selectedUser.email
         ?.charAt(0)
         .toUpperCase() ||
@@ -103,6 +127,9 @@ export class EmailPreviewComponent {
   ========================= */
 
   get hasSelectedUser(): boolean {
-    return !!this.selectedUser;
+    return Boolean(
+      this.selectedUser ||
+      this.externalEmail
+    );
   }
 }

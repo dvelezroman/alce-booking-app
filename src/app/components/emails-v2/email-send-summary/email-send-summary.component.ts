@@ -46,6 +46,10 @@ export class EmailSendSummaryComponent {
     UserDto | null = null;
 
   @Input()
+  externalEmail:
+    string | null = null;
+
+  @Input()
   selectedStage:
     Stage | null = null;
 
@@ -64,7 +68,9 @@ export class EmailSendSummaryComponent {
   get recipientTypeLabel(): string {
     switch (this.selectedType) {
       case 'user':
-        return 'Usuario';
+        return this.externalEmail
+          ? 'Correo externo'
+          : 'Usuario';
 
       case 'stage':
         return 'Stage';
@@ -84,8 +90,15 @@ export class EmailSendSummaryComponent {
   get recipientLabel(): string {
     switch (this.selectedType) {
       case 'user':
+
+        if (this.externalEmail) {
+          return this.externalEmail;
+        }
+
         return this.selectedUser
-          ? this.getUserName(this.selectedUser)
+          ? this.getUserName(
+              this.selectedUser,
+            )
           : 'Selecciona un usuario';
 
       case 'stage':
@@ -109,8 +122,14 @@ export class EmailSendSummaryComponent {
   get recipientDescription(): string {
     switch (this.selectedType) {
       case 'user':
+
+        if (this.externalEmail) {
+          return 'Correo electrónico externo';
+        }
+
         return (
           this.selectedUser?.email ||
+          this.selectedUser?.emailAddress ||
           'Selecciona un usuario para continuar'
         );
 
@@ -140,7 +159,10 @@ export class EmailSendSummaryComponent {
   get hasRecipient(): boolean {
     switch (this.selectedType) {
       case 'user':
-        return !!this.selectedUser;
+        return Boolean(
+          this.selectedUser ||
+          this.externalEmail
+        );
 
       case 'stage':
         return !!this.selectedStage;
@@ -149,10 +171,6 @@ export class EmailSendSummaryComponent {
         return !!this.selectedRole;
 
       case 'group':
-        /*
-         * El componente padre actual no está pasando
-         * selectedGroup todavía.
-         */
         return true;
 
       default:
