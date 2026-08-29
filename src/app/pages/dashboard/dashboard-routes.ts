@@ -130,7 +130,7 @@ const dashboardChildren: Routes = [
       {
         path: 'whatsapp-campaigns/:batchId',
         component: WhatsappCampaignDetailComponent,
-      },
+      }, 
     ],
   },
   {
@@ -202,6 +202,8 @@ const dashboardChildren: Routes = [
   { path: 'historial-email', component: HistorialEmailComponent },
   { path: 'suppressed-emails', component: SuppressedEmailsComponent },
   { path: 'email-detail', component: EmailDetailComponent },
+  { path: 'admin-report-recipients', component: AdminReportRecipientsComponent },
+  { path: 'stage-promotion', component: StagePromotionConfigComponent },
 ];
 
 export const dashboardRoutes: Routes = [

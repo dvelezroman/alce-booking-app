@@ -1,0 +1,129 @@
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.promotion-button {
+  min-height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .3rem;
+  padding: 0 .7rem;
+  border: 1px solid transparent;
+  border-radius: .45rem;
+  font-family: inherit;
+  font-size: .55rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
+}
+
+.promotion-button .material-icons {
+  font-size: .85rem;
+}
+
+/* =========================================================
+   PRIMARY
+========================================================= */
+
+.promotion-button--primary {
+  border-color: #5943d4;
+  background: linear-gradient(135deg, #725ce9, #5943d4);
+  color: #ffffff;
+  box-shadow: 0 .3rem .7rem rgba(89, 67, 212, .14);
+}
+
+.promotion-button--primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 .4rem .9rem rgba(89, 67, 212, .2);
+}
+
+.promotion-button--run {
+  min-width: 10rem;
+}
+
+/* =========================================================
+   SECONDARY
+========================================================= */
+
+.promotion-button--secondary {
+  border-color: #dde1e9;
+  background: #ffffff;
+  color: #4f5b73;
+}
+
+.promotion-button--secondary:hover:not(:disabled) {
+  border-color: #cfc9ef;
+  background: #fbfaff;
+}
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+.promotion-button--filter {
+  align-self: flex-end;
+  border-color: #d7d0fb;
+  background: #faf9ff;
+  color: #604acb;
+}
+
+.promotion-button--filter:hover:not(:disabled) {
+  background: #f2efff;
+}
+
+/* =========================================================
+   GHOST
+========================================================= */
+
+.promotion-button--ghost {
+  border-color: #e0e3eb;
+  background: #ffffff;
+  color: #59647a;
+}
+
+.promotion-button--ghost:hover:not(:disabled) {
+  border-color: #d2d6df;
+  background: #f8f9fc;
+}
+
+/* =========================================================
+   DISABLED
+========================================================= */
+
+.promotion-button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* =========================================================
+   SPINNER
+========================================================= */
+
+.promotion-spinner {
+  width: .78rem;
+  height: .78rem;
+  display: inline-block;
+  flex: 0 0 .78rem;
+  border: .1rem solid rgba(255, 255, 255, .35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: promotion-spin .7s linear infinite;
+}
+
+.promotion-spinner--dark {
+  border-color: #e0dcf7;
+  border-top-color: #6653d7;
+}
+
+@keyframes promotion-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

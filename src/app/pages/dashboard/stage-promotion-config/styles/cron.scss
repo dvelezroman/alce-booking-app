@@ -1,0 +1,82 @@
+/* =========================================================
+   CRON
+========================================================= */
+
+.promotion-card--cron .promotion-card__header {
+  min-height: 8.5rem;
+}
+
+.cron-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cron-actions__status {
+  min-width: 8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+  padding: .25rem 1rem;
+  border-left: 1px solid #eceef4;
+  border-right: 1px solid #eceef4;
+}
+
+.cron-actions__label {
+  color: #596277;
+  font-size: .53rem;
+  font-weight: 650;
+}
+
+/* =========================================================
+   SWITCH
+========================================================= */
+
+.promotion-switch {
+  position: relative;
+  width: 2.75rem;
+  height: 1.45rem;
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.promotion-switch input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.promotion-switch__slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #cfd3dd;
+  transition: background 150ms ease;
+}
+
+.promotion-switch__slider::before {
+  content: '';
+  position: absolute;
+  top: .17rem;
+  left: .18rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 .1rem .3rem rgba(0, 0, 0, .18);
+  transition: transform 160ms ease;
+}
+
+.promotion-switch input:checked + .promotion-switch__slider {
+  background: linear-gradient(135deg, #7059e8, #563ed2);
+}
+
+.promotion-switch input:checked + .promotion-switch__slider::before {
+  transform: translateX(1.28rem);
+}
+
+.promotion-switch--disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}

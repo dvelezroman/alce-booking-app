@@ -1,110 +1,1224 @@
-<section class="page-root">
-  <div class="page-card">
-    <h1 class="page-title">Destinatarios de reportes</h1>
-    <p class="page-subtitle">
-      Lista global para reportes diarios, semanales, mensuales y notificaciones
-      admin por email. Solo se envía a quienes estén aquí.
-    </p>
+<section class="report-recipients">
 
-    <section class="panel">
-      <h2>Añadir administradores</h2>
-      <p class="hint">Solo usuarios con rol ADMIN activos en ALCE.</p>
-      <app-user-selector
-        role="admin"
-        [resetTrigger]="userSelectorReset"
-        (usersSelected)="onUsersSelected($event)"
-      ></app-user-selector>
-      <button
-        class="btn btn-primary"
-        type="button"
-        [disabled]="!selectedAdmins.length || saving"
-        (click)="addSelectedAdmins()"
-      >
-        Añadir seleccionados
-      </button>
-    </section>
+  <div class="report-recipients__container">
 
-    <section class="panel">
-      <h2>Añadir correo externo</h2>
-      <p class="hint">
-        Para personas que no tienen cuenta en ALCE (p. ej. gerencia).
-      </p>
-      <div class="external-form">
-        <div class="field">
-          <label for="externalEmail">Email</label>
-          <input
-            id="externalEmail"
-            type="email"
-            [(ngModel)]="externalEmail"
-            placeholder="correo@ejemplo.com"
-          />
-        </div>
-        <div class="field">
-          <label for="externalName">Nombre (opcional)</label>
-          <input
-            id="externalName"
-            type="text"
-            [(ngModel)]="externalDisplayName"
-            placeholder="Nombre"
-          />
-        </div>
-        <button
-          class="btn btn-primary"
-          type="button"
-          [disabled]="!isValidEmail(externalEmail) || saving"
-          (click)="addExternal()"
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="report-recipients__header">
+
+      <div class="report-recipients__header-main">
+
+        <span
+          class="report-recipients__header-icon"
+          aria-hidden="true"
         >
-          Añadir correo
-        </button>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="14"
+              rx="2.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+
+            <path
+              d="m4.5 7 7.5 5.5L19.5 7"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+
+        <div class="report-recipients__header-content">
+
+          <h1 class="report-recipients__title">
+            Destinatarios de reportes
+          </h1>
+
+          <p class="report-recipients__description">
+            Gestiona la lista global de destinatarios que recibirán
+            los reportes diarios, semanales, mensuales y notificaciones
+            administrativas por email.
+          </p>
+
+        </div>
+
       </div>
-    </section>
 
-    <div class="divider"></div>
 
-    <section class="list-section">
-      <h2>Destinatarios actuales ({{ items.length }})</h2>
-      <div *ngIf="loading" class="placeholder">Cargando…</div>
-      <div *ngIf="!loading && errorMsg" class="error">{{ errorMsg }}</div>
-      <div
-        *ngIf="!loading && !errorMsg && items.length === 0"
-        class="placeholder"
+      <button
+        type="button"
+        class="report-recipients__refresh"
+        [disabled]="loading"
+        (click)="fetch()"
       >
-        No hay destinatarios configurados. Añade administradores o correos
-        externos.
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M20 11a8 8 0 1 0-2.3 5.7"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M20 5v6h-6"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        Actualizar
+
+      </button>
+
+    </header>
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+    <div class="report-recipients__workspace">
+
+      <!-- ===================================================
+           MAIN
+      ==================================================== -->
+
+      <main class="report-recipients__main">
+
+        <!-- ===============================================
+             ADD OPTIONS
+        ================================================ -->
+
+        <div class="report-recipients__actions-grid">
+
+          <!-- =============================================
+               ADMINISTRATORS
+          ============================================== -->
+
+          <section class="recipient-panel">
+
+            <header class="recipient-panel__header">
+
+              <span
+                class="
+                  recipient-panel__icon
+                  recipient-panel__icon--admin
+                "
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="10"
+                    cy="8"
+                    r="3"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M4 19c0-3 2.2-5 6-5 2 0 3.5.5 4.5 1.4"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+
+                  <path
+                    d="M18 10v6M15 13h6"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+
+
+              <div>
+
+                <h2>
+                  Añadir administradores
+                </h2>
+
+                <p>
+                  Selecciona usuarios con rol ADMIN activos en ALCE.
+                </p>
+
+              </div>
+
+            </header>
+
+
+            <div class="recipient-panel__body">
+
+              <div class="recipient-panel__selector">
+
+                <app-user-selector
+                  role="admin"
+                  [resetTrigger]="userSelectorReset"
+                  (usersSelected)="onUsersSelected($event)"
+                >
+                </app-user-selector>
+
+              </div>
+
+
+              <div class="recipient-panel__notice">
+
+                <span
+                  class="recipient-panel__notice-icon"
+                  aria-hidden="true"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="8"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    />
+
+                    <path
+                      d="M12 10v6M12 7.5h.01"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </span>
+
+                Solo se pueden agregar usuarios con rol ADMIN activos.
+
+              </div>
+
+
+              <footer class="recipient-panel__footer">
+
+                <span class="recipient-panel__selected-count">
+
+                  <strong>
+                    {{ selectedAdmins.length }}
+                  </strong>
+
+                  {{
+                    selectedAdmins.length === 1
+                      ? 'seleccionado'
+                      : 'seleccionados'
+                  }}
+
+                </span>
+
+
+                <button
+                  type="button"
+                  class="
+                    recipient-button
+                    recipient-button--primary
+                  "
+                  [disabled]="
+                    !selectedAdmins.length ||
+                    saving
+                  "
+                  (click)="addSelectedAdmins()"
+                >
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M12 5v14M5 12h14"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+
+                  Añadir seleccionados
+
+                </button>
+
+              </footer>
+
+            </div>
+
+          </section>
+
+
+          <!-- =============================================
+               EXTERNAL EMAIL
+          ============================================== -->
+
+          <section class="recipient-panel">
+
+            <header class="recipient-panel__header">
+
+              <span
+                class="
+                  recipient-panel__icon
+                  recipient-panel__icon--external
+                "
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <rect
+                    x="3"
+                    y="5"
+                    width="18"
+                    height="14"
+                    rx="2.5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="m4.5 7 7.5 5.5L19.5 7"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+
+
+              <div>
+
+                <h2>
+                  Añadir correo externo
+                </h2>
+
+                <p>
+                  Agrega personas que no poseen una cuenta en ALCE.
+                </p>
+
+              </div>
+
+            </header>
+
+
+            <div class="recipient-panel__body">
+
+              <div class="external-recipient">
+
+                <!-- EMAIL -->
+
+                <div class="external-recipient__field">
+
+                  <label for="externalEmail">
+                    Email
+
+                    <span>
+                      *
+                    </span>
+                  </label>
+
+
+                  <div class="external-recipient__control">
+
+                    <input
+                      id="externalEmail"
+                      type="email"
+                      [(ngModel)]="externalEmail"
+                      placeholder="correo@ejemplo.com"
+                    />
+
+
+                    <span
+                      class="external-recipient__control-icon"
+                      aria-hidden="true"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <rect
+                          x="3"
+                          y="5"
+                          width="18"
+                          height="14"
+                          rx="2"
+                          stroke="currentColor"
+                          stroke-width="1.6"
+                        />
+
+                        <path
+                          d="m4 7 8 6 8-6"
+                          stroke="currentColor"
+                          stroke-width="1.6"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <!-- NAME -->
+
+                <div class="external-recipient__field">
+
+                  <label for="externalName">
+                    Nombre
+
+                    <small>
+                      opcional
+                    </small>
+                  </label>
+
+
+                  <div class="external-recipient__control">
+
+                    <input
+                      id="externalName"
+                      type="text"
+                      [(ngModel)]="externalDisplayName"
+                      placeholder="Nombre completo o referencia"
+                    />
+
+
+                    <span
+                      class="external-recipient__control-icon"
+                      aria-hidden="true"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <circle
+                          cx="12"
+                          cy="8"
+                          r="3"
+                          stroke="currentColor"
+                          stroke-width="1.6"
+                        />
+
+                        <path
+                          d="M6 19c0-3 2.4-5 6-5s6 2 6 5"
+                          stroke="currentColor"
+                          stroke-width="1.6"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <div
+                class="
+                  recipient-panel__notice
+                  recipient-panel__notice--success
+                "
+              >
+
+                <span
+                  class="recipient-panel__notice-icon"
+                  aria-hidden="true"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="8"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    />
+
+                    <path
+                      d="m8.5 12 2.2 2.2 4.8-5"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+
+                El correo se añadirá a la lista general de reportes
+                y notificaciones.
+
+              </div>
+
+
+              <footer
+                class="
+                  recipient-panel__footer
+                  recipient-panel__footer--end
+                "
+              >
+
+                <button
+                  type="button"
+                  class="
+                    recipient-button
+                    recipient-button--success
+                  "
+                  [disabled]="
+                    !isValidEmail(externalEmail) ||
+                    saving
+                  "
+                  (click)="addExternal()"
+                >
+
+                  Añadir correo
+
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="8"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    />
+
+                    <path
+                      d="M12 8v8M8 12h8"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+
+                </button>
+
+              </footer>
+
+            </div>
+
+          </section>
+
+        </div>
+
+
+        <!-- ===============================================
+             CURRENT RECIPIENTS
+        ================================================ -->
+
+        <section class="recipients-list">
+
+          <header class="recipients-list__header">
+
+            <div>
+
+              <h2>
+                Destinatarios actuales
+              </h2>
+
+              <p>
+                Personas que reciben los reportes y notificaciones.
+              </p>
+
+            </div>
+
+
+            <span class="recipients-list__count">
+              {{ items.length }}
+              {{
+                items.length === 1
+                  ? 'destinatario'
+                  : 'destinatarios'
+              }}
+            </span>
+
+          </header>
+
+
+          <!-- LOADING -->
+
+          <div
+            *ngIf="loading"
+            class="recipients-list__state"
+          >
+
+            <span class="recipients-list__loader">
+            </span>
+
+            <strong>
+              Cargando destinatarios...
+            </strong>
+
+            <span>
+              Espera un momento.
+            </span>
+
+          </div>
+
+
+          <!-- ERROR -->
+
+          <div
+            *ngIf="
+              !loading &&
+              errorMsg
+            "
+            class="
+              recipients-list__state
+              recipients-list__state--error
+            "
+          >
+
+            <strong>
+              No pudimos cargar los destinatarios
+            </strong>
+
+            <span>
+              {{ errorMsg }}
+            </span>
+
+
+            <button
+              type="button"
+              class="recipient-button recipient-button--secondary"
+              (click)="fetch()"
+            >
+              Reintentar
+            </button>
+
+          </div>
+
+
+          <!-- EMPTY -->
+
+          <div
+            *ngIf="
+              !loading &&
+              !errorMsg &&
+              items.length === 0
+            "
+            class="recipients-list__state"
+          >
+
+            <span
+              class="recipients-list__empty-icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="9"
+                  cy="8"
+                  r="3"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+
+                <path
+                  d="M3.5 19c0-3 2.2-5 5.5-5 1.4 0 2.6.3 3.5.9"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+
+                <path
+                  d="M17 10v7M13.5 13.5h7"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <strong>
+              No hay destinatarios configurados
+            </strong>
+
+            <span>
+              Añade administradores o correos externos para comenzar.
+            </span>
+
+          </div>
+
+
+          <!-- TABLE -->
+
+          <div
+            *ngIf="
+              !loading &&
+              !errorMsg &&
+              items.length > 0
+            "
+            class="recipients-table__wrapper"
+          >
+
+            <div class="recipients-table">
+
+              <!-- HEADER -->
+
+              <div
+                class="
+                  recipients-table__row
+                  recipients-table__row--header
+                "
+              >
+
+                <div class="recipients-table__name">
+                  Nombre
+                </div>
+
+                <div class="recipients-table__email">
+                  Email
+                </div>
+
+                <div class="recipients-table__source">
+                  Origen
+                </div>
+
+                <div class="recipients-table__actions">
+                  Acciones
+                </div>
+
+              </div>
+
+
+              <!-- ROW -->
+
+              <div
+                class="recipients-table__row"
+                *ngFor="let item of items"
+              >
+
+                <!-- NAME -->
+
+                <div class="recipients-table__name">
+
+                  <span
+                    class="
+                      recipients-table__avatar
+                    "
+                    [class.recipients-table__avatar--external]="
+                      item.source === 'EXTERNAL'
+                    "
+                  >
+                    {{
+                      displayName(item)
+                        .charAt(0)
+                        .toUpperCase()
+                    }}
+                  </span>
+
+
+                  <div class="recipients-table__person">
+
+                    <strong>
+                      {{ displayName(item) }}
+                    </strong>
+
+                    <span>
+                      {{
+                        item.source === 'USER'
+                          ? 'Administrador'
+                          : 'Contacto externo'
+                      }}
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="recipients-table__email">
+
+                  <span
+                    class="recipients-table__email-icon"
+                    aria-hidden="true"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <rect
+                        x="3"
+                        y="5"
+                        width="18"
+                        height="14"
+                        rx="2"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                      />
+
+                      <path
+                        d="m4 7 8 6 8-6"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+
+                  <span>
+                    {{ item.email }}
+                  </span>
+
+                </div>
+
+
+                <!-- SOURCE -->
+
+                <div class="recipients-table__source">
+
+                  <span
+                    class="recipients-table__badge"
+                    [class.recipients-table__badge--user]="
+                      item.source === 'USER'
+                    "
+                    [class.recipients-table__badge--external]="
+                      item.source === 'EXTERNAL'
+                    "
+                  >
+
+                    <svg
+                      *ngIf="item.source === 'USER'"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="8"
+                        r="3"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+
+                      <path
+                        d="M6 19c0-3 2.4-5 6-5s6 2 6 5"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+
+
+                    <svg
+                      *ngIf="item.source === 'EXTERNAL'"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <rect
+                        x="3"
+                        y="5"
+                        width="18"
+                        height="14"
+                        rx="2"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                      />
+
+                      <path
+                        d="m4 7 8 6 8-6"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+
+
+                    {{ sourceLabel(item.source) }}
+
+                  </span>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="recipients-table__actions">
+
+                  <button
+                    type="button"
+                    class="recipients-table__remove"
+                    title="Quitar destinatario"
+                    aria-label="Quitar destinatario"
+                    (click)="confirmRemove(item)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M5 7h14M9 7V4h6v3M8 10v7M12 10v7M16 10v7M7 7l1 13h8l1-13"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+
+      <!-- ===================================================
+           SIDEBAR
+      ==================================================== -->
+
+      <aside class="report-recipients__sidebar">
+
+        <!-- INFO -->
+
+        <section class="sidebar-card">
+
+          <header class="sidebar-card__header">
+
+            <span
+              class="sidebar-card__icon"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M9 18h6M10 21h4"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+
+                <path
+                  d="M8.5 14.5C7.6 13.7 7 12.5 7 11a5 5 0 0 1 10 0c0 1.5-.6 2.7-1.5 3.5-.7.6-1.2 1.3-1.3 2H9.8c-.1-.7-.6-1.4-1.3-2Z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <h2>
+              Información útil
+            </h2>
+
+          </header>
+
+
+          <p class="sidebar-card__description">
+            Solo se enviarán reportes y notificaciones a los
+            destinatarios que estén registrados en esta lista.
+          </p>
+
+
+          <div class="sidebar-card__features">
+
+            <div>
+
+              <span>
+                ✓
+              </span>
+
+              Reportes diarios
+
+            </div>
+
+
+            <div>
+
+              <span>
+                ✓
+              </span>
+
+              Reportes semanales
+
+            </div>
+
+
+            <div>
+
+              <span>
+                ✓
+              </span>
+
+              Reportes mensuales
+
+            </div>
+
+
+            <div>
+
+              <span>
+                ✓
+              </span>
+
+              Notificaciones administrativas
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- STAT -->
+
+        <section class="sidebar-stat">
+
+          <span class="sidebar-stat__value">
+            {{ items.length }}
+          </span>
+
+          <span class="sidebar-stat__label">
+            Total destinatarios
+          </span>
+
+        </section>
+
+
+        <!-- ADVICE -->
+
+        <section class="sidebar-advice">
+
+          <div class="sidebar-advice__title">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="m12 3 2.3 4.7 5.2.8-3.8 3.7.9 5.2-4.6-2.5-4.6 2.5.9-5.2-3.8-3.7 5.2-.8L12 3Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <strong>
+              Consejo
+            </strong>
+
+          </div>
+
+
+          <p>
+            Mantén esta lista actualizada para asegurarte de que
+            los reportes lleguen únicamente a las personas correctas.
+          </p>
+
+        </section>
+
+      </aside>
+
+    </div>
+
+
+    <!-- =====================================================
+         SECURITY
+    ====================================================== -->
+
+    <section class="security-card">
+
+      <header class="security-card__header">
+
+        <span
+          class="security-card__icon"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M12 3 5 6v5c0 4.7 2.8 8 7 10 4.2-2 7-5.3 7-10V6l-7-3Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="m9 12 2 2 4-4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+
+        <h2>
+          Control y seguridad
+        </h2>
+
+      </header>
+
+
+      <div class="security-card__items">
+
+        <div class="security-card__item">
+
+          <span>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="8"
+                r="3"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+
+              <path
+                d="M6 19c0-3 2.4-5 6-5s6 2 6 5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <p>
+            Solo administradores activos pueden ser agregados.
+          </p>
+
+        </div>
+
+
+        <div class="security-card__item">
+
+          <span>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M5 7h14v11H5V7Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+
+              <path
+                d="m6 8 6 5 6-5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <p>
+            Los correos externos forman parte de la misma lista global.
+          </p>
+
+        </div>
+
+
+        <div class="security-card__item">
+
+          <span>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M5 7h14M9 7V4h6v3M8 10v8M12 10v8M16 10v8"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <p>
+            Puedes quitar destinatarios en cualquier momento.
+          </p>
+
+        </div>
+
+
+        <div class="security-card__item">
+
+          <span>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="4"
+                y="4"
+                width="16"
+                height="16"
+                rx="3"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+
+              <path
+                d="M8 9h8M8 13h8M8 17h5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <p>
+            La configuración se aplica a los reportes y notificaciones.
+          </p>
+
+        </div>
+
       </div>
 
-      <div *ngIf="!loading && items.length > 0" class="table-wrapper">
-        <div class="table-header">
-          <div class="col-name">Nombre</div>
-          <div class="col-email">Email</div>
-          <div class="col-source">Origen</div>
-          <div class="col-actions">Acciones</div>
-        </div>
-        <div class="table-row" *ngFor="let item of items">
-          <div class="col-name">{{ displayName(item) }}</div>
-          <div class="col-email">{{ item.email }}</div>
-          <div class="col-source">
-            <span
-              class="badge"
-              [class.badge-user]="item.source === 'USER'"
-              [class.badge-external]="item.source === 'EXTERNAL'"
-            >
-              {{ sourceLabel(item.source) }}
-            </span>
-          </div>
-          <div class="col-actions">
-            <button
-              class="btn btn-danger"
-              type="button"
-              (click)="confirmRemove(item)"
-            >
-              Quitar
-            </button>
-          </div>
-        </div>
-      </div>
     </section>
+
   </div>
+
+
+  <!-- =====================================================
+       MODAL
+  ====================================================== -->
 
   <app-modal
     [showModal]="modal.show"
@@ -116,5 +1230,7 @@
     [showButtons]="modal.showButtons ?? false"
     (confirmAction)="modal.confirm && modal.confirm()"
     (close)="modal.close()"
-  ></app-modal>
+  >
+  </app-modal>
+
 </section>
