@@ -1381,7 +1381,8 @@
           </label>
 
           <textarea
-            rows="5"
+            id="notifyMessage"
+            rows="12"
             [(ngModel)]="notifyMessage"
           ></textarea>
 
@@ -1481,8 +1482,32 @@
 
       </header>
 
+        <ng-container *ngIf="!bulkNotifyLoading && bulkNotifyPreview">
+          <p class="bulk-summary">
+            Se enviará notificación a
+            <strong>{{ bulkNotifyPreview.uniqueUserCount }}</strong>
+            usuario(s) de plataforma vinculados a
+            <strong>{{ bulkNotifyPreview.withUsersCount }}</strong>
+            email(s) baneado(s)
+            <span *ngIf="bulkNotifyPreview.withoutUsersCount">
+              ({{ bulkNotifyPreview.withoutUsersCount }} sin usuario se omitirán)
+            </span>.
+          </p>
 
-      <div class="suppressed-modal__body">
+          <p class="bulk-hint">
+            Cada usuario recibirá una notificación clara: qué pasó con su correo
+            y los pasos para corregirlo en Perfil.
+          </p>
+
+          <p
+            class="bulk-hint warn"
+            *ngIf="!bulkNotifyPreview.withUsersCount"
+          >
+            No hay usuarios vinculados en la lista filtrada actual.
+          </p>
+        </ng-container>
+
+        <div class="suppressed-modal__body">
 
         <!-- LOADING -->
 
@@ -1555,63 +1580,18 @@
 
           </div>
 
-
-          <!-- DEFAULT MESSAGE INFO -->
-
-          <div
-            *ngIf="!bulkNotifyMessage.trim()"
-            class="suppressed-page__info"
-          >
-            <span>
-              Si dejas el mensaje vacío, cada usuario recibirá
-              un mensaje personalizado con su email bloqueado.
-            </span>
+          <div class="message-preview" *ngIf="!bulkNotifyMessage.trim()">
+            <div class="message-preview__label">Vista previa del mensaje (automático)</div>
+            <div class="message-preview__body">{{ defaultBulkMessagePreview }}</div>
           </div>
 
-
-          <!-- NO USERS -->
-
-          <div
-            *ngIf="!bulkNotifyPreview.withUsersCount"
-            class="
-              suppressed-table__state
-              suppressed-table__state--error
-            "
-          >
-            No hay usuarios vinculados en la lista filtrada actual.
-          </div>
-
-
-          <!-- TITLE -->
-
-          <div class="suppressed-modal__field">
-
-            <label for="bulkNotifyTitle">
-              Título
-            </label>
-
-            <input
-              id="bulkNotifyTitle"
-              type="text"
-              [(ngModel)]="bulkNotifyTitle"
-            />
-
-          </div>
-
-
-          <!-- MESSAGE -->
-
-          <div class="suppressed-modal__field">
-
-            <label for="bulkNotifyMessage">
-              Mensaje (opcional)
-            </label>
-
+          <div class="form-field">
+            <label for="bulkNotifyMessage">Mensaje personalizado (opcional)</label>
             <textarea
               id="bulkNotifyMessage"
-              rows="4"
+              rows="6"
               [(ngModel)]="bulkNotifyMessage"
-              placeholder="Vacío = mensaje personalizado por email bloqueado"
+              placeholder="Déjalo vacío para usar el mensaje automático con el email de cada usuario"
             ></textarea>
 
           </div>

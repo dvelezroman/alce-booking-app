@@ -42,11 +42,11 @@ export class SuppressedEmailsComponent implements OnInit {
   formActive = true;
 
   notifyTarget: EmailSuppression | null = null;
-  notifyTitle = 'Actualiza tu correo electrónico';
+  notifyTitle = 'Acción requerida: corrige tu correo';
   notifyMessage = '';
   selectedUserIds = new Set<number>();
 
-  bulkNotifyTitle = 'Actualiza tu correo electrónico';
+  bulkNotifyTitle = 'Acción requerida: corrige tu correo';
   bulkNotifyMessage = '';
   bulkNotifyPreview: {
     totalSuppressions: number;
@@ -246,7 +246,8 @@ export class SuppressedEmailsComponent implements OnInit {
   }
 
   openBulkNotify(): void {
-    this.bulkNotifyTitle = 'Actualiza tu correo electrónico';
+    this.bulkNotifyTitle = 'Acción requerida: corrige tu correo';
+    // Empty → backend personalizes each notice with that user's banned email
     this.bulkNotifyMessage = '';
     this.bulkNotifyPreview = null;
     this.bulkNotifyLoading = true;
@@ -268,6 +269,11 @@ export class SuppressedEmailsComponent implements OnInit {
           );
         },
       });
+  }
+
+  /** Sample copy shown in bulk modal when message field is empty */
+  get defaultBulkMessagePreview(): string {
+    return this.defaultFixEmailMessage('[correo del usuario]');
   }
 
   closeBulkNotifyModal(): void {
@@ -321,10 +327,30 @@ export class SuppressedEmailsComponent implements OnInit {
       return;
     }
     this.notifyTarget = item;
-    this.notifyTitle = 'Actualiza tu correo electrónico';
-    this.notifyMessage = `Tu dirección de correo (${item.email}) está bloqueada o es inválida. Por favor actualízala en tu perfil para seguir recibiendo notificaciones por email.`;
+    this.notifyTitle = 'Acción requerida: corrige tu correo';
+    this.notifyMessage = this.defaultFixEmailMessage(item.email);
     this.selectedUserIds = new Set(item.matchedUsers.map((u) => u.id));
     this.showNotifyModal = true;
+  }
+
+  /** Clear explanatory copy: what happened + what to do */
+  private defaultFixEmailMessage(emailOrLabel: string): string {
+    return [
+      `Detectamos que el correo ${emailOrLabel} no es válido o no puede recibir mensajes.`,
+      '',
+      'Por eso dejamos de enviarte emails a esa dirección.',
+      '',
+      'Para volver a recibir avisos importantes (clases, recordatorios y novedades), haz esto:',
+      '',
+      '1. Entra a la app ALCE College.',
+      '2. Ve a tu Perfil.',
+      '3. Cambia el correo por uno correcto que sí uses.',
+      '4. Guarda los cambios.',
+      '',
+      'Si el correo del tutor está mal, actualízalo también en tus datos.',
+      '',
+      'Cuando el correo esté corregido, administración podrá reactivar el envío.',
+    ].join('\n');
   }
 
   closeNotifyModal(): void {

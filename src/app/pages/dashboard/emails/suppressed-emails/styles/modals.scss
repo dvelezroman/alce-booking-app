@@ -317,9 +317,71 @@ input:checked + .suppressed-modal__user-check {
 .suppressed-modal__panel--bulk-notify
 .suppressed-modal__header p {
   max-width: 28rem;
-
   font-size: .46rem;
   line-height: 1.45;
+}
+
+
+/* =========================================================
+   BULK NOTIFY - SUMMARY SUPERIOR
+========================================================= */
+
+.suppressed-modal__panel--bulk-notify
+.bulk-summary {
+  margin: .7rem .9rem 0;
+  padding: .62rem .7rem;
+
+  border: 1px solid #e5e1fa;
+  border-radius: .5rem;
+
+  background: #faf9ff;
+
+  color: #676079;
+
+  font-size: .5rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.suppressed-modal__panel--bulk-notify
+.bulk-summary strong {
+  color: #5546b8;
+  font-size: .52rem;
+  font-weight: 750;
+}
+
+.suppressed-modal__panel--bulk-notify
+.bulk-summary span {
+  color: #898197;
+}
+
+
+/* =========================================================
+   BULK NOTIFY - HINT
+========================================================= */
+
+.suppressed-modal__panel--bulk-notify
+.bulk-hint {
+  margin: .4rem .9rem 0;
+  padding: .5rem .65rem;
+
+  border: 1px solid #e8eaf0;
+  border-radius: .46rem;
+
+  background: #fafbfc;
+
+  color: #747c8e;
+
+  font-size: .47rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.suppressed-modal__panel--bulk-notify
+.bulk-hint.warn {
+  border-color: #f0dfbd;
+  background: #fffaf1;
+  color: #987036;
 }
 
 
@@ -332,13 +394,14 @@ input:checked + .suppressed-modal__user-check {
   gap: .65rem;
 
   padding:
-    .8rem
-    .9rem;
+    .7rem
+    .9rem
+    .8rem;
 }
 
 
 /* =========================================================
-   BULK NOTIFY - SUMMARY
+   BULK NOTIFY - SUMMARY BODY
 ========================================================= */
 
 .suppressed-modal__panel--bulk-notify
@@ -377,16 +440,64 @@ input:checked + .suppressed-modal__user-check {
 
 
 /* =========================================================
-   BULK NOTIFY - FIELDS
+   BULK NOTIFY - MESSAGE PREVIEW
 ========================================================= */
 
 .suppressed-modal__panel--bulk-notify
-.suppressed-modal__field {
-  gap: .25rem;
+.message-preview {
+  overflow: hidden;
+
+  border: 1px solid #e4e6ed;
+  border-radius: .52rem;
+
+  background: #ffffff;
 }
 
 .suppressed-modal__panel--bulk-notify
-.suppressed-modal__field label {
+.message-preview__label {
+  padding: .5rem .65rem;
+
+  border-bottom: 1px solid #eceef3;
+
+  background: #fafbfe;
+
+  color: #6960a8;
+
+  font-size: .47rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.suppressed-modal__panel--bulk-notify
+.message-preview__body {
+  padding: .65rem;
+
+  background: #ffffff;
+
+  color: #626a7c;
+
+  font-size: .5rem;
+  font-weight: 500;
+  line-height: 1.6;
+
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   BULK NOTIFY - FORM FIELD
+========================================================= */
+
+.suppressed-modal__panel--bulk-notify
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: .28rem;
+}
+
+.suppressed-modal__panel--bulk-notify
+.form-field label {
   color: #343b4f;
 
   font-size: .52rem;
@@ -394,15 +505,47 @@ input:checked + .suppressed-modal__user-check {
 }
 
 .suppressed-modal__panel--bulk-notify
-.suppressed-modal__field input,
-.suppressed-modal__panel--bulk-notify
-.suppressed-modal__field textarea {
+.form-field textarea {
+  width: 100%;
+  min-height: 5.5rem;
+
+  padding: .65rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dfe3eb;
+  border-radius: .48rem;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #343b4f;
+
+  font-family: inherit;
   font-size: .54rem;
+  line-height: 1.55;
+
+  resize: vertical;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
 }
 
 .suppressed-modal__panel--bulk-notify
-.suppressed-modal__field textarea {
-  min-height: 5.5rem;
+.form-field textarea::placeholder {
+  color: #a2a8b5;
+  font-size: .5rem;
+}
+
+.suppressed-modal__panel--bulk-notify
+.form-field textarea:focus {
+  border-color: #8172e4;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(102, 84, 223, .07);
 }
 
 
@@ -425,7 +568,6 @@ input:checked + .suppressed-modal__user-check {
 .suppressed-modal__panel--bulk-notify
 .suppressed-modal__button:disabled {
   opacity: .5;
-
   cursor: not-allowed;
 }
 
@@ -442,14 +584,47 @@ input:checked + .suppressed-modal__user-check {
 
   .suppressed-modal__panel--bulk-notify
   .suppressed-modal__header {
-    padding:
-      .75rem
-      .7rem;
+    padding: .75rem .7rem;
+  }
+
+  .suppressed-modal__panel--bulk-notify
+  .bulk-summary {
+    margin:
+      .65rem
+      .7rem
+      0;
+
+    padding: .6rem;
+  }
+
+  .suppressed-modal__panel--bulk-notify
+  .bulk-hint {
+    margin:
+      .4rem
+      .7rem
+      0;
+
+    padding: .5rem .6rem;
   }
 
   .suppressed-modal__panel--bulk-notify
   .suppressed-modal__body {
-    padding: .7rem;
+    padding: .65rem .7rem .7rem;
+  }
+
+  .suppressed-modal__panel--bulk-notify
+  .message-preview__label {
+    padding: .5rem .6rem;
+  }
+
+  .suppressed-modal__panel--bulk-notify
+  .message-preview__body {
+    padding: .6rem;
+  }
+
+  .suppressed-modal__panel--bulk-notify
+  .form-field textarea {
+    min-height: 5rem;
   }
 
   .suppressed-modal__panel--bulk-notify
