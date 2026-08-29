@@ -337,51 +337,6 @@ export class MeetingBookingV2Component
 
   }
 
-  // onDaySelected(
-  //   event: BookingSelectedDay
-  // ): void {
-  //   if (this.isBlocked) {
-  //     this.showBlockedMessage();
-  //     return;
-  //   }
-
-  //   if (
-  //     this.userData?.suspensionInfo
-  //       ?.isSuspended
-  //   ) {
-  //     this.isSuspended = true;
-  //     this.showSuspensionModal = true;
-  //     return;
-  //   }
-
-  //   this.notificationService
-  //     .loadUnreadCount()
-  //     .pipe(takeUntil(this.unsubscribe$))
-  //     .subscribe({
-  //       next: (count) => {
-  //         if (count > 0) {
-  //           this.handleUnreadNotifications();
-  //           return;
-  //         }
-
-  //         this.applySelectedDay(event);
-  //       },
-  //       error: (error) => {
-  //         console.error(
-  //           '[Booking V2] Error verificando notificaciones:',
-  //           error
-  //         );
-
-  //         /*
-  //          * Se conserva el comportamiento anterior:
-  //          * si falla la consulta de notificaciones,
-  //          * se permite continuar.
-  //          */
-  //         this.applySelectedDay(event);
-  //       },
-  //     });
-  // }
-
   onDaySelected(
     event: BookingSelectedDay
   ): void {
@@ -399,8 +354,53 @@ export class MeetingBookingV2Component
       return;
     }
 
-    this.applySelectedDay(event);
+    this.notificationService
+      .loadUnreadCount()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (count) => {
+          if (count > 0) {
+            this.handleUnreadNotifications();
+            return;
+          }
+
+          this.applySelectedDay(event);
+        },
+        error: (error) => {
+          console.error(
+            '[Booking V2] Error verificando notificaciones:',
+            error
+          );
+
+          /*
+           * Se conserva el comportamiento anterior:
+           * si falla la consulta de notificaciones,
+           * se permite continuar.
+           */
+          this.applySelectedDay(event);
+        },
+      });
   }
+
+  // onDaySelected(
+  //   event: BookingSelectedDay
+  // ): void {
+  //   if (this.isBlocked) {
+  //     this.showBlockedMessage();
+  //     return;
+  //   }
+
+  //   if (
+  //     this.userData?.suspensionInfo
+  //       ?.isSuspended
+  //   ) {
+  //     this.isSuspended = true;
+  //     this.showSuspensionModal = true;
+  //     return;
+  //   }
+
+  //   this.applySelectedDay(event);
+  // }
 
   private applySelectedDay( event: BookingSelectedDay ): void {
     const [year, month, day] =
