@@ -1,202 +1,387 @@
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
-  background: rgba(15, 23, 42, 0.25);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(4px);
+  padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  background: rgba(15, 23, 42, .28);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
   z-index: 9999;
 }
 
 .modal-content {
-  background-color: #ffffff;
-  padding: 1.7rem;
-  border-radius: 14px; /* más vercel */
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e5e7eb;
+  position: relative;
   width: 350px;
   max-width: 90%;
-  max-height: 550px;
+  max-height: calc(100vh - 2rem);
+  padding: 1.5rem;
   overflow-y: auto;
-  position: relative;
-}
-
-.modal-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 0.75rem;
+  box-sizing: border-box;
+  border: 1px solid #e1e7ef;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, .16);
   text-align: center;
 }
 
+/* =========================================================
+   TITLE
+========================================================= */
+
+.modal-title {
+  margin: 0 0 .7rem;
+  color: #172033;
+  font-size: .95rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
 .modal-message {
-  font-size: 0.85rem;
-  color: #374151;
-  text-align: left;
+  color: #4b5565;
+  font-size: .78rem;
   line-height: 1.5;
+  text-align: left;
 }
 
 .modal-content .modal-message strong {
-  color: #111827;
+  color: #172033;
+  font-weight: 700;
 }
 
-/* Metadata */
+.modal-content p {
+  max-width: 19rem;
+  margin: .3rem auto 0;
+  color: #344054;
+  font-size: .8rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   METADATA
+========================================================= */
+
 .modal-content.is-metadata-viewer {
   width: 90%;
   max-width: 800px;
-  background-color: #ffffff;
-}
-
-.modal-content.content-viewer-modal {
-  max-width: 480px;
-  width: 90%;
-}
-
-.modal-content.content-viewer-modal strong {
-  color: #111827;
 }
 
 .modal-content.is-metadata-viewer .json-previewer {
-  background-color: #f9fafb;
-  color: #111827;
-  padding: 1rem;
-  text-align: left;
-  border-radius: 12px;
-  font-size: 0.8rem;
+  width: 100%;
   max-height: 500px;
+  margin: 0;
+  padding: 1rem;
   overflow-y: auto;
+  box-sizing: border-box;
+  border: 1px solid #e1e7ef;
+  border-radius: 12px;
+  color: #172033;
+  background: #f8fafc;
+  font-size: .75rem;
+  line-height: 1.5;
+  text-align: left;
   white-space: pre-wrap;
   word-break: break-word;
-  border: 1px solid #e5e7eb;
 }
 
-/* Animaciones intactas */
-@keyframes pop-up {
-  0% { transform: scale(0.5); opacity: 0; }
-  80% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); }
+/* =========================================================
+   CONTENT VIEWER
+========================================================= */
+
+.modal-content.content-viewer-modal {
+  width: 90%;
+  max-width: 480px;
 }
 
-.pop-up-animation {
-  animation: pop-up 0.3s ease-out;
+.modal-content.content-viewer-modal strong {
+  color: #172033;
 }
 
-@keyframes shake {
-  0% { transform: translateX(0); }
-  10%,30%,50%,70%,90% { transform: translateX(-5px); }
-  20%,40%,60%,80% { transform: translateX(5px); }
-  100% { transform: translateX(0); }
-}
+/* =========================================================
+   STATES
+========================================================= */
 
-.shake-animation {
-  animation: shake 0.5s ease-in-out;
-}
-
-.modal-content p{
-  font-size: .9rem;
-  color: #111827;
-}
-
-/* Estados */
 .error-modal p {
-  color: #dc2626;
+  color: #c94a4a;
 }
 
 .success-modal p {
-  color: #16a34a;
+  color: #2f8a63;
+}
+
+.info-modal p {
+  color: #344054;
+}
+
+/* =========================================================
+   ICONS
+========================================================= */
+
+.success-icon,
+.question-icon,
+.error-icon {
+  width: 2.8rem;
+  height: 2.8rem;
+  margin: 0 auto .65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.25rem;
 }
 
 .success-icon {
-  font-size: 1.4rem;
-  color: #16a34a;
-  margin-bottom: 1rem;
+  color: #2f9569;
+  background: #eef9f4;
+  border: 1px solid #cfeadd;
 }
 
 .question-icon {
-  font-size: 1.4rem;
-  color: #28336f;
-  margin-bottom: 1rem;
+  color: #3f5d9b;
+  background: #eef3fb;
+  border: 1px solid #d7e2f2;
 }
 
 .error-icon {
-  font-size: 1.4rem;
-  color: #dc2626;
-  margin-bottom: .7rem;
+  color: #c94a4a;
+  background: #fff2f2;
+  border: 1px solid #f0d1d1;
 }
 
-/* Botones */
+/* =========================================================
+   BUTTONS
+========================================================= */
+
 .modal-buttons {
+  width: 100%;
+  margin-top: 1rem;
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-top: 20px;
+  gap: .55rem;
 }
 
 .button {
-  padding: 10px 20px;
-  font-size: .85rem;
-  font-weight: 600;
-  border-radius: 12px;
+  min-height: 2.4rem;
+  padding: .5rem 1rem;
   border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1;
   cursor: pointer;
-  transition: all 0.2s ease;
+  box-sizing: border-box;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease;
 }
 
-/* Cancel gris vercel */
+.button:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   CANCEL
+========================================================= */
+
 .cancel-button {
-  background-color: #f3f4f6;
-  color: #374151;
-  border: 1px solid #e5e7eb;
-
-  &:hover {
-    background-color: #e5e7eb;
-  }
+  color: #4b5565;
+  background: #ffffff;
+  border: 1px solid #d8dee8;
 }
 
-/* Confirm azul eléctrico */
+.cancel-button:hover {
+  color: #354052;
+  background: #f7f9fc;
+  border-color: #cbd3df;
+}
+
+/* =========================================================
+   CONFIRM
+========================================================= */
+
 .confirm-button {
-  background-color: #28336f;
   color: #ffffff;
-  border-color: #28336f;
-
-  &:hover {
-    background-color: #1f2857;
-    border-color: #1f2857;
-  }
+  background: #28336f;
+  border: 1px solid #28336f;
+  box-shadow: 0 .3rem .7rem rgba(40, 51, 111, .18);
 }
 
-/* Close gris oscuro */
+.confirm-button:hover {
+  background: #20295c;
+  border-color: #20295c;
+}
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
 .modal-buttons .close-button {
-  background-color: #e5e7eb;
-  color: #374151;
-  border: 1px solid #d1d5db;
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
+  min-width: 7rem;
+  padding: .5rem 1rem;
+  border: 1px solid #d8dee8;
+  border-radius: 10px;
+  color: #4b5565;
+  background: #f4f6f8;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background .18s ease, border-color .18s ease;
 }
 
 .modal-buttons .close-button:hover {
-  background-color: #d1d5db;
+  background: #e9edf2;
+  border-color: #cfd6df;
 }
 
-@media (max-width: 492px) {
-  .modal-content {
-    padding: 1.5rem;
-    max-width: 85%;
+/* =========================================================
+   CONFIRMATION
+========================================================= */
+
+.confirmation-block {
+  width: 100%;
+  margin-top: .8rem;
+}
+
+.confirmation-actions {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .55rem;
+  margin-top: .9rem;
+}
+
+.confirmation-actions .button {
+  width: 100%;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes pop-up {
+  0% {
+    transform: scale(.94);
+    opacity: 0;
   }
 
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.pop-up-animation {
+  animation: pop-up .2s ease-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-4px);
+  }
+
+  50% {
+    transform: translateX(4px);
+  }
+
+  75% {
+    transform: translateX(-2px);
+  }
+}
+
+.shake-animation {
+  animation: shake .28s ease-in-out;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.modal-content::-webkit-scrollbar,
+.json-previewer::-webkit-scrollbar {
+  width: .35rem;
+}
+
+.modal-content::-webkit-scrollbar-thumb,
+.json-previewer::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #cbd4df;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 492px) {
+  .modal-overlay {
+    padding: .75rem;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 21rem;
+    max-height: calc(100vh - 1.5rem);
+    padding: 1.15rem 1rem 1rem;
+    border-radius: 14px;
+  }
+
+  .modal-title {
+    font-size: .84rem;
+  }
+
+  .modal-message {
+    font-size: .68rem;
+  }
+
+  .modal-content p {
+    max-width: 17rem;
+    font-size: .71rem;
+  }
+
+  .success-icon,
+  .question-icon,
   .error-icon {
-    font-size: 1.3rem;
+    width: 2.55rem;
+    height: 2.55rem;
+    margin-bottom: .5rem;
+    font-size: 1.1rem;
+  }
+
+  .modal-buttons {
+    gap: .4rem;
+    margin-top: .85rem;
   }
 
   .button {
-    padding: 0.45rem 1.5rem;
+    min-height: 2.25rem;
+    padding: .45rem .7rem;
+    font-size: .64rem;
+  }
+
+  .confirmation-actions {
+    gap: .4rem;
+    margin-top: .8rem;
+  }
+
+  .modal-content.content-viewer-modal,
+  .modal-content.is-metadata-viewer {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .modal-content.is-metadata-viewer .json-previewer {
+    max-height: 20rem;
+    font-size: .65rem;
   }
 }
