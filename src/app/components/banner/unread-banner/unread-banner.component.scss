@@ -1,57 +1,504 @@
+:host {
+  display: block;
+}
+
+/* =========================================================
+   WRAPPER
+========================================================= */
+
 .unread-banner {
   position: fixed;
-  top: 40px;
-  left: 64px;
-  z-index: 900;
-  animation: slideIn .25s ease-out;
+  top: .8rem;
+  left: 50%;
+  width: min(calc(100% - 2rem), 760px);
+  z-index: 1200;
+  transform: translateX(-50%);
+}
 
-  .bubble {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    background: #e6e7e7;
-    color: #474747;
-    border-radius: 999px;
-    box-shadow: 0 8px 20px rgba(0,0,0,.18);
-    font-size: .9rem;
-    line-height: 1;
+/* =========================================================
+   CARD
+========================================================= */
 
-    strong {
-      color: #222;
-      font-weight: 500;
-    }
+.unread-banner__card {
+  position: relative;
+  width: 100%;
+  min-height: 5.2rem;
+  padding: .9rem 1rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .8rem;
+  overflow: hidden;
+  box-sizing: border-box;
 
-    .bell {
-      font-size: 1rem;
-    }
+  border: 1px solid #d9e5f4;
+  border-radius: 1.05rem;
 
-    .close {
-      margin-left: 6px;
-      border: 0;
-      background: transparent;
-      color: #777;
-      font-size: 16px;
-      cursor: pointer;
-      line-height: 1;
-      padding: 0 2px;
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #fbfdff 68%,
+      #f5f9ff 100%
+    );
 
-      &:hover {
-        color: #333;
-      }
-    }
+  box-shadow:
+    0 .8rem 2rem rgba(51, 77, 116, .14),
+    0 .2rem .55rem rgba(51, 77, 116, .06);
+
+  animation: unread-banner-in .25s ease-out;
+}
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+.unread-banner__timer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: .28rem;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #1565e8,
+      #0b52d4
+    );
+
+  animation: unread-timer 10s linear forwards;
+}
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.unread-banner__icon {
+  position: relative;
+  width: 3.7rem;
+  height: 3.7rem;
+  flex: 0 0 3.7rem;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      #ffffff 0%,
+      #ffffff 55%,
+      #eef6ff 100%
+    );
+
+  box-shadow:
+    0 .45rem 1rem rgba(39, 104, 214, .14),
+    0 0 0 .55rem rgba(114, 178, 247, .12);
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   BELL
+========================================================= */
+
+.unread-banner__bell {
+  display: block;
+  font-size: 1.8rem;
+  line-height: 1;
+  filter: drop-shadow(0 .25rem .3rem rgba(32, 91, 184, .14));
+}
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+.unread-banner__badge {
+  position: absolute;
+  top: -.15rem;
+  right: -.2rem;
+
+  min-width: 1.55rem;
+  height: 1.55rem;
+  padding: 0 .35rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: .2rem solid #fff;
+  border-radius: 999px;
+
+  color: #fff;
+  background: #ff3131;
+
+  font-size: .64rem;
+  font-weight: 800;
+  line-height: 1;
+
+  box-shadow: 0 .25rem .6rem rgba(255, 49, 49, .24);
+}
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.unread-banner__content {
+  min-width: 0;
+  cursor: pointer;
+}
+
+.unread-banner__content h3 {
+  margin: 0;
+
+  color: #101a38;
+
+  font-size: .82rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.unread-banner__content h3 strong {
+  color: #1663dc;
+  font-weight: 800;
+}
+
+.unread-banner__content p {
+  margin: .28rem 0 0;
+
+  color: #607089;
+
+  font-size: .68rem;
+  font-weight: 450;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.unread-banner__actions {
+  padding-left: 1rem;
+
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+
+  border-left: 1px solid #dfe6ef;
+}
+
+/* =========================================================
+   VIEW BUTTON
+========================================================= */
+
+.unread-banner__view {
+  min-height: 2.4rem;
+  padding: .5rem .9rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+
+  border: 1px solid #1260df;
+  border-radius: .65rem;
+
+  color: #fff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1668ea,
+      #0e55d6
+    );
+
+  box-shadow: 0 .45rem 1rem rgba(22, 104, 234, .22);
+
+  font-size: .7rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease,
+    background .15s ease;
+}
+
+.unread-banner__view svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.unread-banner__view:hover {
+  transform: translateY(-1px);
+
+  background:
+    linear-gradient(
+      135deg,
+      #0f5fe3,
+      #094cc3
+    );
+
+  box-shadow: 0 .55rem 1.15rem rgba(22, 104, 234, .26);
+}
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
+.unread-banner__close {
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  color: #22324d;
+  background: transparent;
+
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    color .15s ease,
+    background .15s ease;
+}
+
+.unread-banner__close:hover {
+  color: #111827;
+  background: #edf2f8;
+}
+
+/* =========================================================
+   MOBILE ARROW
+========================================================= */
+
+.unread-banner__mobile-arrow {
+  display: none;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes unread-banner-in {
+  from {
+    opacity: 0;
+    transform: translateY(-.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes slideIn {
-  from { transform: translateX(-10px); opacity: 0; }
-  to   { transform: translateX(0);     opacity: 1; }
+@keyframes unread-timer {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
 }
 
-@media (max-width: 640px) {
-  .unread-banner { left: 70px; top: 80px; }
-  .unread-banner .bubble {
-    font-size: .85rem;
-    padding: 8px 12px;
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media screen and (max-width: 650px) {
+
+  .unread-banner {
+    top: .75rem;
+    width: calc(100% - 1.4rem);
+    max-width: 24rem;
+  }
+
+  .unread-banner__card {
+    min-height: 5.5rem;
+    padding: 0;
+
+    grid-template-columns: 5.5rem minmax(0, 1fr) 2.6rem;
+    gap: 0;
+
+    border-radius: 1rem;
+  }
+
+  /* ---------------------------------------------------------
+     TIMER
+  --------------------------------------------------------- */
+
+  .unread-banner__timer {
+    height: .22rem;
+  }
+
+  /* ---------------------------------------------------------
+     ICON AREA
+  --------------------------------------------------------- */
+
+  .unread-banner__icon {
+    width: 5.5rem;
+    height: 5.5rem;
+
+    border-radius: 1rem 0 0 1rem;
+
+    background:
+      linear-gradient(
+        145deg,
+        #75b9ff,
+        #a9d6ff
+      );
+
+    box-shadow: none;
+  }
+
+  .unread-banner__icon::before {
+    content: '';
+
+    position: absolute;
+
+    width: 3.45rem;
+    height: 3.45rem;
+
+    border-radius: 50%;
+
+    background: #fff;
+
+    box-shadow: 0 .35rem .8rem rgba(43, 95, 159, .16);
+  }
+
+  .unread-banner__bell {
+    position: relative;
+    z-index: 2;
+
+    font-size: 1.85rem;
+  }
+
+  .unread-banner__badge {
+    top: .7rem;
+    right: .65rem;
+    z-index: 3;
+
+    min-width: 1.55rem;
+    height: 1.55rem;
+
+    font-size: .63rem;
+  }
+
+  /* ---------------------------------------------------------
+     CONTENT
+  --------------------------------------------------------- */
+
+  .unread-banner__content {
+    padding: .8rem .75rem;
+  }
+
+  .unread-banner__content h3 {
+    max-width: 9rem;
+
+    font-size: .76rem;
+    line-height: 1.45;
+  }
+
+  .unread-banner__content h3 strong {
+    color: #1263e1;
+  }
+
+  .unread-banner__content p {
+    display: none;
+  }
+
+  /* ---------------------------------------------------------
+     HIDE DESKTOP ACTIONS
+  --------------------------------------------------------- */
+
+  .unread-banner__actions {
+    display: none;
+  }
+
+  /* ---------------------------------------------------------
+     ARROW
+  --------------------------------------------------------- */
+
+  .unread-banner__mobile-arrow {
+    width: 2.6rem;
+    height: 100%;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    color: #21314a;
+    background: transparent;
+
+    cursor: pointer;
+  }
+
+  .unread-banner__mobile-arrow svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media screen and (max-width: 390px) {
+
+  .unread-banner {
+    width: calc(100% - 1rem);
+  }
+
+  .unread-banner__card {
+    min-height: 5rem;
+    grid-template-columns: 5rem minmax(0, 1fr) 2.3rem;
+  }
+
+  .unread-banner__icon {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .unread-banner__icon::before {
+    width: 3.15rem;
+    height: 3.15rem;
+  }
+
+  .unread-banner__bell {
+    font-size: 1.7rem;
+  }
+
+  .unread-banner__badge {
+    top: .55rem;
+    right: .5rem;
+  }
+
+  .unread-banner__content {
+    padding: .65rem;
+  }
+
+  .unread-banner__content h3 {
+    font-size: .69rem;
   }
 }

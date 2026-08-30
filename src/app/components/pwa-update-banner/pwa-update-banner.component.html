@@ -1,29 +1,197 @@
 <div *ngIf="showBanner" class="pwa-update-banner">
-  <div class="pwa-update-content">
-    <div class="pwa-update-icon">
-      <i class="material-icons">system_update</i>
+  <div class="pwa-update-card">
+
+    <button
+      type="button"
+      class="pwa-update-card__close"
+      (click)="dismiss()"
+      [disabled]="isLoading"
+      aria-label="Cerrar"
+    >
+      ×
+    </button>
+
+    <div class="pwa-update-card__visual">
+      <div class="pwa-update-card__spark pwa-update-card__spark--one">✦</div>
+      <div class="pwa-update-card__spark pwa-update-card__spark--two">✦</div>
+
+      <div class="pwa-update-card__device">
+        <div class="pwa-update-card__device-top">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="pwa-update-card__refresh">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M20 11a8.1 8.1 0 0 0-14.8-4.4L3 9"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M3 4v5h5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M4 13a8.1 8.1 0 0 0 14.8 4.4L21 15"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M21 20v-5h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+
+        <div class="pwa-update-card__device-lines">
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <div class="pwa-update-card__upload">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 19V5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+          />
+          <path
+            d="m6.5 10.5 5.5-5.5 5.5 5.5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
     </div>
 
-    <div class="pwa-update-text">
-      <h4>Actualiza la app</h4>
-      <p>
-        Esta versión es antigua. Actualiza para activar las notificaciones push
-        y seguir recibiendo avisos de clases.
+    <div class="pwa-update-card__content">
+
+      <span class="pwa-update-card__eyebrow">
+        <span>✦</span>
+        Nueva actualización disponible
+      </span>
+
+      <h2>
+        Actualiza la aplicación
+      </h2>
+
+      <p class="pwa-update-card__description">
+        Hemos lanzado una nueva versión con mejoras de rendimiento,
+        correcciones y nuevas funciones.
       </p>
+
+      <div class="pwa-update-card__info">
+        <div class="pwa-update-card__info-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 21h4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+        <div>
+          <strong>
+            Activa las notificaciones push
+          </strong>
+
+          <span>
+            Actualiza para seguir recibiendo avisos importantes sobre tus clases.
+          </span>
+        </div>
+      </div>
+
+      <div class="pwa-update-card__actions">
+
+        <button
+          type="button"
+          class="pwa-update-card__later"
+          (click)="dismiss()"
+          [disabled]="isLoading"
+        >
+          Ahora no
+        </button>
+
+        <button
+          type="button"
+          class="pwa-update-card__update"
+          (click)="acceptUpdate()"
+          [disabled]="isLoading"
+        >
+
+          <ng-container *ngIf="!isLoading">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 4v11"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="m8 11 4 4 4-4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M5 18v2h14v-2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <span>Actualizar ahora</span>
+          </ng-container>
+
+          <span
+            *ngIf="isLoading"
+            class="pwa-update-card__spinner"
+          ></span>
+
+        </button>
+
+      </div>
+
     </div>
 
-    <div class="pwa-update-actions">
-      <button
-        class="btn-activate"
-        (click)="acceptUpdate()"
-        [disabled]="isLoading"
-      >
-        <span *ngIf="!isLoading">Actualizar</span>
-        <span *ngIf="isLoading" class="loading-spinner"></span>
-      </button>
-      <button class="btn-dismiss" (click)="dismiss()" [disabled]="isLoading">
-        Ahora no
-      </button>
-    </div>
   </div>
 </div>

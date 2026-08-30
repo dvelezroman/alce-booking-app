@@ -9,11 +9,9 @@
   margin-left: 70px;
   padding: 2rem 1.5rem 2rem;
   overflow-x: hidden;
-
 }
 
 @media (max-width: 768px) {
-
   .assessment-page {
     width: 100%;
     margin-left: 0;
@@ -27,97 +25,107 @@
   margin: 0 auto;
 }
 
+/* =========================================================
+   SECTIONS
+========================================================= */
+
 .assessment-page__sections {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-
   margin-top: 1.5rem;
 }
 
+/* VENCIDAS + COMPLETADAS */
+
+.assessment-page__secondary {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(28rem, 100%), 1fr)
+  );
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.assessment-page__secondary app-assessment-section {
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
 .assessment-page__loading {
   min-height: 18rem;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-
   margin-top: 1.5rem;
-
   border: 1px solid #e8eaf1;
   border-radius: 1.25rem;
-
   background: #ffffff;
 }
 
 .assessment-page__spinner {
   width: 2.75rem;
   height: 2.75rem;
-
   border: 0.25rem solid #ece8ff;
   border-top-color: #7758e8;
   border-radius: 50%;
-
   animation: assessment-spinner 0.8s linear infinite;
 }
 
 .assessment-page__loading-text {
   margin: 0;
-
   color: #69708a;
-
   font-size: 0.925rem;
   font-weight: 600;
   line-height: 1.4;
 }
 
+/* =========================================================
+   EMPTY
+========================================================= */
+
 .assessment-page__empty {
   min-height: 18rem;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-
   margin-top: 1.5rem;
   padding: 2rem;
-
   border: 1px solid #e8eaf1;
   border-radius: 1.25rem;
-
   background:
     linear-gradient(
       135deg,
       rgba(119, 88, 232, 0.04),
       rgba(255, 255, 255, 0.95)
     );
-
   text-align: center;
 }
 
 .assessment-page__empty-icon {
   width: 4rem;
   height: 4rem;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 1.125rem;
-
   background: linear-gradient(
     135deg,
     #8d72ef,
     #6947dc
   );
-
   color: #ffffff;
-
   font-size: 1.45rem;
-
   box-shadow:
     0 0.75rem 1.5rem rgba(105, 71, 220, 0.2);
 }
@@ -128,9 +136,7 @@
 
 .assessment-page__empty-title {
   margin: 0 0 0.4rem;
-
   color: #171c36;
-
   font-size: 1.15rem;
   font-weight: 800;
   line-height: 1.3;
@@ -138,13 +144,15 @@
 
 .assessment-page__empty-description {
   margin: 0;
-
   color: #747b91;
-
   font-size: 0.9rem;
   font-weight: 500;
   line-height: 1.6;
 }
+
+/* =========================================================
+   COMPONENTS
+========================================================= */
 
 app-assessment-header,
 app-assessment-summary,
@@ -162,6 +170,10 @@ app-assessment-support {
   margin-top: 1.5rem;
 }
 
+/* =========================================================
+   ANIMATION
+========================================================= */
+
 @keyframes assessment-spinner {
   from {
     transform: rotate(0deg);
@@ -171,6 +183,10 @@ app-assessment-support {
     transform: rotate(360deg);
   }
 }
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
 @media (max-width: 75rem) {
   .assessment-page {
@@ -189,13 +205,17 @@ app-assessment-support {
 
   .assessment-page__container {
     padding: 1rem;
-
     border-radius: 1.25rem;
   }
 
   .assessment-page__sections {
     gap: 1.25rem;
     margin-top: 1.25rem;
+  }
+
+  .assessment-page__secondary {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
   app-assessment-summary,
@@ -207,15 +227,12 @@ app-assessment-support {
 @media (max-width: 40.625rem) {
   .assessment-page {
     padding: 0.75rem;
-
     background: #f8f9fc;
   }
 
   .assessment-page__container {
     padding: 0.75rem;
-
     border-radius: 1rem;
-
     box-shadow:
       0 0.5rem 1.5rem rgba(32, 37, 64, 0.04);
   }
@@ -223,6 +240,11 @@ app-assessment-support {
   .assessment-page__sections {
     gap: 1rem;
     margin-top: 1rem;
+  }
+
+  .assessment-page__secondary {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   app-assessment-summary,
@@ -235,7 +257,6 @@ app-assessment-support {
     min-height: 15rem;
     margin-top: 1rem;
     padding: 1.5rem 1rem;
-
     border-radius: 1rem;
   }
 }
@@ -247,16 +268,13 @@ app-assessment-support {
 
   .assessment-page__container {
     padding: 0.625rem;
-
     border-radius: 0.875rem;
   }
 
   .assessment-page__empty-icon {
     width: 3.5rem;
     height: 3.5rem;
-
     border-radius: 1rem;
-
     font-size: 1.25rem;
   }
 

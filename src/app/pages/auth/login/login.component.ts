@@ -7,10 +7,11 @@ import {Store} from "@ngrx/store";
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
 import { FeatureFlagDto } from '../../../services/dtos/feature-flag.dto';
-import { LoginResponseDto } from '../../../services/dtos/user.dto';
+import { LoginResponseDto, SuspensionInfo } from '../../../services/dtos/user.dto';
 import { FeatureFlagService } from '../../../services/feature-flag.service';
 import { UsersService } from '../../../services/users.service';
 import { UserState } from '../../../store/user.state';
+import { StudentSuspensionModalComponent } from "../../../components/home/student-suspension-modal/student-suspension-modal.component";
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,9 @@ import { UserState } from '../../../store/user.state';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    ModalComponent],
+    ModalComponent,
+    StudentSuspensionModalComponent
+],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -29,7 +32,8 @@ export class LoginComponent implements OnInit {
   modal: ModalDto = modalInitializer();
   passwordVisible: boolean = false;
   ffs: FeatureFlagDto[] = [];
-
+  showSuspensionModal = false;
+  suspensionInfo: SuspensionInfo | null = null;
   loginForm: FormGroup;
 
   constructor(private fb: FormBuilder,
@@ -85,7 +89,24 @@ export class LoginComponent implements OnInit {
         }
     },
       error: (error) => {
-        this.showModal(this.createModalParams(true, error.error.message));
+        const message = error?.error?.message || '';
+
+        if (message === 'Usuario inactivo, contacte al administrador.') {
+          this.suspensionInfo = {
+            suspensionEndDate: null,
+            daysRemaining: null,
+          } as unknown as SuspensionInfo;
+
+          this.showSuspensionModal = true;
+          return;
+        }
+
+        this.showModal(
+          this.createModalParams(
+            true,
+            message || 'No se pudo iniciar sesión.'
+          )
+        );
       }
     });
   }
@@ -113,13 +134,18 @@ export class LoginComponent implements OnInit {
     this.modal.show = false;
   }
 
-onPasswordInput(): void {
-  const passwordControl = this.loginForm.get('password');
-}
+  closeSuspensionModal(): void {
+    this.showSuspensionModal = false;
+    this.suspensionInfo = null;
+  }
 
-togglePasswordVisibility() {
-  this.passwordVisible = !this.passwordVisible;
-}
+  onPasswordInput(): void {
+    const passwordControl = this.loginForm.get('password');
+  }
+
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
+  }
 
 
 }

@@ -1,65 +1,436 @@
+:host {
+  display: block;
+}
+
+/* =========================================================
+   WRAPPER
+========================================================= */
+
 .lead-pending-banner {
   position: fixed;
-  top: 88px;
-  left: 64px;
-  z-index: 899;
-  animation: leadBannerSlideIn 0.25s ease-out;
-  max-width: min(420px, calc(100vw - 80px));
-
-  .bubble {
-    display: inline-flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 10px 14px;
-    background: #fef3c7;
-    color: #78350f;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
-    font-size: 0.9rem;
-    line-height: 1.35;
-
-    .bell {
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-
-    .close {
-      margin-left: 4px;
-      border: 0;
-      background: transparent;
-      color: #92400e;
-      font-size: 16px;
-      cursor: pointer;
-      line-height: 1;
-      padding: 0 2px;
-      flex-shrink: 0;
-
-      &:hover {
-        color: #451a03;
-      }
-    }
-  }
+  top: 50%;
+  left: 50%;
+  width: min(calc(100% - 2rem), 780px);
+  z-index: 1200;
+  transform: translate(-50%, -50%);
 }
 
-@keyframes leadBannerSlideIn {
+/* =========================================================
+   CARD
+========================================================= */
+
+.lead-pending-banner__card {
+  position: relative;
+  width: 100%;
+  min-height: 5.4rem;
+  padding: .85rem 1rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .85rem;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid #d7e4f2;
+  border-radius: 1rem;
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #fbfdff 67%,
+      #f2f8ff 100%
+    );
+  box-shadow:
+    0 .8rem 2rem rgba(45, 72, 108, .13),
+    0 .2rem .5rem rgba(45, 72, 108, .05);
+  animation: lead-banner-in .25s ease-out;
+}
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+.lead-pending-banner__timer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: .25rem;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      #2d75e8,
+      #4ca4ee
+    );
+  animation: lead-banner-timer 12s linear forwards;
+}
+
+/* =========================================================
+   ICON AREA
+========================================================= */
+
+.lead-pending-banner__icon-area {
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .85rem;
+  background:
+    linear-gradient(
+      145deg,
+      #e7f3ff,
+      #d7ebff
+    );
+  cursor: pointer;
+}
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.lead-pending-banner__icon {
+  position: relative;
+  width: 2.9rem;
+  height: 2.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #c8dff7;
+  border-radius: 50%;
+  color: #276cda;
+  background: #fff;
+  box-shadow: 0 .35rem .8rem rgba(42, 107, 210, .13);
+}
+
+.lead-pending-banner__icon svg {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+.lead-pending-banner__badge {
+  position: absolute;
+  top: -.45rem;
+  right: -.45rem;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 .3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: .18rem solid #fff;
+  border-radius: 999px;
+  color: #fff;
+  background: #ef4d4d;
+  font-size: .61rem;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 .2rem .5rem rgba(221, 61, 61, .2);
+}
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.lead-pending-banner__content {
+  min-width: 0;
+  cursor: pointer;
+}
+
+.lead-pending-banner__eyebrow {
+  display: block;
+  margin-bottom: .12rem;
+  color: #4d7aad;
+  font-size: .55rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: .045em;
+}
+
+.lead-pending-banner__content h3 {
+  margin: 0;
+  color: #14213d;
+  font-size: .8rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.lead-pending-banner__content h3 strong {
+  color: #216add;
+  font-weight: 800;
+}
+
+.lead-pending-banner__content p {
+  max-width: 31rem;
+  margin: .22rem 0 0;
+  color: #64748b;
+  font-size: .59rem;
+  font-weight: 450;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.lead-pending-banner__actions {
+  padding-left: .8rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  border-left: 1px solid #e0e8f1;
+}
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.lead-pending-banner__view {
+  min-height: 2.35rem;
+  padding: .48rem .85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  border: 1px solid #2168d7;
+  border-radius: .6rem;
+  color: #fff;
+  background:
+    linear-gradient(
+      135deg,
+      #327ce7,
+      #2165d5
+    );
+  box-shadow: 0 .35rem .8rem rgba(39, 104, 214, .18);
+  font-size: .61rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform .15s ease,
+    background .15s ease,
+    box-shadow .15s ease;
+}
+
+.lead-pending-banner__view svg {
+  width: .9rem;
+  height: .9rem;
+}
+
+.lead-pending-banner__view:hover {
+  transform: translateY(-1px);
+  background:
+    linear-gradient(
+      135deg,
+      #286fda,
+      #1b59bd
+    );
+  box-shadow: 0 .45rem .9rem rgba(39, 104, 214, .22);
+}
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
+.lead-pending-banner__close {
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  color: #35435a;
+  background: transparent;
+  font-size: 1.45rem;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background .15s ease,
+    color .15s ease;
+}
+
+.lead-pending-banner__close:hover {
+  color: #111827;
+  background: #edf2f7;
+}
+
+/* =========================================================
+   MOBILE ARROW
+========================================================= */
+
+.lead-pending-banner__mobile-arrow {
+  display: none;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes lead-banner-in {
   from {
-    transform: translateX(-10px);
     opacity: 0;
+    transform: translateY(-.7rem);
   }
+
   to {
-    transform: translateX(0);
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (max-width: 640px) {
-  .lead-pending-banner {
-    left: 70px;
-    top: 128px;
+@keyframes lead-banner-timer {
+  from {
+    width: 100%;
   }
 
-  .lead-pending-banner .bubble {
-    font-size: 0.85rem;
-    padding: 8px 12px;
+  to {
+    width: 0%;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media screen and (max-width: 650px) {
+  .lead-pending-banner {
+    top: 50%;
+    left: 50%;
+    width: calc(100% - 1.4rem);
+    max-width: 24rem;
+    transform: translate(-50%, -50%);
+  }
+
+  .lead-pending-banner__card {
+    min-height: 5.3rem;
+    padding: 0;
+    grid-template-columns: 5rem minmax(0, 1fr) 2.5rem;
+    gap: 0;
+    border-radius: 1rem;
+  }
+
+  .lead-pending-banner__timer {
+    height: .22rem;
+  }
+
+  /* ICON LEFT */
+
+  .lead-pending-banner__icon-area {
+    width: 5rem;
+    height: 100%;
+    min-height: 5.3rem;
+    border-radius: 1rem 0 0 1rem;
+    background:
+      linear-gradient(
+        145deg,
+        #7dbdff,
+        #b6dcff
+      );
+  }
+
+  .lead-pending-banner__icon {
+    width: 3.15rem;
+    height: 3.15rem;
+    border: none;
+  }
+
+  .lead-pending-banner__icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .lead-pending-banner__badge {
+    top: -.25rem;
+    right: -.3rem;
+    min-width: 1.45rem;
+    height: 1.45rem;
+    font-size: .58rem;
+  }
+
+  /* CONTENT */
+
+  .lead-pending-banner__content {
+    padding: .7rem .65rem;
+  }
+
+  .lead-pending-banner__eyebrow {
+    margin-bottom: .15rem;
+    font-size: .46rem;
+  }
+
+  .lead-pending-banner__content h3 {
+    font-size: .7rem;
+    line-height: 1.4;
+  }
+
+  .lead-pending-banner__content p {
+    display: none;
+  }
+
+  /* DESKTOP ACTIONS */
+
+  .lead-pending-banner__actions {
+    display: none;
+  }
+
+  /* MOBILE ARROW */
+
+  .lead-pending-banner__mobile-arrow {
+    width: 2.5rem;
+    height: 100%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    color: #263750;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .lead-pending-banner__mobile-arrow svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media screen and (max-width: 390px) {
+  .lead-pending-banner {
+    width: calc(100% - 1rem);
+  }
+
+  .lead-pending-banner__card {
+    min-height: 5rem;
+    grid-template-columns: 4.7rem minmax(0, 1fr) 2.2rem;
+  }
+
+  .lead-pending-banner__icon-area {
+    width: 4.7rem;
+    min-height: 5rem;
+  }
+
+  .lead-pending-banner__icon {
+    width: 2.9rem;
+    height: 2.9rem;
+  }
+
+  .lead-pending-banner__content {
+    padding: .6rem;
+  }
+
+  .lead-pending-banner__content h3 {
+    font-size: .65rem;
   }
 }

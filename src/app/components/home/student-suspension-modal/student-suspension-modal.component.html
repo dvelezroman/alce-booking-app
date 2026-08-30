@@ -1,29 +1,190 @@
-<div class="announcement-backdrop" *ngIf="suspensionInfo">
-  <div class="announcement-card animate-in">
+<div class="suspension-backdrop" *ngIf="suspensionInfo">
+  <div class="suspension-card animate-in">
 
-    <h2 class="title">
-      Cuenta suspendida
-    </h2>
+    <button
+      type="button"
+      class="suspension-card__close"
+      aria-label="Cerrar"
+      (click)="close.emit()"
+    >
+      ×
+    </button>
 
-    <p class="subtitle">
-      Tu cuenta se encuentra suspendida temporalmente.
-      Por lo que no podrás agendar clases.
-    </p>
+    <div class="suspension-card__icon">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <rect
+          x="5"
+          y="10"
+          width="14"
+          height="10"
+          rx="2.5"
+          stroke="currentColor"
+          stroke-width="1.8"
+        />
 
-    <p class="info-line">
-      <strong>Se reactivará el:</strong>
-      {{ suspensionInfo.suspensionEndDate | date:'longDate' }}
-    </p>
+        <path
+          d="M8 10V7a4 4 0 0 1 8 0v3"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
 
-    <p class="info-line">
-      <strong>Días restantes:</strong>
-      {{ suspensionInfo.daysRemaining }}
-    </p>
+        <path
+          d="M12 14v2"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
 
-    <div class="actions-row">
-      <button class="close-btn" (click)="close.emit()">
+    <div class="suspension-card__content">
+
+      <h2 class="suspension-card__title">
+        Cuenta suspendida
+      </h2>
+
+      <p class="suspension-card__subtitle">
+        Tu cuenta se encuentra suspendida temporalmente.
+        Por lo que no podrás iniciar sesión.
+      </p>
+
+      <div
+        class="suspension-card__details"
+        *ngIf="
+          suspensionInfo.suspensionEndDate ||
+          suspensionInfo.daysRemaining !== null
+        "
+      >
+
+        <div
+          class="suspension-card__detail"
+          *ngIf="suspensionInfo.suspensionEndDate"
+        >
+          <div class="suspension-card__detail-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="4"
+                y="6"
+                width="16"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+
+              <path
+                d="M8 3v4M16 3v4M4 10h16"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+
+          <div class="suspension-card__detail-content">
+            <span class="suspension-card__detail-label">
+              Se reactivará el:
+            </span>
+
+            <strong class="suspension-card__detail-value">
+              {{ suspensionInfo.suspensionEndDate | date:'longDate' }}
+            </strong>
+          </div>
+        </div>
+
+        <div
+          class="suspension-card__separator"
+          *ngIf="
+            suspensionInfo.suspensionEndDate &&
+            suspensionInfo.daysRemaining !== null
+          "
+        ></div>
+
+        <div
+          class="suspension-card__detail"
+          *ngIf="suspensionInfo.daysRemaining !== null"
+        >
+          <div class="suspension-card__detail-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="8"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+
+              <path
+                d="M12 8v4l2.5 1.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+
+          <div class="suspension-card__detail-content">
+            <span class="suspension-card__detail-label">
+              Días restantes:
+            </span>
+
+            <strong
+              class="suspension-card__detail-value suspension-card__detail-value--days"
+            >
+              {{ suspensionInfo.daysRemaining }}
+              {{ suspensionInfo.daysRemaining === 1 ? 'día' : 'días' }}
+            </strong>
+          </div>
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="suspension-card__button"
+        (click)="close.emit()"
+      >
+        <span class="suspension-card__button-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="m8.5 12 2.2 2.2 4.8-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
         Entendido
       </button>
+
     </div>
 
   </div>

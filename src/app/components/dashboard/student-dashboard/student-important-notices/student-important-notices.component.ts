@@ -7,7 +7,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { UserDto } from '../../../../services/dtos/user.dto';
 
-
 @Component({
   selector: 'app-student-important-notices',
   standalone: true,
@@ -27,39 +26,74 @@ export class StudentImportantNoticesComponent {
   expandedNotes = new Set<number>();
 
   toggleNote(index: number): void {
+    if (this.expandedNotes.has(index)) {
+      this.expandedNotes.delete(index);
+      return;
+    }
 
-  if (this.expandedNotes.has(index)) {
-    this.expandedNotes.delete(index);
-    return;
-  }
-  this.expandedNotes.add(index);
-}
-
-isNoteExpanded(index: number): boolean {
-  return this.expandedNotes.has(index);
-}
-
-shouldShowNoteToggle(note?: string | null): boolean {
-
-  if (!note) {
-    return false;
+    this.expandedNotes.add(index);
   }
 
-  const plainText = note
-    .replace(/<[^>]*>/g, '')
-    .replace(/\\n/g, ' ')
-    .trim();
+  isNoteExpanded(index: number): boolean {
+    return this.expandedNotes.has(index);
+  }
 
-  return plainText.length > 220;
+  getDisplayNote(note?: string | null): string {
+    if (!note?.trim()) {
+      return '';
+    }
 
-}
+    const trimmedNote = note.trim();
+
+    try {
+      const parsed = JSON.parse(trimmedNote);
+
+      if (
+        parsed &&
+        typeof parsed === 'object' &&
+        !Array.isArray(parsed)
+      ) {
+        return 'Tienes un nuevo recurso de evaluación disponible. Revisa el material para continuar con tu proceso.';
+      }
+    } catch (_) {
+      // No es JSON, se muestra normalmente.
+    }
+
+    return note;
+  }
+
+  hasDisplayNote(note?: string | null): boolean {
+    return Boolean(
+      this.getDisplayNote(note).trim()
+    );
+  }
+
+  shouldShowNoteToggle(note?: string | null): boolean {
+    const displayNote = this.getDisplayNote(note);
+
+    if (!displayNote) {
+      return false;
+    }
+
+    const plainText = displayNote
+      .replace(/<[^>]*>/g, '')
+      .replace(/\\n/g, ' ')
+      .trim();
+
+    return plainText.length > 220;
+  }
 
   get hasMeetingsAlert(): boolean {
-    return Boolean(this.userData?.meetingsAlert);
+    return Boolean(
+      this.userData?.meetingsAlert
+    );
   }
 
   get assessmentResources() {
-    return this.userData?.assessmentResources ?? [];
+    return (
+      this.userData?.assessmentResources ??
+      []
+    );
   }
 
   get hasAssessmentResources(): boolean {
@@ -99,7 +133,9 @@ shouldShowNoteToggle(note?: string | null): boolean {
         'noopener,noreferrer'
       );
     } catch (_) {
-      console.warn('El enlace del recurso no es válido');
+      console.warn(
+        'El enlace del recurso no es válido'
+      );
     }
   }
 }
