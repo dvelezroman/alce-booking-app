@@ -2,7 +2,12 @@
   class="progress-card"
   aria-labelledby="student-progress-title"
 >
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
   <header class="progress-card__header">
+
     <h2
       id="student-progress-title"
       class="progress-card__title"
@@ -10,13 +15,20 @@
       Tu progreso general
     </h2>
 
+
+    <!-- STAGE -->
+
     <div
       class="progress-card__stage"
       [class.progress-card__stage--empty]="!hasAssignedStage"
       role="status"
       [attr.aria-label]="stageAriaLabel"
     >
-      <span class="progress-card__stage-icon" aria-hidden="true">
+
+      <span
+        class="progress-card__stage-icon"
+        aria-hidden="true"
+      >
         <svg viewBox="0 0 24 24" fill="none">
           <path
             d="m12 2 2.15 3.2 3.75.4.4 3.75L21.5 12l-3.2 2.65-.4 3.75-3.75.4L12 22l-2.15-3.2-3.75-.4-.4-3.75L2.5 12l3.2-2.65.4-3.75 3.75-.4L12 2Z"
@@ -24,6 +36,7 @@
             stroke-width="1.6"
             stroke-linejoin="round"
           />
+
           <circle
             cx="12"
             cy="12"
@@ -34,142 +47,406 @@
         </svg>
       </span>
 
+
       <span class="progress-card__stage-copy">
+
         <span class="progress-card__stage-kicker">
           Stage actual
         </span>
 
         <strong class="progress-card__stage-value">
-          <ng-container *ngIf="hasAssignedStage; else unassignedStage">
+
+          <ng-container
+            *ngIf="hasAssignedStage; else unassignedStage"
+          >
+
             <span *ngIf="stageNumber">
-              {{ stageNumber }}
+              STG {{ stageNumber }}
             </span>
+
             <span
               *ngIf="stageNumber && stageDescription"
-              class="progress-card__stage-sep"
-              aria-hidden="true"
+              class="progress-card__stage-separator"
             >
               ·
             </span>
+
             <span
               *ngIf="stageDescription"
-              class="progress-card__stage-desc"
+              class="progress-card__stage-description"
             >
               {{ stageDescription }}
             </span>
+
           </ng-container>
+
 
           <ng-template #unassignedStage>
             Sin asignar
           </ng-template>
+
         </strong>
+
       </span>
+
     </div>
+
   </header>
+
+
+  <!-- =====================================================
+       CONTENT
+  ====================================================== -->
 
   <ng-container *ngIf="!isLoading; else loadingState">
 
-    <div class="progress-card__content">
+    <div
+      class="progress-card__content"
+      [class.progress-card__content--live]="hasActiveMeeting"
+    >
 
-      <!-- PROGRESO CIRCULAR -->
-      <div class="progress-card__progress-section">
-        <!-- <div
-          class="progress-ring"
-          [style.--progress]="progressPercentage"
-          role="progressbar"
-          [attr.aria-valuenow]="progressPercentage"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          aria-label="Progreso general"
-        >
-          <div class="progress-ring__inner">
-            <strong>
-              {{ progressPercentage }}%
-            </strong>
-          </div>
-        </div> -->
-        <img
-          class="progress-card__temporary-image"
-          src="/assets/icons/icon-384x384.png"
-          alt=""
-          aria-hidden="true"
-        />
-      </div>
 
-      <!-- MENSAJE -->
-      <div class="progress-card__message">
-        <h3>
-          ¡Vas por buen camino!
-        </h3>
+      <!-- =================================================
+           ROCKET
+      ================================================== -->
 
-        <p>
-          {{ progressMessage }}
-        </p>
-      </div>
-
-      <span
-        class="progress-card__divider progress-card__divider--first"
+      <div
+        class="progress-card__rocket"
         aria-hidden="true"
-      ></span>
+      >
 
-      <!-- CLASES -->
-      <div class="progress-card__stat">
-        <span class="progress-card__stat-label">
-          Clases tomadas
+        <span class="progress-card__rocket-star progress-card__rocket-star--one">
+          ✦
         </span>
 
-        <strong class="progress-card__stat-value">
-          {{ totalClasses }}
-        </strong>
-
-        <span class="progress-card__stat-caption">
-          En total
+        <span class="progress-card__rocket-star progress-card__rocket-star--two">
+          ✦
         </span>
+
+        <span class="progress-card__rocket-icon">
+          🚀
+        </span>
+
       </div>
 
-      <!-- RACHA -->
-      <div class="progress-card__stat progress-card__streak">
-        <span class="progress-card__stat-label">
-          Racha de estudio
-        </span>
 
-        <strong class="progress-card__stat-value">
-          <span class="streak-icon" aria-hidden="true">
-            🔥
+      <!-- =================================================
+           MESSAGE
+      ================================================== -->
+
+      <div
+        class="progress-card__message"
+        [class.progress-card__message--live]="hasActiveMeeting"
+      >
+
+        <!-- =========================
+             NORMAL STATE
+        ========================== -->
+
+        <ng-container *ngIf="!hasActiveMeeting">
+
+          <h3>
+            ¡Vas por buen camino!
+          </h3>
+
+          <p>
+            {{ progressMessage }}
+          </p>
+
+        </ng-container>
+
+
+        <!-- =========================
+             ACTIVE CLASS STATE
+        ========================== -->
+
+        <ng-container *ngIf="hasActiveMeeting">
+
+          <span
+            class="progress-card__live-label"
+            [class.progress-card__live-label--started]="isMeetingStarted"
+          >
+            {{ classStatusLabel }}
           </span>
 
-          {{ studyStreak }}
-          {{ studyStreak === 1 ? 'día' : 'días' }}
-        </strong>
 
-        <span class="progress-card__stat-caption">
-          {{ streakMessage }}
-        </span>
+          <h3 class="progress-card__live-title">
+            {{ mainTitle }}
+          </h3>
+
+
+          <p class="progress-card__live-description">
+            {{ mainDescription }}
+          </p>
+
+
+          <!-- =========================
+               CLASS INFO
+          ========================== -->
+
+          <div class="progress-card__live-info">
+
+            <div class="progress-card__live-time">
+
+              <span
+                class="progress-card__live-time-icon"
+                aria-hidden="true"
+              >
+                <svg viewBox="0 0 24 24" fill="none">
+
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="8.5"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                  />
+
+                  <path
+                    d="M12 7.5V12L15 14"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+
+                </svg>
+              </span>
+
+
+              <span class="progress-card__live-time-copy">
+
+                <span class="progress-card__live-time-label">
+                  Hora de la clase
+                </span>
+
+                <strong class="progress-card__live-time-value">
+                  {{ activeMeetingTime }}
+                </strong>
+
+              </span>
+
+            </div>
+
+
+            <div
+              class="progress-card__live-access"
+              *ngIf="accessClosesAt"
+            >
+
+              <span class="progress-card__live-access-label">
+                Acceso disponible hasta
+              </span>
+
+              <strong class="progress-card__live-access-value">
+                {{ accessClosesAt }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- =========================
+               BUTTON
+          ========================== -->
+
+          <button
+            type="button"
+            class="progress-card__live-button"
+            [disabled]="!canEnterActiveMeeting"
+            (click)="enterActiveClass()"
+          >
+
+            <span
+              class="progress-card__live-button-icon"
+              aria-hidden="true"
+            >
+              <svg viewBox="0 0 24 24" fill="none">
+
+                <path
+                  d="M8 5H5.5A1.5 1.5 0 0 0 4 6.5v11A1.5 1.5 0 0 0 5.5 19H8"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+
+                <path
+                  d="M13 8l4 4-4 4M17 12H8"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+              </svg>
+            </span>
+
+            <span>
+              Ingresar a la clase
+            </span>
+
+          </button>
+
+        </ng-container>
+
       </div>
 
-      <!-- IMAGEN -->
-      <div class="progress-card__mascot" aria-hidden="true">
+
+      <!-- =================================================
+           MASCOT
+      ================================================== -->
+
+      <div
+        class="progress-card__mascot"
+        aria-hidden="true"
+      >
         <img
           src="/assets/alce-student-progress.svg"
           alt=""
         />
       </div>
 
+
+      <!-- =================================================
+           STATS
+      ================================================== -->
+
+      <div class="progress-card__stats">
+
+
+        <!-- CLASES -->
+
+        <div class="progress-card__stat">
+
+          <span
+            class="
+              progress-card__stat-icon
+              progress-card__stat-icon--classes
+            "
+            aria-hidden="true"
+          >
+
+            <svg viewBox="0 0 24 24" fill="none">
+
+              <rect
+                x="4"
+                y="5"
+                width="16"
+                height="15"
+                rx="2.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 3.5v4M16 3.5v4M4 9h16"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M8 13h3M13 13h3M8 16h3"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+
+            </svg>
+
+          </span>
+
+
+          <span class="progress-card__stat-content">
+
+            <span class="progress-card__stat-label">
+              Clases tomadas
+            </span>
+
+            <strong class="progress-card__stat-value">
+              {{ totalClasses }}
+            </strong>
+
+            <span class="progress-card__stat-caption">
+              En total
+            </span>
+
+          </span>
+
+        </div>
+
+
+        <!-- DIVIDER -->
+
+        <span
+          class="progress-card__stat-divider"
+          aria-hidden="true"
+        >
+        </span>
+
+
+        <!-- RACHA -->
+
+        <div class="progress-card__stat">
+
+          <span
+            class="
+              progress-card__stat-icon
+              progress-card__stat-icon--streak
+            "
+            aria-hidden="true"
+          >
+            🔥
+          </span>
+
+
+          <span class="progress-card__stat-content">
+
+            <span class="progress-card__stat-label">
+              Racha de estudio
+            </span>
+
+            <strong class="progress-card__stat-value">
+              {{ studyStreak }}
+              {{ studyStreak === 1 ? 'día' : 'días' }}
+            </strong>
+
+            <span class="progress-card__stat-caption">
+              {{ streakMessage }}
+            </span>
+
+          </span>
+
+        </div>
+
+      </div>
+
     </div>
+
   </ng-container>
 
-  <!-- LOADING -->
-  <ng-template #loadingState>
-    <div class="progress-card__loading">
-      <div class="loading-circle"></div>
 
-      <div class="loading-lines">
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  <ng-template #loadingState>
+
+    <div class="progress-card__loading">
+
+      <div class="loading-rocket"></div>
+
+      <div class="loading-message">
         <span></span>
         <span></span>
       </div>
 
       <div class="loading-stat"></div>
       <div class="loading-stat"></div>
+
     </div>
+
   </ng-template>
+
 </section>

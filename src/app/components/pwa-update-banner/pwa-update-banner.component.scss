@@ -1,138 +1,775 @@
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -12px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
+:host {
+  display: block;
 }
+
+/* =========================================================
+   OVERLAY
+========================================================= */
 
 .pwa-update-banner {
   position: fixed;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 650px;
-  background: #eceff3;
-  color: #2d3748;
-  padding: 16px 20px;
-  border-radius: 14px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-  z-index: 100000;
-  animation: slideDown 0.3s ease-out;
-}
-
-.pwa-update-content {
+  inset: 0;
+  padding: 1rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 14px;
-  width: 100%;
+  justify-content: center;
+  box-sizing: border-box;
+  background: rgba(31, 49, 78, .45);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 9999;
 }
 
-.pwa-update-icon i {
-  font-size: 26px;
-  color: #2d3748;
+/* =========================================================
+   CARD
+========================================================= */
+
+.pwa-update-card {
+  position: relative;
+  width: min(100%, 820px);
+  min-height: 390px;
+  display: grid;
+  grid-template-columns: 40% 60%;
+  overflow: hidden;
+  border: 1px solid rgba(210, 222, 239, .95);
+  border-radius: 1.35rem;
+  background: #fff;
+  box-shadow:
+    0 1.6rem 4rem rgba(23, 42, 72, .22),
+    0 .3rem .8rem rgba(23, 42, 72, .08);
+  animation: pwa-update-in .24s ease-out;
 }
 
-.pwa-update-text h4 {
-  margin: 0 0 4px;
-  font-size: 14px;
-  font-weight: 600;
-}
+/* =========================================================
+   CLOSE
+========================================================= */
 
-.pwa-update-text p {
-  margin: 0;
-  font-size: 12px;
-  opacity: 0.8;
-}
-
-.pwa-update-actions {
+.pwa-update-card__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  width: 2.3rem;
+  height: 2.3rem;
+  padding: 0;
   display: flex;
-  flex-direction: row;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-.btn-activate,
-.btn-dismiss {
-  padding: 10px 24px;
-  min-width: 140px;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d8e0ec;
+  border-radius: 50%;
+  color: #394a65;
+  background: rgba(255, 255, 255, .9);
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1;
   cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: center;
-  white-space: nowrap;
+  transition:
+    background .15s ease,
+    border-color .15s ease,
+    transform .15s ease;
 }
 
-.btn-activate {
-  background: #3d8bfd;
-  color: white;
-  border: none;
+.pwa-update-card__close:hover:not(:disabled) {
+  transform: scale(1.05);
+  border-color: #c5cfdd;
+  background: #f6f8fb;
 }
 
-.btn-activate:hover:not(:disabled) {
-  background: #2f74d9;
+.pwa-update-card__close:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   LEFT VISUAL
+========================================================= */
+
+.pwa-update-card__visual {
+  position: relative;
+  min-height: 390px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      rgba(255, 255, 255, .95) 0%,
+      rgba(255, 255, 255, .65) 25%,
+      transparent 53%
+    ),
+    linear-gradient(
+      180deg,
+      #f8fbff 0%,
+      #eef6ff 45%,
+      #dcecff 100%
+    );
+}
+
+.pwa-update-card__visual::before {
+  content: '';
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  bottom: -4rem;
+  height: 9rem;
+  border-radius: 50% 50% 0 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(160, 201, 255, .45),
+      rgba(125, 177, 248, .65)
+    );
+}
+
+.pwa-update-card__visual::after {
+  content: '';
+  position: absolute;
+  left: -20%;
+  right: 30%;
+  bottom: -5.5rem;
+  height: 9rem;
+  border-radius: 50%;
+  background: rgba(111, 166, 244, .22);
+}
+
+/* =========================================================
+   DEVICE
+========================================================= */
+
+.pwa-update-card__device {
+  position: relative;
+  z-index: 2;
+  width: 10.5rem;
+  height: 14rem;
+  padding: 1.4rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  border: .35rem solid rgba(197, 219, 250, .9);
+  border-radius: 1.5rem;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, .98),
+      rgba(246, 250, 255, .94)
+    );
+  box-shadow:
+    0 1.2rem 2rem rgba(67, 123, 211, .17),
+    inset 0 0 2rem rgba(190, 217, 255, .12);
+}
+
+/* =========================================================
+   DEVICE TOP
+========================================================= */
+
+.pwa-update-card__device-top {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: .3rem;
+}
+
+.pwa-update-card__device-top span {
+  width: .42rem;
+  height: .42rem;
+  display: block;
+  border-radius: 50%;
+  background: #d6e4fb;
+}
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+.pwa-update-card__refresh {
+  width: 6.5rem;
+  height: 6.5rem;
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  background:
+    linear-gradient(
+      145deg,
+      #347ff3,
+      #075de7
+    );
+  box-shadow:
+    0 .9rem 1.5rem rgba(18, 96, 224, .25),
+    inset 0 .15rem .35rem rgba(255, 255, 255, .2);
+}
+
+.pwa-update-card__refresh svg {
+  width: 3.7rem;
+  height: 3.7rem;
+}
+
+/* =========================================================
+   DEVICE LINES
+========================================================= */
+
+.pwa-update-card__device-lines {
+  width: 65%;
+  margin-top: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+
+.pwa-update-card__device-lines span {
+  height: .45rem;
+  border-radius: 999px;
+  background: #dfeafe;
+}
+
+/* =========================================================
+   UPLOAD ICON
+========================================================= */
+
+.pwa-update-card__upload {
+  position: absolute;
+  z-index: 4;
+  top: 4.5rem;
+  right: 2.8rem;
+  width: 3.8rem;
+  height: 3.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: .25rem solid rgba(255, 255, 255, .75);
+  border-radius: 50%;
+  color: #fff;
+  background:
+    linear-gradient(
+      145deg,
+      #3987f7,
+      #0861e9
+    );
+  box-shadow: 0 .65rem 1.3rem rgba(21, 94, 216, .28);
+}
+
+.pwa-update-card__upload svg {
+  width: 1.9rem;
+  height: 1.9rem;
+}
+
+/* =========================================================
+   DECORATION
+========================================================= */
+
+.pwa-update-card__spark {
+  position: absolute;
+  z-index: 3;
+  color: #8bbdff;
+  font-size: 1.2rem;
+}
+
+.pwa-update-card__spark--one {
+  top: 4rem;
+  left: 3rem;
+}
+
+.pwa-update-card__spark--two {
+  right: 2.2rem;
+  bottom: 5rem;
+  font-size: .8rem;
+}
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.pwa-update-card__content {
+  min-width: 0;
+  padding: 3.1rem 2.5rem 2.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #ffffff 65%,
+      #fbfdff 100%
+    );
+}
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.pwa-update-card__eyebrow {
+  width: fit-content;
+  margin-bottom: 1rem;
+  padding: .45rem .75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  border-radius: .6rem;
+  color: #1764dc;
+  background: #eef5ff;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.pwa-update-card__eyebrow span {
+  font-size: .8rem;
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.pwa-update-card__content h2 {
+  margin: 0;
+  color: #0d1940;
+  font-size: 1.65rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -.025em;
+}
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.pwa-update-card__description {
+  max-width: 29rem;
+  margin: .85rem 0 0;
+  color: #52627c;
+  font-size: .78rem;
+  font-weight: 450;
+  line-height: 1.55;
+}
+
+/* =========================================================
+   INFO BLOCK
+========================================================= */
+
+.pwa-update-card__info {
+  width: 100%;
+  margin-top: 1.35rem;
+  padding: .85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  box-sizing: border-box;
+  border: 1px solid #e5edf8;
+  border-radius: .8rem;
+  background:
+    linear-gradient(
+      135deg,
+      #f9fbff,
+      #f1f6fd
+    );
+}
+
+.pwa-update-card__info-icon {
+  width: 2.8rem;
+  height: 2.8rem;
+  flex: 0 0 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #1769e8;
+  background: #e2efff;
+}
+
+.pwa-update-card__info-icon svg {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.pwa-update-card__info div:last-child {
+  min-width: 0;
+}
+
+.pwa-update-card__info strong {
+  display: block;
+  color: #16213e;
+  font-size: .72rem;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.pwa-update-card__info span {
+  display: block;
+  margin-top: .15rem;
+  color: #5d6d85;
+  font-size: .65rem;
+  font-weight: 450;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.pwa-update-card__actions {
+  width: 100%;
+  margin-top: 1.55rem;
+  display: grid;
+  grid-template-columns: .9fr 1.15fr;
+  gap: .75rem;
+}
+
+/* =========================================================
+   LATER
+========================================================= */
+
+.pwa-update-card__later {
+  min-height: 2.9rem;
+  padding: .65rem 1rem;
+  border: 1px solid #cbd5e3;
+  border-radius: .65rem;
+  color: #4a5871;
+  background: #fff;
+  font-size: .71rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background .15s ease,
+    border-color .15s ease,
+    transform .15s ease;
+}
+
+.pwa-update-card__later:hover:not(:disabled) {
   transform: translateY(-1px);
+  border-color: #b9c5d4;
+  background: #f8fafc;
 }
 
-.btn-dismiss {
-  background: transparent;
-  border: 1px solid #2d3748;
-  color: #2d3748;
+/* =========================================================
+   UPDATE
+========================================================= */
+
+.pwa-update-card__update {
+  min-height: 2.9rem;
+  padding: .65rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  border: 1px solid #1260e7;
+  border-radius: .65rem;
+  color: #fff;
+  background:
+    linear-gradient(
+      135deg,
+      #1770f2,
+      #0557df
+    );
+  box-shadow: 0 .5rem 1rem rgba(12, 92, 225, .23);
+  font-size: .71rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background .15s ease,
+    box-shadow .15s ease,
+    transform .15s ease;
 }
 
-.btn-dismiss:hover:not(:disabled) {
-  background: rgba(0, 0, 0, 0.07);
+.pwa-update-card__update svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.pwa-update-card__update:hover:not(:disabled) {
   transform: translateY(-1px);
+  background:
+    linear-gradient(
+      135deg,
+      #0f65e5,
+      #044bc5
+    );
+  box-shadow: 0 .65rem 1.2rem rgba(12, 92, 225, .27);
 }
 
-.loading-spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
+.pwa-update-card__update:disabled,
+.pwa-update-card__later:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   SPINNER
+========================================================= */
+
+.pwa-update-card__spinner {
+  width: 1rem;
+  height: 1rem;
+  display: block;
+  border: .14rem solid rgba(255, 255, 255, .4);
   border-top-color: #fff;
   border-radius: 50%;
-  animation: spin 0.6s linear infinite;
+  animation: pwa-spinner .7s linear infinite;
 }
 
-@keyframes spin {
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes pwa-update-in {
+  from {
+    opacity: 0;
+    transform: scale(.96) translateY(.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes pwa-spinner {
   to {
     transform: rotate(360deg);
   }
 }
 
-@media (max-width: 480px) {
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media screen and (max-width: 800px) {
+
+  .pwa-update-card {
+    width: min(100%, 650px);
+    min-height: 350px;
+    grid-template-columns: 35% 65%;
+  }
+
+  .pwa-update-card__visual {
+    min-height: 350px;
+  }
+
+  .pwa-update-card__device {
+    width: 8.5rem;
+    height: 12rem;
+  }
+
+  .pwa-update-card__refresh {
+    width: 5.3rem;
+    height: 5.3rem;
+  }
+
+  .pwa-update-card__refresh svg {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .pwa-update-card__upload {
+    top: 4.2rem;
+    right: 1rem;
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+
+  .pwa-update-card__content {
+    padding: 2.8rem 1.5rem 1.8rem;
+  }
+
+  .pwa-update-card__content h2 {
+    font-size: 1.35rem;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media screen and (max-width: 650px) {
+
   .pwa-update-banner {
-    width: 92%;
-    max-width: 92%;
-    padding: 14px 16px;
+    padding: .7rem;
   }
 
-  .pwa-update-actions {
-    flex-direction: row;
-    justify-content: center;
+  .pwa-update-card {
     width: 100%;
+    max-width: 25rem;
+    min-height: auto;
+    display: block;
+    border-radius: 1.1rem;
   }
 
-  .btn-activate,
-  .btn-dismiss {
-    min-width: 100px;
+  .pwa-update-card__close {
+    top: .7rem;
+    right: .7rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.55rem;
   }
 
-  .pwa-update-icon {
-    display: none;
+  /* VISUAL */
+
+  .pwa-update-card__visual {
+    min-height: 11rem;
+    padding-top: 1rem;
   }
 
-  .pwa-update-content {
-    flex-direction: column;
-    text-align: center;
-    gap: 12px;
+  .pwa-update-card__device {
+    width: 6.8rem;
+    height: 8.4rem;
+    padding-top: .8rem;
+    border-width: .25rem;
+    border-radius: 1.1rem;
+  }
+
+  .pwa-update-card__device-top span {
+    width: .3rem;
+    height: .3rem;
+  }
+
+  .pwa-update-card__refresh {
+    width: 4.2rem;
+    height: 4.2rem;
+    margin-top: .8rem;
+  }
+
+  .pwa-update-card__refresh svg {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  .pwa-update-card__device-lines {
+    margin-top: .75rem;
+    gap: .25rem;
+  }
+
+  .pwa-update-card__device-lines span {
+    height: .3rem;
+  }
+
+  .pwa-update-card__upload {
+    top: 1.7rem;
+    right: calc(50% - 4.8rem);
+    width: 2.7rem;
+    height: 2.7rem;
+  }
+
+  .pwa-update-card__upload svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .pwa-update-card__spark--one {
+    top: 2rem;
+    left: 3rem;
+  }
+
+  .pwa-update-card__spark--two {
+    right: 3rem;
+    bottom: 2rem;
+  }
+
+  /* CONTENT */
+
+  .pwa-update-card__content {
+    padding: 1.15rem 1.15rem 1.2rem;
+  }
+
+  .pwa-update-card__eyebrow {
+    margin-bottom: .7rem;
+    padding: .4rem .6rem;
+    font-size: .59rem;
+  }
+
+  .pwa-update-card__content h2 {
+    font-size: 1.1rem;
+  }
+
+  .pwa-update-card__description {
+    margin-top: .55rem;
+    font-size: .68rem;
+  }
+
+  /* INFO */
+
+  .pwa-update-card__info {
+    margin-top: .9rem;
+    padding: .7rem;
+    gap: .6rem;
+  }
+
+  .pwa-update-card__info-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+    flex-basis: 2.4rem;
+  }
+
+  .pwa-update-card__info-icon svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .pwa-update-card__info strong {
+    font-size: .65rem;
+  }
+
+  .pwa-update-card__info span {
+    font-size: .58rem;
+  }
+
+  /* ACTIONS */
+
+  .pwa-update-card__actions {
+    margin-top: 1rem;
+    grid-template-columns: 1fr 1.15fr;
+    gap: .55rem;
+  }
+
+  .pwa-update-card__later,
+  .pwa-update-card__update {
+    min-height: 2.65rem;
+    padding: .55rem .6rem;
+    font-size: .64rem;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media screen and (max-width: 390px) {
+
+  .pwa-update-card__visual {
+    min-height: 9.5rem;
+  }
+
+  .pwa-update-card__device {
+    width: 6rem;
+    height: 7.5rem;
+  }
+
+  .pwa-update-card__refresh {
+    width: 3.7rem;
+    height: 3.7rem;
+  }
+
+  .pwa-update-card__content {
+    padding: 1rem;
+  }
+
+  .pwa-update-card__content h2 {
+    font-size: 1rem;
+  }
+
+  .pwa-update-card__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .pwa-update-card__update {
+    order: 1;
+  }
+
+  .pwa-update-card__later {
+    order: 2;
   }
 }

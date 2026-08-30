@@ -313,6 +313,33 @@ export class UserInfoFormComponent implements OnChanges, OnInit {
   //   this.closeModal.emit();
   // }
 
+  get completedStep(): number {
+    if (!this.infoForm) return 1;
+
+    const emailValid = this.infoForm.get('email')?.valid;
+    const birthdayValid = this.infoForm.get('birthday')?.valid;
+
+    if (!emailValid || !birthdayValid) {
+      return 1;
+    }
+
+    const phoneValid = this.infoForm.get('phoneNumber')?.valid;
+    const countryValid = this.infoForm.get('country')?.valid;
+    const cityValid = this.infoForm.get('city')?.valid;
+
+    if (!phoneValid || !countryValid || !cityValid) {
+      return 2;
+    }
+
+    const occupationValid = this.infoForm.get('occupation')?.valid;
+
+    if (!occupationValid) {
+      return 2;
+    }
+
+    return 3;
+  }
+
   close(): void {
     if (this.dataCompleted) {
       this.closeModal.emit();

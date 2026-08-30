@@ -3,100 +3,168 @@
   width: 100%;
 }
 
-.progress-card {
-  --progress: 0;
 
+/* =========================================================
+   CARD
+========================================================= */
+
+.progress-card {
   position: relative;
 
   width: 100%;
-  min-height: 155px;
-  padding: .95rem 1.2rem;
+  min-height: 285px;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1rem;
+  padding: 1.25rem 1.55rem 1.2rem;
+
+  box-sizing: border-box;
 
   overflow: hidden;
 
+  border: 1px solid #dbe7f6;
+  border-radius: 1.25rem;
+
   background:
     radial-gradient(
-      circle at 12% 10%,
-      rgba(111, 76, 255, 0.18),
-      transparent 28%
+      circle at 12% 25%,
+      rgba(183, 207, 242, .16),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 90% 15%,
+      rgba(192, 216, 249, .18),
+      transparent 30%
     ),
     linear-gradient(
-      115deg,
-      #17155f 0%,
-      #10245f 54%,
-      #0b2864 100%
+      135deg,
+      #fbfdff 0%,
+      #f6f9ff 47%,
+      #edf5ff 100%
     );
 
-  color: #ffffff;
+  color: #101b49;
 
   box-shadow:
-    0 10px 24px rgba(15, 28, 80, 0.14);
+    0 .55rem 1.5rem
+    rgba(52, 79, 129, .07);
 }
 
-.progress-card__temporary-image {
-  width: 72px;
-  max-width: 100%;
-  height: auto;
 
-  object-fit: contain;
+/* =========================================================
+   BACKGROUND DETAILS
+========================================================= */
 
-  user-select: none;
+.progress-card::before {
+  content: '';
+
+  position: absolute;
+
+  width: 22rem;
+  height: 22rem;
+
+  top: -15rem;
+  right: 18%;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255, 255, 255, .42);
+
   pointer-events: none;
 }
 
+
+.progress-card::after {
+  content: '';
+
+  position: absolute;
+
+  width: 16rem;
+  height: 16rem;
+
+  right: -7rem;
+  bottom: -9rem;
+
+  border-radius: 50%;
+
+  background:
+    rgba(185, 211, 247, .12);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
 .progress-card__header {
   position: relative;
-  z-index: 2;
+  z-index: 5;
 
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: .75rem;
-  flex-wrap: wrap;
 
-  margin: 0 0 .7rem;
+  gap: 1rem;
 }
+
 
 .progress-card__title {
   margin: 0;
 
-  color: #ffffff;
+  color: #101b49;
 
-  font-size: .8rem;
-  font-weight: 700;
-  line-height: 1.3;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.2;
+
+  letter-spacing: -.025em;
 }
+
+
+/* =========================================================
+   STAGE
+========================================================= */
 
 .progress-card__stage {
   display: inline-flex;
   align-items: center;
-  gap: .55rem;
+
+  gap: .6rem;
+
   min-width: 0;
-  max-width: min(100%, 22rem);
-  flex-shrink: 1;
+  max-width: 22rem;
 
-  padding: .38rem .7rem .38rem .42rem;
+  padding:
+    .42rem
+    .9rem
+    .42rem
+    .45rem;
 
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-sizing: border-box;
+
+  border: 1px solid #d9e5f4;
   border-radius: 999px;
 
-  background: rgba(255, 255, 255, 0.1);
+  background:
+    rgba(255, 255, 255, .82);
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 .25rem .75rem
+    rgba(60, 82, 128, .05);
 }
+
 
 .progress-card__stage--empty {
-  opacity: 0.78;
+  opacity: .7;
 }
 
+
 .progress-card__stage-icon {
-  width: 1.55rem;
-  height: 1.55rem;
-  flex-shrink: 0;
+  width: 2.15rem;
+  height: 2.15rem;
+
+  flex: 0 0 2.15rem;
 
   display: inline-flex;
   align-items: center;
@@ -104,564 +172,1682 @@
 
   border-radius: 50%;
 
-  color: #f8e27a;
-  background: rgba(248, 226, 122, 0.16);
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      145deg,
+      #94bcf3,
+      #6e9fe5
+    );
+
+  box-shadow:
+    0 .2rem .55rem
+    rgba(80, 132, 206, .16);
 }
 
+
 .progress-card__stage-icon svg {
-  width: 13px;
-  height: 13px;
+  width: 1.05rem;
+  height: 1.05rem;
 }
+
 
 .progress-card__stage-copy {
   min-width: 0;
 
   display: flex;
   flex-direction: column;
-  gap: .05rem;
+
+  gap: .08rem;
 }
+
 
 .progress-card__stage-kicker {
-  color: rgba(255, 255, 255, 0.72);
+  color: #485673;
 
-  font-size: .58rem;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: .04em;
+  font-size: .56rem;
+  font-weight: 700;
+  line-height: 1.15;
+
   text-transform: uppercase;
+  letter-spacing: .035em;
 }
+
 
 .progress-card__stage-value {
   display: flex;
   align-items: baseline;
-  gap: .28rem;
+
   min-width: 0;
 
-  color: #ffffff;
+  gap: .28rem;
 
-  font-size: .82rem;
+  color: #101b49;
+
+  font-size: .84rem;
   font-weight: 800;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+
+  white-space: nowrap;
 }
 
-.progress-card__stage-sep {
-  color: rgba(255, 255, 255, 0.45);
-  font-weight: 600;
+
+.progress-card__stage-separator {
+  color: #8c98ae;
 }
 
-.progress-card__stage-desc {
+
+.progress-card__stage-description {
   min-width: 0;
+
+  color: #293858;
+
+  font-size: .76rem;
+  font-weight: 600;
 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
-  color: rgba(255, 255, 255, 0.88);
-
-  font-size: .72rem;
-  font-weight: 600;
 }
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
 
 .progress-card__content {
   position: relative;
   z-index: 2;
 
+  min-height: 215px;
+
   display: grid;
+
   grid-template-columns:
-    minmax(90px, .65fr)
-    minmax(180px, 1.5fr)
-    1px
-    minmax(90px, .65fr)
-    minmax(125px, .8fr)
-    minmax(100px, .6fr);
+    9rem
+    minmax(220px, 1.35fr)
+    minmax(240px, 1fr);
+
+  grid-template-rows:
+    8rem
+    auto;
 
   align-items: center;
-  gap: .85rem;
+
+  column-gap: 1.5rem;
 }
 
-/* =========================
-   PROGRESS RING
-========================= */
 
-.progress-card__progress-section {
+/* =========================================================
+   LIVE CONTENT
+========================================================= */
+
+.progress-card__content--live {
+  grid-template-rows:
+    auto
+    auto;
+}
+
+
+/* =========================================================
+   ROCKET
+========================================================= */
+
+.progress-card__rocket {
+  position: relative;
+
+  grid-column: 1;
+  grid-row: 1;
+
+  width: 8rem;
+  height: 8rem;
+
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+  border-radius: 50%;
+  border-color: rgba(125, 190, 235, .55);
+  background:
+    linear-gradient(
+      180deg,
+      #7fc8f0 0%,
+      #a8dcf7 55%,
+      #d8f0fc 100%
+    );
+
+  box-shadow:
+    0 .5rem 1.3rem
+    rgba(68, 95, 145, .06);
 }
 
-.progress-ring {
-  width: 82px;
-  aspect-ratio: 1;
 
-  display: grid;
-  place-items: center;
+.progress-card__rocket::before {
+  content: '';
+
+  position: absolute;
+  inset: .5rem;
 
   border-radius: 50%;
 
   background:
-    conic-gradient(
-      from 205deg,
-      #2478ff 0%,
-      #2478ff calc(var(--progress) * 0.55%),
-      #7654ff calc(var(--progress) * 1%),
-      rgba(255, 255, 255, 0.12) 0
+    radial-gradient(
+      circle,
+      rgba(207, 224, 247, .24),
+      transparent 67%
     );
-
-  box-shadow:
-    0 0 18px rgba(74, 85, 255, 0.16);
 }
 
-.progress-ring__inner {
-  width: 62px;
-  aspect-ratio: 1;
 
-  display: grid;
-  place-items: center;
+.progress-card__rocket-icon {
+  position: relative;
+  z-index: 2;
 
-  border-radius: 50%;
+  display: block;
 
-  background: #11245f;
+  font-size: 4.2rem;
+  line-height: 1;
 
-  box-shadow:
-    inset 0 0 16px rgba(2, 8, 35, 0.26);
+  transform: rotate(-5deg);
+
+  filter:
+    drop-shadow(
+      0 .35rem .4rem
+      rgba(49, 78, 129, .12)
+    );
 }
 
-.progress-ring__inner strong {
-  color: #ffffff;
+
+/* =========================================================
+   MOBILE ONLY ELEMENTS
+========================================================= */
+
+.progress-card__mobile-menu {
+  display: none;
+}
+
+
+.progress-card__mobile-stage-stat {
+  display: none;
+}
+
+
+.progress-card__rocket-star {
+  position: absolute;
+  z-index: 3;
+
+  color: #a6b6d0;
+
+  line-height: 1;
+}
+
+
+.progress-card__rocket-star--one {
+  top: 1.4rem;
+  left: 1.45rem;
+
+  font-size: .75rem;
+}
+
+
+.progress-card__rocket-star--two {
+  right: 1rem;
+  bottom: 1.6rem;
+
+  font-size: .62rem;
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.progress-card__message {
+  grid-column: 2;
+  grid-row: 1;
+
+  min-width: 0;
+
+  align-self: center;
+}
+
+
+.progress-card__message h3 {
+  margin: 0;
+
+  color: #101b49;
 
   font-size: 1.25rem;
   font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.035em;
+  line-height: 1.25;
+
+  letter-spacing: -.03em;
 }
 
-/* =========================
-   MESSAGE
-========================= */
-
-.progress-card__message {
-  min-width: 0;
-}
-
-.progress-card__message h3 {
-  margin: 0 0 .25rem;
-
-  color: #ffffff;
-
-  font-size: .8rem;
-  font-weight: 750;
-  line-height: 1.3;
-}
 
 .progress-card__message p {
-  max-width: 260px;
+  max-width: 21rem;
+
+  margin: .55rem 0 0;
+
+  color: #354462;
+
+  font-size: .78rem;
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   LIVE MESSAGE
+========================================================= */
+
+.progress-card__message--live {
+  align-self: start;
+
+  padding-top: .15rem;
+}
+
+
+.progress-card__live-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 1.45rem;
+
+  padding:
+    .2rem
+    .55rem;
+
+  margin-bottom: .45rem;
+
+  border: 1px solid #d2e4f5;
+  border-radius: 999px;
+
+  color: #3475b8;
+
+  background:
+    rgba(240, 248, 255, .92);
+
+  font-size: .54rem;
+  font-weight: 800;
+  line-height: 1;
+
+  text-transform: uppercase;
+  letter-spacing: .055em;
+}
+
+
+.progress-card__live-label--started {
+  border-color: #d8d7f5;
+
+  color: #6356ba;
+
+  background:
+    rgba(246, 244, 255, .95);
+}
+
+
+.progress-card__message .progress-card__live-title {
   margin: 0;
 
-  color: rgba(255, 255, 255, 0.84);
+  color: #101b49;
 
-  font-size: .74rem;
-  font-weight: 400;
-  line-height: 1.45;
+  font-size: 1.08rem;
+  font-weight: 850;
+  line-height: 1.22;
+
+  letter-spacing: -.025em;
 }
 
-/* =========================
-   DIVIDER
-========================= */
 
-.progress-card__divider {
-  width: 1px;
-  height: 68px;
+.progress-card__message .progress-card__live-description {
+  max-width: 25rem;
 
-  background: rgba(255, 255, 255, 0.16);
+  margin: .35rem 0 0;
+
+  color: #3e4e6b;
+
+  font-size: .68rem;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
-/* =========================
-   STATS
-========================= */
 
-.progress-card__stat {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+/* =========================================================
+   LIVE INFO
+========================================================= */
 
-  min-width: 0;
-}
-
-.progress-card__stat-label {
-  margin-bottom: .3rem;
-
-  color: rgba(255, 255, 255, 0.9);
-
-  font-size: .66rem;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.progress-card__stat-value {
+.progress-card__live-info {
   display: flex;
   align-items: center;
-  gap: .25rem;
+  flex-wrap: wrap;
 
-  margin-bottom: .3rem;
+  gap:
+    .55rem
+    .75rem;
+
+  margin-top: .7rem;
+}
+
+
+.progress-card__live-time {
+  display: inline-flex;
+  align-items: center;
+
+  gap: .5rem;
+
+  min-width: 0;
+
+  padding:
+    .42rem
+    .65rem;
+
+  border: 1px solid #dce7f3;
+  border-radius: .65rem;
+
+  background:
+    rgba(255, 255, 255, .72);
+}
+
+
+.progress-card__live-time-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+
+  flex: 0 0 1.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: .55rem;
+
+  color: #4a89cf;
+
+  background:
+    #edf6ff;
+}
+
+
+.progress-card__live-time-icon svg {
+  width: .95rem;
+  height: .95rem;
+}
+
+
+.progress-card__live-time-copy {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .05rem;
+}
+
+
+.progress-card__live-time-label,
+.progress-card__live-access-label {
+  color: #65728a;
+
+  font-size: .52rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+
+.progress-card__live-time-value,
+.progress-card__live-access-value {
+  color: #142248;
+
+  font-size: .69rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+
+.progress-card__live-access {
+  display: flex;
+  flex-direction: column;
+
+  gap: .05rem;
+
+  min-width: 0;
+
+  padding:
+    .42rem
+    .65rem;
+
+  border: 1px solid #dfe8f2;
+  border-radius: .65rem;
+
+  background:
+    rgba(255, 255, 255, .58);
+}
+
+
+/* =========================================================
+   LIVE BUTTON
+========================================================= */
+
+.progress-card__live-button {
+  min-height: 2.15rem;
+
+  margin-top: .65rem;
+
+  padding:
+    .42rem
+    .8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: .4rem;
+
+  border: 1px solid #6c9ddd;
+  border-radius: .6rem;
 
   color: #ffffff;
 
-  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.035em;
+  background:
+    linear-gradient(
+      145deg,
+      #6ca1e6,
+      #4f82cf
+    );
 
-  white-space: nowrap;
-}
-
-.progress-card__stat-caption {
-  color: rgba(255, 255, 255, 0.82);
+  box-shadow:
+    0 .25rem .6rem
+    rgba(64, 116, 190, .16);
 
   font-size: .64rem;
-  font-weight: 500;
-  line-height: 1.3;
-}
-
-.streak-icon {
-  font-size: .95rem;
+  font-weight: 750;
   line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease;
 }
 
-/* =========================
+
+.progress-card__live-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 .35rem .8rem
+    rgba(64, 116, 190, .2);
+}
+
+
+.progress-card__live-button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+
+  transform: none;
+  box-shadow: none;
+}
+
+
+.progress-card__live-button-icon {
+  width: 1rem;
+  height: 1rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.progress-card__live-button-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================================================
    MASCOT
-========================= */
+========================================================= */
 
 .progress-card__mascot {
-  position: relative;
+  position: absolute;
 
-  align-self: stretch;
+  right: -.4rem;
+  bottom: -.15rem;
 
-  min-height: 90px;
+  width: 15rem;
+  height: 14rem;
 
   display: flex;
   align-items: flex-end;
   justify-content: center;
+
+  pointer-events: none;
 }
 
-.progress-card__mascot img {
-  position: absolute;
-  right: .7rem;
-  bottom: 0;
 
-  width: min(100px, 8vw);
-  max-width: 100px;
-  height: auto;
+.progress-card__mascot::before {
+  content: '';
+
+  position: absolute;
+
+  width: 12rem;
+  height: 8rem;
+
+  right: .5rem;
+  bottom: .5rem;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(178, 207, 243, .17),
+      transparent 70%
+    );
+}
+
+
+.progress-card__mascot img {
+  position: relative;
+  z-index: 2;
+
+  width: 14rem;
+  max-height: 13.5rem;
 
   object-fit: contain;
   object-position: bottom center;
 
   user-select: none;
-  pointer-events: none;
 }
 
-/* =========================
-   LOADING
-========================= */
 
-.progress-card__loading {
-  min-height: 125px;
+/* =========================================================
+   STATS
+========================================================= */
+
+.progress-card__stats {
+  position: relative;
+
+  grid-column: 1 / 3;
+  grid-row: 2;
 
   display: grid;
+
   grid-template-columns:
-    95px
-    minmax(180px, 1.5fr)
-    minmax(105px, .7fr)
-    minmax(130px, .85fr);
+    minmax(230px, 1fr)
+    1px
+    minmax(250px, 1fr);
 
   align-items: center;
+
+  gap: 1.7rem;
+
+  padding-top: .95rem;
+
+  border-top:
+    1px solid
+    rgba(95, 119, 159, .17);
+}
+
+
+/* =========================================================
+   STAT ITEM
+========================================================= */
+
+.progress-card__stat {
+  display: flex;
+  align-items: center;
+
+  min-width: 0;
+
+  gap: .9rem;
+}
+
+
+.progress-card__stat-icon {
+  width: 3.35rem;
+  height: 3.35rem;
+
+  flex: 0 0 3.35rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 1rem;
+}
+
+
+.progress-card__stat-icon svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+
+/* CLASS ICON */
+
+.progress-card__stat-icon--classes {
+  color: #5c9de4;
+
+  border: 1px solid #d8e6f7;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f8fbff,
+      #eef6ff
+    );
+}
+
+
+/* STREAK ICON */
+
+.progress-card__stat-icon--streak {
+  color: #f59e0b;
+
+  border:
+    1px solid
+    #f0e7d7;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fffdf9,
+      #fff8ef
+    );
+
+  font-size: 1.7rem;
+}
+
+
+/* =========================================================
+   STAT CONTENT
+========================================================= */
+
+.progress-card__stat-content {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+
+.progress-card__stat-label {
+  margin-bottom: .18rem;
+
+  color: #273652;
+
+  font-size: .72rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+
+.progress-card__stat-value {
+  margin: 0;
+
+  color: #101b49;
+
+  font-size:
+    clamp(
+      1.55rem,
+      2.2vw,
+      2rem
+    );
+
+  font-weight: 850;
+  line-height: 1;
+
+  letter-spacing: -.04em;
+
+  white-space: nowrap;
+}
+
+
+.progress-card__stat-caption {
+  margin-top: .28rem;
+
+  color: #344360;
+
+  font-size: .63rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.progress-card__stat-divider {
+  width: 1px;
+  height: 4.4rem;
+
+  background:
+    rgba(106, 129, 167, .18);
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.progress-card__loading {
+  min-height: 205px;
+
+  display: grid;
+
+  grid-template-columns:
+    8rem
+    minmax(200px, 1fr)
+    minmax(140px, .7fr)
+    minmax(140px, .7fr);
+
+  align-items: center;
+
   gap: 1.3rem;
 }
 
-.loading-circle,
-.loading-lines span,
+
+.loading-rocket,
+.loading-message span,
 .loading-stat {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.16),
-    rgba(255, 255, 255, 0.08)
-  );
+  background:
+    linear-gradient(
+      90deg,
+      #e6edf7,
+      #f5f8fc,
+      #e6edf7
+    );
 
-  background-size: 200% 100%;
+  background-size:
+    200%
+    100%;
 
-  animation: progress-card-shimmer 1.4s infinite linear;
+  animation:
+    progress-card-shimmer
+    1.35s
+    infinite
+    linear;
 }
 
-.loading-circle {
-  width: 85px;
-  aspect-ratio: 1;
+
+.loading-rocket {
+  width: 7rem;
+  height: 7rem;
+
   border-radius: 50%;
 }
 
-.loading-lines {
-  display: grid;
+
+.loading-message {
+  display: flex;
+  flex-direction: column;
+
   gap: .55rem;
 }
 
-.loading-lines span {
-  display: block;
-  height: .7rem;
+
+.loading-message span {
+  height: .72rem;
+
   border-radius: 999px;
 }
 
-.loading-lines span:first-child {
-  width: 60%;
+
+.loading-message span:first-child {
+  width: 58%;
 }
 
-.loading-lines span:last-child {
-  width: 88%;
+
+.loading-message span:last-child {
+  width: 85%;
 }
+
 
 .loading-stat {
-  width: 100%;
-  height: 56px;
-  border-radius: .6rem;
+  height: 4rem;
+
+  border-radius: .8rem;
 }
 
+
 @keyframes progress-card-shimmer {
+
   from {
-    background-position: 200% 0;
+    background-position:
+      200%
+      0;
   }
 
   to {
-    background-position: -200% 0;
+    background-position:
+      -200%
+      0;
   }
+
 }
 
-/* =========================
-   TABLET
-========================= */
 
-@media (max-width: 1180px) {
+/* =========================================================
+   MEDIUM DESKTOP
+========================================================= */
+
+@media (max-width: 1250px) {
+
   .progress-card {
-    padding-inline: 1.5rem;
+    padding:
+      1.1rem
+      1.2rem;
   }
+
 
   .progress-card__content {
     grid-template-columns:
-      115px
-      minmax(200px, 1.5fr)
-      1px
-      minmax(115px, 0.8fr)
-      minmax(160px, 1fr);
+      7.5rem
+      minmax(190px, 1.2fr)
+      minmax(190px, .9fr);
 
-    gap: 1.1rem;
+    column-gap: 1rem;
   }
+
+
+  .progress-card__rocket {
+    width: 6.8rem;
+    height: 6.8rem;
+  }
+
+
+  .progress-card__rocket-icon {
+    font-size: 3.5rem;
+  }
+
+
+  .progress-card__message h3 {
+    font-size: 1.05rem;
+  }
+
+
+  .progress-card__mascot {
+    width: 12rem;
+  }
+
+
+  .progress-card__mascot img {
+    width: 11.5rem;
+  }
+
+
+  .progress-card__stats {
+    grid-template-columns:
+      minmax(180px, 1fr)
+      1px
+      minmax(210px, 1fr);
+
+    gap: 1rem;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .progress-card__content {
+    grid-template-columns:
+      7rem
+      minmax(180px, 1fr);
+
+    grid-template-rows:
+      auto
+      auto;
+  }
+
+
+  .progress-card__rocket {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+
+  .progress-card__message {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+
+  .progress-card__stats {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
 
   .progress-card__mascot {
     display: none;
   }
+
 }
 
-/* =========================
-   SMALL TABLET
-========================= */
 
-@media (max-width: 900px) {
-  .progress-card__content {
-    grid-template-columns:
-      115px
-      minmax(200px, 1fr)
-      minmax(130px, 0.75fr)
-      minmax(155px, 0.9fr);
-  }
-
-  .progress-card__divider {
-    display: none;
-  }
-}
-
-/* =========================
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 680px) {
+
+  /* =======================================================
+     CARD
+  ======================================================= */
+
   .progress-card {
-    min-height: auto;
-    padding: 1rem;
+    min-height: 0;
 
-    border: 1px solid #e2e8f0;
-    border-radius: 1rem;
+    padding:
+      1rem
+      1rem
+      1.05rem;
 
-    background: #f8fafc;
-    color: #1e293b;
+    overflow: hidden;
 
-    box-shadow:
-      0 0.45rem 1.25rem
-        rgba(15, 23, 42, 0.06);
-  }
-
-  .progress-card__temporary-image {
-      width: 62px;
-    }
-
-  .progress-card__header {
-    margin-bottom: 1rem;
-    align-items: stretch;
-    flex-direction: column;
-    gap: .65rem;
-  }
-
-  .progress-card__stage {
-    align-self: flex-start;
-    max-width: 100%;
-  }
-
-  .progress-card__title {
-    color: #1e293b;
-
-    font-size: 0.88rem;
-  }
-
-  .progress-card__stage {
-    border-color: #e2e8f0;
-    background: #ffffff;
-
-    box-shadow:
-      0 0.2rem 0.6rem rgba(15, 23, 42, 0.05);
-  }
-
-  .progress-card__stage-icon {
-    color: #b45309;
-    background: rgba(245, 158, 11, 0.14);
-  }
-
-  .progress-card__stage-kicker {
-    color: #64748b;
-  }
-
-  .progress-card__stage-value {
-    color: #1e293b;
-  }
-
-  .progress-card__stage-sep {
-    color: #94a3b8;
-  }
-
-  .progress-card__stage-desc {
-    color: #475569;
-  }
-
-  .progress-card__content {
-    grid-template-columns: 88px 1fr;
-    gap: 1rem 0.85rem;
-  }
-
-  .progress-ring {
-    width: 84px;
+    border: 1px solid #d7e4f4;
+    border-radius: 1.15rem;
 
     background:
-      conic-gradient(
-        from 205deg,
-        #2478ff 0%,
-        #2478ff calc(var(--progress) * 0.55%),
-        #7654ff calc(var(--progress) * 1%),
-        #dce4ef 0
+      radial-gradient(
+        circle at 18% 22%,
+        rgba(184, 210, 245, .18),
+        transparent 28%
+      ),
+      radial-gradient(
+        circle at 85% 18%,
+        rgba(192, 216, 249, .16),
+        transparent 30%
+      ),
+      linear-gradient(
+        145deg,
+        #fbfdff 0%,
+        #f5f9ff 52%,
+        #edf5ff 100%
       );
 
     box-shadow:
-      0 0.3rem 1rem
-        rgba(37, 99, 235, 0.12);
+      0 .45rem 1.2rem
+      rgba(40, 69, 125, .07);
   }
 
-  .progress-ring__inner {
-    width: 62px;
 
-    background: #ffffff;
+  .progress-card::before {
+    width: 15rem;
+    height: 15rem;
+
+    top: -9rem;
+    right: -6rem;
+  }
+
+
+  .progress-card::after {
+    width: 12rem;
+    height: 12rem;
+
+    right: -6rem;
+    bottom: -7rem;
+  }
+
+
+  /* =======================================================
+     HEADER
+  ======================================================= */
+
+  .progress-card__header {
+    position: relative;
+
+    display: block;
+
+    min-height: 9.2rem;
+
+    margin: 0;
+  }
+
+
+  .progress-card__title {
+    padding-right: 3rem;
+
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+
+  /* =======================================================
+     THREE DOTS
+  ======================================================= */
+
+  .progress-card__mobile-menu {
+    position: absolute;
+
+    top: -.1rem;
+    right: 0;
+
+    width: 2.35rem;
+    height: 2.35rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: .17rem;
+
+    border: 1px solid #edf1f7;
+    border-radius: 50%;
+
+    background:
+      rgba(255, 255, 255, .92);
 
     box-shadow:
-      inset 0 0 0 1px
-        rgba(148, 163, 184, 0.18);
+      0 .25rem .8rem
+      rgba(39, 60, 105, .06);
   }
 
-  .progress-ring__inner strong {
-    color: #1e293b;
 
-    font-size: 1.3rem;
+  .progress-card__mobile-menu span {
+    width: .2rem;
+    height: .2rem;
+
+    border-radius: 50%;
+
+    background: #26375e;
   }
+
+
+  /* =======================================================
+     STAGE TOP
+  ======================================================= */
+
+  .progress-card__stage {
+    position: absolute;
+
+    top: 3.3rem;
+    right: 0;
+
+    width: auto;
+    max-width: calc(100% - 7.3rem);
+
+    gap: .5rem;
+
+    padding:
+      .4rem
+      .7rem
+      .4rem
+      .4rem;
+
+    border-color: #d9e4f2;
+
+    background:
+      rgba(255, 255, 255, .88);
+
+    box-shadow:
+      0 .25rem .75rem
+      rgba(54, 76, 121, .06);
+  }
+
+
+  .progress-card__stage-icon {
+    width: 2rem;
+    height: 2rem;
+
+    flex-basis: 2rem;
+  }
+
+
+  .progress-card__stage-icon svg {
+    width: .95rem;
+    height: .95rem;
+  }
+
+
+  .progress-card__stage-kicker {
+    font-size: .51rem;
+  }
+
+
+  .progress-card__stage-value {
+    gap: .2rem;
+
+    font-size: .72rem;
+  }
+
+
+  .progress-card__stage-description {
+    font-size: .65rem;
+  }
+
+
+  /* =======================================================
+     CONTENT
+  ======================================================= */
+
+  .progress-card__content {
+    position: relative;
+
+    display: block;
+
+    min-height: 0;
+
+    margin: 0;
+  }
+
+
+  /* =======================================================
+     ROCKET
+  ======================================================= */
+
+  .progress-card__rocket {
+    position: absolute;
+
+    top: -7rem;
+    left: .15rem;
+
+    width: 6.2rem;
+    height: 6.2rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow:
+      0 .4rem 1rem
+      rgba(59, 83, 129, .06);
+  }
+
+
+  .progress-card__rocket::before {
+    inset: .35rem;
+  }
+
+
+  .progress-card__rocket-icon {
+    position: relative;
+
+    top: .35rem;
+
+    font-size: 3.5rem;
+    line-height: 1;
+
+    transform: rotate(-5deg);
+  }
+
+
+  .progress-card__rocket-star--one {
+    top: .95rem;
+    left: 1rem;
+
+    font-size: .6rem;
+  }
+
+
+  .progress-card__rocket-star--two {
+    right: .7rem;
+    bottom: 1rem;
+
+    font-size: .48rem;
+  }
+
+
+  /* =======================================================
+     MASCOT
+  ======================================================= */
+
+  .progress-card__mascot {
+    position: absolute;
+
+    display: flex;
+
+    top: -4.7rem;
+    right: -.5rem;
+
+    width: 9.6rem;
+    height: 9rem;
+
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+
+  .progress-card__mascot::before {
+    width: 7.5rem;
+    height: 5rem;
+
+    right: .4rem;
+    bottom: .15rem;
+  }
+
+
+  .progress-card__mascot img {
+    width: 9rem;
+    max-height: 8.6rem;
+  }
+
+
+  /* =======================================================
+     MESSAGE
+  ======================================================= */
+
+  .progress-card__message {
+    position: relative;
+    z-index: 4;
+
+    width: 64%;
+
+    min-height: 7.2rem;
+
+    padding-top: .2rem;
+  }
+
 
   .progress-card__message h3 {
-    color: #1e293b;
+    margin: 0;
 
-    font-size: 0.9rem;
+    font-size: .95rem;
+    font-weight: 800;
+    line-height: 1.25;
   }
 
-  .progress-card__message p {
-    color: #64748b;
 
-    font-size: 0.76rem;
+  .progress-card__message p {
+    max-width: 16rem;
+
+    margin-top: .45rem;
+
+    color: #42516f;
+
+    font-size: .68rem;
+    font-weight: 500;
+    line-height: 1.55;
+  }
+
+
+  /* =======================================================
+     LIVE MESSAGE
+  ======================================================= */
+
+  .progress-card__message--live {
+    width: 100%;
+
+    min-height: 0;
+
+    padding:
+      .25rem
+      0
+      .85rem;
+
+    box-sizing: border-box;
+  }
+
+
+  .progress-card__live-label {
+    min-height: 1.4rem;
+
+    margin-bottom: .4rem;
+
+    padding:
+      .18rem
+      .5rem;
+
+    font-size: .5rem;
+  }
+
+
+  .progress-card__message .progress-card__live-title {
+    max-width: 70%;
+
+    font-size: .92rem;
+    line-height: 1.25;
+  }
+
+
+  .progress-card__message .progress-card__live-description {
+    max-width: 72%;
+
+    margin-top: .35rem;
+
+    font-size: .65rem;
     line-height: 1.5;
   }
 
-  .progress-card__stat {
-    min-height: 82px;
-    padding: 0.8rem;
 
-    border: 1px solid #e5eaf1;
-    border-radius: 0.9rem;
+  /* =======================================================
+     LIVE INFO
+  ======================================================= */
 
-    background: #ffffff;
+  .progress-card__live-info {
+    width: 100%;
 
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    display: grid;
+
+    grid-template-columns:
+      1fr
+      1fr;
+
+    gap: .45rem;
+
+    margin-top: .65rem;
+  }
+
+
+  .progress-card__live-time,
+  .progress-card__live-access {
+    min-height: 3.25rem;
+
+    box-sizing: border-box;
+
+    padding:
+      .45rem
+      .55rem;
+
+    border-radius: .7rem;
+  }
+
+
+  .progress-card__live-time {
+    gap: .45rem;
+  }
+
+
+  .progress-card__live-time-icon {
+    width: 1.9rem;
+    height: 1.9rem;
+
+    flex-basis: 1.9rem;
+  }
+
+
+  .progress-card__live-time-icon svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+
+  .progress-card__live-time-label,
+  .progress-card__live-access-label {
+    font-size: .5rem;
+  }
+
+
+  .progress-card__live-time-value,
+  .progress-card__live-access-value {
+    font-size: .66rem;
+  }
+
+
+  /* =======================================================
+     LIVE BUTTON
+  ======================================================= */
+
+  .progress-card__live-button {
+    width: 100%;
+
+    min-height: 2.65rem;
+
+    margin-top: .55rem;
+
+    padding:
+      .55rem
+      .75rem;
+
+    border-radius: .72rem;
+
+    font-size: .68rem;
+  }
+
+
+  .progress-card__live-button-icon {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+
+  /* =======================================================
+     STATS CONTAINER
+  ======================================================= */
+
+  .progress-card__stats {
+    position: relative;
+    z-index: 5;
+
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 0;
+
+    padding: 0;
+
+    overflow: hidden;
+
+    border: 1px solid #dce7f3;
+    border-radius: .9rem;
+
+    background:
+      rgba(255, 255, 255, .78);
 
     box-shadow:
-      0 0.25rem 0.8rem
-        rgba(15, 23, 42, 0.04);
+      0 .4rem 1rem
+      rgba(42, 64, 108, .055);
+
+    backdrop-filter: blur(6px);
   }
 
-  .progress-card__stat-label {
-    color: #64748b;
+
+  /* =======================================================
+     STAT ROW
+  ======================================================= */
+
+  .progress-card__stat,
+  .progress-card__mobile-stage-stat {
+    width: 100%;
+
+    min-height: 5rem;
+
+    padding:
+      .7rem
+      .85rem;
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+
+    gap: .8rem;
+
+    border: 0;
+    border-radius: 0;
+
+    background: transparent;
+
+    box-shadow: none;
   }
 
-  .progress-card__stat-value {
-    color: #1e293b;
 
-    font-size: 1.4rem;
+  .progress-card__stat-divider + .progress-card__stat,
+  .progress-card__mobile-stage-stat {
+    border-top:
+      1px solid
+      #e3eaf3;
   }
 
-  .progress-card__stat-caption {
-    color: #64748b;
+
+  /* =======================================================
+     REMOVE DESKTOP DIVIDER
+  ======================================================= */
+
+  .progress-card__stat-divider {
+    display: none;
   }
 
-  .progress-card__streak {
-    grid-column: auto;
+
+  /* =======================================================
+     STAT ICONS
+  ======================================================= */
+
+  .progress-card__stat-icon,
+  .progress-card__mobile-stage-icon {
+    width: 3rem;
+    height: 3rem;
+
+    flex: 0 0 3rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: .85rem;
   }
 
-  .progress-card__divider {
-    background: #dbe3ed;
-  }
 
-  .progress-card__loading {
-    grid-template-columns: 90px 1fr;
-  }
+  .progress-card__stat-icon--classes {
+    color: #448fd7;
 
-  .loading-circle,
-  .loading-lines span,
-  .loading-stat {
+    border: 1px solid #d4e5f6;
+
     background:
       linear-gradient(
-        90deg,
-        #e8edf4,
-        #f4f7fb,
-        #e8edf4
+        145deg,
+        #f8fcff,
+        #edf7ff
       );
-
-    background-size: 200% 100%;
   }
 
-  .loading-circle {
-    width: 88px;
+
+  .progress-card__stat-icon--classes svg {
+    width: 1.4rem;
+    height: 1.4rem;
   }
+
+
+  .progress-card__stat-icon--streak {
+    font-size: 1.55rem;
+
+    border-color: #eee6d8;
+
+    background:
+      linear-gradient(
+        145deg,
+        #fffdfa,
+        #fff8ee
+      );
+  }
+
+
+  /* =======================================================
+     MOBILE STAGE ROW
+  ======================================================= */
+
+  .progress-card__mobile-stage-stat {
+    display: flex;
+  }
+
+
+  .progress-card__mobile-stage-icon {
+    color: #3786df;
+
+    border: 1px solid #d9e8f9;
+
+    background:
+      linear-gradient(
+        145deg,
+        #f8fbff,
+        #edf6ff
+      );
+  }
+
+
+  .progress-card__mobile-stage-icon svg {
+    width: 1.55rem;
+    height: 1.55rem;
+  }
+
+
+  /* =======================================================
+     STAT TEXT
+  ======================================================= */
+
+  .progress-card__stat-content {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+
+  .progress-card__stat-label {
+    margin: 0 0 .12rem;
+
+    color: #273653;
+
+    font-size: .72rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+
+  .progress-card__stat-value {
+    color: #101b49;
+
+    font-size: 1.45rem;
+    font-weight: 850;
+    line-height: 1.05;
+  }
+
+
+  .progress-card__stat-caption {
+    margin-top: .2rem;
+
+    color: #43516d;
+
+    font-size: .62rem;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+
+  /* =======================================================
+     LOADING
+  ======================================================= */
+
+  .progress-card__loading {
+    min-height: 20rem;
+
+    display: grid;
+
+    grid-template-columns:
+      5rem
+      1fr;
+
+    gap: .8rem;
+  }
+
+
+  .loading-rocket {
+    width: 5rem;
+    height: 5rem;
+  }
+
 
   .loading-stat {
     display: none;
   }
+
 }

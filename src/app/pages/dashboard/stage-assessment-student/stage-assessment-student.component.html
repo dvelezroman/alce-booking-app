@@ -25,6 +25,7 @@
 
       <div class="assessment-page__sections">
 
+        <!-- ACTIVAS - ANCHO COMPLETO -->
         <app-assessment-section
           *ngIf="hasPending"
           sectionType="active"
@@ -37,28 +38,36 @@
           (clearHighlight)="clearHighlight()"
         />
 
-        <app-assessment-section
-          *ngIf="hasExpired"
-          sectionType="expired"
-          title="Evaluaciones vencidas"
-          description="Estas evaluaciones superaron la fecha límite."
-          [count]="expiredCount"
-          [assessments]="expiredAssessments"
-          [highlightId]="highlightId"
-          (clearHighlight)="clearHighlight()"
-        />
+        <!-- VENCIDAS + COMPLETADAS -->
+        <div
+          class="assessment-page__secondary"
+          *ngIf="hasExpired || hasCompleted"
+        >
 
-        <app-assessment-section
-          *ngIf="hasCompleted"
-          sectionType="completed"
-          title="Evaluaciones completadas"
-          description="Has completado estas evaluaciones."
-          [count]="completedCount"
-          [assessments]="completedAssessments"
-          [highlightId]="highlightId"
-          (viewAssessment)="onViewAssessmentDetail($event)"
-          (clearHighlight)="clearHighlight()"
-        />
+          <app-assessment-section
+            *ngIf="hasExpired"
+            sectionType="expired"
+            title="Evaluaciones vencidas"
+            description="Estas evaluaciones superaron la fecha límite."
+            [count]="expiredCount"
+            [assessments]="expiredAssessments"
+            [highlightId]="highlightId"
+            (clearHighlight)="clearHighlight()"
+          />
+
+          <app-assessment-section
+            *ngIf="hasCompleted"
+            sectionType="completed"
+            title="Evaluaciones completadas"
+            description="Has completado estas evaluaciones."
+            [count]="completedCount"
+            [assessments]="completedAssessments"
+            [highlightId]="highlightId"
+            (viewAssessment)="onViewAssessmentDetail($event)"
+            (clearHighlight)="clearHighlight()"
+          />
+
+        </div>
 
       </div>
 

@@ -1,100 +1,451 @@
-.announcement-backdrop {
+:host {
+  display: block;
+}
+
+/* =========================================================
+   BACKDROP
+========================================================= */
+
+.suspension-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.25);
+  z-index: 5000;
+
+  padding: 1rem;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+
+  background: rgba(24, 38, 65, .5);
+
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
-.announcement-card {
-  width: 90%;
-  max-width: 420px;
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 1.6rem 1.5rem 1.4rem;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.25);
+/* =========================================================
+   CARD
+========================================================= */
+
+.suspension-card {
+  position: relative;
+
+  width: min(100%, 31rem);
+
+  padding: 1.65rem 1.7rem 1.5rem;
+
+  overflow: hidden;
+
+  border: 1px solid #dfe8f6;
+  border-radius: 1.25rem;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(77, 137, 239, .08),
+      transparent 32%
+    ),
+    #ffffff;
+
+  box-shadow:
+    0 1.5rem 3.5rem rgba(20, 41, 78, .2),
+    0 .3rem .8rem rgba(20, 41, 78, .08);
+}
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
+.suspension-card__close {
+  position: absolute;
+  top: .85rem;
+  right: .85rem;
+
+  width: 2rem;
+  height: 2rem;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #d8e2f1;
+  border-radius: 50%;
+
+  color: #6f7d95;
+  background: #f8faff;
+
+  font-family: inherit;
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.suspension-card__close:hover {
+  color: #294b86;
+  background: #f0f5ff;
+  border-color: #cbd9ed;
+}
+
+.suspension-card__close:active {
+  transform: scale(.94);
+}
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.suspension-card__icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0 auto .9rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #d7e5fb;
+  border-radius: 50%;
+
+  color: #2563d9;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f0f6ff 0%,
+      #e2edff 100%
+    );
+
+  box-shadow:
+    0 .5rem 1.2rem rgba(47, 104, 210, .1);
+}
+
+.suspension-card__icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.suspension-card__content {
+  text-align: center;
+}
+
+.suspension-card__title {
+  margin: 0;
+
+  color: #10295f;
+
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.suspension-card__subtitle {
+  max-width: 24rem;
+  margin: .55rem auto 0;
+
+  color: #5c6d8c;
+
+  font-size: .72rem;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+/* =========================================================
+   DETAILS
+========================================================= */
+
+.suspension-card__details {
+  margin-top: 1.2rem;
+  padding: .15rem .8rem;
+
+  border: 1px solid #dce8f8;
+  border-radius: .8rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8fbff 0%,
+      #f1f6ff 100%
+    );
+}
+
+.suspension-card__detail {
+  min-height: 4rem;
+
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: .65rem;
+
   text-align: left;
 }
 
-.animate-in {
-  animation: popIn 0.35s ease-out;
-}
+.suspension-card__detail-icon {
+  width: 2rem;
+  height: 2rem;
 
-@keyframes popIn {
-  from {
-    opacity: 0;
-    transform: scale(0.94);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 0.6rem;
-}
-
-.subtitle {
-  font-size: 0.95rem;
-  color: #374151;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-.info-line {
-  font-size: 0.9rem;
-  color: #1f2937;
-  margin-bottom: 0.35rem;
-
-  strong {
-    color: #111827;
-  }
-}
-
-.actions-row {
-  margin-top: 1.2rem;
   display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: .55rem;
+
+  color: #2a67d8;
+  background: #e8f1ff;
+}
+
+.suspension-card__detail-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.suspension-card__detail-content {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .7rem;
+}
+
+.suspension-card__detail-label {
+  color: #475b7d;
+
+  font-size: .67rem;
+  font-weight: 650;
+}
+
+.suspension-card__detail-value {
+  color: #225bc9;
+
+  font-size: .69rem;
+  font-weight: 800;
+
+  text-align: right;
+}
+
+.suspension-card__detail-value--days {
+  padding: .22rem .5rem;
+
+  border-radius: .45rem;
+
+  background: #e1edff;
+}
+
+.suspension-card__separator {
+  height: 1px;
+
+  background: #dce6f3;
+}
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.suspension-card__button {
+  width: 100%;
+  min-height: 2.8rem;
+
+  margin-top: 1.1rem;
+  padding: .65rem 1rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+
+  border: 0;
+  border-radius: .65rem;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2f73eb 0%,
+      #1e5fd8 100%
+    );
+
+  box-shadow:
+    0 .5rem 1rem rgba(32, 95, 215, .2);
+
+  font-family: inherit;
+  font-size: .72rem;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
+}
+
+.suspension-card__button:hover {
+  filter: brightness(1.03);
+
+  box-shadow:
+    0 .65rem 1.2rem rgba(32, 95, 215, .25);
+}
+
+.suspension-card__button:active {
+  transform: scale(.985);
+}
+
+.suspension-card__button-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
-.close-btn {
-  background: #2563eb;
-  color: #ffffff;
-  border: none;
-  padding: 0.55rem 1.5rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
+.suspension-card__button-icon svg {
+  width: 100%;
+  height: 100%;
+}
 
-  &:hover {
-    background: #1e40af;
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+.animate-in {
+  animation: suspension-modal-in .24s ease-out;
+}
+
+@keyframes suspension-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(.8rem) scale(.98);
   }
 
-  &:active {
-    transform: scale(0.97);
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-/* Mobile */
-@media (max-width: 480px) {
-  .announcement-card {
-    padding: 1.3rem 1.2rem;
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 640px) {
+
+  .suspension-backdrop {
+    padding: .75rem;
   }
 
-  .title {
+  .suspension-card {
+    width: 100%;
+    max-width: 24rem;
+
+    padding: 1.45rem 1.15rem 1.15rem;
+
+    border-radius: 1rem;
+  }
+
+  .suspension-card__close {
+    top: .7rem;
+    right: .7rem;
+
+    width: 1.85rem;
+    height: 1.85rem;
+
     font-size: 1.15rem;
   }
 
-  .subtitle,
-  .info-line {
-    font-size: 0.85rem;
+  .suspension-card__icon {
+    width: 4rem;
+    height: 4rem;
+
+    margin-bottom: .75rem;
+  }
+
+  .suspension-card__icon svg {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .suspension-card__title {
+    font-size: 1.05rem;
+  }
+
+  .suspension-card__subtitle {
+    max-width: 20rem;
+
+    font-size: .68rem;
+  }
+
+  .suspension-card__details {
+    margin-top: 1rem;
+    padding: .15rem .7rem;
+  }
+
+  .suspension-card__detail {
+    min-height: 3.75rem;
+
+    grid-template-columns: 1.9rem minmax(0, 1fr);
+    gap: .55rem;
+  }
+
+  .suspension-card__detail-icon {
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+
+  .suspension-card__detail-label {
+    font-size: .62rem;
+  }
+
+  .suspension-card__detail-value {
+    font-size: .64rem;
+  }
+
+  .suspension-card__button {
+    min-height: 2.7rem;
+
+    font-size: .68rem;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 390px) {
+
+  .suspension-card {
+    padding:
+      1.35rem
+      .9rem
+      1rem;
+  }
+
+  .suspension-card__detail-content {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .15rem;
+  }
+
+  .suspension-card__detail-value {
+    text-align: left;
+  }
+
+  .suspension-card__detail-value--days {
+    padding: .18rem .42rem;
   }
 }

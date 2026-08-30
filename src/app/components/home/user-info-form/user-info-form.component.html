@@ -1,185 +1,516 @@
-<div class="modal" [class.is-active]="isModalOpen">
+<div class="modal user-info-modal" [class.is-active]="isModalOpen">
   <div class="modal-background"></div>
 
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <div>
-        <p class="modal-card-title">Completar Información</p>
-        <p class="modal-subtitle">
-          Completa estos datos para continuar usando la plataforma.
-        </p>
-      </div>
-      <button class="delete" aria-label="close" (click)="close()"></button>
-    </header>
+  <div class="modal-card user-info-card">
+    <div class="user-info-card__layout">
 
-    <section class="modal-card-body">
-      <!-- 👇 Se muestra solo si el form está inicializado -->
-      <form *ngIf="infoForm" [formGroup]="infoForm" (ngSubmit)="onSubmit()" id="studentInfoForm">
-        <!-- Email -->
-        <div class="field">
-          <label class="label">Correo electrónico</label>
-          <div class="control">
-            <input type="email" class="input" formControlName="email" />
-          </div>
-          <p class="error-message" *ngIf="infoForm.get('email')?.invalid && infoForm.get('email')?.touched">
-            Email válido es obligatorio.
-          </p>
-        </div>
+      <!-- =====================================================
+           PANEL LATERAL
+      ====================================================== -->
+      <aside class="user-info-card__aside">
+        <div class="user-info-card__aside-decoration">
+          <span class="user-info-card__cloud user-info-card__cloud--one"></span>
+          <span class="user-info-card__cloud user-info-card__cloud--two"></span>
 
-        <!-- Fecha de nacimiento -->
-        <div class="field">
-          <label class="label">Fecha de nacimiento</label>
-          <div class="control">
-            <input type="date" class="input" formControlName="birthday" />
-          </div>
-          <p class="error-message" *ngIf="infoForm.get('birthday')?.invalid && infoForm.get('birthday')?.touched">
-            Fecha de nacimiento es requerida.
-          </p>
-        </div>
+          <div class="user-info-card__profile-card">
+            <div class="user-info-card__avatar">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
 
-        <!-- Datos del tutor (solo si es menor de edad) -->
-        <div *ngIf="isStudent && isMinor" class="representative-block">
-          <p class="has-text-weight-semibold mb-2">Datos del Representante (opcionales)</p>
+            <div class="user-info-card__profile-lines">
+              <span></span>
+              <span></span>
+            </div>
 
-          <!-- Nombre del tutor -->
-          <div class="field">
-            <label class="label">Nombre del tutor</label>
-            <div class="control">
-              <input
-                type="text"
-                class="input"
-                placeholder="Nombre completo"
-                formControlName="tutorName"
-              />
+            <div class="user-info-card__check">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m6.5 12.5 3.5 3.5 7.5-8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
             </div>
           </div>
+        </div>
 
-          <!-- Email del tutor -->
-          <div class="field">
-            <label class="label">Correo del tutor</label>
-            <div class="control">
-              <input
-                type="email"
-                class="input"
-                placeholder="correo@ejemplo.com"
-                formControlName="tutorEmail"
+        <div class="user-info-card__aside-content">
+          <h3>Tu información está segura</h3>
+
+          <p>
+            Tus datos personales están protegidos y solo se usan para mejorar
+            tu experiencia dentro de la plataforma.
+          </p>
+
+          <div class="user-info-card__privacy">
+            <span class="user-info-card__privacy-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 3 5 6v5c0 4.5 2.7 8 7 10 4.3-2 7-5.5 7-10V6l-7-3Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="m9 12 2 2 4-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span>Privacidad garantizada</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- =====================================================
+           CONTENIDO
+      ====================================================== -->
+      <div class="user-info-card__content">
+
+        <!-- HEADER -->
+        <header class="user-info-card__header">
+          <div class="user-info-card__header-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
               />
-            </div>
+            </svg>
           </div>
 
-          <!-- Teléfono del tutor -->
-          <div class="field">
-            <label class="label">Teléfono del tutor</label>
-            <div class="field is-grouped">
-              <!-- Selector de código de país -->
-              <div class="control" style="min-width: 120px">
-                <div class="select is-fullwidth">
-                  <select formControlName="tutorCountryCode" (change)="onTutorCountryChange($event)">
-                    <option *ngFor="let code of countryCodes" [value]="code.code">
-                      {{ code.name }} ({{ code.code }})
-                    </option>
-                  </select>
+          <div class="user-info-card__heading">
+            <h2>Completa tu información</h2>
+            <p>Estos datos nos ayudan a personalizar tu experiencia.</p>
+          </div>
+
+          <button
+            type="button"
+            class="user-info-card__close"
+            aria-label="Cerrar"
+            (click)="close()"
+          >
+            <span>×</span>
+          </button>
+        </header>
+
+        <!-- MOBILE STEPS - SOLO VISUAL -->
+        <div class="user-info-card__steps">
+          <div
+            class="user-info-card__step"
+            [class.user-info-card__step--active]="completedStep >= 1"
+          >
+            <span>1</span>
+            <small>Personal</small>
+          </div>
+
+          <div
+            class="user-info-card__step-line"
+            [class.user-info-card__step-line--active]="completedStep >= 2"
+          ></div>
+
+          <div
+            class="user-info-card__step"
+            [class.user-info-card__step--active]="completedStep >= 2"
+          >
+            <span>2</span>
+            <small>Contacto</small>
+          </div>
+
+          <div
+            class="user-info-card__step-line"
+            [class.user-info-card__step-line--active]="completedStep >= 3"
+          ></div>
+
+          <div
+            class="user-info-card__step"
+            [class.user-info-card__step--active]="completedStep >= 3"
+          >
+            <span>3</span>
+            <small>Extra</small>
+          </div>
+        </div>
+
+        <!-- BODY -->
+        <section class="user-info-card__body">
+          <form
+            *ngIf="infoForm"
+            [formGroup]="infoForm"
+            (ngSubmit)="onSubmit()"
+            id="studentInfoForm"
+          >
+            <div class="user-info-section">
+              <div class="user-info-section__title">
+                <span>Información personal</span>
+                <div></div>
+              </div>
+
+              <div class="user-info-grid user-info-grid--two">
+                <!-- EMAIL -->
+                <div class="field">
+                  <label class="label">Correo electrónico</label>
+
+                  <div class="control has-icons-left">
+                    <input
+                      type="email"
+                      class="input"
+                      formControlName="email"
+                      placeholder="ejemplo@correo.com"
+                    />
+
+                    <span class="input-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <rect
+                          x="3"
+                          y="5"
+                          width="18"
+                          height="14"
+                          rx="2"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.6"
+                        />
+                        <path
+                          d="m4 7 8 6 8-6"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.6"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+
+                  <p
+                    class="error-message"
+                    *ngIf="
+                      infoForm.get('email')?.invalid &&
+                      infoForm.get('email')?.touched
+                    "
+                  >
+                    Email válido es obligatorio.
+                  </p>
+                </div>
+
+                <!-- FECHA -->
+                <div class="field">
+                  <label class="label">Fecha de nacimiento</label>
+
+                  <div class="control">
+                    <input
+                      type="date"
+                      class="input"
+                      formControlName="birthday"
+                    />
+                  </div>
+
+                  <p
+                    class="error-message"
+                    *ngIf="
+                      infoForm.get('birthday')?.invalid &&
+                      infoForm.get('birthday')?.touched
+                    "
+                  >
+                    Fecha de nacimiento es requerida.
+                  </p>
                 </div>
               </div>
 
-              <!-- Input de número -->
-              <div class="control is-expanded">
-                <input
-                  type="tel"
-                  class="input"
-                  formControlName="tutorPhone"
-                  placeholder="999001087"
-                />
+              <!-- CONTACTO -->
+              <div class="field">
+                <label class="label">Número de contacto</label>
+
+                <div class="phone-field">
+                  <div class="phone-field__country">
+                    <div class="select is-fullwidth">
+                      <select formControlName="countryCode">
+                        <option
+                          *ngFor="let code of countryCodes"
+                          [value]="code.code"
+                        >
+                          {{ code.name }} ({{ code.code }})
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="control phone-field__number">
+                    <input
+                      type="tel"
+                      class="input"
+                      formControlName="phoneNumber"
+                      placeholder="999001087"
+                    />
+                  </div>
+                </div>
+
+                <p
+                  class="error-message"
+                  *ngIf="
+                    infoForm.get('phoneNumber')?.invalid &&
+                    infoForm.get('phoneNumber')?.touched
+                  "
+                >
+                  Número de teléfono es obligatorio.
+                </p>
+              </div>
+
+              <div class="user-info-grid user-info-grid--two">
+                <!-- PAIS -->
+                <div class="field">
+                  <label class="label">País</label>
+
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select
+                        formControlName="country"
+                        (change)="onCountryChange($event)"
+                      >
+                        <option
+                          *ngFor="let country of countryCodes"
+                          [value]="country.iso"
+                        >
+                          {{ country.name }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <p
+                    class="error-message"
+                    *ngIf="
+                      infoForm.get('country')?.invalid &&
+                      infoForm.get('country')?.touched
+                    "
+                  >
+                    País es requerido.
+                  </p>
+                </div>
+
+                <!-- CIUDAD -->
+                <div class="field">
+                  <label class="label">Ciudad</label>
+
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select formControlName="city">
+                        <option value="" disabled>
+                          Seleccione una ciudad
+                        </option>
+
+                        <option
+                          *ngFor="let city of cities"
+                          [value]="city"
+                        >
+                          {{ city }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <p
+                    class="error-message"
+                    *ngIf="
+                      infoForm.get('city')?.invalid &&
+                      infoForm.get('city')?.touched
+                    "
+                  >
+                    Ciudad es requerida.
+                  </p>
+                </div>
+              </div>
+
+              <!-- OCUPACION -->
+              <div class="field">
+                <label class="label">Ocupación</label>
+
+                <div class="control has-icons-left">
+                  <input
+                    type="text"
+                    class="input"
+                    formControlName="occupation"
+                    placeholder="Ej. Estudiante de inglés"
+                  />
+
+                  <span class="input-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+
+                <p
+                  class="error-message"
+                  *ngIf="
+                    infoForm.get('occupation')?.touched &&
+                    infoForm.get('occupation')?.invalid
+                  "
+                >
+                  La ocupación es obligatoria.
+                </p>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Teléfono -->
-        <div class="field">
-          <label class="label">Número de contacto</label>
-          <div class="field is-grouped">
-            <div class="control" style="min-width: 120px">
-              <div class="select is-fullwidth">
-                <select formControlName="countryCode">
-                  <option *ngFor="let code of countryCodes" [value]="code.code">
-                    {{ code.name }} ({{ code.code }})
-                  </option>
-                </select>
+            <!-- =================================================
+                 REPRESENTANTE
+            ================================================== -->
+            <div
+              *ngIf="isStudent && isMinor"
+              class="representative-block"
+            >
+              <div class="representative-block__header">
+                <span class="representative-block__icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm7-1a3 3 0 1 0 0-6"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                    <path
+                      d="M3 20a6 6 0 0 1 12 0m1-7a5 5 0 0 1 5 5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </span>
+
+                <div>
+                  <strong>Datos del representante</strong>
+                  <small>Solo aplica para estudiantes menores de edad</small>
+                </div>
+              </div>
+
+              <div class="user-info-grid user-info-grid--two">
+                <div class="field">
+                  <label class="label">Nombre del tutor</label>
+
+                  <div class="control">
+                    <input
+                      type="text"
+                      class="input"
+                      placeholder="Nombre completo"
+                      formControlName="tutorName"
+                    />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label">Correo del tutor</label>
+
+                  <div class="control">
+                    <input
+                      type="email"
+                      class="input"
+                      placeholder="correo@ejemplo.com"
+                      formControlName="tutorEmail"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="field representative-block__phone">
+                <label class="label">Teléfono del tutor</label>
+
+                <div class="phone-field">
+                  <div class="phone-field__country">
+                    <div class="select is-fullwidth">
+                      <select
+                        formControlName="tutorCountryCode"
+                        (change)="onTutorCountryChange($event)"
+                      >
+                        <option
+                          *ngFor="let code of countryCodes"
+                          [value]="code.code"
+                        >
+                          {{ code.name }} ({{ code.code }})
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="control phone-field__number">
+                    <input
+                      type="tel"
+                      class="input"
+                      formControlName="tutorPhone"
+                      placeholder="999001087"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
+          </form>
+        </section>
 
-            <div class="control is-expanded">
-              <input type="tel" class="input" formControlName="phoneNumber" />
-            </div>
-          </div>
-          <p class="error-message" *ngIf="infoForm.get('phoneNumber')?.invalid && infoForm.get('phoneNumber')?.touched">
-            Número de teléfono es obligatorio.
-          </p>
-        </div>
-
-        <!-- Ocupación -->
-        <div class="field">
-          <label class="label">Ocupación</label>
-          <div class="control">
-            <input
-              type="text"
-              class="input"
-              formControlName="occupation"
-              placeholder="Ej. Estudiante de inglés"
-            />
-          </div>
-          <p
-            class="error-message"
-            *ngIf="infoForm.get('occupation')?.touched && infoForm.get('occupation')?.invalid"
+        <!-- =====================================================
+             FOOTER
+        ====================================================== -->
+        <footer class="buttons-footer">
+          <button
+            *ngIf="!dataCompleted"
+            type="button"
+            class="button btn-secondary"
+            (click)="close()"
           >
-            La ocupación es obligatoria.
-          </p>
-        </div>
+            Completar luego
+          </button>
 
-        <!-- País -->
-        <div class="field">
-          <label class="label">País</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select formControlName="country" (change)="onCountryChange($event)">
-                <option *ngFor="let country of countryCodes" [value]="country.iso">
-                  {{ country.name }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <p class="error-message" *ngIf="infoForm.get('country')?.invalid && infoForm.get('country')?.touched">
-            País es requerido.
-          </p>
-        </div>
+          <button
+            type="submit"
+            class="button btn-primary"
+            form="studentInfoForm"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M5 4h12l2 2v14H5V4Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M8 4v6h8V4M9 20v-6h6v6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+            </svg>
 
-        <!-- Ciudad -->
-        <div class="field">
-          <label class="label">Ciudad</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select formControlName="city">
-                <option value="" disabled>Seleccione una ciudad</option>
-                <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
-              </select>
-            </div>
-          </div>
-          <p class="error-message" *ngIf="infoForm.get('city')?.invalid && infoForm.get('city')?.touched">
-            Ciudad es requerida.
-          </p>
-        </div>
-      </form>
-    </section>
-
-    <footer class="buttons-footer">
-      <button *ngIf="!dataCompleted" type="button" class="button btn-secondary" (click)="close()">
-        Completar Luego
-      </button>
-      <button type="submit" class="button btn-primary" form="studentInfoForm">
-        Guardar
-      </button>
-    </footer>
+            Guardar información
+          </button>
+        </footer>
+      </div>
+    </div>
   </div>
 </div>
 

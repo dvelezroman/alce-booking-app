@@ -1,320 +1,1147 @@
 :host {
-  display: contents;
+  display: block;
 }
+
+
+/* =========================================================
+   OVERLAY
+========================================================= */
 
 .spark-overlay {
   position: fixed;
   inset: 0;
-  z-index: 980;
+  z-index: 2000;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 1.25rem;
+  padding: 1rem;
 
-  background: rgba(8, 14, 48, 0.55);
-  backdrop-filter: blur(2px);
+  background:
+    radial-gradient(
+      circle at 50% 25%,
+      rgba(72, 112, 170, .18),
+      transparent 34%
+    ),
+    rgba(11, 27, 52, .78);
+
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+
+  box-sizing: border-box;
 }
+
+
+/* =========================================================
+   CARD
+========================================================= */
 
 .spark-overlay__card {
   position: relative;
 
-  width: min(100%, 26rem);
-  padding: 1.6rem 1.4rem 1.35rem;
+  width: 100%;
+  max-width: 31rem;
 
-  overflow: hidden;
+  max-height: calc(100vh - 2rem);
 
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 1.15rem;
+  padding:
+    1.25rem
+    1.5rem
+    1.4rem;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  border: 1px solid rgba(215, 228, 247, .95);
+
+  border-radius: 1.8rem;
 
   background:
     radial-gradient(
-      circle at 88% 8%,
-      rgba(67, 92, 188, 0.28),
-      transparent 32%
+      circle at 50% 7%,
+      rgba(196, 220, 255, .55),
+      transparent 29%
     ),
     radial-gradient(
-      circle at 12% 100%,
-      rgba(47, 77, 176, 0.22),
-      transparent 36%
+      circle at 15% 42%,
+      rgba(231, 241, 255, .75),
+      transparent 28%
     ),
     linear-gradient(
-      135deg,
-      #151d63 0%,
-      #10205f 48%,
-      #13296c 100%
+      180deg,
+      #ffffff 0%,
+      #fbfdff 58%,
+      #f7faff 100%
     );
 
-  color: #ffffff;
+  box-shadow:
+    0 2.2rem 5rem rgba(5, 24, 54, .34);
 
-  box-shadow: 0 22px 48px rgba(8, 14, 48, 0.45);
+  box-sizing: border-box;
 
-  animation: spark-enter 320ms ease forwards;
+  scrollbar-width: thin;
 }
 
-.spark-overlay__card::before {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    115deg,
-    rgba(255, 255, 255, 0.05),
-    transparent 40%
-  );
-  content: '';
-}
+
+/* =========================================================
+   CLOSE
+========================================================= */
 
 .spark-overlay__close {
   position: absolute;
-  top: 0.65rem;
-  right: 0.75rem;
-  z-index: 2;
 
-  width: 2rem;
-  height: 2rem;
+  top: 1rem;
+  right: 1rem;
+
+  z-index: 10;
+
+  width: 2.55rem;
+  height: 2.55rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   padding: 0;
 
-  border: 0;
+  border: 1px solid #e0e8f3;
+
   border-radius: 50%;
 
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.92);
+  color: #14295b;
 
-  font-size: 1.35rem;
-  font-weight: 700;
-  line-height: 1;
+  background: rgba(255, 255, 255, .92);
+
+  box-shadow:
+    0 .35rem .8rem rgba(31, 67, 117, .13);
 
   cursor: pointer;
 
   transition:
-    background-color 160ms ease,
-    transform 160ms ease;
+    transform .18s ease,
+    background .18s ease,
+    box-shadow .18s ease;
 }
 
 .spark-overlay__close:hover {
-  background: rgba(255, 255, 255, 0.18);
-  transform: scale(1.06);
+  transform: scale(1.04);
+
+  background: #ffffff;
+
+  box-shadow:
+    0 .45rem .95rem rgba(31, 67, 117, .17);
 }
+
+.spark-overlay__close svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.spark-overlay__hero {
+  position: relative;
+
+  width: 100%;
+  height: 8.4rem;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  margin-bottom: -.25rem;
+}
+
+.spark-overlay__hero::before {
+  content: '';
+
+  position: absolute;
+
+  left: 50%;
+  bottom: .5rem;
+
+  width: 16.5rem;
+  height: 7rem;
+
+  transform: translateX(-50%);
+
+  border-radius:
+    50%
+    50%
+    42%
+    42%;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(211, 229, 255, .74),
+      rgba(230, 241, 255, .42)
+    );
+}
+
+
+/* =========================================================
+   BULB
+========================================================= */
+
+.spark-overlay__bulb {
+  position: absolute;
+
+  top: .25rem;
+  left: calc(50% - 6.2rem);
+
+  z-index: 4;
+
+  width: 3rem;
+  height: 3rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ffbb2e;
+
+  filter:
+    drop-shadow(
+      0 .3rem .35rem
+      rgba(255, 183, 44, .24)
+    );
+
+  transform: rotate(-8deg);
+}
+
+.spark-overlay__bulb svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================================================
+   CHARACTER
+========================================================= */
+
+.spark-overlay__character {
+  position: relative;
+
+  z-index: 3;
+
+  width: 8rem;
+  height: 7.35rem;
+}
+
+/* =========================================================
+   MOOSE CHARACTER
+========================================================= */
+
+.spark-overlay__character {
+  position: relative;
+  z-index: 3;
+
+  width: 9.5rem;
+  height: 7.7rem;
+}
+
+.spark-overlay__moose {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================================================
+   ANTLERS
+========================================================= */
+
+.spark-overlay__antler {
+  position: absolute;
+
+  top: .85rem;
+
+  width: 3.4rem;
+  height: 3.3rem;
+
+  z-index: 1;
+}
+
+
+/* BASE */
+
+.spark-overlay__antler-main {
+  position: absolute;
+
+  bottom: 0;
+
+  width: .48rem;
+  height: 2.85rem;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #a66a3b,
+      #754426
+    );
+}
+
+
+/* PALM */
+
+.spark-overlay__antler::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+
+  width: 2.2rem;
+  height: 1.45rem;
+
+  border-radius:
+    70%
+    45%
+    65%
+    45%;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ba7a45,
+      #8b542f
+    );
+}
+
+
+/* TIPS */
+
+.spark-overlay__antler-tip {
+  position: absolute;
+
+  width: .5rem;
+  height: 1.25rem;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #b87543,
+      #7c4828
+    );
+}
+
+.spark-overlay__antler-tip--1 {
+  top: -.25rem;
+}
+
+.spark-overlay__antler-tip--2 {
+  top: -.4rem;
+}
+
+.spark-overlay__antler-tip--3 {
+  top: -.15rem;
+}
+
+
+/* NOSTRILS */
+
+.spark-overlay__nostril {
+  position: absolute;
+
+  top: .62rem;
+
+  width: .3rem;
+  height: .2rem;
+
+  border-radius: 50%;
+
+  background: #503020;
+}
+
+.spark-overlay__nostril--left {
+  left: .7rem;
+}
+
+.spark-overlay__nostril--right {
+  right: .7rem;
+}
+
+
+/* SMILE */
+
+.spark-overlay__moose-smile {
+  position: absolute;
+
+  left: 50%;
+  bottom: .35rem;
+
+  width: 1rem;
+  height: .42rem;
+
+  transform: translateX(-50%);
+
+  border-bottom:
+    .13rem solid
+    #70412c;
+
+  border-radius: 50%;
+}
+
+
+/* CUELLO PARA QUE NO TAPE EL HOCICO */
+
+.spark-overlay__hoodie-neck {
+  position: absolute;
+
+  top: -.4rem;
+  left: 50%;
+
+  width: 3.8rem;
+  height: .85rem;
+
+  transform: translateX(-50%);
+
+  border-radius:
+    50%
+    50%
+    35%
+    35%;
+
+  background:
+    linear-gradient(
+      180deg,
+      #2d71cf,
+      #245eb8
+    );
+}
+
+
+/* =========================================================
+   SPARKS
+========================================================= */
+
+.spark-overlay__spark {
+  position: absolute;
+
+  z-index: 2;
+
+  color: #74a7ef;
+
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.spark-overlay__spark--one {
+  left: 2.5rem;
+  top: 1.25rem;
+}
+
+.spark-overlay__spark--two {
+  right: 2.5rem;
+  top: 2rem;
+
+  color: #ffc34a;
+}
+
+.spark-overlay__spark--three {
+  right: 4rem;
+  bottom: 1.2rem;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
 
 .spark-overlay__eyebrow {
   position: relative;
-  z-index: 1;
+  z-index: 5;
 
-  margin: 0 1.75rem 0.9rem 0;
+  width: fit-content;
 
-  color: rgba(196, 208, 255, 0.95);
+  margin:
+    -.1rem
+    auto
+    1rem;
 
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
+  padding:
+    .43rem
+    .95rem;
 
-.spark-overlay__quote {
-  position: relative;
-  z-index: 1;
-  margin: 0;
-}
+  border:
+    1px solid
+    rgba(57, 111, 218, .28);
 
-.spark-overlay__text {
-  margin: 0;
+  border-radius: 999px;
 
   color: #ffffff;
 
-  font-size: clamp(1.05rem, 2.4vw, 1.28rem);
+  background:
+    linear-gradient(
+      145deg,
+      #659cf0,
+      #376fe0
+    );
+
+  box-shadow:
+    0 .35rem .8rem
+    rgba(55, 111, 224, .23);
+
+  font-size: .66rem;
   font-weight: 800;
-  line-height: 1.35;
-  letter-spacing: -0.015em;
+
+  line-height: 1;
+
+  text-align: center;
+
+  text-transform: uppercase;
+
+  letter-spacing: .035em;
 }
 
-.spark-overlay__text--reveal {
-  font-size: clamp(0.95rem, 2.1vw, 1.1rem);
-  font-weight: 700;
+
+/* =========================================================
+   QUESTION / QUOTE
+========================================================= */
+
+.spark-overlay__question,
+.spark-overlay__text {
+  max-width: 25rem;
+
+  margin:
+    0
+    auto;
+
+  color: #122b64;
+
+  font-size: 1.04rem;
+  font-weight: 800;
+
   line-height: 1.4;
+
+  text-align: center;
+
+  letter-spacing: -.02em;
+}
+
+.spark-overlay__quote {
+  margin: 0;
 }
 
 .spark-overlay__author {
-  margin-top: 0.85rem;
+  margin-top: .6rem;
 
-  color: rgba(255, 255, 255, 0.82);
+  color: #71809b;
 
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: .66rem;
+  font-weight: 650;
+
+  text-align: center;
 }
 
-/* Trivia flip */
-.spark-overlay__flip {
+
+/* =========================================================
+   REVEAL ARROW
+========================================================= */
+
+.spark-overlay__reveal-arrow {
   position: relative;
-  z-index: 1;
 
-  display: block;
+  width: 9rem;
+  height: 2.1rem;
+
+  margin:
+    .25rem
+    auto
+    -.05rem;
+
+  color: #6ea1ee;
+}
+
+.spark-overlay__reveal-arrow span {
+  position: absolute;
+
+  left: .3rem;
+  top: .65rem;
+
+  width: 7.9rem;
+
+  border-top:
+    2px dashed
+    #8bb4f1;
+
+  border-radius: 50%;
+}
+
+.spark-overlay__reveal-arrow svg {
+  position: absolute;
+
+  right: .1rem;
+  bottom: -.1rem;
+
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+
+/* =========================================================
+   FLIP CARD
+========================================================= */
+
+.spark-overlay__flip {
   width: 100%;
-  min-height: 9.5rem;
+  min-height: 6.4rem;
+  margin-top: .55rem;
   padding: 0;
-
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 0.85rem;
-
+  display: block;
+  border: 0;
   background: transparent;
-  color: inherit;
-
-  cursor: pointer;
   perspective: 1000px;
-  text-align: left;
+  cursor: pointer;
 }
 
 .spark-overlay__flip-inner {
   position: relative;
 
   width: 100%;
-  min-height: 9.5rem;
+  min-height: 6.4rem;
+
+  transition: transform .5s ease;
 
   transform-style: preserve-3d;
-  transition: transform 480ms ease;
 }
 
-.spark-overlay__flip--revealed .spark-overlay__flip-inner {
+.spark-overlay__flip--revealed
+.spark-overlay__flip-inner {
   transform: rotateY(180deg);
 }
 
+
+/* =========================================================
+   FACES
+========================================================= */
+
 .spark-overlay__face {
   position: absolute;
+
   inset: 0;
 
+  min-height: 6.4rem;
+
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
 
-  padding: 1rem 1.05rem;
+  gap: .8rem;
 
-  border-radius: 0.85rem;
+  padding:
+    1rem
+    1.1rem;
 
-  background: rgba(255, 255, 255, 0.06);
+  border:
+    2px solid
+    #c2dafa;
+
+  border-radius: 1rem;
+
+  box-sizing: border-box;
 
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
+
+/* FRONT */
+
+.spark-overlay__face--front {
+  color: #2461ca;
+
+  background:
+    radial-gradient(
+      circle at 15% 30%,
+      rgba(214, 231, 255, .72),
+      transparent 25%
+    ),
+    linear-gradient(
+      145deg,
+      #f6faff,
+      #edf5ff
+    );
+
+  box-shadow:
+    0 .4rem .9rem rgba(75, 124, 192, .15),
+    inset 0 0 0 .22rem rgba(255, 255, 255, .76);
+}
+
+
+/* BACK */
+
 .spark-overlay__face--back {
+  flex-direction: column;
+
   transform: rotateY(180deg);
 
-  background: rgba(255, 255, 255, 0.1);
+  border-color: #c8eadf;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f1fcf8,
+      #e5f8f1
+    );
+
+  box-shadow:
+    0 .4rem .9rem
+    rgba(73, 157, 128, .13);
+}
+
+
+/* =========================================================
+   TAP ICON
+========================================================= */
+
+.spark-overlay__tap-icon {
+  width: 2.4rem;
+  height: 2.4rem;
+
+  flex: 0 0 2.4rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #285fd0;
+}
+
+.spark-overlay__tap-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .spark-overlay__tap-hint {
-  margin-top: 0.85rem;
+  max-width: 12rem;
 
-  color: rgba(196, 208, 255, 0.9);
+  color: #285fd0;
 
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  font-size: .9rem;
+  font-weight: 800;
+
+  line-height: 1.28;
+
+  text-align: left;
 }
 
+
+/* =========================================================
+   REVEALED
+========================================================= */
+
+.spark-overlay__success-icon {
+  width: 2.35rem;
+  height: 2.35rem;
+
+  min-width: 2.35rem;
+  min-height: 2.35rem;
+
+  flex: 0 0 2.35rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  aspect-ratio: 1 / 1;
+
+  border-radius: 50%;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      145deg,
+      #61c9a7,
+      #39a882
+    );
+
+  box-shadow:
+    0 .3rem .65rem
+    rgba(57, 168, 130, .18);
+
+  box-sizing: border-box;
+}
+
+.spark-overlay__success-icon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+
+  flex: 0 0 auto;
+}
+
+.spark-overlay__text--reveal {
+  color: #1d5f4e;
+
+  font-size: .77rem;
+  font-weight: 650;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   HINT
+========================================================= */
+
 .spark-overlay__hint {
-  position: relative;
-  z-index: 1;
+  width: 100%;
 
-  margin: 1rem 0 0;
+  margin:
+    .8rem
+    0
+    0;
 
-  color: rgba(255, 255, 255, 0.78);
+  padding:
+    .7rem
+    .8rem;
 
-  font-size: 0.78rem;
-  font-weight: 600;
-  line-height: 1.35;
+  display: flex;
+  align-items: center;
+
+  gap: .65rem;
+
+  border:
+    1px solid
+    #dce6f2;
+
+  border-radius: .8rem;
+
+  color: #2a4167;
+
+  background:
+    rgba(250, 252, 255, .9);
+
+  box-shadow:
+    0 .25rem .6rem
+    rgba(51, 81, 120, .07);
+
+  box-sizing: border-box;
+}
+
+.spark-overlay__hint-icon {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  color: #3774d7;
+
+  background: #e9f2ff;
+}
+
+.spark-overlay__hint-icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.spark-overlay__hint-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
 }
 
 .spark-overlay__hint-label {
-  display: inline-block;
-  margin-right: 0.35rem;
+  color: #3270d2;
 
-  color: rgba(196, 208, 255, 0.95);
-
-  font-size: 0.68rem;
+  font-size: .62rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+
+  line-height: 1.2;
 }
 
+.spark-overlay__hint-text {
+  color: #273f66;
+
+  font-size: .63rem;
+  font-weight: 550;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
 .spark-overlay__cta {
-  position: relative;
-  z-index: 1;
-
-  display: block;
   width: 100%;
-  margin-top: 1.25rem;
-  padding: 0.75rem 1rem;
+  min-height: 3rem;
 
-  border: 0;
-  border-radius: 0.75rem;
+  margin-top: .85rem;
 
-  background: #ffffff;
-  color: #151d63;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-  font-size: 0.95rem;
+  gap: .45rem;
+
+  padding:
+    .65rem
+    1rem;
+
+  border:
+    1px solid
+    #2d69da;
+
+  border-radius: .85rem;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      145deg,
+      #5f95ee,
+      #2866dc
+    );
+
+  box-shadow:
+    0 .5rem 1rem
+    rgba(38, 102, 220, .22);
+
+  font-size: .82rem;
   font-weight: 800;
+
+  line-height: 1;
 
   cursor: pointer;
 
   transition:
-    transform 160ms ease,
-    background-color 160ms ease;
+    transform .18s ease,
+    box-shadow .18s ease;
 }
 
 .spark-overlay__cta:hover {
-  background: #eef1ff;
   transform: translateY(-1px);
+
+  box-shadow:
+    0 .65rem 1.2rem
+    rgba(38, 102, 220, .26);
 }
 
-.spark-overlay__cta:active {
-  transform: scale(0.98);
+.spark-overlay__cta-spark {
+  color: #ffd665;
+
+  font-size: 1rem;
 }
 
-@keyframes spark-enter {
-  from {
-    opacity: 0;
-    transform: scale(0.94) translateY(10px);
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+
+  .spark-overlay {
+    padding: .75rem;
   }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
 
-@media (max-width: 640px) {
+
   .spark-overlay__card {
-    padding: 1.4rem 1.15rem 1.2rem;
+    max-width: 23.5rem;
+
+    max-height:
+      calc(100vh - 1.5rem);
+
+    padding:
+      1rem
+      1rem
+      1rem;
+
+    border-radius: 1.4rem;
   }
 
-  .spark-overlay__flip,
+
+  .spark-overlay__close {
+    top: .75rem;
+    right: .75rem;
+
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+
+  .spark-overlay__hero {
+    height: 7.2rem;
+
+    margin-bottom: -.15rem;
+  }
+
+  .spark-overlay__hero::before {
+    width: 13.5rem;
+    height: 6rem;
+  }
+
+
+  .spark-overlay__character {
+    width: 7rem;
+    height: 6.5rem;
+  }
+
+  .spark-overlay__head {
+    width: 4.75rem;
+    height: 4.35rem;
+  }
+
+  .spark-overlay__body {
+    width: 6.2rem;
+    height: 3.2rem;
+  }
+
+
+  .spark-overlay__bulb {
+    left: calc(50% - 5.5rem);
+
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+
+  .spark-overlay__eyebrow {
+    margin-bottom: .85rem;
+
+    padding:
+      .4rem
+      .8rem;
+
+    font-size: .6rem;
+  }
+
+
+  .spark-overlay__question,
+  .spark-overlay__text {
+    max-width: 20rem;
+
+    font-size: .88rem;
+
+    line-height: 1.42;
+  }
+
+
+  .spark-overlay__reveal-arrow {
+    width: 7rem;
+    height: 1.8rem;
+  }
+
+  .spark-overlay__reveal-arrow span {
+    width: 6rem;
+  }
+
+
+  .spark-overlay__flip {
+    min-height: 5.7rem;
+  }
+
   .spark-overlay__flip-inner {
-    min-height: 10.5rem;
+    min-height: 5.7rem;
   }
+
+  .spark-overlay__face {
+    min-height: 5.7rem;
+
+    padding:
+      .8rem
+      .9rem;
+  }
+
+
+  .spark-overlay__tap-icon {
+    width: 2.05rem;
+    height: 2.05rem;
+
+    flex-basis: 2.05rem;
+  }
+
+  .spark-overlay__tap-hint {
+    max-width: 10rem;
+
+    font-size: .76rem;
+  }
+
+
+  .spark-overlay__text--reveal {
+    font-size: .68rem;
+  }
+
+
+  .spark-overlay__hint {
+    padding:
+      .62rem
+      .68rem;
+  }
+
+  .spark-overlay__hint-label {
+    font-size: .58rem;
+  }
+
+  .spark-overlay__hint-text {
+    font-size: .59rem;
+  }
+
+
+  .spark-overlay__cta {
+    min-height: 2.75rem;
+
+    margin-top: .7rem;
+
+    font-size: .74rem;
+  }
+
 }
 
-@media (prefers-reduced-motion: reduce) {
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 390px) {
+
   .spark-overlay__card {
-    animation: none;
+    padding:
+      .9rem
+      .85rem
+      .9rem;
   }
 
-  .spark-overlay__flip-inner,
-  .spark-overlay__close,
-  .spark-overlay__cta {
-    transition: none;
+
+  .spark-overlay__hero {
+    height: 6.7rem;
   }
 
-  .spark-overlay__flip--revealed .spark-overlay__flip-inner {
-    transform: none;
+
+  .spark-overlay__question,
+  .spark-overlay__text {
+    font-size: .82rem;
   }
 
-  .spark-overlay__flip--revealed .spark-overlay__face--front {
-    display: none;
+
+  .spark-overlay__tap-hint {
+    font-size: .7rem;
   }
 
-  .spark-overlay__flip--revealed .spark-overlay__face--back {
-    position: relative;
-    transform: none;
+
+  .spark-overlay__hint-text {
+    font-size: .56rem;
   }
+
 }

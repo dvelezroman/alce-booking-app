@@ -1,9 +1,119 @@
 <div class="lead-pending-banner" *ngIf="visible && count > 0">
-  <div class="bubble" (click)="goToRequests()" style="cursor: pointer;">
-    <span class="bell">🔔</span>
-    <span>{{ message }}</span>
-    <button type="button" class="close" (click)="close(); $event.stopPropagation()" aria-label="Cerrar">
-      &times;
+  <div class="lead-pending-banner__card">
+
+    <div class="lead-pending-banner__timer"></div>
+
+    <!-- ICONO -->
+    <div
+      class="lead-pending-banner__icon-area"
+      (click)="goToRequests()"
+    >
+      <div class="lead-pending-banner__icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect
+            x="4"
+            y="5"
+            width="16"
+            height="15"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+          />
+
+          <path
+            d="M8 3v4M16 3v4M4 9h16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="m9 14 2 2 4-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        <span class="lead-pending-banner__badge">
+          {{ count > 9 ? '9+' : count }}
+        </span>
+      </div>
+    </div>
+
+    <!-- CONTENIDO -->
+    <div
+      class="lead-pending-banner__content"
+      (click)="goToRequests()"
+    >
+      <span class="lead-pending-banner__eyebrow">
+        Solicitudes pendientes
+      </span>
+
+      <h3>
+        Tienes
+        <strong>{{ count }}</strong>
+        solicitud{{ count === 1 ? '' : 'es' }} por revisar
+      </h3>
+
+      <p>
+        {{ message }}
+      </p>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="lead-pending-banner__actions">
+      <button
+        type="button"
+        class="lead-pending-banner__view"
+        (click)="goToRequests()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M5 12h14M14 7l5 5-5 5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        Revisar solicitudes
+      </button>
+
+      <button
+        type="button"
+        class="lead-pending-banner__close"
+        (click)="close(); $event.stopPropagation()"
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
+    </div>
+
+    <!-- MOBILE -->
+    <button
+      type="button"
+      class="lead-pending-banner__mobile-arrow"
+      (click)="goToRequests()"
+      aria-label="Revisar solicitudes"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="m9 5 7 7-7 7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </button>
+
   </div>
 </div>
