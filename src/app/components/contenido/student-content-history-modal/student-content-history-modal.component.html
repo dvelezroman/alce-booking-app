@@ -1,75 +1,422 @@
-<div class="modal" [ngClass]="{ 'is-active': show }">
+<div class="modal student-history-modal" [ngClass]="{ 'is-active': show }">
+
   <div class="modal-background"></div>
-  <div class="modal-card">
 
-    <div class="student-stage-header">
-      <h2 class="student-stage-title">
-        Stage del Estudiante: {{ stageDescription || 'No disponible' }}
-      </h2>
-      <button class="delete" aria-label="close" (click)="onClose()">
-        <i class="fas fa-times-circle"></i>
-      </button>
-    </div>
+  <div class="modal-card student-history-card">
 
-    <header class="modal-card-head">
-      <p class="modal-card-title">
-         Historial de Contenidos - {{ currentStageDescription }}
-        <span class="stage-navigation-buttons">
-          <button 
-            class="nav-button" 
-            [disabled]="!canGoPrevious" 
-            [ngClass]="{ 'disabled': !canGoPrevious }"
-            (click)="onPreviousStage()" 
-            title="Anterior">
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="student-history-card__header">
+
+      <div class="student-history-card__header-main">
+
+        <div class="student-history-card__stage-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="m12 3 8 4.5-8 4.5-8-4.5L12 3Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"
+            />
+            <path
+              d="m4 12 8 4.5 8-4.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="m4 16.5 8 4.5 8-4.5"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+
+        <div class="student-history-card__heading">
+
+          <span class="student-history-card__eyebrow">
+            Stage del estudiante
+          </span>
+
+          <h2 class="student-history-card__title">
+            {{ stageDescription || 'Stage no disponible' }}
+          </h2>
+
+          <p class="student-history-card__subtitle">
+            Historial de contenidos · {{ currentStageDescription }}
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="student-history-card__header-actions">
+
+        <div class="student-history-card__navigation">
+
+          <button
+            type="button"
+            class="student-history-card__nav-button"
+            [disabled]="!canGoPrevious"
+            [class.student-history-card__nav-button--disabled]="!canGoPrevious"
+            (click)="onPreviousStage()"
+            aria-label="Stage anterior"
+            title="Anterior"
+          >
             <i class="fas fa-chevron-left"></i>
           </button>
-          <button 
-            class="nav-button" 
-            [disabled]="!canGoNext" 
-            [ngClass]="{ 'disabled': !canGoNext }"
-            (click)="onNextStage()" 
-            title="Siguiente">
+
+          <button
+            type="button"
+            class="student-history-card__nav-button student-history-card__nav-button--next"
+            [disabled]="!canGoNext"
+            [class.student-history-card__nav-button--disabled]="!canGoNext"
+            (click)="onNextStage()"
+            aria-label="Stage siguiente"
+            title="Siguiente"
+          >
             <i class="fas fa-chevron-right"></i>
           </button>
-        </span>
-      </p>
+
+        </div>
+
+        <button
+          type="button"
+          class="student-history-card__close"
+          aria-label="Cerrar"
+          (click)="onClose()"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M6 6l12 12M18 6 6 18"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+      </div>
+
     </header>
 
-    <section class="modal-card-body">
-      <div class="table-container">
-        <table class="table-results is-fullwidth">
-          <thead>
-            <tr>
-              <th *ngFor="let content of stageContents; let i = index"
-                  [title]="content.title"
-                  (mouseenter)="onMouseEnterColumn(i)"
-                  (mouseleave)="onMouseLeaveColumn()"
-                  [ngClass]="{ 'column-hovered': hoveredColumnIndex === i,
-                               'disabled-column': isContentDisabled(i) }">
-                {{ content.title }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td *ngFor="let content of stageContents; let i = index"
-                  [ngClass]="{ 'column-hovered': hoveredColumnIndex === i,
-                               'disabled-column': isContentDisabled(i) }">
-                <div class="scroll-wrapper"
-                    [ngClass]="{ 'scrollable-cell': getRecordsByContentTitle(content.title).length > 2 }">
-                  <ng-container *ngFor="let record of getRecordsByContentTitle(content.title)">
-                    <div class="record-entry" *ngFor="let date of record.dates; let j = index; let last = last">
-                      <div>{{ date | date: 'shortDate' }}</div>
-                      <div>{{ getInstructorByIndex(record, j) }}</div>
-                    </div>
-                  </ng-container>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- =====================================================
+         INFO
+    ====================================================== -->
+
+    <div class="student-history-card__info">
+
+      <div class="student-history-card__info-message">
+
+        <span class="student-history-card__info-icon" aria-hidden="true">
+          <i class="fas fa-info"></i>
+        </span>
+
+        <p>
+          Aquí puedes revisar cuándo y con qué instructor estudiaste cada
+          contenido de este stage.
+        </p>
+
       </div>
+
+      <div class="student-history-card__legend">
+
+        <span class="student-history-card__legend-item">
+          <span
+            class="student-history-card__legend-dot
+                   student-history-card__legend-dot--enabled"
+          ></span>
+          Habilitado
+        </span>
+
+        <span class="student-history-card__legend-item">
+          <span
+            class="student-history-card__legend-dot
+                   student-history-card__legend-dot--disabled"
+          ></span>
+          Deshabilitado
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- =====================================================
+         BODY
+    ====================================================== -->
+
+    <section class="student-history-card__body">
+
+      <div
+        class="student-history-card__empty"
+        *ngIf="stageContents.length === 0"
+      >
+        <div class="student-history-card__empty-icon">
+          <i class="fas fa-book-open"></i>
+        </div>
+
+        <h3>
+          No hay contenidos disponibles
+        </h3>
+
+        <p>
+          Este stage todavía no tiene contenidos configurados.
+        </p>
+      </div>
+
+      <div
+        class="student-history-table-wrapper"
+        *ngIf="stageContents.length > 0"
+      >
+
+        <table class="student-history-table">
+
+          <!-- =================================================
+               HEAD
+          ================================================== -->
+
+          <thead>
+
+            <tr>
+
+              <th
+                *ngFor="let content of stageContents; let i = index"
+                [title]="content.title"
+                [class.student-history-table__column--hovered]="hoveredColumnIndex === i"
+                [class.student-history-table__column--disabled]="isContentDisabled(i)"
+                (mouseenter)="onMouseEnterColumn(i)"
+                (mouseleave)="onMouseLeaveColumn()"
+              >
+
+                <div class="student-history-table__content-header">
+
+                  <span
+                    class="student-history-table__content-icon"
+                    [class.student-history-table__content-icon--disabled]="isContentDisabled(i)"
+                    aria-hidden="true"
+                  >
+                    <i
+                      [class]="
+                        isContentDisabled(i)
+                          ? 'fas fa-lock'
+                          : 'fas fa-book-open'
+                      "
+                    ></i>
+                  </span>
+
+                  <span class="student-history-table__content-title-wrapper">
+
+                    <span class="student-history-table__content-title">
+                      {{ content.title }}
+                    </span>
+
+                    <span class="student-history-table__tooltip">
+                      {{ content.title }}
+                    </span>
+
+                  </span>
+
+                  <span
+                    class="student-history-table__status"
+                    [class.student-history-table__status--disabled]="isContentDisabled(i)"
+                  >
+                    {{
+                      isContentDisabled(i)
+                        ? 'Deshabilitado'
+                        : 'Habilitado'
+                    }}
+                  </span>
+
+                </div>
+
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <!-- =================================================
+               BODY
+          ================================================== -->
+
+          <tbody>
+
+            <tr>
+
+              <td
+                *ngFor="let content of stageContents; let i = index"
+                [class.student-history-table__column--hovered]="hoveredColumnIndex === i"
+                [class.student-history-table__column--disabled]="isContentDisabled(i)"
+                (mouseenter)="onMouseEnterColumn(i)"
+                (mouseleave)="onMouseLeaveColumn()"
+              >
+
+                <!-- CONTENIDO DESHABILITADO -->
+
+                <div
+                  class="student-history-table__disabled-state"
+                  *ngIf="isContentDisabled(i)"
+                >
+
+                  <span class="student-history-table__disabled-icon">
+                    <i class="fas fa-lock"></i>
+                  </span>
+
+                  <span>
+                    Contenido no habilitado
+                  </span>
+
+                </div>
+
+                <!-- CONTENIDO HABILITADO -->
+
+                <ng-container *ngIf="!isContentDisabled(i)">
+
+                  <div
+                    class="student-history-table__records"
+                    [class.student-history-table__records--scrollable]="
+                      getRecordsByContentTitle(content.title).length > 2
+                    "
+                  >
+
+                    <ng-container
+                      *ngIf="
+                        getRecordsByContentTitle(content.title).length > 0;
+                        else noRecords
+                      "
+                    >
+
+                      <ng-container
+                        *ngFor="
+                          let record of getRecordsByContentTitle(content.title)
+                        "
+                      >
+
+                        <article
+                          class="student-history-table__record"
+                          *ngFor="
+                            let date of record.dates;
+                            let j = index
+                          "
+                        >
+
+                          <div class="student-history-table__record-row">
+
+                            <span
+                              class="student-history-table__record-icon"
+                              aria-hidden="true"
+                            >
+                              <i class="far fa-calendar"></i>
+                            </span>
+
+                            <span>
+                              {{ date | date:'mediumDate' }}
+                            </span>
+
+                          </div>
+
+                          <div class="student-history-table__record-row">
+
+                            <span
+                              class="student-history-table__record-icon"
+                              aria-hidden="true"
+                            >
+                              <i class="far fa-user"></i>
+                            </span>
+
+                            <span>
+                              {{ getInstructorByIndex(record, j) }}
+                            </span>
+
+                          </div>
+
+                        </article>
+
+                      </ng-container>
+
+                    </ng-container>
+
+                    <ng-template #noRecords>
+
+                      <div class="student-history-table__no-records">
+
+                        <span class="student-history-table__no-records-icon">
+                          <i class="far fa-clock"></i>
+                        </span>
+
+                        <span>
+                          Sin registros
+                        </span>
+
+                      </div>
+
+                    </ng-template>
+
+                  </div>
+
+                  <div class="student-history-table__record-count">
+
+                    {{ getAssignmentCount(content.title) }}
+
+                    {{
+                      getAssignmentCount(content.title) === 1
+                        ? 'registro'
+                        : 'registros'
+                    }}
+
+                  </div>
+
+                </ng-container>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
     </section>
 
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="student-history-card__footer">
+
+      <div class="student-history-card__tip">
+
+        <span class="student-history-card__tip-icon" aria-hidden="true">
+          <i class="far fa-lightbulb"></i>
+        </span>
+
+        <div>
+          <strong>Consejo</strong>
+
+          <span>
+            Desplázate horizontalmente para consultar todos los contenidos.
+          </span>
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="student-history-card__footer-close"
+        (click)="onClose()"
+      >
+        Cerrar
+      </button>
+
+    </footer>
+
   </div>
+
 </div>

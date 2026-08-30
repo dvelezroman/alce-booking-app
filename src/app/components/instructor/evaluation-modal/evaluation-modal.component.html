@@ -1,100 +1,421 @@
-<div class="modal-overlay" *ngIf="visible">
-  <div class="modal-content">
-    <button class="close-button" (click)="closeModal()">✖</button>
+<div class="evaluation-modal" *ngIf="visible">
+  <div class="evaluation-modal__backdrop"></div>
 
-    <div class="student-header">
-      <h2>{{ studentName }}</h2>
-      <p>Stage actual: {{ studentStage }}</p>
-    </div>
+  <div class="evaluation-modal__card">
 
-    <div class="table-container">
-      <table
-        class="table-results"
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="evaluation-modal__header">
+
+      <div class="evaluation-modal__header-main">
+
+        <div class="evaluation-modal__header-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M9 4.5h6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+            <path
+              d="M9.5 3h5a1.5 1.5 0 0 1 1.5 1.5V6H8V4.5A1.5 1.5 0 0 1 9.5 3Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+            <path
+              d="M7 5H5.8A1.8 1.8 0 0 0 4 6.8v12.4A1.8 1.8 0 0 0 5.8 21h12.4a1.8 1.8 0 0 0 1.8-1.8V6.8A1.8 1.8 0 0 0 18.2 5H17"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+            <path
+              d="m8 11 1.4 1.4L12 9.8"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M14 11h3"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+            <path
+              d="m8 16 1.4 1.4L12 14.8"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M14 16h3"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+        <div class="evaluation-modal__heading">
+
+          <span class="evaluation-modal__eyebrow">
+            Evaluaciones por Stage
+          </span>
+
+          <h2 class="evaluation-modal__student-name">
+            {{ studentName }}
+          </h2>
+
+          <div class="evaluation-modal__current-stage">
+            <span class="evaluation-modal__current-stage-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </span>
+
+            <span>
+              Stage actual:
+            </span>
+
+            <strong>
+              {{ studentStage }}
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="evaluation-modal__header-side">
+
+        <div class="evaluation-modal__legend">
+
+          <span class="evaluation-modal__legend-title">
+            Leyenda:
+          </span>
+
+          <span class="evaluation-modal__legend-item">
+            <span
+              class="evaluation-modal__legend-dot
+                     evaluation-modal__legend-dot--success"
+            ></span>
+            Meta alcanzada
+          </span>
+
+          <span class="evaluation-modal__legend-divider"></span>
+
+          <span class="evaluation-modal__legend-item">
+            <span
+              class="evaluation-modal__legend-dot
+                     evaluation-modal__legend-dot--danger"
+            ></span>
+            Por debajo de la meta
+          </span>
+
+        </div>
+
+        <button
+          type="button"
+          class="evaluation-modal__close"
+          aria-label="Cerrar"
+          (click)="closeModal()"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M6 6l12 12M18 6 6 18"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+      </div>
+
+    </header>
+
+    <!-- =====================================================
+         BODY
+    ====================================================== -->
+
+    <section class="evaluation-modal__body">
+
+      <div
+        class="evaluation-modal__empty"
+        *ngIf="stagesWithContent.length === 0 || types.length === 0"
+      >
+        <div class="evaluation-modal__empty-icon">
+          <i class="fas fa-clipboard-list"></i>
+        </div>
+
+        <h3>
+          No hay evaluaciones disponibles
+        </h3>
+
+        <p>
+          El estudiante todavía no tiene evaluaciones registradas.
+        </p>
+      </div>
+
+      <div
+        class="evaluation-table-wrapper"
         *ngIf="stagesWithContent.length > 0 && types.length > 0"
       >
-        <thead>
-          <tr>
-            <th
-              *ngFor="let stage of stagesWithContent"
-              [attr.colspan]="types.length"
-              class="left-border right-border stage-header"
-              [ngClass]="{
-                'highlight-column': stage.id === highlightStageId,
-                'highlight-stage-header': stage.id === highlightStageId,
-              }"
-              [attr.id]="stage.id === highlightStageId ? 'highlighted-stage' : null"
-            >
-              <div class="stage-header-wrapper">
-                <div
-                  *ngIf="stage.id === highlightStageId"
-                  class="arrow-icon"
-                  aria-hidden="true"
-                >
-                  ⬇
-                </div>
-                <span>{{ stage.number }} - {{ stage.description }}</span>
-              </div>
-            </th>
-          </tr>
-          <tr>
-            <ng-container *ngFor="let stage of stagesWithContent">
-              <th
-                *ngFor="let type of types; let j = index"
-                [ngClass]="{
-                  'left-border': j === 0,
-                  'right-border': j === types.length - 1,
-                  'highlight-column': stage.id === highlightStageId,
-                }"
-              >
-                {{ type }}
-              </th>
-            </ng-container>
-          </tr>
-        </thead>
 
-        <tbody>
-          <tr>
-            <ng-container *ngFor="let stage of stagesWithContent">
-              <td
-                *ngFor="let type of types; let j = index"
-                [ngClass]="{
-                  'left-border': j === 0,
-                  'right-border': j === types.length - 1,
-                  'highlight-column': stage.id === highlightStageId,
-                }"
+        <table class="evaluation-table">
+
+          <!-- =================================================
+               STAGES
+          ================================================== -->
+
+          <thead>
+
+            <tr>
+
+              <th class="evaluation-table__types-header">
+                <div class="evaluation-table__types-header-content">
+
+                  <span class="evaluation-table__types-icon">
+                    <i class="fas fa-layer-group"></i>
+                  </span>
+
+                  <span>
+                    Tipos de evaluación
+                  </span>
+
+                </div>
+              </th>
+
+              <th
+                *ngFor="let stage of stagesWithContent"
+                class="evaluation-table__stage-header"
+                [class.evaluation-table__stage-header--highlighted]="
+                  stage.id === highlightStageId
+                "
+                [attr.id]="
+                  stage.id === highlightStageId
+                    ? 'highlighted-stage'
+                    : null
+                "
               >
-                <ng-container
-                  *ngIf="hasAssessments(type, stage.id); else emptyCell"
-                >
-                  <div
-                    *ngFor="let a of groupedAssessments[type][stage.id]; let last = last"
-                    class="assessment-entry"
-                    [ngClass]="{ 'bordered-entry': !last }"
+
+                <div class="evaluation-table__stage">
+
+                  <span
+                    class="evaluation-table__stage-current"
+                    *ngIf="stage.id === highlightStageId"
                   >
-                    <div class="entry-date">
-                      {{ a.createdAt | date: 'dd/MM/yy' }}
-                    </div>
-                    <div>
-                      Nota:
-                      <span
-                        [ngClass]="{
-                          'max-point-reached': isMaxReached(a.points),
-                          'below-threshold': isBelowMax(a.points)
-                        }"
-                      >
-                        {{ a.points }}
-                      </span>
-                    </div>
+                    Actual
+                  </span>
+
+                  <span class="evaluation-table__stage-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                  </span>
+
+                  <strong class="evaluation-table__stage-number">
+                    Stage {{ stage.number }}
+                  </strong>
+
+                  <span class="evaluation-table__stage-description">
+                    {{ stage.description }}
+                  </span>
+
+                  <span
+                    class="evaluation-table__stage-arrow"
+                    *ngIf="stage.id === highlightStageId"
+                    aria-hidden="true"
+                  >
+                    <i class="fas fa-arrow-down"></i>
+                  </span>
+
+                </div>
+
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <!-- =================================================
+               ASSESSMENTS
+          ================================================== -->
+
+          <tbody>
+
+            <tr *ngFor="let type of types">
+
+              <!-- TYPE -->
+
+              <th class="evaluation-table__type-cell">
+
+                <div class="evaluation-table__type">
+
+                  <span
+                    class="evaluation-table__type-icon"
+                    [class.evaluation-table__type-icon--speaking]="
+                      type === 'Speaking'
+                    "
+                    [class.evaluation-table__type-icon--grammar]="
+                      type === 'Grammar'
+                    "
+                  >
+                    <i
+                      [class]="
+                        type === 'Speaking'
+                          ? 'fas fa-headphones'
+                          : 'fas fa-file-circle-check'
+                      "
+                    ></i>
+                  </span>
+
+                  <div class="evaluation-table__type-content">
+
+                    <strong>
+                      {{ type }}
+                    </strong>
+
+                    <span>
+                      {{
+                        type === 'Speaking'
+                          ? 'Expresión oral'
+                          : 'Gramática'
+                      }}
+                    </span>
+
                   </div>
+
+                </div>
+
+              </th>
+
+              <!-- STAGE RESULT -->
+
+              <td
+                *ngFor="let stage of stagesWithContent"
+                [class.evaluation-table__cell--highlighted]="
+                  stage.id === highlightStageId
+                "
+              >
+
+                <ng-container
+                  *ngIf="
+                    hasAssessments(type, stage.id);
+                    else emptyCell
+                  "
+                >
+
+                  <div class="evaluation-table__entries">
+
+                    <article
+                      class="evaluation-table__entry"
+                      *ngFor="
+                        let a of groupedAssessments[type][stage.id]
+                      "
+                    >
+
+                      <div class="evaluation-table__entry-date">
+
+                        <span class="evaluation-table__entry-icon">
+                          <i class="far fa-calendar"></i>
+                        </span>
+
+                        <span>
+                          {{ a.createdAt | date:'dd MMM yyyy' }}
+                        </span>
+
+                      </div>
+
+                      <div class="evaluation-table__score">
+
+                        <span
+                          class="evaluation-table__score-dot"
+                          [class.evaluation-table__score-dot--success]="
+                            isMaxReached(a.points)
+                          "
+                          [class.evaluation-table__score-dot--danger]="
+                            isBelowMax(a.points)
+                          "
+                        ></span>
+
+                        <span>
+                          Nota:
+                        </span>
+
+                        <strong
+                          [class.evaluation-table__score-value--success]="
+                            isMaxReached(a.points)
+                          "
+                          [class.evaluation-table__score-value--danger]="
+                            isBelowMax(a.points)
+                          "
+                        >
+                          {{ a.points }}
+                        </strong>
+
+                      </div>
+
+                    </article>
+
+                  </div>
+
                 </ng-container>
+
                 <ng-template #emptyCell>
-                  <span style="color: #ccc">-</span>
+
+                  <div class="evaluation-table__empty-cell">
+                    —
+                  </div>
+
                 </ng-template>
+
               </td>
-            </ng-container>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="evaluation-modal__footer">
+
+      <div class="evaluation-modal__tip">
+
+        <span class="evaluation-modal__tip-icon">
+          <i class="far fa-lightbulb"></i>
+        </span>
+
+        <div class="evaluation-modal__tip-content">
+
+          <strong>
+            Consejo
+          </strong>
+
+          <span>
+            Desliza horizontalmente para ver todos los stages.
+          </span>
+
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="evaluation-modal__footer-close"
+        (click)="closeModal()"
+      >
+        Cerrar
+      </button>
+
+    </footer>
+
   </div>
 </div>
