@@ -94,4 +94,11 @@ export class StudentContentHistoryModalComponent implements OnInit, OnChanges {
     return content ? content.enabled === false : false;
   }
 
+  getAssignmentCount(title: string): number {
+    return this.getRecordsByContentTitle(title).reduce(
+      (total, record) => total + (record.dates?.length ?? 0),
+      0
+    );
+  }
+
 }

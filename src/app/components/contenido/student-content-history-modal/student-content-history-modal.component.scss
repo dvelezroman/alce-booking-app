@@ -1,202 +1,1251 @@
-.modal-background {
-  background-color: rgba(0, 0, 0, 0.2);
+:host {
+  display: block;
 }
 
-.modal-card {
-  background-color: #ffffff;
-  color: #4f4f4f;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  max-width: 1000px;
-  width: 90%;
-  max-height: 400px;
-  overflow-x: auto;
+/* =========================================================
+   MODAL
+========================================================= */
+
+.student-history-modal {
+  padding: 1.25rem;
 }
 
-.student-stage-header {
+.student-history-modal .modal-background {
+  background: rgba(18, 27, 48, .42);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.student-history-card {
+  width: min(94vw, 1180px);
+  max-width: 1180px;
+  max-height: 84vh;
+  margin: auto;
+
   display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border: 1px solid #e3e8f1;
+  border-radius: 1.25rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 1.5rem 4rem rgba(24, 36, 64, .2);
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.student-history-card__header {
+  flex: 0 0 auto;
+
+  min-height: 7.3rem;
+
+  display: flex;
+  align-items: center;
   justify-content: space-between;
+  gap: 1rem;
+
+  padding: 1.25rem 1.4rem;
+
+  border-bottom: 1px solid #edf0f5;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #fbfcff 100%
+    );
+}
+
+.student-history-card__header-main {
+  min-width: 0;
+
+  display: flex;
   align-items: center;
-  padding: 1rem;
+  gap: 1rem;
 }
 
-.modal-card-head {
-  background-color: #ffff !important;
-  padding: 0rem 1rem;
-}
+.student-history-card__stage-icon {
+  width: 4.2rem;
+  height: 4.2rem;
+  flex: 0 0 4.2rem;
 
-.student-stage-title {
-  flex: 1;
-  text-align: center;
-  font-size: 1rem;
-  font-weight: bold;
-  padding: .5rem;
-  border-bottom: 1px solid #ddd;
-}
-
-.modal-card-title {
-  color: #1f1f1f;
-  font-size: .9rem;
-  font-weight: bold;
-}
-
-.stage-navigation-buttons {
-  margin-left: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.nav-button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #606060;
-  font-size: 0.9rem;
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #f0f0f0;
-  }
-
-  &.disabled {
-    opacity: 0.4;
-  }
-}
-
-.modal-card-body {
-  padding: 1rem;
-  background-color: #ffffff;
-  color: #4f4f4f;
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  p {
-    font-size: 0.8rem;
-    color: #4f4f4f;
-    margin-bottom: 0.1rem;
-
-    strong {
-      color: #4f4f4f;
-    }
-  }
-}
-
-hr {
-  border: none;
-  height: 1px;
-  background-color: #bfbfbf;
-  margin: 0.75rem 0;
-}
-
-button.delete {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #606060;
-  font-size: 1rem;
-  padding: 0.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  border-radius: 50%;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      145deg,
+      #5574ff,
+      #403ee7
+    );
+
+  box-shadow:
+    0 .65rem 1.4rem rgba(72, 82, 223, .2);
 }
 
-.table-container {
-  width: 100%;
-  height: 200px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  border-radius: 8px;
+.student-history-card__stage-icon svg {
+  width: 2rem;
+  height: 2rem;
 }
 
-.table-results {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 1200px;
-  word-wrap: break-word;
+.student-history-card__heading {
+  min-width: 0;
 }
 
-.table-results thead {
-  position: sticky;
-  top: 0;
-  background-color: #e5effa;
-  z-index: 2;
+.student-history-card__eyebrow {
+  display: block;
+
+  margin-bottom: .22rem;
+
+  color: #4263e9;
+
+  font-size: .68rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
-.table-results th,
-.table-results td {
-  font-size: 0.75rem;
-  padding: 0.55rem;
-  max-width: 130px;
-  min-width: 135px;
+.student-history-card__title {
+  margin: 0;
+
   overflow: hidden;
+
+  color: #141b38;
+
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.25;
+
   text-overflow: ellipsis;
   white-space: nowrap;
-  border-left: 1px solid #dcdcdc;
-  border-right: 1px solid #dcdcdc;
+}
+
+.student-history-card__subtitle {
+  margin: .28rem 0 0;
+
+  color: #707991;
+
+  font-size: .72rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.student-history-card__header-actions {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.student-history-card__navigation {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+}
+
+.student-history-card__nav-button {
+  width: 2.65rem;
+  height: 2.65rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid #dfe4ee;
+  border-radius: .7rem;
+
+  background: #ffffff;
+  color: #35405b;
+
+  font-size: .75rem;
+
+  cursor: pointer;
+
+  transition:
+    border-color .18s ease,
+    background .18s ease,
+    color .18s ease,
+    transform .18s ease,
+    box-shadow .18s ease;
+}
+
+.student-history-card__nav-button:hover:not(:disabled) {
+  border-color: #cad2ef;
+
+  background: #f5f7ff;
+  color: #4d5ee6;
+
+  box-shadow:
+    0 .35rem .8rem rgba(67, 79, 173, .08);
+
+  transform: translateY(-1px);
+}
+
+.student-history-card__nav-button--next {
+  border-color: #5367ec;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5e72f2,
+      #4055e5
+    );
+
+  color: #ffffff;
+}
+
+.student-history-card__nav-button--next:hover:not(:disabled) {
+  border-color: #4054dc;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5367ea,
+      #384bda
+    );
+
+  color: #ffffff;
+}
+
+.student-history-card__nav-button--disabled {
+  opacity: .38;
+  cursor: not-allowed;
+}
+
+.student-history-card__close {
+  width: 2.55rem;
+  height: 2.55rem;
+  flex: 0 0 2.55rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid #e1e5ec;
+  border-radius: 50%;
+
+  background: #ffffff;
+  color: #3b4355;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 .3rem .8rem rgba(33, 42, 64, .08);
+
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    color .18s ease,
+    transform .18s ease;
+}
+
+.student-history-card__close svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.student-history-card__close:hover {
+  border-color: #f0d2d6;
+
+  background: #fff5f6;
+  color: #cf5662;
+
+  transform: rotate(4deg);
+}
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.student-history-card__info {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  margin: 1rem 1.4rem 0;
+  padding: .7rem .85rem;
+
+  border: 1px solid #e2e7f2;
+  border-radius: .75rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fbfcff,
+      #f8faff
+    );
+}
+
+.student-history-card__info-message {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+}
+
+.student-history-card__info-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+  flex: 0 0 1.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #536af1;
+  color: #ffffff;
+
+  font-size: .62rem;
+}
+
+.student-history-card__info-message p {
+  margin: 0;
+
+  color: #414a64;
+
+  font-size: .67rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.student-history-card__legend {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.student-history-card__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+
+  color: #555e73;
+
+  font-size: .62rem;
+  font-weight: 600;
+}
+
+.student-history-card__legend-dot {
+  width: .52rem;
+  height: .52rem;
+
+  border-radius: 50%;
+}
+
+.student-history-card__legend-dot--enabled {
+  background: #6dcc32;
+}
+
+.student-history-card__legend-dot--disabled {
+  background: #cdd3df;
+}
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.student-history-card__body {
+  min-height: 0;
+  flex: 1 1 auto;
+
+  padding: 1rem 1.4rem;
+
+  overflow: hidden;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.student-history-card__empty {
+  min-height: 17rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
   text-align: center;
-  color: #1f1f1f;
-  vertical-align: top;
-  transition: min-width 0.5s ease-in-out, max-width 0.5s ease-in-out;
 }
 
-.disabled-column {
-  background-color: #f0f0f0; 
-  color: #323232;
-  opacity: 0.3;
+.student-history-card__empty-icon {
+  width: 3.75rem;
+  height: 3.75rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: .8rem;
+
+  border-radius: 1rem;
+
+  background: #edf2ff;
+  color: #5369e8;
+
+  font-size: 1.2rem;
 }
 
-.table-results td {
-  font-size: 0.65rem;
-  background-color: #ffffff;
-  border-bottom: 1px solid #ddd;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: anywhere;
-  padding: 0; 
+.student-history-card__empty h3 {
+  margin: 0 0 .25rem;
+
+  color: #222943;
+
+  font-size: .85rem;
+  font-weight: 800;
 }
 
-.record-entry {
-  padding: 0.5rem 0;
-  border-bottom: 1px dashed #ccc;
-  margin-bottom: 0.5rem;
+.student-history-card__empty p {
+  margin: 0;
 
-  &:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-  }
+  color: #7b8395;
+
+  font-size: .68rem;
 }
 
-.table-results th.column-hovered,
-.table-results td.column-hovered {
-  min-width: max-content;
-  max-width: 500px;
-}
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
 
-.scroll-wrapper {
-  max-height: 130px;
+.student-history-table-wrapper {
+  width: 100%;
+  height: 100%;
+
+  overflow-x: auto;
   overflow-y: auto;
-  padding: 0.5rem;
-  display: block;
-  box-sizing: border-box;
-}
 
-.scrollable-cell {
+  border: 1px solid #dfe5ef;
+  border-radius: .85rem;
+
+  background: #ffffff;
+
   scrollbar-width: thin;
-  scrollbar-color: rgba(150, 150, 150, 0.3) transparent;
+  scrollbar-color: #c6cedd transparent;
 }
 
-.scrollable-cell::-webkit-scrollbar {
-  width: 6px;
+.student-history-table-wrapper::-webkit-scrollbar {
+  width: .4rem;
+  height: .45rem;
 }
 
-.scrollable-cell::-webkit-scrollbar-track {
+.student-history-table-wrapper::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.scrollable-cell::-webkit-scrollbar-thumb {
-  background-color: rgba(150, 150, 150, 0.3);
-  border-radius: 4px;
+.student-history-table-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #c6cedd;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.student-history-table {
+  width: max-content;
+  min-width: 100%;
+
+  border-collapse: collapse;
+
+  table-layout: fixed;
+}
+
+.student-history-table th,
+.student-history-table td {
+  width: 10rem;
+  min-width: 10rem;
+  max-width: 10rem;
+
+  border-right: 1px solid #e8ebf1;
+
+  vertical-align: top;
+}
+
+.student-history-table th:last-child,
+.student-history-table td:last-child {
+  border-right: 0;
+}
+
+/* =========================================================
+   TABLE HEAD
+========================================================= */
+
+.student-history-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+
+  background: #ffffff;
+}
+
+.student-history-table th {
+  height: 7.1rem;
+
+  padding: .85rem .65rem;
+
+  border-bottom: 1px solid #e1e6ef;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      #fbfcff
+    );
+
+  transition:
+    background .18s ease;
+}
+
+.student-history-table__content-header {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.student-history-table__content-icon {
+  width: 2.1rem;
+  height: 2.1rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: .45rem;
+
+  border-radius: .7rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      #eef1ff,
+      #e2e7ff
+    );
+
+  color: #5c68ed;
+
+  font-size: .72rem;
+}
+
+.student-history-table__content-icon--disabled {
+  background: #f1f3f7;
+  color: #9098aa;
+}
+
+.student-history-table__content-title {
+  width: 100%;
+
+  overflow: hidden;
+
+  color: #202741;
+
+  font-size: .68rem;
+  font-weight: 800;
+  line-height: 1.25;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.student-history-table__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: .4rem;
+  padding: .2rem .55rem;
+
+  border-radius: 999px;
+
+  background: #eaf8e5;
+  color: #48a027;
+
+  font-size: .52rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.student-history-table__status--disabled {
+  background: #f0f2f5;
+  color: #788194;
+}
+
+.student-history-table__content-title-wrapper {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+
+.student-history-table__content-title {
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  color: #202741;
+  font-size: .68rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.student-history-table__tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + .55rem);
+  z-index: 20;
+
+  width: max-content;
+  max-width: 15rem;
+
+  padding: .45rem .6rem;
+
+  border-radius: .5rem;
+
+  background: #202741;
+  color: #ffffff;
+
+  font-size: .58rem;
+  font-weight: 600;
+  line-height: 1.35;
+
+  white-space: normal;
+  text-align: center;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translate(-50%, .25rem);
+
+  pointer-events: none;
+
+  box-shadow:
+    0 .4rem 1rem rgba(22, 29, 56, .16);
+
+  transition:
+    opacity .15s ease,
+    transform .15s ease,
+    visibility .15s ease;
+}
+
+.student-history-table__content-title-wrapper:hover
+  .student-history-table__tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+/* =========================================================
+   TABLE BODY
+========================================================= */
+
+.student-history-table td {
+  position: relative;
+
+  min-height: 16rem;
+
+  padding: .75rem;
+
+  border-bottom: 0;
+
+  background: #ffffff;
+
+  transition:
+    background .18s ease;
+}
+
+.student-history-table__column--hovered {
+  background: #fafbff !important;
+}
+
+.student-history-table__column--disabled {
+  background:
+    linear-gradient(
+      180deg,
+      #f9fafc,
+      #f6f7fa
+    ) !important;
+}
+
+/* =========================================================
+   RECORDS
+========================================================= */
+
+.student-history-table__records {
+  max-height: 11rem;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: .2rem;
+  scrollbar-width: thin;
+  scrollbar-color: #ccd3df transparent;
+}
+
+.student-history-table__records--scrollable {
+  overflow-y: auto;
+
+  padding-right: .15rem;
+
+  scrollbar-width: thin;
+  scrollbar-color: #ccd3df transparent;
+}
+
+.student-history-table__records--scrollable::-webkit-scrollbar {
+  width: .3rem;
+}
+
+.student-history-table__records--scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.student-history-table__records--scrollable::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #ccd3df;
+}
+
+.student-history-table__record {
+  padding: .62rem .6rem;
+
+  border: 1px solid #e1e6ef;
+  border-radius: .65rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fcfdff
+    );
+
+  box-shadow:
+    0 .18rem .55rem rgba(31, 42, 73, .035);
+}
+
+.student-history-table__record-row {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+
+  color: #46506a;
+
+  font-size: .59rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.student-history-table__record-row + .student-history-table__record-row {
+  margin-top: .35rem;
+}
+
+.student-history-table__record-icon {
+  width: .85rem;
+  flex: 0 0 .85rem;
+
+  display: inline-flex;
+  justify-content: center;
+
+  color: #5369eb;
+
+  font-size: .58rem;
+}
+
+.student-history-table__record-count {
+  width: max-content;
+
+  margin: .7rem auto 0;
+  padding: .18rem .5rem;
+
+  border-radius: 999px;
+
+  background: #eef1ff;
+  color: #5464d9;
+
+  font-size: .52rem;
+  font-weight: 700;
+}
+
+/* =========================================================
+   NO RECORDS
+========================================================= */
+
+.student-history-table__no-records {
+  min-height: 8rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+
+  color: #9299a9;
+
+  font-size: .58rem;
+  font-weight: 600;
+
+  text-align: center;
+}
+
+.student-history-table__no-records-icon {
+  width: 2rem;
+  height: 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f2f4f8;
+  color: #9aa2b2;
+}
+
+/* =========================================================
+   DISABLED
+========================================================= */
+
+.student-history-table__disabled-state {
+  min-height: 13rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+
+  color: #737d92;
+
+  font-size: .6rem;
+  font-weight: 600;
+  line-height: 1.35;
+
+  text-align: center;
+}
+
+.student-history-table__disabled-icon {
+  width: 2.9rem;
+  height: 2.9rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #dfe3eb;
+  border-radius: 50%;
+
+  background: #ffffff;
+  color: #8790a4;
+
+  font-size: .8rem;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.student-history-card__footer {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding: .8rem 1.4rem 1rem;
+
+  border-top: 1px solid #eef0f4;
+
+  background: #ffffff;
+}
+
+.student-history-card__tip {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+
+  padding: .55rem .75rem;
+
+  border-radius: .65rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f4f7ff,
+      #edf2ff
+    );
+}
+
+.student-history-card__tip-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+  flex: 0 0 1.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #6786f5;
+  color: #f1eeee;
+
+  font-size: .62rem;
+}
+
+.student-history-card__tip-icon i {
+
+  color: #f1f2f5;
+
+  font-size: .7rem;
+
+}
+
+.student-history-card__tip div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.student-history-card__tip strong {
+  color: #25304e;
+
+  font-size: .59rem;
+  font-weight: 800;
+}
+
+.student-history-card__tip span {
+  color: #65708a;
+
+  font-size: .54rem;
+  font-weight: 500;
+}
+
+.student-history-card__footer-close {
+  min-width: 6.5rem;
+  min-height: 2.35rem;
+
+  padding: .45rem .9rem;
+
+  border: 1px solid #6274e9;
+  border-radius: .6rem;
+
+  background: #ffffff;
+  color: #4c60dc;
+
+  font: inherit;
+  font-size: .65rem;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    background .18s ease,
+    color .18s ease,
+    border-color .18s ease;
+}
+
+.student-history-card__footer-close:hover {
+  border-color: #4d61dc;
+
+  background: #f4f6ff;
+  color: #3e51cf;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 56.25rem) {
+
+  .student-history-modal {
+    padding: .85rem;
+  }
+
+  .student-history-card {
+    width: 96vw;
+    max-height: 86vh;
+
+    border-radius: 1.05rem;
+  }
+
+  .student-history-card__header {
+    min-height: auto;
+
+    padding: 1rem;
+  }
+
+  .student-history-card__stage-icon {
+    width: 3.6rem;
+    height: 3.6rem;
+    flex-basis: 3.6rem;
+  }
+
+  .student-history-card__stage-icon svg {
+    width: 1.7rem;
+    height: 1.7rem;
+  }
+
+  .student-history-card__title {
+    font-size: 1.05rem;
+  }
+
+  .student-history-card__info {
+    margin: .8rem 1rem 0;
+  }
+
+  .student-history-card__body {
+    padding: .8rem 1rem;
+  }
+
+  .student-history-card__footer {
+    padding: .75rem 1rem .9rem;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 40.625rem) {
+
+  .student-history-modal {
+    padding: .55rem;
+  }
+
+  .student-history-card {
+    width: 100%;
+    max-height: 90vh;
+
+    border-radius: .9rem;
+  }
+
+  .student-history-card__header {
+    position: relative;
+
+    align-items: flex-start;
+
+    padding: .85rem;
+    padding-right: 3.2rem;
+  }
+
+  .student-history-card__header-main {
+    gap: .7rem;
+  }
+
+  .student-history-card__stage-icon {
+    width: 3rem;
+    height: 3rem;
+    flex-basis: 3rem;
+
+    border-radius: .8rem;
+  }
+
+  .student-history-card__stage-icon svg {
+    width: 1.45rem;
+    height: 1.45rem;
+  }
+
+  .student-history-card__eyebrow {
+    font-size: .58rem;
+  }
+
+  .student-history-card__title {
+    max-width: 15rem;
+
+    font-size: .88rem;
+  }
+
+  .student-history-card__subtitle {
+    max-width: 16rem;
+
+    font-size: .6rem;
+  }
+
+  .student-history-card__header-actions {
+    position: absolute;
+    top: .75rem;
+    right: .75rem;
+  }
+
+  .student-history-card__navigation {
+    position: absolute;
+    top: 3.25rem;
+    right: 0;
+  }
+
+  .student-history-card__nav-button {
+    width: 2.15rem;
+    height: 2.15rem;
+
+    border-radius: .55rem;
+
+    font-size: .62rem;
+  }
+
+  .student-history-card__close {
+    width: 2.15rem;
+    height: 2.15rem;
+    flex-basis: 2.15rem;
+  }
+
+  .student-history-card__close svg {
+    width: .8rem;
+    height: .8rem;
+  }
+
+  .student-history-card__info {
+    margin: .65rem .75rem 0;
+    padding: .6rem;
+
+    align-items: flex-start;
+  }
+
+  .student-history-card__info-icon {
+    width: 1.55rem;
+    height: 1.55rem;
+    flex-basis: 1.55rem;
+
+    font-size: .52rem;
+  }
+
+  .student-history-card__info-message p {
+    font-size: .58rem;
+  }
+
+  .student-history-card__legend {
+    display: none;
+  }
+
+  .student-history-card__body {
+    padding: .65rem .75rem;
+  }
+
+  .student-history-table th,
+  .student-history-table td {
+    width: 8.6rem;
+    min-width: 8.6rem;
+    max-width: 8.6rem;
+  }
+
+  .student-history-table th {
+    height: 6.4rem;
+
+    padding: .65rem .5rem;
+  }
+
+  .student-history-table__content-icon {
+    width: 1.85rem;
+    height: 1.85rem;
+
+    margin-bottom: .35rem;
+
+    font-size: .62rem;
+  }
+
+  .student-history-table__content-title {
+    font-size: .61rem;
+  }
+
+  .student-history-table__status {
+    margin-top: .3rem;
+    padding: .18rem .42rem;
+
+    font-size: .47rem;
+  }
+
+  .student-history-table td {
+    padding: .55rem;
+  }
+
+  .student-history-table__record {
+    padding: .55rem .5rem;
+  }
+
+  .student-history-table__record-row {
+    font-size: .54rem;
+  }
+
+  .student-history-table__record-count {
+    font-size: .47rem;
+  }
+
+  .student-history-card__footer {
+    padding: .65rem .75rem .75rem;
+  }
+
+  .student-history-card__tip {
+    display: none;
+  }
+
+  .student-history-card__footer-close {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 30rem) {
+
+  .student-history-card__header {
+    padding: .75rem;
+    padding-right: 3rem;
+  }
+
+  .student-history-card__stage-icon {
+    width: 2.7rem;
+    height: 2.7rem;
+    flex-basis: 2.7rem;
+  }
+
+  .student-history-card__title {
+    max-width: 12rem;
+
+    font-size: .82rem;
+  }
+
+  .student-history-card__subtitle {
+    max-width: 12rem;
+
+    font-size: .56rem;
+  }
+
+  .student-history-table th,
+  .student-history-table td {
+    width: 7.8rem;
+    min-width: 7.8rem;
+    max-width: 7.8rem;
+  }
 }
