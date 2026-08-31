@@ -511,6 +511,65 @@ export class SearchingMeetingV2Component implements OnInit {
     }
   }
 
+  confirmUnassignMeetings(): void {
+    if (!this.selectedMeetingIds.length) {
+      return;
+    }
+
+    const count = this.selectedMeetingIds.length;
+    const label =
+      count === 1
+        ? '1 reunión seleccionada'
+        : `${count} reuniones seleccionadas`;
+
+    this.modalConfig = {
+      ...modalInitializer(),
+      show: true,
+      isInfo: true,
+      message: `¿Desasignar el tutor de ${label}? Las reuniones volverán al estado no asignado.`,
+      showButtons: true,
+      close: () => {
+        this.modalConfig.show = false;
+      },
+      confirm: () => {
+        this.modalConfig.show = false;
+        this.unassignMeetings();
+      },
+    };
+  }
+
+  unassignMeetings(): void {
+    if (!this.selectedMeetingIds.length) {
+      return;
+    }
+
+    this.bookingService
+      .unassignMeetings({
+        meetingIds: this.selectedMeetingIds,
+      })
+      .subscribe({
+        next: () => {
+          this.showModalMessage(
+            'El tutor fue desasignado correctamente.',
+            false,
+            false,
+            true,
+          );
+
+          this.selectedMeetingIds = [];
+          this.fetchMeetings();
+        },
+        error: () => {
+          this.showModalMessage(
+            'Error al desasignar el tutor.',
+            true,
+          );
+
+          this.fetchMeetings();
+        },
+      });
+  }
+
   getStudentDisplayName(
     meeting: MeetingDTO,
   ): string {

@@ -23,6 +23,9 @@ export class SearchingMeetingSelectionSummaryComponent {
   @Output()
   assignRequested = new EventEmitter<void>();
 
+  @Output()
+  unassignRequested = new EventEmitter<void>();
+
   get selectedMeetingsLabel(): string {
     if (this.selectedCount === 1) {
       return '1 reunión seleccionada';
@@ -44,5 +47,16 @@ export class SearchingMeetingSelectionSummaryComponent {
     }
 
     this.assignRequested.emit();
+  }
+
+  onUnassignRequested(): void {
+    if (
+      this.disabled ||
+      !this.hasSelection
+    ) {
+      return;
+    }
+
+    this.unassignRequested.emit();
   }
 }
