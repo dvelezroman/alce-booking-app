@@ -97,6 +97,42 @@ export interface BulkNotifyResultResponse {
   failed: number;
 }
 
+export interface BulkBlockSchedulingPayload {
+  search?: string;
+  active?: boolean;
+  title?: string;
+  message?: string;
+}
+
+export interface BlockSchedulingPayload {
+  userIds?: number[];
+  title?: string;
+  message?: string;
+}
+
+export interface BulkBlockSchedulingPreviewResponse {
+  totalSuppressions: number;
+  withUsersCount: number;
+  uniqueUserCount: number;
+  withoutUsersCount: number;
+}
+
+export interface BlockSchedulingResultResponse {
+  blocked: number;
+  alreadyBlocked: number;
+  skippedNoUsers: number;
+  failed: number;
+  blockedUserIds: number[];
+}
+
+export interface BulkBlockSchedulingResultResponse {
+  blocked: number;
+  alreadyBlocked: number;
+  skippedNoUsers: number;
+  uniqueUsersBlocked: number;
+  failed: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class EmailSuppressionService {
   private apiUrl = `${environment.apiUrl}/email-suppressions`;
@@ -174,6 +210,39 @@ export class EmailSuppressionService {
   ): Observable<BulkNotifyResultResponse> {
     return this.http.post<BulkNotifyResultResponse>(
       `${this.apiUrl}/bulk-notify`,
+      payload,
+    );
+  }
+
+  previewBulkBlockScheduling(
+    filters: BulkBlockSchedulingPayload = {},
+  ): Observable<BulkBlockSchedulingPreviewResponse> {
+    let params = new HttpParams();
+    if (filters.search) params = params.set('search', filters.search);
+    if (filters.active !== undefined && filters.active !== null) {
+      params = params.set('active', String(filters.active));
+    }
+    return this.http.get<BulkBlockSchedulingPreviewResponse>(
+      `${this.apiUrl}/bulk-block-scheduling/preview`,
+      { params },
+    );
+  }
+
+  bulkBlockScheduling(
+    payload: BulkBlockSchedulingPayload,
+  ): Observable<BulkBlockSchedulingResultResponse> {
+    return this.http.post<BulkBlockSchedulingResultResponse>(
+      `${this.apiUrl}/bulk-block-scheduling`,
+      payload,
+    );
+  }
+
+  blockScheduling(
+    id: number,
+    payload: BlockSchedulingPayload = {},
+  ): Observable<BlockSchedulingResultResponse> {
+    return this.http.post<BlockSchedulingResultResponse>(
+      `${this.apiUrl}/${id}/block-scheduling`,
       payload,
     );
   }

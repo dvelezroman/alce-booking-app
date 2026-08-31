@@ -101,6 +101,37 @@
 
         <button
           type="button"
+          class="
+            suppressed-page__create
+            suppressed-page__create--block
+          "
+          [disabled]="loading || bulkBlockLoading"
+          (click)="openBulkBlockScheduling()"
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="14"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.7"
+            />
+            <path
+              d="M8 12h8M12 8v8"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          Bloquear agendamiento
+        </button>
+
+
+        <button
+          type="button"
           class="suppressed-page__create"
           (click)="openCreate()"
         >
@@ -936,6 +967,39 @@
                   </button>
 
 
+                  <!-- BLOCK SCHEDULING -->
+
+                  <button
+                    *ngIf="item.active"
+                    type="button"
+                    class="
+                      suppressed-table__action
+                      suppressed-table__action--block
+                    "
+                    title="Bloquear agendamiento"
+                    [disabled]="!hasMatchedStudents(item)"
+                    (click)="requestBlockScheduling(item)"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <rect
+                        x="3"
+                        y="5"
+                        width="18"
+                        height="14"
+                        rx="2"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                      />
+                      <path
+                        d="M8 12h8"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </button>
+
+
                   <!-- LIFT -->
 
                   <button
@@ -1630,6 +1694,179 @@
             bulkNotifySending
               ? 'Enviando...'
               : 'Enviar a todos'
+          }}
+        </button>
+
+      </footer>
+
+    </section>
+
+  </div>
+
+
+  <!-- =====================================================
+       BULK BLOCK SCHEDULING MODAL
+  ====================================================== -->
+
+  <div
+    *ngIf="showBulkBlockModal"
+    class="suppressed-modal"
+  >
+
+    <button
+      type="button"
+      class="suppressed-modal__backdrop"
+      aria-label="Cerrar"
+      (click)="closeBulkBlockModal()"
+    >
+    </button>
+
+
+    <section
+      class="
+        suppressed-modal__panel
+        suppressed-modal__panel--notify
+        suppressed-modal__panel--bulk-notify
+      "
+    >
+
+      <header class="suppressed-modal__header">
+
+        <div>
+
+          <span class="suppressed-modal__eyebrow">
+            Bloqueo de agendamiento
+          </span>
+
+          <h2>
+            Bloquear agendamiento
+          </h2>
+
+          <p>
+            Impide agendar clases a los estudiantes vinculados
+            con los emails baneados de la lista filtrada actual.
+            También se les enviará una notificación in-app.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="suppressed-modal__close"
+          aria-label="Cerrar"
+          (click)="closeBulkBlockModal()"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M7 7l10 10M17 7 7 17"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+      </header>
+
+      <ng-container *ngIf="!bulkBlockLoading && bulkBlockPreview">
+        <p class="bulk-summary">
+          Se bloqueará el agendamiento de
+          <strong>{{ bulkBlockPreview.uniqueUserCount }}</strong>
+          estudiante(s) vinculados a
+          <strong>{{ bulkBlockPreview.withUsersCount }}</strong>
+          email(s) baneado(s)
+          <span *ngIf="bulkBlockPreview.withoutUsersCount">
+            ({{ bulkBlockPreview.withoutUsersCount }} sin estudiante se omitirán)
+          </span>.
+        </p>
+
+        <p class="bulk-hint">
+          Cada estudiante quedará con estado bloqueado y verá un aviso
+          al intentar agendar. Al actualizar su correo en Perfil,
+          el bloqueo se levantará automáticamente.
+        </p>
+
+        <p
+          class="bulk-hint warn"
+          *ngIf="!bulkBlockPreview.withUsersCount"
+        >
+          No hay estudiantes vinculados en la lista filtrada actual.
+        </p>
+      </ng-container>
+
+      <div class="suppressed-modal__body">
+
+        <div
+          *ngIf="bulkBlockLoading"
+          class="suppressed-table__state"
+        >
+          <span class="suppressed-table__spinner">
+          </span>
+          Calculando resumen...
+        </div>
+
+        <div
+          *ngIf="!bulkBlockLoading && bulkBlockPreview"
+          class="suppressed-page__info"
+        >
+          <span
+            class="suppressed-page__info-icon"
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="8.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+              <path
+                d="M12 10.5v5M12 7.5h.01"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+          <span>
+            Se aplicará el motivo
+            <strong>invalid_email</strong>
+            y se notificará in-app para que corrijan el correo.
+          </span>
+        </div>
+
+      </div>
+
+      <footer class="suppressed-modal__footer">
+
+        <button
+          type="button"
+          class="suppressed-modal__button"
+          (click)="closeBulkBlockModal()"
+          [disabled]="bulkBlockSending"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="
+            suppressed-modal__button
+            suppressed-modal__button--primary
+          "
+          [disabled]="
+            bulkBlockLoading ||
+            bulkBlockSending ||
+            !bulkBlockPreview?.withUsersCount
+          "
+          (click)="sendBulkBlockScheduling()"
+        >
+          {{
+            bulkBlockSending
+              ? 'Bloqueando...'
+              : 'Bloquear a todos'
           }}
         </button>
 

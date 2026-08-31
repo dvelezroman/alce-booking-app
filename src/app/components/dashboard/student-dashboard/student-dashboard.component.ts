@@ -361,6 +361,13 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     if (reason && reason.trim().length > 0) {
       const normalized = reason.toLowerCase();
 
+      if (
+        normalized.includes('invalid_email') ||
+        normalized.includes('banned_email')
+      ) {
+        return 'Tu correo está bloqueado (inválido o no recibe mensajes). Actualiza tu email en Perfil para poder agendar clases.';
+      }
+
       if (normalized.includes('assessment')) {
         return 'Tienes assessments expirados. Debes completarlos para poder agendar nuevas clases.';
       }

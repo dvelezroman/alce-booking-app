@@ -457,12 +457,39 @@ export class MeetingBookingV2Component
 
   private showBlockedMessage(): void {
     this.showModalMessage(
-      'No puedes agendar clases porque ya EXPIRARON TUS ASSESSMENTS. Para su activación, comunícate con administración.',
+      this.getBlockedSchedulingMessage(),
       true,
       false,
       false,
       6000
     );
+  }
+
+  private getBlockedSchedulingMessage(): string {
+    const reason = (this.userData?.schedulingBlockReason || '')
+      .toLowerCase()
+      .trim();
+
+    if (
+      reason.includes('invalid_email') ||
+      reason.includes('banned_email')
+    ) {
+      return 'No puedes agendar porque tu correo está bloqueado (inválido o no recibe mensajes). Actualiza tu email en Perfil para reactivar el agendamiento.';
+    }
+
+    if (reason.includes('assessment')) {
+      return 'No puedes agendar clases porque ya EXPIRARON TUS ASSESSMENTS. Para su activación, comunícate con administración.';
+    }
+
+    if (
+      reason.includes('evaluacion') ||
+      reason.includes('evaluaciones') ||
+      reason.includes('evaluation')
+    ) {
+      return 'No puedes agendar clases porque tienes evaluaciones pendientes. Complétalas para poder agendar.';
+    }
+
+    return 'No puedes agendar clases porque ya EXPIRARON TUS ASSESSMENTS. Para su activación, comunícate con administración.';
   }
 
   private getDisabledDates(): Observable<DisabledDays> {

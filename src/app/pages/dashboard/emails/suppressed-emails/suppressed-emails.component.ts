@@ -33,6 +33,7 @@ export class SuppressedEmailsComponent implements OnInit {
   showEditModal = false;
   showNotifyModal = false;
   showBulkNotifyModal = false;
+  showBulkBlockModal = false;
   showUserModal = false;
   editing: EmailSuppression | null = null;
   isCreate = false;
@@ -56,6 +57,16 @@ export class SuppressedEmailsComponent implements OnInit {
   } | null = null;
   bulkNotifyLoading = false;
   bulkNotifySending = false;
+
+  bulkBlockPreview: {
+    totalSuppressions: number;
+    withUsersCount: number;
+    uniqueUserCount: number;
+    withoutUsersCount: number;
+  } | null = null;
+  bulkBlockLoading = false;
+  bulkBlockSending = false;
+
   selectedUser: MatchedUser | null = null;
   selectedBannedEmail = '';
 
@@ -232,6 +243,120 @@ export class SuppressedEmailsComponent implements OnInit {
         this.modal.show = false;
       },
     };
+  }
+
+  hasMatchedStudents(item: EmailSuppression): boolean {
+    return (item.matchedUsers || []).some(
+      (u) => String(u.role).toUpperCase() === 'STUDENT',
+    );
+  }
+
+  requestBlockScheduling(item: EmailSuppression): void {
+    if (!this.hasMatchedStudents(item)) {
+      this.showError('No hay estudiante vinculado para bloquear agendamiento.');
+      return;
+    }
+
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      title: 'Bloquear agendamiento',
+      message: `¿Bloquear el agendamiento de los estudiantes vinculados a <strong>${item.email}</strong>? También se les enviará una notificación in-app para que actualicen su correo.`,
+      showButtons: true,
+      isInfo: true,
+      confirm: () => {
+        this.modal.show = false;
+        this.emailSuppressionService.blockScheduling(item.id).subscribe({
+          next: (result) => {
+            const parts = [
+              `${result.blocked} bloqueado(s)`,
+              `${result.alreadyBlocked} ya bloqueado(s)`,
+            ];
+            if (result.failed) {
+              parts.push(`${result.failed} fallido(s)`);
+            }
+            this.showSuccess(`Agendamiento bloqueado: ${parts.join(', ')}.`);
+            this.fetch();
+          },
+          error: (err) => {
+            this.showError(
+              err?.error?.message ||
+                'No se pudo bloquear el agendamiento.',
+            );
+          },
+        });
+      },
+      close: () => {
+        this.modal.show = false;
+      },
+    };
+  }
+
+  openBulkBlockScheduling(): void {
+    this.bulkBlockPreview = null;
+    this.bulkBlockLoading = true;
+    this.showBulkBlockModal = true;
+
+    this.emailSuppressionService
+      .previewBulkBlockScheduling(this.currentListFilters())
+      .subscribe({
+        next: (preview) => {
+          this.bulkBlockPreview = preview;
+          this.bulkBlockLoading = false;
+        },
+        error: (err) => {
+          this.bulkBlockLoading = false;
+          this.showBulkBlockModal = false;
+          this.showError(
+            err?.error?.message ||
+              'No se pudo cargar el resumen de bloqueo de agendamiento.',
+          );
+        },
+      });
+  }
+
+  closeBulkBlockModal(): void {
+    this.showBulkBlockModal = false;
+    this.bulkBlockPreview = null;
+    this.bulkBlockSending = false;
+  }
+
+  sendBulkBlockScheduling(): void {
+    if (!this.bulkBlockPreview?.withUsersCount) {
+      this.showError('No hay estudiantes vinculados para bloquear.');
+      return;
+    }
+
+    this.bulkBlockSending = true;
+    this.emailSuppressionService
+      .bulkBlockScheduling(this.currentListFilters())
+      .subscribe({
+        next: (result) => {
+          this.closeBulkBlockModal();
+          const parts = [
+            `${result.uniqueUsersBlocked} estudiante(s) bloqueado(s)`,
+            `${result.blocked} cuenta(s) actualizada(s)`,
+            `${result.alreadyBlocked} ya bloqueado(s)`,
+          ];
+          if (result.skippedNoUsers) {
+            parts.push(`${result.skippedNoUsers} sin estudiante vinculado`);
+          }
+          if (result.failed) {
+            parts.push(`${result.failed} fallido(s)`);
+          }
+          this.showSuccess(
+            `Bloqueo de agendamiento: ${parts.join(', ')}.`,
+          );
+          this.fetch();
+        },
+        error: (err) => {
+          this.bulkBlockSending = false;
+          this.showError(
+            err?.error?.message ||
+              'No se pudo bloquear el agendamiento masivo.',
+          );
+        },
+      });
   }
 
   private currentListFilters(): { search?: string; active?: boolean } {
