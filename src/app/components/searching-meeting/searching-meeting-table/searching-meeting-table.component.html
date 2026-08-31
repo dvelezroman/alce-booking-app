@@ -8,24 +8,36 @@
         <h2 class="searching-meeting-table__title">
           Reuniones encontradas
         </h2>
+
         <span class="searching-meeting-table__count">
-          {{ meetings.length }}
+          {{ totalMeetings }}
+        </span>
+
+        <span
+          *ngIf="meetings.length > 0"
+          class="searching-meeting-table__assignment-result"
+          [class.searching-meeting-table__assignment-result--assigned]="
+            !!meetings[0].instructorId
+          "
+          [class.searching-meeting-table__assignment-result--unassigned]="
+            !meetings[0].instructorId
+          "
+        >
+          {{ meetings[0].instructorId ? 'Asignadas' : 'Sin asignar' }}
         </span>
       </div>
 
-      <div class="searching-meeting-table__page-size">
+      <!-- <div class="searching-meeting-table__page-size">
         <span class="searching-meeting-table__page-size-label">
           Mostrar
         </span>
+
         <select
           class="searching-meeting-table__page-size-select"
           [value]="limit"
           (change)="onLimitSelected($any($event.target).value)"
         >
-          @for (
-            option of limitOptions;
-            track option
-          ) {
+          @for (option of limitOptions; track option) {
             <option
               [value]="option"
               [selected]="option === limit"
@@ -34,10 +46,11 @@
             </option>
           }
         </select>
+
         <span class="searching-meeting-table__page-size-label">
           por página
         </span>
-      </div>
+      </div> -->
     </header>
 
     <!-- =========================

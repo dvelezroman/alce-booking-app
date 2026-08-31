@@ -31,6 +31,18 @@ import {
 })
 export class SearchingMeetingFiltersComponent {
 
+  /* =========================
+     INSTRUCTOR SEARCH
+  ========================= */
+
+  instructorSearch: string = '';
+  showInstructorDropdown: boolean = false;
+  filteredInstructors: Instructor[] = [];
+
+  /* =========================
+     INPUTS
+  ========================= */
+
   @Input()
   filter: FilterMeetingsDto = {
     from: '',
@@ -58,19 +70,35 @@ export class SearchingMeetingFiltersComponent {
   @Input()
   instructors: Instructor[] = [];
 
+  /* =========================
+     OUTPUTS
+  ========================= */
+
   @Output()
   filterChange = new EventEmitter<void>();
 
   @Output()
   clearFilters = new EventEmitter<void>();
 
+  /* =========================
+     ACTIONS
+  ========================= */
+
   onApplyFilters(): void {
     this.filterChange.emit();
   }
 
   onClearFilters(): void {
+    this.instructorSearch = '';
+    this.showInstructorDropdown = false;
+    this.filteredInstructors = [];
+
     this.clearFilters.emit();
   }
+
+  /* =========================
+     HOUR
+  ========================= */
 
   formatHour(
     hour: number,
@@ -86,6 +114,10 @@ export class SearchingMeetingFiltersComponent {
     return `${formattedHour}:00 ${suffix}`;
   }
 
+  /* =========================
+     STAGE
+  ========================= */
+
   getStageLabel(
     stage: Stage,
   ): string {
@@ -93,6 +125,10 @@ export class SearchingMeetingFiltersComponent {
       ? `Stage ${stage.number}`
       : stage.description || 'Stage';
   }
+
+  /* =========================
+     CATEGORY
+  ========================= */
 
   getCategoryLabel(
     category: string,
@@ -107,6 +143,10 @@ export class SearchingMeetingFiltersComponent {
     return labels[category] || category;
   }
 
+  /* =========================
+     MODE
+  ========================= */
+
   getModeLabel(
     mode: string,
   ): string {
@@ -118,6 +158,10 @@ export class SearchingMeetingFiltersComponent {
 
     return labels[mode] || mode;
   }
+
+  /* =========================
+     INSTRUCTOR
+  ========================= */
 
   getInstructorLabel(
     instructor: Instructor,
@@ -142,6 +186,22 @@ export class SearchingMeetingFiltersComponent {
     );
   }
 
+  getInstructorInitials(
+    instructor: Instructor,
+  ): string {
+    const firstName =
+      instructor.user?.firstName?.trim() || '';
+
+    const lastName =
+      instructor.user?.lastName?.trim() || '';
+
+    const initials =
+      `${firstName.charAt(0)}${lastName.charAt(0)}`
+        .toUpperCase();
+
+    return initials || 'IN';
+  }
+
   trackByInstructorId(
     index: number,
     instructor: Instructor,
@@ -149,9 +209,102 @@ export class SearchingMeetingFiltersComponent {
     return instructor.id;
   }
 
-  onInstructorChange(): void {
-    if (this.filter.instructorId) {
-      this.filter.assigned = true;
+  /* =========================
+     INSTRUCTOR SEARCH
+  ========================= */
+
+  onInstructorInputFocus(): void {
+    this.filteredInstructors = [
+      ...this.instructors,
+    ];
+
+    this.showInstructorDropdown = true;
+  }
+
+  onInstructorInputChange(
+    value: string,
+  ): void {
+    this.instructorSearch = value;
+
+    const term =
+      value
+        .trim()
+        .toLowerCase();
+
+    /*
+     * Si el usuario comienza a escribir nuevamente,
+     * quitamos el instructor previamente seleccionado.
+     */
+    this.filter.instructorId = '';
+
+    this.showInstructorDropdown = true;
+
+    if (!term) {
+      this.filteredInstructors = [
+        ...this.instructors,
+      ];
+
+      return;
     }
+
+    this.filteredInstructors =
+      this.instructors.filter(
+        instructor => {
+          const fullName =
+            this
+              .getInstructorLabel(
+                instructor,
+              )
+              .toLowerCase();
+
+          return fullName.includes(
+            term,
+          );
+        },
+      );
+  }
+
+  onInstructorInputBlur(): void {
+    setTimeout(() => {
+      this.showInstructorDropdown =
+        false;
+    }, 150);
+  }
+
+  onSelectInstructor(
+    instructor: Instructor,
+  ): void {
+    this.filter.instructorId =
+      this.getInstructorId(
+        instructor,
+      );
+
+    this.instructorSearch =
+      this.getInstructorLabel(
+        instructor,
+      );
+
+    /*
+     * Si seleccionamos un instructor,
+     * automáticamente buscamos reuniones
+     * asignadas.
+     */
+    this.filter.assigned = true;
+
+    this.showInstructorDropdown =
+      false;
+  }
+
+  clearInstructor(): void {
+    this.filter.instructorId = '';
+
+    this.instructorSearch = '';
+
+    this.filteredInstructors = [
+      ...this.instructors,
+    ];
+
+    this.showInstructorDropdown =
+      false;
   }
 }

@@ -274,6 +274,284 @@
   pointer-events: none;
 }
 
+/* =========================
+   SELECT
+========================= */
+
+.searching-meeting-filters__select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.searching-meeting-filters__select {
+  padding-right: 2rem;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  cursor: pointer;
+}
+
+.searching-meeting-filters__select-icon {
+  position: absolute;
+  top: 50%;
+  right: .65rem;
+
+  width: .8rem;
+  height: .8rem;
+
+  transform: translateY(-50%);
+
+  color: #515a70;
+
+  pointer-events: none;
+}
+
+
+/* =========================
+   INSTRUCTOR SEARCH
+========================= */
+
+.searching-meeting-filters__field--instructor {
+  position: relative;
+  z-index: 30;
+  grid-column: span 2;
+}
+
+.searching-meeting-filters__instructor-search {
+  position: relative;
+  width: 100%;
+}
+
+.searching-meeting-filters__instructor-input {
+  padding-left: 2.15rem;
+  padding-right: 2rem;
+}
+
+.searching-meeting-filters__instructor-search-icon {
+  position: absolute;
+  top: 50%;
+  left: .7rem;
+  z-index: 2;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #687185;
+
+  pointer-events: none;
+
+  transform: translateY(-50%);
+}
+
+.searching-meeting-filters__instructor-clear {
+  position: absolute;
+  top: 50%;
+  right: .6rem;
+  z-index: 3;
+
+  width: 1.35rem;
+  height: 1.35rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+  color: #858d9d;
+
+  font-size: 1rem;
+
+  cursor: pointer;
+
+  transform: translateY(-50%);
+}
+
+.searching-meeting-filters__instructor-clear:hover {
+  background: #f2efff;
+  color: #6040d8;
+}
+
+
+/* =========================
+   INSTRUCTOR DROPDOWN
+========================= */
+
+.searching-meeting-filters__instructor-dropdown {
+  position: absolute;
+  top: calc(100% + .35rem);
+  right: 0;
+  left: 0;
+  z-index: 100;
+
+  max-height: 17rem;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: .35rem;
+
+  border: 1px solid #e1e4eb;
+  border-radius: .55rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 .75rem 2rem rgba(30, 36, 58, .12),
+    0 .15rem .5rem rgba(30, 36, 58, .05);
+}
+
+
+/* =========================
+   INSTRUCTOR OPTION
+========================= */
+
+.searching-meeting-filters__instructor-option {
+  width: 100%;
+  min-height: 3.25rem;
+
+  display: grid;
+  grid-template-columns:
+    2rem
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: .65rem;
+
+  padding: .45rem .55rem;
+
+  border: 0;
+  border-radius: .4rem;
+
+  background: transparent;
+  color: #30384d;
+
+  font-family: inherit;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    transform .1s ease;
+}
+
+.searching-meeting-filters__instructor-option:hover {
+  background: #f5f2ff;
+}
+
+.searching-meeting-filters__instructor-option:active {
+  transform: scale(.99);
+}
+
+
+/* =========================
+   INSTRUCTOR AVATAR
+========================= */
+
+.searching-meeting-filters__instructor-avatar {
+  width: 2rem;
+  height: 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eeeaff;
+  color: #6542db;
+
+  font-size: .62rem;
+  font-weight: 750;
+}
+
+
+/* =========================
+   INSTRUCTOR CONTENT
+========================= */
+
+.searching-meeting-filters__instructor-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
+}
+
+.searching-meeting-filters__instructor-content strong {
+  overflow: hidden;
+
+  color: #252c40;
+
+  font-size: .66rem;
+  font-weight: 700;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searching-meeting-filters__instructor-content small {
+  color: #858d9e;
+
+  font-size: .58rem;
+}
+
+.searching-meeting-filters__instructor-id {
+  color: #777f91;
+
+  font-size: .6rem;
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   DROPDOWN SCROLLBAR
+========================= */
+
+.searching-meeting-filters__instructor-dropdown {
+  scrollbar-width: thin;
+  scrollbar-color: #c8cbd3 transparent;
+}
+
+.searching-meeting-filters__instructor-dropdown::-webkit-scrollbar {
+  width: .32rem;
+}
+
+.searching-meeting-filters__instructor-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.searching-meeting-filters__instructor-dropdown::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #c8cbd3;
+}
+
+
+/* =========================
+   BOTTOM
+========================= */
+
+.searching-meeting-filters__bottom {
+  width: 100%;
+  margin-top: .9rem;
+
+  display: flex;
+  align-items: flex-end;
+
+  gap: .6rem;
+}
 
 /* =========================
    BUTTONS
@@ -423,6 +701,10 @@
   .searching-meeting-filters__grid {
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
+  }
+
+  .searching-meeting-filters__field--instructor {
+    grid-column: auto;
   }
 
   .searching-meeting-filters__bottom {

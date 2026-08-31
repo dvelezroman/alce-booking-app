@@ -311,50 +311,122 @@
     </label>
 
     <!-- INSTRUCTOR ASIGNADO -->
-    <label class="searching-meeting-filters__field">
-      <span class="searching-meeting-filters__label">
+    <div class="searching-meeting-filters__field searching-meeting-filters__field--instructor">
+
+      <label class="searching-meeting-filters__label">
         Instructor asignado
-      </span>
-  
-      <div class="searching-meeting-filters__select-wrapper">
-        <select
-          class="searching-meeting-filters__control searching-meeting-filters__select"
-          [(ngModel)]="filter.instructorId"
-          (ngModelChange)="onInstructorChange()"
-        >
-          <option value="">
-            Todos
-          </option>
-  
-          <option
-            *ngFor="
-              let instructor of instructors;
-              trackBy: trackByInstructorId
-            "
-            [value]="getInstructorId(instructor)"
-          >
-            {{ getInstructorLabel(instructor) }}
-          </option>
-        </select>
-  
-        <svg
-          class="searching-meeting-filters__select-icon"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
+      </label>
+
+      <div class="searching-meeting-filters__instructor-search">
+
+        <span
+          class="searching-meeting-filters__instructor-search-icon"
           aria-hidden="true"
         >
-          <path
-            d="m6 9 6 6 6-6"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="m16 16 4 4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+
+        <input
+          type="text"
+          class="searching-meeting-filters__control searching-meeting-filters__instructor-input"
+          placeholder="Buscar instructor..."
+          [(ngModel)]="instructorSearch"
+          (focus)="onInstructorInputFocus()"
+          (ngModelChange)="onInstructorInputChange($event)"
+          (blur)="onInstructorInputBlur()"
+        />
+
+        <button
+          *ngIf="instructorSearch"
+          type="button"
+          class="searching-meeting-filters__instructor-clear"
+          aria-label="Limpiar instructor"
+          (mousedown)="$event.preventDefault()"
+          (click)="clearInstructor()"
+        >
+          ×
+        </button>
+
+        <div
+          *ngIf="showInstructorDropdown && filteredInstructors.length > 0"
+          class="searching-meeting-filters__instructor-dropdown"
+        >
+
+          <!-- TODOS -->
+          <button
+            type="button"
+            class="searching-meeting-filters__instructor-option"
+            (mousedown)="clearInstructor()"
+          >
+            <span class="searching-meeting-filters__instructor-avatar searching-meeting-filters__instructor-avatar--all">
+              —
+            </span>
+
+            <span class="searching-meeting-filters__instructor-content">
+              <strong>
+                Todos
+              </strong>
+
+              <small>
+                Todos los instructores
+              </small>
+            </span>
+          </button>
+
+          <!-- INSTRUCTORES -->
+          <button
+            *ngFor="
+              let instructor of filteredInstructors;
+              trackBy: trackByInstructorId
+            "
+            type="button"
+            class="searching-meeting-filters__instructor-option"
+            (mousedown)="onSelectInstructor(instructor)"
+          >
+            <span class="searching-meeting-filters__instructor-avatar">
+              {{ getInstructorInitials(instructor) }}
+            </span>
+
+            <span class="searching-meeting-filters__instructor-content">
+              <strong>
+                {{ getInstructorLabel(instructor) }}
+              </strong>
+
+              <small>
+                Instructor
+              </small>
+            </span>
+
+            <span class="searching-meeting-filters__instructor-id">
+              #{{ instructor.id }}
+            </span>
+          </button>
+
+        </div>
+
       </div>
-    </label>
+
+    </div>
   </div>
 
 
