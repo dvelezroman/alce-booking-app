@@ -310,7 +310,53 @@
       </div>
     </label>
 
+    <!-- INSTRUCTOR ASIGNADO -->
+    <label class="searching-meeting-filters__field">
+      <span class="searching-meeting-filters__label">
+        Instructor asignado
+      </span>
+  
+      <div class="searching-meeting-filters__select-wrapper">
+        <select
+          class="searching-meeting-filters__control searching-meeting-filters__select"
+          [(ngModel)]="filter.instructorId"
+          (ngModelChange)="onInstructorChange()"
+        >
+          <option value="">
+            Todos
+          </option>
+  
+          <option
+            *ngFor="
+              let instructor of instructors;
+              trackBy: trackByInstructorId
+            "
+            [value]="getInstructorId(instructor)"
+          >
+            {{ getInstructorLabel(instructor) }}
+          </option>
+        </select>
+  
+        <svg
+          class="searching-meeting-filters__select-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+    </label>
   </div>
+
 
 
   <!-- =========================

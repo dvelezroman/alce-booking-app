@@ -15,6 +15,10 @@ import {
   Stage,
 } from '../../../services/dtos/student.dto';
 
+import {
+  Instructor,
+} from '../../../services/dtos/instructor.dto';
+
 @Component({
   selector: 'app-searching-meeting-filters',
   standalone: true,
@@ -36,6 +40,7 @@ export class SearchingMeetingFiltersComponent {
     assigned: false,
     category: undefined,
     mode: undefined,
+    instructorId: '',
   };
 
   @Input()
@@ -50,9 +55,14 @@ export class SearchingMeetingFiltersComponent {
   @Input()
   modeOptions: string[] = [];
 
-  @Output() filterChange = new EventEmitter<void>();
+  @Input()
+  instructors: Instructor[] = [];
 
-  @Output() clearFilters = new EventEmitter<void>(); 
+  @Output()
+  filterChange = new EventEmitter<void>();
+
+  @Output()
+  clearFilters = new EventEmitter<void>();
 
   onApplyFilters(): void {
     this.filterChange.emit();
@@ -62,10 +72,13 @@ export class SearchingMeetingFiltersComponent {
     this.clearFilters.emit();
   }
 
-  formatHour(hour: number): string {
-    const suffix = hour >= 12
-      ? 'PM'
-      : 'AM';
+  formatHour(
+    hour: number,
+  ): string {
+    const suffix =
+      hour >= 12
+        ? 'PM'
+        : 'AM';
 
     const formattedHour =
       hour % 12 || 12;
@@ -73,28 +86,72 @@ export class SearchingMeetingFiltersComponent {
     return `${formattedHour}:00 ${suffix}`;
   }
 
-  getStageLabel(stage: Stage): string {
+  getStageLabel(
+    stage: Stage,
+  ): string {
     return stage.number
       ? `Stage ${stage.number}`
       : stage.description || 'Stage';
   }
 
-  getCategoryLabel(category: string): string {
-    const labels: Record<string, string> = {
-      KIDS: 'Kids',
-      TEENS: 'Teens',
-      ADULTS: 'Adults',
-    };
+  getCategoryLabel(
+    category: string,
+  ): string {
+    const labels:
+      Record<string, string> = {
+        KIDS: 'Kids',
+        TEENS: 'Teens',
+        ADULTS: 'Adults',
+      };
 
     return labels[category] || category;
   }
 
-  getModeLabel(mode: string): string {
-    const labels: Record<string, string> = {
-      ONLINE: 'Online',
-      PRESENCIAL: 'Presencial',
-    };
+  getModeLabel(
+    mode: string,
+  ): string {
+    const labels:
+      Record<string, string> = {
+        ONLINE: 'Online',
+        PRESENCIAL: 'Presencial',
+      };
 
     return labels[mode] || mode;
+  }
+
+  getInstructorLabel(
+    instructor: Instructor,
+  ): string {
+    const firstName =
+      instructor.user?.firstName || '';
+
+    const lastName =
+      instructor.user?.lastName || '';
+
+    const fullName =
+      `${firstName} ${lastName}`.trim();
+
+    return fullName || 'Instructor';
+  }
+
+  getInstructorId(
+    instructor: Instructor,
+  ): string {
+    return String(
+      instructor.id,
+    );
+  }
+
+  trackByInstructorId(
+    index: number,
+    instructor: Instructor,
+  ): number {
+    return instructor.id;
+  }
+
+  onInstructorChange(): void {
+    if (this.filter.instructorId) {
+      this.filter.assigned = true;
+    }
   }
 }

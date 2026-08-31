@@ -102,6 +102,7 @@ export class SearchingMeetingV2Component implements OnInit {
     assigned: false,
     category: undefined,
     mode: undefined,
+    instructorId: '',
   };
 
   constructor(
@@ -294,6 +295,11 @@ export class SearchingMeetingV2Component implements OnInit {
           this.filter.mode
             ? this.filter.mode
             : undefined,
+
+        instructorId:
+          this.filter.instructorId
+            ? this.filter.instructorId
+            : undefined,
       };
 
     if (
@@ -322,6 +328,7 @@ export class SearchingMeetingV2Component implements OnInit {
       assigned: false,
       category: undefined,
       mode: undefined,
+      instructorId: '',
     };
 
     this.page = 1;
