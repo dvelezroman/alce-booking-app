@@ -9,90 +9,158 @@
 
 
   <!-- =========================
-       INSTRUCTOR
+      INSTRUCTOR
   ========================== -->
   <div class="searching-meeting-assignment__field">
 
     <label
       class="searching-meeting-assignment__label"
-      for="searching-meeting-instructor"
+      for="searching-meeting-instructor-search"
     >
       Instructor
     </label>
 
-    <div class="searching-meeting-assignment__instructor-control">
+    <div class="searching-meeting-assignment__instructor-search">
 
-      @if (selectedInstructor) {
-
-        <div class="searching-meeting-assignment__instructor-avatar">
-          {{ getInstructorInitials(selectedInstructor) }}
-        </div>
-
-        <div class="searching-meeting-assignment__instructor-info">
-
-          <strong class="searching-meeting-assignment__instructor-name">
-            {{ getInstructorName(selectedInstructor) }}
-          </strong>
-
-          <span class="searching-meeting-assignment__instructor-secondary">
-            {{ getInstructorSubtitle(selectedInstructor) }}
-          </span>
-
-        </div>
-
-      } @else {
-
-        <div class="searching-meeting-assignment__instructor-avatar searching-meeting-assignment__instructor-avatar--empty">
-          IN
-        </div>
-
-        <div class="searching-meeting-assignment__instructor-info">
-
-          <strong class="searching-meeting-assignment__instructor-name">
-            Selecciona un instructor
-          </strong>
-
-          <span class="searching-meeting-assignment__instructor-secondary">
-            Instructor disponible
-          </span>
-
-        </div>
-
-      }
-
-      <select
-        id="searching-meeting-instructor"
-        class="searching-meeting-assignment__select"
-        [value]="selectedInstructor?.id || ''"
-        (change)="onInstructorChange($any($event.target).value)"
+      <!-- SEARCH ICON -->
+      <span
+        class="searching-meeting-assignment__instructor-search-icon"
+        aria-hidden="true"
       >
-        <option value="">
-          Selecciona un instructor
-        </option>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
 
-        <option
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <!-- INPUT -->
+      <input
+        id="searching-meeting-instructor-search"
+        type="text"
+        class="searching-meeting-assignment__input searching-meeting-assignment__instructor-input"
+        placeholder="Buscar instructor..."
+        [(ngModel)]="instructorSearch"
+        (focus)="onInstructorInputFocus()"
+        (ngModelChange)="onInstructorInputChange($event)"
+        (blur)="onInstructorInputBlur()"
+        autocomplete="off"
+      />
+
+      <!-- CLEAR -->
+      <button
+        *ngIf="instructorSearch"
+        type="button"
+        class="searching-meeting-assignment__instructor-clear"
+        aria-label="Limpiar instructor"
+        (mousedown)="$event.preventDefault()"
+        (click)="clearInstructor()"
+      >
+        ×
+      </button>
+
+
+      <!-- =========================
+          DROPDOWN
+      ========================== -->
+      <div
+        *ngIf="
+          showInstructorDropdown &&
+          filteredInstructors.length > 0
+        "
+        class="searching-meeting-assignment__instructor-dropdown"
+      >
+
+        <button
           *ngFor="
-            let instructor of instructors;
+            let instructor of filteredInstructors;
             trackBy: trackByInstructorId
           "
-          [value]="instructor.id"
+          type="button"
+          class="searching-meeting-assignment__instructor-option"
+          [class.searching-meeting-assignment__instructor-option--selected]="
+            selectedInstructor?.id === instructor.id
+          "
+          (mousedown)="onSelectInstructor(instructor)"
         >
-          {{ getInstructorName(instructor) }}
-        </option>
-      </select>
+
+          <span class="searching-meeting-assignment__instructor-avatar">
+            {{ getInstructorInitials(instructor) }}
+          </span>
+
+          <span class="searching-meeting-assignment__instructor-content">
+
+            <strong>
+              {{ getInstructorName(instructor) }}
+            </strong>
+
+            <small>
+              {{ getInstructorSubtitle(instructor) }}
+            </small>
+
+          </span>
+
+          <span class="searching-meeting-assignment__instructor-id">
+            #{{ instructor.id }}
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- SELECTED INSTRUCTOR -->
+    <div
+      *ngIf="selectedInstructor"
+      class="searching-meeting-assignment__selected-instructor"
+    >
+
+      <span class="searching-meeting-assignment__selected-avatar">
+        {{ getInstructorInitials(selectedInstructor) }}
+      </span>
+
+      <span class="searching-meeting-assignment__selected-content">
+
+        <strong>
+          {{ getInstructorName(selectedInstructor) }}
+        </strong>
+
+        <small>
+          {{ getInstructorSubtitle(selectedInstructor) }}
+        </small>
+
+      </span>
 
       <svg
-        class="searching-meeting-assignment__select-chevron"
-        width="15"
-        height="15"
+        class="searching-meeting-assignment__selected-check"
+        width="16"
+        height="16"
         viewBox="0 0 24 24"
         fill="none"
         aria-hidden="true"
       >
         <path
-          d="m6 9 6 6 6-6"
+          d="m5 12 4 4L19 6"
           stroke="currentColor"
-          stroke-width="1.8"
+          stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"
         />

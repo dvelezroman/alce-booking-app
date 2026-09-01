@@ -1,20 +1,23 @@
 <section class="searching-meeting-table">
+
   @if (meetings.length > 0) {
+
     <!-- =========================
          HEADER
     ========================== -->
     <header class="searching-meeting-table__header">
+
       <div class="searching-meeting-table__heading">
+
         <h2 class="searching-meeting-table__title">
           Reuniones encontradas
         </h2>
 
         <span class="searching-meeting-table__count">
-          {{ totalMeetings }}
+          {{ meetings.length }}
         </span>
 
         <span
-          *ngIf="meetings.length > 0"
           class="searching-meeting-table__assignment-result"
           [class.searching-meeting-table__assignment-result--assigned]="
             !!meetings[0].instructorId
@@ -25,48 +28,31 @@
         >
           {{ meetings[0].instructorId ? 'Asignadas' : 'Sin asignar' }}
         </span>
+
       </div>
 
-      <!-- <div class="searching-meeting-table__page-size">
-        <span class="searching-meeting-table__page-size-label">
-          Mostrar
-        </span>
-
-        <select
-          class="searching-meeting-table__page-size-select"
-          [value]="limit"
-          (change)="onLimitSelected($any($event.target).value)"
-        >
-          @for (option of limitOptions; track option) {
-            <option
-              [value]="option"
-              [selected]="option === limit"
-            >
-              {{ option }}
-            </option>
-          }
-        </select>
-
-        <span class="searching-meeting-table__page-size-label">
-          por página
-        </span>
-      </div> -->
     </header>
+
 
     <!-- =========================
          TABLE WRAPPER
     ========================== -->
     <div class="searching-meeting-table__wrapper">
+
       <table class="searching-meeting-table__table">
+
         <!-- =========================
              TABLE HEADER
         ========================== -->
         <thead>
           <tr>
+
+            <!-- SELECTION -->
             <th
               class="searching-meeting-table__column searching-meeting-table__column--selection"
             >
               <label class="searching-meeting-table__checkbox-control">
+
                 <input
                   type="checkbox"
                   [checked]="allMeetingsSelected"
@@ -79,7 +65,12 @@
                   class="searching-meeting-table__checkbox-box"
                   aria-hidden="true"
                 >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <path
                       d="m5 12 4 4 10-10"
                       stroke="currentColor"
@@ -89,76 +80,105 @@
                     />
                   </svg>
                 </span>
+
               </label>
             </th>
 
+
+            <!-- DATE -->
             <th
               class="searching-meeting-table__column searching-meeting-table__column--date"
             >
-              <span> Fecha y hora </span>
+              <span>
+                Fecha y hora
+              </span>
 
-              <small> (Local) </small>
+              <small>
+                (Local)
+              </small>
             </th>
 
+
+            <!-- STUDENT -->
             <th
               class="searching-meeting-table__column searching-meeting-table__column--student"
             >
               Estudiante
             </th>
 
+
+            <!-- STAGE -->
             <th
               class="searching-meeting-table__column searching-meeting-table__column--stage"
             >
               Etapa
             </th>
 
+
+            <!-- CATEGORY -->
             <th
               class="searching-meeting-table__column searching-meeting-table__column--category"
             >
               Categoría
             </th>
 
+
+            <!-- MODE -->
             <th
               class="searching-meeting-table__column searching-meeting-table__column--mode"
             >
               Modalidad
             </th>
 
+
+            <!-- INSTRUCTOR -->
             <th
               class="searching-meeting-table__column searching-meeting-table__column--instructor"
             >
               Instructor
             </th>
 
+
+            <!-- STATUS -->
             <th
               class="searching-meeting-table__column searching-meeting-table__column--status"
             >
               Estado
             </th>
 
+
+            <!-- ASSIGNED BY -->
             <th
               class="searching-meeting-table__column searching-meeting-table__column--assigned-by"
             >
               Asignado por
             </th>
 
+
+            <!-- COMMENT -->
             <th
               class="searching-meeting-table__column searching-meeting-table__column--comment"
             >
               Comentario
             </th>
+
+
+            <!-- OBSERVATION -->
             <th
               class="searching-meeting-table__column searching-meeting-table__column--observation"
             >
               Observación
             </th>
+
           </tr>
         </thead>
+
 
         <!-- =========================
              TABLE BODY
         ========================== -->
         <tbody>
+
           <tr
             *ngFor="let meeting of meetings; trackBy: trackByMeetingId"
             class="searching-meeting-table__row"
@@ -166,8 +186,14 @@
               isSelected(meeting.id)
             "
           >
+
+            <!-- =========================
+                 SELECTION
+            ========================== -->
             <td class="searching-meeting-table__selection-cell">
+
               <label class="searching-meeting-table__checkbox-control">
+
                 <input
                   type="checkbox"
                   [checked]="isSelected(meeting.id)"
@@ -178,7 +204,12 @@
                   class="searching-meeting-table__checkbox-box"
                   aria-hidden="true"
                 >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <path
                       d="m5 12 4 4 10-10"
                       stroke="currentColor"
@@ -188,19 +219,28 @@
                     />
                   </svg>
                 </span>
+
               </label>
+
             </td>
 
+
+            <!-- =========================
+                 DATE / HOUR
+            ========================== -->
             <td>
+
               <div class="searching-meeting-table__date">
+
                 <div class="searching-meeting-table__date-content">
+
                   <span class="searching-meeting-table__date-day">
                     {{ formatDate(meeting.localdate || meeting.date) }}
                   </span>
 
-                 <span class="searching-meeting-table__date-hour">
-                   {{ formatHour(meeting.localhour) }}
-                 </span>
+                  <span class="searching-meeting-table__date-hour">
+                    {{ formatHour(meeting.localhour) }}
+                  </span>
 
                   <span
                     *ngIf="
@@ -212,20 +252,29 @@
                   >
                     ({{ formatHour(meeting.hour) }})
                   </span>
+
                 </div>
+
               </div>
+
             </td>
 
+
+            <!-- =========================
+                 STUDENT
+            ========================== -->
             <td>
+
               <div class="searching-meeting-table__student">
-                <!-- <div class="searching-meeting-table__student-avatar">
-                  {{ getStudentInitials(meeting) }}
-                </div> -->
 
                 <div class="searching-meeting-table__student-content">
+
                   <div class="searching-meeting-table__student-name-row">
-                    <span class="searching-meeting-table__student-name"
-                          [title]="getStudentDisplayName(meeting)">
+
+                    <span
+                      class="searching-meeting-table__student-name"
+                      [title]="getStudentDisplayName(meeting)"
+                    >
                       {{ getStudentDisplayName(meeting) }}
                     </span>
 
@@ -235,22 +284,37 @@
                     >
                       Nuevo
                     </span>
+
                   </div>
 
                   <span class="searching-meeting-table__student-email">
                     {{ getStudentEmail(meeting) }}
                   </span>
+
                 </div>
+
               </div>
+
             </td>
 
+
+            <!-- =========================
+                 STAGE
+            ========================== -->
             <td>
+
               <span class="searching-meeting-table__stage">
                 {{ getStageLabel(meeting) }}
               </span>
+
             </td>
 
+
+            <!-- =========================
+                 CATEGORY
+            ========================== -->
             <td>
+
               <span
                 class="searching-meeting-table__category"
                 [class.searching-meeting-table__category--kids]="
@@ -265,9 +329,15 @@
               >
                 {{ getCategoryLabel(meeting) }}
               </span>
+
             </td>
 
+
+            <!-- =========================
+                 MODE
+            ========================== -->
             <td>
+
               <span
                 class="searching-meeting-table__mode"
                 [class.searching-meeting-table__mode--online]="
@@ -279,17 +349,31 @@
               >
                 {{ getModeLabel(meeting) }}
               </span>
+
             </td>
 
+
+            <!-- =========================
+                 INSTRUCTOR
+            ========================== -->
             <td>
+
               <div class="searching-meeting-table__instructor">
+
                 <span class="searching-meeting-table__instructor-name">
                   {{ getInstructorDisplayName(meeting) }}
                 </span>
+
               </div>
+
             </td>
 
+
+            <!-- =========================
+                 STATUS
+            ========================== -->
             <td>
+
               <span
                 class="searching-meeting-table__status"
                 [class.searching-meeting-table__status--active]="
@@ -307,12 +391,21 @@
               >
                 {{ getStatusLabel(meeting) }}
               </span>
+
             </td>
 
+
+            <!-- =========================
+                 ASSIGNED BY
+            ========================== -->
             <td>
+
               <div class="searching-meeting-table__assigned-by">
-                <span class="searching-meeting-table__assigned-by-name"
-                      [title]="getAssignedByName(meeting)">
+
+                <span
+                  class="searching-meeting-table__assigned-by-name"
+                  [title]="getAssignedByName(meeting)"
+                >
                   {{ getAssignedByName(meeting) }}
                 </span>
 
@@ -322,15 +415,24 @@
                 >
                   {{ formatDate(meeting.assignedAt) }}
                 </span>
+
               </div>
+
             </td>
 
+
+            <!-- =========================
+                 COMMENT
+            ========================== -->
             <td class="searching-meeting-table__comment-cell">
+
               @if (meeting.student?.user?.temporaryComment) {
+
                 <div
                   class="searching-meeting-table__comment"
                   [attr.data-tooltip]="meeting.student?.user?.temporaryComment"
                 >
+
                   <span
                     class="searching-meeting-table__comment-icon"
                     aria-hidden="true"
@@ -361,20 +463,32 @@
                   <span class="searching-meeting-table__comment-text">
                     {{ meeting.student?.user?.temporaryComment }}
                   </span>
+
                 </div>
+
               } @else {
+
                 <span class="searching-meeting-table__comment-empty">
                   —
                 </span>
+
               }
+
             </td>
 
+
+            <!-- =========================
+                 OBSERVATION
+            ========================== -->
             <td class="searching-meeting-table__observation-cell">
+
               @if (meeting.student?.user?.comment) {
+
                 <div
                   class="searching-meeting-table__observation"
                   [attr.data-tooltip]="meeting.student?.user?.comment"
                 >
+
                   <span
                     class="searching-meeting-table__observation-icon"
                     aria-hidden="true"
@@ -412,23 +526,36 @@
                   <span class="searching-meeting-table__observation-text">
                     {{ meeting.student?.user?.comment }}
                   </span>
+
                 </div>
+
               } @else {
+
                 <span class="searching-meeting-table__observation-empty">
                   —
                 </span>
+
               }
+
             </td>
+
           </tr>
+
         </tbody>
+
       </table>
+
     </div>
+
   } @else {
+
     <!-- =========================
          EMPTY
     ========================== -->
     <div class="searching-meeting-table__empty">
+
       <div class="searching-meeting-table__empty-icon">
+
         <svg
           width="24"
           height="24"
@@ -460,11 +587,19 @@
             stroke-linecap="round"
           />
         </svg>
+
       </div>
 
-      <h3>No hay reuniones para mostrar</h3>
+      <h3>
+        No hay reuniones para mostrar
+      </h3>
 
-      <p>Modifica los filtros y realiza una nueva búsqueda.</p>
+      <p>
+        Modifica los filtros y realiza una nueva búsqueda.
+      </p>
+
     </div>
+
   }
+
 </section>

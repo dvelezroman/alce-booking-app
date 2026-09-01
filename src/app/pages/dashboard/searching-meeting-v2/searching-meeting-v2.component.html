@@ -155,12 +155,6 @@
               <span></span>
               <span></span>
               <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
             </div>
 
             <!-- ROWS -->
@@ -219,31 +213,14 @@
         } @else {
 
           <app-searching-meeting-table
-            [meetings]="paginatedMeetings"
-            [totalMeetings]="totalMeetings"
+            [meetings]="meetings"
             [selectedMeetingIds]="selectedMeetingIds"
-            [limit]="limit"
-            [limitOptions]="[10, 20, 50]"
             [getStudentDisplayName]="getStudentDisplayName"
             [getInstructorDisplayName]="getInstructorDisplayName"
             [isNewUser]="isNewUser"
             (selectionChange)="toggleSelection($event)"
             (selectAllChange)="onSelectAllMeetings($event)"
-            (limitChange)="onLimitChange($event)"
           ></app-searching-meeting-table>
-
-          <app-searching-meeting-pagination
-            *ngIf="totalMeetings > 0"
-            [page]="page"
-            [limit]="limit"
-            [total]="totalMeetings"
-            [startIndex]="startIndex"
-            [endIndex]="endIndex"
-            (prev)="onPrevPage()"
-            (next)="onNextPage()"
-            (pageChange)="onPageChange($event)"
-            (limitChange)="onLimitChange($event)"
-          ></app-searching-meeting-pagination>
 
         }
 
