@@ -43,17 +43,11 @@ export class SearchingMeetingTableComponent {
   ) => boolean;
 
   @Input() totalMeetings: number = 0;
-
   @Input() limit: number = 20;
-
   @Input() limitOptions: number[] = [ 10, 20, 50 ];
-
   @Output() limitChange = new EventEmitter<number>();
-
   @Output() selectionChange = new EventEmitter<number | undefined>();
-
   @Output() commentRequested = new EventEmitter<string>();
-
   @Output() selectAllChange = new EventEmitter<boolean>();
 
   isSelected(
@@ -62,6 +56,16 @@ export class SearchingMeetingTableComponent {
     return this.selectedMeetingIds.includes(
       meetingId,
     );
+  }
+
+  isMeetingAssigned( meeting: MeetingDTO ): boolean {
+    return !!meeting.instructorId;
+  }
+
+  getAssignmentLabel( meeting: MeetingDTO ): string {
+    return meeting.instructorId
+      ? 'Asignada'
+      : 'Sin asignar';
   }
 
   get allMeetingsSelected(): boolean {

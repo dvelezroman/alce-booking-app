@@ -7,6 +7,7 @@ import {
   FilterInstructorMeetingDto,
   FilterMeetingsDto,
   MeetingDTO,
+  UnassignMeetingsDto,
   UpdateMeetingLinkDto
 } from "./dtos/booking.dto";
 
@@ -91,6 +92,10 @@ export class BookingService {
 
   updateMeetingLink(data: UpdateMeetingLinkDto): Observable<any> {
     return this.http.patch(`${this.apiUrl}/link`, data);
+  }
+
+  unassignMeetings(data: UnassignMeetingsDto): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/unassign`, data);
   }
 
   deleteMeeting(id: number): Observable<void> {

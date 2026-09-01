@@ -51,51 +51,85 @@
 
 
   <!-- =========================
-       ACTION
+       ACTIONS
   ========================== -->
-  <button
-    type="button"
-    class="searching-meeting-selection-summary__button"
-    [disabled]="disabled"
-    (click)="onAssignRequested()"
-  >
-    <span
-      class="searching-meeting-selection-summary__button-icon"
-      aria-hidden="true"
+  <div class="searching-meeting-selection-summary__actions">
+
+    <button
+      type="button"
+      class="searching-meeting-selection-summary__button"
+      [disabled]="disabled"
+      (click)="onAssignRequested()"
     >
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
+      <span
+        class="searching-meeting-selection-summary__button-icon"
+        aria-hidden="true"
       >
-        <path
-          d="M10.6 13.4 13.4 10.6"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-        />
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M10.6 13.4 13.4 10.6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
 
-        <path
-          d="m8.8 15.2-2.1 2.1a3.5 3.5 0 0 1-5-5l3.7-3.7a3.5 3.5 0 0 1 5 0"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-        />
+          <path
+            d="m8.8 15.2-2.1 2.1a3.5 3.5 0 0 1-5-5l3.7-3.7a3.5 3.5 0 0 1 5 0"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
 
-        <path
-          d="m15.2 8.8 2.1-2.1a3.5 3.5 0 0 1 5 5l-3.7 3.7a3.5 3.5 0 0 1-5 0"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-        />
-      </svg>
-    </span>
+          <path
+            d="m15.2 8.8 2.1-2.1a3.5 3.5 0 0 1 5 5l-3.7 3.7a3.5 3.5 0 0 1-5 0"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
 
-    <span>
-      Asignar enlace
-    </span>
-  </button>
+      <span>
+        Asignar enlace
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="searching-meeting-selection-summary__button searching-meeting-selection-summary__button--secondary"
+      [disabled]="disabled"
+      (click)="onUnassignRequested()"
+    >
+      <span
+        class="searching-meeting-selection-summary__button-icon"
+        aria-hidden="true"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M6 6l12 12M18 6 6 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+
+      <span>
+        Desasignar tutor
+      </span>
+    </button>
+
+  </div>
 
 
   <!-- =========================
@@ -138,7 +172,7 @@
     </span>
 
     <p class="searching-meeting-selection-summary__info-text">
-      Selecciona una o más reuniones para asignarles el enlace del instructor.
+      Selecciona una o más reuniones para asignar o desasignar el tutor.
     </p>
 
   </div>

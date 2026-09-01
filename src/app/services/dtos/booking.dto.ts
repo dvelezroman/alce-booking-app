@@ -113,6 +113,10 @@ export interface UpdateMeetingLinkDto {
   password?: string;
 }
 
+export interface UnassignMeetingsDto {
+  meetingIds: number[];
+}
+
 export interface MeetingLinkDto {
   id: number;
   link: string;

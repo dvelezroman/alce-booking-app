@@ -15,6 +15,10 @@ import {
   Stage,
 } from '../../../services/dtos/student.dto';
 
+import {
+  Instructor,
+} from '../../../services/dtos/instructor.dto';
+
 @Component({
   selector: 'app-searching-meeting-filters',
   standalone: true,
@@ -27,6 +31,18 @@ import {
 })
 export class SearchingMeetingFiltersComponent {
 
+  /* =========================
+     INSTRUCTOR SEARCH
+  ========================= */
+
+  instructorSearch: string = '';
+  showInstructorDropdown: boolean = false;
+  filteredInstructors: Instructor[] = [];
+
+  /* =========================
+     INPUTS
+  ========================= */
+
   @Input()
   filter: FilterMeetingsDto = {
     from: '',
@@ -36,6 +52,7 @@ export class SearchingMeetingFiltersComponent {
     assigned: false,
     category: undefined,
     mode: undefined,
+    instructorId: '',
   };
 
   @Input()
@@ -50,22 +67,46 @@ export class SearchingMeetingFiltersComponent {
   @Input()
   modeOptions: string[] = [];
 
-  @Output() filterChange = new EventEmitter<void>();
+  @Input()
+  instructors: Instructor[] = [];
 
-  @Output() clearFilters = new EventEmitter<void>(); 
+  /* =========================
+     OUTPUTS
+  ========================= */
+
+  @Output()
+  filterChange = new EventEmitter<void>();
+
+  @Output()
+  clearFilters = new EventEmitter<void>();
+
+  /* =========================
+     ACTIONS
+  ========================= */
 
   onApplyFilters(): void {
     this.filterChange.emit();
   }
 
   onClearFilters(): void {
+    this.instructorSearch = '';
+    this.showInstructorDropdown = false;
+    this.filteredInstructors = [];
+
     this.clearFilters.emit();
   }
 
-  formatHour(hour: number): string {
-    const suffix = hour >= 12
-      ? 'PM'
-      : 'AM';
+  /* =========================
+     HOUR
+  ========================= */
+
+  formatHour(
+    hour: number,
+  ): string {
+    const suffix =
+      hour >= 12
+        ? 'PM'
+        : 'AM';
 
     const formattedHour =
       hour % 12 || 12;
@@ -73,28 +114,197 @@ export class SearchingMeetingFiltersComponent {
     return `${formattedHour}:00 ${suffix}`;
   }
 
-  getStageLabel(stage: Stage): string {
+  /* =========================
+     STAGE
+  ========================= */
+
+  getStageLabel(
+    stage: Stage,
+  ): string {
     return stage.number
       ? `Stage ${stage.number}`
       : stage.description || 'Stage';
   }
 
-  getCategoryLabel(category: string): string {
-    const labels: Record<string, string> = {
-      KIDS: 'Kids',
-      TEENS: 'Teens',
-      ADULTS: 'Adults',
-    };
+  /* =========================
+     CATEGORY
+  ========================= */
+
+  getCategoryLabel(
+    category: string,
+  ): string {
+    const labels:
+      Record<string, string> = {
+        KIDS: 'Kids',
+        TEENS: 'Teens',
+        ADULTS: 'Adults',
+      };
 
     return labels[category] || category;
   }
 
-  getModeLabel(mode: string): string {
-    const labels: Record<string, string> = {
-      ONLINE: 'Online',
-      PRESENCIAL: 'Presencial',
-    };
+  /* =========================
+     MODE
+  ========================= */
+
+  getModeLabel(
+    mode: string,
+  ): string {
+    const labels:
+      Record<string, string> = {
+        ONLINE: 'Online',
+        PRESENCIAL: 'Presencial',
+      };
 
     return labels[mode] || mode;
+  }
+
+  /* =========================
+     INSTRUCTOR
+  ========================= */
+
+  getInstructorLabel(
+    instructor: Instructor,
+  ): string {
+    const firstName =
+      instructor.user?.firstName || '';
+
+    const lastName =
+      instructor.user?.lastName || '';
+
+    const fullName =
+      `${firstName} ${lastName}`.trim();
+
+    return fullName || 'Instructor';
+  }
+
+  getInstructorId(
+    instructor: Instructor,
+  ): string {
+    return String(
+      instructor.id,
+    );
+  }
+
+  getInstructorInitials(
+    instructor: Instructor,
+  ): string {
+    const firstName =
+      instructor.user?.firstName?.trim() || '';
+
+    const lastName =
+      instructor.user?.lastName?.trim() || '';
+
+    const initials =
+      `${firstName.charAt(0)}${lastName.charAt(0)}`
+        .toUpperCase();
+
+    return initials || 'IN';
+  }
+
+  trackByInstructorId(
+    index: number,
+    instructor: Instructor,
+  ): number {
+    return instructor.id;
+  }
+
+  /* =========================
+     INSTRUCTOR SEARCH
+  ========================= */
+
+  onInstructorInputFocus(): void {
+    this.filteredInstructors = [
+      ...this.instructors,
+    ];
+
+    this.showInstructorDropdown = true;
+  }
+
+  onInstructorInputChange(
+    value: string,
+  ): void {
+    this.instructorSearch = value;
+
+    const term =
+      value
+        .trim()
+        .toLowerCase();
+
+    /*
+     * Si el usuario comienza a escribir nuevamente,
+     * quitamos el instructor previamente seleccionado.
+     */
+    this.filter.instructorId = '';
+
+    this.showInstructorDropdown = true;
+
+    if (!term) {
+      this.filteredInstructors = [
+        ...this.instructors,
+      ];
+
+      return;
+    }
+
+    this.filteredInstructors =
+      this.instructors.filter(
+        instructor => {
+          const fullName =
+            this
+              .getInstructorLabel(
+                instructor,
+              )
+              .toLowerCase();
+
+          return fullName.includes(
+            term,
+          );
+        },
+      );
+  }
+
+  onInstructorInputBlur(): void {
+    setTimeout(() => {
+      this.showInstructorDropdown =
+        false;
+    }, 150);
+  }
+
+  onSelectInstructor(
+    instructor: Instructor,
+  ): void {
+    this.filter.instructorId =
+      this.getInstructorId(
+        instructor,
+      );
+
+    this.instructorSearch =
+      this.getInstructorLabel(
+        instructor,
+      );
+
+    /*
+     * Si seleccionamos un instructor,
+     * automáticamente buscamos reuniones
+     * asignadas.
+     */
+    this.filter.assigned = true;
+
+    this.showInstructorDropdown =
+      false;
+  }
+
+  clearInstructor(): void {
+    this.filter.instructorId = '';
+
+    this.instructorSearch = '';
+
+    this.filteredInstructors = [
+      ...this.instructors,
+    ];
+
+    this.showInstructorDropdown =
+      false;
   }
 }

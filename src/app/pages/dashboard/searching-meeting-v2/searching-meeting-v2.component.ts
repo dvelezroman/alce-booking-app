@@ -102,6 +102,7 @@ export class SearchingMeetingV2Component implements OnInit {
     assigned: false,
     category: undefined,
     mode: undefined,
+    instructorId: '',
   };
 
   constructor(
@@ -294,6 +295,11 @@ export class SearchingMeetingV2Component implements OnInit {
           this.filter.mode
             ? this.filter.mode
             : undefined,
+
+        instructorId:
+          this.filter.instructorId
+            ? this.filter.instructorId
+            : undefined,
       };
 
     if (
@@ -322,6 +328,7 @@ export class SearchingMeetingV2Component implements OnInit {
       assigned: false,
       category: undefined,
       mode: undefined,
+      instructorId: '',
     };
 
     this.page = 1;
@@ -502,6 +509,65 @@ export class SearchingMeetingV2Component implements OnInit {
           },
         });
     }
+  }
+
+  confirmUnassignMeetings(): void {
+    if (!this.selectedMeetingIds.length) {
+      return;
+    }
+
+    const count = this.selectedMeetingIds.length;
+    const label =
+      count === 1
+        ? '1 reunión seleccionada'
+        : `${count} reuniones seleccionadas`;
+
+    this.modalConfig = {
+      ...modalInitializer(),
+      show: true,
+      isInfo: true,
+      message: `¿Desasignar el tutor de ${label}? Las reuniones volverán al estado no asignado.`,
+      showButtons: true,
+      close: () => {
+        this.modalConfig.show = false;
+      },
+      confirm: () => {
+        this.modalConfig.show = false;
+        this.unassignMeetings();
+      },
+    };
+  }
+
+  unassignMeetings(): void {
+    if (!this.selectedMeetingIds.length) {
+      return;
+    }
+
+    this.bookingService
+      .unassignMeetings({
+        meetingIds: this.selectedMeetingIds,
+      })
+      .subscribe({
+        next: () => {
+          this.showModalMessage(
+            'El tutor fue desasignado correctamente.',
+            false,
+            false,
+            true,
+          );
+
+          this.selectedMeetingIds = [];
+          this.fetchMeetings();
+        },
+        error: () => {
+          this.showModalMessage(
+            'Error al desasignar el tutor.',
+            true,
+          );
+
+          this.fetchMeetings();
+        },
+      });
   }
 
   getStudentDisplayName(

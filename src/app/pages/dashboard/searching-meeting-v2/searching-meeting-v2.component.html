@@ -17,6 +17,7 @@
       [stages]="stages"
       [ageGroupOptions]="ageGroupOptions"
       [modeOptions]="mode"
+      [instructors]="instructorList"
       (filterChange)="onFilterChange()"
       (clearFilters)="onClearFilters()"
     ></app-searching-meeting-filters>
@@ -96,6 +97,7 @@
         } @else {
           <app-searching-meeting-table
             [meetings]="paginatedMeetings"
+            [totalMeetings]="totalMeetings"
             [selectedMeetingIds]="selectedMeetingIds"
             [limit]="limit"
             [limitOptions]="[10, 20, 50]"
@@ -131,6 +133,7 @@
           [selectedCount]="totalSelectedMeetings"
           [disabled]="totalSelectedMeetings === 0"
           (assignRequested)="assignLink()"
+          (unassignRequested)="confirmUnassignMeetings()"
         ></app-searching-meeting-selection-summary>
 
         <!-- ASIGNACIÓN -->

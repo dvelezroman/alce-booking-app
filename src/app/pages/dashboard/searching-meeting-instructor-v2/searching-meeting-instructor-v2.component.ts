@@ -113,6 +113,7 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
   stages: Stage[] = [];
   meetings: MeetingDTO[] = [];
   filteredStages: Stage[] = [];
+  instructors: UserDto[] = [];
   availableHours: number[] = [];
   studyContentIds: number[] = [];
   studentStageContents: StudyContentDto[] = [];
