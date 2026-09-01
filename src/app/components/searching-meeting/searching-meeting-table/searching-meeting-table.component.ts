@@ -42,13 +42,22 @@ export class SearchingMeetingTableComponent {
     meeting: MeetingDTO,
   ) => boolean;
 
-  @Input() totalMeetings: number = 0;
-  @Input() limit: number = 20;
-  @Input() limitOptions: number[] = [ 10, 20, 50 ];
-  @Output() limitChange = new EventEmitter<number>();
-  @Output() selectionChange = new EventEmitter<number | undefined>();
-  @Output() commentRequested = new EventEmitter<string>();
-  @Output() selectAllChange = new EventEmitter<boolean>();
+  @Output()
+  selectionChange =
+    new EventEmitter<number | undefined>();
+
+  @Output()
+  commentRequested =
+    new EventEmitter<string>();
+
+  @Output()
+  selectAllChange =
+    new EventEmitter<boolean>();
+
+
+  /* =========================
+     SELECTION
+  ========================= */
 
   isSelected(
     meetingId: number | undefined,
@@ -58,21 +67,11 @@ export class SearchingMeetingTableComponent {
     );
   }
 
-  isMeetingAssigned( meeting: MeetingDTO ): boolean {
-    return !!meeting.instructorId;
-  }
-
-  getAssignmentLabel( meeting: MeetingDTO ): string {
-    return meeting.instructorId
-      ? 'Asignada'
-      : 'Sin asignar';
-  }
-
   get allMeetingsSelected(): boolean {
     return (
-      this.totalMeetings > 0 &&
+      this.meetings.length > 0 &&
       this.selectedMeetingIds.length ===
-        this.totalMeetings
+        this.meetings.length
     );
   }
 
@@ -80,18 +79,8 @@ export class SearchingMeetingTableComponent {
     return (
       this.selectedMeetingIds.length > 0 &&
       this.selectedMeetingIds.length <
-        this.totalMeetings
+        this.meetings.length
     );
-  }
-
-  onLimitSelected( value: string ): void {
-    const limit = Number(value);
-
-    if (!this.limitOptions.includes(limit)) {
-      return;
-    }
-
-    this.limitChange.emit(limit);
   }
 
   onToggleSelectAll(
@@ -110,6 +99,30 @@ export class SearchingMeetingTableComponent {
     );
   }
 
+
+  /* =========================
+     ASSIGNMENT
+  ========================= */
+
+  isMeetingAssigned(
+    meeting: MeetingDTO,
+  ): boolean {
+    return !!meeting.instructorId;
+  }
+
+  getAssignmentLabel(
+    meeting: MeetingDTO,
+  ): string {
+    return meeting.instructorId
+      ? 'Asignada'
+      : 'Sin asignar';
+  }
+
+
+  /* =========================
+     COMMENT
+  ========================= */
+
   onCommentRequested(
     comment: string | undefined,
   ): void {
@@ -121,6 +134,11 @@ export class SearchingMeetingTableComponent {
       comment,
     );
   }
+
+
+  /* =========================
+     STUDENT
+  ========================= */
 
   getStudentInitials(
     meeting: MeetingDTO,
@@ -146,6 +164,22 @@ export class SearchingMeetingTableComponent {
     ).toUpperCase();
   }
 
+  getStudentEmail(
+    meeting: MeetingDTO,
+  ): string {
+    return (
+      meeting.student
+        ?.user
+        ?.email ||
+      ''
+    );
+  }
+
+
+  /* =========================
+     INSTRUCTOR
+  ========================= */
+
   getInstructorInitials(
     meeting: MeetingDTO,
   ): string {
@@ -170,17 +204,6 @@ export class SearchingMeetingTableComponent {
     ).toUpperCase();
   }
 
-  getStudentEmail(
-    meeting: MeetingDTO,
-  ): string {
-    return (
-      meeting.student
-        ?.user
-        ?.email ||
-      ''
-    );
-  }
-
   getAssignedByName(
     meeting: MeetingDTO,
   ): string {
@@ -198,6 +221,11 @@ export class SearchingMeetingTableComponent {
     );
   }
 
+
+  /* =========================
+     STAGE
+  ========================= */
+
   getStageLabel(
     meeting: MeetingDTO,
   ): string {
@@ -205,6 +233,11 @@ export class SearchingMeetingTableComponent {
       ? `Stage ${meeting.stage.number}`
       : '—';
   }
+
+
+  /* =========================
+     CATEGORY
+  ========================= */
 
   getCategoryLabel(
     meeting: MeetingDTO,
@@ -225,6 +258,11 @@ export class SearchingMeetingTableComponent {
     );
   }
 
+
+  /* =========================
+     MODE
+  ========================= */
+
   getModeLabel(
     meeting: MeetingDTO,
   ): string {
@@ -242,6 +280,11 @@ export class SearchingMeetingTableComponent {
       '—'
     );
   }
+
+
+  /* =========================
+     STATUS
+  ========================= */
 
   getStatusLabel(
     meeting: MeetingDTO,
@@ -262,6 +305,11 @@ export class SearchingMeetingTableComponent {
       '—'
     );
   }
+
+
+  /* =========================
+     DATE
+  ========================= */
 
   formatDate(
     value: Date | string,
@@ -287,6 +335,11 @@ export class SearchingMeetingTableComponent {
     );
   }
 
+
+  /* =========================
+     HOUR
+  ========================= */
+
   formatHour(
     hour: number,
   ): string {
@@ -304,6 +357,11 @@ export class SearchingMeetingTableComponent {
       .toString()
       .padStart(2, '0')}:00 ${period}`;
   }
+
+
+  /* =========================
+     TRACK BY
+  ========================= */
 
   trackByMeetingId(
     index: number,

@@ -33,11 +33,30 @@ export class SearchingMeetingAssignmentFormComponent {
     | undefined = null;
 
   @Input() selectedCount = 0;
-  @Input() assignmentDisabled = false;
 
-  @Output() selectedInstructorChange = new EventEmitter<Instructor | null>();
+  @Output()
+  selectedInstructorChange =
+    new EventEmitter<Instructor | null>();
 
-  @Output() assignRequested = new EventEmitter<void>();
+  @Output()
+  assignRequested =
+    new EventEmitter<void>();
+
+
+  /* =========================
+     INSTRUCTOR SEARCH
+  ========================= */
+
+  instructorSearch: string = '';
+
+  showInstructorDropdown: boolean = false;
+
+  filteredInstructors: Instructor[] = [];
+
+
+  /* =========================
+     STATES
+  ========================= */
 
   get hasSelection(): boolean {
     return this.selectedCount > 0;
@@ -71,33 +90,124 @@ export class SearchingMeetingAssignmentFormComponent {
     );
   }
 
-  onInstructorChange(
-    instructorId: string,
+
+  /* =========================
+     INSTRUCTOR SEARCH
+  ========================= */
+
+  onInstructorInputFocus(): void {
+    this.filteredInstructors = [
+      ...this.instructors,
+    ];
+
+    this.showInstructorDropdown = true;
+  }
+
+  onInstructorInputChange(
+    value: string,
   ): void {
-    if (!instructorId) {
+    this.instructorSearch = value;
+
+    const term =
+      value
+        .trim()
+        .toLowerCase();
+
+    /*
+     * Si ya había un instructor seleccionado
+     * y el usuario vuelve a escribir,
+     * quitamos esa selección.
+     */
+    if (this.selectedInstructor) {
       this.selectedInstructor = null;
 
       this.selectedInstructorChange.emit(
         null,
       );
+    }
+
+    this.showInstructorDropdown = true;
+
+    if (!term) {
+      this.filteredInstructors = [
+        ...this.instructors,
+      ];
 
       return;
     }
 
-    const instructor =
-      this.instructors.find(
-        item =>
-          String(item.id) ===
-          instructorId,
-      ) || null;
+    this.filteredInstructors =
+      this.instructors.filter(
+        instructor => {
+          const name =
+            this
+              .getInstructorName(
+                instructor,
+              )
+              .toLowerCase();
 
+          const email =
+            this
+              .getInstructorSubtitle(
+                instructor,
+              )
+              .toLowerCase();
+
+          return (
+            name.includes(term) ||
+            email.includes(term)
+          );
+        },
+      );
+  }
+
+  onInstructorInputBlur(): void {
+    setTimeout(() => {
+      this.showInstructorDropdown =
+        false;
+    }, 150);
+  }
+
+  onSelectInstructor(
+    instructor: Instructor,
+  ): void {
     this.selectedInstructor =
       instructor;
+
+    this.instructorSearch =
+      this.getInstructorName(
+        instructor,
+      );
 
     this.selectedInstructorChange.emit(
       instructor,
     );
+
+    this.showInstructorDropdown =
+      false;
   }
+
+  clearInstructor(): void {
+    this.selectedInstructor = null;
+
+    this.instructorSearch = '';
+
+    this.filteredInstructors = [
+      ...this.instructors,
+    ];
+
+    this.showInstructorDropdown =
+      false;
+
+    this.selectedInstructorChange.emit(
+      null,
+    );
+  }
+
+
+  /* =========================
+     ASSIGN
+  ========================= */
 
   onAssignRequested(): void {
     if (!this.canAssign) {
@@ -106,6 +216,11 @@ export class SearchingMeetingAssignmentFormComponent {
 
     this.assignRequested.emit();
   }
+
+
+  /* =========================
+     INSTRUCTOR HELPERS
+  ========================= */
 
   getInstructorName(
     instructor: Instructor,
@@ -151,7 +266,10 @@ export class SearchingMeetingAssignmentFormComponent {
   getInstructorSubtitle(
     instructor: Instructor,
   ): string {
-    return instructor.user?.email || '';
+    return (
+      instructor.user?.email ||
+      'Instructor'
+    );
   }
 
   trackByInstructorId(

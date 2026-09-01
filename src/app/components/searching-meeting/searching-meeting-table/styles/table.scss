@@ -6,11 +6,36 @@
   width: 100%;
   min-width: 0;
 
+  height: 600px;
+  max-height: 650px;
+
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: auto;
+
+  box-sizing: border-box;
 
   scrollbar-width: thin;
   scrollbar-color: #d6dbe5 transparent;
+
+  overscroll-behavior: contain;
+}
+
+.searching-meeting-table__wrapper::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.searching-meeting-table__wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.searching-meeting-table__wrapper::-webkit-scrollbar-thumb {
+  background: #d6dbe5;
+  border-radius: 999px;
+}
+
+.searching-meeting-table__wrapper::-webkit-scrollbar-thumb:hover {
+  background: #bcc3cf;
 }
 
 
@@ -92,6 +117,10 @@
 ========================= */
 
 .searching-meeting-table__table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
   background: #fbfbfd;
 }
 
@@ -103,6 +132,8 @@
     .65rem;
 
   border-bottom: 1px solid #e7e9f0;
+
+  background: #fbfbfd;
 
   color: #2d3448;
 
@@ -133,6 +164,8 @@
 ========================= */
 
 .searching-meeting-table__row {
+  background: #ffffff;
+
   transition:
     background-color 150ms ease,
     box-shadow 150ms ease;
@@ -176,6 +209,8 @@
 }
 
 .searching-meeting-table__checkbox-control {
+  position: relative;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -201,6 +236,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
+  box-sizing: border-box;
 
   border: 1px solid #adb5c4;
   border-radius: .22rem;
@@ -229,6 +266,44 @@ input:checked
     );
 
   color: #ffffff;
+}
+
+.searching-meeting-table__checkbox-control
+input:indeterminate
++
+.searching-meeting-table__checkbox-box {
+  border-color: #6440e8;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6338ed 0%,
+      #754ef0 100%
+    );
+
+  color: #ffffff;
+}
+
+.searching-meeting-table__checkbox-control
+input:indeterminate
++
+.searching-meeting-table__checkbox-box
+svg {
+  display: none;
+}
+
+.searching-meeting-table__checkbox-control
+input:indeterminate
++
+.searching-meeting-table__checkbox-box::after {
+  content: '';
+
+  width: .45rem;
+  height: 2px;
+
+  border-radius: 999px;
+
+  background: #ffffff;
 }
 
 .searching-meeting-table__checkbox-control:active

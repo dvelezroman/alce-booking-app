@@ -27,7 +27,6 @@ import { SearchingMeetingFiltersComponent } from '../../../components/searching-
 import { SearchingMeetingTableComponent } from '../../../components/searching-meeting/searching-meeting-table/searching-meeting-table.component';
 import { SearchingMeetingSelectionSummaryComponent } from '../../../components/searching-meeting/searching-meeting-selection-summary/searching-meeting-selection-summary.component';
 import { SearchingMeetingAssignmentFormComponent } from '../../../components/searching-meeting/searching-meeting-assignment-form/searching-meeting-assignment-form.component';
-import { SearchingMeetingPaginationComponent } from '../../../components/searching-meeting/searching-meeting-pagination/searching-meeting-pagination.component';
 
 @Component({
   selector: 'app-searching-meeting-v2',
@@ -42,7 +41,6 @@ import { SearchingMeetingPaginationComponent } from '../../../components/searchi
     SearchingMeetingTableComponent,
     SearchingMeetingSelectionSummaryComponent,
     SearchingMeetingAssignmentFormComponent,
-    SearchingMeetingPaginationComponent,
   ],
   templateUrl: './searching-meeting-v2.component.html',
   styleUrl: './searching-meeting-v2.component.scss',
@@ -59,9 +57,6 @@ export class SearchingMeetingV2Component implements OnInit {
   meetings: MeetingDTO[] = [];
   originalMeetings: MeetingDTO[] = [];
   isLoadingMeetings = false;
-
-  page = 1;
-  limit = 20;
 
   stages: Stage[] = [];
 
@@ -156,7 +151,8 @@ export class SearchingMeetingV2Component implements OnInit {
             );
           });
       });
-      this.onFilterChange();
+
+    this.onFilterChange();
   }
 
   get hasAssignedMeetingSelected(): boolean {
@@ -184,101 +180,6 @@ export class SearchingMeetingV2Component implements OnInit {
     return this.meetings.length;
   }
 
-  get totalPages(): number {
-    return Math.max(
-      1,
-      Math.ceil(
-        this.totalMeetings / this.limit,
-      ),
-    );
-  }
-
-  get paginatedMeetings(): MeetingDTO[] {
-    const start =
-      (this.page - 1) * this.limit;
-
-    const end =
-      start + this.limit;
-
-    return this.meetings.slice(
-      start,
-      end,
-    );
-  }
-
-  get startIndex(): number {
-    if (
-      this.totalMeetings === 0
-    ) {
-      return 0;
-    }
-
-    return (
-      (this.page - 1) *
-      this.limit +
-      1
-    );
-  }
-
-  get endIndex(): number {
-    return Math.min(
-      this.page * this.limit,
-      this.totalMeetings,
-    );
-  }
-
-  onPrevPage(): void {
-    if (
-      this.page <= 1
-    ) {
-      return;
-    }
-
-    this.page--;
-  }
-
-  onNextPage(): void {
-    if (
-      this.page >= this.totalPages
-    ) {
-      return;
-    }
-
-    this.page++;
-  }
-
-  onPageChange(
-    page: number,
-  ): void {
-    if (
-      page < 1 ||
-      page > this.totalPages ||
-      page === this.page
-    ) {
-      return;
-    }
-
-    this.page = page;
-  }
-
-  onLimitChange(
-    limit: number,
-  ): void {
-    console.log('==============================');
-    console.log('LIMIT RECIBIDO:', limit);
-    console.log('TOTAL MEETINGS:', this.meetings.length);
-
-    this.limit = limit;
-    this.page = 1;
-
-    console.log('LIMIT ACTUAL:', this.limit);
-    console.log(
-      'PAGINATED MEETINGS:',
-      this.paginatedMeetings.length,
-    );
-    console.log('==============================');
-  }
-
   openModal(): void {
     this.selectedInstructor = null;
     this.isModalOpen = true;
@@ -290,7 +191,6 @@ export class SearchingMeetingV2Component implements OnInit {
 
   onFilterChange(): void {
     this.selectedInstructor = null;
-    this.page = 1;
 
     this.searchMode =
       this.filter.assigned || !!this.filter.instructorId
@@ -339,7 +239,6 @@ export class SearchingMeetingV2Component implements OnInit {
       instructorId: '',
     };
 
-    this.page = 1;
     this.selectedMeetingIds = [];
 
     this.onFilterChange();
@@ -388,8 +287,6 @@ export class SearchingMeetingV2Component implements OnInit {
             this.meetings;
 
           this.selectedMeetingIds = [];
-
-          this.page = 1;
 
           this.isLoadingMeetings = false;
         },
@@ -525,6 +422,7 @@ export class SearchingMeetingV2Component implements OnInit {
     }
 
     const count = this.selectedMeetingIds.length;
+
     const label =
       count === 1
         ? '1 reunión seleccionada'
@@ -565,8 +463,10 @@ export class SearchingMeetingV2Component implements OnInit {
           );
 
           this.selectedMeetingIds = [];
+
           this.fetchMeetings();
         },
+
         error: () => {
           this.showModalMessage(
             'Error al desasignar el tutor.',

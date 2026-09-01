@@ -16,6 +16,8 @@
     1rem
     1.05rem;
 
+  box-sizing: border-box;
+
   border: 1px solid #e2e5ec;
   border-radius: .7rem;
 
@@ -59,6 +61,10 @@
   margin-bottom: .85rem;
 }
 
+.searching-meeting-assignment__field:last-of-type {
+  margin-bottom: 0;
+}
+
 .searching-meeting-assignment__label {
   color: #30374a;
 
@@ -75,183 +81,6 @@
 
 
 /* =========================
-   INSTRUCTOR CONTROL
-========================= */
-
-.searching-meeting-assignment__instructor-control {
-  position: relative;
-
-  width: 100%;
-  min-height: 3rem;
-
-  display: flex;
-  align-items: center;
-
-  gap: .55rem;
-
-  padding:
-    .45rem
-    2.2rem
-    .45rem
-    .55rem;
-
-  border: 1px solid #dfe3eb;
-  border-radius: .5rem;
-
-  background: #ffffff;
-
-  box-sizing: border-box;
-
-  transition:
-    border-color 150ms ease,
-    box-shadow 150ms ease,
-    background-color 150ms ease;
-}
-
-.searching-meeting-assignment__instructor-control:hover {
-  border-color: #cbd1dc;
-}
-
-.searching-meeting-assignment__instructor-control:focus-within {
-  border-color: #6f4be8;
-
-  box-shadow:
-    0 0 0 2px rgba(111, 75, 232, .08);
-}
-
-
-/* =========================
-   INSTRUCTOR AVATAR
-========================= */
-
-.searching-meeting-assignment__instructor-avatar {
-  width: 2rem;
-  height: 2rem;
-
-  flex: 0 0 auto;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background:
-    linear-gradient(
-      135deg,
-      #4d1d92 0%,
-      #6730b5 100%
-    );
-
-  color: #ffffff;
-
-  font-size: .62rem;
-  font-weight: 700;
-}
-
-.searching-meeting-assignment__instructor-avatar--empty {
-  background: #f0f2f6;
-  color: #8b93a3;
-}
-
-
-/* =========================
-   INSTRUCTOR INFO
-========================= */
-
-.searching-meeting-assignment__instructor-info {
-  min-width: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: .12rem;
-}
-
-.searching-meeting-assignment__instructor-name {
-  overflow: hidden;
-
-  color: #23293d;
-
-  font-size: .66rem;
-  font-weight: 650;
-  line-height: 1.25;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.searching-meeting-assignment__instructor-secondary {
-  overflow: hidden;
-
-  color: #878f9f;
-
-  font-size: .56rem;
-  font-weight: 400;
-  line-height: 1.2;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-
-/* =========================
-   SELECT OVERLAY
-========================= */
-
-.searching-meeting-assignment__select {
-  position: absolute;
-  inset: 0;
-
-  width: 100%;
-  height: 100%;
-
-  border: 0;
-
-  appearance: none;
-  -webkit-appearance: none;
-
-  background: transparent;
-  color: transparent;
-
-  cursor: pointer;
-
-  opacity: 0;
-}
-
-.searching-meeting-assignment__select:focus {
-  outline: none;
-}
-
-.searching-meeting-assignment__select-chevron {
-  position: absolute;
-
-  top: 50%;
-  right: .7rem;
-
-  width: .85rem;
-  height: .85rem;
-
-  transform: translateY(-50%);
-
-  color: #22293d;
-
-  pointer-events: none;
-}
-
-
-/* =========================
-   INPUT WRAPPER
-========================= */
-
-.searching-meeting-assignment__input-wrapper {
-  position: relative;
-
-  width: 100%;
-}
-
-
-/* =========================
    INPUT
 ========================= */
 
@@ -262,6 +91,8 @@
   padding:
     0
     .7rem;
+
+  box-sizing: border-box;
 
   border: 1px solid #dfe3eb;
   border-radius: .5rem;
@@ -274,8 +105,6 @@
   font-family: inherit;
   font-size: .61rem;
   font-weight: 400;
-
-  box-sizing: border-box;
 
   transition:
     border-color 150ms ease,
@@ -304,6 +133,388 @@
   background: #ffffff;
 
   cursor: default;
+}
+
+
+/* =========================
+   INSTRUCTOR SEARCH
+========================= */
+
+.searching-meeting-assignment__instructor-search {
+  position: relative;
+
+  width: 100%;
+
+  z-index: 30;
+}
+
+.searching-meeting-assignment__instructor-input {
+  width: 100%;
+
+  padding-left: 2.55rem;
+  padding-right: 2.25rem;
+}
+
+.searching-meeting-assignment__instructor-search-icon {
+  position: absolute;
+
+  top: 50%;
+  left: .85rem;
+  z-index: 2;
+
+  width: 1rem;
+  height: 1rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #687185;
+
+  pointer-events: none;
+
+  transform:
+    translateY(-50%);
+}
+
+.searching-meeting-assignment__instructor-search-icon svg {
+  width: .95rem;
+  height: .95rem;
+
+  display: block;
+}
+
+.searching-meeting-assignment__instructor-clear {
+  position: absolute;
+
+  top: 50%;
+  right: .55rem;
+  z-index: 3;
+
+  width: 1.4rem;
+  height: 1.4rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+  color: #858d9d;
+
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transform:
+    translateY(-50%);
+
+  transition:
+    background-color .15s ease,
+    color .15s ease;
+}
+
+.searching-meeting-assignment__instructor-clear:hover {
+  background: #f2efff;
+
+  color: #6040d8;
+}
+
+
+/* =========================
+   INSTRUCTOR DROPDOWN
+========================= */
+
+.searching-meeting-assignment__instructor-dropdown {
+  position: absolute;
+
+  top: calc(100% + .35rem);
+  right: 0;
+  left: 0;
+  z-index: 100;
+
+  max-height: 17rem;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: .35rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e1e4eb;
+  border-radius: .55rem;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 .75rem 2rem rgba(30, 36, 58, .12),
+    0 .15rem .5rem rgba(30, 36, 58, .05);
+
+  scrollbar-width: thin;
+  scrollbar-color:
+    #c8cbd3
+    transparent;
+}
+
+.searching-meeting-assignment__instructor-dropdown::-webkit-scrollbar {
+  width: .32rem;
+}
+
+.searching-meeting-assignment__instructor-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.searching-meeting-assignment__instructor-dropdown::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background: #c8cbd3;
+}
+
+
+/* =========================
+   INSTRUCTOR OPTION
+========================= */
+
+.searching-meeting-assignment__instructor-option {
+  width: 100%;
+  min-height: 3.25rem;
+
+  display: grid;
+
+  grid-template-columns:
+    2rem
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: .65rem;
+
+  padding:
+    .45rem
+    .55rem;
+
+  box-sizing: border-box;
+
+  border: 0;
+  border-radius: .4rem;
+
+  background: transparent;
+  color: #30384d;
+
+  font-family: inherit;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color .15s ease,
+    transform .1s ease;
+}
+
+.searching-meeting-assignment__instructor-option:hover {
+  background: #f5f2ff;
+}
+
+.searching-meeting-assignment__instructor-option--selected {
+  background: #f5f2ff;
+}
+
+.searching-meeting-assignment__instructor-option:active {
+  transform: scale(.99);
+}
+
+
+/* =========================
+   INSTRUCTOR AVATAR
+========================= */
+
+.searching-meeting-assignment__instructor-avatar {
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4d1d92 0%,
+      #6730b5 100%
+    );
+
+  color: #ffffff;
+
+  font-size: .62rem;
+  font-weight: 700;
+}
+
+
+/* =========================
+   INSTRUCTOR OPTION CONTENT
+========================= */
+
+.searching-meeting-assignment__instructor-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
+}
+
+.searching-meeting-assignment__instructor-content strong {
+  overflow: hidden;
+
+  color: #252c40;
+
+  font-size: .66rem;
+  font-weight: 700;
+  line-height: 1.2;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searching-meeting-assignment__instructor-content small {
+  overflow: hidden;
+
+  color: #858d9e;
+
+  font-size: .58rem;
+  line-height: 1.2;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searching-meeting-assignment__instructor-id {
+  color: #777f91;
+
+  font-size: .6rem;
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   SELECTED INSTRUCTOR
+========================= */
+
+.searching-meeting-assignment__selected-instructor {
+  width: 100%;
+
+  margin-top: .5rem;
+
+  display: grid;
+
+  grid-template-columns:
+    2rem
+    minmax(0, 1fr)
+    1rem;
+
+  align-items: center;
+
+  gap: .6rem;
+
+  padding:
+    .5rem
+    .6rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e2def7;
+  border-radius: .5rem;
+
+  background: #faf9ff;
+}
+
+.searching-meeting-assignment__selected-avatar {
+  width: 2rem;
+  height: 2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4d1d92 0%,
+      #6730b5 100%
+    );
+
+  color: #ffffff;
+
+  font-size: .62rem;
+  font-weight: 700;
+}
+
+.searching-meeting-assignment__selected-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: .08rem;
+}
+
+.searching-meeting-assignment__selected-content strong {
+  overflow: hidden;
+
+  color: #252c40;
+
+  font-size: .66rem;
+  font-weight: 700;
+  line-height: 1.2;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searching-meeting-assignment__selected-content small {
+  overflow: hidden;
+
+  color: #858d9e;
+
+  font-size: .57rem;
+  line-height: 1.2;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searching-meeting-assignment__selected-check {
+  width: 1rem;
+  height: 1rem;
+
+  color: #6542db;
+}
+
+
+/* =========================
+   INPUT WRAPPER
+========================= */
+
+.searching-meeting-assignment__input-wrapper {
+  position: relative;
+
+  width: 100%;
 }
 
 .searching-meeting-assignment__input--link {
@@ -339,7 +550,8 @@
 
   text-decoration: none;
 
-  transform: translateY(-50%);
+  transform:
+    translateY(-50%);
 
   transition:
     background-color 150ms ease,
@@ -349,6 +561,7 @@
 
 .searching-meeting-assignment__external-link:hover {
   background: #f2f3f7;
+
   color: #5e3de1;
 }
 
@@ -381,6 +594,8 @@
   padding:
     .75rem
     .8rem;
+
+  box-sizing: border-box;
 
   border-radius: .5rem;
 
@@ -444,25 +659,96 @@
   }
 
   .searching-meeting-assignment__title {
-    font-size: .76rem;
+    font-size: .78rem;
   }
 
   .searching-meeting-assignment__field {
     margin-bottom: .75rem;
   }
 
-  .searching-meeting-assignment__instructor-control {
-    min-height: 2.8rem;
+  .searching-meeting-assignment__label {
+    font-size: .66rem;
   }
 
   .searching-meeting-assignment__input {
-    height: 2.5rem;
+    height: 2.6rem;
 
-    font-size: .59rem;
+    font-size: .64rem;
+  }
+
+  .searching-meeting-assignment__instructor-input {
+    padding-left: 2.5rem;
+    padding-right: 2.2rem;
+  }
+
+  .searching-meeting-assignment__instructor-search-icon {
+    left: .82rem;
+  }
+
+  .searching-meeting-assignment__instructor-option {
+    min-height: 3.4rem;
+
+    gap: .55rem;
+  }
+
+  .searching-meeting-assignment__instructor-content strong {
+    font-size: .7rem;
+  }
+
+  .searching-meeting-assignment__instructor-content small {
+    font-size: .62rem;
+  }
+
+  .searching-meeting-assignment__instructor-id {
+    font-size: .62rem;
+  }
+
+  .searching-meeting-assignment__selected-content strong {
+    font-size: .7rem;
+  }
+
+  .searching-meeting-assignment__selected-content small {
+    font-size: .61rem;
   }
 
   .searching-meeting-assignment__info-text {
-    font-size: .57rem;
+    font-size: .61rem;
+  }
+
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+
+  .searching-meeting-assignment {
+    padding: .7rem;
+  }
+
+  .searching-meeting-assignment__instructor-dropdown {
+    max-height: 14rem;
+  }
+
+  .searching-meeting-assignment__instructor-option {
+    grid-template-columns:
+      1.9rem
+      minmax(0, 1fr)
+      auto;
+
+    gap: .5rem;
+
+    padding:
+      .42rem
+      .45rem;
+  }
+
+  .searching-meeting-assignment__instructor-avatar,
+  .searching-meeting-assignment__selected-avatar {
+    width: 1.9rem;
+    height: 1.9rem;
   }
 
 }

@@ -1,0 +1,85 @@
+.progress-card__loading {
+  min-height: 205px;
+
+  display: grid;
+
+  grid-template-columns:
+    8rem
+    minmax(200px, 1fr)
+    minmax(140px, .7fr)
+    minmax(140px, .7fr);
+
+  align-items: center;
+
+  gap: 1.3rem;
+}
+
+.loading-rocket,
+.loading-message span,
+.loading-stat {
+  background:
+    linear-gradient(
+      90deg,
+      #e6edf7,
+      #f5f8fc,
+      #e6edf7
+    );
+
+  background-size:
+    200%
+    100%;
+
+  animation:
+    progress-card-shimmer
+    1.35s
+    infinite
+    linear;
+}
+
+.loading-rocket {
+  width: 7rem;
+  height: 7rem;
+
+  border-radius: 50%;
+}
+
+.loading-message {
+  display: flex;
+  flex-direction: column;
+
+  gap: .55rem;
+}
+
+.loading-message span {
+  height: .72rem;
+
+  border-radius: 999px;
+}
+
+.loading-message span:first-child {
+  width: 58%;
+}
+
+.loading-message span:last-child {
+  width: 85%;
+}
+
+.loading-stat {
+  height: 4rem;
+
+  border-radius: .8rem;
+}
+
+@keyframes progress-card-shimmer {
+  from {
+    background-position:
+      200%
+      0;
+  }
+
+  to {
+    background-position:
+      -200%
+      0;
+  }
+}
