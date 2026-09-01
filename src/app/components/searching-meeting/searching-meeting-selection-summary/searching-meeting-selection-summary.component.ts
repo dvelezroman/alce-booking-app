@@ -14,17 +14,13 @@ import {
 })
 export class SearchingMeetingSelectionSummaryComponent {
 
-  @Input()
-  selectedCount = 0;
+  @Input() selectedCount = 0;
+  @Input() disabled = false;
+  @Input() assignDisabled = false;
+  @Input() unassignDisabled = false;
 
-  @Input()
-  disabled = false;
-
-  @Output()
-  assignRequested = new EventEmitter<void>();
-
-  @Output()
-  unassignRequested = new EventEmitter<void>();
+  @Output() assignRequested = new EventEmitter<void>();
+  @Output() unassignRequested = new EventEmitter<void>();
 
   get selectedMeetingsLabel(): string {
     if (this.selectedCount === 1) {
@@ -41,6 +37,7 @@ export class SearchingMeetingSelectionSummaryComponent {
   onAssignRequested(): void {
     if (
       this.disabled ||
+      this.assignDisabled ||
       !this.hasSelection
     ) {
       return;
@@ -52,6 +49,7 @@ export class SearchingMeetingSelectionSummaryComponent {
   onUnassignRequested(): void {
     if (
       this.disabled ||
+      this.unassignDisabled ||
       !this.hasSelection
     ) {
       return;
