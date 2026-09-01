@@ -1,5 +1,6 @@
 <div class="searching-meeting-page">
   <div class="searching-meeting-page__container">
+
     <!-- =========================
          HEADER
     ========================== -->
@@ -23,15 +24,131 @@
     ></app-searching-meeting-filters>
 
     <!-- =========================
+         STEPS / ASIGNAR
+    ========================== -->
+    <div
+      *ngIf="isAssignMode"
+      class="searching-meeting-page__steps"
+    >
+      <div class="searching-meeting-page__step">
+        <span class="searching-meeting-page__step-number">
+          1
+        </span>
+
+        <div class="searching-meeting-page__step-content">
+          <strong>
+            Selecciona la reunión
+          </strong>
+
+          <span>
+            Marca una o varias reuniones que deseas asignar.
+          </span>
+        </div>
+      </div>
+
+      <div class="searching-meeting-page__step">
+        <span class="searching-meeting-page__step-number">
+          2
+        </span>
+
+        <div class="searching-meeting-page__step-content">
+          <strong>
+            Elige un instructor
+          </strong>
+
+          <span>
+            Selecciona el instructor para las reuniones elegidas.
+          </span>
+        </div>
+      </div>
+
+      <div class="searching-meeting-page__step">
+        <span class="searching-meeting-page__step-number">
+          3
+        </span>
+
+        <div class="searching-meeting-page__step-content">
+          <strong>
+            Asigna el enlace
+          </strong>
+
+          <span>
+            Presiona “Asignar enlace” para completar la asignación.
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================
+         STEPS / DESASIGNAR
+    ========================== -->
+    <div
+      *ngIf="isUnassignMode"
+      class="searching-meeting-page__steps searching-meeting-page__steps--unassign"
+    >
+      <div class="searching-meeting-page__step">
+        <span class="searching-meeting-page__step-number">
+          1
+        </span>
+
+        <div class="searching-meeting-page__step-content">
+          <strong>
+            Selecciona la reunión
+          </strong>
+
+          <span>
+            Marca una o varias reuniones que tengan instructor asignado.
+          </span>
+        </div>
+      </div>
+
+      <div class="searching-meeting-page__step">
+        <span class="searching-meeting-page__step-number">
+          2
+        </span>
+
+        <div class="searching-meeting-page__step-content">
+          <strong>
+            Desasigna el tutor
+          </strong>
+
+          <span>
+            Presiona el botón “Desasignar tutor”.
+          </span>
+        </div>
+      </div>
+
+      <div class="searching-meeting-page__step">
+        <span class="searching-meeting-page__step-number">
+          3
+        </span>
+
+        <div class="searching-meeting-page__step-content">
+          <strong>
+            Confirma la acción
+          </strong>
+
+          <span>
+            Confirma para dejar nuevamente disponibles las reuniones.
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================
          WORKSPACE
     ========================== -->
     <div class="searching-meeting-page__workspace">
+
       <!-- =========================
            LEFT / MEETINGS
       ========================== -->
       <main class="searching-meeting-page__main">
+
         @if (isLoadingMeetings) {
+
           <div class="searching-meeting-page__table-skeleton">
+
             <!-- HEADER -->
             <div class="searching-meeting-page__table-skeleton-header">
               <span></span>
@@ -48,7 +165,9 @@
 
             <!-- ROWS -->
             @for (row of [1, 2, 3, 4, 5, 6, 7, 8]; track row) {
+
               <div class="searching-meeting-page__table-skeleton-row">
+
                 <span
                   class="searching-meeting-page__table-skeleton-checkbox"
                 ></span>
@@ -91,10 +210,14 @@
                 <span
                   class="searching-meeting-page__table-skeleton-line"
                 ></span>
+
               </div>
             }
+
           </div>
+
         } @else {
+
           <app-searching-meeting-table
             [meetings]="paginatedMeetings"
             [totalMeetings]="totalMeetings"
@@ -121,33 +244,40 @@
             (pageChange)="onPageChange($event)"
             (limitChange)="onLimitChange($event)"
           ></app-searching-meeting-pagination>
+
         }
+
       </main>
 
       <!-- =========================
            RIGHT / ASIDE
       ========================== -->
       <aside class="searching-meeting-page__aside">
-        <!-- SELECCIÓN ACTUAL -->
-        <app-searching-meeting-selection-summary
-          [selectedCount]="totalSelectedMeetings"
-          [disabled]="totalSelectedMeetings === 0"
-          (assignRequested)="assignLink()"
-          (unassignRequested)="confirmUnassignMeetings()"
-        ></app-searching-meeting-selection-summary>
 
         <!-- ASIGNACIÓN -->
         <app-searching-meeting-assignment-form
+          *ngIf="isAssignMode"
           [instructors]="instructorList"
           [selectedInstructor]="selectedInstructor"
           [selectedCount]="totalSelectedMeetings"
           (selectedInstructorChange)="selectedInstructor = $event"
           (assignRequested)="assignLink()"
         ></app-searching-meeting-assignment-form>
+
+        <!-- SELECCIÓN ACTUAL -->
+        <app-searching-meeting-selection-summary
+          [selectedCount]="totalSelectedMeetings"
+          [disabled]="totalSelectedMeetings === 0"
+          [assignDisabled]="!selectedInstructor"
+          [unassignDisabled]="!hasAssignedMeetingSelected"
+          (assignRequested)="assignLink()"
+          (unassignRequested)="confirmUnassignMeetings()"
+        ></app-searching-meeting-selection-summary>
+
       </aside>
+
     </div>
   </div>
-
 
   <!-- =========================
        FEEDBACK MODAL
@@ -162,4 +292,5 @@
     (confirmAction)="modalConfig.confirm && modalConfig.confirm()"
     (close)="modalConfig.close()"
   />
+
 </div>

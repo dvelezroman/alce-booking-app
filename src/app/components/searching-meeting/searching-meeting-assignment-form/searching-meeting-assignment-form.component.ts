@@ -32,16 +32,12 @@ export class SearchingMeetingAssignmentFormComponent {
     | null
     | undefined = null;
 
-  @Input()
-  selectedCount = 0;
+  @Input() selectedCount = 0;
+  @Input() assignmentDisabled = false;
 
-  @Output()
-  selectedInstructorChange =
-    new EventEmitter<Instructor | null>();
+  @Output() selectedInstructorChange = new EventEmitter<Instructor | null>();
 
-  @Output()
-  assignRequested =
-    new EventEmitter<void>();
+  @Output() assignRequested = new EventEmitter<void>();
 
   get hasSelection(): boolean {
     return this.selectedCount > 0;

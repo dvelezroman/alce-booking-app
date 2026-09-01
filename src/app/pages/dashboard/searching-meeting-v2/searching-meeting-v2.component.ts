@@ -54,6 +54,8 @@ export class SearchingMeetingV2Component implements OnInit {
 
   availableHours: number[] = [];
 
+  searchMode: 'assign' | 'unassign' = 'assign';
+
   meetings: MeetingDTO[] = [];
   originalMeetings: MeetingDTO[] = [];
   isLoadingMeetings = false;
@@ -155,6 +157,23 @@ export class SearchingMeetingV2Component implements OnInit {
           });
       });
       this.onFilterChange();
+  }
+
+  get hasAssignedMeetingSelected(): boolean {
+    return this.meetings.some(
+      meeting =>
+        meeting.id !== undefined &&
+        this.selectedMeetingIds.includes(meeting.id) &&
+        !!meeting.instructorId
+    );
+  }
+
+  get isUnassignMode(): boolean {
+    return this.searchMode === 'unassign';
+  }
+
+  get isAssignMode(): boolean {
+    return this.searchMode === 'assign';
   }
 
   get totalSelectedMeetings(): number {
@@ -270,50 +289,39 @@ export class SearchingMeetingV2Component implements OnInit {
   }
 
   onFilterChange(): void {
+    this.selectedInstructor = null;
     this.page = 1;
 
-    const filterParams:
-      FilterMeetingsDto = {
-        ...this.filter,
+    this.searchMode =
+      this.filter.assigned || !!this.filter.instructorId
+        ? 'unassign'
+        : 'assign';
 
-        hour:
-          this.filter.hour
-            ? this.filter.hour.toString()
-            : undefined,
+    const filterParams: FilterMeetingsDto = {
+      ...this.filter,
+      hour: this.filter.hour
+        ? this.filter.hour.toString()
+        : undefined,
+      assigned: !!this.filter.assigned,
+      category: this.filter.category
+        ? this.filter.category
+        : undefined,
+      mode: this.filter.mode
+        ? this.filter.mode
+        : undefined,
+      instructorId: this.filter.instructorId
+        ? this.filter.instructorId
+        : undefined,
+    };
 
-        assigned:
-          !!this.filter.assigned
-            ? true
-            : false,
-
-        category:
-          this.filter.category
-            ? this.filter.category
-            : undefined,
-
-        mode:
-          this.filter.mode
-            ? this.filter.mode
-            : undefined,
-
-        instructorId:
-          this.filter.instructorId
-            ? this.filter.instructorId
-            : undefined,
-      };
-
-    if (
-      this.filter.stageId === ''
-    ) {
+    if (this.filter.stageId === '') {
       delete filterParams.stageId;
     } else {
       filterParams.stageId =
         this.filter.stageId?.toString();
     }
 
-    this.fetchMeetings(
-      filterParams,
-    );
+    this.fetchMeetings(filterParams);
   }
 
   onClearFilters(): void {

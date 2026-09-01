@@ -1,561 +1,581 @@
 <section class="searching-meeting-filters">
 
-  <h2 class="searching-meeting-filters__title">
-    Filtros de búsqueda
-  </h2>
+  <!-- =========================
+       HEADER
+  ========================== -->
+  <div class="searching-meeting-filters__header">
+
+    <h2 class="searching-meeting-filters__title">
+      Filtros de búsqueda
+    </h2>
+
+    <button
+      type="button"
+      class="searching-meeting-filters__toggle"
+      [class.searching-meeting-filters__toggle--open]="
+        isMobileFiltersOpen
+      "
+      (click)="toggleMobileFilters()"
+      [attr.aria-expanded]="isMobileFiltersOpen"
+      aria-label="Mostrar u ocultar filtros"
+    >
+      <span>
+        {{ isMobileFiltersOpen ? 'Ocultar' : 'Mostrar' }}
+      </span>
+
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="m6 9 6 6 6-6"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+  </div>
+
 
   <!-- =========================
-       FILTERS ROW
+       COLLAPSIBLE CONTENT
   ========================== -->
-  <div class="searching-meeting-filters__grid">
+  <div
+    class="searching-meeting-filters__content"
+    [class.searching-meeting-filters__content--open]="
+      isMobileFiltersOpen
+    "
+  >
 
-    <!-- FECHA DESDE -->
-    <label class="searching-meeting-filters__field">
-      <span class="searching-meeting-filters__label">
-        Fecha desde
-      </span>
+    <!-- =========================
+         FILTERS ROW
+    ========================== -->
+    <div class="searching-meeting-filters__grid">
 
-      <div class="searching-meeting-filters__control-wrapper">
-        <input
-          type="date"
-          class="searching-meeting-filters__control searching-meeting-filters__control--date"
-          [(ngModel)]="filter.from"
-        />
-
-        <span
-          class="searching-meeting-filters__control-icon searching-meeting-filters__control-icon--left"
-          aria-hidden="true"
-        >
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <rect
-              x="3"
-              y="5"
-              width="18"
-              height="16"
-              rx="2.5"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-
-            <path
-              d="M7 3v4M17 3v4M3 9h18"
-              stroke="currentColor"
-              stroke-width="1.7"
-              stroke-linecap="round"
-            />
-          </svg>
+      <!-- FECHA DESDE -->
+      <label class="searching-meeting-filters__field">
+        <span class="searching-meeting-filters__label">
+          Fecha desde
         </span>
-      </div>
-    </label>
 
-
-    <!-- FECHA HASTA -->
-    <label class="searching-meeting-filters__field">
-      <span class="searching-meeting-filters__label">
-        Fecha hasta
-      </span>
-
-      <div class="searching-meeting-filters__control-wrapper">
-        <input
-          type="date"
-          class="searching-meeting-filters__control searching-meeting-filters__control--date"
-          [(ngModel)]="filter.to"
-        />
-
-        <span
-          class="searching-meeting-filters__control-icon searching-meeting-filters__control-icon--left"
-          aria-hidden="true"
-        >
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <rect
-              x="3"
-              y="5"
-              width="18"
-              height="16"
-              rx="2.5"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-
-            <path
-              d="M7 3v4M17 3v4M3 9h18"
-              stroke="currentColor"
-              stroke-width="1.7"
-              stroke-linecap="round"
-            />
-          </svg>
-        </span>
-      </div>
-    </label>
-
-
-    <!-- HORA -->
-    <label class="searching-meeting-filters__field">
-      <span class="searching-meeting-filters__label">
-        Hora
-      </span>
-
-      <div class="searching-meeting-filters__select-wrapper">
-        <select
-          class="searching-meeting-filters__control searching-meeting-filters__select"
-          [(ngModel)]="filter.hour"
-        >
-          <option value="">
-            Selecciona
-          </option>
-
-          <option
-            *ngFor="let hour of availableHours"
-            [ngValue]="hour"
-          >
-            {{ formatHour(hour) }}
-          </option>
-        </select>
-
-        <svg
-          class="searching-meeting-filters__select-icon"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="m6 9 6 6 6-6"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+        <div class="searching-meeting-filters__control-wrapper">
+          <input
+            type="date"
+            class="searching-meeting-filters__control searching-meeting-filters__control--date"
+            [(ngModel)]="filter.from"
           />
-        </svg>
-      </div>
-    </label>
 
-
-    <!-- ETAPA -->
-    <label class="searching-meeting-filters__field">
-      <span class="searching-meeting-filters__label">
-        Etapa
-      </span>
-
-      <div class="searching-meeting-filters__select-wrapper">
-        <select
-          class="searching-meeting-filters__control searching-meeting-filters__select"
-          [(ngModel)]="filter.stageId"
-        >
-          <option value="">
-            Selecciona etapa
-          </option>
-
-          <option
-            *ngFor="let stage of stages"
-            [value]="stage.id"
+          <span
+            class="searching-meeting-filters__control-icon searching-meeting-filters__control-icon--left"
+            aria-hidden="true"
           >
-            {{ getStageLabel(stage) }}
-          </option>
-        </select>
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="16"
+                rx="2.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
 
-        <svg
-          class="searching-meeting-filters__select-icon"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="m6 9 6 6 6-6"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </div>
-    </label>
-
-
-    <!-- ASIGNADO -->
-    <label class="searching-meeting-filters__field">
-      <span class="searching-meeting-filters__label">
-        Asignado
-      </span>
-
-      <div class="searching-meeting-filters__select-wrapper">
-        <select
-          class="searching-meeting-filters__control searching-meeting-filters__select"
-          [(ngModel)]="filter.assigned"
-        >
-          <option [ngValue]="false">
-            Todos
-          </option>
-
-          <option [ngValue]="true">
-            Asignados
-          </option>
-        </select>
-
-        <svg
-          class="searching-meeting-filters__select-icon"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="m6 9 6 6 6-6"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </div>
-    </label>
-
-
-    <!-- CATEGORÍA -->
-    <label class="searching-meeting-filters__field">
-      <span class="searching-meeting-filters__label">
-        Categoría
-      </span>
-
-      <div class="searching-meeting-filters__select-wrapper">
-        <select
-          class="searching-meeting-filters__control searching-meeting-filters__select"
-          [(ngModel)]="filter.category"
-        >
-          <option [ngValue]="undefined">
-            Todas
-          </option>
-
-          <option
-            *ngFor="let category of ageGroupOptions"
-            [value]="category"
-          >
-            {{ getCategoryLabel(category) }}
-          </option>
-        </select>
-
-        <svg
-          class="searching-meeting-filters__select-icon"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="m6 9 6 6 6-6"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </div>
-    </label>
-
-
-    <!-- MODALIDAD -->
-    <label class="searching-meeting-filters__field">
-      <span class="searching-meeting-filters__label">
-        Modalidad
-      </span>
-
-      <div class="searching-meeting-filters__select-wrapper">
-        <select
-          class="searching-meeting-filters__control searching-meeting-filters__select"
-          [(ngModel)]="filter.mode"
-        >
-          <option [ngValue]="undefined">
-            Todas
-          </option>
-
-          <option
-            *ngFor="let mode of modeOptions"
-            [value]="mode"
-          >
-            {{ getModeLabel(mode) }}
-          </option>
-        </select>
-
-        <svg
-          class="searching-meeting-filters__select-icon"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="m6 9 6 6 6-6"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </div>
-    </label>
-
-    <!-- INSTRUCTOR ASIGNADO -->
-    <div class="searching-meeting-filters__field searching-meeting-filters__field--instructor">
-
-      <label class="searching-meeting-filters__label">
-        Instructor asignado
+              <path
+                d="M7 3v4M17 3v4M3 9h18"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+        </div>
       </label>
 
-      <div class="searching-meeting-filters__instructor-search">
 
-        <span
-          class="searching-meeting-filters__instructor-search-icon"
-          aria-hidden="true"
-        >
+      <!-- FECHA HASTA -->
+      <label class="searching-meeting-filters__field">
+        <span class="searching-meeting-filters__label">
+          Fecha hasta
+        </span>
+
+        <div class="searching-meeting-filters__control-wrapper">
+          <input
+            type="date"
+            class="searching-meeting-filters__control searching-meeting-filters__control--date"
+            [(ngModel)]="filter.to"
+          />
+
+          <span
+            class="searching-meeting-filters__control-icon searching-meeting-filters__control-icon--left"
+            aria-hidden="true"
+          >
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="16"
+                rx="2.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M7 3v4M17 3v4M3 9h18"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+        </div>
+      </label>
+
+
+      <!-- HORA -->
+      <label class="searching-meeting-filters__field">
+        <span class="searching-meeting-filters__label">
+          Hora
+        </span>
+
+        <div class="searching-meeting-filters__select-wrapper">
+          <select
+            class="searching-meeting-filters__control searching-meeting-filters__select"
+            [(ngModel)]="filter.hour"
+          >
+            <option value="">
+              Selecciona
+            </option>
+
+            <option
+              *ngFor="let hour of availableHours"
+              [ngValue]="hour"
+            >
+              {{ formatHour(hour) }}
+            </option>
+          </select>
+
           <svg
-            width="16"
-            height="16"
+            class="searching-meeting-filters__select-icon"
+            width="14"
+            height="14"
             viewBox="0 0 24 24"
             fill="none"
+            aria-hidden="true"
           >
-            <circle
-              cx="11"
-              cy="11"
-              r="6.5"
-              stroke="currentColor"
-              stroke-width="1.8"
-            />
-
             <path
-              d="m16 16 4 4"
+              d="m6 9 6 6 6-6"
               stroke="currentColor"
               stroke-width="1.8"
               stroke-linecap="round"
+              stroke-linejoin="round"
             />
           </svg>
+        </div>
+      </label>
+
+
+      <!-- ETAPA -->
+      <label class="searching-meeting-filters__field">
+        <span class="searching-meeting-filters__label">
+          Etapa
         </span>
 
-        <input
-          type="text"
-          class="searching-meeting-filters__control searching-meeting-filters__instructor-input"
-          placeholder="Buscar instructor..."
-          [(ngModel)]="instructorSearch"
-          (focus)="onInstructorInputFocus()"
-          (ngModelChange)="onInstructorInputChange($event)"
-          (blur)="onInstructorInputBlur()"
-        />
-
-        <button
-          *ngIf="instructorSearch"
-          type="button"
-          class="searching-meeting-filters__instructor-clear"
-          aria-label="Limpiar instructor"
-          (mousedown)="$event.preventDefault()"
-          (click)="clearInstructor()"
-        >
-          ×
-        </button>
-
-        <div
-          *ngIf="showInstructorDropdown && filteredInstructors.length > 0"
-          class="searching-meeting-filters__instructor-dropdown"
-        >
-
-          <!-- TODOS -->
-          <button
-            type="button"
-            class="searching-meeting-filters__instructor-option"
-            (mousedown)="clearInstructor()"
+        <div class="searching-meeting-filters__select-wrapper">
+          <select
+            class="searching-meeting-filters__control searching-meeting-filters__select"
+            [(ngModel)]="filter.stageId"
           >
-            <span class="searching-meeting-filters__instructor-avatar searching-meeting-filters__instructor-avatar--all">
-              —
-            </span>
+            <option value="">
+              Selecciona etapa
+            </option>
 
-            <span class="searching-meeting-filters__instructor-content">
-              <strong>
-                Todos
-              </strong>
+            <option
+              *ngFor="let stage of stages"
+              [value]="stage.id"
+            >
+              {{ getStageLabel(stage) }}
+            </option>
+          </select>
 
-              <small>
-                Todos los instructores
-              </small>
-            </span>
+          <svg
+            class="searching-meeting-filters__select-icon"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      </label>
+
+
+      <!-- ASIGNADO -->
+      <label class="searching-meeting-filters__field">
+        <span class="searching-meeting-filters__label">
+          Asignado
+        </span>
+
+        <div class="searching-meeting-filters__select-wrapper">
+          <select
+            class="searching-meeting-filters__control searching-meeting-filters__select"
+            [(ngModel)]="filter.assigned"
+          >
+            <option [ngValue]="false">
+              Todos
+            </option>
+
+            <option [ngValue]="true">
+              Asignados
+            </option>
+          </select>
+
+          <svg
+            class="searching-meeting-filters__select-icon"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      </label>
+
+
+      <!-- CATEGORÍA -->
+      <label class="searching-meeting-filters__field">
+        <span class="searching-meeting-filters__label">
+          Categoría
+        </span>
+
+        <div class="searching-meeting-filters__select-wrapper">
+          <select
+            class="searching-meeting-filters__control searching-meeting-filters__select"
+            [(ngModel)]="filter.category"
+          >
+            <option [ngValue]="undefined">
+              Todas
+            </option>
+
+            <option
+              *ngFor="let category of ageGroupOptions"
+              [value]="category"
+            >
+              {{ getCategoryLabel(category) }}
+            </option>
+          </select>
+
+          <svg
+            class="searching-meeting-filters__select-icon"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      </label>
+
+
+      <!-- MODALIDAD -->
+      <label class="searching-meeting-filters__field">
+        <span class="searching-meeting-filters__label">
+          Modalidad
+        </span>
+
+        <div class="searching-meeting-filters__select-wrapper">
+          <select
+            class="searching-meeting-filters__control searching-meeting-filters__select"
+            [(ngModel)]="filter.mode"
+          >
+            <option [ngValue]="undefined">
+              Todas
+            </option>
+
+            <option
+              *ngFor="let mode of modeOptions"
+              [value]="mode"
+            >
+              {{ getModeLabel(mode) }}
+            </option>
+          </select>
+
+          <svg
+            class="searching-meeting-filters__select-icon"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      </label>
+
+
+      <!-- INSTRUCTOR ASIGNADO -->
+      <div
+        class="searching-meeting-filters__field searching-meeting-filters__field--instructor"
+      >
+
+        <label class="searching-meeting-filters__label">
+          Instructor asignado
+        </label>
+
+        <div class="searching-meeting-filters__instructor-search">
+
+          <span
+            class="searching-meeting-filters__instructor-search-icon"
+            aria-hidden="true"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="6.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+
+              <path
+                d="m16 16 4 4"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <input
+            type="text"
+            class="searching-meeting-filters__control searching-meeting-filters__instructor-input"
+            placeholder="Buscar instructor..."
+            [(ngModel)]="instructorSearch"
+            (focus)="onInstructorInputFocus()"
+            (ngModelChange)="onInstructorInputChange($event)"
+            (blur)="onInstructorInputBlur()"
+          />
+
+          <button
+            *ngIf="instructorSearch"
+            type="button"
+            class="searching-meeting-filters__instructor-clear"
+            aria-label="Limpiar instructor"
+            (mousedown)="$event.preventDefault()"
+            (click)="clearInstructor()"
+          >
+            ×
           </button>
 
-          <!-- INSTRUCTORES -->
-          <button
-            *ngFor="
-              let instructor of filteredInstructors;
-              trackBy: trackByInstructorId
+
+          <!-- =========================
+               INSTRUCTOR DROPDOWN
+          ========================== -->
+          <div
+            *ngIf="
+              showInstructorDropdown &&
+              filteredInstructors.length > 0
             "
-            type="button"
-            class="searching-meeting-filters__instructor-option"
-            (mousedown)="onSelectInstructor(instructor)"
+            class="searching-meeting-filters__instructor-dropdown"
           >
-            <span class="searching-meeting-filters__instructor-avatar">
-              {{ getInstructorInitials(instructor) }}
-            </span>
 
-            <span class="searching-meeting-filters__instructor-content">
-              <strong>
-                {{ getInstructorLabel(instructor) }}
-              </strong>
+            <!-- TODOS -->
+            <button
+              type="button"
+              class="searching-meeting-filters__instructor-option"
+              (mousedown)="clearInstructor()"
+            >
+              <span
+                class="searching-meeting-filters__instructor-avatar searching-meeting-filters__instructor-avatar--all"
+              >
+                —
+              </span>
 
-              <small>
-                Instructor
-              </small>
-            </span>
+              <span class="searching-meeting-filters__instructor-content">
+                <strong>
+                  Todos
+                </strong>
 
-            <span class="searching-meeting-filters__instructor-id">
-              #{{ instructor.id }}
-            </span>
-          </button>
+                <small>
+                  Todos los instructores
+                </small>
+              </span>
+            </button>
+
+
+            <!-- INSTRUCTORES -->
+            <button
+              *ngFor="
+                let instructor of filteredInstructors;
+                trackBy: trackByInstructorId
+              "
+              type="button"
+              class="searching-meeting-filters__instructor-option"
+              (mousedown)="onSelectInstructor(instructor)"
+            >
+              <span class="searching-meeting-filters__instructor-avatar">
+                {{ getInstructorInitials(instructor) }}
+              </span>
+
+              <span class="searching-meeting-filters__instructor-content">
+                <strong>
+                  {{ getInstructorLabel(instructor) }}
+                </strong>
+
+                <small>
+                  Instructor
+                </small>
+              </span>
+
+              <span class="searching-meeting-filters__instructor-id">
+                #{{ instructor.id }}
+              </span>
+            </button>
+
+          </div>
 
         </div>
 
       </div>
 
     </div>
-  </div>
 
 
+    <!-- =========================
+         SEARCH / ACTIONS
+    ========================== -->
+    <div class="searching-meeting-filters__bottom">
 
-  <!-- =========================
-       SEARCH / ACTIONS
-  ========================== -->
-  <div class="searching-meeting-filters__bottom">
-
-    <!-- <label class="searching-meeting-filters__field searching-meeting-filters__field--search">
-      <span class="searching-meeting-filters__label">
-        Buscar estudiante
-      </span>
-
-      <div class="searching-meeting-filters__search-wrapper">
-
-        <input
-          type="text"
-          class="searching-meeting-filters__control searching-meeting-filters__search"
-          placeholder="Nombre o email del estudiante"
-        />
-
-        <span
-          class="searching-meeting-filters__search-icon"
+      <!-- CLEAR -->
+      <button
+        type="button"
+        class="searching-meeting-filters__button searching-meeting-filters__button--clear"
+        (click)="onClearFilters()"
+      >
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
           aria-hidden="true"
         >
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <circle
-              cx="11"
-              cy="11"
-              r="6"
-              stroke="currentColor"
-              stroke-width="1.8"
-            />
+          <path
+            d="M20 6v5h-5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
 
-            <path
-              d="m16 16 4 4"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            />
-          </svg>
+          <path
+            d="M4 18v-5h5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <path
+            d="M5.8 9A7 7 0 0 1 18.5 6M18.2 15A7 7 0 0 1 5.5 18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <span>
+          Limpiar filtros
         </span>
-
-      </div>
-    </label> -->
+      </button>
 
 
-    <!-- CLEAR -->
-    <button
-      type="button"
-      class="searching-meeting-filters__button searching-meeting-filters__button--clear"
-      (click)="onClearFilters()"
-    >
-      <svg
-        width="17"
-        height="17"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
+      <!-- SEARCH -->
+      <button
+        type="button"
+        class="searching-meeting-filters__button searching-meeting-filters__button--search"
+        (click)="onApplyFilters()"
       >
-        <path
-          d="M20 6v5h-5"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="6"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
 
-        <path
-          d="M4 18v-5h5"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
+          <path
+            d="m16 16 4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
 
-        <path
-          d="M5.8 9A7 7 0 0 1 18.5 6M18.2 15A7 7 0 0 1 5.5 18"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-        />
-      </svg>
+        <span>
+          Buscar
+        </span>
+      </button>
 
-      <span>
-        Limpiar filtros
-      </span>
-    </button>
-
-
-    <!-- SEARCH -->
-    <button
-      type="button"
-      class="searching-meeting-filters__button searching-meeting-filters__button--search"
-      (click)="onApplyFilters()"
-    >
-      <svg
-        width="17"
-        height="17"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
-      >
-        <circle
-          cx="11"
-          cy="11"
-          r="6"
-          stroke="currentColor"
-          stroke-width="1.8"
-        />
-
-        <path
-          d="m16 16 4 4"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-        />
-      </svg>
-
-      <span>
-        Buscar
-      </span>
-    </button>
+    </div>
 
   </div>
 

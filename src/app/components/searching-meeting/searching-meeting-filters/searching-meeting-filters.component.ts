@@ -31,6 +31,8 @@ import {
 })
 export class SearchingMeetingFiltersComponent {
 
+  isMobileFiltersOpen: boolean = false;
+
   /* =========================
      INSTRUCTOR SEARCH
   ========================= */
@@ -55,38 +57,25 @@ export class SearchingMeetingFiltersComponent {
     instructorId: '',
   };
 
-  @Input()
-  availableHours: number[] = [];
-
-  @Input()
-  stages: Stage[] = [];
-
-  @Input()
-  ageGroupOptions: string[] = [];
-
-  @Input()
-  modeOptions: string[] = [];
-
-  @Input()
-  instructors: Instructor[] = [];
+  @Input() availableHours: number[] = [];
+  @Input() stages: Stage[] = [];
+  @Input() ageGroupOptions: string[] = [];
+  @Input() modeOptions: string[] = [];
+  @Input() instructors: Instructor[] = [];
 
   /* =========================
      OUTPUTS
   ========================= */
 
-  @Output()
-  filterChange = new EventEmitter<void>();
-
-  @Output()
-  clearFilters = new EventEmitter<void>();
+  @Output() filterChange = new EventEmitter<void>();
+  @Output() clearFilters = new EventEmitter<void>();
 
   /* =========================
      ACTIONS
   ========================= */
 
-  onApplyFilters(): void {
-    this.filterChange.emit();
-  }
+  toggleMobileFilters(): void { this.isMobileFiltersOpen = !this.isMobileFiltersOpen }
+  onApplyFilters(): void { this.filterChange.emit() }
 
   onClearFilters(): void {
     this.instructorSearch = '';
