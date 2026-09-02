@@ -1014,9 +1014,16 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
   onContentIdsSelected(
     ids: number[],
   ): void {
-    this.studyContentIds = ids;
+    this.studyContentIds = [
+      ...new Set([
+        ...this.studyContentIds,
+        ...ids,
+      ]),
+    ];
 
-    this.loadContentNames(ids);
+    this.loadContentNames(
+      this.studyContentIds,
+    );
   }
 
   loadContentNames(

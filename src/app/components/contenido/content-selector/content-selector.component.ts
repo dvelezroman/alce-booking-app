@@ -24,23 +24,17 @@ interface ContentSelectorStepState {
 })
 export class ContentSelectorComponent {
   @Input() stages: Stage[] = [];
+  @Input() savedContentIds: number[] = [];
 
   @Output() contentIdsSelected = new EventEmitter<number[]>();
-
   @Output() stepStateChanged = new EventEmitter<ContentSelectorStepState>();
 
   selectedStageId: number | null = null;
-
   contents: StudyContentDto[] = [];
-
   filteredContents: StudyContentDto[] = [];
-
   selectedContentIds: number[] = [];
-
   searchQuery: string = '';
-
   isLoadingContents: boolean = false;
-
   isConfirmed: boolean = false;
 
   constructor(
@@ -58,19 +52,15 @@ export class ContentSelectorComponent {
     this.searchQuery = '';
     this.isConfirmed = false;
 
-    /*
-     * Limpiamos también los contenidos que
-     * estaban preparados anteriormente en el padre.
-     */
-    this.contentIdsSelected.emit([]);
-
     this.emitStepState();
 
     if (!this.selectedStageId) {
       return;
     }
 
-    this.loadStageContents(this.selectedStageId);
+    this.loadStageContents(
+      this.selectedStageId,
+    );
   }
 
   private loadStageContents(stageId: number): void {
@@ -84,7 +74,19 @@ export class ContentSelectorComponent {
             content.unit > 0,
         );
 
-        this.filteredContents = [...this.contents];
+        this.filteredContents = [
+          ...this.contents,
+        ];
+
+        this.selectedContentIds =
+          this.contents
+            .filter(content =>
+              this.savedContentIds.includes(
+                content.id,
+              ),
+            )
+            .map(content => content.id);
+
         this.isLoadingContents = false;
 
         this.emitStepState();
@@ -99,6 +101,14 @@ export class ContentSelectorComponent {
         this.emitStepState();
       },
     });
+  }
+
+  isContentSaved(
+    contentId: number,
+  ): boolean {
+    return this.savedContentIds.includes(
+      contentId,
+    );
   }
 
   /* =========================
