@@ -82,17 +82,12 @@ export class SuppressedEmailsComponent implements OnInit {
     this.loading = true;
     this.errorMsg = '';
 
-    const active =
-      this.activeFilter === 'all'
-        ? undefined
-        : this.activeFilter === 'true';
-
     this.emailSuppressionService
       .list({
         page: this.page,
         limit: this.limit,
         search: this.search.trim() || undefined,
-        active,
+        active: this.resolveActiveQueryParam(),
       })
       .subscribe({
         next: (res) => {
@@ -121,7 +116,8 @@ export class SuppressedEmailsComponent implements OnInit {
     this.fetch();
   }
 
-  onFilterChange(): void {
+  onFilterChange(value: 'all' | 'true' | 'false'): void {
+    this.activeFilter = value;
     this.page = 1;
     this.fetch();
   }
@@ -360,14 +356,21 @@ export class SuppressedEmailsComponent implements OnInit {
   }
 
   private currentListFilters(): { search?: string; active?: boolean } {
-    const active =
-      this.activeFilter === 'all'
-        ? undefined
-        : this.activeFilter === 'true';
     return {
       search: this.search.trim() || undefined,
-      active,
+      active: this.resolveActiveQueryParam(),
     };
+  }
+
+  private resolveActiveQueryParam(): boolean | undefined {
+    switch (this.activeFilter) {
+      case 'true':
+        return true;
+      case 'false':
+        return false;
+      default:
+        return undefined;
+    }
   }
 
   openBulkNotify(): void {
