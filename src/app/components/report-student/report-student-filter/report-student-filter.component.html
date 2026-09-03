@@ -171,6 +171,7 @@
           id="from"
           type="date"
           [(ngModel)]="from"
+          (ngModelChange)="emitFiltersChanged()"
         />
       </div>
     </div>
@@ -211,6 +212,7 @@
           id="to"
           type="date"
           [(ngModel)]="to"
+          (ngModelChange)="emitFiltersChanged()"
         />
       </div>
     </div>
@@ -227,6 +229,7 @@
         <select
           id="stage"
           [(ngModel)]="stageId"
+          (ngModelChange)="emitFiltersChanged()"
         >
           <option [ngValue]="null">
             Todos los stages

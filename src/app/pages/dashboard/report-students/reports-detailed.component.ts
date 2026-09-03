@@ -56,6 +56,8 @@ export class ReportsDetailedComponent {
     stageId?: number;
   };
 
+  downloadFilters: { from?: string; to?: string; stageId?: number } = {};
+
   constructor(
     private reportsService: ReportsService,
     private usersService: UsersService
@@ -65,6 +67,18 @@ export class ReportsDetailedComponent {
       .subscribe((term: string) => {
         this.fetchFilteredStudents(term);
       });
+  }
+
+  onDownloadFiltersChanged(filters: {
+    from?: string;
+    to?: string;
+    stageId?: number;
+  }): void {
+    this.downloadFilters = filters;
+  }
+
+  get canDownloadReport(): boolean {
+    return !!this.downloadFilters.from && !!this.downloadFilters.to;
   }
 
   onStudentSearchChange(term: string): void {
@@ -220,7 +234,9 @@ export class ReportsDetailedComponent {
   }
 
   openDownloadModal() {
-    if (!this.isReportGenerated || !this.lastFilters) return;
+    const { from, to } = this.downloadFilters;
+
+    if (!from || !to) return;
 
     this.modalData = {
       show: true,
@@ -238,30 +254,67 @@ export class ReportsDetailedComponent {
   }
 
   confirmDownload() {
-    if (!this.lastFilters) return;
+    const { from, to, stageId } = this.downloadFilters;
 
-    const { studentId, from, to } = this.lastFilters;
+    if (!from || !to) return;
 
-    const reportType = {
-      type: 'GET_DETAIL_REPORT',
-      label: `Reporte_detallado_estudianteId_${studentId}`
-    };
+    const studentId = this.selectedStudentId;
 
-    this.reportsService.getCsvReport(
-      reportType.type,
-      studentId,
-      from!,
-      to!
-    ).subscribe((blob) => {
-      const a = document.createElement('a');
-      const url = window.URL.createObjectURL(blob);
+    if (studentId) {
+      const reportType = {
+        type: 'GET_DETAIL_REPORT',
+        label: `Reporte_detallado_estudianteId_${studentId}`
+      };
 
-      a.href = url;
-      a.download = `${reportType.label}_${from}_${to}.csv`;
-      a.click();
+      this.reportsService.getCsvReport(
+        reportType.type,
+        studentId,
+        from,
+        to,
+        stageId
+      ).subscribe({
+        next: (blob) => {
+          const a = document.createElement('a');
+          const url = window.URL.createObjectURL(blob);
 
-      window.URL.revokeObjectURL(url);
-    });
+          a.href = url;
+          a.download = `${reportType.label}_${from}_${to}.csv`;
+
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+
+          window.URL.revokeObjectURL(url);
+        },
+        error: (error) => {
+          console.error('ERROR DOWNLOADING STUDENT REPORT:', error);
+        }
+      });
+
+    } else {
+      this.reportsService.getCsvSummaryReport(
+        from,
+        to,
+        stageId
+      ).subscribe({
+        next: (blob) => {
+          const a = document.createElement('a');
+          const url = window.URL.createObjectURL(blob);
+
+          a.href = url;
+          a.download = `Reporte_general_estudiantes_${from}_${to}.xlsx`;
+
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+
+          window.URL.revokeObjectURL(url);
+        },
+        error: (error) => {
+          console.error('ERROR DOWNLOADING GENERAL REPORT:', error);
+        }
+      });
+    }
 
     this.closeModal();
   }

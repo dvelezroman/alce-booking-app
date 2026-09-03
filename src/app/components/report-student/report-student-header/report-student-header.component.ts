@@ -10,12 +10,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ReportStudentHeaderComponent {
   @Input() isReportGenerated = false;
+  @Input() canDownload = false;
 
   @Output() downloadRequested = new EventEmitter<void>();
   @Output() refreshRequested = new EventEmitter<void>();
 
   onDownload(): void {
-    if (!this.isReportGenerated) return;
+    if (!this.canDownload) return;
     this.downloadRequested.emit();
   }
 

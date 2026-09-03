@@ -3,11 +3,12 @@
 
     <app-report-student-header
       [isReportGenerated]="isReportGenerated"
+      [canDownload]="canDownloadReport"
       (downloadRequested)="openDownloadModal()"
       (refreshRequested)="onFiltersSubmitted(lastFilters!)"
     />
 
-    <app-report-student-filter
+   <app-report-student-filter
       [filteredStudents]="filteredStudents"
       [showStudentDropdown]="showStudentDropdown"
       [isStudentFieldInvalid]="isStudentFieldInvalid"
@@ -15,6 +16,7 @@
       (studentSelected)="onStudentSelected($event)"
       (studentDropdownHidden)="hideStudentDropdown()"
       (filtersSubmitted)="onFiltersSubmitted($event)"
+      (filtersChanged)="onDownloadFiltersChanged($event)"
     />
 
     @if (!showReportButtons) {
