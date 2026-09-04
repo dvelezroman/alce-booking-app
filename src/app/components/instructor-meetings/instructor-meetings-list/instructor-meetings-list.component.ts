@@ -43,6 +43,12 @@ export class InstructorMeetingsListComponent {
   @Input()
   meetings: MeetingDTO[] = [];
 
+  @Input()
+  isNewUser!:
+    (
+      meeting: MeetingDTO,
+    ) => boolean;
+
 
   @Input()
   totalMeetings: number = 0;

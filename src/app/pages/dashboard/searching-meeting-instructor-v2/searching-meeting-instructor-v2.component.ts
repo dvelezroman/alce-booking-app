@@ -271,6 +271,11 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
     this.store.select(selectInstructorLink).subscribe(link => { this.instructorLink = link });
   }
 
+
+  isNewUser( meeting: MeetingDTO ): boolean {
+    return !!meeting.isNewUser;
+  }
+
   /* =========================
      SEMANA ACTUAL
   ========================= */
