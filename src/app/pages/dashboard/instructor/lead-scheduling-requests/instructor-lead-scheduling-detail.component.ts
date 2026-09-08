@@ -22,6 +22,7 @@ import {
   isPlacementTestExam,
   isSpeakingPlacementExam,
   leadSchedulingKindLabel,
+  leadSchedulingModeLabel,
 } from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
@@ -156,6 +157,10 @@ export class InstructorLeadSchedulingDetailComponent implements OnInit, OnDestro
     const datePart = d ? this.formatScheduledDate(d) : '—';
     const hourPart = h != null ? `${this.formatScheduledHour(h)} h (24 h)` : '—';
     return `${datePart} · ${hourPart}`;
+  }
+
+  modeText(mode: string | null | undefined): string {
+    return leadSchedulingModeLabel(mode);
   }
 
   private formatScheduledDate(iso: string): string {

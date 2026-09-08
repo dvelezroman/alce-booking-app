@@ -21,6 +21,7 @@ import {
   SafeNoteHtmlPipe,
 } from '../../../../pipes/safe-note-html.pipe';
 import { formatRelativeDueDateEs } from '../../../../shared/utils/dates.util';
+import { leadSchedulingModeLabel } from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
   selector: 'app-notification-detail-content',
@@ -263,5 +264,9 @@ export class NotificationDetailContentComponent {
     if (!value) return;
 
     navigator.clipboard.writeText(value);
+  }
+
+  modeLabel(mode: string | null | undefined): string {
+    return leadSchedulingModeLabel(mode);
   }
 }

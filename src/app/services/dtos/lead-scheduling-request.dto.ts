@@ -53,6 +53,8 @@ export interface LeadSchedulingRequestRow {
   stageId?: number | null;
   stage?: LeadSchedulingStageRef | null;
   courtesyClassHours?: number | null;
+  /** Modalidad de clase demo (`ONLINE` | `PRESENCIAL`). Null en examen de ubicación. */
+  mode?: 'ONLINE' | 'PRESENCIAL' | null;
   requestNotes?: string | null;
   instructorId?: number | null;
   instructor?: LeadSchedulingInstructorRef | null;

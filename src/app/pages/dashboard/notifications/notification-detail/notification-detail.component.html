@@ -674,6 +674,13 @@
               <span class="request-lead-field__label">Horas de cortesía</span>
               <strong class="request-lead-field__value">{{ requestLead.courtesyClassHours }}</strong>
             </div>
+            <div
+              class="request-lead-field"
+              *ngIf="isDemoClassNotification && requestLead.mode"
+            >
+              <span class="request-lead-field__label">Modalidad</span>
+              <strong class="request-lead-field__value">{{ formatLeadMode(requestLead.mode) }}</strong>
+            </div>
           </div>
         </div>
 

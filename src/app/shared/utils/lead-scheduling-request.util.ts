@@ -96,3 +96,11 @@ export function leadSchedulingScheduleSummary(
   const hourPart = h != null ? `${h}:00` : '—';
   return `${datePart} · ${hourPart}`;
 }
+
+export function leadSchedulingModeLabel(
+  mode: string | null | undefined,
+): string {
+  if (mode === 'ONLINE') return 'Online';
+  if (mode === 'PRESENCIAL') return 'Presencial';
+  return '—';
+}

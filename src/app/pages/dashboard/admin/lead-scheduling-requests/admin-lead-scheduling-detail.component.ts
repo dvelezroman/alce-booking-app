@@ -25,6 +25,7 @@ import {
   isPlacementTestExam,
   isSpeakingPlacementExam,
   leadSchedulingKindLabel,
+  leadSchedulingModeLabel,
   leadSchedulingScheduleSummary,
 } from '../../../../shared/utils/lead-scheduling-request.util';
 
@@ -175,6 +176,10 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
 
   slotText(row: LeadSchedulingRequestRow): string {
     return leadSchedulingScheduleSummary(row);
+  }
+
+  modeText(mode: string | null | undefined): string {
+    return leadSchedulingModeLabel(mode);
   }
 
   instructorLabelFromRow(row: LeadSchedulingRequestRow): string {

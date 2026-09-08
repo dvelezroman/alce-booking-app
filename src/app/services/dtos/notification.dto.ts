@@ -76,6 +76,7 @@ export interface DemoClassLead {
   idNumber?: string | null;
   contactPhone: string;
   courtesyClassHours?: number | null;
+  mode?: 'ONLINE' | 'PRESENCIAL' | null;
   stageId?: number | null;
   stageNumber?: string | null;
   stageLabel?: string | null;
@@ -98,6 +99,7 @@ export interface DemoClassSummary {
   stageId: number;
   leadName: string;
   courtesyClassHours: number;
+  mode?: 'ONLINE' | 'PRESENCIAL';
   requestNotes?: string;
   leadSchedulingRequestId?: number;
 }

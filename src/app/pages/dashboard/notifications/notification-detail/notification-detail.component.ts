@@ -27,7 +27,7 @@ import { Stage,  } from '../../../../services/dtos/student.dto';
 import { StagesService } from '../../../../services/stages.service';
 import { StudentsService } from '../../../../services/students.service';
 import { sanitizeNotificationBody } from '../../../../shared/utils/notification-message.util';
-import { isPlacementTestExam } from '../../../../shared/utils/lead-scheduling-request.util';
+import { isPlacementTestExam, leadSchedulingModeLabel } from '../../../../shared/utils/lead-scheduling-request.util';
 import { formatRelativeDueDateEs } from '../../../../shared/utils/dates.util';
 
 @Component({
@@ -554,6 +554,10 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   formatLeadSchedulingHour(h: number): string {
     const hh = Math.max(0, Math.min(23, Math.floor(h)));
     return `${String(hh).padStart(2, '0')}:00`;
+  }
+
+  formatLeadMode(mode: string | null | undefined): string {
+    return leadSchedulingModeLabel(mode);
   }
 
   /** Oculta el cuerpo técnico cuando la tarjeta estructurada ya muestra la información. */
