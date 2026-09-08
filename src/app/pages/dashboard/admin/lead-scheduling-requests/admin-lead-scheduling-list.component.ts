@@ -95,6 +95,7 @@ export class AdminLeadSchedulingListComponent implements OnInit {
   readonly kindLabel: Record<LeadSchedulingRequestKind, string> = {
     DEMO_CLASS: 'Demo / cortesía',
     PLACEMENT_EXAM: 'Examen ubicación',
+    INDUCTION: 'Inducción',
   };
 
   readonly statusLabel: Record<LeadSchedulingRequestStatus, string> = {
@@ -134,7 +135,11 @@ export class AdminLeadSchedulingListComponent implements OnInit {
   ========================= */
 
   private applyKindFromRoute(kind: string | null): void {
-    if (kind === 'PLACEMENT_EXAM' || kind === 'DEMO_CLASS') {
+    if (
+      kind === 'PLACEMENT_EXAM' ||
+      kind === 'DEMO_CLASS' ||
+      kind === 'INDUCTION'
+    ) {
       this.filterKind = kind;
     }
   }

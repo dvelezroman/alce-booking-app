@@ -45,6 +45,7 @@ export class InstructorLeadSchedulingDetailComponent implements OnInit, OnDestro
   readonly kindLabel: Record<LeadSchedulingRequestKind, string> = {
     DEMO_CLASS: 'Cortesía / demo',
     PLACEMENT_EXAM: 'Examen de ubicación',
+    INDUCTION: 'Inducción',
   };
 
   readonly statusLabel: Record<LeadSchedulingRequestStatus, string> = {
@@ -128,6 +129,7 @@ export class InstructorLeadSchedulingDetailComponent implements OnInit, OnDestro
     return (
       this.row != null &&
       (this.row.kind === 'DEMO_CLASS' ||
+        this.row.kind === 'INDUCTION' ||
         isSpeakingPlacementExam(this.row.kind, this.row.placementExamType))
     );
   }

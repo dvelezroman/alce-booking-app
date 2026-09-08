@@ -631,7 +631,9 @@
       {{
         isPlacementExamNotification
           ? 'Solicitud de examen de ubicación'
-          : 'Solicitud de clase de cortesía'
+          : isInductionNotification
+            ? 'Solicitud de inducción'
+            : 'Solicitud de clase de cortesía'
       }}
     </span>
 
@@ -646,7 +648,8 @@
               'pi-file-edit':
                 isPlacementExamNotification,
               'pi-calendar':
-                isDemoClassNotification
+                isDemoClassNotification ||
+                isInductionNotification
             }"
           ></i>
         </div>
@@ -680,7 +683,7 @@
             <dd>{{ requestLead.email }}</dd>
         </div>
 
-        <div *ngIf="isDemoClassNotification && requestLead.mode">
+        <div *ngIf="(isDemoClassNotification || isInductionNotification) && requestLead.mode">
             <dt>Modalidad</dt>
             <dd>{{ modeLabel(requestLead.mode) }}</dd>
         </div>
@@ -900,6 +903,22 @@
           </span>
         </button>
 
+        <button
+          *ngIf="showInductionListLink"
+          type="button"
+          class="
+            notification-detail-content__button
+            notification-detail-content__button--secondary
+          "
+          (click)="onGoToInductionList()"
+        >
+          <i class="pi pi-list"></i>
+
+          <span>
+            Ver inducciones
+          </span>
+        </button>
+
       </div>
 
     </div>
@@ -947,6 +966,53 @@
 
         <span>
           Ver exámenes de ubicación
+        </span>
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- ================================
+       ACCIÓN PARA INDUCCIÓN
+  ================================= -->
+  <section
+    *ngIf="
+      showInductionListLink &&
+      !isLeadSchedulingInstructorCard
+    "
+    class="
+      notification-detail-content__section
+      notification-detail-content__section--bordered
+    "
+  >
+
+    <span class="notification-detail-content__label">
+      Acción requerida
+    </span>
+
+    <div class="notification-detail-content__notice">
+      <i class="pi pi-info-circle"></i>
+
+      <span>
+        Revisa las solicitudes de inducción pendientes.
+      </span>
+    </div>
+
+    <div class="notification-detail-content__actions">
+
+      <button
+        type="button"
+        class="
+          notification-detail-content__button
+          notification-detail-content__button--primary
+        "
+        (click)="onGoToInductionList()"
+      >
+        <i class="pi pi-external-link"></i>
+
+        <span>
+          Ver inducciones
         </span>
       </button>
 

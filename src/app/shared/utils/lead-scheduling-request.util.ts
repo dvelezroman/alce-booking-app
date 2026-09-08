@@ -26,6 +26,7 @@ export function leadSchedulingKindLabel(row: {
   placementExamType?: PlacementExamType | null;
 }): string {
   if (row.kind === 'DEMO_CLASS') return 'Demo / cortesía';
+  if (row.kind === 'INDUCTION') return 'Inducción';
   if (isPlacementTestExam(row.kind, row.placementExamType)) {
     return 'Placement test';
   }
@@ -102,5 +103,6 @@ export function leadSchedulingModeLabel(
 ): string {
   if (mode === 'ONLINE') return 'Online';
   if (mode === 'PRESENCIAL') return 'Presencial';
+  if (mode === 'SEMIPRESENCIAL') return 'Semipresencial';
   return '—';
 }

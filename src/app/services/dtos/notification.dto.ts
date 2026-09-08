@@ -36,6 +36,7 @@ export interface NotificationMessage {
   kind?:
     | 'demo-class'
     | 'placement-exam'
+    | 'induction'
     | 'assessment-assigned'
     | 'assessment-results-ready'
     | 'assessment-unassigned'
@@ -76,7 +77,7 @@ export interface DemoClassLead {
   idNumber?: string | null;
   contactPhone: string;
   courtesyClassHours?: number | null;
-  mode?: 'ONLINE' | 'PRESENCIAL' | null;
+  mode?: 'ONLINE' | 'PRESENCIAL' | 'SEMIPRESENCIAL' | null;
   stageId?: number | null;
   stageNumber?: string | null;
   stageLabel?: string | null;
@@ -99,7 +100,7 @@ export interface DemoClassSummary {
   stageId: number;
   leadName: string;
   courtesyClassHours: number;
-  mode?: 'ONLINE' | 'PRESENCIAL';
+  mode?: 'ONLINE' | 'PRESENCIAL' | 'SEMIPRESENCIAL';
   requestNotes?: string;
   leadSchedulingRequestId?: number;
 }
@@ -108,7 +109,10 @@ export interface NotificationSummary {
   count: number;
 }
 
-export type LeadSchedulingNotificationRequestKind = 'DEMO_CLASS' | 'PLACEMENT_EXAM';
+export type LeadSchedulingNotificationRequestKind =
+  | 'DEMO_CLASS'
+  | 'PLACEMENT_EXAM'
+  | 'INDUCTION';
 
 /** Resumen opcional en `message.summary` para notificaciones `lead-scheduling-assigned`. */
 export interface LeadSchedulingAssignedSummary {

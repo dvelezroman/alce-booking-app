@@ -49,6 +49,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
   readonly kindLabel: Record<LeadSchedulingRequestKind, string> = {
     DEMO_CLASS: 'Demo / cortesía',
     PLACEMENT_EXAM: 'Examen de ubicación',
+    INDUCTION: 'Inducción',
   };
 
   readonly statusLabel: Record<LeadSchedulingRequestStatus, string> = {
@@ -146,8 +147,12 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     return this.row?.kind === 'DEMO_CLASS';
   }
 
+  get isInduction(): boolean {
+    return this.row?.kind === 'INDUCTION';
+  }
+
   get requiresScheduleTriple(): boolean {
-    return this.isDemoClass || this.isSpeakingPlacement;
+    return this.isDemoClass || this.isInduction || this.isSpeakingPlacement;
   }
 
   get typeDetailLabel(): string {
@@ -160,6 +165,9 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     }
     if (this.isSpeakingPlacement) {
       return 'Para agendar: asigna instructor. La fecha y hora suelen venir del asesor; complétalas si faltan. Se notifica al asesor, al estudiante y al instructor.';
+    }
+    if (this.isInduction) {
+      return 'Para agendar: asigna instructor. La fecha y hora vienen de la solicitud del asesor; complétalas si faltan. Se notifica al asesor y al instructor.';
     }
     return 'Para agendar: instructor, fecha y hora. Se notifica al asesor y al instructor.';
   }

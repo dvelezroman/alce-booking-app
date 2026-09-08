@@ -299,6 +299,14 @@
           >
             Ver listado de exámenes de ubicación
           </button>
+          <button
+            type="button"
+            class="lead-scheduling-card__cta lead-scheduling-card__cta--secondary"
+            *ngIf="showInductionListLink"
+            (click)="goToInductionList()"
+          >
+            Ver listado de inducciones
+          </button>
         </div>
       </section>
 
@@ -529,10 +537,10 @@
         </div>
       </section>
 
-      <!-- Solicitud nueva: cortesía/demo o examen de ubicación -->
+      <!-- Solicitud nueva: cortesía/demo, examen de ubicación o inducción -->
       <section
         class="request-lead-card"
-        [class.request-lead-card--demo]="isDemoClassNotification"
+        [class.request-lead-card--demo]="isDemoClassNotification || isInductionNotification"
         [class.request-lead-card--placement]="isPlacementExamNotification"
         *ngIf="isLeadRequestNotification && requestLead"
       >
@@ -546,6 +554,7 @@
                 >Examen de ubicación</ng-container
               >
               <ng-container *ngIf="isDemoClassNotification">Clase de cortesía / demo</ng-container>
+              <ng-container *ngIf="isInductionNotification">Inducción de estudiante</ng-container>
             </p>
             <h3 class="request-lead-card__title">
               <ng-container *ngIf="isPlacementTestRequestNotification"
@@ -564,6 +573,9 @@
               >
               <ng-container *ngIf="isDemoClassNotification"
                 >Nueva solicitud de clase de cortesía</ng-container
+              >
+              <ng-container *ngIf="isInductionNotification"
+                >Nueva solicitud de inducción</ng-container
               >
             </h3>
             <p class="request-lead-card__subtitle">
@@ -584,6 +596,9 @@
               </ng-container>
               <ng-container *ngIf="isDemoClassNotification">
                 Un asesor registró un lead para una clase de prueba o cortesía. Revisa los datos y coordina la sesión.
+              </ng-container>
+              <ng-container *ngIf="isInductionNotification">
+                Un asesor registró una solicitud de inducción para un estudiante. Revisa los datos y coordina la sesión.
               </ng-container>
             </p>
           </div>
@@ -619,6 +634,7 @@
           <h4 class="request-lead-card__section-title">
             <ng-container *ngIf="isPlacementExamNotification">Datos del examen</ng-container>
             <ng-container *ngIf="isDemoClassNotification">Datos de la clase</ng-container>
+            <ng-container *ngIf="isInductionNotification">Datos de la inducción</ng-container>
           </h4>
           <div class="request-lead-card__grid">
             <div class="request-lead-field" *ngIf="placementExamSubtypeLabel">
@@ -632,7 +648,7 @@
             <div
               class="request-lead-field request-lead-field--span"
               *ngIf="
-                (isSpeakingPlacementRequestNotification || isDemoClassNotification) &&
+                (isSpeakingPlacementRequestNotification || isDemoClassNotification || isInductionNotification) &&
                 requestLead.scheduledDate
               "
             >
@@ -644,7 +660,7 @@
             <div
               class="request-lead-field"
               *ngIf="
-                (isSpeakingPlacementRequestNotification || isDemoClassNotification) &&
+                (isSpeakingPlacementRequestNotification || isDemoClassNotification || isInductionNotification) &&
                 requestLead.scheduledHour != null
               "
             >
@@ -676,7 +692,7 @@
             </div>
             <div
               class="request-lead-field"
-              *ngIf="isDemoClassNotification && requestLead.mode"
+              *ngIf="(isDemoClassNotification || isInductionNotification) && requestLead.mode"
             >
               <span class="request-lead-field__label">Modalidad</span>
               <strong class="request-lead-field__value">{{ formatLeadMode(requestLead.mode) }}</strong>
@@ -717,7 +733,7 @@
 
         <div
           class="request-lead-card__actions"
-          *ngIf="showPlacementExamListLink || showLeadRequestAdminAction"
+          *ngIf="showPlacementExamListLink || showInductionListLink || showLeadRequestAdminAction"
         >
           <button
             type="button"
@@ -734,6 +750,14 @@
             (click)="goToPlacementExamList()"
           >
             Ver listado de exámenes de ubicación
+          </button>
+          <button
+            type="button"
+            class="request-lead-card__cta request-lead-card__cta--secondary"
+            *ngIf="showInductionListLink"
+            (click)="goToInductionList()"
+          >
+            Ver listado de inducciones
           </button>
         </div>
       </section>

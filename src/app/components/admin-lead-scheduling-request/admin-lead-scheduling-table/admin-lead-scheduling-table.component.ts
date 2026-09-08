@@ -129,7 +129,7 @@ export class AdminLeadSchedulingTableComponent {
   getKindClass(
     row: LeadSchedulingRequestRow,
   ): string {
-    return row.kind === 'DEMO_CLASS'
+    return row.kind === 'DEMO_CLASS' || row.kind === 'INDUCTION'
       ? 'lead-scheduling-table__kind--demo'
       : 'lead-scheduling-table__kind--exam';
   }

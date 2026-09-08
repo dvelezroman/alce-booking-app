@@ -75,6 +75,9 @@ export class NotificationDetailContentComponent {
   isDemoClassNotification = false;
 
   @Input()
+  isInductionNotification = false;
+
+  @Input()
   isPlacementExamNotification = false;
 
   @Input()
@@ -108,12 +111,19 @@ export class NotificationDetailContentComponent {
   @Input()
   showPlacementExamListLink = false;
 
+  @Input()
+  showInductionListLink = false;
+
   @Output()
   toggleRecipients =
     new EventEmitter<void>();
 
   @Output()
   goToPlacementExamList =
+    new EventEmitter<void>();
+
+  @Output()
+  goToInductionList =
     new EventEmitter<void>();
 
   @Output()
@@ -144,6 +154,10 @@ export class NotificationDetailContentComponent {
 
   onGoToPlacementExamList(): void {
     this.goToPlacementExamList.emit();
+  }
+
+  onGoToInductionList(): void {
+    this.goToInductionList.emit();
   }
 
   onGoToAssignedLeadScheduling(): void {

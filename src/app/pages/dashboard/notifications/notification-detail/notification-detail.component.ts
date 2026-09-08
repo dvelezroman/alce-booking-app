@@ -257,9 +257,14 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   }
 
   get isDemoClassNotification(): boolean {
-    if (this.isPlacementExamNotification) return false;
+    if (this.isPlacementExamNotification || this.isInductionNotification) return false;
     const kind = this.notification?.message?.kind;
     return kind === 'demo-class' || kind === 'demo_class';
+  }
+
+  get isInductionNotification(): boolean {
+    const kind = this.notification?.message?.kind;
+    return kind === 'induction';
   }
 
   get isPlacementExamNotification(): boolean {
@@ -270,10 +275,13 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return /examen de ubicaci[oó]n|placement\s*exam/.test(`${title} ${body}`);
   }
 
-  /** Solicitud nueva con datos estructurados del lead (cortesía o ubicación). */
+  /** Solicitud nueva con datos estructurados del lead (cortesía, ubicación o inducción). */
   get isLeadRequestNotification(): boolean {
     return (
-      (this.isDemoClassNotification || this.isPlacementExamNotification) && !!this.requestLead
+      (this.isDemoClassNotification ||
+        this.isPlacementExamNotification ||
+        this.isInductionNotification) &&
+      !!this.requestLead
     );
   }
 
@@ -423,10 +431,17 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   get leadSchedulingRequestKind(): LeadSchedulingNotificationRequestKind | null {
     const raw = this.leadSchedulingAssignedSummary;
-    if (raw.requestKind === 'PLACEMENT_EXAM' || raw.requestKind === 'DEMO_CLASS') {
+    if (
+      raw.requestKind === 'PLACEMENT_EXAM' ||
+      raw.requestKind === 'DEMO_CLASS' ||
+      raw.requestKind === 'INDUCTION'
+    ) {
       return raw.requestKind;
     }
     const body = this.notification?.message?.body ?? '';
+    if (/inducci[oó]n|induction|INDUCTION/i.test(body)) {
+      return 'INDUCTION';
+    }
     if (/examen de ubicaci[oó]n|placement\s*exam|PLACEMENT_EXAM/i.test(body)) {
       return 'PLACEMENT_EXAM';
     }
@@ -442,6 +457,10 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   get isDemoSchedulingAssignment(): boolean {
     return this.leadSchedulingRequestKind === 'DEMO_CLASS';
+  }
+
+  get isInductionSchedulingAssignment(): boolean {
+    return this.leadSchedulingRequestKind === 'INDUCTION';
   }
 
   private static readonly leadSchedulingStatusEs: Record<string, string> = {
@@ -469,7 +488,9 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     const hourParsed = horaMatch?.[1] != null ? parseInt(horaMatch[1], 10) : null;
 
     let requestKind: LeadSchedulingNotificationRequestKind | null = null;
-    if (/examen de ubicaci[oó]n|placement\s*exam|PLACEMENT_EXAM/i.test(body)) {
+    if (/inducci[oó]n|induction|INDUCTION/i.test(body)) {
+      requestKind = 'INDUCTION';
+    } else if (/examen de ubicaci[oó]n|placement\s*exam|PLACEMENT_EXAM/i.test(body)) {
       requestKind = 'PLACEMENT_EXAM';
     } else if (/cortes[ií]a|clase de demo|demo\s*class|DEMO_CLASS/i.test(body)) {
       requestKind = 'DEMO_CLASS';
@@ -593,6 +614,13 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     return this.userRole === UserRole.INSTRUCTOR || this.userRole === UserRole.ADMIN;
   }
 
+  get showInductionListLink(): boolean {
+    if (!this.isInductionNotification && !this.isInductionSchedulingAssignment) {
+      return false;
+    }
+    return this.userRole === UserRole.INSTRUCTOR || this.userRole === UserRole.ADMIN;
+  }
+
   goToActiveStudentsReport(): void {
     const jobId = this.activeStudentsReportJobId;
     void this.router.navigate(['/dashboard/active-students-report'], {
@@ -602,6 +630,21 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   goToPlacementExamList(): void {
     const queryParams = { kind: 'PLACEMENT_EXAM' as const };
+    if (this.userRole === UserRole.INSTRUCTOR) {
+      void this.router.navigate(['/dashboard/instructor/lead-scheduling-requests'], {
+        queryParams,
+      });
+      return;
+    }
+    if (this.userRole === UserRole.ADMIN) {
+      void this.router.navigate(['/dashboard/admin/lead-scheduling-requests'], {
+        queryParams,
+      });
+    }
+  }
+
+  goToInductionList(): void {
+    const queryParams = { kind: 'INDUCTION' as const };
     if (this.userRole === UserRole.INSTRUCTOR) {
       void this.router.navigate(['/dashboard/instructor/lead-scheduling-requests'], {
         queryParams,
@@ -630,6 +673,8 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       ]);
     } else if (this.isPlacementSchedulingAssignment) {
       this.goToPlacementExamList();
+    } else if (this.isInductionSchedulingAssignment) {
+      this.goToInductionList();
     } else {
       void this.router.navigate(['/dashboard/instructor/lead-scheduling-requests']);
     }

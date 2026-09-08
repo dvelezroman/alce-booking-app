@@ -548,7 +548,8 @@ export class NotificationDetailV2Component
 
   get isDemoClassNotification(): boolean {
     if (
-      this.isPlacementExamNotification
+      this.isPlacementExamNotification ||
+      this.isInductionNotification
     ) {
       return false;
     }
@@ -560,6 +561,13 @@ export class NotificationDetailV2Component
       kind === 'demo-class' ||
       kind === 'demo_class'
     );
+  }
+
+  get isInductionNotification(): boolean {
+    const kind =
+      this.notification?.message?.kind;
+
+    return kind === 'induction';
   }
 
   get isPlacementExamNotification():
@@ -594,8 +602,8 @@ export class NotificationDetailV2Component
     boolean {
     return (
       (this.isDemoClassNotification ||
-        this
-          .isPlacementExamNotification) &&
+        this.isPlacementExamNotification ||
+        this.isInductionNotification) &&
       !!this.requestLead
     );
   }
@@ -765,7 +773,9 @@ export class NotificationDetailV2Component
       summary.requestKind ===
         'PLACEMENT_EXAM' ||
       summary.requestKind ===
-        'DEMO_CLASS'
+        'DEMO_CLASS' ||
+      summary.requestKind ===
+        'INDUCTION'
     ) {
       return summary.requestKind;
     }
@@ -773,6 +783,14 @@ export class NotificationDetailV2Component
     const body =
       this.notification?.message?.body ??
       '';
+
+    if (
+      /inducci[oó]n|induction|INDUCTION/i.test(
+        body,
+      )
+    ) {
+      return 'INDUCTION';
+    }
 
     if (
       /examen de ubicaci[oó]n|placement\s*exam|PLACEMENT_EXAM/i.test(
@@ -806,6 +824,14 @@ export class NotificationDetailV2Component
     return (
       this.leadSchedulingRequestKind ===
       'DEMO_CLASS'
+    );
+  }
+
+  get isInductionSchedulingAssignment():
+    boolean {
+    return (
+      this.leadSchedulingRequestKind ===
+      'INDUCTION'
     );
   }
 
@@ -866,6 +892,12 @@ export class NotificationDetailV2Component
       null;
 
     if (
+      /inducci[oó]n|induction|INDUCTION/i.test(
+        body,
+      )
+    ) {
+      requestKind = 'INDUCTION';
+    } else if (
       /examen de ubicaci[oó]n|placement\s*exam|PLACEMENT_EXAM/i.test(
         body,
       )
@@ -1186,6 +1218,24 @@ export class NotificationDetailV2Component
     );
   }
 
+  get showInductionListLink():
+    boolean {
+    if (
+      !this
+        .isInductionNotification &&
+      !this
+        .isInductionSchedulingAssignment
+    ) {
+      return false;
+    }
+
+    return (
+      this.userRole ===
+        UserRole.INSTRUCTOR ||
+      this.userRole === UserRole.ADMIN
+    );
+  }
+
   get formattedBody(): string {
     const body =
       sanitizeNotificationBody(
@@ -1270,6 +1320,41 @@ export class NotificationDetailV2Component
     }
   }
 
+  goToInductionList(): void {
+    const queryParams = {
+      kind: 'INDUCTION' as const,
+    };
+
+    if (
+      this.userRole ===
+      UserRole.INSTRUCTOR
+    ) {
+      void this.router.navigate(
+        [
+          '/dashboard/instructor/lead-scheduling-requests',
+        ],
+        {
+          queryParams,
+        },
+      );
+
+      return;
+    }
+
+    if (
+      this.userRole === UserRole.ADMIN
+    ) {
+      void this.router.navigate(
+        [
+          '/dashboard/admin/lead-scheduling-requests',
+        ],
+        {
+          queryParams,
+        },
+      );
+    }
+  }
+
   goToLeadRequestAdminDetail():
     void {
     const id =
@@ -1304,6 +1389,14 @@ export class NotificationDetailV2Component
         .isPlacementSchedulingAssignment
     ) {
       this.goToPlacementExamList();
+      return;
+    }
+
+    if (
+      this
+        .isInductionSchedulingAssignment
+    ) {
+      this.goToInductionList();
       return;
     }
 

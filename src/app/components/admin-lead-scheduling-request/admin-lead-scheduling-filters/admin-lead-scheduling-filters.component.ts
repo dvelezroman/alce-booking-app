@@ -78,6 +78,10 @@ export class AdminLeadSchedulingFiltersComponent {
       value: 'PLACEMENT_EXAM',
       label: 'Examen de ubicación',
     },
+    {
+      value: 'INDUCTION',
+      label: 'Inducción',
+    },
   ];
 
 

@@ -200,6 +200,10 @@ export class InstructorSchedulingRequestRowComponent {
     return this.item.kind === 'DEMO_CLASS';
   }
 
+  get isInduction(): boolean {
+    return this.item.kind === 'INDUCTION';
+  }
+
   get isPlacementExam(): boolean {
     return this.item.kind === 'PLACEMENT_EXAM';
   }

@@ -77,6 +77,10 @@ export class InstructorSchedulingRequestFiltersComponent {
       value: 'PLACEMENT_EXAM',
       label: 'Examen de ubicación',
     },
+    {
+      value: 'INDUCTION',
+      label: 'Inducción',
+    },
   ];
 
   onSearchChange(value: string): void {

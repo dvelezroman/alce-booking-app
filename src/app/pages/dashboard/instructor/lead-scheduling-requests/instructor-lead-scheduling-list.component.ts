@@ -77,6 +77,7 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
   readonly kindLabel: Record<LeadSchedulingRequestKind, string> = {
     DEMO_CLASS: 'Cortesía / demo',
     PLACEMENT_EXAM: 'Examen ubicación',
+    INDUCTION: 'Inducción',
   };
 
   readonly statusLabel: Record<LeadSchedulingRequestStatus, string> = {
@@ -120,6 +121,10 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
       value: 'PLACEMENT_EXAM',
       label: 'Examen de ubicación',
     },
+    {
+      value: 'INDUCTION',
+      label: 'Inducción',
+    },
   ];
 
   constructor(
@@ -138,7 +143,11 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
   }
 
   private applyKindFromRoute(kind: string | null): void {
-    if (kind === 'PLACEMENT_EXAM' || kind === 'DEMO_CLASS') {
+    if (
+      kind === 'PLACEMENT_EXAM' ||
+      kind === 'DEMO_CLASS' ||
+      kind === 'INDUCTION'
+    ) {
       this.kindFilter = kind;
     }
   }

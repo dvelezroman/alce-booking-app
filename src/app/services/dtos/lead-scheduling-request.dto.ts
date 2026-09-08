@@ -1,4 +1,7 @@
-export type LeadSchedulingRequestKind = 'DEMO_CLASS' | 'PLACEMENT_EXAM';
+export type LeadSchedulingRequestKind =
+  | 'DEMO_CLASS'
+  | 'PLACEMENT_EXAM'
+  | 'INDUCTION';
 
 export type PlacementExamType = 'PLACEMENT_TEST' | 'SPEAKING_TEST';
 
@@ -53,8 +56,8 @@ export interface LeadSchedulingRequestRow {
   stageId?: number | null;
   stage?: LeadSchedulingStageRef | null;
   courtesyClassHours?: number | null;
-  /** Modalidad de clase demo (`ONLINE` | `PRESENCIAL`). Null en examen de ubicación. */
-  mode?: 'ONLINE' | 'PRESENCIAL' | null;
+  /** Modalidad de clase demo / inducción (`ONLINE` | `PRESENCIAL` | `SEMIPRESENCIAL`). Null en examen de ubicación. */
+  mode?: 'ONLINE' | 'PRESENCIAL' | 'SEMIPRESENCIAL' | null;
   requestNotes?: string | null;
   instructorId?: number | null;
   instructor?: LeadSchedulingInstructorRef | null;
@@ -92,6 +95,7 @@ export interface UpdateLeadSchedulingAdminDto {
   scheduledDate?: string | null;
   scheduledHour?: number | null;
   examLink?: string | null;
+  mode?: 'ONLINE' | 'PRESENCIAL' | 'SEMIPRESENCIAL' | null;
   status?: LeadSchedulingRequestStatus;
   adminNotes?: string | null;
 }
