@@ -133,9 +133,18 @@
 
     <article class="panel panel--wide panel--emphasis" *ngIf="canSubmitReport">
       <h2 class="panel__heading">
-        {{ isPlacementTest ? 'Enviar informe de resultado' : 'Registrar asistencia e informe' }}
+        {{
+          isPlacementTest
+            ? 'Enviar informe de resultado'
+            : isInduction
+              ? 'Registrar asistencia e informe de inducción'
+              : 'Registrar asistencia e informe'
+        }}
       </h2>
-      <p class="panel__hint">
+      <p class="panel__hint" *ngIf="isInduction">
+        Solo cuando el estado es <strong>Agendada</strong>. Confirma si el estudiante asistió a su inducción y describe las observaciones (accesos a plataforma, dudas, acuerdos iniciales). Al enviar, la solicitud pasa a <strong>Completada</strong> y se notifica al asesor comercial.
+      </p>
+      <p class="panel__hint" *ngIf="!isInduction">
         Solo cuando el estado es <strong>Agendada</strong>. Al enviar, la solicitud pasa a
         <strong>Completada</strong> y el API notifica al asesor (correo con el informe completo y
         WhatsApp).
@@ -143,12 +152,16 @@
       <form [formGroup]="form" (ngSubmit)="submit()" class="report-form">
         <label class="report-form__check" *ngIf="requiresAttendance">
           <input type="checkbox" formControlName="attendancePresent" />
-          <span>El lead asistió a la sesión</span>
+          <span>{{ isInduction ? 'El estudiante asistió a la inducción' : 'El lead asistió a la sesión' }}</span>
         </label>
 
         <label class="report-form__field">
           <span class="report-form__label">{{
-            isPlacementTest ? 'Informe de resultado (mín. 3 caracteres)' : 'Informe de la sesión (mín. 3 caracteres)'
+            isPlacementTest
+              ? 'Informe de resultado (mín. 3 caracteres)'
+              : isInduction
+                ? 'Informe de la inducción (mín. 3 caracteres)'
+                : 'Informe de la sesión (mín. 3 caracteres)'
           }}</span>
           <textarea
             formControlName="instructorReportNotes"
@@ -156,7 +169,9 @@
             [attr.placeholder]="
               isPlacementTest
                 ? 'Resultado del placement test, nivel sugerido, observaciones…'
-                : 'Describe la sesión, participación del lead, nivel observado y recomendaciones…'
+                : isInduction
+                  ? 'Describe la inducción realizada: entrega de credenciales, recorrido de plataforma, dudas resueltas y recomendaciones iniciales…'
+                  : 'Describe la sesión, participación del lead, nivel observado y recomendaciones…'
             "
           ></textarea>
         </label>
@@ -175,7 +190,11 @@
         Un <strong>administrador</strong> debe asignarte y registrar el <strong>enlace del examen</strong>.
         Cuando quede <strong>Agendada</strong>, podrás enviar aquí el informe de resultado.
       </p>
-      <p class="callout__text" *ngIf="!isPlacementTest">
+      <p class="callout__text" *ngIf="isInduction">
+        Un <strong>administrador</strong> debe confirmar la asignación del instructor de inducción.
+        Cuando la solicitud pase a <strong>Agendada</strong>, podrás registrar la asistencia y el informe de la inducción.
+      </p>
+      <p class="callout__text" *ngIf="!isPlacementTest && !isInduction">
         Un <strong>administrador</strong> debe confirmar la asignación (y fecha/hora si aplica).
         Cuando la solicitud pase a <strong>Agendada</strong>, podrás registrar asistencia e informe.
       </p>

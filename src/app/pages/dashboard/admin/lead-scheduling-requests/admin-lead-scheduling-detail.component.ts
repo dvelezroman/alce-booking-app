@@ -167,7 +167,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
       return 'Para agendar: asigna instructor. La fecha y hora suelen venir del asesor; complétalas si faltan. Se notifica al asesor, al estudiante y al instructor.';
     }
     if (this.isInduction) {
-      return 'Para agendar: asigna instructor. La fecha y hora vienen de la solicitud del asesor; complétalas si faltan. Se notifica al asesor y al instructor.';
+      return 'Inducción de estudiante: asigna el instructor según la fecha, hora y modalidad (Online, Presencial o Semipresencial) acordadas con el asesor comercial. Al agendar, se notificará al instructor y al asesor.';
     }
     return 'Para agendar: instructor, fecha y hora. Se notifica al asesor y al instructor.';
   }

@@ -125,6 +125,10 @@ export class InstructorLeadSchedulingDetailComponent implements OnInit, OnDestro
     );
   }
 
+  get isInduction(): boolean {
+    return this.row?.kind === 'INDUCTION';
+  }
+
   get requiresAttendance(): boolean {
     return (
       this.row != null &&
