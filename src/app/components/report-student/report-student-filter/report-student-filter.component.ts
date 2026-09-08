@@ -35,6 +35,8 @@ export class ReportStudentFilterComponent {
   @Output() studentSelected = new EventEmitter<UserDto>();
   @Output() studentDropdownHidden = new EventEmitter<void>();
 
+  @Output() filtersChanged = new EventEmitter<{ from?: string; to?: string; stageId?: number }>();
+
   studentId: number | null = null;
   studentName = '';
   from = '';
@@ -45,6 +47,14 @@ export class ReportStudentFilterComponent {
     this.studentName = term;
     this.studentId = null;
     this.studentInputChange.emit(term);
+  }
+
+  emitFiltersChanged(): void { 
+    this.filtersChanged.emit({
+      from: this.from || undefined,
+      to: this.to || undefined,
+      stageId: this.stageId || undefined
+    });
   }
 
   onSelectStudent(user: UserDto): void {

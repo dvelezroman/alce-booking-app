@@ -73,17 +73,31 @@
           *ngFor="let content of filteredContents"
           class="content-selector__content-item"
           [class.content-selector__content-item--selected]="isContentSelected(content.id)"
+          [class.content-selector__content-item--saved]="isContentSaved(content.id)"
         >
           <input
             type="checkbox"
             class="content-selector__checkbox-input"
             [checked]="isContentSelected(content.id)"
+            [disabled]="isContentSaved(content.id)"
             (change)="toggleContent(content.id)"
           />
 
           <span class="content-selector__checkbox" aria-hidden="true">
-            <svg *ngIf="isContentSelected(content.id)" width="12" height="12" viewBox="0 0 24 24" fill="none">
-              <path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <svg
+              *ngIf="isContentSelected(content.id)"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="m5 12 4 4 10-10"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </span>
 

@@ -99,9 +99,8 @@
 
   </div>
 
-
   <!-- =====================================================
-       ESTUDIANTE
+      ESTUDIANTE
   ====================================================== -->
 
   <div
@@ -129,17 +128,24 @@
 
       <span class="meeting-row__student-information">
 
-        <span
-          class="meeting-row__student-name"
-          [title]="studentName"
-        >
-          {{ studentName }}
+        <span class="meeting-row__student-name-row">
+
+          <span
+            class="meeting-row__student-name"
+            [title]="studentName"
+          >
+            {{ studentName }}
+          </span>
+
+          <span
+            *ngIf="isNewUser(meeting)"
+            class="meeting-row__new-user"
+          >
+            Nuevo
+          </span>
         </span>
-
       </span>
-
     </button>
-
   </div>
 
 

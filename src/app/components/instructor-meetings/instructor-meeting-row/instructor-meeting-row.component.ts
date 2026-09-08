@@ -44,6 +44,12 @@ export class InstructorMeetingRowComponent {
   })
   meeting!: MeetingDTO;
 
+  @Input()
+  isNewUser!:
+    (
+      meeting: MeetingDTO,
+    ) => boolean;
+
 
   @Input()
   isToday!:

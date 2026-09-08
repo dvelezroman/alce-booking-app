@@ -271,6 +271,11 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
     this.store.select(selectInstructorLink).subscribe(link => { this.instructorLink = link });
   }
 
+
+  isNewUser( meeting: MeetingDTO ): boolean {
+    return !!meeting.isNewUser;
+  }
+
   /* =========================
      SEMANA ACTUAL
   ========================= */
@@ -1014,9 +1019,16 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
   onContentIdsSelected(
     ids: number[],
   ): void {
-    this.studyContentIds = ids;
+    this.studyContentIds = [
+      ...new Set([
+        ...this.studyContentIds,
+        ...ids,
+      ]),
+    ];
 
-    this.loadContentNames(ids);
+    this.loadContentNames(
+      this.studyContentIds,
+    );
   }
 
   loadContentNames(
