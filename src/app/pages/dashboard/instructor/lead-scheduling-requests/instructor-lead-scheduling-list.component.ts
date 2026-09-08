@@ -256,6 +256,8 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
       }
     }
 
+    list.sort((a, b) => this.compareByNewestSession(a, b));
+
     return list;
   }
 
@@ -409,6 +411,36 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
       row.requestNotes,
       56,
     );
+  }
+
+  /** Newest scheduled session first; unscheduled rows last. */
+  private compareByNewestSession(
+    a: LeadSchedulingRequestRow,
+    b: LeadSchedulingRequestRow,
+  ): number {
+    const dateA = this.scheduledYyyyMmDd(a);
+    const dateB = this.scheduledYyyyMmDd(b);
+
+    if (dateA !== dateB) {
+      if (!dateA) {
+        return 1;
+      }
+
+      if (!dateB) {
+        return -1;
+      }
+
+      return dateB.localeCompare(dateA);
+    }
+
+    const hourA = a.scheduledHour ?? -1;
+    const hourB = b.scheduledHour ?? -1;
+
+    if (hourA !== hourB) {
+      return hourB - hourA;
+    }
+
+    return b.createdAt.localeCompare(a.createdAt);
   }
 
   private scheduledYyyyMmDd(
