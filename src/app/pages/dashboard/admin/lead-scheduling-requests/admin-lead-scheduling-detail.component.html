@@ -518,11 +518,14 @@
         <div class="lead-detail-grid lead-detail-grid--4">
 
           <div>
-            <span>Instructor asignado</span>
-            <strong>{{ instructorLabelFromRow(r) }}</strong>
+            <span>{{ isInduction ? 'Admin responsable' : 'Instructor asignado' }}</span>
+            <strong>{{ isInduction ? responsibleAdminLabelFromRow(r) : instructorLabelFromRow(r) }}</strong>
 
-            @if (r.instructorId) {
+            @if (!isInduction && r.instructorId) {
               <small>ID: {{ r.instructorId }}</small>
+            }
+            @if (isInduction && r.responsibleAdminId) {
+              <small>ID: {{ r.responsibleAdminId }}</small>
             }
           </div>
 
@@ -712,28 +715,50 @@
             <label class="lead-detail-field">
 
               <span>
-                Instructor
+                {{ isInduction ? 'Admin responsable' : 'Instructor' }}
               </span>
 
-              <select
-                formControlName="instructorId"
-                [compareWith]="compareIdOrEmpty"
-              >
-                <option [ngValue]="''">
-                  Sin asignar
-                </option>
-
-                @for (ins of instructors; track ins.id) {
-                  <option [ngValue]="ins.id">
-                    {{ instructorOptionLabel(ins) }}
+              @if (isInduction) {
+                <select
+                  formControlName="responsibleAdminId"
+                  [compareWith]="compareIdOrEmpty"
+                >
+                  <option [ngValue]="''">
+                    Sin asignar
                   </option>
-                }
-              </select>
 
-              <small>
-                Actual en servidor:
-                <strong>{{ instructorLabelFromRow(r) }}</strong>
-              </small>
+                  @for (admin of admins; track admin.id) {
+                    <option [ngValue]="admin.id">
+                      {{ adminOptionLabel(admin) }}
+                    </option>
+                  }
+                </select>
+
+                <small>
+                  Actual en servidor:
+                  <strong>{{ responsibleAdminLabelFromRow(r) }}</strong>
+                </small>
+              } @else {
+                <select
+                  formControlName="instructorId"
+                  [compareWith]="compareIdOrEmpty"
+                >
+                  <option [ngValue]="''">
+                    Sin asignar
+                  </option>
+
+                  @for (ins of instructors; track ins.id) {
+                    <option [ngValue]="ins.id">
+                      {{ instructorOptionLabel(ins) }}
+                    </option>
+                  }
+                </select>
+
+                <small>
+                  Actual en servidor:
+                  <strong>{{ instructorLabelFromRow(r) }}</strong>
+                </small>
+              }
 
             </label>
 

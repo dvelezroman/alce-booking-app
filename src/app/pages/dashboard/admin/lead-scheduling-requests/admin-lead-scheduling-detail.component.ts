@@ -11,9 +11,10 @@ import { ModalComponent } from '../../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../../components/modal/modal.dto';
 import { InstructorsService } from '../../../../services/instructors.service';
 import { Instructor } from '../../../../services/dtos/instructor.dto';
+import { UsersService } from '../../../../services/users.service';
+import { UserDto, UserRole, UserStatus } from '../../../../services/dtos/user.dto';
 import { LeadSchedulingRequestService } from '../../../../services/lead-scheduling-request.service';
 import { LeadSchedulingPendingCountService } from '../../../../services/lead-scheduling-pending-count.service';
-import { UserRole } from '../../../../services/dtos/user.dto';
 import {
   LeadSchedulingRequestKind,
   LeadSchedulingRequestRow,
@@ -41,6 +42,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
 
   row: LeadSchedulingRequestRow | null = null;
   instructors: Instructor[] = [];
+  admins: UserDto[] = [];
   loading = false;
   saving = false;
   error: string | null = null;
@@ -63,6 +65,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
 
   form = this.fb.group({
     instructorId: ['' as string | number],
+    responsibleAdminId: ['' as string | number],
     scheduledDate: [''],
     scheduledHour: ['' as string | number],
     examLink: ['', [Validators.maxLength(2048)]],
@@ -76,6 +79,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly leadScheduling: LeadSchedulingRequestService,
     private readonly instructorsService: InstructorsService,
+    private readonly usersService: UsersService,
     private readonly leadSchedulingPending: LeadSchedulingPendingCountService,
   ) {}
 
@@ -96,12 +100,22 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
           return forkJoin({
             row: this.leadScheduling.getAdmin(id),
             instructors: this.instructorsService.getAll('ACTIVE'),
+            admins: this.usersService.searchUsers(
+              1,
+              500,
+              undefined,
+              undefined,
+              undefined,
+              UserStatus.ACTIVE,
+              UserRole.ADMIN,
+            ),
           });
         }),
       )
       .subscribe({
-        next: ({ row, instructors }) => {
+        next: ({ row, instructors, admins }) => {
           this.instructors = instructors ?? [];
+          this.admins = admins?.users ?? [];
           this.row = row;
           this.patchFormFromRow(row);
           this.loading = false;
@@ -167,7 +181,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
       return 'Para agendar: asigna instructor. La fecha y hora suelen venir del asesor; complétalas si faltan. Se notifica al asesor, al estudiante y al instructor.';
     }
     if (this.isInduction) {
-      return 'Inducción de estudiante: asigna el instructor según la fecha, hora y modalidad (Online, Presencial o Semipresencial) acordadas con el asesor comercial. Al agendar, se notificará al instructor y al asesor.';
+      return 'Inducción de estudiante: asigna el admin responsable según la fecha, hora y modalidad acordadas con el asesor comercial. Al agendar, se notificará a ese admin y al asesor.';
     }
     return 'Para agendar: instructor, fecha y hora. Se notifica al asesor y al instructor.';
   }
@@ -202,6 +216,18 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     if (!u) return `Instructor #${ins.id}`;
     const name = `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim();
     return name || u.email || `Instructor #${ins.id}`;
+  }
+
+  responsibleAdminLabelFromRow(row: LeadSchedulingRequestRow): string {
+    const u = row.responsibleAdmin;
+    if (!u) return '—';
+    const name = `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim();
+    return name || u.email || `ID ${row.responsibleAdminId}`;
+  }
+
+  adminOptionLabel(admin: UserDto): string {
+    const name = `${admin.firstName ?? ''} ${admin.lastName ?? ''}`.trim();
+    return name || admin.email || `Admin #${admin.id}`;
   }
 
   goList(): void {
@@ -319,6 +345,10 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
         : row.scheduledDate ?? '';
     return {
       instructorId: row.instructorId != null ? Number(row.instructorId) : ('' as const),
+      responsibleAdminId:
+        row.responsibleAdminId != null
+          ? Number(row.responsibleAdminId)
+          : ('' as const),
       scheduledDate: dateOnly,
       scheduledHour:
         row.scheduledHour != null && row.scheduledHour !== undefined
@@ -352,12 +382,23 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     const body: UpdateLeadSchedulingAdminDto = {};
 
     const instructorId = raw['instructorId'];
+    const responsibleAdminId = raw['responsibleAdminId'];
     const scheduledDate = raw['scheduledDate'];
     const scheduledHour = raw['scheduledHour'];
     const examLink = raw['examLink'];
     const adminNotes = raw['adminNotes'];
 
-    if (instructorId === '' || instructorId === null || instructorId === undefined) {
+    if (this.isInduction) {
+      if (
+        responsibleAdminId === '' ||
+        responsibleAdminId === null ||
+        responsibleAdminId === undefined
+      ) {
+        body.responsibleAdminId = null;
+      } else {
+        body.responsibleAdminId = Number(responsibleAdminId);
+      }
+    } else if (instructorId === '' || instructorId === null || instructorId === undefined) {
       body.instructorId = null;
     } else {
       body.instructorId = Number(instructorId);

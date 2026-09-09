@@ -43,6 +43,8 @@ export interface NotificationMessage {
     | 'S2S_NEW_STUDENTS_TO_CREATE'
     | 'lead-scheduling-assigned'
     | 'lead-scheduling-cancelled'
+    | 'induction-assigned'
+    | 'induction-cancelled'
     | string;
   lead?: DemoClassLead;
   rows?: NewStudentRow[];

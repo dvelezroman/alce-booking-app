@@ -62,6 +62,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   profileNavItem: SidebarNavItem | null = null;
   adminLeadPendingCount = 0;
   instructorLeadPendingCount = 0;
+  assignedInductionPendingCount = 0;
   private readonly subs = new Subscription();
 
 navItems: SidebarNavItem[] = [
@@ -77,6 +78,7 @@ navItems: SidebarNavItem[] = [
   // { icon: 'school', text: 'Usuarios', route: '/dashboard/searching-students', roles: [UserRole.ADMIN] },
   { icon: 'school', text: 'Usuarios', route: '/dashboard/searching-user', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Solicitudes demo / ubicación', route: '/dashboard/admin/lead-scheduling-requests', roles: [UserRole.ADMIN] },
+  { icon: 'reportes', text: 'Mis inducciones', route: '/dashboard/admin/assigned-inductions', roles: [UserRole.ADMIN] },
   // { icon: 'asistencias-student', text: 'Asistencias Estudiantes', route: '/dashboard/attendance-student', roles: [UserRole.ADMIN] },
   { icon: 'asistencias-student', text: 'Asistencias Estudiantes', route: '/dashboard/attendance-student', roles: [UserRole.ADMIN] },
   // { icon: 'asistencias-instructor', text: 'Asistencias Instructores', route: '/dashboard/attendance-instructor', roles: [UserRole.ADMIN] },
@@ -167,6 +169,11 @@ navItems: SidebarNavItem[] = [
         (count) => (this.instructorLeadPendingCount = count),
       ),
     );
+    this.subs.add(
+      this.leadSchedulingPending.assignedInductionPending$.subscribe(
+        (count) => (this.assignedInductionPendingCount = count),
+      ),
+    );
 
     this.isAdmin$.subscribe(state => {
       this.isAdmin = state;
@@ -242,6 +249,7 @@ navItems: SidebarNavItem[] = [
          this.findNavItemByRoute('/dashboard/create-students'),
         this.findNavItemByRoute('/dashboard/create-staff'),
         this.findNavItemByRoute('/dashboard/admin/lead-scheduling-requests'),
+        this.findNavItemByRoute('/dashboard/admin/assigned-inductions'),
       ].filter(item => item.roles.includes(role))
     },
     {
@@ -363,6 +371,9 @@ navItems: SidebarNavItem[] = [
   leadPendingCountForRoute(route: string): number {
     if (route === '/dashboard/admin/lead-scheduling-requests') {
       return this.adminLeadPendingCount;
+    }
+    if (route === '/dashboard/admin/assigned-inductions') {
+      return this.assignedInductionPendingCount;
     }
     if (route === '/dashboard/instructor/lead-scheduling-requests') {
       return this.instructorLeadPendingCount;

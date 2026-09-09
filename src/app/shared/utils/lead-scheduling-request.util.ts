@@ -48,24 +48,27 @@ export function isSchedulingComplete(row: {
   kind: LeadSchedulingRequestKind;
   placementExamType?: PlacementExamType | null;
   instructorId?: number | null;
+  responsibleAdminId?: number | null;
   scheduledDate?: string | null;
   scheduledHour?: number | null;
   examLink?: string | null;
 }): boolean {
-  const instructorId = row.instructorId ?? null;
-  if (isPlacementTestExam(row.kind, row.placementExamType)) {
-    return instructorId != null && normalizeExamLink(row.examLink) != null;
-  }
   const d = row.scheduledDate;
   const h = row.scheduledHour;
-  return (
-    instructorId != null &&
+  const hasSlot =
     d != null &&
     String(d).trim() !== '' &&
     h != null &&
     h >= 0 &&
-    h <= 23
-  );
+    h <= 23;
+  if (row.kind === 'INDUCTION') {
+    return (row.responsibleAdminId ?? null) != null && hasSlot;
+  }
+  const instructorId = row.instructorId ?? null;
+  if (isPlacementTestExam(row.kind, row.placementExamType)) {
+    return instructorId != null && normalizeExamLink(row.examLink) != null;
+  }
+  return instructorId != null && hasSlot;
 }
 
 /** Vista previa de notas en tablas (listados admin / instructor). */

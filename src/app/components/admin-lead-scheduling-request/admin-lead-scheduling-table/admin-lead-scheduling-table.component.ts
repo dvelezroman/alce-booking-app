@@ -284,6 +284,20 @@ export class AdminLeadSchedulingTableComponent {
       : '';
   }
 
+  getResponsibleAdminName(
+    row: LeadSchedulingRequestRow,
+  ): string {
+    const user = row.responsibleAdmin;
+    if (!user) {
+      return '—';
+    }
+    const name = [user.firstName, user.lastName]
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+    return name || user.email || '—';
+  }
+
 
   /* =========================
      STATUS

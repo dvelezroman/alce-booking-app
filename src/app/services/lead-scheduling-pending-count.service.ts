@@ -10,6 +10,7 @@ import { LeadSchedulingRequestService } from './lead-scheduling-request.service'
 
 const ADMIN_LEAD_ROUTE = '/dashboard/admin/lead-scheduling-requests';
 const INSTRUCTOR_LEAD_ROUTE = '/dashboard/instructor/lead-scheduling-requests';
+const ASSIGNED_INDUCTION_ROUTE = '/dashboard/admin/assigned-inductions';
 
 const ACTIVE_STATUSES: LeadSchedulingRequestStatus[] = [
   'PENDING',
@@ -20,9 +21,12 @@ const ACTIVE_STATUSES: LeadSchedulingRequestStatus[] = [
 export class LeadSchedulingPendingCountService {
   private readonly adminPendingSubject = new BehaviorSubject<number>(0);
   private readonly instructorPendingSubject = new BehaviorSubject<number>(0);
+  private readonly assignedInductionPendingSubject = new BehaviorSubject<number>(0);
 
   readonly adminPending$ = this.adminPendingSubject.asObservable();
   readonly instructorPending$ = this.instructorPendingSubject.asObservable();
+  readonly assignedInductionPending$ =
+    this.assignedInductionPendingSubject.asObservable();
 
   private readonly batchSize = 100;
   private readonly fetchCap = 5000;
@@ -39,12 +43,20 @@ export class LeadSchedulingPendingCountService {
     ) {
       return this.instructorPendingSubject.value;
     }
+    if (
+      route === ASSIGNED_INDUCTION_ROUTE ||
+      route.startsWith(ASSIGNED_INDUCTION_ROUTE + '/')
+    ) {
+      return this.assignedInductionPendingSubject.value;
+    }
     return 0;
   }
 
   hasLeadSchedulingNavBadge(route: string): boolean {
     return (
-      (route === ADMIN_LEAD_ROUTE || route === INSTRUCTOR_LEAD_ROUTE) &&
+      (route === ADMIN_LEAD_ROUTE ||
+        route === INSTRUCTOR_LEAD_ROUTE ||
+        route === ASSIGNED_INDUCTION_ROUTE) &&
       this.getCountForRoute(route) > 0
     );
   }
@@ -57,11 +69,18 @@ export class LeadSchedulingPendingCountService {
 
   refresh(role: UserRole | null | undefined): Observable<void> {
     if (role === UserRole.ADMIN) {
-      return this.countAdminWithoutTutor().pipe(
-        tap((count) => this.adminPendingSubject.next(count)),
+      return forkJoin({
+        unassigned: this.countAdminWithoutTutor(),
+        assignedInductions: this.countAssignedInductionsPendingReport(),
+      }).pipe(
+        tap(({ unassigned, assignedInductions }) => {
+          this.adminPendingSubject.next(unassigned);
+          this.assignedInductionPendingSubject.next(assignedInductions);
+        }),
         map(() => void 0),
         catchError(() => {
           this.adminPendingSubject.next(0);
+          this.assignedInductionPendingSubject.next(0);
           return of(void 0);
         }),
       );
@@ -80,12 +99,14 @@ export class LeadSchedulingPendingCountService {
 
     this.adminPendingSubject.next(0);
     this.instructorPendingSubject.next(0);
+    this.assignedInductionPendingSubject.next(0);
     return of(void 0);
   }
 
   reset(): void {
     this.adminPendingSubject.next(0);
     this.instructorPendingSubject.next(0);
+    this.assignedInductionPendingSubject.next(0);
   }
 
   /** Solicitudes activas (cortesía / ubicación) sin tutor asignado. */
@@ -115,10 +136,19 @@ export class LeadSchedulingPendingCountService {
     );
   }
 
+  private countAssignedInductionsPendingReport(): Observable<number> {
+    return this.fetchAllAssignedInductionRows({ status: 'SCHEDULED' }).pipe(
+      map((rows) => rows.filter((row) => this.isInstructorActionPending(row)).length),
+    );
+  }
+
   private isAdminUnassigned(row: LeadSchedulingRequestRow): boolean {
+    const hasAssignee =
+      row.kind === 'INDUCTION'
+        ? row.responsibleAdminId != null || row.responsibleAdmin != null
+        : row.instructorId != null || row.instructor != null;
     return (
-      row.instructorId == null &&
-      row.instructor == null &&
+      !hasAssignee &&
       row.status !== 'CANCELLED' &&
       row.status !== 'COMPLETED'
     );
@@ -147,6 +177,18 @@ export class LeadSchedulingPendingCountService {
   }): Observable<LeadSchedulingRequestRow[]> {
     return this.fetchAllPages((offset) =>
       this.leadScheduling.listMine({
+        ...query,
+        limit: this.batchSize,
+        offset,
+      }),
+    );
+  }
+
+  private fetchAllAssignedInductionRows(query: {
+    status?: LeadSchedulingRequestStatus;
+  }): Observable<LeadSchedulingRequestRow[]> {
+    return this.fetchAllPages((offset) =>
+      this.leadScheduling.listAssignedInductions({
         ...query,
         limit: this.batchSize,
         offset,

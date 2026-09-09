@@ -62,6 +62,8 @@ import { adminOnlyGuard } from '../auth/admin-role.guard';
 import { instructorOnlyGuard } from '../auth/instructor-role.guard';
 import { AdminLeadSchedulingDetailComponent } from './admin/lead-scheduling-requests/admin-lead-scheduling-detail.component';
 import { AdminLeadSchedulingListComponent } from './admin/lead-scheduling-requests/admin-lead-scheduling-list.component';
+import { AdminAssignedInductionsDetailComponent } from './admin/assigned-inductions/admin-assigned-inductions-detail.component';
+import { AdminAssignedInductionsListComponent } from './admin/assigned-inductions/admin-assigned-inductions-list.component';
 import { InstructorLeadSchedulingDetailComponent } from './instructor/lead-scheduling-requests/instructor-lead-scheduling-detail.component';
 import { InstructorLeadSchedulingListComponent } from './instructor/lead-scheduling-requests/instructor-lead-scheduling-list.component';
 import { WhatsappNotificadorComponent } from './admin/whatsapp-notificador/whatsapp-notificador.component';
@@ -118,6 +120,14 @@ const dashboardChildren: Routes = [
       {
         path: 'lead-scheduling-requests/:id',
         component: AdminLeadSchedulingDetailComponent,
+      },
+      {
+        path: 'assigned-inductions',
+        component: AdminAssignedInductionsListComponent,
+      },
+      {
+        path: 'assigned-inductions/:id',
+        component: AdminAssignedInductionsDetailComponent,
       },
       {
         path: 'whatsapp-notificador',

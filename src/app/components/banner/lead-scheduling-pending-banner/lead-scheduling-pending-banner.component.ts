@@ -44,11 +44,11 @@ export class LeadSchedulingPendingBannerComponent implements OnChanges {
     const plural = n === 1 ? '' : 'es';
 
     if (this.role === UserRole.ADMIN) {
-      return `Hay ${n} solicitud${plural} de examen de ubicación, clases de cortesía o inducciones sin tutor asignado. Revisa y asigna instructor, fecha y hora.`;
+      return `Hay ${n} solicitud${plural} de examen de ubicación, clases de cortesía o inducciones sin responsable asignado. Revisa y asigna instructor o admin, fecha y hora.`;
     }
 
     if (this.role === UserRole.INSTRUCTOR) {
-      return `Tienes ${n} solicitud${plural} asignada${plural} (clases de cortesía, exámenes de ubicación o inducciones) pendiente${plural} de registrar asistencia e informe.`;
+      return `Tienes ${n} solicitud${plural} asignada${plural} (clases de cortesía o exámenes de ubicación) pendiente${plural} de registrar asistencia e informe.`;
     }
 
     return '';

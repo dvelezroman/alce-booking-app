@@ -401,11 +401,17 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   }
 
   get isLeadSchedulingAssignedNotification(): boolean {
-    return this.notification?.message?.kind === 'lead-scheduling-assigned';
+    const kind = this.notification?.message?.kind;
+    return (
+      kind === 'lead-scheduling-assigned' || kind === 'induction-assigned'
+    );
   }
 
   get isLeadSchedulingCancelledNotification(): boolean {
-    return this.notification?.message?.kind === 'lead-scheduling-cancelled';
+    const kind = this.notification?.message?.kind;
+    return (
+      kind === 'lead-scheduling-cancelled' || kind === 'induction-cancelled'
+    );
   }
 
   get isActiveStudentsReportNotification(): boolean {
@@ -422,11 +428,18 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   /** Tarjeta estructurada para instructores (asignación o cancelación). */
   get isLeadSchedulingInstructorCard(): boolean {
-    return (
-      (this.isLeadSchedulingAssignedNotification ||
-        this.isLeadSchedulingCancelledNotification) &&
-      this.userRole === UserRole.INSTRUCTOR
-    );
+    const isAssignmentCard =
+      this.isLeadSchedulingAssignedNotification ||
+      this.isLeadSchedulingCancelledNotification;
+    if (!isAssignmentCard) return false;
+    if (
+      this.isInductionSchedulingAssignment ||
+      this.notification?.message?.kind === 'induction-assigned' ||
+      this.notification?.message?.kind === 'induction-cancelled'
+    ) {
+      return this.userRole === UserRole.ADMIN;
+    }
+    return this.userRole === UserRole.INSTRUCTOR;
   }
 
   get leadSchedulingRequestKind(): LeadSchedulingNotificationRequestKind | null {
@@ -618,7 +631,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     if (!this.isInductionNotification && !this.isInductionSchedulingAssignment) {
       return false;
     }
-    return this.userRole === UserRole.INSTRUCTOR || this.userRole === UserRole.ADMIN;
+    return this.userRole === UserRole.ADMIN;
   }
 
   goToActiveStudentsReport(): void {
@@ -644,18 +657,18 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   }
 
   goToInductionList(): void {
-    const queryParams = { kind: 'INDUCTION' as const };
-    if (this.userRole === UserRole.INSTRUCTOR) {
-      void this.router.navigate(['/dashboard/instructor/lead-scheduling-requests'], {
-        queryParams,
-      });
+    if (this.userRole !== UserRole.ADMIN) return;
+    if (
+      this.isInductionSchedulingAssignment ||
+      this.notification?.message?.kind === 'induction-assigned' ||
+      this.notification?.message?.kind === 'induction-cancelled'
+    ) {
+      void this.router.navigate(['/dashboard/admin/assigned-inductions']);
       return;
     }
-    if (this.userRole === UserRole.ADMIN) {
-      void this.router.navigate(['/dashboard/admin/lead-scheduling-requests'], {
-        queryParams,
-      });
-    }
+    void this.router.navigate(['/dashboard/admin/lead-scheduling-requests'], {
+      queryParams: { kind: 'INDUCTION' as const },
+    });
   }
 
   goToLeadRequestAdminDetail(): void {
@@ -666,6 +679,18 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   goToAssignedLeadScheduling(): void {
     const id = this.leadSchedulingAssignedId;
+    const isInductionAssignment =
+      this.isInductionSchedulingAssignment ||
+      this.notification?.message?.kind === 'induction-assigned' ||
+      this.notification?.message?.kind === 'induction-cancelled';
+    if (isInductionAssignment) {
+      if (id != null) {
+        void this.router.navigate(['/dashboard/admin/assigned-inductions', id]);
+      } else {
+        this.goToInductionList();
+      }
+      return;
+    }
     if (id != null) {
       void this.router.navigate([
         '/dashboard/instructor/lead-scheduling-requests',
@@ -673,8 +698,6 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       ]);
     } else if (this.isPlacementSchedulingAssignment) {
       this.goToPlacementExamList();
-    } else if (this.isInductionSchedulingAssignment) {
-      this.goToInductionList();
     } else {
       void this.router.navigate(['/dashboard/instructor/lead-scheduling-requests']);
     }

@@ -37,6 +37,13 @@ export interface LeadSchedulingAssignedByRef {
   email: string;
 }
 
+export interface LeadSchedulingResponsibleAdminRef {
+  id: number;
+  firstName: string | null;
+  lastName: string | null;
+  email: string;
+}
+
 export interface LeadSchedulingRequestRow {
   id: number;
   kind: LeadSchedulingRequestKind;
@@ -61,6 +68,8 @@ export interface LeadSchedulingRequestRow {
   requestNotes?: string | null;
   instructorId?: number | null;
   instructor?: LeadSchedulingInstructorRef | null;
+  responsibleAdminId?: number | null;
+  responsibleAdmin?: LeadSchedulingResponsibleAdminRef | null;
   assignedBy?: LeadSchedulingAssignedByRef | null;
   scheduledDate?: string | null;
   scheduledHour?: number | null;
@@ -92,6 +101,7 @@ export interface SubmitLeadSchedulingInstructorReportDto {
 /** Cuerpo de `PATCH /lead-scheduling-requests/:id` (admin). Campos opcionales; `null` limpia según API. */
 export interface UpdateLeadSchedulingAdminDto {
   instructorId?: number | null;
+  responsibleAdminId?: number | null;
   scheduledDate?: string | null;
   scheduledHour?: number | null;
   examLink?: string | null;

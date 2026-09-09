@@ -28,7 +28,7 @@ import {
 } from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
-  selector: 'app-instructor-lead-scheduling-list',
+  selector: 'app-admin-assigned-inductions-list',
   standalone: true,
   imports: [
     CommonModule,
@@ -40,10 +40,10 @@ import {
     InstructorSchedulingRequestListComponent,
     InstructorSchedulingRequestPaginationComponent,
   ],
-  templateUrl: './instructor-lead-scheduling-list.component.html',
-  styleUrl: './instructor-lead-scheduling-list.component.scss',
+  templateUrl: './admin-assigned-inductions-list.component.html',
+  styleUrl: './admin-assigned-inductions-list.component.scss',
 })
-export class InstructorLeadSchedulingListComponent implements OnInit {
+export class AdminAssignedInductionsListComponent implements OnInit {
   /** Filas acumuladas del API (según estado/tipo seleccionados en servidor). */
   sourceItems: LeadSchedulingRequestRow[] = [];
 
@@ -121,6 +121,10 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
       value: 'PLACEMENT_EXAM',
       label: 'Examen de ubicación',
     },
+    {
+      value: 'INDUCTION',
+      label: 'Inducción',
+    },
   ];
 
   constructor(
@@ -159,11 +163,10 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
 
     const pull = (offset: number): void => {
       this.leadScheduling
-        .listMine({
+        .listAssignedInductions({
           limit: this.fetchBatchSize,
           offset,
           status: this.statusFilter || undefined,
-          kind: this.kindFilter || undefined,
         })
         .subscribe({
           next: (res) => {
@@ -185,7 +188,7 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
               this.clampPageIndex();
 
               this.leadSchedulingPending
-                .refresh(UserRole.INSTRUCTOR)
+                .refresh(UserRole.ADMIN)
                 .subscribe();
             }
           },
@@ -486,7 +489,7 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
     requestId: number,
   ): void {
     this.router.navigate([
-      '/dashboard/instructor/lead-scheduling-requests',
+      '/dashboard/admin/assigned-inductions',
       requestId,
     ]);
   }

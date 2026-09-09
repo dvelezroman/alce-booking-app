@@ -10,6 +10,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class InstructorSchedulingRequestHeaderComponent {
   @Input() loading: boolean = false;
+  @Input() title = 'Solicitudes de agendamiento';
+  @Input() description =
+    'Gestiona solicitudes de clases demo y exámenes de ubicación.';
 
   @Output() refreshRequested = new EventEmitter<void>();
 

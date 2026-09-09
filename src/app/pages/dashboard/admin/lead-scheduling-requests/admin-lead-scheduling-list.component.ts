@@ -492,6 +492,13 @@ export class AdminLeadSchedulingListComponent implements OnInit {
   instructorLabel(
     row: LeadSchedulingRequestRow,
   ): string {
+    if (row.kind === 'INDUCTION') {
+      const admin = row.responsibleAdmin;
+      if (!admin) return '—';
+      const name = `${admin.firstName ?? ''} ${admin.lastName ?? ''}`.trim();
+      return name || admin.email || `ID ${row.responsibleAdminId}`;
+    }
+
     const u = row.instructor?.user;
 
     if (!u) {

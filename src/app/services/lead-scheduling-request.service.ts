@@ -24,6 +24,7 @@ export interface LeadSchedulingListQuery {
 export class LeadSchedulingRequestService {
   private readonly instructorBase = `${environment.apiUrl}/instructor/lead-scheduling-requests`;
   private readonly adminBase = `${environment.apiUrl}/lead-scheduling-requests`;
+  private readonly assignedInductionsBase = `${environment.apiUrl}/admin/assigned-inductions`;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -43,6 +44,37 @@ export class LeadSchedulingRequestService {
   getMine(id: number): Observable<LeadSchedulingRequestRow> {
     return this.http.get<LeadSchedulingRequestRow>(
       `${this.instructorBase}/${id}`,
+    );
+  }
+
+  listAssignedInductions(
+    query?: LeadSchedulingListQuery,
+  ): Observable<LeadSchedulingListResponse> {
+    let params = new HttpParams();
+    if (query?.status) params = params.set('status', query.status);
+    if (query?.createdFrom) params = params.set('createdFrom', query.createdFrom);
+    if (query?.createdTo) params = params.set('createdTo', query.createdTo);
+    if (query?.limit != null) params = params.set('limit', String(query.limit));
+    if (query?.offset != null) params = params.set('offset', String(query.offset));
+    return this.http.get<LeadSchedulingListResponse>(
+      this.assignedInductionsBase,
+      { params },
+    );
+  }
+
+  getAssignedInduction(id: number): Observable<LeadSchedulingRequestRow> {
+    return this.http.get<LeadSchedulingRequestRow>(
+      `${this.assignedInductionsBase}/${id}`,
+    );
+  }
+
+  submitAdminInductionReport(
+    id: number,
+    body: SubmitLeadSchedulingInstructorReportDto,
+  ): Observable<LeadSchedulingRequestRow> {
+    return this.http.patch<LeadSchedulingRequestRow>(
+      `${environment.apiUrl}/lead-scheduling-requests/${id}/admin-induction-report`,
+      body,
     );
   }
 

@@ -697,17 +697,23 @@ export class NotificationDetailV2Component
 
   get isLeadSchedulingAssignedNotification():
     boolean {
+    const kind =
+      this.notification?.message?.kind;
     return (
-      this.notification?.message?.kind ===
-      'lead-scheduling-assigned'
+      kind ===
+        'lead-scheduling-assigned' ||
+      kind === 'induction-assigned'
     );
   }
 
   get isLeadSchedulingCancelledNotification():
     boolean {
+    const kind =
+      this.notification?.message?.kind;
     return (
-      this.notification?.message?.kind ===
-      'lead-scheduling-cancelled'
+      kind ===
+        'lead-scheduling-cancelled' ||
+      kind === 'induction-cancelled'
     );
   }
 
@@ -754,13 +760,32 @@ export class NotificationDetailV2Component
 
   get isLeadSchedulingInstructorCard():
     boolean {
-    return (
-      (this
+    const isAssignmentCard =
+      this
         .isLeadSchedulingAssignedNotification ||
-        this
-          .isLeadSchedulingCancelledNotification) &&
+      this
+        .isLeadSchedulingCancelledNotification;
+    if (!isAssignmentCard) {
+      return false;
+    }
+    if (
+      this
+        .isInductionSchedulingAssignment ||
+      this.notification?.message
+        ?.kind ===
+        'induction-assigned' ||
+      this.notification?.message
+        ?.kind ===
+        'induction-cancelled'
+    ) {
+      return (
+        this.userRole ===
+        UserRole.ADMIN
+      );
+    }
+    return (
       this.userRole ===
-        UserRole.INSTRUCTOR
+      UserRole.INSTRUCTOR
     );
   }
 
@@ -1229,11 +1254,7 @@ export class NotificationDetailV2Component
       return false;
     }
 
-    return (
-      this.userRole ===
-        UserRole.INSTRUCTOR ||
-      this.userRole === UserRole.ADMIN
-    );
+    return this.userRole === UserRole.ADMIN;
   }
 
   get formattedBody(): string {
@@ -1321,38 +1342,25 @@ export class NotificationDetailV2Component
   }
 
   goToInductionList(): void {
-    const queryParams = {
-      kind: 'INDUCTION' as const,
-    };
-
-    if (
-      this.userRole ===
-      UserRole.INSTRUCTOR
-    ) {
-      void this.router.navigate(
-        [
-          '/dashboard/instructor/lead-scheduling-requests',
-        ],
-        {
-          queryParams,
-        },
-      );
-
+    if (this.userRole !== UserRole.ADMIN) {
       return;
     }
 
     if (
-      this.userRole === UserRole.ADMIN
+      this.isInductionSchedulingAssignment ||
+      this.notification?.message?.kind === 'induction-assigned' ||
+      this.notification?.message?.kind === 'induction-cancelled'
     ) {
-      void this.router.navigate(
-        [
-          '/dashboard/admin/lead-scheduling-requests',
-        ],
-        {
-          queryParams,
-        },
-      );
+      void this.router.navigate([
+        '/dashboard/admin/assigned-inductions',
+      ]);
+      return;
     }
+
+    void this.router.navigate(
+      ['/dashboard/admin/lead-scheduling-requests'],
+      { queryParams: { kind: 'INDUCTION' as const } },
+    );
   }
 
   goToLeadRequestAdminDetail():
@@ -1374,13 +1382,30 @@ export class NotificationDetailV2Component
     void {
     const id =
       this.leadSchedulingAssignedId;
+    const isInductionAssignment =
+      this.isInductionSchedulingAssignment ||
+      this.notification?.message?.kind ===
+        'induction-assigned' ||
+      this.notification?.message?.kind ===
+        'induction-cancelled';
+
+    if (isInductionAssignment) {
+      if (id != null) {
+        void this.router.navigate([
+          '/dashboard/admin/assigned-inductions',
+          id,
+        ]);
+      } else {
+        this.goToInductionList();
+      }
+      return;
+    }
 
     if (id != null) {
       void this.router.navigate([
         '/dashboard/instructor/lead-scheduling-requests',
         id,
       ]);
-
       return;
     }
 
@@ -1389,14 +1414,6 @@ export class NotificationDetailV2Component
         .isPlacementSchedulingAssignment
     ) {
       this.goToPlacementExamList();
-      return;
-    }
-
-    if (
-      this
-        .isInductionSchedulingAssignment
-    ) {
-      this.goToInductionList();
       return;
     }
 

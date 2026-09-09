@@ -28,6 +28,8 @@ export class InstructorSchedulingRequestFiltersComponent {
 
   @Input() loading: boolean = false;
   @Input() hasActiveFilters: boolean = false;
+  /** Assigned inductions are a single kind; hide the tipo dropdown. */
+  @Input() showKindFilter: boolean = true;
 
   @Output() searchNameChange = new EventEmitter<string>();
   @Output() dateFromChange = new EventEmitter<string>();
@@ -76,10 +78,6 @@ export class InstructorSchedulingRequestFiltersComponent {
     {
       value: 'PLACEMENT_EXAM',
       label: 'Examen de ubicación',
-    },
-    {
-      value: 'INDUCTION',
-      label: 'Inducción',
     },
   ];
 
