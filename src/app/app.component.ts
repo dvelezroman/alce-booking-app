@@ -73,16 +73,38 @@ export class AppComponent implements OnInit {
 
   private checkAccessTokenAndRefreshSession(): void {
     const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) return;
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!accessToken && !refreshToken) return;
 
-    this.usersService.refreshLogin().subscribe({
-      error: () => {
-        this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
-        this.store.dispatch(setAdminStatus({ isAdmin: false }));
-        this.store.dispatch(unsetUserData());
-        localStorage.removeItem('accessToken');
-      }
+    if (accessToken) {
+      this.usersService.refreshLogin().subscribe({
+        error: () => {
+          if (refreshToken) {
+            this.tryRefreshTokenRestore();
+            return;
+          }
+          this.clearSessionAndRedirect();
+        }
+      });
+      return;
+    }
+
+    // Access expired/missing but remember-me refresh token still present
+    this.tryRefreshTokenRestore();
+  }
+
+  private tryRefreshTokenRestore(): void {
+    this.usersService.refreshWithToken().subscribe({
+      error: () => this.clearSessionAndRedirect()
     });
+  }
+
+  private clearSessionAndRedirect(): void {
+    this.store.dispatch(setLoggedInStatus({ isLoggedIn: false }));
+    this.store.dispatch(setAdminStatus({ isAdmin: false }));
+    this.store.dispatch(unsetUserData());
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
   }
 
   showModal(params: ModalDto) {

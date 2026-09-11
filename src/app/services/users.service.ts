@@ -1,6 +1,6 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable, Subject, tap, firstValueFrom} from 'rxjs';
+import {Observable, Subject, tap, firstValueFrom, throwError} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Store} from "@ngrx/store";
 import {setAdminStatus, setInstructorLink, setLoggedInStatus, setUserData, unsetUserData} from "../store/user.action";
@@ -75,6 +75,11 @@ export class UsersService implements OnInit{
         tap((response) => {
           if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
             localStorage.setItem('accessToken', response.accessToken);
+            if (response.refreshToken) {
+              localStorage.setItem('refreshToken', response.refreshToken);
+            } else {
+              localStorage.removeItem('refreshToken');
+            }
           }
           this.store.dispatch(setAdminStatus({ isAdmin: response.role === UserRole.ADMIN }));
           this.store.dispatch(setLoggedInStatus({ isLoggedIn: !!response.accessToken }));
@@ -101,6 +106,36 @@ export class UsersService implements OnInit{
         tap((response) => {
           if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
             localStorage.setItem('accessToken', response.accessToken);
+            if (response.refreshToken) {
+              localStorage.setItem('refreshToken', response.refreshToken);
+            }
+          }
+          this.store.dispatch(setAdminStatus({ isAdmin: response.role === UserRole.ADMIN }));
+          this.store.dispatch(setLoggedInStatus({ isLoggedIn: !!response.accessToken }));
+          this.store.dispatch(setUserData({ data: response }));
+        })
+      );
+  }
+
+  /**
+   * Exchange refresh token for a new access token (and rotated refresh token).
+   */
+  refreshWithToken(): Observable<LoginResponseDto> {
+    const refreshToken =
+      typeof window !== 'undefined' ? localStorage.getItem('refreshToken') : null;
+    if (!refreshToken) {
+      return throwError(() => new Error('No refresh token'));
+    }
+
+    return this.http
+      .post<LoginResponseDto>(`${this.apiUrl}/refresh`, { refreshToken })
+      .pipe(
+        tap((response) => {
+          if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+            localStorage.setItem('accessToken', response.accessToken);
+            if (response.refreshToken) {
+              localStorage.setItem('refreshToken', response.refreshToken);
+            }
           }
           this.store.dispatch(setAdminStatus({ isAdmin: response.role === UserRole.ADMIN }));
           this.store.dispatch(setLoggedInStatus({ isLoggedIn: !!response.accessToken }));
@@ -181,8 +216,27 @@ export class UsersService implements OnInit{
 
   logout(): void {
     if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+      const refreshToken = localStorage.getItem('refreshToken');
+      const accessToken = localStorage.getItem('accessToken');
+
+      // Best-effort server revoke; clear local session regardless of network
+      if (refreshToken || accessToken) {
+        this.http
+          .post(
+            `${this.apiUrl}/logout`,
+            refreshToken ? { refreshToken } : {},
+            {
+              headers: accessToken
+                ? { Authorization: `Bearer ${accessToken}` }
+                : undefined,
+            }
+          )
+          .subscribe({ error: () => undefined });
+      }
+
       this.bannerState.reset();
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       localStorage.removeItem('instructorLink');
       localStorage.removeItem('assessment_announced');
       localStorage.removeItem('globalNoticeDismissed');

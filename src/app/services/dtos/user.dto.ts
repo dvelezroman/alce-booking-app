@@ -65,12 +65,14 @@ export interface SuspensionInfo {
 export interface LoginDto {
   email: string;
   password: string;
+  rememberMe?: boolean;
 }
 
 export type UserWithoutPasswordDto = Omit<UserDto, 'password'>;
 
 export interface LoginResponseDto extends UserWithoutPasswordDto {
   accessToken: string;
+  refreshToken?: string;
 }
 
 export interface RegisterResponseDto {
