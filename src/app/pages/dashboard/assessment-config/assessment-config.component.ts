@@ -5,8 +5,8 @@ import { AssessmentDaysConfigFormComponent } from '../../../components/assessmen
 import { AssessmentConfigFormComponent } from '../../../components/assessment-config/assessment-max-config/assessment-config-form.component';
 import { AssessmentMinConfigComponent } from '../../../components/assessment-config/assessment-min-config/assessment-min-config.component';
 import { AssessmentHoursConfigComponent } from '../../../components/assessment-config/assessment-hours-config/assessment-hours-config.component';
+import { AssessmentMaxDaysConfigComponent } from '../../../components/assessment-config/assessment-max-days-config/assessment-max-days-config.component';
 import { ModalComponent } from '../../../components/modal/modal.component';
-
 
 @Component({
   selector: 'app-assessment-config',
@@ -16,16 +16,18 @@ import { ModalComponent } from '../../../components/modal/modal.component';
     AssessmentMinConfigComponent,
     AssessmentDaysConfigFormComponent,
     AssessmentHoursConfigComponent,
-    ModalComponent
+    AssessmentMaxDaysConfigComponent,
+    ModalComponent,
   ],
   templateUrl: './assessment-config.component.html',
-  styleUrl: './assessment-config.component.scss'
+  styleUrl: './assessment-config.component.scss',
 })
 export class AssessmentConfigComponent implements OnInit {
   maxPoints: number | null = null;
   minPoints: number | null = null;
   daysAsNewStudent: number | null = null;
   minHoursScheduled: number | null = null;
+  maxDaysInCurrentStage: number | null = null;
   modal: ModalDto = modalInitializer();
 
   constructor(private configService: AssessmentPointsConfigService) {}
@@ -37,49 +39,106 @@ export class AssessmentConfigComponent implements OnInit {
         this.minPoints = config.minPointsAssessment;
         this.daysAsNewStudent = config.numberDaysNewStudent;
         this.minHoursScheduled = config.minHoursScheduled;
+        this.maxDaysInCurrentStage = config.maxDaysInCurrentStage ?? 60;
       },
-      error: () => this.showModal('Error al cargar configuración', true)
+      error: () => this.showModal('Error al cargar configuración', true),
     });
+  }
+
+  private persist(
+    max: number,
+    min: number,
+    days: number,
+    hours: number,
+    maxDays: number,
+    successMessage: string,
+    errorMessage: string,
+    onSuccess: () => void,
+  ): void {
+    this.configService
+      .update(1, max, min, days, hours, maxDays)
+      .subscribe({
+        next: () => {
+          onSuccess();
+          this.showModal(successMessage, false, true);
+        },
+        error: () => this.showModal(errorMessage, true),
+      });
   }
 
   updateMaxPoints(max: number): void {
-    this.configService.update(1, max, this.minPoints!, this.daysAsNewStudent!, this.minHoursScheduled!).subscribe({
-      next: () => {
+    this.persist(
+      max,
+      this.minPoints!,
+      this.daysAsNewStudent!,
+      this.minHoursScheduled!,
+      this.maxDaysInCurrentStage!,
+      'Máximo actualizado',
+      'Error al actualizar máximo',
+      () => {
         this.maxPoints = max;
-        this.showModal('Máximo actualizado', false, true);
       },
-      error: () => this.showModal('Error al actualizar máximo', true)
-    });
+    );
   }
 
   updateMinPoints(min: number): void {
-    this.configService.update(1, this.maxPoints!, min, this.daysAsNewStudent!, this.minHoursScheduled!).subscribe({
-      next: () => {
+    this.persist(
+      this.maxPoints!,
+      min,
+      this.daysAsNewStudent!,
+      this.minHoursScheduled!,
+      this.maxDaysInCurrentStage!,
+      'Mínimo actualizado',
+      'Error al actualizar mínimo',
+      () => {
         this.minPoints = min;
-        this.showModal('Mínimo actualizado', false, true);
       },
-      error: () => this.showModal('Error al actualizar mínimo', true)
-    });
+    );
   }
 
   updateDays(days: number): void {
-    this.configService.update(1, this.maxPoints!, this.minPoints!, days, this.minHoursScheduled! ).subscribe({
-      next: () => {
+    this.persist(
+      this.maxPoints!,
+      this.minPoints!,
+      days,
+      this.minHoursScheduled!,
+      this.maxDaysInCurrentStage!,
+      'Días actualizados',
+      'Error al actualizar días',
+      () => {
         this.daysAsNewStudent = days;
-        this.showModal('Días actualizados', false, true);
       },
-      error: () => this.showModal('Error al actualizar días', true)
-    });
+    );
   }
 
   updateMinHoursScheduled(hours: number): void {
-    this.configService.update(1, this.maxPoints!, this.minPoints!, this.daysAsNewStudent!, hours).subscribe({
-      next: () => {
+    this.persist(
+      this.maxPoints!,
+      this.minPoints!,
+      this.daysAsNewStudent!,
+      hours,
+      this.maxDaysInCurrentStage!,
+      'Horas mínimas actualizadas',
+      'Error al actualizar horas mínimas',
+      () => {
         this.minHoursScheduled = hours;
-        this.showModal('Horas mínimas actualizadas', false, true);
       },
-      error: () => this.showModal('Error al actualizar horas mínimas', true)
-    });
+    );
+  }
+
+  updateMaxDaysInCurrentStage(days: number): void {
+    this.persist(
+      this.maxPoints!,
+      this.minPoints!,
+      this.daysAsNewStudent!,
+      this.minHoursScheduled!,
+      days,
+      'Días máximos en etapa actualizados',
+      'Error al actualizar días máximos en etapa',
+      () => {
+        this.maxDaysInCurrentStage = days;
+      },
+    );
   }
 
   showModal(message: string, isError = false, isSuccess = false): void {
@@ -89,8 +148,8 @@ export class AssessmentConfigComponent implements OnInit {
       message,
       isError,
       isSuccess,
-      close: () => (this.modal.show = false)
+      close: () => (this.modal.show = false),
     };
-    setTimeout(() => this.modal.show = false, 2500);
+    setTimeout(() => (this.modal.show = false), 2500);
   }
 }

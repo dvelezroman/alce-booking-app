@@ -1,0 +1,35 @@
+<section class="assessment-max-days-config">
+  <div class="assessment-max-days-config__field">
+    <label class="assessment-max-days-config__label" for="assessment-max-days">
+      Nuevos días máximos en etapa
+    </label>
+    <div class="assessment-max-days-config__control">
+      <input
+        id="assessment-max-days"
+        type="number"
+        min="1"
+        step="1"
+        class="assessment-max-days-config__input"
+        [class.assessment-max-days-config__input--error]="value !== null && isInvalid"
+        [(ngModel)]="value"
+        placeholder="Ej. 60"
+      />
+      <span class="assessment-max-days-config__suffix">días</span>
+    </div>
+    <span
+      *ngIf="value !== null && isInvalid"
+      class="assessment-max-days-config__error"
+    >
+      Ingresa al menos 1 día.
+    </span>
+  </div>
+
+  <button
+    type="button"
+    class="assessment-max-days-config__button"
+    [disabled]="isInvalid || !hasChanges"
+    (click)="save()"
+  >
+    Guardar
+  </button>
+</section>

@@ -1,0 +1,72 @@
+<section class="admin-dashboard-early-warnings">
+  <header class="admin-dashboard-early-warnings__header">
+    <div>
+      <div class="admin-dashboard-early-warnings__heading">
+        <h2 class="admin-dashboard-early-warnings__title">
+          Alertas tempranas
+        </h2>
+        <span
+          *ngIf="!loading && summary && summary.totalAtRisk > 0"
+          class="admin-dashboard-early-warnings__counter"
+        >
+          {{ summary.totalAtRisk }}
+        </span>
+      </div>
+      <p class="admin-dashboard-early-warnings__description">
+        Poca programación o mucho tiempo en la misma etapa.
+      </p>
+    </div>
+
+    <a
+      routerLink="/dashboard/early-warnings"
+      class="admin-dashboard-early-warnings__view-all"
+    >
+      Ver todas
+    </a>
+  </header>
+
+  <div
+    *ngIf="!loading && summary"
+    class="admin-dashboard-early-warnings__stats"
+  >
+    <div>
+      <span>Poca prog.</span>
+      <strong>{{ summary.lowSchedulingCount }}</strong>
+    </div>
+    <div>
+      <span>Etapa larga</span>
+      <strong>{{ summary.longStageCount }}</strong>
+    </div>
+    <div>
+      <span>Ambas</span>
+      <strong>{{ summary.bothCount }}</strong>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="admin-dashboard-early-warnings__loading">
+    Cargando alertas…
+  </div>
+
+  <ul
+    *ngIf="!loading && summary && summary.top.length > 0"
+    class="admin-dashboard-early-warnings__list"
+  >
+    <li *ngFor="let row of summary.top; trackBy: trackByStudentId">
+      <div>
+        <strong>{{ fullName(row) }}</strong>
+        <small>Etapa {{ row.stageNumber || '—' }}</small>
+      </div>
+      <div class="admin-dashboard-early-warnings__badges">
+        <span *ngIf="row.lowScheduling">Poca prog.</span>
+        <span *ngIf="row.longTimeInStage">Etapa larga</span>
+      </div>
+    </li>
+  </ul>
+
+  <div
+    *ngIf="!loading && summary && summary.top.length === 0"
+    class="admin-dashboard-early-warnings__empty"
+  >
+    No hay estudiantes en alerta ahora.
+  </div>
+</section>

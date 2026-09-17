@@ -139,6 +139,10 @@ export class NotificationDetailContentComponent {
     new EventEmitter<void>();
 
   @Output()
+  goToEarlyWarnings =
+    new EventEmitter<void>();
+
+  @Output()
   toggleStudentMenu =
     new EventEmitter<number>();
 
@@ -170,6 +174,18 @@ export class NotificationDetailContentComponent {
 
   onGoToActiveStudentsReport(): void {
     this.goToActiveStudentsReport.emit();
+  }
+
+  onGoToEarlyWarnings(): void {
+    this.goToEarlyWarnings.emit();
+  }
+
+  get isEarlyWarningNotification(): boolean {
+    const messageKind = this.notification?.message?.kind;
+    const metadataKind = (
+      this.notification?.metadata as { kind?: string } | null
+    )?.kind;
+    return messageKind === 'early-warning' || metadataKind === 'early-warning';
   }
 
   onToggleStudentMenu(

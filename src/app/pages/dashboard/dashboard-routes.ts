@@ -56,6 +56,7 @@ import { MeetingEvaluationsComponent } from './meeting-evaluations/meeting-evalu
 import { EvaluationStatisticsComponent } from './evaluation-statistics/evaluation-statistics.component';
 import { StudentHistoryReportComponent } from './report-students/student-history-report/student-history-report.component';
 import { ActiveStudentsReportComponent } from './report-students/active-students-report/active-students-report.component';
+import { EarlyWarningsComponent } from './early-warnings/early-warnings.component';
 import { InstructorCreatedMeetingsComponent } from './instructor-created-meetings/instructor-created-meetings.component';
 import { AnnouncementsComponent } from './announcements/announcements.component';
 import { adminOnlyGuard } from '../auth/admin-role.guard';
@@ -176,6 +177,7 @@ const dashboardChildren: Routes = [
   { path: 'reports-detailed', component: ReportsDetailedComponent },
   { path: 'student-history-report', component: StudentHistoryReportComponent },
   { path: 'active-students-report', component: ActiveStudentsReportComponent },
+  { path: 'early-warnings', component: EarlyWarningsComponent },
   // { path: 'reports-progress', component: ReportsProgressComponent },
   { path: 'reports-progress-v2', component: ReportsProgressV2Component },
   { path: 'suspension-history', component: SuspensionHistoryComponent },

@@ -71,6 +71,7 @@ export interface AssessmentConfigI {
   maxPointsAssessment: number;
   numberDaysNewStudent: number;
   minHoursScheduled: number;
+  maxDaysInCurrentStage: number;
 }
 
 export type AutomaticPromotionSource =

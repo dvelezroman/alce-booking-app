@@ -18,12 +18,20 @@ export class AssessmentPointsConfigService {
     return this.http.get<AssessmentConfigI>(`${this.apiUrl}/${id}`);
   }
 
-  update(id: number, max: number, min: number, daysNewStudent: number, minHoursScheduled: number): Observable<AssessmentConfigI> {
-    return this.http.patch<AssessmentConfigI>(`${this.apiUrl}/${id}`, { 
-      maxPointsAssessment: max, 
-      minPointsAssessment: min, 
+  update(
+    id: number,
+    max: number,
+    min: number,
+    daysNewStudent: number,
+    minHoursScheduled: number,
+    maxDaysInCurrentStage: number,
+  ): Observable<AssessmentConfigI> {
+    return this.http.patch<AssessmentConfigI>(`${this.apiUrl}/${id}`, {
+      maxPointsAssessment: max,
+      minPointsAssessment: min,
       numberDaysNewStudent: daysNewStudent,
-      minHoursScheduled: minHoursScheduled
+      minHoursScheduled: minHoursScheduled,
+      maxDaysInCurrentStage: maxDaysInCurrentStage,
     });
   }
 }
