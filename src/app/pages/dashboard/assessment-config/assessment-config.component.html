@@ -447,6 +447,109 @@
 
 
         <!-- ===============================================
+             MAX DAYS IN STAGE
+        ================================================ -->
+
+        <article
+          class="
+            assessment-config__card
+            assessment-config__card--hours
+          "
+        >
+
+          <div class="assessment-config__card-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="4"
+                y="5"
+                width="16"
+                height="15"
+                rx="2.5"
+                stroke="currentColor"
+                stroke-width="1.7"
+              />
+
+              <path
+                d="M8 3v4M16 3v4M4 9h16"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M9 14h6M9 17h4"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </div>
+
+
+          <div class="assessment-config__card-content">
+
+            <div class="assessment-config__card-heading">
+
+              <div>
+
+                <h2>
+                  Días máximos en la misma etapa
+                </h2>
+
+                <p>
+                  Alerta temprana si el estudiante no avanza de etapa.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="assessment-config__card-body">
+
+              <div class="assessment-config__value">
+
+                <strong>
+                  {{ maxDaysInCurrentStage ?? '—' }}
+                </strong>
+
+                <span>
+                  días
+                </span>
+
+              </div>
+
+
+              <p class="assessment-config__helper">
+                Si un estudiante permanece este número de días o más en la
+                misma etapa, aparece en el panel de alertas tempranas.
+              </p>
+
+
+              <div class="assessment-config__form">
+
+                <app-assessment-max-days-config
+                  [maxDaysInCurrentStage]="maxDaysInCurrentStage"
+                  (daysChange)="updateMaxDaysInCurrentStage($event)"
+                >
+                </app-assessment-max-days-config>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- ===============================================
              NOTICE
         ================================================ -->
 

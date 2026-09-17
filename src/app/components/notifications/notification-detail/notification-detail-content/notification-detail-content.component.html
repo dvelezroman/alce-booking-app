@@ -1069,6 +1069,50 @@
   </section>
 
   <!-- ================================
+       ALERTAS TEMPRANAS
+  ================================= -->
+  <section
+    *ngIf="isEarlyWarningNotification"
+    class="
+      notification-detail-content__section
+      notification-detail-content__section--bordered
+    "
+  >
+
+    <span class="notification-detail-content__label">
+      Alertas tempranas
+    </span>
+
+    <div class="notification-detail-content__notice">
+      <i class="pi pi-exclamation-triangle"></i>
+
+      <span>
+        Hay nuevas alertas de poca programación o mucho tiempo en etapa.
+      </span>
+    </div>
+
+    <div class="notification-detail-content__actions">
+
+      <button
+        type="button"
+        class="
+          notification-detail-content__button
+          notification-detail-content__button--primary
+        "
+        (click)="onGoToEarlyWarnings()"
+      >
+        <i class="pi pi-external-link"></i>
+
+        <span>
+          Ver alertas tempranas
+        </span>
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- ================================
        NUEVOS ESTUDIANTES
   ================================= -->
   <section

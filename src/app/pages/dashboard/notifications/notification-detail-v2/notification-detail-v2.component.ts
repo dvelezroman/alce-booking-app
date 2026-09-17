@@ -736,6 +736,23 @@ export class NotificationDetailV2Component
     );
   }
 
+  get isEarlyWarningNotification():
+    boolean {
+    const messageKind =
+      this.notification?.message?.kind;
+
+    const metadataKind = (
+      this.notification?.metadata as {
+        kind?: string;
+      } | null
+    )?.kind;
+
+    return (
+      messageKind === 'early-warning' ||
+      metadataKind === 'early-warning'
+    );
+  }
+
   get activeStudentsReportJobId():
     string | null {
     const metadata =
@@ -1167,6 +1184,10 @@ export class NotificationDetailV2Component
       return false;
     }
 
+    if (this.isEarlyWarningNotification) {
+      return false;
+    }
+
     if (
       this
         .isLeadRequestNotification &&
@@ -1304,6 +1325,12 @@ export class NotificationDetailV2Component
           : {},
       },
     );
+  }
+
+  goToEarlyWarnings(): void {
+    void this.router.navigate([
+      '/dashboard/early-warnings',
+    ]);
   }
 
   goToPlacementExamList(): void {

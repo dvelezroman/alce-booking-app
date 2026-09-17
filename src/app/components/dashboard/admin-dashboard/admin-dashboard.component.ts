@@ -56,6 +56,10 @@ import {
 } from '../../../components/dashboard/admin-dashboard-components/admin-dashboard-pending-demos/admin-dashboard-pending-demos.component';
 
 import {
+  AdminDashboardEarlyWarningsComponent,
+} from '../../../components/dashboard/admin-dashboard-components/admin-dashboard-early-warnings/admin-dashboard-early-warnings.component';
+
+import {
   AdminDashboardQuickActionsComponent,
 } from '../../../components/dashboard/admin-dashboard-components/admin-dashboard-quick-actions/admin-dashboard-quick-actions.component';
 
@@ -89,6 +93,7 @@ import { FilterMeetingsDto } from '../../../services/dtos/booking.dto';
     AdminDashboardStatsComponent,
     AdminDashboardShortcutsComponent,
     AdminDashboardPendingDemosComponent,
+    AdminDashboardEarlyWarningsComponent,
     AdminDashboardQuickActionsComponent,
     AdminDashboardDaySummaryComponent,
     AdminDashboardNotificationsComponent,

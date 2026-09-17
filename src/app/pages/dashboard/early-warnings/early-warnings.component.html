@@ -1,0 +1,151 @@
+<section class="early-warnings">
+  <header class="early-warnings__header">
+    <div>
+      <span class="early-warnings__eyebrow">Seguimiento académico</span>
+      <h1 class="early-warnings__title">Alertas tempranas</h1>
+      <p class="early-warnings__description">
+        Estudiantes con poca programación en la ventana móvil o demasiado tiempo
+        en la misma etapa.
+      </p>
+    </div>
+  </header>
+
+  <div class="early-warnings__kpis" *ngIf="summary as s">
+    <article class="early-warnings__kpi">
+      <span>En riesgo</span>
+      <strong>{{ s.totalAtRisk }}</strong>
+    </article>
+    <article class="early-warnings__kpi early-warnings__kpi--danger">
+      <span>Poca programación</span>
+      <strong>{{ s.lowSchedulingCount }}</strong>
+    </article>
+    <article class="early-warnings__kpi early-warnings__kpi--warning">
+      <span>Mucho tiempo en etapa</span>
+      <strong>{{ s.longStageCount }}</strong>
+    </article>
+    <article class="early-warnings__kpi early-warnings__kpi--info">
+      <span>Ambas alertas</span>
+      <strong>{{ s.bothCount }}</strong>
+    </article>
+  </div>
+
+  <p class="early-warnings__config" *ngIf="summary?.config as c">
+    Umbrales: mínimo {{ c.minHoursScheduled }} clases en {{ c.numberDaysNewStudent }} días;
+    máximo {{ c.maxDaysInCurrentStage }} días en la misma etapa.
+  </p>
+
+  <form class="early-warnings__filters" (ngSubmit)="applyFilters()">
+    <label>
+      Tipo
+      <select [(ngModel)]="alertType" name="alertType">
+        <option value="any">Todas</option>
+        <option value="low_scheduling">Poca programación</option>
+        <option value="long_stage">Mucho tiempo en etapa</option>
+      </select>
+    </label>
+
+    <label>
+      Etapa
+      <select [(ngModel)]="stageId" name="stageId">
+        <option [ngValue]="null">Todas</option>
+        <option *ngFor="let stage of stages" [ngValue]="stage.id">
+          {{ stage.number }} — {{ stage.description || 'Sin descripción' }}
+        </option>
+      </select>
+    </label>
+
+    <label class="early-warnings__search">
+      Buscar
+      <input
+        type="search"
+        name="search"
+        [(ngModel)]="search"
+        placeholder="Nombre, email o ID"
+      />
+    </label>
+
+    <div class="early-warnings__filter-actions">
+      <button type="submit">Filtrar</button>
+      <button type="button" class="early-warnings__ghost" (click)="clearFilters()">
+        Limpiar
+      </button>
+    </div>
+  </form>
+
+  <p *ngIf="error" class="early-warnings__error">{{ error }}</p>
+  <p *ngIf="loading" class="early-warnings__loading">Cargando…</p>
+
+  <div class="early-warnings__table-wrap" *ngIf="!loading && list">
+    <table class="early-warnings__table">
+      <thead>
+        <tr>
+          <th>Estudiante</th>
+          <th>Email</th>
+          <th>Etapa</th>
+          <th>Clases (ventana)</th>
+          <th>Días en etapa</th>
+          <th>Alertas</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of list.items; trackBy: trackByStudentId">
+          <td>
+            <strong>{{ fullName(row) }}</strong>
+            <small>ID {{ row.studentId }}</small>
+          </td>
+          <td>{{ email(row) }}</td>
+          <td>{{ row.stageNumber || '—' }}</td>
+          <td>
+            {{ row.meetingsInWindow }} / {{ row.minHoursScheduled }}
+            <small>({{ row.windowDays }} días)</small>
+          </td>
+          <td>
+            {{ row.daysInStage }}
+            <small>/ {{ row.maxDaysInCurrentStage }}</small>
+          </td>
+          <td>
+            <span
+              *ngIf="row.lowScheduling"
+              class="early-warnings__badge early-warnings__badge--danger"
+            >
+              Poca prog.
+            </span>
+            <span
+              *ngIf="row.longTimeInStage"
+              class="early-warnings__badge early-warnings__badge--warning"
+            >
+              Etapa larga
+            </span>
+          </td>
+          <td>
+            <a
+              [routerLink]="['/dashboard/searching-user']"
+              [queryParams]="{ userId: row.userId }"
+            >
+              Ver usuario
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="list.items.length === 0" class="early-warnings__empty">
+      No hay estudiantes con alertas para los filtros actuales.
+    </p>
+
+    <footer class="early-warnings__pagination" *ngIf="list.totalCount > 0">
+      <button type="button" [disabled]="page <= 1" (click)="goToPage(page - 1)">
+        Anterior
+      </button>
+      <span>Página {{ page }} de {{ totalPages }} ({{ list.totalCount }})</span>
+      <button
+        type="button"
+        [disabled]="page >= totalPages"
+        (click)="goToPage(page + 1)"
+      >
+        Siguiente
+      </button>
+    </footer>
+  </div>
+</section>
