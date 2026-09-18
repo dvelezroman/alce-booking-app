@@ -8,9 +8,18 @@
         en la misma etapa.
       </p>
     </div>
+
+    <button
+      type="button"
+      class="early-warnings__export"
+      [disabled]="exporting || loading"
+      (click)="downloadExcel()"
+    >
+      {{ exporting ? 'Generando…' : 'Descargar Excel' }}
+    </button>
   </header>
 
-  <div class="early-warnings__kpis" *ngIf="summary as s">
+  <div class="early-warnings__kpis" *ngIf="displaySummary as s">
     <article class="early-warnings__kpi">
       <span>En riesgo</span>
       <strong>{{ s.totalAtRisk }}</strong>
@@ -32,15 +41,17 @@
   <p class="early-warnings__config" *ngIf="summary?.config as c">
     Umbrales: mínimo {{ c.minHoursScheduled }} clases en {{ c.numberDaysNewStudent }} días;
     máximo {{ c.maxDaysInCurrentStage }} días en la misma etapa.
+    Los KPIs reflejan los filtros aplicados.
   </p>
 
   <form class="early-warnings__filters" (ngSubmit)="applyFilters()">
     <label>
-      Tipo
+      Tipo de alerta
       <select [(ngModel)]="alertType" name="alertType">
         <option value="any">Todas</option>
         <option value="low_scheduling">Poca programación</option>
         <option value="long_stage">Mucho tiempo en etapa</option>
+        <option value="both">Ambas alertas</option>
       </select>
     </label>
 
@@ -54,13 +65,90 @@
       </select>
     </label>
 
+    <label>
+      Clasificación
+      <select [(ngModel)]="classification" name="classification">
+        <option [ngValue]="null">Todas</option>
+        <option
+          *ngFor="let item of filterOptions.classifications"
+          [ngValue]="item"
+        >
+          {{ classificationLabel(item) }}
+        </option>
+      </select>
+    </label>
+
+    <label>
+      Modalidad
+      <select [(ngModel)]="mode" name="mode">
+        <option [ngValue]="null">Todas</option>
+        <option *ngFor="let item of filterOptions.modes" [ngValue]="item">
+          {{ modeLabel(item) }}
+        </option>
+      </select>
+    </label>
+
+    <label>
+      Ciudad
+      <select [(ngModel)]="city" name="city">
+        <option [ngValue]="null">Todas</option>
+        <option *ngFor="let item of filterOptions.cities" [ngValue]="item">
+          {{ item }}
+        </option>
+      </select>
+    </label>
+
+    <label>
+      Días en etapa (mín)
+      <input
+        type="number"
+        min="0"
+        name="minDaysInStage"
+        [(ngModel)]="minDaysInStage"
+        placeholder="Ej. 60"
+      />
+    </label>
+
+    <label>
+      Días en etapa (máx)
+      <input
+        type="number"
+        min="0"
+        name="maxDaysInStage"
+        [(ngModel)]="maxDaysInStage"
+        placeholder="Ej. 120"
+      />
+    </label>
+
+    <label>
+      Clases ventana (mín)
+      <input
+        type="number"
+        min="0"
+        name="minMeetingsInWindow"
+        [(ngModel)]="minMeetingsInWindow"
+        placeholder="Ej. 0"
+      />
+    </label>
+
+    <label>
+      Clases ventana (máx)
+      <input
+        type="number"
+        min="0"
+        name="maxMeetingsInWindow"
+        [(ngModel)]="maxMeetingsInWindow"
+        placeholder="Ej. 5"
+      />
+    </label>
+
     <label class="early-warnings__search">
       Buscar
       <input
         type="search"
         name="search"
         [(ngModel)]="search"
-        placeholder="Nombre, email o ID"
+        placeholder="Nombre, email, contacto o ID"
       />
     </label>
 
@@ -68,6 +156,14 @@
       <button type="submit">Filtrar</button>
       <button type="button" class="early-warnings__ghost" (click)="clearFilters()">
         Limpiar
+      </button>
+      <button
+        type="button"
+        class="early-warnings__ghost"
+        [disabled]="exporting"
+        (click)="downloadExcel()"
+      >
+        {{ exporting ? 'Generando…' : 'Excel filtrado' }}
       </button>
     </div>
   </form>
@@ -81,9 +177,12 @@
         <tr>
           <th>Estudiante</th>
           <th>Email</th>
+          <th>Ciudad</th>
+          <th>Clasif. / Modalidad</th>
           <th>Etapa</th>
           <th>Clases (ventana)</th>
           <th>Días en etapa</th>
+          <th>Ingreso etapa</th>
           <th>Alertas</th>
           <th></th>
         </tr>
@@ -95,7 +194,15 @@
             <small>ID {{ row.studentId }}</small>
           </td>
           <td>{{ email(row) }}</td>
-          <td>{{ row.stageNumber || '—' }}</td>
+          <td>{{ row.city || '—' }}</td>
+          <td>
+            {{ classificationLabel(row.studentClassification) }}
+            <small>{{ modeLabel(row.mode) }}</small>
+          </td>
+          <td>
+            {{ row.stageNumber || '—' }}
+            <small *ngIf="row.stageDescription">{{ row.stageDescription }}</small>
+          </td>
           <td>
             {{ row.meetingsInWindow }} / {{ row.minHoursScheduled }}
             <small>({{ row.windowDays }} días)</small>
@@ -104,6 +211,7 @@
             {{ row.daysInStage }}
             <small>/ {{ row.maxDaysInCurrentStage }}</small>
           </td>
+          <td>{{ formatStageEntry(row.stageEntryDate) }}</td>
           <td>
             <span
               *ngIf="row.lowScheduling"
