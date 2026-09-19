@@ -96,6 +96,8 @@ export class InboxComponent implements OnInit {
 
   loading = false;
   errorMsg = '';
+  selectedNotificationIds = new Set<number>();
+  bulkActionLoading = false;
 
   filters: InboxFilters = {
     search: '',
@@ -170,6 +172,7 @@ export class InboxComponent implements OnInit {
             this.inboxUnreadCount = response.unreadCount;
           }
 
+          this.selectedNotificationIds.clear();
           this.loading = false;
         },
         error: (error) => {
@@ -181,9 +184,115 @@ export class InboxComponent implements OnInit {
           this.errorMsg =
             'No se pudieron cargar las notificaciones.';
 
+          this.selectedNotificationIds.clear();
           this.loading = false;
         },
       });
+  }
+
+  onToggleSelection(notificationId: number): void {
+    if (this.selectedNotificationIds.has(notificationId)) {
+      this.selectedNotificationIds.delete(notificationId);
+    } else {
+      this.selectedNotificationIds.add(notificationId);
+    }
+
+    this.selectedNotificationIds = new Set(this.selectedNotificationIds);
+  }
+
+  onSelectAllVisible(checked: boolean): void {
+    const visibleIds = this.filteredNotifications.map(
+      (notification) => notification.id,
+    );
+
+    if (checked) {
+      visibleIds.forEach((id) => this.selectedNotificationIds.add(id));
+    } else {
+      visibleIds.forEach((id) => this.selectedNotificationIds.delete(id));
+    }
+
+    this.selectedNotificationIds = new Set(this.selectedNotificationIds);
+  }
+
+  get selectedNotificationIdsList(): number[] {
+    return Array.from(this.selectedNotificationIds);
+  }
+
+  get allVisibleSelected(): boolean {
+    const visible = this.filteredNotifications;
+
+    return (
+      visible.length > 0 &&
+      visible.every((notification) =>
+        this.selectedNotificationIds.has(notification.id),
+      )
+    );
+  }
+
+  get someVisibleSelected(): boolean {
+    const visible = this.filteredNotifications;
+    const selectedOnPage = visible.filter((notification) =>
+      this.selectedNotificationIds.has(notification.id),
+    ).length;
+
+    return selectedOnPage > 0 && selectedOnPage < visible.length;
+  }
+
+  onMarkAllAsRead(): void {
+    if (this.inboxUnreadCount === 0 || this.bulkActionLoading) {
+      return;
+    }
+
+    this.bulkActionLoading = true;
+
+    this.notificationService.markAllAsRead().subscribe({
+      next: () => {
+        this.notifications = this.notifications.map((notification) => ({
+          ...notification,
+          isRead: true,
+          status: 'READ',
+          readAt: notification.readAt || new Date().toISOString(),
+        }));
+        this.inboxUnreadCount = 0;
+        this.notificationService.setUnreadCount(0);
+        this.bulkActionLoading = false;
+      },
+      error: (error) => {
+        console.error('[Inbox] mark all as read failed:', error);
+        this.bulkActionLoading = false;
+      },
+    });
+  }
+
+  onDeleteSelected(): void {
+    const ids = this.selectedNotificationIdsList;
+
+    if (ids.length === 0 || this.bulkActionLoading) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `¿Eliminar ${ids.length} notificación(es) seleccionada(s)?`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.bulkActionLoading = true;
+
+    this.notificationService.deleteForUser(ids).subscribe({
+      next: () => {
+        this.selectedNotificationIds.clear();
+        this.fetchNotifications();
+        this.notificationService.loadUnreadCount().subscribe();
+        this.bulkActionLoading = false;
+      },
+      error: (error) => {
+        console.error('[Inbox] delete notifications failed:', error);
+        this.bulkActionLoading = false;
+      },
+    });
   }
 
   onReadDaysChange(days: number): void {
