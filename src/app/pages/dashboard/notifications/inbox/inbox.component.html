@@ -73,6 +73,32 @@
     <!-- COLUMNA IZQUIERDA -->
     <main class="notifications-page__main">
 
+      <div
+        *ngIf="!loading && !errorMsg && hasFilteredNotifications"
+        class="notifications-page__bulk-actions"
+      >
+        <button
+          type="button"
+          class="notifications-page__bulk-button notifications-page__bulk-button--secondary"
+          [disabled]="inboxUnreadCount === 0 || bulkActionLoading"
+          (click)="onMarkAllAsRead()"
+        >
+          Marcar todas como leídas
+        </button>
+
+        <button
+          type="button"
+          class="notifications-page__bulk-button notifications-page__bulk-button--danger"
+          [disabled]="selectedNotificationIds.size === 0 || bulkActionLoading"
+          (click)="onDeleteSelected()"
+        >
+          Eliminar seleccionadas
+          <span *ngIf="selectedNotificationIds.size > 0">
+            ({{ selectedNotificationIds.size }})
+          </span>
+        </button>
+      </div>
+
       <!--
       <app-inbox-loading
         *ngIf="loading"
@@ -163,6 +189,11 @@
           hasFilteredNotifications
         "
         [notifications]="filteredNotifications"
+        [selectedIds]="selectedNotificationIdsList"
+        [allVisibleSelected]="allVisibleSelected"
+        [someVisibleSelected]="someVisibleSelected"
+        (selectionToggle)="onToggleSelection($event)"
+        (selectAllToggle)="onSelectAllVisible($event)"
         (notificationSelected)="onRowClick($event)"
       >
         <app-inbox-pagination

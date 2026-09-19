@@ -22,15 +22,39 @@ import { Notification } from '../../../../../../src/app/services/dtos/notificati
 export class NotificationListComponent {
 
   @Input() notifications: Notification[] = [];
+  @Input() selectedIds: number[] = [];
+  @Input() allVisibleSelected = false;
+  @Input() someVisibleSelected = false;
 
   @Output()
   notificationSelected =
     new EventEmitter<Notification>();
 
+  @Output() selectionToggle = new EventEmitter<number>();
+  @Output() selectAllToggle = new EventEmitter<boolean>();
+
   onNotificationClick(
     notification: Notification,
   ): void {
     this.notificationSelected.emit(notification);
+  }
+
+  onCheckboxChange(
+    event: Event,
+    notificationId: number,
+  ): void {
+    event.stopPropagation();
+    this.selectionToggle.emit(notificationId);
+  }
+
+  onSelectAllChange(event: Event): void {
+    event.stopPropagation();
+    const target = event.target as HTMLInputElement;
+    this.selectAllToggle.emit(target.checked);
+  }
+
+  isSelected(notificationId: number): boolean {
+    return this.selectedIds.includes(notificationId);
   }
 
   trackByNotificationId(

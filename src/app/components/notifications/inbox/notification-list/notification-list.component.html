@@ -15,6 +15,18 @@
       ========================== -->
       <thead>
         <tr>
+          <th class="notification-list__column notification-list__column--select">
+            <input
+              type="checkbox"
+              class="notification-list__checkbox"
+              [checked]="allVisibleSelected"
+              [indeterminate]="someVisibleSelected"
+              aria-label="Seleccionar todas las notificaciones visibles"
+              (click)="$event.stopPropagation()"
+              (change)="onSelectAllChange($event)"
+            />
+          </th>
+
           <th class="notification-list__column notification-list__column--title">
             Título
           </th>
@@ -71,6 +83,19 @@
             onNotificationClick(notification)
           "
         >
+
+          <td class="notification-list__select-cell">
+            <input
+              type="checkbox"
+              class="notification-list__checkbox"
+              [checked]="isSelected(notification.id)"
+              [attr.aria-label]="
+                'Seleccionar notificación ' + notification.title
+              "
+              (click)="$event.stopPropagation()"
+              (change)="onCheckboxChange($event, notification.id)"
+            />
+          </td>
 
           <!-- =========================
                TITLE

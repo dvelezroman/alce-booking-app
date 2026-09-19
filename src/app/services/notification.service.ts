@@ -105,6 +105,25 @@ export class NotificationService {
       );
   }
 
+  markAsRead(notificationIds: number[]): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/mark-as-read`, {
+      notificationIds,
+    });
+  }
+
+  markAllAsRead(): Observable<{ markedCount: number }> {
+    return this.http
+      .post<{ markedCount: number }>(`${this.apiUrl}/mark-all-as-read`, {})
+      .pipe(switchMap((res) => this.loadUnreadCount().pipe(map(() => res))));
+  }
+
+  deleteForUser(notificationIds: number[]): Observable<{ deletedCount: number }> {
+    return this.http.post<{ deletedCount: number }>(
+      `${this.apiUrl}/delete-for-user`,
+      { notificationIds },
+    );
+  }
+
   loadUnreadCount() {
     return this.http
       .get<{ count: number }>(`${this.apiUrl}/unread-count`)
