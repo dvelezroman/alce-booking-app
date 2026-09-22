@@ -24,8 +24,8 @@ type PersonalInfoIcon =
   | 'occupation'
   | 'phone'
   | 'email'
-  | 'comment'
-  | 'temporary-comment';
+  | 'comment';
+  // | 'temporary-comment';
 
 @Component({
   selector: 'app-profile-personal-info',
@@ -84,13 +84,13 @@ export class ProfilePersonalInfoComponent {
       //   value: this.comment,
       //   icon: 'comment',
       // },
-      {
-        label: 'Comentario temporal',
-        value: this.temporaryComment,
-        icon: 'temporary-comment',
-        isHighlighted:
-          this.temporaryComment !== '—',
-      },
+      // {
+      //   label: 'Comentario temporal',
+      //   value: this.temporaryComment,
+      //   icon: 'temporary-comment',
+      //   isHighlighted:
+      //     this.temporaryComment !== '—',
+      // },
     ];
   }
 
@@ -182,13 +182,13 @@ export class ProfilePersonalInfoComponent {
     );
   }
 
-  get temporaryComment(): string {
-    return (
-      this.user?.temporaryComment
-        ?.trim() ||
-      '—'
-    );
-  }
+  // get temporaryComment(): string {
+  //   return (
+  //     this.user?.temporaryComment
+  //       ?.trim() ||
+  //     '—'
+  //   );
+  // }
 
   onEditProfile(): void {
     this.editProfile.emit();
