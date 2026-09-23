@@ -52,6 +52,7 @@ import { CreateMeetingDto } from '../../../services/dtos/booking.dto';
 import { convertEcuadorDateToLocal, convertEcuadorHourToLocal, getTimezoneOffsetHours } from '../../../shared/utils/dates.util';
 import { getHttpErrorMessage } from '../../../shared/utils/http-error-message.util';
 import { BookingHelpBannerComponent } from "../../../components/meeting-booking-v2/booking-help-banner/booking-help-banner.component";
+import { getBlockedSchedulingUserMessage } from '../../../utils/scheduling-block-reason.util';
 
 @Component({
   selector: 'app-meeting-booking-v2',
@@ -466,30 +467,9 @@ export class MeetingBookingV2Component
   }
 
   private getBlockedSchedulingMessage(): string {
-    const reason = (this.userData?.schedulingBlockReason || '')
-      .toLowerCase()
-      .trim();
-
-    if (
-      reason.includes('invalid_email') ||
-      reason.includes('banned_email')
-    ) {
-      return 'No puedes agendar porque tu correo está bloqueado (inválido o no recibe mensajes). Actualiza tu email en Perfil para reactivar el agendamiento.';
-    }
-
-    if (reason.includes('assessment')) {
-      return 'No puedes agendar clases porque ya EXPIRARON TUS ASSESSMENTS. Para su activación, comunícate con administración.';
-    }
-
-    if (
-      reason.includes('evaluacion') ||
-      reason.includes('evaluaciones') ||
-      reason.includes('evaluation')
-    ) {
-      return 'No puedes agendar clases porque tienes evaluaciones pendientes. Complétalas para poder agendar.';
-    }
-
-    return 'No puedes agendar clases porque ya EXPIRARON TUS ASSESSMENTS. Para su activación, comunícate con administración.';
+    return getBlockedSchedulingUserMessage(
+      this.userData?.schedulingBlockReason
+    );
   }
 
   private getDisabledDates(): Observable<DisabledDays> {

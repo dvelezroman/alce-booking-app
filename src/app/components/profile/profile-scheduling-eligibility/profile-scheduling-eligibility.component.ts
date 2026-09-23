@@ -5,6 +5,7 @@ import {
 import { CommonModule } from '@angular/common';
 
 import { UserDto } from '../../../services/dtos/user.dto';
+import { formatSchedulingBlockReasonForDisplay } from '../../../utils/scheduling-block-reason.util';
 
 @Component({
   selector:
@@ -125,7 +126,11 @@ export class ProfileSchedulingEligibilityComponent {
         ?.schedulingBlockReason
         ?.trim();
 
-    return reason || null;
+    if (!reason) {
+      return null;
+    }
+
+    return formatSchedulingBlockReasonForDisplay(reason);
   }
 
   get statusType():

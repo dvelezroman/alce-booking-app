@@ -28,6 +28,7 @@ import { StudentIntroVideoComponent } from "../../home/student-intro-video/stude
 import { StudentBannerComponent } from "../../student-banner/student-banner.component";
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 import { AlceKidsAvisoComponent } from '../../home/alce-kids-aviso/alce-kids-aviso.component';
+import { getDashboardAgendaBlockMessage } from '../../../utils/scheduling-block-reason.util';
 import { AnnouncementViewerComponent } from '../../announcements/announcement-viewer/announcement-viewer.component';
 import { Announcement } from '../../../services/dtos/announcement.dto';
 import { StudentClassification } from '../../../services/dtos/student.dto';
@@ -356,34 +357,9 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   get agendaBlockMessage(): string {
-    const reason = this.userData?.schedulingBlockReason;
-
-    if (reason && reason.trim().length > 0) {
-      const normalized = reason.toLowerCase();
-
-      if (
-        normalized.includes('invalid_email') ||
-        normalized.includes('banned_email')
-      ) {
-        return 'Tu correo está bloqueado (inválido o no recibe mensajes). Actualiza tu email en Perfil para poder agendar clases.';
-      }
-
-      if (normalized.includes('assessment')) {
-        return 'Tienes assessments expirados. Debes completarlos para poder agendar nuevas clases.';
-      }
-
-      if (
-        normalized.includes('evaluacion') ||
-        normalized.includes('evaluaciones') ||
-        normalized.includes('evaluation')
-      ) {
-        return 'Tienes clases pendientes por evaluar. Debes evaluarlas antes de poder agendar nuevas clases.';
-      }
-
-      return reason;
-    }
-
-    return 'No puedes agendar nuevas clases hasta completar tus evaluaciones o assessments pendientes.';
+    return getDashboardAgendaBlockMessage(
+      this.userData?.schedulingBlockReason
+    );
   }
 
   get isKidsRestrictionActive(): boolean {

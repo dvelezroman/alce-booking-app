@@ -5,6 +5,7 @@ import {
 import { CommonModule } from '@angular/common';
 
 import { UserDto } from '../../../services/dtos/user.dto';
+import { formatSchedulingBlockReasonForDisplay } from '../../../utils/scheduling-block-reason.util';
 
 @Component({
   selector: 'app-profile-academic-status',
@@ -107,11 +108,8 @@ export class ProfileAcademicStatusComponent {
       return 'No aplica';
     }
 
-    return (
-      this.user
-        ?.schedulingBlockReason
-        ?.trim() ||
-      '—'
+    return formatSchedulingBlockReasonForDisplay(
+      this.user?.schedulingBlockReason
     );
   }
 
