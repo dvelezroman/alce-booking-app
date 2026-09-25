@@ -114,6 +114,12 @@
               Etapa
             </th>
 
+            <!-- PROGRESS -->
+            <th
+              class="searching-meeting-table__column searching-meeting-table__column--progress"
+            >
+              Progreso
+            </th>
 
             <!-- CATEGORY -->
             <th
@@ -137,14 +143,6 @@
             >
               Instructor
             </th>
-
-
-            <!-- STATUS -->
-            <!-- <th
-              class="searching-meeting-table__column searching-meeting-table__column--status"
-            >
-              Estado
-            </th> -->
 
 
             <!-- ASSIGNED BY -->
@@ -309,6 +307,32 @@
 
             </td>
 
+            <!-- =========================
+                PROGRESS
+            ========================== -->
+            <td>
+              <div class="searching-meeting-table__progress">
+
+                <span
+                  class="searching-meeting-table__progress-value"
+                  [ngClass]="getStudentProgressClass(meeting)"
+                >
+                  {{ getFormattedStudentProgress(meeting) }}
+                </span>
+
+                <div
+                  class="searching-meeting-table__progress-track"
+                  aria-hidden="true"
+                >
+                  <div
+                    class="searching-meeting-table__progress-bar"
+                    [ngClass]="getStudentProgressClass(meeting)"
+                    [style.width.%]="getStudentProgress(meeting)"
+                  ></div>
+                </div>
+              </div>
+            </td>
+
 
             <!-- =========================
                  CATEGORY
@@ -367,32 +391,6 @@
               </div>
 
             </td>
-
-
-            <!-- =========================
-                 STATUS
-            ========================== -->
-            <!-- <td>
-
-              <span
-                class="searching-meeting-table__status"
-                [class.searching-meeting-table__status--active]="
-                  meeting.status === 'ACTIVE'
-                "
-                [class.searching-meeting-table__status--inactive]="
-                  meeting.status === 'INACTIVE'
-                "
-                [class.searching-meeting-table__status--cancelled]="
-                  meeting.status === 'CANCELLED'
-                "
-                [class.searching-meeting-table__status--deleted]="
-                  meeting.status === 'DELETED'
-                "
-              >
-                {{ getStatusLabel(meeting) }}
-              </span>
-
-            </td> -->
 
 
             <!-- =========================
