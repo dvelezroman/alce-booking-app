@@ -234,6 +234,50 @@ export class SearchingMeetingTableComponent {
       : '—';
   }
 
+  /* =========================
+    PROGRESS
+  ========================= */
+
+  getStudentProgress(
+    meeting: MeetingDTO,
+  ): number {
+    return (
+      meeting.student
+        ?.progressPercentage ??
+      0
+    );
+  }
+
+  getFormattedStudentProgress(
+    meeting: MeetingDTO,
+  ): string {
+    return `${Math.round(
+      this.getStudentProgress(meeting),
+    )}%`;
+  }
+
+  getStudentProgressClass(
+    meeting: MeetingDTO,
+  ): string {
+    const progress =
+      this.getStudentProgress(
+        meeting,
+      );
+
+    if (progress <= 25) {
+      return 'searching-meeting-table__progress--low';
+    }
+
+    if (progress <= 50) {
+      return 'searching-meeting-table__progress--medium';
+    }
+
+    if (progress <= 75) {
+      return 'searching-meeting-table__progress--good';
+    }
+
+    return 'searching-meeting-table__progress--high';
+  }
 
   /* =========================
      CATEGORY
