@@ -1,69 +1,71 @@
-<section
-  class="daily-quote"
-  *ngIf="spark as item"
->
-  <header class="daily-quote__header">
-    <h3 class="daily-quote__title">
-      {{ title }}
-    </h3>
-  </header>
+<div class="daily-sparks" *ngIf="quoteSpark || triviaSpark">
+  <!-- Frase del día -->
+  <section class="daily-quote" *ngIf="quoteSpark as quote">
+    <header class="daily-quote__header">
+      <h3 class="daily-quote__title">Frase del día</h3>
+    </header>
 
-  <!-- Quote -->
-  <div class="daily-quote__content" *ngIf="!isTrivia">
-    <span
-      class="daily-quote__quotation daily-quote__quotation--opening"
-      aria-hidden="true"
-    >
-      “
-    </span>
+    <div class="daily-quote__content">
+      <span
+        class="daily-quote__quotation daily-quote__quotation--opening"
+        aria-hidden="true"
+      >
+        “
+      </span>
 
-    <blockquote class="daily-quote__blockquote">
-      <p class="daily-quote__text">
-        “{{ item.text }}”
-      </p>
+      <blockquote class="daily-quote__blockquote">
+        <p class="daily-quote__text">“{{ quote.text }}”</p>
 
-      <footer class="daily-quote__author" *ngIf="item.author">
-        — {{ item.author }}
-      </footer>
+        <footer class="daily-quote__author" *ngIf="quote.author">
+          — {{ quote.author }}
+        </footer>
 
-      <p class="daily-quote__hint" *ngIf="item.hintEs">
-        <span class="daily-quote__hint-label">Hint</span>
-        {{ item.hintEs }}
-      </p>
-    </blockquote>
-
-    <span
-      class="daily-quote__quotation daily-quote__quotation--closing"
-      aria-hidden="true"
-    >
-      ”
-    </span>
-  </div>
-
-  <!-- Trivia compact flip -->
-  <button
-    *ngIf="isTrivia"
-    type="button"
-    class="daily-quote__trivia"
-    [class.daily-quote__trivia--revealed]="revealed"
-    [attr.aria-expanded]="revealed"
-    aria-label="Toca para revelar la respuesta"
-    (click)="flip()"
-  >
-    <div class="daily-quote__trivia-inner">
-      <div class="daily-quote__trivia-face daily-quote__trivia-face--front">
-        <p class="daily-quote__text">{{ item.text }}</p>
-        <span class="daily-quote__tap" *ngIf="!revealed">Toca para revelar</span>
-      </div>
-      <div class="daily-quote__trivia-face daily-quote__trivia-face--back">
-        <p class="daily-quote__text daily-quote__text--reveal">
-          {{ item.reveal }}
+        <p class="daily-quote__hint" *ngIf="quote.hintEs">
+          <span class="daily-quote__hint-label">En español</span>
+          {{ quote.hintEs }}
         </p>
-        <p class="daily-quote__hint" *ngIf="item.hintEs">
-          <span class="daily-quote__hint-label">Hint</span>
-          {{ item.hintEs }}
-        </p>
-      </div>
+      </blockquote>
+
+      <span
+        class="daily-quote__quotation daily-quote__quotation--closing"
+        aria-hidden="true"
+      >
+        ”
+      </span>
     </div>
-  </button>
-</section>
+  </section>
+
+  <!-- Trivia del día -->
+  <section class="daily-quote daily-quote--trivia" *ngIf="triviaSpark as trivia">
+    <header class="daily-quote__header">
+      <h3 class="daily-quote__title">Trivia del día</h3>
+    </header>
+
+    <button
+      type="button"
+      class="daily-quote__trivia"
+      [class.daily-quote__trivia--revealed]="triviaRevealed"
+      [attr.aria-expanded]="triviaRevealed"
+      aria-label="Toca para revelar la respuesta"
+      (click)="flipTrivia()"
+    >
+      <div class="daily-quote__trivia-inner">
+        <div class="daily-quote__trivia-face daily-quote__trivia-face--front">
+          <p class="daily-quote__text">{{ trivia.text }}</p>
+          <span class="daily-quote__tap" *ngIf="!triviaRevealed"
+            >Toca para revelar</span
+          >
+        </div>
+        <div class="daily-quote__trivia-face daily-quote__trivia-face--back">
+          <p class="daily-quote__text daily-quote__text--reveal">
+            {{ trivia.reveal }}
+          </p>
+          <p class="daily-quote__hint" *ngIf="trivia.hintEs">
+            <span class="daily-quote__hint-label">En español</span>
+            {{ trivia.hintEs }}
+          </p>
+        </div>
+      </div>
+    </button>
+  </section>
+</div>

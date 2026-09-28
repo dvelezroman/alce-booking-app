@@ -188,7 +188,7 @@ export const DAILY_SPARKS: readonly DailySpark[] = [
     audience: 'adult',
     text: 'Silence after a mistake teaches more than fear does.',
     author: 'Anonymous',
-    hintEs: 'error',
+    hintEs: 'silencio',
   },
   {
     id: 'q-play',

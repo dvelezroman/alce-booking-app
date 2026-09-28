@@ -21,45 +21,43 @@ export class StudentDailyQuoteComponent implements OnInit, OnChanges {
   @Input() userId: number | null = null;
   @Input() classification: StudentClassification | string | null = null;
 
-  spark: DailySpark | null = null;
-  revealed = false;
+  quoteSpark: DailySpark | null = null;
+  triviaSpark: DailySpark | null = null;
+  triviaRevealed = false;
 
   constructor(private readonly dailySparkService: DailySparkService) {}
 
   ngOnInit(): void {
-    this.loadSpark();
+    this.loadSparks();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['userId'] || changes['classification']) {
-      this.loadSpark();
+      this.loadSparks();
     }
   }
 
-  get isTrivia(): boolean {
-    return this.spark?.kind === 'trivia';
-  }
-
-  get title(): string {
-    return this.isTrivia ? 'Trivia del día' : 'Frase del día';
-  }
-
-  flip(): void {
-    if (!this.isTrivia || this.revealed) {
+  flipTrivia(): void {
+    if (this.triviaRevealed) {
       return;
     }
-    this.revealed = true;
+    this.triviaRevealed = true;
   }
 
-  private loadSpark(): void {
-    this.revealed = false;
+  private loadSparks(): void {
+    this.triviaRevealed = false;
 
     if (!this.userId) {
-      this.spark = null;
+      this.quoteSpark = null;
+      this.triviaSpark = null;
       return;
     }
 
-    this.spark = this.dailySparkService.getTodaySpark(
+    this.quoteSpark = this.dailySparkService.getTodayQuote(
+      this.userId,
+      this.classification
+    );
+    this.triviaSpark = this.dailySparkService.getTodayTrivia(
       this.userId,
       this.classification
     );

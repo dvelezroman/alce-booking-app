@@ -372,12 +372,12 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     return this.filterByDisplayMode(this.announcements);
   }
 
-  get todaySpark(): DailySpark | null {
+  get todayTrivia(): DailySpark | null {
     if (!this.userData?.id) {
       return null;
     }
 
-    return this.dailySparkService.getTodaySpark(
+    return this.dailySparkService.getTodayTrivia(
       this.userData.id,
       this.userData.student?.studentClassification
     );
@@ -398,6 +398,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   get canShowSpark(): boolean {
     return (
       !!this.userData?.id &&
+      !!this.todayTrivia &&
       !(this.showSuspensionModal && !!this.suspensionInfo) &&
       !this.showUserInfoForm &&
       !this.announcementQueueActive &&
@@ -413,7 +414,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
     this.dailySparkService.markSeen(
       this.userData.id,
-      this.todaySpark?.id
+      this.todayTrivia?.id
     );
   }
 

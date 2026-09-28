@@ -36,7 +36,7 @@ export class StudentDailySparkOverlayComponent implements OnChanges {
   }
 
   get label(): string {
-    return this.isTrivia ? 'Did you know?' : 'Quote of the day';
+    return this.isTrivia ? '¿Sabías que…?' : 'Frase del día';
   }
 
   flip(): void {
