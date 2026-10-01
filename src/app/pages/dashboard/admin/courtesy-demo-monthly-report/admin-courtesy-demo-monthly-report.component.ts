@@ -11,6 +11,7 @@ import {
   type CourtesyDemoMonthlyReportSummary,
 } from '../../../../services/dtos/courtesy-demo-monthly-report.dto';
 import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message.util';
+import { LEAD_SCHEDULING_RETURN_TO_COURTESY_REPORT } from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
   selector: 'app-admin-courtesy-demo-monthly-report',
@@ -21,6 +22,7 @@ import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message
 })
 export class AdminCourtesyDemoMonthlyReportComponent implements OnInit {
   readonly outcomeLabel = COURTESY_DEMO_OUTCOME_LABEL;
+  readonly courtesyReportReturnTo = LEAD_SCHEDULING_RETURN_TO_COURTESY_REPORT;
 
   year = signal(new Date().getFullYear());
   month = signal(new Date().getMonth() + 1);

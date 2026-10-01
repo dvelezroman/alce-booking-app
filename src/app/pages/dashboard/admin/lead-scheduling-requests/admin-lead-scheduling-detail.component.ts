@@ -25,6 +25,9 @@ import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message
 import {
   isPlacementTestExam,
   isSpeakingPlacementExam,
+  LEAD_SCHEDULING_ADMIN_LIST_PATH,
+  LEAD_SCHEDULING_COURTESY_MONTHLY_REPORT_PATH,
+  LEAD_SCHEDULING_RETURN_TO_COURTESY_REPORT,
   leadSchedulingKindLabel,
   leadSchedulingModeLabel,
   leadSchedulingScheduleSummary,
@@ -47,6 +50,7 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
   saving = false;
   error: string | null = null;
   modal: ModalDto = modalInitializer();
+  private returnTo: string | null = null;
 
   readonly kindLabel: Record<LeadSchedulingRequestKind, string> = {
     DEMO_CLASS: 'Demo / cortesía',
@@ -84,6 +88,12 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.route.queryParamMap
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((q) => {
+        this.returnTo = q.get('returnTo');
+      });
+
     this.route.paramMap
       .pipe(
         takeUntil(this.destroy$),
@@ -230,8 +240,18 @@ export class AdminLeadSchedulingDetailComponent implements OnInit, OnDestroy {
     return name || admin.email || `Admin #${admin.id}`;
   }
 
+  get backTargetLabel(): string {
+    return this.returnTo === LEAD_SCHEDULING_RETURN_TO_COURTESY_REPORT
+      ? 'Volver al reporte'
+      : 'Volver al listado';
+  }
+
   goList(): void {
-    void this.router.navigate(['/dashboard/admin/lead-scheduling-requests']);
+    const path =
+      this.returnTo === LEAD_SCHEDULING_RETURN_TO_COURTESY_REPORT
+        ? LEAD_SCHEDULING_COURTESY_MONTHLY_REPORT_PATH
+        : LEAD_SCHEDULING_ADMIN_LIST_PATH;
+    void this.router.navigate([path]);
   }
 
   /** Compara valores de selects que mezclan '' con id/hora numéricos. */

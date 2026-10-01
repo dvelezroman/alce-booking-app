@@ -4,6 +4,16 @@ import {
   PlacementExamType,
 } from '../../services/dtos/lead-scheduling-request.dto';
 
+/** Query `returnTo` al abrir detalle desde el reporte mensual de cortesías. */
+export const LEAD_SCHEDULING_RETURN_TO_COURTESY_REPORT =
+  'courtesy-monthly-report' as const;
+
+export const LEAD_SCHEDULING_COURTESY_MONTHLY_REPORT_PATH =
+  '/dashboard/admin/courtesy-demo-monthly-report' as const;
+
+export const LEAD_SCHEDULING_ADMIN_LIST_PATH =
+  '/dashboard/admin/lead-scheduling-requests' as const;
+
 /** Legacy rows without placementExamType follow the speaking-test flow. */
 export function isSpeakingPlacementExam(
   kind: LeadSchedulingRequestKind,
