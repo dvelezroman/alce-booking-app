@@ -251,6 +251,7 @@ navItems: SidebarNavItem[] = [
          this.findNavItemByRoute('/dashboard/create-students'),
         this.findNavItemByRoute('/dashboard/create-staff'),
         this.findNavItemByRoute('/dashboard/admin/lead-scheduling-requests'),
+        this.findNavItemByRoute('/dashboard/admin/courtesy-demo-monthly-report'),
         this.findNavItemByRoute('/dashboard/admin/assigned-inductions'),
       ].filter(item => item.roles.includes(role))
     },

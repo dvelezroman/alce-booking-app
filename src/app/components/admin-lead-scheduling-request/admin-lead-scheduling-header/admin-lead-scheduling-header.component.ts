@@ -3,6 +3,7 @@ import {
   Component,
   Input,
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 import {
   LeadSchedulingRequestRow,
@@ -13,6 +14,7 @@ import {
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
   ],
   templateUrl: './admin-lead-scheduling-header.component.html',
   styleUrl: './admin-lead-scheduling-header.component.scss',
