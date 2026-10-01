@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import type { CourtesyDemoMonthlyReportResponse } from './dtos/courtesy-demo-monthly-report.dto';
 import {
   LeadSchedulingListResponse,
   LeadSchedulingRequestRow,
@@ -110,6 +111,30 @@ export class LeadSchedulingRequestService {
     return this.http.patch<LeadSchedulingRequestRow>(
       `${this.adminBase}/${id}`,
       body,
+    );
+  }
+
+  getCourtesyMonthlyReport(query: {
+    year: number;
+    month: number;
+    instructorId?: number;
+    advisorOfficeLabel?: string;
+  }): Observable<CourtesyDemoMonthlyReportResponse> {
+    let params = new HttpParams()
+      .set('year', String(query.year))
+      .set('month', String(query.month));
+    if (query.instructorId != null) {
+      params = params.set('instructorId', String(query.instructorId));
+    }
+    if (query.advisorOfficeLabel?.trim()) {
+      params = params.set(
+        'advisorOfficeLabel',
+        query.advisorOfficeLabel.trim(),
+      );
+    }
+    return this.http.get<CourtesyDemoMonthlyReportResponse>(
+      `${this.adminBase}/reports/courtesy-monthly`,
+      { params },
     );
   }
 }

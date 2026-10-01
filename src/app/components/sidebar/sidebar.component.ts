@@ -78,6 +78,7 @@ navItems: SidebarNavItem[] = [
   // { icon: 'school', text: 'Usuarios', route: '/dashboard/searching-students', roles: [UserRole.ADMIN] },
   { icon: 'school', text: 'Usuarios', route: '/dashboard/searching-user', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Solicitudes demo / ubicación', route: '/dashboard/admin/lead-scheduling-requests', roles: [UserRole.ADMIN] },
+  { icon: 'reportes', text: 'Reporte cortesías (mes)', route: '/dashboard/admin/courtesy-demo-monthly-report', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Mis inducciones', route: '/dashboard/admin/assigned-inductions', roles: [UserRole.ADMIN] },
   // { icon: 'asistencias-student', text: 'Asistencias Estudiantes', route: '/dashboard/attendance-student', roles: [UserRole.ADMIN] },
   { icon: 'asistencias-student', text: 'Asistencias Estudiantes', route: '/dashboard/attendance-student', roles: [UserRole.ADMIN] },

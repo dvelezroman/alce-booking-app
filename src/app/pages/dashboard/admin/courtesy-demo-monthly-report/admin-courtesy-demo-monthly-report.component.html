@@ -1,0 +1,222 @@
+<section class="courtesy-report-page">
+  <div class="courtesy-report-page__container">
+    <header class="courtesy-report-page__header">
+      <div>
+        <h1 class="courtesy-report-page__title">Reporte mensual — cortesías</h1>
+        <p class="courtesy-report-page__subtitle">
+          Clases demo en ALCE por mes calendario (fecha de clase agendada).
+          Inscripción comercial sigue en Contracts.
+        </p>
+      </div>
+      <a
+        class="courtesy-report-page__back"
+        routerLink="/dashboard/admin/lead-scheduling-requests"
+      >
+        ← Solicitudes demo
+      </a>
+    </header>
+
+    <div class="courtesy-report-page__filters box">
+      <div class="field">
+        <label class="label" for="report-year">Año</label>
+        <input
+          id="report-year"
+          class="input"
+          type="number"
+          min="2000"
+          max="2100"
+          [ngModel]="year()"
+          (ngModelChange)="year.set(+$event); onPeriodChange()"
+        />
+      </div>
+      <div class="field">
+        <label class="label" for="report-month">Mes</label>
+        <div class="select is-fullwidth">
+          <select
+            id="report-month"
+            [ngModel]="month()"
+            (ngModelChange)="month.set(+$event); onPeriodChange()"
+          >
+            @for (m of [1,2,3,4,5,6,7,8,9,10,11,12]; track m) {
+              <option [ngValue]="m">{{ m | number: '2.0-0' }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="report-instructor">Instructor</label>
+        <div class="select is-fullwidth">
+          <select
+            id="report-instructor"
+            [ngModel]="instructorFilter()"
+            (ngModelChange)="onInstructorChange($event)"
+          >
+            <option value="all">Todos</option>
+            @for (i of instructorOptions(); track i.instructorId) {
+              <option
+                [value]="i.instructorId != null ? i.instructorId : 'none'"
+                [disabled]="i.instructorId == null"
+              >
+                {{ i.instructorName || 'Sin instructor' }}
+              </option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="report-office">Sede asesor</label>
+        <div class="select is-fullwidth">
+          <select
+            id="report-office"
+            [ngModel]="officeFilter()"
+            (ngModelChange)="onOfficeChange($event)"
+          >
+            <option value="all">Todas</option>
+            @for (o of officeOptions(); track o) {
+              <option [value]="o">{{ o }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="field courtesy-report-page__refresh">
+        <label class="label">&nbsp;</label>
+        <button
+          type="button"
+          class="button is-link"
+          [disabled]="loading()"
+          (click)="loadReport()"
+        >
+          {{ loading() ? 'Cargando…' : 'Actualizar' }}
+        </button>
+      </div>
+    </div>
+
+    @if (error()) {
+      <div class="notification is-danger" role="alert">{{ error() }}</div>
+    }
+
+    @if (summary(); as s) {
+      <div class="courtesy-report-page__kpis">
+        <div class="box courtesy-report-page__kpi">
+          <p class="heading">Periodo</p>
+          <p class="title is-5">{{ s.periodLabel }}</p>
+        </div>
+        <div class="box courtesy-report-page__kpi">
+          <p class="heading">Total en mes</p>
+          <p class="title is-5">{{ s.total }}</p>
+        </div>
+        <div class="box courtesy-report-page__kpi">
+          <p class="heading">Asistieron</p>
+          <p class="title is-5">{{ s.attended }}</p>
+        </div>
+        <div class="box courtesy-report-page__kpi">
+          <p class="heading">No asistieron</p>
+          <p class="title is-5">{{ s.notAttended }}</p>
+        </div>
+        <div class="box courtesy-report-page__kpi">
+          <p class="heading">Incumplidas</p>
+          <p class="title is-5">{{ s.breached }}</p>
+        </div>
+        <div class="box courtesy-report-page__kpi">
+          <p class="heading">Pendientes</p>
+          <p class="title is-5">{{ s.pending }}</p>
+        </div>
+        <div class="box courtesy-report-page__kpi">
+          <p class="heading">Tasa asistencia</p>
+          <p class="title is-5">{{ formatRate(s.attendanceRatePrimary) }}</p>
+        </div>
+      </div>
+
+      @if (s.sinFechaAlceCount > 0) {
+        <div class="notification is-warning is-light">
+          {{ s.sinFechaAlceCount }} cortesía(s) sin fecha de clase agendada (no
+          entran en este mes). Asigne fecha desde solicitudes demo.
+        </div>
+      }
+
+      @if (data()?.byInstructor?.length) {
+        <div class="box courtesy-report-page__table-wrap">
+          <h2 class="title is-6">Por instructor</h2>
+          <table class="table is-fullwidth is-striped is-hoverable">
+            <thead>
+              <tr>
+                <th>Instructor</th>
+                <th>Total</th>
+                <th>Asistió</th>
+                <th>No asistió</th>
+                <th>Incumplida</th>
+                <th>Pendiente</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (i of data()!.byInstructor; track i.instructorId) {
+                <tr>
+                  <td>{{ i.instructorName || '—' }}</td>
+                  <td>{{ i.total }}</td>
+                  <td>{{ i.attended }}</td>
+                  <td>{{ i.notAttended }}</td>
+                  <td>{{ i.breached }}</td>
+                  <td>{{ i.pending }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <div class="box courtesy-report-page__table-wrap">
+        <h2 class="title is-6">Detalle ({{ filteredRows().length }})</h2>
+        <div class="courtesy-report-page__scroll">
+          <table class="table is-fullwidth is-striped is-hoverable">
+            <thead>
+              <tr>
+                <th>Lead</th>
+                <th>Documento</th>
+                <th>Clase</th>
+                <th>Modalidad</th>
+                <th>Instructor</th>
+                <th>Asesor</th>
+                <th>Sede</th>
+                <th>Resultado</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of filteredRows(); track row.id) {
+                <tr>
+                  <td>{{ row.firstName }} {{ row.lastName }}</td>
+                  <td>{{ row.idNumber || '—' }}</td>
+                  <td>{{ formatSlot(row) }}</td>
+                  <td>{{ row.mode || '—' }}</td>
+                  <td>{{ row.instructorName || '—' }}</td>
+                  <td>{{ row.requestingAdvisorName || '—' }}</td>
+                  <td>{{ row.requestingAdvisorOfficeLabel || '—' }}</td>
+                  <td>
+                    <span
+                      class="tag"
+                      [class.is-success]="row.outcome === 'attended'"
+                      [class.is-warning]="row.outcome === 'pending'"
+                      [class.is-danger]="
+                        row.outcome === 'breached' ||
+                        row.outcome === 'not_attended'
+                      "
+                    >
+                      {{ outcomeLabel[row.outcome] }}
+                    </span>
+                  </td>
+                  <td>
+                    <a [routerLink]="['/dashboard/admin/lead-scheduling-requests', row.id]">
+                      Ver
+                    </a>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @else if (!loading() && !error()) {
+      <p class="courtesy-report-page__empty">Sin datos para el periodo.</p>
+    }
+  </div>
+</section>

@@ -61,6 +61,7 @@ import { InstructorCreatedMeetingsComponent } from './instructor-created-meeting
 import { AnnouncementsComponent } from './announcements/announcements.component';
 import { adminOnlyGuard } from '../auth/admin-role.guard';
 import { instructorOnlyGuard } from '../auth/instructor-role.guard';
+import { AdminCourtesyDemoMonthlyReportComponent } from './admin/courtesy-demo-monthly-report/admin-courtesy-demo-monthly-report.component';
 import { AdminLeadSchedulingDetailComponent } from './admin/lead-scheduling-requests/admin-lead-scheduling-detail.component';
 import { AdminLeadSchedulingListComponent } from './admin/lead-scheduling-requests/admin-lead-scheduling-list.component';
 import { AdminAssignedInductionsDetailComponent } from './admin/assigned-inductions/admin-assigned-inductions-detail.component';
@@ -114,6 +115,10 @@ const dashboardChildren: Routes = [
     path: 'admin',
     canActivate: [adminOnlyGuard],
     children: [
+      {
+        path: 'courtesy-demo-monthly-report',
+        component: AdminCourtesyDemoMonthlyReportComponent,
+      },
       {
         path: 'lead-scheduling-requests',
         component: AdminLeadSchedulingListComponent,
