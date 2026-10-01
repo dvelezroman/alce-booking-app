@@ -89,6 +89,45 @@ export class AdminCourtesyDemoMonthlyReportComponent implements OnInit {
     return `${rate}%`;
   }
 
+  monthLabel(m: number): string {
+    const names = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre',
+    ];
+    const name = names[m - 1] ?? String(m);
+    return `${String(m).padStart(2, '0')} — ${name}`;
+  }
+
+  kpiCards(s: CourtesyDemoMonthlyReportSummary): {
+    label: string;
+    value: string;
+    tone?: 'accent' | 'success' | 'muted';
+  }[] {
+    return [
+      { label: 'Periodo', value: s.periodLabel, tone: 'accent' },
+      { label: 'Total en mes', value: String(s.total) },
+      { label: 'Asistieron', value: String(s.attended), tone: 'success' },
+      { label: 'No asistieron', value: String(s.notAttended) },
+      { label: 'Incumplidas', value: String(s.breached) },
+      { label: 'Pendientes', value: String(s.pending), tone: 'muted' },
+      {
+        label: 'Tasa asistencia',
+        value: this.formatRate(s.attendanceRatePrimary),
+        tone: 'accent',
+      },
+    ];
+  }
+
   private buildQuery(): {
     year: number;
     month: number;

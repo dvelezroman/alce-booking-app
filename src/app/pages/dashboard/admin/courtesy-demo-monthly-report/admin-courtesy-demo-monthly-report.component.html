@@ -1,173 +1,165 @@
-<section class="courtesy-report-page">
-  <div class="courtesy-report-page__container">
-    <header class="courtesy-report-page__header">
-      <div>
-        <h1 class="courtesy-report-page__title">Reporte mensual — cortesías</h1>
-        <p class="courtesy-report-page__subtitle">
+<section class="lead-scheduling-page courtesy-report-page">
+  <div class="lead-scheduling-page__container">
+    <header class="courtesy-report-header">
+      <div class="courtesy-report-header__text">
+        <h1 class="courtesy-report-header__title">Reporte mensual — cortesías</h1>
+        <p class="courtesy-report-header__description">
           Clases demo en ALCE por mes calendario (fecha de clase agendada).
-          Inscripción comercial sigue en Contracts.
+          La inscripción comercial se gestiona en Contracts.
         </p>
       </div>
       <a
-        class="courtesy-report-page__back"
+        class="courtesy-report-header__back"
         routerLink="/dashboard/admin/lead-scheduling-requests"
       >
         ← Solicitudes demo
       </a>
     </header>
 
-    <div class="courtesy-report-page__filters box">
-      <div class="field">
-        <label class="label" for="report-year">Año</label>
-        <input
-          id="report-year"
-          class="input"
-          type="number"
-          min="2000"
-          max="2100"
-          [ngModel]="year()"
-          (ngModelChange)="year.set(+$event); onPeriodChange()"
-        />
-      </div>
-      <div class="field">
-        <label class="label" for="report-month">Mes</label>
-        <div class="select is-fullwidth">
-          <select
-            id="report-month"
-            [ngModel]="month()"
-            (ngModelChange)="month.set(+$event); onPeriodChange()"
-          >
-            @for (m of [1,2,3,4,5,6,7,8,9,10,11,12]; track m) {
-              <option [ngValue]="m">{{ m | number: '2.0-0' }}</option>
-            }
-          </select>
+    <div class="courtesy-report-filters">
+      <div class="courtesy-report-filters__fields">
+        <div class="courtesy-report-filters__field">
+          <label class="courtesy-report-filters__label" for="report-year">Año</label>
+          <input
+            id="report-year"
+            class="courtesy-report-filters__input"
+            type="number"
+            min="2000"
+            max="2100"
+            [ngModel]="year()"
+            (ngModelChange)="year.set(+$event); onPeriodChange()"
+          />
+        </div>
+        <div class="courtesy-report-filters__field">
+          <label class="courtesy-report-filters__label" for="report-month">Mes</label>
+          <div class="courtesy-report-filters__select-wrap">
+            <select
+              id="report-month"
+              class="courtesy-report-filters__select"
+              [ngModel]="month()"
+              (ngModelChange)="month.set(+$event); onPeriodChange()"
+            >
+              @for (m of [1,2,3,4,5,6,7,8,9,10,11,12]; track m) {
+                <option [ngValue]="m">{{ monthLabel(m) }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="courtesy-report-filters__field">
+          <label class="courtesy-report-filters__label" for="report-instructor">Instructor</label>
+          <div class="courtesy-report-filters__select-wrap">
+            <select
+              id="report-instructor"
+              class="courtesy-report-filters__select"
+              [ngModel]="instructorFilter()"
+              (ngModelChange)="onInstructorChange($event)"
+            >
+              <option value="all">Todos</option>
+              @for (i of instructorOptions(); track i.instructorId) {
+                <option
+                  [value]="i.instructorId != null ? i.instructorId : 'none'"
+                  [disabled]="i.instructorId == null"
+                >
+                  {{ i.instructorName || 'Sin instructor' }}
+                </option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="courtesy-report-filters__field">
+          <label class="courtesy-report-filters__label" for="report-office">Sede asesor</label>
+          <div class="courtesy-report-filters__select-wrap">
+            <select
+              id="report-office"
+              class="courtesy-report-filters__select"
+              [ngModel]="officeFilter()"
+              (ngModelChange)="onOfficeChange($event)"
+            >
+              <option value="all">Todas</option>
+              @for (o of officeOptions(); track o) {
+                <option [value]="o">{{ o }}</option>
+              }
+            </select>
+          </div>
         </div>
       </div>
-      <div class="field">
-        <label class="label" for="report-instructor">Instructor</label>
-        <div class="select is-fullwidth">
-          <select
-            id="report-instructor"
-            [ngModel]="instructorFilter()"
-            (ngModelChange)="onInstructorChange($event)"
-          >
-            <option value="all">Todos</option>
-            @for (i of instructorOptions(); track i.instructorId) {
-              <option
-                [value]="i.instructorId != null ? i.instructorId : 'none'"
-                [disabled]="i.instructorId == null"
-              >
-                {{ i.instructorName || 'Sin instructor' }}
-              </option>
-            }
-          </select>
-        </div>
-      </div>
-      <div class="field">
-        <label class="label" for="report-office">Sede asesor</label>
-        <div class="select is-fullwidth">
-          <select
-            id="report-office"
-            [ngModel]="officeFilter()"
-            (ngModelChange)="onOfficeChange($event)"
-          >
-            <option value="all">Todas</option>
-            @for (o of officeOptions(); track o) {
-              <option [value]="o">{{ o }}</option>
-            }
-          </select>
-        </div>
-      </div>
-      <div class="field courtesy-report-page__refresh">
-        <label class="label">&nbsp;</label>
+      <div class="courtesy-report-filters__actions">
         <button
           type="button"
-          class="button is-link"
+          class="courtesy-report-filters__button courtesy-report-filters__button--primary"
           [disabled]="loading()"
           (click)="loadReport()"
         >
-          {{ loading() ? 'Cargando…' : 'Actualizar' }}
+          {{ loading() ? 'Cargando…' : 'Actualizar reporte' }}
         </button>
       </div>
     </div>
 
     @if (error()) {
-      <div class="notification is-danger" role="alert">{{ error() }}</div>
+      <div class="lead-scheduling-page__error" role="alert">
+        <span>{{ error() }}</span>
+      </div>
+    }
+
+    @if (loading() && !summary()) {
+      <div class="courtesy-report-page__loading" aria-live="polite">
+        Cargando datos del periodo…
+      </div>
     }
 
     @if (summary(); as s) {
-      <div class="courtesy-report-page__kpis">
-        <div class="box courtesy-report-page__kpi">
-          <p class="heading">Periodo</p>
-          <p class="title is-5">{{ s.periodLabel }}</p>
-        </div>
-        <div class="box courtesy-report-page__kpi">
-          <p class="heading">Total en mes</p>
-          <p class="title is-5">{{ s.total }}</p>
-        </div>
-        <div class="box courtesy-report-page__kpi">
-          <p class="heading">Asistieron</p>
-          <p class="title is-5">{{ s.attended }}</p>
-        </div>
-        <div class="box courtesy-report-page__kpi">
-          <p class="heading">No asistieron</p>
-          <p class="title is-5">{{ s.notAttended }}</p>
-        </div>
-        <div class="box courtesy-report-page__kpi">
-          <p class="heading">Incumplidas</p>
-          <p class="title is-5">{{ s.breached }}</p>
-        </div>
-        <div class="box courtesy-report-page__kpi">
-          <p class="heading">Pendientes</p>
-          <p class="title is-5">{{ s.pending }}</p>
-        </div>
-        <div class="box courtesy-report-page__kpi">
-          <p class="heading">Tasa asistencia</p>
-          <p class="title is-5">{{ formatRate(s.attendanceRatePrimary) }}</p>
-        </div>
+      <div class="courtesy-report-kpis">
+        @for (kpi of kpiCards(s); track kpi.label) {
+          <div class="courtesy-report-kpis__card" [class]="kpi.tone ? 'courtesy-report-kpis__card--' + kpi.tone : ''">
+            <span class="courtesy-report-kpis__label">{{ kpi.label }}</span>
+            <strong class="courtesy-report-kpis__value">{{ kpi.value }}</strong>
+          </div>
+        }
       </div>
 
       @if (s.sinFechaAlceCount > 0) {
-        <div class="notification is-warning is-light">
-          {{ s.sinFechaAlceCount }} cortesía(s) sin fecha de clase agendada (no
-          entran en este mes). Asigne fecha desde solicitudes demo.
+        <div class="courtesy-report-alert courtesy-report-alert--warning">
+          {{ s.sinFechaAlceCount }} cortesía(s) sin fecha de clase agendada (no entran en este mes).
+          Asigne fecha desde solicitudes demo.
         </div>
       }
 
       @if (data()?.byInstructor?.length) {
-        <div class="box courtesy-report-page__table-wrap">
-          <h2 class="title is-6">Por instructor</h2>
-          <table class="table is-fullwidth is-striped is-hoverable">
-            <thead>
-              <tr>
-                <th>Instructor</th>
-                <th>Total</th>
-                <th>Asistió</th>
-                <th>No asistió</th>
-                <th>Incumplida</th>
-                <th>Pendiente</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (i of data()!.byInstructor; track i.instructorId) {
+        <div class="lead-scheduling-page__results courtesy-report-panel">
+          <h2 class="courtesy-report-panel__title">Por instructor</h2>
+          <div class="courtesy-report-table__wrap">
+            <table class="courtesy-report-table">
+              <thead>
                 <tr>
-                  <td>{{ i.instructorName || '—' }}</td>
-                  <td>{{ i.total }}</td>
-                  <td>{{ i.attended }}</td>
-                  <td>{{ i.notAttended }}</td>
-                  <td>{{ i.breached }}</td>
-                  <td>{{ i.pending }}</td>
+                  <th>Instructor</th>
+                  <th>Total</th>
+                  <th>Asistió</th>
+                  <th>No asistió</th>
+                  <th>Incumplida</th>
+                  <th>Pendiente</th>
                 </tr>
-              }
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                @for (i of data()!.byInstructor; track i.instructorId) {
+                  <tr>
+                    <td>{{ i.instructorName || '—' }}</td>
+                    <td>{{ i.total }}</td>
+                    <td>{{ i.attended }}</td>
+                    <td>{{ i.notAttended }}</td>
+                    <td>{{ i.breached }}</td>
+                    <td>{{ i.pending }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       }
 
-      <div class="box courtesy-report-page__table-wrap">
-        <h2 class="title is-6">Detalle ({{ filteredRows().length }})</h2>
-        <div class="courtesy-report-page__scroll">
-          <table class="table is-fullwidth is-striped is-hoverable">
+      <div class="lead-scheduling-page__results courtesy-report-panel">
+        <h2 class="courtesy-report-panel__title">Detalle ({{ filteredRows().length }})</h2>
+        <div class="courtesy-report-table__wrap">
+          <table class="courtesy-report-table courtesy-report-table--detail">
             <thead>
               <tr>
                 <th>Lead</th>
@@ -192,20 +184,15 @@
                   <td>{{ row.requestingAdvisorName || '—' }}</td>
                   <td>{{ row.requestingAdvisorOfficeLabel || '—' }}</td>
                   <td>
-                    <span
-                      class="tag"
-                      [class.is-success]="row.outcome === 'attended'"
-                      [class.is-warning]="row.outcome === 'pending'"
-                      [class.is-danger]="
-                        row.outcome === 'breached' ||
-                        row.outcome === 'not_attended'
-                      "
-                    >
+                    <span class="courtesy-report-outcome" [attr.data-outcome]="row.outcome">
                       {{ outcomeLabel[row.outcome] }}
                     </span>
                   </td>
                   <td>
-                    <a [routerLink]="['/dashboard/admin/lead-scheduling-requests', row.id]">
+                    <a
+                      class="courtesy-report-table__link"
+                      [routerLink]="['/dashboard/admin/lead-scheduling-requests', row.id]"
+                    >
                       Ver
                     </a>
                   </td>
@@ -216,7 +203,9 @@
         </div>
       </div>
     } @else if (!loading() && !error()) {
-      <p class="courtesy-report-page__empty">Sin datos para el periodo.</p>
+      <div class="courtesy-report-empty">
+        Sin datos para el periodo seleccionado.
+      </div>
     }
   </div>
 </section>
