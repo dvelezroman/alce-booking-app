@@ -496,6 +496,72 @@
   </section>
 
   <!-- ================================
+       RESULTADOS LISTOS (S2S)
+  ================================= -->
+  <section
+    *ngIf="isAssessmentResultsReadyNotification"
+    class="
+      notification-detail-content__section
+      notification-detail-content__section--bordered
+    "
+  >
+    <span class="notification-detail-content__label">
+      Mensaje
+    </span>
+
+    <div class="assessment-card">
+      <div class="assessment-card__header">
+        <div>
+          <p class="assessment-card__eyebrow">
+            Resultados listos
+          </p>
+          <h3 class="assessment-card__title">
+            {{ notification.message.templateTitle || notification.title }}
+          </h3>
+        </div>
+        <span
+          class="assessment-card__badge"
+          [class.assessment-card__badge--expired]="assessmentResultsPassed === false"
+        >
+          {{ assessmentResultsOutcomeLabel }}
+        </span>
+      </div>
+
+      <p class="assessment-card__lead">
+        Ya puedes consultar el detalle de tu evaluación: preguntas fallidas y feedback (sin nota numérica).
+      </p>
+
+      <ng-container *ngIf="assessmentResultsUrl">
+        <a
+          class="assessment-card__cta"
+          [href]="assessmentResultsUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ver resultados
+        </a>
+        <p class="assessment-card__link-label">Enlace al assessment</p>
+        <a
+          class="assessment-card__url"
+          [href]="assessmentResultsUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >{{ assessmentResultsUrl }}</a>
+      </ng-container>
+
+      <dl
+        *ngIf="notification.message?.studentStage != null"
+        class="assessment-card__meta"
+      >
+        <div>
+          <dt>Stage</dt>
+          <dd>{{ notification.message.studentStage }}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ================================
        ASSESSMENT RETIRADO
   ================================= -->
   <section

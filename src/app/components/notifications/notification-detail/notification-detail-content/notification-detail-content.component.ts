@@ -208,6 +208,38 @@ export class NotificationDetailContentComponent {
     return this.notification?.message?.kind === 'assessment-unassigned';
   }
 
+  get isAssessmentResultsReadyNotification(): boolean {
+    return this.notification?.message?.kind === 'assessment-results-ready';
+  }
+
+  get assessmentResultsUrl(): string | null {
+    const url = this.notification?.message?.resultsUrl?.trim();
+    return url || null;
+  }
+
+  get assessmentResultsOutcomeLabel(): string {
+    const outcome = this.notification?.message?.outcome;
+    if (outcome === 'PASSED') return 'Aprobado';
+    if (outcome === 'FAILED') return 'No aprobado';
+    return '—';
+  }
+
+  get assessmentResultsPassed(): boolean | null {
+    const outcome = this.notification?.message?.outcome;
+    if (outcome === 'PASSED') return true;
+    if (outcome === 'FAILED') return false;
+    return null;
+  }
+
+  openAssessmentResults(): void {
+    if (!this.assessmentResultsUrl) return;
+    window.open(
+      this.assessmentResultsUrl,
+      '_blank',
+      'noopener,noreferrer',
+    );
+  }
+
   get isAssessmentRetake(): boolean {
     return this.notification?.message?.reason === 'RETAKE';
   }
