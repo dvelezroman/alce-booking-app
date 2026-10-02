@@ -1,0 +1,243 @@
+:host {
+  display: contents;
+}
+
+.notification-delete-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.notification-delete-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgb(15 23 42 / 0.52);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  pointer-events: auto;
+  animation: notification-delete-fade-in 0.2s ease;
+}
+
+.notification-delete-modal__backdrop:disabled {
+  cursor: wait;
+}
+
+.notification-delete-modal__dialog {
+  position: relative;
+  width: min(100%, 26rem);
+  padding: 1.35rem 1.35rem 1.15rem;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);
+  box-shadow:
+    0 1.25rem 3rem rgb(15 23 42 / 0.18),
+    0 0 0 1px rgb(255 255 255 / 0.6) inset;
+  pointer-events: auto;
+  animation: notification-delete-slide-up 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.notification-delete-modal__icon-wrap {
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.85rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #fef2f2;
+  color: #b42318;
+  border: 1px solid #fecaca;
+}
+
+.notification-delete-modal__icon {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.notification-delete-modal__header {
+  margin-bottom: 0.95rem;
+}
+
+.notification-delete-modal__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #b42318;
+}
+
+.notification-delete-modal__title {
+  margin: 0 0 0.45rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #1b2245;
+}
+
+.notification-delete-modal__subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #4b5565;
+}
+
+.notification-delete-modal__preview {
+  margin-bottom: 1.1rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e5eaf3;
+  background: #ffffff;
+}
+
+.notification-delete-modal__preview-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.notification-delete-modal__preview-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.notification-delete-modal__preview-dot {
+  flex-shrink: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-top: 0.45rem;
+  border-radius: 999px;
+  background: #94a3b8;
+}
+
+.notification-delete-modal__preview-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #27304f;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notification-delete-modal__preview-more {
+  margin: 0.55rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.notification-delete-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.notification-delete-modal__button {
+  min-height: 2.45rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.6rem;
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.12s ease,
+    opacity 0.15s ease;
+}
+
+.notification-delete-modal__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.notification-delete-modal__button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.notification-delete-modal__button--ghost {
+  background: #ffffff;
+  border-color: #d8dee9;
+  color: #27304f;
+}
+
+.notification-delete-modal__button--ghost:not(:disabled):hover {
+  background: #f8fafc;
+}
+
+.notification-delete-modal__button--danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: #b42318;
+  border-color: #991b1b;
+  color: #ffffff;
+  box-shadow: 0 0.35rem 0.9rem rgb(180 35 24 / 0.28);
+}
+
+.notification-delete-modal__button--danger:not(:disabled):hover {
+  background: #991b1b;
+}
+
+.notification-delete-modal__spinner {
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 999px;
+  border: 2px solid rgb(255 255 255 / 0.35);
+  border-top-color: #ffffff;
+  animation: notification-delete-spin 0.7s linear infinite;
+}
+
+@keyframes notification-delete-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes notification-delete-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.65rem) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes notification-delete-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .notification-delete-modal__actions {
+    flex-direction: column-reverse;
+  }
+
+  .notification-delete-modal__button {
+    width: 100%;
+  }
+}

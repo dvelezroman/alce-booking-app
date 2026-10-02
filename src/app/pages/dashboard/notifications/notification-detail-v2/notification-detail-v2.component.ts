@@ -50,6 +50,10 @@ import {
 import {
   ModalComponent,
 } from '../../../../components/modal/modal.component';
+
+import {
+  NotificationDeleteConfirmModalComponent,
+} from '../../../../components/notifications/notification-delete-confirm-modal/notification-delete-confirm-modal.component';
 import {
   ModalDto,
   modalInitializer,
@@ -88,6 +92,7 @@ import { NotificationDetailLoadingComponent } from '../../../../components/notif
     RouterModule,
 
     ModalComponent,
+    NotificationDeleteConfirmModalComponent,
     SafeNoteHtmlPipe,
     StudentEditModalComponent,
 
@@ -123,6 +128,7 @@ export class NotificationDetailV2Component
 
   modal: ModalDto = modalInitializer();
   deleting = false;
+  showDeleteConfirmModal = false;
   showAllRecipients = false;
   currentUserId?: number;
   showRecipients = false;
@@ -1450,43 +1456,38 @@ export class NotificationDetailV2Component
   }
 
   onDeleteClick(): void {
-    if (!this.notification?.id) {
+    if (!this.notification?.id || this.deleting) {
       return;
     }
 
-    this.openConfirmDelete(
-      this.notification.id,
-    );
+    this.showDeleteConfirmModal = true;
   }
 
-  private openConfirmDelete(
-    notificationId: number,
-  ): void {
-    this.modal = {
-      ...modalInitializer(),
-      show: true,
-      title: 'Eliminar notificación',
-      message:
-        '¿Deseas eliminar esta notificación? Esta acción no se puede deshacer.',
-      isInfo: true,
-      showButtons: true,
+  onCancelDeleteConfirm(): void {
+    if (this.deleting) {
+      return;
+    }
 
-      close: () => {
-        this.modal.show = false;
-      },
+    this.showDeleteConfirmModal = false;
+  }
 
-      confirm: () => {
-        this.confirmDelete(
-          notificationId,
-        );
-      },
-    };
+  onConfirmDeleteSelected(): void {
+    const notificationId = this.notification?.id;
+
+    if (!notificationId || this.deleting) {
+      return;
+    }
+
+    this.confirmDelete(notificationId);
+  }
+
+  get notificationsForDeleteConfirm(): Notification[] {
+    return this.notification ? [this.notification] : [];
   }
 
   private confirmDelete(
     notificationId: number,
   ): void {
-    this.modal.show = false;
     this.deleting = true;
 
     this.notificationService
@@ -1497,6 +1498,7 @@ export class NotificationDetailV2Component
       .subscribe({
         next: () => {
           this.deleting = false;
+          this.showDeleteConfirmModal = false;
 
           this.showModalMessage({
             title:
@@ -1513,6 +1515,7 @@ export class NotificationDetailV2Component
 
         error: () => {
           this.deleting = false;
+          this.showDeleteConfirmModal = false;
 
           this.showModalMessage({
             title:

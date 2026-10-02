@@ -1,0 +1,116 @@
+<div
+  *ngIf="open"
+  class="notification-delete-modal"
+  role="presentation"
+>
+  <button
+    type="button"
+    class="notification-delete-modal__backdrop"
+    [attr.aria-hidden]="!open"
+    [disabled]="loading"
+    (click)="onBackdropClick()"
+  ></button>
+
+  <div
+    class="notification-delete-modal__dialog"
+    role="alertdialog"
+    aria-modal="true"
+    aria-labelledby="notification-delete-modal-title"
+    aria-describedby="notification-delete-modal-desc"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="notification-delete-modal__icon-wrap" aria-hidden="true">
+      <svg
+        class="notification-delete-modal__icon"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7h12Z"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M10 11v6M14 11v6"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+
+    <header class="notification-delete-modal__header">
+      <p class="notification-delete-modal__eyebrow">{{ eyebrowText }}</p>
+      <h2
+        id="notification-delete-modal-title"
+        class="notification-delete-modal__title"
+      >
+        {{ dialogTitle }}
+      </h2>
+      <p
+        id="notification-delete-modal-desc"
+        class="notification-delete-modal__subtitle"
+      >
+        {{ dialogDescription }}
+      </p>
+    </header>
+
+    <div
+      *ngIf="count > 0"
+      class="notification-delete-modal__preview"
+      aria-label="Vista previa de notificaciones a eliminar"
+    >
+      <ul class="notification-delete-modal__preview-list">
+        <li
+          *ngFor="
+            let notification of previewItems;
+            trackBy: trackById
+          "
+          class="notification-delete-modal__preview-item"
+        >
+          <span
+            class="notification-delete-modal__preview-dot"
+            aria-hidden="true"
+          ></span>
+          <span class="notification-delete-modal__preview-title">
+            {{ displayTitle(notification) }}
+          </span>
+        </li>
+      </ul>
+
+      <p
+        *ngIf="overflowCount > 0"
+        class="notification-delete-modal__preview-more"
+      >
+        y {{ overflowCount }} más…
+      </p>
+    </div>
+
+    <footer class="notification-delete-modal__actions">
+      <button
+        type="button"
+        class="notification-delete-modal__button notification-delete-modal__button--ghost"
+        [disabled]="loading"
+        (click)="cancel.emit()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="notification-delete-modal__button notification-delete-modal__button--danger"
+        [disabled]="loading || count === 0"
+        (click)="onConfirmClick()"
+      >
+        <span
+          *ngIf="loading"
+          class="notification-delete-modal__spinner"
+          aria-hidden="true"
+        ></span>
+        {{ deleteButtonLabel }}
+      </button>
+    </footer>
+  </div>
+</div>

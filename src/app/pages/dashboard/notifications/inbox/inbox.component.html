@@ -234,4 +234,25 @@
     </aside>
 
   </div>
+
+  <app-notification-delete-confirm-modal
+    variant="inbox"
+    [open]="showDeleteConfirmModal"
+    [loading]="deleteConfirmLoading"
+    [notifications]="selectedNotificationsForDelete"
+    (cancel)="onCancelDeleteConfirm()"
+    (confirm)="onConfirmDeleteSelected()"
+  />
+
+  <app-modal
+    [showModal]="modal.show"
+    [message]="modal.message"
+    [isError]="modal.isError"
+    [isSuccess]="modal.isSuccess"
+    [isInfo]="modal.isInfo"
+    [title]="modal.title || ''"
+    [showButtons]="modal.showButtons ?? false"
+    (confirmAction)="modal.confirm && modal.confirm()"
+    (close)="modal.close()"
+  />
 </section>

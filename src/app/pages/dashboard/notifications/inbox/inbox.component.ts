@@ -57,6 +57,16 @@ import {
   InboxErrorComponent,
 } from '../../../../components/notifications/inbox/inbox-error/inbox-error.component';
 
+import {
+  NotificationDeleteConfirmModalComponent,
+} from '../../../../components/notifications/notification-delete-confirm-modal/notification-delete-confirm-modal.component';
+
+import { ModalComponent } from '../../../../components/modal/modal.component';
+import {
+  ModalDto,
+  modalInitializer,
+} from '../../../../components/modal/modal.dto';
+
 export interface NotificationTypeSummary {
   type: Notification['notificationType'];
   label: string;
@@ -77,6 +87,8 @@ export interface NotificationTypeSummary {
     InboxLoadingComponent,
     InboxEmptyComponent,
     InboxErrorComponent,
+    NotificationDeleteConfirmModalComponent,
+    ModalComponent,
   ],
   templateUrl: './inbox.component.html',
   styleUrl: './inbox.component.scss',
@@ -98,6 +110,9 @@ export class InboxComponent implements OnInit {
   errorMsg = '';
   selectedNotificationIds = new Set<number>();
   bulkActionLoading = false;
+  showDeleteConfirmModal = false;
+  deleteConfirmLoading = false;
+  modal: ModalDto = modalInitializer();
 
   filters: InboxFilters = {
     search: '',
@@ -265,34 +280,74 @@ export class InboxComponent implements OnInit {
   }
 
   onDeleteSelected(): void {
+    if (
+      this.selectedNotificationIds.size === 0 ||
+      this.bulkActionLoading ||
+      this.deleteConfirmLoading
+    ) {
+      return;
+    }
+
+    this.showDeleteConfirmModal = true;
+  }
+
+  onCancelDeleteConfirm(): void {
+    if (this.deleteConfirmLoading) {
+      return;
+    }
+
+    this.showDeleteConfirmModal = false;
+  }
+
+  onConfirmDeleteSelected(): void {
     const ids = this.selectedNotificationIdsList;
 
-    if (ids.length === 0 || this.bulkActionLoading) {
+    if (ids.length === 0 || this.deleteConfirmLoading) {
       return;
     }
 
-    const confirmed = window.confirm(
-      `¿Eliminar ${ids.length} notificación(es) seleccionada(s)?`,
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
+    this.deleteConfirmLoading = true;
     this.bulkActionLoading = true;
 
     this.notificationService.deleteForUser(ids).subscribe({
       next: () => {
+        const deletedCount = ids.length;
+
+        this.showDeleteConfirmModal = false;
+        this.deleteConfirmLoading = false;
         this.selectedNotificationIds.clear();
         this.fetchNotifications();
         this.notificationService.loadUnreadCount().subscribe();
         this.bulkActionLoading = false;
+
+        this.showFeedbackModal({
+          title: 'Notificaciones eliminadas',
+          message:
+            deletedCount === 1
+              ? 'La notificación fue eliminada de tu bandeja.'
+              : `${deletedCount} notificaciones fueron eliminadas de tu bandeja.`,
+          isSuccess: true,
+        });
       },
       error: (error) => {
         console.error('[Inbox] delete notifications failed:', error);
+        this.deleteConfirmLoading = false;
         this.bulkActionLoading = false;
+
+        this.showFeedbackModal({
+          title: 'No se pudo eliminar',
+          message:
+            'Ocurrió un error al eliminar las notificaciones. Intenta nuevamente.',
+          isError: true,
+        });
       },
     });
+  }
+
+  get selectedNotificationsForDelete(): Notification[] {
+    return this.notifications.filter((notification) =>
+      this.selectedNotificationIds.has(notification.id),
+    );
   }
 
   onReadDaysChange(days: number): void {
@@ -806,6 +861,25 @@ export class InboxComponent implements OnInit {
     );
 
     return normalizedDate;
+  }
+
+  private showFeedbackModal(options: {
+    title: string;
+    message: string;
+    isSuccess?: boolean;
+    isError?: boolean;
+  }): void {
+    this.modal = {
+      ...modalInitializer(),
+      show: true,
+      title: options.title,
+      message: options.message,
+      isSuccess: !!options.isSuccess,
+      isError: !!options.isError,
+      close: () => {
+        this.modal.show = false;
+      },
+    };
   }
 
   private markNotificationLocallyAsRead(

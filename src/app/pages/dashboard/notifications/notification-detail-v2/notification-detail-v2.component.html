@@ -101,6 +101,15 @@
     (create)="onRequestCreateStudent($event)"
   ></app-student-edit-modal>
 
+  <app-notification-delete-confirm-modal
+    variant="detail"
+    [open]="showDeleteConfirmModal"
+    [loading]="deleting"
+    [notifications]="notificationsForDeleteConfirm"
+    (cancel)="onCancelDeleteConfirm()"
+    (confirm)="onConfirmDeleteSelected()"
+  />
+
   <app-modal
     [showModal]="modal.show"
     [message]="modal.message"
