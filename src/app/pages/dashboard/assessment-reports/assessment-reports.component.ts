@@ -31,6 +31,7 @@ import { StudyContentService } from '../../../services/study-content.service';
 import { StagesService } from '../../../services/stages.service';
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 import { UsersService } from '../../../services/users.service';
+import { needsManualPlatformWritingAcceptance } from '../../../utils/platform-assessment-writing.util';
 
 @Component({
   selector: 'app-assessment-reports',
@@ -670,7 +671,7 @@ export class AssessmentReportsComponent {
   }
 
   canShowWritingAction(row: PlatformAssessmentAssignment): boolean {
-    return row.points != null;
+    return needsManualPlatformWritingAcceptance(row);
   }
 
   isWritingLocked(row: PlatformAssessmentAssignment): boolean {

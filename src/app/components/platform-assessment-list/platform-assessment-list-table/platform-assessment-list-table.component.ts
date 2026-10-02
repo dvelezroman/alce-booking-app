@@ -11,6 +11,10 @@ import {
   RemotePlatformAssessmentItem,
 } from '../../../services/dtos/platform-assessment.dto';
 import { RouterLink } from '@angular/router';
+import {
+  needsManualPlatformWritingAcceptance,
+  platformWritingPointsMismatch,
+} from '../../../utils/platform-assessment-writing.util';
 
 
 @Component({
@@ -278,10 +282,7 @@ export class PlatformAssessmentListTableComponent {
   canApplyWritingAction(
     row: RemotePlatformAssessmentItem,
   ): boolean {
-    return (
-      row.mirrorId != null &&
-      row.points != null
-    );
+    return needsManualPlatformWritingAcceptance(row);
   }
 
 
@@ -297,8 +298,11 @@ export class PlatformAssessmentListTableComponent {
   getWritingActionLabel(
     row: RemotePlatformAssessmentItem,
   ): string {
-    return this.isWritingLocked(row)
-      ? 'Aceptada'
+    if (this.isWritingLocked(row)) {
+      return 'Aceptada';
+    }
+    return platformWritingPointsMismatch(row)
+      ? 'Corregir Evaluación'
       : 'Aceptar Evaluación';
   }
 

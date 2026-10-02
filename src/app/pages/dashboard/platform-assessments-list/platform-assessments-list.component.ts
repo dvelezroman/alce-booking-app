@@ -26,6 +26,10 @@ import { PlatformAssessmentListTableComponent } from '../../../components/platfo
 import { PlatformAssessmentListPaginationComponent } from '../../../components/platform-assessment-list/platform-assessment-list-pagination/platform-assessment-list-pagination.component';
 import { PlatformAssessmentListEmptyStateComponent } from '../../../components/platform-assessment-list/platform-assessment-list-empty-state/platform-assessment-list-empty-state.component';
 import { PlatformAssessmentWritingModalComponent } from "../../../components/platform-assessment-list/platform-assessment-writing-modal/platform-assessment-writing-modal.component";
+import {
+  needsManualPlatformWritingAcceptance,
+  platformWritingPointsMismatch,
+} from '../../../utils/platform-assessment-writing.util';
 
 @Component({
   selector: 'app-platform-assessments-list',
@@ -417,10 +421,7 @@ export class PlatformAssessmentsListComponent implements OnInit {
   canShowWritingAction(
     row: RemotePlatformAssessmentItem,
   ): boolean {
-    return (
-      row.mirrorId != null &&
-      row.points != null
-    );
+    return needsManualPlatformWritingAcceptance(row);
   }
 
   isWritingLocked(
@@ -434,8 +435,11 @@ export class PlatformAssessmentsListComponent implements OnInit {
   writingActionLabel(
     row: RemotePlatformAssessmentItem,
   ): string {
-    return this.isWritingLocked(row)
-      ? 'Aceptada'
+    if (this.isWritingLocked(row)) {
+      return 'Aceptada';
+    }
+    return platformWritingPointsMismatch(row)
+      ? 'Corregir Evaluación'
       : 'Aceptar Evaluación';
   }
 

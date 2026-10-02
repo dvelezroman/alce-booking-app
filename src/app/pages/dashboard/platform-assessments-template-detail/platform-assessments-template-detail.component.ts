@@ -9,6 +9,7 @@ import {
 } from '../../../services/dtos/platform-assessment.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
+import { needsManualPlatformWritingAcceptance } from '../../../utils/platform-assessment-writing.util';
 
 @Component({
   selector: 'app-platform-assessments-template-detail',
@@ -123,7 +124,7 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
   }
 
   canShowWritingAction(row: RemotePlatformAssessmentItem): boolean {
-    return row.mirrorId != null && row.points != null;
+    return needsManualPlatformWritingAcceptance(row);
   }
 
   isWritingLocked(row: RemotePlatformAssessmentItem): boolean {
