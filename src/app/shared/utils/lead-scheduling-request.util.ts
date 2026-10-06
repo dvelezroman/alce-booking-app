@@ -14,6 +14,13 @@ export const LEAD_SCHEDULING_COURTESY_MONTHLY_REPORT_PATH =
 export const LEAD_SCHEDULING_ADMIN_LIST_PATH =
   '/dashboard/admin/lead-scheduling-requests' as const;
 
+/** Inducción = estudiante; cortesía / ubicación = interesado(a). */
+export function schedulingRequestPersonLabelEs(
+  kind: LeadSchedulingRequestKind,
+): 'Estudiante' | 'Interesado(a)' {
+  return kind === 'INDUCTION' ? 'Estudiante' : 'Interesado(a)';
+}
+
 /** Legacy rows without placementExamType follow the speaking-test flow. */
 export function isSpeakingPlacementExam(
   kind: LeadSchedulingRequestKind,

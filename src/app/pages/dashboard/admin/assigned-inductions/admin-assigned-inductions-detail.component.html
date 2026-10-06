@@ -28,7 +28,7 @@
 
     <div class="lead-detail__grid">
       <article class="panel">
-        <h2 class="panel__heading">Datos del lead</h2>
+        <h2 class="panel__heading">Datos del estudiante</h2>
         <div class="field-grid">
           <div class="field">
             <span class="field__label">Nombre</span>
@@ -53,7 +53,7 @@
         <h2 class="panel__heading">Agenda y contexto</h2>
         <div class="field-grid">
           <div class="field field--span" *ngIf="isPlacementTest && row.examLink">
-            <span class="field__label">Enlace del examen (lead)</span>
+            <span class="field__label">Enlace del examen</span>
             <span class="field__value field__value--wrap">
               <a [href]="row.examLink" target="_blank" rel="noopener noreferrer">{{ row.examLink }}</a>
             </span>
@@ -152,7 +152,7 @@
       <form [formGroup]="form" (ngSubmit)="submit()" class="report-form">
         <label class="report-form__check" *ngIf="requiresAttendance">
           <input type="checkbox" formControlName="attendancePresent" />
-          <span>{{ isInduction ? 'El estudiante asistió a la inducción' : 'El lead asistió a la sesión' }}</span>
+          <span>El estudiante asistió a la inducción</span>
         </label>
 
         <label class="report-form__field">
@@ -171,7 +171,7 @@
                 ? 'Resultado del placement test, nivel sugerido, observaciones…'
                 : isInduction
                   ? 'Describe la inducción realizada: entrega de credenciales, recorrido de plataforma, dudas resueltas y recomendaciones iniciales…'
-                  : 'Describe la sesión, participación del lead, nivel observado y recomendaciones…'
+                  : 'Describe la sesión, participación del estudiante, nivel observado y recomendaciones…'
             "
           ></textarea>
         </label>
