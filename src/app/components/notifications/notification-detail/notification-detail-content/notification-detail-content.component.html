@@ -745,21 +745,28 @@
       <dl class="notification-detail-content__details">
 
         <div *ngIf="requestLead.email">
-            <dt>Correo electrónico</dt>
+            <dt>Correo</dt>
             <dd>{{ requestLead.email }}</dd>
         </div>
 
-        <div *ngIf="(isDemoClassNotification || isInductionNotification) && requestLead.mode">
-            <dt>Modalidad</dt>
-            <dd>{{ modeLabel(requestLead.mode) }}</dd>
+        <div *ngIf="requestLead.leadSchedulingRequestId">
+            <dt>N.º solicitud</dt>
+            <dd>#{{ requestLead.leadSchedulingRequestId }}</dd>
         </div>
 
         <div *ngIf="placementExamSubtypeLabel">
-            <dt>Tipo de examen</dt>
+            <dt>Tipo</dt>
             <dd>{{ placementExamSubtypeLabel }}</dd>
         </div>
 
         </dl>
+
+      <div class="notification-detail-content__notice">
+        <i class="pi pi-info-circle"></i>
+        <span>
+          Abre la página de solicitudes para asignar instructor o enlace y cambiar el estado.
+        </span>
+      </div>
 
       <div
         *ngIf="isAdmin"
@@ -777,7 +784,7 @@
           <i class="pi pi-external-link"></i>
 
           <span>
-            Ver solicitud
+            Abrir solicitud
           </span>
         </button>
 
@@ -789,7 +796,8 @@
 
   <!-- ================================
        ASIGNACIÓN O CANCELACIÓN
-       PARA INSTRUCTOR
+       PARA INSTRUCTOR / ADMIN
+       (resumen + CTA a solicitudes)
   ================================= -->
   <section
     *ngIf="isLeadSchedulingInstructorCard"
@@ -800,7 +808,7 @@
   >
 
     <span class="notification-detail-content__label">
-      Información de la solicitud
+      Solicitud comercial
     </span>
 
     <div class="notification-detail-content__assignment-card">
@@ -833,106 +841,29 @@
           <p>
             {{
               assignedIsPlacementTest
-                ? 'Examen de ubicación'
-                : 'Clase de cortesía'
+                ? 'Placement test'
+                : isPlacementExamNotification
+                  ? 'Examen de ubicación'
+                  : 'Clase de cortesía / inducción'
             }}
+            <ng-container
+              *ngIf="leadSchedulingAssignedSummary.leadSchedulingRequestId"
+            >
+              · #{{ leadSchedulingAssignedSummary.leadSchedulingRequestId }}
+            </ng-container>
+            <ng-container *ngIf="leadSchedulingAssignedSummary.status">
+              · {{ leadSchedulingAssignedSummary.status }}
+            </ng-container>
           </p>
 
         </div>
 
       </div>
 
-      <dl class="notification-detail-content__details">
-
-        <div
-          *ngIf="
-            leadSchedulingAssignedSummary
-              .leadSchedulingRequestId
-          "
-        >
-          <dt>Número de solicitud</dt>
-
-          <dd>
-            #{{ 
-              leadSchedulingAssignedSummary
-                .leadSchedulingRequestId
-            }}
-          </dd>
-        </div>
-
-        <div
-          *ngIf="
-            leadSchedulingAssignedSummary
-              .scheduledDate
-          "
-        >
-          <dt>Fecha asignada</dt>
-
-          <dd>
-            {{
-              leadSchedulingAssignedSummary
-                .scheduledDate
-            }}
-          </dd>
-        </div>
-
-        <div
-          *ngIf="
-            leadSchedulingAssignedSummary
-              .scheduledHour !== undefined
-          "
-        >
-          <dt>Hora asignada</dt>
-
-          <dd>
-            {{
-              leadSchedulingAssignedSummary
-                .scheduledHour
-            }}:00
-          </dd>
-        </div>
-
-        <div
-          *ngIf="
-            leadSchedulingAssignedSummary.status
-          "
-        >
-          <dt>Estado</dt>
-
-          <dd>
-            {{
-              leadSchedulingAssignedSummary.status
-            }}
-          </dd>
-        </div>
-
-        <div
-          *ngIf="
-            leadSchedulingAssignedSummary
-              .requestNotes
-          "
-        >
-          <dt>Observaciones</dt>
-
-          <dd>
-            {{
-              leadSchedulingAssignedSummary
-                .requestNotes
-            }}
-          </dd>
-        </div>
-
-      </dl>
-
-      <div
-        *ngIf="leadSchedulingShowGenericNextStep"
-        class="notification-detail-content__notice"
-      >
+      <div class="notification-detail-content__notice">
         <i class="pi pi-info-circle"></i>
-
         <span>
-          Revisa la información de la solicitud
-          antes de continuar con el proceso.
+          Gestiona asignación, informe y estado en la página de solicitudes.
         </span>
       </div>
 
@@ -947,41 +878,8 @@
           (click)="onGoToAssignedLeadScheduling()"
         >
           <i class="pi pi-external-link"></i>
-
           <span>
-            Ver solicitud asignada
-          </span>
-        </button>
-
-        <button
-          *ngIf="showPlacementExamListLink"
-          type="button"
-          class="
-            notification-detail-content__button
-            notification-detail-content__button--secondary
-          "
-          (click)="onGoToPlacementExamList()"
-        >
-          <i class="pi pi-list"></i>
-
-          <span>
-            Ver solicitudes
-          </span>
-        </button>
-
-        <button
-          *ngIf="showInductionListLink"
-          type="button"
-          class="
-            notification-detail-content__button
-            notification-detail-content__button--secondary
-          "
-          (click)="onGoToInductionList()"
-        >
-          <i class="pi pi-list"></i>
-
-          <span>
-            Ver inducciones
+            Abrir solicitud
           </span>
         </button>
 

@@ -6,6 +6,10 @@ import {
   LeadSchedulingRequestKind,
   LeadSchedulingRequestStatus,
 } from '../../../services/dtos/lead-scheduling-request.dto';
+import type {
+  LeadSchedulingDateField,
+  LeadSchedulingListSortBy,
+} from '../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
   selector: 'app-instructor-scheduling-request-filters',
@@ -22,6 +26,8 @@ export class InstructorSchedulingRequestFiltersComponent {
   @Input() dateFrom: string = '';
   @Input() dateTo: string = '';
   @Input() sessionTodayOnly: boolean = false;
+  @Input() sortBy: LeadSchedulingListSortBy = 'createdAt';
+  @Input() dateField: LeadSchedulingDateField = 'session';
 
   @Input() filterStatus: '' | LeadSchedulingRequestStatus = '';
   @Input() filterKind: '' | LeadSchedulingRequestKind = '';
@@ -35,6 +41,8 @@ export class InstructorSchedulingRequestFiltersComponent {
   @Output() dateFromChange = new EventEmitter<string>();
   @Output() dateToChange = new EventEmitter<string>();
   @Output() sessionTodayOnlyChange = new EventEmitter<boolean>();
+  @Output() sortByChange = new EventEmitter<LeadSchedulingListSortBy>();
+  @Output() dateFieldChange = new EventEmitter<LeadSchedulingDateField>();
 
   @Output() filterStatusChange = new EventEmitter<'' | LeadSchedulingRequestStatus>();
   @Output() filterKindChange = new EventEmitter<'' | LeadSchedulingRequestKind>();
@@ -49,36 +57,34 @@ export class InstructorSchedulingRequestFiltersComponent {
     value: LeadSchedulingRequestStatus;
     label: string;
   }[] = [
-    {
-      value: 'PENDING',
-      label: 'Pendiente',
-    },
-    {
-      value: 'SCHEDULED',
-      label: 'Agendada',
-    },
-    {
-      value: 'COMPLETED',
-      label: 'Completada',
-    },
-    {
-      value: 'CANCELLED',
-      label: 'Cancelada',
-    },
+    { value: 'PENDING', label: 'Pendiente' },
+    { value: 'SCHEDULED', label: 'Agendada' },
+    { value: 'COMPLETED', label: 'Completada' },
+    { value: 'CANCELLED', label: 'Cancelada' },
   ];
 
   readonly kindOptions: {
     value: LeadSchedulingRequestKind;
     label: string;
   }[] = [
-    {
-      value: 'DEMO_CLASS',
-      label: 'Cortesía / demo',
-    },
-    {
-      value: 'PLACEMENT_EXAM',
-      label: 'Examen de ubicación',
-    },
+    { value: 'DEMO_CLASS', label: 'Cortesía / demo' },
+    { value: 'PLACEMENT_EXAM', label: 'Examen de ubicación' },
+  ];
+
+  readonly sortByOptions: Array<{
+    value: LeadSchedulingListSortBy;
+    label: string;
+  }> = [
+    { value: 'createdAt', label: 'Fecha de registro' },
+    { value: 'scheduledSession', label: 'Fecha de sesión' },
+  ];
+
+  readonly dateFieldOptions: Array<{
+    value: LeadSchedulingDateField;
+    label: string;
+  }> = [
+    { value: 'created', label: 'Registro' },
+    { value: 'session', label: 'Sesión' },
   ];
 
   onSearchChange(value: string): void {
@@ -101,6 +107,20 @@ export class InstructorSchedulingRequestFiltersComponent {
     this.filterKind = value;
     this.filterKindChange.emit(value);
     this.serverFiltersChange.emit();
+  }
+
+  onSortByChange(value: LeadSchedulingListSortBy): void {
+    this.sortBy = value;
+    this.sortByChange.emit(value);
+    this.serverFiltersChange.emit();
+  }
+
+  onDateFieldChange(value: LeadSchedulingDateField): void {
+    this.dateField = value;
+    this.dateFieldChange.emit(value);
+    if (this.dateFrom || this.dateTo) {
+      this.serverFiltersChange.emit();
+    }
   }
 
   onFromDateChange(value: string): void {
@@ -129,13 +149,11 @@ export class InstructorSchedulingRequestFiltersComponent {
 
   onTodayClick(): void {
     if (this.loading) return;
-
     this.sessionTodayToggle.emit();
   }
 
   onClearFilters(): void {
     if (this.loading) return;
-
     this.clearFiltersRequested.emit();
   }
 }

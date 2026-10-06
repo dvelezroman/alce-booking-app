@@ -1342,6 +1342,7 @@ export class NotificationDetailV2Component
   goToPlacementExamList(): void {
     const queryParams = {
       kind: 'PLACEMENT_EXAM' as const,
+      status: 'PENDING' as const,
     };
 
     if (

@@ -1,15 +1,8 @@
 <section class="lead-scheduling-filters">
 
-  <!-- =========================
-       FILTERS
-  ========================== -->
   <div class="lead-scheduling-filters__fields">
 
-    <!-- =========================
-         KIND
-    ========================== -->
     <div class="lead-scheduling-filters__field">
-
       <label
         for="filterKind"
         class="lead-scheduling-filters__label"
@@ -18,33 +11,6 @@
       </label>
 
       <div class="lead-scheduling-filters__select-wrapper">
-
-        <svg
-          class="lead-scheduling-filters__select-leading-icon"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <rect
-            x="4"
-            y="5"
-            width="16"
-            height="15"
-            rx="2"
-            stroke="currentColor"
-            stroke-width="1.7"
-          />
-
-          <path
-            d="M8 3v4M16 3v4M4 9h16"
-            stroke="currentColor"
-            stroke-width="1.7"
-            stroke-linecap="round"
-          />
-        </svg>
-
         <select
           id="filterKind"
           class="lead-scheduling-filters__select"
@@ -62,34 +28,10 @@
             </option>
           }
         </select>
-
-        <svg
-          class="lead-scheduling-filters__select-arrow"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="m6 9 6 6 6-6"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-
       </div>
-
     </div>
 
-
-    <!-- =========================
-         STATUS
-    ========================== -->
     <div class="lead-scheduling-filters__field">
-
       <label
         for="filterStatus"
         class="lead-scheduling-filters__label"
@@ -98,31 +40,6 @@
       </label>
 
       <div class="lead-scheduling-filters__select-wrapper">
-
-        <svg
-          class="lead-scheduling-filters__select-leading-icon"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <circle
-            cx="12"
-            cy="12"
-            r="8"
-            stroke="currentColor"
-            stroke-width="1.7"
-          />
-
-          <circle
-            cx="12"
-            cy="12"
-            r="2"
-            fill="currentColor"
-          />
-        </svg>
-
         <select
           id="filterStatus"
           class="lead-scheduling-filters__select"
@@ -140,34 +57,97 @@
             </option>
           }
         </select>
-
-        <svg
-          class="lead-scheduling-filters__select-arrow"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="m6 9 6 6 6-6"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-
       </div>
+    </div>
 
+    <div class="lead-scheduling-filters__field">
+      <label
+        for="filterSortBy"
+        class="lead-scheduling-filters__label"
+      >
+        Ordenar por
+      </label>
+
+      <div class="lead-scheduling-filters__select-wrapper">
+        <select
+          id="filterSortBy"
+          class="lead-scheduling-filters__select"
+          [ngModel]="sortBy"
+          [disabled]="loading"
+          (ngModelChange)="onSortByChange($event)"
+        >
+          @for (option of sortByOptions; track option.value) {
+            <option [value]="option.value">
+              {{ option.label }}
+            </option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="lead-scheduling-filters__field">
+      <label
+        for="filterDateField"
+        class="lead-scheduling-filters__label"
+      >
+        Rango aplica a
+      </label>
+
+      <div class="lead-scheduling-filters__select-wrapper">
+        <select
+          id="filterDateField"
+          class="lead-scheduling-filters__select"
+          [ngModel]="dateField"
+          [disabled]="loading"
+          (ngModelChange)="onDateFieldChange($event)"
+        >
+          @for (option of dateFieldOptions; track option.value) {
+            <option [value]="option.value">
+              {{ option.label }}
+            </option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="lead-scheduling-filters__field">
+      <label
+        for="filterDateFrom"
+        class="lead-scheduling-filters__label"
+      >
+        Desde
+      </label>
+
+      <input
+        id="filterDateFrom"
+        type="date"
+        class="lead-scheduling-filters__date"
+        [ngModel]="dateFrom"
+        [disabled]="loading"
+        (ngModelChange)="onDateFromChange($event)"
+      />
+    </div>
+
+    <div class="lead-scheduling-filters__field">
+      <label
+        for="filterDateTo"
+        class="lead-scheduling-filters__label"
+      >
+        Hasta
+      </label>
+
+      <input
+        id="filterDateTo"
+        type="date"
+        class="lead-scheduling-filters__date"
+        [ngModel]="dateTo"
+        [disabled]="loading"
+        (ngModelChange)="onDateToChange($event)"
+      />
     </div>
 
   </div>
 
-
-  <!-- =========================
-       ACTIONS
-  ========================== -->
   <div class="lead-scheduling-filters__actions">
 
     <a
@@ -181,7 +161,6 @@
       Reporte cortesías (mes)
     </a>
 
-    <!-- CLEAR -->
     <button
       type="button"
       class="
@@ -191,36 +170,11 @@
       [disabled]="loading"
       (click)="onClear()"
     >
-      <svg
-        width="17"
-        height="17"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M4 12a8 8 0 1 0 2.35-5.65"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-        />
-
-        <path
-          d="M4 5v5h5"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-
       <span>
         Limpiar filtros
       </span>
     </button>
 
-
-    <!-- REFRESH -->
     <button
       type="button"
       class="
@@ -230,38 +184,6 @@
       [disabled]="loading"
       (click)="onRefresh()"
     >
-      <svg
-        width="17"
-        height="17"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
-        [class.lead-scheduling-filters__refresh-icon--loading]="loading"
-      >
-        <path
-          d="M20 6v5h-5"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-
-        <path
-          d="M4 18v-5h5"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-
-        <path
-          d="M18.5 9A7 7 0 0 0 6.3 6.3L4 8M5.5 15A7 7 0 0 0 17.7 17.7L20 16"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-        />
-      </svg>
-
       <span>
         {{ loading ? 'Actualizando...' : 'Actualizar' }}
       </span>

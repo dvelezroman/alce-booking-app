@@ -14,6 +14,16 @@ export const LEAD_SCHEDULING_COURTESY_MONTHLY_REPORT_PATH =
 export const LEAD_SCHEDULING_ADMIN_LIST_PATH =
   '/dashboard/admin/lead-scheduling-requests' as const;
 
+/** Page size options for lead-scheduling list UIs (admin, instructor, inductions). */
+export const LEAD_SCHEDULING_PAGE_SIZE_OPTIONS = [
+  10, 20, 50, 100, 200,
+] as const;
+
+export const LEAD_SCHEDULING_DEFAULT_PAGE_SIZE = 50;
+
+export type LeadSchedulingListSortBy = 'createdAt' | 'scheduledSession';
+export type LeadSchedulingDateField = 'created' | 'session';
+
 /** Inducción = estudiante; cortesía / ubicación = interesado(a). */
 export function schedulingRequestPersonLabelEs(
   kind: LeadSchedulingRequestKind,

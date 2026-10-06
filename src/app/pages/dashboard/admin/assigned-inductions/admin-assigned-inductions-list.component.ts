@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { InstructorSchedulingRequestHeaderComponent } from '../../../../components/instructor-scheduling-request/instructor-scheduling-request-header/instructor-scheduling-request-header.component';
 import { InstructorSchedulingRequestFiltersComponent } from '../../../../components/instructor-scheduling-request/instructor-scheduling-request-filters/instructor-scheduling-request-filters.component';
@@ -14,7 +14,6 @@ import { LeadSchedulingPendingCountService } from '../../../../services/lead-sch
 import { UserRole } from '../../../../services/dtos/user.dto';
 
 import {
-  LeadSchedulingRequestKind,
   LeadSchedulingRequestRow,
   LeadSchedulingRequestStatus,
 } from '../../../../services/dtos/lead-scheduling-request.dto';
@@ -22,9 +21,13 @@ import {
 import { getHttpErrorMessage } from '../../../../shared/utils/http-error-message.util';
 
 import {
+  LEAD_SCHEDULING_DEFAULT_PAGE_SIZE,
+  LEAD_SCHEDULING_PAGE_SIZE_OPTIONS,
   leadSchedulingKindLabel,
   leadSchedulingScheduleSummary,
   requestNotesPreview,
+  type LeadSchedulingDateField,
+  type LeadSchedulingListSortBy,
 } from '../../../../shared/utils/lead-scheduling-request.util';
 
 @Component({
@@ -44,41 +47,25 @@ import {
   styleUrl: './admin-assigned-inductions-list.component.scss',
 })
 export class AdminAssignedInductionsListComponent implements OnInit {
-  /** Filas acumuladas del API (según estado/tipo seleccionados en servidor). */
-  sourceItems: LeadSchedulingRequestRow[] = [];
-
-  /** Total de filas que reporta el API para el filtro servidor actual. */
-  totalFromApi = 0;
+  items: LeadSchedulingRequestRow[] = [];
+  total = 0;
 
   loading = false;
   error: string | null = null;
 
-  /** Por defecto 25 registros por página (vista). */
-  pageSize = 25;
-
-  /** Índice de página base 0 sobre `filteredItems`. */
+  pageSize = LEAD_SCHEDULING_DEFAULT_PAGE_SIZE;
   pageIndex = 0;
 
   searchName = '';
   dateFrom = '';
   dateTo = '';
-
-  /** Sesión agendada exactamente para el día calendario actual (fecha local). */
   sessionTodayOnly = false;
+  sortBy: LeadSchedulingListSortBy = 'createdAt';
+  dateField: LeadSchedulingDateField = 'session';
 
-  statusFilter: '' | LeadSchedulingRequestStatus = '';
-  kindFilter: '' | LeadSchedulingRequestKind = '';
+  statusFilter: '' | LeadSchedulingRequestStatus = 'PENDING';
 
-  readonly pageSizeChoices: readonly number[] = [10, 25, 50, 100];
-
-  private readonly fetchBatchSize = 100;
-  private readonly fetchCap = 5000;
-
-  readonly kindLabel: Record<LeadSchedulingRequestKind, string> = {
-    DEMO_CLASS: 'Cortesía / demo',
-    PLACEMENT_EXAM: 'Examen ubicación',
-    INDUCTION: 'Inducción',
-  };
+  readonly pageSizeChoices = LEAD_SCHEDULING_PAGE_SIZE_OPTIONS;
 
   readonly statusLabel: Record<LeadSchedulingRequestStatus, string> = {
     PENDING: 'Pendiente',
@@ -87,211 +74,106 @@ export class AdminAssignedInductionsListComponent implements OnInit {
     COMPLETED: 'Completada',
   };
 
-  readonly statusOptions: {
-    value: LeadSchedulingRequestStatus;
-    label: string;
-  }[] = [
-    {
-      value: 'PENDING',
-      label: 'Pendiente',
-    },
-    {
-      value: 'SCHEDULED',
-      label: 'Agendada',
-    },
-    {
-      value: 'COMPLETED',
-      label: 'Completada',
-    },
-    {
-      value: 'CANCELLED',
-      label: 'Cancelada',
-    },
-  ];
-
-  readonly kindOptions: {
-    value: LeadSchedulingRequestKind;
-    label: string;
-  }[] = [
-    {
-      value: 'DEMO_CLASS',
-      label: 'Cortesía / demo',
-    },
-    {
-      value: 'PLACEMENT_EXAM',
-      label: 'Examen de ubicación',
-    },
-    {
-      value: 'INDUCTION',
-      label: 'Inducción',
-    },
-  ];
-
   constructor(
     private readonly leadScheduling: LeadSchedulingRequestService,
-    private readonly route: ActivatedRoute,
     private router: Router,
     private readonly leadSchedulingPending: LeadSchedulingPendingCountService,
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParamMap.subscribe((params) => {
-      this.applyKindFromRoute(params.get('kind'));
-      this.pageIndex = 0;
-      this.load();
-    });
+    this.load();
   }
 
-  private applyKindFromRoute(kind: string | null): void {
-    if (
-      kind === 'PLACEMENT_EXAM' ||
-      kind === 'DEMO_CLASS' ||
-      kind === 'INDUCTION'
-    ) {
-      this.kindFilter = kind;
-    }
+  private toYyyyMmDdLocal(d: Date): string {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
   }
 
-  /** Descarga todas las filas disponibles para el filtro estado/tipo (en lotes), luego paginamos en cliente. */
-  load(): void {
-    this.loading = true;
-    this.error = null;
-    this.sourceItems = [];
-
-    const acc: LeadSchedulingRequestRow[] = [];
-    let reportedTotal = 0;
-
-    const pull = (offset: number): void => {
-      this.leadScheduling
-        .listAssignedInductions({
-          limit: this.fetchBatchSize,
-          offset,
-          status: this.statusFilter || undefined,
-        })
-        .subscribe({
-          next: (res) => {
-            reportedTotal = res.total;
-            acc.push(...res.items);
-
-            const got = res.items.length;
-            const underTotal = acc.length < reportedTotal;
-            const fullBatch = got === this.fetchBatchSize;
-            const underCap = acc.length < this.fetchCap;
-
-            if (underTotal && fullBatch && underCap && got > 0) {
-              pull(offset + this.fetchBatchSize);
-            } else {
-              this.sourceItems = acc;
-              this.totalFromApi = reportedTotal > 0 ? reportedTotal : acc.length;
-              this.loading = false;
-
-              this.clampPageIndex();
-
-              this.leadSchedulingPending
-                .refresh(UserRole.ADMIN)
-                .subscribe();
-            }
-          },
-
-          error: (err) => {
-            this.loading = false;
-
-            this.error = getHttpErrorMessage(
-              err,
-              'No se pudo cargar la lista de solicitudes.',
-            );
-          },
-        });
-    };
-
-    pull(0);
-  }
-
-  /** Filtros solo en cliente: nombre, email, fechas de sesión, «hoy». Estado/tipo ya vienen filtrados del servidor. */
-  get filteredItems(): LeadSchedulingRequestRow[] {
-    let list = [...this.sourceItems];
-
-    const q = this.searchName
-      .trim()
-      .toLowerCase();
-
-    if (q) {
-      list = list.filter((r) => {
-        const full = `${r.firstName ?? ''} ${r.lastName ?? ''}`
-          .toLowerCase()
-          .trim();
-
-        const email = (r.email ?? '')
-          .toLowerCase();
-
-        return full.includes(q) || email.includes(q);
-      });
-    }
+  private buildListQuery() {
+    let scheduledFrom: string | undefined;
+    let scheduledTo: string | undefined;
+    let createdFrom: string | undefined;
+    let createdTo: string | undefined;
 
     if (this.sessionTodayOnly) {
       const today = this.toYyyyMmDdLocal(new Date());
-
-      list = list.filter(
-        (r) => this.scheduledYyyyMmDd(r) === today,
-      );
-    } else {
-      const from = this.dateFrom.trim();
-      const to = this.dateTo.trim();
-
-      if (from) {
-        list = list.filter((r) => {
-          const key = this.scheduledYyyyMmDd(r);
-
-          return key !== '' && key >= from;
-        });
-      }
-
-      if (to) {
-        list = list.filter((r) => {
-          const key = this.scheduledYyyyMmDd(r);
-
-          return key !== '' && key <= to;
-        });
+      scheduledFrom = today;
+      scheduledTo = today;
+    } else if (this.dateFrom || this.dateTo) {
+      if (this.dateField === 'created') {
+        createdFrom = this.dateFrom || undefined;
+        createdTo = this.dateTo || undefined;
+      } else {
+        scheduledFrom = this.dateFrom || undefined;
+        scheduledTo = this.dateTo || undefined;
       }
     }
 
-    list.sort((a, b) => this.compareByNewestSession(a, b));
+    return {
+      limit: this.pageSize,
+      offset: this.pageIndex * this.pageSize,
+      status: this.statusFilter || undefined,
+      sortBy: this.sortBy,
+      sortDir: 'desc' as const,
+      createdFrom,
+      createdTo,
+      scheduledFrom,
+      scheduledTo,
+    };
+  }
 
-    return list;
+  load(): void {
+    this.loading = true;
+    this.error = null;
+
+    this.leadScheduling.listAssignedInductions(this.buildListQuery()).subscribe({
+      next: (res) => {
+        this.items = res.items;
+        this.total = res.total;
+        this.loading = false;
+        this.clampPageIndex();
+        this.leadSchedulingPending.refresh(UserRole.ADMIN).subscribe();
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = getHttpErrorMessage(
+          err,
+          'No se pudo cargar la lista de solicitudes.',
+        );
+      },
+    });
+  }
+
+  get filteredItems(): LeadSchedulingRequestRow[] {
+    const q = this.searchName.trim().toLowerCase();
+    if (!q) return this.items;
+    return this.items.filter((r) => {
+      const full = `${r.firstName ?? ''} ${r.lastName ?? ''}`
+        .toLowerCase()
+        .trim();
+      const email = (r.email ?? '').toLowerCase();
+      return full.includes(q) || email.includes(q);
+    });
   }
 
   get pagedItems(): LeadSchedulingRequestRow[] {
-    const start = this.pageIndex * this.pageSize;
-
-    return this.filteredItems.slice(
-      start,
-      start + this.pageSize,
-    );
+    return this.filteredItems;
   }
 
   get totalPages(): number {
-    const n = this.filteredItems.length;
-
-    return Math.max(
-      1,
-      Math.ceil(n / this.pageSize),
-    );
+    return Math.max(1, Math.ceil(this.total / this.pageSize));
   }
 
   get rangeLabel(): string {
-    const n = this.filteredItems.length;
-
-    if (n === 0) {
-      return '0 resultados';
-    }
-
+    if (this.total === 0) return '0 resultados';
     const start = this.pageIndex * this.pageSize + 1;
     const end = Math.min(
-      n,
-      (this.pageIndex + 1) * this.pageSize,
+      this.total,
+      this.pageIndex * this.pageSize + this.items.length,
     );
-
-    return `${start}–${end} de ${n}`;
+    return `${start}–${end} de ${this.total}`;
   }
 
   get hasActiveFilters(): boolean {
@@ -300,8 +182,8 @@ export class AdminAssignedInductionsListComponent implements OnInit {
       this.dateFrom.trim() !== '' ||
       this.dateTo.trim() !== '' ||
       this.sessionTodayOnly ||
-      this.statusFilter !== '' ||
-      this.kindFilter !== ''
+      this.statusFilter !== 'PENDING' ||
+      this.sortBy !== 'createdAt'
     );
   }
 
@@ -310,66 +192,60 @@ export class AdminAssignedInductionsListComponent implements OnInit {
     this.load();
   }
 
-  onClientFiltersChange(): void {
-    this.clampPageIndex();
-  }
+  onClientFiltersChange(): void {}
 
   onPageSizeChange(): void {
     this.pageIndex = 0;
-    this.clampPageIndex();
+    this.load();
   }
 
   goPrev(): void {
     if (this.pageIndex > 0) {
       this.pageIndex--;
+      this.load();
     }
   }
 
   goNext(): void {
     if (this.pageIndex < this.totalPages - 1) {
       this.pageIndex++;
+      this.load();
     }
   }
 
   goFirst(): void {
     this.pageIndex = 0;
+    this.load();
   }
 
   goLast(): void {
-    this.pageIndex = Math.max(
-      0,
-      this.totalPages - 1,
-    );
+    this.pageIndex = Math.max(0, this.totalPages - 1);
+    this.load();
   }
 
   private clampPageIndex(): void {
-    const maxIndex = Math.max(
-      0,
-      this.totalPages - 1,
-    );
-
+    const maxIndex = Math.max(0, this.totalPages - 1);
     if (this.pageIndex > maxIndex) {
       this.pageIndex = maxIndex;
+      if (this.total > 0) this.load();
     }
   }
 
   toggleSessionToday(): void {
     this.sessionTodayOnly = !this.sessionTodayOnly;
-
     if (this.sessionTodayOnly) {
       this.dateFrom = '';
       this.dateTo = '';
+      this.dateField = 'session';
     }
-
-    this.onClientFiltersChange();
+    this.onServerFiltersChange();
   }
 
   onDateRangeChange(): void {
     if (this.dateFrom || this.dateTo) {
       this.sessionTodayOnly = false;
     }
-
-    this.onClientFiltersChange();
+    this.onServerFiltersChange();
   }
 
   clearFilters(): void {
@@ -377,117 +253,30 @@ export class AdminAssignedInductionsListComponent implements OnInit {
     this.dateFrom = '';
     this.dateTo = '';
     this.sessionTodayOnly = false;
-    this.statusFilter = '';
-    this.kindFilter = '';
+    this.statusFilter = 'PENDING';
+    this.sortBy = 'createdAt';
+    this.dateField = 'session';
     this.pageIndex = 0;
-    this.pageSize = 25;
-
     this.load();
   }
 
-  kindText(
-    row: LeadSchedulingRequestRow,
-  ): string {
+  kindText(row: LeadSchedulingRequestRow): string {
     return leadSchedulingKindLabel(row);
   }
 
-  statusText(
-    s: LeadSchedulingRequestStatus,
-  ): string {
+  statusText(s: LeadSchedulingRequestStatus): string {
     return this.statusLabel[s] ?? s;
   }
 
-  slotText(
-    row: LeadSchedulingRequestRow,
-  ): string {
+  slotText(row: LeadSchedulingRequestRow): string {
     return leadSchedulingScheduleSummary(row);
   }
 
-  notesPreview(
-    row: LeadSchedulingRequestRow,
-  ): string | null {
-    return requestNotesPreview(
-      row.requestNotes,
-      56,
-    );
+  notesPreview(row: LeadSchedulingRequestRow): string | null {
+    return requestNotesPreview(row.requestNotes, 56);
   }
 
-  /** Newest scheduled session first; unscheduled rows last. */
-  private compareByNewestSession(
-    a: LeadSchedulingRequestRow,
-    b: LeadSchedulingRequestRow,
-  ): number {
-    const dateA = this.scheduledYyyyMmDd(a);
-    const dateB = this.scheduledYyyyMmDd(b);
-
-    if (dateA !== dateB) {
-      if (!dateA) {
-        return 1;
-      }
-
-      if (!dateB) {
-        return -1;
-      }
-
-      return dateB.localeCompare(dateA);
-    }
-
-    const hourA = a.scheduledHour ?? -1;
-    const hourB = b.scheduledHour ?? -1;
-
-    if (hourA !== hourB) {
-      return hourB - hourA;
-    }
-
-    return b.createdAt.localeCompare(a.createdAt);
-  }
-
-  private scheduledYyyyMmDd(
-    row: LeadSchedulingRequestRow,
-  ): string {
-    const raw = row.scheduledDate;
-
-    if (!raw || typeof raw !== 'string') {
-      return '';
-    }
-
-    return raw.length >= 10
-      ? raw.slice(0, 10)
-      : raw;
-  }
-
-  private toYyyyMmDdLocal(
-    d: Date,
-  ): string {
-    const y = d.getFullYear();
-
-    const m = String(
-      d.getMonth() + 1,
-    ).padStart(2, '0');
-
-    const day = String(
-      d.getDate(),
-    ).padStart(2, '0');
-
-    return `${y}-${m}-${day}`;
-  }
-
-  private normalizeDateForParse(
-    iso: string,
-  ): string {
-    if (
-      iso.includes('T') ||
-      iso.endsWith('Z')
-    ) {
-      return iso;
-    }
-
-    return `${iso}T12:00:00`;
-  }
-
-  goToRequestDetail(
-    requestId: number,
-  ): void {
+  goToRequestDetail(requestId: number): void {
     this.router.navigate([
       '/dashboard/admin/assigned-inductions',
       requestId,

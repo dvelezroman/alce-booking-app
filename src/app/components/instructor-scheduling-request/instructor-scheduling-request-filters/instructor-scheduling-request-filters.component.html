@@ -2,7 +2,7 @@
   <div class="scheduling-request-filters__search-row">
     <div class="scheduling-request-filters__field scheduling-request-filters__field--search">
       <label class="scheduling-request-filters__label" for="search-student">
-        Buscar por nombre o correo
+        Buscar por nombre o correo (página actual)
       </label>
 
       <div class="scheduling-request-filters__search-wrapper">
@@ -42,7 +42,6 @@
           (ngModelChange)="onStatusChange($event)"
         >
           <option value="">Todos</option>
-
           <option
             *ngFor="let option of statusOptions"
             [ngValue]="option.value"
@@ -50,12 +49,6 @@
             {{ option.label }}
           </option>
         </select>
-
-        <span class="scheduling-request-filters__select-icon" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="m7 9.5 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </span>
       </div>
     </div>
 
@@ -73,7 +66,6 @@
           (ngModelChange)="onKindChange($event)"
         >
           <option value="">Todos</option>
-
           <option
             *ngFor="let option of kindOptions"
             [ngValue]="option.value"
@@ -81,12 +73,52 @@
             {{ option.label }}
           </option>
         </select>
+      </div>
+    </div>
 
-        <span class="scheduling-request-filters__select-icon" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="m7 9.5 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </span>
+    <div class="scheduling-request-filters__field">
+      <label class="scheduling-request-filters__label" for="request-sort">
+        Ordenar por
+      </label>
+
+      <div class="scheduling-request-filters__select-wrapper">
+        <select
+          id="request-sort"
+          class="scheduling-request-filters__select"
+          [ngModel]="sortBy"
+          [disabled]="loading"
+          (ngModelChange)="onSortByChange($event)"
+        >
+          <option
+            *ngFor="let option of sortByOptions"
+            [ngValue]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="scheduling-request-filters__field">
+      <label class="scheduling-request-filters__label" for="date-field">
+        Rango aplica a
+      </label>
+
+      <div class="scheduling-request-filters__select-wrapper">
+        <select
+          id="date-field"
+          class="scheduling-request-filters__select"
+          [ngModel]="dateField"
+          [disabled]="loading || sessionTodayOnly"
+          (ngModelChange)="onDateFieldChange($event)"
+        >
+          <option
+            *ngFor="let option of dateFieldOptions"
+            [ngValue]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
       </div>
     </div>
 
@@ -101,7 +133,7 @@
           type="date"
           class="scheduling-request-filters__date"
           [ngModel]="dateFrom"
-          [disabled]="loading"
+          [disabled]="loading || sessionTodayOnly"
           (ngModelChange)="onFromDateChange($event)"
         />
       </div>
@@ -118,7 +150,7 @@
           type="date"
           class="scheduling-request-filters__date"
           [ngModel]="dateTo"
-          [disabled]="loading"
+          [disabled]="loading || sessionTodayOnly"
           (ngModelChange)="onToDateChange($event)"
         />
       </div>
@@ -132,11 +164,6 @@
         [disabled]="loading"
         (click)="onTodayClick()"
       >
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect x="3.5" y="5.5" width="17" height="15" rx="2.2" stroke="currentColor" stroke-width="1.7" />
-          <path d="M7 3.5v4M17 3.5v4M3.5 9.5h17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-        </svg>
-
         <span>Sesiones de hoy</span>
       </button>
 
@@ -146,11 +173,6 @@
         [disabled]="loading || !hasActiveFilters"
         (click)="onClearFilters()"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M5 7h14M7.5 12h9M10 17h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-          <path d="m17.5 4.5 2.5 2.5-2.5 2.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-
         <span>Limpiar filtros</span>
       </button>
     </div>

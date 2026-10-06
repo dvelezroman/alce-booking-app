@@ -225,7 +225,16 @@ navItems: SidebarNavItem[] = [
         this.findNavItemByRoute('/dashboard/searching-meeting-v2'),
         // this.findNavItemByRoute('/dashboard/searching-meeting-instructor'),
         this.findNavItemByRoute('/dashboard/searching-meeting-instructor-v2'),
+      ].filter(item => item.roles.includes(role))
+    },
+    {
+      title: 'Solicitudes',
+      icon: 'reportes',
+      items: [
         this.findNavItemByRoute('/dashboard/instructor/lead-scheduling-requests'),
+        this.findNavItemByRoute('/dashboard/admin/lead-scheduling-requests'),
+        this.findNavItemByRoute('/dashboard/admin/assigned-inductions'),
+        this.findNavItemByRoute('/dashboard/admin/courtesy-demo-monthly-report'),
       ].filter(item => item.roles.includes(role))
     },
     {
@@ -250,9 +259,6 @@ navItems: SidebarNavItem[] = [
         // this.findNavItemByRoute('/dashboard/create-students'),
          this.findNavItemByRoute('/dashboard/create-students'),
         this.findNavItemByRoute('/dashboard/create-staff'),
-        this.findNavItemByRoute('/dashboard/admin/lead-scheduling-requests'),
-        this.findNavItemByRoute('/dashboard/admin/courtesy-demo-monthly-report'),
-        this.findNavItemByRoute('/dashboard/admin/assigned-inductions'),
       ].filter(item => item.roles.includes(role))
     },
     {

@@ -10,7 +10,11 @@ import {
   FormsModule,
 } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { LEAD_SCHEDULING_COURTESY_MONTHLY_REPORT_PATH } from '../../../shared/utils/lead-scheduling-request.util';
+import {
+  LEAD_SCHEDULING_COURTESY_MONTHLY_REPORT_PATH,
+  type LeadSchedulingDateField,
+  type LeadSchedulingListSortBy,
+} from '../../../shared/utils/lead-scheduling-request.util';
 
 import {
   LeadSchedulingRequestKind,
@@ -31,10 +35,6 @@ import {
 export class AdminLeadSchedulingFiltersComponent {
   readonly courtesyReportPath = LEAD_SCHEDULING_COURTESY_MONTHLY_REPORT_PATH;
 
-  /* =========================
-     INPUTS
-  ========================= */
-
   @Input()
   filterKind: '' | LeadSchedulingRequestKind = '';
 
@@ -42,12 +42,19 @@ export class AdminLeadSchedulingFiltersComponent {
   filterStatus: '' | LeadSchedulingRequestStatus = '';
 
   @Input()
+  sortBy: LeadSchedulingListSortBy = 'createdAt';
+
+  @Input()
+  dateField: LeadSchedulingDateField = 'created';
+
+  @Input()
+  dateFrom = '';
+
+  @Input()
+  dateTo = '';
+
+  @Input()
   loading = false;
-
-
-  /* =========================
-     OUTPUTS
-  ========================= */
 
   @Output()
   kindChange =
@@ -58,17 +65,24 @@ export class AdminLeadSchedulingFiltersComponent {
     new EventEmitter<'' | LeadSchedulingRequestStatus>();
 
   @Output()
+  sortByChange = new EventEmitter<LeadSchedulingListSortBy>();
+
+  @Output()
+  dateFieldChange = new EventEmitter<LeadSchedulingDateField>();
+
+  @Output()
+  dateFromChange = new EventEmitter<string>();
+
+  @Output()
+  dateToChange = new EventEmitter<string>();
+
+  @Output()
   clearRequested =
     new EventEmitter<void>();
 
   @Output()
   refreshRequested =
     new EventEmitter<void>();
-
-
-  /* =========================
-     OPTIONS
-  ========================= */
 
   readonly kindOptions: Array<{
     value: LeadSchedulingRequestKind;
@@ -87,7 +101,6 @@ export class AdminLeadSchedulingFiltersComponent {
       label: 'Inducción',
     },
   ];
-
 
   readonly statusOptions: Array<{
     value: LeadSchedulingRequestStatus;
@@ -111,10 +124,21 @@ export class AdminLeadSchedulingFiltersComponent {
     },
   ];
 
+  readonly sortByOptions: Array<{
+    value: LeadSchedulingListSortBy;
+    label: string;
+  }> = [
+    { value: 'createdAt', label: 'Fecha de registro' },
+    { value: 'scheduledSession', label: 'Fecha de sesión' },
+  ];
 
-  /* =========================
-     CHANGE
-  ========================= */
+  readonly dateFieldOptions: Array<{
+    value: LeadSchedulingDateField;
+    label: string;
+  }> = [
+    { value: 'created', label: 'Registro' },
+    { value: 'session', label: 'Sesión' },
+  ];
 
   onKindChange(
     value: '' | LeadSchedulingRequestKind,
@@ -122,17 +146,27 @@ export class AdminLeadSchedulingFiltersComponent {
     this.kindChange.emit(value);
   }
 
-
   onStatusChange(
     value: '' | LeadSchedulingRequestStatus,
   ): void {
     this.statusChange.emit(value);
   }
 
+  onSortByChange(value: LeadSchedulingListSortBy): void {
+    this.sortByChange.emit(value);
+  }
 
-  /* =========================
-     ACTIONS
-  ========================= */
+  onDateFieldChange(value: LeadSchedulingDateField): void {
+    this.dateFieldChange.emit(value);
+  }
+
+  onDateFromChange(value: string): void {
+    this.dateFromChange.emit(value);
+  }
+
+  onDateToChange(value: string): void {
+    this.dateToChange.emit(value);
+  }
 
   onClear(): void {
     if (this.loading) {
@@ -141,7 +175,6 @@ export class AdminLeadSchedulingFiltersComponent {
 
     this.clearRequested.emit();
   }
-
 
   onRefresh(): void {
     if (this.loading) {

@@ -642,7 +642,10 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   }
 
   goToPlacementExamList(): void {
-    const queryParams = { kind: 'PLACEMENT_EXAM' as const };
+    const queryParams = {
+      kind: 'PLACEMENT_EXAM' as const,
+      status: 'PENDING' as const,
+    };
     if (this.userRole === UserRole.INSTRUCTOR) {
       void this.router.navigate(['/dashboard/instructor/lead-scheduling-requests'], {
         queryParams,

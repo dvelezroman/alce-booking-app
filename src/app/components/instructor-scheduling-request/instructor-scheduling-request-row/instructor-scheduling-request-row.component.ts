@@ -196,6 +196,28 @@ export class InstructorSchedulingRequestRowComponent {
     );
   }
 
+  get createdDateLabel(): string {
+    if (!this.item.createdAt) return '—';
+    const date = new Date(this.item.createdAt);
+    if (Number.isNaN(date.getTime())) return '—';
+    return new Intl.DateTimeFormat('es-EC', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(date);
+  }
+
+  get createdTimeLabel(): string {
+    if (!this.item.createdAt) return '';
+    const date = new Date(this.item.createdAt);
+    if (Number.isNaN(date.getTime())) return '';
+    return new Intl.DateTimeFormat('es-EC', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    }).format(date);
+  }
+
   get isDemoClass(): boolean {
     return this.item.kind === 'DEMO_CLASS';
   }
